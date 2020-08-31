@@ -2,185 +2,89 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D96C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4026C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9676B2074B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9413B2076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RZXZsQyf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgHaAeO (ORCPT
+        id S1726468AbgHaAoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 20:34:14 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:34185 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726179AbgHaAeN (ORCPT
+        Sun, 30 Aug 2020 20:44:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgHaAoD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 20:34:13 -0400
-Received: from dread.disaster.area (pa49-181-146-199.pa.nsw.optusnet.com.au [49.181.146.199])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 2B359824857;
-        Mon, 31 Aug 2020 10:34:08 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1kCXlv-0000ei-2W; Mon, 31 Aug 2020 10:34:07 +1000
-Date:   Mon, 31 Aug 2020 10:34:07 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, y-goto@fujitsu.com
-Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
- DCACHE_REFERENCED is set
-Message-ID: <20200831003407.GE12096@dread.disaster.area>
-References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
- <20200827063748.GA12096@dread.disaster.area>
- <6b3b3439-2199-8f00-ceca-d65769e94fe0@cn.fujitsu.com>
- <20200828003541.GD12096@dread.disaster.area>
- <d7852ad6-d304-895d-424d-3053bf07f0f5@cn.fujitsu.com>
+        Sun, 30 Aug 2020 20:44:03 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBF7DC061573;
+        Sun, 30 Aug 2020 17:44:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=HJcfCyclewk4FrZYLGIK+aioBTHV/K05rdspPHw3Ge4=; b=RZXZsQyfB9/hoiFpoWkf09T+fz
+        X9kmK4HI/K5LktWoSnb7cJ6vVPjDFuKITv75mXVi4KpaHjYyUhqbvOoUn0ZJSdy1CHhRicH53x0Ry
+        vRAo+cGyWQSUToJm7pWC90ZSyNMdw+Ol+UiVWlVGJx9q101utJVYTVNqsE5sB3wUo3X+bojLb3vee
+        1IfLeyn530kzKdliw5aVtux4NI4pwENmBo9k0zCELpS6TWc2JJvO7FV1o4mXtnDGvkaQdwwgNJsy/
+        sfQ66mhUk00SVYnf3ppnDXA0Zp9ERkvSR74LxLRbR1lHKChg8vn4Si5EsfWJAcu/EaM/rZ461+M/i
+        9rJ/uiVg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCXvR-000874-HN; Mon, 31 Aug 2020 00:43:57 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Mike Rapoport <rppt@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH v2] Documentation: submit-checklist: add clean builds for new
+ Documentation
+Message-ID: <cf5bbdf5-03ff-0606-a6d4-ca196d90aee9@infradead.org>
+Date:   Sun, 30 Aug 2020 17:43:54 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d7852ad6-d304-895d-424d-3053bf07f0f5@cn.fujitsu.com>
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=IuRgj43g c=1 sm=1 tr=0 cx=a_idp_d
-        a=GorAHYkI+xOargNMzM6qxQ==:117 a=GorAHYkI+xOargNMzM6qxQ==:17
-        a=kj9zAlcOel0A:10 a=y4yBn9ojGxQA:10 a=omOdbC7AAAAA:8 a=7-415B0cAAAA:8
-        a=Q-SpeKd3jp49hb1f-zoA:9 a=CjuIK1q_8ugA:10 a=baC4JDFNLZpnPwus_NF9:22
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 05:04:14PM +0800, Li, Hao wrote:
-> On 2020/8/28 8:35, Dave Chinner wrote:
-> > On Thu, Aug 27, 2020 at 05:58:07PM +0800, Li, Hao wrote:
-> >> On 2020/8/27 14:37, Dave Chinner wrote:
-> >>> On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
-> >>>> Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
-> >>>> set from being killed, so the corresponding inode can't be evicted. If
-> >>>> the DAX policy of an inode is changed, we can't make policy changing
-> >>>> take effects unless dropping caches manually.
-> >>>>
-> >>>> This patch fixes this problem and flushes the inode to disk to prepare
-> >>>> for evicting it.
-> >>>>
-> >>>> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
-> >>>> ---
-> >>>>  fs/dcache.c | 3 ++-
-> >>>>  fs/inode.c  | 2 +-
-> >>>>  2 files changed, 3 insertions(+), 2 deletions(-)
-> >>>>
-> >>>> diff --git a/fs/dcache.c b/fs/dcache.c
-> >>>> index ea0485861d93..486c7409dc82 100644
-> >>>> --- a/fs/dcache.c
-> >>>> +++ b/fs/dcache.c
-> >>>> @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
-> >>>>  	 */
-> >>>>  	smp_rmb();
-> >>>>  	d_flags = READ_ONCE(dentry->d_flags);
-> >>>> -	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
-> >>>> +	d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
-> >>>> +			| DCACHE_DONTCACHE;
-> >>> Seems reasonable, but you need to update the comment above as to
-> >>> how this flag fits into this code....
-> >> Yes. I will change it. Thanks.
-> >>
-> >>>>  	/* Nothing to do? Dropping the reference was all we needed? */
-> >>>>  	if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
-> >>>> diff --git a/fs/inode.c b/fs/inode.c
-> >>>> index 72c4c347afb7..5218a8aebd7f 100644
-> >>>> --- a/fs/inode.c
-> >>>> +++ b/fs/inode.c
-> >>>> @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
-> >>>>  	}
-> >>>>  
-> >>>>  	state = inode->i_state;
-> >>>> -	if (!drop) {
-> >>>> +	if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
-> >>>>  		WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
-> >>>>  		spin_unlock(&inode->i_lock);
-> >>> What's this supposed to do? We'll only get here with drop set if the
-> >>> filesystem is mounting or unmounting.
-> >> The variable drop will also be set to True if I_DONTCACHE is set on
-> >> inode->i_state.
-> >> Although mounting/unmounting will set the drop variable, it won't set
-> >> I_DONTCACHE if I understand correctly. As a result,
-> >> drop && (inode->i_state & I_DONTCACHE) will filter out mounting/unmounting.
-> > So what does this have to do with changing the way the dcache
-> > treats DCACHE_DONTCACHE?
-> After changing the way the dcache treats DCACHE_DONTCACHE, the dentry with
-> DCACHE_DONTCACHE set will be killed unconditionally even if
-> DCACHE_REFERENCED is set, and its inode will be processed by iput_final().
-> This inode has I_DONTCACHE flag, so op->drop_inode() will return true,
-> and the inode will be evicted _directly_ even though it has dirty pages.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Yes. But this doesn't rely on DCACHE_DONTCACHE behaviour. Inodes
-that are looked up and cached by the filesystem without going
-through dentry cache pathwalks can have I_DONTCACHE set and then get
-evicted...
+Add to Documentation/process/submit-checklist.rst that patch
+submitters should run "make htmldocs" and verify that any
+Documentation/ changes (patches) are clean (no new warnings/errors).
 
-i.e. we can get I_DONTCACHE set on inodes that do not have dentries
-attached to them. That's the original functionality that got pulled
-up from XFS - internal iteration of inodes, either via quotacheck or
-bulkstat....
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+---
+v2: insert "new" inside "without warnings/errors" (Mike)
 
-> I think the kernel will run into error state because it doesn't writeback
-> dirty pages of this inode before evicting. This is why I write back this
-> inode here.
-> 
-> According to my test, if I revert the second hunk of this patch, kernel
-> will hang after running the following command:
-> echo 123 > test.txt && xfs_io -c "chattr +x" test.txt
-> 
-> The backtrace is:
-> 
-> xfs_fs_destroy_inode+0x204/0x24d
-> destroy_inode+0x3b/0x65
-> evict+0x150/0x1aa
-> iput+0x117/0x19a
-> dentry_unlink_inode+0x12b/0x12f
-> __dentry_kill+0xee/0x211
-> dentry_kill+0x112/0x22f
-> dput+0x79/0x86
-> __fput+0x200/0x23f
-> ____fput+0x25/0x28
-> task_work_run+0x144/0x177
-> do_exit+0x4fb/0xb94
-> 
-> This backtrace is printed with an ASSERT(0) statement in xfs_fs_destroy_inode().
+ Documentation/process/submit-checklist.rst |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-Sure, that's your messenger. That doesn't mean the bug can't be
-triggered by other means.
+--- linux-next-20200821.orig/Documentation/process/submit-checklist.rst
++++ linux-next-20200821/Documentation/process/submit-checklist.rst
+@@ -24,6 +24,10 @@ and elsewhere regarding submitting Linux
+ 
+   c) Builds successfully when using ``O=builddir``
+ 
++  d) Any Documentation/ changes build successfully without new warnings/errors.
++     Use ``make htmldocs`` or ``make pdfdocs`` to check the build and
++     fix any issues.
++
+ 3) Builds on multiple CPU architectures by using local cross-compile tools
+    or some other build farm.
+ 
 
-> > Also, if I_DONTCACHE is set, but the inode has also been unlinked or
-> > is unhashed, should we be writing it back? i.e. it might have been
-> > dropped for a different reason to I_DONTCACHE....
-> This is a problem I didn't realize. You are right. If the inode has been
-> unlinked/unhashed and the I_DONTCACHE is also set, the appended condition
-> will lead to unnecessary writeback.
-> 
-> I think I need to handle the inode writeback more carefully. Maybe I can
-> revert the second hunk and remove I_DONTCACHE from generic_drop_inode()
-> and then change
-> 
-> if (!drop && (sb->s_flags & SB_ACTIVE))
-> 
-> to
-> 
-> if (!drop && !(inode->i_state & I_DONTCACHE) && (sb->s_flags & SB_ACTIVE))
-> 
-> This approach would be more suitable.
-
-Yup, that's pretty much what I was thinking, but as a standalone
-patch and preceding the DCACHE_DONTCACHE behaviour change. Thanks! :)
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
