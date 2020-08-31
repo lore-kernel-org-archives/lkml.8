@@ -2,121 +2,128 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F92C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64538C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAF612068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8RMICeU"
+	by mail.kernel.org (Postfix) with ESMTP id 3625C206E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598877974;
+	bh=xpciEiK1NwSQDebvBUt8PqEJ0Povb15SzOC+Y7MqoZ4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DE0AGnoUaolX1rpR9FusGJnJEWcHtI9cIbKlVeTDEi5Z9i72ME/c38URXHVjLAUZ7
+	 s+BiEarRWpbW+ixeWO8+i9gURRQAnrvPBDARGoY2S4oQb0Mm/DE41Z7MS9DVYmGMNR
+	 cgtawuP5eOgZ1EWuqgKhicakDv8r/pOpSw4FehgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgHaMqD (ORCPT
+        id S1727931AbgHaMqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:46:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgHaMqA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:46:00 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15F6C061573;
-        Mon, 31 Aug 2020 05:45:59 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id nv17so3082616pjb.3;
-        Mon, 31 Aug 2020 05:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pa6JcLul+a6lE0D1xdaF9TYM4EfgCjAor7g5z7fUwhk=;
-        b=B8RMICeUUT2UI+437Vp/yRQTeZCUVfXHdJOIZIuWk0sy8oxdgge4Ozr3ka8okAg74m
-         hr1G0wYveXi0hQlsQB+qz9N0Suj1KdKavvHUDnMpud/P0SW2Z6aXcXhdnPCSX4TN5b6p
-         aM/MfBCJ1LvhVPYJzjmeL5nddpOdiuwDvKmS33zODu8eFo7CNUPLTfD9WJFla7tEjbwr
-         dkbA8ngHAFKIEPd3pGaWK0DAo3d6r3HfdmDuC4PFKzoFmwIyAgmZ6KvsL/rfyULCSdFl
-         bXvO0gLiQuhnW6IR43V/UTh4P6mYRkIGR+8kmNRMmhgwg/wVqOU1q2sfhsn4rjO7Jrsv
-         fJ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pa6JcLul+a6lE0D1xdaF9TYM4EfgCjAor7g5z7fUwhk=;
-        b=bSwU/oHze+itdWnKXHmVeKZSEDBmeYEOU65LWKjbufV8IDn7si6fhvc0b35kTxqfK8
-         EJDzIAEw9EUqFU8NlmVbYv5Go9Lnoi+RNgv0ocBIhIhRmq1vj8w3OV8dfJQ0CBx+AaOA
-         47z/nyk+vHMOaq2tAQN963jNBeHbi2EP2nj8ti7aM68mMQvQLSy7dt+K8iVldKkRNrMp
-         UO6dKpphY9DB5lL9JSan2oSWL3HgWFoO+6+43JcQ2xv9NqsfmJFDGtXziD3hVWxyjOeO
-         +ZkdJA2F7VIjshe5C83a++xYnxwlEH1pWO4FXlKAtPC9SPiy4nLRfl5jhQEaHR8VUXLG
-         lKNg==
-X-Gm-Message-State: AOAM532VQu4RJdsldhye7Eb3jxHzMaj5+E7IcU5Wb/3+2fEQBUUTpdIm
-        YxeijUCDgf0D7gaAiLhuJpw3rholHffj4S7RJj4=
-X-Google-Smtp-Source: ABdhPJywKdmDfUuf9QY9ZvDBz7C0v4U1PQVaeuyyFA0xhSBtfgBnIYIFptTzhuSUt68hsPxDIkvTrWz1D9H4SkNQ1wE=
-X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr1261475pjd.129.1598877959382;
- Mon, 31 Aug 2020 05:45:59 -0700 (PDT)
+        Mon, 31 Aug 2020 08:46:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47094 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgHaMqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 08:46:05 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCC7F20936;
+        Mon, 31 Aug 2020 12:46:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598877965;
+        bh=xpciEiK1NwSQDebvBUt8PqEJ0Povb15SzOC+Y7MqoZ4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tm0X0Bnskgtx626aIhezv8tq7tulaFU3a02p5jY8yCe97ApiLEIeMVX4lpuYoRS9S
+         aIo2O9kvct12CyFJvs6hK2BD66CXX8xM57Zb8O8hqh1FvH0+zp2K68OTBsN6T/t1Sg
+         nwbU9+gYaddTY/+CoLhEyShzLNIQJpwhyBL4b9XA=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: [PATCH 4/6] tracing/kprobes: Support perf-style return probe
+Date:   Mon, 31 Aug 2020 21:46:01 +0900
+Message-Id: <159887796151.1330989.2690618021941671783.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159887792384.1330989.5993224243767476896.stgit@devnote2>
+References: <159887792384.1330989.5993224243767476896.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <20200824054347.3805-1-william.sung@advantech.com.tw>
- <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com> <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
-In-Reply-To: <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 31 Aug 2020 15:45:42 +0300
-Message-ID: <CAHp75Vcup9LUk0fgjW9T2FK-K5GD3=3ycPHi74Oykc8rq_tJqA@mail.gmail.com>
-Subject: Re: [PATCH] iio: dac: ad5593r: Dynamically set AD5593R channel modes
-To:     AceLan Kao <acelan.kao@canonical.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     William Sung <william.sung@advantech.com.tw>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Campion Kang <Campion.Kang@advantech.com.tw>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 2:28 PM AceLan Kao <acelan.kao@canonical.com> wrote:
-> This patch is mainly for Advantech's UNO-420[1] which is a x86-based platform.
-> This platform is more like a development platform for customers to
-> customize their products,
-> so, specify the channel modes in ACPI table is not generic enough,
-> that's why William submit this patch.
->
-> Are there other ways to specify or pass values to the module without
-> using module parameters?
-> It's good if we can leverage sysfs, but I don't know if there is one
-> for this scenario.
+Support perf-style return probe ("SYMBOL%return") in kprobe events.
+This will allow boot-time tracing user to define a return probe event.
 
-Can we provide DT bindings for that and use then in ACPI? ACPI has a
-possibility to reuse DT properties and compatible strings [1]. As far
-as I can see the driver uses fwnode API, so it supports ACPI case
-already [2]. So, what prevents you to utilize 'adi,mode' property?
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ kernel/trace/trace_kprobe.c |   21 ++++++++++++++++++++-
+ 1 file changed, 20 insertions(+), 1 deletion(-)
 
-Also, we accept examples of ASL excerpt in meta-acpi project [3]. It
-has already plenty of examples [4] how to use PRP0001 for DIY /
-development boards.
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index aefb6065b508..391361b67c8f 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -709,6 +709,18 @@ static inline void sanitize_event_name(char *name)
+ 			*name = '_';
+ }
+ 
++static inline bool split_return_suffix(char *symbol)
++{
++	char *p = strchr(symbol, '%');
++
++	if (p && !strcmp(p, "%return")) {
++		*p = '\0';
++		return true;
++	}
++
++	return false;
++}
++
+ static int trace_kprobe_create(int argc, const char *argv[])
+ {
+ 	/*
+@@ -717,6 +729,9 @@ static int trace_kprobe_create(int argc, const char *argv[])
+ 	 *      p[:[GRP/]EVENT] [MOD:]KSYM[+OFFS]|KADDR [FETCHARGS]
+ 	 *  - Add kretprobe:
+ 	 *      r[MAXACTIVE][:[GRP/]EVENT] [MOD:]KSYM[+0] [FETCHARGS]
++	 *    Or
++	 *      p:[GRP/]EVENT] [MOD:]KSYM[+0]%return [FETCHARGS]
++	 *
+ 	 * Fetch args:
+ 	 *  $retval	: fetch return value
+ 	 *  $stack	: fetch stack address
+@@ -746,7 +761,6 @@ static int trace_kprobe_create(int argc, const char *argv[])
+ 	switch (argv[0][0]) {
+ 	case 'r':
+ 		is_return = true;
+-		flags |= TPARG_FL_RETURN;
+ 		break;
+ 	case 'p':
+ 		break;
+@@ -804,12 +818,17 @@ static int trace_kprobe_create(int argc, const char *argv[])
+ 		symbol = kstrdup(argv[1], GFP_KERNEL);
+ 		if (!symbol)
+ 			return -ENOMEM;
++
++		is_return = split_return_suffix(symbol) || is_return;
++
+ 		/* TODO: support .init module functions */
+ 		ret = traceprobe_split_symbol_offset(symbol, &offset);
+ 		if (ret || offset < 0 || offset > UINT_MAX) {
+ 			trace_probe_log_err(0, BAD_PROBE_ADDR);
+ 			goto parse_error;
+ 		}
++		if (is_return)
++			flags |= TPARG_FL_RETURN;
+ 		if (kprobe_on_func_entry(NULL, symbol, offset))
+ 			flags |= TPARG_FL_FENTRY;
+ 		if (offset && is_return && !(flags & TPARG_FL_FENTRY)) {
 
-So, take all together I think this patch is simple redundant.
-
-[1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id
-[2]: https://elixir.bootlin.com/linux/v5.9-rc3/source/Documentation/devicetree/bindings/iio/dac/ad5592r.txt
-[3]: https://github.com/westeri/meta-acpi
-[4]: https://github.com/westeri/meta-acpi/tree/master/recipes-bsp/acpi-tables/samples
-
-P.S. Jonathan, it seems this driver has artificial ACPI HID. We
-probably have to remove it. However, ADS is indeed reserved for Analog
-Devices in PNP registry. Can we have AD's official answer on this?
-Cc'ing additional AD people.
-
-> 1. https://www.advantech.com/products/9a0cc561-8fc2-4e22-969c-9df90a3952b5/uno-420/mod_2d6a546b-39e3-4bc4-bbf4-ac89e6b7667c
-
-
--- 
-With Best Regards,
-Andy Shevchenko
