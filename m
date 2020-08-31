@@ -2,60 +2,140 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D10C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC7BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B416620719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 150C72083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:25:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598912718;
+	bh=ok5cIhweDhuPNAlDOAvCMFEWKnh75ccd7XXvokedz3w=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ojf8p/75Ss6j6VhC3RfNt7l94jEB5PTsE+bxi1s9wFqlS5YfAKS9FegBVZgIMacRb
+	 dV2bxx0TIm1hVLtKuFB3nQxqL5tLiARpIoDwO5XcbPqt0KS9sZ5QnYKmKsxQ9iYiH/
+	 UbG0J0hDrm1F1MmRYDYUAx4Nb29m87k6tHp3AWk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgHaWQb (ORCPT
+        id S1728092AbgHaWZF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 18:16:31 -0400
-Received: from ms.lwn.net ([45.79.88.28]:39036 "EHLO ms.lwn.net"
+        Mon, 31 Aug 2020 18:25:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgHaWQb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 18:16:31 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1726044AbgHaWZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 18:25:05 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B372C537;
-        Mon, 31 Aug 2020 22:16:30 +0000 (UTC)
-Date:   Mon, 31 Aug 2020 16:16:29 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Andrew Cooper <andrew.cooper3@citrix.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Andrew Cooper <amc96@cam.ac.uk>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        <linux-ia64@vger.kernel.org>, <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH] docs/ia64: Drop obsolete Xen documentation
-Message-ID: <20200831161629.2dc218ff@lwn.net>
-In-Reply-To: <20200827175405.24344-1-andrew.cooper3@citrix.com>
-References: <20200827175405.24344-1-andrew.cooper3@citrix.com>
-Organization: LWN.net
-MIME-Version: 1.0
+        by mail.kernel.org (Postfix) with ESMTPSA id E3DEB207EA;
+        Mon, 31 Aug 2020 22:25:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598912704;
+        bh=ok5cIhweDhuPNAlDOAvCMFEWKnh75ccd7XXvokedz3w=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=eQTe3Uz/fG7hwmN7Ao8DHwyrPZjtNPXmRcUFON+jmtH95YNyhbLXyG9FhnuNyCagu
+         pk89q2naK2ZprsXViBcDg5YLYHUpwEkNNlTlJ2RauCRGpd3TBLSdmeCzDKpd52QKgZ
+         v8fwlks9nhMk8UH2MyvkbuBoyXLNibMdMhbzD8J4=
+Date:   Tue, 1 Sep 2020 07:24:59 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Muchun Song <songmuchun@bytedance.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
+        Chengming Zhou <zhouchengming@bytedance.com>
+Subject: Re: [External] [BUGFIX PATCH] kprobes: Fix to check probe enabled
+ before disarm_kprobe_ftrace()
+Message-Id: <20200901072459.05d801da057ec93f68c4448d@kernel.org>
+In-Reply-To: <CAMZfGtXqhyzsqm=9Y5VUVpRsTA4-EfAXsX=8TLOjuVkJkw-ngg@mail.gmail.com>
+References: <159888672694.1411785.5987998076694782591.stgit@devnote2>
+        <CAMZfGtXqhyzsqm=9Y5VUVpRsTA4-EfAXsX=8TLOjuVkJkw-ngg@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Aug 2020 18:54:05 +0100
-Andrew Cooper <andrew.cooper3@citrix.com> wrote:
+Hi Muchun,
 
-> While the xensource.com URLs referenced still exist, neither the Xen or Linux
-> 2.6.18 fork have been touched since 2009, 11 years ago.  Other URLs are dead.
+On Mon, 31 Aug 2020 23:47:14 +0800
+Muchun Song <songmuchun@bytedance.com> wrote:
+
+> On Mon, Aug 31, 2020 at 11:12 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Commit 0cb2f1372baa ("kprobes: Fix NULL pointer dereference at
+> > kprobe_ftrace_handler") fixed one bug but not completely fixed yet.
+> > If we run a kprobe_module.tc of ftracetest, kernel showed a warning
+> > as below.
+> >
+> >
+> > # ./ftracetest test.d/kprobe/kprobe_module.tc
+> > === Ftrace unit tests ===
+> > [1] Kprobe dynamic event - probing module
+> > ...
+> > [   22.400215] ------------[ cut here ]------------
+> > [   22.400962] Failed to disarm kprobe-ftrace at trace_printk_irq_work+0x0/0x7e [trace_printk] (-2)
+> > [   22.402139] WARNING: CPU: 7 PID: 200 at kernel/kprobes.c:1091 __disarm_kprobe_ftrace.isra.0+0x7e/0xa0
+> > [   22.403358] Modules linked in: trace_printk(-)
+> > [   22.404028] CPU: 7 PID: 200 Comm: rmmod Not tainted 5.9.0-rc2+ #66
+> > [   22.404870] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
+> > [   22.406139] RIP: 0010:__disarm_kprobe_ftrace.isra.0+0x7e/0xa0
+> > [   22.406947] Code: 30 8b 03 eb c9 80 3d e5 09 1f 01 00 75 dc 49 8b 34 24 89 c2 48 c7 c7 a0 c2 05 82 89 45 e4 c6 05 cc 09 1f 01 01 e8 a9 c7 f0 ff <0f> 0b 8b 45 e4 eb b9 89 c6 48 c7 c7 70 c2 05 82 89 45 e4 e8 91 c7
+> > [   22.409544] RSP: 0018:ffffc90000237df0 EFLAGS: 00010286
+> > [   22.410385] RAX: 0000000000000000 RBX: ffffffff83066024 RCX: 0000000000000000
+> > [   22.411434] RDX: 0000000000000001 RSI: ffffffff810de8d3 RDI: ffffffff810de8d3
+> > [   22.412687] RBP: ffffc90000237e10 R08: 0000000000000001 R09: 0000000000000001
+> > [   22.413762] R10: 0000000000000000 R11: 0000000000000001 R12: ffff88807c478640
+> > [   22.414852] R13: ffffffff8235ebc0 R14: ffffffffa00060c0 R15: 0000000000000000
+> > [   22.415941] FS:  00000000019d48c0(0000) GS:ffff88807d7c0000(0000) knlGS:0000000000000000
+> > [   22.417264] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [   22.418176] CR2: 00000000005bb7e3 CR3: 0000000078f7a000 CR4: 00000000000006a0
+> > [   22.419309] Call Trace:
+> > [   22.419990]  kill_kprobe+0x94/0x160
+> > [   22.420652]  kprobes_module_callback+0x64/0x230
+> > [   22.421470]  notifier_call_chain+0x4f/0x70
+> > [   22.422184]  blocking_notifier_call_chain+0x49/0x70
+> > [   22.422979]  __x64_sys_delete_module+0x1ac/0x240
+> > [   22.423733]  do_syscall_64+0x38/0x50
+> > [   22.424366]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > [   22.425176] RIP: 0033:0x4bb81d
+> > [   22.425741] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 e0 ff ff ff f7 d8 64 89 01 48
+> > [   22.428726] RSP: 002b:00007ffc70fef008 EFLAGS: 00000246 ORIG_RAX: 00000000000000b0
+> > [   22.430169] RAX: ffffffffffffffda RBX: 00000000019d48a0 RCX: 00000000004bb81d
+> > [   22.431375] RDX: 0000000000000000 RSI: 0000000000000880 RDI: 00007ffc70fef028
+> > [   22.432543] RBP: 0000000000000880 R08: 00000000ffffffff R09: 00007ffc70fef320
+> > [   22.433692] R10: 0000000000656300 R11: 0000000000000246 R12: 00007ffc70fef028
+> > [   22.434635] R13: 0000000000000000 R14: 0000000000000002 R15: 0000000000000000
+> > [   22.435682] irq event stamp: 1169
+> > [   22.436240] hardirqs last  enabled at (1179): [<ffffffff810df542>] console_unlock+0x422/0x580
+> > [   22.437466] hardirqs last disabled at (1188): [<ffffffff810df19b>] console_unlock+0x7b/0x580
+> > [   22.438608] softirqs last  enabled at (866): [<ffffffff81c0038e>] __do_softirq+0x38e/0x490
+> > [   22.439637] softirqs last disabled at (859): [<ffffffff81a00f42>] asm_call_on_stack+0x12/0x20
+> > [   22.440690] ---[ end trace 1e7ce7e1e4567276 ]---
+> > [   22.472832] trace_kprobe: This probe might be able to register after target module is loaded. Continue.
+> >
+> >
+> > This is because the kill_kprobe() calls disarm_kprobe_ftrace() even
+> > if the given probe is not enabled. In that case, ftrace_set_filter_ip()
+> > fails because the given probe point is not registered to ftrace.
 > 
-> IA64 support was removed in Xen 4.2, in 2012.  Relegate this piece of
-> documentation to source history.
+> Does the following patch solve this issue?  Thanks.
 > 
-> Signed-off-by: Andrew Cooper <andrew.cooper3@citrix.com>
+>   kprobes: Fix kill kprobe which has been marked as gone
+>   https://lkml.org/lkml/2020/8/19/1496
 
-Applied, thanks.
+No, your patch skips all gone probes, but this one disabled ftrace
+probes (not gone yet).
 
-jon
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
