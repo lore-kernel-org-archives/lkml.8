@@ -4,28 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10404C43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:12:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A89C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B65CF21655
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:11:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB78D2067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728917AbgHaRL6 (ORCPT
+        id S1728961AbgHaRME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:11:58 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47979 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728850AbgHaRLs (ORCPT
+        Mon, 31 Aug 2020 13:12:04 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:40623 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbgHaRLq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:11:48 -0400
+        Mon, 31 Aug 2020 13:11:46 -0400
 X-Originating-IP: 90.66.108.79
 Received: from localhost (lfbn-lyo-1-1932-79.w90-66.abo.wanadoo.fr [90.66.108.79])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 77EC46000B;
-        Mon, 31 Aug 2020 17:11:43 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id C4D9FC000B;
+        Mon, 31 Aug 2020 17:11:42 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
@@ -33,9 +33,9 @@ Cc:     Nicolas Ferre <nicolas.ferre@microchip.com>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4/5] ARM: dts: at91: add unit-address to memory node
-Date:   Mon, 31 Aug 2020 19:11:28 +0200
-Message-Id: <20200831171129.3886857-7-alexandre.belloni@bootlin.com>
+Subject: [PATCH 3/5] ARM: dts: at91: move mmc pinctrl-names property to board dts
+Date:   Mon, 31 Aug 2020 19:11:27 +0200
+Message-Id: <20200831171129.3886857-6-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200831171129.3886857-1-alexandre.belloni@bootlin.com>
 References: <20200831171129.3886857-1-alexandre.belloni@bootlin.com>
@@ -46,726 +46,314 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memory node requires a unit-address, add it.
+Having the pinctrl-names property in the dtsi leads to dtbs_check warnings
+when the board dts doesn't define pinctrl-0. Instead, move the property to
+the board dts actually using the mmc node.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- arch/arm/boot/dts/animeo_ip.dts               | 2 +-
- arch/arm/boot/dts/at91-ariag25.dts            | 2 +-
- arch/arm/boot/dts/at91-ariettag25.dts         | 2 +-
- arch/arm/boot/dts/at91-cosino.dtsi            | 2 +-
- arch/arm/boot/dts/at91-foxg20.dts             | 2 +-
- arch/arm/boot/dts/at91-kizbox.dts             | 2 +-
- arch/arm/boot/dts/at91-kizbox2-common.dtsi    | 2 +-
- arch/arm/boot/dts/at91-kizboxmini-common.dtsi | 2 +-
- arch/arm/boot/dts/at91-linea.dtsi             | 2 +-
- arch/arm/boot/dts/at91-qil_a9260.dts          | 2 +-
- arch/arm/boot/dts/at91-sam9_l9260.dts         | 2 +-
- arch/arm/boot/dts/at91-sama5d3_xplained.dts   | 2 +-
- arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi     | 2 +-
- arch/arm/boot/dts/at91-sama5d4_xplained.dts   | 2 +-
- arch/arm/boot/dts/at91-sama5d4ek.dts          | 2 +-
- arch/arm/boot/dts/at91-som60.dtsi             | 2 +-
- arch/arm/boot/dts/at91-vinco.dts              | 2 +-
- arch/arm/boot/dts/at91-wb45n.dtsi             | 2 +-
- arch/arm/boot/dts/at91-wb50n.dtsi             | 2 +-
- arch/arm/boot/dts/at91rm9200.dtsi             | 2 +-
- arch/arm/boot/dts/at91rm9200ek.dts            | 2 +-
- arch/arm/boot/dts/at91sam9260.dtsi            | 2 +-
- arch/arm/boot/dts/at91sam9260ek.dts           | 2 +-
- arch/arm/boot/dts/at91sam9261.dtsi            | 2 +-
- arch/arm/boot/dts/at91sam9261ek.dts           | 2 +-
- arch/arm/boot/dts/at91sam9263.dtsi            | 2 +-
- arch/arm/boot/dts/at91sam9263ek.dts           | 2 +-
- arch/arm/boot/dts/at91sam9g20.dtsi            | 2 +-
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi   | 2 +-
- arch/arm/boot/dts/at91sam9g45.dtsi            | 2 +-
- arch/arm/boot/dts/at91sam9m10g45ek.dts        | 2 +-
- arch/arm/boot/dts/at91sam9n12.dtsi            | 2 +-
- arch/arm/boot/dts/at91sam9n12ek.dts           | 2 +-
- arch/arm/boot/dts/at91sam9rl.dtsi             | 2 +-
- arch/arm/boot/dts/at91sam9rlek.dts            | 2 +-
- arch/arm/boot/dts/at91sam9x5.dtsi             | 2 +-
- arch/arm/boot/dts/at91sam9x5cm.dtsi           | 2 +-
- arch/arm/boot/dts/ethernut5.dts               | 2 +-
- arch/arm/boot/dts/mpa1600.dts                 | 2 +-
- arch/arm/boot/dts/pm9g45.dts                  | 2 +-
- arch/arm/boot/dts/sam9x60.dtsi                | 2 +-
- arch/arm/boot/dts/sama5d2.dtsi                | 2 +-
- arch/arm/boot/dts/sama5d3.dtsi                | 2 +-
- arch/arm/boot/dts/sama5d3xcm.dtsi             | 2 +-
- arch/arm/boot/dts/sama5d3xcm_cmp.dtsi         | 2 +-
- arch/arm/boot/dts/sama5d4.dtsi                | 2 +-
- arch/arm/boot/dts/tny_a9260_common.dtsi       | 2 +-
- arch/arm/boot/dts/tny_a9263.dts               | 2 +-
- arch/arm/boot/dts/usb_a9260.dts               | 2 +-
- arch/arm/boot/dts/usb_a9263.dts               | 2 +-
- arch/arm/boot/dts/usb_a9g20_common.dtsi       | 2 +-
- 51 files changed, 51 insertions(+), 51 deletions(-)
+ arch/arm/boot/dts/animeo_ip.dts             | 1 +
+ arch/arm/boot/dts/at91-ariag25.dts          | 1 +
+ arch/arm/boot/dts/at91-ariettag25.dts       | 1 +
+ arch/arm/boot/dts/at91-cosino.dtsi          | 1 +
+ arch/arm/boot/dts/at91-cosino_mega2560.dts  | 1 +
+ arch/arm/boot/dts/at91-foxg20.dts           | 1 +
+ arch/arm/boot/dts/at91-qil_a9260.dts        | 1 +
+ arch/arm/boot/dts/at91-sam9_l9260.dts       | 1 +
+ arch/arm/boot/dts/at91-wb45n.dtsi           | 1 +
+ arch/arm/boot/dts/at91rm9200.dtsi           | 1 -
+ arch/arm/boot/dts/at91sam9260.dtsi          | 1 -
+ arch/arm/boot/dts/at91sam9260ek.dts         | 1 +
+ arch/arm/boot/dts/at91sam9263.dtsi          | 2 --
+ arch/arm/boot/dts/at91sam9263ek.dts         | 1 +
+ arch/arm/boot/dts/at91sam9g20ek_common.dtsi | 1 +
+ arch/arm/boot/dts/at91sam9g45.dtsi          | 2 --
+ arch/arm/boot/dts/at91sam9m10g45ek.dts      | 2 ++
+ arch/arm/boot/dts/at91sam9x5.dtsi           | 2 --
+ arch/arm/boot/dts/at91sam9x5ek.dtsi         | 2 ++
+ arch/arm/boot/dts/pm9g45.dts                | 1 +
+ 20 files changed, 17 insertions(+), 8 deletions(-)
 
 diff --git a/arch/arm/boot/dts/animeo_ip.dts b/arch/arm/boot/dts/animeo_ip.dts
-index 6d7fc9c6c6e0..7da718abbd85 100644
+index c36d28c295d6..6d7fc9c6c6e0 100644
 --- a/arch/arm/boot/dts/animeo_ip.dts
 +++ b/arch/arm/boot/dts/animeo_ip.dts
-@@ -26,7 +26,7 @@ chosen {
- 		stdout-path = &usart2;
- 	};
+@@ -81,6 +81,7 @@ mmc0: mmc@fffa8000 {
+ 				pinctrl-0 = <&pinctrl_mmc0_clk
+ 					     &pinctrl_mmc0_slot1_cmd_dat0
+ 					     &pinctrl_mmc0_slot1_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
  
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+ 				slot@1 {
 diff --git a/arch/arm/boot/dts/at91-ariag25.dts b/arch/arm/boot/dts/at91-ariag25.dts
-index 2ef39ecbda18..713d18f80356 100644
+index dbfefef2869d..2ef39ecbda18 100644
 --- a/arch/arm/boot/dts/at91-ariag25.dts
 +++ b/arch/arm/boot/dts/at91-ariag25.dts
-@@ -22,7 +22,7 @@ chosen {
- 		bootargs = "console=ttyS0,115200 root=/dev/mmcblk0p2 rw rootwait";
- 	};
+@@ -93,6 +93,7 @@ &mmc0 {
+ 	pinctrl-0 = <
+ 		&pinctrl_mmc0_slot0_clk_cmd_dat0
+ 		&pinctrl_mmc0_slot0_dat1_3>;
++	pinctrl-names = "default";
+ 	status = "okay";
  
--	memory {
-+	memory@20000000 {
- 		/* 128 MB, change this for 256 MB revision */
- 		reg = <0x20000000 0x8000000>;
- 	};
+ 	slot@0 {
 diff --git a/arch/arm/boot/dts/at91-ariettag25.dts b/arch/arm/boot/dts/at91-ariettag25.dts
-index 2eb494f49078..2c52a71752c2 100644
+index 0267e72c074a..2eb494f49078 100644
 --- a/arch/arm/boot/dts/at91-ariettag25.dts
 +++ b/arch/arm/boot/dts/at91-ariettag25.dts
-@@ -15,7 +15,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+@@ -48,6 +48,7 @@ &mmc0 {
+ 	pinctrl-0 = <
+ 		&pinctrl_mmc0_slot0_clk_cmd_dat0
+ 		&pinctrl_mmc0_slot0_dat1_3>;
++	pinctrl-names = "default";
+ 	status = "okay";
  
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x8000000>;
- 	};
- 
+ 	slot@0 {
 diff --git a/arch/arm/boot/dts/at91-cosino.dtsi b/arch/arm/boot/dts/at91-cosino.dtsi
-index 91e386d4872f..ee0f5da6d819 100644
+index feebd54f670e..91e386d4872f 100644
 --- a/arch/arm/boot/dts/at91-cosino.dtsi
 +++ b/arch/arm/boot/dts/at91-cosino.dtsi
-@@ -20,7 +20,7 @@ chosen {
- 		bootargs = "console=ttyS0,115200 root=/dev/mmcblk0p2 rw rootfstype=ext3 rootwait";
- 	};
+@@ -112,6 +112,7 @@ &mmc0 {
+ 		&pinctrl_board_mmc0
+ 		&pinctrl_mmc0_slot0_clk_cmd_dat0
+ 		&pinctrl_mmc0_slot0_dat1_3>;
++	pinctrl-names = "default";
+ 	status = "okay";
  
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x8000000>;
- 	};
+ 	slot@0 {
+diff --git a/arch/arm/boot/dts/at91-cosino_mega2560.dts b/arch/arm/boot/dts/at91-cosino_mega2560.dts
+index 73e88d1ba4ed..04cb7bee937d 100644
+--- a/arch/arm/boot/dts/at91-cosino_mega2560.dts
++++ b/arch/arm/boot/dts/at91-cosino_mega2560.dts
+@@ -34,6 +34,7 @@ &mmc1 {
+ 	pinctrl-0 = <
+ 		&pinctrl_mmc1_slot0_clk_cmd_dat0
+ 		&pinctrl_mmc1_slot0_dat1_3>;
++	pinctrl-names = "default";
+ 	status = "okay";
  
+ 	slot@0 {
 diff --git a/arch/arm/boot/dts/at91-foxg20.dts b/arch/arm/boot/dts/at91-foxg20.dts
-index c0509c4e5138..7edf057047f8 100644
+index 683b9e37f9c5..c0509c4e5138 100644
 --- a/arch/arm/boot/dts/at91-foxg20.dts
 +++ b/arch/arm/boot/dts/at91-foxg20.dts
-@@ -17,7 +17,7 @@ chosen {
- 		bootargs = "console=ttyS0,115200 root=/dev/mmcblk0p2 rw rootwait";
- 	};
+@@ -55,6 +55,7 @@ mmc0: mmc@fffa8000 {
+ 					&pinctrl_mmc0_clk
+ 					&pinctrl_mmc0_slot1_cmd_dat0
+ 					&pinctrl_mmc0_slot1_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
  
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-kizbox.dts b/arch/arm/boot/dts/at91-kizbox.dts
-index 7d938ccf71b0..7add151f6250 100644
---- a/arch/arm/boot/dts/at91-kizbox.dts
-+++ b/arch/arm/boot/dts/at91-kizbox.dts
-@@ -18,7 +18,7 @@ chosen {
- 		stdout-path = &dbgu;
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x2000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-kizbox2-common.dtsi b/arch/arm/boot/dts/at91-kizbox2-common.dtsi
-index af38253a6e7a..25f761065106 100644
---- a/arch/arm/boot/dts/at91-kizbox2-common.dtsi
-+++ b/arch/arm/boot/dts/at91-kizbox2-common.dtsi
-@@ -17,7 +17,7 @@ chosen {
- 		stdout-path = &dbgu;
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x10000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-kizboxmini-common.dtsi b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-index fddf267b2d17..d37724c10695 100644
---- a/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-+++ b/arch/arm/boot/dts/at91-kizboxmini-common.dtsi
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = &dbgu;
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x8000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
-index 41f163955b1e..533a440d5583 100644
---- a/arch/arm/boot/dts/at91-linea.dtsi
-+++ b/arch/arm/boot/dts/at91-linea.dtsi
-@@ -13,7 +13,7 @@ / {
- 	compatible = "axentia,linea",
- 		     "atmel,sama5d31", "atmel,sama5d3", "atmel,sama5";
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- };
+ 				slot@1 {
 diff --git a/arch/arm/boot/dts/at91-qil_a9260.dts b/arch/arm/boot/dts/at91-qil_a9260.dts
-index ee8525d5a5da..969d990767fc 100644
+index a50b7fd2149f..ee8525d5a5da 100644
 --- a/arch/arm/boot/dts/at91-qil_a9260.dts
 +++ b/arch/arm/boot/dts/at91-qil_a9260.dts
-@@ -14,7 +14,7 @@ chosen {
- 		bootargs = "console=ttyS0,115200";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+@@ -52,6 +52,7 @@ mmc0: mmc@fffa8000 {
+ 					&pinctrl_mmc0_clk
+ 					&pinctrl_mmc0_slot0_cmd_dat0
+ 					&pinctrl_mmc0_slot0_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
+ 				slot@0 {
+ 					reg = <0>;
 diff --git a/arch/arm/boot/dts/at91-sam9_l9260.dts b/arch/arm/boot/dts/at91-sam9_l9260.dts
-index f475c0b0f1de..1e2a28c2f365 100644
+index 954404ed8158..f475c0b0f1de 100644
 --- a/arch/arm/boot/dts/at91-sam9_l9260.dts
 +++ b/arch/arm/boot/dts/at91-sam9_l9260.dts
-@@ -15,7 +15,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
+@@ -49,6 +49,7 @@ &pinctrl_board_mmc0
+ 					&pinctrl_mmc0_clk
+ 					&pinctrl_mmc0_slot1_cmd_dat0
+ 					&pinctrl_mmc0_slot1_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
  
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-index 7abf555cd2fe..cf13632edd44 100644
---- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x10000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi b/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi
-index 0be184a870eb..710cb72bda5a 100644
---- a/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi
-+++ b/arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi
-@@ -9,7 +9,7 @@ / {
- 	model = "Aries/DENX MA5D4";
- 	compatible = "aries,ma5d4", "denx,ma5d4", "atmel,sama5d4", "atmel,sama5";
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x10000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-index 924d9491780d..e5974a17374c 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-sama5d4ek.dts b/arch/arm/boot/dts/at91-sama5d4ek.dts
-index 0cc1cff13e46..fe432b6b7e95 100644
---- a/arch/arm/boot/dts/at91-sama5d4ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4ek.dts
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-som60.dtsi b/arch/arm/boot/dts/at91-som60.dtsi
-index 241682a207c5..39474a112b16 100644
---- a/arch/arm/boot/dts/at91-som60.dtsi
-+++ b/arch/arm/boot/dts/at91-som60.dtsi
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = &dbgu;
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x8000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-vinco.dts b/arch/arm/boot/dts/at91-vinco.dts
-index 15050fdd479d..a51a3372afa1 100644
---- a/arch/arm/boot/dts/at91-vinco.dts
-+++ b/arch/arm/boot/dts/at91-vinco.dts
-@@ -17,7 +17,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+ 				slot@1 {
 diff --git a/arch/arm/boot/dts/at91-wb45n.dtsi b/arch/arm/boot/dts/at91-wb45n.dtsi
-index e3d98306ee3a..430c75358086 100644
+index ebe61a25ca96..e3d98306ee3a 100644
 --- a/arch/arm/boot/dts/at91-wb45n.dtsi
 +++ b/arch/arm/boot/dts/at91-wb45n.dtsi
-@@ -17,7 +17,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-wb50n.dtsi b/arch/arm/boot/dts/at91-wb50n.dtsi
-index 1487b893cfa7..74b249bb6351 100644
---- a/arch/arm/boot/dts/at91-wb50n.dtsi
-+++ b/arch/arm/boot/dts/at91-wb50n.dtsi
-@@ -17,7 +17,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
+@@ -145,6 +145,7 @@ &usb2 {
  };
+ 
+ &mmc0 {
++	pinctrl-names = "default";
+ 	pinctrl-0 = <
+ 		&pinctrl_mmc0_slot0_clk_cmd_dat0
+ 		&pinctrl_mmc0_slot0_dat1_3>;
 diff --git a/arch/arm/boot/dts/at91rm9200.dtsi b/arch/arm/boot/dts/at91rm9200.dtsi
-index 0ea0aff2a024..d1181ead18e5 100644
+index 1724e14d9994..0ea0aff2a024 100644
 --- a/arch/arm/boot/dts/at91rm9200.dtsi
 +++ b/arch/arm/boot/dts/at91rm9200.dtsi
-@@ -49,7 +49,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x04000000>;
- 	};
-diff --git a/arch/arm/boot/dts/at91rm9200ek.dts b/arch/arm/boot/dts/at91rm9200ek.dts
-index 1e0bf5afa913..e1ef4e44e663 100644
---- a/arch/arm/boot/dts/at91rm9200ek.dts
-+++ b/arch/arm/boot/dts/at91rm9200ek.dts
-@@ -15,7 +15,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
+@@ -173,7 +173,6 @@ mmc0: mmc@fffb4000 {
+ 				clock-names = "mci_clk";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				pinctrl-names = "default";
+ 				status = "disabled";
+ 			};
  
 diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index b07578ff214c..82c5d7fd9811 100644
+index f6ac5346f910..b07578ff214c 100644
 --- a/arch/arm/boot/dts/at91sam9260.dtsi
 +++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -46,7 +46,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x04000000>;
- 	};
+@@ -654,7 +654,6 @@ mmc0: mmc@fffa8000 {
+ 				interrupts = <9 IRQ_TYPE_LEVEL_HIGH 0>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				pinctrl-names = "default";
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 9>;
+ 				clock-names = "mci_clk";
+ 				status = "disabled";
 diff --git a/arch/arm/boot/dts/at91sam9260ek.dts b/arch/arm/boot/dts/at91sam9260ek.dts
-index 657dc3a420d6..d3446e42b598 100644
+index 81f808a10931..657dc3a420d6 100644
 --- a/arch/arm/boot/dts/at91sam9260ek.dts
 +++ b/arch/arm/boot/dts/at91sam9260ek.dts
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = &dbgu;
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
-index 980cc308fec5..7adc36ca8a46 100644
---- a/arch/arm/boot/dts/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/at91sam9261.dtsi
-@@ -43,7 +43,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x08000000>;
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-index c4ef74fea97c..beed819609e8 100644
---- a/arch/arm/boot/dts/at91sam9261ek.dts
-+++ b/arch/arm/boot/dts/at91sam9261ek.dts
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+@@ -55,6 +55,7 @@ &pinctrl_board_mmc0_slot1
+ 					&pinctrl_mmc0_clk
+ 					&pinctrl_mmc0_slot1_cmd_dat0
+ 					&pinctrl_mmc0_slot1_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
+ 				slot@1 {
+ 					reg = <1>;
 diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index aea70a32511c..fe45d96239c9 100644
+index a321c68be64f..aea70a32511c 100644
 --- a/arch/arm/boot/dts/at91sam9263.dtsi
 +++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -45,7 +45,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x08000000>;
- 	};
+@@ -654,7 +654,6 @@ mmc0: mmc@fff80000 {
+ 				compatible = "atmel,hsmci";
+ 				reg = <0xfff80000 0x600>;
+ 				interrupts = <10 IRQ_TYPE_LEVEL_HIGH 0>;
+-				pinctrl-names = "default";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 10>;
+@@ -666,7 +665,6 @@ mmc1: mmc@fff84000 {
+ 				compatible = "atmel,hsmci";
+ 				reg = <0xfff84000 0x600>;
+ 				interrupts = <11 IRQ_TYPE_LEVEL_HIGH 0>;
+-				pinctrl-names = "default";
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 11>;
 diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-index bf89cb2bbdd9..71f60576761a 100644
+index 62d218542a48..bf89cb2bbdd9 100644
 --- a/arch/arm/boot/dts/at91sam9263ek.dts
 +++ b/arch/arm/boot/dts/at91sam9263ek.dts
-@@ -16,7 +16,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9g20.dtsi b/arch/arm/boot/dts/at91sam9g20.dtsi
-index 86b4e943089a..708e1646b7f4 100644
---- a/arch/arm/boot/dts/at91sam9g20.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20.dtsi
-@@ -11,7 +11,7 @@ / {
- 	model = "Atmel AT91SAM9G20 family SoC";
- 	compatible = "atmel,at91sam9g20";
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x08000000>;
- 	};
- 
+@@ -72,6 +72,7 @@ &pinctrl_board_mmc0
+ 					&pinctrl_mmc0_clk
+ 					&pinctrl_mmc0_slot0_cmd_dat0
+ 					&pinctrl_mmc0_slot0_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
+ 				slot@0 {
+ 					reg = <0>;
 diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-index c65651549692..6e6e672c0b86 100644
+index bda22700110c..c65651549692 100644
 --- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
 +++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-@@ -13,7 +13,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+@@ -93,6 +93,7 @@ &pinctrl_board_mmc0_slot1
+ 					&pinctrl_mmc0_clk
+ 					&pinctrl_mmc0_slot1_cmd_dat0
+ 					&pinctrl_mmc0_slot1_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
+ 				slot@1 {
+ 					reg = <1>;
 diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 1e1b7490ee0a..19fc748a87c5 100644
+index 984b5292a129..1e1b7490ee0a 100644
 --- a/arch/arm/boot/dts/at91sam9g45.dtsi
 +++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -51,7 +51,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@70000000 {
- 		device_type = "memory";
- 		reg = <0x70000000 0x10000000>;
- 	};
+@@ -875,7 +875,6 @@ mmc0: mmc@fff80000 {
+ 				compatible = "atmel,hsmci";
+ 				reg = <0xfff80000 0x600>;
+ 				interrupts = <11 IRQ_TYPE_LEVEL_HIGH 0>;
+-				pinctrl-names = "default";
+ 				dmas = <&dma 1 AT91_DMA_CFG_PER_ID(0)>;
+ 				dma-names = "rxtx";
+ 				#address-cells = <1>;
+@@ -889,7 +888,6 @@ mmc1: mmc@fffd0000 {
+ 				compatible = "atmel,hsmci";
+ 				reg = <0xfffd0000 0x600>;
+ 				interrupts = <29 IRQ_TYPE_LEVEL_HIGH 0>;
+-				pinctrl-names = "default";
+ 				dmas = <&dma 1 AT91_DMA_CFG_PER_ID(13)>;
+ 				dma-names = "rxtx";
+ 				#address-cells = <1>;
 diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 09b29126f60d..9734667abbfc 100644
+index a3a5c82d9f29..09b29126f60d 100644
 --- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
 +++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -18,7 +18,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@70000000 {
- 		reg = <0x70000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 5c27ead05284..0785389f5507 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -47,7 +47,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x10000000>;
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index 870b83ff6b97..2bc4e6e0a923 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -17,7 +17,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x8000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
-index eb5bea473bc8..5653e70c84b4 100644
---- a/arch/arm/boot/dts/at91sam9rl.dtsi
-+++ b/arch/arm/boot/dts/at91sam9rl.dtsi
-@@ -48,7 +48,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x04000000>;
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9rlek.dts b/arch/arm/boot/dts/at91sam9rlek.dts
-index 0de75d3c4f18..1590862f16f2 100644
---- a/arch/arm/boot/dts/at91sam9rlek.dts
-+++ b/arch/arm/boot/dts/at91sam9rlek.dts
-@@ -17,7 +17,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+@@ -99,6 +99,7 @@ mmc0: mmc@fff80000 {
+ 					&pinctrl_board_mmc0
+ 					&pinctrl_mmc0_slot0_clk_cmd_dat0
+ 					&pinctrl_mmc0_slot0_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
+ 				slot@0 {
+ 					reg = <0>;
+@@ -112,6 +113,7 @@ mmc1: mmc@fffd0000 {
+ 					&pinctrl_board_mmc1
+ 					&pinctrl_mmc1_slot0_clk_cmd_dat0
+ 					&pinctrl_mmc1_slot0_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
+ 				slot@0 {
+ 					reg = <0>;
 diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 79076e4ed1e0..4cdb05079cc7 100644
+index a5a1838c2524..79076e4ed1e0 100644
 --- a/arch/arm/boot/dts/at91sam9x5.dtsi
 +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -49,7 +49,7 @@ cpu@0 {
- 		};
- 	};
+@@ -651,7 +651,6 @@ mmc0: mmc@f0008000 {
+ 				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 0>;
+ 				dmas = <&dma0 1 AT91_DMA_CFG_PER_ID(0)>;
+ 				dma-names = "rxtx";
+-				pinctrl-names = "default";
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 12>;
+ 				clock-names = "mci_clk";
+ 				#address-cells = <1>;
+@@ -665,7 +664,6 @@ mmc1: mmc@f000c000 {
+ 				interrupts = <26 IRQ_TYPE_LEVEL_HIGH 0>;
+ 				dmas = <&dma1 1 AT91_DMA_CFG_PER_ID(0)>;
+ 				dma-names = "rxtx";
+-				pinctrl-names = "default";
+ 				clocks = <&pmc PMC_TYPE_PERIPHERAL 26>;
+ 				clock-names = "mci_clk";
+ 				#address-cells = <1>;
+diff --git a/arch/arm/boot/dts/at91sam9x5ek.dtsi b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+index c934928742b0..6d1264de6060 100644
+--- a/arch/arm/boot/dts/at91sam9x5ek.dtsi
++++ b/arch/arm/boot/dts/at91sam9x5ek.dtsi
+@@ -56,6 +56,7 @@ &mmc0 {
+ 		&pinctrl_board_mmc0
+ 		&pinctrl_mmc0_slot0_clk_cmd_dat0
+ 		&pinctrl_mmc0_slot0_dat1_3>;
++	pinctrl-names = "default";
+ 	status = "okay";
  
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x10000000>;
- 	};
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-index 75d2f7fd314f..cdd37f67280b 100644
---- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -7,7 +7,7 @@
-  */
+ 	slot@0 {
+@@ -70,6 +71,7 @@ &mmc1 {
+ 		&pinctrl_board_mmc1
+ 		&pinctrl_mmc1_slot0_clk_cmd_dat0
+ 		&pinctrl_mmc1_slot0_dat1_3>;
++	pinctrl-names = "default";
+ 	status = "okay";
  
- / {
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x8000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/ethernut5.dts b/arch/arm/boot/dts/ethernut5.dts
-index 052a52f947ce..ad7a0850252a 100644
---- a/arch/arm/boot/dts/ethernut5.dts
-+++ b/arch/arm/boot/dts/ethernut5.dts
-@@ -15,7 +15,7 @@ chosen {
- 		bootargs = "console=ttyS0,115200 root=/dev/mtdblock0 rw rootfstype=jffs2";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x08000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/mpa1600.dts b/arch/arm/boot/dts/mpa1600.dts
-index a5c91c240db9..005c2758e229 100644
---- a/arch/arm/boot/dts/mpa1600.dts
-+++ b/arch/arm/boot/dts/mpa1600.dts
-@@ -11,7 +11,7 @@ / {
- 	model = "Phontech MPA 1600";
- 	compatible = "phontech,mpa1600", "atmel,at91rm9200";
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+ 	slot@0 {
 diff --git a/arch/arm/boot/dts/pm9g45.dts b/arch/arm/boot/dts/pm9g45.dts
-index f52f5eea430a..c349fd3758a6 100644
+index 4dfe0f15d7bd..f52f5eea430a 100644
 --- a/arch/arm/boot/dts/pm9g45.dts
 +++ b/arch/arm/boot/dts/pm9g45.dts
-@@ -15,7 +15,7 @@ chosen {
- 		bootargs = "console=ttyS0,115200";
- 	};
- 
--	memory {
-+	memory@70000000 {
- 		reg = <0x70000000 0x8000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/sam9x60.dtsi b/arch/arm/boot/dts/sam9x60.dtsi
-index 3e85c2a0d198..04ad6b956471 100644
---- a/arch/arm/boot/dts/sam9x60.dtsi
-+++ b/arch/arm/boot/dts/sam9x60.dtsi
-@@ -42,7 +42,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x10000000>;
- 	};
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index ddd7f9b05aa2..c4aecfa4a2be 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -72,7 +72,7 @@ etm_out: endpoint {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x20000000>;
- 	};
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 4f9001188511..86137f8d2b45 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -55,7 +55,7 @@ pmu {
- 		interrupts = <46 IRQ_TYPE_LEVEL_HIGH 0>;
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x8000000>;
- 	};
-diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
-index 65566e4b78d8..384335635792 100644
---- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-@@ -14,7 +14,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-index 9d2563602cbe..5579c955f141 100644
---- a/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-@@ -12,7 +12,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x20000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index 1aca4b462f52..04f24cf752d3 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -53,7 +53,7 @@ cpu@0 {
- 		};
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		device_type = "memory";
- 		reg = <0x20000000 0x20000000>;
- 	};
-diff --git a/arch/arm/boot/dts/tny_a9260_common.dtsi b/arch/arm/boot/dts/tny_a9260_common.dtsi
-index dd6957b20772..70e5635c78ed 100644
---- a/arch/arm/boot/dts/tny_a9260_common.dtsi
-+++ b/arch/arm/boot/dts/tny_a9260_common.dtsi
-@@ -10,7 +10,7 @@ chosen {
- 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock6 rw rootfstype=ubifs";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/tny_a9263.dts b/arch/arm/boot/dts/tny_a9263.dts
-index 2820635952e3..62b7d9f9a926 100644
---- a/arch/arm/boot/dts/tny_a9263.dts
-+++ b/arch/arm/boot/dts/tny_a9263.dts
-@@ -15,7 +15,7 @@ chosen {
- 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/usb_a9260.dts b/arch/arm/boot/dts/usb_a9260.dts
-index ec8cd86b260d..6cfa83921ac2 100644
---- a/arch/arm/boot/dts/usb_a9260.dts
-+++ b/arch/arm/boot/dts/usb_a9260.dts
-@@ -16,7 +16,7 @@ chosen {
- 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/usb_a9263.dts b/arch/arm/boot/dts/usb_a9263.dts
-index e7a705fddda9..8a0cfbfd0c45 100644
---- a/arch/arm/boot/dts/usb_a9263.dts
-+++ b/arch/arm/boot/dts/usb_a9263.dts
-@@ -15,7 +15,7 @@ chosen {
- 		bootargs = "mem=64M console=ttyS0,115200 root=/dev/mtdblock5 rw rootfstype=ubifs";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
-diff --git a/arch/arm/boot/dts/usb_a9g20_common.dtsi b/arch/arm/boot/dts/usb_a9g20_common.dtsi
-index adbe75024739..7d10b36db1ee 100644
---- a/arch/arm/boot/dts/usb_a9g20_common.dtsi
-+++ b/arch/arm/boot/dts/usb_a9g20_common.dtsi
-@@ -14,7 +14,7 @@ chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
- 
--	memory {
-+	memory@20000000 {
- 		reg = <0x20000000 0x4000000>;
- 	};
- 
+@@ -68,6 +68,7 @@ mmc0: mmc@fff80000 {
+ 					&pinctrl_board_mmc
+ 					&pinctrl_mmc0_slot0_clk_cmd_dat0
+ 					&pinctrl_mmc0_slot0_dat1_3>;
++				pinctrl-names = "default";
+ 				status = "okay";
+ 				slot@0 {
+ 					reg = <0>;
 -- 
 2.26.2
 
