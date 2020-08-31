@@ -2,326 +2,164 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7025C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02950C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8909F21534
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D609F2145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="q+lfeWpH";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="e+0Sb+jL"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YRWrwRgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgHaMbY (ORCPT
+        id S1727061AbgHaMbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:31:24 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:55089 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727103AbgHaMbA (ORCPT
+        Mon, 31 Aug 2020 08:31:37 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:37673 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727780AbgHaMbA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 08:31:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1598877061; x=1630413061;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=t/J5BhuLT+5vJaoywOQClLYe0pLHLd8PHzF4nEQxl8Y=;
-  b=q+lfeWpHoAhDkNmOc1/K3rRCeYWryiH2z1B89uJi3sWwjwxSAuIyPnc9
-   rC8J5rK3QqoD3dXaZUnkVKghNm/XUgEqGiE2wRdIaR8cXz3SN/TKBN7Xe
-   JXtlEHRRR9oFkyEzAo2cZW0/xt6Sp06TDTjSnQp7SwhQB2OiQJyND9ohf
-   UFPrUyqHEIgxFKOIQa5JxFzyamC7CmiwjxiyZEYdgjDceyp9I/fJ+aVkU
-   K0M39AAi8oWEScEdrbcqQjhWssV/oaWWab3eBswZVAkgY2e0KqIZYAoIU
-   tGS85WUwB+7XzQZjYwpvqVLB6e1QNXkAviJlNg7Seam6yHS/alNGUIPdz
-   A==;
-IronPort-SDR: wEkNZ0h979Lokf60wCIcaipnq8MHpo/Qo8weKEyO9dt9DvAJz1tJ3JiksmTZn5OpucZMnj1cID
- DyPcxPL/469tzxMzrvGUk6cBPd5hnmGli5WUFlRwwgiQW2RzUJSMxs+EE5pP5ae/smUym4hb0r
- WE68pwxmIHiOnswvXcTW8YYyfpg3uY5A+qPCUW2rBQP2UEdMtNhqgzk/jk/rAAAWurh4Pej/fC
- YqVPrKLE0otTaKHkJkaUUMMC1+1cRXsYFKHTxVlKkzfgmq7QhlMgW1HASWEJvzeSB7dFHBybYp
- ZwI=
-X-IronPort-AV: E=Sophos;i="5.76,375,1592841600"; 
-   d="scan'208";a="146216624"
-Received: from mail-dm6nam10lp2107.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.107])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Aug 2020 20:30:57 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MktP+a/+MRYtpENCopV0EfFE9BlFPu+VlFz1v7QKq1chw+JqCaaY98e0+vb8Aqj4EaG99eYCiOIHSZMuyL3MJS3R4AnE19P169MjNyWU+sXc2xc/gZWqCjSpopW9rLw0kiTybB12nZr7CYzxhuq7XcSCR8XDNE7AV8zYOCNnCu7XFJGIVygCpK7YAMUEyp4pyoIvXkE41wEd8Xhkc7fprzGl7EJ1Q4vc7S0wzw8fWO1QJt0c3kV3Cla7vqQkuZzxLhAKupZ3NAfwTxejicr00FzXTLJCIUXPfIselJiLbYEqOg7XIqhlwWI3rkiRQkeq02cssAOILAZsRMV/6wS4+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pT+3ONsRZew7hKC3TTIXCxmIgYa9u06HktJCk8qmInI=;
- b=ifI0ckjVyttT5Wrv6R+gjLUuWOV6uxtpuKyUp/fceGAlLEiFUAQ74t8zFiHN2Z5Y+xhIff//7NIWPuzj8PpbOdnv21Z+yMyvBYqFRYW9I3BNejXF5JAYqmn/k0qPubDaw/Sp4DxP/Bp3W9oXsmEaobG2pU4vB5nw9m2CSJQbvwed58lb0fjyeiVoi0UlIB09YO067+mlJ/o+4iOwnu+FBV9TpfBu1xUFM7qchkSsSQDwbTlahqGd4S/BGKibpUH1/09g4yPl5VIBkxuzsHOkr3tNtB70RXGKtdxi/qRLb2n4C0fqyKpx6/YQx/XItHlLAsiS1pkQ+POP4USpMWSqQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pT+3ONsRZew7hKC3TTIXCxmIgYa9u06HktJCk8qmInI=;
- b=e+0Sb+jLhI720vzcUCUwTgiKOhdC9RD4zL34etHB7z6Rf1RLji/Uu8GUX+IN6fIvDPBc/uPk2yd+ZHaARyf2l88d/3diJQNIuah4Cjm29VHGwt6TLUOBiBoYs6U5ti6K6+E1rkyDt7OICR4dDtCVER8oNRsbVUqOE+4rt6Wodp0=
-Authentication-Results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
- by DM6PR04MB6124.namprd04.prod.outlook.com (2603:10b6:5:122::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Mon, 31 Aug
- 2020 12:30:55 +0000
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::607a:44ed:1477:83e]) by DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::607a:44ed:1477:83e%7]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 12:30:55 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v14 03/17] RISC-V: KVM: Implement VCPU create, init and destroy functions
-Date:   Mon, 31 Aug 2020 18:00:01 +0530
-Message-Id: <20200831123015.336047-4-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831123015.336047-1-anup.patel@wdc.com>
-References: <20200831123015.336047-1-anup.patel@wdc.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1a::32) To DM6PR04MB6201.namprd04.prod.outlook.com
- (2603:10b6:5:127::32)
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200831123056euoutp028a21f32a27b31211a7a67390ba063d8b~wWjYmpQcD2214022140euoutp02q
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:30:56 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200831123056euoutp028a21f32a27b31211a7a67390ba063d8b~wWjYmpQcD2214022140euoutp02q
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598877056;
+        bh=aAdNm/dzVaND4IVjQoOGhc1gHHOhMrELO0GWHWLYSRw=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=YRWrwRgVptW1I2wULNLtJ/GQQ8lqLvb1HVvYZxXXTX9E7uJSzXrDNJKc/1IPAxPh9
+         rh5GyZutXUlgpadt0ea71octNj4Z2OI08pTYJFpCA4afar+Lgigl/AGF1KLecFJ3/b
+         o6IgTqasvjFqQ05l6b0g/gDFykGUjK7DrrHkDskU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200831123055eucas1p266684932dbf9db192710f35b46fd643d~wWjX-AKXc1299512995eucas1p2s;
+        Mon, 31 Aug 2020 12:30:55 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B1.DE.05997.F7DEC4F5; Mon, 31
+        Aug 2020 13:30:55 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200831123054eucas1p14913acf89e94842b48d8e005b5e01d7e~wWjXT2kzy1358313583eucas1p1i;
+        Mon, 31 Aug 2020 12:30:54 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200831123054eusmtrp161f6cfc6de50ed8de4d8c5ad763ba97d~wWjXS9rJy0520905209eusmtrp1d;
+        Mon, 31 Aug 2020 12:30:54 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-c3-5f4ced7f7ef1
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id CF.5E.06314.E7DEC4F5; Mon, 31
+        Aug 2020 13:30:54 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200831123053eusmtip266f3538f6634be0eee709dcabfb9b647~wWjVj4NFe0780707807eusmtip2X;
+        Mon, 31 Aug 2020 12:30:53 +0000 (GMT)
+Subject: Re: [PATCH 04/10] dt-bindings: mfd: syscon: Document Samsung Exynos
+ compatibles
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        alsa-devel@alsa-project.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <8b0a42a3-e014-c2ed-7403-021f9a476fc8@samsung.com>
+Date:   Mon, 31 Aug 2020 14:30:52 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.11.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 12:30:50 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [103.15.57.192]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 06750792-27b3-4bfe-24f6-08d84da9b499
-X-MS-TrafficTypeDiagnostic: DM6PR04MB6124:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB6124DEDF170B676F78E21CD08D510@DM6PR04MB6124.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:1284;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Oq9CbPR0Ix5pAkfiz9BOJgVOYgJFtrO6Ppr2Y30dP4c8dNrOUFAs44b0jSyllaXWX8UkSXpWKKKrGts68k/ypldOX10rZke/IF8vYVKh12dKdlGYPRjRs791MKTsOqk1NSczs+LgHhQ9tSPWtrdQsZ4Ff2NJ3GsaAdwXbiUdPmkRtBrW8eY7mjijkPI+yJPm6HU1r0UBJ3i/pe1VS+5KKf5ruCTR3QakznVB3PIOi7cJgIy0vJBnAW8iIafNPHp9tvHD5LHFV49Pg2uSbIqH0BbLU6usN9a4nBnkhWpGeHffTm5d/nUYIivtSAtQJEQA
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(8676002)(8936002)(478600001)(52116002)(86362001)(1076003)(54906003)(7416002)(110136005)(6486002)(66556008)(36756003)(5660300002)(66476007)(4326008)(2906002)(66946007)(2616005)(6666004)(26005)(956004)(316002)(83380400001)(16576012)(186003)(44832011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: EqIbXjSmN2rWr33DiCcytl1T0cJTua+6re6eONKM6VqhX1+6SI4ha4nQj3HDJRC25G0c6vsFP3sl/jFta4R+/RKVa1KH6Bz6VTIpMLJ1Zj3Vmdz4qlfoLT6o+y51VnauHgfxcP3m2WMB611DjtD3hbudaDwYDU3U40aP2+1nJ+snaN+sJoD/Yuw6OZJgcL7hWcgvCqFPKoZbQwnsiH5Pq8tBNrreK5c5bMrUirqKL0f+4dxxWTBIEbCdHYeCgAEtFmSgdpv0pdY3RKydg0vGk/KbXPbCCrJ8T2GcnhzlKZw9uv8rppbOZHnCPxsHdprs8wJny2fzrB9YHQPwKyAsUsZHrSELgho/Br8wlQMTJ8bt/+RRDunpZ2CV6BSTh4hcFMDUwG7HWLaK4lt78oscJzTUy5z2k/HcRr0F5xnMIhQP9CKKFMjBddxP02NNar7N/GGp0QFWt2oomN3CDLqam6Dgbvxe3Wwjs4NFXj5ACAHEsQbstx4xnuWDh4BDBxSwVyeKVATVHcwRi6MRA/68ubgfvb3M/8WbcwLTaLfExL6ZxBLac7ocpOOc9GH+QWgpvJOSjCiR25jzih6O5mF6YSrR1AIV00zuNtYYULfGFpOvEsrBz9XAHbEVHd/k/XJtfHrS2Ua3ir0i0Ypsuse1mA==
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06750792-27b3-4bfe-24f6-08d84da9b499
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 12:30:54.9381
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: puUahC9AliW+4OtRKYzD6ltj+nJeYOXy2RxpJxG/sAgVFER+yybpe2ZdD71mBhnh8zk0yG6/Sy0XAGxRyA3Hxw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6124
+In-Reply-To: <20200829142501.31478-4-krzk@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa1BMYRjHvee2p3KaY2l6JtdZucQoub4zjHH7cMQHfDLNVDYdLWprdiuX
+        D4oG0VWYsqKGsDYqW0Ikk7bVxK4uqkkXscPExKhtXSq0ezL69nv+z/O8z/8/87KkPJXxYfep
+        40SNWhmlYNypirqfliWJ/dvClt42+eJ0Sz2BWxprCHw3t4TGF3ptDG6zf6TxlcGZ+E/FWRLn
+        11po3DL0lcHZPVkUznz/mcRWa6kM9wyZEHa0pBDY+L6Vxs2VeQzOtT4h8J3aLhk+UVUrw416
+        O4HLjBfI9V5C6eBxRqhyFFDCQ12XTDAaTjNCZ+tjRvhisciE+463tNCTaiaEssJEIaPcgIRB
+        46ztHsHuayPEqH0JoiZg3W53VVPhcyp2lD3UnDdAJ6F02RnkxgK/Al4k1yMny3k9gtN1m84g
+        9zG2IzBnfqalYhCBtfMY+W8jLSeNkDZuIhgoWiwNfUNQXFztakzlgyGjv5l28jTeD9pGv7te
+        Ivl3NOgv2Rhng+EDId2UMXabZTl+HVy+oXLKFD8Pvlb0uSx58aFwz/za9SbHT4H6izbKyW78
+        SnC8yXdFIHlv6LDlExLPhvv9eeNGn7MwUg0Sb4ayH1ZC4qnwyVw+Hn8GNJxLo5zegE9GkPbo
+        jUwqshD0mAuQNLUGOi2/GKdRcixNSWWAJG+AwnPJpFMG3hPa+6dIHjwhuyJnXOYg5aRcmvaF
+        YUPOuAUfSLX9obKQQjchmW5CGt2ENLr/dwsQZUDeYrw2OlLULlOLB/21ymhtvDrSf09MtBGN
+        fdGG32b7A1Q5El6DeBYpJnM/TFvD5LQyQXs4ugYBSyqmcRtfNoTKuQjl4SOiJiZMEx8lamvQ
+        dJZSeHPLr/aFyPlIZZx4QBRjRc2/LsG6+SShLbPm3FH3vjqlSo8gd1WLXrnTkUfxjqa+gq41
+        Jj/CK3vZqbZhLnFk0fxczy8dKyM+6Nsd5TE7447Gpjy9FWQIHh5YeKRu9dyH4aGJVHv4eblf
+        iGqph/C4yrhXv2eIm9R9PKjbTiVcb9ufN6/o2WhjUFLYtYD42gU5Hvqdcf6OzFWTFZRWpQxc
+        RGq0yr94lNVNngMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHKsWRmVeSWpSXmKPExsVy+t/xe7p1b33iDbrvmFr0njvJZHHl4iEm
+        i40z1rNaTH34hM3i+pfnrBbzPsta/N82kdli/pFzrBZXvr5ns5h0fwKLRf/j18wW589vYLe4
+        //Uoo8W3Kx1MFpseX2O1uLxrDpvFjPP7mCzWHrnLbtG69wi7xcUVX5gsNm+ayuwg6rHhcxOb
+        x95vC1g8ds66y+6xaVUnm8eda3vYPN6dO8fusf3bA1aP+93HmTw2L6n36NuyitHj8ya5AO4o
+        PZui/NKSVIWM/OISW6VoQwsjPUNLCz0jE0s9Q2PzWCsjUyV9O5uU1JzMstQifbsEvYxLS06w
+        FPzlqLg85xNrA2MvexcjJ4eEgIlEz/Qepi5GLg4hgaWMEl/XzwZKcAAlpCTmtyhB1AhL/LnW
+        xQZR855R4sH8/YwgCWGBKIm+t5dZQWwRAU2J63+/g9nMAo9YJT7NqoJo2Mwo8XjZT7BtbAKG
+        Er1H+xhBFvAK2EnMXZYBEmYRUJV4v+0l2ExRgTiJx73/mUFsXgFBiZMzn7CA2JwCphLfbs9n
+        h5ivLvFn3iVmCFtc4taT+UwQtrzE9rdzmCcwCs1C0j4LScssJC2zkLQsYGRZxSiSWlqcm55b
+        bKhXnJhbXJqXrpecn7uJEZg2th37uXkH46WNwYcYBTgYlXh4fxz1jhdiTSwrrsw9xCjBwawk
+        wut09nScEG9KYmVValF+fFFpTmrxIUZToOcmMkuJJucDU1peSbyhqaG5haWhubG5sZmFkjhv
+        h8DBGCGB9MSS1OzU1ILUIpg+Jg5OqQbGdvej/55ybXj8s2mR123OyEKxS0H/v6eedpQ04F/V
+        IWwT6vbQ9m/BW+7uhvbbdttOHD25yTHN3pZ1QmTvweuqj201ut56Ss48etmwTH3S7rhlZsec
+        LD5tm1Gfbr3tTq+k8+7f727OXH/mQuDPwszmw/a/jrp4vXFsujv1uZTTDp8vAkLZp7zalViK
+        MxINtZiLihMBD3yhmDEDAAA=
+X-CMS-MailID: 20200831123054eucas1p14913acf89e94842b48d8e005b5e01d7e
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200829142536eucas1p12c539f1cd45195adef96f8b752778fcf
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200829142536eucas1p12c539f1cd45195adef96f8b752778fcf
+References: <20200829142501.31478-1-krzk@kernel.org>
+        <CGME20200829142536eucas1p12c539f1cd45195adef96f8b752778fcf@eucas1p1.samsung.com>
+        <20200829142501.31478-4-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements VCPU create, init and destroy functions
-required by generic KVM module. We don't have much dynamic
-resources in struct kvm_vcpu_arch so these functions are quite
-simple for KVM RISC-V.
+On 29.08.2020 16:24, Krzysztof Kozlowski wrote:
+> Samsung Exynos SoCs use syscon for system registers so document its
+> compatibles.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> index 049ec2ffc7f9..0f21943dea28 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> @@ -40,6 +40,10 @@ properties:
+>                - allwinner,sun50i-a64-system-controller
+>                - microchip,sparx5-cpu-syscon
+>                - mstar,msc313-pmsleep
+> +              - samsung,exynos3-sysreg
+> +              - samsung,exynos4-sysreg
+> +              - samsung,exynos5-sysreg
+> +              - samsung,exynos5433-sysreg
 
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
----
- arch/riscv/include/asm/kvm_host.h | 69 +++++++++++++++++++++++++++++++
- arch/riscv/kvm/vcpu.c             | 55 ++++++++++++++++++++----
- 2 files changed, 115 insertions(+), 9 deletions(-)
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index fdd63bafb714..43e85523a07e 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -63,7 +63,76 @@ struct kvm_cpu_trap {
- 	unsigned long htinst;
- };
- 
-+struct kvm_cpu_context {
-+	unsigned long zero;
-+	unsigned long ra;
-+	unsigned long sp;
-+	unsigned long gp;
-+	unsigned long tp;
-+	unsigned long t0;
-+	unsigned long t1;
-+	unsigned long t2;
-+	unsigned long s0;
-+	unsigned long s1;
-+	unsigned long a0;
-+	unsigned long a1;
-+	unsigned long a2;
-+	unsigned long a3;
-+	unsigned long a4;
-+	unsigned long a5;
-+	unsigned long a6;
-+	unsigned long a7;
-+	unsigned long s2;
-+	unsigned long s3;
-+	unsigned long s4;
-+	unsigned long s5;
-+	unsigned long s6;
-+	unsigned long s7;
-+	unsigned long s8;
-+	unsigned long s9;
-+	unsigned long s10;
-+	unsigned long s11;
-+	unsigned long t3;
-+	unsigned long t4;
-+	unsigned long t5;
-+	unsigned long t6;
-+	unsigned long sepc;
-+	unsigned long sstatus;
-+	unsigned long hstatus;
-+};
-+
-+struct kvm_vcpu_csr {
-+	unsigned long vsstatus;
-+	unsigned long hie;
-+	unsigned long vstvec;
-+	unsigned long vsscratch;
-+	unsigned long vsepc;
-+	unsigned long vscause;
-+	unsigned long vstval;
-+	unsigned long hvip;
-+	unsigned long vsatp;
-+	unsigned long scounteren;
-+};
-+
- struct kvm_vcpu_arch {
-+	/* VCPU ran atleast once */
-+	bool ran_atleast_once;
-+
-+	/* ISA feature bits (similar to MISA) */
-+	unsigned long isa;
-+
-+	/* CPU context of Guest VCPU */
-+	struct kvm_cpu_context guest_context;
-+
-+	/* CPU CSR context of Guest VCPU */
-+	struct kvm_vcpu_csr guest_csr;
-+
-+	/* CPU context upon Guest VCPU reset */
-+	struct kvm_cpu_context guest_reset_context;
-+
-+	/* CPU CSR context upon Guest VCPU reset */
-+	struct kvm_vcpu_csr guest_reset_csr;
-+
- 	/* Don't run the VCPU (blocked) */
- 	bool pause;
- 
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 8d8d140a0caf..84deeddbffbe 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -35,6 +35,27 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
- 	{ NULL }
- };
- 
-+#define KVM_RISCV_ISA_ALLOWED	(riscv_isa_extension_mask(a) | \
-+				 riscv_isa_extension_mask(c) | \
-+				 riscv_isa_extension_mask(d) | \
-+				 riscv_isa_extension_mask(f) | \
-+				 riscv_isa_extension_mask(i) | \
-+				 riscv_isa_extension_mask(m) | \
-+				 riscv_isa_extension_mask(s) | \
-+				 riscv_isa_extension_mask(u))
-+
-+static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
-+{
-+	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-+	struct kvm_vcpu_csr *reset_csr = &vcpu->arch.guest_reset_csr;
-+	struct kvm_cpu_context *cntx = &vcpu->arch.guest_context;
-+	struct kvm_cpu_context *reset_cntx = &vcpu->arch.guest_reset_context;
-+
-+	memcpy(csr, reset_csr, sizeof(*csr));
-+
-+	memcpy(cntx, reset_cntx, sizeof(*cntx));
-+}
-+
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- {
- 	return 0;
-@@ -42,7 +63,25 @@ int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
- 
- int kvm_arch_vcpu_create(struct kvm_vcpu *vcpu)
- {
--	/* TODO: */
-+	struct kvm_cpu_context *cntx;
-+
-+	/* Mark this VCPU never ran */
-+	vcpu->arch.ran_atleast_once = false;
-+
-+	/* Setup ISA features available to VCPU */
-+	vcpu->arch.isa = riscv_isa_extension_base(NULL) & KVM_RISCV_ISA_ALLOWED;
-+
-+	/* Setup reset state of shadow SSTATUS and HSTATUS CSRs */
-+	cntx = &vcpu->arch.guest_reset_context;
-+	cntx->sstatus = SR_SPP | SR_SPIE;
-+	cntx->hstatus = 0;
-+	cntx->hstatus |= HSTATUS_VTW;
-+	cntx->hstatus |= HSTATUS_SPVP;
-+	cntx->hstatus |= HSTATUS_SPV;
-+
-+	/* Reset VCPU */
-+	kvm_riscv_reset_vcpu(vcpu);
-+
- 	return 0;
- }
- 
-@@ -55,15 +94,10 @@ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
- {
- }
- 
--int kvm_arch_vcpu_init(struct kvm_vcpu *vcpu)
--{
--	/* TODO: */
--	return 0;
--}
--
- void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- {
--	/* TODO: */
-+	/* Flush the pages pre-allocated for Stage2 page table mappings */
-+	kvm_riscv_stage2_flush_cache(vcpu);
- }
- 
- int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
-@@ -209,6 +243,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 	struct kvm_cpu_trap trap;
- 	struct kvm_run *run = vcpu->run;
- 
-+	/* Mark this VCPU ran at least once */
-+	vcpu->arch.ran_atleast_once = true;
-+
- 	vcpu->arch.srcu_idx = srcu_read_lock(&vcpu->kvm->srcu);
- 
- 	/* Process MMIO value returned from user-space */
-@@ -282,7 +319,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 		 * get an interrupt between __kvm_riscv_switch_to() and
- 		 * local_irq_enable() which can potentially change CSRs.
- 		 */
--		trap.sepc = 0;
-+		trap.sepc = vcpu->arch.guest_context.sepc;
- 		trap.scause = csr_read(CSR_SCAUSE);
- 		trap.stval = csr_read(CSR_STVAL);
- 		trap.htval = csr_read(CSR_HTVAL);
+Do you also have a patch updating Documentation/devicetree/
+bindings/arm/samsung/sysreg.yaml with new compatibles?
+
 -- 
-2.25.1
-
+Regards,
+Sylwester
