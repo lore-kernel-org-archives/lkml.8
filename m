@@ -2,173 +2,175 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB5BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9413DC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72CBA2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6619F2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:41:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598888467;
+	bh=npfcU0pwyfPfRyU05fDUq1Zm5QXoTD0f+8A/EmwT2RA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eoUKm4ybfVJN+CqFxfFmpByBYQK4CIu1RdoA9lJWSNmblDuLeXZk4e+VEdeFtGtrH
+	 2VmCOSC65Y3z6gzOosJ0KOHppLw3clzCf0TS1BoG7F1F6ymbSHAn1JVtuCf2/FCcSA
+	 3MASDG0Gz11w+Z3UKxyZaB7RuD7GgWjItTV6gq20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgHaPk5 (ORCPT
+        id S1728911AbgHaPlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:40:57 -0400
-Received: from vms1-real.sfasu.edu ([144.96.128.33]:19075 "EHLO
-        vms1-real.sfasu.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728956AbgHaPkv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:40:51 -0400
-Received: from CONVERSION-DAEMON.SFAVMS.SFASU.EDU by SFAVMS.SFASU.EDU
- (PMDF V6.7-x04 #1799) id <01RP342BG5U88X2C4R@SFAVMS.SFASU.EDU>; Mon,
- 31 Aug 2020 09:19:15 -0500 (CDT)
-Received: from exchgrouting.sfasu.edu ([144.96.206.206])
- by SFAVMS.SFASU.EDU (PMDF V6.7-x04 #1799)
- with ESMTPS id <01RP342BAQ228XEVLE@SFAVMS.SFASU.EDU>; Mon,
- 31 Aug 2020 09:19:15 -0500 (CDT)
-Received: from TECHMB.sfasu.nac (2002:9060:cece::9060:cece)
- by TECHMB.sfasu.nac (2002:9060:cece::9060:cece) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Mon, 31 Aug 2020 09:19:15 -0500
-Received: from TECHMB.sfasu.nac ([fe80::982c:d7b7:9491:6094])
- by TECHMB.sfasu.nac ([fe80::982c:d7b7:9491:6094%15])
- with mapi id 15.00.1497.006; Mon, 31 Aug 2020 09:19:15 -0500
-Date:   Mon, 31 Aug 2020 14:19:15 +0000
-From:   Robert Judy <rjudy@sfasu.edu>
-Subject: RE: [RFC PATCH] selinux: Add denied trace with permssion filter
-In-reply-to: <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
-X-Originating-IP: [144.96.210.77]
-To:     Paul Moore <paul@paul-moore.com>,
-        peter enderborg <peter.enderborg@sony.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>
-Message-id: <f0e287f6b7dd4764a5091b90cf31b02e@TECHMB.sfasu.nac>
-MIME-version: 1.0
-Content-type: text/plain; charset=utf-8
-Content-language: en-US
-Content-transfer-encoding: base64
-Thread-Topic: [RFC PATCH] selinux: Add denied trace with permssion filter
-Thread-Index: AQHWehnLeH0ZXs0eIUe8rW1dyDj2J6lHkvQAgAMqQwCAAA5OAIAAAz+AgAAFuICAAXd7gIAACZYAgAZMrAD//6x+MA==
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
- <20200824132252.31261-1-peter.enderborg@sony.com>
- <20200824132252.31261-2-peter.enderborg@sony.com>
- <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
- <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
- <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
- <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
- <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
- <abaccc15-85a8-24d2-4481-8303e3a42362@sony.com>
- <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
+        Mon, 31 Aug 2020 11:41:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728441AbgHaP3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:29:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3548F20E65;
+        Mon, 31 Aug 2020 15:29:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598887788;
+        bh=npfcU0pwyfPfRyU05fDUq1Zm5QXoTD0f+8A/EmwT2RA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PUDjw4B9VMPDd6brLGS/crNa5QA6sVBNgV5TbtX2MCzlBOKk2vR+dWGJoMapOU5ib
+         Oc660fWl1JqS4hrbz/y3CDg8v3j1HsoULV4B54SbiDe3BjffF6OuvKA6E9AIP3ia7H
+         ddl+yvb3QMjYm5iCSaTBk4Tap9F9AwFMps/0lMcc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Saravana Kannan <saravanak@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 08/42] tty: serial: qcom_geni_serial: Drop __init from qcom_geni_console_setup
+Date:   Mon, 31 Aug 2020 11:29:00 -0400
+Message-Id: <20200831152934.1023912-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
+References: <20200831152934.1023912-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SSB3b3VsZCBsaWtlIHRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBncm91cC4gSSBoYXZlIHNlbnQg
-InVuc3Vic2NyaWJlIiByZXF1ZXN0cyB0byBzZWxpbnV4LW93bmVyQHZnZXIua2VybmVsLm9yZyBh
-cyBzdWJqZWN0IGFuZCBpbiB0aGUgYm9keSBvZiB0aGUgZS1tYWlsIGJ1dCB0aGF0IGhhcyBub3Qg
-d29ya2VkLiBQbGVhc2UgYWR2aXNlIG1lIGhvdyB0byB1bnN1YnNjcmliZS4NCg0KVGhhbmsgeW91
-IGFuZCByZXNwZWN0ZnVsbHksDQoNCnJtag0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
-RnJvbTogc2VsaW51eC1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPHNlbGludXgtb3duZXJAdmdlci5r
-ZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgUGF1bCBNb29yZQ0KU2VudDogTW9uZGF5LCBBdWd1c3Qg
-MzEsIDIwMjAgOToxNiBBTQ0KVG86IHBldGVyIGVuZGVyYm9yZyA8cGV0ZXIuZW5kZXJib3JnQHNv
-bnkuY29tPg0KQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNFbGludXggbGlzdCA8
-c2VsaW51eEB2Z2VyLmtlcm5lbC5vcmc+OyBTdGV2ZW4gUm9zdGVkdCA8cm9zdGVkdEBnb29kbWlz
-Lm9yZz47IFN0ZXBoZW4gU21hbGxleSA8c3RlcGhlbi5zbWFsbGV5LndvcmtAZ21haWwuY29tPg0K
-U3ViamVjdDogUmU6IFtSRkMgUEFUQ0hdIHNlbGludXg6IEFkZCBkZW5pZWQgdHJhY2Ugd2l0aCBw
-ZXJtc3Npb24gZmlsdGVyDQoNCk9uIFRodSwgQXVnIDI3LCAyMDIwIGF0IDEwOjA0IEFNIHBldGVy
-IGVuZGVyYm9yZyA8cGV0ZXIuZW5kZXJib3JnQHNvbnkuY29tPiB3cm90ZToNCj4NCj4gT24gOC8y
-Ny8yMCAzOjMwIFBNLCBQYXVsIE1vb3JlIHdyb3RlOg0KPiA+IE9uIFdlZCwgQXVnIDI2LCAyMDIw
-IGF0IDExOjA2IEFNIHBldGVyIGVuZGVyYm9yZyANCj4gPiA8cGV0ZXIuZW5kZXJib3JnQHNvbnku
-Y29tPiB3cm90ZToNCj4gPj4gT24gOC8yNi8yMCA0OjQ1IFBNLCBQYXVsIE1vb3JlIHdyb3RlOg0K
-PiA+Pj4gT24gV2VkLCBBdWcgMjYsIDIwMjAgYXQgMTA6MzQgQU0gcGV0ZXIgZW5kZXJib3JnIA0K
-PiA+Pj4gPHBldGVyLmVuZGVyYm9yZ0Bzb255LmNvbT4gd3JvdGU6DQo+ID4+Pj4gT24gOC8yNi8y
-MCAzOjQyIFBNLCBQYXVsIE1vb3JlIHdyb3RlOg0KPiA+Pj4+PiBPbiBNb24sIEF1ZyAyNCwgMjAy
-MCBhdCA5OjIzIEFNIFBldGVyIEVuZGVyYm9yZyANCj4gPj4+Pj4gPHBldGVyLmVuZGVyYm9yZ0Bz
-b255LmNvbT4gd3JvdGU6DQo+ID4+Pj4+PiBUaGlzIGFkZHMgdHJhY2luZyBvZiBhbGwgZGVuaWVz
-LiBUaGV5IGFyZSBncm91cGVkIHdpdGggDQo+ID4+Pj4+PiB0cmFjZV9zZXEgZm9yIGVhY2ggYXVk
-aXQuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gQSBmaWx0ZXIgY2FuIGJlIGluc2VydGVkIHdpdGggYSB3
-cml0ZSB0byBpdCdzIGZpbHRlciBzZWN0aW9uLg0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IGVjaG8gInBl
-cm1pc3Npb249PVwiZW50cnlwb2ludFwiIiA+IA0KPiA+Pj4+Pj4gZXZlbnRzL2F2Yy9zZWxpbnV4
-X2RlbmllZC9maWx0ZXINCj4gPj4+Pj4+DQo+ID4+Pj4+PiBBIG91dHB1dCB3aWxsIGJlIGxpa2U6
-DQo+ID4+Pj4+PiAgICAgICAgICAgcnVuY29uLTEwNDYgIFswMDJdIC5OLi4gICAxNTYuMzUxNzM4
-OiBzZWxpbnV4X2RlbmllZDoNCj4gPj4+Pj4+ICAgICAgICAgICB0cmFjZV9zZXE9MiByZXN1bHQ9
-LTEzDQo+ID4+Pj4+PiAgICAgICAgICAgc2NvbnRleHQ9c3lzdGVtX3U6c3lzdGVtX3I6Y3Vwc2Rf
-dDpzMC1zMDpjMC4NCj4gPj4+Pj4+ICAgICAgICAgICBjMTAyMyB0Y29udGV4dD1zeXN0ZW1fdTpv
-YmplY3RfcjpiaW5fdDpzMA0KPiA+Pj4+Pj4gICAgICAgICAgIHRjbGFzcz1maWxlIHBlcm1pc3Np
-b249ZW50cnlwb2ludA0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFBldGVyIEVu
-ZGVyYm9yZyA8cGV0ZXIuZW5kZXJib3JnQHNvbnkuY29tPg0KPiA+Pj4+Pj4gLS0tDQo+ID4+Pj4+
-PiAgaW5jbHVkZS90cmFjZS9ldmVudHMvYXZjLmggfCAzNyArKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrDQo+ID4+Pj4+PiAgc2VjdXJpdHkvc2VsaW51eC9hdmMuYyAgICAgfCAy
-NyArKysrKysrKysrKysrKysrKysrKysrKysrLS0NCj4gPj4+Pj4+ICAyIGZpbGVzIGNoYW5nZWQs
-IDYyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4+Pj4+IE15IG1vc3Qgc2lnbmlm
-aWNhbnQgY29tbWVudCBpcyB0aGF0IEkgZG9uJ3QgdGhpbmsgd2Ugd2FudCwgb3IgDQo+ID4+Pj4+
-IG5lZWQsIHR3byB0cmFjZSBwb2ludHMgaW4gdGhlIGF2Y19hdWRpdF9wb3N0X2NhbGxiYWNrKCkg
-DQo+ID4+Pj4+IGZ1bmN0aW9uLiAgWWVzLCBJIHVuZGVyc3RhbmQgdGhleSBhcmUgdHJpZ2dlcmVk
-IHNsaWdodGx5IA0KPiA+Pj4+PiBkaWZmZXJlbnRseSwgYnV0IGZyb20gbXkgcGVyc3BlY3RpdmUg
-dGhlcmUgaXNuJ3QgZW5vdWdoIA0KPiA+Pj4+PiBkaWZmZXJlbmNlIGJldHdlZW4gdGhlIHR3byB0
-cmFjZXBvaW50cyB0byB3YXJyYW50IGluY2x1ZGluZyANCj4gPj4+Pj4gYm90aC4gIEhvd2V2ZXIs
-IHdoaWxlIHRoZSB0cmFjZXBvaW50cyBtYXkgYmUNCj4gPj4+PiBXZSB0cmllZCB0aGF0IGJ1dCB0
-aGF0IHdhcyBwcm9ibGVtYXRpYyB0b28uDQo+ID4+PiBNeSBhcG9sb2dpZXMgaWYgSSB3YXMgb24g
-dGhhdCB0aHJlYWQsIGJ1dCBjYW4geW91IHJlbWluZCBtZSB3aHkgaXQgDQo+ID4+PiB3YXMgYSBw
-cm9ibGVtPyAgV2h5IGNhbid0IHdlIHVzZSBhIHNpbmdsZSB0cmFjZXBvaW50IHRvIGNhcHR1cmUg
-DQo+ID4+PiB0aGUgQVZDIGluZm9ybWF0aW9uPw0KPiA+PiBUaGUgcHJvYmxlbSBpcyBwYXJzaW5n
-IHRoZSBldmVudC4NCj4gPj4NCj4gPj4gaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQuY29t
-L3YyL3VybD91PWh0dHBzLTNBX19sa21sLm9yZ19sa21sXw0KPiA+PiAyMDIwXzhfMThfODQyJmQ9
-RHdJQmFRJmM9ZlA0dGYtLTFkUzBiaUNGbEIwc2F6MEkwa2pPNXY3LUdMUHR2U2hBbzRjDQo+ID4+
-IGMmcj1vTzVIdUdFR3h6bkEyRjNkamlpWXhteHhXUW9udzBoNlNrcy1CRW9CNHlzJm09cW1pMlJP
-V3NMQ18wbUxMaEgNCj4gPj4ga3BiNzFqMVlvaWN5ZExoLTdsNGNPc0xZY1kmcz1pUzNlWnIzVEZy
-TjVJN0JibnZQRllPS2Q2RGZXMUZIVEZjd0k3ag0KPiA+PiBvU19mayZlPQ0KPiA+Pg0KPiA+PiBo
-dHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cHMtM0FfX2xrbWwu
-b3JnX2xrbWxfDQo+ID4+IDIwMjBfOF8yMV81MjYmZD1Ed0lCYVEmYz1mUDR0Zi0tMWRTMGJpQ0Zs
-QjBzYXowSTBrak81djctR0xQdHZTaEFvNGMNCj4gPj4gYyZyPW9PNUh1R0VHeHpuQTJGM2RqaWlZ
-eG14eFdRb253MGg2U2tzLUJFb0I0eXMmbT1xbWkyUk9Xc0xDXzBtTExoSA0KPiA+PiBrcGI3MWox
-WW9pY3lkTGgtN2w0Y09zTFljWSZzPTlPc0xOMFk1bVVXeEVBQXFVRTZLNFBTNTdQbjFYeVp6N0dY
-YWs2DQo+ID4+IHVjX0xzJmU9DQo+ID4+DQo+ID4+IGFuZCB0aGUgInNpbmdsZSBsaXN0IiB2ZXJz
-aW9uDQo+ID4+DQo+ID4+IGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92Mi91cmw/
-dT1odHRwcy0zQV9fbGttbC5vcmdfbGttbF8NCj4gPj4gMjAyMF84XzE3XzEzNDYmZD1Ed0lCYVEm
-Yz1mUDR0Zi0tMWRTMGJpQ0ZsQjBzYXowSTBrak81djctR0xQdHZTaEFvNA0KPiA+PiBjYyZyPW9P
-NUh1R0VHeHpuQTJGM2RqaWlZeG14eFdRb253MGg2U2tzLUJFb0I0eXMmbT1xbWkyUk9Xc0xDXzBt
-TExoDQo+ID4+IEhrcGI3MWoxWW9pY3lkTGgtN2w0Y09zTFljWSZzPXRXU1kycnkySVQ2UmNUNUJJ
-VXdNdXFCTF95UE9iREUxVmxqYkwNCj4gPj4gcUkxenJBJmU9DQo+ID4+DQo+ID4+IFdpdGggdGhp
-cyBwYXRjaCB3ZSBmb2xsb3cgc3RhbmRhcmQgbWVzc2FnZSBmb3JtYXQgc28gbm8gcGx1Z2luIHNo
-b3VsZCBiZSBuZWVkZWQuDQo+ID4gSSdtIGV2aWRlbnRseSBtaXNzaW5nIHNvbWV0aGluZyB2ZXJ5
-IGZ1bmRhbWVudGFsIChsaWtlbHkpLCBhbmQvb3IgDQo+ID4gSSdtIGp1c3Qgbm90IGNvbW11bmlj
-YXRpbmcgdmVyeSBjbGVhcmx5IChhbHNvIGxpa2VseSksIGJlY2F1c2UgdGhlIA0KPiA+IGFib3Zl
-IGxpbmtzIGRvbid0IGFwcGVhciB0byBtYWtlIGFueSBzZW5zZSB3aXRoIHJlc3BlY3QgdG8gbXkg
-cXVlc3Rpb24uDQo+ID4NCj4gPiBMZXQgbWUgdHJ5IGEgcmVzZXQgLi4uIFdoeSBjYW4ndCB3ZSBi
-YXNpY2FsbHkgdGFrZSB0aGUgDQo+ID4gInNlbGludXhfZGVuaWVkIiBUUkFDRV9FVkVOVCBpbXBs
-ZW1lbnRhdGlvbiBpbiB5b3VyIHBhdGNoIGFuZCB1c2UgaXQgDQo+ID4gdG8gcmVwbGFjZSB0aGUg
-InNlbGludXhfYXVkaXRlZCIgVFJBQ0VfRVZFTlQgaW4gdGhlIHNlbGludXgvbmV4dCANCj4gPiB0
-cmVlIChvZiBjb3Vyc2Ugd2l0aCB0aGUgbmVjZXNzYXJ5IGNoYW5nZXMgdG8gdGhlIEFWQyBjYWxs
-YmFjayBjb2RlKT8NCj4gPg0KPiA+IElmIHRoZSAic2VsaW51eF9kZW5pZWQiIGltcGxlbWVudGF0
-aW9uIGlzIHZhbGlkIGZyb20gYSB0cmFjaW5nIHBvaW50IA0KPiA+IG9mIHZpZXcsIHdoeSBjYW4g
-d2Ugbm90IGRvIHRoaXM/ICBPZiBjb3Vyc2UgaWYgdGhlICJzZWxpbnV4X2RlbmllZCINCj4gPiBp
-bXBsZW1lbnRhdGlvbiBpcyBub3QgYSB2YWxpZCBUUkFDRV9FVkVOVCB0aGVuIEknbSBub3Qgc3Vy
-ZSB3aHkgdGhpcyANCj4gPiB3YXMgc3VnZ2VzdGVkIGZvciBTRUxpbnV4IDopDQo+DQo+IEltIGhh
-cHBseSBmaW5lIHdpdGggcmVwbGFjaW5nIHRoZSBzZWxpbnV4X2F1ZGl0ZWQgd2l0aCBzZWxpbnV4
-X2RlbmllZC4gIEhvd2V2ZXIgaXQgaXMgdGhlIGNhc2Ugd2hlcmUgdGhlcmUgYXJlIG1vcmUgdGhh
-biBvbmUgZGVuaWFsIGF0IHRoZSBzYW1lIHRpbWUuIEltIG5vdCBzdXJlIGhvdyBhbmQgd2hlbiBp
-dCBtaWdodCBoYXBwZW4uDQoNCk9uZSB0aGluZyBJIHdvbmRlcmVkIGFib3V0IHdhcyB3aHkgbm90
-IGJ1aWxkIHVwIGEgc2luZ2xlIHN0cmluZyB3aXRoIGFsbCBvZiB0aGUgcGVybWlzc2lvbnMgaW5z
-dGVhZCBvZiBnZW5lcmF0aW5nIG11bHRpcGxlIHRyYWNlIGV2ZW50cz8NCkluIHRoZSBwcmV2aW91
-cyBkaXNjdXNzaW9uIGl0IHdhcyBpbXBsaWVkIHRoYXQgdGhpcyB3YXMgZHVlIHRvIGxpbWl0YXRp
-b25zIGluIHRoZSB0cmFjaW5nIHN1YnN5c3RlbSdzIGZpbHRlcmluZywgYW5kIGJhc2VkIG9uIHRo
-ZSBkaXNjdXNzaW9uIHRodXMgZmFyIEknbSBndWVzc2luZyB0aGVyZSBpcyBsaXR0bGUgZGVzaXJl
-IGZvciB0aGlzIGluZm9ybWF0aW9uIGlmIGl0IGNhbid0IGJlIGZpbHRlcmVkIG9uPw0KDQpJZiB0
-aGF0J3MgdGhlIGNhc2UgdGhlbiBJIHRoaW5rIHdlIGFyZSBzdHVjayB3aXRoIHRoZSB0cmFjaW5n
-IGNvZGUgdGhhdCBjdXJyZW50bHkgbGl2ZXMgaW4gc2VsaW51eC9uZXh0LCBhcyBJIGN1cnJlbnRs
-eSBoYXZlIGxpdHRsZSBkZXNpcmUgdG8gYWRkIG1vcmUgdGhhbiBvbmUgdHJhY2Vwb2ludCBpbiB0
-aGUgU0VMaW51eCBwZXJtaXNzaW9uIGNoZWNraW5nIGNvZGVwYXRoLg0KDQo+IFdoZW4gdGhhdCBo
-YXBwZW4gd2UgZ290IG1vcmUgdGhhbiBvbmUgZXZlbnQuIEkgaGF2ZSBubyBwcm9ibGVtcyB3aXRo
-IHRoYXQsIGJ1dCBpbSBub3Qgc3VyZSBpZiB0aGUgZGVidWcgdG9vbHMgYW5kIHBlcmYgY2FuIG1h
-a2Ugc2Vuc2Ugb2YgdGhhdC4NCj4NCj4gQSBvdGhlciBmZWF0dXJlIHdpdGggdGhlIHNlbGludXhf
-YXVkaXRlZCBldmVudCBpdCBtaWdodCBiZSBpbnNlcnRlZCBvbiBvdGhlciBwbGFjZXMgaW4gdGhl
-IGNvZGUgdG9vLiAgQSBkZW5pYWwgaXMgc29ydCBvZiBmaW5hbC4NCg0KLS0NCnBhdWwgbW9vcmUN
-Cnd3dy5wYXVsLW1vb3JlLmNvbQ0K
+From: John Stultz <john.stultz@linaro.org>
+
+[ Upstream commit 975efc66d4e654207c17f939eb737ac591ac38fe ]
+
+When booting with heavily modularized config, the serial console
+may not be able to load until after init when modules that
+satisfy needed dependencies have time to load.
+
+Unfortunately, as qcom_geni_console_setup is marked as __init,
+the function may have been freed before we get to run it,
+causing boot time crashes such as:
+
+[    6.469057] Unable to handle kernel paging request at virtual address ffffffe645d4e6cc
+[    6.481623] Mem abort info:
+[    6.484466]   ESR = 0x86000007
+[    6.487557]   EC = 0x21: IABT (current EL), IL = 32 bits
+[    6.492929]   SET = 0, FnV = 0g
+[    6.496016]   EA = 0, S1PTW = 0
+[    6.499202] swapper pgtable: 4k pages, 39-bit VAs, pgdp=000000008151e000
+[    6.501286] ufshcd-qcom 1d84000.ufshc: ufshcd_print_pwr_info:[RX, TX]: gear=[3, 3], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
+[    6.505977] [ffffffe645d4e6cc] pgd=000000017df9f003, p4d=000000017df9f003, pud=000000017df9f003, pmd=000000017df9c003, pte=0000000000000000
+[    6.505990] Internal error: Oops: 86000007 [#1] PREEMPT SMP
+[    6.505995] Modules linked in: zl10353 zl10039 zl10036 zd1301_demod xc5000 xc4000 ves1x93 ves1820 tuner_xc2028 tuner_simple tuner_types tua9001 tua6100 1
+[    6.506152]  isl6405
+[    6.518104] ufshcd-qcom 1d84000.ufshc: ufshcd_find_max_sup_active_icc_level: Regulator capability was not set, actvIccLevel=0
+[    6.530549]  horus3a helene fc2580 fc0013 fc0012 fc0011 ec100 e4000 dvb_pll ds3000 drxk drxd drx39xyj dib9000 dib8000 dib7000p dib7000m dib3000mc dibx003
+[    6.624271] CPU: 7 PID: 148 Comm: kworker/7:2 Tainted: G        W       5.8.0-mainline-12021-g6defd37ba1cd #3455
+[    6.624273] Hardware name: Thundercomm Dragonboard 845c (DT)
+[    6.624290] Workqueue: events deferred_probe_work_func
+[    6.624296] pstate: 40c00005 (nZcv daif +PAN +UAO BTYPE=--)
+[    6.624307] pc : qcom_geni_console_setup+0x0/0x110
+[    6.624316] lr : try_enable_new_console+0xa0/0x140
+[    6.624318] sp : ffffffc010843a30
+[    6.624320] x29: ffffffc010843a30 x28: ffffffe645c3e7d0
+[    6.624325] x27: ffffff80f8022180 x26: ffffffc010843b28
+[    6.637937] x25: 0000000000000000 x24: ffffffe6462a2000
+[    6.637941] x23: ffffffe646398000 x22: 0000000000000000
+[    6.637945] x21: 0000000000000000 x20: ffffffe6462a5ce8
+[    6.637952] x19: ffffffe646398e38 x18: ffffffffffffffff
+[    6.680296] x17: 0000000000000000 x16: ffffffe64492b900
+[    6.680300] x15: ffffffe6461e9d08 x14: 69202930203d2064
+[    6.680305] x13: 7561625f65736162 x12: 202c363331203d20
+[    6.696434] x11: 0000000000000030 x10: 0101010101010101
+[    6.696438] x9 : 4d4d20746120304d x8 : 7f7f7f7f7f7f7f7f
+[    6.707249] x7 : feff4c524c787373 x6 : 0000000000008080
+[    6.707253] x5 : 0000000000000000 x4 : 8080000000000000
+[    6.707257] x3 : 0000000000000000 x2 : ffffffe645d4e6cc
+[    6.744223] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
+[    6.744966] x1 : fffffffefe74e174 x0 : ffffffe6462a5ce8
+[    6.753580] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
+[    6.761634] Call trace:
+[    6.761639]  qcom_geni_console_setup+0x0/0x110
+[    6.761645]  register_console+0x29c/0x2f8
+[    6.767981] Bluetooth: hci0: Frame reassembly failed (-84)
+[    6.775252]  uart_add_one_port+0x438/0x500
+[    6.775258]  qcom_geni_serial_probe+0x2c4/0x4a8
+[    6.775266]  platform_drv_probe+0x58/0xa8
+[    6.855359]  really_probe+0xec/0x398
+[    6.855362]  driver_probe_device+0x5c/0xb8
+[    6.855367]  __device_attach_driver+0x98/0xb8
+[    7.184945]  bus_for_each_drv+0x74/0xd8
+[    7.188825]  __device_attach+0xec/0x148
+[    7.192705]  device_initial_probe+0x24/0x30
+[    7.196937]  bus_probe_device+0x9c/0xa8
+[    7.200816]  deferred_probe_work_func+0x7c/0xb8
+[    7.205398]  process_one_work+0x20c/0x4b0
+[    7.209456]  worker_thread+0x48/0x460
+[    7.213157]  kthread+0x14c/0x158
+[    7.216432]  ret_from_fork+0x10/0x18
+[    7.220049] Code: bad PC value
+[    7.223139] ---[ end trace 73f3b21e251d5a70 ]---
+
+Thus this patch removes the __init avoiding crash in such
+configs.
+
+Cc: Andy Gross <agross@kernel.org>
+Cc: Jiri Slaby <jirislaby@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-serial@vger.kernel.org
+Suggested-by: Saravana Kannan <saravanak@google.com>
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lore.kernel.org/r/20200811025044.70626-1-john.stultz@linaro.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/tty/serial/qcom_geni_serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+index 457c0bf8cbf83..ffdf6da016c21 100644
+--- a/drivers/tty/serial/qcom_geni_serial.c
++++ b/drivers/tty/serial/qcom_geni_serial.c
+@@ -1047,7 +1047,7 @@ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
+ }
+ 
+ #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
+-static int __init qcom_geni_console_setup(struct console *co, char *options)
++static int qcom_geni_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_port *uport;
+ 	struct qcom_geni_serial_port *port;
+-- 
+2.25.1
+
