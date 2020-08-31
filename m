@@ -2,128 +2,153 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:19:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47FBC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF3E207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598861957;
-	bh=gs2KV8fmJRAS8fO2XzodFn9j02lDZ/NLqHlPjxAm9ws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o5H9qWNJ0lwDmby0zACsadYAhnjJQ/9De5hWmH6yISUxbX8xqn8YNMXZMH7I4AC01
-	 Y/mXASrQVcEEzank8v9RqQlOgAnkUO+U+OOI/pN/ogsqRaCY4ZaxEfyrhVcRjLr+Ot
-	 wXR/0YdQtgdZ3WbFsbLiulorFdSFUklTehGOuouI=
+	by mail.kernel.org (Postfix) with ESMTP id 82F2D2098B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:19:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="GIz/1vnU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgHaITO (ORCPT
+        id S1728035AbgHaITq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:19:14 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:36354 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgHaITM (ORCPT
+        Mon, 31 Aug 2020 04:19:46 -0400
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:40732 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgHaITo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:19:12 -0400
-Received: by mail-ej1-f67.google.com with SMTP id e23so1809440eja.3;
-        Mon, 31 Aug 2020 01:19:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Cqrk1bBlfTS3BPtOTE3s4vilkxanbVUMadQ6BMq95XQ=;
-        b=bzfjvLzlIiONuVg+R5UoCfdMYf9OiP7YcOcxvQlm3fcekQW3fKxUOqM8RCDlYU0Wd+
-         yh6KoMlP2nrC+ls91gJpErP/8WfOhsgb9s3OQmdSc7QifcsTnQXrb9CPQFtIFRA46ZEW
-         oGKA+1iUzobLAXea03dxDusmAOB8fVGapMy5sHWFSqRBjfgJh5ioFgCslrFroJqRnp7l
-         scWh1eno+dHW8jF6A0vY2y36aVKEuyDl14XVSBViwOixX1RqStCBixg9+1xipYSwa37x
-         P4yawGK3GPN/sNk36tQvs11odOrXq43QartPuxhB5WnIo2A6dGSdTinRwcSEukvGAtQm
-         v7Gg==
-X-Gm-Message-State: AOAM532R7UcVkPYHmjUW7qGhLbSTkROi6pqLazmLR9xntFmzBJptwGGH
-        jBUvNflbpzbEzdsFL+vgU+I=
-X-Google-Smtp-Source: ABdhPJwZmYA5QBVdQf3hNtCbKsFlHcp5sGv8ZbmLIZ97Vr6lwstZRZcAMaFR7D7zA37ZpKOOmXJ5ug==
-X-Received: by 2002:a17:906:180b:: with SMTP id v11mr47877eje.427.1598861949932;
-        Mon, 31 Aug 2020 01:19:09 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.216])
-        by smtp.googlemail.com with ESMTPSA id d2sm7482261ejm.19.2020.08.31.01.19.08
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 31 Aug 2020 01:19:09 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 10:19:06 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: Re: [RFT 3/4] ARM: dts: exynos: Move CMU assigned ISP clocks to
- buses in Exynos3250
-Message-ID: <20200831081906.GA11513@kozik-lap>
-References: <20200829172532.29358-1-krzk@kernel.org>
- <CGME20200829172553eucas1p1b62ad1cac6e0eea1dbb4669f09949419@eucas1p1.samsung.com>
- <20200829172532.29358-3-krzk@kernel.org>
- <6ed67a82-0f29-7384-203d-dcb2e58c5a8d@samsung.com>
+        Mon, 31 Aug 2020 04:19:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1598861982; x=1630397982;
+  h=references:from:to:cc:subject:in-reply-to:date:
+   message-id:mime-version;
+  bh=/OVoMxK7QR8HMDkkjaY5EKtHvjhOjzN5H7hhNs/BFQE=;
+  b=GIz/1vnUEp6LljLl/kb5LRe9/XMxr+K3c5zPsz8g1c6C3gxYixSR2wMB
+   Ln41ZwaixhHIsIVUCNQrLOqJIlrKwpuPMQP6BTTgkb+nIidhwt16bYDWG
+   qd6t6W/PsGrfGgyzI0b6aIk8likETE7iMhcHOB6k3u81fLEArAeo7KJy4
+   moGhyIAHlRdcq6p4fpwNzy0nD8HQLMb+SXb/2d+Gfvgshc7TVeZo+vzeI
+   N6HjCoqzC8XONSZacYvZf1LoEsxEmclAc4MqQsYv1pjpmqj22GwbCeyJI
+   fhSIbw0BtIPnOGLZZo4b7czvYP1KaxR1BbXvzHgGNByz9nZjPuOAXlJ3U
+   A==;
+IronPort-SDR: d1h+Beaw30NanlIjjvjgxr1QKYq+SI4swHZsYINTj/zflUsOTmbbZlXjdMCqlvcjI6eplY6JNI
+ 0AXkI7I4GAHcQFuvYgWD84Kt9o0sI18hPkqjuCVTIbmUSYB9MRUM4NBqVRapR2InjXwXRRRAq+
+ Kap57G/NT0nsIcTRMi+J07r44oGIhJaYeIl7RtGjl8r16mbVOYyOIWKfZHqeIV2LXq/hpZUQH0
+ PtzbImtIkHJU2fh1c4gxkl62mgpNdJ8yldiSSdIFvRBldtM451WvKqZqXpUAcBDlnEIeZUoPWx
+ 8bQ=
+X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
+   d="scan'208";a="93715065"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 31 Aug 2020 01:19:42 -0700
+Received: from chn-vm-ex01.mchp-main.com (10.10.85.143) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Mon, 31 Aug 2020 01:19:40 -0700
+Received: from soft-dev15.microsemi.net.microchip.com (10.10.115.15) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1979.3
+ via Frontend Transport; Mon, 31 Aug 2020 01:19:23 -0700
+References: <20200513130842.24847-1-lars.povlsen@microchip.com> <20200513130842.24847-4-lars.povlsen@microchip.com> <20200528022502.GA3234572@bogus> <87wo4piyqz.fsf@soft-dev15.microsemi.net> <20200828163916.g6vbk3anfyijl7sx@earth.universe>
+From:   Lars Povlsen <lars.povlsen@microchip.com>
+To:     Sebastian Reichel <sre@kernel.org>
+List-Id: <soc.lore.kernel.org>
+CC:     Lars Povlsen <lars.povlsen@microchip.com>,
+        Rob Herring <robh@kernel.org>, SoC Team <soc@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
+        <linux-pm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/5] dt-bindings: reset: ocelot: Add documentation for 'microchip,reset-switch-core' property
+In-Reply-To: <20200828163916.g6vbk3anfyijl7sx@earth.universe>
+Date:   Mon, 31 Aug 2020 10:19:38 +0200
+Message-ID: <871rjnxm5h.fsf@soft-dev15.microsemi.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <6ed67a82-0f29-7384-203d-dcb2e58c5a8d@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 10:11:02AM +0200, Marek Szyprowski wrote:
-> Hi Krzysztof,
+
+Sebastian Reichel writes:
+
+> Hi,
 > 
-> On 29.08.2020 19:25, Krzysztof Kozlowski wrote:
-> > Commit 52005dece527 ("ARM: dts: Add assigned clock parents to CMU node
-> > for exynos3250") added assigned clocks under Clock Management Unit to
-> > fix hangs when accessing ISP registers.
-> >
-> > This is not the place for it as CMU does not have a required "clocks"
-> > property:
-> >
-> >    arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >
-> > ---
-> >
-> > Not tested and I wonder whether actually correct. For example, what will
-> > happen if devfreq (exynos-bus) is not built in?
-> >
-> > Could someone verify it?
+> On Tue, Jun 02, 2020 at 11:49:08AM +0200, Lars Povlsen wrote:
+> > Rob Herring writes:
+> > > On Wed, May 13, 2020 at 03:08:40PM +0200, Lars Povlsen wrote:
+> > >> This documents the 'microchip,reset-switch-core' property in the
+> > >> ocelot-reset driver.
+> > >>
+> > >> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
+> > >> ---
+> > >>  .../devicetree/bindings/power/reset/ocelot-reset.txt        | 6 ++++++
+> > >>  1 file changed, 6 insertions(+)
+> > >>
+> > >> diff --git a/Documentation/devicetree/bindings/power/reset/ocelot-rese=
+> t.txt b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> > >> index 4d530d8154848..20fff03753ad2 100644
+> > >> --- a/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> > >> +++ b/Documentation/devicetree/bindings/power/reset/ocelot-reset.txt
+> > >> @@ -9,9 +9,15 @@ microchip Sparx5 armv8 SoC's.
+> > >>  Required Properties:
+> > >>   - compatible: "mscc,ocelot-chip-reset" or "microchip,sparx5-chip-res=
+> et"
+> > >>
+> > >> +Optional properties:
+> > >> +- microchip,reset-switch-core : Perform a switch core reset at the
+> > >> +  time of driver load. This is may be used to initialize the switch
+> > >> +  core to a known state (before other drivers are loaded).
+> > >
+> > > How do you know when other drivers are loaded? This could be a module
+> > > perhaps. Doesn't seem like something that belongs in DT.
+> > >
+> > 
+> > The reset driver is loaded at postcore_initcall() time, which ensures it
+> > is loaded before other drivers using the switch core. I noticed other
+> > drivers do the same to do low-level system reset and initialization at
+> > early boot time.
+> > 
+> > > Can this behavior be implied with "microchip,sparx5-chip-reset"?
+> > 
+> > Since we need to cater for both modus operandi, I would need two driver
+> > compatible strings per platform, which scales worse than a single
+> > property.
+> > 
+> > The "microchip,reset-switch-core" is a device configuration property
+> > which tells the system (driver) how the hw should be handled. Since you
+> > do not *always* want to reset the switch core (f.ex. when implementing
+> > systems with warm reboot), I think it makes perfect sense - but I may be
+> > biased off course :-)
+> > 
+> > Thank you for (all) of your comments, by the way!
+> > 
+> > ---Lars
+> > > Rob
 > 
-> Sorry, but this patch is not correct. Those clocks has noting with 
-> bus-freq. The assigned clocks property should stay where it is. Maybe 
-> one need to fix the schemas for dts verification. Those clocks has to be 
-> set (and so generic clock framework does) according to the assigned 
-> clocks properties once the clock controller is instantiated.
-> 
-> The only alternative would be to add exynos-subcmu variant to properly 
-> link CMU with the ISP power domain, but assuming that there is no Exynos 
-> 3250 ISP driver in mainline (and probably never will be), it is safe to 
-> keep those clocks sourced from 24MHz crystal.
+> Is this series still needed? Did I miss a follow-up?
 
-Thanks for the clarification.  Another solution to silence the warning
-could be to add a "clocks" property for FIN_PLL, although the driver
-actually does not take it.
+Hi Sebastian!
 
-This is the only remaining dtschema check warning on Exynos3250 so it
-would be nice to at least silence it. My goal is to have all them
-schema-correct, or as close as possible (for Exynos4 the camera node is
-a trouble).
+Yes, the series is still needed, but the conversation died after my
+last message.
 
-Best regards,
-Krzysztof
+If the DT-controlled reset property is too controversial, I am willing
+to drop that part. (Rob just reviewed the bindings).
 
+MCHP reference designs have GPIO resets, so we *could* get by without,
+but new designs may this feature.
+
+> -- Sebastian
+
+---Lars
+
+-- 
+Lars Povlsen,
+Microchip
