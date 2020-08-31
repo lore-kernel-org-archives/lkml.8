@@ -3,127 +3,147 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC17CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB7BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:47:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8158C206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1EBA2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598856201;
-	bh=y9nSHuhDgDMw5zpER+/tN+R20SRJvwg4qM3Lz4R94aU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L3+F/HHO/6U0NnjeXgh802VCc8tDiHS6K/Gi9YTk1C3KZLdXBJ9Iska/m2HohngcW
-	 M5jnJC/59nrSbTy+101oF6R83kBMB9P+ji5VzK0wC0b04CO/TpWIewvR2Bb+axjYaT
-	 LDARGOFWGIAkyIAcxqqJUlfJ3GBTeVRl0onhVMPQ=
+	s=default; t=1598856446;
+	bh=s6E5dk62F/7tkZOxFbrZuEem/3lQqvI4/Tqsfx9toRY=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=F39bRa+qXfacTDfQwSAVoGvDjoB2w765bgXeybnWSzdOOb398/to4MI5Ly8/r+7cg
+	 UYYGaKyzRm8JITlpk1tAqN/+KaG5PmHPGpPoq+SREUyWE7JW306jM9epJ9F1Asat2G
+	 zibJVvNW43yW7klYgvucRYg87WyUWbNVrolRzHvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbgHaGnT (ORCPT
+        id S1726334AbgHaGrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 02:43:19 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41056 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgHaGnS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 02:43:18 -0400
-Received: by mail-lj1-f193.google.com with SMTP id y4so4282032ljk.8;
-        Sun, 30 Aug 2020 23:43:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wyW58DDBNp+B8mjoREWkn7J6NiyeeYGpM+salH1bjXM=;
-        b=YrQiutvdvFIanhD9xE4LfIzFpyTWE0k81PP4HCgGdvc7vedd9MwJrIuRaKs1aC/CDy
-         12UQFVaUiiXu7wdNUkmUXFuRIjiEUU61HsT/6RhEQD9ssSHhzpGX4nL9y4gxjVexjBkU
-         eMtHveR49P0Xskn2fcXnLxq35kPvaZbWf4XVkBljKX97u2nRfoe1w3yP19WbyIiZo1mm
-         9YjlmELBKPMKRaSClD/8RHI43+CKH6iWruY3P3O6wCf7QwBP1Q5g0zgMVUQUrLpEfIK0
-         kpcyPPLv5ObKG7tPXMDRqYImfPeCVCOmfeRJC2s2+JAsZDeXZW6R3EhMOqQ92xZ8ILUy
-         GwRw==
-X-Gm-Message-State: AOAM533vBK6xwtEkIZ3X1OsGXb6nDmc1Nu2+xV6HLkRCPmm2opGtteOw
-        14xYKNpUFlOcZ4DS25rfXME=
-X-Google-Smtp-Source: ABdhPJzybFq958m1TKK2GCBj+0bVRPOnQGvnyOyx0GNhUh2y6CEFA1Dt5qSQPV3Ry/w8ygYnkLIsSg==
-X-Received: by 2002:a2e:8690:: with SMTP id l16mr4245073lji.7.1598856194607;
-        Sun, 30 Aug 2020 23:43:14 -0700 (PDT)
-Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
-        by smtp.gmail.com with ESMTPSA id a16sm1374592ljj.108.2020.08.30.23.43.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 23:43:13 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.93.0.4)
-        (envelope-from <johan@kernel.org>)
-        id 1kCdX0-0006dm-98; Mon, 31 Aug 2020 08:43:06 +0200
-Date:   Mon, 31 Aug 2020 08:43:06 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Aleksander Morgado <aleksander@aleksander.es>
-Cc:     johan@kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: option: add support for
- SIM7070/SIM7080/SIM7090 modules
-Message-ID: <20200831064306.GN21288@localhost>
-References: <20200829090539.80140-1-aleksander@aleksander.es>
+        Mon, 31 Aug 2020 02:47:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgHaGrU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 02:47:20 -0400
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31FD42072D;
+        Mon, 31 Aug 2020 06:47:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598856440;
+        bh=s6E5dk62F/7tkZOxFbrZuEem/3lQqvI4/Tqsfx9toRY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pymHDF1fBg8yfx6PAVz2IaxBvAtw/ssY3kRW7rngUMVuKBv0R81LSCghvTmpLikhh
+         YI4JyMU7M+1fkeNgqj0V055RXTx46A256q2xujr1KGwPMXaCe+rFVi4Ygnt6xms6be
+         9GT5j4qKwJyRrND1qSVBiN22fJ2pj7nDjZFcAUA4=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Vineet Gupta <vgupta@synopsys.com>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [RFC/RFT PATCH v3 0/1] arc: add sparsemem support
+Date:   Mon, 31 Aug 2020 09:47:13 +0300
+Message-Id: <20200831064714.16562-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829090539.80140-1-aleksander@aleksander.es>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 11:05:39AM +0200, Aleksander Morgado wrote:
-> These modules have 2 different USB layouts:
-> 
-> The default layout with PID 0x9205 (AT+CUSBSELNV=1) exposes 4 TTYs and
-> an ECM interface:
-> 
->   T:  Bus=02 Lev=01 Prnt=01 Port=02 Cnt=01 Dev#=  6 Spd=480 MxCh= 0
->   D:  Ver= 2.00 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  1
->   P:  Vendor=1e0e ProdID=9205 Rev=00.00
->   S:  Manufacturer=SimTech, Incorporated
->   S:  Product=SimTech SIM7080
->   S:  SerialNumber=1234567890ABCDEF
->   C:  #Ifs= 6 Cfg#= 1 Atr=e0 MxPwr=500mA
->   I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x4 Alt= 0 #EPs= 1 Cls=02(commc) Sub=06 Prot=00 Driver=cdc_ether
->   I:  If#=0x5 Alt= 1 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=cdc_ether
-> 
-> The purpose of each TTY is as follows:
->  * ttyUSB0: DIAG/QCDM port.
->  * ttyUSB1: GNSS data.
->  * ttyUSB2: AT-capable port (control).
->  * ttyUSB3: AT-capable port (data).
-> 
-> In the secondary layout with PID=0x9206 (AT+CUSBSELNV=86) the module
-> exposes 6 TTY ports:
-> 
->   T:  Bus=02 Lev=01 Prnt=01 Port=02 Cnt=01 Dev#=  8 Spd=480 MxCh= 0
->   D:  Ver= 2.00 Cls=02(commc) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
->   P:  Vendor=1e0e ProdID=9206 Rev=00.00
->   S:  Manufacturer=SimTech, Incorporated
->   S:  Product=SimTech SIM7080
->   S:  SerialNumber=1234567890ABCDEF
->   C:  #Ifs= 6 Cfg#= 1 Atr=e0 MxPwr=500mA
->   I:  If#=0x0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x1 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x3 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x4 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
->   I:  If#=0x5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-> 
-> The purpose of each TTY is as follows:
->  * ttyUSB0: DIAG/QCDM port.
->  * ttyUSB1: GNSS data.
->  * ttyUSB2: AT-capable port (control).
->  * ttyUSB3: QFLOG interface.
->  * ttyUSB4: DAM interface.
->  * ttyUSB5: AT-capable port (data).
-> 
-> Signed-off-by: Aleksander Morgado <aleksander@aleksander.es>
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Now applied. Thanks, Aleksander.
+Hi,
 
-Johan
+This is yet another attempt to enable SPARSEMEM on ARC.
+
+I've boot tested it on nSIM with haps_hs_defconfig with highmem and
+sparsemem enabled.
+
+With sparsemem the kernel text becomes a bit smaller, but bss and data are
+slightly increased:
+
+$ size discontig/vmlinux sparse/vmlinux
+   text	   data	    bss	    dec	    hex	filename
+4429390	 785456	 244580	5459426	 534de2	discontig/vmlinux
+4415099	 786224	 244844	5446167	 531a17	sparse/vmlinux
+
+I've also added a dummy global functions to wrap pfn_valid(), page_to_pfn()
+and pfn_to_page(). Judging by objdump, sparsemem is a bit more efficient:
+
+	DISCONTIGMEM			SPARSEMEM
+<pfn_to_page>:
+	seths	r2,0x3ffff,r0		lsr	r2,r0,0xe
+	mpy	r2,r2,1896		mpy	r0,r0,0x24
+	add	r3,r2,0x8050066c	add3	r2,0x80529d1c,r2
+	add_s	r2,r2,0x80500668	ld_s	r2,[r2,0]
+	ld_s	r3,[r3,0]		bmskn	r2,r2,0x3
+	sub_s	r0,r0,r3		j_s.d	[blink]
+	ld_s	r2,[r2,0]		add_s	r0,r0,r2
+	mpy	r0,r0,0x24		nop_s
+	j_s.d	[blink]
+	add_s	r0,r0,r2
+
+<page_to_pfn>:
+	ld_s	r2,[r0,0]		ld_s	r2,[r0,0]
+	lsr_s	r2,r2,0x1f	 	lsr_s	r2,r2,0x1b
+	mpy	r2,r2,1896	 	add3	r2,0x80529d1c,r2
+	add	r3,r2,0x80500668 	ld_s	r2,[r2,0]
+	add_s	r2,r2,0x8050066c 	bmskn	r2,r2,0x3
+	ld_s	r3,[r3,0]	 	sub_s	r0,r0,r2
+	sub_s	r0,r0,r3	 	asr_s	r0,r0,0x2
+	ld_s	r2,[r2,0]	 	mpy	r0,r0,0x38e38e39
+	asr_s	r0,r0,0x2	 	j_s	[blink]
+	mpy	r0,r0,0x38e38e39
+	j_s.d	[blink]
+	add_s	r0,r0,r2
+	nop_s
+
+<pfn_valid>:
+	cmp_s	r0,0x3ffff		lsr_s	r0,r0,0xe
+	mov_s	r2,0			brhs.nt	r0,0x20,24
+	mov.ls	r2,0x768		add3	r0,0x80529d1c,r0
+	add_s	r2,r2,0x80500814	breq_s	r0,0,12
+	ld.as	r3,[r2,-106]		ld_s	r0,[r0,0]
+	ld.as	r2,[r2,-104]		j_s.d	[blink]
+	add_s	r2,r2,r3		xbfu	r0,r0,0x1
+	j_s.d	[blink]			j_s.d	[blink]
+	seths	r0,r2,r0		mov_s	r0,0
+	nop_s
+
+Still, SPARSEMEM has an issue with potentially wasted memory allocated for
+the memory map. The memory maps are allocated for each present section,
+which means that if part of the section is not populated we'll have a bunch
+of unused 'struct page' objects. The smaller the section size, the smaller
+is memory overhead, but the section size cannot be much smaller than the
+physical address because 
+
+	MAX_PHYSMEM_BITS - SECTION_SIZE_BITS
+
+has to fit into page flags and the room there is limited.
+
+There is yet another possibility to support separate banks. It is possible
+to use FLATMEM and free the memmap allocated for the hole, like, for
+instance, ARM does [1]. This will require ARC's override for pfn_valid()
+that takes into account the actual memory configuration rather than relies
+on the memmap.
+
+[1] https://elixir.bootlin.com/linux/latest/source/arch/arm/mm/init.c#L305
+
+Mike Rapoport (1):
+  arc: add sparsemem support
+
+ arch/arc/Kconfig                 | 10 ++++++++++
+ arch/arc/include/asm/sparsemem.h | 13 +++++++++++++
+ arch/arc/mm/init.c               |  6 +++++-
+ 3 files changed, 28 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arc/include/asm/sparsemem.h
+
+-- 
+2.26.2
+
