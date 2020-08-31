@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C8AC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F40C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:03:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2902083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D452083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598896987;
-	bh=NHb/uTlI4XHsRb/k0hOwL2ogF8mCSlrEuc3/2RLkKwc=;
+	s=default; t=1598896993;
+	bh=90MadMgN8o3HpOyPeyMVAosKnpX8VPQY4+XK0zBBVd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VDjWKgc1xAlb70tfPpomZTHWfq0Lmpt19WLm4QgEenCIcAp3xnETPdMqVSxP+cN9W
-	 VAwRw+c3Tw7yKx6/rszENE2xzv1yWfdHIyUOaB5c/bnJ494cf64Lvpo8J09YMIZYjy
-	 ie4QmY5swa83+V5BGojxUu+4goPYVvWnnhfE0Glo=
+	b=nIfy1fDEnJhjgXzCk4BHKllptm1jC5jSvgVW5ZovlRiFxQDlSeQttP8h618mtYSWB
+	 rhdfSHptzSiRJsWOMSkUrwg4NOMRFBeCq9o1xX0upsC7XfTO0bSse9yMJBZnzw1pc1
+	 E9UWMopOUBCa8h7a2ArPWEDKjIiNgNL72+AxtqPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgHaSDE (ORCPT
+        id S1729261AbgHaSDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:03:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35758 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgHaSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728776AbgHaSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:01:26 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BBD21582;
-        Mon, 31 Aug 2020 18:01:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45D4221556;
+        Mon, 31 Aug 2020 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598896886;
-        bh=NHb/uTlI4XHsRb/k0hOwL2ogF8mCSlrEuc3/2RLkKwc=;
+        s=default; t=1598896884;
+        bh=90MadMgN8o3HpOyPeyMVAosKnpX8VPQY4+XK0zBBVd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBPmO5/kGI8gApBVBahCdZgxKSWm5wQnN4i/V76N5DT9AdUokBFaTWrtKWjgmcwln
-         6pNXdmmrxbZh+8GUWBmvDAVGTtoEWjdjD3N/8jWn31bucAXC/0lpJtT2IhQJTSe0zx
-         CCFiBgRVQukHJrJTskeT6Nx+RpxcE+sHSv6PZvA4=
+        b=uZFn5zscUsOX/1eG7bhNjgA/uanhfNLuFkCfWfPnP41VxwLPvWhhV5Pk/wu/DKC2u
+         gwvAFQ5LTarlmx7AT6FkEhxNf5z3VzLfJ2UnGYzOVf/DB+cz2AEb85ZZ9CE6435rFX
+         IjHHpnWh3xsJzwdB8daWi27tEIZz+5C+rlrPEyKo=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 18/24] rcu: Move rcu_cpu_started per-CPU variable to rcu_data
-Date:   Mon, 31 Aug 2020 11:01:10 -0700
-Message-Id: <20200831180116.32690-18-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 14/24] rcu: Add READ_ONCE() to rcu_do_batch() access to rcu_cpu_stall_ftrace_dump
+Date:   Mon, 31 Aug 2020 11:01:06 -0700
+Message-Id: <20200831180116.32690-14-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180050.GA32590@paulmck-ThinkPad-P72>
 References: <20200831180050.GA32590@paulmck-ThinkPad-P72>
@@ -61,69 +61,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-When the rcu_cpu_started per-CPU variable was added by commit
-f64c6013a202 ("rcu/x86: Provide early rcu_cpu_starting() callback"),
-there were multiple sets of per-CPU rcu_data structures.  Therefore, the
-rcu_cpu_started flag was added as a separate per-CPU variable.  But now
-there is only one set of per-CPU rcu_data structures, so this commit
-moves rcu_cpu_started to a new ->cpu_started field in that structure.
+Given that sysfs can change the value of rcu_cpu_stall_ftrace_dump at any
+time, this commit adds a READ_ONCE() to the accesses to that variable.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 11 ++++-------
- kernel/rcu/tree.h |  1 +
- 2 files changed, 5 insertions(+), 7 deletions(-)
+ kernel/rcu/tree_stall.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index da05afc..52108dd 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -3967,8 +3967,6 @@ int rcutree_offline_cpu(unsigned int cpu)
- 	return 0;
+diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
+index a1780a6..0fde39b 100644
+--- a/kernel/rcu/tree_stall.h
++++ b/kernel/rcu/tree_stall.h
+@@ -623,7 +623,7 @@ static void check_cpu_stall(struct rcu_data *rdp)
+ 
+ 		/* We haven't checked in, so go dump stack. */
+ 		print_cpu_stall(gps);
+-		if (rcu_cpu_stall_ftrace_dump)
++		if (READ_ONCE(rcu_cpu_stall_ftrace_dump))
+ 			rcu_ftrace_dump(DUMP_ALL);
+ 
+ 	} else if (rcu_gp_in_progress() &&
+@@ -632,7 +632,7 @@ static void check_cpu_stall(struct rcu_data *rdp)
+ 
+ 		/* They had a few time units to dump stack, so complain. */
+ 		print_other_cpu_stall(gs2, gps);
+-		if (rcu_cpu_stall_ftrace_dump)
++		if (READ_ONCE(rcu_cpu_stall_ftrace_dump))
+ 			rcu_ftrace_dump(DUMP_ALL);
+ 	}
  }
- 
--static DEFINE_PER_CPU(int, rcu_cpu_started);
--
- /*
-  * Mark the specified CPU as being online so that subsequent grace periods
-  * (both expedited and normal) will wait on it.  Note that this means that
-@@ -3988,12 +3986,11 @@ void rcu_cpu_starting(unsigned int cpu)
- 	struct rcu_node *rnp;
- 	bool newcpu;
- 
--	if (per_cpu(rcu_cpu_started, cpu))
-+	rdp = per_cpu_ptr(&rcu_data, cpu);
-+	if (rdp->cpu_started)
- 		return;
-+	rdp->cpu_started = true;
- 
--	per_cpu(rcu_cpu_started, cpu) = 1;
--
--	rdp = per_cpu_ptr(&rcu_data, cpu);
- 	rnp = rdp->mynode;
- 	mask = rdp->grpmask;
- 	raw_spin_lock_irqsave_rcu_node(rnp, flags);
-@@ -4053,7 +4050,7 @@ void rcu_report_dead(unsigned int cpu)
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	raw_spin_unlock(&rcu_state.ofl_lock);
- 
--	per_cpu(rcu_cpu_started, cpu) = 0;
-+	rdp->cpu_started = false;
- }
- 
- /*
-diff --git a/kernel/rcu/tree.h b/kernel/rcu/tree.h
-index c96ae35..309bc7f 100644
---- a/kernel/rcu/tree.h
-+++ b/kernel/rcu/tree.h
-@@ -156,6 +156,7 @@ struct rcu_data {
- 	bool		beenonline;	/* CPU online at least once. */
- 	bool		gpwrap;		/* Possible ->gp_seq wrap. */
- 	bool		exp_deferred_qs; /* This CPU awaiting a deferred QS? */
-+	bool		cpu_started;	/* RCU watching this onlining CPU. */
- 	struct rcu_node *mynode;	/* This CPU's leaf of hierarchy */
- 	unsigned long grpmask;		/* Mask to apply to leaf qsmask. */
- 	unsigned long	ticks_this_gp;	/* The number of scheduling-clock */
 -- 
 2.9.5
 
