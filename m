@@ -2,104 +2,93 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE91C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5470BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6356520767
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29C9C20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ByycTz/Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgHaIZH convert rfc822-to-8bit (ORCPT
+        id S1727949AbgHaI1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:25:07 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:44058 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727910AbgHaIZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:25:00 -0400
-Received: from DGGEMM405-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id ADA9A5D06E1A34BB50C0;
-        Mon, 31 Aug 2020 16:24:57 +0800 (CST)
-Received: from dggema723-chm.china.huawei.com (10.3.20.87) by
- DGGEMM405-HUB.china.huawei.com (10.3.20.213) with Microsoft SMTP Server (TLS)
- id 14.3.487.0; Mon, 31 Aug 2020 16:23:54 +0800
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- dggema723-chm.china.huawei.com (10.3.20.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Mon, 31 Aug 2020 16:23:54 +0800
-Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
- dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
- Mon, 31 Aug 2020 16:23:55 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     Christoph Hellwig <hch@lst.de>
-CC:     "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "ganapatrao.kulkarni@cavium.com" <ganapatrao.kulkarni@cavium.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        huangdaode <huangdaode@huawei.com>
-Subject: RE: [PATCH v6 0/2] make dma_alloc_coherent NUMA-aware by per-NUMA CMA
-Thread-Topic: [PATCH v6 0/2] make dma_alloc_coherent NUMA-aware by per-NUMA
- CMA
-Thread-Index: AQHWd2Lc8c1DGcwANEy/0S0zVDdod6lBkR4AgBBdgfA=
-Date:   Mon, 31 Aug 2020 08:23:55 +0000
-Message-ID: <05dad074e0624367a3fc0dfd0b96a352@hisilicon.com>
-References: <20200821022615.28596-1-song.bao.hua@hisilicon.com>
- <20200821061918.GA28559@lst.de>
-In-Reply-To: <20200821061918.GA28559@lst.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.203.153]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+        Mon, 31 Aug 2020 04:27:41 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:48555 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726198AbgHaI1j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:27:39 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598862459; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=BsJW+6b+ChjHM1tuO2UVuZumO9q0AK+u8r67VrfoMpM=; b=ByycTz/YIDwtEydcPg7yk6JAq/Z4cm4QuGgiw7ptg9lMAww3Q12NPCWwEXRbx1a2enRREDNp
+ cSaHIYi0vKShQdunasabF04IFXB4Skq03mxURXo8xw66edobSe9nyCXbQjfCc5Z5FUy9tPVb
+ 2GzFGAl8bmIZnH0+5ROiWCKxBuM=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-west-2.postgun.com with SMTP id
+ 5f4cb469d3d3df8c3975e08c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 08:27:21
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 23F3FC433CA; Mon, 31 Aug 2020 08:27:21 +0000 (UTC)
+Received: from kathirav-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kathirav)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 904A6C433C6;
+        Mon, 31 Aug 2020 08:27:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 904A6C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kathirav@codeaurora.org
+From:   Kathiravan T <kathirav@codeaurora.org>
+To:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     kathirav@codeaurora.org
+Subject: [PATCH] arm64: dts: ipq8074: enable watchdog support
+Date:   Mon, 31 Aug 2020 13:57:08 +0530
+Message-Id: <1598862428-13996-1-git-send-email-kathirav@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Enable watchdog support for the IPQ8074 SoCs.
 
+Signed-off-by: Kathiravan T <kathirav@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org
-> [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of Christoph Hellwig
-> Sent: Friday, August 21, 2020 6:19 PM
-> To: Song Bao Hua (Barry Song) <song.bao.hua@hisilicon.com>
-> Cc: hch@lst.de; m.szyprowski@samsung.com; robin.murphy@arm.com;
-> will@kernel.org; ganapatrao.kulkarni@cavium.com;
-> catalin.marinas@arm.com; iommu@lists.linux-foundation.org; Linuxarm
-> <linuxarm@huawei.com>; linux-arm-kernel@lists.infradead.org;
-> linux-kernel@vger.kernel.org; huangdaode <huangdaode@huawei.com>
-> Subject: Re: [PATCH v6 0/2] make dma_alloc_coherent NUMA-aware by
-> per-NUMA CMA
-> 
-> FYI, as of the last one I'm fine now, bit I really need an ACK from
-> the arm64 maintainers.
+diff --git a/arch/arm64/boot/dts/qcom/ipq8074.dtsi b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+index 96a5ec89b5f0..74a474300314 100644
+--- a/arch/arm64/boot/dts/qcom/ipq8074.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq8074.dtsi
+@@ -498,6 +498,14 @@ timer {
+ 				     <GIC_PPI 1 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		};
+ 
++		watchdog: watchdog@b017000 {
++			compatible = "qcom,kpss-wdt";
++			reg = <0xb017000 0x1000>;
++			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
++			clocks = <&sleep_clk>;
++			timeout-sec = <30>;
++		};
++
+ 		timer@b120000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
 
-Hi Christoph,
-
-For the changes in arch/arm64, Will gave his ack here:
-https://lore.kernel.org/linux-iommu/20200821090116.GB20255@willie-the-truck/
-
-and the patchset has been refined to v8
-https://lore.kernel.org/linux-iommu/20200823230309.28980-1-song.bao.hua@hisilicon.com/
-with one additional patch to remove magic number:
-[PATCH v8 3/3] mm: cma: use CMA_MAX_NAME to define the length of cma name array
-https://lore.kernel.org/linux-iommu/20200823230309.28980-4-song.bao.hua@hisilicon.com/
-
-Hopefully, you didn't miss it:-)
-Does the new one need an Ack from Linux-mm maintainer?
-
-Thanks
-Barry
+base-commit: f75aef392f869018f78cfedf3c320a6b3fcfda6b
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
