@@ -2,172 +2,138 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D378C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:06:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05323C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1C9B2054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYYSC4hY"
+	by mail.kernel.org (Postfix) with ESMTP id D8D412054F
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728856AbgHaRGU (ORCPT
+        id S1728873AbgHaRHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:06:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41942 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgHaRGU (ORCPT
+        Mon, 31 Aug 2020 13:07:21 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:39705 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728644AbgHaRHT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:06:20 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CBEC061573;
-        Mon, 31 Aug 2020 10:06:19 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id l23so6122515edv.11;
-        Mon, 31 Aug 2020 10:06:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=u4sKpJRBaQSUXgG3D6yX9pvNnzDpclOknSCxOcHgR7c=;
-        b=gYYSC4hYqEORnDcxwSsnSWRBf3ioYjiJ3xLqskImUlkf9jryYq5DWuPxdtFtHmGd6F
-         CH9GULdP3JJjBC5ZgWaPjCRqmoYgtokuZmvIWJmNjc6EjrX/3P7ox7YP/AHdjSbiSYKM
-         GbDrv/yHMJY6uLr0fowgqm8Mo7gm6Zo4+ouX1iyOd4RVB3NVDE71ow8qG3KiTOVqLUqa
-         btBlVX9TrYbFyz/+wQHEbtirDdi0/P1DqCeiI2ereAw48vXA/xS1UrpRGuo5c3/GDKEI
-         dgrpQAxQqUwfjXAjak4xjU0kGojxsz5jW89xd19ghRqYQquEW18TQAdzZWWOPYMssRME
-         w1Iw==
+        Mon, 31 Aug 2020 13:07:19 -0400
+Received: by mail-il1-f198.google.com with SMTP id o1so5607913ilk.6
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:07:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u4sKpJRBaQSUXgG3D6yX9pvNnzDpclOknSCxOcHgR7c=;
-        b=Pe9qf7dc4XNYRUlQE+IXi9bO6+tix9LGPpuI6mDbbXjKkkZE3hbrOIkDWt87IYjagu
-         eAW4/0XaSsgUpi36R1zkm0Cdlve86y1J11b6gnqSsz2TED/O4R4OeRPjYLGI75jkgEix
-         ZHs7BZCsblgy4N+P+LR2X32dc1vQnX1vAMxxeNCk7n9Z5ckVIzqG5VvtErOp3+xDD2rS
-         H2AJ8EcUThcgA+kzu0GDIT8ZCyZCMB+jCgNYAQX15m7UcCzMXoczQigKgFZWX01oJZgp
-         FIvqeKrAwgG4RYDWXdTeM4NWMT9vqSrJMdt0tzvgNXGrkMhJoCFkhRBgoFWWc4Zc2H3H
-         sUww==
-X-Gm-Message-State: AOAM530Jq9ne0neowCDX2pNjcoy+0N8sbuNgAG3BaXO3b2lvX35YhQj9
-        4+HCnlBV7vxg8ox4GxJ1qpE=
-X-Google-Smtp-Source: ABdhPJydJI4mOY5eMb7W8MUzEfAXm3D6CazcHI5jOSApGYesoRPd1Pl94XA/SpLRu0LMoRSBHzmwWw==
-X-Received: by 2002:a50:fc04:: with SMTP id i4mr2063666edr.14.1598893578432;
-        Mon, 31 Aug 2020 10:06:18 -0700 (PDT)
-Received: from BV030612LT ([188.24.159.61])
-        by smtp.gmail.com with ESMTPSA id k6sm7238260ejr.104.2020.08.31.10.06.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 10:06:17 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 20:06:15 +0300
-From:   Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Peter Korsgaard <peter@korsgaard.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-actions@lists.infradead.org
-Subject: Re: [PATCH v2 4/4] arm: dts: owl-s500: Add RoseapplePi
-Message-ID: <20200831170615.GB2551342@BV030612LT>
-References: <cover.1598621459.git.cristian.ciocaltea@gmail.com>
- <5a6fc55341b346439ba32b5a3e14087edbaa6226.1598621459.git.cristian.ciocaltea@gmail.com>
- <20200831092648.GD4154@mani>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=pgFu1p8h9Ux4HOhRX7jy/a6A2Bz00oLRJJ81vpA+6Ow=;
+        b=m0+pr34MCIlNXIUa8IeFewwMcLi89byaptRQyvklxcEbeMMlp7Rz5hx91Ct8giWQFv
+         vZDd8oe7w8rL8vadN5L5DrEqpsuIoYITiMW4lt4nFyvcWBvwtuvZwJJefO4tlpxxNHQk
+         n0sHhvl7G5HQPCOa9LnDuJ5TEtYpK9G6Hgl7urIAo3twgZz94g+YWxxcfCk0chxmokxD
+         22bPacUFI+dwkfGey8SUzka50naCnZqPKYN43Eq0Y2z0zK2rdxShqQgDssBG8ks7w69u
+         f+TOs6ASAPEHCh7AWZIyPa79E/R6uIYOSyqaB65TA+66O3DNF3mrIKg8xoqPQq8ITbjE
+         SuaQ==
+X-Gm-Message-State: AOAM532zD5y2u8rELnQyO588Mnbee+POEF5sx/p3Ujj67yd1gPsO4e7B
+        oA5X2nHGowypd3ga+TTb/o0W7W1ZkdbRTc24LAQOglatKmlH
+X-Google-Smtp-Source: ABdhPJxbaySGcmCPsLgimLZxA5TlRXRrqaSmJ1pg2AGx3PbvrNO1Rg8wmsm79dEWPpl6m3yhnNfyAUO2m2KzcBW1gjDLlJXpiY3K
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831092648.GD4154@mani>
+X-Received: by 2002:a5d:9051:: with SMTP id v17mr1979896ioq.88.1598893638182;
+ Mon, 31 Aug 2020 10:07:18 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 10:07:18 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000566d5405ae2f6f70@google.com>
+Subject: WARNING in timer_wait_running
+From:   syzbot <syzbot+3b14b2ed9b3d06dcaa07@syzkaller.appspotmail.com>
+To:     baolu.lu@linux.intel.com, jroedel@suse.de, jun.miao@windriver.com,
+        koba.ko@canonical.com, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 02:56:48PM +0530, Manivannan Sadhasivam wrote:
-> On 0828, Cristian Ciocaltea wrote:
-> > Add a Device Tree for the RoseapplePi SBC.
-> > 
-> > Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > Reviewed-by: Peter Korsgaard <peter@korsgaard.com>
-> 
-> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Hello,
 
-Thanks,
-Cristi
+syzbot found the following issue on:
 
-> Thanks,
-> Mani
-> 
-> > ---
-> >  arch/arm/boot/dts/Makefile                 |  1 +
-> >  arch/arm/boot/dts/owl-s500-roseapplepi.dts | 47 ++++++++++++++++++++++
-> >  2 files changed, 48 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/owl-s500-roseapplepi.dts
-> > 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index 4572db3fa5ae..bff9ef996fbb 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -868,6 +868,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
-> >  dtb-$(CONFIG_ARCH_ACTIONS) += \
-> >  	owl-s500-cubieboard6.dtb \
-> >  	owl-s500-guitar-bb-rev-b.dtb \
-> > +	owl-s500-roseapplepi.dtb \
-> >  	owl-s500-sparky.dtb
-> >  dtb-$(CONFIG_ARCH_PRIMA2) += \
-> >  	prima2-evb.dtb
-> > diff --git a/arch/arm/boot/dts/owl-s500-roseapplepi.dts b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
-> > new file mode 100644
-> > index 000000000000..a2087e617cb2
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/owl-s500-roseapplepi.dts
-> > @@ -0,0 +1,47 @@
-> > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> > +/*
-> > + * Roseapple Pi
-> > + *
-> > + * Copyright (C) 2020 Cristian Ciocaltea <cristian.ciocaltea@gmail.com>
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "owl-s500.dtsi"
-> > +
-> > +/ {
-> > +	compatible = "roseapplepi,roseapplepi", "actions,s500";
-> > +	model = "Roseapple Pi";
-> > +
-> > +	aliases {
-> > +		serial2 = &uart2;
-> > +	};
-> > +
-> > +	chosen {
-> > +		stdout-path = "serial2:115200n8";
-> > +	};
-> > +
-> > +	memory@0 {
-> > +		device_type = "memory";
-> > +		reg = <0x0 0x80000000>; /* 2GB */
-> > +	};
-> > +
-> > +	uart2_clk: uart2-clk {
-> > +		compatible = "fixed-clock";
-> > +		clock-frequency = <921600>;
-> > +		#clock-cells = <0>;
-> > +	};
-> > +};
-> > +
-> > +&twd_timer {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&timer {
-> > +	clocks = <&hosc>;
-> > +};
-> > +
-> > +&uart2 {
-> > +	status = "okay";
-> > +	clocks = <&uart2_clk>;
-> > +};
-> > -- 
-> > 2.28.0
-> > 
+HEAD commit:    1127b219 Merge tag 'fallthrough-fixes-5.9-rc3' of git://gi..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1501768e900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
+dashboard link: https://syzkaller.appspot.com/bug?extid=3b14b2ed9b3d06dcaa07
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1446598e900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ac97d5900000
+
+The issue was bisected to:
+
+commit b1012ca8dc4f9b1a1fe8e2cb1590dd6d43ea3849
+Author: Lu Baolu <baolu.lu@linux.intel.com>
+Date:   Thu Jul 23 01:34:37 2020 +0000
+
+    iommu/vt-d: Skip TE disabling on quirky gfx dedicated iommu
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=177a7499900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=14fa7499900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10fa7499900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3b14b2ed9b3d06dcaa07@syzkaller.appspotmail.com
+Fixes: b1012ca8dc4f ("iommu/vt-d: Skip TE disabling on quirky gfx dedicated iommu")
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 10581 at kernel/time/posix-timers.c:849 timer_wait_running+0x218/0x250 kernel/time/posix-timers.c:849
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 10581 Comm: syz-executor958 Not tainted 5.9.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x4a kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:timer_wait_running+0x218/0x250 kernel/time/posix-timers.c:849
+Code: 00 48 c7 c2 a0 97 4d 88 be 7b 02 00 00 48 c7 c7 00 98 4d 88 c6 05 8b eb 46 09 01 e8 87 85 f4 ff e9 b1 fe ff ff e8 f8 04 0e 00 <0f> 0b e9 08 ff ff ff e8 6c 1d 4e 00 e9 3b fe ff ff 4c 89 e7 e8 6f
+RSP: 0018:ffffc9000ab87d40 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: ffff8880a0b46100 RSI: ffffffff81663a18 RDI: ffffffff884da458
+RBP: ffff888093acbb48 R08: 0000000000000001 R09: 0000000000000001
+R10: 0000000000000000 R11: 0000000000000000 R12: ffffc9000ab87da0
+R13: 0000000000000000 R14: ffffffff884da3e0 R15: ffffc9000ab87da0
+ do_timer_settime.part.0+0x119/0x1d0 kernel/time/posix-timers.c:929
+ do_timer_settime kernel/time/posix-timers.c:961 [inline]
+ __do_sys_timer_settime32 kernel/time/posix-timers.c:974 [inline]
+ __se_sys_timer_settime32 kernel/time/posix-timers.c:961 [inline]
+ __ia32_sys_timer_settime32+0x219/0x310 kernel/time/posix-timers.c:961
+ do_syscall_32_irqs_on arch/x86/entry/common.c:84 [inline]
+ __do_fast_syscall_32+0x57/0x80 arch/x86/entry/common.c:126
+ do_fast_syscall_32+0x2f/0x70 arch/x86/entry/common.c:149
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7fa7549
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 eb 0d 90 90 90 90 90 90 90 90 90 90 90 90
+RSP: 002b:00000000f7f8114c EFLAGS: 00000296 ORIG_RAX: 0000000000000104
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000020000300 RSI: 0000000000000000 RDI: 0000000000000002
+RBP: 0000000020000180 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
