@@ -2,123 +2,148 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA06C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFB2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64F8520707
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC6CA207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="irsBQYiw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbgHaL3s convert rfc822-to-8bit (ORCPT
+        id S1726821AbgHaLac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:29:48 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:39917 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727799AbgHaL2x (ORCPT
+        Mon, 31 Aug 2020 07:30:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45910 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727037AbgHaL3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:28:53 -0400
-Received: from mail-wr1-f69.google.com ([209.85.221.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <chia-lin.kao@canonical.com>)
-        id 1kChzW-0003Do-UZ
-        for linux-kernel@vger.kernel.org; Mon, 31 Aug 2020 11:28:50 +0000
-Received: by mail-wr1-f69.google.com with SMTP id l17so3086567wrw.11
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:28:50 -0700 (PDT)
+        Mon, 31 Aug 2020 07:29:41 -0400
+Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E95C06123F
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:29:31 -0700 (PDT)
+Received: by mail-vk1-xa43.google.com with SMTP id s127so1222389vkg.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:29:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JIN710TFLeLsKqRRlGqyF1G56AtXFbXojtnB+ek7vjU=;
+        b=irsBQYiwNj1Qd8vMPMDZ4IELqeCiPeWMfkpBS3c2ZNz7mZFu5GH+I3B7C0OPEjwMVD
+         9jI1XXFeXGnU2b2vums9U5nwrWH6D0JR8+2oZUphySN+PnNxeueJzDWGnvYwt/oltfMD
+         22ZbWt8+LSAgrcF3KfEDBpLH3L3bqcmci89/GwhyaMurg6aJNkKIcnBmBAkNJinIQkY1
+         sd8lVRWhg89SyMdMugmmdByKiTxoWw4s11IaTQo1XbNMhUAko8qoNtgXLFhxi6gu+Sow
+         h1kW2Fb4raKYv6Gc7y/Bhtd4ewL/1azXQH6Gakmz1md2e2rsSKov/8PxpyaUZ9MImqDH
+         NVGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=k+4/Yx6DeQldeglbS376dNJoVgOKnSc5ajKOtdzMws4=;
-        b=e6+GbnZk8ReLcGRsLHHg19i2MK6JZPgu0/N1aB51ipJKIlL7phJWbNjlygze1PHBzU
-         AMBNxPYSUJxnzoQooEzlG7PGne/dV84/+iMv/USOiKNm7XFs92PUrvkl5x2DSi5uIrFM
-         VRB4IKMes+L87wXvYUWydvIteQ4UFOq+nUBFj7DlLTPj3R3qtHD1Wda6pOcUpFVTggfL
-         B8tveY9ehEfWpWXH3sS7/AbToaOPCDwfRMwlt25pyfDDYR4wsppbwA+AnG7fT4Kao8xW
-         Od6/w/84qmmSkaidvpjrEkA+JNndgnbQaoiF4qBQC0uyYUuYYDpKxRhKRJBiGD+caXpo
-         kmZA==
-X-Gm-Message-State: AOAM530UB5yDVBqdtj4QkPJJ2H2A3HpTODfp+uFCD2Vrl/kqg7C6zeQu
-        1seUzfvQo+U0MjAyTTZkO4I95WPMapbm0z48emqyIpghtz2P8svPOR6jof1jnmjtdPKJS00K5LL
-        JOD2QKfvnhWG/upjC7VLElbBBZc032YT+odfKJ4geqyswplJ1PG5K9OrI/g==
-X-Received: by 2002:a5d:6910:: with SMTP id t16mr1345544wru.178.1598873328736;
-        Mon, 31 Aug 2020 04:28:48 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzNUaRTbjM1YE4AAR11tE2YfJvDxtl/R6uUHfYMBUE4Qb+ZRi35hOwMuCN3NIWR3kfvnlBKWAY3T3S0eBA+ytc=
-X-Received: by 2002:a5d:6910:: with SMTP id t16mr1345532wru.178.1598873328545;
- Mon, 31 Aug 2020 04:28:48 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=JIN710TFLeLsKqRRlGqyF1G56AtXFbXojtnB+ek7vjU=;
+        b=XQNlg06RcnWQPZEngXTnHOxTDmi7qDYBTrWnRPBZz1QRgFqGqKSwz3hvwz+W1Ql8JS
+         4AEac6QkQqAWYU7lLki0qq0cgwENEjVCWx/xHwe4dewuvRTnr1LVDtJfawk715kdaNRp
+         k9z3YiAligvG97JylwVX/gt4NGy/YUzbPLQWT5wyuRpPjfnve5gUzEfumEgidgOpCzUa
+         dNaLiwHgZvFqOJuYK6024kNKQDkDpi3NOLch3GZrODrCEdA+vVySwYz2Od7PhtUMlcuk
+         jA0uy3rwgyIYq7TFSJkRMz7XZZtQKo2dvkS1JE6jSK8RFl4aOndqeIdqiDLOgjPfmQgp
+         offA==
+X-Gm-Message-State: AOAM532MioeCh7ocCSLNbtYvDXpjdhUCLr1+VlzWjawNzjEkkmcm7Sq6
+        zBpugKpBXA8e9NzusFC7qfHoKPtFnPE/ZQJ72PYQgQ==
+X-Google-Smtp-Source: ABdhPJw4BM3EMv3eBn1ExCUI2PJJGFIfafdTX935b2p/ZrPMqqlhkRsSr+VDzuwhyidZqSRYvMBnWkwMt12C+fZFJyw=
+X-Received: by 2002:a1f:2a48:: with SMTP id q69mr458218vkq.69.1598873366828;
+ Mon, 31 Aug 2020 04:29:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200824054347.3805-1-william.sung@advantech.com.tw> <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com>
-In-Reply-To: <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com>
-From:   AceLan Kao <acelan.kao@canonical.com>
-Date:   Mon, 31 Aug 2020 19:28:37 +0800
-Message-ID: <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
-Subject: Re: [PATCH] iio: dac: ad5593r: Dynamically set AD5593R channel modes
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     William Sung <william.sung@advantech.com.tw>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
+References: <20200714121856.955680-1-hch@lst.de> <20200714121856.955680-10-hch@lst.de>
+ <20200828020045.GT3265@brightrain.aerifal.cx> <20200828021152.GU3265@brightrain.aerifal.cx>
+ <20200828042422.GA29734@lst.de> <CAPDyKFrKJrUN8mJ94g0+0Vs3aT1uq9MmHWfvzcVaoA5efaYPmQ@mail.gmail.com>
+ <20200828150942.GV3265@brightrain.aerifal.cx> <20200829083121.GA7851@lst.de>
+In-Reply-To: <20200829083121.GA7851@lst.de>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 31 Aug 2020 13:28:50 +0200
+Message-ID: <CAPDyKFpqd2n64=i5-45nJ=acbgS0AmOK0D2rtn-1bJj2HV9pnQ@mail.gmail.com>
+Subject: Re: [PATCH 09/10] sh: don't allow non-coherent DMA for NOMMU
+To:     Christoph Hellwig <hch@lst.de>, Rich Felker <dalias@libc.org>
+Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Campion Kang <Campion.Kang@advantech.com.tw>
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        linux-spi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jonathan and Andy,
+On Sat, 29 Aug 2020 at 10:31, Christoph Hellwig <hch@lst.de> wrote:
+>
+> On Fri, Aug 28, 2020 at 11:09:43AM -0400, Rich Felker wrote:
+> > > However, by looking at the code, one get the feeling that the DMA
+> > > support is somewhat prepared to be made optional. I guess it has never
+> > > been really tested, as the Kconfig option has "depends on HAS_DMA"  -
+> > > and it's been like that as long as I can remember.
+> >
+> > It always worked on our "byte-banged" SPI controller, with no DMA
+> > controller present, before Christoph's changes in this patch series,
+>
+> Before that nommu sh builds provided a DMA mapping implementation
+> that even worked for the streaming side (dma_map_*), but would corrupt
+> data if you used dma_alloc_coherent memory to communicate with the
+> device.
 
-This patch is mainly for Advantech's UNO-420[1] which is a x86-based platform.
-This platform is more like a development platform for customers to
-customize their products,
-so, specify the channel modes in ACPI table is not generic enough,
-that's why William submit this patch.
+I see.
 
-Are there other ways to specify or pass values to the module without
-using module parameters?
-It's good if we can leverage sysfs, but I don't know if there is one
-for this scenario.
+>
+> > and seems to be working now (although I have some other, hopefully
+> > unrelated regressions to debug) with #ifdef CONFIG_HAS_DMA around the
+> > if (spi->master->dev.parent->dma_mask) block in mmc_spi_probe. That's
+> > probably not the right fix though -- why isn't it checking
+> > host->dma_dev instead and only attempting DMA setup if dma_dev is
+> > non-null?
+>
+> I don't think dma_dev can be NULL right now.  dma_dev is assigned here:
+>
+>         if (spi->master->dev.parent->dma_mask) {
+>                 struct device   *dev = spi->master->dev.parent;
+>
+>                 host->dma_dev = dev;
+>
+> but for any OF or real bus device dma_mask never is zero (it actually is
+> a pointer), and the value of it also is initialized to 32-bit by default,
+> making this effectively an "if (1) {".  The driver needs some way to
+> communicate if a given device actually is DMA capable or not. Or is that
+> purely a factor of the platform which would be a little strange.
 
-1. https://www.advantech.com/products/9a0cc561-8fc2-4e22-969c-9df90a3952b5/uno-420/mod_2d6a546b-39e3-4bc4-bbf4-ac89e6b7667c
+Okay, thanks for clarifying things.
 
-Andy Shevchenko <andy.shevchenko@gmail.com> 於 2020年8月31日 週一 上午1:07寫道：
 >
-> On Mon, Aug 24, 2020 at 8:54 AM William Sung
-> <william.sung@advantech.com.tw> wrote:
-> >
-> > To use ad5593r more flexibly, we use the module parameter to setting the
-> > channel modes dynamically whenever the module probe up.
+> In which case we should do something like:
 >
-> > Users can pass
-> > the channel modes to the module parameter for allocating the
-> > functionality of channels as desired.
 >
-> NAK. We have a sysfs interface.
+> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+> index 39bb1e30c2d722..3b0cc9a70e6432 100644
+> --- a/drivers/mmc/host/mmc_spi.c
+> +++ b/drivers/mmc/host/mmc_spi.c
+> @@ -1374,7 +1374,7 @@ static int mmc_spi_probe(struct spi_device *spi)
+>         if (!host->data)
+>                 goto fail_nobuf1;
 >
-> > For example:
-> > * Use in the kernel command line:
-> > Users can add the module parameter in the kernel command line such as
-> >
-> >     "ad5593r.ch_mode_cmdline=88001122"
-> >
-> > "88001122" means the channel mode setting for each channel. The most
-> > left side indicates the mode of channel 7, and the most right side
-> > indicates the mode of channel 0.
-> >
-> > * Use when manually probe the module:
-> > Similar to the kernel command line usage, users can enter
-> >
-> >     "modprobe ad5593r ch_mode_probe=88001122"
-> >
-> > to start the ad5593r module with the desired channel mode setting.
+> -       if (spi->master->dev.parent->dma_mask) {
+> +       if (IS_ENABLED(CONFIG_HAS_DMA)) {
+
+I guess "#ifdef CONFIG_HAS_DMA", would work as well as CONFIG_HAS_DMA
+can't be "m".
+
+I would also suggest moving the DMA setup things into a separate
+function. Then when CONFIG_HAS_DMA is unset, we can use a stub.
+
+>                 struct device   *dev = spi->master->dev.parent;
 >
-> Again NAK, this basically should come from Device Tree or ACPI.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
+>                 host->dma_dev = dev;
+
+Let me cook a patch that we can try.
+
+Kind regards
+Uffe
