@@ -2,158 +2,133 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DF2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2414EC43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0AB20578
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00387206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sAI2u2w5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dgF7Dfsf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHaEfl (ORCPT
+        id S1726106AbgHaEjU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 00:35:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
+        Mon, 31 Aug 2020 00:39:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgHaEfj (ORCPT
+        with ESMTP id S1725829AbgHaEjS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 00:35:39 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5E0C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:37 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id w186so3620059pgb.8
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:37 -0700 (PDT)
+        Mon, 31 Aug 2020 00:39:18 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAEB5C061755
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:39:16 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id n3so1694899pjq.1
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:39:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=icspKIQ1PkNAJTsI1t63T7zqqLLvN0pfo9ohQKHwF/s=;
-        b=sAI2u2w5PWSlX52FmcryHfAvoeCFTuap75DsHLtQnmiADV733XENBiQs+j4DPt8B2r
-         eqfKj+K2Vgh/Uf0+gpZ3cwLUNhsqc5Bcj8277YYxSHaXc7p5nVZFP592pBFt+AdNu1x9
-         K7IwET7gDZxdVBK2///6HceZPwhcOk1US/f6Pdj1vWcfRy/5kf5gPErYwzByB/V2bJGt
-         Hcfo1EZ2laKftr/LsNfG1I5R6fF9RFciPYaioZu71FrEYOqlIuhUX+5CV3idAl1HTbp0
-         Z/MGxGWJFYQu4nmYcKWGfMtAZ3USq1sjYmlwGbEwSA3fH1FqmWIEtfMZLDE3UJhrlil/
-         Hi1A==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=eK4HJEXVysJqY3H0HRpuKE64bWmfk+MIff/zDDdh058=;
+        b=dgF7DfsfgxuT9oJTzh49Q55n+VQFmgp6g1F2K862ACF6INQXaDDqnOAFaIM+pWb91x
+         bPyOS+Rx+5UGnULEhSocC6LP2ytaeNXvqVRy2kXIcQBz8LJeZWECPUVnNGyfpJkce+nQ
+         RsnWO7OFQqYBFkyFL3XfSDGQsrxI3YbH+tNVI1UYHGMX4RiEacjEq11YsUIv//Zaonvj
+         oOT21Wx8sS66bVnNuz7Xom8Ti1w9JZ2tlmenJfaZlAiPxdfGIjY0yHk3zHXD2+7lKivI
+         BWWHzsQukeg1cmIoFebvX8xOjr1PisXH9ZIMA1cL9hvLoPnBLuyq6BEMnJO/VSSJjLOq
+         WRaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=icspKIQ1PkNAJTsI1t63T7zqqLLvN0pfo9ohQKHwF/s=;
-        b=Yp1wNWOHaoC0AqaQHuaWIEzKwJHUP7d3F0ts0QNpmX7dV5mC8yTJuk8m7/slpx3mQz
-         3mzjXEkhVqYZrS6gNHnyu9zbtNEbHR2+C0ywg//5t22jIHwGxsPKo0LYlx1O3gWnsPtJ
-         yfV8+Q/eKZMfh/nSNkPgjb5QTDLxwUqO4PJf903kvgsanWgiXAK9I8khM2aFgOP/trCt
-         h5L9C3jnca9vuDo08biZUlpKyaUfOHbWashMX/O4iMvHQjm/B5Yzjc/NfvVmbwOBfEp8
-         0MMUGciMPRYP5L4pLrrFKdo2LznpEBj6unFWQjS1WF+ROSSpFp7J+Y4Zy3lWlNgk5EfN
-         54nA==
-X-Gm-Message-State: AOAM532FYOll3Bx8PJ/ji4rsixJ3DAOyBJHO/f1RUd/F1hTIu6rFQE1D
-        GzHbl5A4p+FQn6KHyuo7Cek=
-X-Google-Smtp-Source: ABdhPJyHrTxe8NKfMuuY5xgg7xQCcQStiOBRt8sRSbruKNh8bZI1btUWlqDBb+fIrDEMs79eI+f5Vw==
-X-Received: by 2002:aa7:95b8:: with SMTP id a24mr7639695pfk.219.1598848536811;
-        Sun, 30 Aug 2020 21:35:36 -0700 (PDT)
-Received: from Gentoo (sau-465d4-or.servercontrol.com.au. [43.250.207.1])
-        by smtp.gmail.com with ESMTPSA id y29sm5840199pfp.141.2020.08.30.21.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 21:35:35 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 10:05:22 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Sasha Levin <sashal@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: ..and its built and boot without fuss!! Linux 5.9-rc3
-Message-ID: <20200831043522.GA32698@Gentoo>
-Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <CAHk-=wiD1yujm_WvWLYL7gZsWMvZyWMg1rfU7dWmnYYc3a7Gsg@mail.gmail.com>
- <20200830234659.GB8670@sasha-vm>
- <CAHk-=whBtfMQDm9YRzSG7xCvVKx6YMScJ-_P+=hCT31op-CVig@mail.gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=eK4HJEXVysJqY3H0HRpuKE64bWmfk+MIff/zDDdh058=;
+        b=cn7+/+Agqr+v5hBE0SSGuaqw/JZrVcU0aCgvfv7Z1EBie32tE0RxxY9+4VH7AUNORj
+         qhUzvnuRNgLLVEUfJOBzf5fAuZXOfNyFR4gjY4cUtuu+br07p/ZcV9p8oXaEraE1ptqy
+         MSXw5zbR8LZjHzojVarQso0Ssu0/ns6U1t3A9rqEtha8ZeZ3CMwaruqTh+nbmH9JniD1
+         hs/1xtRCtRoVw/ul2jtBcaQcKvur5hah9Kc0nVOLNunwh5fuhjdmmNvrmf+AqkmlJrjY
+         GRN/0PfhWO7sqRZ6IZ4TZ1TPAB7ArXpu2AZw2jZOomD1MRGqf040pTq5aVIPj8cgKdAQ
+         iwsQ==
+X-Gm-Message-State: AOAM531IRHMb2rA6RnfLmMK0FsS9MAW5FLcxhgdr3T6Ev8S7FeEN4onQ
+        wVTTE3Vj3pT6l3MSheRvFSFTZw==
+X-Google-Smtp-Source: ABdhPJxaL3cyZNWOP2NQ3q4g/ZNU7QIPjGKqARj3Y782jHZtc3+5BbYdDk8M94yhDr8nn2UtuztSiw==
+X-Received: by 2002:a17:90a:1741:: with SMTP id 1mr9611028pjm.173.1598848756361;
+        Sun, 30 Aug 2020 21:39:16 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id t5sm5487141pji.51.2020.08.30.21.39.15
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 30 Aug 2020 21:39:15 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 10:09:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/3] ARM: tegra: Pass multiple versions in
+ opp-supported-hw property
+Message-ID: <20200831043908.mtw4dglybcmcabjb@vireshk-i7>
+References: <cover.1598442485.git.viresh.kumar@linaro.org>
+ <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
+ <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAHk-=whBtfMQDm9YRzSG7xCvVKx6YMScJ-_P+=hCT31op-CVig@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 28-08-20, 10:37, Dmitry Osipenko wrote:
+> 26.08.2020 14:50, Viresh Kumar пишет:
+> > We can now pass multiple versions in "opp-supported-hw" property, lets
+> > do that and simplify the tables a bit.
+> > 
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > 
+> > ---
+> > Dmitry, I think there is further scope of simplifying stuff here by
+> > using the opp-microvolt-<name> property and corresponding
+> > dev_pm_opp_set_prop_name() call.
 
---UlVJffcvxoiEqYs2
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Any inputs on this Dmitry ?
 
-On 16:56 Sun 30 Aug 2020, Linus Torvalds wrote:
->On Sun, Aug 30, 2020 at 4:47 PM Sasha Levin <sashal@kernel.org> wrote:
->>
->> Is it possible you've forgotten to push? I don't see the tag/5.9-rc3
->> commit in your repo.
->
->Indeed. Thanks for noticing. Fixed,
->
->           Linus
+> > diff --git a/arch/arm/boot/dts/tegra30-cpu-opp.dtsi b/arch/arm/boot/dts/tegra30-cpu-opp.dtsi
+> ...
+> > -		opp@1000000000,975,3,7 {
+> > -			clock-latency-ns = <100000>;
+> > -			opp-supported-hw = <0x08 0x0080>;
+> > -			opp-hz = /bits/ 64 <1000000000>;
+> > +			opp-supported-hw = <0x0F 0x0001>,
+> > +				<0x01 0x0002>,
+> > +				<0x01 0x0010>,
+> > +				<0x01 0x0080>,
+> > +				<0x01 0x0100>;
+> > +			opp-hz = /bits/ 64 <475000000>;
+> >  		};
+> 
+> The only very minor difference between my OPP-gen result and yours is
+> that the above hunk has inconsistent single-column formatting, while all
+> others are two-column.
 
-Something trivial for your eyes!!
+Ah, my mistake. Fixed and pushed now.
 
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
 
-[    3.218031] sd 0:0:0:0: [sda] Attached SCSI disk
-[    3.225776] md: Waiting for all devices to be available before autodetect
-[    3.226313] md: If you don't use raid, use raid=noautodetect
-[    3.226722] md: Autodetecting RAID arrays.
-[    3.227221] md: autorun ...
-[    3.227519] md: ... autorun DONE.
-[    3.396336] EXT4-fs (sda): recovery complete
-[    3.414304] EXT4-fs (sda): mounted filesystem with ordered data mode. Opts: (null)
-[    3.416040] ext4 filesystem being mounted at /root supports timestamps until 2038 (0x7fffffff)
-[    3.416733] VFS: Mounted root (ext4 filesystem) on device 8:0.
-[    3.422032] devtmpfs: mounted
-[    3.445402] Freeing unused decrypted memory: 2040K
-[    3.530217] Freeing unused kernel image (initmem) memory: 1604K
-[    3.530871] Write protecting the kernel read-only data: 26624k
-[    3.535134] Freeing unused kernel image (text/rodata gap) memory: 2040K
-[    3.536869] Freeing unused kernel image (rodata/data gap) memory: 908K
-[    3.537595] rodata_test: all tests were successful
-[    3.538160] Run /sbin/init as init process
-[    3.716064] tsc: Refined TSC clocksource calibration: 2194.918 MHz
-[    3.716766] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x1fa37202099, max_idle_ns: 440795206796 ns
-[    3.717452] clocksource: Switched to clocksource tsc
-[    3.769061] EXT4-fs (sda): re-mounted. Opts: (null)
-[    3.769727] ext4 filesystem being remounted at / supports timestamps until 2038 (0x7fffffff)
-Starting syslogd: OK
-Starting klogd: OK
-Running sysctl: OK
-[    5.019294] random: crng init done
-Initializing random number generator: OK
-Saving random seed: OK
-Starting network: OK
+Thanks.
 
-Welcome to Buildroot_Linux
-Bhaskar_Thinkpad_x250 login: root
-# uname -a
-Linux Bhaskar_Thinkpad_x250 5.9.0-rc3-Gentoo #1 SMP Mon Aug 31 08:00:07 IST 2020 x86_64 GNU/Linux
-
-
-~Bhaskar
-
---UlVJffcvxoiEqYs2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl9MfgoACgkQsjqdtxFL
-KRXghAf/aT484AINKRTmc4AUD0rXXezr5c/+F0jn2DCSKGvG/oIjbwxov1O2ly8E
-6ijqHAt3b+7pft8dTiE/U9aLUs1xIXutc7PIgoJQrlUHVGNSYwVD0KZDwy0m7pJB
-K5ynbf9UYm0bK/u/05H//7lZwOO71DAqUxBCzoYx+mhsZxFm2O58rdmUVtq2JPe9
-d53rLzXwppyvJI8GU6v9A5td8soQwFjvgDr6uQpdV5NTChjdyYjt2RisTVJll2Cn
-rU0IjYGpw05iLrU7Jec/rr8uth9sEe01kOXSrfXpMv2JKvzm0gEAjG9kPSgBGu13
-+LDT8qOI2BOPeiXVz7TkIuncgjvZeA==
-=H0b8
------END PGP SIGNATURE-----
-
---UlVJffcvxoiEqYs2--
+-- 
+viresh
