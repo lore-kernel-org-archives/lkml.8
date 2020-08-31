@@ -2,101 +2,226 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DD5C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8F1C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F7FC206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:22:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZzXUvi0p"
+	by mail.kernel.org (Postfix) with ESMTP id E90C620719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:29:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598909359;
+	bh=ZDT28xfUkP1M8J8ASix6Vm8/VXe7dJSKAagxg06IY/s=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=mD2nAjr9JWosm30DnRwlOWCmbk3fukkq/udZ8d3o6n26NfCy9vjMjKFOriAN5b0J1
+	 QCkO1Jzd2k8d9loRfjOebRUyizEn6M9IBSZLzF/5mxJ2WN/TgLCBUd670nyBL4vCr2
+	 j5pQRdOn3YPxgzvBBqqha8t0IZ9N+gD6SCu694Pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730259AbgHaVWg (ORCPT
+        id S1730263AbgHaV3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 17:22:36 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11379 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728458AbgHaVWb (ORCPT
+        Mon, 31 Aug 2020 17:29:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728352AbgHaV3Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 17:22:31 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4d69980001>; Mon, 31 Aug 2020 14:20:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 31 Aug 2020 14:22:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 31 Aug 2020 14:22:30 -0700
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
- 2020 21:22:30 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 31 Aug 2020 21:22:30 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4d6a150003>; Mon, 31 Aug 2020 14:22:29 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH 2/2] mm/migrate: preserve soft dirty in remove_migration_pte()
-Date:   Mon, 31 Aug 2020 14:22:22 -0700
-Message-ID: <20200831212222.22409-3-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200831212222.22409-1-rcampbell@nvidia.com>
-References: <20200831212222.22409-1-rcampbell@nvidia.com>
+        Mon, 31 Aug 2020 17:29:16 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 857C1C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:29:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id h10so7612247ioq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:29:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=va7gdVSZd9oGcktmFSi4633m1KmqtF16W8cC99ywrMo=;
+        b=WjlB03xtnU+43wht78tHLoS8a424N3Kd+/ROTOPBFZ7Kk02fAInH1cmTngPOuY1KNe
+         UeIBt8RalhfROJkDxcePklvzDqg8TmWtuYWfvTRq58aE+XIrld97k8ukOw8yPapfzKPS
+         U7adjw89nSoej8pbAX+2Gj0ZNyJPVqhqYmxqg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=va7gdVSZd9oGcktmFSi4633m1KmqtF16W8cC99ywrMo=;
+        b=Nn05yue135rIFzJWgLwnGrqzmA4x+mybCuElf+EUIhezWLiCoZ6TvUCwlTmGng/Oji
+         2FTjGvEUDr2zKpKUgrS/4ozHIO500j2QJBtRphpVaKUaoJShdmqx8OWIe7hTG34maoai
+         Z1S3tedZO5O4FmMr3tt+WTqYCpJr+qu/CLH7w4QCn+gBeTofUkLt2EcUcXB3KVfhQ9Ut
+         qVov0eZ9tyzeR7wQIv5xuSbSJqH6wTFo5sbm1AtVz4D+nutSoEhZqt/s2r/DgSri7cQD
+         JqqJ2oAzd6XXLb5dDJRjTy9dM42wD5MNGsL7zoJ1Js5K2PaMRCsBuSeZQDl4o8YwFKj9
+         28hg==
+X-Gm-Message-State: AOAM530K9qwHP36pnjm5fcmGAeyKDsqV2BUqAMZS4LXOLON/zT94+NUj
+        1uPDRJWs+HLpdpGFEv1aTpW2XA==
+X-Google-Smtp-Source: ABdhPJy48awb963u3Jr6eP4TskOJYw/H3bcAOBQuCF1AsS/1fowlxgVQDhdVetgBTVCcuH5yHNXHFg==
+X-Received: by 2002:a6b:d811:: with SMTP id y17mr2890886iob.16.1598909355836;
+        Mon, 31 Aug 2020 14:29:15 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id j66sm4476366ili.71.2020.08.31.14.29.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 14:29:15 -0700 (PDT)
+Subject: Re: [PATCH 1/2] kunit: support failure from dynamic analysis tools
+To:     Uriel Guajardo <urielguajardojr@gmail.com>,
+        brendanhiggins@google.com
+Cc:     urielguajardo@google.com, akpm@linux-foundation.org,
+        keescook@chromium.org, rdunlap@infradead.org,
+        herbert@gondor.apana.org.au, christian.brauner@ubuntu.com,
+        peterz@infradead.org, ardb@kernel.og, arnd@arndb.de,
+        julien.grall@arm.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200813205722.1384108-1-urielguajardojr@gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <ae0e6555-5c10-4133-a975-3c28dca01d2f@linuxfoundation.org>
+Date:   Mon, 31 Aug 2020 15:29:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598908824; bh=/ipjpHkkeivZ87Vlc2yYb0Vba/A4X8d8GxlfEZWUxR0=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=ZzXUvi0px/bTG0EVGP2xyCKwESunCzWASuxsvDpudVMigdzLlKaTlJZs5JHmzz0aB
-         jyXi1u44c9KoM2W7SmcyDofzVrhN3jkFmxVc6gvXHkT+malP6swX/k9haqrisgdcwh
-         HMfmBvCqWbWl/QYLPbKbJcc6gotJX2fRbO31yUE43PXRc8rjID84khaMLCtZG9f20a
-         Sbj8gKC1sArfB/DBZkB8k0lXkeqBGRjjKMrTPbJMPaxZfBvO3MmVsOisWNk+YUcdr1
-         1W4xmUS1P05smOPgsPhQT0VkxxrglfA7NCcMXAjZvLdEYCV9ZGg3DHgaW7Qx/zEI2t
-         x9BNk7o+QUfhQ==
+In-Reply-To: <20200813205722.1384108-1-urielguajardojr@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The code to remove a migration PTE and replace it with a device private
-PTE was not copying the soft dirty bit from the migration entry.
-This could lead to page contents not being marked dirty when faulting
-the page back from device private memory.
+On 8/13/20 2:57 PM, Uriel Guajardo wrote:
+> Adds an API to allow dynamic analysis tools to fail the currently
+> running KUnit test case.
+> 
+> - Always places the kunit test in the task_struct to allow other tools
+> to access the currently running KUnit test.
+> 
+> - Creates a new header file to avoid circular dependencies that could be
+> created from the test.h file.
+> 
+> Requires KASAN-KUnit integration patch to access the kunit test from
+> task_struct:
+> https://lore.kernel.org/linux-kselftest/20200606040349.246780-2-davidgow@google.com/
+> 
+> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
+> ---
+>   include/kunit/test-bug.h | 24 ++++++++++++++++++++++++
+>   include/kunit/test.h     |  1 +
+>   lib/kunit/test.c         | 10 ++++++----
+>   3 files changed, 31 insertions(+), 4 deletions(-)
+>   create mode 100644 include/kunit/test-bug.h
+> 
+> diff --git a/include/kunit/test-bug.h b/include/kunit/test-bug.h
+> new file mode 100644
+> index 000000000000..283c19ec328f
+> --- /dev/null
+> +++ b/include/kunit/test-bug.h
+> @@ -0,0 +1,24 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * KUnit API allowing dynamic analysis tools to interact with KUnit tests
+> + *
+> + * Copyright (C) 2020, Google LLC.
+> + * Author: Uriel Guajardo <urielguajardo@google.com>
+> + */
+> +
+> +#ifndef _KUNIT_TEST_BUG_H
+> +#define _KUNIT_TEST_BUG_H
+> +
+> +#if IS_ENABLED(CONFIG_KUNIT)
+> +
+> +extern void kunit_fail_current_test(void);
+> +
+> +#else
+> +
+> +static inline void kunit_fail_current_test(void)
+> +{
+> +}
+> +
+> +#endif
+> +
+> +#endif /* _KUNIT_TEST_BUG_H */
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 3391f38389f8..81bf43a1abda 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -11,6 +11,7 @@
+>   
+>   #include <kunit/assert.h>
+>   #include <kunit/try-catch.h>
+> +#include <kunit/test-bug.h>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/slab.h>
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index dcc35fd30d95..d8189d827368 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -16,6 +16,12 @@
+>   #include "string-stream.h"
+>   #include "try-catch-impl.h"
+>   
+> +void kunit_fail_current_test(void)
+> +{
+> +	if (current->kunit_test)
+> +		kunit_set_failure(current->kunit_test);
+> +}
+> +
+>   static void kunit_print_tap_version(void)
+>   {
+>   	static bool kunit_has_printed_tap_version;
+> @@ -284,9 +290,7 @@ static void kunit_try_run_case(void *data)
+>   	struct kunit_suite *suite = ctx->suite;
+>   	struct kunit_case *test_case = ctx->test_case;
+>   
+> -#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+>   	current->kunit_test = test;
+> -#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
+>   
+>   	/*
+>   	 * kunit_run_case_internal may encounter a fatal error; if it does,
+> @@ -602,9 +606,7 @@ void kunit_cleanup(struct kunit *test)
+>   		spin_unlock(&test->lock);
+>   		kunit_remove_resource(test, res);
+>   	}
+> -#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+>   	current->kunit_test = NULL;
+> -#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
+>   }
+>   EXPORT_SYMBOL_GPL(kunit_cleanup);
+>   
+> 
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
----
- mm/migrate.c | 2 ++
- 1 file changed, 2 insertions(+)
+Is this patch still needed. Doesn't apply on top of Linux 5.9. From
+q quick review, doesn't looks like it is needed. Not seeing any
+CONFIG_KASAN's in lib/kunit/test.c
 
-diff --git a/mm/migrate.c b/mm/migrate.c
-index fe339a847328..4f89360d9e77 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -249,6 +249,8 @@ static bool remove_migration_pte(struct page *page, str=
-uct vm_area_struct *vma,
- 		if (unlikely(is_device_private_page(new))) {
- 			entry =3D make_device_private_entry(new, pte_write(pte));
- 			pte =3D swp_entry_to_pte(entry);
-+			if (pte_swp_soft_dirty(*pvmw.pte))
-+				pte =3D pte_swp_mksoft_dirty(pte);
- 			if (pte_swp_uffd_wp(*pvmw.pte))
- 				pte =3D pte_swp_mkuffd_wp(pte);
- 		}
---=20
-2.20.1
+Here is the .rej
+
+--- lib/kunit/test.c
++++ lib/kunit/test.c
+@@ -290,9 +296,7 @@ static void kunit_try_run_case(void *data)
+         struct kunit_suite *suite = ctx->suite;
+         struct kunit_case *test_case = ctx->test_case;
+
+-#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+         current->kunit_test = test;
+-#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT) */
+
+         /*
+          * kunit_run_case_internal may encounter a fatal error; if it does,
+@@ -608,9 +612,7 @@ void kunit_cleanup(struct kunit *test)
+                 spin_unlock(&test->lock);
+                 kunit_remove_resource(test, res);
+         }
+-#if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT))
+         current->kunit_test = NULL;
+-#endif /* IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_KUNIT)*/
+  }
+  EXPORT_SYMBOL_GPL(kunit_cleanup);
+
+If this is still needed, please send me rebased patch.
+
+thanks,
+-- Shuah
 
