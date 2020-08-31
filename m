@@ -2,51 +2,53 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5F9C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6186FC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 106C220E65
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:29:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30BB7214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887784;
-	bh=heEBb8MpOxbMsYU7JsQ/L2aJhoEd8G5kwJWv4Ec04jY=;
+	s=default; t=1598887789;
+	bh=VJ0G36w4AwGdWcGN89VVM6vkew7+G4ceTdRs1y5VBhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QX0QnN8C1ZlWmIsGlPWSs0jGsIv/pU+Qvv6m+2tD22pGhabimJFMhKiDw/q+nUsXa
-	 DpvthPBB/K5bIDUrNJGNvnmpkTBuvL0bUmbYLZuUrmevSjhhOLibd3eer2+LAaMXse
-	 UzojSdPDDOXVaRXhdQ4DcSPFb+htNddcKx6Q9PBY=
+	b=kQsNVuwehHoALuucqO5MSBiB0V/80KT2qqxcM/19V07pyRWa9h2QOPdP7e+tBJdpr
+	 H+lJys6z0jVsDF8yJy3zmVsNEQo+xXOZD2Nj3+q/DC43n/FJ86fR3Kne73BywSujEs
+	 ZcRsyEL1wD76y2e8yaxjiqg3OQW6HKP4MAvBjYTo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgHaP3n (ORCPT
+        id S1728422AbgHaP3r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38172 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:29:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38334 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgHaP3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:29:39 -0400
+        id S1726755AbgHaP3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:29:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 884C02083E;
-        Mon, 31 Aug 2020 15:29:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 383BA20936;
+        Mon, 31 Aug 2020 15:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887778;
-        bh=heEBb8MpOxbMsYU7JsQ/L2aJhoEd8G5kwJWv4Ec04jY=;
+        s=default; t=1598887783;
+        bh=VJ0G36w4AwGdWcGN89VVM6vkew7+G4ceTdRs1y5VBhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F6ZmBeHLBgQ0r/1TLiXD2NtwSZXx6yA6Gh/kfd47EvCin6ootJL29qcN2KTcvAguV
-         hps+xToWeKYl/cy97JkEuLjbU9YGYGETkMCJe37x6JEa5rhUkkV0d9SdHuBZFLf4UG
-         JxAgOZfe3IyxOoKsrB+14VpIPDAjEC55k88oD8L4=
+        b=rTCYaOD+E4TXIVTHBLu3t6ghmtVmEeDFVu50klulLG0fmuUDdJeMpI58nLps2uphO
+         x2VwfoaSmunnDvKDcfhCg1QDd47ykD9l/R0yc0fB8Jn/T1GyMRlgHpi70Zmrz/BJg6
+         PiFtARASpyRr4tWffLj3gRqEIketWh+ia6voXvd4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sebastian Parschauer <s.parschauer@gmx.de>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 02/42] HID: quirks: Always poll three more Lenovo PixArt mice
-Date:   Mon, 31 Aug 2020 11:28:54 -0400
-Message-Id: <20200831152934.1023912-2-sashal@kernel.org>
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 05/42] drm/msm/dpu: Fix scale params in plane validation
+Date:   Mon, 31 Aug 2020 11:28:57 -0400
+Message-Id: <20200831152934.1023912-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -59,54 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Parschauer <s.parschauer@gmx.de>
+From: Kalyan Thota <kalyan_t@codeaurora.org>
 
-[ Upstream commit 627a49975bdc3220f360a8237603a6344ee6a588 ]
+[ Upstream commit 4c978caf08aa155bdeadd9e2d4b026d4ce97ebd0 ]
 
-The PixArt OEM mice are known for disconnecting every minute in
-runlevel 1 or 3 if they are not always polled. One Lenovo PixArt
-mouse is already fixed. Got two references for 17ef:602e and three
-references for 17ef:6019 misbehaving like this. Got one direct bug
-report for 17ef:6093 from Wyatt Ward (wyatt8740). So add
-HID_QUIRK_ALWAYS_POLL for all of them.
+Plane validation uses an API drm_calc_scale which will
+return src/dst value as a scale ratio.
 
-Link: https://github.com/sriemer/fix-linux-mouse issue 22
-Signed-off-by: Sebastian Parschauer <s.parschauer@gmx.de>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+when viewing the range on a scale the values should fall in as
+
+Upscale ratio < Unity scale < Downscale ratio for src/dst formula
+
+Fix the min and max scale ratios to suit the API accordingly.
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+Tested-by: Kristian H. Kristensen <hoegsberg@google.com>
+Reviewed-by: Kristian H. Kristensen <hoegsberg@google.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 3 +++
- drivers/hid/hid-quirks.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 6f370e020feb3..1f42318a137fb 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -727,6 +727,9 @@
- #define USB_DEVICE_ID_LENOVO_TPPRODOCK	0x6067
- #define USB_DEVICE_ID_LENOVO_X1_COVER	0x6085
- #define USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_608D	0x608d
-+#define USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_6019	0x6019
-+#define USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_602E	0x602e
-+#define USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_6093	0x6093
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 3b9c33e694bf4..994d23bad3870 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -866,9 +866,9 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
+ 		crtc_state = drm_atomic_get_new_crtc_state(state->state,
+ 							   state->crtc);
  
- #define USB_VENDOR_ID_LG		0x1fd2
- #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 934fc0a798d4d..87b57514b92e1 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -105,6 +105,9 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M406XE), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTICAL_MOUSE_ID2), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_608D), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_6019), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_602E), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_MOUSE_6093), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C007), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOARD_G710_PLUS), HID_QUIRK_NOGET },
+-	min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxdwnscale);
++	min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxupscale);
+ 	ret = drm_atomic_helper_check_plane_state(state, crtc_state, min_scale,
+-					  pdpu->pipe_sblk->maxupscale << 16,
++					  pdpu->pipe_sblk->maxdwnscale << 16,
+ 					  true, true);
+ 	if (ret) {
+ 		DPU_DEBUG_PLANE(pdpu, "Check plane state failed (%d)\n", ret);
 -- 
 2.25.1
 
