@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73531C43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0B4C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BA0D21527
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 130ED206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887836;
-	bh=ht+MpGssPKdJ6E3rsvdmycBCNz+RMWwRINpMqFlTCqE=;
+	s=default; t=1598887840;
+	bh=SjN8iminpZiXmeBHQ3gKw/eRxDZLxp1Xr4nXn7Ml+q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SIl7M3NKwsJw83+Ir9clmsdsUMj8AgozDn1faxPTHVsttxCxr0q2L9BRPfigyCZPK
-	 4VPYMxFX1aXhEaSIb6h+S+0WY0sf/CFWUkCjKn7Q3hyxxpU4G50Bxddt2VXdKBp5Vn
-	 86PDVA7hTnCRgMyU0k7JYJqaeqQG1Wx/P8KbAmMU=
+	b=owSsCCmwO4U8ZDPxCZdcoFEj6UCoCGGmfwW3X8z6Jhgx5DrjjB9YRRuVyd6BMkpRl
+	 uLBwnX5pmWTT6uWCTKYdyAWxkUXXqiG5SMralxSlX9Rbc+dDoJmGsBQ++Ej3TAZplu
+	 3QBlF0jb9DCDQWPfoq/DgUusEp30JZ+zl5EnY8Es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgHaPae (ORCPT
+        id S1728700AbgHaPaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:30:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39660 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:30:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728584AbgHaPaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:21 -0400
+        id S1728612AbgHaPaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA7E920767;
-        Mon, 31 Aug 2020 15:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A6A207EA;
+        Mon, 31 Aug 2020 15:30:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887820;
-        bh=ht+MpGssPKdJ6E3rsvdmycBCNz+RMWwRINpMqFlTCqE=;
+        s=default; t=1598887823;
+        bh=SjN8iminpZiXmeBHQ3gKw/eRxDZLxp1Xr4nXn7Ml+q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AP7mPhhIXZomj4o2XoZnzCtfT9p7rI3/XsbrLq4uRX2koZd2g6tmndwdD17I4amDm
-         r7DiKc8GM6BVTEa6SN9P9tvgxcoxPzfkn8Jv65muM0505aw+oeawBfBrLghgjqiTLs
-         GV2M1zDmJXoiE9i3nslbAFVYbjn5Jski6rNMo4RE=
+        b=Z0noHzwbiA1bMrbUdSrDR0sDcKVByvEvKcLdzopp3gg72X1YnFYRn1j/JtHfO5Jan
+         1RQ9ZJLmYUJOmGh9jSDUGBL8SziNlS5NCBqekoZLc9zSRm1ZZgdl2BorI7CO4XTRAW
+         4H1ER9uJkIb8Mn8eSgKeyMh6fn1R6JGtGydR/gYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hou Pu <houpu@bytedance.com>, Josef Bacik <josef@toxicpanda.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        linux-block@vger.kernel.org, nbd@other.debian.org
-Subject: [PATCH AUTOSEL 5.8 31/42] nbd: restore default timeout when setting it to zero
-Date:   Mon, 31 Aug 2020 11:29:23 -0400
-Message-Id: <20200831152934.1023912-31-sashal@kernel.org>
+Cc:     Tong Zhang <ztong0001@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 33/42] drm/amd/display: should check error using DC_OK
+Date:   Mon, 31 Aug 2020 11:29:25 -0400
+Message-Id: <20200831152934.1023912-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -59,46 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Pu <houpu@bytedance.com>
+From: Tong Zhang <ztong0001@gmail.com>
 
-[ Upstream commit acb19e17c5134dd78668c429ecba5b481f038e6a ]
+[ Upstream commit ed9ab229fea24cbcab17f484297dc8344afb7ea9 ]
 
-If we configured io timeout of nbd0 to 100s. Later after we
-finished using it, we configured nbd0 again and set the io
-timeout to 0. We expect it would timeout after 30 seconds
-and keep retry. But in fact we could not change the timeout
-when we set it to 0. the timeout is still the original 100s.
+core_link_read_dpcd returns only DC_OK(1) and DC_ERROR_UNEXPECTED(-1),
+the caller should check error using DC_OK instead of checking against 0
 
-So change the timeout to default 30s when we set it to zero.
-It also behaves same as commit 2da22da57348 ("nbd: fix zero
-cmd timeout handling v2").
-
-It becomes more important if we were reconfigure a nbd device
-and the io timeout it set to zero. Because it could take 30s
-to detect the new socket and thus io could be completed more
-quickly compared to 100s.
-
-Signed-off-by: Hou Pu <houpu@bytedance.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Tong Zhang <ztong0001@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/nbd.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
-index ce7e9f223b20b..bc9dc1f847e19 100644
---- a/drivers/block/nbd.c
-+++ b/drivers/block/nbd.c
-@@ -1360,6 +1360,8 @@ static void nbd_set_cmd_timeout(struct nbd_device *nbd, u64 timeout)
- 	nbd->tag_set.timeout = timeout * HZ;
- 	if (timeout)
- 		blk_queue_rq_timeout(nbd->disk->queue, timeout * HZ);
-+	else
-+		blk_queue_rq_timeout(nbd->disk->queue, 30 * HZ);
- }
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+index 91cd884d6f257..7728fd71d1f3a 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_link_dp.c
+@@ -4346,9 +4346,9 @@ bool dc_link_get_backlight_level_nits(struct dc_link *link,
+ 			link->connector_signal != SIGNAL_TYPE_DISPLAY_PORT))
+ 		return false;
  
- /* Must be called with config_lock held */
+-	if (!core_link_read_dpcd(link, DP_SOURCE_BACKLIGHT_CURRENT_PEAK,
++	if (core_link_read_dpcd(link, DP_SOURCE_BACKLIGHT_CURRENT_PEAK,
+ 			dpcd_backlight_get.raw,
+-			sizeof(union dpcd_source_backlight_get)))
++			sizeof(union dpcd_source_backlight_get)) != DC_OK)
+ 		return false;
+ 
+ 	*backlight_millinits_avg =
+@@ -4387,9 +4387,9 @@ bool dc_link_read_default_bl_aux(struct dc_link *link, uint32_t *backlight_milli
+ 		link->connector_signal != SIGNAL_TYPE_DISPLAY_PORT))
+ 		return false;
+ 
+-	if (!core_link_read_dpcd(link, DP_SOURCE_BACKLIGHT_LEVEL,
++	if (core_link_read_dpcd(link, DP_SOURCE_BACKLIGHT_LEVEL,
+ 		(uint8_t *) backlight_millinits,
+-		sizeof(uint32_t)))
++		sizeof(uint32_t)) != DC_OK)
+ 		return false;
+ 
+ 	return true;
 -- 
 2.25.1
 
