@@ -2,86 +2,127 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4539EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB29C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:55:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB4720782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4993220782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:55:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TKDhuGbz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgHaBwt (ORCPT
+        id S1726903AbgHaBzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:52:49 -0400
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:38415 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726454AbgHaBws (ORCPT
+        Sun, 30 Aug 2020 21:55:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbgHaBzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:52:48 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e01353;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U7IVksK_1598838766;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U7IVksK_1598838766)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 31 Aug 2020 09:52:46 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     viro@zeniv.linux.org.uk, akpm@linux-foundation.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richard.weiyang@linux.alibaba.com>
-Subject: [PATCH] [RFC] exec: the vma passed to shift_arg_pages() must not have next
-Date:   Mon, 31 Aug 2020 09:51:21 +0800
-Message-Id: <20200831015121.20036-1-richard.weiyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Sun, 30 Aug 2020 21:55:14 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3382C061573;
+        Sun, 30 Aug 2020 18:55:14 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BftYy6xJlz9sTW;
+        Mon, 31 Aug 2020 11:55:02 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1598838904;
+        bh=Fevkc9YaB+1sYDbeOG8T4LT6GQdE5UvQoFOdg072Pu4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=TKDhuGbzZwJiCgjOR9K0+Eoiu1N+9y45LmPK2aIISkDfk+UEbKCBwjQ7Qhdpnkfyw
+         kyplzaIOzSMtPulaeL074BS0aq/GM4fIN9UBXOvms4bTKzoucGapMzW/Q6L4UP3MA/
+         2NqFCcpi9lId2L8nzWPulhyV+5XbgBxZkuoyuYMl6Xex6L7GiaGoI81QWsm/cq9YOY
+         yQwrxa6jjC9Whjq4YOzOV/5NyZMdJDF/vbajRMvRTB57SfyVGRYTOxaBigewE1UlCt
+         /jvBjUEltBJx4sRKP1ya6z56t8KGzMkjjZNSnRDnADcpFegpCY+uOtR0ngkd4pTDFV
+         YD86uNOQfMvWw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <joerg.roedel@amd.com>,
+        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        dma <dmaengine@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] fsldma: fsl_ioread64*() do not need lower_32_bits()
+In-Reply-To: <CAHk-=wjDEiWF_DsCVFPFqNa+JCS5SkOygbqeq8_=ZNOrFt7-rg@mail.gmail.com>
+References: <20200829105116.GA246533@roeck-us.net> <20200829124538.7475-1-luc.vanoostenryck@gmail.com> <CAHk-=whH0ApHy0evN0q6AwQ+-a5RK56oMkYkkCJtTMnaq4FrNQ@mail.gmail.com> <59cc6c99-9894-08b3-1075-2156e39bfc8e@roeck-us.net> <CAHk-=wjDEiWF_DsCVFPFqNa+JCS5SkOygbqeq8_=ZNOrFt7-rg@mail.gmail.com>
+Date:   Mon, 31 Aug 2020 11:54:58 +1000
+Message-ID: <874koj37gt.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can divide vma_adjust() into two categories based on whether the
-*insert* is NULL or not. And when *insert* is NULL, it has two users:
-mremap() and shift_arg_pages().
+Linus Torvalds <torvalds@linux-foundation.org> writes:
+> On Sat, Aug 29, 2020 at 1:40 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>> Except for
+>>
+>> CHECK: spaces preferred around that '+' (ctx:VxV)
+>> #29: FILE: drivers/dma/fsldma.h:223:
+>> +       u32 val_lo = in_be32((u32 __iomem *)addr+1);
+>
+> Added spaces.
+>
+>> I don't see anything wrong with it either, so
+>>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+>>
+>> Since I didn't see the real problem with the original code,
+>> I'd take that with a grain of salt, though.
+>
+> Well, honestly, the old code was so confused that just making it build
+> is clearly already an improvement even if everything else were to be
+> wrong.
 
-For the second vma_adjust() in shift_arg_pages(), the vma must not have
-next. Otherwise vma_adjust() would expand next->vm_start instead of just
-shift the vma.
+The old code is not that old, only ~18 months:
 
-Fortunately, shift_arg_pages() is only used in setup_arg_pages() to move
-stack, which is placed on the top of the address range. This means the
-vma is not expected to have a next.
+a1ff82a9c165 ("dmaengine: fsldma: Adding macro FSL_DMA_IN/OUT implement for ARM platform") (Jan 2019)
 
-Since mremap() calls vma_adjust() to expand itself, shift_arg_pages() is
-the only case it may fall into mprotect case 4 by accident. Let's add a
-BUG_ON() and comment to inform the following audience.
+So I think it's possible it's never been tested on 32-bit ppc at all.
 
-Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
----
- fs/exec.c | 3 +++
- 1 file changed, 3 insertions(+)
+I did have a 32-bit FSL machine but it lost its network card in a power
+outage and now it won't boot (and I can't get to it physically).
 
-diff --git a/fs/exec.c b/fs/exec.c
-index a91003e28eaa..3ff44ab0d112 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -682,6 +682,7 @@ static int shift_arg_pages(struct vm_area_struct *vma, unsigned long shift)
- 	struct mmu_gather tlb;
- 
- 	BUG_ON(new_start > new_end);
-+	BUG_ON(vma->vm_next);
- 
- 	/*
- 	 * ensure there are no vmas between where we want to go
-@@ -726,6 +727,8 @@ static int shift_arg_pages(struct vm_area_struct *vma, unsigned long shift)
- 
- 	/*
- 	 * Shrink the vma to just the new range.  Always succeeds.
-+	 * Since !vma->vm_next, __vma_adjust() would not go to mprotect case
-+	 * 4 to expand next.
- 	 */
- 	vma_adjust(vma, new_start, new_end, vma->vm_pgoff, NULL);
- 
--- 
-2.20.1 (Apple Git-117)
+> So I committed my "fix". If it turns out there's more wrong in there
+> and somebody tests it, we can fix it again. But now it hopefully
+> compiles, at least.
+>
+> My bet is that if that driver ever worked on ppc32, it will continue
+> to work whatever we do to that function.
+>
+> I _think_ the old code happened to - completely by mistake - get the
+> value right for the case of "little endian access, with dma_addr_t
+> being 32-bit". Because then it would still read the upper bits wrong,
+> but the cast to dma_addr_t would then throw those bits away. And the
+> lower bits would be right.
+>
+> But for big-endian accesses or for ARCH_DMA_ADDR_T_64BIT it really
+> looks like it always returned a completely incorrect value.
+>
+> And again - the driver may have worked even with that completely
+> incorrect value, since the use of it seems to be very incidental.
+>
+> In either case ("it didn't work before" or "it worked because the
+> value doesn't really matter"), I don't think I could possibly have
+> made things worse.
 
+Agreed.
+
+Hopefully someone from NXP can test it.
+
+cheers
