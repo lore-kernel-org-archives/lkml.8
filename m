@@ -2,159 +2,90 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ADF9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:11:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E0EC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CA6B2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:11:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OS9gs7zA"
+	by mail.kernel.org (Postfix) with ESMTP id AAF1C20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbgHaVLA (ORCPT
+        id S1730235AbgHaVS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 17:11:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbgHaVKf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 17:10:35 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96F1DC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:10:35 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id u126so7512214iod.12
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:10:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fct3OniIAh7vq4PmVo6V6yOdFXmba0zXgaN8XqOugb8=;
-        b=OS9gs7zA6vnWaXIdgW4oTD/29+9QNuHo5Y+QT5MuPNicJHhOcRmGlh+T1zGfudkOME
-         dKws0e3uJnOS3WV3S3sD6O0y315yxtmuBUq/8pFEA+owp3gliITgFSBKSCeJCJMBlRQz
-         C4DgV+AJ1pGIhAVDSwGxQcuoCGB8+vA0GHOe8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Fct3OniIAh7vq4PmVo6V6yOdFXmba0zXgaN8XqOugb8=;
-        b=lZ6E3tYKToBJub86u4S5YKBLbjLWU6dbe63TWxpEIEFicVLvyaYJmMZtLof6+0V0vh
-         O4O69tZD3cqC4TQY8iU/6Ny2hEw2/nbEJof9Cvz8gUKS3CwA5XR4oQ1NtngvQd4T23x3
-         x2TYRBq+hY+5bccalH8523HKiva8nEL2VU2mzQ4f1cd1TVDWK8kL/+qo7PC6ScHdI1OV
-         Q8NLyxLcLtjoSsg+pYjtDlt0NluqgvpXPoh2xDun0xiL9YoAOgoZOvtLQAOO5FAQ/msN
-         Sxj4PxnyVEFKQo86aDc0xBGA3nS+X5a+8BH5KrH7mVWr5mUWAPNI6gxGjMbIOOkpdCgb
-         +oUw==
-X-Gm-Message-State: AOAM530k4Qnb4EYbdAlTCJt1Gb3SWKJCgJpZCmbaxlgp/qK5yOag9Qd6
-        LsCiHqzTbpbFFutwLd8/ChfjJQ==
-X-Google-Smtp-Source: ABdhPJwlJ/rs0nG0HBgLhylpvYBhuBlWkXOCzKi3WbxNowDljJgS3+8Nvv2ps1fh0YXLqokwqRAeYw==
-X-Received: by 2002:a02:65c2:: with SMTP id u185mr2914044jab.35.1598908234755;
-        Mon, 31 Aug 2020 14:10:34 -0700 (PDT)
-Received: from rrangel920.bld.corp.google.com (h184-60-195-141.arvdco.broadband.dynamic.tds.net. [184.60.195.141])
-        by smtp.gmail.com with ESMTPSA id w13sm4090144iox.10.2020.08.31.14.10.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 14:10:34 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     adrian.hunter@intel.com
-Cc:     Nehal-bakulchandra.Shah@amd.com, chris.wang@amd.com,
-        Akshu.Agrawal@amd.com, Raul E Rangel <rrangel@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
-Subject: [PATCH] mmc: sdhci-acpi: Clear amd_sdhci_host on reset
-Date:   Mon, 31 Aug 2020 15:10:32 -0600
-Message-Id: <20200831150517.1.I93c78bfc6575771bb653c9d3fca5eb018a08417d@changeid>
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+        Mon, 31 Aug 2020 17:18:29 -0400
+Received: from correo.us.es ([193.147.175.20]:50194 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730222AbgHaVS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 17:18:27 -0400
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 121651C4423
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:18:24 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 058CDDA789
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:18:24 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id DF530DA7B9; Mon, 31 Aug 2020 23:18:23 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 8465BDA78B;
+        Mon, 31 Aug 2020 23:18:21 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Mon, 31 Aug 2020 23:18:21 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (unknown [90.77.255.23])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 44245426CCB9;
+        Mon, 31 Aug 2020 23:18:21 +0200 (CEST)
+Date:   Mon, 31 Aug 2020 23:18:20 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Julian Anastasov <ja@ssi.bg>
+Cc:     Yaroslav Bolyukin <iam@lach.pw>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Wensong Zhang <wensong@linux-vs.org>,
+        Simon Horman <horms@verge.net.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
+Subject: Re: [PATCHv5 net-next] ipvs: remove dependency on ip6_tables
+Message-ID: <20200831211820.GB24186@salvia>
+References: <alpine.LFD.2.23.451.2008291233110.3043@ja.home.ssi.bg>
+ <20200829135953.20228-1-iam@lach.pw>
+ <alpine.LFD.2.23.451.2008312005270.4425@ja.home.ssi.bg>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.LFD.2.23.451.2008312005270.4425@ja.home.ssi.bg>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 61d7437ed1390 ("mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040")
-broke resume for HS400. When the system suspends the eMMC controller is
-powered down. So on resume we need to reinitialize the controller.
-amd_sdhci_host was not getting cleared, so the DLL was never re-enabled
-on resume. This results in HS400 being non-functional.
+On Mon, Aug 31, 2020 at 08:12:05PM +0300, Julian Anastasov wrote:
+> 
+> 	Hello,
+> 
+> On Sat, 29 Aug 2020, Yaroslav Bolyukin wrote:
+> 
+> > This dependency was added because ipv6_find_hdr was in iptables specific
+> > code but is no longer required
+> > 
+> > Fixes: f8f626754ebe ("ipv6: Move ipv6_find_hdr() out of Netfilter code.")
+> > Fixes: 63dca2c0b0e7 ("ipvs: Fix faulty IPv6 extension header handling in IPVS").
+> > Signed-off-by: Yaroslav Bolyukin <iam@lach.pw>
+> 
+> 	Looks good to me, thanks! May be maintainers will
+> remove the extra dot after the Fixes line.
 
-This change clears the tuned_clock flag, clears the dll_enabled flag and
-disables the DLL on reset.
-
-Fixes: 61d7437ed1390 ("mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040")
-
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
-- Performed 100+ suspend/resume cycles without issue.
-- Also verified tuning continues to work.
-
- drivers/mmc/host/sdhci-acpi.c | 31 ++++++++++++++++++++++++-------
- 1 file changed, 24 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/mmc/host/sdhci-acpi.c b/drivers/mmc/host/sdhci-acpi.c
-index 962f074ca1742..284cba11e2795 100644
---- a/drivers/mmc/host/sdhci-acpi.c
-+++ b/drivers/mmc/host/sdhci-acpi.c
-@@ -551,12 +551,18 @@ static int amd_select_drive_strength(struct mmc_card *card,
- 	return MMC_SET_DRIVER_TYPE_A;
- }
- 
--static void sdhci_acpi_amd_hs400_dll(struct sdhci_host *host)
-+static void sdhci_acpi_amd_hs400_dll(struct sdhci_host *host, bool enable)
- {
-+	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
-+	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
-+
- 	/* AMD Platform requires dll setting */
- 	sdhci_writel(host, 0x40003210, SDHCI_AMD_RESET_DLL_REGISTER);
- 	usleep_range(10, 20);
--	sdhci_writel(host, 0x40033210, SDHCI_AMD_RESET_DLL_REGISTER);
-+	if (enable)
-+		sdhci_writel(host, 0x40033210, SDHCI_AMD_RESET_DLL_REGISTER);
-+
-+	amd_host->dll_enabled = enable;
- }
- 
- /*
-@@ -596,10 +602,8 @@ static void amd_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
- 
- 		/* DLL is only required for HS400 */
- 		if (host->timing == MMC_TIMING_MMC_HS400 &&
--		    !amd_host->dll_enabled) {
--			sdhci_acpi_amd_hs400_dll(host);
--			amd_host->dll_enabled = true;
--		}
-+		    !amd_host->dll_enabled)
-+			sdhci_acpi_amd_hs400_dll(host, true);
- 	}
- }
- 
-@@ -620,10 +624,23 @@ static int amd_sdhci_execute_tuning(struct mmc_host *mmc, u32 opcode)
- 	return err;
- }
- 
-+static void amd_sdhci_reset(struct sdhci_host *host, u8 mask)
-+{
-+	struct sdhci_acpi_host *acpi_host = sdhci_priv(host);
-+	struct amd_sdhci_host *amd_host = sdhci_acpi_priv(acpi_host);
-+
-+	if (mask & SDHCI_RESET_ALL) {
-+		amd_host->tuned_clock = false;
-+		sdhci_acpi_amd_hs400_dll(host, false);
-+	}
-+
-+	sdhci_reset(host, mask);
-+}
-+
- static const struct sdhci_ops sdhci_acpi_ops_amd = {
- 	.set_clock	= sdhci_set_clock,
- 	.set_bus_width	= sdhci_set_bus_width,
--	.reset		= sdhci_reset,
-+	.reset		= amd_sdhci_reset,
- 	.set_uhs_signaling = sdhci_set_uhs_signaling,
- };
- 
--- 
-2.28.0.402.g5ffc5be6b7-goog
-
+Applied, thanks. I have also removed the extra dot.
