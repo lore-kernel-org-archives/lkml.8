@@ -2,81 +2,102 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DFBBC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:04:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86954C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 735862072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:04:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6864920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:10:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pVbGWHzC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OmZcAy4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgHaHE0 (ORCPT
+        id S1726144AbgHaHKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:04:26 -0400
-Received: from mga12.intel.com ([192.55.52.136]:32881 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgHaHEZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:04:25 -0400
-IronPort-SDR: c836ObG9SCR551eSOm/x+vng0TtKsbm8Sc3nNgx7BjJPHuIzzQuLEy/GZf/anidQzrFbCeQzQq
- qpKzZO1MffTg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="136454593"
-X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
-   d="scan'208";a="136454593"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 00:04:24 -0700
-IronPort-SDR: +mGfJ4fN8GdX+b3galXYZm21+cuocKgUviGrYgLujy61A368eUKMv9P3+Btyp5No5MHi7pc9LD
- 8t+h/Pxhldig==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
-   d="scan'208";a="300952317"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
-  by orsmga006.jf.intel.com with ESMTP; 31 Aug 2020 00:04:18 -0700
-Subject: Re: [PATCH 5/6] perf record: Add 'snapshot' control command
-To:     Andi Kleen <ak@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200829105015.10800-1-adrian.hunter@intel.com>
- <20200829105015.10800-6-adrian.hunter@intel.com>
- <20200831062332.GW1509399@tassilo.jf.intel.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <64a87689-8ce9-c54a-98fd-b6ad7fd3aa92@intel.com>
-Date:   Mon, 31 Aug 2020 10:03:40 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 31 Aug 2020 03:10:52 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:59352 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgHaHKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:10:50 -0400
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598857848;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FARkIRHO1KDuZXY7+kAUc27scL3+jsSFrhOHhYco6Ck=;
+        b=pVbGWHzCvbWtavZwE6dhNWXXFxRvilaTtx/laCggTx6McaidMopyu70dd6qN+DpOrvAnEC
+        NWQgdTQEqPmTBErfzcv7KTN6E0s/wQHPlfGpQ6LHCLL7knvkvL+Z5EcRMLvdnnyIAZvOc7
+        84eFvvaBgqdRh7b6uzJquG6SPUe/5E+2ILpbUF8XQOPYlIKERkhRt0JaVx8y2wLuw/UPVO
+        kEYld38+pX8ynofoU0FC9wqE9Xmm4dgEmq8kJrFYuRUPGhZyPmASXHI3qXoTZox/n6FuHy
+        WCA7m+B+DJitbQdaThrzVyKrqpDiD0aKyw6+VhHkpAd2LQiXdvrgCHi8IimDMA==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598857848;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=FARkIRHO1KDuZXY7+kAUc27scL3+jsSFrhOHhYco6Ck=;
+        b=OmZcAy4Z777Iii/2G+bD5e+zVYJ16Fc1fbiIYma87KnA7XicfNHL1pplQOk/GUXLOURqWN
+        xldvJovtQWy7NhBg==
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     baolu.lu@linux.intel.com, x86@kernel.org,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-hyperv@vger.kernel.org,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Steve Wahl <steve.wahl@hpe.com>,
+        Dimitri Sivanich <sivanich@hpe.com>,
+        Russ Anderson <rja@hpe.com>, linux-pci@vger.kernel.org,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        xen-devel@lists.xenproject.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Megha Dey <megha.dey@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Baolu Lu <baolu.lu@intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [patch V2 00/46] x86, PCI, XEN, genirq ...: Prepare for device MSI
+In-Reply-To: <02e30654-714b-520a-0d20-fca20794df93@linux.intel.com>
+References: <20200826111628.794979401@linutronix.de> <02e30654-714b-520a-0d20-fca20794df93@linux.intel.com>
+Date:   Mon, 31 Aug 2020 09:10:47 +0200
+Message-ID: <87pn77i93c.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200831062332.GW1509399@tassilo.jf.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/08/20 9:23 am, Andi Kleen wrote:
-> On Sat, Aug 29, 2020 at 01:50:14PM +0300, Adrian Hunter wrote:
->> Add 'snapshot' control command to create an AUX area tracing snapshot the
->> same as if sending SIGUSR2. The advantage of the FIFO is that access is
->> governed by access to the FIFO.
-> 
-> How about the --switch-output SIGUSR2 switch? Could that be handled too?
+On Mon, Aug 31 2020 at 08:51, Lu Baolu wrote:
+> On 8/26/20 7:16 PM, Thomas Gleixner wrote:
+>> This is the second version of providing a base to support device MSI (non
+>> PCI based) and on top of that support for IMS (Interrupt Message Storm)
+>> based devices in a halfways architecture independent way.
+>
+> After applying this patch series, the dmar_alloc_hwirq() helper doesn't
+> work anymore during boot. This causes the IOMMU driver to fail to
+> register the DMA fault handler and abort the IOMMU probe processing.
+> Is this a known issue?
 
-Presumably, but I have never used --switch-out because Intel PT does not yet
-support it (it is on the list of things to do).  Perhaps someone more
-familiar with it can add that :-)
+See replies to patch 15/46 or pull the git tree. It has the issue fixed.
 
-> 
-> Other than that it looks great. Thanks.
-> 
-> -Andi
-> 
+Thanks,
 
+        tglx
