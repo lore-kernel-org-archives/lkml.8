@@ -2,95 +2,129 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D52AC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B309C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA3242073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cj+8D5tQ"
+	by mail.kernel.org (Postfix) with ESMTP id 566802073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728058AbgHaH6S (ORCPT
+        id S1728164AbgHaH6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:58:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41018 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgHaH6R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:58:17 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C41CC061573;
-        Mon, 31 Aug 2020 00:58:16 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id l21so4519979eds.7;
-        Mon, 31 Aug 2020 00:58:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=huQdyM+q9reHAMotsMXMrR+uvxt0zB89ISm5NsTKcqY=;
-        b=cj+8D5tQCSmxfAdRNPAPmuTudMTpVoAPeOSrZRptzQ9EhDEPiOuSrmIXydsDMC+IeB
-         KiWnCQxbIr9VmNhmjBuWIJNcYSz0fR7DGnIqjOs89G7ZOSCNSd4uUdBC/+VoIYOCm2Ug
-         bag1Qks2Ap1zSsyUVQwE6/t2STKAtjsFe4VxvfYryowvEC6R/zSSoasSY0gBbLtpdOWI
-         V9V/LvGoRfx9PsVevepeL/OpGnrrSmB8c3+pKeIPMwAQBzJp9EGr45gCIG7Z8rB3mx7a
-         oaJm6l+/FCsoGio3O55Cy9zRlcqCOZ9rzgHzEcMtCww4c7Z8OoLasFoK7bMVvoJi4/0f
-         sRDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=huQdyM+q9reHAMotsMXMrR+uvxt0zB89ISm5NsTKcqY=;
-        b=cUERPBR8WsfrdQpqm04iC4r6PVteMRJojU2nVlbbadms8SRvRcLoVJtSUJwUYmL5OB
-         +XpN6fLWydUSK5vJgHuh1U4XB6e9PDZzkB4iIBu1foLR5TFN8j+lhZCKOk6QxgAYLYKB
-         Q8oEQ+PxH7N8JxmUG3bAS9nFnlwMGKBjiNjAxd6qFSm3H1GeLJLbvNr2Za56s2sLFeO0
-         foqbXMe4O7ofT9RJm64O5o870bYQJ84odtc++k+8Anvn6WeUz9TIgdJyjQiyijPshqBf
-         Df2XkUZ2/B4b3KRjsdcDAxLOpIzGIZS6G66QK4FPjqeANzW80ersPknljGjiENqft6QW
-         xadw==
-X-Gm-Message-State: AOAM5310vQSiTVb/repF31VCITzsAjeJC19+RyRd6jozIzXtVMqt5nSx
-        b2nvjhEPZ9KY/E0jBQMuIAaf3YESi1/EI7eH4NrEVIiA5EM=
-X-Google-Smtp-Source: ABdhPJyYEmEjgTlSTI3u2NEAheWGVf1siQ0TfcnMk8UQJ0LD/ssFBMKoiOcwk2Zx1mkLhm0A/hOUiN2gs3xnvJ0Zz2M=
-X-Received: by 2002:aa7:c4c8:: with SMTP id p8mr59745edr.231.1598860695181;
- Mon, 31 Aug 2020 00:58:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598851448-5493-1-git-send-email-amit.pundir@linaro.org> <CAMi1Hd3n2rfr+k09L8WO1S1Tn1s3xJencmr1q3a6e-FOgXr5Qg@mail.gmail.com>
-In-Reply-To: <CAMi1Hd3n2rfr+k09L8WO1S1Tn1s3xJencmr1q3a6e-FOgXr5Qg@mail.gmail.com>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Mon, 31 Aug 2020 09:57:39 +0200
-Message-ID: <CAMS8qEXcANkb-HoTk8zrXQEzkQO4cnFw4hj5tMp82UEVKd+eHQ@mail.gmail.com>
-Subject: Re: [PATCH v6] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-To:     Amit Pundir <amit.pundir@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 31 Aug 2020 03:58:25 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:60147 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgHaH6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:58:22 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bg2d25dfrz9v46s;
+        Mon, 31 Aug 2020 09:58:14 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id ziN4ogZZ3b0q; Mon, 31 Aug 2020 09:58:14 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bg2d24hCCz9v46r;
+        Mon, 31 Aug 2020 09:58:14 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id AB3FD8B79B;
+        Mon, 31 Aug 2020 09:58:19 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3qjn3q60cyjq; Mon, 31 Aug 2020 09:58:19 +0200 (CEST)
+Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6E24C8B799;
+        Mon, 31 Aug 2020 09:58:19 +0200 (CEST)
+Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
+        id 4FCBE65D48; Mon, 31 Aug 2020 07:58:19 +0000 (UTC)
+Message-Id: <f0cb2a5477cd87d1eaadb128042e20aeb2bc2859.1598860677.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] powerpc: Fix random segfault when freeing hugetlb range
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 31 Aug 2020 07:58:19 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Konrad,
->
-> I couldn't find answer to your question around missing
-> (regulatorname)-supply properties. Need help in figuring out that
-> part.
+The following random segfault is observed from time to time with
+map_hugetlb selftest:
 
-When the phone boots up and RPM(H) kicks in, you should see regulators
-probing like "s1 supplied by foo". Without the *-supply stuff, you
-will likely get "supplied by regulator-dummy". This happens here [1]
-and to my knowledge it is the "eletrical wiring" for Linux, as in it
-makes Linux aware of which regulators are connected electrically to
-the same supply (so that kernel knows when the supply is on and what
-voltage it's at). For qcom platforms, this is common per-pmic (afaik,
-please check if you are able to!), so you can likely just copy-paste
-that part from msm8998-mtp.dtsi, which also uses pm(i)8998.
+root@localhost:~# ./map_hugetlb 1 19
+524288 kB hugepages
+Mapping 1 Mbytes
+Segmentation fault
 
-Konrad
+[   31.219972] map_hugetlb[365]: segfault (11) at 117 nip 77974f8c lr 779a6834 code 1 in ld-2.23.so[77966000+21000]
+[   31.220192] map_hugetlb[365]: code: 9421ffc0 480318d1 93410028 90010044 9361002c 93810030 93a10034 93c10038
+[   31.220307] map_hugetlb[365]: code: 93e1003c 93210024 8123007c 81430038 <80e90004> 814a0004 7f443a14 813a0004
+[   31.221911] BUG: Bad rss-counter state mm:(ptrval) type:MM_FILEPAGES val:33
+[   31.229362] BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:5
+
+This fault is due to hugetlb_free_pgd_range() freeing page tables
+that are also used by regular pages.
+
+As explain in the comment at the beginning of
+hugetlb_free_pgd_range(), the verification done in free_pgd_range()
+on floor and ceiling is not done here, which means
+hugetlb_free_pte_range() can free outside the expected range.
+
+As the verification cannot be done in hugetlb_free_pgd_range(), it
+must be done in hugetlb_free_pte_range().
+
+Fixes: b250c8c08c79 ("powerpc/8xx: Manage 512k huge pages as standard pages.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+---
+ arch/powerpc/mm/hugetlbpage.c | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index 26292544630f..e7ae2a2c4545 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -330,10 +330,24 @@ static void free_hugepd_range(struct mmu_gather *tlb, hugepd_t *hpdp, int pdshif
+ 				 get_hugepd_cache_index(pdshift - shift));
+ }
+ 
+-static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd, unsigned long addr)
++static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd,
++				   unsigned long addr, unsigned long end,
++				   unsigned long floor, unsigned long ceiling)
+ {
++	unsigned long start = addr;
+ 	pgtable_t token = pmd_pgtable(*pmd);
+ 
++	start &= PMD_MASK;
++	if (start < floor)
++		return;
++	if (ceiling) {
++		ceiling &= PMD_MASK;
++		if (!ceiling)
++			return;
++	}
++	if (end - 1 > ceiling - 1)
++		return;
++
+ 	pmd_clear(pmd);
+ 	pte_free_tlb(tlb, token, addr);
+ 	mm_dec_nr_ptes(tlb->mm);
+@@ -363,7 +377,7 @@ static void hugetlb_free_pmd_range(struct mmu_gather *tlb, pud_t *pud,
+ 			 */
+ 			WARN_ON(!IS_ENABLED(CONFIG_PPC_8xx));
+ 
+-			hugetlb_free_pte_range(tlb, pmd, addr);
++			hugetlb_free_pte_range(tlb, pmd, addr, end, floor, ceiling);
+ 
+ 			continue;
+ 		}
+-- 
+2.25.0
+
