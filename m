@@ -2,446 +2,232 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE305C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 125FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 758F92068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF2032068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:35:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="bsgWuSMC";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="BKgqaBut"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWi+7MgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbgHaMfK (ORCPT
+        id S1727883AbgHaMfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:35:10 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:45722 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727933AbgHaMdN (ORCPT
+        Mon, 31 Aug 2020 08:35:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55874 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727949AbgHaMdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:33:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1598877191; x=1630413191;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=7V3i2G1OM1APfY7A5F7UDjaX/mAW6VhUlFaaKwi9naU=;
-  b=bsgWuSMCqz6HATcX4JwytwwG3ndADLzn9olnAsAnACLe0nA02paHTi8D
-   tAjoZbDx0bLPNl8aUA/exwiR5+o/5KRqjxZgcb4cczEXJlrErVCj+CcDK
-   NDIUxF3QOkwCsXnKgveIays5qClfevo3KQ7Lzp01uy5VKZaLXfH1BB/H2
-   wj/AIv8b/DT9oXFuG+Z11BA2ZI5RcktBt9jCMLKffh+pE5Xqvojaa0iOx
-   ZFFlFEuw0vTCOHEEO1KNpBdDpRJOfKij4Ctb3vOr7nZnMVr6kl+ly9osX
-   KZmRUyplQedFbSLJvKhICUU69GxKzlzC0QRrrXvkCSnrYrS/1oXqJCMG4
-   w==;
-IronPort-SDR: KHIsniwEiQCZu3brpdZrBqn4FG9y9zXwJ/G8WfEzCubW94XIX69+lTZLWk8MXhjuxTDCK9xTwz
- r4uu17yC4DfvgRgKb+9ok5U8Uo3e8YS52qlZF6GBAHXLl6K/6N75cR/Hfx4zIyfz5rJfAPnD/z
- 47qmNOYE4kGmkL3P/CVuQ5ZV4+qJWbFUsWVAMtbQ/tlRXhb+nj+jMeO6+HIPad7aoobM7D+8yB
- wWfeEXz7l+SdZNWuPoWvzuGrinjuGzUFq3xaVGUE+CkpcZLY+tQEKuNr2iFydtndW+TXtEN6+2
- N9I=
-X-IronPort-AV: E=Sophos;i="5.76,375,1592841600"; 
-   d="scan'208";a="255743415"
-Received: from mail-sn1nam02lp2051.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.51])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Aug 2020 20:31:55 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XMhZOk6rFO8uO3Wd7Bui3hGNBPZ9uyK7BAMsxWbBw+oYCV+2P0OP09WLnSWkXUrO1Nr9BNywtiHn7DvBPTmcz1x3UW5gX6OZUIQHS6PhigemRuntKosfh4x5gnnXOWLN1epg8Q/dEU1tx2NQRxm9q9mi3tXFpMUpjWTV91fE3i+Le6nLwjxuAww30JvbgVIVe4gnDZ/rZ0Vet/WaYOq1LMt24DN2yZjXfo43HjSj1tH/sqNvFELrffH2AJ0ocK5P1LgFbois9uJWc7NHDRvRMgoHfSfj9Nt3tVkIMoRkeH3zj8ThsmvVwQl2HHchsObq6vN/HEjMFw8j7yERaBlyxQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xYcxRJZfyJuHvNT3MDNZc28s8FURtOZTIZ8+bvEwt94=;
- b=ifr2I6rlZ7scyONXKsYV7FOd9sZPHRbLWnlpJS8Oav737Jv/j8kR/BaZW6lYPhmQEJwqHDK2/NR9NCApvZsYu8ILTQhtAQ8OHJEzNXQtV28/LFbjj8pPk+osCQIlhaanC59a02Zz5w/svjcs9hF+ZZvoJp4ICFebob4a/Cymh4yYTRDCabhu4fRTV8+hxz/Q0BujP7nEqmFLyV0y6GnlJj9kaL4bm/sFOzWortwlht7uWNnmGMw8FNr0A/2bWGZ/pCtoakExDmz1Vrx+JllH+i/OzZwU4zUtcGVumY+99TOSI7VpqCvrVEgSdn1zHF/b9UfEDuEfhY3UsJ1pI4K2+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Mon, 31 Aug 2020 08:33:25 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D80CC061239;
+        Mon, 31 Aug 2020 05:33:24 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id a26so8300647ejc.2;
+        Mon, 31 Aug 2020 05:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xYcxRJZfyJuHvNT3MDNZc28s8FURtOZTIZ8+bvEwt94=;
- b=BKgqaButQzStuRUcRE7JepBnMLi8U6am1v3m7tGYv/suqWeu7sCQP9Pu4F8BUpvYtmPvQXYKwL7+UTNYfmAd9qvhApgIIKmUJjET0aM5hl7qGeYDXFO3AbDefC0RhxH4Ic4JyvWea6s7RBox5zEEoHGLOV4LpU06YLBCNA+dRdM=
-Authentication-Results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
- by DM6PR04MB6092.namprd04.prod.outlook.com (2603:10b6:5:12b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Mon, 31 Aug
- 2020 12:31:54 +0000
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::607a:44ed:1477:83e]) by DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::607a:44ed:1477:83e%7]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 12:31:54 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v14 15/17] RISC-V: KVM: Add SBI v0.1 support
-Date:   Mon, 31 Aug 2020 18:00:13 +0530
-Message-Id: <20200831123015.336047-16-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831123015.336047-1-anup.patel@wdc.com>
-References: <20200831123015.336047-1-anup.patel@wdc.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1a::32) To DM6PR04MB6201.namprd04.prod.outlook.com
- (2603:10b6:5:127::32)
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hbcUYwYW/xJDLtbCqjA6b7sU1ZfzYZFemLdx1cJX5XA=;
+        b=CWi+7MgN9lN1o9/Gla8LTUEZXuTqcW621vsMgcTys05vudCBxOQqVdt3eIxg0xZ684
+         Z5LS2jOzihJoWu7RUij/ngwzO7OPP3gDvJUKpfXSWF15+pVlnd2JbEffONNHLckeiBbn
+         XMUItGS/S5un58oWy/8dNw42Dm3Eee+28ijJ507vL2p7jzbZVY3/5KD1vF5PzPRQdJGj
+         UE+yFphAlabWPDjXUgLmZgBNPpcLL+Q+9YEuila8S/qRU9BJJJLGEpOh4/4nSyxCIAhi
+         TumItxAqUhVGFyDvkYYLYNf1eTJmKW4lAwO+YIPF8o/ZRMToQiiklPKlFInSiC0k64b8
+         6pTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hbcUYwYW/xJDLtbCqjA6b7sU1ZfzYZFemLdx1cJX5XA=;
+        b=SlkFXePxOeUAE0+19+8e61hxgems+DDifClHROeejzXxiiJL07RzSo2tpoDyqkuwAh
+         lcs/ZC3WbKVtcEfPf7mKvlmi7aRTxJqJWJK0hrlhyVV2yL9Lc06/Hg8daa+lRMYTmCLM
+         KnO0JpkMYAlMfLYLDo4AEpI3nuzJ0Rw+Tdw+We86HsHXpxmAr4Z4mpQZ/Y0X1VfPQ1OZ
+         3DQ+TtUyxB24nPQcLS0erzQ7uWNMdJ6IC0kn/9kw5e+VESBgl/jvGUrkbcLfgwQcUjAA
+         /LCQzNBajDbpjWZ7dzUX4F1rQ3nxlZGcHk4Zw1toB169AjGMpXzCZHctnCl81fLtXz8L
+         b7vA==
+X-Gm-Message-State: AOAM5308qzc6gXPCPy/6nV+9KIc/O1B0+pG/P+6uVDhBTNtoYeIzkj+o
+        n6i7U+FuswkMB8KxmKHOylVOrvCYG8Bn6A==
+X-Google-Smtp-Source: ABdhPJy/8IkFbalv91EKccdsv+UO41f+dzMA/FEZXgFGihTYsRlXiL+amrnzkGKIBJJQ7odSUi1VYA==
+X-Received: by 2002:a17:906:6884:: with SMTP id n4mr1017257ejr.50.1598877202929;
+        Mon, 31 Aug 2020 05:33:22 -0700 (PDT)
+Received: from ?IPv6:2003:ea:8f23:5700:b116:6da2:9c8c:de81? (p200300ea8f235700b1166da29c8cde81.dip0.t-ipconnect.de. [2003:ea:8f23:5700:b116:6da2:9c8c:de81])
+        by smtp.googlemail.com with ESMTPSA id r26sm8090266ejb.102.2020.08.31.05.33.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 05:33:22 -0700 (PDT)
+Subject: Re: fsl_espi errors on v5.7.15
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "paulus@samba.org" <paulus@samba.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
+References: <42107721-614b-96e8-68d9-4b888206562e@alliedtelesis.co.nz>
+ <1020029e-4cb9-62ba-c6d6-e6b9bdf93aac@gmail.com>
+ <1598510348.1g7wt0s02s.astroid@bobo.none>
+ <0068446e-06f8-6648-2f40-56f324c1ee6e@alliedtelesis.co.nz>
+ <1598788275.m90vz24p6x.astroid@bobo.none>
+ <524a0f50-f954-f5a7-eccb-66eece59c7c4@alliedtelesis.co.nz>
+ <5ca7ba48-ef9c-2b7c-67ff-88d0a2c9f380@gmail.com>
+ <6a9eb498-2982-05de-52f9-da5f6a626e49@alliedtelesis.co.nz>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <5bf05188-a52e-c8c0-9d2d-c87eff6f1588@gmail.com>
+Date:   Mon, 31 Aug 2020 14:33:16 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 12:31:49 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [103.15.57.192]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b631a208-ca21-44a4-3fc2-08d84da9d7d4
-X-MS-TrafficTypeDiagnostic: DM6PR04MB6092:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB609269C7963FED129AFD841F8D510@DM6PR04MB6092.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: s0mTa6iSdDHRG9gYXwx45d5TWNJHlK7aOA3gaSGBfVmvP5rO6wnKdK9Fo9tmQ1d7iySDBRR+m/M6ItWg/QGsySqCwcRF4v+uro8aaXkkEaWGZDQokBO6y+e00GakYrbqnukdyN7H+8ucI3gTw0azrHAjgKZUhgkL3pDltpiiTi5tvVnTH349EoaL1chakqoWhuRnTTzpKkRBlD0UV0s3kt9pYGdNTsZSCWxV/ouD6NNzEUP1eMKxQCHGV0N/SKddoJFzphZWhJM3vh82YiDLtLcCPj84JTzhRvR15V/ByJO8mT3pC8XVB28dxoANhbasV+p3f4z9756xlTfhjA0Sag==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(44832011)(6666004)(52116002)(8676002)(86362001)(36756003)(478600001)(6486002)(7416002)(110136005)(8936002)(54906003)(83380400001)(66946007)(1076003)(66556008)(2906002)(26005)(186003)(66476007)(956004)(316002)(16576012)(4326008)(5660300002)(2616005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: hulc6V2i0KrDfC/0H4ojC8V+uefyy+wI5ckzLfmGKifn9o+e40z9fSLnwb4qRXKb+ztxI+ysifU0YlM8SBlyFy1eVAh/Ugs+Uhtbsw9t4c1q5Yt850e01ZHK+Fw69YW1wl3nd2mDmajllvrLv4gbuVZezI4zXHsLWgmrw3p29xuJ3Ji8uV6WhyYiQr1rIBu0zm6KFpJvhbRWBIUGIkkajzXZajIDm+OaarVVUfBEL/rgX6+J+yQaiVNNJiFxm+YG2NJAcFMbhojNdrjYvuXOkS3OIqDHpKz1NXihfBkAB2NughYY6oV1j2zE/s8d5zLOigDokYrRLegk5pxbXQ9AyfHSv9/CbqSAF5+pGLckA0bQkfJJ/HmrPMWDBurtOvyBth5tugwJujiXdA/JFNs2UEFmEgxt7X/cZQLuUSNtH6I9z8d67i31jYWqJTlSDlmYqfexBUIqF/FPzYM2StXm8CTqULPu26itOUsXhmMcr/QLIL2oCFQs/SSYikVIzh7sigArk0VkM7pbwF77dFqH2APO9jfklv9YpIaHpFCcLXoKWZa6fhxJdjEZ1TGZ+5itd/Lh5qTVkzqWL5GxzqpyeRNLHqTsZVHz6hrI1XBOEDTtwwonCFRYzwj4oPkPX1o93gS8oqBQmzFciLw6BRVrkw==
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b631a208-ca21-44a4-3fc2-08d84da9d7d4
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 12:31:54.3365
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 35gZrSonN/oFfPsT1TEwQWvnCbVtqpaRJYNau5mko/ACGIBCNaYFNyYGZxOXKRldrB/wMWxep7qeUBjLss76FQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6092
+In-Reply-To: <6a9eb498-2982-05de-52f9-da5f6a626e49@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Atish Patra <atish.patra@wdc.com>
+On 30.08.2020 23:59, Chris Packham wrote:
+> 
+> On 31/08/20 9:41 am, Heiner Kallweit wrote:
+>> On 30.08.2020 23:00, Chris Packham wrote:
+>>> On 31/08/20 12:30 am, Nicholas Piggin wrote:
+>>>> Excerpts from Chris Packham's message of August 28, 2020 8:07 am:
+>>> <snip>
+>>>
+>>>>>>>>> I've also now seen the RX FIFO not empty error on the T2080RDB
+>>>>>>>>>
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+>>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+>>>>>>>>>
+>>>>>>>>> With my current workaround of emptying the RX FIFO. It seems
+>>>>>>>>> survivable. Interestingly it only ever seems to be 1 extra byte in the
+>>>>>>>>> RX FIFO and it seems to be after either a READ_SR or a READ_FSR.
+>>>>>>>>>
+>>>>>>>>> fsl_espi ffe110000.spi: tx 70
+>>>>>>>>> fsl_espi ffe110000.spi: rx 03
+>>>>>>>>> fsl_espi ffe110000.spi: Extra RX 00
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+>>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+>>>>>>>>> fsl_espi ffe110000.spi: tx 05
+>>>>>>>>> fsl_espi ffe110000.spi: rx 00
+>>>>>>>>> fsl_espi ffe110000.spi: Extra RX 03
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+>>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+>>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+>>>>>>>>> fsl_espi ffe110000.spi: tx 05
+>>>>>>>>> fsl_espi ffe110000.spi: rx 00
+>>>>>>>>> fsl_espi ffe110000.spi: Extra RX 03
+>>>>>>>>>
+>>>>>>>>>    From all the Micron SPI-NOR datasheets I've got access to it is
+>>>>>>>>> possible to continually read the SR/FSR. But I've no idea why it
+>>>>>>>>> happens some times and not others.
+>>>>>>>> So I think I've got a reproduction and I think I've bisected the problem
+>>>>>>>> to commit 3282a3da25bd ("powerpc/64: Implement soft interrupt replay in
+>>>>>>>> C"). My day is just finishing now so I haven't applied too much scrutiny
+>>>>>>>> to this result. Given the various rabbit holes I've been down on this
+>>>>>>>> issue already I'd take this information with a good degree of skepticism.
+>>>>>>>>
+>>>>>>> OK, so an easy test should be to re-test with a 5.4 kernel.
+>>>>>>> It doesn't have yet the change you're referring to, and the fsl-espi driver
+>>>>>>> is basically the same as in 5.7 (just two small changes in 5.7).
+>>>>>> There's 6cc0c16d82f88 and maybe also other interrupt related patches
+>>>>>> around this time that could affect book E, so it's good if that exact
+>>>>>> patch is confirmed.
+>>>>> My confirmation is basically that I can induce the issue in a 5.4 kernel
+>>>>> by cherry-picking 3282a3da25bd. I'm also able to "fix" the issue in
+>>>>> 5.9-rc2 by reverting that one commit.
+>>>>>
+>>>>> I both cases it's not exactly a clean cherry-pick/revert so I also
+>>>>> confirmed the bisection result by building at 3282a3da25bd (which sees
+>>>>> the issue) and the commit just before (which does not).
+>>>> Thanks for testing, that confirms it well.
+>>>>
+>>>> [snip patch]
+>>>>
+>>>>> I still saw the issue with this change applied. PPC_IRQ_SOFT_MASK_DEBUG
+>>>>> didn't report anything (either with or without the change above).
+>>>> Okay, it was a bit of a shot in the dark. I still can't see what
+>>>> else has changed.
+>>>>
+>>>> What would cause this, a lost interrupt? A spurious interrupt? Or
+>>>> higher interrupt latency?
+>>>>
+>>>> I don't think the patch should cause significantly worse latency,
+>>>> (it's supposed to be a bit better if anything because it doesn't set
+>>>> up the full interrupt frame). But it's possible.
+>>> My working theory is that the SPI_DON indication is all about the TX
+>>> direction an now that the interrupts are faster we're hitting an error
+>>> because there is still RX activity going on. Heiner disagrees with my
+>>> interpretation of the SPI_DON indication and the fact that it doesn't
+>>> happen every time does throw doubt on it.
+>>>
+>> It's right that the eSPI spec can be interpreted that SPI_DON refers to
+>> TX only. However this wouldn't really make sense, because also for RX
+>> we program the frame length, and therefore want to be notified once the
+>> full frame was received. Also practical experience shows that SPI_DON
+>> is set also after RX-only transfers.
+>> Typical SPI NOR use case is that you write read command + start address,
+>> followed by a longer read. If the TX-only interpretation would be right,
+>> we'd always end up with SPI_DON not being set.
+>>
+>>> I can't really explain the extra RX byte in the fifo. We know how many
+>>> bytes to expect and we pull that many from the fifo so it's not as if
+>>> we're missing an interrupt causing us to skip the last byte. I've been
+>>> looking for some kind of off-by-one calculation but again if it were
+>>> something like that it'd happen all the time.
+>>>
+>> Maybe it helps to know what value this extra byte in the FIFO has. Is it:
+>> - a duplicate of the last read byte
+>> - or the next byte (at <end address> + 1)
+>> - or a fixed value, e.g. always 0x00 or 0xff
+> 
+> The values were up thread a bit but I'll repeat them here
+> 
+> fsl_espi ffe110000.spi: tx 70
+> fsl_espi ffe110000.spi: rx 03
+> fsl_espi ffe110000.spi: Extra RX 00
+> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+> fsl_espi ffe110000.spi: tx 05
+> fsl_espi ffe110000.spi: rx 00
+> fsl_espi ffe110000.spi: Extra RX 03
+> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
+> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
+> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
+> fsl_espi ffe110000.spi: tx 05
+> fsl_espi ffe110000.spi: rx 00
+> fsl_espi ffe110000.spi: Extra RX 03
+> 
+> 
+> The rx 00 Extra RX 03 is a bit concerning. I've only ever seen them with
+> either a READ_SR or a READ_FSR. Never a data read.
+> 
+Just remembered something about SPIE_DON:
+Transfers are always full duplex, therefore in case of a read the chip
+sends dummy zero's. Having said that in case of a read SPIE_DON means
+that the last dummy zero was shifted out.
 
-The KVM host kernel is running in HS-mode needs so we need to handle
-the SBI calls coming from guest kernel running in VS-mode.
+READ_SR and READ_FSR are the shortest transfers, 1 byte out and 1 byte in.
+So the issue may have a dependency on the length of the transfer.
+However I see no good explanation so far. You can try adding a delay of
+a few miroseconds between the following to commands in fsl_espi_bufs().
 
-This patch adds SBI v0.1 support in KVM RISC-V. Almost all SBI v0.1
-calls are implemented in KVM kernel module except GETCHAR and PUTCHART
-calls which are forwarded to user space because these calls cannot be
-implemented in kernel space. In future, when we implement SBI v0.2 for
-Guest, we will forward SBI v0.2 experimental and vendor extension calls
-to user space.
+	fsl_espi_write_reg(espi, ESPI_SPIM, mask);
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/riscv/include/asm/kvm_host.h |  10 ++
- arch/riscv/kvm/Makefile           |   2 +-
- arch/riscv/kvm/vcpu.c             |   9 ++
- arch/riscv/kvm/vcpu_exit.c        |   4 +
- arch/riscv/kvm/vcpu_sbi.c         | 173 ++++++++++++++++++++++++++++++
- include/uapi/linux/kvm.h          |   8 ++
- 6 files changed, 205 insertions(+), 1 deletion(-)
- create mode 100644 arch/riscv/kvm/vcpu_sbi.c
+	/* Prevent filling the fifo from getting interrupted */
+	spin_lock_irq(&espi->lock);
 
-diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 6d97a8eab206..dc2666b4180b 100644
---- a/arch/riscv/include/asm/kvm_host.h
-+++ b/arch/riscv/include/asm/kvm_host.h
-@@ -80,6 +80,10 @@ struct kvm_mmio_decode {
- 	int return_handled;
- };
- 
-+struct kvm_sbi_context {
-+	int return_handled;
-+};
-+
- #define KVM_MMU_PAGE_CACHE_NR_OBJS	32
- 
- struct kvm_mmu_page_cache {
-@@ -192,6 +196,9 @@ struct kvm_vcpu_arch {
- 	/* MMIO instruction details */
- 	struct kvm_mmio_decode mmio_decode;
- 
-+	/* SBI context */
-+	struct kvm_sbi_context sbi_context;
-+
- 	/* Cache pages needed to program page tables with spinlock held */
- 	struct kvm_mmu_page_cache mmu_page_cache;
- 
-@@ -265,4 +272,7 @@ bool kvm_riscv_vcpu_has_interrupts(struct kvm_vcpu *vcpu, unsigned long mask);
- void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu);
- void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
- 
-+int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run);
-+int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run);
-+
- #endif /* __RISCV_KVM_HOST_H__ */
-diff --git a/arch/riscv/kvm/Makefile b/arch/riscv/kvm/Makefile
-index a034826f9a3f..7cf0015d9142 100644
---- a/arch/riscv/kvm/Makefile
-+++ b/arch/riscv/kvm/Makefile
-@@ -10,6 +10,6 @@ ccflags-y := -Ivirt/kvm -Iarch/riscv/kvm
- kvm-objs := $(common-objs-y)
- 
- kvm-objs += main.o vm.o vmid.o tlb.o mmu.o
--kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o
-+kvm-objs += vcpu.o vcpu_exit.o vcpu_switch.o vcpu_timer.o vcpu_sbi.o
- 
- obj-$(CONFIG_KVM)	+= kvm.o
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 2d8bab65dec9..bcc4af9d2fa9 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -882,6 +882,15 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 		}
- 	}
- 
-+	/* Process SBI value returned from user-space */
-+	if (run->exit_reason == KVM_EXIT_RISCV_SBI) {
-+		ret = kvm_riscv_vcpu_sbi_return(vcpu, vcpu->run);
-+		if (ret) {
-+			srcu_read_unlock(&vcpu->kvm->srcu, vcpu->arch.srcu_idx);
-+			return ret;
-+		}
-+	}
-+
- 	if (run->immediate_exit) {
- 		srcu_read_unlock(&vcpu->kvm->srcu, vcpu->arch.srcu_idx);
- 		return -EINTR;
-diff --git a/arch/riscv/kvm/vcpu_exit.c b/arch/riscv/kvm/vcpu_exit.c
-index 1324b95d3044..89d5a13db732 100644
---- a/arch/riscv/kvm/vcpu_exit.c
-+++ b/arch/riscv/kvm/vcpu_exit.c
-@@ -678,6 +678,10 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
- 			ret = stage2_page_fault(vcpu, run, trap);
- 		break;
-+	case EXC_SUPERVISOR_SYSCALL:
-+		if (vcpu->arch.guest_context.hstatus & HSTATUS_SPV)
-+			ret = kvm_riscv_vcpu_sbi_ecall(vcpu, run);
-+		break;
- 	default:
- 		break;
- 	};
-diff --git a/arch/riscv/kvm/vcpu_sbi.c b/arch/riscv/kvm/vcpu_sbi.c
-new file mode 100644
-index 000000000000..9d1d25cf217f
---- /dev/null
-+++ b/arch/riscv/kvm/vcpu_sbi.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/**
-+ * Copyright (c) 2019 Western Digital Corporation or its affiliates.
-+ *
-+ * Authors:
-+ *     Atish Patra <atish.patra@wdc.com>
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/kvm_host.h>
-+#include <asm/csr.h>
-+#include <asm/sbi.h>
-+#include <asm/kvm_vcpu_timer.h>
-+
-+#define SBI_VERSION_MAJOR			0
-+#define SBI_VERSION_MINOR			1
-+
-+static void kvm_sbi_system_shutdown(struct kvm_vcpu *vcpu,
-+				    struct kvm_run *run, u32 type)
-+{
-+	int i;
-+	struct kvm_vcpu *tmp;
-+
-+	kvm_for_each_vcpu(i, tmp, vcpu->kvm)
-+		tmp->arch.power_off = true;
-+	kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_SLEEP);
-+
-+	memset(&run->system_event, 0, sizeof(run->system_event));
-+	run->system_event.type = type;
-+	run->exit_reason = KVM_EXIT_SYSTEM_EVENT;
-+}
-+
-+static void kvm_riscv_vcpu_sbi_forward(struct kvm_vcpu *vcpu,
-+				       struct kvm_run *run)
-+{
-+	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-+
-+	vcpu->arch.sbi_context.return_handled = 0;
-+	vcpu->stat.ecall_exit_stat++;
-+	run->exit_reason = KVM_EXIT_RISCV_SBI;
-+	run->riscv_sbi.extension_id = cp->a7;
-+	run->riscv_sbi.function_id = cp->a6;
-+	run->riscv_sbi.args[0] = cp->a0;
-+	run->riscv_sbi.args[1] = cp->a1;
-+	run->riscv_sbi.args[2] = cp->a2;
-+	run->riscv_sbi.args[3] = cp->a3;
-+	run->riscv_sbi.args[4] = cp->a4;
-+	run->riscv_sbi.args[5] = cp->a5;
-+	run->riscv_sbi.ret[0] = cp->a0;
-+	run->riscv_sbi.ret[1] = cp->a1;
-+}
-+
-+int kvm_riscv_vcpu_sbi_return(struct kvm_vcpu *vcpu, struct kvm_run *run)
-+{
-+	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-+
-+	/* Handle SBI return only once */
-+	if (vcpu->arch.sbi_context.return_handled)
-+		return 0;
-+	vcpu->arch.sbi_context.return_handled = 1;
-+
-+	/* Update return values */
-+	cp->a0 = run->riscv_sbi.ret[0];
-+	cp->a1 = run->riscv_sbi.ret[1];
-+
-+	/* Move to next instruction */
-+	vcpu->arch.guest_context.sepc += 4;
-+
-+	return 0;
-+}
-+
-+int kvm_riscv_vcpu_sbi_ecall(struct kvm_vcpu *vcpu, struct kvm_run *run)
-+{
-+	ulong hmask;
-+	int i, ret = 1;
-+	u64 next_cycle;
-+	struct kvm_vcpu *rvcpu;
-+	bool next_sepc = true;
-+	struct cpumask cm, hm;
-+	struct kvm *kvm = vcpu->kvm;
-+	struct kvm_cpu_trap utrap = { 0 };
-+	struct kvm_cpu_context *cp = &vcpu->arch.guest_context;
-+
-+	if (!cp)
-+		return -EINVAL;
-+
-+	switch (cp->a7) {
-+	case SBI_EXT_0_1_CONSOLE_GETCHAR:
-+	case SBI_EXT_0_1_CONSOLE_PUTCHAR:
-+		/*
-+		 * The CONSOLE_GETCHAR/CONSOLE_PUTCHAR SBI calls cannot be
-+		 * handled in kernel so we forward these to user-space
-+		 */
-+		kvm_riscv_vcpu_sbi_forward(vcpu, run);
-+		next_sepc = false;
-+		ret = 0;
-+		break;
-+	case SBI_EXT_0_1_SET_TIMER:
-+#if __riscv_xlen == 32
-+		next_cycle = ((u64)cp->a1 << 32) | (u64)cp->a0;
-+#else
-+		next_cycle = (u64)cp->a0;
-+#endif
-+		kvm_riscv_vcpu_timer_next_event(vcpu, next_cycle);
-+		break;
-+	case SBI_EXT_0_1_CLEAR_IPI:
-+		kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_VS_SOFT);
-+		break;
-+	case SBI_EXT_0_1_SEND_IPI:
-+		if (cp->a0)
-+			hmask = kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
-+							   &utrap);
-+		else
-+			hmask = (1UL << atomic_read(&kvm->online_vcpus)) - 1;
-+		if (utrap.scause) {
-+			utrap.sepc = cp->sepc;
-+			kvm_riscv_vcpu_trap_redirect(vcpu, &utrap);
-+			next_sepc = false;
-+			break;
-+		}
-+		for_each_set_bit(i, &hmask, BITS_PER_LONG) {
-+			rvcpu = kvm_get_vcpu_by_id(vcpu->kvm, i);
-+			kvm_riscv_vcpu_set_interrupt(rvcpu, IRQ_VS_SOFT);
-+		}
-+		break;
-+	case SBI_EXT_0_1_SHUTDOWN:
-+		kvm_sbi_system_shutdown(vcpu, run, KVM_SYSTEM_EVENT_SHUTDOWN);
-+		next_sepc = false;
-+		ret = 0;
-+		break;
-+	case SBI_EXT_0_1_REMOTE_FENCE_I:
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA:
-+	case SBI_EXT_0_1_REMOTE_SFENCE_VMA_ASID:
-+		if (cp->a0)
-+			hmask = kvm_riscv_vcpu_unpriv_read(vcpu, false, cp->a0,
-+							   &utrap);
-+		else
-+			hmask = (1UL << atomic_read(&kvm->online_vcpus)) - 1;
-+		if (utrap.scause) {
-+			utrap.sepc = cp->sepc;
-+			kvm_riscv_vcpu_trap_redirect(vcpu, &utrap);
-+			next_sepc = false;
-+			break;
-+		}
-+		cpumask_clear(&cm);
-+		for_each_set_bit(i, &hmask, BITS_PER_LONG) {
-+			rvcpu = kvm_get_vcpu_by_id(vcpu->kvm, i);
-+			if (rvcpu->cpu < 0)
-+				continue;
-+			cpumask_set_cpu(rvcpu->cpu, &cm);
-+		}
-+		riscv_cpuid_to_hartid_mask(&cm, &hm);
-+		if (cp->a7 == SBI_EXT_0_1_REMOTE_FENCE_I)
-+			sbi_remote_fence_i(cpumask_bits(&hm));
-+		else if (cp->a7 == SBI_EXT_0_1_REMOTE_SFENCE_VMA)
-+			sbi_remote_hfence_vvma(cpumask_bits(&hm),
-+						cp->a1, cp->a2);
-+		else
-+			sbi_remote_hfence_vvma_asid(cpumask_bits(&hm),
-+						cp->a1, cp->a2, cp->a3);
-+		break;
-+	default:
-+		/* Return error for unsupported SBI calls */
-+		cp->a0 = SBI_ERR_NOT_SUPPORTED;
-+		break;
-+	};
-+
-+	if (next_sepc)
-+		cp->sepc += 4;
-+
-+	return ret;
-+}
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index f6d86033c4fa..22a41e8db4e1 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -248,6 +248,7 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_IOAPIC_EOI       26
- #define KVM_EXIT_HYPERV           27
- #define KVM_EXIT_ARM_NISV         28
-+#define KVM_EXIT_RISCV_SBI        28
- 
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -413,6 +414,13 @@ struct kvm_run {
- 			__u64 esr_iss;
- 			__u64 fault_ipa;
- 		} arm_nisv;
-+		/* KVM_EXIT_RISCV_SBI */
-+		struct {
-+			unsigned long extension_id;
-+			unsigned long function_id;
-+			unsigned long args[6];
-+			unsigned long ret[2];
-+		} riscv_sbi;
- 		/* Fix the size of the union. */
- 		char padding[256];
- 	};
--- 
-2.25.1
-
+Maybe enabling interrupts and seeing the SPIE_DON interrupt are too close.
