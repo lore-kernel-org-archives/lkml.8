@@ -2,160 +2,135 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE97BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02245C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE0F206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:00:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D18EF20866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:00:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598896855;
+	bh=sV61BZWqOqN6aZ1wNPfxW+MMj9m6m9nEYuRPT0u4TvQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=i4/FqdVNeF2I4wiOfMiA23HkedUDOr9zgpij+KesJ/clpEgSYxntGVvKXKk29fLil
+	 L4r76/HxU62hLz8ztAjPjWVRTVuXcynz/f23+guW2d5i0rF5YRHplBgJ4CQeO4UHI+
+	 CvDI5CSCloxxQBS/X0QIPWgMFIFVyF36sEqPHqxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbgHaSAQ (ORCPT
+        id S1728257AbgHaSAy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:00:16 -0400
-Received: from mga12.intel.com ([192.55.52.136]:19958 "EHLO mga12.intel.com"
+        Mon, 31 Aug 2020 14:00:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725993AbgHaSAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:00:10 -0400
-IronPort-SDR: iuu5aDyn/raD+corTQgWPHYB0DCtfFTmY9seRQ5Pie7GSjn+XNGUnXrjJ9uspL8uLp8aUcv6lo
- LyQJC1NT0a0g==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="136555808"
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="136555808"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 11:00:04 -0700
-IronPort-SDR: xb0ioehmjdMJjigSkasDrkPikkCEuEOMNgeICpeoHGSZOHD0+sT+neTYjj2/Vh+3ke8hYdmB4C
- fkW998XB+SsQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="404514603"
-Received: from lkp-server02.sh.intel.com (HELO 713faec3b0e5) ([10.239.97.151])
-  by fmsmga001.fm.intel.com with ESMTP; 31 Aug 2020 11:00:03 -0700
-Received: from kbuild by 713faec3b0e5 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kCo66-00008I-V1; Mon, 31 Aug 2020 18:00:02 +0000
-Date:   Tue, 01 Sep 2020 01:59:22 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:master] BUILD SUCCESS
- 9e4e12be1c647da2bf200d476d769ff07f1e91fb
-Message-ID: <5f4d3a7a.ojA1b9mtWwPy/hzS%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        id S1725993AbgHaSAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:00:50 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C29E2083E;
+        Mon, 31 Aug 2020 18:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598896850;
+        bh=sV61BZWqOqN6aZ1wNPfxW+MMj9m6m9nEYuRPT0u4TvQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=mdpMwZgy8Kjbo0P5ODYcw/hYKgn9Tl/rCHYW00XhElZMDkgP4bSAs7K88+plPFF0C
+         PGKzi0ReUQIcLbUGLfflDB9RrlDRTb7aGv+ezg975mkeFIolSQpE0+q/EQYgF3ldsc
+         nv1f/HvvB9tv/HTxUqU0EavDM+0zGLzEgoUoCsVE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 4534735230F1; Mon, 31 Aug 2020 11:00:50 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 11:00:50 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/24] Miscellaneous fixes for v5.10
+Message-ID: <20200831180050.GA32590@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  master
-branch HEAD: 9e4e12be1c647da2bf200d476d769ff07f1e91fb  Merge branch 'locking/core'
+Hello!
 
-elapsed time: 727m
+This series provides miscellaneous fixes:
 
-configs tested: 89
-configs skipped: 5
+1.	Remove KCSAN stubs from tree.c.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+2.	Remove KCSAN stubs from update.c.
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arc                      axs103_smp_defconfig
-arm                         s3c6400_defconfig
-m68k                        mvme147_defconfig
-sh                           sh2007_defconfig
-mips                 decstation_r4k_defconfig
-powerpc                      ep88xc_defconfig
-arm                       versatile_defconfig
-arm                          pxa910_defconfig
-arm                             pxa_defconfig
-sh                                  defconfig
-mips                  maltasmvp_eva_defconfig
-mips                        omega2p_defconfig
-arc                             nps_defconfig
-ia64                         bigsur_defconfig
-powerpc                         ps3_defconfig
-sh                        sh7785lcr_defconfig
-arm                         orion5x_defconfig
-arm                    vt8500_v6_v7_defconfig
-sh                      rts7751r2d1_defconfig
-i386                             alldefconfig
-sh                          rsk7201_defconfig
-arm                            qcom_defconfig
-mips                     decstation_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-i386                                defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-powerpc                             defconfig
-i386                 randconfig-a001-20200831
-i386                 randconfig-a002-20200831
-i386                 randconfig-a004-20200831
-i386                 randconfig-a006-20200831
-i386                 randconfig-a005-20200831
-i386                 randconfig-a003-20200831
-x86_64               randconfig-a012-20200831
-x86_64               randconfig-a015-20200831
-x86_64               randconfig-a014-20200831
-x86_64               randconfig-a011-20200831
-x86_64               randconfig-a016-20200831
-x86_64               randconfig-a013-20200831
-i386                 randconfig-a013-20200831
-i386                 randconfig-a011-20200831
-i386                 randconfig-a012-20200831
-i386                 randconfig-a015-20200831
-i386                 randconfig-a016-20200831
-i386                 randconfig-a014-20200831
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+3.	Remove KCSAN stubs from srcutree.c.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+4.	Initialize at declaration time in rcu_exp_handler().
+
+5.	rcu/trace: Print negative GP numbers correctly.
+
+6.	rcu/trace: Use gp_seq_req in acceleration's rcu_grace_period
+	tracepoint.
+
+7.	Clarify RCU nocb CPU error message.
+
+8.	rcu/tree: Force quiescent state on callback overload.
+
+9.	rcu/tree: Remove CONFIG_PREMPT_RCU check in force_qs_rnp().
+
+10.	Remove show_rcu_nocb_state() false positive printout.
+
+11.	Add READ_ONCE() to rcu_do_batch() access to rcu_divisor.
+
+12.	Add READ_ONCE() to rcu_do_batch() access to rcu_resched_ns.
+
+13.	Add READ_ONCE() to rcu_do_batch() access to rcu_kick_kthreads.
+
+14.	Add READ_ONCE() to rcu_do_batch() access to rcu_cpu_stall_ftrace_dump.
+
+15.	Fix kerneldoc comments in rcupdate.h.
+
+16.	Introduce list/hlist_for_each_entry_srcu() macros.
+
+17.	mmu: page_track: Fix RCU list API usage.
+
+18.	Move rcu_cpu_started per-CPU variable to rcu_data.
+
+19.	rcu/nocb: Add a warning for non-GP kthread running GP code.
+
+20.	Clarify comments about FQS loop reporting quiescent states.
+
+21.	Make FQS more aggressive in complaining about offline CPUs.
+
+22.	Remove unused __rcu_is_watching() function.
+
+23.	rcu/segcblist: Prevent useless GP start if no CBs to accelerate.
+
+24.	Shrink each possible cpu krcp.
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+ arch/x86/kvm/mmu/page_track.c |    6 +-
+ include/linux/rculist.h       |   48 +++++++++++++++++++++
+ include/linux/rcupdate.h      |   12 ++---
+ include/linux/rcutiny.h       |    1 
+ include/linux/rcutree.h       |    1 
+ include/trace/events/rcu.h    |   54 ++++++++++++------------
+ kernel/entry/common.c         |    2 
+ kernel/rcu/rcu_segcblist.c    |   10 ++++
+ kernel/rcu/srcutree.c         |   13 -----
+ kernel/rcu/tree.c             |   92 +++++++++++++++++++++---------------------
+ kernel/rcu/tree.h             |    1 
+ kernel/rcu/tree_exp.h         |    6 --
+ kernel/rcu/tree_plugin.h      |    8 +--
+ kernel/rcu/tree_stall.h       |    8 +--
+ kernel/rcu/update.c           |   13 -----
+ 15 files changed, 154 insertions(+), 121 deletions(-)
