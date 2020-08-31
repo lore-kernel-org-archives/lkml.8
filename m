@@ -2,170 +2,472 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA1A5C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3CEEC43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:42:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1CD8207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6260207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:42:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="bZLz65AF";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="LwmXMh2Z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V7Mua0vz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgHaLln (ORCPT
+        id S1726928AbgHaLmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:41:43 -0400
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:43652 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726121AbgHaLll (ORCPT
+        Mon, 31 Aug 2020 07:42:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgHaLmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:41:41 -0400
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VBfW8k031542;
-        Mon, 31 Aug 2020 04:41:32 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0220;
- bh=6THUmfS9xdAztoPkGwC3FaclSzAdOgo9MAPU11JJB18=;
- b=bZLz65AFED43KDg+HVDYAhdIB10wdhhVzYd0euYFvG18RUCZZBPbuszOQjnR6lQYO9Cs
- WjV1LmMDECchFCelMq5+Ozn28tmPehofGy9E6hTCFzMIly2nURUlzo580wNnpeuEWrfY
- GYllISyT3JpBmAlEy+luunRphWYlYRIv3fMjBgwjAFtwBTz5Xp1UKDuCBdsDzHn9o4rN
- /lB1WHkSGJfNP2U2iN5ELIoNCFjmCCiK+1vcPtvWCc+g33TJkIbplIdBVxO5a86SUrQ4
- kpP4w2wVXYlpJEF4RZHgeVBKoGUv0rmLDQ6CyMWZM4kozM/A3ssoixajKXzSU0YFTfSu 0g== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 337phprwa7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 04:41:31 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 31 Aug
- 2020 04:41:30 -0700
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 31 Aug
- 2020 04:41:29 -0700
-Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.59) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Mon, 31 Aug 2020 04:41:29 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ks6aknUu2/jI3i+ABSrlNKfJzeYfYdkWfHtZA+d26h3wMJhEioXjKLOHyGuyBqmY3dA9YGR3snXIhGd9Azc8yfxJETBi9gdd42vwpy3pPBSPWdEJOgJ7YkinFYuO7LUCw4iSfhorIACWBQ+cj/qNP20o4QYOiqbnEhazuf+VfFMe6FK57MNk3IbzIF+OUAmcnbK8Xxw2mKwdhBGhbzasNhZh+dadmsLBAShN3WVqV//M3AwHsO9W186jONxw+1IRAdcixhBbf6w9OYINZOXe5v1IFYyEeveE9Khyl0GB9+n5mka3jO0Wtvbk30GeZko8kMAKESeluAQhOq8KeRCxww==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6THUmfS9xdAztoPkGwC3FaclSzAdOgo9MAPU11JJB18=;
- b=cOAW4AroT6E2onIx4JgbZJKeEoFWS37WLmVQEAUddTBp3FyItEt0jINwPNeYaQyxmmLT9y+6EwoLEvD3+U5KahdgMbUGqa86HcIWTUIvtDlpi19Gij/bHP+KWRMscNkUpJrEhX3NbwJsks02F8ARvrvcToZcyXm4JiPYl0Aq018sLDVAG431z4bntk4mdgTEeMsEcnaxAL7AVQj/H1hjebPB82fJq3gveyECQEhOZKxgdRurBtIlS5lHtWuU067EeEjIRTJJ27xcVpeOsuGZFPaBI7mm1IAPXV1PZsPyV880NrPIFPo7DKscDoTLNHgbNxHoHxMXBnYhKH6tLjaaLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Mon, 31 Aug 2020 07:42:17 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 533AFC061573;
+        Mon, 31 Aug 2020 04:42:16 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id c10so5109484edk.6;
+        Mon, 31 Aug 2020 04:42:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6THUmfS9xdAztoPkGwC3FaclSzAdOgo9MAPU11JJB18=;
- b=LwmXMh2ZjQTtDisbqECPT0lOlPl7uvZX4J8ryfqcJXOd56wRJYwIPEPzZj0L4fCYrqRAj4CzoZXAo9KnguS0Y3uhG0W0NQ3a1bC6MQfeEBg2VgpoJBAP73q5c5K0//L+dlcPboEA+lDCaYowv4SxChsl5isuueAgjBY7jFpxYwM=
-Received: from DM6PR18MB3052.namprd18.prod.outlook.com (2603:10b6:5:167::19)
- by DM6PR18MB3212.namprd18.prod.outlook.com (2603:10b6:5:14a::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Mon, 31 Aug
- 2020 11:41:27 +0000
-Received: from DM6PR18MB3052.namprd18.prod.outlook.com
- ([fe80::905a:ebb4:369c:ae1b]) by DM6PR18MB3052.namprd18.prod.outlook.com
- ([fe80::905a:ebb4:369c:ae1b%7]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 11:41:26 +0000
-From:   Nilesh Javali <njavali@marvell.com>
-To:     Xianting Tian <tian.xianting@h3c.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        GR-QLogic-Storage-Upstream <GR-QLogic-Storage-Upstream@marvell.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH] scsi: qla2xxx: Fix the return value
-Thread-Topic: [EXT] [PATCH] scsi: qla2xxx: Fix the return value
-Thread-Index: AQHWfdsk2b/ryS/vZ06xqJFnAbz5JKlSGq5w
-Date:   Mon, 31 Aug 2020 11:41:26 +0000
-Message-ID: <DM6PR18MB3052E1B8F65AA24F80530E37AF510@DM6PR18MB3052.namprd18.prod.outlook.com>
-References: <20200829075746.19166-1-tian.xianting@h3c.com>
-In-Reply-To: <20200829075746.19166-1-tian.xianting@h3c.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: h3c.com; dkim=none (message not signed)
- header.d=none;h3c.com; dmarc=none action=none header.from=marvell.com;
-x-originating-ip: [59.90.36.175]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 662adcee-58ad-4d78-176d-08d84da2cb30
-x-ms-traffictypediagnostic: DM6PR18MB3212:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR18MB32129ACEA03197C58DC577ADAF510@DM6PR18MB3212.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: wkFMy9X34FlxareAnEekE1nzaJRpBFYE9jT96RAo66t3kb8m/n4WbqWE7L2FZpOtgjV4QjSB1XSR2n/gNfZgb7zJ6l4JJEw9cEswGbiOeni17kAJK4fbOnUvnXwID9PNkgxBEbnzsGJ8hUU0DUF/uLxyzxJFbLBcva6fDWuHT07BNorgZKqyC24/PYXxHne1ja2gNp44uiNlvBTqfnZanfZbd0XqlbXXgVI9zSk+IYjdxvG8KX/QeFcDLU37iSpwmEJcsgbOyMsL7XR2wuZNsA7e/+4gy6WdGZrb/bYzOtbYwL3YmYNo1CieRbxNbz+C
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR18MB3052.namprd18.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(346002)(39850400004)(136003)(376002)(396003)(33656002)(26005)(53546011)(6506007)(8936002)(52536014)(76116006)(54906003)(71200400001)(110136005)(7696005)(5660300002)(2906002)(9686003)(83380400001)(55016002)(478600001)(66476007)(64756008)(66556008)(66946007)(6636002)(186003)(316002)(8676002)(4326008)(86362001)(66446008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: T5D+lu0eIB7B0dOpVsbhLQKRJMi7yCYRkaRM2kg2RZiZB/KNyw8VbeXdb+xarvPvmmg1xxELP/j10BXgoGFlGw5CGwNG7vYRa4851P2j6lpL39eOI/xeR8nY84FAA6E4x7QlEDhvGhlq95On9oPSfmpcBhD2ZphcEMxr4OwZ8mVM/QZUzjtELbXQxuT433OilM0eAkxi+YGpFfldDy9FSlBWxVamFY4/3FgFn+rCt5G2BkPQpCx+OuhRnYlJbq1lSQ0kZcOzDi4RF5fDKhyYzdKo0X2LgnH2RyTOtjPqDu5zpsDjtzkmJZFX47WEgEaYn9b4f09oKp+CaT5D6YCtcO3G2Eq39MfefivUh374qSMyGkTycR3IJ4Psg0MfOc7Ekwdjd6G6k/RuG/kOLRE1bxdZOui16o0e3bGvmA039STomhxs4btU2RHsbznRRjPbgKML2CM2WtKY7sarlpY/eiV3Ntup2s/kBJ64cTDLVSD1+RA5Ho9p6ZAcb8pJErlDEmpVOP2bykL8pijqhez4nawmO0wbVSlVvsAXRjA6NqmL8JF8Xgz7JhWULCaIEWeQSvM5YYdpgqM4BeOd0ZZpzRec/AMeidi0qj1h0hizmqB8dL1n2uEsBbxGKbE0LqR0y0tn5Fup0a1oWI8YIeovPA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Duh1V085veXGe65AU6M3+q7eVYSTOZ5DljpuqDKUcVA=;
+        b=V7Mua0vzsymkuA4Ully/sJn+hoJqt3u/HxARTSL+0Ytd3Hx7StMN9oj6S4TkRXJINo
+         hPPcEvcBoIVfIQUK/09A1Fbp8r5STkk5ePaJT0F53hcIbwNer8JEZEU9W0+6d+UXSlir
+         0etcaPK/VMVKtUdUi/SfvmCDgMb1Z7QI+NEhMJsFLZohwHhd/2MmWY5jiGNRNIABPvc+
+         TDhP36uf3H6m8OZnHa3lnOd6RHpnAD64iI7g5uojPU+kiHh5OlNA/KRPOak4H0XZbmX5
+         rrDuXk4HzoUZH2wc5uJsCYebex7Od9AOd+u+Z6rrIj6kFVZJ24xlvibO2Sk10sKo7W8X
+         ewpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Duh1V085veXGe65AU6M3+q7eVYSTOZ5DljpuqDKUcVA=;
+        b=LxMv6s+3fOZqrsmNJJtQcMr4PJ2RF+JopPNlioZsLeCClXHHhYbYNhI0PS3TBe84FI
+         RSL4gnXIgc2OPwhHwf2f/SKkYJBYdCviCgSkIG2QS6WBH3UpbVPfGwjE33RFLqk/KQeY
+         8GPCyUwqqEqTeio030S/nnx9A6FU0e8Z80FAHzK7ovpf7ZIx3gSlsXlFOmM5f9jhcCX7
+         6psjAbQqp0mm0hMlm6JNn1fxOr0OBtxWBs97n1jZI0+PnjD9jUTJKXlfHvAqCYETJ3Vu
+         2OpeDQi8vOWb/j1kqfZQu1lnlnuNDZlDGUaOBgMtkGfaj45DtIsRVZ5ZF5jYUu8voxRV
+         V6JA==
+X-Gm-Message-State: AOAM533XzKxOxmRd5V44kyuDIrRRxyfz4gLL+QJtZVFgsXR5j1J7ca0J
+        sNPwAfSC0x03PBygUoblW7U=
+X-Google-Smtp-Source: ABdhPJwsJIHZoMgqd7ZW/2RTScLUQLgKsk4NYHNIy5V6Q8TJjEGbSiQw2r3F3b4eduhRG4ndrkaChQ==
+X-Received: by 2002:aa7:dcd9:: with SMTP id w25mr803949edu.280.1598874134641;
+        Mon, 31 Aug 2020 04:42:14 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id o60sm7292704eda.30.2020.08.31.04.42.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 04:42:13 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 13:42:12 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     JC Kuo <jckuo@nvidia.com>
+Cc:     gregkh@linuxfoundation.org, robh@kernel.org, jonathanh@nvidia.com,
+        kishon@ti.com, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, nkristam@nvidia.com
+Subject: Re: [PATCH v2 03/12] phy: tegra: xusb: t210: rearrange UPHY init
+Message-ID: <20200831114212.GA1689119@ulmo>
+References: <20200831044043.1561074-1-jckuo@nvidia.com>
+ <20200831044043.1561074-4-jckuo@nvidia.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR18MB3052.namprd18.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 662adcee-58ad-4d78-176d-08d84da2cb30
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2020 11:41:26.1302
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PyJQ4sTCw5OjJmEmwrxINh6wYSgCbCyPYCqVcvFwD8KC0mIXIGMdko5PGG137mibfD7vWnqpRo+N3BcjC0cuhA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR18MB3212
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-31_04:2020-08-31,2020-08-31 signatures=0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
+Content-Disposition: inline
+In-Reply-To: <20200831044043.1561074-4-jckuo@nvidia.com>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Xianting Tian,
 
-Thanks for the patch.
+--jI8keyz6grp/JLjh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> -----Original Message-----
-> From: Xianting Tian <tian.xianting@h3c.com>
-> Sent: Saturday, August 29, 2020 1:28 PM
-> To: Nilesh Javali <njavali@marvell.com>; GR-QLogic-Storage-Upstream <GR-
-> QLogic-Storage-Upstream@marvell.com>; jejb@linux.ibm.com;
-> martin.petersen@oracle.com
-> Cc: linux-scsi@vger.kernel.org; linux-kernel@vger.kernel.org; Xianting Ti=
-an
-> <tian.xianting@h3c.com>
-> Subject: [EXT] [PATCH] scsi: qla2xxx: Fix the return value
+Please start commit subjects with a capital letter after the prefix.
+Also, please avoid t210 as abbreviation and use tegra210 instead.
+
+The above should be something like:
+
+    phy: tegra: xusb: tegra210: Rearrange UPHY init
+
+Or perhaps:
+
+    phy: tegra: xusb: Rearrange UPHY init on Tegra210
+
+On Mon, Aug 31, 2020 at 12:40:34PM +0800, JC Kuo wrote:
+> This commit is a preparation for enabling XUSB SC7 support.
+> It rearranges Tegra210 XUSB PADCTL UPHY initialization sequence,
+> for the following reasons:
 >=20
-> External Email
+> 1. PLLE hardware power sequencer has to be enabled only after both
+>    PEX UPHY PLL and SATA UPHY PLL are initialized.
+>    tegra210_uphy_init() -> tegra210_pex_uphy_enable()
+>                         -> tegra210_sata_uphy_enable()
+>                         -> tegra210_plle_hw_sequence_start()
+>                         -> tegra210_aux_mux_lp0_clamp_disable()
 >=20
-> ----------------------------------------------------------------------
-> A negative error code should be returned.
+> 2. Once UPHY PLL hardware power sequencer is enabled, do not assert
+>    reset to PEX/SATA PLLs, otherwise UPHY PLL operation will be
+>    broken.
+>    reset_control_assert(pcie->rst) and reset_control_assert(sata->rst)
+>    are removed from PEX/SATA UPHY disable procedure.
 >=20
-> Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+> 3. At cold boot and SC7 exit, the following bits must be cleared after
+>    PEX/SATA lanes are out of IDDQ (IDDQ_DISABLE=3D1).
+>    a. XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_CLAMP_EN,
+>    b. XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_CLAMP_EN_EARLY
+>    c. XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_VCORE_DOWN
+>=20
+>    tegra210_pex_uphy_enable() and tegra210_sata_uphy_enable() are in
+>    charge of bringing lanes out of IDDQ, and then AUX_MUX_LP0_* bits
+>    will be cleared by tegra210_aux_mux_lp0_clamp_disable().
+>=20
+> 4. The programming sequence in tegra210_usb3_port_enable() is required
+>    for both cold boot and SC7 exit, and must be performed only after
+>    PEX/SATA UPHY is initialized. Therefore, this commit moves the
+>    programming sequence to .power_on() stub which is invoked after
+>    .init(). PEX/SATA UPHY is initialzied in .init().
+>=20
+> Signed-off-by: JC Kuo <jckuo@nvidia.com>
 > ---
->  drivers/scsi/qla2xxx/qla_target.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/scsi/qla2xxx/qla_target.c
-> b/drivers/scsi/qla2xxx/qla_target.c
-> index fbb80a043..612e001cc 100644
-> --- a/drivers/scsi/qla2xxx/qla_target.c
-> +++ b/drivers/scsi/qla2xxx/qla_target.c
-> @@ -3781,7 +3781,7 @@ int qlt_abort_cmd(struct qla_tgt_cmd *cmd)
->  		    "multiple abort. %p transport_state %x, t_state %x, "
->  		    "se_cmd_flags %x\n", cmd, cmd->se_cmd.transport_state,
->  		    cmd->se_cmd.t_state, cmd->se_cmd.se_cmd_flags);
-> -		return EIO;
-> +		return -EIO;
->  	}
->  	cmd->aborted =3D 1;
->  	cmd->trc_flags |=3D TRC_ABORT;
-> --
-> 2.17.1
+>  drivers/phy/tegra/xusb-tegra210.c | 495 ++++++++++++++++--------------
+>  drivers/phy/tegra/xusb.c          |   2 +-
+>  drivers/phy/tegra/xusb.h          |   6 +-
+>  3 files changed, 270 insertions(+), 233 deletions(-)
 
-Acked-by: Nilesh Javali <njavali@marvell.com>
+You've listed 4 logically separate changes in the commit message, so I'm
+wondering if it's possible to split this patch into 4 different ones. It
+might not be worth doing that if they all basically fix the sequence in
+one go, but it's pretty difficult to review this as-is.
+
+>=20
+> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-t=
+egra210.c
+> index 66bd4613835b..3a2d9797fb9f 100644
+> --- a/drivers/phy/tegra/xusb-tegra210.c
+> +++ b/drivers/phy/tegra/xusb-tegra210.c
+> @@ -256,23 +256,52 @@ to_tegra210_xusb_padctl(struct tegra_xusb_padctl *p=
+adctl)
+>  	return container_of(padctl, struct tegra210_xusb_padctl, base);
+>  }
+> =20
+> +static const struct tegra_xusb_lane_map tegra210_usb3_map[] =3D {
+> +	{ 0, "pcie", 6 },
+> +	{ 1, "pcie", 5 },
+> +	{ 2, "pcie", 0 },
+> +	{ 2, "pcie", 3 },
+> +	{ 3, "pcie", 4 },
+> +	{ 3, "pcie", 4 },
+> +	{ 0, NULL,   0 }
+> +};
+> +
+> +static int tegra210_usb3_lane_map(struct tegra_xusb_lane *lane)
+> +{
+> +	const struct tegra_xusb_lane_map *map;
+> +
+> +	for (map =3D tegra210_usb3_map; map->type; map++) {
+> +		if (map->index =3D=3D lane->index &&
+> +		    strcmp(map->type, lane->pad->soc->name) =3D=3D 0) {
+> +			dev_dbg(lane->pad->padctl->dev,
+> +				"lane =3D %s map to port =3D usb3-%d\n",
+
+"mapped to port"?
+
+> +				lane->pad->soc->lanes[lane->index].name,
+> +				map->port);
+> +			return map->port;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+>  /* must be called under padctl->lock */
+>  static int tegra210_pex_uphy_enable(struct tegra_xusb_padctl *padctl)
+>  {
+>  	struct tegra_xusb_pcie_pad *pcie =3D to_pcie_pad(padctl->pcie);
+>  	unsigned long timeout;
+>  	u32 value;
+> -	int err;
+> +	int err, i;
+
+i should be unsigned to match the type of padctl->pcie->soc->num_lanes.
+
+> =20
+> -	if (pcie->enable > 0) {
+> -		pcie->enable++;
+> +	if (pcie->enable)
+>  		return 0;
+> -	}
+> =20
+>  	err =3D clk_prepare_enable(pcie->pll);
+>  	if (err < 0)
+>  		return err;
+> =20
+> +	if (tegra210_plle_hw_sequence_is_enabled())
+> +		goto skip_pll_init;
+> +
+>  	err =3D reset_control_deassert(pcie->rst);
+
+Is it guaranteed that the reset is asserted if the PLLE HW sequencer is
+enabled? I suppose with the change to not enable the sequencer by
+default in one of the earlier patches this may indeed be a valid
+assumption.
+
+>  	if (err < 0)
+>  		goto disable;
+> @@ -455,7 +484,14 @@ static int tegra210_pex_uphy_enable(struct tegra_xus=
+b_padctl *padctl)
+> =20
+>  	tegra210_xusb_pll_hw_sequence_start();
+> =20
+> -	pcie->enable++;
+> +skip_pll_init:
+> +	pcie->enable =3D true;
+> +
+> +	for (i =3D 0; i < padctl->pcie->soc->num_lanes; i++) {
+> +		value =3D padctl_readl(padctl, XUSB_PADCTL_USB3_PAD_MUX);
+> +		value |=3D XUSB_PADCTL_USB3_PAD_MUX_PCIE_IDDQ_DISABLE(i);
+> +		padctl_writel(padctl, value, XUSB_PADCTL_USB3_PAD_MUX);
+> +	}
+> =20
+>  	return 0;
+> =20
+> @@ -469,34 +505,42 @@ static int tegra210_pex_uphy_enable(struct tegra_xu=
+sb_padctl *padctl)
+>  static void tegra210_pex_uphy_disable(struct tegra_xusb_padctl *padctl)
+>  {
+>  	struct tegra_xusb_pcie_pad *pcie =3D to_pcie_pad(padctl->pcie);
+> +	u32 value;
+> +	int i;
+
+Same as above.
+
+> =20
+> -	mutex_lock(&padctl->lock);
+> -
+> -	if (WARN_ON(pcie->enable =3D=3D 0))
+> -		goto unlock;
+> +	if (WARN_ON(!pcie->enable))
+> +		return;
+> =20
+> -	if (--pcie->enable > 0)
+> -		goto unlock;
+> +	pcie->enable =3D false;
+> =20
+> -	reset_control_assert(pcie->rst);
+> +	for (i =3D 0; i < padctl->pcie->soc->num_lanes; i++) {
+> +		value =3D padctl_readl(padctl, XUSB_PADCTL_USB3_PAD_MUX);
+> +		value &=3D ~XUSB_PADCTL_USB3_PAD_MUX_PCIE_IDDQ_DISABLE(i);
+> +		padctl_writel(padctl, value, XUSB_PADCTL_USB3_PAD_MUX);
+> +	}
+>  	clk_disable_unprepare(pcie->pll);
+
+Please leave a blank line after a block for better readability.
+
+> -
+> -unlock:
+> -	mutex_unlock(&padctl->lock);
+>  }
+> =20
+>  /* must be called under padctl->lock */
+> -static int tegra210_sata_uphy_enable(struct tegra_xusb_padctl *padctl, b=
+ool usb)
+> +static int tegra210_sata_uphy_enable(struct tegra_xusb_padctl *padctl)
+>  {
+>  	struct tegra_xusb_sata_pad *sata =3D to_sata_pad(padctl->sata);
+> +	struct tegra_xusb_lane *lane =3D tegra_xusb_find_lane(padctl, "sata", 0=
+);
+>  	unsigned long timeout;
+>  	u32 value;
+> -	int err;
+> +	int err, i;
+
+Same comment as above for "i".
+
+> +	bool usb;
+> =20
+> -	if (sata->enable > 0) {
+> -		sata->enable++;
+> +	if (sata->enable)
+
+Do we want a WARN_ON() here for symmetry with the implementation of
+tegra210_sata_uphy_disable() below?
+
+>  		return 0;
+> -	}
+> +
+> +	if (!lane)
+> +		return 0;
+> +
+> +	if (tegra210_plle_hw_sequence_is_enabled())
+> +		goto skip_pll_init;
+> +
+> +	usb =3D tegra_xusb_lane_check(lane, "usb3-ss");
+> =20
+>  	err =3D clk_prepare_enable(sata->pll);
+>  	if (err < 0)
+> @@ -697,7 +741,14 @@ static int tegra210_sata_uphy_enable(struct tegra_xu=
+sb_padctl *padctl, bool usb)
+> =20
+>  	tegra210_sata_pll_hw_sequence_start();
+> =20
+> -	sata->enable++;
+> +skip_pll_init:
+> +	sata->enable =3D true;
+> +
+> +	for (i =3D 0; i < padctl->sata->soc->num_lanes; i++) {
+> +		value =3D padctl_readl(padctl, XUSB_PADCTL_USB3_PAD_MUX);
+> +		value |=3D XUSB_PADCTL_USB3_PAD_MUX_SATA_IDDQ_DISABLE(i);
+> +		padctl_writel(padctl, value, XUSB_PADCTL_USB3_PAD_MUX);
+> +	}
+> =20
+>  	return 0;
+> =20
+> @@ -711,31 +762,26 @@ static int tegra210_sata_uphy_enable(struct tegra_x=
+usb_padctl *padctl, bool usb)
+>  static void tegra210_sata_uphy_disable(struct tegra_xusb_padctl *padctl)
+>  {
+>  	struct tegra_xusb_sata_pad *sata =3D to_sata_pad(padctl->sata);
+> +	u32 value;
+> +	int i;
+
+unsigned int, please.
+
+> =20
+> -	mutex_lock(&padctl->lock);
+> -
+> -	if (WARN_ON(sata->enable =3D=3D 0))
+> -		goto unlock;
+> +	if (WARN_ON(!sata->enable))
+> +		return;
+> =20
+> -	if (--sata->enable > 0)
+> -		goto unlock;
+> +	sata->enable =3D false;
+> =20
+> -	reset_control_assert(sata->rst);
+> +	for (i =3D 0; i < padctl->sata->soc->num_lanes; i++) {
+> +		value =3D padctl_readl(padctl, XUSB_PADCTL_USB3_PAD_MUX);
+> +		value &=3D ~XUSB_PADCTL_USB3_PAD_MUX_SATA_IDDQ_DISABLE(i);
+> +		padctl_writel(padctl, value, XUSB_PADCTL_USB3_PAD_MUX);
+> +	}
+>  	clk_disable_unprepare(sata->pll);
+> -
+> -unlock:
+> -	mutex_unlock(&padctl->lock);
+>  }
+> =20
+> -static int tegra210_xusb_padctl_enable(struct tegra_xusb_padctl *padctl)
+> +static void tegra210_aux_mux_lp0_clamp_disable(struct tegra_xusb_padctl =
+*padctl)
+>  {
+>  	u32 value;
+> =20
+> -	mutex_lock(&padctl->lock);
+> -
+> -	if (padctl->enable++ > 0)
+> -		goto out;
+> -
+>  	value =3D padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
+>  	value &=3D ~XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_CLAMP_EN;
+>  	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
+> @@ -751,24 +797,12 @@ static int tegra210_xusb_padctl_enable(struct tegra=
+_xusb_padctl *padctl)
+>  	value =3D padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
+>  	value &=3D ~XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_VCORE_DOWN;
+>  	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
+> -
+> -out:
+> -	mutex_unlock(&padctl->lock);
+> -	return 0;
+>  }
+> =20
+> -static int tegra210_xusb_padctl_disable(struct tegra_xusb_padctl *padctl)
+> +static void tegra210_aux_mux_lp0_clamp_enable(struct tegra_xusb_padctl *=
+padctl)
+>  {
+>  	u32 value;
+> =20
+> -	mutex_lock(&padctl->lock);
+> -
+> -	if (WARN_ON(padctl->enable =3D=3D 0))
+> -		goto out;
+> -
+> -	if (--padctl->enable > 0)
+> -		goto out;
+> -
+>  	value =3D padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
+>  	value |=3D XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_VCORE_DOWN;
+>  	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
+> @@ -784,12 +818,36 @@ static int tegra210_xusb_padctl_disable(struct tegr=
+a_xusb_padctl *padctl)
+>  	value =3D padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM1);
+>  	value |=3D XUSB_PADCTL_ELPG_PROGRAM1_AUX_MUX_LP0_CLAMP_EN;
+>  	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM1);
+> +}
+> +
+> +static int tegra210_uphy_init(struct tegra_xusb_padctl *padctl)
+> +{
+> +	if (padctl->pcie)
+> +		tegra210_pex_uphy_enable(padctl);
+> +	if (padctl->sata)
+> +		tegra210_sata_uphy_enable(padctl);
+> +
+> +	if (!tegra210_plle_hw_sequence_is_enabled())
+> +		tegra210_plle_hw_sequence_start();
+> +	else
+> +		dev_dbg(padctl->dev, "PLLE is already in HW control\n");
+> +
+> +	tegra210_aux_mux_lp0_clamp_disable(padctl);
+> =20
+> -out:
+> -	mutex_unlock(&padctl->lock);
+>  	return 0;
+>  }
+> =20
+> +static void __maybe_unused
+> +tegra210_uphy_deinit(struct tegra_xusb_padctl *padctl)
+> +{
+> +	tegra210_aux_mux_lp0_clamp_enable(padctl);
+
+Do we need tegra210_plle_hw_sequence_stop() here?
+
+> +
+> +	if (padctl->pcie)
+> +		tegra210_pex_uphy_disable(padctl);
+> +	if (padctl->sata)
+> +		tegra210_sata_uphy_disable(padctl);
+
+Maybe reverse the order of these two so that they are symmetrical with
+tegra210_uphy_init()? Also, single blank lines between the two blocks
+make this easier to read, in my opinion.
+
+Thierry
+
+--jI8keyz6grp/JLjh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M4hEACgkQ3SOs138+
+s6EI2hAApNax2Figu58Vn9NnvSW/ThTbFJ2/WPsRSW84s5KymTYdApMhBnb8Gbkn
+xeIAdJeyrTqJuSWbRLXDb1UiypPJA40nwRjIZKWvXQId00E+F6vPf6h7ZFGWfPpU
+AWBOEsQSCi7liBJWLg0oJC5LQedLv3uvRNNXMhiVmp188iWExlss5moSLg3YHVJW
+DWDnHv82v+b3p/j/qMk9xKkAvyMh5uhpHuX9/6xInWwFST5Q2sHg2hsgRRma0onO
+u0XaDxFqk8zgrQ6jCchL5dCnr51b9tNDWNqHwn08HZpCBeKrKkvduNhEl5oEV90J
+3rhNNRCfssf/JBwwAfhA9oARxKQMvT3g6YuuJESVzZO27cZz4SFiKafUAtM/CwBL
++OpWkFe44xIovY30dJQWaQ6e/2GMJgWsRQm3ng34F67ruVLcUv0XaD758KskHcpQ
+D5L2ypbi4SLQh7/PP0wn8uH84eGPQSi3ZjnjMjr6ET66VoreVGmYvVtenSEM1bEM
+TYcnrEKLnwnO/FUa5LQ52isvXAes8O8roOAcW0U3HL2jhK2bjE0mQveZxSU3TSmK
+0K+2YdLBNRCEnPEy3Z5uCa4ACfXip+Qs0lni6NmaHy8+gibYgpaDRDqqL1j74zoI
+HbyUFTRd3n1M/FHmDcl8idFdYgikuFXZ9Yytw+4QoLsXl30agPk=
+=aDUQ
+-----END PGP SIGNATURE-----
+
+--jI8keyz6grp/JLjh--
