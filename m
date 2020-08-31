@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC00C43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD9EDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B60B3214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B243215A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887850;
-	bh=UqqMPAtWDqzA6uUdK9GV+TVqxsDEdKr1IAB3nfSBPuo=;
+	s=default; t=1598887857;
+	bh=ijrS9uIpRTrtNJTAMLV8xe4MQCKKTbmb4xcnDYux+Kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L5ffGwJ1meVSVqfJkbbragi/aefzAksssivSvQHVsoOEhQWpPjZdnx1rhhFj+wsnA
-	 cohoJFC4/K0COiPagCORX/e4qY57sCt9oxu3k647hssvzVS3bfrYw1uRco/e0Vzh/w
-	 B1IqYvyiHjxX0+rOwPvZg9yKvJnjEMbUuW0oWvxs=
+	b=vF+ZG71dFpd8xnBYik6XvaQwVYU4pOKvpbx8iGi5+Hbxra5JgrDexyfqOxpW/qMD/
+	 5NojHCvzSEO53J+8nB2OLk5ki0ZbTEKgv+B9TycSo+KGcC7w9dScNw8pWnppD16xBk
+	 8H8ymxB6eJNNZ1v1dkDcoEbAkJyWfx53zRFCqawA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728659AbgHaPas (ORCPT
+        id S1728755AbgHaPay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:30:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728681AbgHaPag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:36 -0400
+        id S1728722AbgHaPaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69372214D8;
-        Mon, 31 Aug 2020 15:30:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A815C20FC3;
+        Mon, 31 Aug 2020 15:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887836;
-        bh=UqqMPAtWDqzA6uUdK9GV+TVqxsDEdKr1IAB3nfSBPuo=;
+        s=default; t=1598887845;
+        bh=ijrS9uIpRTrtNJTAMLV8xe4MQCKKTbmb4xcnDYux+Kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q9hLf9QsynLtpUQttfgx4RwjoCIhoqOHFiIEucCON7lXCaoldpFKfE0v4CQa+sjWO
-         J/SRnl1XEf1yqUxCsOAie84w6uAS0iHDLgtlNCKXlhb9inigCbDRtxjl0DWAxh6bi0
-         OpJA/xO5raSAWiiPfDGk+u5vLN0IWkkVhwJIZcOE=
+        b=uIxZ2erkqhi9rY5fyzP9oiUVhNilSgEjeW7MTfY2ln3MXfIvecmeOid+23EoOhBZZ
+         SmqSf1NUYponITpWRXWs8i6DtUS++3/ms97xvw8RhKjPc57+1X2xoJOKL4Yapjw9RY
+         Y9NGOHyOkqQnRmKDgaXAUEfxeBVheOJIVKVL+6P0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Simon Leiner <simon@leiner.me>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
-Subject: [PATCH AUTOSEL 5.8 41/42] xen/xenbus: Fix granting of vmalloc'd memory
-Date:   Mon, 31 Aug 2020 11:29:33 -0400
-Message-Id: <20200831152934.1023912-41-sashal@kernel.org>
+Cc:     Kalyan Thota <kalyan_t@codeaurora.org>,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 03/23] drm/msm/dpu: Fix scale params in plane validation
+Date:   Mon, 31 Aug 2020 11:30:19 -0400
+Message-Id: <20200831153039.1024302-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
-References: <20200831152934.1023912-1-sashal@kernel.org>
+In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
+References: <20200831153039.1024302-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,45 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Simon Leiner <simon@leiner.me>
+From: Kalyan Thota <kalyan_t@codeaurora.org>
 
-[ Upstream commit d742db70033c745e410523e00522ee0cfe2aa416 ]
+[ Upstream commit 4c978caf08aa155bdeadd9e2d4b026d4ce97ebd0 ]
 
-On some architectures (like ARM), virt_to_gfn cannot be used for
-vmalloc'd memory because of its reliance on virt_to_phys. This patch
-introduces a check for vmalloc'd addresses and obtains the PFN using
-vmalloc_to_pfn in that case.
+Plane validation uses an API drm_calc_scale which will
+return src/dst value as a scale ratio.
 
-Signed-off-by: Simon Leiner <simon@leiner.me>
-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
-Link: https://lore.kernel.org/r/20200825093153.35500-1-simon@leiner.me
-Signed-off-by: Juergen Gross <jgross@suse.com>
+when viewing the range on a scale the values should fall in as
+
+Upscale ratio < Unity scale < Downscale ratio for src/dst formula
+
+Fix the min and max scale ratios to suit the API accordingly.
+
+Signed-off-by: Kalyan Thota <kalyan_t@codeaurora.org>
+Tested-by: Kristian H. Kristensen <hoegsberg@google.com>
+Reviewed-by: Kristian H. Kristensen <hoegsberg@google.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/xenbus/xenbus_client.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
-index 786fbb7d8be06..907bcbb93afbf 100644
---- a/drivers/xen/xenbus/xenbus_client.c
-+++ b/drivers/xen/xenbus/xenbus_client.c
-@@ -379,8 +379,14 @@ int xenbus_grant_ring(struct xenbus_device *dev, void *vaddr,
- 	int i, j;
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+index 58d5acbcfc5c2..b984bafd27e25 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c
+@@ -853,9 +853,9 @@ static int dpu_plane_atomic_check(struct drm_plane *plane,
+ 		crtc_state = drm_atomic_get_new_crtc_state(state->state,
+ 							   state->crtc);
  
- 	for (i = 0; i < nr_pages; i++) {
--		err = gnttab_grant_foreign_access(dev->otherend_id,
--						  virt_to_gfn(vaddr), 0);
-+		unsigned long gfn;
-+
-+		if (is_vmalloc_addr(vaddr))
-+			gfn = pfn_to_gfn(vmalloc_to_pfn(vaddr));
-+		else
-+			gfn = virt_to_gfn(vaddr);
-+
-+		err = gnttab_grant_foreign_access(dev->otherend_id, gfn, 0);
- 		if (err < 0) {
- 			xenbus_dev_fatal(dev, err,
- 					 "granting access to ring page");
+-	min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxdwnscale);
++	min_scale = FRAC_16_16(1, pdpu->pipe_sblk->maxupscale);
+ 	ret = drm_atomic_helper_check_plane_state(state, crtc_state, min_scale,
+-					  pdpu->pipe_sblk->maxupscale << 16,
++					  pdpu->pipe_sblk->maxdwnscale << 16,
+ 					  true, true);
+ 	if (ret) {
+ 		DPU_ERROR_PLANE(pdpu, "Check plane state failed (%d)\n", ret);
 -- 
 2.25.1
 
