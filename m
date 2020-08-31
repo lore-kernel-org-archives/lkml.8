@@ -2,136 +2,120 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25CBC43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF23C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:19:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2E3E20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D42E20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:19:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNUV6toF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xTMC+yzh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728503AbgHaPR6 (ORCPT
+        id S1728329AbgHaPT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbgHaPRT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:17:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CCE8C061573;
-        Mon, 31 Aug 2020 08:17:19 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 31so740117pgy.13;
-        Mon, 31 Aug 2020 08:17:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=o2tp+O/fvjT5GP7vYXsEtBxLItwJjgYMH2teIh37dm8=;
-        b=fNUV6toFn7/F1MjitalN8tMYAdmNugJVStqW3KuHLW8doFsghzwRNbMHMLvicQE6wU
-         yFofiIJnd8S69MJ0qisVO7fMjkiOZHclHUuY5vkd6z3h0KcquKCm0Kf+4WcGl8Y3p3bU
-         jigUTQJC76Tl514EcN8HKe7gRpcJgnqwSkHIwdUSm8MYTz+Bh1819ZA76HUPW6K1UHMd
-         VEHwZxciLUwUDoRkNWmCX6i252xAdWYuJ08KkPYM5sRBPFOBhisj1cfjYn2wn8U1u2nP
-         lIpj0joCbU5Eqq+OBG6/flvFI0V4Uz9LDsq20f015T2lWJMjUYbooY6ZnBO9BZeOv3U2
-         UwSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=o2tp+O/fvjT5GP7vYXsEtBxLItwJjgYMH2teIh37dm8=;
-        b=J5MwiZqccg5snq7sMKbDL0DbPTelTq2mspcji7PSnwZ1N1n/eyYbNZzxHxevlbXXM3
-         uHBXOhFmItoXyR7Rfj9VmPUIdDGSTDJLAtaWH58yjTwTcGW8SGZJ8CeF+JTVkwH0GN5e
-         fOkvnvKEoIcBNkibpTLrgjRtUvcGd/2WpMcvadaooxMWcN5y7rED3NoHAq2ZbVzZPp1b
-         5XYMzHac717UTMRR5+MiYLqDdZ8640n4z6COrR2u200MHRjqCw8UPhK5YMljCDEJVq26
-         hkHuQKILwaVz/JBH0VscXX5ieeF/BsEDYy+BHDKzswMIzgxBSbDX19Eo0FgF5x1hHkLO
-         RAKg==
-X-Gm-Message-State: AOAM532SDQwRkR//m3QWfjq38az11UEALh00JtpPkr6DlfPSLwWHbwYg
-        CW00/OYfL3w2wUN9zQsyvys=
-X-Google-Smtp-Source: ABdhPJx1SK62N2vqqPYnezhgTvO4C1jj3h6FfAnSTjpgrQAL8dJyzQVQ7aOaz5lp1ITWCAROkcSEcw==
-X-Received: by 2002:aa7:8430:: with SMTP id q16mr141766pfn.69.1598887038744;
-        Mon, 31 Aug 2020 08:17:18 -0700 (PDT)
-Received: from gmail.com ([223.190.108.199])
-        by smtp.gmail.com with ESMTPSA id y7sm7528471pgk.73.2020.08.31.08.17.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 08:17:18 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 20:45:30 +0530
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        linux-i2c@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        stable@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
-        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] i2c: i801: Fix runtime PM
-Message-ID: <20200831151159.GA11707@gmail.com>
-References: <20180627212340.GA161569@bhelgaas-glaptop.roam.corp.google.com>
- <20200828162640.GA2160001@bjorn-Precision-5520>
+        Mon, 31 Aug 2020 11:19:28 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:56631 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727902AbgHaPT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:19:26 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598887165; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=4u536xE6VM//6j9yfuTuY3V55yP7Lhb2M62vzlpJNx0=;
+ b=xTMC+yzhMVJvBNfL7X8+4fbL664J6CH34xhQvXpFvA4mLeIKj7ummzL1oHh9VVUqzrUAcSDg
+ V70oa+IJBU90mPbcK9G5UrAYQ1gvP66mPXvQpOtJjBRnFhohREmnSEKU9+OM1Azua+E0MeK5
+ lwW83ABjyYOkiPdZPQE+jHhVLxg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5f4d14eb32925f96e147d741 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 15:19:06
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 39021C43391; Mon, 31 Aug 2020 15:19:06 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A490CC433CA;
+        Mon, 31 Aug 2020 15:19:03 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A490CC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200828162640.GA2160001@bjorn-Precision-5520>
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 25/32] wireless: ath: wil6210: wmi: Fix formatting and
+ demote non-conforming function headers
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200827073201.GR3248864@dell>
+References: <20200827073201.GR3248864@dell>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Maya Erez <merez@codeaurora.org>, wil6210@qti.qualcomm.com
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200831151906.39021C43391@smtp.codeaurora.org>
+Date:   Mon, 31 Aug 2020 15:19:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 11:26:40AM -0500, Bjorn Helgaas wrote:
-> [+cc Vaibhav]
-> 
-> On Wed, Jun 27, 2018 at 04:23:40PM -0500, Bjorn Helgaas wrote:
-> > [+cc Rafael, linux-pm, linux-kernel]
-> > 
-> > On Wed, Jun 27, 2018 at 10:15:50PM +0200, Jean Delvare wrote:
-> > > Hi Jarkko,
-> > > 
-> > > On Tue, 26 Jun 2018 17:39:12 +0300, Jarkko Nikula wrote:
-> > > > Commit 9c8088c7988 ("i2c: i801: Don't restore config registers on
-> > > > runtime PM") nullified the runtime PM suspend/resume callback pointers
-> > > > while keeping the runtime PM enabled. This causes that device stays in
-> > > > D0 power state and sysfs /sys/bus/pci/devices/.../power/runtime_status
-> > > > shows "error" when runtime PM framework attempts to autosuspend the
-> > > > device.
-> > > > 
-> > > > This is due PCI bus runtime PM which checks for driver runtime PM
-> > > > callbacks and returns with -ENOSYS if they are not set. Fix this by
-> > > > having a shared dummy runtime PM callback that returns with success.
-> > > > 
-> > > > Fixes: a9c8088c7988 ("i2c: i801: Don't restore config registers on runtime PM")
-> > > 
-> > > I don't want to sound like I'm trying to decline all responsibility for
-> > > a regression I caused, but frankly, if just using SIMPLE_DEV_PM_OPS()
-> > > breaks runtime PM, then it's the PM model which is broken, not the
-> > > i2c-i801 driver.
-> > > 
-> > > I will boldly claim that the PCI bus runtime code is simply wrong in
-> > > returning -ENOSYS in the absence of runtime PM callbacks, and it should
-> > > be changed to return 0 instead. Or whoever receives that -ENOSYS should
-> > > not treat it as an error - whatever makes more sense.
-> > > 
-> > > Having to add dummy functions in every PCI driver that doesn't need to
-> > > do anything special for runtime PM sounds plain stupid. It should be
-> > > pretty obvious that a whole lot of drivers are going to use
-> > > SIMPLE_DEV_PM_OPS() because it exists and seems to do what they want,
-> > > and all of them will be bugged because the PCI core is doing something
-> > > silly and unexpected.
-> > > 
-> > > So please let's fix it at the PCI subsystem core level. Adding Bjorn
-> > > and the linux-pci list to Cc.
-> > 
-> > Thanks Jean.  What you describe does sound broken.  I think the PM
-> > guys (cc'd) will have a better idea of how to deal with this.
-> 
-> Did we ever get anywhere with this?  It seems like the thread petered
-> out.
-This does seems worrying. I remember, few days earlier you pointed out a driver
-i2c-nvidia-gpuc.c. In the code, gpu_i2c_suspend() is an empty-body function. And
-comment mentioned that empty stub is necessary for runtime_pm to work.
+Lee Jones <lee.jones@linaro.org> wrote:
 
-And this driver also uses UNIVERSAL_DEV_PM_OPS.
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  drivers/net/wireless/ath/wil6210/wmi.c:52: warning: Incorrect use of kernel-doc format:  * Addressing - theory of operations
+>  drivers/net/wireless/ath/wil6210/wmi.c:70: warning: Incorrect use of kernel-doc format:  * @sparrow_fw_mapping provides memory remapping table for sparrow
+>  drivers/net/wireless/ath/wil6210/wmi.c:80: warning: cannot understand function prototype: 'const struct fw_map sparrow_fw_mapping[] = '
+>  drivers/net/wireless/ath/wil6210/wmi.c:107: warning: Cannot understand  * @sparrow_d0_mac_rgf_ext - mac_rgf_ext section for Sparrow D0
+>  drivers/net/wireless/ath/wil6210/wmi.c:115: warning: Cannot understand  * @talyn_fw_mapping provides memory remapping table for Talyn
+>  drivers/net/wireless/ath/wil6210/wmi.c:158: warning: Cannot understand  * @talyn_mb_fw_mapping provides memory remapping table for Talyn-MB
+>  drivers/net/wireless/ath/wil6210/wmi.c:236: warning: Function parameter or member 'x' not described in 'wmi_addr_remap'
+>  drivers/net/wireless/ath/wil6210/wmi.c:255: warning: Function parameter or member 'section' not described in 'wil_find_fw_mapping'
+>  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function parameter or member 'wil' not described in 'wmi_buffer_block'
+>  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function parameter or member 'ptr_' not described in 'wmi_buffer_block'
+>  drivers/net/wireless/ath/wil6210/wmi.c:278: warning: Function parameter or member 'size' not described in 'wmi_buffer_block'
+>  drivers/net/wireless/ath/wil6210/wmi.c:307: warning: Function parameter or member 'wil' not described in 'wmi_addr'
+>  drivers/net/wireless/ath/wil6210/wmi.c:307: warning: Function parameter or member 'ptr' not described in 'wmi_addr'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function parameter or member 'wil' not described in 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function parameter or member 'vif' not described in 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function parameter or member 'cid' not described in 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1589: warning: Function parameter or member 'ringid' not described in 'wil_find_cid_ringid_sta'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function parameter or member 'vif' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function parameter or member 'id' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function parameter or member 'd' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:1876: warning: Function parameter or member 'len' not described in 'wmi_evt_ignore'
+>  drivers/net/wireless/ath/wil6210/wmi.c:2588: warning: Function parameter or member 'wil' not described in 'wmi_rxon'
+> 
+> Cc: Maya Erez <merez@codeaurora.org>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: wil6210@qti.qualcomm.com
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+
+6 patches applied to ath-next branch of ath.git, thanks.
+
+6b9739c8b8b8 wil6210: wmi: Fix formatting and demote non-conforming function headers
+299ff6c6baa2 wil6210: interrupt: Demote comment header which is clearly not kernel-doc
+e6636d649474 wil6210: txrx: Demote obvious abuse of kernel-doc
+e2d651b99379 wil6210: txrx_edma: Demote comments which are clearly not kernel-doc
+c7b1a9b358e1 wil6210: pmc: Demote a few nonconformant kernel-doc function headers
+ea2e3df7c4f2 wil6210: wil_platform: Demote kernel-doc header to standard comment block
+
+-- 
+https://patchwork.kernel.org/patch/11740165/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
