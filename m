@@ -2,132 +2,98 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEADC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E83CDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDAD206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C132E206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbgHaIHm (ORCPT
+        id S1728198AbgHaIJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:07:42 -0400
-Received: from mga03.intel.com ([134.134.136.65]:63312 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727833AbgHaIHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:07:35 -0400
-IronPort-SDR: r8tHsmEkoe1PPO1GFd2ok8HibGUAnccOp/P1FQuAZ8m2ThZBuCfqBc5vvc6WmZO0E6MhIyd1qu
- 2WCIFJ4Mq3tg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="156930880"
-X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
-   d="scan'208";a="156930880"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 01:07:34 -0700
-IronPort-SDR: MiWim/TS860g5bef5EVAeDlZ5D121AhKj2ox6xZdszaQmZ3jbP8eyegM//Kg1juQhBlDVf/MG2
- QbJyMhx03R1w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
-   d="scan'208";a="501249961"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga006.fm.intel.com with ESMTP; 31 Aug 2020 01:07:33 -0700
-Received: from [10.213.47.150] (mreddy3x-MOBL.gar.corp.intel.com [10.213.47.150])
-        by linux.intel.com (Postfix) with ESMTP id D92D15803C5;
-        Mon, 31 Aug 2020 01:07:30 -0700 (PDT)
-Subject: Re: [PATCH v5 2/2] Add Intel LGM soc DMA support.
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>, dmaengine@vger.kernel.org,
-        vkoul@kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        chuanhua.lei@linux.intel.com, malliamireddy009@gmail.com
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <cdd26d104000c060d85a0c5f8abe8492e4103de5.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <fbc98cdb-3b50-cbcc-0e90-c9d6116566d1@ti.com>
- <bf3e4422-b023-4148-9aa6-60c4d74fe5a9@linux.intel.com>
- <3aea19e6-de96-12ba-495c-94b3b313074d@ti.com>
- <51ed096a-d211-9bab-bf1e-44f912b2a20e@linux.intel.com>
- <831fadff-8127-7634-32be-0000e69e0d94@ti.com>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <6a2e572e-c169-21d5-d36f-23972a24cc54@linux.intel.com>
-Date:   Mon, 31 Aug 2020 16:07:29 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Mon, 31 Aug 2020 04:09:08 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44196 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726573AbgHaII7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:08:59 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 31261FB2EF1CFF7FDF93;
+        Mon, 31 Aug 2020 16:08:56 +0800 (CST)
+Received: from huawei.com (10.175.127.227) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Mon, 31 Aug 2020
+ 16:08:49 +0800
+From:   Jason Yan <yanaijie@huawei.com>
+To:     <kvalo@codeaurora.org>, <davem@davemloft.net>, <kuba@kernel.org>,
+        <yanaijie@huawei.com>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Hulk Robot <hulkci@huawei.com>
+Subject: [PATCH] ath6kl: wmi: remove set but not used 'rate'
+Date:   Mon, 31 Aug 2020 16:08:24 +0800
+Message-ID: <20200831080824.3249197-1-yanaijie@huawei.com>
+X-Mailer: git-send-email 2.25.4
 MIME-Version: 1.0
-In-Reply-To: <831fadff-8127-7634-32be-0000e69e0d94@ti.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+X-Originating-IP: [10.175.127.227]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This addresses the following gcc warning with "make W=1":
 
-On 8/28/2020 7:17 PM, Peter Ujfalusi wrote:
-> Hi,
->
-> On 27/08/2020 17.41, Reddy, MallikarjunaX wrote:
->>>>>> +
->>>>>> +    dma_dev->device_alloc_chan_resources =
->>>>>> +        d->inst->ops->device_alloc_chan_resources;
->>>>>> +    dma_dev->device_free_chan_resources =
->>>>>> +        d->inst->ops->device_free_chan_resources;
->>>>>> +    dma_dev->device_terminate_all =
->>>>>> d->inst->ops->device_terminate_all;
->>>>>> +    dma_dev->device_issue_pending =
->>>>>> d->inst->ops->device_issue_pending;
->>>>>> +    dma_dev->device_tx_status = d->inst->ops->device_tx_status;
->>>>>> +    dma_dev->device_resume = d->inst->ops->device_resume;
->>>>>> +    dma_dev->device_pause = d->inst->ops->device_pause;
->>>>>> +    dma_dev->device_config = d->inst->ops->device_config;
->>>>>> +    dma_dev->device_prep_slave_sg =
->>>>>> d->inst->ops->device_prep_slave_sg;
->>>>>> +    dma_dev->device_synchronize = d->inst->ops->device_synchronize;
->>>>>> +
->>>>>> +    if (d->ver == DMA_VER22) {
->>>>>> +        dma_dev->src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
->>>>>> +        dma_dev->dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_4_BYTES);
->>>>>> +        dma_dev->directions = BIT(DMA_MEM_TO_DEV) |
->>>>>> +                      BIT(DMA_DEV_TO_MEM);
->>>>>> +        dma_dev->residue_granularity =
->>>>>> +                    DMA_RESIDUE_GRANULARITY_DESCRIPTOR;
->>>>>> +    }
->>>>> So, if version is != DMA_VER22, then you don't support any direction?
->>>>> Why register the DMA device if it can not do any transfer?
->>>> Only dma0 instance (intel,lgm-cdma) is used as a general purpose slave
->>>> DMA. we set both control and datapath here.
->>>> Other instances we set only control path. data path is taken care by dma
->>>> client(GSWIP).
->>> How the client (GSWIP) can request a channel from intel,lgm-* ? Don't
->>> you need some capabilities for the DMA device so core can sort out the
->>> request?
->> client request channel by name, dma_request_slave_channel(dev, name);
-> clients should use dma_request_chan(dev, name);
->
-> If the channel can be requested via DT or ACPI then we don't check the
-> capabilities at all, so yes, that could work.
->
->>>> Only thing needs to do is get the channel, set the descriptor and just
->>>> on the channel.
->>> How do you 'on' the channel?
->> we on the channel in issue_pending.
-> Right.
-> Basically you only prep_slave_sg/single for the DMA_VER22? Or do you
-> that for the others w/o direction support?
-Yes. prep_slave_sg/single only for the DMA_VER22.
->
-> For the intel,lgm-* DMAs you only call issue_pending() and probably
-> terminate_all?
-Yes, correct.
->
-> Interesting setup ;)
->
-> - Péter
->
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->
+drivers/net/wireless/ath/ath6kl/wmi.c: In function
+‘ath6kl_wmi_bitrate_reply_rx’:
+drivers/net/wireless/ath/ath6kl/wmi.c:1204:6: warning: variable ‘rate’
+set but not used [-Wunused-but-set-variable]
+ 1204 |  s32 rate;
+      |      ^~~~
+
+The variable 'sgi' is alse removed because after 'rate' is removed, it
+is not used too.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+---
+ drivers/net/wireless/ath/ath6kl/wmi.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/net/wireless/ath/ath6kl/wmi.c b/drivers/net/wireless/ath/ath6kl/wmi.c
+index 6885d2ded53a..a4339cca661f 100644
+--- a/drivers/net/wireless/ath/ath6kl/wmi.c
++++ b/drivers/net/wireless/ath/ath6kl/wmi.c
+@@ -1201,8 +1201,7 @@ static int ath6kl_wmi_pstream_timeout_event_rx(struct wmi *wmi, u8 *datap,
+ static int ath6kl_wmi_bitrate_reply_rx(struct wmi *wmi, u8 *datap, int len)
+ {
+ 	struct wmi_bit_rate_reply *reply;
+-	s32 rate;
+-	u32 sgi, index;
++	u32 index;
+ 
+ 	if (len < sizeof(struct wmi_bit_rate_reply))
+ 		return -EINVAL;
+@@ -1211,15 +1210,10 @@ static int ath6kl_wmi_bitrate_reply_rx(struct wmi *wmi, u8 *datap, int len)
+ 
+ 	ath6kl_dbg(ATH6KL_DBG_WMI, "rateindex %d\n", reply->rate_index);
+ 
+-	if (reply->rate_index == (s8) RATE_AUTO) {
+-		rate = RATE_AUTO;
+-	} else {
++	if (reply->rate_index != (s8) RATE_AUTO) {
+ 		index = reply->rate_index & 0x7f;
+ 		if (WARN_ON_ONCE(index > (RATE_MCS_7_40 + 1)))
+ 			return -EINVAL;
+-
+-		sgi = (reply->rate_index & 0x80) ? 1 : 0;
+-		rate = wmi_rate_tbl[index][sgi];
+ 	}
+ 
+ 	ath6kl_wakeup_event(wmi->parent_dev);
+-- 
+2.25.4
+
