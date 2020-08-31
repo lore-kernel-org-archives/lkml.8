@@ -2,126 +2,194 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A23BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C79C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:03:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19A3120707
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 543F5206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:03:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="d6yPCmXw"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="g0T45vqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgHaRAR (ORCPT
+        id S1728772AbgHaRDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:00:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgHaRAQ (ORCPT
+        Mon, 31 Aug 2020 13:03:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59704 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728418AbgHaRDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:00:16 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F770C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:00:16 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id d18so6692218iop.13
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:00:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CbLQBk0R133e+MDPFjATDQhfT0igK9JozJHO4u3nHJo=;
-        b=d6yPCmXwt5FGLBwV/ZES7tOSYRtK+dFvQ84oneE8FbPOudw/F9obCuKcExCTBv2xU8
-         Yg996gv/t6gB840GiJnWYqFvOlQbbhiPaC9QyN1rSntI/TR1342W1ahmMs1v0GDB5AN8
-         VclqhtTHnuoIn9qbMRJ0nLn2oA6IH5tQA1Yh6ll6g+1HTTL0Xdc1137nJ+EEriUp1og1
-         P+ZhkDyU4cHTgR8MZrBIBpwOYSaDR2Aa2FrPxVpBRB+PKdsjMFKmcN2G2Uwvup82KqmL
-         P8yT1CrB0r1MCMPwiIMBF5Q263Wju3zsIYIRK+ypfXpdc2eDd+FHJx8Xi+L5g2YJmBs4
-         AEsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CbLQBk0R133e+MDPFjATDQhfT0igK9JozJHO4u3nHJo=;
-        b=YXwKiuko498U2uyk1BWdqUT9TE0ydmHptof5BWbqwkh5aqEWAeQkw239+KRNdQ1evn
-         J0mn1nPxq0RJjobuV05zUWDitA9JkyOjWM9n4tWod2+GoRXffP5Wd2lB4uPhvhgQX6Hr
-         gbs6G1cFs1LVX9/QEcP0Dwmq9JO+5H9Gv0Gjn7TvEi04/1t6d5lPtNtkF8N1lJyW08wh
-         l5hneFHT0eO+YfXfArMgNC3ZXJRETYYjaoIftLM5sxbZ1hcVY+I6k/ePuHYfxOBRJGGi
-         CixRF20j5PgAPjoosWX0uDe/6Oouamfg1PNIkOQS4e84eHnKGzQGa+fKTey9yjOLqzeu
-         iXYQ==
-X-Gm-Message-State: AOAM530/rUXNqmPpi7V5f3EcZx7Y1Rj/EBlEsEPEo5rTNQZwcnBTY67u
-        k5NY5gV6yZcJD79kq/ARei9quA==
-X-Google-Smtp-Source: ABdhPJxzb5DTSBTQVD3ikr0ZEmGMgtzC7QQMSyiCzXtsEvB/wqKU4g2wBcNM+8CrB276HcibCBhgYQ==
-X-Received: by 2002:a05:6638:d95:: with SMTP id l21mr2024838jaj.98.1598893215413;
-        Mon, 31 Aug 2020 10:00:15 -0700 (PDT)
-Received: from [192.168.1.58] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c12sm1144003ilm.17.2020.08.31.10.00.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 10:00:14 -0700 (PDT)
-Subject: Re: [PATCH] fat: Avoid oops when bdi->io_pages==0
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        fsdevel <linux-fsdevel@vger.kernel.org>
-References: <87ft85osn6.fsf@mail.parknet.co.jp>
- <b4e1f741-989c-6c9d-b559-4c1ada88c499@kernel.dk>
- <87o8mq6aao.fsf@mail.parknet.co.jp>
- <4010690f-20ad-f7ba-b595-2e07b0fa2d94@kernel.dk>
- <20200831165659.GH14765@casper.infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <33eb2820-894e-a42f-61a5-c25bc52345d5@kernel.dk>
-Date:   Mon, 31 Aug 2020 11:00:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200831165659.GH14765@casper.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+        Mon, 31 Aug 2020 13:03:12 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VH1uUs017762;
+        Mon, 31 Aug 2020 13:03:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=A4B2a9+fgKjB2GfXhrEpVQFgQTELQDJKb0sN6gsP0Ss=;
+ b=g0T45vqHswIrTRR0qxOK4mB2BnzQUmIw40fTIDoytBNg9VEOzF2YVyYO4FnJiZLwfotr
+ bC1uBpAI92bNS+9LJYMRf4JNn1cb/4/S5LEGwFwDvM61h7lAQqOwBtEDK1jEjDQc1iSj
+ LuWitgGqdMfMOmRMCPeFa2JtVtCQ5fUHhy5QHP8AVQl+Woat0PEEPW4W6PcrxN0gmPMl
+ tdEADHm0gWh5gxX/Pkv6bAeGFYNkRRvt+N3DqKol1+D74qTgh95vIlqsAmsOXsSA2WJW
+ AQXVQk8E16gNay7kI37HISYWlg4h4fGw+ftES45CaJifqAuMNIxn++Kj2Yiyl6KIsGwD lg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3393sutn1e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 13:03:05 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07VH2SDP023355;
+        Mon, 31 Aug 2020 13:03:05 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3393sutmyp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 13:03:05 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07VGxDRK021536;
+        Mon, 31 Aug 2020 17:03:03 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 337en8ac3r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 17:03:03 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07VH30Uq12058924
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 17:03:01 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C950311C058;
+        Mon, 31 Aug 2020 17:03:00 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD72511C05B;
+        Mon, 31 Aug 2020 17:02:57 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.2.129])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 31 Aug 2020 17:02:57 +0000 (GMT)
+Message-ID: <f11dbfc1382e60c04fdd519ce5122239fa0cab8b.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 3/6] IMA: update process_buffer_measurement to
+ measure buffer hash
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+        agk@redhat.com, snitzer@redhat.com, gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+Date:   Mon, 31 Aug 2020 13:02:56 -0400
+In-Reply-To: <20200828015704.6629-4-tusharsu@linux.microsoft.com>
+References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
+         <20200828015704.6629-4-tusharsu@linux.microsoft.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-31_08:2020-08-31,2020-08-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 suspectscore=0
+ impostorscore=0 phishscore=0 adultscore=0 spamscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008310099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/31/20 10:56 AM, Matthew Wilcox wrote:
-> On Mon, Aug 31, 2020 at 10:39:26AM -0600, Jens Axboe wrote:
->> We really should ensure that ->io_pages is always set, imho, instead of
->> having to work-around it in other spots.
-> 
-> Interestingly, there are only three places in the entire kernel which
-> _use_ bdi->io_pages.  FAT, Verity and the pagecache readahead code.
-> 
-> Verity:
->                         unsigned long num_ra_pages =
->                                 min_t(unsigned long, num_blocks_to_hash - i,
->                                       inode->i_sb->s_bdi->io_pages);
-> 
-> FAT:
->         if (ra_pages > sb->s_bdi->io_pages)
->                 ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
-> 
-> Pagecache:
->         max_pages = max_t(unsigned long, bdi->io_pages, ra->ra_pages);
-> and
->         if (req_size > max_pages && bdi->io_pages > max_pages)
->                 max_pages = min(req_size, bdi->io_pages);
-> 
-> The funny thing is that all three are using it differently.  Verity is
-> taking io_pages to be the maximum amount to readahead.  FAT is using
-> it as the unit of readahead (round down to the previous multiple) and
-> the pagecache uses it to limit reads that exceed the current per-file
-> readahead limit (but allows per-file readahead to exceed io_pages,
-> in which case it has no effect).
-> 
-> So how should it be used?  My inclination is to say that the pagecache
-> is right, by virtue of being the most-used.
+On Thu, 2020-08-27 at 18:57 -0700, Tushar Sugandhi wrote:
+> process_buffer_measurement() currently only measures the input buffer.
+> When the buffer being measured is too large, it may result in bloated
+> IMA logs.
 
-When I added ->io_pages, it was for the page cache use case. The others
-grew after that...
+The subject of  this sentence refers to an individual record, while
+"bloated" refers to the measurement list.  A "bloated" measurement list
+would contain too many or unnecessary records.  Your concern seems to
+be with the size of the individual record, not the number of
+measurement list entries.
 
--- 
-Jens Axboe
+Measuring the hash of the buffer data is similar to measuring the file
+data.  In the case of the file data, however, the attestation server
+may rely on a white list manifest/DB or the file signature to verify
+the file data hash.  For buffer measurements, how will the attestation
+server ascertain what is a valid buffer hash?
+
+Hint:  I assume, correct me if I'm wrong, the measurement list record
+template data is not meant to be verified, but used to detect if the "critical data" changed.
+
+Please update the patch description accordingly.
+
+> 
+> Introduce a boolean parameter measure_buf_hash to support measuring
+> hash of a buffer, which would be much smaller, instead of the buffer
+> itself.
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> ---
+
+<snip>
+
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -733,17 +733,21 @@ int ima_load_data(enum kernel_load_data_id id)
+>   * @func: IMA hook
+>   * @pcr: pcr to extend the measurement
+>   * @func_data: private data specific to @func, can be NULL.
+> + * @measure_buf_hash: if set to true - will measure hash of the buf,
+> + *                    instead of buf
+>   *
+>   * Based on policy, the buffer is measured into the ima log.
+>   */
+>  int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  			       const char *eventname, enum ima_hooks func,
+> -			       int pcr, const char *func_data)
+> +			       int pcr, const char *func_data,
+> +			       bool measure_buf_hash)
+>  {
+>  	int ret = 0;
+>  	const char *audit_cause = "ENOMEM";
+>  	struct ima_template_entry *entry = NULL;
+>  	struct integrity_iint_cache iint = {};
+> +	struct integrity_iint_cache digest_iint = {};
+>  	struct ima_event_data event_data = {.iint = &iint,
+>  					    .filename = eventname,
+>  					    .buf = buf,
+> @@ -752,7 +756,7 @@ int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  	struct {
+>  		struct ima_digest_data hdr;
+>  		char digest[IMA_MAX_DIGEST_SIZE];
+> -	} hash = {};
+> +	} hash = {}, digest_hash = {};
+>  	int violation = 0;
+>  	int action = 0;
+>  	u32 secid;
+> @@ -801,6 +805,24 @@ int process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  		goto out;
+>  	}
+>  
+> +	if (measure_buf_hash) {
+> +		digest_iint.ima_hash = &digest_hash.hdr;
+> +		digest_iint.ima_hash->algo = ima_hash_algo;
+> +		digest_iint.ima_hash->length = hash_digest_size[ima_hash_algo];
+> +
+> +		ret = ima_calc_buffer_hash(hash.hdr.digest,
+> +					   iint.ima_hash->length,
+> +					   digest_iint.ima_hash);
+> +		if (ret < 0) {
+> +			audit_cause = "digest_hashing_error";
+> +			goto out;
+> +		}
+> +
+> +		event_data.iint = &digest_iint;
+> +		event_data.buf = hash.hdr.digest;
+> +		event_data.buf_len = iint.ima_hash->length;
+> +	}
+> +
+
+There seems to be some code and variable duplication by doing it this
+way.  Copying the caluclated buffer data hash to a temporary buffer
+might eliminate it.
+
+>  	ret = ima_alloc_init_template(&event_data, &entry, template);
+>  	if (ret < 0) {
+>  		audit_cause = "alloc_entry";
 
