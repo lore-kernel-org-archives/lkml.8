@@ -2,127 +2,139 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB29C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4659C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:56:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4993220782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD0B20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="TKDhuGbz"
+	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="ygn3M/fL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgHaBzR (ORCPT
+        id S1727013AbgHaB4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41402 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgHaBzO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:55:14 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3382C061573;
-        Sun, 30 Aug 2020 18:55:14 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4BftYy6xJlz9sTW;
-        Mon, 31 Aug 2020 11:55:02 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1598838904;
-        bh=Fevkc9YaB+1sYDbeOG8T4LT6GQdE5UvQoFOdg072Pu4=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=TKDhuGbzZwJiCgjOR9K0+Eoiu1N+9y45LmPK2aIISkDfk+UEbKCBwjQ7Qhdpnkfyw
-         kyplzaIOzSMtPulaeL074BS0aq/GM4fIN9UBXOvms4bTKzoucGapMzW/Q6L4UP3MA/
-         2NqFCcpi9lId2L8nzWPulhyV+5XbgBxZkuoyuYMl6Xex6L7GiaGoI81QWsm/cq9YOY
-         yQwrxa6jjC9Whjq4YOzOV/5NyZMdJDF/vbajRMvRTB57SfyVGRYTOxaBigewE1UlCt
-         /jvBjUEltBJx4sRKP1ya6z56t8KGzMkjjZNSnRDnADcpFegpCY+uOtR0ngkd4pTDFV
-         YD86uNOQfMvWw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Joerg Roedel <joerg.roedel@amd.com>,
-        Li Yang <leoyang.li@nxp.com>, Zhang Wei <zw@zh-kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        dma <dmaengine@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] fsldma: fsl_ioread64*() do not need lower_32_bits()
-In-Reply-To: <CAHk-=wjDEiWF_DsCVFPFqNa+JCS5SkOygbqeq8_=ZNOrFt7-rg@mail.gmail.com>
-References: <20200829105116.GA246533@roeck-us.net> <20200829124538.7475-1-luc.vanoostenryck@gmail.com> <CAHk-=whH0ApHy0evN0q6AwQ+-a5RK56oMkYkkCJtTMnaq4FrNQ@mail.gmail.com> <59cc6c99-9894-08b3-1075-2156e39bfc8e@roeck-us.net> <CAHk-=wjDEiWF_DsCVFPFqNa+JCS5SkOygbqeq8_=ZNOrFt7-rg@mail.gmail.com>
-Date:   Mon, 31 Aug 2020 11:54:58 +1000
-Message-ID: <874koj37gt.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
+        Sun, 30 Aug 2020 21:56:15 -0400
+Received: from mail-eopbgr60111.outbound.protection.outlook.com ([40.107.6.111]:41218
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726454AbgHaB4L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 21:56:11 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=caaxP1A4lVxyykHBQ2Jhl7R3eEL5mTMiVbFA/wpstMCavHrJWWGivBFUc0XUq/oEJOAnj254xghdeGR6dP7q+uxC57yT1SMLJkZWUr3Re+D3UEdOJI+H4+vZ0KK2ROrq3S9z0CaVBXHiSrLrJqekUq1UysVEAtyo+ySK/wGKzX4DKAiA/x35hEt3NLKLt796p7HHGiPxHLJEB5suenYfIvoPeY8bOth82ztinLLSneB639o6KT+J9zaNGsR0L0hMz3toRr87OgUyYPEtOvmy8a2OStjQCRnDEk2/TX7tUQ+bDt29sxV84s2tFaB/JLJg7IT7wRjh10BJDsig/D6dQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GTUd+tv8XU9tfTf9LnK9By7HWFX0H4ZNyA8Jee7DUgM=;
+ b=KEjra3k6ct2aPQch9x8Nfd93HVV89fc4iQJuEYIhyIofOcHgJdSBqqBsqwiqYViXYyOsTePPlA96CyzeE5Bez6Aiu62pDw3zRJ3m7thXqRBc93FH+TG0NRP1xJupafL2A1S6raSWDT0nakWkzMdtAuOhaCqSHmoGyVrVNr+6gcCFMiI8YMUAoDGHFek1FmZgu63CYDpSTG/mnbcvBVz9X2EItfgF9GAQ4CJSJkfkuoffs/ZEbBkOLOMBznbhWFZBx0l0hTqDLlpZh8IjM7ZrMDo5SfAS0aik/PK+7LOgrG4bkPEg1GDRg9zWcvCCYeZaIvdNypRzDRzzoJ5fP/f+aA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
+ dkim=pass header.d=plvision.eu; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GTUd+tv8XU9tfTf9LnK9By7HWFX0H4ZNyA8Jee7DUgM=;
+ b=ygn3M/fLVewzRJ8xB91tFAjD+VUgF5VZkR2Igb+S3sSvxyArPBD6vY5AhmvYBLHXVwljvsReKEfjiBqj//lzc30QvtSAsLa66Y2aEIXZSlziul0rtipXQ6anDhGMXC2E6SXZcwSsTNRN1BwQu1lmmmfB1iyxRq5+na8PKOhD1yE=
+Authentication-Results: baylibre.com; dkim=none (message not signed)
+ header.d=none;baylibre.com; dmarc=none action=none header.from=plvision.eu;
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
+ HE1P190MB0364.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:62::25) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.23; Mon, 31 Aug 2020 01:56:05 +0000
+Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
+ 01:56:04 +0000
+From:   Vadym Kochan <vadym.kochan@plvision.eu>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Maxime Ripard <maxime.ripard@free-electrons.com>,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Vadym Kochan <vadym.kochan@plvision.eu>
+Subject: [PATCH v3 0/3] nvmem: add ONIE NVMEM cells provider
+Date:   Mon, 31 Aug 2020 04:55:36 +0300
+Message-Id: <20200831015539.26811-1-vadym.kochan@plvision.eu>
+X-Mailer: git-send-email 2.17.1
 Content-Type: text/plain
+X-ClientProxiedBy: AM5PR0201CA0022.eurprd02.prod.outlook.com
+ (2603:10a6:203:3d::32) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+ (2603:10a6:7:56::28)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM5PR0201CA0022.eurprd02.prod.outlook.com (2603:10a6:203:3d::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.20 via Frontend Transport; Mon, 31 Aug 2020 01:56:03 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.20.186.93]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d3f9dfea-e2e7-4cb3-5b68-08d84d5104c4
+X-MS-TrafficTypeDiagnostic: HE1P190MB0364:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <HE1P190MB0364EC146EF0A3D5B4BE4FA495510@HE1P190MB0364.EURP190.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Ssk2ks84jle2kwgqLZyOeFadxlDREcklDhQEobd7v8g+19UBGakZrnHXnzs3y/aPJ2yz5K3QzKA8Izfrl/UoupwLfPPuNos6r4gjV5chgM7j2RCCkD7DfqFkBMHU8/DgMycRNGOOkGcczfIhRHrpkE1FvALj44w6vJQw4bdozOYKDQk1Ei9j6Z/bC7/qZlV5tBq9C2d9bKKuNK4QGwlZTID5fmsP4IVslUDhawWVg4hbexhn4Pbs+0ApctR3RG0NStK8JBcdH3bIO7lTctLCine5o6/SFkoyT9J+Okxle6fWOPHseg3UvMcFWn9exkJs
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(376002)(136003)(39830400003)(366004)(396003)(346002)(36756003)(478600001)(6486002)(5660300002)(316002)(2906002)(110136005)(8936002)(8676002)(6512007)(6666004)(66476007)(1076003)(66556008)(44832011)(66946007)(107886003)(2616005)(956004)(26005)(86362001)(4326008)(6506007)(83380400001)(16526019)(186003)(52116002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: hEsDgqDyC10YBfMB+WCoRlZX20MeEFRrjfhtpECmoF+iGQRv7HN5IKXtJIyF85nbCiDWNxCDcfK9eEo66xD5++aGDkksiIpOjxf0sZwLwLiVto0LXcWTD6c0ZN6rIdglkbE02VLC2ehHKYoGAyhlOG0crFp+dXo1jRIzy4b9Y1uA8Y0SFaQY+aaOWZB+8WYUqJOfr8dWe9qvH6q8kwtgu4vIJwyPCruPrVbwRGAmCbvVkG5979GB1bZ/msy+5YCzDe7zC/mWfqoIulyop9/evLtqXN7YQWijvfGQA44YFOYrQqBI41I4OujAz5XSNoSFkwgy1gygMrHWsF/hK/UJn4a4Ho6bobmQLKe5HGpCA2ugdHmoelCyjn7dFt4KALWjs0gk7Vp+ONby7cYYxM5arpDszMQS2zsrpTUsrHEg2Cgn4OXs3ALE0u+X6MkfZkY++tYnayZegSsaWnCngmhUxlb8QCs8FgTNnja8f4PivF1lOBsG9hscpgvP3WOgcGO+P8S5Wo/M9yj1EnwLnYP+3L22YwctYdjztIhlpVqSN9AUIVr1xdTpNg5HJZLyfSItDBDVB+1ZHBzn/tJ+0IPKaB3UKd/7pWH5CGHIVSo4iYuBSyRZf9wa3OslSWrByq0nDBLr9tkzcS+tSTU1NMVlaw==
+X-OriginatorOrg: plvision.eu
+X-MS-Exchange-CrossTenant-Network-Message-Id: d3f9dfea-e2e7-4cb3-5b68-08d84d5104c4
+X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 01:56:04.5629
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Q9Zjll57zahNNgyKZF7vK24b76xTArt5pu/a//O3znrqCMcdginFaE8bMxKQ3rvgIpyzs15bi//7sCYrvutKNW1Y7oTfHWWMhVb8GsteQZs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0364
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
-> On Sat, Aug 29, 2020 at 1:40 PM Guenter Roeck <linux@roeck-us.net> wrote:
->>
->> Except for
->>
->> CHECK: spaces preferred around that '+' (ctx:VxV)
->> #29: FILE: drivers/dma/fsldma.h:223:
->> +       u32 val_lo = in_be32((u32 __iomem *)addr+1);
->
-> Added spaces.
->
->> I don't see anything wrong with it either, so
->>
->> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
->>
->> Since I didn't see the real problem with the original code,
->> I'd take that with a grain of salt, though.
->
-> Well, honestly, the old code was so confused that just making it build
-> is clearly already an improvement even if everything else were to be
-> wrong.
+This series adds cells provider for the ONIE TLV attributes which are
+stored on NVMEM device. It adds possibility to read the mac address (and
+other info) by other drivers.
 
-The old code is not that old, only ~18 months:
+There is a special case for this driver that before registering cells
+the nvmem device should be first parsed to read the TLV layout which
+holds the cells data.
 
-a1ff82a9c165 ("dmaengine: fsldma: Adding macro FSL_DMA_IN/OUT implement for ARM platform") (Jan 2019)
+v3:
+    1) Update core.c changes by extending notification mechanism
+       by adding new NVMEM_PRE_ADD event id which is called before lookup
+       table cells binding, this allows for notification handler to
+       register cells which require nvmem parsing.
 
-So I think it's possible it's never been tested on 32-bit ppc at all.
+    2) Update onie-cells.c to use nvmem notification to parse and
+       register cells before device and cells are finally registered.
 
-I did have a 32-bit FSL machine but it lost its network card in a power
-outage and now it won't boot (and I can't get to it physically).
+       Use subsys_init() macro which allows to probe before nvmem drivers.
 
-> So I committed my "fix". If it turns out there's more wrong in there
-> and somebody tests it, we can fix it again. But now it hopefully
-> compiles, at least.
->
-> My bet is that if that driver ever worked on ppc32, it will continue
-> to work whatever we do to that function.
->
-> I _think_ the old code happened to - completely by mistake - get the
-> value right for the case of "little endian access, with dma_addr_t
-> being 32-bit". Because then it would still read the upper bits wrong,
-> but the cast to dma_addr_t would then throw those bits away. And the
-> lower bits would be right.
->
-> But for big-endian accesses or for ARCH_DMA_ADDR_T_64BIT it really
-> looks like it always returned a completely incorrect value.
->
-> And again - the driver may have worked even with that completely
-> incorrect value, since the use of it seems to be very incidental.
->
-> In either case ("it didn't work before" or "it worked because the
-> value doesn't really matter"), I don't think I could possibly have
-> made things worse.
+    3) at24 driver enables regulator and pm state machine after nvmem
+       registration which does not allow to use it on handing NVMEM_PRE_ADD event.
 
-Agreed.
+v2:
+    1) Fixed wrong memcmp comparison
 
-Hopefully someone from NXP can test it.
+Vadym Kochan (3):
+  nvmem: core: allow to register cells during nvmem registration
+  nvmem: add ONIE NVMEM cells support
+  misc: eeprom: at24: register nvmem only after eeprom is ready to use
 
-cheers
+ drivers/misc/eeprom/at24.c     |  11 +-
+ drivers/nvmem/Kconfig          |   9 +
+ drivers/nvmem/Makefile         |   3 +
+ drivers/nvmem/core.c           |   2 +
+ drivers/nvmem/onie-cells.c     | 410 +++++++++++++++++++++++++++++++++
+ include/linux/nvmem-consumer.h |   1 +
+ 6 files changed, 432 insertions(+), 4 deletions(-)
+ create mode 100644 drivers/nvmem/onie-cells.c
+
+-- 
+2.17.1
+
