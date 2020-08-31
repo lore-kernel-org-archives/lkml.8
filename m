@@ -2,174 +2,192 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AD7C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E422EC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:58:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CAAB206E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF547206E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:58:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbgHaU47 (ORCPT
+        id S1728354AbgHaU6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:56:59 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54289 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbgHaU46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:56:58 -0400
-IronPort-SDR: Pl/9gf0cICtQarKvAd08k6qTHvb03biht8W6pgJ4unzoXS+IdDPp5XH1DzR9fz34oE3UOSM1QV
- humDwSSZAB9A==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="157062072"
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="157062072"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 13:56:56 -0700
-IronPort-SDR: t0PJjCuD1wtMFqkpi/FztVOjFZGZRijtNvTBBG6lxNyyHI/hyCERrhJlJXzQk2/5kzDmDwSPHq
- pOmLMXDREYiw==
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="445865326"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 13:56:55 -0700
-Date:   Mon, 31 Aug 2020 13:56:55 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-nvdimm@lists.01.org, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org
-Subject: Re: [PATCH v4 1/2] memremap: rename MEMORY_DEVICE_DEVDAX to
- MEMORY_DEVICE_GENERIC
-Message-ID: <20200831205655.GK1422350@iweiny-DESK2.sc.intel.com>
-References: <20200811094447.31208-1-roger.pau@citrix.com>
- <20200811094447.31208-2-roger.pau@citrix.com>
- <96e34f77-8f55-d8a2-4d1f-4f4b667b0472@redhat.com>
- <20200820113741.GV828@Air-de-Roger>
- <20200831101907.GA753@Air-de-Roger>
+        Mon, 31 Aug 2020 16:58:17 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:36032 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727939AbgHaU6Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 16:58:16 -0400
+Received: by mail-io1-f70.google.com with SMTP id h8so4993448ioa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 13:58:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=kTY+Uwg3ib3S5RkkgseOAR+2XsswT5YnxR3cu10Okqo=;
+        b=YP4gcdFtcq/+NuuWJpMS43ir3TegdbXRED5/O0JJATkruYFLV8P7nsl1jtFzxcjLgl
+         IHgxHZeTxjggLgUwnHHfMS7GtA/HDYiJ6x04RX7NZbRJvopxvJ3VZYDssMbd+uReseJ3
+         K5+gRdgGPtmF7P1Px4PYpG9+T8nlGFPUxTiDx+ipGt0rajFAYaLspQvB4ESb9+5dlt0z
+         AHfMu5OjfQPwitcXgD5bmp1M4U2y9UHCBO4MYEDNBPk8X95XMX1hgOocRrB9Nz0vSlxF
+         bo04v84vL1U5ybhaHIVgnVbarejMRoHOo9ayN5mDNO44g0oUuJbAXmwqCsDMYdPJDOAR
+         tdDA==
+X-Gm-Message-State: AOAM5316pzFtJU+l36ngIW7Hr8IhkSL+gMydU8/no5L/DlKiCb4VKxrX
+        XtRt7XeSd5+1BlBAumKAFEJEq+LM3KHwPf/TK4jYgnMtfFzt
+X-Google-Smtp-Source: ABdhPJza5y0DWIIomP+16EQJ4eYa7Z00iwEGl0MnxX10Ys8IO1mKh11DV3jIi99vbgsFw+ASRq+NNRSE1R7jR6wOVjoxglk1Bbmp
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200831101907.GA753@Air-de-Roger>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-Received: by 2002:a92:1b48:: with SMTP id b69mr516771ilb.63.1598907494739;
+ Mon, 31 Aug 2020 13:58:14 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 13:58:14 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000040b7ba05ae32a94a@google.com>
+Subject: possible deadlock in __sock_release
+From:   syzbot <syzbot+8e467b009209f1fcf666@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 12:19:07PM +0200, Roger Pau Monné wrote:
-> On Thu, Aug 20, 2020 at 01:37:41PM +0200, Roger Pau Monné wrote:
-> > On Tue, Aug 11, 2020 at 11:07:36PM +0200, David Hildenbrand wrote:
-> > > On 11.08.20 11:44, Roger Pau Monne wrote:
-> > > > This is in preparation for the logic behind MEMORY_DEVICE_DEVDAX also
-> > > > being used by non DAX devices.
-> > > > 
-> > > > No functional change intended.
-> > > > 
-> > > > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+Hello,
 
-Dan is out on leave so I'll chime in.
+syzbot found the following issue on:
 
-I can't really justify keeping this as DEVDAX if there is another user who
-needs the same type of mapping.
+HEAD commit:    b36c9697 Add linux-next specific files for 20200828
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10bf2835900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5e3cf99580b5542c
+dashboard link: https://syzkaller.appspot.com/bug?extid=8e467b009209f1fcf666
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12be1435900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11f77ad1900000
 
-Sorry for the delay.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+8e467b009209f1fcf666@syzkaller.appspotmail.com
 
-Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+======================================================
+WARNING: possible circular locking dependency detected
+5.9.0-rc2-next-20200828-syzkaller #0 Not tainted
+------------------------------------------------------
+kworker/0:4/7108 is trying to acquire lock:
+ffff888085730c90 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:779 [inline]
+ffff888085730c90 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: __sock_release+0x86/0x280 net/socket.c:595
 
-> > > > ---
-> > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > Cc: Vishal Verma <vishal.l.verma@intel.com>
-> > > > Cc: Dave Jiang <dave.jiang@intel.com>
-> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > Cc: Ira Weiny <ira.weiny@intel.com>
-> > > > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> > > > Cc: Johannes Thumshirn <jthumshirn@suse.de>
-> > > > Cc: Logan Gunthorpe <logang@deltatee.com>
-> > > > Cc: linux-nvdimm@lists.01.org
-> > > > Cc: xen-devel@lists.xenproject.org
-> > > > Cc: linux-mm@kvack.org
-> > > > ---
-> > > >  drivers/dax/device.c     | 2 +-
-> > > >  include/linux/memremap.h | 9 ++++-----
-> > > >  mm/memremap.c            | 2 +-
-> > > >  3 files changed, 6 insertions(+), 7 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> > > > index 4c0af2eb7e19..1e89513f3c59 100644
-> > > > --- a/drivers/dax/device.c
-> > > > +++ b/drivers/dax/device.c
-> > > > @@ -429,7 +429,7 @@ int dev_dax_probe(struct device *dev)
-> > > >  		return -EBUSY;
-> > > >  	}
-> > > >  
-> > > > -	dev_dax->pgmap.type = MEMORY_DEVICE_DEVDAX;
-> > > > +	dev_dax->pgmap.type = MEMORY_DEVICE_GENERIC;
-> > > >  	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
-> > > >  	if (IS_ERR(addr))
-> > > >  		return PTR_ERR(addr);
-> > > > diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-> > > > index 5f5b2df06e61..e5862746751b 100644
-> > > > --- a/include/linux/memremap.h
-> > > > +++ b/include/linux/memremap.h
-> > > > @@ -46,11 +46,10 @@ struct vmem_altmap {
-> > > >   * wakeup is used to coordinate physical address space management (ex:
-> > > >   * fs truncate/hole punch) vs pinned pages (ex: device dma).
-> > > >   *
-> > > > - * MEMORY_DEVICE_DEVDAX:
-> > > > + * MEMORY_DEVICE_GENERIC:
-> > > >   * Host memory that has similar access semantics as System RAM i.e. DMA
-> > > > - * coherent and supports page pinning. In contrast to
-> > > > - * MEMORY_DEVICE_FS_DAX, this memory is access via a device-dax
-> > > > - * character device.
-> > > > + * coherent and supports page pinning. This is for example used by DAX devices
-> > > > + * that expose memory using a character device.
-> > > >   *
-> > > >   * MEMORY_DEVICE_PCI_P2PDMA:
-> > > >   * Device memory residing in a PCI BAR intended for use with Peer-to-Peer
-> > > > @@ -60,7 +59,7 @@ enum memory_type {
-> > > >  	/* 0 is reserved to catch uninitialized type fields */
-> > > >  	MEMORY_DEVICE_PRIVATE = 1,
-> > > >  	MEMORY_DEVICE_FS_DAX,
-> > > > -	MEMORY_DEVICE_DEVDAX,
-> > > > +	MEMORY_DEVICE_GENERIC,
-> > > >  	MEMORY_DEVICE_PCI_P2PDMA,
-> > > >  };
-> > > >  
-> > > > diff --git a/mm/memremap.c b/mm/memremap.c
-> > > > index 03e38b7a38f1..006dace60b1a 100644
-> > > > --- a/mm/memremap.c
-> > > > +++ b/mm/memremap.c
-> > > > @@ -216,7 +216,7 @@ void *memremap_pages(struct dev_pagemap *pgmap, int nid)
-> > > >  			return ERR_PTR(-EINVAL);
-> > > >  		}
-> > > >  		break;
-> > > > -	case MEMORY_DEVICE_DEVDAX:
-> > > > +	case MEMORY_DEVICE_GENERIC:
-> > > >  		need_devmap_managed = false;
-> > > >  		break;
-> > > >  	case MEMORY_DEVICE_PCI_P2PDMA:
-> > > > 
-> > > 
-> > > No strong opinion (@Dan?), I do wonder if a separate type would make sense.
-> > 
-> > Gentle ping.
-> 
-> Sorry to ping again, but I would rather get this out of my queue if
-> possible, seeing as the other patch is OK to go in but depends on this
-> one going in first.
-> 
-> Thanks, Roger.
+but task is already holding lock:
+ffffc90006037da8 ((delayed_fput_work).work){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #3 ((delayed_fput_work).work){+.+.}-{0:0}:
+       process_one_work+0x8bb/0x1670 kernel/workqueue.c:2245
+       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+       kthread+0x3b5/0x4a0 kernel/kthread.c:292
+       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+-> #2 ((wq_completion)events){+.+.}-{0:0}:
+       flush_workqueue+0x110/0x13e0 kernel/workqueue.c:2780
+       flush_scheduled_work include/linux/workqueue.h:597 [inline]
+       tipc_exit_net+0x47/0x2a0 net/tipc/core.c:116
+       ops_exit_list+0xb0/0x160 net/core/net_namespace.c:186
+       cleanup_net+0x4ea/0xb10 net/core/net_namespace.c:603
+       process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+       kthread+0x3b5/0x4a0 kernel/kthread.c:292
+       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+-> #1 (pernet_ops_rwsem){++++}-{3:3}:
+       down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
+       unregister_netdevice_notifier+0x1e/0x170 net/core/dev.c:1861
+       raw_release+0x58/0x890 net/can/raw.c:354
+       __sock_release+0xcd/0x280 net/socket.c:596
+       sock_close+0x18/0x20 net/socket.c:1277
+       __fput+0x285/0x920 fs/file_table.c:281
+       task_work_run+0xdd/0x190 kernel/task_work.c:141
+       tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+       exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+       exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+       syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+       entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+-> #0 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}:
+       check_prev_add kernel/locking/lockdep.c:2496 [inline]
+       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+       validate_chain kernel/locking/lockdep.c:3218 [inline]
+       __lock_acquire+0x2a6b/0x5640 kernel/locking/lockdep.c:4426
+       lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
+       down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
+       inode_lock include/linux/fs.h:779 [inline]
+       __sock_release+0x86/0x280 net/socket.c:595
+       sock_close+0x18/0x20 net/socket.c:1277
+       __fput+0x285/0x920 fs/file_table.c:281
+       delayed_fput+0x56/0x70 fs/file_table.c:309
+       process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+       kthread+0x3b5/0x4a0 kernel/kthread.c:292
+       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+other info that might help us debug this:
+
+Chain exists of:
+  &sb->s_type->i_mutex_key#13 --> (wq_completion)events --> (delayed_fput_work).work
+
+ Possible unsafe locking scenario:
+
+       CPU0                    CPU1
+       ----                    ----
+  lock((delayed_fput_work).work);
+                               lock((wq_completion)events);
+                               lock((delayed_fput_work).work);
+  lock(&sb->s_type->i_mutex_key#13);
+
+ *** DEADLOCK ***
+
+2 locks held by kworker/0:4/7108:
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
+ #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
+ #1: ffffc90006037da8 ((delayed_fput_work).work){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+
+stack backtrace:
+CPU: 0 PID: 7108 Comm: kworker/0:4 Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events delayed_fput
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ check_noncircular+0x324/0x3e0 kernel/locking/lockdep.c:1827
+ check_prev_add kernel/locking/lockdep.c:2496 [inline]
+ check_prevs_add kernel/locking/lockdep.c:2601 [inline]
+ validate_chain kernel/locking/lockdep.c:3218 [inline]
+ __lock_acquire+0x2a6b/0x5640 kernel/locking/lockdep.c:4426
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
+ down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
+ inode_lock include/linux/fs.h:779 [inline]
+ __sock_release+0x86/0x280 net/socket.c:595
+ sock_close+0x18/0x20 net/socket.c:1277
+ __fput+0x285/0x920 fs/file_table.c:281
+ delayed_fput+0x56/0x70 fs/file_table.c:309
+ process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
+ worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
