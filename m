@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8D7C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D288AC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7675E207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81C7214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887981;
-	bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
+	s=default; t=1598887984;
+	bh=eQe1wYGLHkgxe6Ouy//U4712xeQz8re6/WlsK2ceVuQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8QCvU29Y1oRFoBFdxN4s1/gF3gok2fyFGbhJToZOstMc2fVDnQdPu70f15HJlMpU
-	 jRvxzu4VuTCH8cpbskn5vP7Y3x90u9pMdoes/rUVLh+o5VidY3lsXZYFAVUfEUbIO2
-	 HZlsOfteprYIOkT8kGmXaYrWsCHU5pUMGDbhrdmQ=
+	b=cAzOP2oFGArc94OHZeZD8Jii01Tt9QAs/8VjQUCh1OYoGiLo3O9uvVtGh1q7MMJ0N
+	 zCbTBpI4MHhoZcIuUueqt4nMNM0Dc828BAgBtpxst5GHQ5LMA8zcaf7FnXoN/xlJpo
+	 O8uxRv163WCdg1aXNW5YCLdxaajPnEwQ8p3ow660=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729131AbgHaPc7 (ORCPT
+        id S1729047AbgHaPcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:32:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43530 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:32:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729049AbgHaPcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:32:05 -0400
+        id S1728974AbgHaPbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D22EA21655;
-        Mon, 31 Aug 2020 15:32:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3482021531;
+        Mon, 31 Aug 2020 15:31:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887924;
-        bh=T6IXcbTZtskK1L7YVm0OiBCn2pW7sfMMpBbYy0pK7wk=;
+        s=default; t=1598887904;
+        bh=eQe1wYGLHkgxe6Ouy//U4712xeQz8re6/WlsK2ceVuQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LpQYratYUZY4s74Z+LiurR58y2AhNCW/Ey3DIOSzgjTXCnSLMzmNf6x46Fto1yDy7
-         aLWniseInGHR1LxB42HEOGBcg/RBI7b9h06ufi2Hiqngzy+l27SUzk++qujRAHRvfN
-         jl50CAhDJ6t+2Mdh23XUJ29n1rfCcW/8LQ1HII/0=
+        b=GUd6YY6qZV6FzwvT7GyAaL9ENeBswtpmbHTJ0v9vax6VS1f3+WiLDLqBKChij73Ex
+         wGVtBDfV9IRbffBKrrNOLLIbpKysRr5/TWDWdDs2iE3vW7gy4Hez3pl6mSeyIDZrRr
+         gomFU6HzY5tl3k5dm4sRQnraqzYb/4mBfFp8EXgI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>, Henrik Rydberg <rydberg@bitmath.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 4.4 2/5] hwmon: (applesmc) check status earlier.
-Date:   Mon, 31 Aug 2020 11:31:57 -0400
-Message-Id: <20200831153200.1024898-2-sashal@kernel.org>
+Cc:     Amit Engel <amit.engel@dell.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.14 5/9] nvmet: Disable keep-alive timer when kato is cleared to 0h
+Date:   Mon, 31 Aug 2020 11:31:32 -0400
+Message-Id: <20200831153136.1024676-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831153200.1024898-1-sashal@kernel.org>
-References: <20200831153200.1024898-1-sashal@kernel.org>
+In-Reply-To: <20200831153136.1024676-1-sashal@kernel.org>
+References: <20200831153136.1024676-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,121 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Amit Engel <amit.engel@dell.com>
 
-[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
+[ Upstream commit 0d3b6a8d213a30387b5104b2fb25376d18636f23 ]
 
-clang static analysis reports this representative problem
+Based on nvme spec, when keep alive timeout is set to zero
+the keep-alive timer should be disabled.
 
-applesmc.c:758:10: warning: 1st function call argument is an
-  uninitialized value
-        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-buffer is filled by the earlier call
-
-	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
-
-This problem is reported because a goto skips the status check.
-Other similar problems use data from applesmc_read_key before checking
-the status.  So move the checks to before the use.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
-Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Amit Engel <amit.engel@dell.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/nvme/target/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 0af7fd311979d..587fc5c686b3c 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -758,15 +758,18 @@ static ssize_t applesmc_light_show(struct device *dev,
- 	}
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 09a39f4aaf821..d0be85d0c289a 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -208,6 +208,9 @@ static void nvmet_keep_alive_timer(struct work_struct *work)
  
- 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
-+	if (ret)
-+		goto out;
- 	/* newer macbooks report a single 10-bit bigendian value */
- 	if (data_length == 10) {
- 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
- 		goto out;
- 	}
- 	left = buffer[2];
+ static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
+ {
++	if (unlikely(ctrl->kato == 0))
++		return;
 +
-+	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	if (ret)
- 		goto out;
--	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	right = buffer[2];
+ 	pr_debug("ctrl %d start keep-alive timer for %d secs\n",
+ 		ctrl->cntlid, ctrl->kato);
  
- out:
-@@ -814,12 +817,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
- 	sprintf(newkey, fan_speed_fmt[to_option(attr)], to_index(attr));
+@@ -217,6 +220,9 @@ static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
  
- 	ret = applesmc_read_key(newkey, buffer, 2);
--	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
+ static void nvmet_stop_keep_alive_timer(struct nvmet_ctrl *ctrl)
+ {
++	if (unlikely(ctrl->kato == 0))
++		return;
 +
-+	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
- }
+ 	pr_debug("ctrl %d stop keep-alive\n", ctrl->cntlid);
  
- static ssize_t applesmc_store_fan_speed(struct device *dev,
-@@ -854,12 +856,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
- 	u8 buffer[2];
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
-+
-+	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
- }
- 
- static ssize_t applesmc_store_fan_manual(struct device *dev,
-@@ -875,10 +876,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
- 		return -EINVAL;
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	val = (buffer[0] << 8 | buffer[1]);
- 	if (ret)
- 		goto out;
- 
-+	val = (buffer[0] << 8 | buffer[1]);
-+
- 	if (input)
- 		val = val | (0x01 << to_index(attr));
- 	else
-@@ -954,13 +956,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
- 	u32 count;
- 
- 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
--	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
--						((u32)buffer[2]<<8) + buffer[3];
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
-+
-+	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
-+						((u32)buffer[2]<<8) + buffer[3];
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
- }
- 
- static ssize_t applesmc_key_at_index_read_show(struct device *dev,
+ 	cancel_delayed_work_sync(&ctrl->ka_work);
 -- 
 2.25.1
 
