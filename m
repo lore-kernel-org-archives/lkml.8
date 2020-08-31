@@ -2,121 +2,148 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 184D8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB1EC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD1A2100A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 008C2206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="QaTqLkTg"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="SjNBQ6we"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726517AbgHaKzX (ORCPT
+        id S1726384AbgHaK4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:55:23 -0400
-Received: from mail-eopbgr00112.outbound.protection.outlook.com ([40.107.0.112]:31672
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726121AbgHaKzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:55:20 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=az4jGmFDXf7jRh2bqPgJd0t7MMZ4anEKr1K8mLgPe63rqTqqYuM0lSlFrGp7fTg026G0QRGeveOb8dDu6pSK5hzKbHOy3b+2ArlphsK0wDv/t3nFBE5pAsD92NNWvaSsYBUa2ijdHc8PKZiddznd339FpG6jbHpVz2AurLWWFr3prmi7Mc4XnLxYzkm1kFzsUtt5pD2kA+TTGf9Scu7Dl7KQwqg0lArGHMZD+XJubhBeT7Btnyei6CrIZIZqWgVO2o+NC9r7QUpguwQy2m9mQACntbzpqhFdQkONe198DGtSPzKRtzzw7m0tr22VqJ/iaAHN+vsxaPnUfvqKeybagw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CP4+mNDXx6XQKukanVDEw8CA9fMjnCKDq+Ox4MsFRT8=;
- b=Ez9tsiFO+3kKA5TTzX9khSKmsjQEH/uWhsdFH3sLI4/hwQKNGYr5YzjN/HQ9bezs2vZmVxQnr3g8c8Q6hk8qk+fcfBuiRlZU71XBhOz76/vGv+wrSHtq9ej4FvU9ANa+w9LcURFrTJd+S7ALSfhQJ04/ISqe7eQWZSDUJTW21d6dF6pQNApC26AVoFNl+phl0zNDQamSCQNJ9OPq++o8Xqow7UcZ75rgdvvvA8x+wKVRJMSYcR4LkJ2hplo+wSHETNTGQsqb0hLGLc26btgYUdknCZLqf2NraeCz/lyax+6xfdFeqdaid9M5dknhOnikYXFgESh1pBC+mcZc+Tcx2Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
- dkim=pass header.d=prevas.dk; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=CP4+mNDXx6XQKukanVDEw8CA9fMjnCKDq+Ox4MsFRT8=;
- b=QaTqLkTgs4NxAL1dAweH/79jchGX9xCBj5oFeHSOArw0aH6t3MVI4qy3mlM/T+KWSjPz3iueai7looolrpUT4NrV1xfWRfCeFQKbI3Av7GyOhRUatIylX/6RwF7Oq0o1dAKLQhEroxqeFs5AR+lX9eLSVfF3MDQPk4arZIWiWUk=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none header.from=prevas.dk;
-Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:3f::10)
- by AM0PR10MB3220.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:182::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Mon, 31 Aug
- 2020 10:55:17 +0000
-Received: from AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::3cfb:a3e6:dfc0:37ec]) by AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::3cfb:a3e6:dfc0:37ec%3]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 10:55:17 +0000
-Subject: Re: [PATCH 2/2] mtd: spi-nor: enable lock interface for macronix
- chips
-To:     Ivan Mikhaylov <i.mikhaylov@yadro.com>
-Cc:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200812151818.16699-1-i.mikhaylov@yadro.com>
- <20200812151818.16699-3-i.mikhaylov@yadro.com>
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Message-ID: <ae094597-e57e-dff1-f897-bf3cc75f5511@prevas.dk>
-Date:   Mon, 31 Aug 2020 12:55:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-In-Reply-To: <20200812151818.16699-3-i.mikhaylov@yadro.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM3PR07CA0110.eurprd07.prod.outlook.com
- (2603:10a6:207:7::20) To AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:208:3f::10)
+        Mon, 31 Aug 2020 06:56:54 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:43559 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726121AbgHaK4x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 06:56:53 -0400
+X-UUID: d92c9e3114fa4d5c8c978949b4224d19-20200831
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=PFK96T7avqn9jICrOvLa+GZbdRwSDF9sP7kZd14N3es=;
+        b=SjNBQ6weldBIG4cCv4v/RPnwzTdTxs5IQIjHtZhR4RBdjJe/nKlWJUWONsjlKK/3OjNjAX/cP++Px1uHRAHGe2c40dtq7y/zYwZKZSNqiFLrbnurigTOnLoo5SFAbfocv31xnZrAlFDBB09+DfFoam9uOMdhbb2DbX/AtzakNgc=;
+X-UUID: d92c9e3114fa4d5c8c978949b4224d19-20200831
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <miles.chen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1501708277; Mon, 31 Aug 2020 18:56:46 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Mon, 31 Aug 2020 18:56:38 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 31 Aug 2020 18:56:38 +0800
+From:   Miles Chen <miles.chen@mediatek.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh@kernel.org>
+CC:     <iommu@lists.linux-foundation.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <wsd_upstream@mediatek.com>,
+        Miles Chen <miles.chen@mediatek.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Yong Wu <yong.wu@mediatek.com>,
+        Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH v5] iommu/mediatek: check 4GB mode by reading infracfg
+Date:   Mon, 31 Aug 2020 18:56:39 +0800
+Message-ID: <20200831105639.2856-1-miles.chen@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.149] (5.186.112.31) by AM3PR07CA0110.eurprd07.prod.outlook.com (2603:10a6:207:7::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5 via Frontend Transport; Mon, 31 Aug 2020 10:55:17 +0000
-X-Originating-IP: [5.186.112.31]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 8aec64e9-4109-47e8-30a5-08d84d9c58cf
-X-MS-TrafficTypeDiagnostic: AM0PR10MB3220:
-X-Microsoft-Antispam-PRVS: <AM0PR10MB3220DCBEE627A004DCCE22D193510@AM0PR10MB3220.EURPRD10.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:913;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: pRk3KABxRVg3Hhn0oq1Z8Q6GoadwZPc34iBhzTRD6QbIO8qdPvjFmCqz+hfTqARRKCVyST0wWRJLDqJ/Q+SiPKo9Luh90AVEH6wiUIdk3AylJVxFXuFGbQw1PddGzvigl+83vihF8q2C7Obg9AvboqnsZXa4NiNUJEQOur3QD5wsRnZTGaT54EPuSuBN+NwfHC16FofwNjgx+0IXY0mJAtEcsJz6V47H1Usf1VAbjZw9lJtKuCqGKfrFi3bfPciy9xVHyyW5wzmRsa2JL2nYkszizF3BQ6bM1QGDhp4xMVsqRNrYIMlgm72ggyEe3mtBPl48Wl86XEIEluddrUev5vl2Qh4+NdKykk0aUVNnLB2d67T85WSmzC9BnJP5pQEMLbAkUY3P+NIZKDKpmPuWEUOgVjGY58wRdHnMIYBy17BRwVHKfbdhVeL8o8ANd/iP3QIh2sN40oyqKeDS4VqOAw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(396003)(346002)(136003)(376002)(366004)(39840400004)(36756003)(6486002)(86362001)(6916009)(2906002)(478600001)(16526019)(44832011)(316002)(31696002)(16576012)(26005)(8976002)(66556008)(66946007)(66476007)(31686004)(8676002)(8936002)(186003)(4744005)(956004)(2616005)(5660300002)(52116002)(83380400001)(54906003)(4326008)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: alZ8h0jsy2eUGzO1tL+ROp/9E4Stm4eZt4/8oj2xO2NzlK1MM28AKk0LuMJYEkBtiyez1mS5WNiYiS4Xo0H5MxzHa8RhbW8UbZ/wl/h/qHVkjYGthMmL5+sjNIlMIUZu7JdXbHu8uoMoTcioPcTU52EovtfJqqaUFMOwJvi2ZcsMRv7Dugezfo0Ib2ulmx+QbusMLfqSNlHOVUcfYLyb8Q8NjZtL+5Y5o/HM1/MEcK/oIE1vi13mRU3k/MdlPj+k8637mLseiSt8eaCnj+gpw3WIObFDWS5seufodLNlbxky9VfFTBcZeV4tTzO4cOGrv//jksE7o7vZLRlo4v58Qgnj/v3O34hWtO7JBcE6tgAgx9jj76LXQpe6PObpxGVH2NEQjlCPwA0h+TrdcRW7AUQ8Cp95VvNBWjm8Kz54l3y9YxvhrEasP3cwxJDeC5EnlIPn8HVX3tl0IKO5PdUyYPj4Zw97iqxIpB9OuWIWJrnPGkK0fueLCD/Nymn2DLJ5IaIHuouodtk7EXP2MFeXYT1arx2S5ezC+Fo9CNoyDFViIFhSPfY5XgiMLmG0WEqxltvHxf+DwiB3CEmz4uD2rmm+E9J36OCjCxlPGWfzRKKaPinKugq7sLioJKr2l9LlG8jhVnW/2yitenrKpfI89Q==
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8aec64e9-4109-47e8-30a5-08d84d9c58cf
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR10MB1874.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 10:55:17.5853
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rGXiZP2GDPBPSbiivwiHFmGgbnAcgoBD04ehrPiP0MNePLh+H0nW/aBT6KYVE7GFD1/kpQEaRG6M28+J2WShbSBYbzrtnJ+4gkR8qHf5ChE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB3220
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 80F077771CDF5D82782C84C936A5D97B92B6AC9617A3A67447E00A9E4B201C822000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/08/2020 17.18, Ivan Mikhaylov wrote:
-> Add locks for whole macronix chip series with BP0-2 and BP0-3 bits.
-> 
-> Tested with mx25l51245g(BP0-3).
+SW4gcHJldmlvdXMgZGlzY3Vzc2lvbiBbMV0gYW5kIFsyXSwgd2UgZm91bmQgdGhhdCBpdCBpcyBy
+aXNreSB0bw0KdXNlIG1heF9wZm4gb3IgdG90YWxyYW1fcGFnZXMgdG8gdGVsbCBpZiA0R0IgbW9k
+ZSBpcyBlbmFibGVkLg0KDQpDaGVjayA0R0IgbW9kZSBieSByZWFkaW5nIGluZnJhY2ZnIHJlZ2lz
+dGVyLCByZW1vdmUgdGhlIHVzYWdlDQpvZiB0aGUgdW4tZXhwb3J0ZWQgc3ltYm9sIG1heF9wZm4u
+DQoNClRoaXMgaXMgYSBzdGVwIHRvd2FyZHMgYnVpbGRpbmcgbXRrX2lvbW11IGFzIGEga2VybmVs
+IG1vZHVsZS4NCg0KWzFdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMDA2MDMxNjEx
+MzIuMjQ0MS0xLW1pbGVzLmNoZW5AbWVkaWF0ZWsuY29tLw0KWzJdIGh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xrbWwvMjAyMDA2MDQwODAxMjAuMjYyOC0xLW1pbGVzLmNoZW5AbWVkaWF0ZWsuY29t
+Lw0KWzNdIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvMjAyMDA3MTUyMDUxMjAuR0E3Nzg4
+NzZAYm9ndXMvDQoNCkNjOiBNaWtlIFJhcG9wb3J0IDxycHB0QGxpbnV4LmlibS5jb20+DQpDYzog
+RGF2aWQgSGlsZGVuYnJhbmQgPGRhdmlkQHJlZGhhdC5jb20+DQpDYzogWW9uZyBXdSA8eW9uZy53
+dUBtZWRpYXRlay5jb20+DQpDYzogWWluZ2pvZSBDaGVuIDx5aW5nam9lLmNoZW5AbWVkaWF0ZWsu
+Y29tPg0KQ2M6IENocmlzdG9waCBIZWxsd2lnIDxoY2hAbHN0LmRlPg0KQ2M6IFJvYiBIZXJyaW5n
+IDxyb2JoQGtlcm5lbC5vcmc+DQpDYzogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdt
+YWlsLmNvbT4NClNpZ25lZC1vZmYtYnk6IE1pbGVzIENoZW4gPG1pbGVzLmNoZW5AbWVkaWF0ZWsu
+Y29tPg0KDQotLS0NCg0KQ2hhbmdlIHNpbmNlIHY0DQotIHJlbW92ZSB1bm5lY2Vzc2FyeSBkYXRh
+LT5lbmFibGVfNEdCID0gZmFsc2UsIHNpbmNlIGl0IGlzIGt6YWxsb2MoKWVkLg0KDQpDaGFuZ2Ug
+c2luY2UgdjMNCi0gdXNlIGxvcmUua2VybmVsLm9yZyBsaW5rcw0KLSBtb3ZlICJjaGFuZ2Ugc2lu
+Y2UuLi4iIGFmdGVyICItLS0iDQoNCkNoYW5nZSBzaW5jZSB2MjoNCi0gZGV0ZXJtaW5lIGNvbXBh
+dGlibGUgc3RyaW5nIGJ5IG00dV9wbGF0DQotIHJlYmFzZSB0byBuZXh0LTIwMjAwNzIwDQotIGFk
+ZCAiLS0tIg0KDQpDaGFuZ2Ugc2luY2UgdjE6DQotIHJlbW92ZSB0aGUgcGhhbmRsZSB1c2FnZSwg
+c2VhcmNoIGZvciBpbmZyYWNmZyBpbnN0ZWFkIFszXQ0KLSB1c2UgaW5mcmFjZmcgaW5zdGVhZCBv
+ZiBpbmZyYWNmZ19yZWdtYXANCi0gbW92ZSBpbmZyYWNmZyBkZWZpbml0YWlvbnMgdG8gbGludXgv
+c29jL21lZGlhdGVrL2luZnJhY2ZnLmgNCi0gdXBkYXRlIGVuYWJsZV80R0Igb25seSB3aGVuIGhh
+c180Z2JfbW9kZQ0KLS0tDQogZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYyAgICAgICAgICAgICB8
+IDMzICsrKysrKysrKysrKysrKysrKysrKysrLS0tLQ0KIGluY2x1ZGUvbGludXgvc29jL21lZGlh
+dGVrL2luZnJhY2ZnLmggfCAgMyArKysNCiAyIGZpbGVzIGNoYW5nZWQsIDMxIGluc2VydGlvbnMo
+KyksIDUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L210a19pb21t
+dS5jIGIvZHJpdmVycy9pb21tdS9tdGtfaW9tbXUuYw0KaW5kZXggNzg1YjIyOGQzOWE2Li5lN2I4
+YjJiYjA4YTkgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2lvbW11L210a19pb21tdS5jDQorKysgYi9k
+cml2ZXJzL2lvbW11L210a19pb21tdS5jDQpAQCAtMyw3ICszLDYgQEANCiAgKiBDb3B5cmlnaHQg
+KGMpIDIwMTUtMjAxNiBNZWRpYVRlayBJbmMuDQogICogQXV0aG9yOiBZb25nIFd1IDx5b25nLnd1
+QG1lZGlhdGVrLmNvbT4NCiAgKi8NCi0jaW5jbHVkZSA8bGludXgvbWVtYmxvY2suaD4NCiAjaW5j
+bHVkZSA8bGludXgvYnVnLmg+DQogI2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KICNpbmNsdWRlIDxs
+aW51eC9jb21wb25lbnQuaD4NCkBAIC0xNSwxMyArMTQsMTYgQEANCiAjaW5jbHVkZSA8bGludXgv
+aW9tbXUuaD4NCiAjaW5jbHVkZSA8bGludXgvaW9wb2xsLmg+DQogI2luY2x1ZGUgPGxpbnV4L2xp
+c3QuaD4NCisjaW5jbHVkZSA8bGludXgvbWZkL3N5c2Nvbi5oPg0KICNpbmNsdWRlIDxsaW51eC9v
+Zl9hZGRyZXNzLmg+DQogI2luY2x1ZGUgPGxpbnV4L29mX2lvbW11Lmg+DQogI2luY2x1ZGUgPGxp
+bnV4L29mX2lycS5oPg0KICNpbmNsdWRlIDxsaW51eC9vZl9wbGF0Zm9ybS5oPg0KICNpbmNsdWRl
+IDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCisjaW5jbHVkZSA8bGludXgvcmVnbWFwLmg+DQog
+I2luY2x1ZGUgPGxpbnV4L3NsYWIuaD4NCiAjaW5jbHVkZSA8bGludXgvc3BpbmxvY2suaD4NCisj
+aW5jbHVkZSA8bGludXgvc29jL21lZGlhdGVrL2luZnJhY2ZnLmg+DQogI2luY2x1ZGUgPGFzbS9i
+YXJyaWVyLmg+DQogI2luY2x1ZGUgPHNvYy9tZWRpYXRlay9zbWkuaD4NCiANCkBAIC02NDAsOCAr
+NjQyLDExIEBAIHN0YXRpYyBpbnQgbXRrX2lvbW11X3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
+Y2UgKnBkZXYpDQogCXN0cnVjdCByZXNvdXJjZSAgICAgICAgICpyZXM7DQogCXJlc291cmNlX3Np
+emVfdAkJaW9hZGRyOw0KIAlzdHJ1Y3QgY29tcG9uZW50X21hdGNoICAqbWF0Y2ggPSBOVUxMOw0K
+KwlzdHJ1Y3QgcmVnbWFwCQkqaW5mcmFjZmc7DQogCXZvaWQgICAgICAgICAgICAgICAgICAgICpw
+cm90ZWN0Ow0KIAlpbnQgICAgICAgICAgICAgICAgICAgICBpLCBsYXJiX25yLCByZXQ7DQorCXUz
+MgkJCXZhbDsNCisJY2hhciAgICAgICAgICAgICAgICAgICAgKnA7DQogDQogCWRhdGEgPSBkZXZt
+X2t6YWxsb2MoZGV2LCBzaXplb2YoKmRhdGEpLCBHRlBfS0VSTkVMKTsNCiAJaWYgKCFkYXRhKQ0K
+QEAgLTY1NSwxMCArNjYwLDI4IEBAIHN0YXRpYyBpbnQgbXRrX2lvbW11X3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQlyZXR1cm4gLUVOT01FTTsNCiAJZGF0YS0+cHJvdGVj
+dF9iYXNlID0gQUxJR04odmlydF90b19waHlzKHByb3RlY3QpLCBNVEtfUFJPVEVDVF9QQV9BTElH
+Tik7DQogDQotCS8qIFdoZXRoZXIgdGhlIGN1cnJlbnQgZHJhbSBpcyBvdmVyIDRHQiAqLw0KLQlk
+YXRhLT5lbmFibGVfNEdCID0gISEobWF4X3BmbiA+IChCSVRfVUxMKDMyKSA+PiBQQUdFX1NISUZU
+KSk7DQotCWlmICghTVRLX0lPTU1VX0hBU19GTEFHKGRhdGEtPnBsYXRfZGF0YSwgSEFTXzRHQl9N
+T0RFKSkNCi0JCWRhdGEtPmVuYWJsZV80R0IgPSBmYWxzZTsNCisJaWYgKE1US19JT01NVV9IQVNf
+RkxBRyhkYXRhLT5wbGF0X2RhdGEsIEhBU180R0JfTU9ERSkpIHsNCisJCXN3aXRjaCAoZGF0YS0+
+cGxhdF9kYXRhLT5tNHVfcGxhdCkgew0KKwkJY2FzZSBNNFVfTVQyNzEyOg0KKwkJCXAgPSAibWVk
+aWF0ZWssbXQyNzEyLWluZnJhY2ZnIjsNCisJCQlicmVhazsNCisJCWNhc2UgTTRVX01UODE3MzoN
+CisJCQlwID0gIm1lZGlhdGVrLG10ODE3My1pbmZyYWNmZyI7DQorCQkJYnJlYWs7DQorCQlkZWZh
+dWx0Og0KKwkJCXAgPSBOVUxMOw0KKwkJfQ0KKw0KKwkJaW5mcmFjZmcgPSBzeXNjb25fcmVnbWFw
+X2xvb2t1cF9ieV9jb21wYXRpYmxlKHApOw0KKw0KKwkJaWYgKElTX0VSUihpbmZyYWNmZykpDQor
+CQkJcmV0dXJuIFBUUl9FUlIoaW5mcmFjZmcpOw0KKw0KKwkJcmV0ID0gcmVnbWFwX3JlYWQoaW5m
+cmFjZmcsIFJFR19JTkZSQV9NSVNDLCAmdmFsKTsNCisJCWlmIChyZXQpDQorCQkJcmV0dXJuIHJl
+dDsNCisJCWRhdGEtPmVuYWJsZV80R0IgPSAhISh2YWwgJiBGX0REUl80R0JfU1VQUE9SVF9FTik7
+DQorCX0NCiANCiAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0Vf
+TUVNLCAwKTsNCiAJZGF0YS0+YmFzZSA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIHJlcyk7
+DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaCBiL2lu
+Y2x1ZGUvbGludXgvc29jL21lZGlhdGVrL2luZnJhY2ZnLmgNCmluZGV4IGZkMjVmMDE0ODU2Ni4u
+MjMzNDYzZDc4OWM2IDEwMDY0NA0KLS0tIGEvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvaW5m
+cmFjZmcuaA0KKysrIGIvaW5jbHVkZS9saW51eC9zb2MvbWVkaWF0ZWsvaW5mcmFjZmcuaA0KQEAg
+LTMyLDYgKzMyLDkgQEANCiAjZGVmaW5lIE1UNzYyMl9UT1BfQVhJX1BST1RfRU5fV0IJCShCSVQo
+MikgfCBCSVQoNikgfCBcDQogCQkJCQkJIEJJVCg3KSB8IEJJVCg4KSkNCiANCisjZGVmaW5lIFJF
+R19JTkZSQV9NSVNDCQkJCTB4ZjAwDQorI2RlZmluZSBGX0REUl80R0JfU1VQUE9SVF9FTgkJCUJJ
+VCgxMykNCisNCiBpbnQgbXRrX2luZnJhY2ZnX3NldF9idXNfcHJvdGVjdGlvbihzdHJ1Y3QgcmVn
+bWFwICppbmZyYWNmZywgdTMyIG1hc2ssDQogCQlib29sIHJlZ191cGRhdGUpOw0KIGludCBtdGtf
+aW5mcmFjZmdfY2xlYXJfYnVzX3Byb3RlY3Rpb24oc3RydWN0IHJlZ21hcCAqaW5mcmFjZmcsIHUz
+MiBtYXNrLA0KLS0gDQoyLjE4LjANCg==
 
-Hmm. I've tried adding support for locking on Macronix to U-Boot
-(https://patchwork.ozlabs.org/project/uboot/patch/20200326114257.1782-3-rasmus.villemoes@prevas.dk/),
-but that was quite a bit more involved than this. Note in particular the
-first part of my commit message:
-
-  Macronix chips implements locking in (power-of-two multiple of) 64K
-  blocks, not as a fraction of the chip's size.
-
-At least, that was true for the chip I was interested in and the few
-others whose data sheets I grabbed to double-check. So I'm a bit
-skeptical that this can work out-of-the-box without introducing a new
-struct spi_nor_locking_ops.
-
-Rasmus
