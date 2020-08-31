@@ -4,152 +4,127 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4963C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A65B8C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:22:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DD172073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 776272073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598872919;
-	bh=luuKNVi+KwBr1ekM6udfXcrivJveuP/tHqNrnFBYWzo=;
+	s=default; t=1598872931;
+	bh=h1kMcG8he3kJobrVkF04CR2+ioy68IPllAuj7Q35pyo=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2hoiHCj3QCll8Lyo2Y45QuKbEJ6R5C7YjqdPOJvUzNTCB1CfPONlsAMsXJPjvpPpj
-	 qzA1nN9sPb0l5vUQen51wVOoBa1/33n3nmDcDPzad/Y29nJ+wFWiyUcNPukD8ahiIe
-	 vFLIOo0wazHOq/3F9EEE8F90nusZ6Z+6ttACRRL0=
+	b=gkA66ldeb/5z3IYo6LCBfBTwGvPa+0gbJMFvR5tjX7Cpk4868js9tthW8YMwgH/FF
+	 37cr1ZL3RAz55iJOrau4XwduVmZn/m5vMzJ3cOvEUhDr5Ngtar5m1/cP6tZrc9p2T2
+	 iYvCsg6TEx1oK/ZwEaJez19Z/VVhZqOFjnO84QXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgHaLVy (ORCPT
+        id S1727815AbgHaLWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:21:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 07:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726726AbgHaLR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726714AbgHaLR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 07:17:58 -0400
 Received: from localhost (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0162D206F0;
-        Mon, 31 Aug 2020 11:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4475E2072D;
+        Mon, 31 Aug 2020 11:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598872136;
-        bh=luuKNVi+KwBr1ekM6udfXcrivJveuP/tHqNrnFBYWzo=;
+        s=default; t=1598872297;
+        bh=h1kMcG8he3kJobrVkF04CR2+ioy68IPllAuj7Q35pyo=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=q9i5JjFRgd6CT0v9YoaM43xpHDTkyeMvqzq3Ssb0Bwy66dDENHm+T2c4kSr9F6e5F
-         yEMdfTYkuFjp5dQur7ohdLp0G40YvgqkgngONSvuR2XT1YwwpxfCQsGF1eAe8OHKhd
-         h9qDDRaJm9JIIW54F64ilO+Gwlnky3sIxbz/qE8Y=
-Date:   Mon, 31 Aug 2020 16:38:52 +0530
+        b=xoELkdYRm3whuwOE+7jGts+1CArRNLFlX1HvBNtbFsEs1b4R5WzDV3NzunMhvbPY0
+         pd+mwILwRXzKlcNqaBrSS7DwAWuKnhWxTC3ZWsoHpY/xsLadTBe0OeoXc75ZYg+nqN
+         HhVfrwX5RiknoLolgw3dDUfpYmqmslXD15NWlTL8=
+Date:   Mon, 31 Aug 2020 16:41:33 +0530
 From:   Vinod Koul <vkoul@kernel.org>
-To:     Liam Beguin <liambeguin@gmail.com>
-Cc:     geert@linux-m68k.org, kishon@ti.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] phy: tusb1210: use bitmasks to set
- VENDOR_SPECIFIC2
-Message-ID: <20200831110852.GO2639@vkoul-mobl>
-References: <20200822205320.9746-1-liambeguin@gmail.com>
+To:     Roger Quadros <rogerq@ti.com>
+Cc:     kishon@ti.com, Tony Lindgren <tony@atomide.com>,
+        robh+dt@kernel.org, nsekhar@ti.com, vigneshr@ti.com,
+        jan.kiszka@siemens.com, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4] dt-binding: phy: convert ti,omap-usb2 to YAML
+Message-ID: <20200831111133.GP2639@vkoul-mobl>
+References: <20200821081144.29288-1-rogerq@ti.com>
+ <a6a59fba-6a0c-c00f-29e7-e85c7dcc1319@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200822205320.9746-1-liambeguin@gmail.com>
+In-Reply-To: <a6a59fba-6a0c-c00f-29e7-e85c7dcc1319@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Liam,
+On 24-08-20, 10:47, Roger Quadros wrote:
+> Hi,
+> 
+> On 21/08/2020 11:11, Roger Quadros wrote:
+> > Move ti,omap-usb2 to its own YAML schema.
+> > 
+> > Signed-off-by: Roger Quadros <rogerq@ti.com>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+> > ---
+> > 
+> > v4
+> > - fix example to fix dt_binding_check warnings
+> > - '#phy-cells' -> "#phy-cells"
+> > - Add 'oneOf' to compatible logic to allow just "ti,omap-usb2" as valid
+> > 
+> > v3
+> > - Removed quotes from compatibles
+> > - changed property to "ti,disable-charger-det"
+> > 
+> > v2
+> > - Address Rob's comments on YAML schema.
+> > 
+> >   .../devicetree/bindings/phy/ti,omap-usb2.yaml | 72 +++++++++++++++++++
+> >   .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
+> >   2 files changed, 72 insertions(+), 37 deletions(-)
+> >   create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> > new file mode 100644
+> > index 000000000000..a05110351814
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+> > @@ -0,0 +1,72 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: OMAP USB2 PHY
+> > +
+> > +maintainers:
+> > + - Kishon Vijay Abraham I <kishon@ti.com>
+> > + - Roger Quadros <rogerq@ti.com>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    oneOf:
+> > +      - items:
+> > +        - enum:
+> > +          - ti,dra7x-usb2
+> > +          - ti,dra7x-usb2-phy2
+> > +          - ti,am654-usb2
+> 
+> I missed these two.
+> "ti,omap5-usb2"
+> "ti,am437x-usb2"
+> 
+> While "ti,am437x-usb2" is being used in the device tree files
+> I don't see "ti,omap5-usb2" being used anywhere.
+> 
+> omap5-l4.dtsi uses "ti,omap-usb2"
+> 
+> Should we get rid of "ti,omap5-usb2"?
 
-On 22-08-20, 16:53, Liam Beguin wrote:
-> From: Liam Beguin <lvb@xiphos.com>
-> 
-> Start by reading the content of the VENDOR_SPECIFIC2 register and update
-> each bit field based on device properties when defined.
-> 
-> The use of bit masks prevents fields from overriding each other and
-> enables users to clear bits which are set by default, like datapolarity
-> in this instance.
-> 
-> Signed-off-by: Liam Beguin <lvb@xiphos.com>
-> ---
-> Changes since v1:
-> - use set_mask_bits
-> 
-> Changes since v2:
-> - fix missing bit shift dropped in v2
-> - rebase on 5.9-rc1
-> 
-> Changes since v3:
-> - switch to u8p_replace_bits() since there's little reason to protect
->   against concurrent access
-> 
->  drivers/phy/ti/phy-tusb1210.c | 27 ++++++++++++++-------------
->  1 file changed, 14 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/phy/ti/phy-tusb1210.c b/drivers/phy/ti/phy-tusb1210.c
-> index d8d0cc11d187..a63213f5972a 100644
-> --- a/drivers/phy/ti/phy-tusb1210.c
-> +++ b/drivers/phy/ti/phy-tusb1210.c
-> @@ -7,15 +7,16 @@
->   * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->   */
->  #include <linux/module.h>
-> +#include <linux/bitfield.h>
->  #include <linux/ulpi/driver.h>
->  #include <linux/ulpi/regs.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/phy/ulpi_phy.h>
->  
->  #define TUSB1210_VENDOR_SPECIFIC2		0x80
-> -#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT	0
-> -#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT	4
-> -#define TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT	6
-> +#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK	GENMASK(3, 0)
-> +#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK	GENMASK(5, 4)
-> +#define TUSB1210_VENDOR_SPECIFIC2_DP_MASK	BIT(6)
->  
->  struct tusb1210 {
->  	struct ulpi *ulpi;
-> @@ -118,22 +119,22 @@ static int tusb1210_probe(struct ulpi *ulpi)
->  	 * diagram optimization and DP/DM swap.
->  	 */
->  
-> +	reg = ulpi_read(ulpi, TUSB1210_VENDOR_SPECIFIC2);
-> +
->  	/* High speed output drive strength configuration */
-> -	device_property_read_u8(&ulpi->dev, "ihstx", &val);
-> -	reg = val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT;
-> +	if (!device_property_read_u8(&ulpi->dev, "ihstx", &val))
-> +		u8p_replace_bits(&reg, val, (u8)TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK);
-
-Any reason for using u8p_replace_bits and not u8_replace_bits? 
-
-Also please drop the u8 casts above, they seem unnecessary here
-
->  
->  	/* High speed output impedance configuration */
-> -	device_property_read_u8(&ulpi->dev, "zhsdrv", &val);
-> -	reg |= val << TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT;
-> +	if (!device_property_read_u8(&ulpi->dev, "zhsdrv", &val))
-> +		u8p_replace_bits(&reg, val, (u8)TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK);
->  
->  	/* DP/DM swap control */
-> -	device_property_read_u8(&ulpi->dev, "datapolarity", &val);
-> -	reg |= val << TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT;
-> +	if (!device_property_read_u8(&ulpi->dev, "datapolarity", &val))
-> +		u8p_replace_bits(&reg, val, (u8)TUSB1210_VENDOR_SPECIFIC2_DP_MASK);
->  
-> -	if (reg) {
-> -		ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
-> -		tusb->vendor_specific2 = reg;
-> -	}
-> +	ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
-> +	tusb->vendor_specific2 = reg;
->  
->  	tusb->phy = ulpi_phy_create(ulpi, &phy_ops);
->  	if (IS_ERR(tusb->phy))
-> 
-> base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
-> -- 
-> 2.27.0
+Sure drop them ;-) we can always add back when we have a user
 
 -- 
 ~Vinod
