@@ -2,177 +2,128 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25E0FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3394C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 006E02072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="V08T2Weq"
+	by mail.kernel.org (Postfix) with ESMTP id DC70B2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbgHaK1P (ORCPT
+        id S1726584AbgHaK21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:27:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbgHaK1J (ORCPT
+        Mon, 31 Aug 2020 06:28:27 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:40795 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbgHaK2X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:27:09 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABBC7C061573;
-        Mon, 31 Aug 2020 03:27:08 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f085000329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 31A0E1EC02F2;
-        Mon, 31 Aug 2020 12:27:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598869626;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ZuWmCteGQZKM0ko0ElODot8ukDLVFBwRtcdceTKHyJE=;
-        b=V08T2WeqYCMhRjX3D5H2r4EqFkI0JVoF2Ohes825PrLzETVPYkLxl1GPEn/7TSpDZdWzbp
-        8UU4qAGxRwPluiQYH2jRl0uT9qfcF9eCrrfw4Kf6Zk2aeZzG/dgYcnPaS16JfQ63jhp5ya
-        pEpx11HroUZ5WqYtb7XAL7poJus3OKU=
-Date:   Mon, 31 Aug 2020 12:27:01 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 45/76] x86/sev-es: Allocate and Map IST stack for #VC
- handler
-Message-ID: <20200831102701.GE27517@zn.tnic>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-46-joro@8bytes.org>
+        Mon, 31 Aug 2020 06:28:23 -0400
+Received: by mail-io1-f69.google.com with SMTP id x12so3698212iow.7
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 03:28:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=DWxdBslkom8iu1CMhBZx9cnBrix7vgJ186+tz9LmQSs=;
+        b=QPaPTjcSZdTPl58IdGO6GY7m1JubodlHeWO8nKVwDqa/wIVXe18BLEDJ8Tki9gCKqx
+         Hr+ucVu3CGims7arAQDMPRjJo64JLQKJfYMJvsbOxEJXWDKeDKrpBRXUK+FuFeY3/Tls
+         I9EpolWXEKRU+XrBXYeKAIacXJuVFa9b712B8m2ZMt9FR9QsmxzxeAg9cz5JC/4uYKzL
+         ky2r2j+bwW8P9TRmMFSDQK1m3sVow3R8wVtKOJj4q6HRX5TJlyM/kdDf3I4ADaeVL3BW
+         eMfIdxK6Nr59TBRXmNhlwP79Lx6k8OCTFMFGxLsT9ssFCoRcVgR603p/Xwsl7qveWB0g
+         Nz7Q==
+X-Gm-Message-State: AOAM532ahQWPOgy7giVStgWoUOWH11WP/M/SunUzlvcyara1vxH6kbN/
+        HF1km4/pZ3yQBrvLNStr60al3SG/SCf2D43FvhY9449WB/MP
+X-Google-Smtp-Source: ABdhPJyl+/bjrhBTqzilrgleXpP82H0h5USvj/TK22Dj4vuigPaCgy/1J64q0xPq0uRY9g/tCW7+xz8bJ3O6btIQ0pegaT5dUSyI
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-46-joro@8bytes.org>
+X-Received: by 2002:a92:d4ca:: with SMTP id o10mr705468ilm.129.1598869702068;
+ Mon, 31 Aug 2020 03:28:22 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 03:28:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000a24fa705ae29dc6c@google.com>
+Subject: KMSAN: kernel-infoleak in scsi_cmd_ioctl
+From:   syzbot <syzbot+85433a479a646a064ab3@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, glider@google.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:40AM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Allocate and map an IST stack and an additional fall-back stack for
-> the #VC handler.  The memory for the stacks is allocated only when
-> SEV-ES is active.
-> 
-> The #VC handler needs to use an IST stack because it could be raised
-> from kernel space with unsafe stack, e.g. in the SYSCALL entry path.
-> 
-> Since the #VC exception can be nested, the #VC handler switches back to
-> the interrupted stack when entered from kernel space. If switching back
-> is not possible the fall-back stack is used.
-> 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> Link: https://lore.kernel.org/r/20200724160336.5435-45-joro@8bytes.org
-> ---
->  arch/x86/include/asm/cpu_entry_area.h | 33 +++++++++++++++++----------
->  arch/x86/include/asm/page_64_types.h  |  1 +
->  arch/x86/kernel/cpu/common.c          |  2 ++
->  arch/x86/kernel/dumpstack_64.c        |  8 +++++--
->  arch/x86/kernel/sev-es.c              | 33 +++++++++++++++++++++++++++
->  5 files changed, 63 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-> index 8902fdb7de13..f87e4c0c16f4 100644
-> --- a/arch/x86/include/asm/cpu_entry_area.h
-> +++ b/arch/x86/include/asm/cpu_entry_area.h
-> @@ -11,25 +11,29 @@
->  #ifdef CONFIG_X86_64
->  
->  /* Macro to enforce the same ordering and stack sizes */
-> -#define ESTACKS_MEMBERS(guardsize)		\
-> -	char	DF_stack_guard[guardsize];	\
-> -	char	DF_stack[EXCEPTION_STKSZ];	\
-> -	char	NMI_stack_guard[guardsize];	\
-> -	char	NMI_stack[EXCEPTION_STKSZ];	\
-> -	char	DB_stack_guard[guardsize];	\
-> -	char	DB_stack[EXCEPTION_STKSZ];	\
-> -	char	MCE_stack_guard[guardsize];	\
-> -	char	MCE_stack[EXCEPTION_STKSZ];	\
-> -	char	IST_top_guard[guardsize];	\
-> +#define ESTACKS_MEMBERS(guardsize, optional_stack_size)		\
-> +	char	DF_stack_guard[guardsize];			\
-> +	char	DF_stack[EXCEPTION_STKSZ];			\
-> +	char	NMI_stack_guard[guardsize];			\
-> +	char	NMI_stack[EXCEPTION_STKSZ];			\
-> +	char	DB_stack_guard[guardsize];			\
-> +	char	DB_stack[EXCEPTION_STKSZ];			\
-> +	char	MCE_stack_guard[guardsize];			\
-> +	char	MCE_stack[EXCEPTION_STKSZ];			\
-> +	char	VC_stack_guard[guardsize];			\
-> +	char	VC_stack[optional_stack_size];			\
-> +	char	VC2_stack_guard[guardsize];			\
-> +	char	VC2_stack[optional_stack_size];			\
+Hello,
 
-So the VC* stuff needs to be ifdefferied and enabled only on
-CONFIG_AMD_MEM_ENCRYPT... here and below.
+syzbot found the following issue on:
 
-I had that in my previous review too:
+HEAD commit:    3b3ea602 x86: add failure injection to get/put/clear_user
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=14d89966900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=85433a479a646a064ab3
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+userspace arch: i386
 
-"All those things should be under an CONFIG_AMD_MEM_ENCRYPT ifdeffery."
+Unfortunately, I don't have any reproducer for this issue yet.
 
-> +	char	IST_top_guard[guardsize];			\
->  
->  /* The exception stacks' physical storage. No guard pages required */
->  struct exception_stacks {
-> -	ESTACKS_MEMBERS(0)
-> +	ESTACKS_MEMBERS(0, 0)
->  };
->  
->  /* The effective cpu entry area mapping with guard pages. */
->  struct cea_exception_stacks {
-> -	ESTACKS_MEMBERS(PAGE_SIZE)
-> +	ESTACKS_MEMBERS(PAGE_SIZE, EXCEPTION_STKSZ)
->  };
->  
->  /*
-> @@ -40,6 +44,8 @@ enum exception_stack_ordering {
->  	ESTACK_NMI,
->  	ESTACK_DB,
->  	ESTACK_MCE,
-> +	ESTACK_VC,
-> +	ESTACK_VC2,
->  	N_EXCEPTION_STACKS
->  };
->  
-> @@ -139,4 +145,7 @@ static inline struct entry_stack *cpu_entry_stack(int cpu)
->  #define __this_cpu_ist_top_va(name)					\
->  	CEA_ESTACK_TOP(__this_cpu_read(cea_exception_stacks), name)
->  
-> +#define __this_cpu_ist_bot_va(name)					\
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+85433a479a646a064ab3@syzkaller.appspotmail.com
 
-"bottom" please. I was wondering for a bit, what "bot"? And I know it is
-CEA_ESTACK_BOT but that's not readable.
+=====================================================
+BUG: KMSAN: kernel-infoleak in kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+CPU: 1 PID: 12272 Comm: syz-executor.3 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ kmsan_internal_check_memory+0x238/0x3d0 mm/kmsan/kmsan.c:423
+ kmsan_copy_to_user+0x81/0x90 mm/kmsan/kmsan_hooks.c:253
+ instrument_copy_to_user include/linux/instrumented.h:91 [inline]
+ _copy_to_user+0x18e/0x260 lib/usercopy.c:33
+ scsi_put_cdrom_generic_arg include/linux/uaccess.h:170 [inline]
+ scsi_cdrom_send_packet block/scsi_ioctl.c:770 [inline]
+ scsi_cmd_ioctl+0x2422/0x25a0 block/scsi_ioctl.c:827
+ scsi_cmd_blk_ioctl+0x1f6/0x240 block/scsi_ioctl.c:876
+ sd_ioctl_common+0x50a/0x5c0 drivers/scsi/sd.c:1531
+ sd_compat_ioctl+0xc5/0x220 drivers/scsi/sd.c:1733
+ compat_blkdev_ioctl+0x74b/0x1200 block/ioctl.c:691
+ __do_compat_sys_ioctl fs/ioctl.c:847 [inline]
+ __se_compat_sys_ioctl+0x55f/0x1100 fs/ioctl.c:798
+ __ia32_compat_sys_ioctl+0x4a/0x70 fs/ioctl.c:798
+ do_syscall_32_irqs_on arch/x86/entry/common.c:430 [inline]
+ __do_fast_syscall_32+0x2af/0x480 arch/x86/entry/common.c:477
+ do_fast_syscall_32+0x6b/0xd0 arch/x86/entry/common.c:505
+ do_SYSENTER_32+0x73/0x90 arch/x86/entry/common.c:554
+ entry_SYSENTER_compat_after_hwframe+0x4d/0x5c
+RIP: 0023:0xf7fae549
+Code: Bad RIP value.
+RSP: 002b:00000000f55a80cc EFLAGS: 00000296 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 0000000000005393
+RDX: 0000000020002000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
 
--- 
-Regards/Gruss,
-    Boris.
+Local variable ----cgc32.i42.i@scsi_cmd_ioctl created at:
+ scsi_put_cdrom_generic_arg block/scsi_ioctl.c:695 [inline]
+ scsi_cdrom_send_packet block/scsi_ioctl.c:770 [inline]
+ scsi_cmd_ioctl+0x2257/0x25a0 block/scsi_ioctl.c:827
+ scsi_put_cdrom_generic_arg block/scsi_ioctl.c:695 [inline]
+ scsi_cdrom_send_packet block/scsi_ioctl.c:770 [inline]
+ scsi_cmd_ioctl+0x2257/0x25a0 block/scsi_ioctl.c:827
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Bytes 29-31 of 44 are uninitialized
+Memory access of size 44 starts at ffff8881c5bfbaa0
+Data copied to user address 0000000020002000
+=====================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
