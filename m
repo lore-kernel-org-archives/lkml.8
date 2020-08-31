@@ -2,143 +2,91 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E061FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A340C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABD6B208A9
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DFC52072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+8263WA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbgHaG7g (ORCPT
+        id S1727799AbgHaHAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 02:59:36 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10739 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727799AbgHaG7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 02:59:32 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 83A81744CE870CABDBC1;
-        Mon, 31 Aug 2020 14:59:28 +0800 (CST)
-Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 31 Aug
- 2020 14:59:27 +0800
-Subject: Re: [PATCH v2 5/5] f2fs: support age threshold based garbage
- collection
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20200804131449.50517-1-yuchao0@huawei.com>
- <20200804131449.50517-6-yuchao0@huawei.com>
- <20200825193404.GA2614120@google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <7986af8c-1fe9-7140-f1c0-d8b4a58f702c@huawei.com>
-Date:   Mon, 31 Aug 2020 14:59:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 31 Aug 2020 03:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60320 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbgHaHAf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:00:35 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6FEBC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 00:00:34 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id ay8so4389493edb.8
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 00:00:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7mp1wlP+yLNID1XAoJHzsrmrZXmS2a5Y+F074V8aUs8=;
+        b=c+8263WAZSAa+mnQUymnZ5Ed/xslJmBQIkVyLWBNzPdMVDm1QLhDTL6GZ9Rly2uBAf
+         h2C1sU16fiMYqh8Es0WgnCsgHXjdT+yZk9F1cvUlfg1O4nftt8EYKcPxIOQuHaNIB/n9
+         Sn5iQTqdzEyLcyfv50jUp5ZO9hHyTFLqmn5IcVMZGUGuZEACcU6ZFgnze5OjW8dtgAPO
+         AmQiyWeOgC8z4wl9wveTH7ES3qcrmSL+nk82Qn3H0SOZbuqVCGSX7ON0oLXgPrY4OomY
+         45FekjyQta98eYdktPlxyxra3m1CDNzDoPO35KU3H+pD7g1pjFMt1Ay5ODtJsGDCqvKk
+         qnhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7mp1wlP+yLNID1XAoJHzsrmrZXmS2a5Y+F074V8aUs8=;
+        b=N6/zbaTqeTn49ArAoWKDV+iJiY6NdtYDq9VZZ2DlgCB3gQJLJZl9BJGbvA5dCqUtpY
+         OOtioGqMEtgvR63mdJDmbywzrtd0mUcyQZTCSSkKKv5kImdsElPQf7D3/Q1QwUz++PqZ
+         eqcZeKkKuAaW+cUrzZ9cxiZu5N1L2uMsZbLBFKtLPIvumjqJDwdW/Bt5f+0CJhBO0Wxb
+         XdbQyHDj4Mf9KZrog9vOWAjkYBtaG+AyeTrGdWEN22zrEpeZ4PkQqwygriYt1DlugdAH
+         464VY7XVTYqco+hfzyAO54qr59buDKZImhJc1zjm3CtoyIKfhexk64MpFC7ifkCrz1w3
+         iLlg==
+X-Gm-Message-State: AOAM532HMS2xhBu/M6Juexm7jHz10v0DA+F0WZekyQ5kpYnb+PzbYpTm
+        27lPwuwmYm8ViJCJ44THEZ4SsHTLQsCPc8NlMB4=
+X-Google-Smtp-Source: ABdhPJxa9Pe+DZMtyiPcubMEiscjLjno1TEmJY/7bsvBWAM24vdzfr8/NI4fn4I7njlkYuuyVMiFKLF+uBl1wQdUFDk=
+X-Received: by 2002:aa7:d3c2:: with SMTP id o2mr10316061edr.11.1598857233478;
+ Mon, 31 Aug 2020 00:00:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200825193404.GA2614120@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.136.114.67]
-X-CFilter-Loop: Reflected
+References: <cover.1598598459.git.zong.li@sifive.com> <3f1f693147f0b62f19f4a44b8e8ef3d5bde23352.1598598459.git.zong.li@sifive.com>
+ <CAOJsxLHOvvt8WGQUynGkLxZCA4OQQ+KgxxJJD7s_iP8Pxf-Omg@mail.gmail.com> <CANXhq0r2jg_fVZJE0shquGc25QNgenL+Qq6HRUBXEYPSf=QcFQ@mail.gmail.com>
+In-Reply-To: <CANXhq0r2jg_fVZJE0shquGc25QNgenL+Qq6HRUBXEYPSf=QcFQ@mail.gmail.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Mon, 31 Aug 2020 10:00:17 +0300
+Message-ID: <CAOJsxLF_+0eg6zU=CFwnN+pc75jF4aqvUqog5z18wfG4WOKoDQ@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] riscv: Set more data to cacheinfo
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        David Abdurachmanov <david.abdurachmanov@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jaegeuk,
+Hi,
 
-I've changed code a bit to fix some bugs, including:
-- gc_idle = 3 (GC_IDLE_AT) description
-- disallow set gc_idle to 3 if atgc is off
-- keep compatibility with checkpoint disabling
+On Mon, Aug 31, 2020 at 9:15 AM Zong Li <zong.li@sifive.com> wrote:
+> If the sets is one, it means that the cache is fully associative, then
+> we don't need to fill the ways number, just keep way number as zero,
+> so here we want to find the fully associative case first and make the
+> if expression fail at the beginning. We might also rewrite it as
+> follow:
 
-Could you please check and merge below diff?
+[snip]
 
-From: Chao Yu <yuchao0@huawei.com>
+Thanks for the explanation! The rewritten version is much easier to
+read, at least to me.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-  Documentation/ABI/testing/sysfs-fs-f2fs |  3 ++-
-  fs/f2fs/gc.c                            | 12 +++++++++++-
-  fs/f2fs/sysfs.c                         | 11 ++++++++---
-  3 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/ABI/testing/sysfs-fs-f2fs b/Documentation/ABI/testing/sysfs-fs-f2fs
-index 7f730c4c8df2..834d0becae6d 100644
---- a/Documentation/ABI/testing/sysfs-fs-f2fs
-+++ b/Documentation/ABI/testing/sysfs-fs-f2fs
-@@ -22,7 +22,8 @@ Contact:	"Namjae Jeon" <namjae.jeon@samsung.com>
-  Description:	Controls the victim selection policy for garbage collection.
-  		Setting gc_idle = 0(default) will disable this option. Setting
-  		gc_idle = 1 will select the Cost Benefit approach & setting
--		gc_idle = 2 will select the greedy approach.
-+		gc_idle = 2 will select the greedy approach & setting
-+		gc_idle = 3 will select the age-threshold based approach.
-
-  What:		/sys/fs/f2fs/<disk>/reclaim_segments
-  Date:		October 2013
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 6413886e52d4..3c0edb8b4cc5 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -388,6 +388,16 @@ static void add_victim_entry(struct f2fs_sb_info *sbi,
-  	unsigned long long mtime = 0;
-  	unsigned int i;
-
-+	if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED)) {
-+		if (p->gc_mode == GC_AT &&
-+			get_valid_blocks(sbi, segno, true) == 0)
-+			return;
-+
-+		if (p->alloc_mode == AT_SSR &&
-+			get_seg_entry(sbi, segno)->ckpt_valid_blocks == 0)
-+			return;
-+	}
-+
-  	for (i = 0; i < sbi->segs_per_sec; i++)
-  		mtime += get_seg_entry(sbi, start + i)->mtime;
-  	mtime = div_u64(mtime, sbi->segs_per_sec);
-@@ -721,7 +731,7 @@ static int get_victim_by_default(struct f2fs_sb_info *sbi,
-  		/* Don't touch checkpointed data */
-  		if (unlikely(is_sbi_flag_set(sbi, SBI_CP_DISABLED) &&
-  					get_ckpt_valid_blocks(sbi, segno) &&
--					p.alloc_mode != SSR))
-+					p.alloc_mode == LFS))
-  			goto next;
-  		if (gc_type == BG_GC && test_bit(secno, dirty_i->victim_secmap))
-  			goto next;
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index 88ed9969cc86..bacfa9c35e6b 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -375,12 +375,17 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
-  		return count;
-  	}
-  	if (!strcmp(a->attr.name, "gc_idle")) {
--		if (t == GC_IDLE_CB)
-+		if (t == GC_IDLE_CB) {
-  			sbi->gc_mode = GC_IDLE_CB;
--		else if (t == GC_IDLE_GREEDY)
-+		} else if (t == GC_IDLE_GREEDY) {
-  			sbi->gc_mode = GC_IDLE_GREEDY;
--		else
-+		} else if (t == GC_IDLE_AT) {
-+			if (!sbi->am.atgc_enabled)
-+				return -EINVAL;
-+			sbi->gc_mode = GC_AT;
-+		} else {
-  			sbi->gc_mode = GC_NORMAL;
-+		}
-  		return count;
-  	}
-
--- 
-2.26.2
-
-
+- Pekka
