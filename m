@@ -2,84 +2,204 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6922FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2155C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4C7206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:00:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HG/qEiyC"
+	by mail.kernel.org (Postfix) with ESMTP id 9894D206E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728067AbgHaIAq (ORCPT
+        id S1727944AbgHaIFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgHaIAp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:00:45 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E641BC061573;
-        Mon, 31 Aug 2020 01:00:44 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o18so7226657eje.7;
-        Mon, 31 Aug 2020 01:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RLyGY7skttPgNOsTkC5qujmdsaHTNBsI9n0BA8OjV9c=;
-        b=HG/qEiyC9awhcfnIgmgt/osngCjseQB57TpCrwAGZejnh63dA8FdDNWc6FjG7hZiQd
-         pu/iQpRptYlTZuSWbuZHQr1G47yxwjXrBlvWve2A/c4nHYaWMUnIQ2Bju4WnbFsn69bl
-         ASNtOvqRCE71Y/djLTEqpmrDm9ZHT6vECvGdBKWhfnWFPTNFBkpKFscAtbW47Ecgt0Lk
-         YnU6FomqRWLxTxRqBLK9rqwLHQini05Q20EbNGOzYAWg2IULEYTkMj5LH74pbtzml1sA
-         8OUWhSA39tpycMgWQegyiCX9PxJGm4Om9QCKUnEqz5o980mepwoyD14sSiIzK1a6DcVZ
-         5fBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RLyGY7skttPgNOsTkC5qujmdsaHTNBsI9n0BA8OjV9c=;
-        b=dESKyW/CujOgRxnm9NgLGHVlv8H71Ano1hMI3K6tFyb/xCy1jLKGNF7jbFbJ93Asdr
-         qV7GDU0hISWnETs63Z8vVzs6mN9+Y8p81t32oM0cSC6Vt5J4bxwoYMIPwLV3mGXGd8p0
-         M0SxOQTdp0ZEbLF7IwDBOh536TCeXlnjE1r2p2mJ3igTSwjA+DCbo8A0R8i6aQdd0PHv
-         6JNu7CgVsqT9ozmoFRAdJZTGkGnjr+HXVOIVL78+ISSJ4R4SldSY1GtszGFIEqP04THD
-         eEbmCY3TVXZgfXNJ4UldUjnTZTwkzBmoZ8ooMvUrWDQI7nwaD3agG9fkbBtS9s/EyLq0
-         SExg==
-X-Gm-Message-State: AOAM5332AoXEvF4TVfVNa9avcDhqpPxSuUcEvmQQB1ERaJzYTbnv9RvM
-        6UHmXfe58xfAsb0p2UYDG/0O3qyJ/BtFh/is6aGBbvmmDtc=
-X-Google-Smtp-Source: ABdhPJxBfcSDn6XcN2nGEofMVxqRw1qOv9l16bC+TFGmq4avPtJ4PxuJPRshQlSxWv+9zqsmzKmIoTWzzX1k/DKUVC8=
-X-Received: by 2002:a17:906:5812:: with SMTP id m18mr38190ejq.66.1598860843635;
- Mon, 31 Aug 2020 01:00:43 -0700 (PDT)
+        Mon, 31 Aug 2020 04:05:46 -0400
+Received: from foss.arm.com ([217.140.110.172]:54798 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgHaIFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:05:45 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA1AE31B;
+        Mon, 31 Aug 2020 01:05:44 -0700 (PDT)
+Received: from [10.57.6.112] (unknown [10.57.6.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4557B3F68F;
+        Mon, 31 Aug 2020 01:05:42 -0700 (PDT)
+Subject: Re: [PATCH 1/4] kselftests/arm64: add a basic Pointer Authentication
+ test
+To:     Boyan Karatotev <boyan.karatotev@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     vincenzo.frascino@arm.com, boian4o1@gmail.com,
+        Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200828131606.7946-1-boyan.karatotev@arm.com>
+ <20200828131606.7946-2-boyan.karatotev@arm.com>
+From:   Amit Kachhap <amit.kachhap@arm.com>
+Message-ID: <ec48c4c2-7034-ddfe-2120-85e7856dc062@arm.com>
+Date:   Mon, 31 Aug 2020 13:35:39 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1598851448-5493-1-git-send-email-amit.pundir@linaro.org>
- <CAMi1Hd3n2rfr+k09L8WO1S1Tn1s3xJencmr1q3a6e-FOgXr5Qg@mail.gmail.com> <CAMS8qEXcANkb-HoTk8zrXQEzkQO4cnFw4hj5tMp82UEVKd+eHQ@mail.gmail.com>
-In-Reply-To: <CAMS8qEXcANkb-HoTk8zrXQEzkQO4cnFw4hj5tMp82UEVKd+eHQ@mail.gmail.com>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Mon, 31 Aug 2020 10:00:07 +0200
-Message-ID: <CAMS8qEW=EbKpBPSp10PgnuGY-rcqtrdhRs0ObYym5vrbqTtb-w@mail.gmail.com>
-Subject: Re: [PATCH v6] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-To:     Amit Pundir <amit.pundir@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200828131606.7946-2-boyan.karatotev@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->This happens here
+Hi Boyan,
 
-Forgot this part
+On 8/28/20 6:46 PM, Boyan Karatotev wrote:
+> PAuth signs and verifies return addresses on the stack. It does so by
+> inserting a Pointer Authentication code (PAC) into some of the unused top
+> bits of an address. This is achieved by adding paciasp/autiasp instructions
+> at the beginning and end of a function.
+> 
+> This feature is partially backwards compatible with earlier versions of the
+> ARM architecture. To coerce the compiler into emitting fully backwards
+> compatible code the main file is compiled to target an earlier ARM version.
+> This allows the tests to check for the feature and print meaningful error
+> messages instead of crashing.
+> 
+> Add a test to verify that corrupting the return address results in a
+> SIGSEGV on return.
+> 
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+> ---
+>   tools/testing/selftests/arm64/Makefile        |  2 +-
+>   .../testing/selftests/arm64/pauth/.gitignore  |  1 +
+>   tools/testing/selftests/arm64/pauth/Makefile  | 22 ++++++++++++
+>   tools/testing/selftests/arm64/pauth/helper.h  | 10 ++++++
+>   tools/testing/selftests/arm64/pauth/pac.c     | 32 +++++++++++++++++
+>   .../selftests/arm64/pauth/pac_corruptor.S     | 36 +++++++++++++++++++
+>   6 files changed, 102 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/testing/selftests/arm64/pauth/.gitignore
+>   create mode 100644 tools/testing/selftests/arm64/pauth/Makefile
+>   create mode 100644 tools/testing/selftests/arm64/pauth/helper.h
+>   create mode 100644 tools/testing/selftests/arm64/pauth/pac.c
+>   create mode 100644 tools/testing/selftests/arm64/pauth/pac_corruptor.S
+> 
+> diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
+> index 93b567d23c8b..525506fd97b9 100644
+> --- a/tools/testing/selftests/arm64/Makefile
+> +++ b/tools/testing/selftests/arm64/Makefile
+> @@ -4,7 +4,7 @@
+>   ARCH ?= $(shell uname -m 2>/dev/null || echo not)
+>   
+>   ifneq (,$(filter $(ARCH),aarch64 arm64))
+> -ARM64_SUBTARGETS ?= tags signal
+> +ARM64_SUBTARGETS ?= tags signal pauth
+>   else
+>   ARM64_SUBTARGETS :=
+>   endif
+> diff --git a/tools/testing/selftests/arm64/pauth/.gitignore b/tools/testing/selftests/arm64/pauth/.gitignore
+> new file mode 100644
+> index 000000000000..b557c916720a
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/.gitignore
+> @@ -0,0 +1 @@
+> +pac
+> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+> new file mode 100644
+> index 000000000000..785c775e5e41
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/Makefile
+> @@ -0,0 +1,22 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +# Copyright (C) 2020 ARM Limited
+> +
+> +CFLAGS += -mbranch-protection=pac-ret
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/regulator/core.c?h=v5.9-rc3#n398
+There is no CFLAGS validation present which may give error with non 
+supported compiler.
+
+Can you add a check something like,
+
++#check if the compiler works well
++pauth_cc_support := $(shell if ($(CC) $(CFLAGS) -march=armv8.3-a -E -x 
+c /dev/null -o /dev/null 2>&1) then echo "1"; fi)
++
++ifeq ($(pauth_cc_support),1)
+  TEST_GEN_PROGS := pac
+  TEST_GEN_FILES := pac_corruptor.o
++endif
+
+  include ../../lib.mk
+
++ifeq ($(pauth_cc_support),1)
+  # pac* and aut* instructions are not available on architectures berfore
+  # ARMv8.3. Therefore target ARMv8.3 wherever they are used directly
+  $(OUTPUT)/pac_corruptor.o: pac_corruptor.S
+@@ -19,4 +25,4 @@ $(OUTPUT)/pac_corruptor.o: pac_corruptor.S
+  # run on earlier targets and print a meaningful error messages
+  $(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o
+         $(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+-
++endif
+
+> +
+> +TEST_GEN_PROGS := pac
+> +TEST_GEN_FILES := pac_corruptor.o
+> +
+> +include ../../lib.mk
+> +
+> +# pac* and aut* instructions are not available on architectures berfore
+> +# ARMv8.3. Therefore target ARMv8.3 wherever they are used directly
+> +$(OUTPUT)/pac_corruptor.o: pac_corruptor.S
+> +	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
+> +
+> +# when -mbranch-protection is enabled and the target architecture is ARMv8.3 or
+> +# greater, gcc emits pac* instructions which are not in HINT NOP space,
+> +# preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
+> +# run on earlier targets and print a meaningful error messages
+> +$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o
+> +	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
+> +
+> diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
+> new file mode 100644
+> index 000000000000..f777f88acf0a
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/helper.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/* Copyright (C) 2020 ARM Limited */
+> +
+> +#ifndef _HELPER_H_
+> +#define _HELPER_H_
+> +
+> +void pac_corruptor(void);
+> +
+> +#endif
+> +
+
+Please delete extra line at end of file here and other places too.
+
+Other changes look fine for me. After the suggested changes please free 
+to add,
+Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+
+Thanks,
+Amit Daniel
+
+
+> diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
+> new file mode 100644
+> index 000000000000..ed445050f621
+> --- /dev/null
+> +++ b/tools/testing/selftests/arm64/pauth/pac.c
+> @@ -0,0 +1,32 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2020 ARM Limited
+> +
+> +#include <sys/auxv.h>
+> +#include <signal.h>
+> +
+>
