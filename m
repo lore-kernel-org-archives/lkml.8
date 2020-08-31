@@ -2,87 +2,82 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6444C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92721C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCAA8206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:13:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A082206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:14:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbgHaINp (ORCPT
+        id S1728134AbgHaIOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:13:45 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53536 "EHLO mx2.suse.de"
+        Mon, 31 Aug 2020 04:14:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:54892 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgHaINo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:13:44 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 7BB3DAEBA;
-        Mon, 31 Aug 2020 08:14:17 +0000 (UTC)
-Date:   Mon, 31 Aug 2020 10:13:41 +0200
-From:   Jean Delvare <jdelvare@suse.de>
-To:     wsa@kernel.org
-Cc:     Jeffrey Lin <jeffrey@icurse.nl>, linux-i2c@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: i801: Register lis3lv02d I2C device on Dell
- Latitude 5480
-Message-ID: <20200831101341.476ce06f@endymion>
-In-Reply-To: <20200805093347.GM1229@kunai>
-References: <20200616234130.814499-1-jeffrey@icurse.nl>
-        <20200805093347.GM1229@kunai>
-Organization: SUSE Linux
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+        id S1725978AbgHaIOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:14:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 814D531B;
+        Mon, 31 Aug 2020 01:14:00 -0700 (PDT)
+Received: from [10.57.6.112] (unknown [10.57.6.112])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E224F3F68F;
+        Mon, 31 Aug 2020 01:13:57 -0700 (PDT)
+Subject: Re: [PATCH 3/4] kselftests/arm64: add PAuth test for whether exec()
+ changes keys
+To:     Boyan Karatotev <boyan.karatotev@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     vincenzo.frascino@arm.com, boian4o1@gmail.com,
+        Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+References: <20200828131606.7946-1-boyan.karatotev@arm.com>
+ <20200828131606.7946-4-boyan.karatotev@arm.com>
+From:   Amit Kachhap <amit.kachhap@arm.com>
+Message-ID: <e4169cc5-643b-67f1-5b19-c3265a341a8f@arm.com>
+Date:   Mon, 31 Aug 2020 13:43:55 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200828131606.7946-4-boyan.karatotev@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wolfram,
 
-On Wed, 05 Aug 2020 11:33:47 +0200, wsa@kernel.org wrote:
-> On Tue, Jun 16, 2020 at 07:41:30PM -0400, Jeffrey Lin wrote:
-> > Value of /sys/devices/platform/lis3lv02d/position when
-> >     Horizontal:     (36,-108,-1152)
-> >     Left elevated:  (-432,-126,-1062)
-> >     Front elevated: (36,594,-936)
-> >     Upside down:    (-126,-252,1098)
-> > 
-> > Signed-off-by: Jeffrey Lin <jeffrey@icurse.nl>  
+
+On 8/28/20 6:46 PM, Boyan Karatotev wrote:
+> Kernel documentation states that it will change PAuth keys on exec() calls.
 > 
-> Jean?
+> Verify that all keys are correctly switched to new ones.
 > 
-> > ---
-> >  drivers/i2c/busses/i2c-i801.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-> > index fea644921a76..d7c802e20ae6 100644
-> > --- a/drivers/i2c/busses/i2c-i801.c
-> > +++ b/drivers/i2c/busses/i2c-i801.c
-> > @@ -1268,6 +1268,7 @@ static const struct {
-> >  	/*
-> >  	 * Additional individual entries were added after verification.
-> >  	 */
-> > +	{ "Latitude 5480",      0x29 },
-> >  	{ "Vostro V131",        0x1d },
-> >  };
-> >  
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
 
-No actual code change and not something I can test, so pretty much any
-kernel developer is as qualified as I am to deal with it. But yes, OK,
-I'm listed as the maintainer for this driver, so I should have replied
-earlier, sorry.
+The changes look fine so,
+Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-
--- 
-Jean Delvare
-SUSE L3 Support
+> ---
+>   tools/testing/selftests/arm64/pauth/Makefile  |   4 +
+>   .../selftests/arm64/pauth/exec_target.c       |  35 +++++
+>   tools/testing/selftests/arm64/pauth/helper.h  |  10 ++
+>   tools/testing/selftests/arm64/pauth/pac.c     | 148 ++++++++++++++++++
+>   4 files changed, 197 insertions(+)
+>   create mode 100644 tools/testing/selftests/arm64/pauth/exec_target.c
+> 
+> diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+> index a017d1c8dd58..2e237b21ccf6 100644
+> --- a/tools/testing/selftests/arm64/pauth/Makefile
+> +++ b/tools/testing/selftests/arm64/pauth/Makefile
+> @@ -5,6 +5,7 @@ CFLAGS += -mbranch-protection=pac-ret
+>   
