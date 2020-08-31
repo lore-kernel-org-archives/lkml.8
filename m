@@ -2,162 +2,118 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FFDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DE5C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8077F20767
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NuUGQOHx"
+	by mail.kernel.org (Postfix) with ESMTP id 8DC382083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598889772;
+	bh=iE2JfXtNRXcBePxejNj2vUktxPmSGqItV3WCiVQWgHE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gJRsvlfeFlfTF6ppkDOPCi5ouDYZ5lgti8ruohHZiTYTRPyGtwAuBkK0kyQHnqPNz
+	 otqUZfylCECK1RNIs8hB1sbVXgefKeG62bFUET5Ebs2naOlJIxpvA4FYjOqS/fJqks
+	 Dqy2fnkcx0WyRR++kZpY0Zl9Ee1phWopjs1NlRIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728267AbgHaQCJ (ORCPT
+        id S1728306AbgHaQCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:02:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60216 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728165AbgHaQCE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:02:04 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3326EC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:02:04 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id t20so5081115qtr.8
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:02:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=szyBZmXmGTfhNbvEwHNrOEoyR6ZVqLq4aSXH4RxuP/w=;
-        b=NuUGQOHxyfqfMJUN82zrksWb8lPBil57bkrhwOwi9HrnrM305tAW7ZTvinRCmW8ntx
-         GDwP698CZW7qroPU3cIlSkjc0xqDq/mYioEzHXYWx1q68VaVBgpKJ4T+1CnZXhGa9Kqe
-         jSq2fj5vtbnRlsp1bKweEpUH3we26uOqQm4JhXtxt3HVM9bhoUcLdfKYlQPrYJWQe2DO
-         3puXqUK9qh1zQNZDKGIvz9Q6FBu2ypq5LCNxHhn/NZQjW5Bq8i30dP1uKSQtEqub3gcr
-         7qw/ly98IFJafxtRe3kU1V4dS2ww1hCzbFJtsNqOrHO8AarB1BA7BYm3VYBuZU9COGH6
-         ZuYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=szyBZmXmGTfhNbvEwHNrOEoyR6ZVqLq4aSXH4RxuP/w=;
-        b=mC/rs6SSgDiNRSavFzAp2qjL2TqciFV8TrKrMajPUU6xdCQ4Q1Hiu11jxH4r/UwJgi
-         50tZYsU2HrzcSpw5+nkslWKgD+HmNLe0yamcUimaPEAtq8DFkPKCrEcxKKCkm18V7zMV
-         uPUcLwifDiREJGsDZEfHkVnvGNlZFAlB0s+1X1ouQLwsQzujWJPfVBMb9Zl4lTVKv9tT
-         FslW//AqdNwDssKLps8yL40hdJOJraedqWBw5+Qi70yJdlMysVV5rOKScCdePJvC9Tbo
-         53xIsfSgetSJqpnf+/uWWeZJMiR0Jc1MHJp1oapXuTPNJg4qhH5r/sRIEkmS6qo76G+m
-         K+zA==
-X-Gm-Message-State: AOAM533mos8RRnqo/vCTl3lJunSlndYfmudTmyu/TnuPmxkWfleOsquu
-        Z3/3Tiffda8QoJ6TLRYxy0GWFg==
-X-Google-Smtp-Source: ABdhPJwgW/w1RFlFAb2nTVP6gOrwqGGnH7eA7HzonF2C/qJlWUVmcq0S9YcX8jXnTG3mrmSkcfE+Zw==
-X-Received: by 2002:ac8:142:: with SMTP id f2mr1918414qtg.191.1598889723060;
-        Mon, 31 Aug 2020 09:02:03 -0700 (PDT)
-Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id g64sm7050652qkf.71.2020.08.31.09.02.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 09:02:01 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 12:01:55 -0400
-From:   Qian Cai <cai@lca.pw>
-To:     Eric Sandeen <sandeen@sandeen.net>
-Cc:     darrick.wong@oracle.com, hch@infradead.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] iomap: Fix WARN_ON_ONCE() from unprivileged users
-Message-ID: <20200831160154.GA4080@lca.pw>
-References: <20200831014511.17174-1-cai@lca.pw>
- <d34753a2-57bf-8013-015a-adeb3fe9447c@sandeen.net>
+        Mon, 31 Aug 2020 12:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57862 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727019AbgHaQCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 12:02:50 -0400
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB459214D8
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:02:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598889770;
+        bh=iE2JfXtNRXcBePxejNj2vUktxPmSGqItV3WCiVQWgHE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aG0DDdc9WaflHUKr1gprlR4aRG0QzH6Q6MUeJfGvbWfxmHwwKuo2S5hQ5lOU5zwSr
+         P8el1/7aCTUfpMUAoqct3NYExCyvx69iQwp0jNGmv6za6vsPngXGkRmEcgr1vBEY25
+         Dk1pPChAxZINkzT6av+40EEyJ2Exv+pCnZp0AkTk=
+Received: by mail-ej1-f46.google.com with SMTP id q13so5741974ejo.9
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:02:49 -0700 (PDT)
+X-Gm-Message-State: AOAM530xbWynGAUEITas1s/VVyfGjkV33oIeQyv0YdIj/5BYBJ+zzpyh
+        ApvPS/vKv8M10XvVB8cQRzFdkClWVrnA/Tu5Cg==
+X-Google-Smtp-Source: ABdhPJzVfg2VBCCh3cFVWTXiqVCWpKgkXDpTn86toFw+LFgxINOPaV80H9SEI6gSfpVAinA9c18C4USSDNd1DJAwL8w=
+X-Received: by 2002:a17:906:1909:: with SMTP id a9mr1679553eje.127.1598889768317;
+ Mon, 31 Aug 2020 09:02:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d34753a2-57bf-8013-015a-adeb3fe9447c@sandeen.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200823014830.15962-1-chunkuang.hu@kernel.org>
+ <20200823014830.15962-5-chunkuang.hu@kernel.org> <1598838539.7054.9.camel@mhfsdcap03>
+In-Reply-To: <1598838539.7054.9.camel@mhfsdcap03>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Tue, 1 Sep 2020 00:02:36 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9hZgLGSiqCA6a1Ea+TjGZAH4-t4DFS9jCz3nEXNJY1zg@mail.gmail.com>
+Message-ID: <CAAOTY_9hZgLGSiqCA6a1Ea+TjGZAH4-t4DFS9jCz3nEXNJY1zg@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] MAINTAINERS: add files for Mediatek DRM drivers
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 10:48:59AM -0500, Eric Sandeen wrote:
-> On 8/30/20 8:45 PM, Qian Cai wrote:
-> > It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
-> > unprivileged users which would taint the kernel, or worse - panic if
-> > panic_on_warn or panic_on_taint is set. Hence, just convert it to
-> > pr_warn_ratelimited() to let users know their workloads are racing.
-> > Thanks Dave Chinner for the initial analysis of the racing reproducers.
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
+Hi, Chunfeng:
+
+Chunfeng Yun <chunfeng.yun@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=
+1=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=889:50=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+>
+> On Sun, 2020-08-23 at 09:48 +0800, Chun-Kuang Hu wrote:
+> > Mediatek HDMI phy driver is moved from drivers/gpu/drm/mediatek to
+> > drivers/phy/mediatek, so add the new folder to the Mediatek DRM drivers=
+'
+> > information.
+> >
+> > Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> > Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 > > ---
-> > 
-> > v2: Record the path, pid and command as well.
-> > 
-> >  fs/iomap/direct-io.c | 17 ++++++++++++++++-
-> >  1 file changed, 16 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> > index c1aafb2ab990..66a4502ef675 100644
-> > --- a/fs/iomap/direct-io.c
-> > +++ b/fs/iomap/direct-io.c
-> > @@ -374,6 +374,7 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
-> >  		void *data, struct iomap *iomap, struct iomap *srcmap)
-> >  {
-> >  	struct iomap_dio *dio = data;
-> > +	char pathname[128], *path;
-> >  
-> >  	switch (iomap->type) {
-> >  	case IOMAP_HOLE:
-> > @@ -389,7 +390,21 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
-> >  	case IOMAP_INLINE:
-> >  		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
-> >  	default:
-> > -		WARN_ON_ONCE(1);
-> 
-> It seems like we should explicitly catch IOMAP_DELALLOC for this case, and leave the
-> default: as a WARN_ON that is not user-triggerable? i.e.
-> 
-> case IOMAP_DELALLOC:
-> 	<all the fancy warnings>
-> 	return -EIO;
-> default:
-> 	WARN_ON_ONCE(1);
-> 	return -EIO;
-> 
-> > +		/*
-> > +		 * DIO is not serialised against mmap() access at all, and so
-> > +		 * if the page_mkwrite occurs between the writeback and the
-> > +		 * iomap_apply() call in the DIO path, then it will see the
-> > +		 * DELALLOC block that the page-mkwrite allocated.
-> > +		 */
-> > +		path = file_path(dio->iocb->ki_filp, pathname,
-> > +				 sizeof(pathname));
-> > +		if (IS_ERR(path))
-> > +			path = "(unknown)";
-> > +
-> > +		pr_warn_ratelimited("page_mkwrite() is racing with DIO read (iomap->type = %u).\n"
-> > +				    "File: %s PID: %d Comm: %.20s\n",
-> > +				    iomap->type, path, current->pid,
-> > +				    current->comm);
-> 
-> This is very specific ...
-> 
-> Do we know that mmap/page_mkwrite is (and will always be) the only way to reach this
-> point?
+> >  MAINTAINERS | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index deaafb617361..191bacf02209 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -5793,6 +5793,7 @@ L:      dri-devel@lists.freedesktop.org
+> >  S:   Supported
+> >  F:   Documentation/devicetree/bindings/display/mediatek/
+> >  F:   drivers/gpu/drm/mediatek/
+> > +F:   drivers/phy/mediatek/phy-mtk-hdmi*
+> >
+> >  DRM DRIVERS FOR NVIDIA TEGRA
+> >  M:   Thierry Reding <thierry.reding@gmail.com>
+>
+> Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+>
 
-I don't know, so this could indeed be a bit misleading.
+Could you give an 'Acked-by' tag on this patch? So I could apply the
+whole series into my tree.
 
-> 
-> It seems to me that this message won't be very useful for the admin; "pg_mkwrite" may
-> mean something to us, but doubtful for the general public.  And "type = 1" won't mean
-> much to the reader, either.
-> 
-> Maybe something like:
-> 
-> "DIO encountered delayed allocation block, racing buffered+direct? File: %s Comm: %.20s\n"
-> 
-> It just seems that a user-facing warning should be something the admin has a chance of
-> acting on without needing to file a bug for analysis by the developers.
-> 
-> (though TBH "delayed allocation" probably doesn't mean much to the admin, either)
+Regards,
+Chun-Kuang.
 
-I agree with your suggestions. I'll submit a new version.
+> Thanks
+>
+>
+>
