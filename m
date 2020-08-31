@@ -2,118 +2,72 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F76DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C08C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B890206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uMpewtv7"
+	by mail.kernel.org (Postfix) with ESMTP id 1ED82206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgHaDVc (ORCPT
+        id S1727828AbgHaDVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:21:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54660 "EHLO
+        Sun, 30 Aug 2020 23:21:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54678 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727017AbgHaDV2 (ORCPT
+        with ESMTP id S1726838AbgHaDVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 23:21:28 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE447C061573;
-        Sun, 30 Aug 2020 20:21:27 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id o20so950709pfp.11;
-        Sun, 30 Aug 2020 20:21:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fedQaMAad6gJKi/QRC5xP0GL2BO40HvVvA1rAXDD1oY=;
-        b=uMpewtv7PaRVZb3Mcp0C6UTqYyOUR6X6XXIfkXciLP0li4oIkRv03CUX8tE26X3lPF
-         lgq98XHKd+659g+6UeBfsf2035wsBs6r5fOdD0JT3vQUILl9y/eIGyC99Y9Q4bFlVdef
-         8bLb71Idz/A0K6PasF2giFy/LAO+JfKpRDX9c+TYgJJVIJcNW3UaTdT/7ScqvFor83E4
-         HpyncVvDHb0K8sGyy2Swtcl/LIRZwHmO9S8IL4OJggbisx9r4hwpeYYmxO1fxbIZt9jL
-         gUnkSTOhvOZhSy0r8jUHBOd7VP2OH/DTOKtb6WBQGXvbiI4KTAeGPWDiIimHMkEVlot2
-         AWbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fedQaMAad6gJKi/QRC5xP0GL2BO40HvVvA1rAXDD1oY=;
-        b=m+PSq4BZdAjQ4tLTP2yhnp9IteHx3tvBN2JIZOyPducPHwPfOFvZHnz+S6se0L/apG
-         jvPxdBH3x3VozgGvVRrk/Hz80FSVPeF5q/EeCIe8CEzIdR1hPvSMRMbJwT9dKRU8tAGR
-         B0Dwd6M64u6d3Pvfu0yXcmu0qHKYk55jMPMILi87Y6lKi9hmYlb0HdLqEzX33xZMR9r7
-         R0Fjyid7pmULC2ycvh30DA6XboRBweWrFPUHuq4zwr/OZUsktu2N9ya/xQF+IReQqTWo
-         RWMRdMuzvK/3FMfnTj8dVW1HhxPp27Tgp78YNVFj7JTHo7iAHgRX8I5tatOj3uG4zaAn
-         1KXw==
-X-Gm-Message-State: AOAM533+ei/fubxg7H1D7M52bFsvaLyhDAvs/7/TMDEyeYJusffV+mWn
-        GaZHA7Lx8ELtYM7gpVn53i8v+3gv354=
-X-Google-Smtp-Source: ABdhPJxT3m0YGzOaOuE9LBz1QIeV2n+QEULjKqrylCX3NLzGhQgi8zcDjecHEmYKBwICqVNj3cofUA==
-X-Received: by 2002:a63:fe54:: with SMTP id x20mr6550021pgj.438.1598844087031;
-        Sun, 30 Aug 2020 20:21:27 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id z17sm6095733pfq.38.2020.08.30.20.21.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 20:21:26 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v6 01/20] gpiolib: cdev: desc_to_lineinfo should set info offset
-Date:   Mon, 31 Aug 2020 11:19:47 +0800
-Message-Id: <20200831032006.1019978-2-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200831032006.1019978-1-warthog618@gmail.com>
-References: <20200831032006.1019978-1-warthog618@gmail.com>
+        Sun, 30 Aug 2020 23:21:33 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16326C061573;
+        Sun, 30 Aug 2020 20:21:32 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCaNr-007qZv-1n; Mon, 31 Aug 2020 03:21:27 +0000
+Date:   Mon, 31 Aug 2020 04:21:27 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yuqi Jin <jinyuqi@huawei.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>
+Subject: Re: [NAK] Re: [PATCH] fs: Optimized fget to improve performance
+Message-ID: <20200831032127.GW1236603@ZenIV.linux.org.uk>
+References: <1598523584-25601-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20200827142848.GZ1236603@ZenIV.linux.org.uk>
+ <dfa0ec1a-87fc-b17b-4d4a-c2d5c44e6dde@hisilicon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dfa0ec1a-87fc-b17b-4d4a-c2d5c44e6dde@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the value of the line info offset in desc_to_lineinfo, rather than
-relying on it being passed in the info.  This makes the function behave
-as you would expect from the name - it generates the line info
-corresponding to a given GPIO desc.
+On Mon, Aug 31, 2020 at 09:43:31AM +0800, Shaokun Zhang wrote:
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
+> How about this? We try to replace atomic_cmpxchg with atomic_add to improve
+> performance. The atomic_add does not check the current f_count value.
+> Therefore, the number of online CPUs is reserved to prevent multi-core
+> competition.
 
-There are some instances where this results in the offset being set when
-it is already set in the info, but this is clearer especially considering
-that, as part of the replacement of strncpy with strscpy and to ensure
-kernel stack cannot be leaked to userspace, the info is initially zeroed
-in a subsequent patch.
+No.  Really, really - no.  Not unless you can guarantee that process on another
+CPU won't lose its timeslice, ending up with more than one increment happening on
+the same CPU - done by different processes scheduled there, one after another.
 
- drivers/gpio/gpiolib-cdev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you have some change of atomic_long_add_unless(), do it there.  And get it
+past the arm64 folks.  get_file_rcu() is nothing special in that respect *AND*
+it has to cope with any architecture out there.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index e6c9b78adfc2..e95e3eab9867 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -752,6 +752,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
- 	bool ok_for_pinctrl;
- 	unsigned long flags;
- 
-+	info->line_offset = gpio_chip_hwgpio(desc);
- 	/*
- 	 * This function takes a mutex so we must check this before taking
- 	 * the spinlock.
-@@ -933,7 +934,6 @@ static int lineinfo_changed_notify(struct notifier_block *nb,
- 		return NOTIFY_DONE;
- 
- 	memset(&chg, 0, sizeof(chg));
--	chg.info.line_offset = gpio_chip_hwgpio(desc);
- 	chg.event_type = action;
- 	chg.timestamp = ktime_get_ns();
- 	gpio_desc_to_lineinfo(desc, &chg.info);
--- 
-2.28.0
+BTW, keep in mind that there's such thing as a KVM - race windows are much
+wider there, since a thread representing a guest CPU might lose its timeslice
+whenever the host feels like that.  At which point you get a single instruction
+on a guest CPU taking longer than many thousands of instructions on another
+CPU of the same guest.
 
+AFAIK, arm64 does support KVM with SMP guests.
