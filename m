@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F795C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A406C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7E16E207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A6EE207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888353;
-	bh=hJ4CKVWnrnDzcY+E+SwF6btxG/3tO217+leRyRg10yA=;
+	s=default; t=1598888356;
+	bh=enPaakcvPoIVnN5PoXGGX7Ex4yMClA/+TEGHC+05xf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D/+rpoKuaaoD9+1E1GQG04aYGraQvM/hv8g9GZZsSZlbRWGDVVpdYl+NJEMvIxm7J
-	 SdltsMunP2UfAmkf9UMLSrbVAMu5vbSV9+lWSiimZDp4IucdNjbgcK53eRLJ+dNvNA
-	 epClatbwIMHBeffc7Q0qJ+4HrHkK3jQcO+4UkWBU=
+	b=aMgweZlRd1PAv8Mt0CxPiHyD6c4PUGPweoL2vLh2EnlotwFJ2N2rxmSLFOzONUlie
+	 aCqRcwKDlAuuFnJ2QSG+/YhL2yiWgjlRgu5qMCkQrWCGB8KWv+w4V8uwm6781wHPUT
+	 vPMqnSz675wtUka2vzjZJG4jjhjwU3WUr0EfiQSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728840AbgHaPjH (ORCPT
+        id S1729388AbgHaPjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:39:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39368 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:39:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbgHaPaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:10 -0400
+        id S1728550AbgHaPaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AAD421531;
-        Mon, 31 Aug 2020 15:30:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AC2B20767;
+        Mon, 31 Aug 2020 15:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887809;
-        bh=hJ4CKVWnrnDzcY+E+SwF6btxG/3tO217+leRyRg10yA=;
+        s=default; t=1598887814;
+        bh=enPaakcvPoIVnN5PoXGGX7Ex4yMClA/+TEGHC+05xf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8/3CVJ6Bx/ejsxnGeYz7XitWR6UzSq6/EzNqBiZQ8I3SI86fNMU6EH/vKSZkpp/z
-         Vv697R3J7zbwwoSEzWtdvH530r9/DnO8QkHZjAuN31Li3XA04mwpb0k8eouRqHs+lF
-         2o37GT/nuq6NXOUFbRAO/kKJgLCMTwTy870Soq00=
+        b=SpUsS9h59eRyWCiWfYxY1/llhcIZi+OTLbzc2BHD3mOaxPYzliIO4wMIjWYd3Yfwr
+         aliK2vMe8VHdJ8doAltYZ8NVDC+1FdJGvDuglwX5XEbTUZsTmQGjG6TOXsPzvQ8UGN
+         ZicyYFumvibmi+20QgZbdgvEq7OCAfjNCAKCC5Qw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        linux-hyperv@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 23/42] hv_utils: return error if host timesysnc update is stale
-Date:   Mon, 31 Aug 2020 11:29:15 -0400
-Message-Id: <20200831152934.1023912-23-sashal@kernel.org>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.8 26/42] ceph: don't allow setlease on cephfs
+Date:   Mon, 31 Aug 2020 11:29:18 -0400
+Message-Id: <20200831152934.1023912-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -60,100 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Pillai <viremana@linux.microsoft.com>
+From: Jeff Layton <jlayton@kernel.org>
 
-[ Upstream commit 90b125f4cd2697f949f5877df723a0b710693dd0 ]
+[ Upstream commit 496ceaf12432b3d136dcdec48424312e71359ea7 ]
 
-If for any reason, host timesync messages were not processed by
-the guest, hv_ptp_gettime() returns a stale value and the
-caller (clock_gettime, PTP ioctl etc) has no means to know this
-now. Return an error so that the caller knows about this.
+Leases don't currently work correctly on kcephfs, as they are not broken
+when caps are revoked. They could eventually be implemented similarly to
+how we did them in libcephfs, but for now don't allow them.
 
-Signed-off-by: Vineeth Pillai <viremana@linux.microsoft.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Link: https://lore.kernel.org/r/20200821152523.99364-1-viremana@linux.microsoft.com
-Signed-off-by: Wei Liu <wei.liu@kernel.org>
+[ idryomov: no need for simple_nosetlease() in ceph_dir_fops and
+  ceph_snapdir_fops ]
+
+Signed-off-by: Jeff Layton <jlayton@kernel.org>
+Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hv/hv_util.c | 46 +++++++++++++++++++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 11 deletions(-)
+ fs/ceph/file.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hv/hv_util.c b/drivers/hv/hv_util.c
-index 92ee0fe4c919e..1f86e8d9b018d 100644
---- a/drivers/hv/hv_util.c
-+++ b/drivers/hv/hv_util.c
-@@ -282,26 +282,52 @@ static struct {
- 	spinlock_t			lock;
- } host_ts;
- 
--static struct timespec64 hv_get_adj_host_time(void)
-+static inline u64 reftime_to_ns(u64 reftime)
- {
--	struct timespec64 ts;
--	u64 newtime, reftime;
-+	return (reftime - WLTIMEDELTA) * 100;
-+}
-+
-+/*
-+ * Hard coded threshold for host timesync delay: 600 seconds
-+ */
-+static const u64 HOST_TIMESYNC_DELAY_THRESH = 600 * (u64)NSEC_PER_SEC;
-+
-+static int hv_get_adj_host_time(struct timespec64 *ts)
-+{
-+	u64 newtime, reftime, timediff_adj;
- 	unsigned long flags;
-+	int ret = 0;
- 
- 	spin_lock_irqsave(&host_ts.lock, flags);
- 	reftime = hv_read_reference_counter();
--	newtime = host_ts.host_time + (reftime - host_ts.ref_time);
--	ts = ns_to_timespec64((newtime - WLTIMEDELTA) * 100);
-+
-+	/*
-+	 * We need to let the caller know that last update from host
-+	 * is older than the max allowable threshold. clock_gettime()
-+	 * and PTP ioctl do not have a documented error that we could
-+	 * return for this specific case. Use ESTALE to report this.
-+	 */
-+	timediff_adj = reftime - host_ts.ref_time;
-+	if (timediff_adj * 100 > HOST_TIMESYNC_DELAY_THRESH) {
-+		pr_warn_once("TIMESYNC IC: Stale time stamp, %llu nsecs old\n",
-+			     (timediff_adj * 100));
-+		ret = -ESTALE;
-+	}
-+
-+	newtime = host_ts.host_time + timediff_adj;
-+	*ts = ns_to_timespec64(reftime_to_ns(newtime));
- 	spin_unlock_irqrestore(&host_ts.lock, flags);
- 
--	return ts;
-+	return ret;
- }
- 
- static void hv_set_host_time(struct work_struct *work)
- {
--	struct timespec64 ts = hv_get_adj_host_time();
- 
--	do_settimeofday64(&ts);
-+	struct timespec64 ts;
-+
-+	if (!hv_get_adj_host_time(&ts))
-+		do_settimeofday64(&ts);
- }
- 
- /*
-@@ -622,9 +648,7 @@ static int hv_ptp_adjtime(struct ptp_clock_info *ptp, s64 delta)
- 
- static int hv_ptp_gettime(struct ptp_clock_info *info, struct timespec64 *ts)
- {
--	*ts = hv_get_adj_host_time();
--
--	return 0;
-+	return hv_get_adj_host_time(ts);
- }
- 
- static struct ptp_clock_info ptp_hyperv_info = {
+diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+index 26172bb90a459..c53c1499f7c58 100644
+--- a/fs/ceph/file.c
++++ b/fs/ceph/file.c
+@@ -2506,6 +2506,7 @@ const struct file_operations ceph_file_fops = {
+ 	.mmap = ceph_mmap,
+ 	.fsync = ceph_fsync,
+ 	.lock = ceph_lock,
++	.setlease = simple_nosetlease,
+ 	.flock = ceph_flock,
+ 	.splice_read = generic_file_splice_read,
+ 	.splice_write = iter_file_splice_write,
 -- 
 2.25.1
 
