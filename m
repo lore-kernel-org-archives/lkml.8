@@ -2,26 +2,27 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A38C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0F8C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5BB207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 138C720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgHaHcZ (ORCPT
+        id S1728045AbgHaHcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:32:25 -0400
-Received: from gw.c-home.cz ([89.24.150.100]:41464 "EHLO dmz.c-home.cz"
+        Mon, 31 Aug 2020 03:32:35 -0400
+Received: from gw.c-home.cz ([89.24.150.100]:41466 "EHLO dmz.c-home.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726618AbgHaHcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:32:23 -0400
+        id S1726618AbgHaHcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:32:32 -0400
 Received: from ubuntu1804.c-home.cz (intra-239.c-home.cz [192.168.1.239])
-        by dmz.c-home.cz (8.14.4+Sun/8.14.4) with ESMTP id 07V7VPlG005879;
-        Mon, 31 Aug 2020 09:31:30 +0200 (CEST)
+        by dmz.c-home.cz (8.14.4+Sun/8.14.4) with ESMTP id 07V7VPlJ005879;
+        Mon, 31 Aug 2020 09:31:37 +0200 (CEST)
 From:   Martin Cerveny <m.cerveny@computer.org>
 To:     Corentin Labbe <clabbe.montjoie@gmail.com>
 Cc:     Martin Cerveny <m.cerveny@computer.org>,
@@ -32,31 +33,51 @@ Cc:     Martin Cerveny <m.cerveny@computer.org>,
         linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
         linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 0/3] crypto: sun4i-ss: add support for V3s
-Date:   Mon, 31 Aug 2020 09:30:58 +0200
-Message-Id: <20200831073101.3608-1-m.cerveny@computer.org>
+Subject: [PATCH v2 3/3] crypto: sun4i-ss - add the V3s variant of SS
+Date:   Mon, 31 Aug 2020 09:31:01 +0200
+Message-Id: <20200831073101.3608-4-m.cerveny@computer.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200831073101.3608-1-m.cerveny@computer.org>
+References: <20200831073101.3608-1-m.cerveny@computer.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for "sun4i-ss" (crypto engine) for Allwinner V3s.
-Simmilar problem like A33.
+Like A33 "sun4i-ss" has a difference, it give SHA1 digest
+directly in BE. So add new compatible.
 
-Changes since v1:
-- splited to patch series
+Tested-by: Martin Cerveny <m.cerveny@computer.org>
+Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
+---
+ drivers/crypto/allwinner/sun4i-ss/sun4i-ss-core.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-Martin Cerveny (3):
-  dt-bindings: crypto: add new compatible for V3s
-  ARM: dts: sun8i: v3s: Enable crypto engine
-  crypto: sun4i-ss - add the V3s variant of SS
-
- .../bindings/crypto/allwinner,sun4i-a10-crypto.yaml    |  5 ++++-
- arch/arm/boot/dts/sun8i-v3s.dtsi                       | 10 ++++++++++
- drivers/crypto/allwinner/sun4i-ss/sun4i-ss-core.c      |  7 +++++++
- 3 files changed, 21 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-core.c b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-core.c
+index a2b67f7f8..d24496cac 100644
+--- a/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-core.c
++++ b/drivers/crypto/allwinner/sun4i-ss/sun4i-ss-core.c
+@@ -31,6 +31,10 @@ static const struct ss_variant ss_a33_variant = {
+ 	.sha1_in_be = true,
+ };
+ 
++static const struct ss_variant ss_v3s_variant = {
++	.sha1_in_be = true,
++};
++
+ static struct sun4i_ss_alg_template ss_algs[] = {
+ {       .type = CRYPTO_ALG_TYPE_AHASH,
+ 	.mode = SS_OP_MD5,
+@@ -505,6 +509,9 @@ static const struct of_device_id a20ss_crypto_of_match_table[] = {
+ 	{ .compatible = "allwinner,sun8i-a33-crypto",
+ 	  .data = &ss_a33_variant
+ 	},
++	{ .compatible = "allwinner,sun8i-v3s-crypto",
++	  .data = &ss_v3s_variant
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, a20ss_crypto_of_match_table);
 -- 
 2.17.1
 
