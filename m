@@ -2,137 +2,291 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5325FC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4801AC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:31:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A7F20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:31:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="EUkMf822"
+	by mail.kernel.org (Postfix) with ESMTP id 1D0E620719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:31:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730313AbgHaVbi (ORCPT
+        id S1730314AbgHaVbt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 17:31:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54514 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726224AbgHaVbh (ORCPT
+        Mon, 31 Aug 2020 17:31:49 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:44145 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgHaVbr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 17:31:37 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VL2uYE110245;
-        Mon, 31 Aug 2020 17:31:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=1Dbw3IMHWQxOhGrQ00lEjLfXQ44s1hsxiHPb7q4Nmjo=;
- b=EUkMf822AAlWQ//FDIhDFf6IzXlhbwcw1qzafRLv8MVYdgPY0LMMnRbM/aCNOnoPeVBm
- 8hPoXrXjD6rOVvkRNOdnkE221KQv4xW3eWpMqKE3zUkyLFtS6oghgivUGPTsdiT1hyZg
- JXHksymgb0A5Ojkga6XknSP6msxgU6iUQnmM26942ZodWuJjfAEbzEJhAeqpeDHXSmVB
- rR/0PFzchy88xHP+iwBTEpZ/aoKdA9tEa5NyX3EtQATWfike6YVxYZ0aVKtb30k4/Rvv
- wNBXXt14zniNcqLNGAbm3hudpDOVaG5eLXrx5melgq3fHINq/6/r9CGdAZSX7KVwfh3M qQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33975wb1bk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 17:31:33 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07VLKk0O017994;
-        Mon, 31 Aug 2020 17:31:33 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33975wb1a4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 17:31:33 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07VLGK3s013879;
-        Mon, 31 Aug 2020 21:31:30 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma02fra.de.ibm.com with ESMTP id 337en7hkq6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 21:31:30 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07VLVSM414418202
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 21:31:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69D92A4067;
-        Mon, 31 Aug 2020 21:31:28 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1732A4062;
-        Mon, 31 Aug 2020 21:31:26 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.2.129])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 31 Aug 2020 21:31:26 +0000 (GMT)
-Message-ID: <b74a68cb22656e4646d61c651aeb5ebee234530c.camel@linux.ibm.com>
-Subject: Re: [PATCH 03/11] evm: Refuse EVM_ALLOW_METADATA_WRITES only if the
- HMAC key is loaded
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "mjg59@google.com" <mjg59@google.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Date:   Mon, 31 Aug 2020 17:31:26 -0400
-In-Reply-To: <0c1c8fb398c340d89531360be7e3418b@huawei.com>
-References: <20200618160133.937-1-roberto.sassu@huawei.com>
-         <20200618160133.937-3-roberto.sassu@huawei.com>
-         <caedd49bc2080a2fb8b16b9ecacab67d11e68fd7.camel@linux.ibm.com>
-         <0c1c8fb398c340d89531360be7e3418b@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-31_10:2020-08-31,2020-08-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 adultscore=0 spamscore=0 mlxscore=0
- clxscore=1015 priorityscore=1501 bulkscore=0 impostorscore=0
- malwarescore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2006250000 definitions=main-2008310123
+        Mon, 31 Aug 2020 17:31:47 -0400
+Received: from methusalix.internal.home.lespocky.de ([92.117.54.199]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis)
+ id 1Mj8iJ-1kpEcF1hWn-00fF1f; Mon, 31 Aug 2020 23:31:34 +0200
+Received: from falbala.internal.home.lespocky.de ([192.168.243.94])
+        by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <post@lespocky.de>)
+        id 1kCrOl-0004Dq-PT; Mon, 31 Aug 2020 23:31:32 +0200
+Date:   Mon, 31 Aug 2020 23:31:30 +0200
+From:   Alexander Dahl <post@lespocky.de>
+To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alexander Dahl <ada@thorsis.com>,
+        Alexander Dahl <post@lespocky.de>
+Subject: Re: [PATCH v2 2/2] dt-bindings: leds: Convert pwm to yaml
+Message-ID: <20200831213129.6o4nuqgh7aurantv@falbala.internal.home.lespocky.de>
+Mail-Followup-To: linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alexander Dahl <ada@thorsis.com>
+References: <20200831210232.28052-1-post@lespocky.de>
+ <20200831210232.28052-3-post@lespocky.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="bqxk4ppyznh6xyvt"
+Content-Disposition: inline
+In-Reply-To: <20200831210232.28052-3-post@lespocky.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Scan-Signature: f41cc761d791b9a06623163ee6e33981
+X-Provags-ID: V03:K1:1RiyH8glb6y88EbhRcg8mn5lxJ1wnZN5zb0xJnDZZQpZLgMl3Ji
+ qDESUgAKrXFv4bFRhlhKURaVcSLGLlSV2O0NrRk4huZIiHMwXG6qbAwE0Dm77OkOuFqPSqh
+ bfQDg/OHYX9D6DNXUuv3uNqevjlHa0euwDKO8YMiBzpMhk1ZxM/cUW2Xr8Iy4dJ8LZ/jJCX
+ /36hLeXs76XhlYIq8aGfg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GTlt4jacSxY=:lyFoUefKyl6tpG54hfVTRy
+ FLP3KEkJIY4niTv/NKdU87Wb73oVmTDp79FJjEFn4TqqcruFqyTcZNV8WXZESNzWy1ZnXI91f
+ AJHcQ0Mnv4jKW710RhxAblV5UOwBn1ZNkSocHiGArS5j2AtSsu3V4354q7DU6/XzDKXAPI8Ev
+ PWdwxxs9STjgiX5D2pw9sYyRbOfuGzbtJn89nJpITdosJWz5XHEF/X3wMFMoyiD0cOYv3O9rN
+ 9Q1yQwiaGWDRn6ZKdhgR+iutNjxkfQzuZmIADTnQ+G5VxalKfhMz1zaSc6IrEZo9/sM/inXad
+ U1ihErOmE1Phr5uIvF3BOU3CwKVRuJTF9x9DkMhiypiceiZvKK6wT8g1QkzI9ZvgVphQJjPeF
+ mY20k5Yv9bggSmM5xVDSavWm4dcG+TsNbzjzI6b5tbT+FB4UGS+QPMpleZlw1fXTiuHLbRzH+
+ y4c1p8g3QOd9FotPS0gJaJH+dsDjzENs9x5WVHMb8OpeG7PsXuVCBIKDehl1BQoKIHrezVMmt
+ LD4eDHdk2qej12s8EqWVWPaq10XfuQK4gtP87ZwQXtQgYmytMgjSy9cXv3odv88vkBZ5Aworu
+ +7jKeZWe06FDAh4nSLJQJi6voKMFKPcU4fnhYaGhzzSutk7UZpwq6HoXZGaerw61U/07/yDn8
+ K0/bBlT7JD1R2qBf0tr/P7z/emKDG4383sjweWSlJyu23yay96vdIfl8EFJFgkAXsONJE5KW3
+ tTpWnQ4BXZd5Z8PaaOJ4805xldvja1Mm9dSQ3f6I0k2LXi/2q41WmD4sZ5jlWdc8eQFxlbDbp
+ 5QhbcWuSedxAsQfbcxzEnUXVghLrMeyz+Ni9CBm0QIxN14CLiu9gzoiYomVNI5C6W4GrCqn
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-08-31 at 08:24 +0000, Roberto Sassu wrote:
-> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> > Sent: Friday, August 21, 2020 10:15 PM
-> > Hi Roberto,
-> > 
-> > On Thu, 2020-06-18 at 18:01 +0200, Roberto Sassu wrote:
-> > > Granting metadata write is safe if the HMAC key is not loaded, as it won't
-> > > let an attacker obtain a valid HMAC from corrupted xattrs.
-> > evm_write_key()
-> > > however does not allow it if any key is loaded, including a public key,
-> > > which should not be a problem.
-> > >
-> > 
-> > Why is the existing hebavior a problem?  What is the problem being
-> > solved?
-> 
-> Hi Mimi
-> 
-> currently it is not possible to set EVM_ALLOW_METADATA_WRITES when
-> only a public key is loaded and the HMAC key is not. The patch removes
-> this limitation.
 
-Yes, I understand.  You're describing "what" the problem is, not "why"
-this is a problem.  Support for loading EVM HMAC and x509 certificates
-isn't new.  Please add a line or two prior to this paragraph providing
-the context for why this is now a problem.
+--bqxk4ppyznh6xyvt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Is the problem related to previoulsy not beginning EVM verification
-until after the EVM HMAC key was loaded?  Or perhaps EVM signatures
-were not that common since they weren't portable.   Now, with portable
-and immutable signatures loading x509 certificates is more common.
+Hei hei,
 
-thanks,
+I forgot to run checkpatch (it's late today already), and it warns:
 
-Mimi
+  WARNING: DT binding documents should be licensed (GPL-2.0-only OR BSD-2-C=
+lause)
+  #80: FILE: Documentation/devicetree/bindings/leds/leds-pwm.yaml:1:
+  +# SPDX-License-Identifier: GPL-2.0-only
 
+tbh, I just copied that line from leds-gpio.yaml, can be changed in a
+v3 of course.
+
+Greets
+Alex
+
+On Mon, Aug 31, 2020 at 11:02:31PM +0200, Alexander Dahl wrote:
+> The example was adapted slightly to make use of the 'function' and
+> 'color' properties.
+>=20
+> Suggested-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> Signed-off-by: Alexander Dahl <post@lespocky.de>
+> ---
+>  .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
+>  .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
+>  2 files changed, 85 insertions(+), 50 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Docume=
+ntation/devicetree/bindings/leds/leds-pwm.txt
+> deleted file mode 100644
+> index 6c6583c35f2f..000000000000
+> --- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
+> +++ /dev/null
+> @@ -1,50 +0,0 @@
+> -LED connected to PWM
+> -
+> -Required properties:
+> -- compatible : should be "pwm-leds".
+> -
+> -Each LED is represented as a sub-node of the pwm-leds device.  Each
+> -node's name represents the name of the corresponding LED.
+> -
+> -LED sub-node properties:
+> -- pwms : PWM property to point to the PWM device (phandle)/port (id) and=
+ to
+> -  specify the period time to be used: <&phandle id period_ns>;
+> -- pwm-names : (optional) Name to be used by the PWM subsystem for the PW=
+M device
+> -  For the pwms and pwm-names property please refer to:
+> -  Documentation/devicetree/bindings/pwm/pwm.txt
+> -- max-brightness : Maximum brightness possible for the LED
+> -- active-low : (optional) For PWMs where the LED is wired to supply
+> -  rather than ground.
+> -- label :  (optional)
+> -  see Documentation/devicetree/bindings/leds/common.txt
+> -- linux,default-trigger :  (optional)
+> -  see Documentation/devicetree/bindings/leds/common.txt
+> -
+> -Example:
+> -
+> -twl_pwm: pwm {
+> -	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
+> -	compatible =3D "ti,twl6030-pwm";
+> -	#pwm-cells =3D <2>;
+> -};
+> -
+> -twl_pwmled: pwmled {
+> -	/* provides one PWM (id 0 for Charing indicator LED) */
+> -	compatible =3D "ti,twl6030-pwmled";
+> -	#pwm-cells =3D <2>;
+> -};
+> -
+> -pwmleds {
+> -	compatible =3D "pwm-leds";
+> -	kpad {
+> -		label =3D "omap4::keypad";
+> -		pwms =3D <&twl_pwm 0 7812500>;
+> -		max-brightness =3D <127>;
+> -	};
+> -
+> -	charging {
+> -		label =3D "omap4:green:chrg";
+> -		pwms =3D <&twl_pwmled 0 7812500>;
+> -		max-brightness =3D <255>;
+> -	};
+> -};
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.yaml b/Docum=
+entation/devicetree/bindings/leds/leds-pwm.yaml
+> new file mode 100644
+> index 000000000000..8c5217f2a9f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
+> @@ -0,0 +1,85 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/leds-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: LEDs connected to PWM
+> +
+> +maintainers:
+> +  - Pavel Machek <pavel@ucw.cz>
+> +
+> +description:
+> +  Each LED is represented as a sub-node of the pwm-leds device.  Each
+> +  node's name represents the name of the corresponding LED.
+> +
+> +properties:
+> +  compatible:
+> +    const: pwm-leds
+> +
+> +patternProperties:
+> +  "^pwm-led-([0-9a-f])$":
+> +    type: object
+> +
+> +    $ref: common.yaml#
+> +
+> +    properties:
+> +      pwms:
+> +        description:
+> +          "PWM property to point to the PWM device (phandle)/port (id)
+> +          and to specify the period time to be used:
+> +          <&phandle id period_ns>;"
+> +
+> +      pwm-names:
+> +        description:
+> +          "Name to be used by the PWM subsystem for the PWM device For
+> +          the pwms and pwm-names property please refer to:
+> +          Documentation/devicetree/bindings/pwm/pwm.txt"
+> +
+> +      max-brightness:
+> +        description:
+> +          Maximum brightness possible for the LED
+> +
+> +      active-low:
+> +        description:
+> +          For PWMs where the LED is wired to supply rather than ground.
+> +
+> +    required:
+> +      - pwms
+> +      - max-brightness
+> +
+> +examples:
+> +  - |
+> +
+> +    #include <dt-bindings/leds/common.h>
+> +
+> +    twl_pwm: pwm {
+> +        /* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
+> +        compatible =3D "ti,twl6030-pwm";
+> +        #pwm-cells =3D <2>;
+> +    };
+> +
+> +    twl_pwmled: pwmled {
+> +        /* provides one PWM (id 0 for Charing indicator LED) */
+> +        compatible =3D "ti,twl6030-pwmled";
+> +        #pwm-cells =3D <2>;
+> +    };
+> +
+> +    pwm_leds {
+> +        compatible =3D "pwm-leds";
+> +
+> +        pwm-led-1 {
+> +            label =3D "omap4::keypad";
+> +            pwms =3D <&twl_pwm 0 7812500>;
+> +            max-brightness =3D <127>;
+> +        };
+> +
+> +        pwm-led-2 {
+> +            color =3D <LED_COLOR_ID_GREEN>;
+> +            function =3D LED_FUNCTION_CHARGING;
+> +            pwms =3D <&twl_pwmled 0 7812500>;
+> +            max-brightness =3D <255>;
+> +        };
+> +    };
+> +
+> +...
+> --=20
+> 2.20.1
+
+--=20
+/"\ ASCII RIBBON | =BBWith the first link, the chain is forged. The first
+\ / CAMPAIGN     | speech censured, the first thought forbidden, the
+ X  AGAINST      | first freedom denied, chains us all irrevocably.=AB
+/ \ HTML MAIL    | (Jean-Luc Picard, quoting Judge Aaron Satie)
+
+--bqxk4ppyznh6xyvt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEwo7muQJjlc+Prwj6NK3NAHIhXMYFAl9NbC4ACgkQNK3NAHIh
+XMbWLRAAyKU2FTkPnTkZ0P8+VmB5alCBONQnPfxB5lkluokR4N1WOJYv0fyPcQJ4
+Vh+g8YWQxiAKh/kfHF4R5TxJeDkgMsg4/cVuL73Vh9q3q6uMgeARImJj8rEzFwMT
+44XhIS1aMQnqjbxMNojSVRQIZ7gCaCKkZ6I1UH8tZnEF9UzNxG2/+1GwKpaxBHz7
+1UiwedKuw9wjiHx8FFvSZY+Hs2rospNpBiNxUMd4/3nuRP/s3b54BOt0H6gf7fRC
+F77KbUhtmIgO2EOlGXZWD/U2UEw6oZ3loZXPYcR3CyQLXVwKJDExG9hUyyYkH3tx
+Hk6I3dl/c8/7+eM5oe34woOtFCiiP2k3YlXjKrY+LEqcFOnC+WN+RqDf25RahPIi
+RA/niLGbg80g0YTaIn+ZoCatAov2FdhRU9hgj8nNFOhQ5bpQ8yXPPJBIWcs+cqv9
+Fbpxv93OvyrnlY31VHvr13spqqmCbtG3hWs42DkY9OiqoUcFy8oWxu/rJwtJsqyc
+Bpp50w9NhhKkN2h/GqdzUgDlG/QAeI0iv2ofaJdB+nHNsRPKxUhwLjn4E2ZnbbaO
+Nz3PPTeNOBaKuTccJ4T4KMKJAFqnimqrUIfExrhqQ4LVPPrqd2DRVS3/zq5EPqYq
+ar03oJwDg5ljaBKZ6gD3k8QtKb5FWTcngocKembWfXtYb5ddN4Y=
+=9aT3
+-----END PGP SIGNATURE-----
+
+--bqxk4ppyznh6xyvt--
