@@ -2,232 +2,172 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 759E5C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8B6C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5497A2067C
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:04:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143402067C
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598907864;
+	bh=PmvOQ4QSyhiDx/Cyz45UpviX009W6n9TdDWX6vV48E0=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=mzrQy34II5e9/aup9nzK9Md9NPcbUmGOaCHhKupdFKi5i7b0rCbza8UFPQmok0RSP
+	 iyW0maSxvSjbr3srqmnegdY+O02IT5ChYUM3F/noN5P1tFRZXCNEBxc8kukUP7gFYB
+	 1b5ftFCygiOp6IoilGJwq3JIZjOJQsRMglEzKJY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbgHaVEG (ORCPT
+        id S1730215AbgHaVEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 17:04:06 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:54897 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730190AbgHaVED (ORCPT
+        Mon, 31 Aug 2020 17:04:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51112 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730190AbgHaVEU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 17:04:03 -0400
-Received: from methusalix.internal.home.lespocky.de ([92.117.54.199]) by
- mrelayeu.kundenserver.de (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis)
- id 1MwxRN-1kX1Re1CqR-00yNfw; Mon, 31 Aug 2020 23:03:49 +0200
-Received: from lemmy.internal.home.lespocky.de ([192.168.243.176] helo=lemmy.home.lespocky.de)
-        by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94)
-        (envelope-from <alex@home.lespocky.de>)
-        id 1kCqxu-0003pu-KC; Mon, 31 Aug 2020 23:03:47 +0200
-Received: (nullmailer pid 28172 invoked by uid 2001);
-        Mon, 31 Aug 2020 21:03:46 -0000
-From:   Alexander Dahl <post@lespocky.de>
-To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexander Dahl <ada@thorsis.com>,
-        Alexander Dahl <post@lespocky.de>
-Subject: [PATCH v2 2/2] dt-bindings: leds: Convert pwm to yaml
-Date:   Mon, 31 Aug 2020 23:02:31 +0200
-Message-Id: <20200831210232.28052-3-post@lespocky.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200831210232.28052-1-post@lespocky.de>
-References: <20200831210232.28052-1-post@lespocky.de>
+        Mon, 31 Aug 2020 17:04:20 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D86BC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:04:20 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id g13so7510797ioo.9
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:04:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Me0l90lHBcIiWc7V/ZnOYLUZoEWFXUMKq05fR5MgBoI=;
+        b=TX4maE3GZYKy+0cHbPXR7wmQYueLPMQhRbMPLA+SMHLhy91uuGkHhQfZdUxQLjaOde
+         HbTD/JwxShVg9W5T3VN0xO5HcRCgvnlYoco1ijAzsJLzDVkvNi8gfQVaXUFo1K+1UpyP
+         yrP3KMVlxFfJLEYkkXz11j2xpk/IIClE9mmnQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Me0l90lHBcIiWc7V/ZnOYLUZoEWFXUMKq05fR5MgBoI=;
+        b=DP1oPcReZrqIQYNKPCKKpuOLC8q+Vde+ptpUXIViHj7Xi2x/0dvsKTY27vnUte67Aw
+         quAWSxK8NJqrvJYQvZfJB2LmYNYdVh66DdWi7u56pXq8aR6UtuPK8H9aaF9SGSOUplR0
+         KaGcgW8NA7e3R0fPD8VxRe+M4yPYUyN3DUY+1IS2qumKVRGjNfCgVSMbhpksrDCS1/b6
+         hyobBCoK2gNqpfOEnDLOxLu04rrlS4Fony4SgrKnjSjbj6QZx8+dQ9G0apOu0YzE+0Ma
+         r7XDRbhNBvYqPBKPGzRzCsJ5bpXp1bcYv/mKuTsOW+k4zjjIUNy8ubl9ONUGI0BKeEp9
+         6y7Q==
+X-Gm-Message-State: AOAM530gQIXdlheH/JhaQeT3GvK52u1SUOxh76OI2Y8ggaD2cw1qvUDn
+        M979waKM1cgGxJr8ZbphOM52/A==
+X-Google-Smtp-Source: ABdhPJyi/O4/QkvK0vdP1ocRmXkb7lxwJC7RNGtV8T+Y+zuP/wovhJwJYeLyTH+iFy9k43M+/CN3AA==
+X-Received: by 2002:a5d:824f:: with SMTP id n15mr2710901ioo.95.1598907859727;
+        Mon, 31 Aug 2020 14:04:19 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id t67sm4685400ill.88.2020.08.31.14.04.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 14:04:19 -0700 (PDT)
+Subject: Re: [PATCH v2 0/4] kselftests/arm64: add PAuth tests
+To:     Boyan Karatotev <boyan.karatotev@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     vincenzo.frascino@arm.com, amit.kachhap@arm.com,
+        boian4o1@gmail.com, Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20200831110450.30188-1-boyan.karatotev@arm.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <f4589c6e-2bf9-1554-4ee7-d04bbe0e9391@linuxfoundation.org>
+Date:   Mon, 31 Aug 2020 15:04:18 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scan-Signature: 3731072af39ff8e356c2b9ce22b0e06d
-X-Provags-ID: V03:K1:oM53fdvwQ3pKA3Rt7ukIWMzygtco2V05YPSfGJAXJXzKyYpxGyg
- jrkyFd9f4eZjfcAJCgoC4Gfnr6KdFDQZs5CYym7UAM0tN3t2KdOabimbgRe69CzMGs/OGUA
- XYQLxNWNRq469BiaPMxaDePmJ6Tc4GyLHU9q1v2IkWstsN0iG+J+r/Wf68UD/SLlcI8AWg6
- hec/QeHk0FamhHHmQ/CsQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5dGDGcpVNOc=:PYFERMnt/JdpAHokOqI9Ms
- 4k61D8IR5jZ1IR822VQeRMwHBUkQYBRSVuo5VBoVV7Lq2E5akSx1dytaKwZOXMI6vpLwU++2K
- Oyq3Ri3Q6pQ02q3TaRXm5vYZInb1OcoX4SKzLNJgQqBXA6NYHLlR7XaQ28JOviYpJeWvWYJcn
- synTUXE2EcSNDepuIXsQ3+a0QNMYMliEbKvZ0V6+fKmsB70daTjAPj3Q/POEh8IO+iw0TnHLx
- KQYlax/8tZWOZLSKjRfu0r56taXv6o5TQsfxWWcwP9iZjeDsUlSmf+4S5DmwNpe6YzHqmLl/c
- Hf2dodfzBwtlUc8SMTeEpiFTZedsIS5TBNssVne8BalKPnwpGRZqBOkZClOH336iTZFKFum8e
- neoM19KWIz02IRjv/z6sgfvxCXjk9gc/FpZ2BB6nOHtWd9hlgYmy3Tb6luy6Hh2Fu8867dsIo
- Ry1zb+sZBsYMEVCHpL1x+2sYSxLdhwXih6g8zbbRM7PDKpi8xDcym8mp4Hz9qSOgBSETZbnBu
- PIlsrYtA4thXETF0ENcSNfYDMktm/4/0zTySIw5N0WIcf9LMOeJ8M5PVr+9A87OMUESkxVr40
- W7kgCb002ej0XQiC9ljK9NjXqrtpEx4aQ4a5VhTd7OKFGy9KOL7AoK09HeojQ6hQBtLMxqjyw
- MV1tNH9qjAPM8JwryeITW/GpXxISjZ/qw+jke7SFPsLqoIMoT8OnVaff59A9iEsZrcuaaOpvF
- D20d8U+mIH6umKRUVghVqbTwz7Pf+Q/7rvEKVWG5XG7uhUm8fHeTIm/Ti8SStvlbrGHjFtXrM
- PyiQKTU/OX502PLX9VITgYVPWQNuW8w/t35+tg5g0vHkO/CcCsHCMrFoCRtK45onHPi50xH
+In-Reply-To: <20200831110450.30188-1-boyan.karatotev@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The example was adapted slightly to make use of the 'function' and
-'color' properties.
+On 8/31/20 5:04 AM, Boyan Karatotev wrote:
+> Pointer Authentication (PAuth) is a security feature introduced in ARMv8.3.
+> It introduces instructions to sign addresses and later check for potential
+> corruption using a second modifier value and one of a set of keys. The
+> signature, in the form of the Pointer Authentication Code (PAC), is stored
+> in some of the top unused bits of the virtual address (e.g. [54: 49] if
+> TBID0 is enabled and TnSZ is set to use a 48 bit VA space). A set of
+> controls are present to enable/disable groups of instructions (which use
+> certain keys) for compatibility with libraries that do not utilize the
+> feature. PAuth is used to verify the integrity of return addresses on the
+> stack with less memory than the stack canary.
+> 
+> This patchset adds kselftests to verify the kernel's configuration of the
+> feature and its runtime behaviour. There are 7 tests which verify that:
+> 	* an authentication failure leads to a SIGSEGV
+> 	* the data/instruction instruction groups are enabled
+> 	* the generic instructions are enabled
+> 	* all 5 keys are unique for a single thread
+> 	* exec() changes all keys to new unique ones
+> 	* context switching preserves the 4 data/instruction keys
+> 	* context switching preserves the generic keys
+> 
+> The tests have been verified to work on qemu without a working PAUTH
+> Implementation and on ARM's FVP with a full or partial PAuth
+> implementation.
+> 
+> Changes in v2:
+> * remove extra lines at end of files
+> * Patch 1: "kselftests: add a basic arm64 Pointer Authentication test"
+> 	* add checks for a compatible compiler in Makefile
+> * Patch 4: "kselftests: add PAuth tests for single threaded consistency and
+> key uniqueness"
+> 	* rephrase comment for clarity in pac.c
+> 
+> Cc: Shuah Khan <shuah@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
+> Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+> Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+> 
+> Boyan Karatotev (4):
+>    kselftests/arm64: add a basic Pointer Authentication test
+>    kselftests/arm64: add nop checks for PAuth tests
+>    kselftests/arm64: add PAuth test for whether exec() changes keys
+>    kselftests/arm64: add PAuth tests for single threaded consistency and
+>      key uniqueness
+> 
+>   tools/testing/selftests/arm64/Makefile        |   2 +-
+>   .../testing/selftests/arm64/pauth/.gitignore  |   2 +
+>   tools/testing/selftests/arm64/pauth/Makefile  |  39 ++
+>   .../selftests/arm64/pauth/exec_target.c       |  35 ++
+>   tools/testing/selftests/arm64/pauth/helper.c  |  40 ++
+>   tools/testing/selftests/arm64/pauth/helper.h  |  29 ++
+>   tools/testing/selftests/arm64/pauth/pac.c     | 348 ++++++++++++++++++
+>   .../selftests/arm64/pauth/pac_corruptor.S     |  35 ++
+>   8 files changed, 529 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/testing/selftests/arm64/pauth/.gitignore
+>   create mode 100644 tools/testing/selftests/arm64/pauth/Makefile
+>   create mode 100644 tools/testing/selftests/arm64/pauth/exec_target.c
+>   create mode 100644 tools/testing/selftests/arm64/pauth/helper.c
+>   create mode 100644 tools/testing/selftests/arm64/pauth/helper.h
+>   create mode 100644 tools/testing/selftests/arm64/pauth/pac.c
+>   create mode 100644 tools/testing/selftests/arm64/pauth/pac_corruptor.S
+> 
+> --
+> 2.17.1
+> 
+> 
 
-Suggested-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Signed-off-by: Alexander Dahl <post@lespocky.de>
----
- .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
- .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
- 2 files changed, 85 insertions(+), 50 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
+Will, Catalin,
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-deleted file mode 100644
-index 6c6583c35f2f..000000000000
---- a/Documentation/devicetree/bindings/leds/leds-pwm.txt
-+++ /dev/null
-@@ -1,50 +0,0 @@
--LED connected to PWM
--
--Required properties:
--- compatible : should be "pwm-leds".
--
--Each LED is represented as a sub-node of the pwm-leds device.  Each
--node's name represents the name of the corresponding LED.
--
--LED sub-node properties:
--- pwms : PWM property to point to the PWM device (phandle)/port (id) and to
--  specify the period time to be used: <&phandle id period_ns>;
--- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
--  For the pwms and pwm-names property please refer to:
--  Documentation/devicetree/bindings/pwm/pwm.txt
--- max-brightness : Maximum brightness possible for the LED
--- active-low : (optional) For PWMs where the LED is wired to supply
--  rather than ground.
--- label :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--- linux,default-trigger :  (optional)
--  see Documentation/devicetree/bindings/leds/common.txt
--
--Example:
--
--twl_pwm: pwm {
--	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
--	compatible = "ti,twl6030-pwm";
--	#pwm-cells = <2>;
--};
--
--twl_pwmled: pwmled {
--	/* provides one PWM (id 0 for Charing indicator LED) */
--	compatible = "ti,twl6030-pwmled";
--	#pwm-cells = <2>;
--};
--
--pwmleds {
--	compatible = "pwm-leds";
--	kpad {
--		label = "omap4::keypad";
--		pwms = <&twl_pwm 0 7812500>;
--		max-brightness = <127>;
--	};
--
--	charging {
--		label = "omap4:green:chrg";
--		pwms = <&twl_pwmled 0 7812500>;
--		max-brightness = <255>;
--	};
--};
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.yaml b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
-new file mode 100644
-index 000000000000..8c5217f2a9f7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.yaml
-@@ -0,0 +1,85 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/leds/leds-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: LEDs connected to PWM
-+
-+maintainers:
-+  - Pavel Machek <pavel@ucw.cz>
-+
-+description:
-+  Each LED is represented as a sub-node of the pwm-leds device.  Each
-+  node's name represents the name of the corresponding LED.
-+
-+properties:
-+  compatible:
-+    const: pwm-leds
-+
-+patternProperties:
-+  "^pwm-led-([0-9a-f])$":
-+    type: object
-+
-+    $ref: common.yaml#
-+
-+    properties:
-+      pwms:
-+        description:
-+          "PWM property to point to the PWM device (phandle)/port (id)
-+          and to specify the period time to be used:
-+          <&phandle id period_ns>;"
-+
-+      pwm-names:
-+        description:
-+          "Name to be used by the PWM subsystem for the PWM device For
-+          the pwms and pwm-names property please refer to:
-+          Documentation/devicetree/bindings/pwm/pwm.txt"
-+
-+      max-brightness:
-+        description:
-+          Maximum brightness possible for the LED
-+
-+      active-low:
-+        description:
-+          For PWMs where the LED is wired to supply rather than ground.
-+
-+    required:
-+      - pwms
-+      - max-brightness
-+
-+examples:
-+  - |
-+
-+    #include <dt-bindings/leds/common.h>
-+
-+    twl_pwm: pwm {
-+        /* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-+        compatible = "ti,twl6030-pwm";
-+        #pwm-cells = <2>;
-+    };
-+
-+    twl_pwmled: pwmled {
-+        /* provides one PWM (id 0 for Charing indicator LED) */
-+        compatible = "ti,twl6030-pwmled";
-+        #pwm-cells = <2>;
-+    };
-+
-+    pwm_leds {
-+        compatible = "pwm-leds";
-+
-+        pwm-led-1 {
-+            label = "omap4::keypad";
-+            pwms = <&twl_pwm 0 7812500>;
-+            max-brightness = <127>;
-+        };
-+
-+        pwm-led-2 {
-+            color = <LED_COLOR_ID_GREEN>;
-+            function = LED_FUNCTION_CHARGING;
-+            pwms = <&twl_pwmled 0 7812500>;
-+            max-brightness = <255>;
-+        };
-+    };
-+
-+...
--- 
-2.20.1
+Patches look good to me from selftests perspective. My acked by
+for these patches to go through arm64.
+
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+
+If you would like me to take these through kselftest tree, give
+me your Acks. I can queue these up for 5.10-rc1
+
+thanks,
+-- Shuah
+
 
