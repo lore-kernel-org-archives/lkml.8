@@ -2,242 +2,182 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3850C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE55C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BECBF207BB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7161720738
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="mACKkyQQ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CDD9ulTl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgHaHeR (ORCPT
+        id S1728093AbgHaHe5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:34:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37250 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727092AbgHaHd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:33:59 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45473C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 00:33:59 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id d22so133134pfn.5
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 00:33:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D2/zDTHvWlr1Ly8bFpcj2KiwYie4rAzDW76UW7C3FiQ=;
-        b=mACKkyQQ3E/8JXYbwFUTlc1csMGhgn1EiPhe/kKRn4KBtyQaNIy996S4oVaTWzlCIu
-         tLDEfA8yVJcq6YAC8VOuPDhIpk5u1jVuz/u47YDYMr/nNi+XKiwzI12UZaFZFS4JrbhR
-         hy4GxpGFrtcl1cjCIm/lGKk1tcow2uDZjBkrqyUE4U1ltLvNXsk0eOS+/LmFw3HRZx/w
-         HowbdOqEENDRs0P/AnZ33dv/PMMJPbYUq+HUdnFEDaH24O5y+Mv1IDklM62ZeVlX4sbJ
-         FbdXCOTDyrPR6CzWnoVt0VVJ6rxCZwpgfwZJz+KwWqgmbTFaxJBygSyPPwdS7a3bo/+S
-         Bpqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D2/zDTHvWlr1Ly8bFpcj2KiwYie4rAzDW76UW7C3FiQ=;
-        b=dGQVD49j+FitnwUG1NYfjwSEy3ckFFMLNoQ4BQFAMBOthESHBzMxhgwYNl3OohI6qe
-         aWCpzZ3ZRpWnl183AS8OvGDHdN4+cVh9hC/2SbJ1GQSbmQgpZ6GX3mf0Lcpb7g8+mdLm
-         5rWNNXCIAsBbApj8d9vgSIUvqFTerNvcot7FQ+2ALQEz2FkjPpYW1/nIHDWwTFy3usC5
-         xkVdeRFcVGVga8v/FaJZ5X5mR3WCRFotL2VeIj5ZCDAtxQpQBk84dsX+ux9GTbRXlWaz
-         a8X0arE/lo09f0tFtwcDC0uUxWRS7VCaAAL6NKd3Nz35MYtc5EAFmKoyBXuJ+9bsEh3k
-         cbmw==
-X-Gm-Message-State: AOAM5313E8DeJrMyIJ2WXAbOMMi3GslkB/RDd7wr/gWO+qSwcQpsSFh+
-        84OtSTtuUcuyEAnAhNxiqX2uRw==
-X-Google-Smtp-Source: ABdhPJwDzdqwO+6c2A0n956bc0Kzwtr46Zq0Wj5zhNMlJWmnjRsDKjYooyKfh0ZE52LII3vg+9b+xQ==
-X-Received: by 2002:a65:6286:: with SMTP id f6mr336781pgv.0.1598859238809;
-        Mon, 31 Aug 2020 00:33:58 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id m3sm6065979pjn.28.2020.08.31.00.33.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 00:33:58 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        david.abdurachmanov@sifive.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>
-Subject: [PATCH v4 3/3] riscv: Add cache information in AUX vector
-Date:   Mon, 31 Aug 2020 15:33:50 +0800
-Message-Id: <b6fed9b4c2a3eacb2a9c353c2570d9dc1d0c1c88.1598859038.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <cover.1598859038.git.zong.li@sifive.com>
-References: <cover.1598859038.git.zong.li@sifive.com>
+        Mon, 31 Aug 2020 03:34:57 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:22867 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbgHaHe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:34:56 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598859296; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=jgiqhD6mEWmgkZ8iCooIwuov0Mq1aYTRhNXeEovmpSI=; b=CDD9ulTljrHbYxYk9qfBaDq6r3Yq3kPyk+2B3gY3v3W0n4b2OfHkt1juKwg2F96EoLPojqn+
+ voLU1OOY2XZlBCsTJ6FavFrBLiWXxZJt8QTMNLOvz+Q7Wk6KWFCRbt4lGNgPB2FXJbNXeXlQ
+ +E4d92RssBymTutdHxR2Yn7Uh+I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f4ca81ea816b7fb48d07ee5 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 07:34:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 6A6EEC43395; Mon, 31 Aug 2020 07:34:53 +0000 (UTC)
+Received: from [10.110.39.192] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: wcheng)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F497C433CA;
+        Mon, 31 Aug 2020 07:34:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F497C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
+Subject: Re: [RFC v5 4/6] usb: gadget: configfs: Check USB configuration
+ before adding
+To:     Peter Chen <peter.chen@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "balbi@kernel.org" <balbi@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "jackp@codeaurora.org" <jackp@codeaurora.org>
+References: <20200829055846.19034-1-wcheng@codeaurora.org>
+ <20200829055846.19034-5-wcheng@codeaurora.org>
+ <20200831022825.GA15756@b29397-desktop>
+From:   Wesley Cheng <wcheng@codeaurora.org>
+Message-ID: <2631cd0b-66d4-aabc-dc41-9ae5e84fa90d@codeaurora.org>
+Date:   Mon, 31 Aug 2020 00:34:51 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200831022825.GA15756@b29397-desktop>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are no standard CSR registers to provide cache information, the
-way for RISC-V is to get this information from DT. Currently, AT_L1I_X,
-AT_L1D_X and AT_L2_X are present in glibc header, and sysconf syscall
-could use them to get information of cache through AUX vector.
 
-The result of 'getconf -a' as follows:
-LEVEL1_ICACHE_SIZE                 32768
-LEVEL1_ICACHE_ASSOC                8
-LEVEL1_ICACHE_LINESIZE             64
-LEVEL1_DCACHE_SIZE                 32768
-LEVEL1_DCACHE_ASSOC                8
-LEVEL1_DCACHE_LINESIZE             64
-LEVEL2_CACHE_SIZE                  2097152
-LEVEL2_CACHE_ASSOC                 32
-LEVEL2_CACHE_LINESIZE              64
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
----
- arch/riscv/include/asm/cacheinfo.h   |  5 +++++
- arch/riscv/include/asm/elf.h         | 13 +++++++++++
- arch/riscv/include/uapi/asm/auxvec.h | 23 +++++++++++++++++++-
- arch/riscv/kernel/cacheinfo.c        | 32 +++++++++++++++++++++++++++-
- 4 files changed, 71 insertions(+), 2 deletions(-)
+On 8/30/2020 7:29 PM, Peter Chen wrote:
+> On 20-08-28 22:58:44, Wesley Cheng wrote:
+>> Ensure that the USB gadget is able to support the configuration being
+>> added based on the number of endpoints required from all interfaces.  This
+>> is for accounting for any bandwidth or space limitations.
+>>
+>> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
+>> ---
+>>  drivers/usb/gadget/configfs.c | 22 ++++++++++++++++++++++
+>>  1 file changed, 22 insertions(+)
+>>
+>> diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
+>> index 56051bb97349..7c74c04b1d8c 100644
+>> --- a/drivers/usb/gadget/configfs.c
+>> +++ b/drivers/usb/gadget/configfs.c
+>> @@ -1361,6 +1361,7 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
+>>  		struct usb_function *f;
+>>  		struct usb_function *tmp;
+>>  		struct gadget_config_name *cn;
+>> +		unsigned long ep_map = 0;
+>>  
+>>  		if (gadget_is_otg(gadget))
+>>  			c->descriptors = otg_desc;
+>> @@ -1390,7 +1391,28 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
+>>  				list_add(&f->list, &cfg->func_list);
+>>  				goto err_purge_funcs;
+>>  			}
+>> +			if (f->ss_descriptors) {
+>> +				struct usb_descriptor_header **d;
+>> +
+>> +				d = f->ss_descriptors;
+>> +				for (; *d; ++d) {
+>> +					struct usb_endpoint_descriptor *ep;
+>> +					int addr;
+>> +
+>> +					if ((*d)->bDescriptorType != USB_DT_ENDPOINT)
+>> +						continue;
+>> +
+>> +					ep = (struct usb_endpoint_descriptor *)*d;
+>> +					addr = ((ep->bEndpointAddress & 0x80) >> 3) |
+>> +						(ep->bEndpointAddress & 0x0f);
+> 
+> ">> 3" or "<< 3?
+> 
 
-diff --git a/arch/riscv/include/asm/cacheinfo.h b/arch/riscv/include/asm/cacheinfo.h
-index 5d9662e9aba8..d1a365215ec0 100644
---- a/arch/riscv/include/asm/cacheinfo.h
-+++ b/arch/riscv/include/asm/cacheinfo.h
-@@ -1,4 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (C) 2020 SiFive
-+ */
- 
- #ifndef _ASM_RISCV_CACHEINFO_H
- #define _ASM_RISCV_CACHEINFO_H
-@@ -11,5 +14,7 @@ struct riscv_cacheinfo_ops {
- };
- 
- void riscv_set_cacheinfo_ops(struct riscv_cacheinfo_ops *ops);
-+uintptr_t get_cache_size(u32 level, enum cache_type type);
-+uintptr_t get_cache_geometry(u32 level, enum cache_type type);
- 
- #endif /* _ASM_RISCV_CACHEINFO_H */
-diff --git a/arch/riscv/include/asm/elf.h b/arch/riscv/include/asm/elf.h
-index d83a4efd052b..5c725e1df58b 100644
---- a/arch/riscv/include/asm/elf.h
-+++ b/arch/riscv/include/asm/elf.h
-@@ -11,6 +11,7 @@
- #include <uapi/asm/elf.h>
- #include <asm/auxvec.h>
- #include <asm/byteorder.h>
-+#include <asm/cacheinfo.h>
- 
- /*
-  * These are used to set parameters in the core dumps.
-@@ -61,6 +62,18 @@ extern unsigned long elf_hwcap;
- do {								\
- 	NEW_AUX_ENT(AT_SYSINFO_EHDR,				\
- 		(elf_addr_t)current->mm->context.vdso);		\
-+	NEW_AUX_ENT(AT_L1I_CACHESIZE,				\
-+		get_cache_size(1, CACHE_TYPE_INST));		\
-+	NEW_AUX_ENT(AT_L1I_CACHEGEOMETRY,			\
-+		get_cache_geometry(1, CACHE_TYPE_INST));	\
-+	NEW_AUX_ENT(AT_L1D_CACHESIZE,				\
-+		get_cache_size(1, CACHE_TYPE_DATA));		\
-+	NEW_AUX_ENT(AT_L1D_CACHEGEOMETRY,			\
-+		get_cache_geometry(1, CACHE_TYPE_DATA));	\
-+	NEW_AUX_ENT(AT_L2_CACHESIZE,				\
-+		get_cache_size(2, CACHE_TYPE_UNIFIED));		\
-+	NEW_AUX_ENT(AT_L2_CACHEGEOMETRY,			\
-+		get_cache_geometry(2, CACHE_TYPE_UNIFIED));	\
- } while (0)
- #define ARCH_HAS_SETUP_ADDITIONAL_PAGES
- struct linux_binprm;
-diff --git a/arch/riscv/include/uapi/asm/auxvec.h b/arch/riscv/include/uapi/asm/auxvec.h
-index 22e0ae888406..32c73ba1d531 100644
---- a/arch/riscv/include/uapi/asm/auxvec.h
-+++ b/arch/riscv/include/uapi/asm/auxvec.h
-@@ -10,7 +10,28 @@
- /* vDSO location */
- #define AT_SYSINFO_EHDR 33
- 
-+/*
-+ * The set of entries below represent more extensive information
-+ * about the caches, in the form of two entry per cache type,
-+ * one entry containing the cache size in bytes, and the other
-+ * containing the cache line size in bytes in the bottom 16 bits
-+ * and the cache associativity in the next 16 bits.
-+ *
-+ * The associativity is such that if N is the 16-bit value, the
-+ * cache is N way set associative. A value if 0xffff means fully
-+ * associative, a value of 1 means directly mapped.
-+ *
-+ * For all these fields, a value of 0 means that the information
-+ * is not known.
-+ */
-+#define AT_L1I_CACHESIZE	40
-+#define AT_L1I_CACHEGEOMETRY	41
-+#define AT_L1D_CACHESIZE	42
-+#define AT_L1D_CACHEGEOMETRY	43
-+#define AT_L2_CACHESIZE		44
-+#define AT_L2_CACHEGEOMETRY	45
-+
- /* entries in ARCH_DLINFO */
--#define AT_VECTOR_SIZE_ARCH	1
-+#define AT_VECTOR_SIZE_ARCH	7
- 
- #endif /* _UAPI_ASM_RISCV_AUXVEC_H */
-diff --git a/arch/riscv/kernel/cacheinfo.c b/arch/riscv/kernel/cacheinfo.c
-index 291d7d8f748b..de59dd457b41 100644
---- a/arch/riscv/kernel/cacheinfo.c
-+++ b/arch/riscv/kernel/cacheinfo.c
-@@ -3,7 +3,6 @@
-  * Copyright (C) 2017 SiFive
-  */
- 
--#include <linux/cacheinfo.h>
- #include <linux/cpu.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-@@ -25,6 +24,37 @@ cache_get_priv_group(struct cacheinfo *this_leaf)
- 	return NULL;
- }
- 
-+static struct cacheinfo *get_cacheinfo(u32 level, enum cache_type type)
-+{
-+	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(smp_processor_id());
-+	struct cacheinfo *this_leaf;
-+	int index;
-+
-+	for (index = 0; index < this_cpu_ci->num_leaves; index++) {
-+		this_leaf = this_cpu_ci->info_list + index;
-+		if (this_leaf->level == level && this_leaf->type == type)
-+			return this_leaf;
-+	}
-+
-+	return NULL;
-+}
-+
-+uintptr_t get_cache_size(u32 level, enum cache_type type)
-+{
-+	struct cacheinfo *this_leaf = get_cacheinfo(level, type);
-+
-+	return this_leaf ? this_leaf->size : 0;
-+}
-+
-+uintptr_t get_cache_geometry(u32 level, enum cache_type type)
-+{
-+	struct cacheinfo *this_leaf = get_cacheinfo(level, type);
-+
-+	return this_leaf ? (this_leaf->ways_of_associativity << 16 |
-+			    this_leaf->coherency_line_size) :
-+			   0;
-+}
-+
- static void ci_leaf_init(struct cacheinfo *this_leaf, enum cache_type type,
- 			 unsigned int level, unsigned int size,
- 			 unsigned int sets, unsigned int line_size)
+Hi Peter,
+
+Thanks for your comments.  It should be ">> 3" as we want to utilize the
+corresponding USB_DIR_IN bit in the bitmap to set the correct bit.
+(USB_DIR_IN = 0x80)
+
+>> +					set_bit(addr, &ep_map);
+> 
+> You want to record all endpoints on ep_map? Considering there are
+> four EP_IN (1-4), and four EP_OUT (1-4), what the value of ep_map
+> would like?
+> 
+
+So for example, if a configuration uses EP8IN and EP9OUT, then the
+ep_map will look like:
+
+EP8-IN:
+addr = ((0x88 & 0x80) >> 3) | (0x88 & 0xf) --> 0x18
+
+EP9-OUT:
+addr = ((0x9 & 0x80) >> 3) | (0x9 & 0xf) --> 0x9
+
+ep_map = ep_map = 0x01000200
+
+The lower 16 bits will carry the OUT endpoints, whereas the upper 16
+bits are the IN endpoints. (ie bit16 = ep0in, bit0 = ep0out)
+
+>> +				}
+>> +			}
+>>  		}
+>> +		ret = usb_gadget_check_config(cdev->gadget, ep_map);
+>> +		if (ret)
+>> +			goto err_purge_funcs;
+>> +
+> 
+> You may move this patch after your 4nd patch to avoid "git bisect"
+> issue.
+> 
+
+Sure, thanks for the suggestion, will do that in the next rev.
+
+Thanks
+Wesley
+
+>>  		usb_ep_autoconfig_reset(cdev->gadget);
+>>  	}
+>>  	if (cdev->use_os_string) {
+>> -- 
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+>> a Linux Foundation Collaborative Project
+>>
+> 
+
 -- 
-2.28.0
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
