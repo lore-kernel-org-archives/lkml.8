@@ -2,137 +2,185 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E35AC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B04C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:39:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40EB220720
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D65F20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgHaCb2 (ORCPT
+        id S1727061AbgHaCjs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 22:31:28 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10735 "EHLO huawei.com"
+        Sun, 30 Aug 2020 22:39:48 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3080 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726913AbgHaCb0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 22:31:26 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 920CFA952F9902B1F4F0;
-        Mon, 31 Aug 2020 10:31:22 +0800 (CST)
-Received: from [10.136.114.67] (10.136.114.67) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 31 Aug
- 2020 10:31:17 +0800
-Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent compressed file from being
- disabled after releasing cblocks
-To:     Daeho Jeong <daeho43@gmail.com>
-CC:     Chao Yu <chao@kernel.org>, Daeho Jeong <daehojeong@google.com>,
-        <kernel-team@android.com>, <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20200828054629.583577-1-daeho43@gmail.com>
- <61996dcd-6db1-13fc-8239-7e684f3ec49e@kernel.org>
- <CACOAw_wc29AROzFhcGyC73i_vYZC1NmHP60uQfP7X-j6y6=kSA@mail.gmail.com>
- <bd1a8ffa-83ff-b774-9bed-ed68025d0c7a@huawei.com>
- <CACOAw_y=O35_SFxdfsVER4+a+n-eE6f48NXF6CsAnj=Ms-dgkA@mail.gmail.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <c4f58675-9df5-e3af-45fc-6fa924e3ee68@huawei.com>
-Date:   Mon, 31 Aug 2020 10:31:17 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726695AbgHaCjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 22:39:47 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.56])
+        by Forcepoint Email with ESMTP id 7B494EEB1E8EDA7F4D5F;
+        Mon, 31 Aug 2020 10:39:42 +0800 (CST)
+Received: from DGGEMM421-HUB.china.huawei.com (10.1.198.38) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.487.0; Mon, 31 Aug 2020 10:39:42 +0800
+Received: from DGGEMM525-MBS.china.huawei.com ([169.254.5.119]) by
+ dggemm421-hub.china.huawei.com ([10.1.198.38]) with mapi id 14.03.0487.000;
+ Mon, 31 Aug 2020 10:39:35 +0800
+From:   Jiangyifei <jiangyifei@huawei.com>
+To:     Anup Patel <anup@brainfault.org>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup.patel@wdc.com>,
+        Alistair Francis <alistair.francis@wdc.com>,
+        "Atish Patra" <atish.patra@wdc.com>,
+        "deepa.kernel@gmail.com" <deepa.kernel@gmail.com>,
+        "kvm-riscv@lists.infradead.org" <kvm-riscv@lists.infradead.org>,
+        KVM General <kvm@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        "Zhangxiaofeng (F)" <victor.zhangxiaofeng@huawei.com>,
+        "Wubin (H)" <wu.wubin@huawei.com>,
+        Zhanghailiang <zhang.zhanghailiang@huawei.com>,
+        "dengkai (A)" <dengkai1@huawei.com>,
+        yinyipeng <yinyipeng1@huawei.com>,
+        "zhaosiqi (A)" <zhaosiqi3@huawei.com>
+Subject: RE: [PATCH RFC 2/2] target/kvm: Add interfaces needed for log dirty
+Thread-Topic: [PATCH RFC 2/2] target/kvm: Add interfaces needed for log dirty
+Thread-Index: AQHWfEtmTyNMW66okESUbG9EQ0iVQKlMb8AAgAUV7AA=
+Date:   Mon, 31 Aug 2020 02:39:35 +0000
+Message-ID: <3915816D913D8241BB43E932213F57D4ADD8F34F@dggemm525-mbs.china.huawei.com>
+References: <20200827082251.1591-1-jiangyifei@huawei.com>
+ <20200827082251.1591-3-jiangyifei@huawei.com>
+ <CAAhSdy36ZCubU-1+WzjMzBaR+RipgEhvRqd9AT+28=99-EUDaQ@mail.gmail.com>
+In-Reply-To: <CAAhSdy36ZCubU-1+WzjMzBaR+RipgEhvRqd9AT+28=99-EUDaQ@mail.gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.187.31]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <CACOAw_y=O35_SFxdfsVER4+a+n-eE6f48NXF6CsAnj=Ms-dgkA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.136.114.67]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/8/31 9:44, Daeho Jeong wrote:
-> Sorry, I didn't get your point.
-> 
-> So, do you think this patch is ok? And we need to consider that we
-> need more immutable checks for other cases?
-
-Yes, this patch looks good to me.
-
-But, IMO, we should discuss about whether we need to add more immutable checks
-for other ioctl cases.
-
-- open(O_RDWR)
-- ioctl(FS_IOC_SETFLAGS, F2FS_COMPR_FL)
-- write()
-- ioctl(RELEASE_COMPRESS_BLOCKS) -- inode is immutable now
-- ioctl(FS_IOC_SETFLAGS, ~F2FS_COMPR_FL) -- Should we allow to update immutable inode?
-as we know, normally, immutable inode should deny open(O_WRONLY or O_RDWR) and later update.
-
-Thanks,
-
-> Or you want to remove this immutable check from here and add the check
-> to each ioctl functions? >
-> 2020년 8월 31일 (월) 오전 10:24, Chao Yu <yuchao0@huawei.com>님이 작성:
->>
->> On 2020/8/31 7:42, Daeho Jeong wrote:
->>> Do you have any reason not to put this check here?
->>
->> No, the place is okay to me. :)
->>
->>> If we do this check outside of here, we definitely make a mistake
->>> sooner or later.
->>
->> I just want to see whether we can cover all cases in where we missed to
->> add immutable check condition if necessary.
->>
->> Thanks,
->>
->>>
->>> 2020년 8월 30일 (일) 오후 12:24, Chao Yu <chao@kernel.org>님이 작성:
->>>>
->>>> On 2020-8-28 13:46, Daeho Jeong wrote:
->>>>> From: Daeho Jeong <daehojeong@google.com>
->>>>>
->>>>> After releasing cblocks, the compressed file can be accidentally
->>>>> disabled in compression mode, since it has zero cblocks. As we are
->>>>> using IMMUTABLE flag to present released cblocks state, we can add
->>>>> IMMUTABLE state check when considering the compressed file disabling.
->>>>>
->>>>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
->>>>> ---
->>>>>    fs/f2fs/f2fs.h | 2 ++
->>>>>    1 file changed, 2 insertions(+)
->>>>>
->>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>> index 02811ce15059..14d30740ba03 100644
->>>>> --- a/fs/f2fs/f2fs.h
->>>>> +++ b/fs/f2fs/f2fs.h
->>>>> @@ -3936,6 +3936,8 @@ static inline u64 f2fs_disable_compressed_file(struct inode *inode)
->>>>>         if (!f2fs_compressed_file(inode))
->>>>>                 return 0;
->>>>>         if (S_ISREG(inode->i_mode)) {
->>>>> +             if (IS_IMMUTABLE(inode))
->>>>> +                     return 1;
->>>>
->>>> It looks most of callers are from ioctl, should we add immutable check in f2fs
->>>> ioctl interfaces if necessary? or I missed existed check.
->>>>
->>>> Thanks,
->>>>
->>>>>                 if (get_dirty_pages(inode))
->>>>>                         return 1;
->>>>>                 if (fi->i_compr_blocks)
->>>>>
->>>
->>>
->>> _______________________________________________
->>> Linux-f2fs-devel mailing list
->>> Linux-f2fs-devel@lists.sourceforge.net
->>> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
->>>
-> .
-> 
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFudXAgUGF0ZWwgW21haWx0
+bzphbnVwQGJyYWluZmF1bHQub3JnXQ0KPiBTZW50OiBGcmlkYXksIEF1Z3VzdCAyOCwgMjAyMCAx
+Mjo1NCBQTQ0KPiBUbzogSmlhbmd5aWZlaSA8amlhbmd5aWZlaUBodWF3ZWkuY29tPg0KPiBDYzog
+UGF1bCBXYWxtc2xleSA8cGF1bC53YWxtc2xleUBzaWZpdmUuY29tPjsgUGFsbWVyIERhYmJlbHQN
+Cj4gPHBhbG1lckBkYWJiZWx0LmNvbT47IEFsYmVydCBPdSA8YW91QGVlY3MuYmVya2VsZXkuZWR1
+PjsgQW51cCBQYXRlbA0KPiA8YW51cC5wYXRlbEB3ZGMuY29tPjsgQWxpc3RhaXIgRnJhbmNpcyA8
+YWxpc3RhaXIuZnJhbmNpc0B3ZGMuY29tPjsgQXRpc2gNCj4gUGF0cmEgPGF0aXNoLnBhdHJhQHdk
+Yy5jb20+OyBkZWVwYS5rZXJuZWxAZ21haWwuY29tOw0KPiBrdm0tcmlzY3ZAbGlzdHMuaW5mcmFk
+ZWFkLm9yZzsgS1ZNIEdlbmVyYWwgPGt2bUB2Z2VyLmtlcm5lbC5vcmc+Ow0KPiBsaW51eC1yaXNj
+diA8bGludXgtcmlzY3ZAbGlzdHMuaW5mcmFkZWFkLm9yZz47IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
+cm5lbC5vcmcgTGlzdA0KPiA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz47IFpoYW5neGlh
+b2ZlbmcgKEYpDQo+IDx2aWN0b3Iuemhhbmd4aWFvZmVuZ0BodWF3ZWkuY29tPjsgV3ViaW4gKEgp
+IDx3dS53dWJpbkBodWF3ZWkuY29tPjsNCj4gWmhhbmdoYWlsaWFuZyA8emhhbmcuemhhbmdoYWls
+aWFuZ0BodWF3ZWkuY29tPjsgZGVuZ2thaSAoQSkNCj4gPGRlbmdrYWkxQGh1YXdlaS5jb20+OyB5
+aW55aXBlbmcgPHlpbnlpcGVuZzFAaHVhd2VpLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCBS
+RkMgMi8yXSB0YXJnZXQva3ZtOiBBZGQgaW50ZXJmYWNlcyBuZWVkZWQgZm9yIGxvZyBkaXJ0eQ0K
+PiANCj4gT24gVGh1LCBBdWcgMjcsIDIwMjAgYXQgMTo1NCBQTSBZaWZlaSBKaWFuZyA8amlhbmd5
+aWZlaUBodWF3ZWkuY29tPiB3cm90ZToNCj4gPg0KPiA+IEFkZCB0d28gaW50ZXJmYWNlcyBvZiBs
+b2cgZGlydHkgZm9yIGt2bV9tYWluLmMsIGFuZCBkZXRlbGUgdGhlDQo+ID4gaW50ZXJmYWNlIGt2
+bV92bV9pb2N0bF9nZXRfZGlydHlfbG9nIHdoaWNoIGlzIHJlZHVuZGFudGx5IGRlZmluZWQuDQo+
+ID4NCj4gPiBDT05GSUdfS1ZNX0dFTkVSSUNfRElSVFlMT0dfUkVBRF9QUk9URUNUIGlzIGFkZGVk
+IGluIGRlZmNvbmZpZy4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFlpZmVpIEppYW5nIDxqaWFu
+Z3lpZmVpQGh1YXdlaS5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogWWlwZW5nIFlpbiA8eWlueWlw
+ZW5nMUBodWF3ZWkuY29tPg0KPiA+IC0tLQ0KPiA+ICBhcmNoL3Jpc2N2L2NvbmZpZ3MvZGVmY29u
+ZmlnIHwgIDEgKw0KPiA+ICBhcmNoL3Jpc2N2L2t2bS9LY29uZmlnICAgICAgIHwgIDEgKw0KPiA+
+ICBhcmNoL3Jpc2N2L2t2bS9tbXUuYyAgICAgICAgIHwgNDMNCj4gKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrDQo+ID4gIGFyY2gvcmlzY3Yva3ZtL3ZtLmMgICAgICAgICAgfCAg
+NiAtLS0tLQ0KPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyksIDYgZGVsZXRp
+b25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZp
+Zw0KPiA+IGIvYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZyBpbmRleCBkMzZlMTAwMGJiZDMu
+Ljg1N2Q3OTk2NzJjMiAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Jpc2N2L2NvbmZpZ3MvZGVmY29u
+ZmlnDQo+ID4gKysrIGIvYXJjaC9yaXNjdi9jb25maWdzL2RlZmNvbmZpZw0KPiA+IEBAIC0xOSw2
+ICsxOSw3IEBAIENPTkZJR19TT0NfVklSVD15DQo+ID4gIENPTkZJR19TTVA9eQ0KPiA+ICBDT05G
+SUdfVklSVFVBTElaQVRJT049eQ0KPiA+ICBDT05GSUdfS1ZNPXkNCj4gPiArQ09ORklHX0tWTV9H
+RU5FUklDX0RJUlRZTE9HX1JFQURfUFJPVEVDVD15DQo+ID4gIENPTkZJR19IT1RQTFVHX0NQVT15
+DQo+ID4gIENPTkZJR19NT0RVTEVTPXkNCj4gPiAgQ09ORklHX01PRFVMRV9VTkxPQUQ9eQ0KPiA+
+IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2t2bS9LY29uZmlnIGIvYXJjaC9yaXNjdi9rdm0vS2Nv
+bmZpZyBpbmRleA0KPiA+IDIzNTZkYzUyZWJiMy4uOTFmY2ZmYzcwZTVkIDEwMDY0NA0KPiA+IC0t
+LSBhL2FyY2gvcmlzY3Yva3ZtL0tjb25maWcNCj4gPiArKysgYi9hcmNoL3Jpc2N2L2t2bS9LY29u
+ZmlnDQo+ID4gQEAgLTI2LDYgKzI2LDcgQEAgY29uZmlnIEtWTQ0KPiA+ICAgICAgICAgc2VsZWN0
+IEtWTV9NTUlPDQo+ID4gICAgICAgICBzZWxlY3QgSEFWRV9LVk1fVkNQVV9BU1lOQ19JT0NUTA0K
+PiA+ICAgICAgICAgc2VsZWN0IFNSQ1UNCj4gPiArICAgICAgIHNlbGVjdCBLVk1fR0VORVJJQ19E
+SVJUWUxPR19SRUFEX1BST1RFQ1QNCj4gPiAgICAgICAgIGhlbHANCj4gPiAgICAgICAgICAgU3Vw
+cG9ydCBob3N0aW5nIHZpcnR1YWxpemVkIGd1ZXN0IG1hY2hpbmVzLg0KPiA+DQo+ID4gZGlmZiAt
+LWdpdCBhL2FyY2gvcmlzY3Yva3ZtL21tdS5jIGIvYXJjaC9yaXNjdi9rdm0vbW11LmMgaW5kZXgN
+Cj4gPiA4OGJjZTgwZWU5ODMuLmRmMmE0NzBjMjVlNCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Jp
+c2N2L2t2bS9tbXUuYw0KPiA+ICsrKyBiL2FyY2gvcmlzY3Yva3ZtL21tdS5jDQo+ID4gQEAgLTM1
+OCw2ICszNTgsNDMgQEAgdm9pZCBzdGFnZTJfd3BfbWVtb3J5X3JlZ2lvbihzdHJ1Y3Qga3ZtICpr
+dm0sDQo+IGludCBzbG90KQ0KPiA+ICAgICAgICAga3ZtX2ZsdXNoX3JlbW90ZV90bGJzKGt2bSk7
+DQo+ID4gIH0NCj4gPg0KPiA+ICsvKioNCj4gPiArICoga3ZtX21tdV93cml0ZV9wcm90ZWN0X3B0
+X21hc2tlZCgpIC0gd3JpdGUgcHJvdGVjdCBkaXJ0eSBwYWdlcw0KPiA+ICsgKiBAa3ZtOiAgICBU
+aGUgS1ZNIHBvaW50ZXINCj4gPiArICogQHNsb3Q6ICAgVGhlIG1lbW9yeSBzbG90IGFzc29jaWF0
+ZWQgd2l0aCBtYXNrDQo+ID4gKyAqIEBnZm5fb2Zmc2V0OiBUaGUgZ2ZuIG9mZnNldCBpbiBtZW1v
+cnkgc2xvdA0KPiA+ICsgKiBAbWFzazogICBUaGUgbWFzayBvZiBkaXJ0eSBwYWdlcyBhdCBvZmZz
+ZXQgJ2dmbl9vZmZzZXQnIGluIHRoaXMgbWVtb3J5DQo+ID4gKyAqICAgICAgc2xvdCB0byBiZSB3
+cml0ZSBwcm90ZWN0ZWQNCj4gPiArICoNCj4gPiArICogV2Fsa3MgYml0cyBzZXQgaW4gbWFzayB3
+cml0ZSBwcm90ZWN0cyB0aGUgYXNzb2NpYXRlZCBwdGUncy4gQ2FsbGVyDQo+ID4gK211c3QNCj4g
+PiArICogYWNxdWlyZSBrdm1fbW11X2xvY2suDQo+ID4gKyAqLw0KPiA+ICtzdGF0aWMgdm9pZCBr
+dm1fbW11X3dyaXRlX3Byb3RlY3RfcHRfbWFza2VkKHN0cnVjdCBrdm0gKmt2bSwNCj4gPiArICAg
+ICAgICBzdHJ1Y3Qga3ZtX21lbW9yeV9zbG90ICpzbG90LA0KPiA+ICsgICAgICAgIGdmbl90IGdm
+bl9vZmZzZXQsIHVuc2lnbmVkIGxvbmcgbWFzaykgew0KPiA+ICsgICAgcGh5c19hZGRyX3QgYmFz
+ZV9nZm4gPSBzbG90LT5iYXNlX2dmbiArIGdmbl9vZmZzZXQ7DQo+ID4gKyAgICBwaHlzX2FkZHJf
+dCBzdGFydCA9IChiYXNlX2dmbiArICBfX2ZmcyhtYXNrKSkgPDwgUEFHRV9TSElGVDsNCj4gPiAr
+ICAgIHBoeXNfYWRkcl90IGVuZCA9IChiYXNlX2dmbiArIF9fZmxzKG1hc2spICsgMSkgPDwgUEFH
+RV9TSElGVDsNCj4gPiArDQo+ID4gKyAgICBzdGFnZTJfd3BfcmFuZ2Uoa3ZtLCBzdGFydCwgZW5k
+KTsgfQ0KPiA+ICsNCj4gPiArLyoNCj4gPiArICoga3ZtX2FyY2hfbW11X2VuYWJsZV9sb2dfZGly
+dHlfcHRfbWFza2VkIC0gZW5hYmxlIGRpcnR5IGxvZ2dpbmcgZm9yDQo+ID4gK3NlbGVjdGVkDQo+
+ID4gKyAqIGRpcnR5IHBhZ2VzLg0KPiA+ICsgKg0KPiA+ICsgKiBJdCBjYWxscyBrdm1fbW11X3dy
+aXRlX3Byb3RlY3RfcHRfbWFza2VkIHRvIHdyaXRlIHByb3RlY3Qgc2VsZWN0ZWQNCj4gPiArcGFn
+ZXMgdG8NCj4gPiArICogZW5hYmxlIGRpcnR5IGxvZ2dpbmcgZm9yIHRoZW0uDQo+ID4gKyAqLw0K
+PiA+ICt2b2lkIGt2bV9hcmNoX21tdV9lbmFibGVfbG9nX2RpcnR5X3B0X21hc2tlZChzdHJ1Y3Qg
+a3ZtICprdm0sDQo+ID4gKyAgICAgICAgc3RydWN0IGt2bV9tZW1vcnlfc2xvdCAqc2xvdCwNCj4g
+PiArICAgICAgICBnZm5fdCBnZm5fb2Zmc2V0LCB1bnNpZ25lZCBsb25nIG1hc2spIHsNCj4gPiAr
+ICAgIGt2bV9tbXVfd3JpdGVfcHJvdGVjdF9wdF9tYXNrZWQoa3ZtLCBzbG90LCBnZm5fb2Zmc2V0
+LCBtYXNrKTsgfQ0KPiA+ICsNCj4gPiArDQo+ID4gIGludCBzdGFnZTJfaW9yZW1hcChzdHJ1Y3Qg
+a3ZtICprdm0sIGdwYV90IGdwYSwgcGh5c19hZGRyX3QgaHBhLA0KPiA+ICAgICAgICAgICAgICAg
+ICAgICB1bnNpZ25lZCBsb25nIHNpemUsIGJvb2wgd3JpdGFibGUpICB7IEBAIC00MzMsNg0KPiA+
+ICs0NzAsMTIgQEAgdm9pZCBrdm1fYXJjaF9zeW5jX2RpcnR5X2xvZyhzdHJ1Y3Qga3ZtICprdm0s
+IHN0cnVjdA0KPiA+IGt2bV9tZW1vcnlfc2xvdCAqbWVtc2xvdCkgIHsgIH0NCj4gPg0KPiA+ICt2
+b2lkIGt2bV9hcmNoX2ZsdXNoX3JlbW90ZV90bGJzX21lbXNsb3Qoc3RydWN0IGt2bSAqa3ZtLA0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdHJ1Y3Qga3ZtX21l
+bW9yeV9zbG90DQo+ID4gKyptZW1zbG90KSB7DQo+ID4gKyAgICAgICBrdm1fZmx1c2hfcmVtb3Rl
+X3RsYnMoa3ZtKTsNCj4gPiArfQ0KPiA+ICsNCj4gPiAgdm9pZCBrdm1fYXJjaF9mcmVlX21lbXNs
+b3Qoc3RydWN0IGt2bSAqa3ZtLCBzdHJ1Y3Qga3ZtX21lbW9yeV9zbG90DQo+ID4gKmZyZWUpICB7
+ICB9IGRpZmYgLS1naXQgYS9hcmNoL3Jpc2N2L2t2bS92bS5jIGIvYXJjaC9yaXNjdi9rdm0vdm0u
+Yw0KPiA+IGluZGV4IDRmMjQ5ODE5OGNiNS4uZjc0MDU2NzY5MDNiIDEwMDY0NA0KPiA+IC0tLSBh
+L2FyY2gvcmlzY3Yva3ZtL3ZtLmMNCj4gPiArKysgYi9hcmNoL3Jpc2N2L2t2bS92bS5jDQo+ID4g
+QEAgLTEyLDEyICsxMiw2IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC91YWNjZXNzLmg+DQo+ID4g
+ICNpbmNsdWRlIDxsaW51eC9rdm1faG9zdC5oPg0KPiA+DQo+ID4gLWludCBrdm1fdm1faW9jdGxf
+Z2V0X2RpcnR5X2xvZyhzdHJ1Y3Qga3ZtICprdm0sIHN0cnVjdCBrdm1fZGlydHlfbG9nDQo+ID4g
+KmxvZykgLXsNCj4gPiAtICAgICAgIC8qIFRPRE86IFRvIGJlIGFkZGVkIGxhdGVyLiAqLw0KPiA+
+IC0gICAgICAgcmV0dXJuIC1FTk9UU1VQUDsNCj4gPiAtfQ0KPiA+IC0NCj4gPiAgaW50IGt2bV9h
+cmNoX2luaXRfdm0oc3RydWN0IGt2bSAqa3ZtLCB1bnNpZ25lZCBsb25nIHR5cGUpICB7DQo+ID4g
+ICAgICAgICBpbnQgcjsNCj4gPiAtLQ0KPiA+IDIuMTkuMQ0KPiA+DQo+ID4NCj4gDQo+IEkgYWxy
+ZWFkeSBoYXZlIGEgc2ltaWxhciBjaGFuZ2UgYXMgcGFydCBvZiB2MTQgS1ZNIFJJU0MtViBzZXJp
+ZXMuDQo+IA0KPiBMZXQgdXMgY29vcmRpbmF0ZSBiZXR0ZXIuIFBsZWFzZSBsZXQgdXMga25vdyBp
+bi1hZHZhbmNlIGZvciBhbnkgS1ZNIFJJU0MtVg0KPiBmZWF0dXJlIHlvdSBwbGFuIHRvIHdvcmsg
+b24uIE90aGVyd2lzZSwgdGhpcyBsZWFkcyB0byBlZmZvcnRzIHdhc3RlZCBhdCB5b3VyDQo+IGVu
+ZCBvciBhdCBvdXIgZW5kLg0KPiANCj4gUmVnYXJkcywNCj4gQW51cA0KDQpIaSBBbnVwLA0KDQpU
+aGFua3MgZm9yIGFjY2VwdGluZyBvdXIgcGF0Y2hlcy4NCg0KSW4gdGhlIG5leHQgZmV3IHdlZWtz
+IHdlIHBsYW4gdG8gd29yayBvbiB0aGUgZm9sbG93aW5nOg0KMS4gbWVtb3J5IHJldmVyc2UgbWFw
+cGluZyAocm1hcCksIHJlbGF0ZWQgdG8gbWlncmF0aW9uLg0KMi4gaXJxZmQuDQozLiBpbXBsbWVu
+dGFpb24gcmVsYXRlZCB0byB0aGUgZGVkaWNhdGVkIGNsb2NrIGV2ZW50IHNvdXJjZSBwcm9wb3Nh
+bC4NCg0KQmVzaWRlcywgd2UgYXJlIGF3YXJlIG9mIHRoYXQgeW91IGFyZSB3b3JraW5nIG9uIGly
+cSBjaGlwIGVtdWxhdGlvbiBpbiBLVk0uIE1lYW53aGlsZSwgb3VyIGltcGxlbWVudGFpdG9uIG9m
+IGlycWZkIGFuZCB0aGUgY2xvY2sgZXZlbnQgc291cmNlIGhhcyBkZXBlbmRlbmN5IG9uIHRoZSBp
+cnEgY2hpcCBhbmQgd2UgbWF5IHdlbGwgbW9kaWZ5IHRoZSBpcnEgY2hpcCBlbXVsYXRpb24gY29k
+ZS4gU28gY291bGQgeW91IHNoYXJlIHdpdGggdXMgYW55IGlkZWFzLCBwbGFucyBvciBwcm9ncmVz
+cyByZWdhcmRpbmcgeW91ciB3b3JrIHNpbmNlIHRoZXJlIG1pZ2h0IGJlIHBvdGVudGlhbCBjb2xs
+aXNpb24/DQoNCkxldCdzIHN0YXkgaW4gdG91Y2ggaW4gdGhlIGxvbmcgcnVuIGFuZCBjb29kaW5h
+dGUgYmV0dGVyLiBCVFcsIGNvdWxkIHlvdSBzaGFyZSB3aXRoIHVzIGlmIHRoZXJlJ3MgYW55IHJl
+Z3VsYXIgZGlzY3Vzc2lvbiBzZXNzaW9ucyBmb2N1c2VkIG9uIFJJU0MtViBLVk0/DQoNClJlZ2Fy
+ZHMsDQpZaWZlaQ0K
