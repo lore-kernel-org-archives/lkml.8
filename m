@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB38C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4279AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A9620E65
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 122762168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897060;
-	bh=iMkwxDd3YrTJpp4F9jO9Wr9+IbHF1XwKyVCOl8Pmq9E=;
+	s=default; t=1598897064;
+	bh=4AuojR95FSb5tOK6DNtw+xzMg2K0zUYedN74DX3J48o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2G1PJ0rNuihKPypdvJP1RPu4yNWKHfgl0/iS2qdPIRj/GilAzIwrVoRsPdsHKQx6z
-	 TSutjQMs/UVkROH1rq85iLd4/4RJK7MKuztlq3uT1r8tI+g6t7mI4hPlBy8yjYwIOo
-	 VSN2Cd6nXXZd1J2/dyiy7QDcTfg4mTRWzFtabgRw=
+	b=Pf2s4+Eo0gav8hZ18gto384MFHs4mXKIKQ3V9K5TOPxztNi7xsp+sUy4dAWtGT10Q
+	 2FbHvul8ewh/HSbsia3a4dybIO9+Qoae54QGw1I5FWjb5U26oS1gukQl6hHzPGofBw
+	 JawVmxQrqz8f/IcU36YJassWus+XnreJNGxVHmjc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbgHaSEP (ORCPT
+        id S1729391AbgHaSEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:04:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44176 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbgHaSEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:04:08 -0400
+        id S1729357AbgHaSEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:04:10 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21DEA2145D;
-        Mon, 31 Aug 2020 18:04:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E34C20866;
+        Mon, 31 Aug 2020 18:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897048;
-        bh=iMkwxDd3YrTJpp4F9jO9Wr9+IbHF1XwKyVCOl8Pmq9E=;
+        s=default; t=1598897049;
+        bh=4AuojR95FSb5tOK6DNtw+xzMg2K0zUYedN74DX3J48o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PpTHqBWVFhjftHHF6xyoTDtxFFb+j1zJcGS+5rDT2OqyCmKepzMPp9v2Pc5TpICnE
-         EE1RfvTxThPWFQLAY/y9UNG/ZUQmvHs/WcH+k5yCxNYoGiv2pfTMBVCjEY7DL6G8XT
-         2FdcZhq94sUYsWdieeXUmu7Wo1rkabHmeLWONyOc=
+        b=w5sof7pW2UOxew2g3qI8k3wfzXyh5mmPAxdDWyq4OofffDkHhQ3/xqmWwgk3Ykbrb
+         KvbtCxnwWok06lpEDnEtBb+Sknpem8n3iuoRxocD9T9AAlhU6vVQH3KYYqZDPnjUth
+         ZO+2tAwUSlPjnt4pCHTmM4Hk5NYSO8KVvQrxJtMs=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,10 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Alexander A. Klimov" <grandmaster@al2klimov.de>,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 02/14] rcutorture: Output number of elapsed grace periods
-Date:   Mon, 31 Aug 2020 11:03:54 -0700
-Message-Id: <20200831180406.494-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/14] rcutorture: Replace HTTP links with HTTPS ones
+Date:   Mon, 31 Aug 2020 11:03:57 -0700
+Message-Id: <20200831180406.494-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180348.GA416@paulmck-ThinkPad-P72>
 References: <20200831180348.GA416@paulmck-ThinkPad-P72>
@@ -59,66 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
 
-This commit adds code to print the grace-period number at the start
-of the test along with both the grace-period number and the number of
-elapsed grace periods at the end of the test.  Note that variants of
-RCU)without the notion of a grace-period number (for example, Tiny RCU)
-just print zeroes.
+Rationale:
+Reduces attack surface on kernel devs opening the links for MITM
+as HTTPS traffic is much harder to manipulate.
 
-[ paulmck: Adjust commit log. ]
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Deterministic algorithm:
+For each file:
+  If not .svg:
+    For each line:
+      If doesn't contain `\bxmlns\b`:
+        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+	  If neither `\bgnu\.org/license`, nor `\bmozilla\.org/MPL\b`:
+            If both the HTTP and HTTPS versions
+            return 200 OK and serve the same content:
+              Replace HTTP with HTTPS.
+
+Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/rcutorture.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/testing/selftests/rcutorture/doc/rcu-test-image.txt | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index db37861..c8206ff 100644
---- a/kernel/rcu/rcutorture.c
-+++ b/kernel/rcu/rcutorture.c
-@@ -172,6 +172,7 @@ static long n_barrier_successes; /* did rcu_barrier test succeed? */
- static unsigned long n_read_exits;
- static struct list_head rcu_torture_removed;
- static unsigned long shutdown_jiffies;
-+static unsigned long start_gp_seq;
- 
- static int rcu_torture_writer_state;
- #define RTWS_FIXED_DELAY	0
-@@ -2469,8 +2470,9 @@ rcu_torture_cleanup(void)
- 
- 	rcutorture_get_gp_data(cur_ops->ttype, &flags, &gp_seq);
- 	srcutorture_get_gp_data(cur_ops->ttype, srcu_ctlp, &flags, &gp_seq);
--	pr_alert("%s:  End-test grace-period state: g%lu f%#x\n",
--		 cur_ops->name, gp_seq, flags);
-+	pr_alert("%s:  End-test grace-period state: g%ld f%#x total-gps=%ld\n",
-+		 cur_ops->name, (long)gp_seq, flags,
-+		 rcutorture_seq_diff(gp_seq, start_gp_seq));
- 	torture_stop_kthread(rcu_torture_stats, stats_task);
- 	torture_stop_kthread(rcu_torture_fqs, fqs_task);
- 	if (rcu_torture_can_boost())
-@@ -2594,6 +2596,8 @@ rcu_torture_init(void)
- 	long i;
- 	int cpu;
- 	int firsterr = 0;
-+	int flags = 0;
-+	unsigned long gp_seq = 0;
- 	static struct rcu_torture_ops *torture_ops[] = {
- 		&rcu_ops, &rcu_busted_ops, &srcu_ops, &srcud_ops,
- 		&busted_srcud_ops, &tasks_ops, &tasks_rude_ops,
-@@ -2636,6 +2640,11 @@ rcu_torture_init(void)
- 			nrealreaders = 1;
- 	}
- 	rcu_torture_print_module_parms(cur_ops, "Start of test");
-+	rcutorture_get_gp_data(cur_ops->ttype, &flags, &gp_seq);
-+	srcutorture_get_gp_data(cur_ops->ttype, srcu_ctlp, &flags, &gp_seq);
-+	start_gp_seq = gp_seq;
-+	pr_alert("%s:  Start-test grace-period state: g%ld f%#x\n",
-+		 cur_ops->name, (long)gp_seq, flags);
- 
- 	/* Set up the freelist. */
- 
+diff --git a/tools/testing/selftests/rcutorture/doc/rcu-test-image.txt b/tools/testing/selftests/rcutorture/doc/rcu-test-image.txt
+index 449cf57..cc280ba 100644
+--- a/tools/testing/selftests/rcutorture/doc/rcu-test-image.txt
++++ b/tools/testing/selftests/rcutorture/doc/rcu-test-image.txt
+@@ -36,7 +36,7 @@ References:
+ 	https://help.ubuntu.com/community/JeOSVMBuilder
+ 	http://wiki.libvirt.org/page/UbuntuKVMWalkthrough
+ 	http://www.moe.co.uk/2011/01/07/pci_add_option_rom-failed-to-find-romfile-pxe-rtl8139-bin/ -- "apt-get install kvm-pxe"
+-	http://www.landley.net/writing/rootfs-howto.html
+-	http://en.wikipedia.org/wiki/Initrd
+-	http://en.wikipedia.org/wiki/Cpio
++	https://www.landley.net/writing/rootfs-howto.html
++	https://en.wikipedia.org/wiki/Initrd
++	https://en.wikipedia.org/wiki/Cpio
+ 	http://wiki.libvirt.org/page/UbuntuKVMWalkthrough
 -- 
 2.9.5
 
