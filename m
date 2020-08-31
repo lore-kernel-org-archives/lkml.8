@@ -2,178 +2,219 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F068FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E462C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C113C20707
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B0A2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:17:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dTwUQ/Jk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mDVAQkQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHaNQm (ORCPT
+        id S1727051AbgHaNQ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:16:42 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:56582 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726359AbgHaNQc (ORCPT
+        Mon, 31 Aug 2020 09:16:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34416 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgHaNQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:16:32 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200831131628euoutp02a673f9578fae151056d42a0f29b39d1b~wXLJedtc_2105821058euoutp020
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200831131628euoutp02a673f9578fae151056d42a0f29b39d1b~wXLJedtc_2105821058euoutp020
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598879788;
-        bh=5VQ0Ar29Dvuafq8sMDFtn4rGRbW1P19RvUszVW2Ec1A=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=dTwUQ/JkRXBxHOFulehLhcgMXUVy0RGP8+byRuH5t6A9wSUl8bRgO4R4i55EN2fb6
-         KqsDn+qCaH7pEyEyojszZHXvCY0zZ7R6vOu5Ts+8wk+xMqvtjtnNUdHyzuU+Mcp+aW
-         3b1pnxdbmIyobj6DEJE6KeiU+b9V9DcGLhp6Npyo=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200831131628eucas1p277df1c0fea3c0b4fdf6e106475f96a73~wXLJN9vsB0220302203eucas1p2B;
-        Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 11.EF.06318.C28FC4F5; Mon, 31
-        Aug 2020 14:16:28 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200831131628eucas1p2dbece80673d9a44929084210e658cec8~wXLIuj0Yd0809408094eucas1p22;
-        Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200831131628eusmtrp2f70555b54e2d2b57096f50034829b142~wXLItwQz43092430924eusmtrp2M;
-        Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
-X-AuditID: cbfec7f5-38bff700000018ae-3b-5f4cf82c7f32
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5B.55.06314.B28FC4F5; Mon, 31
-        Aug 2020 14:16:28 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200831131627eusmtip2e48c554bfffbc613fc4269af62a5878a~wXLH77e450534905349eusmtip2p;
-        Mon, 31 Aug 2020 13:16:27 +0000 (GMT)
-Subject: Re: [RFT 3/4] nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Opasiak <k.opasiak@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nfc@lists.01.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <b97ec4e0-fd78-d605-a22b-310426803429@samsung.com>
-Date:   Mon, 31 Aug 2020 15:16:27 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.12.0
+        Mon, 31 Aug 2020 09:16:45 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23987C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 06:16:45 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id q8so3472466lfb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 06:16:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UQoI1GeQhVK5+wMgW0TP/WghvzBAWuVFG8q6FGoAyEw=;
+        b=mDVAQkQ4nwJalyxEi62enizY/JY4FUg76of5iT2j26oB8IYHKuIH0RQKSkJMimjeYj
+         0S5G5EZYatzFkdiTnmlS8MwYw0MPgHU41vlt6+++tl0KCq/GGznPC/W9y65RmVXYTRc4
+         VDICi+t+zpxh+MpHqK+4I7aEZCf7KqDyrTQ+6+7BKTcoMbTatXvzKZ3CiEA7TX+PsaAr
+         hqaIH3zCSVXnfdWcPx7ZICi+56VMHe/BOromwtM+N268RTyEgRFZaQXWHIs5sxx8WWgd
+         qP1cecE9ppABFVqGBmxsEW3AFkH96rRNsGH3nbtQTSRgtztLSZANcdoU34bj7OnSMIQf
+         cKwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=UQoI1GeQhVK5+wMgW0TP/WghvzBAWuVFG8q6FGoAyEw=;
+        b=rprCfRUl+JbttDK/iA6sd5wOW8sguTJXMZ63b9Up3kKQbgkfhU9klU65RPhtvR37P3
+         oL5Xlr7NwJLL2r1HHNHVhpycVANX/6XkYb6Y4kCdMkJ7umKVnkNyiiMvjI+S7eQzpjYq
+         iUBW4QTnMH7F4ajAuoHFLeP9aevHCnwpxAQ0vsmlRbUJX7Hww68Op0k2QN3oyU6+baqD
+         L4UjqjH1zwNk6QgU+hjiZrUfEIms205Kk/5p8F7eKwS/AbjaCh5p0V6QYetoucDcsRIA
+         2PSSifaYWyM588KJKy2mJ3OgtGh8j9THxhtwVrsNjlJ+HHhMt3+Ym+m+iDBb+mQAGlSK
+         0Q4A==
+X-Gm-Message-State: AOAM530vTQbvqXWuK7TyCrF4ws+UxUuvuSy05HI/854tGVJVS40+V6N1
+        txcF1/rsp79Nu9jIpjw+rnzlpA==
+X-Google-Smtp-Source: ABdhPJzVp5g4TmXGKFKys+cMStMUrOj5V3tjfDh8btgvQtHcZhUz4HTK0Qot13w8qV/lgiSFnoaSzA==
+X-Received: by 2002:ac2:4253:: with SMTP id m19mr696212lfl.81.1598879803345;
+        Mon, 31 Aug 2020 06:16:43 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-180-79.NA.cust.bahnhof.se. [98.128.180.79])
+        by smtp.gmail.com with ESMTPSA id b16sm1570435ljk.24.2020.08.31.06.16.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 06:16:42 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Mark Brown <broonie@kernel.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] mmc: mmc_spi: Don't use dma mappings unless CONFIG_HAS_DMA is set
+Date:   Mon, 31 Aug 2020 15:16:36 +0200
+Message-Id: <20200831131636.51502-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200829142948.32365-3-krzk@kernel.org>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRzl27279261cd1Sf5QUjRKKmoUGN3pH0JQFEYUQpS29U8tZ7Kpl
-        //Swh62XWZSulUsKH5CP65wPdKDIRprOXFia0UOXqY0KtYdpj3m1/O+c3/edc37n46MwRY94
-        PpWUksoaU3TJKkKK250/2leu+K6NXeV6tpipyC0TM89HB8SMxX0WZ/Kb28VMzutsnHl5/RbB
-        XOsbxhi3u5xkOuxXxQzf1yVmPHUWgrGUV5JMrtshYpzWIOZcQzPJXPAOYptpja24W6ThSy4S
-        mkt3fuGaygcnNVdtJUgzwi/cSeyVro9nk5PSWWPYxgPSxJY8B3G0UX78Su1P8hT6MceEKAro
-        CHiRpTAhKaWgixBcOe3DBTKKoJmvwQQygiC/q0tkQpIpRX2LhxAOChH8buhBAvmE4N4bm8jv
-        q6SjgH8i8c/n0XcxsGXbMb8ao0sRZPLRfkzQq8HkMxF+LKM3Qof95VQCTi+FpzeGpnAgHQPO
-        lne4cCcAHuf1T2EJvQZeVxWRguciqPZZpv2Doac/X+QPBnqShHoXTwprb4OBsVdIwEoYctmm
-        5yHwu3ZGkIngbfsjUiCXEXjO5E4r1kFv+zjhr4bRy6CsLkx4vS1wv26BAOXwwhcg7CCHHPtt
-        TBjLIOu8QvAIBbOr9F9qY0cnlo1U5lnNzLPamGe1Mf+PtSK8BAWzaZwhgeXCU9hjak5n4NJS
-        EtRxRww8+vvjWn+5xmqQY+JgE6IppJorK/qqjVWIdelchqEJAYWp5sm2trXGKGTxuowTrPFI
-        rDEtmeWa0AIKVwXLwgsG9yvoBF0qe5hlj7LGmVMRJZl/CkXqt5/uZsOViXtalOota5Vy146x
-        xwMLy6yfhjM8edXuzPfRWl/O57UR3d3l/c47uzN6P1jA6vRE9AVG7oquqljSOuYZybp5sSrE
-        q43iQ+MKAvVq776aL+dH9MWTiakhG9Q3Td64j/ri3tFCXjL+hXMEtT3clIAiD32f6JT3f1Ph
-        XKJu9XLMyOn+AEssu9htAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xe7o6P3ziDR4+ZrTYOGM9q8X1L89Z
-        Leacb2GxmH/kHKvFpPsTWCxuT5zGZtH/+DWzxfnzG9gtLmzrY7XY9Pgaq8XlXXPYLOZs2Mxu
-        MeP8PiaLYwvELFr3HmG3aH/6ktlBwGPLyptMHptWdbJ5dM/+x+KxeUm9R9+WVYwenzfJBbBF
-        6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GWcmrmP
-        reAgX0Xvzt/sDYw/ubsYOTkkBEwk9py6zNbFyMUhJLCUUeLfkjlsEAkZiZPTGlghbGGJP9e6
-        oIreMkocuHULyOHgEBbwkth0hhOkRkRgPrPEgcOKIDXMAusYJV5vbmKFaNjMKNG//CYzSBWb
-        gKFE19susA28AnYSF7bdZgKxWQRUJS5OfgVmiwrESZzpeQFVIyhxcuYTFhCbU8BU4v7WFewg
-        NrOAmcS8zQ+ZIWx5ie1v50DZ4hK3nsxnmsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6x
-        oV5xYm5xaV66XnJ+7iZGYFxvO/Zz8w7GSxuDDzEKcDAq8fAGfPGJF2JNLCuuzD3EKMHBrCTC
-        63T2dJwQb0piZVVqUX58UWlOavEhRlOg5yYyS4km5wNTTl5JvKGpobmFpaG5sbmxmYWSOG+H
-        wMEYIYH0xJLU7NTUgtQimD4mDk6pBsY46Vu3prk0Hylwe5RUuV/xj8oWt42TJ8SZ/J708nlf
-        fGv3Yfnq87/8f9nvUPL+dC2PJT4tdD7nJNd7HoLHau8v0t3UXtqgZxSQqX++qn3pRS6bObkG
-        RWu4GOZ9rjW6dfpvyWPnEtVwfmOn528DjsUlp61YHPlvv6lTjsaHhdpfORbO2WUSVa7EUpyR
-        aKjFXFScCAARjbxVAQMAAA==
-X-CMS-MailID: 20200831131628eucas1p2dbece80673d9a44929084210e658cec8
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200829143008eucas1p11c924e666bcd7561c787755ea0a0ccb0
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200829143008eucas1p11c924e666bcd7561c787755ea0a0ccb0
-References: <20200829142948.32365-1-krzk@kernel.org>
-        <CGME20200829143008eucas1p11c924e666bcd7561c787755ea0a0ccb0@eucas1p1.samsung.com>
-        <20200829142948.32365-3-krzk@kernel.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The commit cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU") made
+CONFIG_NO_DMA to be set for some platforms, for good reasons.
+Consequentially, CONFIG_HAS_DMA doesn't get set, which makes the DMA
+mapping interface to be built as stub functions.
 
-On 29.08.2020 16:29, Krzysztof Kozlowski wrote:
-> The device tree property prefix describes the vendor, which in case of
-> S3FWRN5 chip is Samsung.  Therefore the "s3fwrn5" prefix for "en-gpios"
-> and "fw-gpios" is not correct and should be deprecated.  Introduce
-> properly named properties for these GPIOs but still support deprecated
-> ones.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->   drivers/nfc/s3fwrn5/i2c.c | 20 ++++++++++++++------
->   1 file changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/nfc/s3fwrn5/i2c.c b/drivers/nfc/s3fwrn5/i2c.c
-> index b4eb926d220a..557279492503 100644
-> --- a/drivers/nfc/s3fwrn5/i2c.c
-> +++ b/drivers/nfc/s3fwrn5/i2c.c
-> @@ -200,13 +200,21 @@ static int s3fwrn5_i2c_parse_dt(struct i2c_client *client)
->   	if (!np)
->   		return -ENODEV;
->   
-> -	phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
-> -	if (!gpio_is_valid(phy->gpio_en))
-> -		return -ENODEV;
-> +	phy->gpio_en = of_get_named_gpio(np, "en-gpios", 0);
-> +	if (!gpio_is_valid(phy->gpio_en)) {
-> +		/* Support also deprecated property */
-> +		phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
-> +		if (!gpio_is_valid(phy->gpio_en))
-> +			return -ENODEV;
-> +	}
->   
-> -	phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
-> -	if (!gpio_is_valid(phy->gpio_fw_wake))
-> -		return -ENODEV;
-> +	phy->gpio_fw_wake = of_get_named_gpio(np, "wake-gpios", 0);
-> +	if (!gpio_is_valid(phy->gpio_fw_wake)) {
-> +		/* Support also deprecated property */
-> +		phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
-> +		if (!gpio_is_valid(phy->gpio_fw_wake))
-> +			return -ENODEV;
-> +	}
->   
->   	return 0;
->   }
+For weird reasons this causes the mmc_spi driver to fail to ->probe(), as
+it relies on the dma mappings APIs, no matter of CONFIG_HAS_DMA is set or
+not. This is wrong, so let's fix this.
 
-Best regards
+Fixes: cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU")
+Reported-by: Rich Felker <dalias@libc.org>
+Suggested-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/mmc/host/mmc_spi.c | 86 +++++++++++++++++++++++---------------
+ 1 file changed, 52 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+index 39bb1e30c2d7..5055a7eb134a 100644
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1278,6 +1278,52 @@ mmc_spi_detect_irq(int irq, void *mmc)
+ 	return IRQ_HANDLED;
+ }
+ 
++#ifdef CONFIG_HAS_DMA
++static int mmc_spi_dma_alloc(struct mmc_spi_host *host)
++{
++	struct spi_device *spi = host->spi;
++	struct device *dev;
++
++	if (!spi->master->dev.parent->dma_mask)
++		return 0;
++
++	dev = spi->master->dev.parent;
++
++	host->ones_dma = dma_map_single(dev, host->ones, MMC_SPI_BLOCKSIZE,
++					DMA_TO_DEVICE);
++	if (dma_mapping_error(dev, host->ones_dma))
++		return -ENOMEM;
++
++	host->data_dma = dma_map_single(dev, host->data, sizeof(*host->data),
++					DMA_BIDIRECTIONAL);
++	if (dma_mapping_error(dev, host->data_dma)) {
++		dma_unmap_single(dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
++				 DMA_TO_DEVICE);
++		return -ENOMEM;
++	}
++
++	dma_sync_single_for_cpu(dev, host->data_dma, sizeof(*host->data),
++				DMA_BIDIRECTIONAL);
++
++	host->dma_dev = dev;
++	return 0;
++}
++
++static void mmc_spi_dma_free(struct mmc_spi_host *host)
++{
++	if (!host->dma_dev)
++		return;
++
++	dma_unmap_single(host->dma_dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
++			 DMA_TO_DEVICE);
++	dma_unmap_single(host->dma_dev, host->data_dma,	sizeof(*host->data),
++			 DMA_BIDIRECTIONAL);
++}
++#else
++static inline mmc_spi_dma_alloc(struct mmc_spi_host *host) { return 0; }
++static inline void mmc_spi_dma_free(struct mmc_spi_host *host) {}
++#endif
++
+ static int mmc_spi_probe(struct spi_device *spi)
+ {
+ 	void			*ones;
+@@ -1374,23 +1420,9 @@ static int mmc_spi_probe(struct spi_device *spi)
+ 	if (!host->data)
+ 		goto fail_nobuf1;
+ 
+-	if (spi->master->dev.parent->dma_mask) {
+-		struct device	*dev = spi->master->dev.parent;
+-
+-		host->dma_dev = dev;
+-		host->ones_dma = dma_map_single(dev, ones,
+-				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+-		if (dma_mapping_error(dev, host->ones_dma))
+-			goto fail_ones_dma;
+-		host->data_dma = dma_map_single(dev, host->data,
+-				sizeof(*host->data), DMA_BIDIRECTIONAL);
+-		if (dma_mapping_error(dev, host->data_dma))
+-			goto fail_data_dma;
+-
+-		dma_sync_single_for_cpu(host->dma_dev,
+-				host->data_dma, sizeof(*host->data),
+-				DMA_BIDIRECTIONAL);
+-	}
++	status = mmc_spi_dma_alloc(host);
++	if (status)
++		goto fail_dma;
+ 
+ 	/* setup message for status/busy readback */
+ 	spi_message_init(&host->readback);
+@@ -1458,20 +1490,12 @@ static int mmc_spi_probe(struct spi_device *spi)
+ fail_add_host:
+ 	mmc_remove_host(mmc);
+ fail_glue_init:
+-	if (host->dma_dev)
+-		dma_unmap_single(host->dma_dev, host->data_dma,
+-				sizeof(*host->data), DMA_BIDIRECTIONAL);
+-fail_data_dma:
+-	if (host->dma_dev)
+-		dma_unmap_single(host->dma_dev, host->ones_dma,
+-				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+-fail_ones_dma:
++	mmc_spi_dma_free(host);
++fail_dma:
+ 	kfree(host->data);
+-
+ fail_nobuf1:
+ 	mmc_free_host(mmc);
+ 	mmc_spi_put_pdata(spi);
+-
+ nomem:
+ 	kfree(ones);
+ 	return status;
+@@ -1489,13 +1513,7 @@ static int mmc_spi_remove(struct spi_device *spi)
+ 
+ 	mmc_remove_host(mmc);
+ 
+-	if (host->dma_dev) {
+-		dma_unmap_single(host->dma_dev, host->ones_dma,
+-			MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+-		dma_unmap_single(host->dma_dev, host->data_dma,
+-			sizeof(*host->data), DMA_BIDIRECTIONAL);
+-	}
+-
++	mmc_spi_dma_free(host);
+ 	kfree(host->data);
+ 	kfree(host->ones);
+ 
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.25.1
 
