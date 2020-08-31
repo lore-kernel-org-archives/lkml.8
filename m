@@ -2,137 +2,99 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BBAC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:55:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86029C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 274C7206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:55:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 630A32073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgHaHzb (ORCPT
+        id S1727986AbgHaH4S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:55:31 -0400
-Received: from smtp.h3c.com ([60.191.123.56]:28759 "EHLO h3cspam01-ex.h3c.com"
+        Mon, 31 Aug 2020 03:56:18 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41416 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727962AbgHaHzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:55:31 -0400
-Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
-        by h3cspam01-ex.h3c.com with ESMTP id 07V725q5024120
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:02:05 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
-        by h3cspam01-ex.h3c.com with ESMTPS id 07V704Zl018891
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 31 Aug 2020 15:00:04 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from localhost.localdomain (10.99.212.201) by
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 31 Aug 2020 15:00:07 +0800
-From:   Xianting Tian <tian.xianting@h3c.com>
-To:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
-        <sagi@grimberg.me>
-CC:     <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Xianting Tian <tian.xianting@h3c.com>
-Subject: [PATCH] nvme-pci: check req to prevent crash in nvme_handle_cqe()
-Date:   Mon, 31 Aug 2020 14:53:11 +0800
-Message-ID: <20200831065311.40731-1-tian.xianting@h3c.com>
-X-Mailer: git-send-email 2.17.1
+        id S1727961AbgHaH4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:56:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7C8FCAC85;
+        Mon, 31 Aug 2020 07:56:48 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 08:56:11 +0100
+From:   Mel Gorman <mgorman@suse.com>
+To:     Feng Tang <feng.tang@intel.com>
+Cc:     Borislav Petkov <bp@suse.de>, "Luck, Tony" <tony.luck@intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
+ -14.1% regression
+Message-ID: <20200831075611.GA2976@suse.com>
+References: <20200818082943.GA65567@shbuild999.sh.intel.com>
+ <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
+ <20200819020437.GA2605@shbuild999.sh.intel.com>
+ <20200821020259.GA90000@shbuild999.sh.intel.com>
+ <20200824151425.GF4794@zn.tnic>
+ <20200824153300.GA56944@shbuild999.sh.intel.com>
+ <20200824161238.GI4794@zn.tnic>
+ <20200825062305.GA83850@shbuild999.sh.intel.com>
+ <20200828174839.GD19448@zn.tnic>
+ <20200831021638.GB65971@shbuild999.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.99.212.201]
-X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
- DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
-X-DNSRBL: 
-X-MAIL: h3cspam01-ex.h3c.com 07V704Zl018891
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <20200831021638.GB65971@shbuild999.sh.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We met a crash issue when hot-insert a nvme device, blk_mq_tag_to_rq()
-returned null(req=null), then crash happened in nvme_end_request():
-	struct nvme_request *rq = nvme_req(req);
-	rq->result = result;  <==crash here
+On Mon, Aug 31, 2020 at 10:16:38AM +0800, Feng Tang wrote:
+> > So why don't you define both variables with DEFINE_PER_CPU_ALIGNED and
+> > check if all your bad measurements go away this way?
+> 
+> For 'arch_freq_scale', there are other percpu variables in the same
+> smpboot.c: 'arch_prev_aperf' and 'arch_prev_mperf', and in hot path
+> arch_scale_freq_tick(), these 3 variables are all accessed, so I didn't 
+> touch it. Or maybe we can align the first of these 3 variables, so
+> that they sit in one cacheline.
+> 
+> > You'd also need to check whether there's no detrimental effect from
+> > this change on other, i.e., !KNL platforms, and I think there won't
+> > be because both variables will be in separate cachelines then and all
+> > should be good.
+> 
+> Yes, these kind of changes should be verified on other platforms.
+> 
+> One thing still puzzles me, that the 2 variables are per-cpu things, and
+> there is no case of many CPU contending, why the cacheline layout matters?
+> I doubt it is due to the contention of the same cache set, and am trying
+> to find some way to test it.
+> 
 
-The test env is, a server is configured with 2 backplanes, each backplane
-support 8 nvme devices, this crash happened when hot-insert a nvme device
-to the second backplane. We measured the signal, which is send out of cpu
-to ack nvme interrupt, the signal is very weak when it reached the second
-backplane, the device can't distinguish it as a ack signal. So it caused
-the device can't clear the interrupt flag.
-After updating related driver, the signal sending out of cpu to the second
-backplane is good, the crash issue disappeared.
+Because if you have two structures that are per-cpu and not cache-aligned
+then a write in one can bounce the cache line in another due to
+cache coherency protocol. It's generally called "false cache line
+sharing". https://en.wikipedia.org/wiki/False_sharing has basic examples
+(lets not get into whether wikipedia is a valid citation source, there
+are books on the topic if someone really cared).
 
-As blk_mq_tag_to_rq() may return null, so it should be check whether it is
-null before using it to prevent a crash.
+While it's in my imagination, this should happen with the page allocator
+pcpu structures because the core structure is 1.5 cache lines on 64-bit
+currently and not aligned.  That means that not only can two CPUs interfere
+with each others lists and counters but that could happen cross-node.
 
-	[ 1124.256246] nvme nvme5: pci function 0000:e1:00.0
-	[ 1124.256323] nvme 0000:e1:00.0: enabling device (0000 -> 0002)
-	[ 1125.720859] nvme nvme5: 96/0/0 default/read/poll queues
-	[ 1125.732483]  nvme5n1: p1 p2 p3
-	[ 1125.788049] BUG: unable to handle kernel NULL pointer dereference at 0000000000000130
-	[ 1125.788054] PGD 0 P4D 0
-	[ 1125.788057] Oops: 0002 [#1] SMP NOPTI
-	[ 1125.788059] CPU: 50 PID: 0 Comm: swapper/50 Kdump: loaded Tainted: G   --------- -t - 4.18.0-147.el8.x86_64 #1
-	[ 1125.788065] RIP: 0010:nvme_irq+0xe8/0x240 [nvme]
-	[ 1125.788068] RSP: 0018:ffff916b8ec83ed0 EFLAGS: 00010813
-	[ 1125.788069] RAX: 0000000000000000 RBX: ffff918ae9211b00 RCX: 0000000000000000
-	[ 1125.788070] RDX: 000000000000400b RSI: 0000000000000000 RDI: 0000000000000000
-	[ 1125.788071] RBP: ffff918ae8870000 R08: 0000000000000004 R09: ffff918ae8870000
-	[ 1125.788072] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-	[ 1125.788073] R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001
-	[ 1125.788075] FS:  0000000000000000(0000) GS:ffff916b8ec80000(0000) knlGS:0000000000000000
-	[ 1125.788075] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-	[ 1125.788076] CR2: 0000000000000130 CR3: 0000001768f00000 CR4: 0000000000340ee0
-	[ 1125.788077] Call Trace:
-	[ 1125.788080]  <IRQ>
-	[ 1125.788085]  __handle_irq_event_percpu+0x40/0x180
-	[ 1125.788087]  handle_irq_event_percpu+0x30/0x80
-	[ 1125.788089]  handle_irq_event+0x36/0x53
-	[ 1125.788090]  handle_edge_irq+0x82/0x190
-	[ 1125.788094]  handle_irq+0xbf/0x100
-	[ 1125.788098]  do_IRQ+0x49/0xd0
-	[ 1125.788100]  common_interrupt+0xf/0xf
+The hypothesis can be tested with perf looking for abnormal cache
+misses. In this case, an intense allocating process bound to one CPU
+with intermittent allocations on the adjacent CPU should show unexpected
+cache line bounces. It would not be perfect as collisions would happen
+anyway when the pcpu lists spill over on either the alloc or free side
+to the the buddy lists but in that case, the cache misses would happen
+on different instructions.
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- drivers/nvme/host/pci.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
-index ba725ae47..32712a41c 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -939,6 +939,7 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- {
- 	struct nvme_completion *cqe = &nvmeq->cqes[idx];
- 	struct request *req;
-+	struct blk_mq_tags *tags;
- 
- 	if (unlikely(cqe->command_id >= nvmeq->q_depth)) {
- 		dev_warn(nvmeq->dev->ctrl.device,
-@@ -959,7 +960,15 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- 		return;
- 	}
- 
--	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
-+	tags = nvme_queue_tagset(nvmeq);
-+	req = blk_mq_tag_to_rq(tags, cqe->command_id);
-+	if (unlikely(!req)) {
-+		dev_warn(nvmeq->dev->ctrl.device,
-+			"req is null(tag:%d nr_tags:%d) on queue %d\n"
-+			cqe->command_id, tags->nr_tags, le16_to_cpu(cqe->sq_id);
-+		return;
-+	}
-+
- 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
- 	if (!nvme_end_request(req, cqe->status, cqe->result))
- 		nvme_pci_complete_rq(req);
 -- 
-2.17.1
-
+Mel Gorman
+SUSE Labs
