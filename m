@@ -2,131 +2,188 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D2CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14688C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1902071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:40:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EzcrI3fl"
+	by mail.kernel.org (Postfix) with ESMTP id E84FB20866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:43:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgHaNko (ORCPT
+        id S1726927AbgHaNnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:40:44 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:46666 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgHaNkm (ORCPT
+        Mon, 31 Aug 2020 09:43:52 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:48484 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgHaNnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:40:42 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VDZXad170145;
-        Mon, 31 Aug 2020 13:40:34 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=UcZelzQz1egJztiC3oTDk5ObhFphp8EDAemUUbgfzx0=;
- b=EzcrI3fl/j7LAYCVchRSS8yiMf1hxzALf1nC45FgeNVpJUpwmh/VXDoGRYlvnvUgG/cW
- Ei3UwfEhAuhwXJuUVo6OSoNN1Z5pgkWq+rpXR4eb42haH0FLjfEDlGHujPz5F6FXhujp
- BsBolisY6mRw3h0OUKxUBJap/rEXh7hUhyXuNOMw2LeujcMekBpYKRRHGWbUJ+i8ba1o
- mT6E0YSKRguPWDqiplkM4ZHXJ9YL7MVnuVzPS5g7EaMxED9DH+hOcCCRJeQ4vKE8dHrg
- l1DYrmUW8QtTEKZh60OMQ800A2N4fyyimqdc32qjLeuONNgcYgruTVV/MG05tPNXWCnl MQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 337qrhdb27-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 31 Aug 2020 13:40:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VDYujg030703;
-        Mon, 31 Aug 2020 13:40:33 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 3380sq0y92-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 13:40:33 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07VDeS4Y015193;
-        Mon, 31 Aug 2020 13:40:29 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 31 Aug 2020 06:40:28 -0700
-Date:   Mon, 31 Aug 2020 16:40:21 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: atomisp: Fix fallthrough keyword warning
-Message-ID: <20200831134021.GV8299@kadam>
-References: <20200831133011.91258-1-cengiz@kernel.wtf>
+        Mon, 31 Aug 2020 09:43:50 -0400
+Date:   Mon, 31 Aug 2020 09:43:49 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Mark Brown <broonie@kernel.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mmc: mmc_spi: Don't use dma mappings unless
+ CONFIG_HAS_DMA is set
+Message-ID: <20200831134348.GN3265@brightrain.aerifal.cx>
+References: <20200831131636.51502-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200831133011.91258-1-cengiz@kernel.wtf>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008310079
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
- suspectscore=0 priorityscore=1501 spamscore=0 malwarescore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008310079
+In-Reply-To: <20200831131636.51502-1-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 04:30:12PM +0300, Cengiz Can wrote:
-> commit df561f6688fe ("treewide: Use fallthrough pseudo-keyword") from
-> Gustavo A. R. Silva replaced and standardized /* fallthrough */ comments
-> with 'fallthrough' pseudo-keyword.
+On Mon, Aug 31, 2020 at 03:16:36PM +0200, Ulf Hansson wrote:
+> The commit cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU") made
+> CONFIG_NO_DMA to be set for some platforms, for good reasons.
+> Consequentially, CONFIG_HAS_DMA doesn't get set, which makes the DMA
+> mapping interface to be built as stub functions.
 > 
-> However, in one of the switch-case statements, Coverity Static Analyzer
-> throws a warning that 'fallthrough' is unreachable due to the adjacent
-> 'return false' statement.
+> For weird reasons this causes the mmc_spi driver to fail to ->probe(), as
+> it relies on the dma mappings APIs, no matter of CONFIG_HAS_DMA is set or
+> not. This is wrong, so let's fix this.
 > 
-> Since 'fallthrough' is actually an empty "do {} while(0)" this might be
-> due to compiler optimizations. But that needs further investigation.
-> 
-> In order to fix the unreachable code warning, make adjacent 'return
-> false' a part of the previous if statement's else clause.
-> 
-> Reported-by: Coverity Static Analyzer CID 1466511
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> Fixes: cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU")
+> Reported-by: Rich Felker <dalias@libc.org>
+> Suggested-by: Christoph Hellwig <hch@lst.de>
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 > ---
->  drivers/staging/media/atomisp/pci/atomisp_compat_css20.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  drivers/mmc/host/mmc_spi.c | 86 +++++++++++++++++++++++---------------
+>  1 file changed, 52 insertions(+), 34 deletions(-)
 > 
-> diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-> index 1b2b2c68025b..aaa2d0e0851b 100644
-> --- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-> +++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
-> @@ -709,8 +709,8 @@ static bool is_pipe_valid_to_current_run_mode(struct atomisp_sub_device *asd,
->  		if (pipe_id == IA_CSS_PIPE_ID_CAPTURE ||
->  		    pipe_id == IA_CSS_PIPE_ID_PREVIEW)
->  			return true;
+> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+> index 39bb1e30c2d7..5055a7eb134a 100644
+> --- a/drivers/mmc/host/mmc_spi.c
+> +++ b/drivers/mmc/host/mmc_spi.c
+> @@ -1278,6 +1278,52 @@ mmc_spi_detect_irq(int irq, void *mmc)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +#ifdef CONFIG_HAS_DMA
+> +static int mmc_spi_dma_alloc(struct mmc_spi_host *host)
+> +{
+> +	struct spi_device *spi = host->spi;
+> +	struct device *dev;
+> +
+> +	if (!spi->master->dev.parent->dma_mask)
+> +		return 0;
+> +
+> +	dev = spi->master->dev.parent;
+> +
+> +	host->ones_dma = dma_map_single(dev, host->ones, MMC_SPI_BLOCKSIZE,
+> +					DMA_TO_DEVICE);
+> +	if (dma_mapping_error(dev, host->ones_dma))
+> +		return -ENOMEM;
+> +
+> +	host->data_dma = dma_map_single(dev, host->data, sizeof(*host->data),
+> +					DMA_BIDIRECTIONAL);
+> +	if (dma_mapping_error(dev, host->data_dma)) {
+> +		dma_unmap_single(dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
+> +				 DMA_TO_DEVICE);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	dma_sync_single_for_cpu(dev, host->data_dma, sizeof(*host->data),
+> +				DMA_BIDIRECTIONAL);
+> +
+> +	host->dma_dev = dev;
+> +	return 0;
+> +}
+> +
+> +static void mmc_spi_dma_free(struct mmc_spi_host *host)
+> +{
+> +	if (!host->dma_dev)
+> +		return;
+> +
+> +	dma_unmap_single(host->dma_dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
+> +			 DMA_TO_DEVICE);
+> +	dma_unmap_single(host->dma_dev, host->data_dma,	sizeof(*host->data),
+> +			 DMA_BIDIRECTIONAL);
+> +}
+> +#else
+> +static inline mmc_spi_dma_alloc(struct mmc_spi_host *host) { return 0; }
+> +static inline void mmc_spi_dma_free(struct mmc_spi_host *host) {}
+> +#endif
+> +
+>  static int mmc_spi_probe(struct spi_device *spi)
+>  {
+>  	void			*ones;
+> @@ -1374,23 +1420,9 @@ static int mmc_spi_probe(struct spi_device *spi)
+>  	if (!host->data)
+>  		goto fail_nobuf1;
+>  
+> -	if (spi->master->dev.parent->dma_mask) {
+> -		struct device	*dev = spi->master->dev.parent;
 > -
-> -		return false;
-> +		else
-> +			return false;
->  		fallthrough;
+> -		host->dma_dev = dev;
+> -		host->ones_dma = dma_map_single(dev, ones,
+> -				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+> -		if (dma_mapping_error(dev, host->ones_dma))
+> -			goto fail_ones_dma;
+> -		host->data_dma = dma_map_single(dev, host->data,
+> -				sizeof(*host->data), DMA_BIDIRECTIONAL);
+> -		if (dma_mapping_error(dev, host->data_dma))
+> -			goto fail_data_dma;
+> -
+> -		dma_sync_single_for_cpu(host->dma_dev,
+> -				host->data_dma, sizeof(*host->data),
+> -				DMA_BIDIRECTIONAL);
+> -	}
+> +	status = mmc_spi_dma_alloc(host);
+> +	if (status)
+> +		goto fail_dma;
+>  
+>  	/* setup message for status/busy readback */
+>  	spi_message_init(&host->readback);
+> @@ -1458,20 +1490,12 @@ static int mmc_spi_probe(struct spi_device *spi)
+>  fail_add_host:
+>  	mmc_remove_host(mmc);
+>  fail_glue_init:
+> -	if (host->dma_dev)
+> -		dma_unmap_single(host->dma_dev, host->data_dma,
+> -				sizeof(*host->data), DMA_BIDIRECTIONAL);
+> -fail_data_dma:
+> -	if (host->dma_dev)
+> -		dma_unmap_single(host->dma_dev, host->ones_dma,
+> -				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+> -fail_ones_dma:
+> +	mmc_spi_dma_free(host);
+> +fail_dma:
+>  	kfree(host->data);
+> -
+>  fail_nobuf1:
+>  	mmc_free_host(mmc);
+>  	mmc_spi_put_pdata(spi);
+> -
+>  nomem:
+>  	kfree(ones);
+>  	return status;
+> @@ -1489,13 +1513,7 @@ static int mmc_spi_remove(struct spi_device *spi)
+>  
+>  	mmc_remove_host(mmc);
+>  
+> -	if (host->dma_dev) {
+> -		dma_unmap_single(host->dma_dev, host->ones_dma,
+> -			MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+> -		dma_unmap_single(host->dma_dev, host->data_dma,
+> -			sizeof(*host->data), DMA_BIDIRECTIONAL);
+> -	}
+> -
+> +	mmc_spi_dma_free(host);
+>  	kfree(host->data);
+>  	kfree(host->ones);
+>  
+> -- 
+> 2.25.1
 
-Heh...  Still unreachable, but now it has a checkpatch.pl warning as
-well.  Just get rid of the bogus fallthrough annotation.
+A change to Kconfig is also needed to remove the HAS_DMA dependency.
 
->  	case ATOMISP_RUN_MODE_VIDEO:
->  		if (!asd->continuous_mode->val) {
-
-regards,
-dan carpenter
-
+Rich
