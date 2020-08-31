@@ -2,283 +2,77 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3C9C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60778C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A016120936
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:24:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dP1lmEFy"
+	by mail.kernel.org (Postfix) with ESMTP id 43E0020866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730104AbgHaUY1 (ORCPT
+        id S1728046AbgHaU0c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:24:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44760 "EHLO
+        Mon, 31 Aug 2020 16:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729978AbgHaUXb (ORCPT
+        with ESMTP id S1726928AbgHaU0b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:23:31 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA171C061755;
-        Mon, 31 Aug 2020 13:23:30 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w14so8242559ljj.4;
-        Mon, 31 Aug 2020 13:23:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=LlFFuQSVpP4nuOnidxL8KPHKkAPDk1QX0MDXTli+RAU=;
-        b=dP1lmEFyf6frzJ1B8XZwURB2SeEh72JMFlrp4WrwxklfKetjzVQguOcrFwb0h1Wtn6
-         OE6DtQMLQMy8dyGpXFcOWw9t6rIcMz6FOWXTspiLX++zGiiVnnIp4AzPuCQpMnftCFc8
-         9Repl1fNNy4fQMNZgKJYxWeAjjTE4Pixxk0hQDke8SMzEzniV5lqq0gEn3mPWCcO4iKQ
-         vw5KC+SgWXCZAzFaoOZg0TAe5SjFqmiBZREiEcuTYaLmv9haR8XIq4UQjX3hE/LpxgeW
-         YVUyKoRpA5NhubrAaLS/iE4B45mNIgzXT8BPliqFxKAJ4n1iz3u4FrnCkjXk/JCMgoE7
-         0w0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=LlFFuQSVpP4nuOnidxL8KPHKkAPDk1QX0MDXTli+RAU=;
-        b=HoiE1himpQt4ADDKe95lRxLo/zyca/BsKn7r5GQCid9AYpW3av749zNN1aUZoUTa5S
-         rdutUA2+yq6ETl3MDSuFwPQbDiRsW7kHaXL9YcveEsPmFqRUijboCxX4TSztj4qjHLSI
-         LEHLYgCyN4BCktD4Sp/aPxVP07COytEHJ8tUWsAwufr2qxs/3eU3kaSRRepGwernTyn0
-         7gIjBHN/fiJwYzsodidrtIXqRBfxVr138cbPorIaP8H/eseEikELa21ENWt+rfPgNqgH
-         gzqFpTEHNvJ3pB0H97sZlwz/FhIRxI3mR8EmM/48BWqGgWMYfbpAfh5+/aNo+X+BehyO
-         Gkfw==
-X-Gm-Message-State: AOAM532dRv2/ffYWOmTjeOO/n816unsvweDiNlhBJQt0+u3VVI651dkX
-        ueWVG5+f7aEcIgPGVE9wBLO5AotExFo=
-X-Google-Smtp-Source: ABdhPJwVuNjpPMZLuTwO3BMasZHAYnlVKPN4KyfqL+kt3zKw0lRQAeuEw6UDBzbhWJsOO7BbJzp25w==
-X-Received: by 2002:a2e:a58a:: with SMTP id m10mr1311257ljp.247.1598905408626;
-        Mon, 31 Aug 2020 13:23:28 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id z20sm1769054ljk.97.2020.08.31.13.23.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:23:28 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Mon, 31 Aug 2020 16:26:31 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521BAC061573;
+        Mon, 31 Aug 2020 13:26:31 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id C3B44634C87;
+        Mon, 31 Aug 2020 23:26:13 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kCqNZ-0000zH-J0; Mon, 31 Aug 2020 23:26:13 +0300
+Date:   Mon, 31 Aug 2020 23:26:13 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, hverkuil@xs4all.nl,
+        luca@lucaceresoli.net, leonl@leopardimaging.com,
+        robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 03/12] i2c: tegra: Clean up messages in the code
-Date:   Mon, 31 Aug 2020 23:22:54 +0300
-Message-Id: <20200831202303.15391-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200831202303.15391-1-digetx@gmail.com>
-References: <20200831202303.15391-1-digetx@gmail.com>
+Subject: Re: [PATCH v4 3/4] dt-bindings: media: imx274: Move clock and
+ supplies to required properties
+Message-ID: <20200831202613.GE844@valkosipuli.retiisi.org.uk>
+References: <1598903558-9691-1-git-send-email-skomatineni@nvidia.com>
+ <1598903558-9691-4-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598903558-9691-4-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use lowercase and consistent wording for all messages in the code.
+Hi Sowjanya,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/i2c/busses/i2c-tegra.c | 50 ++++++++++++++++------------------
- 1 file changed, 24 insertions(+), 26 deletions(-)
+On Mon, Aug 31, 2020 at 12:52:37PM -0700, Sowjanya Komatineni wrote:
+> Clock and supplies are external to IMX274 sensor and are dependent
+> on camera module design.
+> 
+> So, this patch moves them to required properties.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 9bd91b6f32f4..efbb20049cf8 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -427,7 +427,7 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
- 		return 0;
- 
- 	if (!IS_ENABLED(CONFIG_TEGRA20_APB_DMA)) {
--		dev_dbg(i2c_dev->dev, "Support for APB DMA not enabled!\n");
-+		dev_dbg(i2c_dev->dev, "dma support not enabled\n");
- 		return 0;
- 	}
- 
-@@ -450,7 +450,7 @@ static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
- 	dma_buf = dma_alloc_coherent(i2c_dev->dev, i2c_dev->dma_buf_size,
- 				     &dma_phys, GFP_KERNEL | __GFP_NOWARN);
- 	if (!dma_buf) {
--		dev_err(i2c_dev->dev, "failed to allocate the DMA buffer\n");
-+		dev_err(i2c_dev->dev, "failed to allocate dma buffer\n");
- 		err = -ENOMEM;
- 		goto err_out;
- 	}
-@@ -672,8 +672,7 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
- 
- 	ret = clk_enable(i2c_dev->fast_clk);
- 	if (ret < 0) {
--		dev_err(i2c_dev->dev,
--			"Enabling fast clk failed, err %d\n", ret);
-+		dev_err(dev, "failed to enable fast clock: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -685,8 +684,7 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
- 
- 	ret = clk_enable(i2c_dev->div_clk);
- 	if (ret < 0) {
--		dev_err(i2c_dev->dev,
--			"Enabling div clk failed, err %d\n", ret);
-+		dev_err(dev, "failed to enable div clock: %d\n", ret);
- 		goto disable_slow_clk;
- 	}
- 
-@@ -850,7 +848,7 @@ static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
- 				   i2c_dev->bus_clk_rate * clk_multiplier);
- 		if (err) {
- 			dev_err(i2c_dev->dev,
--				"failed changing clock rate: %d\n", err);
-+				"failed to set div-clk rate: %d\n", err);
- 			return err;
- 		}
- 	}
-@@ -1052,7 +1050,7 @@ static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
- 		slv_config.device_fc = true;
- 		ret = dmaengine_slave_config(chan, &slv_config);
- 		if (ret < 0) {
--			dev_err(i2c_dev->dev, "DMA slave config failed: %d\n",
-+			dev_err(i2c_dev->dev, "dma slave config failed: %d\n",
- 				ret);
- 			dev_err(i2c_dev->dev, "falling back to PIO\n");
- 			tegra_i2c_release_dma(i2c_dev);
-@@ -1163,8 +1161,7 @@ static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
- 
- 	reg = i2c_readl(i2c_dev, I2C_BUS_CLEAR_STATUS);
- 	if (!(reg & I2C_BC_STATUS)) {
--		dev_err(i2c_dev->dev,
--			"un-recovered arbitration lost\n");
-+		dev_err(i2c_dev->dev, "un-recovered arbitration lost\n");
- 		return -EIO;
- 	}
- 
-@@ -1221,8 +1218,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 			err = tegra_i2c_dma_submit(i2c_dev, xfer_size);
- 			if (err < 0) {
- 				dev_err(i2c_dev->dev,
--					"starting RX DMA failed, err %d\n",
--					err);
-+					"starting rx dma failed: %d\n", err);
- 				return err;
- 			}
- 
-@@ -1281,8 +1277,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 			err = tegra_i2c_dma_submit(i2c_dev, xfer_size);
- 			if (err < 0) {
- 				dev_err(i2c_dev->dev,
--					"starting TX DMA failed, err %d\n",
--					err);
-+					"starting tx dma failed: %d\n", err);
- 				return err;
- 			}
- 		} else {
-@@ -1321,7 +1316,7 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 					 i2c_dev->tx_dma_chan);
- 
- 		if (!time_left && !completion_done(&i2c_dev->dma_complete)) {
--			dev_err(i2c_dev->dev, "DMA transfer timeout\n");
-+			dev_err(i2c_dev->dev, "dma transfer timeout\n");
- 			tegra_i2c_init(i2c_dev, true);
- 			return -ETIMEDOUT;
- 		}
-@@ -1676,7 +1671,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
- 	if (!res) {
--		dev_err(&pdev->dev, "no irq resource\n");
-+		dev_err(dev, "no irq resource\n");
- 		return -EINVAL;
- 	}
- 	irq = res->start;
-@@ -1705,7 +1700,9 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 
- 	i2c_dev->rst = devm_reset_control_get_exclusive(&pdev->dev, "i2c");
- 	if (IS_ERR(i2c_dev->rst)) {
--		dev_err(&pdev->dev, "missing controller reset\n");
-+		dev_err(dev, "failed to get controller reset: %pe\n",
-+			i2c_dev->rst);
-+
- 		return PTR_ERR(i2c_dev->rst);
- 	}
- 
-@@ -1725,7 +1722,9 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	if (!i2c_dev->hw->has_single_clk_source) {
- 		fast_clk = devm_clk_get(&pdev->dev, "fast-clk");
- 		if (IS_ERR(fast_clk)) {
--			dev_err(&pdev->dev, "missing fast clock\n");
-+			dev_err(dev, "failed to get fast clock\n: %ld\n",
-+				PTR_ERR(fast_clk));
-+
- 			return PTR_ERR(fast_clk);
- 		}
- 		i2c_dev->fast_clk = fast_clk;
-@@ -1746,7 +1745,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 
- 	ret = clk_prepare(i2c_dev->fast_clk);
- 	if (ret < 0) {
--		dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
-+		dev_err(dev, "failed to prepare fast clock: %d\n", ret);
- 		return ret;
- 	}
- 
-@@ -1770,7 +1769,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 
- 	ret = clk_prepare(i2c_dev->div_clk);
- 	if (ret < 0) {
--		dev_err(i2c_dev->dev, "Clock prepare failed %d\n", ret);
-+		dev_err(dev, "failed to prepare div-clk: %d\n", ret);
- 		goto unprepare_slow_clk;
- 	}
- 
-@@ -1787,13 +1786,13 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	if (!pm_runtime_enabled(&pdev->dev)) {
- 		ret = tegra_i2c_runtime_resume(&pdev->dev);
- 		if (ret < 0) {
--			dev_err(&pdev->dev, "runtime resume failed\n");
-+			dev_err(dev, "runtime resume failed\n");
- 			goto unprepare_div_clk;
- 		}
- 	} else {
- 		ret = pm_runtime_get_sync(i2c_dev->dev);
- 		if (ret < 0) {
--			dev_err(&pdev->dev, "runtime resume failed\n");
-+			dev_err(dev, "runtime resume failed\n");
- 			goto disable_rpm;
- 		}
- 	}
-@@ -1801,8 +1800,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	if (i2c_dev->is_multimaster_mode) {
- 		ret = clk_enable(i2c_dev->div_clk);
- 		if (ret < 0) {
--			dev_err(i2c_dev->dev, "div_clk enable failed %d\n",
--				ret);
-+			dev_err(dev, "failed to enable div-clk: %d\n", ret);
- 			goto put_rpm;
- 		}
- 	}
-@@ -1816,7 +1814,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 
- 	ret = tegra_i2c_init(i2c_dev, false);
- 	if (ret) {
--		dev_err(&pdev->dev, "Failed to initialize i2c controller\n");
-+		dev_err(dev, "failed to initialize i2c controller\n");
- 		goto release_dma;
- 	}
- 
-@@ -1825,7 +1823,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
- 	ret = devm_request_irq(&pdev->dev, i2c_dev->irq, tegra_i2c_isr,
- 			       IRQF_NO_SUSPEND, dev_name(&pdev->dev), i2c_dev);
- 	if (ret) {
--		dev_err(&pdev->dev, "Failed to request irq %i\n", i2c_dev->irq);
-+		dev_err(dev, "failed to request irq %i\n", i2c_dev->irq);
- 		goto release_dma;
- 	}
- 
+One more comment.
+
+Jacopo has been working on converting this to YAML format. Could you rebase
+your patch on his? I believe he's still working on some changes. The
+subject is "[PATCH v3] dt-bindings: media: imx274: Convert to json-schema".
+
 -- 
-2.27.0
+Kind regards,
 
+Sakari Ailus
