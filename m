@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66F5AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A13E3C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47F322083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A8012083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897367;
-	bh=4XdryG1RiS9pScSJTZHEAUnlZQ1xRBaxkunLznXSh3k=;
+	s=default; t=1598897375;
+	bh=0m6LQHb9e+Dt06c4PMG96RC7SkXXFksL6e5cysjbOlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GS6iTcSTNatIYO6HDTyq5kqKigm5mGv/96ndXNuHvAygVaI4pLg1abPTsaP6TcMJm
-	 eCo/sJMgKHEG+EIOMzYVGC/7xEmvCGlOLnGFUqgyylxMsmPGAee/+/zKqI+rYZ552T
-	 tMp5BBox70xW4mB3wW7BITAK43GgiymPqeCO9lpM=
+	b=UsnmTl5D4/YvOW7sHvrggEMvs27atQp7gp+vAVshutOsBKVBfwn4XifHhPe9/c4bA
+	 j1MShVGzwvu5YbnCOJNJLoOff0l7ShgV7If77ttR/0lJBp3HwuugxbenX3cxTj3DhW
+	 LPxkG1LJtFNvdaMtvXSJmYZpMsW4SmGY5Ez4I0UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729538AbgHaSJY (ORCPT
+        id S1729558AbgHaSJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:09:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55484 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55452 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729215AbgHaSHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:07:54 -0400
+        id S1729053AbgHaSHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:07:53 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EF3421582;
-        Mon, 31 Aug 2020 18:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF17620E65;
+        Mon, 31 Aug 2020 18:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598897273;
-        bh=4XdryG1RiS9pScSJTZHEAUnlZQ1xRBaxkunLznXSh3k=;
+        bh=0m6LQHb9e+Dt06c4PMG96RC7SkXXFksL6e5cysjbOlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fJaMfqeU/GjtBbGqlL6h5tZeBfk4frMJyYuK35tMvGizmlN6qs+aiF6wKSefTtf07
-         YchP8MbeLxv3mnXudWEveZ27BBPjFK+RtuU2z7Vvl5iSGYf2fFYCXsMEUT3yq+J+yz
-         YOCmd7q3QPBAUrVih5Jd3j+RZn57mtiMjY6f03Hg=
+        b=mkaFcE/9S0LnjyzUWqYcRdGMVN6FQ4zmH1+JruHtxhpi80i5ssnTLMgoGXl4YXaN2
+         FoKojGhNY5ZPTWnvnIQM497FtKCiTZbTQajwGj/oAARLZFFkjpq4rMFK80iiUo4Evj
+         eRGyNjhw+rzWbyR7aysBI48Ax/yYJieLjHvFhvTQ=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 07/19] scftorture: Add smp_call_function_single() memory-ordering checks
-Date:   Mon, 31 Aug 2020 11:07:37 -0700
-Message-Id: <20200831180749.843-7-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 06/19] scftorture: Summarize per-thread statistics
+Date:   Mon, 31 Aug 2020 11:07:36 -0700
+Message-Id: <20200831180749.843-6-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180731.GA582@paulmck-ThinkPad-P72>
 References: <20200831180731.GA582@paulmck-ThinkPad-P72>
@@ -61,143 +61,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds checks for memory misordering across calls to
-smp_call_function_single() and also across returns in the case where
-the caller waits.  Misordering results in a splat.
+This commit summarizes the per-thread statistics, providing counts of
+the number of single, many, and all calls, both no-wait and wait, and,
+for the single case, the number where the target CPU was offline.
 
-[ paulmck: s/GFP_KERNEL/GFP_ATOMIC/ per kernel test robot feedback. ]
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/scftorture.c | 56 +++++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 8 deletions(-)
+ kernel/scftorture.c | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
 diff --git a/kernel/scftorture.c b/kernel/scftorture.c
-index 09a6242..9b42271 100644
+index 5f19845..09a6242 100644
 --- a/kernel/scftorture.c
 +++ b/kernel/scftorture.c
-@@ -117,9 +117,20 @@ static struct scf_selector scf_sel_array[SCF_NPRIMS];
- static int scf_sel_array_len;
- static unsigned long scf_sel_totweight;
- 
-+// Communicate between caller and handler.
-+struct scf_check {
-+	bool scfc_in;
-+	bool scfc_out;
-+	int scfc_cpu; // -1 for not _single().
-+	bool scfc_wait;
-+};
-+
- // Use to wait for all threads to start.
- static atomic_t n_started;
- static atomic_t n_errs;
-+static atomic_t n_mb_in_errs;
-+static atomic_t n_mb_out_errs;
-+static atomic_t n_alloc_errs;
- static bool scfdone;
- 
- DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
-@@ -222,24 +233,27 @@ static struct scf_selector *scf_sel_rand(struct torture_random_state *trsp)
- // Update statistics and occasionally burn up mass quantities of CPU time,
- // if told to do so via scftorture.longwait.  Otherwise, occasionally burn
- // a little bit.
--static void scf_handler(void *unused)
-+static void scf_handler(void *scfc_in)
+@@ -128,13 +128,27 @@ DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
+ static void scf_torture_stats_print(void)
  {
- 	int i;
- 	int j;
- 	unsigned long r = torture_random(this_cpu_ptr(&scf_torture_rand));
-+	struct scf_check *scfcp = scfc_in;
+ 	int cpu;
++	int i;
+ 	long long invoked_count = 0;
+ 	bool isdone = READ_ONCE(scfdone);
++	struct scf_statistics scfs = {};
  
-+	if (likely(scfcp) && WARN_ON_ONCE(unlikely(!READ_ONCE(scfcp->scfc_in))))
-+		atomic_inc(&n_mb_in_errs);
- 	this_cpu_inc(scf_invoked_count);
- 	if (longwait <= 0) {
- 		if (!(r & 0xffc0))
- 			udelay(r & 0x3f);
--		return;
-+		goto out;
- 	}
- 	if (r & 0xfff)
--		return;
-+		goto out;
- 	r = (r >> 12);
- 	if (longwait <= 0) {
- 		udelay((r & 0xff) + 1);
--		return;
-+		goto out;
- 	}
- 	r = r % longwait + 1;
- 	for (i = 0; i < r; i++) {
-@@ -248,14 +262,24 @@ static void scf_handler(void *unused)
- 			cpu_relax();
- 		}
- 	}
-+out:
-+	if (unlikely(!scfcp))
-+		return;
-+	if (scfcp->scfc_wait)
-+		WRITE_ONCE(scfcp->scfc_out, true);
-+	else
-+		kfree(scfcp);
- }
- 
- // As above, but check for correct CPU.
--static void scf_handler_1(void *me)
-+static void scf_handler_1(void *scfc_in)
- {
--	if (WARN_ON_ONCE(smp_processor_id() != (uintptr_t)me))
-+	struct scf_check *scfcp = scfc_in;
-+
-+	if (likely(scfcp) && WARN_ONCE(smp_processor_id() != scfcp->scfc_cpu, "%s: Wanted CPU %d got CPU %d\n", __func__, scfcp->scfc_cpu, smp_processor_id())) {
- 		atomic_inc(&n_errs);
--	scf_handler(NULL);
+ 	for_each_possible_cpu(cpu)
+ 		invoked_count += data_race(per_cpu(scf_invoked_count, cpu));
+-	pr_alert("%s scf_invoked_count %s: %lld ",
+-		 SCFTORT_FLAG, isdone ? "VER" : "ver", invoked_count);
++	for (i = 0; i < nthreads; i++) {
++		scfs.n_single += scf_stats_p[i].n_single;
++		scfs.n_single_ofl += scf_stats_p[i].n_single_ofl;
++		scfs.n_single_wait += scf_stats_p[i].n_single_wait;
++		scfs.n_single_wait_ofl += scf_stats_p[i].n_single_wait_ofl;
++		scfs.n_many += scf_stats_p[i].n_many;
++		scfs.n_many_wait += scf_stats_p[i].n_many_wait;
++		scfs.n_all += scf_stats_p[i].n_all;
++		scfs.n_all_wait += scf_stats_p[i].n_all_wait;
 +	}
-+	scf_handler(scfcp);
++	pr_alert("%s scf_invoked_count %s: %lld single: %lld/%lld single_ofl: %lld/%lld many: %lld/%lld all: %lld/%lld ",
++		 SCFTORT_FLAG, isdone ? "VER" : "ver", invoked_count,
++		 scfs.n_single, scfs.n_single_wait, scfs.n_single_ofl, scfs.n_single_wait_ofl,
++		 scfs.n_many, scfs.n_many_wait, scfs.n_all, scfs.n_all_wait);
+ 	torture_onoff_stats();
+ 	pr_cont("\n");
  }
+@@ -357,11 +371,11 @@ static void scf_torture_cleanup(void)
+ 			torture_stop_kthread("scftorture_invoker", scf_stats_p[i].task);
+ 	else
+ 		goto end;
+-	kfree(scf_stats_p);
+-	scf_stats_p = NULL;
+ 	smp_call_function(scf_cleanup_handler, NULL, 0);
+ 	torture_stop_kthread(scf_torture_stats, scf_torture_stats_task);
+ 	scf_torture_stats_print();  // -After- the stats thread is stopped!
++	kfree(scf_stats_p);  // -After- the last stats print has completed!
++	scf_stats_p = NULL;
  
- // Randomly do an smp_call_function*() invocation.
-@@ -263,6 +287,7 @@ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_ra
- {
- 	uintptr_t cpu;
- 	int ret;
-+	struct scf_check *scfcp = NULL;
- 	struct scf_selector *scfsp = scf_sel_rand(trsp);
- 
- 	if (use_cpus_read_lock)
-@@ -271,17 +296,32 @@ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_ra
- 		preempt_disable();
- 	switch (scfsp->scfs_prim) {
- 	case SCF_PRIM_SINGLE:
-+		scfcp = kmalloc(sizeof(*scfcp), GFP_ATOMIC);
-+		if (WARN_ON_ONCE(!scfcp))
-+			atomic_inc(&n_alloc_errs);
- 		cpu = torture_random(trsp) % nr_cpu_ids;
- 		if (scfsp->scfs_wait)
- 			scfp->n_single_wait++;
- 		else
- 			scfp->n_single++;
--		ret = smp_call_function_single(cpu, scf_handler_1, (void *)cpu, scfsp->scfs_wait);
-+		if (scfcp) {
-+			scfcp->scfc_cpu = cpu;
-+			scfcp->scfc_wait = scfsp->scfs_wait;
-+			scfcp->scfc_out = false;
-+			scfcp->scfc_in = true;
-+		}
-+		ret = smp_call_function_single(cpu, scf_handler_1, (void *)scfcp, scfsp->scfs_wait);
- 		if (ret) {
- 			if (scfsp->scfs_wait)
- 				scfp->n_single_wait_ofl++;
- 			else
- 				scfp->n_single_ofl++;
-+			kfree(scfcp);
-+		} else if (scfcp && scfsp->scfs_wait) {
-+			if (WARN_ON_ONCE(!scfcp->scfc_out))
-+				atomic_inc(&n_mb_out_errs); // Leak rather than trash!
-+			else
-+				kfree(scfcp);
- 		}
- 		break;
- 	case SCF_PRIM_MANY:
+ 	if (atomic_read(&n_errs))
+ 		scftorture_print_module_parms("End of test: FAILURE");
 -- 
 2.9.5
 
