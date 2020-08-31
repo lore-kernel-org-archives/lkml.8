@@ -2,168 +2,84 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCFAC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9DFBC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB69720719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0B720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="abrgTriq"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="CAU0FQ0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgHaPqy (ORCPT
+        id S1727935AbgHaPr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:46:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57858 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgHaPqs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:46:48 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3881C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:46:47 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id y4so6191451ljk.8
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:46:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+AoMEfgYRxQkncZxnPbeI2rx7pGrsAFC42S72eCBWIc=;
-        b=abrgTriqszl9wlmYoiAi460uozclBt//bwVG6oUCXIYMaa47WhwIZ5OK0cldnL8eqx
-         kNKaDE2trDqOmVr2v/5ZmMIBj2c5PslJlv2Elxb/ggWXIl4U516/Abqy0/HIN11cbHzC
-         h8C0QuQWNNXaJFVu9EOU4Qi0NTNySPdoHprKNcyWCbK9chZpfcUvtCbiRjiPab6dcFod
-         cFZFGqvlQJm9x3ZyscjpjPZ69FH2ahfgHP/+UCwH1Y5lgf1ncOpukzXYqKZ78eqI2EBq
-         7lhaKLnGzzeilsmbuB5IrcJQGGm0tySPQBMaTkEq/xFYC2aa8zaYOqufmsUAWhTl1Ena
-         7ICQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+AoMEfgYRxQkncZxnPbeI2rx7pGrsAFC42S72eCBWIc=;
-        b=sQe0CnaHhGuKDxlS3vgiCR3mzEvBEm3EFIl6ACddJ+5KiNZYfZZQgkd6ltwNOCSlpY
-         FiXl0UXfgealcTKsSElraxwOBdmUfPzWPNRB6u7CoLpu9dpRC7z8yC35Hrb2nJq3xItG
-         8V0y/zHacrUJLoEUpQPNeIQNYlvydJ31qKJsoT6Xlw14FA7fqnsZ9PziPlndCct0T5lv
-         lmh8+tEnTxz4npt1iQ0G0yT++GsZnIoyHxCFvMl3Huk9LxIIdv6NHYNqFRtqlYVwHHqo
-         p4Gr3JdWleuuGK3QGLxFxMFxJG7Y5L0yxlK1oe041IKAFMilO5j9t3d1qlEK8WBhh9Eb
-         jD3A==
-X-Gm-Message-State: AOAM533DXC6pGYcz+NYdNoKfo0fPyKLCzxtrK0Y/zObLs7QZ5Luijxiu
-        owM3AOpDbS4Jvc2+UXlbxRNVZ+lBVwoWP0wDl16thPrh2Ss=
-X-Google-Smtp-Source: ABdhPJw8ICUjRfg1psgk3VeEEbjk3V7kQYtrfhITr5IhGR+QFzandviK26WiXtH9qc+8aQaXY2IApqpO+DdwQrzFP68=
-X-Received: by 2002:a2e:9990:: with SMTP id w16mr872000lji.156.1598888805568;
- Mon, 31 Aug 2020 08:46:45 -0700 (PDT)
+        Mon, 31 Aug 2020 11:47:28 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54564 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726927AbgHaPr0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:47:26 -0400
+Received: from zn.tnic (p200300ec2f085000329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ABBFA1EC0428;
+        Mon, 31 Aug 2020 17:47:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598888843;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=rWtRZ4hfzr7qKnP/HFeh64B+sglziA9JXIexmTro33Y=;
+        b=CAU0FQ0B1Tz+HDK12bpJUpmpyUbpMGCmGPg+UgsIIQtXUhRXxJ80MSIt0uMvMTdu9H3VSx
+        +udnSPwHwwiXAKFZJTnB6Ww89cVrHYMNIyAuy7YPSVJ8ssDKbroIBNch+C24/R4nh5vxmr
+        HI6S0W3EQ3P6uGg3Tsq8M6+CUEdi2Lk=
+Date:   Mon, 31 Aug 2020 17:47:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 52/76] x86/sev-es: Handle MMIO events
+Message-ID: <20200831154719.GI27517@zn.tnic>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-53-joro@8bytes.org>
 MIME-Version: 1.0
-References: <20200831153207.GO3265@brightrain.aerifal.cx>
-In-Reply-To: <20200831153207.GO3265@brightrain.aerifal.cx>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 31 Aug 2020 17:46:19 +0200
-Message-ID: <CAG48ez39WNuoxYO=RaW5OeVGSOy=uEAZ+xW_++TP7yjkUKGqkg@mail.gmail.com>
-Subject: Re: [PATCH v2] vfs: add RWF_NOAPPEND flag for pwritev2
-To:     Rich Felker <dalias@libc.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200824085511.7553-53-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 5:32 PM Rich Felker <dalias@libc.org> wrote:
-> The pwrite function, originally defined by POSIX (thus the "p"), is
-> defined to ignore O_APPEND and write at the offset passed as its
-> argument. However, historically Linux honored O_APPEND if set and
-> ignored the offset. This cannot be changed due to stability policy,
-> but is documented in the man page as a bug.
->
-> Now that there's a pwritev2 syscall providing a superset of the pwrite
-> functionality that has a flags argument, the conforming behavior can
-> be offered to userspace via a new flag. Since pwritev2 checks flag
-> validity (in kiocb_set_rw_flags) and reports unknown ones with
-> EOPNOTSUPP, callers will not get wrong behavior on old kernels that
-> don't support the new flag; the error is reported and the caller can
-> decide how to handle it.
->
-> Signed-off-by: Rich Felker <dalias@libc.org>
+On Mon, Aug 24, 2020 at 10:54:47AM +0200, Joerg Roedel wrote:
+> +		if (bytes == 4)
+> +			*reg_data = 0;  /* Zero-extend for 32-bit operation */
 
-Reviewed-by: Jann Horn <jannh@google.com>
+Please put all side-comments over the respective line. There are a
+couple in this patch.
 
-Note that if this lands, Michael Kerrisk will probably be happy if you
-send a corresponding patch for the manpage man2/readv.2.
+Thx.
 
-Btw, I'm not really sure whose tree this should go through - VFS is
-normally Al Viro's turf, but it looks like the most recent
-modifications to this function have gone through Jens Axboe's tree?
+-- 
+Regards/Gruss,
+    Boris.
 
-> ---
->
-> Changes in v2: I've added a check to ensure that RWF_NOAPPEND does not
-> override O_APPEND for S_APPEND (chattr +a) inodes, and fixed conflicts
-> with 1752f0adea98ef85, which optimized kiocb_set_rw_flags to work with
-> a local copy of flags. Unfortunately the same optimization does not
-> work for RWF_NOAPPEND since it needs to remove flags from the original
-> set at function entry.
->
-> If desired, I could further change this so that kiocb_flags is
-> initialized to ki->ki_flags, with assignment-back in place of |= at
-> the end of the function. This would allow the same local variable
-> pattern in the RWF_NOAPPEND code path, which might be more elegant,
-> but I'm not sure if the emitted code would improve or get worse.
->
->
->  include/linux/fs.h      | 7 +++++++
->  include/uapi/linux/fs.h | 5 ++++-
->  2 files changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 7519ae003a08..924e17ac8e7e 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3321,6 +3321,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
->                 return 0;
->         if (unlikely(flags & ~RWF_SUPPORTED))
->                 return -EOPNOTSUPP;
-> +       if (unlikely((flags & RWF_APPEND) && (flags & RWF_NOAPPEND)))
-> +               return -EINVAL;
->
->         if (flags & RWF_NOWAIT) {
->                 if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
-> @@ -3335,6 +3337,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
->                 kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
->         if (flags & RWF_APPEND)
->                 kiocb_flags |= IOCB_APPEND;
-> +       if ((flags & RWF_NOAPPEND) && (ki->ki_flags & IOCB_APPEND)) {
-> +               if (IS_APPEND(file_inode(ki->ki_filp)))
-> +                       return -EPERM;
-> +               ki->ki_flags &= ~IOCB_APPEND;
-> +       }
->
->         ki->ki_flags |= kiocb_flags;
->         return 0;
-> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
-> index f44eb0a04afd..d5e54e0742cf 100644
-> --- a/include/uapi/linux/fs.h
-> +++ b/include/uapi/linux/fs.h
-> @@ -300,8 +300,11 @@ typedef int __bitwise __kernel_rwf_t;
->  /* per-IO O_APPEND */
->  #define RWF_APPEND     ((__force __kernel_rwf_t)0x00000010)
->
-> +/* per-IO negation of O_APPEND */
-> +#define RWF_NOAPPEND   ((__force __kernel_rwf_t)0x00000020)
-> +
->  /* mask of flags supported by the kernel */
->  #define RWF_SUPPORTED  (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
-> -                        RWF_APPEND)
-> +                        RWF_APPEND | RWF_NOAPPEND)
->
->  #endif /* _UAPI_LINUX_FS_H */
-> --
-> 2.21.0
->
+https://people.kernel.org/tglx/notes-about-netiquette
