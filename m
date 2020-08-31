@@ -2,192 +2,97 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E422EC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:58:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BEBC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF547206E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:58:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6FA20866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728354AbgHaU6R (ORCPT
+        id S1730188AbgHaVDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:58:17 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36032 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727939AbgHaU6Q (ORCPT
+        Mon, 31 Aug 2020 17:03:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:60641 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727019AbgHaVDu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:58:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id h8so4993448ioa.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 13:58:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=kTY+Uwg3ib3S5RkkgseOAR+2XsswT5YnxR3cu10Okqo=;
-        b=YP4gcdFtcq/+NuuWJpMS43ir3TegdbXRED5/O0JJATkruYFLV8P7nsl1jtFzxcjLgl
-         IHgxHZeTxjggLgUwnHHfMS7GtA/HDYiJ6x04RX7NZbRJvopxvJ3VZYDssMbd+uReseJ3
-         K5+gRdgGPtmF7P1Px4PYpG9+T8nlGFPUxTiDx+ipGt0rajFAYaLspQvB4ESb9+5dlt0z
-         AHfMu5OjfQPwitcXgD5bmp1M4U2y9UHCBO4MYEDNBPk8X95XMX1hgOocRrB9Nz0vSlxF
-         bo04v84vL1U5ybhaHIVgnVbarejMRoHOo9ayN5mDNO44g0oUuJbAXmwqCsDMYdPJDOAR
-         tdDA==
-X-Gm-Message-State: AOAM5316pzFtJU+l36ngIW7Hr8IhkSL+gMydU8/no5L/DlKiCb4VKxrX
-        XtRt7XeSd5+1BlBAumKAFEJEq+LM3KHwPf/TK4jYgnMtfFzt
-X-Google-Smtp-Source: ABdhPJza5y0DWIIomP+16EQJ4eYa7Z00iwEGl0MnxX10Ys8IO1mKh11DV3jIi99vbgsFw+ASRq+NNRSE1R7jR6wOVjoxglk1Bbmp
+        Mon, 31 Aug 2020 17:03:50 -0400
+Received: from methusalix.internal.home.lespocky.de ([92.117.54.199]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis)
+ id 1MkYLW-1ksD3D0AV4-00m5Go; Mon, 31 Aug 2020 23:03:33 +0200
+Received: from lemmy.internal.home.lespocky.de ([192.168.243.176] helo=lemmy.home.lespocky.de)
+        by methusalix.internal.home.lespocky.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94)
+        (envelope-from <alex@home.lespocky.de>)
+        id 1kCqxd-0003pQ-Il; Mon, 31 Aug 2020 23:03:30 +0200
+Received: (nullmailer pid 28155 invoked by uid 2001);
+        Mon, 31 Aug 2020 21:03:29 -0000
+From:   Alexander Dahl <post@lespocky.de>
+To:     linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alexander Dahl <ada@thorsis.com>,
+        Alexander Dahl <post@lespocky.de>
+Subject: [PATCH v2 0/2] leds: pwm: Make automatic labels work
+Date:   Mon, 31 Aug 2020 23:02:29 +0200
+Message-Id: <20200831210232.28052-1-post@lespocky.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:1b48:: with SMTP id b69mr516771ilb.63.1598907494739;
- Mon, 31 Aug 2020 13:58:14 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 13:58:14 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000040b7ba05ae32a94a@google.com>
-Subject: possible deadlock in __sock_release
-From:   syzbot <syzbot+8e467b009209f1fcf666@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Scan-Signature: ad2a6dfffa3c54d786fac54cb1795fd5
+X-Provags-ID: V03:K1:tg9wxDQ6YEt1M1K6RtRpsEbXznLx5mI9gVYjX+JClg81c4uZwLE
+ YW1E0R86vH9a30GOBkrFuZzKSY+73iS6LIeleV7oV9aq2EwvMr0eWIE9/dpYM6UW7ra4J5y
+ z+CaEMXeFq/0zY4lbjsiHHGfbB7v4+9hP2xVyyxuBuOkINejkQ6xwK5BDGOLahbYlzj+N/l
+ sdWj27hKpE+j0s7E3ValQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:THVtx+oo+0Y=:+Cz3jj5VZo8Pxf0bW0H4jW
+ 4eYqaKHaA6n4u+CjDh99uK/E69P/gQ0Fe1JE5s7DYS3N6mHMxYKiCikWa0ixLG32LmbIukWy6
+ mOHuTPsx1kUNgviNkdFyyUHzOkUpe48dB/TPQVUetmnRp6T/4D/aNnmVENOGB63u1TMfHkdPz
+ VGlar3vNEY8CjzHbUMDeVTr4c/K7QDKi0Wc6NEEykdjc1zAbp6vhjrmaJteDwpxlW3buX0gfD
+ DG8NtBgFTAUfhrSTwSZdgZ76342SyGd8Ue2OiMEbKWRKaZQPMMoDPcPUxTwFxAd4hRZWNseHB
+ uMl6kn14Fzk/cnayiaidRKy7fFjh8J0sRICh5RZDhBH0L/OzTptSZjDH9x6+piEv/XavrAjDU
+ n8kldoVPqbMSmFCCefppBs2YFjb8Ec5kTTr9pGBzqOtwyFNEywyoszv9eStgampD0KsR/Lkpl
+ Zg0IGu8BB8qaAJpxe7FUC5b8g2Pg18PvottKxA9Le3n/7bSpr9CSlQ10OS80627PzDGkrVqGt
+ frYIh2NWacIZvSSc2B4okFnDI3gzv4gI0uIEQ0RYucTRBNVUhOeztP8V+q0GcgHEXsYzxCgep
+ FG3gPMyXFPXupo4wMr4dsxJyVmWXfRhIay4tYmMKxNxYmvPwx9bSa2Zwuz/MO/cXuCqA6IHmJ
+ FQOpQy5qLf5xKBEBdHeau0xBVnGqaQ3Jz+izAVsBoc/cCDoIvLyKoMYNe4kP7sF6bYwWjGpPD
+ Tf4U+PmnkjR7jOapMRFRoyKHH1ctQeX+aSb0ATtIRSmb4c3UNtcQ/5Gl4pV8uH3+szUf4Lktw
+ hM0m/hUaXgo5PScFr/bpEOBhN6+0ehnsHf6Fy2MDflZk2hZEfe+TvPc0DHudWM7yQz7w9Nd
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hei hei,
 
-syzbot found the following issue on:
+for leds-gpio you can use the properties 'function' and 'color' in the
+devicetree node and omit 'label', the label is constructed
+automatically.  This is a common feature supposed to be working for all
+LED drivers.  However it did not yet work for the 'leds-pwm' driver.
+This series fixes the driver and takes the opportunity to update the
+dt-bindings accordingly.
 
-HEAD commit:    b36c9697 Add linux-next specific files for 20200828
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10bf2835900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5e3cf99580b5542c
-dashboard link: https://syzkaller.appspot.com/bug?extid=8e467b009209f1fcf666
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12be1435900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11f77ad1900000
+v1: based on v5.9-rc2, backport on v5.4.59 tested and working
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+8e467b009209f1fcf666@syzkaller.appspotmail.com
+v2: based on v5.9-rc3, added the dt-bindings update patch
 
-======================================================
-WARNING: possible circular locking dependency detected
-5.9.0-rc2-next-20200828-syzkaller #0 Not tainted
-------------------------------------------------------
-kworker/0:4/7108 is trying to acquire lock:
-ffff888085730c90 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: inode_lock include/linux/fs.h:779 [inline]
-ffff888085730c90 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}, at: __sock_release+0x86/0x280 net/socket.c:595
+Greets
+Alex
 
-but task is already holding lock:
-ffffc90006037da8 ((delayed_fput_work).work){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
+Alexander Dahl (2):
+  leds: pwm: Allow automatic labels for DT based devices
+  dt-bindings: leds: Convert pwm to yaml
 
-which lock already depends on the new lock.
+ .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
+ .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
+ drivers/leds/leds-pwm.c                       |  9 +-
+ 3 files changed, 93 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
 
+-- 
+2.20.1
 
-the existing dependency chain (in reverse order) is:
-
--> #3 ((delayed_fput_work).work){+.+.}-{0:0}:
-       process_one_work+0x8bb/0x1670 kernel/workqueue.c:2245
-       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
-       kthread+0x3b5/0x4a0 kernel/kthread.c:292
-       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
--> #2 ((wq_completion)events){+.+.}-{0:0}:
-       flush_workqueue+0x110/0x13e0 kernel/workqueue.c:2780
-       flush_scheduled_work include/linux/workqueue.h:597 [inline]
-       tipc_exit_net+0x47/0x2a0 net/tipc/core.c:116
-       ops_exit_list+0xb0/0x160 net/core/net_namespace.c:186
-       cleanup_net+0x4ea/0xb10 net/core/net_namespace.c:603
-       process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
-       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
-       kthread+0x3b5/0x4a0 kernel/kthread.c:292
-       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
--> #1 (pernet_ops_rwsem){++++}-{3:3}:
-       down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
-       unregister_netdevice_notifier+0x1e/0x170 net/core/dev.c:1861
-       raw_release+0x58/0x890 net/can/raw.c:354
-       __sock_release+0xcd/0x280 net/socket.c:596
-       sock_close+0x18/0x20 net/socket.c:1277
-       __fput+0x285/0x920 fs/file_table.c:281
-       task_work_run+0xdd/0x190 kernel/task_work.c:141
-       tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-       exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
-       exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
-       syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
-       entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
--> #0 (&sb->s_type->i_mutex_key#13){+.+.}-{3:3}:
-       check_prev_add kernel/locking/lockdep.c:2496 [inline]
-       check_prevs_add kernel/locking/lockdep.c:2601 [inline]
-       validate_chain kernel/locking/lockdep.c:3218 [inline]
-       __lock_acquire+0x2a6b/0x5640 kernel/locking/lockdep.c:4426
-       lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
-       down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
-       inode_lock include/linux/fs.h:779 [inline]
-       __sock_release+0x86/0x280 net/socket.c:595
-       sock_close+0x18/0x20 net/socket.c:1277
-       __fput+0x285/0x920 fs/file_table.c:281
-       delayed_fput+0x56/0x70 fs/file_table.c:309
-       process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
-       worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
-       kthread+0x3b5/0x4a0 kernel/kthread.c:292
-       ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-other info that might help us debug this:
-
-Chain exists of:
-  &sb->s_type->i_mutex_key#13 --> (wq_completion)events --> (delayed_fput_work).work
-
- Possible unsafe locking scenario:
-
-       CPU0                    CPU1
-       ----                    ----
-  lock((delayed_fput_work).work);
-                               lock((wq_completion)events);
-                               lock((delayed_fput_work).work);
-  lock(&sb->s_type->i_mutex_key#13);
-
- *** DEADLOCK ***
-
-2 locks held by kworker/0:4/7108:
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: arch_atomic64_set arch/x86/include/asm/atomic64_64.h:34 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic64_set include/asm-generic/atomic-instrumented.h:856 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: atomic_long_set include/asm-generic/atomic-long.h:41 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_data kernel/workqueue.c:616 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: set_work_pool_and_clear_pending kernel/workqueue.c:643 [inline]
- #0: ffff8880aa063d38 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x82b/0x1670 kernel/workqueue.c:2240
- #1: ffffc90006037da8 ((delayed_fput_work).work){+.+.}-{0:0}, at: process_one_work+0x85f/0x1670 kernel/workqueue.c:2244
-
-stack backtrace:
-CPU: 0 PID: 7108 Comm: kworker/0:4 Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events delayed_fput
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- check_noncircular+0x324/0x3e0 kernel/locking/lockdep.c:1827
- check_prev_add kernel/locking/lockdep.c:2496 [inline]
- check_prevs_add kernel/locking/lockdep.c:2601 [inline]
- validate_chain kernel/locking/lockdep.c:3218 [inline]
- __lock_acquire+0x2a6b/0x5640 kernel/locking/lockdep.c:4426
- lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
- down_write+0x8d/0x150 kernel/locking/rwsem.c:1531
- inode_lock include/linux/fs.h:779 [inline]
- __sock_release+0x86/0x280 net/socket.c:595
- sock_close+0x18/0x20 net/socket.c:1277
- __fput+0x285/0x920 fs/file_table.c:281
- delayed_fput+0x56/0x70 fs/file_table.c:309
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
