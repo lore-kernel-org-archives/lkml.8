@@ -2,85 +2,75 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21210C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B80C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC5622083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:02:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980F920719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:05:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cGNZNqun"
+	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="CdclwL2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgHaOCK (ORCPT
+        id S1727066AbgHaOF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 10:02:10 -0400
-Received: from mail-bn8nam11on2084.outbound.protection.outlook.com ([40.107.236.84]:10720
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726326AbgHaOBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 10:01:49 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WJyO68c1sjv4Q9J+MmVe6mL9m7dLDIor2Ywyp4jD8JAxTD+EStikNF/sAU6Dd3pzIWqlcOZRv4LfSirOD2CkkK5TOdOiE8IHJB3cYoihNa87nmzSsESCaH5fUoIEEKmbFSjKveusmKRtzq5SRhszyYODITMzUR21nigdVjCbQJVjnTTxvRv5WFAK06ns3WXgAELkzkvHwg7gadkCrYFWvcXPC2+c9aIl7LRCOfPPm32LOlPIwuM196KrXzJM+GgBsd7QqpxV+DIX6porNR1BPPg9cKuDV0EsfxUHJv2TBtIlbb4WMY9/SPGuaF+qa4b+Ga6BWz5rxTjkhCLbfjAduw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U5a+M5XiGu2HpsD7xurBxB/Ke6WHm7Y266h1tWRZ4+w=;
- b=ZdUC6k4idQRlL02fzB34XdFpPhvkWV4GlDKBw4Rl1dy2KnKxcrdekMQSpJYaojyqSoOo0pCMehFMDWQzlOFrHChPEh2ffaBR2h/XzJm2AQgISSU9cnB8Dfs2PUT4OsZKKw06nvOdh6WSVJnvFPwaYNMPWXvf075p6wJ4GFirDC5xCCsPNJey3WRSOZgJlX8oZS4+RKodhG5WZTt3Y5lcvyL8ADfOC+BPV2pRKbqs/oNXwxeEscUyfcsfYDml8XRNEpB/OILhvlmaczNxXl/L3A4vPnA4dCgc5SUOG1aCNkbQCbg/IYvfTNbwmLWrU/UuLAw351d+uA4kKoCTc3Gy/Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
- dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
- not signed); arc=none
+        Mon, 31 Aug 2020 10:05:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42090 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgHaOFL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 10:05:11 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFC33C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:05:10 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id n13so5532062edo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:05:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U5a+M5XiGu2HpsD7xurBxB/Ke6WHm7Y266h1tWRZ4+w=;
- b=cGNZNqunW6TQvfpgh+dd+hezLWLdaUibGa+DPmHNl728lVQ0E6C6iAT6p8B6THPylNuNwUFxky7IVFfu+ZmmYBzSQvuGVPcRmYjkpAnaCr/LsRzLJ4bqbfiGIMoXHOJDdYgtK6ROrKzKRqT+vj+cd4WZZ8/o0KyHT4R4RjYVPSI=
-Received: from SN2PR01CA0057.prod.exchangelabs.com (2603:10b6:800::25) by
- BN8PR02MB5860.namprd02.prod.outlook.com (2603:10b6:408:b5::33) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.19; Mon, 31 Aug 2020 14:01:44 +0000
-Received: from SN1NAM02FT014.eop-nam02.prod.protection.outlook.com
- (2603:10b6:800:0:cafe::92) by SN2PR01CA0057.outlook.office365.com
- (2603:10b6:800::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Mon, 31 Aug 2020 14:01:44 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
- smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
-Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
- SN1NAM02FT014.mail.protection.outlook.com (10.152.72.106) with Microsoft SMTP
- Server id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 14:01:44
- +0000
-Received: from [149.199.38.66] (port=55215 helo=smtp.xilinx.com)
-        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1kCkNR-000329-To; Mon, 31 Aug 2020 07:01:41 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by smtp.xilinx.com with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1kCkNT-0005Lw-Nt; Mon, 31 Aug 2020 07:01:43 -0700
-Received: from [172.30.17.109]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1kCkNS-0005LK-18; Mon, 31 Aug 2020 07:01:42 -0700
-Subject: Re: [PATCH] microblaze: fix kbuild redundant file warning
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6Ry2Q0kzv/qurwxYMhXYJrzUcomQoSuew+ttulBrFuY=;
+        b=CdclwL2zPX2jHjO37vT6RFNbgyydLdmvz/680TEtg8MQwEj75QYd+f0g7taLlLln4I
+         Zj8eZZEjX3vgheePgU8mAN7kUnhREtKUv1VvQH0kQyYnuuo6mnZ4kBi9/P/XjEN5Tor6
+         pPICpaE7RiaNsnMXpcGh4Nhxo8U8KW2V5z5ycCZ9FC9JF9OcuDg/J85a/YgCs7HPmDkR
+         A+ByROk+PFxjro1n9oCSuf9w7enYJd4if0Tr02QHBHxWDNeq2ilVqky8aLI4VB8xbNFd
+         EYYoM2GuMiupt/cm9x7Kx1DsqdUH41Y5h9C+vSsR5OyGdhxuqwR2SBCMBDUFdxvjz1CC
+         HgNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6Ry2Q0kzv/qurwxYMhXYJrzUcomQoSuew+ttulBrFuY=;
+        b=I9ScuRjiVrog8zwq6dMysq4s7Q/dcU0Pnoz9VB4t+6mfI3AIk4tkXg0PFK1XIn4mU3
+         Khwd2b2CDOpbHcVk/YdWN8F+Xl6sCkVatAdqN3PoXVFqncxioBWmnqjK13jtrh82M+cA
+         +msFzs6JMwYBq/cbTQ6Dx4J16+/lf9Za3XoTBl32fSavfsegHvgR7+dVpkwpYUC33Ci4
+         UN3Z6oB0dX8ZengwyYvMBmHoe7DPRiNykL9TNGUTiQV6DYBexwIEg4HvPfgcFNi91NTX
+         /uhdgZarnaiMVAoIDehDDUvQyHObn+YknjHLaa3yVcj5LhB6RWGWjufmnvca+h0bAkRx
+         4+ww==
+X-Gm-Message-State: AOAM531GnivJ1w8Lcm+oFvr5WcvvrQUtghpW71SbmL+IrI+8jznTAO+8
+        k8gD82Z/JjMs7GVsTxsW7NiBZw==
+X-Google-Smtp-Source: ABdhPJz3MSutqOHvF5fSSqY/QiZxARnW5vlu/dfcgkO57SUupgkfc+j5qDy7Y7FpyDJYvnzQH4X2EQ==
+X-Received: by 2002:a50:d9c1:: with SMTP id x1mr1449581edj.283.1598882709513;
+        Mon, 31 Aug 2020 07:05:09 -0700 (PDT)
+Received: from [192.168.0.105] (nat-35.starnet.cz. [178.255.168.35])
+        by smtp.gmail.com with ESMTPSA id bd13sm7828547edb.38.2020.08.31.07.04.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 07:05:03 -0700 (PDT)
+Subject: Re: [PATCH] microblaze: fix min_low_pfn/max_low_pfn build errors
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     kernel test robot <lkp@intel.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Rientjes <rientjes@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Michal Simek <monstr@monstr.eu>,
         Michal Simek <michal.simek@xilinx.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>
-References: <21eddfa7-2b7c-00c4-ad5b-40878036f987@infradead.org>
-From:   Michal Simek <michal.simek@xilinx.com>
-Autocrypt: addr=michals@xilinx.com; keydata=
+References: <20200829000110.2408-1-rdunlap@infradead.org>
+From:   Michal Simek <monstr@monstr.eu>
+Autocrypt: addr=monstr@monstr.eu; keydata=
  xsFNBFFuvDEBEAC9Amu3nk79+J+4xBOuM5XmDmljuukOc6mKB5bBYOa4SrWJZTjeGRf52VMc
  howHe8Y9nSbG92obZMqsdt+d/hmRu3fgwRYiiU97YJjUkCN5paHXyBb+3IdrLNGt8I7C9RMy
  svSoH4WcApYNqvB3rcMtJIna+HUhx8xOk+XCfyKJDnrSuKgx0Svj446qgM5fe7RyFOlGX/wF
@@ -142,40 +132,15 @@ Autocrypt: addr=michals@xilinx.com; keydata=
  oa0OZXydlVP7wrnJdi3m8DnljxyInPxbxdKGN5XnMq/r9Y70uRVyeqwp97sKLXd9GsxuaSg7
  QJKUaltvN/i7ng1UOT/xsKeVdfXuqDIIElZ+dyEVTweDM011Zv0NN3OWFz6oD+GzyBetuBwD
  0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <f7ce291e-47be-549b-7163-0744e7ea35d5@xilinx.com>
-Date:   Mon, 31 Aug 2020 16:01:39 +0200
+Message-ID: <fca6486a-5e6b-1ad4-1a52-aec674a67223@monstr.eu>
+Date:   Mon, 31 Aug 2020 16:04:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <21eddfa7-2b7c-00c4-ad5b-40878036f987@infradead.org>
+In-Reply-To: <20200829000110.2408-1-rdunlap@infradead.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9527ebae-26f4-4d68-b0c9-08d84db6649c
-X-MS-TrafficTypeDiagnostic: BN8PR02MB5860:
-X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
-X-Microsoft-Antispam-PRVS: <BN8PR02MB58600CB1D3BB31C6032894A9C6510@BN8PR02MB5860.namprd02.prod.outlook.com>
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 5oTL5vln8yPWAXRSzreUDqlqNsNWyuy3GmL6z7EhSXhNPoR5iLHPs85tN+sTH3tY9Q7CDFdCGBPbrL48EqytTJ+wKFRn+7sRTvMm0xeF7k8jsn5L2m6B4gU0BmzjPcj8Nxwe7m5U8To0e48trIN7X6ScvikznkfQg2NnYifpp0FYUkfgIpqf7vKnO9eXerRoDwC/P7Lue1/RgCVxbXE4kTf66hBg7QD+C9d43AvlRKJtxZpkjVb0hg9SyhuBKRCiypum25ys4yBHLvuy0Y7oOsGv7SvDTxyfoe+RSpKY1Yguz6JWeXTynrE9hc3EuEi6qiLpnYdQ6P6rCRMji00AA3lTC31m7XaHnGqG/WMw2fCSrj6xdUYORy3hO1Lt9aDBXLuBs5epm1nLDWQ0zLsEM2qNLR7+n9LxlaFTx+TSSyz3b/3uSEqc8HpMjoEZwQ1z
-X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(396003)(39860400002)(346002)(376002)(136003)(46966005)(70206006)(9786002)(110136005)(31686004)(6666004)(426003)(2906002)(356005)(2616005)(4326008)(336012)(82310400002)(47076004)(8936002)(81166007)(5660300002)(44832011)(4744005)(8676002)(478600001)(82740400003)(70586007)(316002)(31696002)(36756003)(83380400001)(26005)(186003)(43740500002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 14:01:44.0237
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9527ebae-26f4-4d68-b0c9-08d84db6649c
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
-X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT014.eop-nam02.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5860
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -183,22 +148,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi,
 
-On 28. 08. 20 20:35, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On 29. 08. 20 2:01, Randy Dunlap wrote:
+> Fix min_low_pfn/max_low_pfn build errors for arch/microblaze/: (e.g.)
 > 
-> Fix build warning since this file is already listed in
-> include/asm-generic/Kbuild.
+>   ERROR: "min_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu_sink.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/mmc/core/mmc_core.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/md/dm-crypt.ko] undefined!
+>   ERROR: "min_low_pfn" [drivers/net/wireless/ath/ath6kl/ath6kl_sdio.ko] undefined!
+>   ERROR: "min_low_pfn" [crypto/tcrypt.ko] undefined!
+>   ERROR: "min_low_pfn" [crypto/asymmetric_keys/asym_tpm.ko] undefined!
 > 
-> ../scripts/Makefile.asm-generic:25: redundant generic-y found in arch/microblaze/include/asm/Kbuild: hw_irq.h
+> Mike had/has an alternate patch for Microblaze:
+> https://lore.kernel.org/lkml/20200630111519.GA1951986@linux.ibm.com/
 > 
-> Fixes: 7e8f54cd4e26 ("microblaze: Remove empty headers")
+> David suggested just exporting min_low_pfn & max_low_pfn in
+> mm/memblock.c:
+> https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2006291911220.1118534@chino.kir.corp.google.com/
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linux-mm@kvack.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Michal Simek <monstr@monstr.eu>
+> Cc: Michal Simek <michal.simek@xilinx.com>
+> ---
+>  arch/microblaze/mm/init.c |    3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> --- linux-next-20200825.orig/arch/microblaze/mm/init.c
+> +++ linux-next-20200825/arch/microblaze/mm/init.c
+> @@ -46,6 +46,9 @@ unsigned long memory_size;
+>  EXPORT_SYMBOL(memory_size);
+>  unsigned long lowmem_size;
+>  
+> +EXPORT_SYMBOL(min_low_pfn);
+> +EXPORT_SYMBOL(max_low_pfn);
+> +
+>  #ifdef CONFIG_HIGHMEM
+>  pte_t *kmap_pte;
+>  EXPORT_SYMBOL(kmap_pte);
+> 
 
-The patch is fine but this commit is wrong one. At that time
-asm-generic/Kbuild didn't contain hw_irq.h as mandatory
+Acked-by: Michal Simek <monstr@monstr.eu>
 
-The commit 630f289b7114c0e68519cbd634e2b7ec804ca8c5 added it.
-
-Masahiro: Can you please check?
+Mike: Feel free to take it via memblock tree as you mentioned in
+alternate patch.
 
 Thanks,
 Michal
+
+-- 
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+
