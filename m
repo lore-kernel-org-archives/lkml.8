@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC90C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D45ECC43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93BB020936
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F7320707
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgHaQr1 (ORCPT
+        id S1728675AbgHaQrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:47:27 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:41012 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726946AbgHaQrV (ORCPT
+        Mon, 31 Aug 2020 12:47:37 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:37638 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727949AbgHaQrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:47:21 -0400
-Received: by mail-il1-f197.google.com with SMTP id e23so5521581ill.8
+        Mon, 31 Aug 2020 12:47:22 -0400
+Received: by mail-io1-f70.google.com with SMTP id 80so4470205iou.4
         for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:47:20 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ptposISBabJU+0UJWvS9jomfWUAW0h4nJ0MphyriG80=;
-        b=JicgyNtAFgh4TrAU0bALTwIKe1Rw01YsNozcgx24uLhs4WoktkWX9RcL7MYGZAHC8F
-         sl97wlR7uwMLFUTWftyC6vjw4MrMy8pS1jxF0wbs4/NDBlOZ3HOP+xsKJpdj39FSx46M
-         KUAYtIFBfsf1dBqt1aeV+AW3pEyJhRbk5xjsyRqxKATXXTj1OKShsC5d/GRIPZkfWFg3
-         RYfhBxAFZzZKvYgLoLMae1m1NF+3pGjHq5R4hHbH33z6r0zbcM6LAlOSRHc6L5dRnTx3
-         BXoJgPUZBTPcaeQclfhdg9r44umgi9sHzMgq1/82mEzql4DfRrHPhriWNmdrnsAsKq0h
-         oR2A==
-X-Gm-Message-State: AOAM533Cp02PBzNY1REgy5UQb8imHulNtUS5nQeKkQGfPr9iJXc6JROj
-        9sNP2w1rAHYIaFyRAAHKPz+H739EB9Yzr59oq7sIREnXckRs
-X-Google-Smtp-Source: ABdhPJwbrhYo/UOtEzaf2bomCwl2z82/Rj/d1ECpd3KbTEeUdDOu6FLxX6fptS+lhHNNe4iZJh7pmbBEx+nEuYRPRMUAaRxhSynT
+        bh=wStrx+w9cg4MJN1sqeclOzlihfsrmPUHTb1URkLm6dI=;
+        b=hY4WL0J2eaXC5kkbcp8U57onH0qg2iDKvtUQEThH0wVA89c73jNzTC8zICIwo5KEAP
+         vE9VRNNSv7TVks86cEBx4G+vDE47hO61mVXHUio+VhkTh0GYjNhSbz8L64mOSx2dgyIT
+         KANNF+aYgoAq652AkpKgQwmoUIxChwJ3zbw3ZBSUHPcb5NNM3YXGC4ftvwk/ypgniaiL
+         EFJXffsLo9uuI6huj7Aci4u3tRJP6gkPnfra/D8X43T/JS0+xPhA8aea9uOZcy0q6X3j
+         38k7vMQdtl1XrE9Sx6wX/nHQ9yMg+SpWPo9Pn2473MkQkhUGQBY6yT54ki90zGWJaxFz
+         ERbg==
+X-Gm-Message-State: AOAM531TV+BJXvK8VjJzq/KDv3NDcV6/ssrnud9aHO/T/2IUuLPtFc1s
+        Jb2AzdgTfu76pvQAa/ysjHK/QKBxGzd9JianlYdc2SUKLEum
+X-Google-Smtp-Source: ABdhPJyMLkWyfV9IXG3RdY5g9LqhcNRN2B7RVIXNy/D6Mzzdf0RWcwYTaMx4tpWzzFS++sVRuz1q5nf5pHetmBNie2nC7DLzFujg
 MIME-Version: 1.0
-X-Received: by 2002:a92:85ce:: with SMTP id f197mr1970896ilh.298.1598892440186;
+X-Received: by 2002:a92:ba02:: with SMTP id o2mr1987546ili.219.1598892440478;
  Mon, 31 Aug 2020 09:47:20 -0700 (PDT)
 Date:   Mon, 31 Aug 2020 09:47:20 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ee7d1a05ae2f2720@google.com>
-Subject: WARNING in nla_get_range_unsigned
-From:   syzbot <syzbot+353df1490da781637624@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, johannes.berg@intel.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+Message-ID: <000000000000f2e88105ae2f2768@google.com>
+Subject: INFO: task can't die in usb_start_wait_urb
+From:   syzbot <syzbot+c3df2ca09fe4beef4d67@syzkaller.appspotmail.com>
+To:     andriy.shevchenko@linux.intel.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        rafael.j.wysocki@intel.com, stern@rowland.harvard.edu,
         syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,83 +58,145 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    0f091e43 netlabel: remove unused param from audit_log_form..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=14865df2900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=61025c6fd3261bb1
-dashboard link: https://syzkaller.appspot.com/bug?extid=353df1490da781637624
+HEAD commit:    b36c9697 Add linux-next specific files for 20200828
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=156a598e900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5e3cf99580b5542c
+dashboard link: https://syzkaller.appspot.com/bug?extid=c3df2ca09fe4beef4d67
 compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12d7b769900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14e7aa56900000
-
-The issue was bisected to:
-
-commit 8aa26c575fb343ebde810b30dad0cba7d8121efb
-Author: Johannes Berg <johannes.berg@intel.com>
-Date:   Tue Aug 18 08:17:33 2020 +0000
-
-    netlink: make NLA_BINARY validation more flexible
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=104486c1900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=124486c1900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=144486c1900000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16c3301e900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16d2df49900000
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+353df1490da781637624@syzkaller.appspotmail.com
-Fixes: 8aa26c575fb3 ("netlink: make NLA_BINARY validation more flexible")
+Reported-by: syzbot+c3df2ca09fe4beef4d67@syzkaller.appspotmail.com
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 6854 at lib/nlattr.c:117 nla_get_range_unsigned+0x157/0x530 lib/nlattr.c:117
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 6854 Comm: syz-executor416 Not tainted 5.9.0-rc1-syzkaller #0
+INFO: task syz-executor787:6840 can't die for more than 143 seconds.
+task:syz-executor787 state:D stack:26864 pid: 6840 ppid:  6833 flags:0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:3778 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion_timeout+0x15e/0x270 kernel/sched/completion.c:157
+ usb_start_wait_urb+0x144/0x2b0 drivers/usb/core/message.c:63
+ usb_bulk_msg+0x226/0x550 drivers/usb/core/message.c:254
+ do_proc_bulk+0x39b/0x710 drivers/usb/core/devio.c:1231
+ proc_bulk drivers/usb/core/devio.c:1268 [inline]
+ usbdev_do_ioctl drivers/usb/core/devio.c:2542 [inline]
+ usbdev_ioctl+0x586/0x3360 drivers/usb/core/devio.c:2708
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ __do_sys_ioctl fs/ioctl.c:753 [inline]
+ __se_sys_ioctl fs/ioctl.c:739 [inline]
+ __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:739
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x449659
+Code: Bad RIP value.
+RSP: 002b:00007f02ac79cdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000449659
+RDX: 0000000020000000 RSI: 00000000c0185502 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 00007ffe8f1fe93f R14: 00007f02ac79d9c0 R15: 20c49ba5e353f7cf
+INFO: task syz-executor787:6840 blocked for more than 143 seconds.
+      Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz-executor787 state:D stack:26864 pid: 6840 ppid:  6833 flags:0x00000004
+Call Trace:
+ context_switch kernel/sched/core.c:3778 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
+ schedule+0xd0/0x2a0 kernel/sched/core.c:4602
+ schedule_timeout+0x1d8/0x250 kernel/time/timer.c:1855
+ do_wait_for_common kernel/sched/completion.c:85 [inline]
+ __wait_for_common kernel/sched/completion.c:106 [inline]
+ wait_for_common kernel/sched/completion.c:117 [inline]
+ wait_for_completion_timeout+0x15e/0x270 kernel/sched/completion.c:157
+ usb_start_wait_urb+0x144/0x2b0 drivers/usb/core/message.c:63
+ usb_bulk_msg+0x226/0x550 drivers/usb/core/message.c:254
+ do_proc_bulk+0x39b/0x710 drivers/usb/core/devio.c:1231
+ proc_bulk drivers/usb/core/devio.c:1268 [inline]
+ usbdev_do_ioctl drivers/usb/core/devio.c:2542 [inline]
+ usbdev_ioctl+0x586/0x3360 drivers/usb/core/devio.c:2708
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ __do_sys_ioctl fs/ioctl.c:753 [inline]
+ __se_sys_ioctl fs/ioctl.c:739 [inline]
+ __x64_sys_ioctl+0x193/0x200 fs/ioctl.c:739
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x449659
+Code: Bad RIP value.
+RSP: 002b:00007f02ac79cdb8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006dac28 RCX: 0000000000449659
+RDX: 0000000020000000 RSI: 00000000c0185502 RDI: 0000000000000003
+RBP: 00000000006dac20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dac2c
+R13: 00007ffe8f1fe93f R14: 00007f02ac79d9c0 R15: 20c49ba5e353f7cf
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1173:
+ #0: ffffffff89c67640 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5825
+1 lock held by in:imklog/6531:
+ #0: ffff888098a9c130 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
+
+=============================================
+
+NMI backtrace for cpu 0
+CPU: 0 PID: 1173 Comm: khungtaskd Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
  dump_stack+0x18f/0x20d lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:231
- __warn.cold+0x20/0x4a kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:nla_get_range_unsigned+0x157/0x530 lib/nlattr.c:117
-Code: 2a 03 00 00 44 0f b6 3b 48 c7 c6 40 9f 96 88 4c 89 ff e8 3c 34 c4 fd 41 80 ff 0b 77 11 42 ff 24 fd 60 99 96 88 e8 69 37 c4 fd <0f> 0b eb 8f e8 60 37 c4 fd 0f 0b 5b 41 5c 41 5d 41 5e 41 5f 5d e9
-RSP: 0018:ffffc90000f17190 EFLAGS: 00010293
-RAX: 0000000000000000 RBX: ffffffff89180640 RCX: ffffffff83b006e8
-RDX: ffff8880a79a8300 RSI: ffffffff83b007a7 RDI: 0000000000000003
-RBP: ffffc90000f171b8 R08: 0000000000000000 R09: ffff8880972a4370
-R10: 0000000000000000 R11: 0000000000000000 R12: ffffc90000f17278
-R13: ffffffff89180641 R14: 0000000000008c60 R15: ffffffff89180640
- netlink_policy_dump_write+0x2ae/0xea0 net/netlink/policy.c:270
- ctrl_dumppolicy+0x4a8/0x900 net/netlink/genetlink.c:1099
- genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:553
- netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2246
- __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2354
- genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:616
- genl_family_rcv_msg net/netlink/genetlink.c:711 [inline]
- genl_rcv_msg+0x75f/0x980 net/netlink/genetlink.c:731
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2470
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:742
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1330
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1919
- sock_sendmsg_nosec net/socket.c:651 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:671
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2353
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2407
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2440
+ nmi_cpu_backtrace.cold+0x44/0xd7 lib/nmi_backtrace.c:105
+ nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
+ watchdog+0xd89/0xf30 kernel/hung_task.c:339
+ kthread+0x3b5/0x4a0 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+Sending NMI from CPU 0 to CPUs 1:
+NMI backtrace for cpu 1
+CPU: 1 PID: 3891 Comm: systemd-journal Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:lookup_chain_cache kernel/locking/lockdep.c:3109 [inline]
+RIP: 0010:lookup_chain_cache_add kernel/locking/lockdep.c:3128 [inline]
+RIP: 0010:validate_chain kernel/locking/lockdep.c:3183 [inline]
+RIP: 0010:__lock_acquire+0x1750/0x5640 kernel/locking/lockdep.c:4426
+Code: 74 5d 49 bd 00 00 00 00 00 fc ff df 48 8b 54 24 08 eb 06 49 83 ec 08 74 46 49 8d 7c 24 18 48 89 f8 48 c1 e8 03 42 80 3c 28 00 <0f> 85 43 2a 00 00 49 8b 44 24 18 48 39 c2 0f 84 26 f5 ff ff 49 8d
+RSP: 0018:ffffc90004807b00 EFLAGS: 00000046
+RAX: 1ffffffff1806a53 RBX: 0000000000003fe4 RCX: ffffffff815a153b
+RDX: 62386d250e98b09e RSI: 0000000000000008 RDI: ffffffff8c035298
+RBP: ffff888093da49f0 R08: 0000000000000000 R09: ffffffff8c6a59f7
+R10: fffffbfff18d4b3e R11: 0000000000000000 R12: ffffffff8c035280
+R13: dffffc0000000000 R14: ffff888093da4100 R15: 0000000000000001
+FS:  00007ff896ba08c0(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ff893f44000 CR3: 000000009398b000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ lock_acquire+0x1f1/0xad0 kernel/locking/lockdep.c:5005
+ __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+ _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
+ spin_lock include/linux/spinlock.h:354 [inline]
+ __alloc_fd+0x34/0x600 fs/file.c:500
+ do_sys_openat2+0x134/0x420 fs/open.c:1166
+ do_sys_open fs/open.c:1184 [inline]
+ __do_sys_open fs/open.c:1192 [inline]
+ __se_sys_open fs/open.c:1188 [inline]
+ __x64_sys_open+0x119/0x1c0 fs/open.c:1188
  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x4402a9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffd2f689438 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402a9
-RDX: 0000000000000000 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401ab0
-R13: 0000000000401b40 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+RIP: 0033:0x7ff896130840
+Code: 73 01 c3 48 8b 0d 68 77 20 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 89 bb 20 00 00 75 10 b8 02 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83 ec 08 e8 1e f6 ff ff 48 89 04 24
+RSP: 002b:00007fffa7dee6b8 EFLAGS: 00000246 ORIG_RAX: 0000000000000002
+RAX: ffffffffffffffda RBX: 00007fffa7dee9c0 RCX: 00007ff896130840
+RDX: 00000000000001a0 RSI: 0000000000080042 RDI: 0000560b7f41acd0
+RBP: 000000000000000d R08: 000000000000ffc0 R09: 00000000ffffffff
+R10: 0000000000000069 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 0000560b7f40f040 R14: 00007fffa7dee980 R15: 0000560b7f41aaf0
 
 
 ---
@@ -143,6 +206,5 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this issue. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 syzbot can test patches for this issue, for details see:
 https://goo.gl/tpsmEJ#testing-patches
