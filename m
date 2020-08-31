@@ -2,130 +2,165 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2491AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA01CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0405B206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A89C6206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:49:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="pkVMhSSo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgHaKtJ (ORCPT
+        id S1726913AbgHaKtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:49:09 -0400
-Received: from mga03.intel.com ([134.134.136.65]:9160 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726797AbgHaKsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:48:54 -0400
-IronPort-SDR: mjh+pU5l3w+xP4a0wwPq7B/AVikvNUlqhG2+jRQrWcH3/SdVdkE8IlXTUcommcqFnWzkxwZ/PP
- tc4TMfHf8FAg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="156947471"
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="156947471"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 03:48:53 -0700
-IronPort-SDR: QtbYslM8L6VMNNukXAtrEXwVAn0uOhONeiIlE9BvQ5B9t/RaF/9VInXkE7qJwK2FRDyEZ2mAhe
- /erudIpq4vCw==
-X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="374774114"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 03:48:49 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id AB5D3204F9; Mon, 31 Aug 2020 13:48:47 +0300 (EEST)
-Date:   Mon, 31 Aug 2020 13:48:47 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     =?iso-8859-1?Q?K=E9vin_L'h=F4pital?= <kevin.lhopital@bootlin.com>
-Cc:     linux-media@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, mripard@kernel.org, wens@csie.org,
-        yong.deng@magewell.com, mchehab+samsung@kernel.org,
-        p.zabel@pengutronix.de, hans.verkuil@cisco.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH v2 2/4] media: sunxi: sun6i-csi: Move the sun6i_csi_dev
- structure to the common header
-Message-ID: <20200831104847.GJ31019@paasikivi.fi.intel.com>
-References: <20200828131737.12483-1-kevin.lhopital@bootlin.com>
- <20200828131737.12483-3-kevin.lhopital@bootlin.com>
+        Mon, 31 Aug 2020 06:49:16 -0400
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:61225 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgHaKtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 06:49:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598870942; x=1630406942;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=t83U6iMpHB5Ra5CmTIpP+H+t+wsO9yd9cZKiYQA2Yh0=;
+  b=pkVMhSSo6D7LvBTUYQOvnX+mErPFRreplBZcRRdTEQ5khesWNo/e4/S3
+   Jb79/lTYSI2T5WS2qYjB5K5A5xVnrBVZAu+413hrsGwCDQyI3dwAd+Kzf
+   LbjMd1CXRo1DHlTwpgwOumxRZG3a+j+MrsRCa88Nq02nSPsYt/YTszstH
+   U=;
+X-IronPort-AV: E=Sophos;i="5.76,375,1592870400"; 
+   d="scan'208";a="72355524"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 31 Aug 2020 10:48:59 +0000
+Received: from EX13D31EUB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2b-4ff6265a.us-west-2.amazon.com (Postfix) with ESMTPS id CE26CA261F;
+        Mon, 31 Aug 2020 10:48:56 +0000 (UTC)
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.100) by
+ EX13D31EUB001.ant.amazon.com (10.43.166.210) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 31 Aug 2020 10:48:38 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <akpm@linux-foundation.org>
+CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
+        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [RFC v8 03/10] mm/damon-test: Add more unit tests for 'init_regions'
+Date:   Mon, 31 Aug 2020 12:47:23 +0200
+Message-ID: <20200831104730.28970-4-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200831104730.28970-1-sjpark@amazon.com>
+References: <20200831104730.28970-1-sjpark@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200828131737.12483-3-kevin.lhopital@bootlin.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D49UWB002.ant.amazon.com (10.43.163.68) To
+ EX13D31EUB001.ant.amazon.com (10.43.166.210)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kévin,
+From: SeongJae Park <sjpark@amazon.de>
 
-On Fri, Aug 28, 2020 at 03:17:34PM +0200, Kévin L'hôpital wrote:
-> Access to the sun6i_csi_dev structure is needed to add the
-> MIPI CSI2 support.
-> 
-> Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
-> ---
->  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 12 ------------
->  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 12 ++++++++++++
->  2 files changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> index 055eb0b8e396..680fa31f380a 100644
-> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> @@ -29,18 +29,6 @@
->  
->  #define MODULE_NAME	"sun6i-csi"
->  
-> -struct sun6i_csi_dev {
-> -	struct sun6i_csi		csi;
-> -	struct device			*dev;
-> -
-> -	struct regmap			*regmap;
-> -	struct clk			*clk_mod;
-> -	struct clk			*clk_ram;
-> -	struct reset_control		*rstc_bus;
-> -
-> -	int				planar_offset[3];
-> -};
-> -
->  static inline struct sun6i_csi_dev *sun6i_csi_to_dev(struct sun6i_csi *csi)
->  {
->  	return container_of(csi, struct sun6i_csi_dev, csi);
-> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-> index 8b83d15de0d0..c4a87bdab8c3 100644
-> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
-> @@ -48,6 +48,18 @@ struct sun6i_csi {
->  	struct sun6i_video		video;
->  };
->  
-> +struct sun6i_csi_dev {
-> +	struct sun6i_csi	csi;
-> +	struct device		*dev;
-> +	struct regmap		*regmap;
-> +	struct clk		*clk_mod;
-> +	struct clk		*clk_ram;
-> +	struct clk		*clk_mipi;
-> +	struct clk		*clk_misc;
+This commit adds more test cases for the new feature, 'init_regions'.
 
-This patch adds two more clocks, please add them when you need them. I
-think you could also squash the patch to another one that requires the
-struct in the header.
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ mm/damon-test.h | 53 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-> +	struct reset_control	*rstc_bus;
-> +	int			planar_offset[3];
-> +};
-> +
->  /**
->   * sun6i_csi_is_format_supported() - check if the format supported by csi
->   * @csi:	pointer to the csi
-
+diff --git a/mm/damon-test.h b/mm/damon-test.h
+index 71413ffc1dcb..e67e8fb17eca 100644
+--- a/mm/damon-test.h
++++ b/mm/damon-test.h
+@@ -161,6 +161,58 @@ static void damon_test_set_recording(struct kunit *test)
+ 	KUNIT_EXPECT_STREQ(test, ctx->rfile_path, "foo");
+ }
+ 
++static void damon_test_set_init_regions(struct kunit *test)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	unsigned long ids[] = {1, 2, 3};
++	/* Each line represents one region in ``<target id> <start> <end>`` */
++	char * const valid_inputs[] = {"2 10 20\n 2   20 30\n2 35 45",
++		"2 10 20\n",
++		"2 10 20\n1 39 59\n1 70 134\n  2  20 25\n",
++		""};
++	/* Reading the file again will show sorted, clean output */
++	char * const valid_expects[] = {"2 10 20\n2 20 30\n2 35 45\n",
++		"2 10 20\n",
++		"1 39 59\n1 70 134\n2 10 20\n2 20 25\n",
++		""};
++	char * const invalid_inputs[] = {"4 10 20\n",	/* target not exists */
++		"2 10 20\n 2 14 26\n",		/* regions overlap */
++		"1 10 20\n2 30 40\n 1 5 8"};	/* not sorted by address */
++	char *input, *expect;
++	int i, rc;
++	char buf[256];
++
++	damon_set_targets(ctx, ids, 3);
++
++	/* Put valid inputs and check the results */
++	for (i = 0; i < ARRAY_SIZE(valid_inputs); i++) {
++		input = valid_inputs[i];
++		expect = valid_expects[i];
++
++		rc = set_init_regions(ctx, input, strnlen(input, 256));
++		KUNIT_EXPECT_EQ(test, rc, 0);
++
++		memset(buf, 0, 256);
++		sprint_init_regions(ctx, buf, 256);
++
++		KUNIT_EXPECT_STREQ(test, (char *)buf, expect);
++	}
++	/* Put invlid inputs and check the return error code */
++	for (i = 0; i < ARRAY_SIZE(invalid_inputs); i++) {
++		input = invalid_inputs[i];
++		pr_info("input: %s\n", input);
++		rc = set_init_regions(ctx, input, strnlen(input, 256));
++		KUNIT_EXPECT_EQ(test, rc, -EINVAL);
++
++		memset(buf, 0, 256);
++		sprint_init_regions(ctx, buf, 256);
++
++		KUNIT_EXPECT_STREQ(test, (char *)buf, "");
++	}
++
++	damon_set_targets(ctx, NULL, 0);
++}
++
+ static void __link_vmas(struct vm_area_struct *vmas, ssize_t nr_vmas)
+ {
+ 	int i, j;
+@@ -645,6 +697,7 @@ static struct kunit_case damon_test_cases[] = {
+ 	KUNIT_CASE(damon_test_regions),
+ 	KUNIT_CASE(damon_test_set_targets),
+ 	KUNIT_CASE(damon_test_set_recording),
++	KUNIT_CASE(damon_test_set_init_regions),
+ 	KUNIT_CASE(damon_test_three_regions_in_vmas),
+ 	KUNIT_CASE(damon_test_aggregate),
+ 	KUNIT_CASE(damon_test_write_rbuf),
 -- 
-Sakari Ailus
+2.17.1
+
