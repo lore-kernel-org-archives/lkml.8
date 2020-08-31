@@ -2,188 +2,148 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14688C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2940EC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84FB20866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:43:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4E1208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:46:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgHaNnw (ORCPT
+        id S1727051AbgHaNpv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:43:52 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:48484 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgHaNnu (ORCPT
+        Mon, 31 Aug 2020 09:45:51 -0400
+Received: from zg8tmtm5lju5ljm3lje2naaa.icoremail.net ([139.59.37.164]:41455
+        "HELO zg8tmtm5lju5ljm3lje2naaa.icoremail.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with SMTP id S1726249AbgHaNpe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:43:50 -0400
-Date:   Mon, 31 Aug 2020 09:43:49 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Mark Brown <broonie@kernel.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mmc: mmc_spi: Don't use dma mappings unless
- CONFIG_HAS_DMA is set
-Message-ID: <20200831134348.GN3265@brightrain.aerifal.cx>
-References: <20200831131636.51502-1-ulf.hansson@linaro.org>
+        Mon, 31 Aug 2020 09:45:34 -0400
+Received: from [166.111.139.123] (unknown [166.111.139.123])
+        by app-3 (Coremail) with SMTP id EQQGZQBnGCXq_kxf_QHqAA--.5154S2;
+        Mon, 31 Aug 2020 21:45:14 +0800 (CST)
+Subject: Re: [PATCH AUTOSEL 4.19 08/38] media: pci: ttpci: av7110: fix
+ possible buffer overflow caused by bad DMA value in debiirq()
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-media@vger.kernel.org
+References: <20200821161807.348600-1-sashal@kernel.org>
+ <20200821161807.348600-8-sashal@kernel.org>
+ <20200829121020.GA20944@duo.ucw.cz>
+ <20200829171600.GA7465@pendragon.ideasonboard.com>
+ <9e797c3a-033b-3473-ac03-1566d40e90d2@tsinghua.edu.cn>
+ <20200830222549.GD6043@pendragon.ideasonboard.com>
+From:   Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Message-ID: <665f2e2d-b133-05be-17d5-49b860474ce5@tsinghua.edu.cn>
+Date:   Mon, 31 Aug 2020 21:45:14 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831131636.51502-1-ulf.hansson@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20200830222549.GD6043@pendragon.ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-CM-TRANSID: EQQGZQBnGCXq_kxf_QHqAA--.5154S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxur18urW3WF1xCw48WrykXwb_yoW5ZrWUpF
+        WSkF45tF4DJFy3KryjvwnFvF9YyFWxtFyUWw4DJryjvrZ0vF9Yyr4jyF4rCa4Durn8Z3W0
+        9F4Yv347WFWDAaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUvIb7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I2
+        0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+        A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_tr1l84ACjcxK6xII
+        jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+        C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+        0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
+        1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxvr21l
+        c2xSY4AK67AK6ry8MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+        0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+        tVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+        CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv
+        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf
+        9x07br739UUUUU=
+X-CM-SenderInfo: xedlyxhdmxq3pvlqwxlxdovvfxof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 03:16:36PM +0200, Ulf Hansson wrote:
-> The commit cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU") made
-> CONFIG_NO_DMA to be set for some platforms, for good reasons.
-> Consequentially, CONFIG_HAS_DMA doesn't get set, which makes the DMA
-> mapping interface to be built as stub functions.
-> 
-> For weird reasons this causes the mmc_spi driver to fail to ->probe(), as
-> it relies on the dma mappings APIs, no matter of CONFIG_HAS_DMA is set or
-> not. This is wrong, so let's fix this.
-> 
-> Fixes: cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU")
-> Reported-by: Rich Felker <dalias@libc.org>
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> ---
->  drivers/mmc/host/mmc_spi.c | 86 +++++++++++++++++++++++---------------
->  1 file changed, 52 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-> index 39bb1e30c2d7..5055a7eb134a 100644
-> --- a/drivers/mmc/host/mmc_spi.c
-> +++ b/drivers/mmc/host/mmc_spi.c
-> @@ -1278,6 +1278,52 @@ mmc_spi_detect_irq(int irq, void *mmc)
->  	return IRQ_HANDLED;
->  }
->  
-> +#ifdef CONFIG_HAS_DMA
-> +static int mmc_spi_dma_alloc(struct mmc_spi_host *host)
-> +{
-> +	struct spi_device *spi = host->spi;
-> +	struct device *dev;
-> +
-> +	if (!spi->master->dev.parent->dma_mask)
-> +		return 0;
-> +
-> +	dev = spi->master->dev.parent;
-> +
-> +	host->ones_dma = dma_map_single(dev, host->ones, MMC_SPI_BLOCKSIZE,
-> +					DMA_TO_DEVICE);
-> +	if (dma_mapping_error(dev, host->ones_dma))
-> +		return -ENOMEM;
-> +
-> +	host->data_dma = dma_map_single(dev, host->data, sizeof(*host->data),
-> +					DMA_BIDIRECTIONAL);
-> +	if (dma_mapping_error(dev, host->data_dma)) {
-> +		dma_unmap_single(dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
-> +				 DMA_TO_DEVICE);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	dma_sync_single_for_cpu(dev, host->data_dma, sizeof(*host->data),
-> +				DMA_BIDIRECTIONAL);
-> +
-> +	host->dma_dev = dev;
-> +	return 0;
-> +}
-> +
-> +static void mmc_spi_dma_free(struct mmc_spi_host *host)
-> +{
-> +	if (!host->dma_dev)
-> +		return;
-> +
-> +	dma_unmap_single(host->dma_dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
-> +			 DMA_TO_DEVICE);
-> +	dma_unmap_single(host->dma_dev, host->data_dma,	sizeof(*host->data),
-> +			 DMA_BIDIRECTIONAL);
-> +}
-> +#else
-> +static inline mmc_spi_dma_alloc(struct mmc_spi_host *host) { return 0; }
-> +static inline void mmc_spi_dma_free(struct mmc_spi_host *host) {}
-> +#endif
-> +
->  static int mmc_spi_probe(struct spi_device *spi)
->  {
->  	void			*ones;
-> @@ -1374,23 +1420,9 @@ static int mmc_spi_probe(struct spi_device *spi)
->  	if (!host->data)
->  		goto fail_nobuf1;
->  
-> -	if (spi->master->dev.parent->dma_mask) {
-> -		struct device	*dev = spi->master->dev.parent;
-> -
-> -		host->dma_dev = dev;
-> -		host->ones_dma = dma_map_single(dev, ones,
-> -				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
-> -		if (dma_mapping_error(dev, host->ones_dma))
-> -			goto fail_ones_dma;
-> -		host->data_dma = dma_map_single(dev, host->data,
-> -				sizeof(*host->data), DMA_BIDIRECTIONAL);
-> -		if (dma_mapping_error(dev, host->data_dma))
-> -			goto fail_data_dma;
-> -
-> -		dma_sync_single_for_cpu(host->dma_dev,
-> -				host->data_dma, sizeof(*host->data),
-> -				DMA_BIDIRECTIONAL);
-> -	}
-> +	status = mmc_spi_dma_alloc(host);
-> +	if (status)
-> +		goto fail_dma;
->  
->  	/* setup message for status/busy readback */
->  	spi_message_init(&host->readback);
-> @@ -1458,20 +1490,12 @@ static int mmc_spi_probe(struct spi_device *spi)
->  fail_add_host:
->  	mmc_remove_host(mmc);
->  fail_glue_init:
-> -	if (host->dma_dev)
-> -		dma_unmap_single(host->dma_dev, host->data_dma,
-> -				sizeof(*host->data), DMA_BIDIRECTIONAL);
-> -fail_data_dma:
-> -	if (host->dma_dev)
-> -		dma_unmap_single(host->dma_dev, host->ones_dma,
-> -				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
-> -fail_ones_dma:
-> +	mmc_spi_dma_free(host);
-> +fail_dma:
->  	kfree(host->data);
-> -
->  fail_nobuf1:
->  	mmc_free_host(mmc);
->  	mmc_spi_put_pdata(spi);
-> -
->  nomem:
->  	kfree(ones);
->  	return status;
-> @@ -1489,13 +1513,7 @@ static int mmc_spi_remove(struct spi_device *spi)
->  
->  	mmc_remove_host(mmc);
->  
-> -	if (host->dma_dev) {
-> -		dma_unmap_single(host->dma_dev, host->ones_dma,
-> -			MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
-> -		dma_unmap_single(host->dma_dev, host->data_dma,
-> -			sizeof(*host->data), DMA_BIDIRECTIONAL);
-> -	}
-> -
-> +	mmc_spi_dma_free(host);
->  	kfree(host->data);
->  	kfree(host->ones);
->  
-> -- 
-> 2.25.1
 
-A change to Kconfig is also needed to remove the HAS_DMA dependency.
 
-Rich
+On 2020/8/31 6:25, Laurent Pinchart wrote:
+> Hi Jia-Ju,
+>
+> On Sun, Aug 30, 2020 at 03:33:11PM +0800, Jia-Ju Bai wrote:
+>> On 2020/8/30 1:16, Laurent Pinchart wrote:
+>>> On Sat, Aug 29, 2020 at 02:10:20PM +0200, Pavel Machek wrote:
+>>>> Hi!
+>>>>
+>>>>> The value av7110->debi_virt is stored in DMA memory, and it is assigned
+>>>>> to data, and thus data[0] can be modified at any time by malicious
+>>>>> hardware. In this case, "if (data[0] < 2)" can be passed, but then
+>>>>> data[0] can be changed into a large number, which may cause buffer
+>>>>> overflow when the code "av7110->ci_slot[data[0]]" is used.
+>>>>>
+>>>>> To fix this possible bug, data[0] is assigned to a local variable, which
+>>>>> replaces the use of data[0].
+>>>> I'm pretty sure hardware capable of manipulating memory can work
+>>>> around any such checks, but...
+>>>>
+>>>>> +++ b/drivers/media/pci/ttpci/av7110.c
+>>>>> @@ -424,14 +424,15 @@ static void debiirq(unsigned long cookie)
+>>>>>    	case DATA_CI_GET:
+>>>>>    	{
+>>>>>    		u8 *data = av7110->debi_virt;
+>>>>> +		u8 data_0 = data[0];
+>>>>>    
+>>>>> -		if ((data[0] < 2) && data[2] == 0xff) {
+>>>>> +		if (data_0 < 2 && data[2] == 0xff) {
+>>>>>    			int flags = 0;
+>>>>>    			if (data[5] > 0)
+>>>>>    				flags |= CA_CI_MODULE_PRESENT;
+>>>>>    			if (data[5] > 5)
+>>>>>    				flags |= CA_CI_MODULE_READY;
+>>>>> -			av7110->ci_slot[data[0]].flags = flags;
+>>>>> +			av7110->ci_slot[data_0].flags = flags;
+>>>> This does not even do what it says. Compiler is still free to access
+>>>> data[0] multiple times. It needs READ_ONCE() to be effective.
+>>> Yes, it seems quite dubious to me. If we *really* want to guard against
+>>> rogue hardware here, the whole DMA buffer should be copied. I don't
+>>> think it's worth it, a rogue PCI device can do much more harm.
+>>  From the original driver code, data[0] is considered to be bad and thus
+>> it should be checked, because the content of the DMA buffer may be
+>> problematic.
+>>
+>> Based on this consideration, data[0] can be also modified to bypass the
+>> check, and thus its value should be copied to a local variable for the
+>> check and use.
+> What makes you think the hardware would do that ?
+>
+
+Several recent papers show that the bad values from malicious or 
+problematic hardware can cause security problems:
+[NDSS'19] PeriScope: An Effective Probing and Fuzzing Framework for the 
+Hardware-OS Boundary
+[NDSS'19] Thunderclap: Exploring Vulnerabilities in Operating System 
+IOMMU Protection via DMA from Untrustworthy Peripherals
+[USENIX Security'20] USBFuzz: A Framework for Fuzzing USB Drivers by 
+Device Emulation
+
+In this case, the values from DMA can be bad, and the driver should 
+carefully check these values to avoid security problems.
+IOMMU is an effective method to prevent the hardware from accessing 
+arbitrary memory address via DMA, but it does not check whether the 
+values from DMA are safe.
+
+I find that some drivers (including the av7110 driver) check (or try to 
+check) the values from DMA, and thus I think these drivers have 
+considered such security problems.
+However, some of these checks are not rigorous, so that they can be 
+bypassed in some cases. The problem that I reported is such an example.
+
+
+Best wishes,
+Jia-Ju Bai
+
