@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 907EEC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 909262064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6780F2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888167;
-	bh=mpA3MbNqtFQ4NxGhPR6tP5hHJmfELPRJmAUNWdcPSq8=;
+	s=default; t=1598888174;
+	bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kiENS2+MIcat7rdC5GGmpip9hxlQMkF/vmJ/rjH+abR65aXfh5KZl0Si1uV+fgDxC
-	 5st91nM8xlOFZD54R3hSglI93zDp0lo21cCMPLRPLaXmjGieBo/2mhBcAGeQMrPKQ2
-	 t+JB/74jqhUFngkiiqlb8RxRlXK87Sp/er59nc0M=
+	b=CEQoE00O0+RbcbgMV689uoTRBo5rmyuzK5L9IwLDiXb04riXPUdGEFT84bwDJ8TNF
+	 qm5G266QSAjAepyiUgiZ/YWTo3II0o7REIUeN8/Qfm2Kh2piVn111RC/kV+2k98u3E
+	 Zsm2PlIeIMTjnFH/w8LSYVMEkEiPQ7cOfCbCe+L4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbgHaPgG (ORCPT
+        id S1729284AbgHaPgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:36:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:36:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728742AbgHaPaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:52 -0400
+        id S1728701AbgHaPav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 520F22158C;
-        Mon, 31 Aug 2020 15:30:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A9E207EA;
+        Mon, 31 Aug 2020 15:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887852;
-        bh=mpA3MbNqtFQ4NxGhPR6tP5hHJmfELPRJmAUNWdcPSq8=;
+        s=default; t=1598887850;
+        bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xLZ4bMkfqCja3ODj9TTSVfyZRlwnY/cx802eYNAGXge19spLUmXrPNw0sNRbhIddb
-         Kjj4zqjdqk3L4LimgpVP4bfWHs+It+IjBkXKIUAiXXspqp3l8JuOcBsqxgJUr/vJ9K
-         dADrjlb4TqhlAJsgyPBSvtkqH9agjCdxlaO1yxcM=
+        b=x/oDLGUhLGLdDs0WwbWxpTEozah4VA+iWT5QVJDwhb3RzQPtHKbCPtF1GzecsuJqG
+         vmtXucc4Fnkg9DgOJchB4IyDcbdbnonSVqOvfuEhzpdOrXoNgWI2oeEamjeTKM2MFk
+         QWGaXYeAfdYJx4Yyt8qxXIP6AOEnK7lhzI4y5X1k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>, Henrik Rydberg <rydberg@bitmath.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 07/23] hwmon: (applesmc) check status earlier.
-Date:   Mon, 31 Aug 2020 11:30:23 -0400
-Message-Id: <20200831153039.1024302-7-sashal@kernel.org>
+Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 06/23] drm/msm: add shutdown support for display platform_driver
+Date:   Mon, 31 Aug 2020 11:30:22 -0400
+Message-Id: <20200831153039.1024302-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
 References: <20200831153039.1024302-1-sashal@kernel.org>
@@ -60,121 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Krishna Manikandan <mkrishn@codeaurora.org>
 
-[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
+[ Upstream commit 9d5cbf5fe46e350715389d89d0c350d83289a102 ]
 
-clang static analysis reports this representative problem
+Define shutdown callback for display drm driver,
+so as to disable all the CRTCS when shutdown
+notification is received by the driver.
 
-applesmc.c:758:10: warning: 1st function call argument is an
-  uninitialized value
-        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+This change will turn off the timing engine so
+that no display transactions are requested
+while mmu translations are getting disabled
+during reboot sequence.
 
-buffer is filled by the earlier call
+Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
 
-	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
+Changes in v2:
+	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
+	- Change commit text to reflect when this issue
+	  was uncovered (Sai Prakash Ranjan)
 
-This problem is reported because a goto skips the status check.
-Other similar problems use data from applesmc_read_key before checking
-the status.  So move the checks to before the use.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
-Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 183ff3d251299..006bc07bcd301 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -748,15 +748,18 @@ static ssize_t applesmc_light_show(struct device *dev,
- 	}
- 
- 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
-+	if (ret)
-+		goto out;
- 	/* newer macbooks report a single 10-bit bigendian value */
- 	if (data_length == 10) {
- 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
- 		goto out;
- 	}
- 	left = buffer[2];
-+
-+	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	if (ret)
- 		goto out;
--	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	right = buffer[2];
- 
- out:
-@@ -805,12 +808,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
- 		  to_index(attr));
- 
- 	ret = applesmc_read_key(newkey, buffer, 2);
--	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
-+
-+	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index b73fbb65e14b2..4558d66761b3c 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -1321,6 +1321,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
- static ssize_t applesmc_store_fan_speed(struct device *dev,
-@@ -846,12 +848,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
- 	u8 buffer[2];
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
++static void msm_pdev_shutdown(struct platform_device *pdev)
++{
++	struct drm_device *drm = platform_get_drvdata(pdev);
 +
-+	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
- }
- 
- static ssize_t applesmc_store_fan_manual(struct device *dev,
-@@ -867,10 +868,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
- 		return -EINVAL;
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	val = (buffer[0] << 8 | buffer[1]);
- 	if (ret)
- 		goto out;
- 
-+	val = (buffer[0] << 8 | buffer[1]);
++	drm_atomic_helper_shutdown(drm);
++}
 +
- 	if (input)
- 		val = val | (0x01 << to_index(attr));
- 	else
-@@ -946,13 +948,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
- 	u32 count;
- 
- 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
--	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
--						((u32)buffer[2]<<8) + buffer[3];
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
-+
-+	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
-+						((u32)buffer[2]<<8) + buffer[3];
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
- }
- 
- static ssize_t applesmc_key_at_index_read_show(struct device *dev,
+ static const struct of_device_id dt_match[] = {
+ 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
+ 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
+@@ -1332,6 +1339,7 @@ MODULE_DEVICE_TABLE(of, dt_match);
+ static struct platform_driver msm_platform_driver = {
+ 	.probe      = msm_pdev_probe,
+ 	.remove     = msm_pdev_remove,
++	.shutdown   = msm_pdev_shutdown,
+ 	.driver     = {
+ 		.name   = "msm",
+ 		.of_match_table = dt_match,
 -- 
 2.25.1
 
