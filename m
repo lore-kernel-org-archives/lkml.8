@@ -2,151 +2,410 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BCDC43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77402C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 710D9206EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:30:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455F5206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFgwc5cH"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="jylSosw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbgHaEaz (ORCPT
+        id S1726044AbgHaEfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 00:30:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37180 "EHLO
+        Mon, 31 Aug 2020 00:35:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgHaEax (ORCPT
+        with ESMTP id S1725810AbgHaEfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 00:30:53 -0400
-Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B04C1C061573;
-        Sun, 30 Aug 2020 21:30:53 -0700 (PDT)
-Received: by mail-yb1-xb43.google.com with SMTP id 189so3284955ybw.3;
-        Sun, 30 Aug 2020 21:30:53 -0700 (PDT)
+        Mon, 31 Aug 2020 00:35:05 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A0BC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:05 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id nv17so2467668pjb.3
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3EHX4IFDP9HkXUW+b+ZNzN+U/N5NbUIOOxj43RJQFP8=;
-        b=sFgwc5cHHE9FxursU6WRqYcmits9x/HyhItAsmn2E1mo5JX2JKbQ4kWAoVvXqJgHvX
-         CEr0Pums8JT3qlyKoAgYpS3yK+ibCQGxWNVbQZgisAMuZdXm9u/InCEZgPYhZMLGZydH
-         yd42w67EH6hWqQosjvmCFftCCPPp/at/gd3UhDMhUZJGFRT/JnHsiWGwocA66GWahivh
-         pb+Myve0noIccwNerGhDQD/cIEcMlIqPzyLeXsKabrkChvK3nT3re1P10cmNy0cj5lsL
-         mGaUjNxaOWScrpJXKjjr3m/W3J9uBUiBJRQe0HNBj0stSxKDZKyPYe+RqER4Imlt+dU7
-         iKdg==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wkyLdwK5AWkLSd0kiOmLJIoSgTYFe7HR0Fnu56z+MVY=;
+        b=jylSosw0CGwG6YV7bMvaxEwTIwmb5XA686fIWfEPnNnZ3/7M5tZzJICNRKXkX+Dys4
+         tUWM7zxizf6jJt28Q04tgVyLmwV7aCqsm79D5nABoVpIziJtTfFCNRnxkUVyL8E/q1A7
+         3zr0c4dlpwO1EzokZYaBA/1joe94N3QaAqi3Ghp9uxf4a/2iN3hbeUw9syHAAOipBg1y
+         kkF/VdBj/j5VmtecqQ5v+Ne9TQWQAralJ7eg5qr9kPF5GEhZPstn+fA8q0YPdbdUEZdp
+         MiHwpqvUrB9tItz7AjSSIXVe1oGawK5FguaF0vAq5wcLBRX5ZCWi1GgaQgodBkr27m9c
+         xnmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3EHX4IFDP9HkXUW+b+ZNzN+U/N5NbUIOOxj43RJQFP8=;
-        b=sa7OhCbVc7nysSYD8o0v82TShUJyM92sePNQ4qayjapOrcAMPuQ5Qe3Os/kjxXY+Gn
-         DMyg7+2TXaUEKJhKGtj+OrxDwwJa3dCqkdioOFJTo3nx1mnbBQWhECHfvUvU0bYFLOs4
-         4bSB8MUJyXy2FwvIzHfg4J5TlSCBLxadoZ7ZMujgFrM1IMgcPELRHZrE75+lA6pOUJl0
-         BbMMTO7Sx/HoOnboAs7KYWj1x0nPnv+9HikxKI54oURGAvefI8n+SNr61sslNLainobl
-         oXwRobd8fl765tn3LkH78Byqd9Nh0jhffh6u2HFQBNp2d2Do0Wb7RNOgH0qQkcGJQUdY
-         6w+w==
-X-Gm-Message-State: AOAM5309KbqDnq3PlKADiUQ6Y0NSPESWWscmOuUYeL0WB/JpfBXn8Bqj
-        7bqZMCKRnF0BNkim3b9vpWXoDxItzqqgUfuIkpQ=
-X-Google-Smtp-Source: ABdhPJygqDhnYzGy1ODmzpjWOWvVU0KHozgD8foEW/pFKDAAJ/I2ilsDU+17Efoxy6pCnydvcuH5XqRX2oBauPkkZ+s=
-X-Received: by 2002:a25:3803:: with SMTP id f3mr16938941yba.470.1598848253030;
- Sun, 30 Aug 2020 21:30:53 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=wkyLdwK5AWkLSd0kiOmLJIoSgTYFe7HR0Fnu56z+MVY=;
+        b=qno3BnYUgUeSdJPV4eYqdj+7FsoGiN+qKpDeQXszGe5PG9WAzvnWaYBhgLY3ObuUnt
+         uv1Taq4IZI/9GX2Q8GV5sKUghIjjSTcJItKspGXBvVmXp/jzgdIfgz3cRNyLFHFTfJn0
+         zgaDu3TVjXWF2Pgww/dk8K3DEec07YYWnRZPb83nftop+4kvoy6SvfdrrTrhLv6pWTRz
+         0lHJgSleBZRq73ufpMdKOho0f7YCz31Wwbr2zFdl31rbh+Jbli+7jYIjeXDspQ0NM0PO
+         RO5VcM6EGOmU5NQ7/7bb5oq2r0RBWtX7AhzyoGjmMeawSD/pkEHT0ohH6eX05fhQJNUW
+         cwrA==
+X-Gm-Message-State: AOAM532P27uCywFF1HmoUIAfBejkQ/3nZUvZeZPP8qOZw9x6y3cRQ9SB
+        3PePWOGlZibwE2adcEy6VsFvW9Qs9OYAIw==
+X-Google-Smtp-Source: ABdhPJydX7OxyVhGb8p8AcVb3oGlZpOv8W77lxyQ2ykz9zHQT/tm/gG1uWkvlhkTe9fkH95ze+ncUw==
+X-Received: by 2002:a17:90a:e7c8:: with SMTP id kb8mr9263178pjb.104.1598848504358;
+        Sun, 30 Aug 2020 21:35:04 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id q25sm6190551pfn.181.2020.08.30.21.34.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Aug 2020 21:35:03 -0700 (PDT)
+Subject: Re: [PATCH v1 08/10] powerpc/pseries/iommu: Add ddw_property_create()
+ and refactor enable_ddw()
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+ <20200817234033.442511-9-leobras.c@gmail.com>
+ <952fb640-01dd-003f-7fcb-bd48446d526c@ozlabs.ru>
+ <06f732abbc3e6d4745428c4fc8cc98baf960a2e0.camel@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <1a469384-91ad-81f0-2a42-4c985cbc92da@ozlabs.ru>
+Date:   Mon, 31 Aug 2020 14:34:57 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <CAJ1xhMUpqtKMuGUZdComskTqd0oOKCfDuVQT3+c13u=NSJLkBw@mail.gmail.com>
-In-Reply-To: <CAJ1xhMUpqtKMuGUZdComskTqd0oOKCfDuVQT3+c13u=NSJLkBw@mail.gmail.com>
-From:   Ben Skeggs <skeggsb@gmail.com>
-Date:   Mon, 31 Aug 2020 14:30:42 +1000
-Message-ID: <CACAvsv6zUi=3mZTg11Y_6CVYkpCSO0RY-5+GiBZz+2EXCDmD-g@mail.gmail.com>
-Subject: Re: nouveau PUSHBUFFER_ERR on 5.9.0-rc2-next-20200824
-To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        ML nouveau <nouveau@lists.freedesktop.org>,
-        Linux-Next <linux-next@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <06f732abbc3e6d4745428c4fc8cc98baf960a2e0.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Aug 2020 at 17:21, Alexander Kapshuk
-<alexander.kapshuk@gmail.com> wrote:
->
-> Since upgrading to linux-next based on 5.9.0-rc1 and 5.9.0-rc2 I have
-> had my mouse pointer disappear soon after logging in, and I have
-> observed the system freezing temporarily when clicking on objects and
-> when typing text.
-> I have also found records of push buffer errors in dmesg output:
-> [ 6625.450394] nouveau 0000:01:00.0: disp: ERROR 1 [PUSHBUFFER_ERR] 02
-> [] chid 0 mthd 0000 data 00000400
-Hey,
 
-Yeah, I'm aware of this.  Lyude and I have both seen it, but it's been
-very painful to track down to what's actually causing it so far.  It
-likely is the commit you mentioned that's at fault, and I'm still
-working to find a proper solution before I revert it.
 
-Ben.
+On 29/08/2020 01:25, Leonardo Bras wrote:
+> On Mon, 2020-08-24 at 15:07 +1000, Alexey Kardashevskiy wrote:
+>>
+>> On 18/08/2020 09:40, Leonardo Bras wrote:
+>>> Code used to create a ddw property that was previously scattered in
+>>> enable_ddw() is now gathered in ddw_property_create(), which deals with
+>>> allocation and filling the property, letting it ready for
+>>> of_property_add(), which now occurs in sequence.
+>>>
+>>> This created an opportunity to reorganize the second part of enable_ddw():
+>>>
+>>> Without this patch enable_ddw() does, in order:
+>>> kzalloc() property & members, create_ddw(), fill ddwprop inside property,
+>>> ddw_list_add(), do tce_setrange_multi_pSeriesLP_walk in all memory,
+>>> of_add_property().
+>>>
+>>> With this patch enable_ddw() does, in order:
+>>> create_ddw(), ddw_property_create(), of_add_property(), ddw_list_add(),
+>>> do tce_setrange_multi_pSeriesLP_walk in all memory.
+>>>
+>>> This change requires of_remove_property() in case anything fails after
+>>> of_add_property(), but we get to do tce_setrange_multi_pSeriesLP_walk
+>>> in all memory, which looks the most expensive operation, only if
+>>> everything else succeeds.
+>>>
+>>> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+>>> ---
+>>>  arch/powerpc/platforms/pseries/iommu.c | 97 +++++++++++++++-----------
+>>>  1 file changed, 57 insertions(+), 40 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+>>> index 4031127c9537..3a1ef02ad9d5 100644
+>>> --- a/arch/powerpc/platforms/pseries/iommu.c
+>>> +++ b/arch/powerpc/platforms/pseries/iommu.c
+>>> @@ -1123,6 +1123,31 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
+>>>  			 ret);
+>>>  }
+>>>  
+>>> +static int ddw_property_create(struct property **ddw_win, const char *propname,
+>>
+>> @propname is always the same, do you really want to pass it every time?
+> 
+> I think it reads better, like "create a ddw property with this name".
 
->
-> I tried setting CONFIG_NOUVEAU_DEBUG=5 (tracing) to try and collect
-> further debug info, but nothing caught the eye.
->
-> The error message in question comes from nv50_disp_intr_error in
-> drivers/gpu/drm/nouveau/nvkm/engine/disp/nv50.c:613,645.
-> And nv50_disp_intr_error is called from nv50_disp_intr in the
-> following while block:
-> drivers/gpu/drm/nouveau/nvkm/engine/disp/nv50.c:647,658
-> void
-> nv50_disp_intr(struct nv50_disp *disp)
-> {
->         struct nvkm_device *device = disp->base.engine.subdev.device;
->         u32 intr0 = nvkm_rd32(device, 0x610020);
->         u32 intr1 = nvkm_rd32(device, 0x610024);
->
->         while (intr0 & 0x001f0000) {
->                 u32 chid = __ffs(intr0 & 0x001f0000) - 16;
->                 nv50_disp_intr_error(disp, chid);
->                 intr0 &= ~(0x00010000 << chid);
->         }
-> ...
-> }
->
-> Could this be in any way related to this series of commits?
-> commit 0a96099691c8cd1ac0744ef30b6846869dc2b566
-> Author: Ben Skeggs <bskeggs@redhat.com>
-> Date:   Tue Jul 21 11:34:07 2020 +1000
->
->     drm/nouveau/kms/nv50-: implement proper push buffer control logic
->
->     We had a, what was supposed to be temporary, hack in the KMS code where we'd
->     completely drain an EVO/NVD channel's push buffer when wrapping to the start
->     again, instead of treating it as a ring buffer.
->
->     Let's fix that, finally.
->
->     Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
->
-> Here are my GPU details:
-> 01:00.0 VGA compatible controller: NVIDIA Corporation GT216 [GeForce
-> 210] (rev a1)
->         Subsystem: Micro-Star International Co., Ltd. [MSI] Device 8a93
->         Kernel driver in use: nouveau
->
-> The last linux-next kernel I built where the problem reported does not
-> manifest itself is 5.8.0-rc6-next-20200720.
->
-> I would appreciate being given any pointers on how to further debug this.
-> Or is git bisect the only way to proceed with this?
->
-> Thanks.
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+This reads as "there are at least two ddw properties".
+
+> Also, it makes possible to create ddw properties with other names, in
+> case we decide to create properties with different names depending on
+> the window created.
+
+It is one window at any given moment, why call it different names... I
+get the part that it is not always "direct" anymore but still...
+
+
+> Also, it's probably optimized / inlined at this point.
+> Is it ok doing it like this?
+> 
+>>
+>>> +			       u32 liobn, u64 dma_addr, u32 page_shift, u32 window_shift)
+>>> +{
+>>> +	struct dynamic_dma_window_prop *ddwprop;
+>>> +	struct property *win64;
+>>> +
+>>> +	*ddw_win = win64 = kzalloc(sizeof(*win64), GFP_KERNEL);
+>>> +	if (!win64)
+>>> +		return -ENOMEM;
+>>> +
+>>> +	win64->name = kstrdup(propname, GFP_KERNEL);
+>>
+>> Not clear why "win64->name = DIRECT64_PROPNAME" would not work here, the
+>> generic OF code does not try kfree() it but it is probably out of scope
+>> here.
+> 
+> Yeah, I had that question too. 
+> Previous code was like that, and I as trying not to mess too much on
+> how it's done.
+> 
+>>> +	ddwprop = kzalloc(sizeof(*ddwprop), GFP_KERNEL);
+>>> +	win64->value = ddwprop;
+>>> +	win64->length = sizeof(*ddwprop);
+>>> +	if (!win64->name || !win64->value)
+>>> +		return -ENOMEM;
+>>
+>> Up to 2 memory leaks here. I see the cleanup at "out_free_prop:" but
+>> still looks fragile. Instead you could simply return win64 as the only
+>> error possible here is -ENOMEM and returning NULL is equally good.
+> 
+> I agree. It's better if this function have it's own cleaning routine.
+> It will be fixed for next version.
+> 
+>>
+>>
+>>> +
+>>> +	ddwprop->liobn = cpu_to_be32(liobn);
+>>> +	ddwprop->dma_base = cpu_to_be64(dma_addr);
+>>> +	ddwprop->tce_shift = cpu_to_be32(page_shift);
+>>> +	ddwprop->window_shift = cpu_to_be32(window_shift);
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>>  /*
+>>>   * If the PE supports dynamic dma windows, and there is space for a table
+>>>   * that can map all pages in a linear offset, then setup such a table,
+>>> @@ -1140,12 +1165,11 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>  	struct ddw_query_response query;
+>>>  	struct ddw_create_response create;
+>>>  	int page_shift;
+>>> -	u64 max_addr;
+>>> +	u64 max_addr, win_addr;
+>>>  	struct device_node *dn;
+>>>  	u32 ddw_avail[DDW_APPLICABLE_SIZE];
+>>>  	struct direct_window *window;
+>>> -	struct property *win64;
+>>> -	struct dynamic_dma_window_prop *ddwprop;
+>>> +	struct property *win64 = NULL;
+>>>  	struct failed_ddw_pdn *fpdn;
+>>>  	bool default_win_removed = false;
+>>>  
+>>> @@ -1244,38 +1268,34 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>  		goto out_failed;
+>>>  	}
+>>>  	len = order_base_2(max_addr);
+>>> -	win64 = kzalloc(sizeof(struct property), GFP_KERNEL);
+>>> -	if (!win64) {
+>>> -		dev_info(&dev->dev,
+>>> -			"couldn't allocate property for 64bit dma window\n");
+>>> +
+>>> +	ret = create_ddw(dev, ddw_avail, &create, page_shift, len);
+>>> +	if (ret != 0)
+>>
+>> It is usually just "if (ret)"
+> 
+> It was previously like that, and all query_ddw() checks return value
+> this way.
+
+ah I see.
+
+> Should I update them all or just this one?
+
+Pick one variant and make sure all new lines use just that. In this
+patch you add both variants. Thanks,
+
+> 
+> Thanks!
+> 
+>>
+>>
+>>>  		goto out_failed;
+>>> -	}
+>>> -	win64->name = kstrdup(DIRECT64_PROPNAME, GFP_KERNEL);
+>>> -	win64->value = ddwprop = kmalloc(sizeof(*ddwprop), GFP_KERNEL);
+>>> -	win64->length = sizeof(*ddwprop);
+>>> -	if (!win64->name || !win64->value) {
+>>> +
+>>> +	dev_dbg(&dev->dev, "created tce table LIOBN 0x%x for %pOF\n",
+>>> +		create.liobn, dn);
+>>> +
+>>> +	win_addr = ((u64)create.addr_hi << 32) | create.addr_lo;
+>>> +	ret = ddw_property_create(&win64, DIRECT64_PROPNAME, create.liobn, win_addr,
+>>> +				  page_shift, len);
+>>> +	if (ret) {
+>>>  		dev_info(&dev->dev,
+>>> -			"couldn't allocate property name and value\n");
+>>> +			 "couldn't allocate property, property name, or value\n");
+>>>  		goto out_free_prop;
+>>>  	}
+>>>  
+>>> -	ret = create_ddw(dev, ddw_avail, &create, page_shift, len);
+>>> -	if (ret != 0)
+>>> +	ret = of_add_property(pdn, win64);
+>>> +	if (ret) {
+>>> +		dev_err(&dev->dev, "unable to add dma window property for %pOF: %d",
+>>> +			pdn, ret);
+>>>  		goto out_free_prop;
+>>> -
+>>> -	ddwprop->liobn = cpu_to_be32(create.liobn);
+>>> -	ddwprop->dma_base = cpu_to_be64(((u64)create.addr_hi << 32) |
+>>> -			create.addr_lo);
+>>> -	ddwprop->tce_shift = cpu_to_be32(page_shift);
+>>> -	ddwprop->window_shift = cpu_to_be32(len);
+>>> -
+>>> -	dev_dbg(&dev->dev, "created tce table LIOBN 0x%x for %pOF\n",
+>>> -		  create.liobn, dn);
+>>> +	}
+>>>  
+>>>  	/* Add new window to existing DDW list */
+>>> -	window = ddw_list_add(pdn, ddwprop);
+>>> +	window = ddw_list_add(pdn, win64->value);
+>>>  	if (!window)
+>>> -		goto out_clear_window;
+>>> +		goto out_prop_del;
+>>>  
+>>>  	ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
+>>>  			win64->value, tce_setrange_multi_pSeriesLP_walk);
+>>> @@ -1285,14 +1305,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>  		goto out_free_window;
+>>>  	}
+>>>  
+>>> -	ret = of_add_property(pdn, win64);
+>>> -	if (ret) {
+>>> -		dev_err(&dev->dev, "unable to add dma window property for %pOF: %d",
+>>> -			 pdn, ret);
+>>> -		goto out_free_window;
+>>> -	}
+>>> -
+>>> -	dev->dev.archdata.dma_offset = be64_to_cpu(ddwprop->dma_base);
+>>> +	dev->dev.archdata.dma_offset = win_addr;
+>>>  	goto out_unlock;
+>>>  
+>>>  out_free_window:
+>>> @@ -1302,14 +1315,18 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>  
+>>>  	kfree(window);
+>>>  
+>>> -out_clear_window:
+>>> -	remove_ddw(pdn, true);
+>>> +out_prop_del:
+>>> +	of_remove_property(pdn, win64);
+>>>  
+>>>  out_free_prop:
+>>> -	kfree(win64->name);
+>>> -	kfree(win64->value);
+>>> -	kfree(win64);
+>>> -	win64 = NULL;
+>>> +	if (win64) {
+>>> +		kfree(win64->name);
+>>> +		kfree(win64->value);
+>>> +		kfree(win64);
+>>> +		win64 = NULL;
+>>> +	}
+>>> +
+>>> +	remove_ddw(pdn, true);
+>>>  
+>>>  out_failed:
+>>>  	if (default_win_removed)
+>>>
+> 
+
+-- 
+Alexey
