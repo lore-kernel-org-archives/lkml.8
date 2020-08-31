@@ -2,118 +2,185 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D59C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F266DC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F0520782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFA5420782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:48:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="V3ove1w7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbgHaBqi (ORCPT
+        id S1726873AbgHaBsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:46:38 -0400
-Received: from brightrain.aerifal.cx ([216.12.86.13]:48326 "EHLO
-        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgHaBqf (ORCPT
+        Sun, 30 Aug 2020 21:48:32 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31082 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726579AbgHaBsb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:46:35 -0400
-Date:   Sun, 30 Aug 2020 21:46:33 -0400
-From:   Rich Felker <dalias@libc.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-Message-ID: <20200831014633.GJ3265@brightrain.aerifal.cx>
-References: <20200829020002.GC3265@brightrain.aerifal.cx>
- <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
- <20200830163657.GD3265@brightrain.aerifal.cx>
- <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
- <20200830184334.GE3265@brightrain.aerifal.cx>
- <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
- <20200830200029.GF3265@brightrain.aerifal.cx>
- <CAG48ez2tOBAKLaX-siRZPCLiiy-s65w2mFGDGr4q2S7WFxpK1A@mail.gmail.com>
+        Sun, 30 Aug 2020 21:48:31 -0400
+X-UUID: 20f4710aea0f463ea299132c59aa1c01-20200831
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=dZZDCUUtmJEVSwoR/NCSir2Ab3LZKPpAtMOlLeSELFY=;
+        b=V3ove1w7RR741EB2tHDZ2DvhlQrJx2rl3oZ4IxGMVE0B6Iv7SoyAFrA0nQGbrMrP1BB6r4V3Eiuu+hIVmMgwjKtgauQvfMFEnJKvLHbstzkne1E8sCDvmCKVWzgMrY/T690kvMUFUlmFDdx0ujjdwFUa4IycILEkMH7CEQb8nbo=;
+X-UUID: 20f4710aea0f463ea299132c59aa1c01-20200831
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1629213602; Mon, 31 Aug 2020 09:48:25 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by mtkmbs05n2.mediatek.inc
+ (172.21.101.140) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 31 Aug
+ 2020 09:48:22 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 31 Aug 2020 09:48:23 +0800
+Message-ID: <1598838410.7054.7.camel@mhfsdcap03>
+Subject: Re: [PATCH v5 3/4] phy: mediatek: Move mtk_hdmi_phy driver into
+ drivers/phy/mediatek folder
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>, CK Hu <ck.hu@mediatek.com>
+Date:   Mon, 31 Aug 2020 09:46:50 +0800
+In-Reply-To: <CAAOTY__mJ=+Mg7PikH+bZ9kPxO8yiURhJSt0Ms_Z9=YGuBwCRg@mail.gmail.com>
+References: <20200823014830.15962-1-chunkuang.hu@kernel.org>
+         <20200823014830.15962-4-chunkuang.hu@kernel.org>
+         <CAAOTY__mJ=+Mg7PikH+bZ9kPxO8yiURhJSt0Ms_Z9=YGuBwCRg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG48ez2tOBAKLaX-siRZPCLiiy-s65w2mFGDGr4q2S7WFxpK1A@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 03:15:04AM +0200, Jann Horn wrote:
-> On Sun, Aug 30, 2020 at 10:00 PM Rich Felker <dalias@libc.org> wrote:
-> > On Sun, Aug 30, 2020 at 09:02:31PM +0200, Jann Horn wrote:
-> > > On Sun, Aug 30, 2020 at 8:43 PM Rich Felker <dalias@libc.org> wrote:
-> > > > On Sun, Aug 30, 2020 at 08:31:36PM +0200, Jann Horn wrote:
-> > > > > On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > > So just checking IS_APPEND in the code paths used by
-> > > > > > pwritev2 (and erroring out rather than silently writing output at the
-> > > > > > wrong place) should suffice to preserve all existing security
-> > > > > > invariants.
-> > > > >
-> > > > > Makes sense.
-> > > >
-> > > > There are 3 places where kiocb_set_rw_flags is called with flags that
-> > > > seem to be controlled by userspace: aio.c, io_uring.c, and
-> > > > read_write.c. Presumably each needs to EPERM out on RWF_NOAPPEND if
-> > > > the underlying inode is S_APPEND. To avoid repeating the same logic in
-> > > > an error-prone way, should kiocb_set_rw_flags's signature be updated
-> > > > to take the filp so that it can obtain the inode and check IS_APPEND
-> > > > before accepting RWF_NOAPPEND? It's inline so this should avoid
-> > > > actually loading anything except in the codepath where
-> > > > flags&RWF_NOAPPEND is nonzero.
-> > >
-> > > You can get the file pointer from ki->ki_filp. See the RWF_NOWAIT
-> > > branch of kiocb_set_rw_flags().
-> >
-> > Thanks. I should have looked for that. OK, so a fixup like this on top
-> > of the existing patch?
-> >
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 473289bff4c6..674131e8d139 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -3457,8 +3457,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
-> >                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
-> >         if (flags & RWF_APPEND)
-> >                 ki->ki_flags |= IOCB_APPEND;
-> > -       if (flags & RWF_NOAPPEND)
-> > +       if (flags & RWF_NOAPPEND) {
-> > +               if (IS_APPEND(file_inode(ki->ki_filp)))
-> > +                       return -EPERM;
-> >                 ki->ki_flags &= ~IOCB_APPEND;
-> > +       }
-> >         return 0;
-> >  }
-> >
-> > If this is good I'll submit a v2 as the above squashed with the
-> > original patch.
-> 
-> Looks good to me.
+T24gTW9uLCAyMDIwLTA4LTMxIGF0IDA3OjAzICswODAwLCBDaHVuLUt1YW5nIEh1IHdyb3RlOg0K
+PiBIaSwgQ2h1bmZlbmcgJiBLaXNob246DQo+IA0KPiBIb3cgZG8geW91IGZlZWwgYWJvdXQgdGhp
+cyBwYXRjaD8NCkl0J3MgZmluZSB0byBtZSwgDQoNClJldmlld2VkLWJ5OiBDaHVuZmVuZyBZdW4g
+PGNodW5mZW5nLnl1bkBtZWRpYXRlay5jb20+DQoNClRoYW5rcyBhIGxvdA0KDQo+IA0KPiBSZWdh
+cmRzLA0KPiBDaHVuLUt1YW5nLg0KPiANCj4gQ2h1bi1LdWFuZyBIdSA8Y2h1bmt1YW5nLmh1QGtl
+cm5lbC5vcmc+IOaWvCAyMDIw5bm0OOaciDIz5pelIOmAseaXpSDkuIrljYg5OjQ45a+r6YGT77ya
+DQo+ID4NCj4gPiBGcm9tOiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPg0KPiA+DQo+ID4gbXRr
+X2hkbWlfcGh5IGlzIGN1cnJlbnRseSBwbGFjZWQgaW5zaWRlIG1lZGlhdGVrIGRybSBkcml2ZXIs
+IGJ1dCBpdCdzDQo+ID4gbW9yZSBzdWl0YWJsZSB0byBwbGFjZSBhIHBoeSBkcml2ZXIgaW50byBw
+aHkgZHJpdmVyIGZvbGRlciwgc28gbW92ZQ0KPiA+IG10a19oZG1pX3BoeSBkcml2ZXIgaW50byBw
+aHkgZHJpdmVyIGZvbGRlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IENLIEh1IDxjay5odUBt
+ZWRpYXRlay5jb20+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2h1bi1LdWFuZyBIdSA8Y2h1bmt1YW5n
+Lmh1QGtlcm5lbC5vcmc+DQo+ID4gLS0tDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9L
+Y29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA3IC0tLS0tLS0NCj4gPiAgZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYg
+LS0tLS0tDQo+ID4gIGRyaXZlcnMvcGh5L21lZGlhdGVrL0tjb25maWcgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCA3ICsrKysrKysNCj4gPiAgZHJpdmVycy9waHkvbWVkaWF0ZWsvTWFr
+ZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUgKysrKysNCj4gPiAgLi4uL21l
+ZGlhdGVrL3BoeS1tdGstaGRtaS1tdDI3MDEuY30gICAgICAgICAgICAgICAgICAgICAgICB8IDIg
+Ky0NCj4gPiAgLi4uL21lZGlhdGVrL3BoeS1tdGstaGRtaS1tdDgxNzMuY30gICAgICAgICAgICAg
+ICAgICAgICAgICB8IDIgKy0NCj4gPiAgLi4uL210a19oZG1pX3BoeS5jID0+IHBoeS9tZWRpYXRl
+ay9waHktbXRrLWhkbWkuY30gICAgICAgICB8IDIgKy0NCj4gPiAgLi4uL210a19oZG1pX3BoeS5o
+ID0+IHBoeS9tZWRpYXRlay9waHktbXRrLWhkbWkuaH0gICAgICAgICB8IDANCj4gPiAgOCBmaWxl
+cyBjaGFuZ2VkLCAxNSBpbnNlcnRpb25zKCspLCAxNiBkZWxldGlvbnMoLSkNCj4gPiAgcmVuYW1l
+IGRyaXZlcnMve2dwdS9kcm0vbWVkaWF0ZWsvbXRrX210MjcwMV9oZG1pX3BoeS5jID0+IHBoeS9t
+ZWRpYXRlay9waHktbXRrLWhkbWktbXQyNzAxLmN9ICg5OSUpDQo+ID4gIHJlbmFtZSBkcml2ZXJz
+L3tncHUvZHJtL21lZGlhdGVrL210a19tdDgxNzNfaGRtaV9waHkuYyA9PiBwaHkvbWVkaWF0ZWsv
+cGh5LW10ay1oZG1pLW10ODE3My5jfSAoOTklKQ0KPiA+ICByZW5hbWUgZHJpdmVycy97Z3B1L2Ry
+bS9tZWRpYXRlay9tdGtfaGRtaV9waHkuYyA9PiBwaHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLmN9
+ICg5OSUpDQo+ID4gIHJlbmFtZSBkcml2ZXJzL3tncHUvZHJtL21lZGlhdGVrL210a19oZG1pX3Bo
+eS5oID0+IHBoeS9tZWRpYXRlay9waHktbXRrLWhkbWkuaH0gKDEwMCUpDQo+ID4NCj4gPiBkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL0tjb25maWcgYi9kcml2ZXJzL2dwdS9k
+cm0vbWVkaWF0ZWsvS2NvbmZpZw0KPiA+IGluZGV4IDYzNjNmMmMxY2RiYy4uNjVjZDAzYTRiZTI5
+IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9LY29uZmlnDQo+ID4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL0tjb25maWcNCj4gPiBAQCAtMjcsMTAgKzI3
+LDMgQEAgY29uZmlnIERSTV9NRURJQVRFS19IRE1JDQo+ID4gICAgICAgICBzZWxlY3QgUEhZX01U
+S19IRE1JDQo+ID4gICAgICAgICBoZWxwDQo+ID4gICAgICAgICAgIERSTS9LTVMgSERNSSBkcml2
+ZXIgZm9yIE1lZGlhdGVrIFNvQ3MNCj4gPiAtDQo+ID4gLWNvbmZpZyBQSFlfTVRLX0hETUkNCj4g
+PiAtICAgICAgIHRyaXN0YXRlICJNZWRpYVRlayBIRE1JLVBIWSBEcml2ZXIiDQo+ID4gLSAgICAg
+ICBkZXBlbmRzIG9uIEFSQ0hfTUVESUFURUsgJiYgT0YNCj4gPiAtICAgICAgIHNlbGVjdCBHRU5F
+UklDX1BIWQ0KPiA+IC0gICAgICAgaGVscA0KPiA+IC0gICAgICAgICBTdXBwb3J0IEhETUkgUEhZ
+IGZvciBNZWRpYXRlayBTb0NzLg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUNCj4gPiBp
+bmRleCBmY2JlZjIzYWE2Y2UuLjc3YjBmZDg2MDYzZCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJz
+L2dwdS9kcm0vbWVkaWF0ZWsvTWFrZWZpbGUNCj4gPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvTWFrZWZpbGUNCj4gPiBAQCAtMjIsOSArMjIsMyBAQCBtZWRpYXRlay1kcm0taGRtaS1v
+YmpzIDo9IG10a19jZWMubyBcDQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICBtdGtfaGRt
+aV9kZGMubw0KPiA+DQo+ID4gIG9iai0kKENPTkZJR19EUk1fTUVESUFURUtfSERNSSkgKz0gbWVk
+aWF0ZWstZHJtLWhkbWkubw0KPiA+IC0NCj4gPiAtcGh5LW10ay1oZG1pLWRydi1vYmpzIDo9IG10
+a19oZG1pX3BoeS5vIFwNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgbXRrX210MjcwMV9o
+ZG1pX3BoeS5vIFwNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgbXRrX210ODE3M19oZG1p
+X3BoeS5vDQo+ID4gLQ0KPiA+IC1vYmotJChDT05GSUdfUEhZX01US19IRE1JKSArPSBwaHktbXRr
+LWhkbWktZHJ2Lm8NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waHkvbWVkaWF0ZWsvS2NvbmZp
+ZyBiL2RyaXZlcnMvcGh5L21lZGlhdGVrL0tjb25maWcNCj4gPiBpbmRleCBkZWU3NTdjOTU3ZjIu
+LjUwYzVlOTMwNmUxOSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3BoeS9tZWRpYXRlay9LY29u
+ZmlnDQo+ID4gKysrIGIvZHJpdmVycy9waHkvbWVkaWF0ZWsvS2NvbmZpZw0KPiA+IEBAIC0zNSwz
+ICszNSwxMCBAQCBjb25maWcgUEhZX01US19YU1BIWQ0KPiA+ICAgICAgICAgICBFbmFibGUgdGhp
+cyB0byBzdXBwb3J0IHRoZSBTdXBlclNwZWVkUGx1cyBYUy1QSFkgdHJhbnNjZWl2ZXIgZm9yDQo+
+ID4gICAgICAgICAgIFVTQjMuMSBHRU4yIGNvbnRyb2xsZXJzIG9uIE1lZGlhVGVrIGNoaXBzLiBU
+aGUgZHJpdmVyIHN1cHBvcnRzDQo+ID4gICAgICAgICAgIG11bHRpcGxlIFVTQjIuMCwgVVNCMy4x
+IEdFTjIgcG9ydHMuDQo+ID4gKw0KPiA+ICtjb25maWcgUEhZX01US19IRE1JDQo+ID4gKyAgICAg
+ICB0cmlzdGF0ZSAiTWVkaWFUZWsgSERNSS1QSFkgRHJpdmVyIg0KPiA+ICsgICAgICAgZGVwZW5k
+cyBvbiBBUkNIX01FRElBVEVLICYmIE9GDQo+ID4gKyAgICAgICBzZWxlY3QgR0VORVJJQ19QSFkN
+Cj4gPiArICAgICAgIGhlbHANCj4gPiArICAgICAgICAgU3VwcG9ydCBIRE1JIFBIWSBmb3IgTWVk
+aWF0ZWsgU29Dcy4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9waHkvbWVkaWF0ZWsvTWFrZWZp
+bGUgYi9kcml2ZXJzL3BoeS9tZWRpYXRlay9NYWtlZmlsZQ0KPiA+IGluZGV4IDA4YThlNmE5N2Ix
+ZS4uNjMyNWUzODcwOWVkIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvcGh5L21lZGlhdGVrL01h
+a2VmaWxlDQo+ID4gKysrIGIvZHJpdmVycy9waHkvbWVkaWF0ZWsvTWFrZWZpbGUNCj4gPiBAQCAt
+NiwzICs2LDggQEANCj4gPiAgb2JqLSQoQ09ORklHX1BIWV9NVEtfVFBIWSkgICAgICAgICAgICAg
+Kz0gcGh5LW10ay10cGh5Lm8NCj4gPiAgb2JqLSQoQ09ORklHX1BIWV9NVEtfVUZTKSAgICAgICAg
+ICAgICAgKz0gcGh5LW10ay11ZnMubw0KPiA+ICBvYmotJChDT05GSUdfUEhZX01US19YU1BIWSkg
+ICAgICAgICAgICArPSBwaHktbXRrLXhzcGh5Lm8NCj4gPiArDQo+ID4gK3BoeS1tdGstaGRtaS1k
+cnYteSAgICAgICAgICAgICAgICAgICAgIDo9IHBoeS1tdGstaGRtaS5vDQo+ID4gK3BoeS1tdGst
+aGRtaS1kcnYteSAgICAgICAgICAgICAgICAgICAgICs9IHBoeS1tdGstaGRtaS1tdDI3MDEubw0K
+PiA+ICtwaHktbXRrLWhkbWktZHJ2LXkgICAgICAgICAgICAgICAgICAgICArPSBwaHktbXRrLWhk
+bWktbXQ4MTczLm8NCj4gPiArb2JqLSQoQ09ORklHX1BIWV9NVEtfSERNSSkgICAgICAgICAgICAg
+Kz0gcGh5LW10ay1oZG1pLWRydi5vDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfbXQyNzAxX2hkbWlfcGh5LmMgYi9kcml2ZXJzL3BoeS9tZWRpYXRlay9waHkt
+bXRrLWhkbWktbXQyNzAxLmMNCj4gPiBzaW1pbGFyaXR5IGluZGV4IDk5JQ0KPiA+IHJlbmFtZSBm
+cm9tIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQyNzAxX2hkbWlfcGh5LmMNCj4gPiBy
+ZW5hbWUgdG8gZHJpdmVycy9waHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLW10MjcwMS5jDQo+ID4g
+aW5kZXggOTlmZTA1Y2QzNTk4Li5hNmNiMWRlYTNkMGMgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL21lZGlhdGVrL210a19tdDI3MDFfaGRtaV9waHkuYw0KPiA+ICsrKyBiL2RyaXZl
+cnMvcGh5L21lZGlhdGVrL3BoeS1tdGstaGRtaS1tdDI3MDEuYw0KPiA+IEBAIC00LDcgKzQsNyBA
+QA0KPiA+ICAgKiBBdXRob3I6IENodW5odWkgRGFpIDxjaHVuaHVpLmRhaUBtZWRpYXRlay5jb20+
+DQo+ID4gICAqLw0KPiA+DQo+ID4gLSNpbmNsdWRlICJtdGtfaGRtaV9waHkuaCINCj4gPiArI2lu
+Y2x1ZGUgInBoeS1tdGstaGRtaS5oIg0KPiA+DQo+ID4gICNkZWZpbmUgSERNSV9DT04wICAgICAg
+MHgwMA0KPiA+ICAjZGVmaW5lIFJHX0hETUlUWF9EUlZfSUJJQVMgICAgICAgICAgICAwDQo+ID4g
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbXQ4MTczX2hkbWlfcGh5
+LmMgYi9kcml2ZXJzL3BoeS9tZWRpYXRlay9waHktbXRrLWhkbWktbXQ4MTczLmMNCj4gPiBzaW1p
+bGFyaXR5IGluZGV4IDk5JQ0KPiA+IHJlbmFtZSBmcm9tIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfbXQ4MTczX2hkbWlfcGh5LmMNCj4gPiByZW5hbWUgdG8gZHJpdmVycy9waHkvbWVkaWF0
+ZWsvcGh5LW10ay1oZG1pLW10ODE3My5jDQo+ID4gaW5kZXggODI3YjkzNzg2ZmFjLi42Y2RmZGY1
+YTY5OGEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19tdDgx
+NzNfaGRtaV9waHkuYw0KPiA+ICsrKyBiL2RyaXZlcnMvcGh5L21lZGlhdGVrL3BoeS1tdGstaGRt
+aS1tdDgxNzMuYw0KPiA+IEBAIC00LDcgKzQsNyBAQA0KPiA+ICAgKiBBdXRob3I6IEppZSBRaXUg
+PGppZS5xaXVAbWVkaWF0ZWsuY29tPg0KPiA+ICAgKi8NCj4gPg0KPiA+IC0jaW5jbHVkZSAibXRr
+X2hkbWlfcGh5LmgiDQo+ID4gKyNpbmNsdWRlICJwaHktbXRrLWhkbWkuaCINCj4gPg0KPiA+ICAj
+ZGVmaW5lIEhETUlfQ09OMCAgICAgICAgICAgICAgMHgwMA0KPiA+ICAjZGVmaW5lIFJHX0hETUlU
+WF9QTExfRU4gICAgICAgICAgICAgICBCSVQoMzEpDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfaGRtaV9waHkuYyBiL2RyaXZlcnMvcGh5L21lZGlhdGVrL3Bo
+eS1tdGstaGRtaS5jDQo+ID4gc2ltaWxhcml0eSBpbmRleCA5OSUNCj4gPiByZW5hbWUgZnJvbSBk
+cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfcGh5LmMNCj4gPiByZW5hbWUgdG8gZHJp
+dmVycy9waHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLmMNCj4gPiBpbmRleCBmZTAyMmFjZGRiZWYu
+LjhmYzgzZjAxYTcyMCAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2hkbWlfcGh5LmMNCj4gPiArKysgYi9kcml2ZXJzL3BoeS9tZWRpYXRlay9waHktbXRrLWhk
+bWkuYw0KPiA+IEBAIC00LDcgKzQsNyBAQA0KPiA+ICAgKiBBdXRob3I6IEppZSBRaXUgPGppZS5x
+aXVAbWVkaWF0ZWsuY29tPg0KPiA+ICAgKi8NCj4gPg0KPiA+IC0jaW5jbHVkZSAibXRrX2hkbWlf
+cGh5LmgiDQo+ID4gKyNpbmNsdWRlICJwaHktbXRrLWhkbWkuaCINCj4gPg0KPiA+ICBzdGF0aWMg
+aW50IG10a19oZG1pX3BoeV9wb3dlcl9vbihzdHJ1Y3QgcGh5ICpwaHkpOw0KPiA+ICBzdGF0aWMg
+aW50IG10a19oZG1pX3BoeV9wb3dlcl9vZmYoc3RydWN0IHBoeSAqcGh5KTsNCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19oZG1pX3BoeS5oIGIvZHJpdmVycy9w
+aHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLmgNCj4gPiBzaW1pbGFyaXR5IGluZGV4IDEwMCUNCj4g
+PiByZW5hbWUgZnJvbSBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2hkbWlfcGh5LmgNCj4g
+PiByZW5hbWUgdG8gZHJpdmVycy9waHkvbWVkaWF0ZWsvcGh5LW10ay1oZG1pLmgNCj4gPiAtLQ0K
+PiA+IDIuMTcuMQ0KPiA+DQoNCg==
 
-Actually it's not quite. I think it should be:
-
-	if ((flags & RWF_NOAPPEND) & (ki->ki_flags & IOCB_APPEND)) {
-		if (IS_APPEND(file_inode(ki->ki_filp)))
-			return -EPERM;
-		ki->ki_flags &= ~IOCB_APPEND;
-	}
-
-i.e. don't refuse RWF_NOAPPEND on a file that was already successfully
-opened without O_APPEND that only subsequently got chattr +a. The
-permission check should only be done if it's overriding the default
-action for how the file is open.
-
-This is actually related to the fcntl corner case mentioned before.
-
-Are you ok with this change? If so I'll go ahead and prepare a v2.
-
-Rich
