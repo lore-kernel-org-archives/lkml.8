@@ -2,102 +2,137 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD248C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BBAC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC10D2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:54:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MEdOC3oE"
+	by mail.kernel.org (Postfix) with ESMTP id 274C7206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:55:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbgHaHye (ORCPT
+        id S1728019AbgHaHzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40424 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgHaHy2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:54:28 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ACCDC061573;
-        Mon, 31 Aug 2020 00:54:28 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id t23so5570718ljc.3;
-        Mon, 31 Aug 2020 00:54:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=5ySzm6C/N6GusO8+WhnjxU91a+LGFeV0ennCZHd0ftc=;
-        b=MEdOC3oE13B00ncD1A6e6iOxKon2hzwKox6osA0eizVeUIreNnL8oos+aiT/XyJqKk
-         hltR48w4oCofK42giql4vItyWqwFd8FuOjCPnHnhMbYAN2hbVTMXAmANej0HnVkcA7rq
-         xJXwSXnPtIzhRhmWznurRyJs9m0NDozyp46DYhsvmkuiDg1ZugsDAr+fKOsp1YPC6AhK
-         S0tQBl12Joo7m3hL9meJoFTDXyUdHVb4Rl+h+/D/4q7CCqJk/zR9EKAzlZJaEQMJtLR3
-         Wg0C9djknj4KMQHagDYOdiTcRuUHz/IkaAjdctGvgglq3TxjNnSmIyuMrox5scjWE1Nw
-         qBow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5ySzm6C/N6GusO8+WhnjxU91a+LGFeV0ennCZHd0ftc=;
-        b=lCJDsVZl0vkAD38DW2FcTbLVnS6C68esi0bcukzGpNORChRHa27BJfZQ9qXUsx9fOj
-         +nMl6rXDEalHchSc9yfxzRJfWgG+0eooL3sF7/q+ifsz3DnAGmO4qgGpZ/2b/5gWR+wZ
-         Fzfzvjr6m+WlHt03d8tC4fy1nFjouePiBd1uTbsaed7gxVTQzXBFp3uqdECDy0v/ZOTE
-         GOFnTmGTY/ayIV3s22gxfcwqi3bkDeBWT35gKNz95ecwZsoQU0ojzt2bzn+aUlNIv3ZH
-         Gj7yhEvRde62RpMW7J/OSdkDYUIDBso3S/SGKEKgESqodWBTf8okJ/Yi2dBybUnyl3Xr
-         AcOQ==
-X-Gm-Message-State: AOAM531vzIuwaEEA7hwJuwyjpAF/xnGS30KJrqF+6raLUP+ArC17cA55
-        FjpvgsbzzD0xLfYhTKSPNQu03HarsvQ=
-X-Google-Smtp-Source: ABdhPJyfAmv+rH3T+J72qv5jTB//Lv7QImhS4MJT95CpUpBllj6cC+IS0RzeX3pMInMMiuJqUVsJ2w==
-X-Received: by 2002:a2e:a28b:: with SMTP id k11mr63428lja.405.1598860466583;
-        Mon, 31 Aug 2020 00:54:26 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t25sm1805516lfq.7.2020.08.31.00.54.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 00:54:25 -0700 (PDT)
-Subject: Re: [PATCH 3/3] ARM: tegra: Pass multiple versions in
- opp-supported-hw property
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1598442485.git.viresh.kumar@linaro.org>
- <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
- <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
- <20200831043908.mtw4dglybcmcabjb@vireshk-i7>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <0da380c2-9161-d450-afd2-4b159c8cfb7d@gmail.com>
-Date:   Mon, 31 Aug 2020 10:54:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 31 Aug 2020 03:55:31 -0400
+Received: from smtp.h3c.com ([60.191.123.56]:28759 "EHLO h3cspam01-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727962AbgHaHzb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:55:31 -0400
+Received: from h3cspam01-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam01-ex.h3c.com with ESMTP id 07V725q5024120
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:02:05 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([10.8.0.66])
+        by h3cspam01-ex.h3c.com with ESMTPS id 07V704Zl018891
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 Aug 2020 15:00:04 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from localhost.localdomain (10.99.212.201) by
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 31 Aug 2020 15:00:07 +0800
+From:   Xianting Tian <tian.xianting@h3c.com>
+To:     <kbusch@kernel.org>, <axboe@fb.com>, <hch@lst.de>,
+        <sagi@grimberg.me>
+CC:     <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        Xianting Tian <tian.xianting@h3c.com>
+Subject: [PATCH] nvme-pci: check req to prevent crash in nvme_handle_cqe()
+Date:   Mon, 31 Aug 2020 14:53:11 +0800
+Message-ID: <20200831065311.40731-1-tian.xianting@h3c.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200831043908.mtw4dglybcmcabjb@vireshk-i7>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.99.212.201]
+X-ClientProxiedBy: BJSMTP01-EX.srv.huawei-3com.com (10.63.20.132) To
+ DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66)
+X-DNSRBL: 
+X-MAIL: h3cspam01-ex.h3c.com 07V704Zl018891
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-31.08.2020 07:39, Viresh Kumar пишет:
-...
->>> Dmitry, I think there is further scope of simplifying stuff here by
->>> using the opp-microvolt-<name> property and corresponding
->>> dev_pm_opp_set_prop_name() call.
-> 
-> Any inputs on this Dmitry ?
+We met a crash issue when hot-insert a nvme device, blk_mq_tag_to_rq()
+returned null(req=null), then crash happened in nvme_end_request():
+	struct nvme_request *rq = nvme_req(req);
+	rq->result = result;  <==crash here
 
-Could you please give an example?
+The test env is, a server is configured with 2 backplanes, each backplane
+support 8 nvme devices, this crash happened when hot-insert a nvme device
+to the second backplane. We measured the signal, which is send out of cpu
+to ack nvme interrupt, the signal is very weak when it reached the second
+backplane, the device can't distinguish it as a ack signal. So it caused
+the device can't clear the interrupt flag.
+After updating related driver, the signal sending out of cpu to the second
+backplane is good, the crash issue disappeared.
+
+As blk_mq_tag_to_rq() may return null, so it should be check whether it is
+null before using it to prevent a crash.
+
+	[ 1124.256246] nvme nvme5: pci function 0000:e1:00.0
+	[ 1124.256323] nvme 0000:e1:00.0: enabling device (0000 -> 0002)
+	[ 1125.720859] nvme nvme5: 96/0/0 default/read/poll queues
+	[ 1125.732483]  nvme5n1: p1 p2 p3
+	[ 1125.788049] BUG: unable to handle kernel NULL pointer dereference at 0000000000000130
+	[ 1125.788054] PGD 0 P4D 0
+	[ 1125.788057] Oops: 0002 [#1] SMP NOPTI
+	[ 1125.788059] CPU: 50 PID: 0 Comm: swapper/50 Kdump: loaded Tainted: G   --------- -t - 4.18.0-147.el8.x86_64 #1
+	[ 1125.788065] RIP: 0010:nvme_irq+0xe8/0x240 [nvme]
+	[ 1125.788068] RSP: 0018:ffff916b8ec83ed0 EFLAGS: 00010813
+	[ 1125.788069] RAX: 0000000000000000 RBX: ffff918ae9211b00 RCX: 0000000000000000
+	[ 1125.788070] RDX: 000000000000400b RSI: 0000000000000000 RDI: 0000000000000000
+	[ 1125.788071] RBP: ffff918ae8870000 R08: 0000000000000004 R09: ffff918ae8870000
+	[ 1125.788072] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+	[ 1125.788073] R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001
+	[ 1125.788075] FS:  0000000000000000(0000) GS:ffff916b8ec80000(0000) knlGS:0000000000000000
+	[ 1125.788075] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+	[ 1125.788076] CR2: 0000000000000130 CR3: 0000001768f00000 CR4: 0000000000340ee0
+	[ 1125.788077] Call Trace:
+	[ 1125.788080]  <IRQ>
+	[ 1125.788085]  __handle_irq_event_percpu+0x40/0x180
+	[ 1125.788087]  handle_irq_event_percpu+0x30/0x80
+	[ 1125.788089]  handle_irq_event+0x36/0x53
+	[ 1125.788090]  handle_edge_irq+0x82/0x190
+	[ 1125.788094]  handle_irq+0xbf/0x100
+	[ 1125.788098]  do_IRQ+0x49/0xd0
+	[ 1125.788100]  common_interrupt+0xf/0xf
+
+Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
+---
+ drivers/nvme/host/pci.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index ba725ae47..32712a41c 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -939,6 +939,7 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
+ {
+ 	struct nvme_completion *cqe = &nvmeq->cqes[idx];
+ 	struct request *req;
++	struct blk_mq_tags *tags;
+ 
+ 	if (unlikely(cqe->command_id >= nvmeq->q_depth)) {
+ 		dev_warn(nvmeq->dev->ctrl.device,
+@@ -959,7 +960,15 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
+ 		return;
+ 	}
+ 
+-	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
++	tags = nvme_queue_tagset(nvmeq);
++	req = blk_mq_tag_to_rq(tags, cqe->command_id);
++	if (unlikely(!req)) {
++		dev_warn(nvmeq->dev->ctrl.device,
++			"req is null(tag:%d nr_tags:%d) on queue %d\n"
++			cqe->command_id, tags->nr_tags, le16_to_cpu(cqe->sq_id);
++		return;
++	}
++
+ 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
+ 	if (!nvme_end_request(req, cqe->status, cqe->result))
+ 		nvme_pci_complete_rq(req);
+-- 
+2.17.1
+
