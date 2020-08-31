@@ -2,46 +2,47 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D44C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09F6B20936
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB69206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:48:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="F7sIKPJv"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="sei81R8C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbgHaKsf (ORCPT
+        id S1726492AbgHaKso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:48:35 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:40890 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgHaKs0 (ORCPT
+        Mon, 31 Aug 2020 06:48:44 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:58855 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbgHaKsa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:48:26 -0400
+        Mon, 31 Aug 2020 06:48:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598870905; x=1630406905;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=Ek0EqDHH/iy5xCbjNpXp7HgyUsuNW6mKFdLMssZj/2o=;
-  b=F7sIKPJvUnpwmG5arMxgpyy3y50lZ2QNWYFag3/xiamoNMiCvW701/c6
-   CKUgrF55fi4678S1MPG7V1WtLhQsBYsOuW4WWVVgG7mSnesFU9Alg2QIw
-   EBUZaNRWNdpUULBsKGKui2DVuNaAe2vyQn2HOtEvT+TGXvgo8DF4sIrWk
-   Y=;
+  t=1598870909; x=1630406909;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version;
+  bh=c1UuIiNQ4tKf+PjubMku+iTkAyx0wbyj2J7tAMnPRis=;
+  b=sei81R8CmHVistig3+uRbPIyTkvK509bBtP1Uv+HVkgiuse1L6mlX+1V
+   lOsGC/mENVVsNA9gDCf1LSbmKdXueCj8fA4z959v/1czO5IPjAjeTBaWS
+   FM4bmwFg2ouZu8c2cuvaHEBG8N5S5VvtSY7d374V5ZdR8G1OqXBNVDH9B
+   I=;
 X-IronPort-AV: E=Sophos;i="5.76,375,1592870400"; 
-   d="scan'208";a="50991266"
-Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 31 Aug 2020 10:48:05 +0000
-Received: from EX13D31EUB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id 0DE74A1DF2;
-        Mon, 31 Aug 2020 10:48:02 +0000 (UTC)
+   d="scan'208";a="52524420"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 31 Aug 2020 10:48:25 +0000
+Received: from EX13D31EUB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2c-6f38efd9.us-west-2.amazon.com (Postfix) with ESMTPS id 12B5FA29EF;
+        Mon, 31 Aug 2020 10:48:21 +0000 (UTC)
 Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.100) by
  EX13D31EUB001.ant.amazon.com (10.43.166.210) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 31 Aug 2020 10:47:45 +0000
+ id 15.0.1497.2; Mon, 31 Aug 2020 10:48:03 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -63,10 +64,12 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
         <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC v8 00/10] DAMON: Support Physical Memory Address Space Monitoring
-Date:   Mon, 31 Aug 2020 12:47:20 +0200
-Message-ID: <20200831104730.28970-1-sjpark@amazon.com>
+Subject: [RFC v8 01/10] mm/damon/debugfs: Allow users to set initial monitoring target regions
+Date:   Mon, 31 Aug 2020 12:47:21 +0200
+Message-ID: <20200831104730.28970-2-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200831104730.28970-1-sjpark@amazon.com>
+References: <20200831104730.28970-1-sjpark@amazon.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.43.160.100]
@@ -79,135 +82,212 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-Changes from Previous Version
-=============================
+Some users would want to monitor only a part of the entire virtual
+memory address space.  The '->init_target_regions' callback is therefore
+provided, but only programming interface can use it.
 
-- Add missed 'put_page()' calls
-- Support unmapped LRU pages
+For the reason, this commit introduces a new debugfs file,
+'init_region'.  Users can specify which initial monitoring target
+address regions they want by writing special input to the file.  The
+input should describe each region in each line in below form:
 
-Introduction
-============
+    <pid> <start address> <end address>
 
-NOTE: This is only an RFC for future features of DAMON patchset[1], which is
-not merged in the mainline yet.  The aim of this RFC is to show how DAMON would
-be expanded once it is merged in.  So, if you have some interest in this RFC,
-please consider reviewing DAMON, either.
+This commit also makes the default '->init_target_regions' callback,
+'kdamon_init_vm_regions()' to do nothing if the user has set the initial
+target regions already.
 
-DAMON[1] programming interface users can extend DAMON for any address space by
-configuring the address-space specific low level primitives with appropriate
-ones including their own implementations.  However, because the implementation
-for the virtual address space is only available now, the users should implement
-their own for other address spaces.  Worse yet, the user space users who rely
-on the debugfs interface and user space tool, cannot implement their own.
+Note that the regions will be updated to cover entire memory mapped
+regions after 'regions update interval'.  If you want the regions to not
+be updated after the initial setting, you could set the interval as a
+very long time, say, a few decades.
 
-This patchset implements another reference implementation of the low level
-primitives for the physical memory address space.  With this change, hence, the
-kernel space users can monitor both the virtual and the physical address spaces
-by simply changing the configuration in the runtime.  Further, this patchset
-links the implementation to the debugfs interface and the user space tool for
-the user space users.
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+---
+ mm/damon.c | 156 +++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 152 insertions(+), 4 deletions(-)
 
-Note that the implementation supports only the user memory, as same to the idle
-page tracking feature.
-
-[1] https://lore.kernel.org/linux-mm/20200817105137.19296-1-sjpark@amazon.com/
-
-Baseline and Complete Git Trees
-===============================
-
-The patches are based on the v5.8 plus DAMON v20 patchset[1] and DAMOS RFC v14
-patchset[2].  You can also clone the complete git tree:
-
-    $ git clone git://github.com/sjp38/linux -b cdamon/rfc/v8
-
-The web is also available:
-https://github.com/sjp38/linux/releases/tag/cdamon/rfc/v8
-
-[1] https://lore.kernel.org/linux-mm/20200817105137.19296-1-sjpark@amazon.com/
-[2] https://lore.kernel.org/linux-mm/20200804142430.15384-1-sjpark@amazon.com/
-
-Sequence of Patches
-===================
-
-The sequence of patches is as follow.
-
-The first 5 patches allow the user space users manually set the monitoring
-regions.  The 1st and 2nd patches implements the features in the debugfs
-interface and the user space tool, respectively.  Following two patches update
-unittests (the 3rd patch) and selftests (the 4th patch) for the new feature.
-Finally, the 5th patch documents this new feature.
-
-Following 5 patches implement the physical memory monitoring.  The 6th patch
-implements the low level primitives.  The 7th and the 8th patches links the
-primitives to the debugfs and the user space tool, respectively.  The 9th patch
-further implement a handy NUMA specific memory monitoring feature on the user
-space tool.  Finally, the 10th patch documents this new features.
-
-Patch History
-=============
-
-Changes from RFC v7
-(https://lore.kernel.org/linux-mm/20200818072501.30396-1-sjpark@amazon.com/)
-- Add missed 'put_page()' calls
-- Support unmapped LRU pages
-
-Changes from RFC v6
-(https://lore.kernel.org/linux-mm/20200805065951.18221-1-sjpark@amazon.com/)
-- Use 42 as the fake target id for paddr instead of -1
-- Fix typo
-
-Changes from RFC v5
-(https://lore.kernel.org/linux-mm/20200707144540.21216-1-sjpark@amazon.com/)
-- Support nested iomem sections (Du Fan)
-- Rebase on v5.8
-
-Changes from RFC v4
-(https://lore.kernel.org/linux-mm/20200616140813.17863-1-sjpark@amazon.com/)
- - Support NUMA specific physical memory monitoring
-
-Changes from RFC v3
-(https://lore.kernel.org/linux-mm/20200609141941.19184-1-sjpark@amazon.com/)
- - Export rmap functions
- - Reorganize for physical memory monitoring support only
- - Clean up debugfs code
-
-Changes from RFC v2
-(https://lore.kernel.org/linux-mm/20200603141135.10575-1-sjpark@amazon.com/)
- - Support the physical memory monitoring with the user space tool
- - Use 'pfn_to_online_page()' (David Hildenbrand)
- - Document more detail on random 'pfn' and its safeness (David Hildenbrand)
-
-Changes from RFC v1
-(https://lore.kernel.org/linux-mm/20200409094232.29680-1-sjpark@amazon.com/)
- - Provide the reference primitive implementations for the physical memory
- - Connect the extensions with the debugfs interface
-
-SeongJae Park (10):
-  mm/damon/debugfs: Allow users to set initial monitoring target regions
-  tools/damon: Support init target regions specification
-  mm/damon-test: Add more unit tests for 'init_regions'
-  selftests/damon/_chk_record: Do not check number of gaps
-  Docs/admin-guide/mm/damon: Document 'init_regions' feature
-  mm/damon: Implement callbacks for physical memory monitoring
-  mm/damon/debugfs: Support physical memory monitoring
-  tools/damon/record: Support physical memory monitoring
-  tools/damon/record: Support NUMA specific recording
-  Docs/DAMON: Document physical memory monitoring support
-
- Documentation/admin-guide/mm/damon/usage.rst |  77 +++-
- Documentation/vm/damon/design.rst            |  29 +-
- Documentation/vm/damon/faq.rst               |   5 +-
- include/linux/damon.h                        |   6 +
- mm/damon-test.h                              |  53 +++
- mm/damon.c                                   | 396 ++++++++++++++++++-
- tools/damon/_damon.py                        |  41 ++
- tools/damon/_paddr_layout.py                 | 147 +++++++
- tools/damon/record.py                        |  57 ++-
- tools/damon/schemes.py                       |  12 +-
- tools/testing/selftests/damon/_chk_record.py |   6 -
- 11 files changed, 784 insertions(+), 45 deletions(-)
- create mode 100644 tools/damon/_paddr_layout.py
-
+diff --git a/mm/damon.c b/mm/damon.c
+index 7e3c8c82a010..9815d22fc4de 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -2001,6 +2001,147 @@ static ssize_t debugfs_record_write(struct file *file,
+ 	return ret;
+ }
+ 
++static ssize_t sprint_init_regions(struct damon_ctx *c, char *buf, ssize_t len)
++{
++	struct damon_target *t;
++	struct damon_region *r;
++	int written = 0;
++	int rc;
++
++	damon_for_each_target(t, c) {
++		damon_for_each_region(r, t) {
++			rc = snprintf(&buf[written], len - written,
++					"%lu %lu %lu\n",
++					t->id, r->ar.start, r->ar.end);
++			if (!rc)
++				return -ENOMEM;
++			written += rc;
++		}
++	}
++	return written;
++}
++
++static ssize_t debugfs_init_regions_read(struct file *file, char __user *buf,
++		size_t count, loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	ssize_t len;
++
++	kbuf = kmalloc(count, GFP_KERNEL);
++	if (!kbuf)
++		return -ENOMEM;
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		mutex_unlock(&ctx->kdamond_lock);
++		return -EBUSY;
++	}
++
++	len = sprint_init_regions(ctx, kbuf, count);
++	mutex_unlock(&ctx->kdamond_lock);
++	if (len < 0)
++		goto out;
++	len = simple_read_from_buffer(buf, count, ppos, kbuf, len);
++
++out:
++	kfree(kbuf);
++	return len;
++}
++
++static int add_init_region(struct damon_ctx *c,
++			 unsigned long target_id, struct damon_addr_range *ar)
++{
++	struct damon_target *t;
++	struct damon_region *r, *prev;
++	int rc = -EINVAL;
++
++	if (ar->start >= ar->end)
++		return -EINVAL;
++
++	damon_for_each_target(t, c) {
++		if (t->id == target_id) {
++			r = damon_new_region(ar->start, ar->end);
++			if (!r)
++				return -ENOMEM;
++			damon_add_region(r, t);
++			if (nr_damon_regions(t) > 1) {
++				prev = damon_prev_region(r);
++				if (prev->ar.end > r->ar.start) {
++					damon_destroy_region(r);
++					return -EINVAL;
++				}
++			}
++			rc = 0;
++		}
++	}
++	return rc;
++}
++
++static int set_init_regions(struct damon_ctx *c, const char *str, ssize_t len)
++{
++	struct damon_target *t;
++	struct damon_region *r, *next;
++	int pos = 0, parsed, ret;
++	unsigned long target_id;
++	struct damon_addr_range ar;
++	int err;
++
++	damon_for_each_target(t, c) {
++		damon_for_each_region_safe(r, next, t)
++			damon_destroy_region(r);
++	}
++
++	while (pos < len) {
++		ret = sscanf(&str[pos], "%lu %lu %lu%n",
++				&target_id, &ar.start, &ar.end, &parsed);
++		if (ret != 3)
++			break;
++		err = add_init_region(c, target_id, &ar);
++		if (err)
++			goto fail;
++		pos += parsed;
++	}
++
++	return 0;
++
++fail:
++	damon_for_each_target(t, c) {
++		damon_for_each_region_safe(r, next, t)
++			damon_destroy_region(r);
++	}
++	return err;
++}
++
++static ssize_t debugfs_init_regions_write(struct file *file,
++					  const char __user *buf, size_t count,
++					  loff_t *ppos)
++{
++	struct damon_ctx *ctx = &damon_user_ctx;
++	char *kbuf;
++	ssize_t ret = count;
++	int err;
++
++	kbuf = user_input_str(buf, count, ppos);
++	if (IS_ERR(kbuf))
++		return PTR_ERR(kbuf);
++
++	mutex_lock(&ctx->kdamond_lock);
++	if (ctx->kdamond) {
++		ret = -EBUSY;
++		goto unlock_out;
++	}
++
++	err = set_init_regions(ctx, kbuf, ret);
++	if (err)
++		ret = err;
++
++unlock_out:
++	mutex_unlock(&ctx->kdamond_lock);
++	kfree(kbuf);
++	return ret;
++}
++
+ static ssize_t debugfs_attrs_read(struct file *file,
+ 		char __user *buf, size_t count, loff_t *ppos)
+ {
+@@ -2077,6 +2218,12 @@ static const struct file_operations record_fops = {
+ 	.write = debugfs_record_write,
+ };
+ 
++static const struct file_operations init_regions_fops = {
++	.owner = THIS_MODULE,
++	.read = debugfs_init_regions_read,
++	.write = debugfs_init_regions_write,
++};
++
+ static const struct file_operations attrs_fops = {
+ 	.owner = THIS_MODULE,
+ 	.read = debugfs_attrs_read,
+@@ -2087,10 +2234,11 @@ static struct dentry *debugfs_root;
+ 
+ static int __init damon_debugfs_init(void)
+ {
+-	const char * const file_names[] = {"attrs", "record", "schemes",
+-		"target_ids", "monitor_on"};
+-	const struct file_operations *fops[] = {&attrs_fops, &record_fops,
+-		&schemes_fops, &target_ids_fops, &monitor_on_fops};
++	const char * const file_names[] = {"attrs", "init_regions", "record",
++		"schemes", "target_ids", "monitor_on"};
++	const struct file_operations *fops[] = {&attrs_fops,
++		&init_regions_fops, &record_fops, &schemes_fops,
++		&target_ids_fops, &monitor_on_fops};
+ 	int i;
+ 
+ 	debugfs_root = debugfs_create_dir("damon", NULL);
 -- 
 2.17.1
 
