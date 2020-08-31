@@ -2,55 +2,69 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2233C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC10CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B51E20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B600C20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q/KxHX6y"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="r/gWRXXe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728715AbgHaQjG (ORCPT
+        id S1728772AbgHaQjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:39:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726939AbgHaQjF (ORCPT
+        Mon, 31 Aug 2020 12:39:11 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:33892 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbgHaQjK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:39:05 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE2CC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:39:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=G8eF/437C9jV0dUSsiMh0K3uruFA7n5DD7RzaN/0GcE=; b=Q/KxHX6y+a3NJ3++QdycpvjTdD
-        y1nBSzxbp5NiJWVwcaFnNa4/4iS+ARevqFwnZ1th+f+ePKDNN9nFBDpUIJCIdGdhaXGkt6WN1oW25
-        y65FexJPHjO84DNhnmdC43AeYAo6tNa4c589MTVv30eY1alESXZ9g4xd13Y3ESv35qcL9lv/pXpY6
-        cigATetrSEMynxXcsR3W0CsosFLYQhRb2o1DN/ma4TgiQ4gkGst6F0C650Tpjm7Y7zZD7Nidsg3L9
-        4B9z/ZZAuk2dzCfb1pSAP/5ikBxh3hBY2aw+O2+d6t/U6XpZ4oBlUeJyn2LBtJMviTcBuxQgOtN1f
-        aBLbb2Vw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCmph-0007nj-A9; Mon, 31 Aug 2020 16:39:01 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Masahiro Yamada <masahiroy@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2] microblaze: fix kbuild redundant file warning
-Message-ID: <4d992aee-8a69-1769-e622-8d6d6e316346@infradead.org>
-Date:   Mon, 31 Aug 2020 09:38:58 -0700
+        Mon, 31 Aug 2020 12:39:10 -0400
+Received: from [192.168.0.104] (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 671FC20B7178;
+        Mon, 31 Aug 2020 09:39:09 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 671FC20B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598891949;
+        bh=GgBq+5VlMaXRLhKt8NiZM6TEsQUV1hrj4rr8ds/qjsk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=r/gWRXXenYRrhPaikEQ9yCrJ/nfN5QdjLAq4e7Vlr6bLrSySkj/Lm9YqXHNBpyDgp
+         MNimwrHUQ0d2NJGiLDhTkI0ejcmFlzzB8ZVlugXuXHg3v0klBGWf7COBfDNrdcNo/2
+         p6Z2C20qjxsha2QQuhDfDh+V4zZ5cTP3gzbU7DPU=
+Subject: Re: [PATCH] SELinux: Measure state and hash of policy using IMA
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     Paul Moore <paul@paul-moore.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Tyler Hicks <tyhicks@linux.microsoft.com>,
+        tusharsu@linux.microsoft.com, Sasha Levin <sashal@kernel.org>,
+        James Morris <jmorris@namei.org>,
+        linux-integrity@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200822010018.19453-1-nramas@linux.microsoft.com>
+ <CAEjxPJ5Kok-TBfS=XQ+NUC5tuaZRkyLBOawG4UDky51_bsMnGw@mail.gmail.com>
+ <418618c4-a0c6-6b28-6718-2726a29b83c5@linux.microsoft.com>
+ <CAEjxPJ6-8WnZRJnADsn=RVakzJiESjEjK-f8nSkscpT7dnricQ@mail.gmail.com>
+ <CAFqZXNvVQ5U6Ea3gT32Z0hfWbu7GPR-mTF2z6-JZZJT57Heuuw@mail.gmail.com>
+ <f041e8ee-3955-9551-b72d-d4d7fa6e636d@linux.microsoft.com>
+ <CAHC9VhQP7_rV+Oi6weLjVhrx2d8iu9UJ8zeE=ZcqnBMqngrJ4Q@mail.gmail.com>
+ <07854807-c495-b7e5-fc44-26d78ff14f1b@linux.microsoft.com>
+ <CAEjxPJ4TkEEKG+pXwUjyysov1s1mFk4jbGGVyC7ghmpfd3TJ4w@mail.gmail.com>
+ <CAEjxPJ6GkUot29g5qq2GVYzmY2xwfTvVJkNP2kK54OcW7tkz1Q@mail.gmail.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <612ec12d-0048-2a5f-83a5-518a11eb546d@linux.microsoft.com>
+Date:   Mon, 31 Aug 2020 09:39:08 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <CAEjxPJ6GkUot29g5qq2GVYzmY2xwfTvVJkNP2kK54OcW7tkz1Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -58,33 +72,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On 8/31/20 7:47 AM, Stephen Smalley wrote:
 
-Fix build warning since this file is already listed in
-include/asm-generic/Kbuild.
+>>>>
+>>>
+>>> Could you please let me know when the current set of changes in SELinux
+>>> next branch would be completed and be ready to take new changes?
+>>>
+>>> I mean, roughly - would it be a month from now or you expect that to
+>>> take longer?
+>>
+>> I can't speak for Paul but I would expect it to be sooner rather than
+>> later. Ondrej has some follow ups on top of my policy rcu conversion
+>> but then it should be good to go.
+> 
+> I think the major changes are now merged although there are still a
+> couple of changes coming from Ondrej that could affect your code.  For
+> your purposes, the important things to note are:
+> 
+> 1) The mutex has moved from selinux_fs_info to selinux_state and is
+> now named policy_mutex.  You will need to take it around your call to
+> security_read_policy_kernel().
+> 
+> 2) security_policydb_len() was removed and security_read_policy() just
+> directly reads the policydb len.  You can do the same from your
+> security_read_policy_kernel() variant.
+> 
+> 3) Ondrej has a pending change to move the policycap[] array from
+> selinux_state to selinux_policy so that it can be atomically updated
+> with the policy.
+> 
+> 4) Ondrej has a pending change to eliminate the separate initialized
+> boolean from selinux_state and just test whether selinux_state.policy
+> is non-NULL but as long as you are using selinux_initialized() to
+> test, your code should be unaffected.
+> 
 
-../scripts/Makefile.asm-generic:25: redundant generic-y found in arch/microblaze/include/asm/Kbuild: hw_irq.h
+Thanks a lot for the update Stephen.
 
-Fixes: 630f289b7114 ("asm-generic: make more kernel-space headers mandatory")
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Michal Simek <monstr@monstr.eu>
-Cc: Michal Simek <michal.simek@xilinx.com>
-Cc: Masahiro Yamada <masahiroy@kernel.org>
-Reviewed-by: Masahiro Yamada <masahiroy@kernel.org>
----
-v2: fix the Fixes: commit ID/description
+I will start updating the IMA measurement changes in selinux next 
+branch. Will post the patches this week.
 
- arch/microblaze/include/asm/Kbuild |    1 -
- 1 file changed, 1 deletion(-)
-
---- linux-next-20200828.orig/arch/microblaze/include/asm/Kbuild
-+++ linux-next-20200828/arch/microblaze/include/asm/Kbuild
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
- generated-y += syscall_table.h
- generic-y += extable.h
--generic-y += hw_irq.h
- generic-y += kvm_para.h
- generic-y += local64.h
- generic-y += mcs_spinlock.h
-
+  -lakshmi
