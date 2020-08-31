@@ -2,251 +2,146 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD1BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24449206E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598903045;
-	bh=9B6/M6/43/N+VrQX6UwnkiY8uNrfSqXz8/e67LODxn8=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=VBF6oS+qVmxfKL6WLTXBOoRSafPJHQ16jrPZuJb7BoAWsNWvAD2xogK//uc4+7I3a
-	 /lSm2jzmPcA2pn8ZIneUNyUocG3zBGrqXPk9it41rxB5rkORL4/UsTdf1ik7XTAaic
-	 0Jamf/lHifJovetQCdnP6V4sGwwDGDQLm3cSfk8k=
+	by mail.kernel.org (Postfix) with ESMTP id CCCDC206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:48:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbgHaToE (ORCPT
+        id S1726714AbgHaTsQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 15:44:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41544 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgHaToD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 15:44:03 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53792206E3;
-        Mon, 31 Aug 2020 19:44:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598903042;
-        bh=9B6/M6/43/N+VrQX6UwnkiY8uNrfSqXz8/e67LODxn8=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=w8hFO41BDU39LCL9ZCa1qgGOdeuxpAELFO0uNMmN+YWn0MQE0cqn/xsnvz7GmpE0i
-         Idi3UfMleZwXdWRWcy8+s2LBiyXN9+KTwpuUelORm8OFRQs1kGO1+7KG4KRrPrIIqv
-         04mCkuDoeGVSo+I13lAazkwxXcbztxOIKCmnxBG4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 36D2B35230F1; Mon, 31 Aug 2020 12:44:02 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 12:44:02 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        peterz@infrdead.org
-Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
- OF driver helper
-Message-ID: <20200831194402.GD2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
+        Mon, 31 Aug 2020 15:48:16 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:43356 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbgHaTsP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 15:48:15 -0400
+Received: by mail-io1-f71.google.com with SMTP id f19so4851465iol.10
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:48:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=cK+cTlHrBH0I8dtFbbTlN1a0PMAtRS8/eA1z+aa58yA=;
+        b=eASJKgUS0z4ZKHMoXfGhMhOnQTkmdHlOrkJlC4qC85Xo3+2cwzK7aPfQRsTsbBZ0Cd
+         0BAIkexvjVFgs1WhseSxAGdGGwyBo+pTG6JrBwLqfEHCGiV98iUUCMk2huV2G6xdzSD0
+         aaeeMsPTokow827sTqLTFjlbbX7RJCLc8tolQWC66pbExSvigjFQZUxOwbUJ6tXhF4bB
+         DmfKHUrPZpJKFQldD4IaaJwYuApoYDeOviOAOC8pfyyfxdFTIRZnD+zX2tZMRgKJmmYN
+         og+vApPJHyTPUH/4CaZRqZB9rRw1rhus1AetoKFekSoWECNtlqqWoS51+fsBykenwxSg
+         dTJQ==
+X-Gm-Message-State: AOAM531WebWctmgxKq1DqYcLwicw08vCU9U8LSagJ6tU60qIktL9HSEL
+        v3H+XTRJ38//gLYBh4C5LLZ9KnuqkT71gJW1HsDdGXxcqVMv
+X-Google-Smtp-Source: ABdhPJxsRKfEFgHCrDNCyrUbVf348EO4W3juNVBYdrE4wLSpbYKHk4dges1Kr5WL+zj+suSdPTbaWeY9UumBHULiDtvlNB3TrhHL
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Received: by 2002:a92:d4cf:: with SMTP id o15mr2870758ilm.25.1598903293869;
+ Mon, 31 Aug 2020 12:48:13 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 12:48:13 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dc862405ae31ae9b@google.com>
+Subject: general protection fault in sock_close
+From:   syzbot <syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        maz@kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 12:02:31PM +0530, Naresh Kamboju wrote:
-> While booting linux mainline kernel on arm64 db410c this kernel warning
-> noticed.
-> 
-> metadata:
->   git branch: master
->   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
->   git commit: f75aef392f869018f78cfedf3c320a6b3fcfda6b
->   git describe: v5.9-rc3
->   make_kernelversion: 5.9.0-rc3
->   kernel-config:
-> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-mainline/2965/config
-> 
-> Boot log,
-> 
-> [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
-> [    0.000000] Linux version 5.9.0-rc3 (oe-user@oe-host)
-> (aarch64-linaro-linux-gcc (GCC) 7.3.0, GNU ld (GNU Binutils)
-> 2.30.0.20180208) #1 SMP PREEMPT Mon Aug 31 00:23:15 UTC 2020
-> [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-> <>
-> [    5.299090] sdhci: Secure Digital Host Controller Interface driver
-> [    5.299140] sdhci: Copyright(c) Pierre Ossman
-> [    5.304313]
-> [    5.307771] Synopsys Designware Multimedia Card Interface Driver
-> [    5.308588] =============================
-> [    5.308593] WARNING: suspicious RCU usage
-> [    5.316628] sdhci-pltfm: SDHCI platform and OF driver helper
-> [    5.320052] 5.9.0-rc3 #1 Not tainted
-> [    5.320057] -----------------------------
-> [    5.320063] /usr/src/kernel/include/trace/events/lock.h:37
-> suspicious rcu_dereference_check() usage!
-> [    5.320068]
-> [    5.320068] other info that might help us debug this:
-> [    5.320068]
-> [    5.320074]
-> [    5.320074] rcu_scheduler_active = 2, debug_locks = 1
-> [    5.320078] RCU used illegally from extended quiescent state!
-> [    5.320084] no locks held by swapper/0/0.
-> [    5.320089]
-> [    5.320089] stack backtrace:
-> [    5.320098] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
-> [    5.346354] sdhci_msm 7864900.sdhci: Got CD GPIO
-> [    5.346446] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> [    5.346452] Call trace:
-> [    5.346463]  dump_backtrace+0x0/0x1f8
-> [    5.346471]  show_stack+0x2c/0x38
-> [    5.346480]  dump_stack+0xec/0x15c
-> [    5.346490]  lockdep_rcu_suspicious+0xd4/0xf8
-> [    5.346499]  lock_acquire+0x3d0/0x440
-> [    5.346510]  _raw_spin_lock_irqsave+0x80/0xb0
-> [    5.413118]  __pm_runtime_suspend+0x34/0x1d0
-> [    5.417457]  psci_enter_domain_idle_state+0x4c/0xb0
-> [    5.421795]  cpuidle_enter_state+0xc8/0x610
-> [    5.426392]  cpuidle_enter+0x3c/0x50
-> [    5.430561]  call_cpuidle+0x44/0x80
-> [    5.434378]  do_idle+0x240/0x2a0
+Hello,
 
-RCU ignores CPUs in the idle loop, which means that you cannot use
-rcu_read_lock() from the idle loop without use of something like
-RCU_NONIDLE().  If this is due to event tracing, you should use the
-_rcuidle() variant of the event trace statement.
+syzbot found the following issue on:
 
-Note also that Peter Zijlstra (CCed) is working to shrink the portion
-of the idle loop that RCU ignores.  Not sure that it covers your
-case, but it is worth checking.
+HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16a85669900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
+dashboard link: https://syzkaller.appspot.com/bug?extid=e24baf53dc389927a7c3
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127d3c99900000
 
-							Thanx, Paul
+The issue was bisected to:
 
-> [    5.437589]  cpu_startup_entry+0x2c/0x78
-> [    5.441063]  rest_init+0x1ac/0x280
-> [    5.444970]  arch_call_rest_init+0x14/0x1c
-> [    5.448180]  start_kernel+0x50c/0x544
-> [    5.452395]
-> [    5.452399]
-> [    5.452403] =============================
-> [    5.452406] WARNING: suspicious RCU usage
-> [    5.452409] 5.9.0-rc3 #1 Not tainted
-> [    5.452412] -----------------------------
-> [    5.452417] /usr/src/kernel/include/trace/events/ipi.h:36
-> suspicious rcu_dereference_check() usage!
-> [    5.452420]
-> [    5.452424] other info that might help us debug this:
-> [    5.452426]
-> [    5.452429]
-> [    5.452432] rcu_scheduler_active = 2, debug_locks = 1
-> [    5.452436] RCU used illegally from extended quiescent state!
-> [    5.452440] 1 lock held by swapper/0/0:
-> [    5.452443]  #0: ffff8000127408f8 (logbuf_lock){-...}-{2:2}, at:
-> vprintk_emit+0xb0/0x358
-> [    5.452458]
-> [    5.452461] stack backtrace:
-> [    5.452465] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
-> [    5.452469] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> [    5.452472] Call trace:
-> [    5.452476]  dump_backtrace+0x0/0x1f8
-> [    5.452479]  show_stack+0x2c/0x38
-> [    5.452481]  dump_stack+0xec/0x15c
-> [    5.452485]  lockdep_rcu_suspicious+0xd4/0xf8
-> [    5.452489]  arch_irq_work_raise+0x208/0x210
-> [    5.452493]  __irq_work_queue_local+0x64/0x88
-> [    5.452495]  irq_work_queue+0x3c/0x88
-> [    5.452499]  printk_safe_log_store+0x148/0x178
-> [    5.452502]  vprintk_func+0x1cc/0x2b8
-> [    5.452506]  printk+0x74/0x94
-> [    5.452509]  lockdep_rcu_suspicious+0x28/0xf8
-> [    5.452512]  lock_release+0x338/0x360
-> [    5.452516]  _raw_spin_unlock+0x3c/0xa0
-> [    5.452519]  vprintk_emit+0xf8/0x358
-> [    5.452522]  vprintk_default+0x48/0x58
-> [    5.452526]  vprintk_func+0xec/0x2b8
-> [    5.452528]  printk+0x74/0x94
-> [    5.452532]  lockdep_rcu_suspicious+0x28/0xf8
-> [    5.452535]  lock_acquire+0x3d0/0x440
-> [    5.452538]  _raw_spin_lock_irqsave+0x80/0xb0
-> [    5.452542]  __pm_runtime_suspend+0x34/0x1d0
-> [    5.452545]  psci_enter_domain_idle_state+0x4c/0xb0
-> [    5.452549]  cpuidle_enter_state+0xc8/0x610
-> [    5.452552]  cpuidle_enter+0x3c/0x50
-> [    5.452555]  call_cpuidle+0x44/0x80
-> [    5.452559]  do_idle+0x240/0x2a0
-> [    5.452562]  cpu_startup_entry+0x2c/0x78
-> [    5.452564]  rest_init+0x1ac/0x280
-> [    5.452568]  arch_call_rest_init+0x14/0x1c
-> [    5.452571]  start_kernel+0x50c/0x544
-> [    5.452575] =============================
-> [    5.452578] WARNING: suspicious RCU usage
-> [    5.452582] 5.9.0-rc3 #1 Not tainted
-> [    5.452585] -----------------------------
-> [    5.452590] /usr/src/kernel/include/trace/events/lock.h:63
-> suspicious rcu_dereference_check() usage!
-> [    5.452593]
-> [    5.452596] other info that might help us debug this:
-> [    5.452599]
-> [    5.452601]
-> [    5.452605] rcu_scheduler_active = 2, debug_locks = 1
-> [    5.452609] RCU used illegally from extended quiescent state!
-> [    5.452612] 1 lock held by swapper/0/0:
-> [    5.452615]  #0: ffff8000127408f8 (logbuf_lock){-...}-{2:2}, at:
-> vprintk_emit+0xb0/0x358
-> [    5.452630]
-> [    5.452633] stack backtrace:
-> [    5.452636] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
-> [    5.452640] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> [    5.452643] Call trace:
-> [    5.452646]  dump_backtrace+0x0/0x1f8
-> [    5.452649]  show_stack+0x2c/0x38
-> [    5.452652]  dump_stack+0xec/0x15c
-> [    5.452656]  lockdep_rcu_suspicious+0xd4/0xf8
-> [    5.452659]  lock_release+0x338/0x360
-> [    5.452662]  _raw_spin_unlock+0x3c/0xa0
-> [    5.452665]  vprintk_emit+0xf8/0x358
-> [    5.452669]  vprintk_default+0x48/0x58
-> [    5.452671]  vprintk_func+0xec/0x2b8
-> [    5.452674]  printk+0x74/0x94
-> [    5.452677]  lockdep_rcu_suspicious+0x28/0xf8
-> [    5.452680]  lock_acquire+0x3d0/0x440
-> [    5.452683]  _raw_spin_lock_irqsave+0x80/0xb0
-> [    5.452686]  __pm_runtime_suspend+0x34/0x1d0
-> [    5.452690]  psci_enter_domain_idle_state+0x4c/0xb0
-> [    5.452693]  cpuidle_enter_state+0xc8/0x610
-> [    5.452696]  cpuidle_enter+0x3c/0x50
-> [    5.452698]  call_cpuidle+0x44/0x80
-> [    5.452701]  do_idle+0x240/0x2a0
-> [    5.452704]  cpu_startup_entry+0x2c/0x78
-> [    5.452708]  rest_init+0x1ac/0x280
-> [    5.452711]  arch_call_rest_init+0x14/0x1c
-> [    5.452714]  start_kernel+0x50c/0x544
-> 
-> full test log link,
-> https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.9-rc3/testrun/3137660/suite/linux-log-parser/test/check-kernel-warning-1722813/log
-> 
-> -- 
-> Linaro LKFT
-> https://lkft.linaro.org
+commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
+Author: Marc Zyngier <maz@kernel.org>
+Date:   Wed Aug 19 16:12:17 2020 +0000
+
+    epoll: Keep a reference on files added to the check list
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1374d7c5900000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=10f4d7c5900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=1774d7c5900000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com
+Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the check list")
+
+general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
+CPU: 1 PID: 10933 Comm: syz-executor.0 Not tainted 5.9.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__sock_release net/socket.c:596 [inline]
+RIP: 0010:sock_close+0xc5/0x260 net/socket.c:1277
+Code: fc ff df 41 80 3c 04 00 74 08 4c 89 ff e8 e3 cf 49 fb 49 8b 1f 48 83 c3 10 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 48 89 df e8 bd cf 49 fb 4c 89 f7 ff 13 49 8d 5e
+RSP: 0018:ffffc9000535fe10 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000010 RCX: dffffc0000000000
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000001
+RBP: ffffffff88bbc748 R08: dffffc0000000000 R09: ffffed1010361edf
+R10: ffffed1010361edf R11: 0000000000000000 R12: 1ffff11010361eac
+R13: ffff888081b0f6e0 R14: ffff888081b0f540 R15: ffff888081b0f560
+FS:  00007fad45047700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fad45025db8 CR3: 0000000084c1d000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __fput+0x34f/0x7b0 fs/file_table.c:281
+ task_work_run+0x137/0x1c0 kernel/task_work.c:141
+ tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+ exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+ exit_to_user_mode_prepare+0xfa/0x1b0 kernel/entry/common.c:167
+ syscall_exit_to_user_mode+0x5e/0x1a0 kernel/entry/common.c:242
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d5b9
+Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fad45046c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000e9
+RAX: 0000000000000000 RBX: 0000000000002ac0 RCX: 000000000045d5b9
+RDX: 0000000000000004 RSI: 0000000000000001 RDI: 0000000000000005
+RBP: 000000000118cf88 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000200003c0 R11: 0000000000000246 R12: 000000000118cf4c
+R13: 00007ffd8c03abcf R14: 00007fad450479c0 R15: 000000000118cf4c
+Modules linked in:
+---[ end trace a8eab99154db8026 ]---
+RIP: 0010:__sock_release net/socket.c:596 [inline]
+RIP: 0010:sock_close+0xc5/0x260 net/socket.c:1277
+Code: fc ff df 41 80 3c 04 00 74 08 4c 89 ff e8 e3 cf 49 fb 49 8b 1f 48 83 c3 10 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 48 89 df e8 bd cf 49 fb 4c 89 f7 ff 13 49 8d 5e
+RSP: 0018:ffffc9000535fe10 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: 0000000000000010 RCX: dffffc0000000000
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000001
+RBP: ffffffff88bbc748 R08: dffffc0000000000 R09: ffffed1010361edf
+R10: ffffed1010361edf R11: 0000000000000000 R12: 1ffff11010361eac
+R13: ffff888081b0f6e0 R14: ffff888081b0f540 R15: ffff888081b0f560
+FS:  00007fad45047700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6e37205010 CR3: 0000000084c1d000 CR4: 00000000001506e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
