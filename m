@@ -2,279 +2,168 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DB0C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCFAC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF31B2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB69720719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:46:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="abrgTriq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgHaPor (ORCPT
+        id S1727883AbgHaPqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:44:47 -0400
-Received: from out28-101.mail.aliyun.com ([115.124.28.101]:48240 "EHLO
-        out28-101.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbgHaPom (ORCPT
+        Mon, 31 Aug 2020 11:46:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57858 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgHaPqs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:44:42 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.638439-0.000183839-0.361377;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.IQnAArN_1598888641;
-Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.IQnAArN_1598888641)
-          by smtp.aliyun-inc.com(10.147.41.143);
-          Mon, 31 Aug 2020 23:44:16 +0800
-From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-To:     linus.walleij@linaro.org, paul@crapouillou.net
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        aric.pzqi@ingenic.com, dongsheng.qiu@ingenic.com,
-        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 3/3] pinctrl: Ingenic: Add I2S pins support for Ingenic SoCs.
-Date:   Mon, 31 Aug 2020 23:43:24 +0800
-Message-Id: <20200831154324.64951-4-zhouyanjie@wanyeetech.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
-References: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
+        Mon, 31 Aug 2020 11:46:48 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3881C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:46:47 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id y4so6191451ljk.8
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:46:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+AoMEfgYRxQkncZxnPbeI2rx7pGrsAFC42S72eCBWIc=;
+        b=abrgTriqszl9wlmYoiAi460uozclBt//bwVG6oUCXIYMaa47WhwIZ5OK0cldnL8eqx
+         kNKaDE2trDqOmVr2v/5ZmMIBj2c5PslJlv2Elxb/ggWXIl4U516/Abqy0/HIN11cbHzC
+         h8C0QuQWNNXaJFVu9EOU4Qi0NTNySPdoHprKNcyWCbK9chZpfcUvtCbiRjiPab6dcFod
+         cFZFGqvlQJm9x3ZyscjpjPZ69FH2ahfgHP/+UCwH1Y5lgf1ncOpukzXYqKZ78eqI2EBq
+         7lhaKLnGzzeilsmbuB5IrcJQGGm0tySPQBMaTkEq/xFYC2aa8zaYOqufmsUAWhTl1Ena
+         7ICQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+AoMEfgYRxQkncZxnPbeI2rx7pGrsAFC42S72eCBWIc=;
+        b=sQe0CnaHhGuKDxlS3vgiCR3mzEvBEm3EFIl6ACddJ+5KiNZYfZZQgkd6ltwNOCSlpY
+         FiXl0UXfgealcTKsSElraxwOBdmUfPzWPNRB6u7CoLpu9dpRC7z8yC35Hrb2nJq3xItG
+         8V0y/zHacrUJLoEUpQPNeIQNYlvydJ31qKJsoT6Xlw14FA7fqnsZ9PziPlndCct0T5lv
+         lmh8+tEnTxz4npt1iQ0G0yT++GsZnIoyHxCFvMl3Huk9LxIIdv6NHYNqFRtqlYVwHHqo
+         p4Gr3JdWleuuGK3QGLxFxMFxJG7Y5L0yxlK1oe041IKAFMilO5j9t3d1qlEK8WBhh9Eb
+         jD3A==
+X-Gm-Message-State: AOAM533DXC6pGYcz+NYdNoKfo0fPyKLCzxtrK0Y/zObLs7QZ5Luijxiu
+        owM3AOpDbS4Jvc2+UXlbxRNVZ+lBVwoWP0wDl16thPrh2Ss=
+X-Google-Smtp-Source: ABdhPJw8ICUjRfg1psgk3VeEEbjk3V7kQYtrfhITr5IhGR+QFzandviK26WiXtH9qc+8aQaXY2IApqpO+DdwQrzFP68=
+X-Received: by 2002:a2e:9990:: with SMTP id w16mr872000lji.156.1598888805568;
+ Mon, 31 Aug 2020 08:46:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200831153207.GO3265@brightrain.aerifal.cx>
+In-Reply-To: <20200831153207.GO3265@brightrain.aerifal.cx>
+From:   Jann Horn <jannh@google.com>
+Date:   Mon, 31 Aug 2020 17:46:19 +0200
+Message-ID: <CAG48ez39WNuoxYO=RaW5OeVGSOy=uEAZ+xW_++TP7yjkUKGqkg@mail.gmail.com>
+Subject: Re: [PATCH v2] vfs: add RWF_NOAPPEND flag for pwritev2
+To:     Rich Felker <dalias@libc.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1.Add I2S pins support for the JZ4780 SoC.
-2.Add I2S pins support for the X1000 SoC.
-3.Add I2S pins support for the X1500 SoC.
-4.Add I2S pins support for the X1830 SoC.
+On Mon, Aug 31, 2020 at 5:32 PM Rich Felker <dalias@libc.org> wrote:
+> The pwrite function, originally defined by POSIX (thus the "p"), is
+> defined to ignore O_APPEND and write at the offset passed as its
+> argument. However, historically Linux honored O_APPEND if set and
+> ignored the offset. This cannot be changed due to stability policy,
+> but is documented in the man page as a bug.
+>
+> Now that there's a pwritev2 syscall providing a superset of the pwrite
+> functionality that has a flags argument, the conforming behavior can
+> be offered to userspace via a new flag. Since pwritev2 checks flag
+> validity (in kiocb_set_rw_flags) and reports unknown ones with
+> EOPNOTSUPP, callers will not get wrong behavior on old kernels that
+> don't support the new flag; the error is reported and the caller can
+> decide how to handle it.
+>
+> Signed-off-by: Rich Felker <dalias@libc.org>
 
-Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
----
+Reviewed-by: Jann Horn <jannh@google.com>
 
-Notes:
-    v2:
-    New patch.
+Note that if this lands, Michael Kerrisk will probably be happy if you
+send a corresponding patch for the manpage man2/readv.2.
 
- drivers/pinctrl/pinctrl-ingenic.c | 70 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
+Btw, I'm not really sure whose tree this should go through - VFS is
+normally Al Viro's turf, but it looks like the most recent
+modifications to this function have gone through Jens Axboe's tree?
 
-diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index ae7b8876d3b4..72898c427b83 100644
---- a/drivers/pinctrl/pinctrl-ingenic.c
-+++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -1083,6 +1083,11 @@ static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
- static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
- static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
- static int jz4780_i2c4_f_pins[] = { 0xb9, 0xb8, };
-+static int jz4780_i2s_data_tx_pins[] = { 0x87, };
-+static int jz4780_i2s_data_rx_pins[] = { 0x86, };
-+static int jz4780_i2s_clk_txrx_pins[] = { 0x6c, 0x6d, };
-+static int jz4780_i2s_clk_rx_pins[] = { 0x88, 0x89, };
-+static int jz4780_i2s_sysclk_pins[] = { 0x85, };
- static int jz4780_hdmi_ddc_pins[] = { 0xb9, 0xb8, };
- 
- static int jz4780_uart2_data_funcs[] = { 1, 1, };
-@@ -1125,6 +1130,11 @@ static int jz4780_mmc0_8bit_a_funcs[] = { 1, 1, 1, 1, 1, };
- static int jz4780_i2c3_funcs[] = { 1, 1, };
- static int jz4780_i2c4_e_funcs[] = { 1, 1, };
- static int jz4780_i2c4_f_funcs[] = { 1, 1, };
-+static int jz4780_i2s_data_tx_funcs[] = { 0, };
-+static int jz4780_i2s_data_rx_funcs[] = { 0, };
-+static int jz4780_i2s_clk_txrx_funcs[] = { 1, 0, };
-+static int jz4780_i2s_clk_rx_funcs[] = { 1, 1, };
-+static int jz4780_i2s_sysclk_funcs[] = { 2, };
- static int jz4780_hdmi_ddc_funcs[] = { 0, 0, };
- 
- static const struct group_desc jz4780_groups[] = {
-@@ -1213,6 +1223,11 @@ static const struct group_desc jz4780_groups[] = {
- 	INGENIC_PIN_GROUP("i2c3-data", jz4780_i2c3),
- 	INGENIC_PIN_GROUP("i2c4-data-e", jz4780_i2c4_e),
- 	INGENIC_PIN_GROUP("i2c4-data-f", jz4780_i2c4_f),
-+	INGENIC_PIN_GROUP("i2s-data-tx", jz4780_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", jz4780_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", jz4780_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-clk-rx", jz4780_i2s_clk_rx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", jz4780_i2s_sysclk),
- 	INGENIC_PIN_GROUP("hdmi-ddc", jz4780_hdmi_ddc),
- 	INGENIC_PIN_GROUP("cim-data", jz4770_cim_8bit),
- 	INGENIC_PIN_GROUP("lcd-24bit", jz4770_lcd_24bit),
-@@ -1261,6 +1276,9 @@ static const char *jz4780_nemc_groups[] = {
- };
- static const char *jz4780_i2c3_groups[] = { "i2c3-data", };
- static const char *jz4780_i2c4_groups[] = { "i2c4-data-e", "i2c4-data-f", };
-+static const char *jz4780_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
-+};
- static const char *jz4780_cim_groups[] = { "cim-data", };
- static const char *jz4780_hdmi_ddc_groups[] = { "hdmi-ddc", };
- 
-@@ -1287,6 +1305,7 @@ static const struct function_desc jz4780_functions[] = {
- 	{ "i2c2", jz4770_i2c2_groups, ARRAY_SIZE(jz4770_i2c2_groups), },
- 	{ "i2c3", jz4780_i2c3_groups, ARRAY_SIZE(jz4780_i2c3_groups), },
- 	{ "i2c4", jz4780_i2c4_groups, ARRAY_SIZE(jz4780_i2c4_groups), },
-+	{ "i2s", jz4780_i2s_groups, ARRAY_SIZE(jz4780_i2s_groups), },
- 	{ "cim", jz4780_cim_groups, ARRAY_SIZE(jz4780_cim_groups), },
- 	{ "lcd", jz4770_lcd_groups, ARRAY_SIZE(jz4770_lcd_groups), },
- 	{ "pwm0", jz4770_pwm0_groups, ARRAY_SIZE(jz4770_pwm0_groups), },
-@@ -1368,6 +1387,10 @@ static int x1000_i2c0_pins[] = { 0x38, 0x37, };
- static int x1000_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1000_i2c1_c_pins[] = { 0x5b, 0x5a, };
- static int x1000_i2c2_pins[] = { 0x61, 0x60, };
-+static int x1000_i2s_data_tx_pins[] = { 0x24, };
-+static int x1000_i2s_data_rx_pins[] = { 0x23, };
-+static int x1000_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
-+static int x1000_i2s_sysclk_pins[] = { 0x20, };
- static int x1000_cim_pins[] = {
- 	0x08, 0x09, 0x0a, 0x0b,
- 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
-@@ -1430,6 +1453,10 @@ static int x1000_i2c0_funcs[] = { 0, 0, };
- static int x1000_i2c1_a_funcs[] = { 2, 2, };
- static int x1000_i2c1_c_funcs[] = { 0, 0, };
- static int x1000_i2c2_funcs[] = { 1, 1, };
-+static int x1000_i2s_data_tx_funcs[] = { 1, };
-+static int x1000_i2s_data_rx_funcs[] = { 1, };
-+static int x1000_i2s_clk_txrx_funcs[] = { 1, 1, };
-+static int x1000_i2s_sysclk_funcs[] = { 1, };
- static int x1000_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
- static int x1000_lcd_8bit_funcs[] = {
- 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-@@ -1483,6 +1510,10 @@ static const struct group_desc x1000_groups[] = {
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1000_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1000_i2c1_c),
- 	INGENIC_PIN_GROUP("i2c2-data", x1000_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1000_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1000_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1000_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1000_i2s_sysclk),
- 	INGENIC_PIN_GROUP("cim-data", x1000_cim),
- 	INGENIC_PIN_GROUP("lcd-8bit", x1000_lcd_8bit),
- 	INGENIC_PIN_GROUP("lcd-16bit", x1000_lcd_16bit),
-@@ -1524,6 +1555,9 @@ static const char *x1000_cs2_groups[] = { "emc-cs2", };
- static const char *x1000_i2c0_groups[] = { "i2c0-data", };
- static const char *x1000_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1000_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1000_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
-+};
- static const char *x1000_cim_groups[] = { "cim-data", };
- static const char *x1000_lcd_groups[] = {
- 	"lcd-8bit", "lcd-16bit", "lcd-no-pins",
-@@ -1549,6 +1583,7 @@ static const struct function_desc x1000_functions[] = {
- 	{ "i2c0", x1000_i2c0_groups, ARRAY_SIZE(x1000_i2c0_groups), },
- 	{ "i2c1", x1000_i2c1_groups, ARRAY_SIZE(x1000_i2c1_groups), },
- 	{ "i2c2", x1000_i2c2_groups, ARRAY_SIZE(x1000_i2c2_groups), },
-+	{ "i2s", x1000_i2s_groups, ARRAY_SIZE(x1000_i2s_groups), },
- 	{ "cim", x1000_cim_groups, ARRAY_SIZE(x1000_cim_groups), },
- 	{ "lcd", x1000_lcd_groups, ARRAY_SIZE(x1000_lcd_groups), },
- 	{ "pwm0", x1000_pwm0_groups, ARRAY_SIZE(x1000_pwm0_groups), },
-@@ -1584,6 +1619,10 @@ static int x1500_i2c0_pins[] = { 0x38, 0x37, };
- static int x1500_i2c1_a_pins[] = { 0x01, 0x00, };
- static int x1500_i2c1_c_pins[] = { 0x5b, 0x5a, };
- static int x1500_i2c2_pins[] = { 0x61, 0x60, };
-+static int x1500_i2s_data_tx_pins[] = { 0x24, };
-+static int x1500_i2s_data_rx_pins[] = { 0x23, };
-+static int x1500_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
-+static int x1500_i2s_sysclk_pins[] = { 0x20, };
- static int x1500_cim_pins[] = {
- 	0x08, 0x09, 0x0a, 0x0b,
- 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
-@@ -1607,6 +1646,10 @@ static int x1500_i2c0_funcs[] = { 0, 0, };
- static int x1500_i2c1_a_funcs[] = { 2, 2, };
- static int x1500_i2c1_c_funcs[] = { 0, 0, };
- static int x1500_i2c2_funcs[] = { 1, 1, };
-+static int x1500_i2s_data_tx_funcs[] = { 1, };
-+static int x1500_i2s_data_rx_funcs[] = { 1, };
-+static int x1500_i2s_clk_txrx_funcs[] = { 1, 1, };
-+static int x1500_i2s_sysclk_funcs[] = { 1, };
- static int x1500_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
- static int x1500_pwm_pwm0_funcs[] = { 0, };
- static int x1500_pwm_pwm1_funcs[] = { 1, };
-@@ -1629,6 +1672,10 @@ static const struct group_desc x1500_groups[] = {
- 	INGENIC_PIN_GROUP("i2c1-data-a", x1500_i2c1_a),
- 	INGENIC_PIN_GROUP("i2c1-data-c", x1500_i2c1_c),
- 	INGENIC_PIN_GROUP("i2c2-data", x1500_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1500_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1500_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1500_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1500_i2s_sysclk),
- 	INGENIC_PIN_GROUP("cim-data", x1500_cim),
- 	{ "lcd-no-pins", },
- 	INGENIC_PIN_GROUP("pwm0", x1500_pwm_pwm0),
-@@ -1647,6 +1694,9 @@ static const char *x1500_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
- static const char *x1500_i2c0_groups[] = { "i2c0-data", };
- static const char *x1500_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
- static const char *x1500_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1500_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
-+};
- static const char *x1500_cim_groups[] = { "cim-data", };
- static const char *x1500_lcd_groups[] = { "lcd-no-pins", };
- static const char *x1500_pwm0_groups[] = { "pwm0", };
-@@ -1664,6 +1714,7 @@ static const struct function_desc x1500_functions[] = {
- 	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
- 	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
- 	{ "i2c2", x1500_i2c2_groups, ARRAY_SIZE(x1500_i2c2_groups), },
-+	{ "i2s", x1500_i2s_groups, ARRAY_SIZE(x1500_i2s_groups), },
- 	{ "cim", x1500_cim_groups, ARRAY_SIZE(x1500_cim_groups), },
- 	{ "lcd", x1500_lcd_groups, ARRAY_SIZE(x1500_lcd_groups), },
- 	{ "pwm0", x1500_pwm0_groups, ARRAY_SIZE(x1500_pwm0_groups), },
-@@ -1722,6 +1773,11 @@ static int x1830_mmc1_4bit_pins[] = { 0x45, 0x46, 0x47, };
- static int x1830_i2c0_pins[] = { 0x0c, 0x0d, };
- static int x1830_i2c1_pins[] = { 0x39, 0x3a, };
- static int x1830_i2c2_pins[] = { 0x5b, 0x5c, };
-+static int x1830_i2s_data_tx_pins[] = { 0x53, };
-+static int x1830_i2s_data_rx_pins[] = { 0x54, };
-+static int x1830_i2s_clk_txrx_pins[] = { 0x58, 0x52, };
-+static int x1830_i2s_clk_rx_pins[] = { 0x56, 0x55, };
-+static int x1830_i2s_sysclk_pins[] = { 0x57, };
- static int x1830_lcd_rgb_18bit_pins[] = {
- 	0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
- 	0x68, 0x69, 0x6c, 0x6d, 0x6e, 0x6f,
-@@ -1784,6 +1840,11 @@ static int x1830_mmc1_4bit_funcs[] = { 0, 0, 0, };
- static int x1830_i2c0_funcs[] = { 1, 1, };
- static int x1830_i2c1_funcs[] = { 0, 0, };
- static int x1830_i2c2_funcs[] = { 1, 1, };
-+static int x1830_i2s_data_tx_funcs[] = { 0, };
-+static int x1830_i2s_data_rx_funcs[] = { 0, };
-+static int x1830_i2s_clk_txrx_funcs[] = { 0, 0, };
-+static int x1830_i2s_clk_rx_funcs[] = { 0, 0, };
-+static int x1830_i2s_sysclk_funcs[] = { 0, };
- static int x1830_lcd_rgb_18bit_funcs[] = {
- 	0, 0, 0, 0, 0, 0,
- 	0, 0, 0, 0, 0, 0,
-@@ -1842,6 +1903,11 @@ static const struct group_desc x1830_groups[] = {
- 	INGENIC_PIN_GROUP("i2c0-data", x1830_i2c0),
- 	INGENIC_PIN_GROUP("i2c1-data", x1830_i2c1),
- 	INGENIC_PIN_GROUP("i2c2-data", x1830_i2c2),
-+	INGENIC_PIN_GROUP("i2s-data-tx", x1830_i2s_data_tx),
-+	INGENIC_PIN_GROUP("i2s-data-rx", x1830_i2s_data_rx),
-+	INGENIC_PIN_GROUP("i2s-clk-txrx", x1830_i2s_clk_txrx),
-+	INGENIC_PIN_GROUP("i2s-clk-rx", x1830_i2s_clk_rx),
-+	INGENIC_PIN_GROUP("i2s-sysclk", x1830_i2s_sysclk),
- 	INGENIC_PIN_GROUP("lcd-rgb-18bit", x1830_lcd_rgb_18bit),
- 	INGENIC_PIN_GROUP("lcd-slcd-8bit", x1830_lcd_slcd_8bit),
- 	INGENIC_PIN_GROUP("lcd-slcd-16bit", x1830_lcd_slcd_16bit),
-@@ -1884,6 +1950,9 @@ static const char *x1830_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", };
- static const char *x1830_i2c0_groups[] = { "i2c0-data", };
- static const char *x1830_i2c1_groups[] = { "i2c1-data", };
- static const char *x1830_i2c2_groups[] = { "i2c2-data", };
-+static const char *x1830_i2s_groups[] = {
-+	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
-+};
- static const char *x1830_lcd_groups[] = {
- 	"lcd-rgb-18bit", "lcd-slcd-8bit", "lcd-slcd-16bit", "lcd-no-pins",
- };
-@@ -1908,6 +1977,7 @@ static const struct function_desc x1830_functions[] = {
- 	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
- 	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
- 	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
-+	{ "i2s", x1830_i2s_groups, ARRAY_SIZE(x1830_i2s_groups), },
- 	{ "lcd", x1830_lcd_groups, ARRAY_SIZE(x1830_lcd_groups), },
- 	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
- 	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
--- 
-2.11.0
-
+> ---
+>
+> Changes in v2: I've added a check to ensure that RWF_NOAPPEND does not
+> override O_APPEND for S_APPEND (chattr +a) inodes, and fixed conflicts
+> with 1752f0adea98ef85, which optimized kiocb_set_rw_flags to work with
+> a local copy of flags. Unfortunately the same optimization does not
+> work for RWF_NOAPPEND since it needs to remove flags from the original
+> set at function entry.
+>
+> If desired, I could further change this so that kiocb_flags is
+> initialized to ki->ki_flags, with assignment-back in place of |= at
+> the end of the function. This would allow the same local variable
+> pattern in the RWF_NOAPPEND code path, which might be more elegant,
+> but I'm not sure if the emitted code would improve or get worse.
+>
+>
+>  include/linux/fs.h      | 7 +++++++
+>  include/uapi/linux/fs.h | 5 ++++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+>
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 7519ae003a08..924e17ac8e7e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3321,6 +3321,8 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+>                 return 0;
+>         if (unlikely(flags & ~RWF_SUPPORTED))
+>                 return -EOPNOTSUPP;
+> +       if (unlikely((flags & RWF_APPEND) && (flags & RWF_NOAPPEND)))
+> +               return -EINVAL;
+>
+>         if (flags & RWF_NOWAIT) {
+>                 if (!(ki->ki_filp->f_mode & FMODE_NOWAIT))
+> @@ -3335,6 +3337,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+>                 kiocb_flags |= (IOCB_DSYNC | IOCB_SYNC);
+>         if (flags & RWF_APPEND)
+>                 kiocb_flags |= IOCB_APPEND;
+> +       if ((flags & RWF_NOAPPEND) && (ki->ki_flags & IOCB_APPEND)) {
+> +               if (IS_APPEND(file_inode(ki->ki_filp)))
+> +                       return -EPERM;
+> +               ki->ki_flags &= ~IOCB_APPEND;
+> +       }
+>
+>         ki->ki_flags |= kiocb_flags;
+>         return 0;
+> diff --git a/include/uapi/linux/fs.h b/include/uapi/linux/fs.h
+> index f44eb0a04afd..d5e54e0742cf 100644
+> --- a/include/uapi/linux/fs.h
+> +++ b/include/uapi/linux/fs.h
+> @@ -300,8 +300,11 @@ typedef int __bitwise __kernel_rwf_t;
+>  /* per-IO O_APPEND */
+>  #define RWF_APPEND     ((__force __kernel_rwf_t)0x00000010)
+>
+> +/* per-IO negation of O_APPEND */
+> +#define RWF_NOAPPEND   ((__force __kernel_rwf_t)0x00000020)
+> +
+>  /* mask of flags supported by the kernel */
+>  #define RWF_SUPPORTED  (RWF_HIPRI | RWF_DSYNC | RWF_SYNC | RWF_NOWAIT |\
+> -                        RWF_APPEND)
+> +                        RWF_APPEND | RWF_NOAPPEND)
+>
+>  #endif /* _UAPI_LINUX_FS_H */
+> --
+> 2.21.0
+>
