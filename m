@@ -2,100 +2,189 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDB3C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14108C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82FB0206EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:45:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTO4yNSg"
+	by mail.kernel.org (Postfix) with ESMTP id E5D7E2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbgHaJpf (ORCPT
+        id S1726574AbgHaJpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:45:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbgHaJpc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:45:32 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEB8AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:45:31 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id l8so5203069ios.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:45:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d/wJhQzLekIbhWUFB8CBHk7CDQYQkmDO/XAl9zxuSaU=;
-        b=BTO4yNSgCoI25Xg7JSJrzr10BL4nA+/KtGiUNOUOfG2H7W7QvoCE3EPKXBVnUObt54
-         H3KcidXy063F3eVEIdySSwsgKwFnSXd88rxrRfpNkqNUwiLwmkqktstHxTzwobj5S35B
-         uvhwqbKtxZKNLmVLiWGEcr9Bh0njlbSX8+g8LiJr4Ehro3tF4CdmCFbCgZu4XkQmloJ/
-         w3usDuRF0eQPVFCsk+9nLyDq6owIf1+bus1z3Ag9jZ6fQYnHFr5QSCci6O1iWYOG0w3e
-         QPj+EsSh8f0dHt9LFq79mrQBvEMisdmTXHTN9SVEBWQt8/DSYtLzZYFNchuL+RH12JIX
-         nGuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d/wJhQzLekIbhWUFB8CBHk7CDQYQkmDO/XAl9zxuSaU=;
-        b=kHqOahHfgEXciYxKNLoD/wy23SzEP/VBiQfUkdeKEpVLG5fyd3SIbNZcEiqMPZWORi
-         oYJ/pyHrDiXO3aI0JrPCZhXIwXu/YTTTB9ezcCrjuvacOpTts7KA7tvK4N8KeohSo/QV
-         xGOQvMoltGfnE8hLlao+B1YRfQG5cqOU1gsk/Vy+r4rr3rS/N+PXo5JICcxwDLW0Ra/A
-         5d7siVybPacFP/zWoRSpMSFZsJpTbth5WODxWtd6hlsKX7U0ScIwkKmdRMiyGAcxQNDt
-         Qk5OBKgY2HjlLLOXav+NjsnhaKSChWAue43PrlRwkHTRqkbiZ3Yc9Y7mP6QIrwCTOjIV
-         ir8Q==
-X-Gm-Message-State: AOAM533Hz5MZ3qnqxeu+SkG7Ko0YLKPufk/CtAW/Gxtx7Ss3+2eAtHfo
-        rcpmKxoUQgE86ciuQnML8Xtcn93I+FPnYZby60KyqGbD9iE=
-X-Google-Smtp-Source: ABdhPJwWYaGimABsUFlmyBNL2gNq2/et8GfL8wEB7EeSIW66hiMjHMYtzhgWnn4EkRrP89FRe5AI8poN0nfcV70UKwc=
-X-Received: by 2002:a05:6602:1694:: with SMTP id s20mr575122iow.159.1598867131223;
- Mon, 31 Aug 2020 02:45:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200830081053.64981-1-songmuchun@bytedance.com>
-In-Reply-To: <20200830081053.64981-1-songmuchun@bytedance.com>
-From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date:   Mon, 31 Aug 2020 11:45:20 +0200
-Message-ID: <CAM9Jb+hBeZO=y0=pKUhT6G=qF8-mcZU86wY_A6N7-cT5tJ1wmw@mail.gmail.com>
-Subject: Re: [PATCH] mm/memory-failure: Fix return wrong value when isolate
- page fail
-To:     Muchun Song <songmuchun@bytedance.com>
-Cc:     naoya.horiguchi@nec.com, Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 31 Aug 2020 05:45:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57050 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726042AbgHaJpm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:45:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 87A42AEC7;
+        Mon, 31 Aug 2020 09:46:15 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 11:45:40 +0200
+Message-ID: <s5hpn77i1x7.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+12a3fcd1493ec6585007@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, alsa-devel@alsa-project.org,
+        arnd@arndb.de, gustavoars@kernel.org, linux-kernel@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        vbabka@suse.cz, walken@google.com
+Subject: Re: KASAN: use-after-free Read in snd_pcm_oss_release
+In-Reply-To: <20200829035043.4612-1-hdanton@sina.com>
+References: <000000000000cd24b305adde81ff@google.com>
+        <20200829035043.4612-1-hdanton@sina.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> When we isolate page fail, we should not return 0, because we do not
-> set page HWPoison on any page.
->
-> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-> ---
->  mm/memory-failure.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-> index 696505f56910..4eb3c42ffe35 100644
-> --- a/mm/memory-failure.c
-> +++ b/mm/memory-failure.c
-> @@ -1850,6 +1850,7 @@ static int __soft_offline_page(struct page *page)
->         } else {
->                 pr_info("soft offline: %#lx: %s isolation failed: %d, page count %d, type %lx (%pGp)\n",
->                         pfn, msg_page[huge], ret, page_count(page), page->flags, &page->flags);
-> +               ret = -EBUSY;
->         }
->         return ret;
->  }
-> --
+On Sat, 29 Aug 2020 05:50:43 +0200,
+Hillf Danton wrote:
+> 
+> 
+> Thu, 27 Aug 2020 09:34:15 -0700
+> > syzbot found the following issue on:
+> > 
+> > HEAD commit:    f37be724 Add linux-next specific files for 20200826
+> > git tree:       linux-next
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=137c7cb9900000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=1e5a1cf036089d95
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=12a3fcd1493ec6585007
+> > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > 
+> > Unfortunately, I don't have any reproducer for this issue yet.
+> > 
+> > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > Reported-by: syzbot+12a3fcd1493ec6585007@syzkaller.appspotmail.com
+> > 
+> > ==================================================================
+> > BUG: KASAN: use-after-free in snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2367 [inline]
+> > BUG: KASAN: use-after-free in snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2361 [inline]
+> > BUG: KASAN: use-after-free in snd_pcm_oss_release+0x28d/0x300 sound/core/oss/pcm_oss.c:2548
+> > Read of size 8 at addr ffff888026b66480 by task syz-executor.1/27751
+> > 
+> > CPU: 1 PID: 27751 Comm: syz-executor.1 Not tainted 5.9.0-rc2-next-20200826-syzkaller #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> > Call Trace:
+> >  __dump_stack lib/dump_stack.c:77 [inline]
+> >  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+> >  print_address_description.constprop.0.cold+0xae/0x497 mm/kasan/report.c:383
+> >  __kasan_report mm/kasan/report.c:513 [inline]
+> >  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+> >  snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2367 [inline]
+> >  snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2361 [inline]
+> >  snd_pcm_oss_release+0x28d/0x300 sound/core/oss/pcm_oss.c:2548
+> >  __fput+0x285/0x920 fs/file_table.c:281
+> >  task_work_run+0xdd/0x190 kernel/task_work.c:141
+> >  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+> >  exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+> >  exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+> >  syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > RIP: 0033:0x416f01
+> > Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+> > RSP: 002b:00007ffdd39a5e70 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+> > RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416f01
+> > RDX: 0000000000000001 RSI: 0000000001190428 RDI: 0000000000000003
+> > RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> > R10: 00007ffdd39a5f60 R11: 0000000000000293 R12: 0000000001190428
+> > R13: 0000000000268c54 R14: ffffffffffffffff R15: 000000000118cfec
+> > 
+> > Allocated by task 27754:
+> >  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+> >  kasan_set_track mm/kasan/common.c:56 [inline]
+> >  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:461
+> >  kmem_cache_alloc_trace+0x16e/0x2c0 mm/slab.c:3550
+> >  kmalloc include/linux/slab.h:554 [inline]
+> >  kzalloc include/linux/slab.h:666 [inline]
+> >  snd_pcm_oss_open_file sound/core/oss/pcm_oss.c:2389 [inline]
+> >  snd_pcm_oss_open.part.0+0x55e/0x1290 sound/core/oss/pcm_oss.c:2491
+> >  snd_pcm_oss_open+0x3c/0x50 sound/core/oss/pcm_oss.c:2455
+> >  soundcore_open+0x445/0x600 sound/sound_core.c:593
+> >  chrdev_open+0x266/0x770 fs/char_dev.c:414
+> >  do_dentry_open+0x4b9/0x11b0 fs/open.c:817
+> >  do_open fs/namei.c:3251 [inline]
+> >  path_openat+0x1b9a/0x2730 fs/namei.c:3368
+> >  do_filp_open+0x17e/0x3c0 fs/namei.c:3395
+> >  do_sys_openat2+0x16d/0x420 fs/open.c:1168
+> >  do_sys_open fs/open.c:1184 [inline]
+> >  __do_sys_openat fs/open.c:1200 [inline]
+> >  __se_sys_openat fs/open.c:1195 [inline]
+> >  __x64_sys_openat+0x13f/0x1f0 fs/open.c:1195
+> >  do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > Freed by task 27754:
+> >  kasan_save_stack+0x1b/0x40 mm/kasan/common.c:48
+> >  kasan_set_track+0x1c/0x30 mm/kasan/common.c:56
+> >  kasan_set_free_info+0x1b/0x30 mm/kasan/generic.c:355
+> >  __kasan_slab_free+0xd8/0x120 mm/kasan/common.c:422
+> >  __cache_free mm/slab.c:3418 [inline]
+> >  kfree+0x103/0x2c0 mm/slab.c:3756
+> >  snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2371 [inline]
+> >  snd_pcm_oss_release_file sound/core/oss/pcm_oss.c:2361 [inline]
+> >  snd_pcm_oss_release+0x17e/0x300 sound/core/oss/pcm_oss.c:2548
+> >  __fput+0x285/0x920 fs/file_table.c:281
+> >  task_work_run+0xdd/0x190 kernel/task_work.c:141
+> >  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+> >  exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
+> >  exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
+> >  syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > The buggy address belongs to the object at ffff888026b66480
+> >  which belongs to the cache kmalloc-32 of size 32
+> > The buggy address is located 0 bytes inside of
+> >  32-byte region [ffff888026b66480, ffff888026b664a0)
+> > The buggy address belongs to the page:
+> > page:0000000076bbbb49 refcount:1 mapcount:0 mapping:0000000000000000 index:0xffff888026b66fc1 pfn:0x26b66
+> > flags: 0xfffe0000000200(slab)
+> > raw: 00fffe0000000200 ffffea0002385208 ffffea0000782448 ffff8880aa040100
+> > raw: ffff888026b66fc1 ffff888026b66000 000000010000002e 0000000000000000
+> > page dumped because: kasan: bad access detected
+> > 
+> > Memory state around the buggy address:
+> >  ffff888026b66380: fa fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+> >  ffff888026b66400: 00 fc fc fc fc fc fc fc 00 00 00 00 fc fc fc fc
+> > >ffff888026b66480: fa fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+> >                    ^
+> >  ffff888026b66500: 00 fc fc fc fc fc fc fc 00 fc fc fc fc fc fc fc
+> >  ffff888026b66580: fa fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+> > ==================================================================
+> 
+> Hard to see why file is released more than once though it's not
+> that hard to prepare a fix.
 
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-> 2.11.0
->
->
+Well, it's really the primary question why the release got called for
+the same file->private_data at all.  Might it be a red herring, since
+it was caught not at the first access of pcm_oss_file in the release
+code path.  It's referred already in the code snippet below, although
+the UAF got detected at a much later point (snd_pcm_oss_release_file()
+call)...
+
+
+Takashi
+
+> 
+> --- a/sound/core/oss/pcm_oss.c
+> +++ b/sound/core/oss/pcm_oss.c
+> @@ -2535,6 +2535,10 @@ static int snd_pcm_oss_release(struct in
+>  	struct snd_pcm_oss_file *pcm_oss_file;
+>  
+>  	pcm_oss_file = file->private_data;
+> +	if (!pcm_oss_file)
+> +		return 0;
+> +	file->private_data = NULL;
+> +
+>  	substream = pcm_oss_file->streams[SNDRV_PCM_STREAM_PLAYBACK];
+>  	if (substream == NULL)
+>  		substream = pcm_oss_file->streams[SNDRV_PCM_STREAM_CAPTURE];
+> 
