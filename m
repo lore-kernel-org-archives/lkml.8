@@ -2,63 +2,64 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9995FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13A7CC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 763F6206FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA030206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BzO7N1IJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HtH0lp3X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgHaStW (ORCPT
+        id S1728027AbgHaStc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:49:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58266 "EHLO
+        Mon, 31 Aug 2020 14:49:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726948AbgHaStV (ORCPT
+        with ESMTP id S1727937AbgHaSt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:49:21 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55BB8C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:49:21 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id v54so4068783qtj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:49:21 -0700 (PDT)
+        Mon, 31 Aug 2020 14:49:29 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FC9C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:49:27 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id b14so7156134qkn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:49:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1cLKbrfJy/ZGWttaSw8KlAZUFaKAWrS+yHm9C8wTwuc=;
-        b=BzO7N1IJW/105kqPoLoVuE1QamuzdOIPyBu8Oa2WvipHCs9Z5jp7KhYBcM9Iig/zPs
-         OP1rWZL/QxUbGOf1lmYJ1ln8gZwftqbDc0JswX8TwvnfOoyZ/9YeH5LKXysxQJaPGrRX
-         w16G9XhvTtIb7AqweRgYdhFXqj2RD1M7um6OWG8wVDHBdYhCFbPkWaZaL27hAxq9DNPC
-         r8yO2HZbKJXKtZgT1G1FL1GXSalLRcUXZH4OSF//Q31hLIWN39bfNbZgT7y4gvnRgr2C
-         lzWwpwbV4R2WP8hwpr/3tF0xkYVdvkFaP4FRobW4ekPuPliC6XALWAldtA1fE2ysqJEJ
-         pvMQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=gW/GAJk+DvNLvyuRynw+O+IEgqlrjmTs4zN1XyER6Kc=;
+        b=HtH0lp3X0B/IS4VslB7oJRNKkUSwHZbrZzhCYTa72DLJK++qOMuVnZh6yqZ+utyxOq
+         4OhDcdNjzjXKxN6Vm3TUFSVNgnUSbkWYLGK5QGDwWsEhj30Z3BNZJuUfLXsGRjcmeoyp
+         iKd8kDTuPt1TEnq8CQq+Yj2sYCVwLNyGLFdmgwQ6tdeR9nwNa/RxzpSsKVO0laXQGbR4
+         BCnRqlbMR4QqY8SZQ3ILTC78tBYf/OoXpUsGw/a1Br8QvNPAhizAGLn6x9MlBoZfm86X
+         8JdaQOuhbRka/IMWaQlFWKsmR1bf92NRGHxvLjPt/U+WwNHrCLzcxT+xnhDip8aUw4LH
+         wA7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=1cLKbrfJy/ZGWttaSw8KlAZUFaKAWrS+yHm9C8wTwuc=;
-        b=Ovukd1tLBHg/cq/dJC6of2ngi/zjXwC0YQr/NErtmKbL/GxbEXYDUI+w+TjNZc7TPT
-         1W0fA5WHmZw73X8UT4dq4OViVMR++nu1v7TaR0HqKJgqdOLsM/1bcXtxkA/wHBkLkFyI
-         Lnqj1Uea1h0b/e57sFnnOG3cDCKxOXngnYpHbbCnmUS873JG3Fh6h/bazlSNJqM2suKi
-         27g1K7NOjNFPG+rKk8ftXWYJAk6OhzScRXvN4rc/Ni/aWyLAXiMBlqeFpTZTa7QWE28N
-         Sk/3PsGLP5Q7v5gmfptAoDvj4R/Uw8fToiHI195FOnfXWAENnE3YPr0eQ4+9rvVLl/3O
-         kNbw==
-X-Gm-Message-State: AOAM531GzT2GzmllJCG4P8YAmaGVIRaOK7zDCKw1mrIjyD156tmmURdC
-        uQh12gj3+IcsWEXrN3UOuIY=
-X-Google-Smtp-Source: ABdhPJwrU//AIQuoxvEgis/nTcNp0HgSLFIRo8YjHf0Sy1UbWZK10GmXnZ+6ozodFL0tmiiFglf2Hw==
-X-Received: by 2002:ac8:4248:: with SMTP id r8mr2635412qtm.218.1598899760454;
-        Mon, 31 Aug 2020 11:49:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=gW/GAJk+DvNLvyuRynw+O+IEgqlrjmTs4zN1XyER6Kc=;
+        b=p4Y3HBmvcE4DtA4ociayz7pD3phdR8OgsNgYDQjWeynE+2/TpKxL2EOZcbhjNH74AF
+         MKI1IpeOGgyoXsoyu8fIwkgafAlZW32HwRXEGo59nYG5xtdtWh39L+iwq+vbq8X27k7t
+         8gIa/insGIFqsdEV/DW+z4oxOKb1t8XaCHmG6q8yY2eWWO8dlmQrA9/pq9VitDWfGgt8
+         2Sx3fWeSQcxFz2kurU3ZVOQquOeSUKSd0b2vM4yiOdcGsItu9pgbvh8JrKg0/M5MO5u0
+         oHLirh3biY0w8PCO3AMeUNThsejfTnmuAaYv21I+Bo369s3VBiy8TI3+PE0RplPu2yG3
+         4yJQ==
+X-Gm-Message-State: AOAM530s82vPKukDaJrNZoFaCiB4zIj14CHaXH+xo0JBNif30KqUthbB
+        hum5AnXHC4mxwaPRSvh7klnny16egg8=
+X-Google-Smtp-Source: ABdhPJyEZji/0NQ0lddMUAajB37hmn05TsE/kDQTtJhzrMavyxL5DTi9z+BFEEgG0MmkLnxlUC7Fog==
+X-Received: by 2002:a37:b307:: with SMTP id c7mr2852539qkf.33.1598899766644;
+        Mon, 31 Aug 2020 11:49:26 -0700 (PDT)
 Received: from LeoBras.ibmuc.com ([2804:14d:8084:8e41:9b0d:571e:a65:b5d8])
-        by smtp.gmail.com with ESMTPSA id s17sm11779070qte.50.2020.08.31.11.49.15
+        by smtp.gmail.com with ESMTPSA id s17sm11779070qte.50.2020.08.31.11.49.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 11:49:19 -0700 (PDT)
+        Mon, 31 Aug 2020 11:49:26 -0700 (PDT)
 From:   Leonardo Bras <leobras.c@gmail.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
@@ -76,10 +77,12 @@ To:     Michael Ellerman <mpe@ellerman.id.au>,
         David Dai <zdai@linux.vnet.ibm.com>,
         Matthew Wilcox <willy@infradead.org>
 Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/2] DMA pagecache
-Date:   Mon, 31 Aug 2020 15:48:57 -0300
-Message-Id: <20200831184859.110660-1-leobras.c@gmail.com>
+Subject: [RFC PATCH 1/2] dma-direction: Add DMA_DIR_COMPAT() macro to test direction compability
+Date:   Mon, 31 Aug 2020 15:48:58 -0300
+Message-Id: <20200831184859.110660-2-leobras.c@gmail.com>
 X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200831184859.110660-1-leobras.c@gmail.com>
+References: <20200831184859.110660-1-leobras.c@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,42 +90,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This RFC improves the performance of indirect mapping on all tested DMA
-usages, based on a mlx5 device, ranging from 64k packages to 1-byte
-packages, from 1 thread to 64 threads.
+Given a existing mapping with 'current' direction, and a 'wanted'
+direction for using that mapping, check if 'wanted' is satisfied by
+'current'.
 
-In all workloads tested, the performance of indirect mapping gets very
-near to direct mapping case.
+current			accepts
+DMA_BIDIRECTIONAL	DMA_BIDIRECTIONAL, DMA_TO_DEVICE,
+			DMA_FROM_DEVICE, DMA_NONE
+DMA_TO_DEVICE		DMA_TO_DEVICE, DMA_NONE
+DMA_FROM_DEVICE		DMA_FROM_DEVICE, DMA_NONE
+DMA_NONE		DMA_NONE
 
-The whole thing is designed to have as much perfomance as possible, so
-the impact of the pagecache is not too big.
+This macro is useful for checking if a DMA mapping can be reused.
 
-As I am not very experienced in XArrays usage, nor in lockless
-algorithms, I would specially appreaciate feedback on possible
-failures on it's usage, missing barriers, and so on.
+Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+---
+ include/linux/dma-direction.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Also, this size for the FIFO is just for testing purposes.
-It's also very possible that it will not be a good idea in platforms
-other than pseries, (i have not tested them).
-I can plan I bypass for those cases without much work.
-
-Thank you!
-
-Leonardo Bras (2):
-  dma-direction: Add DMA_DIR_COMPAT() macro to test direction
-    compability
-  powerpc/kernel/iommu: Introduce IOMMU DMA pagecache
-
- arch/powerpc/include/asm/iommu-cache.h |  31 ++++
- arch/powerpc/include/asm/iommu.h       |   4 +
- arch/powerpc/kernel/Makefile           |   2 +-
- arch/powerpc/kernel/iommu-cache.c      | 247 +++++++++++++++++++++++++
- arch/powerpc/kernel/iommu.c            |  15 +-
- include/linux/dma-direction.h          |   3 +
- 6 files changed, 296 insertions(+), 6 deletions(-)
- create mode 100644 arch/powerpc/include/asm/iommu-cache.h
- create mode 100644 arch/powerpc/kernel/iommu-cache.c
-
+diff --git a/include/linux/dma-direction.h b/include/linux/dma-direction.h
+index 9c96e30e6a0b..caf3943a21f4 100644
+--- a/include/linux/dma-direction.h
++++ b/include/linux/dma-direction.h
+@@ -9,4 +9,7 @@ enum dma_data_direction {
+ 	DMA_NONE = 3,
+ };
+ 
++/* Checks if wanted direction is satisfied by current mapping direction*/
++#define DMA_DIR_COMPAT(current, wanted)	(((current) & ~(wanted)) == 0)
++
+ #endif
 -- 
 2.25.4
 
