@@ -2,89 +2,202 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB3F9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A90C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74014214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFEB4207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888029;
-	bh=otuaNmTFeR1cZEWlvlrN8JZo+5WGyGy52K7YN8szaGA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hgmWTzrtpL366a8UPK4TNYiFxYcwC+tnBfzyeMIzX278o3IhSg4wjIJYN8TGsoJuW
-	 isQ/SzPeps6QT4LfddEcgq1xW9e8EkU1LqtEDbt4lPUfGcJdonYzY+XiUqfiGv8LBI
-	 RHN2nleikF634TynTVABY8+cIUPgq4oWD4dQ9NBE=
+	s=default; t=1598888032;
+	bh=GgYEUat4iC8wr6OouJqSNb+FzDajrjBsokpFliM5aSk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WG2RntH5Y5/Q/NCQP4tvmYOK4Otq3YqMUuxyR82sFTxTx5DpoRCiBK3JIUxED77cs
+	 iDHphzwU1grW2F1X4B4WlzMlqQryb9tvKHG12HU6XYboGoGWz2ejiczems3u92nwu4
+	 T1gijKVyTRPgseY1UpL+e3espVUGK+FnkA90aIZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgHaPds (ORCPT
+        id S1729200AbgHaPdp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:33:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45418 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:33:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728421AbgHaPdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:33:38 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728902AbgHaPbk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:40 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCD47207EA;
-        Mon, 31 Aug 2020 15:33:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08567214DB;
+        Mon, 31 Aug 2020 15:31:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598888018;
-        bh=otuaNmTFeR1cZEWlvlrN8JZo+5WGyGy52K7YN8szaGA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t7ji3dYkdFx/lhVBpAlgWVNUumcb97mLLmaULWc2HZF1SCNV+0vn8gB6/EX3Jesa0
-         TYQo9Cyw2WEX/5MQHBMHAI1qxLB9wZhvSOyYytxc0kSFEyY4+z712lYwzwrugn2wO7
-         r7awxU3mYrzFJXQB8ajSViBM8MuzGSlq9+NdMu7k=
-Date:   Mon, 31 Aug 2020 17:33:45 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Samuel Thibault <samuel.thibault@ens-lyon.org>,
-        devel@driverdev.osuosl.org
-Subject: Re: [PATCH AUTOSEL 5.8 07/42] speakup: Fix wait_for_xmitr for ttyio
- case
-Message-ID: <20200831153345.GA2525965@kroah.com>
-References: <20200831152934.1023912-1-sashal@kernel.org>
- <20200831152934.1023912-7-sashal@kernel.org>
+        s=default; t=1598887899;
+        bh=GgYEUat4iC8wr6OouJqSNb+FzDajrjBsokpFliM5aSk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ITszLHoKNngoUhQwitbROwn5kBUTpX7HSWWVH/EW/lo1Z6NYpqqgZDE/AhW/wWEn9
+         yF3/AWM5UEufjh0MYj1XPWIldulsEXrtvn0P8NTO1QqqZU5P46/WPytti7NT9jQi8A
+         D6tvw7ri4bzJvc5CCuf48gQD97uMIX+Z3ddNDthY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Samuel Thibault <samuel.thibault@ens-lyon.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
+Subject: [PATCH AUTOSEL 4.14 2/9] speakup: Fix wait_for_xmitr for ttyio case
+Date:   Mon, 31 Aug 2020 11:31:29 -0400
+Message-Id: <20200831153136.1024676-2-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200831153136.1024676-1-sashal@kernel.org>
+References: <20200831153136.1024676-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831152934.1023912-7-sashal@kernel.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 11:28:59AM -0400, Sasha Levin wrote:
-> From: Samuel Thibault <samuel.thibault@ens-lyon.org>
-> 
-> [ Upstream commit 2b86d9b8ec6efb86fc5ea44f2d49b1df17f699a1 ]
-> 
-> This was missed while introducing the tty-based serial access.
-> 
-> The only remaining use of wait_for_xmitr with tty-based access is in
-> spk_synth_is_alive_restart to check whether the synth can be restarted.
-> With tty-based this is up to the tty layer to cope with the buffering
-> etc. so we can just say yes.
-> 
-> Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
-> Link: https://lore.kernel.org/r/20200804160637.x3iycau5izywbgzl@function
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> ---
->  drivers/staging/speakup/serialio.c  | 8 +++++---
->  drivers/staging/speakup/spk_priv.h  | 1 -
->  drivers/staging/speakup/spk_ttyio.c | 7 +++++++
->  drivers/staging/speakup/spk_types.h | 1 +
->  drivers/staging/speakup/synth.c     | 2 +-
->  5 files changed, 14 insertions(+), 5 deletions(-)
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
 
-Not needed for 5.8 or older, sorry, this was a 5.9-rc1+ issue only.
+[ Upstream commit 2b86d9b8ec6efb86fc5ea44f2d49b1df17f699a1 ]
 
-thanks,
+This was missed while introducing the tty-based serial access.
 
-greg k-h
+The only remaining use of wait_for_xmitr with tty-based access is in
+spk_synth_is_alive_restart to check whether the synth can be restarted.
+With tty-based this is up to the tty layer to cope with the buffering
+etc. so we can just say yes.
+
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Link: https://lore.kernel.org/r/20200804160637.x3iycau5izywbgzl@function
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/speakup/serialio.c  | 8 +++++---
+ drivers/staging/speakup/spk_priv.h  | 1 -
+ drivers/staging/speakup/spk_ttyio.c | 7 +++++++
+ drivers/staging/speakup/spk_types.h | 1 +
+ drivers/staging/speakup/synth.c     | 2 +-
+ 5 files changed, 14 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/staging/speakup/serialio.c b/drivers/staging/speakup/serialio.c
+index 9cfc8142a3187..f9ec8f1ac73be 100644
+--- a/drivers/staging/speakup/serialio.c
++++ b/drivers/staging/speakup/serialio.c
+@@ -31,6 +31,7 @@ static void spk_serial_tiocmset(unsigned int set, unsigned int clear);
+ static unsigned char spk_serial_in(void);
+ static unsigned char spk_serial_in_nowait(void);
+ static void spk_serial_flush_buffer(void);
++static int spk_serial_wait_for_xmitr(struct spk_synth *in_synth);
+ 
+ struct spk_io_ops spk_serial_io_ops = {
+ 	.synth_out = spk_serial_out,
+@@ -39,6 +40,7 @@ struct spk_io_ops spk_serial_io_ops = {
+ 	.synth_in = spk_serial_in,
+ 	.synth_in_nowait = spk_serial_in_nowait,
+ 	.flush_buffer = spk_serial_flush_buffer,
++	.wait_for_xmitr = spk_serial_wait_for_xmitr,
+ };
+ EXPORT_SYMBOL_GPL(spk_serial_io_ops);
+ 
+@@ -210,7 +212,7 @@ void spk_stop_serial_interrupt(void)
+ }
+ EXPORT_SYMBOL_GPL(spk_stop_serial_interrupt);
+ 
+-int spk_wait_for_xmitr(struct spk_synth *in_synth)
++static int spk_serial_wait_for_xmitr(struct spk_synth *in_synth)
+ {
+ 	int tmout = SPK_XMITR_TIMEOUT;
+ 
+@@ -279,7 +281,7 @@ static void spk_serial_flush_buffer(void)
+ 
+ static int spk_serial_out(struct spk_synth *in_synth, const char ch)
+ {
+-	if (in_synth->alive && spk_wait_for_xmitr(in_synth)) {
++	if (in_synth->alive && spk_serial_wait_for_xmitr(in_synth)) {
+ 		outb_p(ch, speakup_info.port_tts);
+ 		return 1;
+ 	}
+@@ -294,7 +296,7 @@ const char *spk_serial_synth_immediate(struct spk_synth *synth,
+ 	while ((ch = *buff)) {
+ 		if (ch == '\n')
+ 			ch = synth->procspeech;
+-		if (spk_wait_for_xmitr(synth))
++		if (spk_serial_wait_for_xmitr(synth))
+ 			outb(ch, speakup_info.port_tts);
+ 		else
+ 			return buff;
+diff --git a/drivers/staging/speakup/spk_priv.h b/drivers/staging/speakup/spk_priv.h
+index 046040ac074c6..8466c4c81ea84 100644
+--- a/drivers/staging/speakup/spk_priv.h
++++ b/drivers/staging/speakup/spk_priv.h
+@@ -45,7 +45,6 @@
+ 
+ const struct old_serial_port *spk_serial_init(int index);
+ void spk_stop_serial_interrupt(void);
+-int spk_wait_for_xmitr(struct spk_synth *in_synth);
+ void spk_serial_release(void);
+ void spk_ttyio_release(void);
+ void spk_ttyio_register_ldisc(void);
+diff --git a/drivers/staging/speakup/spk_ttyio.c b/drivers/staging/speakup/spk_ttyio.c
+index 71edd3cfe6844..59cd966932c82 100644
+--- a/drivers/staging/speakup/spk_ttyio.c
++++ b/drivers/staging/speakup/spk_ttyio.c
+@@ -115,6 +115,7 @@ static void spk_ttyio_tiocmset(unsigned int set, unsigned int clear);
+ static unsigned char spk_ttyio_in(void);
+ static unsigned char spk_ttyio_in_nowait(void);
+ static void spk_ttyio_flush_buffer(void);
++static int spk_ttyio_wait_for_xmitr(struct spk_synth *in_synth);
+ 
+ struct spk_io_ops spk_ttyio_ops = {
+ 	.synth_out = spk_ttyio_out,
+@@ -123,6 +124,7 @@ struct spk_io_ops spk_ttyio_ops = {
+ 	.synth_in = spk_ttyio_in,
+ 	.synth_in_nowait = spk_ttyio_in_nowait,
+ 	.flush_buffer = spk_ttyio_flush_buffer,
++	.wait_for_xmitr = spk_ttyio_wait_for_xmitr,
+ };
+ EXPORT_SYMBOL_GPL(spk_ttyio_ops);
+ 
+@@ -264,6 +266,11 @@ static void spk_ttyio_tiocmset(unsigned int set, unsigned int clear)
+ 	mutex_unlock(&speakup_tty_mutex);
+ }
+ 
++static int spk_ttyio_wait_for_xmitr(struct spk_synth *in_synth)
++{
++	return 1;
++}
++
+ static unsigned char ttyio_in(int timeout)
+ {
+ 	struct spk_ldisc_data *ldisc_data = speakup_tty->disc_data;
+diff --git a/drivers/staging/speakup/spk_types.h b/drivers/staging/speakup/spk_types.h
+index c50de6035a9aa..bfbc09f760a94 100644
+--- a/drivers/staging/speakup/spk_types.h
++++ b/drivers/staging/speakup/spk_types.h
+@@ -156,6 +156,7 @@ struct spk_io_ops {
+ 	unsigned char (*synth_in)(void);
+ 	unsigned char (*synth_in_nowait)(void);
+ 	void (*flush_buffer)(void);
++	int (*wait_for_xmitr)(struct spk_synth *synth);
+ };
+ 
+ struct spk_synth {
+diff --git a/drivers/staging/speakup/synth.c b/drivers/staging/speakup/synth.c
+index a1ca68c765792..7a137f8a5063c 100644
+--- a/drivers/staging/speakup/synth.c
++++ b/drivers/staging/speakup/synth.c
+@@ -142,7 +142,7 @@ int spk_synth_is_alive_restart(struct spk_synth *synth)
+ {
+ 	if (synth->alive)
+ 		return 1;
+-	if (spk_wait_for_xmitr(synth) > 0) {
++	if (synth->io_ops->wait_for_xmitr(synth) > 0) {
+ 		/* restart */
+ 		synth->alive = 1;
+ 		synth_printf("%s", synth->init);
+-- 
+2.25.1
+
