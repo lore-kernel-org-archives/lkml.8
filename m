@@ -2,135 +2,143 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB180C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D5C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:00:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE0E12076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AA5D2076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:00:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wXzkPPaJ"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="vWkTAnIa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726940AbgHaCws (ORCPT
+        id S1726939AbgHaDAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 22:52:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50196 "EHLO
+        Sun, 30 Aug 2020 23:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51340 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbgHaCwp (ORCPT
+        with ESMTP id S1726573AbgHaC76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 22:52:45 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5252C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 19:52:44 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id w7so2308607pfi.4
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 19:52:44 -0700 (PDT)
+        Sun, 30 Aug 2020 22:59:58 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A44CC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 19:59:56 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id 31so3510212pgy.13
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 19:59:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=A1BZl6eZWFd9hXWUqOAEKhTTMElg1LEkP6CLdsn7aD4=;
-        b=wXzkPPaJTgHQTvqIqf5RTdaXzP1F+dRUNo873SRYodRN35MDEgvO+yGcHuvJsMKMB5
-         rStjEc625mbHqeDd/ddud/cP9Z/qCYHvDkFABVmjNsF2RE3paTxONATzJoyvDley9d81
-         krgv6RP4OsllENfyH1GgkcmSKMn5eNoF+IgRHNHc6+gDAwb88nJCdYGQA3Cqiy4QeUR0
-         vQ3RgbeWCKTokv95dr0DquECkSHTmhLUaWbRIieh5qpfS3PAnO0T2DO0Iufdr3EdE9gJ
-         uUYmsnnMv3lBns01YdsgGjB+Kf1+0Wbc5e+GLRy+k4eDFxHGcAdtxZm42268RrZZVHS9
-         T1Hw==
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VVV4zDgX4bh1ITzZ3P/D8BPBhYzTijWax2Ubo35ykQQ=;
+        b=vWkTAnIaI6Tg+5lq3G2zIENEtavt3ptFvX0QsKiZyTAZYTw7cqHJpzgUTsYmiuFTAb
+         jodO6/WSjmVfe31B8zbrIHOOewzYS9z4Y7iJZKG4z8ptsq+FBr0OJ+0N8FIbqyTqAoiK
+         VEa/jmQEjiDhrK3kTnRT2fvPt8YT1mAcsswlW4SsGO6mL3syWPlngNslF8KMxJXtcsR6
+         Thjl9YUslKaYct43GD8MZ834IvroDjCMUTkq+jCg8qQdSIqduVWJtg/8H4aEZW4BYxh8
+         pLr+Sz4OdA7lAVARgkkMiDs7MDpGJ7OxBlEyXOQofmM4+eqvhOfQkm/9SCieRAH6SRPI
+         Qttw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=A1BZl6eZWFd9hXWUqOAEKhTTMElg1LEkP6CLdsn7aD4=;
-        b=ZtvVWeztoV2MOCETX9+GdFofx2BrumpGnZL3rTexpP/urgYxqOAnz37bjUEmFny5p/
-         rSPQztJkjRSodmAG14p1AWoEw3QKIeCED2W5ZWQqunZznoW/GNTUFJycZfx3Wvv5x/U+
-         1/0o7Aqah4w61Y4GDGye32z98ZrKVKyxivKFSC4wsw9xD+XxFuTz5CKg6CfawdE48DZn
-         FOZQ7SxYOlk2jWOKtzBjo0RQUdeMsr0Zk9R68RzlsomEmPFMxtbdtuHeZGbkKt/CBH3p
-         KrtCbVY06GQj+sBcw12PqYMkZBhIXQ9R7IlXEODoNLyjBGeI+gzTTTWpzSPE/4yAf6pE
-         w3Fg==
-X-Gm-Message-State: AOAM531eDkPPELkA0jFBz6Nj4JkJNqnaVwGFWNqOyVY88cSRoPMx4/rd
-        mBBLb0ge/tnrGjzEfMyyTEd2zw==
-X-Google-Smtp-Source: ABdhPJwm4sB0z9LTpgZPPPTjj2JAxIyNIzf+fqvUuJiSdIIfJXAwmpn8+aUw91Yxg1s5qiB2/HBSxQ==
-X-Received: by 2002:a63:2d05:: with SMTP id t5mr5541612pgt.444.1598842359730;
-        Sun, 30 Aug 2020 19:52:39 -0700 (PDT)
-Received: from leoy-ThinkPad-X240s ([2600:3c01::f03c:91ff:fe8a:bb03])
-        by smtp.gmail.com with ESMTPSA id k88sm5443742pjk.19.2020.08.30.19.52.34
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 30 Aug 2020 19:52:39 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 10:52:30 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     James Clark <james.clark@arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        Wei Li <liwei391@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>, nd <nd@arm.com>
-Subject: Re: [PATCH RESEND v1 02/11] perf mem: Introduce weak function
- perf_mem_events__ptr()
-Message-ID: <20200831025230.GA13217@leoy-ThinkPad-X240s>
-References: <20200806030727.30267-1-leo.yan@linaro.org>
- <20200806030727.30267-3-leo.yan@linaro.org>
- <e756de3d-d41f-4b51-d434-fe12cd2da251@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VVV4zDgX4bh1ITzZ3P/D8BPBhYzTijWax2Ubo35ykQQ=;
+        b=NhLJ53+apgmyfiiCmwX/rwCW1dXIekuZFg28he99IUZSIo4VGw7VxFSIxzwbplqF4N
+         YQ6fFjbTnYkVxHlUweputBTeOTxsZ6e2x2nlZUZ+I0jjRIlTQfAiUiuKpGIEDfqFUXbJ
+         1RxvfMytQtj3a/nFMtKnpzrlTrR0Rxma0ETJ+5Fpqk2Yykh7FGRa/slaHP6GvsmDtHym
+         zXcQaoAMTQ7M/PKNqG8uy8xSDVYAdld4pTJB4PtZ5j222qfbBxs5w9pzlKjH4sos5XoN
+         j480UqwD3J3Pwdhe3k/UHQLSZlZv058uku1H8G4ywCalw/Eel/d8adHPY9NGyYAE5h7J
+         ciKg==
+X-Gm-Message-State: AOAM531D4tR6KOPXLXK+5/fFjK4nt1dYcicslk55KJRmSIW2Nw8rMkPc
+        isIoU3l7gnMGa/iQWV3MAHN0HVWIeehjkHjNIvRQ0sWIXz+6Pw==
+X-Google-Smtp-Source: ABdhPJzn3r7DcbmTpR91vBNocSxb2riE/BRXhqMjxn5NApnI0uyZfvJNdQG0kA5iI/3hAtN2Q4B7UWDWo35zg5b6g8k=
+X-Received: by 2002:a62:64d5:: with SMTP id y204mr733541pfb.97.1598842795785;
+ Sun, 30 Aug 2020 19:59:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e756de3d-d41f-4b51-d434-fe12cd2da251@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200822030055.32383-1-songmuchun@bytedance.com>
+In-Reply-To: <20200822030055.32383-1-songmuchun@bytedance.com>
+From:   Muchun Song <songmuchun@bytedance.com>
+Date:   Mon, 31 Aug 2020 10:59:19 +0800
+Message-ID: <CAMZfGtVTTZ1XZ2sLERpjevGmSO+8ex4PdfPaWLFh7Ro2r5oYYA@mail.gmail.com>
+Subject: Re: [PATCH v2] kprobes: Fix kill kprobe which has been marked as gone
+To:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, Masami Hiramatsu <mhiramat@kernel.org>,
+        songliubraving@fb.com
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Chengming Zhou <zhouchengming@bytedance.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 04:40:29PM +0100, James Clark wrote:
-> Hi Leo,
-> 
-> On 06/08/2020 04:07, Leo Yan wrote:
-> >  
-> >  	for (j = 0; j < PERF_MEM_EVENTS__MAX; j++) {
-> > -		if (!perf_mem_events[j].record)
-> > +		e = perf_mem_events__ptr(j);
-> > +		if (!e->record)
-> >  			continue;
-> >  
-> > -		if (!perf_mem_events[j].supported) {
-> > +		if (!e->supported) {
-> >  			pr_err("failed: event '%s' not supported\n",
-> > -			       perf_mem_events[j].name);
-> > +			       perf_mem_events__name(j));
-> >  			free(rec_argv);
-> >  			return -1;
-> 
-> Does it make sense to do something like:
-> 
->    for(j = 0; e = perf_mem_events__ptr(j); j++) {
->        ...
->    }
-> 
-> now that it's a weak function that returns NULL when the argument out of range. That way the caller
-> doesn't need to know about PERF_MEM_EVENTS__MAX as well and it could potentially be a different
-> value. I don't know if it would ever make sense to have a different number of events on different platforms?
+Cc Andrew and Steven.
 
-Thanks for reviewing, James.
+Any other comments or someone can add this to the queue for the
+merge window? It's worth fixing it.
 
-If you look into the later patch "perf mem: Support new memory event
-PERF_MEM_EVENTS__LOAD_STORE", you could find it introduces a new event
-which will be only used for Arm SPE but will not be used by other
-archs.
+On Sat, Aug 22, 2020 at 11:01 AM Muchun Song <songmuchun@bytedance.com> wrote:
+>
+> If a kprobe is marked as gone, we should not kill it again. Otherwise,
+> we can disarm the kprobe more than once. In that case, the statistics
+> of kprobe_ftrace_enabled can unbalance which can lead to that kprobe
+> do not work.
+>
+> Fixes: e8386a0cb22f ("kprobes: support probing module __exit function")
+> Signed-off-by: Muchun Song <songmuchun@bytedance.com>
+> Co-developed-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Signed-off-by: Chengming Zhou <zhouchengming@bytedance.com>
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+> changelogs in v2:
+>  1. Add a WARN_ON_ONCE in the kill_kprobe() to catch incorrect use of it.
+>  2. Update 'Fixes' tag in the commmit log.
+>
+>  kernel/kprobes.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index d36e2b017588..9348b0c36ae0 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -2143,6 +2143,9 @@ static void kill_kprobe(struct kprobe *p)
+>
+>         lockdep_assert_held(&kprobe_mutex);
+>
+> +       if (WARN_ON_ONCE(kprobe_gone(p)))
+> +               return;
+> +
+>         p->flags |= KPROBE_FLAG_GONE;
+>         if (kprobe_aggrprobe(p)) {
+>                 /*
+> @@ -2422,7 +2425,10 @@ static int kprobes_module_callback(struct notifier_block *nb,
+>         mutex_lock(&kprobe_mutex);
+>         for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
+>                 head = &kprobe_table[i];
+> -               hlist_for_each_entry(p, head, hlist)
+> +               hlist_for_each_entry(p, head, hlist) {
+> +                       if (kprobe_gone(p))
+> +                               continue;
+> +
+>                         if (within_module_init((unsigned long)p->addr, mod) ||
+>                             (checkcore &&
+>                              within_module_core((unsigned long)p->addr, mod))) {
+> @@ -2439,6 +2445,7 @@ static int kprobes_module_callback(struct notifier_block *nb,
+>                                  */
+>                                 kill_kprobe(p);
+>                         }
+> +               }
+>         }
+>         if (val == MODULE_STATE_GOING)
+>                 remove_module_kprobe_blacklist(mod);
+> --
+> 2.11.0
+>
 
-Your suggestion is good to encapsulate the macro PERF_MEM_EVENTS__MAX
-into perf_mem_events__ptr(), I will try it in next spin.
 
-Thanks,
-Leo
+--
+Yours,
+Muchun
