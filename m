@@ -5,55 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D80EC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC00C43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30B2A218AC
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B60B3214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:30:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887846;
-	bh=J6LyLE97LKjW1LwdUlkXO5WQuh0pOgwW+p/41/a3jWM=;
+	s=default; t=1598887850;
+	bh=UqqMPAtWDqzA6uUdK9GV+TVqxsDEdKr1IAB3nfSBPuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nSpkb7nqov+2WBIcxTcWdT6xE0Qp02uGG6yS2e6PLpxD6+UJZZMEX5Huvw5MhkMAn
-	 jbB5iifabrwNngwZ163/AIoZG6Ny+Tn54t0EYWeFK7N/O8iMXBWhx4O8P6AP7AKnkD
-	 IP1tgLi7OrkWWxLjKpl9BckBINwq9JC4nqnAC1qU=
+	b=L5ffGwJ1meVSVqfJkbbragi/aefzAksssivSvQHVsoOEhQWpPjZdnx1rhhFj+wsnA
+	 cohoJFC4/K0COiPagCORX/e4qY57sCt9oxu3k647hssvzVS3bfrYw1uRco/e0Vzh/w
+	 B1IqYvyiHjxX0+rOwPvZg9yKvJnjEMbUuW0oWvxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgHaPao (ORCPT
+        id S1728659AbgHaPas (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:30:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39890 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:30:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728638AbgHaPa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:27 -0400
+        id S1728681AbgHaPag (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:36 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9AEE3214D8;
-        Mon, 31 Aug 2020 15:30:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69372214D8;
+        Mon, 31 Aug 2020 15:30:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887827;
-        bh=J6LyLE97LKjW1LwdUlkXO5WQuh0pOgwW+p/41/a3jWM=;
+        s=default; t=1598887836;
+        bh=UqqMPAtWDqzA6uUdK9GV+TVqxsDEdKr1IAB3nfSBPuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IIcRWYKryZFefF836oUBu2zazDLwtRwOtFowIfcoj+KeNZFAHfrrg+p6xzSbqUWSD
-         LmpNY8JfFxZgrNqj54y2JtWEydnWkmMg9fi6N6PFSNU8VSykVGUJjTSfv/IMogUvV+
-         18o9yleRNPe1Dl30NjGrFrxOmxGYRJ09Y+aaLGBQ=
+        b=Q9hLf9QsynLtpUQttfgx4RwjoCIhoqOHFiIEucCON7lXCaoldpFKfE0v4CQa+sjWO
+         J/SRnl1XEf1yqUxCsOAie84w6uAS0iHDLgtlNCKXlhb9inigCbDRtxjl0DWAxh6bi0
+         OpJA/xO5raSAWiiPfDGk+u5vLN0IWkkVhwJIZcOE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Furquan Shaikh <furquan@google.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 35/42] drivers: gpu: amd: Initialize amdgpu_dm_backlight_caps object to 0 in amdgpu_dm_update_backlight_caps
-Date:   Mon, 31 Aug 2020 11:29:27 -0400
-Message-Id: <20200831152934.1023912-35-sashal@kernel.org>
+Cc:     Simon Leiner <simon@leiner.me>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>, xen-devel@lists.xenproject.org
+Subject: [PATCH AUTOSEL 5.8 41/42] xen/xenbus: Fix granting of vmalloc'd memory
+Date:   Mon, 31 Aug 2020 11:29:33 -0400
+Message-Id: <20200831152934.1023912-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -62,39 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Furquan Shaikh <furquan@google.com>
+From: Simon Leiner <simon@leiner.me>
 
-[ Upstream commit 5896585512e5156482335e902f7c7393b940da51 ]
+[ Upstream commit d742db70033c745e410523e00522ee0cfe2aa416 ]
 
-In `amdgpu_dm_update_backlight_caps()`, there is a local
-`amdgpu_dm_backlight_caps` object that is filled in by
-`amdgpu_acpi_get_backlight_caps()`. However, this object is
-uninitialized before the call and hence the subsequent check for
-aux_support can fail since it is not initialized by
-`amdgpu_acpi_get_backlight_caps()` as well. This change initializes
-this local `amdgpu_dm_backlight_caps` object to 0.
+On some architectures (like ARM), virt_to_gfn cannot be used for
+vmalloc'd memory because of its reliance on virt_to_phys. This patch
+introduces a check for vmalloc'd addresses and obtains the PFN using
+vmalloc_to_pfn in that case.
 
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Furquan Shaikh <furquan@google.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Simon Leiner <simon@leiner.me>
+Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+Link: https://lore.kernel.org/r/20200825093153.35500-1-simon@leiner.me
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/xen/xenbus/xenbus_client.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 0a39a8558b294..0682fd363cb50 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2844,6 +2844,8 @@ static void amdgpu_dm_update_backlight_caps(struct amdgpu_display_manager *dm)
- #if defined(CONFIG_ACPI)
- 	struct amdgpu_dm_backlight_caps caps;
+diff --git a/drivers/xen/xenbus/xenbus_client.c b/drivers/xen/xenbus/xenbus_client.c
+index 786fbb7d8be06..907bcbb93afbf 100644
+--- a/drivers/xen/xenbus/xenbus_client.c
++++ b/drivers/xen/xenbus/xenbus_client.c
+@@ -379,8 +379,14 @@ int xenbus_grant_ring(struct xenbus_device *dev, void *vaddr,
+ 	int i, j;
  
-+	memset(&caps, 0, sizeof(caps));
+ 	for (i = 0; i < nr_pages; i++) {
+-		err = gnttab_grant_foreign_access(dev->otherend_id,
+-						  virt_to_gfn(vaddr), 0);
++		unsigned long gfn;
 +
- 	if (dm->backlight_caps.caps_valid)
- 		return;
- 
++		if (is_vmalloc_addr(vaddr))
++			gfn = pfn_to_gfn(vmalloc_to_pfn(vaddr));
++		else
++			gfn = virt_to_gfn(vaddr);
++
++		err = gnttab_grant_foreign_access(dev->otherend_id, gfn, 0);
+ 		if (err < 0) {
+ 			xenbus_dev_fatal(dev, err,
+ 					 "granting access to ring page");
 -- 
 2.25.1
 
