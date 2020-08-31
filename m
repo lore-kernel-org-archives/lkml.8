@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD80DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFD2C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF28321531
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1490B2176B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887876;
-	bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
+	s=default; t=1598887883;
+	bh=C3CcciRVixUYp6L5MEomGa9r80COzfaklmvDwSBzuPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1UYXjOCFp8hqoYVjiisOudQSN43L3KGuCYV6ZLssqoQJ/tIE7yT0N2h5K8GC6lkJk
-	 rIaCw2ecj/KNlCOhp4lzD8BTct/ZIPsMRNEZMjR97jLBe9lhfY2S5EliREpRxs5Sui
-	 ZmaC5z6IWVO8zWk0GDOku33gAPMenPIrXd2v5xH0=
+	b=D8jeLM0KIHWH3qP+jy//7IpnRO+9G80qi2Avy7uYVmpYZJAnrWNp1ICPtPiioxCzy
+	 tlHebroggIZfMSHXri+fP0vQa1BvqwHVEJRR+0hH/5wWMHm+kGKA5Q5Xw17RtqRe7x
+	 6L9J9DIHxPmws1/npVcUG/iJThTzkEboAuenlVxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728822AbgHaPbM (ORCPT
+        id S1728855AbgHaPbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41012 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:31:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728722AbgHaPa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:56 -0400
+        id S1728786AbgHaPbD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:03 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 617D22083E;
-        Mon, 31 Aug 2020 15:30:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73EF3214D8;
+        Mon, 31 Aug 2020 15:31:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887855;
-        bh=8CtIqjoJ1SacnqIRXbMc/xIzgI0xr7BYm3qPaqxHkiQ=;
+        s=default; t=1598887862;
+        bh=C3CcciRVixUYp6L5MEomGa9r80COzfaklmvDwSBzuPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqF9PlkkzTELR9ousLPemeWA5tFLVOAjoTQsl0Y6L3KD1FFUC100HDV4LztY2Ctu2
-         e1EG3wdmqc22l6f3LtVAZJsskShI6nTxXN2IH+Lm3PqMMGjfcqq8lymB/78NqxrJmU
-         LwlKJlFpVUjKTC4YXWagGgI5LRJ/leBtAUZ9kVQE=
+        b=XzqdW5JQ9PNuP5KNC+ATpn8ZAhUROfhRAu5UeclTIgV5OJmPb1c09eBqG4dB088A1
+         PnpceeAQ18LrRmAhfmY5RyxsxIbgyyy3n2rAfBob1LjXYBqeBazbL5pRm1pSN8yeeC
+         Z5fMTMK268t1hrwJNIlep32YyZZZZ0vzYJbdArCY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 09/23] drm/msm: enable vblank during atomic commits
-Date:   Mon, 31 Aug 2020 11:30:25 -0400
-Message-Id: <20200831153039.1024302-9-sashal@kernel.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 14/23] drm/omap: fix incorrect lock state
+Date:   Mon, 31 Aug 2020 11:30:30 -0400
+Message-Id: <20200831153039.1024302-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
 References: <20200831153039.1024302-1-sashal@kernel.org>
@@ -60,97 +60,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit 43906812eaab06423f56af5cca9a9fcdbb4ac454 ]
+[ Upstream commit 7fd5b25499bcec157dd4de9a713425efcf4571cd ]
 
-This has roughly the same effect as drm_atomic_helper_wait_for_vblanks(),
-basically just ensuring that vblank accounting is enabled so that we get
-valid timestamp/seqn on pageflip events.
+After commit 92cc68e35863c1c61c449efa2b2daef6e9926048 ("drm/vblank: Use
+spin_(un)lock_irq() in drm_crtc_vblank_on()") omapdrm locking is broken:
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Tested-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+WARNING: inconsistent lock state
+5.8.0-rc2-00483-g92cc68e35863 #13 Tainted: G        W
+--------------------------------
+inconsistent {HARDIRQ-ON-W} -> {IN-HARDIRQ-W} usage.
+swapper/0/0 [HC1[1]:SC0[0]:HE0:SE1] takes:
+ea98222c (&dev->event_lock#2){?.+.}-{2:2}, at: drm_handle_vblank+0x4c/0x520 [drm]
+{HARDIRQ-ON-W} state was registered at:
+  trace_hardirqs_on+0x9c/0x1ec
+  _raw_spin_unlock_irq+0x20/0x58
+  omap_crtc_atomic_enable+0x54/0xa0 [omapdrm]
+  drm_atomic_helper_commit_modeset_enables+0x218/0x270 [drm_kms_helper]
+  omap_atomic_commit_tail+0x48/0xc4 [omapdrm]
+  commit_tail+0x9c/0x190 [drm_kms_helper]
+  drm_atomic_helper_commit+0x154/0x188 [drm_kms_helper]
+  drm_client_modeset_commit_atomic+0x228/0x268 [drm]
+  drm_client_modeset_commit_locked+0x60/0x1d0 [drm]
+  drm_client_modeset_commit+0x24/0x40 [drm]
+  drm_fb_helper_restore_fbdev_mode_unlocked+0x54/0xa8 [drm_kms_helper]
+  drm_fb_helper_set_par+0x2c/0x5c [drm_kms_helper]
+  drm_fb_helper_hotplug_event.part.0+0xa0/0xbc [drm_kms_helper]
+  drm_kms_helper_hotplug_event+0x24/0x30 [drm_kms_helper]
+  output_poll_execute+0x1a8/0x1c0 [drm_kms_helper]
+  process_one_work+0x268/0x800
+  worker_thread+0x30/0x4e0
+  kthread+0x164/0x190
+  ret_from_fork+0x14/0x20
+
+The reason for this is that omapdrm calls drm_crtc_vblank_on() while
+holding event_lock taken with spin_lock_irq().
+
+It is not clear why drm_crtc_vblank_on() and drm_crtc_vblank_get() are
+called while holding event_lock. I don't see any problem with moving
+those calls outside the lock, which is what this patch does.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200819103021.440288-1-tomi.valkeinen@ti.com
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_atomic.c | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ drivers/gpu/drm/omapdrm/omap_crtc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_atomic.c b/drivers/gpu/drm/msm/msm_atomic.c
-index 5ccfad794c6a5..561bfa48841c3 100644
---- a/drivers/gpu/drm/msm/msm_atomic.c
-+++ b/drivers/gpu/drm/msm/msm_atomic.c
-@@ -27,6 +27,34 @@ int msm_atomic_prepare_fb(struct drm_plane *plane,
- 	return msm_framebuffer_prepare(new_state->fb, kms->aspace);
+diff --git a/drivers/gpu/drm/omapdrm/omap_crtc.c b/drivers/gpu/drm/omapdrm/omap_crtc.c
+index 3c5ddbf30e974..f5e18802e7bc6 100644
+--- a/drivers/gpu/drm/omapdrm/omap_crtc.c
++++ b/drivers/gpu/drm/omapdrm/omap_crtc.c
+@@ -451,11 +451,12 @@ static void omap_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	if (omap_state->manually_updated)
+ 		return;
+ 
+-	spin_lock_irq(&crtc->dev->event_lock);
+ 	drm_crtc_vblank_on(crtc);
++
+ 	ret = drm_crtc_vblank_get(crtc);
+ 	WARN_ON(ret != 0);
+ 
++	spin_lock_irq(&crtc->dev->event_lock);
+ 	omap_crtc_arm_event(crtc);
+ 	spin_unlock_irq(&crtc->dev->event_lock);
  }
- 
-+/*
-+ * Helpers to control vblanks while we flush.. basically just to ensure
-+ * that vblank accounting is switched on, so we get valid seqn/timestamp
-+ * on pageflip events (if requested)
-+ */
-+
-+static void vblank_get(struct msm_kms *kms, unsigned crtc_mask)
-+{
-+	struct drm_crtc *crtc;
-+
-+	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
-+		if (!crtc->state->active)
-+			continue;
-+		drm_crtc_vblank_get(crtc);
-+	}
-+}
-+
-+static void vblank_put(struct msm_kms *kms, unsigned crtc_mask)
-+{
-+	struct drm_crtc *crtc;
-+
-+	for_each_crtc_mask(kms->dev, crtc, crtc_mask) {
-+		if (!crtc->state->active)
-+			continue;
-+		drm_crtc_vblank_put(crtc);
-+	}
-+}
-+
- static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- {
- 	unsigned crtc_mask = BIT(crtc_idx);
-@@ -44,6 +72,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- 
- 	kms->funcs->enable_commit(kms);
- 
-+	vblank_get(kms, crtc_mask);
-+
- 	/*
- 	 * Flush hardware updates:
- 	 */
-@@ -58,6 +88,8 @@ static void msm_atomic_async_commit(struct msm_kms *kms, int crtc_idx)
- 	kms->funcs->wait_flush(kms, crtc_mask);
- 	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
-+	vblank_put(kms, crtc_mask);
-+
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
-@@ -221,6 +253,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	 */
- 	kms->pending_crtc_mask &= ~crtc_mask;
- 
-+	vblank_get(kms, crtc_mask);
-+
- 	/*
- 	 * Flush hardware updates:
- 	 */
-@@ -235,6 +269,8 @@ void msm_atomic_commit_tail(struct drm_atomic_state *state)
- 	kms->funcs->wait_flush(kms, crtc_mask);
- 	trace_msm_atomic_wait_flush_finish(crtc_mask);
- 
-+	vblank_put(kms, crtc_mask);
-+
- 	mutex_lock(&kms->commit_lock);
- 	kms->funcs->complete_commit(kms, crtc_mask);
- 	mutex_unlock(&kms->commit_lock);
 -- 
 2.25.1
 
