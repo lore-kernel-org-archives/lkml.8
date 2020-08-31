@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE7BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BD6C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31EB421556
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37B8921582
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887931;
-	bh=vQ8XEpwc50stmnvkX4zSfdoub4klCXtqsUrmoDbVrO4=;
+	s=default; t=1598887933;
+	bh=LEXzpf0Yr1MJMeyZOqHXNeywTob//8NuwXE8+HwZI8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eG1VaTMy+WJHQBMRD0VOJGPmDswe/y6h6ZCPpwRT+uenEzpUpnw+xsKcoKfHttw66
-	 7HGN/6PhK+5D4oQHM/PXY8EjWK1P4RIuI1gMzRQtBad4VZXWokIQKCq+Jp+dy4Mm14
-	 UYNtOAH6gM+VCLo5RWb7z15sDhmzm8Tk/waBt+XU=
+	b=Tim/xaRZ4uDd6jjUISVZ6oEgogUMcax0MYbMOIsyAkSDS7VkkeLu01cvdeulh4go0
+	 5W92EmPiPmiK+ual9sehe/3SDMmrad2yAG/9sIP7WWWnwf1NpuZB7QobVwGIuYOjmt
+	 G16KPxBGFsdX0oAyYbnyddMaT1OYPirb/B4yknug=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgHaPcG (ORCPT
+        id S1729088AbgHaPcL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42942 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:32:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728981AbgHaPbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:45 -0400
+        id S1728948AbgHaPbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:47 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7717D21527;
-        Mon, 31 Aug 2020 15:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A888521655;
+        Mon, 31 Aug 2020 15:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887905;
-        bh=vQ8XEpwc50stmnvkX4zSfdoub4klCXtqsUrmoDbVrO4=;
+        s=default; t=1598887906;
+        bh=LEXzpf0Yr1MJMeyZOqHXNeywTob//8NuwXE8+HwZI8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BIeQaPrCX+GFIEivxEF/FWUTPD3Li4La346W6kRjeZe+PYNiP2yGvCpYFyx8xz2w1
-         VAPE2sVMT+v9NhFS0RXz9/H/EhRDTjAykPkBRBG3atZXu3b46f1mkhMjCl8SU1L+m3
-         o4/QKZ0Hvccaq9GhOSiCQMOrNAKXsNMCAMyQlksw=
+        b=OZATA1DhIiaYK2nobtRN3xHpkmhEJYrVbQGzXEBz8qLE0aRnD71N5uCz1dPQSR8X3
+         3OK+DiMoAzXWChMgtowi0Pgq26cXKHfdEhZtxb6Niuh39T2RUTREc7k4w8PJTf/SuL
+         yqV8Vok0UAlrdj87uGpNyLfQQA3tprCqeR1eArW0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 6/9] ceph: don't allow setlease on cephfs
-Date:   Mon, 31 Aug 2020 11:31:33 -0400
-Message-Id: <20200831153136.1024676-6-sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Marco Elver <elver@google.com>,
+        Sasha Levin <sashal@kernel.org>, linux-pm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 7/9] cpuidle: Fixup IRQ state
+Date:   Mon, 31 Aug 2020 11:31:34 -0400
+Message-Id: <20200831153136.1024676-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831153136.1024676-1-sashal@kernel.org>
 References: <20200831153136.1024676-1-sashal@kernel.org>
@@ -59,37 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 496ceaf12432b3d136dcdec48424312e71359ea7 ]
+[ Upstream commit 49d9c5936314e44d314c605c39cce0fd947f9c3a ]
 
-Leases don't currently work correctly on kcephfs, as they are not broken
-when caps are revoked. They could eventually be implemented similarly to
-how we did them in libcephfs, but for now don't allow them.
+Match the pattern elsewhere in this file.
 
-[ idryomov: no need for simple_nosetlease() in ceph_dir_fops and
-  ceph_snapdir_fops ]
-
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Tested-by: Marco Elver <elver@google.com>
+Link: https://lkml.kernel.org/r/20200821085348.251340558@infradead.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/cpuidle/cpuidle.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 6d653235e323b..1f873034f4691 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1728,6 +1728,7 @@ const struct file_operations ceph_file_fops = {
- 	.mmap = ceph_mmap,
- 	.fsync = ceph_fsync,
- 	.lock = ceph_lock,
-+	.setlease = simple_nosetlease,
- 	.flock = ceph_flock,
- 	.splice_read = generic_file_splice_read,
- 	.splice_write = iter_file_splice_write,
+diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+index ed4df58a855e1..da9eb38d79d9c 100644
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -144,7 +144,8 @@ static void enter_s2idle_proper(struct cpuidle_driver *drv,
+ 	 */
+ 	stop_critical_timings();
+ 	drv->states[index].enter_s2idle(dev, drv, index);
+-	WARN_ON(!irqs_disabled());
++	if (WARN_ON_ONCE(!irqs_disabled()))
++		local_irq_disable();
+ 	/*
+ 	 * timekeeping_resume() that will be called by tick_unfreeze() for the
+ 	 * first CPU executing it calls functions containing RCU read-side
 -- 
 2.25.1
 
