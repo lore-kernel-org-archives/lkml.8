@@ -2,123 +2,147 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-18.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20700C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1B792083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36FC2068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vZaqRz6g"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aDyC3PDi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729256AbgHaSK0 (ORCPT
+        id S1729022AbgHaSKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:10:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52176 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728376AbgHaSKY (ORCPT
+        Mon, 31 Aug 2020 14:10:54 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2399 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727807AbgHaSKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:10:24 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4139AC061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:10:24 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id k20so6167971otr.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:10:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=VjcOX+O6+Q0wVLVy5iOGuljY1HLUCKGrM2Zx4jaHF0E=;
-        b=vZaqRz6gPaztwYQyRjYHR8xtBaNnsakq7VS7gV1Jc2XbRTtD3KOy2/T7zfVrl7Ux41
-         m1n0QBSe07CxKazXvcJNC0qphB0ZM+F/RZjGclPdxPOyRIHHRotMD2u8Reilqq3Myt9t
-         rgTYnm4TiWZ6QqaLHb5/J3a0tRHoXezu30kMr8imgBwyjdcnydc9nDu7FeRKyB6s3E4x
-         6/yDTDyrcJg7rJiR9v10GikVAZHmp/mz1hT3K8ZvwaEwHbrwDRLYkgVQop12EIUogMcO
-         AvUJnuyQ5gFNW5MnufPLajm+bduenZYdgux9DfNckAmmArxY9lp3WMU2oFqRZAX56c5W
-         ajvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=VjcOX+O6+Q0wVLVy5iOGuljY1HLUCKGrM2Zx4jaHF0E=;
-        b=osCfDILhMTqxpChL1fhpL1kbl8sKzGuBPMo1tcDo90bD5SmLmAlUHBRvdmxCS/UXg/
-         CnautafYHnIJgvFOEUGlK0SdSHMjzslTN+3iMkFlxKEF66MIA2W3OFiqdz2OWqzvMYZJ
-         RBMqasboXc+gXe97WBgWSIpdTmbhv+CCPsZTo1xLia5SxZm/wnG7EjEp3DVMPcdQWZWf
-         PmEfb5DaVP/N9dCXTwTyN6L8axUwKo7H1y1lhrwlbR2IeZdOiGg/UVq7vE492wfiL9Bz
-         XkmQHokiToA25UVCV/zrs39JtVQt0M8qMz2iuKjDPMAuXmQKiPPVEjFC9OXcee5nZSJ2
-         /SkQ==
-X-Gm-Message-State: AOAM5319GpwL23djjz0I2ELWwsa27sROnh1vk24gkVhTZLAQ9pZUEPCc
-        8YO8InNze6iXINIOSVRYEPtvpdXOm3tJncvTUrumQA==
-X-Google-Smtp-Source: ABdhPJwOgUYMtjt9QOITuY87oezIiwUst1TAAS19PpHboVYHCLYkQhWhxobP65iEGxxUZlwrpCSiZH+ta1y30jMxkos=
-X-Received: by 2002:a9d:7f06:: with SMTP id j6mr1714141otq.274.1598897423402;
- Mon, 31 Aug 2020 11:10:23 -0700 (PDT)
+        Mon, 31 Aug 2020 14:10:53 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4d3d1f0005>; Mon, 31 Aug 2020 11:10:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 31 Aug 2020 11:10:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 31 Aug 2020 11:10:53 -0700
+Received: from rcampbell-dev.nvidia.com (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 18:10:53 +0000
+Subject: Re: [PATCH] nouveau: fix the start/end range for migration
+To:     Jason Gunthorpe <jgg@nvidia.com>
+CC:     <nouveau@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        "Jerome Glisse" <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Christoph Hellwig" <hch@lst.de>, Ben Skeggs <bskeggs@redhat.com>
+References: <20200827213744.14074-1-rcampbell@nvidia.com>
+ <20200831115117.GU1152540@nvidia.com>
+ <017b1e81-7e6d-b2cb-785c-aef88e466701@nvidia.com>
+ <20200831180202.GF1152540@nvidia.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <96fcb138-f258-7d11-7c93-114269f67f3e@nvidia.com>
+Date:   Mon, 31 Aug 2020 11:10:53 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-References: <20200830213121.239533-1-tali.perry1@gmail.com> <CACPK8Xev4w4BxrxR1zQPk=wiHCK2fSGD9tEeAQwPe_uayGw_CA@mail.gmail.com>
-In-Reply-To: <CACPK8Xev4w4BxrxR1zQPk=wiHCK2fSGD9tEeAQwPe_uayGw_CA@mail.gmail.com>
-From:   Alex Qiu <xqiu@google.com>
-Date:   Mon, 31 Aug 2020 11:10:12 -0700
-Message-ID: <CAA_a9xKVEA-6n=rMA8Sk6zJpWV4_qGCcXwN7kFUFpJKuDiG=Bg@mail.gmail.com>
-Subject: Re: [PATCH v3] i2c: npcm7xx: Fix timeout calculation
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Tali Perry <tali.perry1@gmail.com>, Kun Yi <kunyi@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200831180202.GF1152540@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598897439; bh=zeh8zwDiHRaNL9z4QR0tsFKKmcnaSzIPhqv89Gm1zgE=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=aDyC3PDi6vQWVgRCrGr8lFiMaZDzxUjwbmMDKJCX1d0jUeDdVrqCmx7IY5vrmEKx5
+         UzTzN6WhATSrvzFxk9DcgS2za8FR0X0GL1YUv2ATkQJoAR0tJOh35cQcYt6QarVvK/
+         kDE97Z43FR0GHNCn3S9Xne0MMmFLPBfvfRkuSC+Z+WLFGH+gZM9zCt4szviySSWpzz
+         xy444tZPQrSWK3QtRDisYgzjr3aUK5kS7qdqZyQdPpS9QcFGnhH1VMlznH5Drr8hOI
+         LvAPJp//JS/5PRyykD1gPjkYqAa5CL/lQNfhpLrvG4V0Wycm4fKZbyAib96Gtx4MfZ
+         JjSbube3bWnAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 8:35 PM Joel Stanley <joel@jms.id.au> wrote:
->
-> On Sun, 30 Aug 2020 at 21:31, Tali Perry <tali.perry1@gmail.com> wrote:
-> >
-> > timeout_usec value calculation was wrong, the calculated value
-> > was in msec instead of usec.
-> >
-> > Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> > Reviewed-by: Avi Fishman <avifishman70@gmail.com>
->
-> Fixes: 56a1485b102e ("i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver")
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
-Reviewed-by: Alex Qiu <xqiu@google.com>
->
-> Cheers,
->
-> Joel
->
-> > ---
-> >  drivers/i2c/busses/i2c-npcm7xx.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-> > index 75f07138a6fa..dfcf04e1967f 100644
-> > --- a/drivers/i2c/busses/i2c-npcm7xx.c
-> > +++ b/drivers/i2c/busses/i2c-npcm7xx.c
-> > @@ -2093,8 +2093,12 @@ static int npcm_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
-> >                 }
-> >         }
-> >
-> > -       /* Adaptive TimeOut: astimated time in usec + 100% margin */
-> > -       timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
-> > +       /*
-> > +        * Adaptive TimeOut: estimated time in usec + 100% margin:
-> > +        * 2: double the timeout for clock stretching case
-> > +        * 9: bits per transaction (including the ack/nack)
-> > +        */
-> > +       timeout_usec = (2 * 9 * USEC_PER_SEC / bus->bus_freq) * (2 + nread + nwrite);
-> >         timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
-> >         if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
-> >                 dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
-> >
-> > base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
-> > --
-> > 2.22.0
-> >
+
+On 8/31/20 11:02 AM, Jason Gunthorpe wrote:
+> On Mon, Aug 31, 2020 at 10:21:41AM -0700, Ralph Campbell wrote:
+>>
+>> On 8/31/20 4:51 AM, Jason Gunthorpe wrote:
+>>> On Thu, Aug 27, 2020 at 02:37:44PM -0700, Ralph Campbell wrote:
+>>>> The user level OpenCL code shouldn't have to align start and end
+>>>> addresses to a page boundary. That is better handled in the nouveau
+>>>> driver. The npages field is also redundant since it can be computed
+>>>> from the start and end addresses.
+>>>>
+>>>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>>>>
+>>>> This is for Ben Skegg's nouveau tree.
+>>>>
+>>>> I have been working with Karol Herbst on the OpenCL mesa changes for
+>>>> nouveau which will be merged upstream soon.
+>>>> With or without those changes, the user visible effect of this patch
+>>>> only extends the range by one page (round up vs. round down to page
+>>>> boundary).
+>>>>
+>>>>    drivers/gpu/drm/nouveau/nouveau_svm.c | 17 ++++++-----------
+>>>>    1 file changed, 6 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+>>>> index 2df1c0460559..888aa0908c5a 100644
+>>>> +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+>>>> @@ -105,11 +105,14 @@ nouveau_svmm_bind(struct drm_device *dev, void *data,
+>>>>    	struct nouveau_cli *cli = nouveau_cli(file_priv);
+>>>>    	struct drm_nouveau_svm_bind *args = data;
+>>>>    	unsigned target, cmd, priority;
+>>>> -	unsigned long addr, end, size;
+>>>> +	unsigned long addr, end;
+>>>>    	struct mm_struct *mm;
+>>>>    	args->va_start &= PAGE_MASK;
+>>>> -	args->va_end &= PAGE_MASK;
+>>>> +	args->va_end = ALIGN(args->va_end, PAGE_SIZE);
+>>>> +	/* If no end address is given, assume a single page. */
+>>>> +	if (args->va_end == 0)
+>>>> +		args->va_end = args->va_start + PAGE_SIZE;
+>>>
+>>> That is really weird, how is it useful for the kernel to map a region
+>>> of unknown size and alignment to the GPU?
+>>>
+>>> Jason
+>>
+>> I agree it is somewhat weird. The OpenCL 2.2 specification says that
+>> clEnqueueSVMMigrateMem() takes an array of pointers and sizes (in bytes)
+>> but the size is optional. There is no alignment required.
+>> This "works" because the pointers have to be allocated with clSVMAlloc()
+>> and presumably, the implementation for clSVMAlloc()
+>> keeps track of the length allocated and can fill that in if size is zero.
+>> However, requiring all allocations to be made with clSVMAlloc() defeats the
+>> goal of being able to use regular malloc() and mmap() allocations for OpenCL
+>> implementations that support fine-grained system allocations.
+>> (See https://github.com/KhronosGroup/OpenCL-Docs/issues/392)
+>>
+>> So if the size isn't specified, the most logical choices are do nothing and
+>> return OK, return an error, or assume that at least one byte is being migrated
+>> and try migrate it.
+> 
+> So if the app migrates the wrong memory then nothing bad happens, it
+> just might not get the performance from migration? Seems find but
+> really weird.
+> 
+> Jason
+> 
+
+Given the principal of least surprise, I'm thinking the better choice is to
+return an error from the driver and leave any other actions to the user level
+library. I'll post a v2.
