@@ -2,134 +2,203 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960D0C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:44:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F327BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A336208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:44:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D518A2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgHaJo0 convert rfc822-to-8bit (ORCPT
+        id S1726521AbgHaJp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:44:26 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2712 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725915AbgHaJoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:44:25 -0400
-Received: from lhreml727-chm.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 6D646A6DED6AE900DFEB;
-        Mon, 31 Aug 2020 10:44:21 +0100 (IST)
-Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
- lhreml727-chm.china.huawei.com (10.201.108.78) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Mon, 31 Aug 2020 10:44:21 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Mon, 31 Aug 2020 11:44:20 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Mon, 31 Aug 2020 11:44:20 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "mjg59@google.com" <mjg59@google.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH 02/11] evm: Load EVM key in ima_load_x509() to avoid
- appraisal
-Thread-Topic: [PATCH 02/11] evm: Load EVM key in ima_load_x509() to avoid
- appraisal
-Thread-Index: AQHWRYodp/NjA9peNES6j1M1Cdu/PKlDKc4AgA9AvsA=
-Date:   Mon, 31 Aug 2020 09:44:20 +0000
-Message-ID: <a4bf0f73e0854cf18d942330a7543d9d@huawei.com>
-References: <20200618160133.937-1-roberto.sassu@huawei.com>
-         <20200618160133.937-2-roberto.sassu@huawei.com>
- <8a1773d7707639d275fff138736d57472e26ade5.camel@linux.ibm.com>
-In-Reply-To: <8a1773d7707639d275fff138736d57472e26ade5.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.205.186]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 31 Aug 2020 05:45:27 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:11829 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726312AbgHaJp1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:45:27 -0400
+X-IronPort-AV: E=Sophos;i="5.76,375,1592841600"; 
+   d="scan'208";a="98732429"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 31 Aug 2020 17:45:12 +0800
+Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
+        by cn.fujitsu.com (Postfix) with ESMTP id 0D1B148990D9;
+        Mon, 31 Aug 2020 17:45:11 +0800 (CST)
+Received: from [10.167.225.206] (10.167.225.206) by
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Mon, 31 Aug 2020 17:45:15 +0800
+Subject: Re: [PATCH] fs: Kill DCACHE_DONTCACHE dentry even if
+ DCACHE_REFERENCED is set
+To:     Dave Chinner <david@fromorbit.com>
+CC:     <viro@zeniv.linux.org.uk>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <y-goto@fujitsu.com>
+References: <20200821015953.22956-1-lihao2018.fnst@cn.fujitsu.com>
+ <20200827063748.GA12096@dread.disaster.area>
+ <6b3b3439-2199-8f00-ceca-d65769e94fe0@cn.fujitsu.com>
+ <20200828003541.GD12096@dread.disaster.area>
+ <d7852ad6-d304-895d-424d-3053bf07f0f5@cn.fujitsu.com>
+ <20200831003407.GE12096@dread.disaster.area>
+From:   "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
+Message-ID: <9bb0144b-dcb7-293c-0b44-a4c2f0fbf05e@cn.fujitsu.com>
+Date:   Mon, 31 Aug 2020 17:45:09 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Thunderbird/78.1.1
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200831003407.GE12096@dread.disaster.area>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.167.225.206]
+X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
+ G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
+X-yoursite-MailScanner-ID: 0D1B148990D9.ADF54
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> Sent: Friday, August 21, 2020 8:45 PM
-> On Thu, 2020-06-18 at 18:01 +0200, Roberto Sassu wrote:
-> > Public keys do not need to be appraised by IMA as the restriction on the
-> > IMA/EVM keyrings ensures that a key is loaded only if it is signed with a
-> > key in the primary or secondary keyring.
-> >
-> > However, when evm_load_x509() is loaded, appraisal is already enabled
-> and
-> > a valid IMA signature must be added to the EVM key to pass verification.
-> >
-> > Since the restriction is applied on both IMA and EVM keyrings, it is safe
-> > to disable appraisal also when the EVM key is loaded. This patch calls
-> > evm_load_x509() inside ima_load_x509() if CONFIG_IMA_LOAD_X509 is
-> defined.
-> >
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > ---
-> >  security/integrity/iint.c         | 2 ++
-> >  security/integrity/ima/ima_init.c | 4 ++++
-> >  2 files changed, 6 insertions(+)
-> >
-> > diff --git a/security/integrity/iint.c b/security/integrity/iint.c
-> > index e12c4900510f..4765a266ba96 100644
-> > --- a/security/integrity/iint.c
-> > +++ b/security/integrity/iint.c
-> > @@ -212,7 +212,9 @@ int integrity_kernel_read(struct file *file, loff_t
-> offset,
-> >  void __init integrity_load_keys(void)
-> >  {
-> >  	ima_load_x509();
-> > +#ifndef CONFIG_IMA_LOAD_X509
-> >  	evm_load_x509();
-> > +#endif
-> >  }
-> >
-> >  static int __init integrity_fs_init(void)
-> > diff --git a/security/integrity/ima/ima_init.c
-> b/security/integrity/ima/ima_init.c
-> > index 4902fe7bd570..9d29a1680da8 100644
-> > --- a/security/integrity/ima/ima_init.c
-> > +++ b/security/integrity/ima/ima_init.c
-> > @@ -106,6 +106,10 @@ void __init ima_load_x509(void)
-> >
-> >  	ima_policy_flag &= ~unset_flags;
-> >  	integrity_load_x509(INTEGRITY_KEYRING_IMA,
-> CONFIG_IMA_X509_PATH);
-> > +
-> > +	/* load also EVM key to avoid appraisal */
-> > +	evm_load_x509();
-> > +
-> >  	ima_policy_flag |= unset_flags;
-> >  }
-> >  #endif
-> 
-> As much as possible IMA and EVM should remain independent of each
-> other.   Modifying integrity_load_x509() doesn't help.  This looks like
-> a good reason for calling another EVM function from within IMA.
+On 2020/8/31 8:34, Dave Chinner wrote:
+> On Fri, Aug 28, 2020 at 05:04:14PM +0800, Li, Hao wrote:
+> > On 2020/8/28 8:35, Dave Chinner wrote:
+> > > On Thu, Aug 27, 2020 at 05:58:07PM +0800, Li, Hao wrote:
+> > > > On 2020/8/27 14:37, Dave Chinner wrote:
+> > > > > On Fri, Aug 21, 2020 at 09:59:53AM +0800, Hao Li wrote:
+> > > > > > Currently, DCACHE_REFERENCED prevents the dentry with DCACHE_DONTCACHE
+> > > > > > set from being killed, so the corresponding inode can't be evicted. If
+> > > > > > the DAX policy of an inode is changed, we can't make policy changing
+> > > > > > take effects unless dropping caches manually.
+> > > > > >
+> > > > > > This patch fixes this problem and flushes the inode to disk to prepare
+> > > > > > for evicting it.
+> > > > > >
+> > > > > > Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
+> > > > > > ---
+> > > > > >  fs/dcache.c | 3 ++-
+> > > > > >  fs/inode.c  | 2 +-
+> > > > > >  2 files changed, 3 insertions(+), 2 deletions(-)
+> > > > > >
+> > > > > > diff --git a/fs/dcache.c b/fs/dcache.c
+> > > > > > index ea0485861d93..486c7409dc82 100644
+> > > > > > --- a/fs/dcache.c
+> > > > > > +++ b/fs/dcache.c
+> > > > > > @@ -796,7 +796,8 @@ static inline bool fast_dput(struct dentry *dentry)
+> > > > > >       */
+> > > > > >      smp_rmb();
+> > > > > >      d_flags = READ_ONCE(dentry->d_flags);
+> > > > > > -    d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED;
+> > > > > > +    d_flags &= DCACHE_REFERENCED | DCACHE_LRU_LIST | DCACHE_DISCONNECTED
+> > > > > > +            | DCACHE_DONTCACHE;
+> > > > > Seems reasonable, but you need to update the comment above as to
+> > > > > how this flag fits into this code....
+> > > > Yes. I will change it. Thanks.
+> > > >
+> > > > > >      /* Nothing to do? Dropping the reference was all we needed? */
+> > > > > >      if (d_flags == (DCACHE_REFERENCED | DCACHE_LRU_LIST) && !d_unhashed(dentry))
+> > > > > > diff --git a/fs/inode.c b/fs/inode.c
+> > > > > > index 72c4c347afb7..5218a8aebd7f 100644
+> > > > > > --- a/fs/inode.c
+> > > > > > +++ b/fs/inode.c
+> > > > > > @@ -1632,7 +1632,7 @@ static void iput_final(struct inode *inode)
+> > > > > >      }
+> > > > > >  
+> > > > > >      state = inode->i_state;
+> > > > > > -    if (!drop) {
+> > > > > > +    if (!drop || (drop && (inode->i_state & I_DONTCACHE))) {
+> > > > > >          WRITE_ONCE(inode->i_state, state | I_WILL_FREE);
+> > > > > >          spin_unlock(&inode->i_lock);
+> > > > > What's this supposed to do? We'll only get here with drop set if the
+> > > > > filesystem is mounting or unmounting.
+> > > > The variable drop will also be set to True if I_DONTCACHE is set on
+> > > > inode->i_state.
+> > > > Although mounting/unmounting will set the drop variable, it won't set
+> > > > I_DONTCACHE if I understand correctly. As a result,
+> > > > drop && (inode->i_state & I_DONTCACHE) will filter out mounting/unmounting.
+> > > So what does this have to do with changing the way the dcache
+> > > treats DCACHE_DONTCACHE?
+> > After changing the way the dcache treats DCACHE_DONTCACHE, the dentry with
+> > DCACHE_DONTCACHE set will be killed unconditionally even if
+> > DCACHE_REFERENCED is set, and its inode will be processed by iput_final().
+> > This inode has I_DONTCACHE flag, so op->drop_inode() will return true,
+> > and the inode will be evicted _directly_ even though it has dirty pages.
+>
+> Yes. But this doesn't rely on DCACHE_DONTCACHE behaviour. Inodes
+> that are looked up and cached by the filesystem without going
+> through dentry cache pathwalks can have I_DONTCACHE set and then get
+> evicted...
+>
+> i.e. we can get I_DONTCACHE set on inodes that do not have dentries
+> attached to them. That's the original functionality that got pulled
+> up from XFS - internal iteration of inodes, either via quotacheck or
+> bulkstat....
 
-Can I add your Reviewed-by?
+Oh, I see!
 
-Thanks
+>
+> > I think the kernel will run into error state because it doesn't writeback
+> > dirty pages of this inode before evicting. This is why I write back this
+> > inode here.
+> >
+> > According to my test, if I revert the second hunk of this patch, kernel
+> > will hang after running the following command:
+> > echo 123 > test.txt && xfs_io -c "chattr +x" test.txt
+> >
+> > The backtrace is:
+> >
+> > xfs_fs_destroy_inode+0x204/0x24d
+> > destroy_inode+0x3b/0x65
+> > evict+0x150/0x1aa
+> > iput+0x117/0x19a
+> > dentry_unlink_inode+0x12b/0x12f
+> > __dentry_kill+0xee/0x211
+> > dentry_kill+0x112/0x22f
+> > dput+0x79/0x86
+> > __fput+0x200/0x23f
+> > ____fput+0x25/0x28
+> > task_work_run+0x144/0x177
+> > do_exit+0x4fb/0xb94
+> >
+> > This backtrace is printed with an ASSERT(0) statement in xfs_fs_destroy_inode().
+>
+> Sure, that's your messenger. That doesn't mean the bug can't be
+> triggered by other means.
+>
+> > > Also, if I_DONTCACHE is set, but the inode has also been unlinked or
+> > > is unhashed, should we be writing it back? i.e. it might have been
+> > > dropped for a different reason to I_DONTCACHE....
+> > This is a problem I didn't realize. You are right. If the inode has been
+> > unlinked/unhashed and the I_DONTCACHE is also set, the appended condition
+> > will lead to unnecessary writeback.
+> >
+> > I think I need to handle the inode writeback more carefully. Maybe I can
+> > revert the second hunk and remove I_DONTCACHE from generic_drop_inode()
+> > and then change
+> >
+> > if (!drop && (sb->s_flags & SB_ACTIVE))
+> >
+> > to
+> >
+> > if (!drop && !(inode->i_state & I_DONTCACHE) && (sb->s_flags & SB_ACTIVE))
+> >
+> > This approach would be more suitable.
+>
+> Yup, that's pretty much what I was thinking, but as a standalone
+> patch and preceding the DCACHE_DONTCACHE behaviour change. Thanks! :)
 
-Roberto
+I see. I will send a new patch to fix I_DONTCACHE first.
 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+Thanks,
+Hao Li
+
+>
+> Cheers,
+>
+> Dave.
+
+
+
