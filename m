@@ -2,129 +2,138 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A65B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69721C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 776272073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:22:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598872931;
-	bh=h1kMcG8he3kJobrVkF04CR2+ioy68IPllAuj7Q35pyo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gkA66ldeb/5z3IYo6LCBfBTwGvPa+0gbJMFvR5tjX7Cpk4868js9tthW8YMwgH/FF
-	 37cr1ZL3RAz55iJOrau4XwduVmZn/m5vMzJ3cOvEUhDr5Ngtar5m1/cP6tZrc9p2T2
-	 iYvCsg6TEx1oK/ZwEaJez19Z/VVhZqOFjnO84QXY=
+	by mail.kernel.org (Postfix) with ESMTP id 424BA2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:22:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FNd/akIM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgHaLWK (ORCPT
+        id S1727822AbgHaLWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:22:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34026 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgHaLR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:22:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43634 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726540AbgHaLR6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 07:17:58 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4475E2072D;
-        Mon, 31 Aug 2020 11:11:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598872297;
-        bh=h1kMcG8he3kJobrVkF04CR2+ioy68IPllAuj7Q35pyo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xoELkdYRm3whuwOE+7jGts+1CArRNLFlX1HvBNtbFsEs1b4R5WzDV3NzunMhvbPY0
-         pd+mwILwRXzKlcNqaBrSS7DwAWuKnhWxTC3ZWsoHpY/xsLadTBe0OeoXc75ZYg+nqN
-         HhVfrwX5RiknoLolgw3dDUfpYmqmslXD15NWlTL8=
-Date:   Mon, 31 Aug 2020 16:41:33 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     kishon@ti.com, Tony Lindgren <tony@atomide.com>,
-        robh+dt@kernel.org, nsekhar@ti.com, vigneshr@ti.com,
-        jan.kiszka@siemens.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4] dt-binding: phy: convert ti,omap-usb2 to YAML
-Message-ID: <20200831111133.GP2639@vkoul-mobl>
-References: <20200821081144.29288-1-rogerq@ti.com>
- <a6a59fba-6a0c-c00f-29e7-e85c7dcc1319@ti.com>
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAB1DC0611E1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:09:42 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id k15so381583pfc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:09:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=E02AUVeFQVT/Yby1TXwpBy6LjVsB+G1ulzMrGLTQLsU=;
+        b=FNd/akIMkL3eaopJcpGVw841qNXHifVpshOPHlo/uuzzMC1uIxR4rpF1cuEx20MJW8
+         zRU3b7IXYtOiWUHE2usegI5lqkz29pQSEe7lc2Zn6kFtFUMZkTsgPTu53uMWFebd0coM
+         iLMT0oFYlNnVymD+VsZPkcbeOQMjtAIsBp7DxOf1eo/wPc9H61/kybyugntRfQEZbv8D
+         gwC6Tj3nw1Cui3GshhMMxUmIqh6mQUDR4d6WK83d4fAnnl0g+V9RF79Hz/YfHby4mlw7
+         mR3PyKcjWV5VnHdjRO8FhwNUz77opdus4HEGeEpTBOw/d8C3bmxPjA6qWJWpAFad6iz7
+         g8gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=E02AUVeFQVT/Yby1TXwpBy6LjVsB+G1ulzMrGLTQLsU=;
+        b=p/8mx5Obb1f+sRcQgo4cpHNsOYWr9+J0KPOOw/BMYE4QwdWVLGQ1PFlrfPJr/qoDVG
+         6I4f6yhK/TFFnhVT6cYI5KtZuy9/F3hOj2JnQ4SmbfRuqPZxgWnekhPlHAIBxs8/6yz1
+         XpAPeyuVZfCenVJJ+f5HVppUPNObRaarL14NHOpg+piahyfdgcCygwIP2nqZZm1Tpl3F
+         2XKWoEmsBfb3GAtABSuE4pWgmSJpFnG4X4BpJuEGATO52Ky8Zi81AoWnYu3tTeesh8FY
+         hiNjTjEPeoCCqdqJI7UqzKcO2lcdP1Hkq4+4FVAcb4bm/DX94DzXFNDK9p0YOCK2J/Vd
+         O4oA==
+X-Gm-Message-State: AOAM533AD9TGfXrMaTXyUDq4sSQwa8nnYjo6pVkSfTs0rj/jjmzRtzNN
+        HE83maexoIoHcq8VUyQP52OhFA==
+X-Google-Smtp-Source: ABdhPJzSBT56cUJvUmQ1jeDl1RjMGJiu46b0HYsbuCGKuS2QrgmD92t81oKVAXJFmHCb4EhXLUuNfg==
+X-Received: by 2002:aa7:9207:: with SMTP id 7mr819876pfo.156.1598872182053;
+        Mon, 31 Aug 2020 04:09:42 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id u16sm7495367pfn.134.2020.08.31.04.09.40
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 31 Aug 2020 04:09:41 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 16:39:39 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     rnayak@codeaurora.org, Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Fabio Estevam <festevam@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@kernel.org>,
+        Mark Brown <broonie@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Qiang Yu <yuq825@gmail.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Rob Clark <robdclark@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sean Paul <sean@poorly.run>, Shawn Guo <shawnguo@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        lima@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH V2 0/8] opp: Unconditionally call
+ dev_pm_opp_of_remove_table()
+Message-ID: <20200831110939.qnyugmhajkg36gzw@vireshk-i7>
+References: <cover.1598594714.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a6a59fba-6a0c-c00f-29e7-e85c7dcc1319@ti.com>
+In-Reply-To: <cover.1598594714.git.viresh.kumar@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24-08-20, 10:47, Roger Quadros wrote:
-> Hi,
+On 28-08-20, 11:37, Viresh Kumar wrote:
+> Hello,
 > 
-> On 21/08/2020 11:11, Roger Quadros wrote:
-> > Move ti,omap-usb2 to its own YAML schema.
-> > 
-> > Signed-off-by: Roger Quadros <rogerq@ti.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> > 
-> > v4
-> > - fix example to fix dt_binding_check warnings
-> > - '#phy-cells' -> "#phy-cells"
-> > - Add 'oneOf' to compatible logic to allow just "ti,omap-usb2" as valid
-> > 
-> > v3
-> > - Removed quotes from compatibles
-> > - changed property to "ti,disable-charger-det"
-> > 
-> > v2
-> > - Address Rob's comments on YAML schema.
-> > 
-> >   .../devicetree/bindings/phy/ti,omap-usb2.yaml | 72 +++++++++++++++++++
-> >   .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
-> >   2 files changed, 72 insertions(+), 37 deletions(-)
-> >   create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-> > new file mode 100644
-> > index 000000000000..a05110351814
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
-> > @@ -0,0 +1,72 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/phy/ti,omap-usb2.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: OMAP USB2 PHY
-> > +
-> > +maintainers:
-> > + - Kishon Vijay Abraham I <kishon@ti.com>
-> > + - Roger Quadros <rogerq@ti.com>
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - items:
-> > +        - enum:
-> > +          - ti,dra7x-usb2
-> > +          - ti,dra7x-usb2-phy2
-> > +          - ti,am654-usb2
+> This cleans up some of the user code around calls to
+> dev_pm_opp_of_remove_table().
 > 
-> I missed these two.
-> "ti,omap5-usb2"
-> "ti,am437x-usb2"
+> All the patches can be picked by respective maintainers directly except
+> for the last patch, which needs the previous two to get merged first.
 > 
-> While "ti,am437x-usb2" is being used in the device tree files
-> I don't see "ti,omap5-usb2" being used anywhere.
-> 
-> omap5-l4.dtsi uses "ti,omap-usb2"
-> 
-> Should we get rid of "ti,omap5-usb2"?
+> These are based for 5.9-rc1.
+ 
+> Viresh Kumar (8):
+>   cpufreq: imx6q: Unconditionally call dev_pm_opp_of_remove_table()
+>   drm/lima: Unconditionally call dev_pm_opp_of_remove_table()
+>   drm/msm: Unconditionally call dev_pm_opp_of_remove_table()
+>   mmc: sdhci-msm: Unconditionally call dev_pm_opp_of_remove_table()
+>   spi: spi-geni-qcom: Unconditionally call dev_pm_opp_of_remove_table()
+>   spi: spi-qcom-qspi: Unconditionally call dev_pm_opp_of_remove_table()
+>   tty: serial: qcom_geni_serial: Unconditionally call
+>     dev_pm_opp_of_remove_table()
+>   qcom-geni-se: remove has_opp_table
 
-Sure drop them ;-) we can always add back when we have a user
+During testing by some of the Linaro folks on linux-next, we found out
+that there was a bug in the OPP core (which makes the kernel crash in
+some corner cases with these patches) for which I have sent a fix
+today which should be part of 5.9-rc4:
+
+https://lore.kernel.org/lkml/922ff0759a16299e24cacfc981ac07914d8f1826.1598865786.git.viresh.kumar@linaro.org/
+
+Please apply the patches over rc4 only once it comes out (I will
+confirm by that time once the patch gets merged). Else you guys can
+provide your Ack and I can take the patches through OPP tree.
 
 -- 
-~Vinod
+viresh
