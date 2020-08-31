@@ -2,148 +2,175 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CFB2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992B3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:31:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC6CA207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:30:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70E38207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:31:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="irsBQYiw"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SenbmO87"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgHaLac (ORCPT
+        id S1727783AbgHaLbF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45910 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbgHaL3l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:29:41 -0400
-Received: from mail-vk1-xa43.google.com (mail-vk1-xa43.google.com [IPv6:2607:f8b0:4864:20::a43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E95C06123F
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:29:31 -0700 (PDT)
-Received: by mail-vk1-xa43.google.com with SMTP id s127so1222389vkg.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:29:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JIN710TFLeLsKqRRlGqyF1G56AtXFbXojtnB+ek7vjU=;
-        b=irsBQYiwNj1Qd8vMPMDZ4IELqeCiPeWMfkpBS3c2ZNz7mZFu5GH+I3B7C0OPEjwMVD
-         9jI1XXFeXGnU2b2vums9U5nwrWH6D0JR8+2oZUphySN+PnNxeueJzDWGnvYwt/oltfMD
-         22ZbWt8+LSAgrcF3KfEDBpLH3L3bqcmci89/GwhyaMurg6aJNkKIcnBmBAkNJinIQkY1
-         sd8lVRWhg89SyMdMugmmdByKiTxoWw4s11IaTQo1XbNMhUAko8qoNtgXLFhxi6gu+Sow
-         h1kW2Fb4raKYv6Gc7y/Bhtd4ewL/1azXQH6Gakmz1md2e2rsSKov/8PxpyaUZ9MImqDH
-         NVGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JIN710TFLeLsKqRRlGqyF1G56AtXFbXojtnB+ek7vjU=;
-        b=XQNlg06RcnWQPZEngXTnHOxTDmi7qDYBTrWnRPBZz1QRgFqGqKSwz3hvwz+W1Ql8JS
-         4AEac6QkQqAWYU7lLki0qq0cgwENEjVCWx/xHwe4dewuvRTnr1LVDtJfawk715kdaNRp
-         k9z3YiAligvG97JylwVX/gt4NGy/YUzbPLQWT5wyuRpPjfnve5gUzEfumEgidgOpCzUa
-         dNaLiwHgZvFqOJuYK6024kNKQDkDpi3NOLch3GZrODrCEdA+vVySwYz2Od7PhtUMlcuk
-         jA0uy3rwgyIYq7TFSJkRMz7XZZtQKo2dvkS1JE6jSK8RFl4aOndqeIdqiDLOgjPfmQgp
-         offA==
-X-Gm-Message-State: AOAM532MioeCh7ocCSLNbtYvDXpjdhUCLr1+VlzWjawNzjEkkmcm7Sq6
-        zBpugKpBXA8e9NzusFC7qfHoKPtFnPE/ZQJ72PYQgQ==
-X-Google-Smtp-Source: ABdhPJw4BM3EMv3eBn1ExCUI2PJJGFIfafdTX935b2p/ZrPMqqlhkRsSr+VDzuwhyidZqSRYvMBnWkwMt12C+fZFJyw=
-X-Received: by 2002:a1f:2a48:: with SMTP id q69mr458218vkq.69.1598873366828;
- Mon, 31 Aug 2020 04:29:26 -0700 (PDT)
+        Mon, 31 Aug 2020 07:31:05 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45730 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727042AbgHaLaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:30:19 -0400
+Received: from zn.tnic (p200300ec2f085000329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4F12D1EC02C1;
+        Mon, 31 Aug 2020 13:30:06 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598873406;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Xc+Pd4QRnfNfg4+7CpZrHisRsqB1SyQ+tI27GhvzMCQ=;
+        b=SenbmO87jXBqpXwojhBpSHQnEP4BtnTmjZyLxOz7tyqmb6JwiuipB0Ll5jgUTJzOB5CVQI
+        gqH0XdsTxrHF2XN6Q8OMqK5PJ0qdVeME1fBmi9+KIvMkE1t9bJ3vKpQFj/q/RLBwVVakrk
+        U7cWe9EJ9E3Y7cK1nNtroJ067GRc6f8=
+Date:   Mon, 31 Aug 2020 13:30:02 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        Kees Cook <keescook@chromium.org>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 48/76] x86/entry/64: Add entry code for #VC handler
+Message-ID: <20200831113002.GH27517@zn.tnic>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-49-joro@8bytes.org>
 MIME-Version: 1.0
-References: <20200714121856.955680-1-hch@lst.de> <20200714121856.955680-10-hch@lst.de>
- <20200828020045.GT3265@brightrain.aerifal.cx> <20200828021152.GU3265@brightrain.aerifal.cx>
- <20200828042422.GA29734@lst.de> <CAPDyKFrKJrUN8mJ94g0+0Vs3aT1uq9MmHWfvzcVaoA5efaYPmQ@mail.gmail.com>
- <20200828150942.GV3265@brightrain.aerifal.cx> <20200829083121.GA7851@lst.de>
-In-Reply-To: <20200829083121.GA7851@lst.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 31 Aug 2020 13:28:50 +0200
-Message-ID: <CAPDyKFpqd2n64=i5-45nJ=acbgS0AmOK0D2rtn-1bJj2HV9pnQ@mail.gmail.com>
-Subject: Re: [PATCH 09/10] sh: don't allow non-coherent DMA for NOMMU
-To:     Christoph Hellwig <hch@lst.de>, Rich Felker <dalias@libc.org>
-Cc:     Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-spi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200824085511.7553-49-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Aug 2020 at 10:31, Christoph Hellwig <hch@lst.de> wrote:
->
-> On Fri, Aug 28, 2020 at 11:09:43AM -0400, Rich Felker wrote:
-> > > However, by looking at the code, one get the feeling that the DMA
-> > > support is somewhat prepared to be made optional. I guess it has never
-> > > been really tested, as the Kconfig option has "depends on HAS_DMA"  -
-> > > and it's been like that as long as I can remember.
-> >
-> > It always worked on our "byte-banged" SPI controller, with no DMA
-> > controller present, before Christoph's changes in this patch series,
->
-> Before that nommu sh builds provided a DMA mapping implementation
-> that even worked for the streaming side (dma_map_*), but would corrupt
-> data if you used dma_alloc_coherent memory to communicate with the
-> device.
+On Mon, Aug 24, 2020 at 10:54:43AM +0200, Joerg Roedel wrote:
+> @@ -446,6 +448,82 @@ _ASM_NOKPROBE(\asmsym)
+>  SYM_CODE_END(\asmsym)
+>  .endm
+>  
 
-I see.
+ifdeffery pls...
 
->
-> > and seems to be working now (although I have some other, hopefully
-> > unrelated regressions to debug) with #ifdef CONFIG_HAS_DMA around the
-> > if (spi->master->dev.parent->dma_mask) block in mmc_spi_probe. That's
-> > probably not the right fix though -- why isn't it checking
-> > host->dma_dev instead and only attempting DMA setup if dma_dev is
-> > non-null?
->
-> I don't think dma_dev can be NULL right now.  dma_dev is assigned here:
->
->         if (spi->master->dev.parent->dma_mask) {
->                 struct device   *dev = spi->master->dev.parent;
->
->                 host->dma_dev = dev;
->
-> but for any OF or real bus device dma_mask never is zero (it actually is
-> a pointer), and the value of it also is initialized to 32-bit by default,
-> making this effectively an "if (1) {".  The driver needs some way to
-> communicate if a given device actually is DMA capable or not. Or is that
-> purely a factor of the platform which would be a little strange.
+> +/**
+> + * idtentry_vc - Macro to generate entry stub for #VC
+> + * @vector:		Vector number
+> + * @asmsym:		ASM symbol for the entry point
+> + * @cfunc:		C function to be called
+> + *
+> + * The macro emits code to set up the kernel context for #VC. The #VC handler
+> + * runs on an IST stack and needs to be able to cause nested #VC exceptions.
+> + *
+> + * To make this work the #VC entry code tries its best to pretend it doesn't use
+> + * an IST stack by switching to the task stack if coming from user-space (which
+> + * includes early SYSCALL entry path) or back to the stack in the IRET frame if
+> + * entered from kernel-mode.
+> + *
+> + * If entered from kernel-mode the return stack is validated first, and if it is
+> + * not safe to use (e.g. because it points to the entry stack) the #VC handler
+> + * will switch to a fall-back stack (VC2) and call a special handler function.
+> + *
+> + * The macro is only used for one vector, but it is planned to extend it in the
+								^^^^^^^^^^^
 
-Okay, thanks for clarifying things.
+"... to be extended..."
 
->
-> In which case we should do something like:
->
->
-> diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
-> index 39bb1e30c2d722..3b0cc9a70e6432 100644
-> --- a/drivers/mmc/host/mmc_spi.c
-> +++ b/drivers/mmc/host/mmc_spi.c
-> @@ -1374,7 +1374,7 @@ static int mmc_spi_probe(struct spi_device *spi)
->         if (!host->data)
->                 goto fail_nobuf1;
->
-> -       if (spi->master->dev.parent->dma_mask) {
-> +       if (IS_ENABLED(CONFIG_HAS_DMA)) {
+...
 
-I guess "#ifdef CONFIG_HAS_DMA", would work as well as CONFIG_HAS_DMA
-can't be "m".
+> @@ -674,6 +675,56 @@ asmlinkage __visible noinstr struct pt_regs *sync_regs(struct pt_regs *eregs)
+>  	return regs;
+>  }
+>  
+> +#ifdef CONFIG_AMD_MEM_ENCRYPT
+> +asmlinkage __visible noinstr struct pt_regs *vc_switch_off_ist(struct pt_regs *eregs)
+> +{
+> +	unsigned long sp, *stack;
+> +	struct stack_info info;
+> +	struct pt_regs *regs;
 
-I would also suggest moving the DMA setup things into a separate
-function. Then when CONFIG_HAS_DMA is unset, we can use a stub.
+Let's call those "regs_ret" or so, so that the argument can be "regs" by
+convention and for better differentiation.
 
->                 struct device   *dev = spi->master->dev.parent;
->
->                 host->dma_dev = dev;
+> +	/*
+> +	 * In the SYSCALL entry path the RSP value comes from user-space - don't
+> +	 * trust it and switch to the current kernel stack
+> +	 */
+> +	if (eregs->ip >= (unsigned long)entry_SYSCALL_64 &&
+> +	    eregs->ip <  (unsigned long)entry_SYSCALL_64_safe_stack) {
+> +		sp = this_cpu_read(cpu_current_top_of_stack);
+> +		goto sync;
+> +	}
+> +
+> +	/*
+> +	 * From here on the the RSP value is trusted - more RSP sanity checks
+> +	 * need to happen above.
+> +	 *
+> +	 * Check whether entry happened from a safe stack.
+> +	 */
+> +	sp    = eregs->sp;
+> +	stack = (unsigned long *)sp;
+> +	get_stack_info_noinstr(stack, current, &info);
+> +
+> +	/*
+> +	 * Don't sync to entry stack or other unknown stacks - use the fall-back
+> +	 * stack instead.
+> +	 */
+> +	if (info.type == STACK_TYPE_UNKNOWN || info.type == STACK_TYPE_ENTRY ||
 
-Let me cook a patch that we can try.
+AFAICT, that STACK_TYPE_UNKNOWN gets set only by the plain
+get_stack_info() function - not by the _noinstr() variant so you'd need
+to check the return value of latter...
 
-Kind regards
-Uffe
+> +	    info.type >= STACK_TYPE_EXCEPTION_LAST)
+> +		sp = __this_cpu_ist_top_va(VC2);
+> +
+> +sync:
+> +	/*
+> +	 * Found a safe stack - switch to it as if the entry didn't happen via
+> +	 * IST stack. The code below only copies pt_regs, the real switch happens
+> +	 * in assembly code.
+> +	 */
+> +	sp = ALIGN_DOWN(sp, 8) - sizeof(*regs);
+> +
+> +	regs = (struct pt_regs *)sp;
+> +	*regs = *eregs;
+> +
+> +	return regs;
+> +}
+> +#endif
+> +
+>  struct bad_iret_stack {
+>  	void *error_entry_ret;
+>  	struct pt_regs regs;
+> -- 
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
