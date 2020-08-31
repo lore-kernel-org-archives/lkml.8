@@ -2,94 +2,256 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481B1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8FA820719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 173EC20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="REVuEsg2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="HEvtbZV+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728211AbgHaPt2 (ORCPT
+        id S1728233AbgHaPtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:49:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58254 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728103AbgHaPtW (ORCPT
+        Mon, 31 Aug 2020 11:49:55 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:32951 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbgHaPty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:49:22 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC327C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:49:21 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id o5so2547392wrn.13
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:49:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V1d2XOGj4/mQm0XIjmCNV1oewYnJg6EZTFcc9J+2cbQ=;
-        b=REVuEsg2CiN/qtSP5ghWobHHXBx5sr9ZVE7C/NuSXKhV/Xd7Pgzyr4SVn563uQXjGI
-         Eq5XEDoSWa0svg/5eG6tnrbMJgXXZoPwGMXyG5sbV2Km3PHMCETnnzx8qcNwyPs1khSq
-         cRcnMTckV8XPo0ktVdWLdXr2ct9RSKYAiE0xufkCrESiMa4TJBNJmTLn6Fdy8dFiglUs
-         O37bIvopoXLB7N36Owu79jonpk31lWDBrDWtmm+NOnUo89VmO/RngjUCO4Wc35VV9fMu
-         OPBpxB5pQxZE9lYtu6VREchdX5ne11FFpN15mkX3yDP8vGmORrv8G57zWMROdPY4i9W4
-         Zqpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V1d2XOGj4/mQm0XIjmCNV1oewYnJg6EZTFcc9J+2cbQ=;
-        b=PgtjsicDTHgxe4YYHi+224eHT8F9nJywjKw72DZLf0DY9k3lBSdEx4zkg70AF7wJZx
-         o1+AbRg3c+UQ/8awf7VQIZpzrwCm7+cL9Ofm2Zw3Aj4feKaXIURN7/iua3DDeEqjWnmm
-         eXVsNjuoNQobSc1HdYGdS0VVFwGLIACEUwQBqTvatCgn7PriHX36qMvwqod4Rp+QQLJ0
-         iX63m7wZxgLw2zkoUeTXC7XxE8NqIh2FQFtHu7EHlS21+H2CD0OjhcZPQIjGRJ3BgHl5
-         Lt6CdAGOJy9ZscP0q7J3Nbnx0jqDOHsd99htV2qQmf+Rh0EysJ/5/4Vb5yera/h674yS
-         m7XQ==
-X-Gm-Message-State: AOAM531kbkWxX6lrdWtAoXJ8iCiTYKSdNy/cL/mPMDPHIL4yrISRmmK1
-        PqUPx1EXD3MUM03zYwkINCz5UwKxHfXDrUseYduUEw==
-X-Google-Smtp-Source: ABdhPJxLWPETNyPnCiyjTDBC8XYVpbEbjCWK79OLmZWLx/OGDa49T6VAmNNs0loEizDKgyAsCush7FlOkIpOBlpST30=
-X-Received: by 2002:adf:f101:: with SMTP id r1mr2234529wro.314.1598888960087;
- Mon, 31 Aug 2020 08:49:20 -0700 (PDT)
+        Mon, 31 Aug 2020 11:49:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1598888988;
+        s=strato-dkim-0002; d=gerhold.net;
+        h=In-Reply-To:References:Message-ID:Subject:Cc:To:From:Date:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=WnjBiD+YCLOi03utB1jGsKYrYVjk60pvHAwVXGX+bcs=;
+        b=HEvtbZV+1c/AsWgYEq4KDfaf1iZIQ9pc/RbvKpRyj8dZ8vqGzTFn5D69C8zgu7Mxk+
+        AUihFp2NlElWpytbmV/E2PlJ9RQI7isLg7VJWpI24pxmMmNlO0t3ym9wdKf4cmcPmHPx
+        R8H9eQ2AcJz/N0bSCwgUyLiDebHKOQHS18EXFXjTmKyHrKNeMe2dPjnCHGJ+dSdX/qtf
+        Mcfn1WuA0C5gJFrdd+kN9RhjIR7HYsNCeUGC53Tm69X8O0FrMP0X38llviKuLlzwmzMC
+        /Nm9ulCbOyQECXoaBMBoM+N5UsCdiOzjVwPklcu2U7f6XPhXtJiiWv+NEZH1l1siHIhh
+        JrKw==
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVOQ/OcYgojyw4j34+u26zEIdhPgVC7iy9yGr7ESbX"
+X-RZG-CLASS-ID: mo00
+Received: from gerhold.net
+        by smtp.strato.de (RZmta 46.10.7 DYNA|AUTH)
+        with ESMTPSA id g0b6c1w7VFnjEyb
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Mon, 31 Aug 2020 17:49:45 +0200 (CEST)
+Date:   Mon, 31 Aug 2020 17:49:38 +0200
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Niklas Cassel <nks@flawful.org>
+Subject: Re: [PATCH v2] opp: Power on (virtual) power domains managed by the
+ OPP core
+Message-ID: <20200831154938.GA33622@gerhold.net>
+References: <20200826093328.88268-1-stephan@gerhold.net>
+ <20200831121457.2v6avendroclvrn5@vireshk-i7>
 MIME-Version: 1.0
-References: <20200828141344.2277088-1-alinde@google.com> <CAC5umyiNw7FA__Y3HZ1UEG8Y6uQDgAWHTJpOVf7okERzpCjnRg@mail.gmail.com>
-In-Reply-To: <CAC5umyiNw7FA__Y3HZ1UEG8Y6uQDgAWHTJpOVf7okERzpCjnRg@mail.gmail.com>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Mon, 31 Aug 2020 17:49:08 +0200
-Message-ID: <CAG_fn=XDTWYbxb1Hy1p0hdOtOejZPWvDXfitysK7wUOsPAE_XQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] add fault injection to user memory access
-To:     Akinobu Mita <akinobu.mita@gmail.com>
-Cc:     Albert Linde <albert.linde@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Marco Elver <elver@google.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Albert van der Linde <alinde@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831121457.2v6avendroclvrn5@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> This series looks good to me.
+Hi Viresh,
 
-Great!
+On Mon, Aug 31, 2020 at 05:44:57PM +0530, Viresh Kumar wrote:
+> On 26-08-20, 11:33, Stephan Gerhold wrote:
+> > dev_pm_opp_attach_genpd() allows attaching an arbitrary number of
+> > power domains to an OPP table. In that case, the genpd core will
+> > create a virtual device for each of the power domains.
+> > 
+> > At the moment, the OPP core only calls
+> > dev_pm_genpd_set_performance_state() on these virtual devices.
+> > It does not attempt to power on the power domains. Therefore
+> > the required power domain might never get turned on.
+> > 
+> > So far, dev_pm_opp_attach_genpd() is only used in qcom-cpufreq-nvmem.c
+> > to attach the CPR power domain to the CPU OPP table. The CPR driver
+> > does not check if it was actually powered on so this did not cause
+> > any problems. However, other drivers (e.g. rpmpd) might ignore the
+> > performance state until the power domain is actually powered on.
+> > 
+> > Since these virtual devices are managed exclusively by the OPP core,
+> > I would say that it should also be responsible to ensure they are
+> > enabled.
+> > 
+> > This commit implements this similar to the non-virtual power domains;
+> > we create device links for each of attached power domains so that they
+> > are turned on whenever the consumer device is active.
+> > 
+> > Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> > ---
+> 
+> Applied with some changes, hope that is fine:
+> 
 
-Which tree do fault injection patches normally go to?
+I appreciate it, thank you! But actually after our discussion regarding
+the "manage multiple power domains which might not always need to be on"
+use case I would like to explore that a bit further before we decide on
+a final solution that complicates changes later.
 
-> Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
+The reason I mention this is that after our discussion I have been
+(again) staring at the vendor implementation of CPU frequency scaling of
+the platform I'm working on (qcom msm8916). Actually there seems to be yet
+another power domain that is scaled only for some CPU frequencies within
+the clock driver. (The vendor driver implies this is a requirement of
+the PLL clock that is used for higher CPU frequencies, but not sure...)
 
-Reviewed-by: Alexander Potapenko <glider@google.com>
+I don't fully understand how to implement this in mainline yet. I have
+started some research on these "voltage requirements" for clocks, and
+based on previous discussions [1] and patches [2] it seems like I'm
+*not* supposed to add this to the clock driver, but rather as another
+required-opp to the CPU OPP table.
+
+If that is the case, we would pretty much have a situation like you
+described, a power domain that should only be scaled for some of the
+OPPs (the higher CPU frequencies).
+
+But first I need to do some more research, and probably discuss how to
+handle that power domain separately first. I think it would be easier if
+we postpone this patch till then. I don't think anyone else needs this
+patch at the moment.
+
+[1]: https://lore.kernel.org/linux-clk/9439bd29e3ccd5424a8e9b464c8c7bd9@codeaurora.org/
+[2]: https://lore.kernel.org/linux-pm/20190320094918.20234-1-rnayak@codeaurora.org/
+
+> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+> [ Viresh: Rearranged the code to remove extra loop and minor cleanup ]
+
+FWIW, the reason I put this into an extra loop is that the
+dev_pm_domain_attach_by_name() might return -EPROBE_DEFER (or some other
+error) for some of the power domains. If you create the device links
+before attaching all domains you might unnecessarily turn on+off some of
+them.
+
+Having it in a separate loop avoids that, because we only start powering
+on the power domains when we know that all the power domains are
+available.
+
+Thanks!
+Stephan
+
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/opp/core.c | 37 ++++++++++++++++++++++++++++++++++++-
+>  drivers/opp/opp.h  |  1 +
+>  2 files changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+> index e65174725a4d..b608b0253079 100644
+> --- a/drivers/opp/core.c
+> +++ b/drivers/opp/core.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/device.h>
+>  #include <linux/export.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regulator/consumer.h>
+>  
+>  #include "opp.h"
+> @@ -1967,10 +1968,15 @@ static void _opp_detach_genpd(struct opp_table *opp_table)
+>  		if (!opp_table->genpd_virt_devs[index])
+>  			continue;
+>  
+> +		if (opp_table->genpd_virt_links[index])
+> +			device_link_del(opp_table->genpd_virt_links[index]);
+> +
+>  		dev_pm_domain_detach(opp_table->genpd_virt_devs[index], false);
+>  		opp_table->genpd_virt_devs[index] = NULL;
+>  	}
+>  
+> +	kfree(opp_table->genpd_virt_links);
+> +	opp_table->genpd_virt_links = NULL;
+>  	kfree(opp_table->genpd_virt_devs);
+>  	opp_table->genpd_virt_devs = NULL;
+>  }
+> @@ -2002,8 +2008,10 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>  {
+>  	struct opp_table *opp_table;
+>  	struct device *virt_dev;
+> +	struct device_link *dev_link;
+>  	int index = 0, ret = -EINVAL;
+>  	const char **name = names;
+> +	u32 flags;
+>  
+>  	opp_table = dev_pm_opp_get_opp_table(dev);
+>  	if (IS_ERR(opp_table))
+> @@ -2030,6 +2038,21 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>  	if (!opp_table->genpd_virt_devs)
+>  		goto unlock;
+>  
+> +	opp_table->genpd_virt_links = kcalloc(opp_table->required_opp_count,
+> +					      sizeof(*opp_table->genpd_virt_links),
+> +					      GFP_KERNEL);
+> +	if (!opp_table->genpd_virt_links) {
+> +		kfree(opp_table->genpd_virt_devs);
+> +		opp_table->genpd_virt_devs = NULL;
+> +		goto unlock;
+> +	}
+> +
+> +	/* Turn on power domain initially if consumer is active */
+> +	pm_runtime_get_noresume(dev);
+> +	flags = DL_FLAG_PM_RUNTIME | DL_FLAG_STATELESS;
+> +	if (pm_runtime_active(dev))
+> +		flags |= DL_FLAG_RPM_ACTIVE;
+> +
+>  	while (*name) {
+>  		if (index >= opp_table->required_opp_count) {
+>  			dev_err(dev, "Index can't be greater than required-opp-count - 1, %s (%d : %d)\n",
+> @@ -2043,12 +2066,23 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>  			dev_err(dev, "Couldn't attach to pm_domain: %d\n", ret);
+>  			goto err;
+>  		}
+> -
+>  		opp_table->genpd_virt_devs[index] = virt_dev;
+> +
+> +		/* Create device links to manage runtime PM */
+> +		dev_link = device_link_add(dev, opp_table->genpd_virt_devs[index],
+> +					   flags);
+> +		if (!dev_link) {
+> +			dev_err(dev, "Failed to create device link\n");
+> +			goto err;
+> +		}
+> +		opp_table->genpd_virt_links[index] = dev_link;
+> +
+>  		index++;
+>  		name++;
+>  	}
+>  
+> +	pm_runtime_put(dev);
+> +
+>  	if (virt_devs)
+>  		*virt_devs = opp_table->genpd_virt_devs;
+>  	mutex_unlock(&opp_table->genpd_virt_dev_lock);
+> @@ -2056,6 +2090,7 @@ struct opp_table *dev_pm_opp_attach_genpd(struct device *dev,
+>  	return opp_table;
+>  
+>  err:
+> +	pm_runtime_put(dev);
+>  	_opp_detach_genpd(opp_table);
+>  unlock:
+>  	mutex_unlock(&opp_table->genpd_virt_dev_lock);
+> diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+> index 78e876ec803e..be5526cdbdba 100644
+> --- a/drivers/opp/opp.h
+> +++ b/drivers/opp/opp.h
+> @@ -186,6 +186,7 @@ struct opp_table {
+>  
+>  	struct mutex genpd_virt_dev_lock;
+>  	struct device **genpd_virt_devs;
+> +	struct device_link **genpd_virt_links;
+>  	struct opp_table **required_opp_tables;
+>  	unsigned int required_opp_count;
