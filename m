@@ -2,612 +2,158 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41615C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DF2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE00206EB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0AB20578
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="Q+x7m6LA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sAI2u2w5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgHaEfV (ORCPT
+        id S1726204AbgHaEfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 00:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37846 "EHLO
+        Mon, 31 Aug 2020 00:35:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgHaEfO (ORCPT
+        with ESMTP id S1725810AbgHaEfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 00:35:14 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5975C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:13 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t11so2440041plr.5
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:13 -0700 (PDT)
+        Mon, 31 Aug 2020 00:35:39 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5E0C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:37 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id w186so3620059pgb.8
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:35:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZRKsjZlqONv6JjET5jqtzBi+/eMi7WQHIDXRX1YM9ys=;
-        b=Q+x7m6LA9m3f0/PjnK/9SVxwkHs68SH/zjfs1Yas+dFq4rPVrD0zDfiBzuJ93h+/jv
-         WKnjtmPSeWNZDc64mGT7v7Lj40TALZ9w6LTc8quodR4FfEYgqkx3QYcsCssF+5j0lPxX
-         GW+bCnTz6juVVx5X3Tw1IR1RbPUrN+lp3BKqTgsaj1bODn9l89nsw/rVsjoILyoauhHA
-         F2C8/D4pJQ/LhXDcm9jyqv9LyTtl/9dJ+UKzWu4TFMgm8c/TZ0rX12chGTgVREl9TAJq
-         yRifp8IEP6LK457LuoYpdVvjb9dyMmgCloBBaju7WMn+SVcBPkE404QwZhr9BZE9OiDd
-         UQxg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=icspKIQ1PkNAJTsI1t63T7zqqLLvN0pfo9ohQKHwF/s=;
+        b=sAI2u2w5PWSlX52FmcryHfAvoeCFTuap75DsHLtQnmiADV733XENBiQs+j4DPt8B2r
+         eqfKj+K2Vgh/Uf0+gpZ3cwLUNhsqc5Bcj8277YYxSHaXc7p5nVZFP592pBFt+AdNu1x9
+         K7IwET7gDZxdVBK2///6HceZPwhcOk1US/f6Pdj1vWcfRy/5kf5gPErYwzByB/V2bJGt
+         Hcfo1EZ2laKftr/LsNfG1I5R6fF9RFciPYaioZu71FrEYOqlIuhUX+5CV3idAl1HTbp0
+         Z/MGxGWJFYQu4nmYcKWGfMtAZ3USq1sjYmlwGbEwSA3fH1FqmWIEtfMZLDE3UJhrlil/
+         Hi1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ZRKsjZlqONv6JjET5jqtzBi+/eMi7WQHIDXRX1YM9ys=;
-        b=Qxnm5/dGoIQto1+7n+SJYycUf9LR938lZxZSToTk5utzIHyFGOYdQa6Kj0jDPGaSIG
-         Mh+FI51b9DcGvYdTZDOVqNl41eiXujVWWWAwlRWhpeysPQV6oCx110a+V7s4CR4uqI/y
-         4NSxgdReGRP4pVp3+vapq6Zu9wK10buRalXdyUVr4vjHOQFZO4WXR2DXMLxOyUJVPCT7
-         nYnVpoNbLBtUOvSbuwog+BrOb//+aVooB5SJ7jKVOCKmquHPaYqWxC47FU39DH21sPFi
-         L1JZyi5gh/FfnKfpx8fgLPwGroP5cJ8OpF8+zjvm3MZIeNuGp6PBg9MyFkiR+r0xZ4Ao
-         uM3A==
-X-Gm-Message-State: AOAM530RL19VGOI6gs+OqYJbwjrNT+b7WRgQDDrUFXcvIXbAVjZVR8Bs
-        +Fvett6L76zlAIMW12oScPHaXA8eMDBkyg==
-X-Google-Smtp-Source: ABdhPJxx9dIg2mxkBfdxgDf2vJz/XytMcpJqk3pkxMWxqFRvBv0b/8MiyniMcseUhnio5R2QJb2hCw==
-X-Received: by 2002:a17:90a:de10:: with SMTP id m16mr9172760pjv.34.1598848512820;
-        Sun, 30 Aug 2020 21:35:12 -0700 (PDT)
-Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
-        by smtp.gmail.com with ESMTPSA id hg16sm2370174pjb.37.2020.08.30.21.35.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 30 Aug 2020 21:35:11 -0700 (PDT)
-Subject: Re: [PATCH v1 09/10] powerpc/pseries/iommu: Make use of DDW even if
- it does not map the partition
-To:     Leonardo Bras <leobras.c@gmail.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Joel Stanley <joel@jms.id.au>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Brian King <brking@linux.vnet.ibm.com>,
-        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
-        David Dai <zdai@linux.vnet.ibm.com>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20200817234033.442511-1-leobras.c@gmail.com>
- <20200817234033.442511-10-leobras.c@gmail.com>
- <d2d98195-982d-c40a-43bc-5853726ed1d6@ozlabs.ru>
- <f3ccef770985b8dfd8d5cb2b9f7b55f2e734d402.camel@gmail.com>
-From:   Alexey Kardashevskiy <aik@ozlabs.ru>
-Autocrypt: addr=aik@ozlabs.ru; keydata=
- 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
-Message-ID: <d309c872-c574-4eb5-0e6e-0a36f73e168e@ozlabs.ru>
-Date:   Mon, 31 Aug 2020 14:35:06 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=icspKIQ1PkNAJTsI1t63T7zqqLLvN0pfo9ohQKHwF/s=;
+        b=Yp1wNWOHaoC0AqaQHuaWIEzKwJHUP7d3F0ts0QNpmX7dV5mC8yTJuk8m7/slpx3mQz
+         3mzjXEkhVqYZrS6gNHnyu9zbtNEbHR2+C0ywg//5t22jIHwGxsPKo0LYlx1O3gWnsPtJ
+         yfV8+Q/eKZMfh/nSNkPgjb5QTDLxwUqO4PJf903kvgsanWgiXAK9I8khM2aFgOP/trCt
+         h5L9C3jnca9vuDo08biZUlpKyaUfOHbWashMX/O4iMvHQjm/B5Yzjc/NfvVmbwOBfEp8
+         0MMUGciMPRYP5L4pLrrFKdo2LznpEBj6unFWQjS1WF+ROSSpFp7J+Y4Zy3lWlNgk5EfN
+         54nA==
+X-Gm-Message-State: AOAM532FYOll3Bx8PJ/ji4rsixJ3DAOyBJHO/f1RUd/F1hTIu6rFQE1D
+        GzHbl5A4p+FQn6KHyuo7Cek=
+X-Google-Smtp-Source: ABdhPJyHrTxe8NKfMuuY5xgg7xQCcQStiOBRt8sRSbruKNh8bZI1btUWlqDBb+fIrDEMs79eI+f5Vw==
+X-Received: by 2002:aa7:95b8:: with SMTP id a24mr7639695pfk.219.1598848536811;
+        Sun, 30 Aug 2020 21:35:36 -0700 (PDT)
+Received: from Gentoo (sau-465d4-or.servercontrol.com.au. [43.250.207.1])
+        by smtp.gmail.com with ESMTPSA id y29sm5840199pfp.141.2020.08.30.21.35.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 21:35:35 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 10:05:22 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: ..and its built and boot without fuss!! Linux 5.9-rc3
+Message-ID: <20200831043522.GA32698@Gentoo>
+Mail-Followup-To: Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <CAHk-=wiD1yujm_WvWLYL7gZsWMvZyWMg1rfU7dWmnYYc3a7Gsg@mail.gmail.com>
+ <20200830234659.GB8670@sasha-vm>
+ <CAHk-=whBtfMQDm9YRzSG7xCvVKx6YMScJ-_P+=hCT31op-CVig@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f3ccef770985b8dfd8d5cb2b9f7b55f2e734d402.camel@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="UlVJffcvxoiEqYs2"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whBtfMQDm9YRzSG7xCvVKx6YMScJ-_P+=hCT31op-CVig@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--UlVJffcvxoiEqYs2
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-On 29/08/2020 04:36, Leonardo Bras wrote:
-> On Mon, 2020-08-24 at 15:17 +1000, Alexey Kardashevskiy wrote:
+On 16:56 Sun 30 Aug 2020, Linus Torvalds wrote:
+>On Sun, Aug 30, 2020 at 4:47 PM Sasha Levin <sashal@kernel.org> wrote:
 >>
->> On 18/08/2020 09:40, Leonardo Bras wrote:
->>> As of today, if the biggest DDW that can be created can't map the whole
->>> partition, it's creation is skipped and the default DMA window
->>> "ibm,dma-window" is used instead.
->>>
->>> DDW is 16x bigger than the default DMA window,
->>
->> 16x only under very specific circumstances which are
->> 1. phyp
->> 2. sriov
->> 3. device class in hmc (or what that priority number is in the lpar config).
-> 
-> Yeah, missing details.
-> 
->>> having the same amount of
->>> pages, but increasing the page size to 64k.
->>> Besides larger DMA window,
->>
->> "Besides being larger"?
-> 
-> You are right there.
-> 
->>
->>> it performs better for allocations over 4k,
->>
->> Better how?
-> 
-> I was thinking for allocations larger than (512 * 4k), since >2
-> hypercalls are needed here, and for 64k pages would still be just 1
-> hypercall up to (512 * 64k). 
-> But yeah, not the usual case anyway.
+>> Is it possible you've forgotten to push? I don't see the tag/5.9-rc3
+>> commit in your repo.
+>
+>Indeed. Thanks for noticing. Fixed,
+>
+>           Linus
 
-Yup.
+Something trivial for your eyes!!
 
 
-> 
->>
->>> so it would be nice to use it instead.
->>
->> I'd rather say something like:
->> ===
->> So far we assumed we can map the guest RAM 1:1 to the bus which worked
->> with a small number of devices. SRIOV changes it as the user can
->> configure hundreds VFs and since phyp preallocates TCEs and does not
->> allow IOMMU pages bigger than 64K, it has to limit the number of TCEs
->> per a PE to limit waste of physical pages.
->> ===
-> 
-> I mixed this in my commit message, it looks like this:
-> 
-> ===
-> powerpc/pseries/iommu: Make use of DDW for indirect mapping
-> 
-> So far it's assumed possible to map the guest RAM 1:1 to the bus, which
-> works with a small number of devices. SRIOV changes it as the user can
-> configure hundreds VFs and since phyp preallocates TCEs and does not
-> allow IOMMU pages bigger than 64K, it has to limit the number of TCEs
-> per a PE to limit waste of physical pages.
-> 
-> As of today, if the assumed direct mapping is not possible, DDW
-> creation is skipped and the default DMA window "ibm,dma-window" is used
-> instead.
-> 
-> The default DMA window uses 4k pages instead of 64k pages, and since
-> the amount of pages is the same,
+[    3.218031] sd 0:0:0:0: [sda] Attached SCSI disk
+[    3.225776] md: Waiting for all devices to be available before autodetect
+[    3.226313] md: If you don't use raid, use raid=noautodetect
+[    3.226722] md: Autodetecting RAID arrays.
+[    3.227221] md: autorun ...
+[    3.227519] md: ... autorun DONE.
+[    3.396336] EXT4-fs (sda): recovery complete
+[    3.414304] EXT4-fs (sda): mounted filesystem with ordered data mode. Opts: (null)
+[    3.416040] ext4 filesystem being mounted at /root supports timestamps until 2038 (0x7fffffff)
+[    3.416733] VFS: Mounted root (ext4 filesystem) on device 8:0.
+[    3.422032] devtmpfs: mounted
+[    3.445402] Freeing unused decrypted memory: 2040K
+[    3.530217] Freeing unused kernel image (initmem) memory: 1604K
+[    3.530871] Write protecting the kernel read-only data: 26624k
+[    3.535134] Freeing unused kernel image (text/rodata gap) memory: 2040K
+[    3.536869] Freeing unused kernel image (rodata/data gap) memory: 908K
+[    3.537595] rodata_test: all tests were successful
+[    3.538160] Run /sbin/init as init process
+[    3.716064] tsc: Refined TSC clocksource calibration: 2194.918 MHz
+[    3.716766] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x1fa37202099, max_idle_ns: 440795206796 ns
+[    3.717452] clocksource: Switched to clocksource tsc
+[    3.769061] EXT4-fs (sda): re-mounted. Opts: (null)
+[    3.769727] ext4 filesystem being remounted at / supports timestamps until 2038 (0x7fffffff)
+Starting syslogd: OK
+Starting klogd: OK
+Running sysctl: OK
+[    5.019294] random: crng init done
+Initializing random number generator: OK
+Saving random seed: OK
+Starting network: OK
+
+Welcome to Buildroot_Linux
+Bhaskar_Thinkpad_x250 login: root
+# uname -a
+Linux Bhaskar_Thinkpad_x250 5.9.0-rc3-Gentoo #1 SMP Mon Aug 31 08:00:07 IST 2020 x86_64 GNU/Linux
 
 
-Is the amount really the same? I thought you can prioritize some VFs
-over others (== allocate different number of TCEs). Does it really
-matter if it is the same?
+~Bhaskar
 
+--UlVJffcvxoiEqYs2
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> making use of DDW instead of the
-> default DMA window for indirect mapping will expand in 16x the amount
-> of memory that can be mapped on DMA.
+-----BEGIN PGP SIGNATURE-----
 
-Stop saying "16x", it is not guaranteed by anything :)
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl9MfgoACgkQsjqdtxFL
+KRXghAf/aT484AINKRTmc4AUD0rXXezr5c/+F0jn2DCSKGvG/oIjbwxov1O2ly8E
+6ijqHAt3b+7pft8dTiE/U9aLUs1xIXutc7PIgoJQrlUHVGNSYwVD0KZDwy0m7pJB
+K5ynbf9UYm0bK/u/05H//7lZwOO71DAqUxBCzoYx+mhsZxFm2O58rdmUVtq2JPe9
+d53rLzXwppyvJI8GU6v9A5td8soQwFjvgDr6uQpdV5NTChjdyYjt2RisTVJll2Cn
+rU0IjYGpw05iLrU7Jec/rr8uth9sEe01kOXSrfXpMv2JKvzm0gEAjG9kPSgBGu13
++LDT8qOI2BOPeiXVz7TkIuncgjvZeA==
+=H0b8
+-----END PGP SIGNATURE-----
 
-
-> 
-> The DDW created will be used for direct mapping by default. [...]
-> ===
-> 
-> What do you think?
-> 
->>> The DDW created will be used for direct mapping by default.
->>> If it's not available, indirect mapping will be used instead.
->>>
->>> For indirect mapping, it's necessary to update the iommu_table so
->>> iommu_alloc() can use the DDW created. For this,
->>> iommu_table_update_window() is called when everything else succeeds
->>> at enable_ddw().
->>>
->>> Removing the default DMA window for using DDW with indirect mapping
->>> is only allowed if there is no current IOMMU memory allocated in
->>> the iommu_table. enable_ddw() is aborted otherwise.
->>>
->>> As there will never have both direct and indirect mappings at the same
->>> time, the same property name can be used for the created DDW.
->>>
->>> So renaming
->>> define DIRECT64_PROPNAME "linux,direct64-ddr-window-info"
->>> to
->>> define DMA64_PROPNAME "linux,dma64-ddr-window-info"
->>> looks the right thing to do.
->>
->> I know I suggested this but this does not look so good anymore as I
->> suspect it breaks kexec (from older kernel to this one) so you either
->> need to check for both DT names or just keep the old one. Changing the
->> macro name is fine.
->>
-> 
-> Yeah, having 'direct' in the name don't really makes sense if it's used
-> for indirect mapping. I will just add this new define instead of
-> replacing the old one, and check for both. 
-> Is that ok?
-
-
-No, having two of these does not seem right or useful. It is pseries
-which does not use petitboot (relies on grub instead so until the target
-kernel is started, there will be no ddw) so realistically we need this
-property for kexec/kdump which uses the same kernel but different
-initramdisk so for that purpose we need the same property name.
-
-But I can see myself annoyed when I try petitboot in the hacked pseries
-qemu and things may crash :) On this basis I'd suggest keeping the name
-and adding a comment next to it that it is not always "direct" anymore.
-
-
-> 
->>
->>> To make sure the property differentiates both cases, a new u32 for flags
->>> was added at the end of the property, where BIT(0) set means direct
->>> mapping.
->>>
->>> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
->>> ---
->>>  arch/powerpc/platforms/pseries/iommu.c | 108 +++++++++++++++++++------
->>>  1 file changed, 84 insertions(+), 24 deletions(-)
->>>
->>> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
->>> index 3a1ef02ad9d5..9544e3c91ced 100644
->>> --- a/arch/powerpc/platforms/pseries/iommu.c
->>> +++ b/arch/powerpc/platforms/pseries/iommu.c
->>> @@ -350,8 +350,11 @@ struct dynamic_dma_window_prop {
->>>  	__be64	dma_base;	/* address hi,lo */
->>>  	__be32	tce_shift;	/* ilog2(tce_page_size) */
->>>  	__be32	window_shift;	/* ilog2(tce_window_size) */
->>> +	__be32	flags;		/* DDW properties, see bellow */
->>>  };
->>>  
->>> +#define DDW_FLAGS_DIRECT	0x01
->>
->> This is set if ((1<<window_shift) >= ddw_memory_hotplug_max()), you
->> could simply check window_shift and drop the flags.
->>
-> 
-> Yeah, it's better this way, I will revert this.
-> 
->>
->>> +
->>>  struct direct_window {
->>>  	struct device_node *device;
->>>  	const struct dynamic_dma_window_prop *prop;
->>> @@ -377,7 +380,7 @@ static LIST_HEAD(direct_window_list);
->>>  static DEFINE_SPINLOCK(direct_window_list_lock);
->>>  /* protects initializing window twice for same device */
->>>  static DEFINE_MUTEX(direct_window_init_mutex);
->>> -#define DIRECT64_PROPNAME "linux,direct64-ddr-window-info"
->>> +#define DMA64_PROPNAME "linux,dma64-ddr-window-info"
->>>  
->>>  static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
->>>  					unsigned long num_pfn, const void *arg)
->>> @@ -836,7 +839,7 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
->>>  	if (ret)
->>>  		return;
->>>  
->>> -	win = of_find_property(np, DIRECT64_PROPNAME, NULL);
->>> +	win = of_find_property(np, DMA64_PROPNAME, NULL);
->>>  	if (!win)
->>>  		return;
->>>  
->>> @@ -852,7 +855,7 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
->>>  			np, ret);
->>>  }
->>>  
->>> -static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
->>> +static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr, bool *direct_mapping)
->>>  {
->>>  	struct direct_window *window;
->>>  	const struct dynamic_dma_window_prop *direct64;
->>> @@ -864,6 +867,7 @@ static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
->>>  		if (window->device == pdn) {
->>>  			direct64 = window->prop;
->>>  			*dma_addr = be64_to_cpu(direct64->dma_base);
->>> +			*direct_mapping = be32_to_cpu(direct64->flags) & DDW_FLAGS_DIRECT;
->>>  			found = true;
->>>  			break;
->>>  		}
->>> @@ -901,8 +905,8 @@ static int find_existing_ddw_windows(void)
->>>  	if (!firmware_has_feature(FW_FEATURE_LPAR))
->>>  		return 0;
->>>  
->>> -	for_each_node_with_property(pdn, DIRECT64_PROPNAME) {
->>> -		direct64 = of_get_property(pdn, DIRECT64_PROPNAME, &len);
->>> +	for_each_node_with_property(pdn, DMA64_PROPNAME) {
->>> +		direct64 = of_get_property(pdn, DMA64_PROPNAME, &len);
->>>  		if (!direct64)
->>>  			continue;
->>>  
->>> @@ -1124,7 +1128,8 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
->>>  }
->>>  
->>>  static int ddw_property_create(struct property **ddw_win, const char *propname,
->>> -			       u32 liobn, u64 dma_addr, u32 page_shift, u32 window_shift)
->>> +			       u32 liobn, u64 dma_addr, u32 page_shift,
->>> +			       u32 window_shift, bool direct_mapping)
->>>  {
->>>  	struct dynamic_dma_window_prop *ddwprop;
->>>  	struct property *win64;
->>> @@ -1144,6 +1149,36 @@ static int ddw_property_create(struct property **ddw_win, const char *propname,
->>>  	ddwprop->dma_base = cpu_to_be64(dma_addr);
->>>  	ddwprop->tce_shift = cpu_to_be32(page_shift);
->>>  	ddwprop->window_shift = cpu_to_be32(window_shift);
->>> +	if (direct_mapping)
->>> +		ddwprop->flags = cpu_to_be32(DDW_FLAGS_DIRECT);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int iommu_table_update_window(struct iommu_table **tbl, int nid, unsigned long liobn,
->>> +				     unsigned long win_addr, unsigned long page_shift,
->>> +				     unsigned long window_size)
->>
->> Rather strange helper imho. I'd extract the most of
->> iommu_table_setparms_lpar() into iommu_table_setparms() (except
->> of_parse_dma_window) and call new helper from where you call
->> iommu_table_update_window; and do
->> iommu_pseries_alloc_table/iommu_tce_table_put there.
->>
-> 
-> I don't see how to extract iommu_table_setparms_lpar() into
-> iommu_table_setparms(), they look to be used for different machine
-> types.
-> 
-> Do mean you extracting most of iommu_table_setparms_lpar() (and maybe
-> iommu_table_setparms() ) into a new helper, which is called in both
-> functions and use it instead of iommu_table_update_window() ?
-
-Yes, this.
-
-
-> 
->>
->>> +{
->>> +	struct iommu_table *new_tbl, *old_tbl;
->>> +
->>> +	new_tbl = iommu_pseries_alloc_table(nid);
->>> +	if (!new_tbl)
->>> +		return -ENOMEM;
->>> +
->>> +	old_tbl = *tbl;
->>> +	new_tbl->it_index = liobn;
->>> +	new_tbl->it_offset = win_addr >> page_shift;
->>> +	new_tbl->it_page_shift = page_shift;
->>> +	new_tbl->it_size = window_size >> page_shift;
->>> +	new_tbl->it_base = old_tbl->it_base;
->>
->> Should not be used in pseries.
->>
-> 
-> The point here is to migrate the values from the older tbl to the
-
-
-The actual window/table is new (on the hypervisor side), you are not
-migrating a single TCE, you deleted one whole window and created another
-whole window, calling it "migration" is confusing, especially when PAPR
-actually defines TCE migration.
-
-
-> newer. I Would like to understand why this is bad, if it will still be
-> 'unused' as the older tbl.
-
-
-Having explicit values is more readable imho.
-
-
->>
->>> +	new_tbl->it_busno = old_tbl->it_busno;
->>> +	new_tbl->it_blocksize = old_tbl->it_blocksize;
->>
->> 16 for pseries and does not change (may be even make it a macro).
->>
->>> +	new_tbl->it_type = old_tbl->it_type;
->>
->> TCE_PCI.
->>
-> 
-> Same as above.
-> 
->>
->>> +	new_tbl->it_ops = old_tbl->it_ops;
->>> +
->>> +	iommu_init_table(new_tbl, nid, old_tbl->it_reserved_start, old_tbl->it_reserved_end);
->>> +	iommu_tce_table_put(old_tbl);
->>> +	*tbl = new_tbl;
->>>  
->>>  	return 0;
->>>  }
->>> @@ -1171,12 +1206,16 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->>>  	struct direct_window *window;
->>>  	struct property *win64 = NULL;
->>>  	struct failed_ddw_pdn *fpdn;
->>> -	bool default_win_removed = false;
->>> +	bool default_win_removed = false, maps_whole_partition = false;
->>
->> s/maps_whole_partition/direct_mapping/
->>
-> 
-> Sure, I will get it replaced.
-> 
->>
->>> +	struct pci_dn *pci = PCI_DN(pdn);
->>> +	struct iommu_table *tbl = pci->table_group->tables[0];
->>>  
->>>  	mutex_lock(&direct_window_init_mutex);
->>>  
->>> -	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset))
->>> -		goto out_unlock;
->>> +	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset, &maps_whole_partition)) {
->>> +		mutex_unlock(&direct_window_init_mutex);
->>> +		return maps_whole_partition;
->>> +	}
->>>  
->>>  	/*
->>>  	 * If we already went through this for a previous function of
->>> @@ -1258,16 +1297,24 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->>>  			  query.page_size);
->>>  		goto out_failed;
->>>  	}
->>> +
->>>  	/* verify the window * number of ptes will map the partition */
->>> -	/* check largest block * page size > max memory hotplug addr */
->>>  	max_addr = ddw_memory_hotplug_max();
->>>  	if (query.largest_available_block < (max_addr >> page_shift)) {
->>> -		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu "
->>> -			  "%llu-sized pages\n", max_addr,  query.largest_available_block,
->>> -			  1ULL << page_shift);
->>> -		goto out_failed;
->>> +		dev_dbg(&dev->dev, "can't map partition max 0x%llx with %llu %llu-sized pages\n",
->>> +			max_addr, query.largest_available_block,
->>> +			1ULL << page_shift);
->>> +
->>> +		len = order_base_2(query.largest_available_block << page_shift);
->>> +	} else {
->>> +		maps_whole_partition = true;
->>> +		len = order_base_2(max_addr);
->>>  	}
->>> -	len = order_base_2(max_addr);
->>> +
->>> +	/* DDW + IOMMU on single window may fail if there is any allocation */
->>> +	if (default_win_removed && !maps_whole_partition &&
->>> +	    iommu_table_in_use(tbl))
->>> +		goto out_failed;
->>>  
->>>  	ret = create_ddw(dev, ddw_avail, &create, page_shift, len);
->>>  	if (ret != 0)
->>> @@ -1277,8 +1324,8 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->>>  		create.liobn, dn);
->>>  
->>>  	win_addr = ((u64)create.addr_hi << 32) | create.addr_lo;
->>> -	ret = ddw_property_create(&win64, DIRECT64_PROPNAME, create.liobn, win_addr,
->>> -				  page_shift, len);
->>> +	ret = ddw_property_create(&win64, DMA64_PROPNAME, create.liobn, win_addr,
->>> +				  page_shift, len, maps_whole_partition);
->>>  	if (ret) {
->>>  		dev_info(&dev->dev,
->>>  			 "couldn't allocate property, property name, or value\n");
->>> @@ -1297,12 +1344,25 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->>>  	if (!window)
->>>  		goto out_prop_del;
->>>  
->>> -	ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
->>> -			win64->value, tce_setrange_multi_pSeriesLP_walk);
->>> -	if (ret) {
->>> -		dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
->>> -			 dn, ret);
->>> -		goto out_free_window;
->>> +	if (maps_whole_partition) {
->>> +		/* DDW maps the whole partition, so enable direct DMA mapping */
->>> +		ret = walk_system_ram_range(0, memblock_end_of_DRAM() >> PAGE_SHIFT,
->>> +					    win64->value, tce_setrange_multi_pSeriesLP_walk);
->>> +		if (ret) {
->>> +			dev_info(&dev->dev, "failed to map direct window for %pOF: %d\n",
->>> +				 dn, ret);
->>> +			goto out_free_window;
->>> +		}
->>> +	} else {
->>> +		/* New table for using DDW instead of the default DMA window */
->>> +		if (iommu_table_update_window(&tbl, pci->phb->node, create.liobn,
->>> +					      win_addr, page_shift, 1UL << len))
->>> +			goto out_free_window;
->>> +
->>> +		set_iommu_table_base(&dev->dev, tbl);
->>> +		WARN_ON(dev->dev.archdata.dma_offset >= SZ_4G);
->>
->> What is this check for exactly? Why 4G, not >= 0, for example?
-> 
-> I am not really sure, you suggested adding it here:
-> http://patchwork.ozlabs.org/project/linuxppc-dev/patch/20200716071658.467820-6-leobras.c@gmail.com/#2488874
-
-
-Ah right I did suggest this :) My bad. I think I suggested it before
-suggesting to keep the reserved area boundaries checked/adjusted to the
-window boundaries, may as well drop this. Thanks,
-
-
-> 
-> I can remove it if it's ok.
-> 
->>
->>> +		goto out_unlock;
->>> +
->>>  	}
->>>  
->>>  	dev->dev.archdata.dma_offset = win_addr;
->>> @@ -1340,7 +1400,7 @@ static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
->>>  
->>>  out_unlock:
->>>  	mutex_unlock(&direct_window_init_mutex);
->>> -	return win64;
->>> +	return win64 && maps_whole_partition;
->>>  }
->>>  
->>>  static void pci_dma_dev_setup_pSeriesLP(struct pci_dev *dev)
->>>
-> 
-
--- 
-Alexey
+--UlVJffcvxoiEqYs2--
