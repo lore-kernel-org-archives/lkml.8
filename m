@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD3C2C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A609CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF820207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65E88207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887990;
-	bh=r5LdmNC2g7FIRe6CwrmHuVuU4fXEV1nY9Ab8Ln9jqTU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=VXMS204C6IIPV1QXVGRPNi2OC+LupowACcT7Ooqduw02Cz834l0MVko4CZKHtQ8Ks
-	 VTQ654DjF5hAbXPIxN+NB2pP4JmdsgxjCl+cjfyCARYt+9gJCZYMexv+evHfkQnYm7
-	 hXbwG+iixKjx0nkf96+htePYn/Gi1MK9+wuVz4zE=
+	s=default; t=1598887999;
+	bh=MwxD5VJzHt3uN3NMF6cZstG6zJoHeJtlRavYi1XCW/4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cWVW6YroTT7Ds5dHnxCCdkjqsMoDqPpdf0GjpDF0q+L5/arN6fhKqer3Gj93HS40q
+	 Xnykx/fh8bFF82DktSH1Wm3N5dX3+/fFuXcMRGJylVIJXexWVAQdyO2n7cGB1gzUkC
+	 +xUVwUFNCm1qqw2X3w3gQLYKmrvnkAuk+XXsJoiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbgHaPdJ (ORCPT
+        id S1728679AbgHaPdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:33:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43470 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:33:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729041AbgHaPcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:32:03 -0400
+        id S1729017AbgHaPb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:56 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AFD121582;
-        Mon, 31 Aug 2020 15:32:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F187F2158C;
+        Mon, 31 Aug 2020 15:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887923;
-        bh=r5LdmNC2g7FIRe6CwrmHuVuU4fXEV1nY9Ab8Ln9jqTU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=lAMslzJcr1hvkxQr37o8z/VLtHWvIcV6NmL0P/Imj0oOjvASOtk3kQcf2yZFPxKid
-         bv8SxDPx5+XBFSrBwttDijXTYD9ODWMQiUbbod7FyUUqiCB60+snPdHrE5Y8UJuTcb
-         MTGDBha3vwxratoDbNXDrOFlZa8akKXIGIgwLLMQ=
+        s=default; t=1598887916;
+        bh=MwxD5VJzHt3uN3NMF6cZstG6zJoHeJtlRavYi1XCW/4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AXOIdLCO3UAHTyvRHpp+x/YinvY95tertdXrWiWrNYb+EzLCO+2Utbkg7PHrvCDQy
+         FO4ib3D9w8x2JSqob7LfGJbdDCYJZZBuMaBbeg5y6I5J/d9xcuFjbKW4PN6SWuaRpr
+         z3dD97ADekVOrFztYYm5JuSETWBJNkgBg9tHImLc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 1/5] HID: hiddev: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
-Date:   Mon, 31 Aug 2020 11:31:56 -0400
-Message-Id: <20200831153200.1024898-1-sashal@kernel.org>
+Cc:     Amit Engel <amit.engel@dell.com>, Sagi Grimberg <sagi@grimberg.me>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
+        linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.9 3/6] nvmet: Disable keep-alive timer when kato is cleared to 0h
+Date:   Mon, 31 Aug 2020 11:31:46 -0400
+Message-Id: <20200831153150.1024799-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200831153150.1024799-1-sashal@kernel.org>
+References: <20200831153150.1024799-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,44 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Amit Engel <amit.engel@dell.com>
 
-[ Upstream commit 25a097f5204675550afb879ee18238ca917cba7a ]
+[ Upstream commit 0d3b6a8d213a30387b5104b2fb25376d18636f23 ]
 
-`uref->usage_index` is not always being properly checked, causing
-hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
+Based on nvme spec, when keep alive timeout is set to zero
+the keep-alive timer should be disabled.
 
-Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Amit Engel <amit.engel@dell.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hiddev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvme/target/core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index dbdd265075daf..7bce23a43907e 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -554,12 +554,16 @@ static noinline int hiddev_ioctl_usage(struct hiddev *hiddev, unsigned int cmd,
+diff --git a/drivers/nvme/target/core.c b/drivers/nvme/target/core.c
+index 96ea6c76be6e5..63b87a8472762 100644
+--- a/drivers/nvme/target/core.c
++++ b/drivers/nvme/target/core.c
+@@ -205,6 +205,9 @@ static void nvmet_keep_alive_timer(struct work_struct *work)
  
- 		switch (cmd) {
- 		case HIDIOCGUSAGE:
-+			if (uref->usage_index >= field->report_count)
-+				goto inval;
- 			uref->value = field->value[uref->usage_index];
- 			if (copy_to_user(user_arg, uref, sizeof(*uref)))
- 				goto fault;
- 			goto goodreturn;
+ static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
+ {
++	if (unlikely(ctrl->kato == 0))
++		return;
++
+ 	pr_debug("ctrl %d start keep-alive timer for %d secs\n",
+ 		ctrl->cntlid, ctrl->kato);
  
- 		case HIDIOCSUSAGE:
-+			if (uref->usage_index >= field->report_count)
-+				goto inval;
- 			field->value[uref->usage_index] = uref->value;
- 			goto goodreturn;
+@@ -214,6 +217,9 @@ static void nvmet_start_keep_alive_timer(struct nvmet_ctrl *ctrl)
  
+ static void nvmet_stop_keep_alive_timer(struct nvmet_ctrl *ctrl)
+ {
++	if (unlikely(ctrl->kato == 0))
++		return;
++
+ 	pr_debug("ctrl %d stop keep-alive\n", ctrl->cntlid);
+ 
+ 	cancel_delayed_work_sync(&ctrl->ka_work);
 -- 
 2.25.1
 
