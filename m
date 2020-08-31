@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 851FAC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE70BC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6222420866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9118620707
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:58:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728867AbgHaQ6e (ORCPT
+        id S1728841AbgHaQ6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:58:34 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200]:48065 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728772AbgHaQ6W (ORCPT
+        Mon, 31 Aug 2020 12:58:31 -0400
+Received: from mail-il1-f197.google.com ([209.85.166.197]:35370 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728797AbgHaQ6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 12:58:22 -0400
-Received: by mail-il1-f200.google.com with SMTP id z6so391422iln.14
+Received: by mail-il1-f197.google.com with SMTP id p16so2466450ilp.2
         for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:58:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=+ZTs2n83Tkv9civzXKXQz/dyybMvLYTtTFdf222myQU=;
-        b=NLmAghc1mZuesaHt/MsbHKnI8f9Xj4XJxbIyUvhzgtawjf7SIgZLS6ikzKDTDG9JdS
-         yPwjGmUaWbzpjItmgr5shPB7bFZY5cYnDpVmX78z2pD7X7QUWItLloFDwoPLxeXyIJ+9
-         N6uNvvp6FyFVKq+ZiWihuKEJpprW4FXQyEjX7JNo1GkLUe++BZkSuOncJGAHWKdmN7D2
-         TPio+YhQSB8anvqqaYqXhy8MoxOcsDrFDloJQfS3JZcMKlm8+qiYa6ojoLEgUNmT/RDq
-         CeGIK2NF1hIK/mycc+QsbfBdtgSkk2T1gT4haNLFgCFog+YiECXZuPekts+NuWQgeKKW
-         tCLw==
-X-Gm-Message-State: AOAM533qehlrq6seSE6fUcNinRNKep6RGLw7TrmXyC9rj0CIM4fTamkq
-        kmBIEg+G9c0GMCXwn/4Hj9r+iTq8m9Xe840hXaaZ6lCdqxP7
-X-Google-Smtp-Source: ABdhPJy97nCt55gGNTuN6WXoY0AozhHr8Q2AcDXTatLhN0TANhDMJJyv6r1BNny+Gn5crQ6UsyoekIZ6uRtQE2Pe0zOgBkzYje1W
+        bh=Ve3fMaP+GgxKOYA2jQMbUsBIcbQ4arT97D2zd8YTu2Q=;
+        b=sRBNo/L79y4XVEMWuF3UvM59MgV1G+kEc7wE6LYdjeRFLLg+9v/6MY3ssPjLgGpKaB
+         aeJEpQlN21LVOIipLf/y32hmGTDLM2McBNet2lbrbTqLPz26B6Qgz6X18r5kFVcneGko
+         YgOk3eVYcHng2z8R/gGwUUB/yyT3e/eBe4jgeni5O9J+Plk0+HHcCpIFw8mPBatJxlpd
+         UzJUPMkaHKPK6ECVcBEPv5W276c0DEMej2j4rCdkbtnQSWdBdBvAkFNYoTXPGzx+8ON0
+         zB99iMGrWZphJwSigvQFVYwGsHzg0NvXANU01jhUuZcGNCvu9czYNc4CbioXI5haIIMf
+         x21Q==
+X-Gm-Message-State: AOAM531mk1ucQZAWqcr/BEb7o/gdxC+KJEKmIWU54PwndfRadGe5k8qU
+        i3GcZjWgdcX1NlL836i+JYs0He0wvDigBz9z48YeUe2GqoS4
+X-Google-Smtp-Source: ABdhPJzebhMi2YVlQFv285w6irW+P0ujyzgsqNUG/Nz0LVkoTR+LISYvXb9Tq45g6gErJc3xGQPz6sdNe3TLeT7IuWRIkJdkg24k
 MIME-Version: 1.0
-X-Received: by 2002:a92:1b4d:: with SMTP id b74mr2202700ilb.198.1598893101025;
+X-Received: by 2002:a05:6e02:ca3:: with SMTP id 3mr2232309ilg.227.1598893101210;
  Mon, 31 Aug 2020 09:58:21 -0700 (PDT)
 Date:   Mon, 31 Aug 2020 09:58:21 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000520ffc05ae2f4fee@google.com>
-Subject: KASAN: use-after-free Read in bdev_del_partition
-From:   syzbot <syzbot+6448f3c229bc52b82f69@syzkaller.appspotmail.com>
-To:     axboe@kernel.dk, johannes.thumshirn@wdc.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
+Message-ID: <00000000000054e22905ae2f4fae@google.com>
+Subject: WARNING in chnl_net_uninit
+From:   syzbot <syzbot+ef72fb13d1c081833ebe@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        wangyunjian@huawei.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -57,114 +57,44 @@ Hello,
 
 syzbot found the following issue on:
 
-HEAD commit:    dcc5c6f0 Merge tag 'x86-urgent-2020-08-30' of git://git.ke..
+HEAD commit:    4d41ead6 Merge tag 'block-5.9-2020-08-28' of git://git.ker..
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11e8ca85900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
-dashboard link: https://syzkaller.appspot.com/bug?extid=6448f3c229bc52b82f69
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154e2285900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f6e915900000
+console output: https://syzkaller.appspot.com/x/log.txt?x=100cf1de900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5ebdb650dfa501c1
+dashboard link: https://syzkaller.appspot.com/bug?extid=ef72fb13d1c081833ebe
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+userspace arch: i386
+
+Unfortunately, I don't have any reproducer for this issue yet.
 
 IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+6448f3c229bc52b82f69@syzkaller.appspotmail.com
+Reported-by: syzbot+ef72fb13d1c081833ebe@syzkaller.appspotmail.com
 
-==================================================================
-BUG: KASAN: use-after-free in kobject_put+0x245/0x2c0 lib/kobject.c:748
-Read of size 1 at addr ffff8880a384e9bc by task syz-executor027/6982
-
-CPU: 0 PID: 6982 Comm: syz-executor027 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+------------[ cut here ]------------
+WARNING: CPU: 3 PID: 11918 at net/caif/chnl_net.c:67 robust_list_del net/caif/chnl_net.c:67 [inline]
+WARNING: CPU: 3 PID: 11918 at net/caif/chnl_net.c:67 chnl_net_uninit+0xc9/0x2dc net/caif/chnl_net.c:380
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 2 PID: 11918 Comm: syz-executor.1 Not tainted 5.9.0-rc2-syzkaller #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
 Call Trace:
  __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1d6/0x29e lib/dump_stack.c:118
- print_address_description+0x66/0x620 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report+0x132/0x1d0 mm/kasan/report.c:530
- kobject_put+0x245/0x2c0 lib/kobject.c:748
- delete_partition block/partitions/core.c:324 [inline]
- bdev_del_partition+0x26a/0x380 block/partitions/core.c:549
- blkpg_do_ioctl+0x12b/0x2e0 block/ioctl.c:33
- blkpg_ioctl block/ioctl.c:69 [inline]
- blkdev_ioctl+0x352/0x5d0 block/ioctl.c:589
- block_ioctl+0xbc/0x100 fs/block_dev.c:1871
- vfs_ioctl fs/ioctl.c:48 [inline]
- __do_sys_ioctl fs/ioctl.c:753 [inline]
- __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x446959
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f4a7a555d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446959
-RDX: 0000000020000000 RSI: 0000000000001269 RDI: 0000000000000005
-RBP: 00000000006dbc30 R08: 00007f4a7a556700 R09: 0000000000000000
-R10: 00007f4a7a556700 R11: 0000000000000246 R12: 00000000006dbc3c
-R13: 00000000000000a9 R14: 00b747111e42e3ec R15: 02ba2b7a04b8ac00
-
-Allocated by task 6977:
- kasan_save_stack mm/kasan/common.c:48 [inline]
- kasan_set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc+0x100/0x130 mm/kasan/common.c:461
- kmem_cache_alloc_trace+0x1e4/0x2e0 mm/slab.c:3550
- kmalloc include/linux/slab.h:554 [inline]
- kzalloc include/linux/slab.h:666 [inline]
- kobject_create lib/kobject.c:783 [inline]
- kobject_create_and_add+0x57/0x240 lib/kobject.c:809
- add_partition+0x884/0xcb0 block/partitions/core.c:443
- bdev_add_partition+0x1c9/0x230 block/partitions/core.c:518
- blkpg_do_ioctl+0x295/0x2e0 block/ioctl.c:52
- blkpg_ioctl block/ioctl.c:69 [inline]
- blkdev_ioctl+0x352/0x5d0 block/ioctl.c:589
- block_ioctl+0xbc/0x100 fs/block_dev.c:1871
- vfs_ioctl fs/ioctl.c:48 [inline]
- __do_sys_ioctl fs/ioctl.c:753 [inline]
- __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 6979:
- kasan_save_stack mm/kasan/common.c:48 [inline]
- kasan_set_track+0x3d/0x70 mm/kasan/common.c:56
- kasan_set_free_info+0x17/0x30 mm/kasan/generic.c:355
- __kasan_slab_free+0xdd/0x110 mm/kasan/common.c:422
- __cache_free mm/slab.c:3418 [inline]
- kfree+0x113/0x200 mm/slab.c:3756
- kobject_cleanup lib/kobject.c:704 [inline]
- kobject_release lib/kobject.c:735 [inline]
- kref_put include/linux/kref.h:65 [inline]
- kobject_put+0x1a0/0x2c0 lib/kobject.c:752
- delete_partition block/partitions/core.c:324 [inline]
- bdev_del_partition+0x26a/0x380 block/partitions/core.c:549
- blkpg_do_ioctl+0x12b/0x2e0 block/ioctl.c:33
- blkpg_ioctl block/ioctl.c:69 [inline]
- blkdev_ioctl+0x352/0x5d0 block/ioctl.c:589
- block_ioctl+0xbc/0x100 fs/block_dev.c:1871
- vfs_ioctl fs/ioctl.c:48 [inline]
- __do_sys_ioctl fs/ioctl.c:753 [inline]
- __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
- do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-The buggy address belongs to the object at ffff8880a384e980
- which belongs to the cache kmalloc-64 of size 64
-The buggy address is located 60 bytes inside of
- 64-byte region [ffff8880a384e980, ffff8880a384e9c0)
-The buggy address belongs to the page:
-page:00000000f601aef4 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xa384e
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000263b548 ffffea00029bbac8 ffff8880aa440200
-raw: 0000000000000000 ffff8880a384e000 0000000100000020 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a384e880: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
- ffff8880a384e900: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->ffff8880a384e980: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-                                        ^
- ffff8880a384ea00: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
- ffff8880a384ea80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
-==================================================================
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:231
+ __warn.cold+0x20/0x4a kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x38/0x90 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:robust_list_del net/caif/chnl_net.c:67 [inline]
+RIP: 0010:chnl_net_uninit+0xc9/0x2dc net/caif/chnl_net.c:380
+Code: 89 eb e8 3a 44 b0 f9 48 89 d8 48 c1 e8 03 42 80 3c 28 00 0f 85 bf 01 00 00 48 81 fb 60 ba a5 8a 48 8b 2b 75 d0 e8 17 44 b0 f9 <0f> 0b 5b 5d 41 5c 41 5d e9 0a 44 b0 f9 4c 89 e3 e8 02 44 b0 f9 4c
+RSP: 0000:ffffc90001707070 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffffffff8aa5ba60 RCX: ffffffff87c3fa72
+RDX: ffff88802797d800 RSI: ffffffff87c3faf9 RDI: 0000000000000005
+RBP: ffffffff8aa5ba60 R08: 0000000000000000 R09: ffffffff8a7e73e7
+R10: 0000000000000000 R11: 0000000000000001 R12: ffff88805fdd6d88
+R13: ffff88805fdd6000 R14: dffffc0000000000 R15: ffff888023b07f80
+ rollback_registered_many+0xa7a/0x1210 net/core/dev.c:9300
 
 
 ---
@@ -174,5 +104,3 @@ syzbot engineers can be reached at syzkaller@googlegroups.com.
 
 syzbot will keep track of this issue. See:
 https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
