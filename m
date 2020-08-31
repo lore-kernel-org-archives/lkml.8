@@ -2,164 +2,121 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 256DBC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F064C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC3E9206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1670F206CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="gEKZiHso";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Ovu0ngWu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oyEI9xOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgHaNGy (ORCPT
+        id S1726797AbgHaNIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:06:54 -0400
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:59127 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726312AbgHaNEs (ORCPT
+        Mon, 31 Aug 2020 09:08:09 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41322 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbgHaNH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:04:48 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 4109B5806A8;
-        Mon, 31 Aug 2020 09:04:45 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Mon, 31 Aug 2020 09:04:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=OksYHyac3fnP5r/s9UEYAtkDaXe
-        rVbf3CMP9KhXgW3A=; b=gEKZiHsoxC331MtHaDKehDi/zbAgqh9THXdSpEIAv1H
-        LxjIKK2As5frnQaNy4+cDvpOKqK29Hs9C+qbOKlFxXKS5M3bJp8tntpc8Zzy9zrR
-        pmUzBPwAhzJln1LWWBiU9nxhgFquJIdodK+APoYEuJuDisv8uoaAA5TWm8GSNxqP
-        QWp2dcFg8lTLwrA0me4t79F7e4/XNZYowti8Zhp1t3Sudbj0whbT2MWIFRgA9HYP
-        TWJnjckUun+AYhj1Efoj5tlE8Ru8howXexc8cNHCf/xQoQ0BzaSSM63BXmTAqQTn
-        ESTQzjLSJEDp5L+fxTX7nAMqkId4/6cyCMRG+0/sRNQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=OksYHy
-        ac3fnP5r/s9UEYAtkDaXerVbf3CMP9KhXgW3A=; b=Ovu0ngWueytMSNIAV6J6sR
-        vrGksFa02XoVowfgyUNlWfUdpOzrXiH4R4CpgcPuFDHuqBpnVKRHQSO88dYA7Cyj
-        OGefdq1LC3aoYqLcgaaQ8bxDi3ysN8+Is4PVyAJfV1OPGR6hRa7x/6DspL2XWbS2
-        JBYKEpKNuesFIPYLaSI0JtU/atDsinEC1JWX9W1TNog3chufI2PyBr32QWoKnMKa
-        O9OY51LBOAOh/Sc+SKHk3Dy24/8351FH3pvW7/TADQmUsPwCljudjSVMXJAJsspg
-        mOcREGU3T/JN22tfwvo941Y7795UNKiBxVuS6ND9mxSCb9NVplYr3GR9JA0PHfLQ
-        ==
-X-ME-Sender: <xms:aPVMX0W1ZXUkLyOW5_x13LNUKIvlg0TirwoKrGpWqW72bsF7eXAHUg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefhedgiedtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
-    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:aPVMX4lIvJbGBpR96RYwSyCrEhpaunktOp3YXRIMcN1rq2nGD5yfzQ>
-    <xmx:aPVMX4ZQAvsTq2mtT3XcfTUyfbf-x-rxkTBbQgWQwfhsQ05rv2cnuw>
-    <xmx:aPVMXzUZwKiacGqLd0FI7cK7UbqzFGZ6LCobvyGrBU9_f2Bc9vaDrw>
-    <xmx:bfVMXwdxudmdp1gUHfC1_mJjHIMUrfhSbYvvWayPoiTFNJCsOHwLCQ>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 14AA13280065;
-        Mon, 31 Aug 2020 09:04:39 -0400 (EDT)
-Date:   Mon, 31 Aug 2020 15:04:38 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     =?utf-8?B?S8OpdmluIEwnaMO0cGl0YWw=?= <kevin.lhopital@bootlin.com>,
-        linux-media@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, wens@csie.org, yong.deng@magewell.com,
-        mchehab+samsung@kernel.org, p.zabel@pengutronix.de,
-        sakari.ailus@linux.intel.com, hans.verkuil@cisco.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, thomas.petazzoni@bootlin.com
-Subject: Re: [PATCH v2 0/4] Support of MIPI CSI-2 for A83T
-Message-ID: <20200831130438.5j237mntivrw3cwo@gilmour.lan>
-References: <20200828131737.12483-1-kevin.lhopital@bootlin.com>
- <20200828141203.GC6858@aptenodytes>
+        Mon, 31 Aug 2020 09:07:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07VD7kAQ093615;
+        Mon, 31 Aug 2020 08:07:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598879266;
+        bh=nPXWbXB5ptLwVXCnfHta8Iu5YbXqThKPhXxvtW0ph6A=;
+        h=From:To:CC:Subject:Date;
+        b=oyEI9xOXJwdLyT8H8XKhcBK6ppOcXoLwJFWsN1VHdXS0eCB+kZYiLMrWKj4cXjSsp
+         V30+TUvA5ejeys34gKHNVrLP7eMp5p3fFRLnC99bUGcMJfTzWPcXr/ogRBdW+TBIZm
+         UlLDApj27ilR+zZv0jKovD9n2dtSg87CTky9608U=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 07VD7kp0054215
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 Aug 2020 08:07:46 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 31
+ Aug 2020 08:07:46 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 31 Aug 2020 08:07:46 -0500
+Received: from ula0132425.ent.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07VD7hcG094698;
+        Mon, 31 Aug 2020 08:07:43 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Pratyush Yadav <p.yadav@ti.com>, <linux-spi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] spi: spi-cadence-quadspi: Fix mapping of buffers for DMA reads
+Date:   Mon, 31 Aug 2020 18:37:20 +0530
+Message-ID: <20200831130720.4524-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="b4qmuwqdmiqxdr5o"
-Content-Disposition: inline
-In-Reply-To: <20200828141203.GC6858@aptenodytes>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Buffers need to mapped to DMA channel's device pointer instead of SPI
+controller's device pointer as its system DMA that actually does data
+transfer.
+Data inconsistencies have been reported when reading from flash
+without this fix.
 
---b4qmuwqdmiqxdr5o
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Fixes: ffa639e069fb ("mtd: spi-nor: cadence-quadspi: Add DMA support for direct mode reads")
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Tested-by: Jan Kiszka <jan.kiszka@siemens.com>
+---
 
-Hi Paul,
+v2:
+Update the Fixes tag and add collect tested-by
 
-On Fri, Aug 28, 2020 at 04:12:03PM +0200, Paul Kocialkowski wrote:
-> Hi everyone,
->=20
-> On Fri 28 Aug 20, 15:17, K=E9vin L'h=F4pital wrote:
-> > This series adds the support for the MIPI CSI-2 controller for the A83T=
- SoC.
-> > The CSI controller is the same as the V3s SoC that's why I put the A83T
-> > MIPI CSI-2 driver in sun6i-csi.
-> > My work is based on the Allwinner BSP for A83T and also on MIPI CSI-2
-> > specification for the A83T given by Allwinner.
->=20
-> To give a bit of context here, Kevin is our intern who worked on MIPI CSI=
--2
-> support on the A83t this summer. As we were approaching the end of the
-> internship, we wanted to publish the current state of the work as a worki=
-ng
-> reference and base for mainline support.
->=20
-> However, we are well aware that there are significant design issues in th=
-is
-> series, such as:
-> - not supporting the fwnode graph;
-> - not working with the DPHY API;
-> - adding MIPI CSI-2 support under the same dt compatible as parallel CSI;
->=20
-> and probably other things.
->=20
-> Bootlin is currently working on V3s MIPI CSI-2 support and we intend to r=
-espin
-> this series when submitting V3s MIPI CSI-2 support, with fixes to these d=
-esign
-> issues.
+ drivers/spi/spi-cadence-quadspi.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-It's great to have that clarification, but it really doesn't address any
-of the questions I had in the v1:
+diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+index 508b219eabf8..c6795c684b16 100644
+--- a/drivers/spi/spi-cadence-quadspi.c
++++ b/drivers/spi/spi-cadence-quadspi.c
+@@ -907,14 +907,16 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+ 	struct dma_async_tx_descriptor *tx;
+ 	dma_cookie_t cookie;
+ 	dma_addr_t dma_dst;
++	struct device *ddev;
+ 
+ 	if (!cqspi->rx_chan || !virt_addr_valid(buf)) {
+ 		memcpy_fromio(buf, cqspi->ahb_base + from, len);
+ 		return 0;
+ 	}
+ 
+-	dma_dst = dma_map_single(dev, buf, len, DMA_FROM_DEVICE);
+-	if (dma_mapping_error(dev, dma_dst)) {
++	ddev = cqspi->rx_chan->device->dev;
++	dma_dst = dma_map_single(ddev, buf, len, DMA_FROM_DEVICE);
++	if (dma_mapping_error(ddev, dma_dst)) {
+ 		dev_err(dev, "dma mapping failed\n");
+ 		return -ENOMEM;
+ 	}
+@@ -948,7 +950,7 @@ static int cqspi_direct_read_execute(struct cqspi_flash_pdata *f_pdata,
+ 	}
+ 
+ err_unmap:
+-	dma_unmap_single(dev, dma_dst, len, DMA_FROM_DEVICE);
++	dma_unmap_single(ddev, dma_dst, len, DMA_FROM_DEVICE);
+ 
+ 	return ret;
+ }
+-- 
+2.28.0
 
-> There's a bunch of things that would need to be explained and / or
-> argued for here, in particular:
->   - Why did you need to plumb it into sun6i-csi?
->   - You're naming the CSI part as the A83t CSI, while MIPI-CSI has been
->     supported since the A31(?), is there a reason for that?
->   - This is not documented anywhere, what did you base this work on?
-
-You're also mentioning the v3s, without really stating why this driver
-wouldn't be able to drive it.
-
-> So we hope you keep this in mind when reviewing the series, which is
-> not meant to be merged in its current state.
-
-I mean, if the current code needs to be redesigned, and you provide no
-details whatsoever on the hardware, I'm not really sure what kind of
-input you're expecting.
-
-Maxime
-
---b4qmuwqdmiqxdr5o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0z1ZgAKCRDj7w1vZxhR
-xcIdAQD4AMq93jtqf5iCSZvZKfZ561pwJYqkPNSNcGBJRo89/AEAkZqWO5FhGhtu
-g9JnCFQyoH2HOEf2wpPFLfqZRWgnIQY=
-=K+VR
------END PGP SIGNATURE-----
-
---b4qmuwqdmiqxdr5o--
