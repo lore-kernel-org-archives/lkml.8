@@ -2,124 +2,118 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9432C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D59C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6BFC20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:45:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Gb0KnAM+"
+	by mail.kernel.org (Postfix) with ESMTP id B9F0520782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727046AbgHaBpe (ORCPT
+        id S1727040AbgHaBqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:45:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbgHaBp2 (ORCPT
+        Sun, 30 Aug 2020 21:46:38 -0400
+Received: from brightrain.aerifal.cx ([216.12.86.13]:48326 "EHLO
+        brightrain.aerifal.cx" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgHaBqf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:45:28 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE8DC061236
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:45:28 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id p25so4884610qkp.2
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:45:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=QrYH2o5+zk1SiKRZEFr0mMh9hRmJ4dl12s+7gy3RUAg=;
-        b=Gb0KnAM+8MBliwaxnEo8iwH9SMoPmVjIfwHxC37VhFYBan0v5M/7DWD4DBNrTj+HwK
-         yeJVvgxnYChpyi0XANWADOOT+W2XUBoPON5Jl7XTlDk2gK8kzg5PDa03u+P2dgiZfhkP
-         Bgh4mXNU7XW7TXRhD17l7pkyliv1alW5NzI1YZtWutwPMESZkMJzCGVO8CEhxg3IgjPX
-         APVmDl9a6yVsdANx7Zh8/kBlMNjiVVLlTaOasGJyggpx3GWalCab0MA+gyZIjbx78Njk
-         kHtEXLYeBq27KRU7YBUEcf3Tp8x91a6rbYa4fS+lZvm6Ep0kUUEtCcpHlDmsqIVE+7J0
-         Ec/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=QrYH2o5+zk1SiKRZEFr0mMh9hRmJ4dl12s+7gy3RUAg=;
-        b=MCak7Rcgjuu8vopFt5PxoGvUxlKY07/ChaVnO7hGV53s8wY+aFtpWzH3zTVLOp9wT8
-         5C9zhZPqfZELpTwA1MX7NPgRgyRWb8WfxCeBSuv1nLh79wH4bXJKZmhB1f9Ma1jr7j2I
-         /T9pmep3mZzd37GqZxp/x5bpEFBsLaWr6dU4AReYfqUD1nKRASrCsQresqcBRG/lq91l
-         mFqfrsZ9HM8Rjiev2acsHYAVjFxc4wc7LDY507DMBj66fynIkZpv+uMBVa3+VJ3lrY93
-         zlxgQnsDEF6w+AO1Lg/BGoRbqU8EW8tOdn52sktZJJEM/LTO5JRfUCWXu2oPxHTF16FE
-         U/CQ==
-X-Gm-Message-State: AOAM533+STLmgdnhUqkB7ofEiCp0uQKA9erthJd5RugQ1XGJ50F/nCFM
-        5B8QIQcN3TYcDalSSp97E775Ww==
-X-Google-Smtp-Source: ABdhPJyglYhJj24S8A7qK0NRCN5Xu+fvhONpZgpIDu1pcxI/eYXkv9ub6eIp7mcebiX3zfPyaA0m4A==
-X-Received: by 2002:a37:8601:: with SMTP id i1mr9250267qkd.307.1598838327422;
-        Sun, 30 Aug 2020 18:45:27 -0700 (PDT)
-Received: from localhost.localdomain.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e63sm7656466qkf.29.2020.08.30.18.45.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 18:45:26 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     darrick.wong@oracle.com
-Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] iomap: Fix WARN_ON_ONCE() from unprivileged users
-Date:   Sun, 30 Aug 2020 21:45:11 -0400
-Message-Id: <20200831014511.17174-1-cai@lca.pw>
-X-Mailer: git-send-email 2.18.4
+        Sun, 30 Aug 2020 21:46:35 -0400
+Date:   Sun, 30 Aug 2020 21:46:33 -0400
+From:   Rich Felker <dalias@libc.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
+Message-ID: <20200831014633.GJ3265@brightrain.aerifal.cx>
+References: <20200829020002.GC3265@brightrain.aerifal.cx>
+ <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
+ <20200830163657.GD3265@brightrain.aerifal.cx>
+ <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
+ <20200830184334.GE3265@brightrain.aerifal.cx>
+ <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
+ <20200830200029.GF3265@brightrain.aerifal.cx>
+ <CAG48ez2tOBAKLaX-siRZPCLiiy-s65w2mFGDGr4q2S7WFxpK1A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG48ez2tOBAKLaX-siRZPCLiiy-s65w2mFGDGr4q2S7WFxpK1A@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
-unprivileged users which would taint the kernel, or worse - panic if
-panic_on_warn or panic_on_taint is set. Hence, just convert it to
-pr_warn_ratelimited() to let users know their workloads are racing.
-Thanks Dave Chinner for the initial analysis of the racing reproducers.
+On Mon, Aug 31, 2020 at 03:15:04AM +0200, Jann Horn wrote:
+> On Sun, Aug 30, 2020 at 10:00 PM Rich Felker <dalias@libc.org> wrote:
+> > On Sun, Aug 30, 2020 at 09:02:31PM +0200, Jann Horn wrote:
+> > > On Sun, Aug 30, 2020 at 8:43 PM Rich Felker <dalias@libc.org> wrote:
+> > > > On Sun, Aug 30, 2020 at 08:31:36PM +0200, Jann Horn wrote:
+> > > > > On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
+> > > > > > So just checking IS_APPEND in the code paths used by
+> > > > > > pwritev2 (and erroring out rather than silently writing output at the
+> > > > > > wrong place) should suffice to preserve all existing security
+> > > > > > invariants.
+> > > > >
+> > > > > Makes sense.
+> > > >
+> > > > There are 3 places where kiocb_set_rw_flags is called with flags that
+> > > > seem to be controlled by userspace: aio.c, io_uring.c, and
+> > > > read_write.c. Presumably each needs to EPERM out on RWF_NOAPPEND if
+> > > > the underlying inode is S_APPEND. To avoid repeating the same logic in
+> > > > an error-prone way, should kiocb_set_rw_flags's signature be updated
+> > > > to take the filp so that it can obtain the inode and check IS_APPEND
+> > > > before accepting RWF_NOAPPEND? It's inline so this should avoid
+> > > > actually loading anything except in the codepath where
+> > > > flags&RWF_NOAPPEND is nonzero.
+> > >
+> > > You can get the file pointer from ki->ki_filp. See the RWF_NOWAIT
+> > > branch of kiocb_set_rw_flags().
+> >
+> > Thanks. I should have looked for that. OK, so a fixup like this on top
+> > of the existing patch?
+> >
+> > diff --git a/include/linux/fs.h b/include/linux/fs.h
+> > index 473289bff4c6..674131e8d139 100644
+> > --- a/include/linux/fs.h
+> > +++ b/include/linux/fs.h
+> > @@ -3457,8 +3457,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
+> >                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
+> >         if (flags & RWF_APPEND)
+> >                 ki->ki_flags |= IOCB_APPEND;
+> > -       if (flags & RWF_NOAPPEND)
+> > +       if (flags & RWF_NOAPPEND) {
+> > +               if (IS_APPEND(file_inode(ki->ki_filp)))
+> > +                       return -EPERM;
+> >                 ki->ki_flags &= ~IOCB_APPEND;
+> > +       }
+> >         return 0;
+> >  }
+> >
+> > If this is good I'll submit a v2 as the above squashed with the
+> > original patch.
+> 
+> Looks good to me.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+Actually it's not quite. I think it should be:
 
-v2: Record the path, pid and command as well.
+	if ((flags & RWF_NOAPPEND) & (ki->ki_flags & IOCB_APPEND)) {
+		if (IS_APPEND(file_inode(ki->ki_filp)))
+			return -EPERM;
+		ki->ki_flags &= ~IOCB_APPEND;
+	}
 
- fs/iomap/direct-io.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+i.e. don't refuse RWF_NOAPPEND on a file that was already successfully
+opened without O_APPEND that only subsequently got chattr +a. The
+permission check should only be done if it's overriding the default
+action for how the file is open.
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index c1aafb2ab990..66a4502ef675 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -374,6 +374,7 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
- 		void *data, struct iomap *iomap, struct iomap *srcmap)
- {
- 	struct iomap_dio *dio = data;
-+	char pathname[128], *path;
- 
- 	switch (iomap->type) {
- 	case IOMAP_HOLE:
-@@ -389,7 +390,21 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
- 	case IOMAP_INLINE:
- 		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
- 	default:
--		WARN_ON_ONCE(1);
-+		/*
-+		 * DIO is not serialised against mmap() access at all, and so
-+		 * if the page_mkwrite occurs between the writeback and the
-+		 * iomap_apply() call in the DIO path, then it will see the
-+		 * DELALLOC block that the page-mkwrite allocated.
-+		 */
-+		path = file_path(dio->iocb->ki_filp, pathname,
-+				 sizeof(pathname));
-+		if (IS_ERR(path))
-+			path = "(unknown)";
-+
-+		pr_warn_ratelimited("page_mkwrite() is racing with DIO read (iomap->type = %u).\n"
-+				    "File: %s PID: %d Comm: %.20s\n",
-+				    iomap->type, path, current->pid,
-+				    current->comm);
- 		return -EIO;
- 	}
- }
--- 
-2.18.4
+This is actually related to the fcntl corner case mentioned before.
 
+Are you ok with this change? If so I'll go ahead and prepare a v2.
+
+Rich
