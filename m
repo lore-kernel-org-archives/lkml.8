@@ -2,119 +2,89 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1187CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF82C43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4340206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:22:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W913JJ4q"
+	by mail.kernel.org (Postfix) with ESMTP id 9F5FB206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:22:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598844158;
+	bh=41IsEe2nqK+mBIBJZKAilYQUgzH6n8IzJt8WNyWroZM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XV8T/OwM+QouqeVxvMnddVlB4m3LtXRVC8BiK1E6lyYkrIlrU4HEZWi5pPx5LfU67
+	 khZIAwGhcTe9g5XYSilZf9Le9Zf37PKsOsjYL6poxC8IBW0mMHuRDrTb8Yk+CGjS3d
+	 QDRxysf51Ztv2P43dtgHgISzwr0SeO/rjyIh14Ag=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgHaDWX (ORCPT
+        id S1727996AbgHaDWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:22:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54812 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgHaDWT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 23:22:19 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A99D1C061573;
-        Sun, 30 Aug 2020 20:22:18 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id ds1so2402361pjb.1;
-        Sun, 30 Aug 2020 20:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XkUqnVE+e8JnchkHV5MBfgoc14AXpDqeCvw9QbCzaI0=;
-        b=W913JJ4qq+CnOcpTfmM8zRq8sEvuI59CRr6UQ6kmOaHbbJ3LcPvD2sdepDu2NtceEg
-         PKJi3Tzy0YZKMyun2DJJrk4BKAlpiXbqs/4Cwd7YAOduE5staL3oDQj0drZzZ8dINt30
-         Mn4riTalMG9sLN5xgKeXy9gf5ZmvMbzUf2KsZAeSVOb++E/xOeki868ZHvNU9+Qu9LDO
-         54/1b0lNhtirRArEgyClJ6n8qmz2mopf1TxF28Dg5cUHnbVgbmchVABazFaUdRe5CN6/
-         tUBB+pW+kkwtgk3vmBh+squKhBXdYQBkD7QawEmXyl/gN0Xwkto0hIVLYirKd/bZd7JN
-         RMsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XkUqnVE+e8JnchkHV5MBfgoc14AXpDqeCvw9QbCzaI0=;
-        b=mLygJkahjrjnJYtToX8R4Xpflul8x8ko0OI7WX0iXcfSf3l34THcrNz0z/+k8p8819
-         VJ6UHy4uVY6MnrvnB+5MxhrtRVNri7rbsc34CRZtCyeETHxqi8ZpK+c6JIqTBWuXfkF0
-         L9L+nefVUBbbCuSHULkITsW4oc/YP1c6u9zRKasK896G+a0i5kDAYK3QfHceJIUhxoxG
-         KPhAH3DFOxOkD88Ezzwgh2BUBL6aal74ZE5lg6fqgQ6qMezItvAO3TcypuT0JTVImgFq
-         U5wnLUIDmDN71ciMb8tcoKBh+UTngTXzYtTFK1wXrlZmaJXrnDtXWK2z5bh3ketYtiOQ
-         t1mg==
-X-Gm-Message-State: AOAM533bzkoKkR2RudvBVFHwDHQ6F58UX3o5Cbm2V8KusBPFdlPvf+Gd
-        GF6efYE5IaGVuFYAM/bTclynD0GSNDQ=
-X-Google-Smtp-Source: ABdhPJySx0U4YtEpEcumymEJaaq6ANuNM05TT6PCh0y5I43m9NnpzxhmyqDAe4nO9BH78/UHTw+WDw==
-X-Received: by 2002:a17:90a:2e0f:: with SMTP id q15mr8997397pjd.49.1598844137917;
-        Sun, 30 Aug 2020 20:22:17 -0700 (PDT)
-Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
-        by smtp.gmail.com with ESMTPSA id z17sm6095733pfq.38.2020.08.30.20.22.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 20:22:17 -0700 (PDT)
-From:   Kent Gibson <warthog618@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bgolaszewski@baylibre.com, linus.walleij@linaro.org
-Cc:     Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v6 06/20] gpiolib: add build option for CDEV v1 ABI
-Date:   Mon, 31 Aug 2020 11:19:52 +0800
-Message-Id: <20200831032006.1019978-7-warthog618@gmail.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200831032006.1019978-1-warthog618@gmail.com>
-References: <20200831032006.1019978-1-warthog618@gmail.com>
+        Sun, 30 Aug 2020 23:22:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54098 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbgHaDWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 23:22:31 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0F62206A5;
+        Mon, 31 Aug 2020 03:22:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598844150;
+        bh=41IsEe2nqK+mBIBJZKAilYQUgzH6n8IzJt8WNyWroZM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mYyIc44uwfLmY/eyFTuvLvDK+TATNyuPbhEpAq4DgcS7R6NqZ2HdflWx7EtL1FEGr
+         MADFZF6/yPWRvqeLE0b71ap1LBcI9DHZsjFmY5m/vIL5Tb2AAJ/9twrbWoPtAkZ+J5
+         Ucv05I7a8+/mpLMAbFIkE6DQ7o77w466IRECylx4=
+Date:   Mon, 31 Aug 2020 11:22:22 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Anson Huang <Anson.Huang@nxp.com>,
+        Li Yang <leoyang.li@nxp.com>, Han Xu <han.xu@nxp.com>,
+        Frank Li <frank.li@nxp.com>, Fugang Duan <fugang.duan@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org,
+        linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v3 14/19] dt-bindings: arm: fsl: Fix Toradex Colibri i.MX
+ 8 binding
+Message-ID: <20200831032221.GF4488@dragon>
+References: <20200825193536.7332-1-krzk@kernel.org>
+ <20200825193536.7332-15-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200825193536.7332-15-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a build option to allow the removal of the CDEV v1 ABI.
+On Tue, Aug 25, 2020 at 09:35:31PM +0200, Krzysztof Kozlowski wrote:
+> The Toradex Colibri i.MX 8 Evaluation board has two Toradex compatibles
+> so it needs separate entry.  This fixes dtbs_check warning:
+> 
+>   arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dt.yaml: /:
+>     compatible: ['toradex,colibri-imx8x-eval-v3', 'toradex,colibri-imx8x', 'fsl,imx8qxp'] is not valid under any of the given schemas (Possible causes of the failure):
+>     arch/arm64/boot/dts/freescale/imx8qxp-colibri-eval-v3.dt.yaml: /: compatible: ['toradex,colibri-imx8x-eval-v3', 'toradex,colibri-imx8x', 'fsl,imx8qxp'] is too long
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
-
-This patch is before the v2 implementation, and is non-functional until
-that patch, as some parts of that patch would be written slightly
-differently if removing v1 was not considered.
-Adding this patch after that would necessitate revisiting the v2 changes,
-so this ordering results in two simpler patches.
-
- drivers/gpio/Kconfig | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index e4debd66d71f..ff9ca836026b 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -82,6 +82,18 @@ config GPIO_CDEV
- 
- 	  If unsure, say Y.
- 
-+config GPIO_CDEV_V1
-+	bool "Support GPIO ABI Version 1"
-+	default y
-+	depends on GPIO_CDEV
-+	help
-+	  Say Y here to support version 1 of the GPIO CDEV ABI.
-+
-+	  This ABI version is deprecated and will be removed in the future.
-+	  Please use the latest ABI for new developments.
-+
-+	  If unsure, say Y.
-+
- config GPIO_GENERIC
- 	depends on HAS_IOMEM # Only for IOMEM drivers
- 	tristate
--- 
-2.28.0
-
+Applied, thanks.
