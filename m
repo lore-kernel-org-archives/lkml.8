@@ -2,83 +2,121 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE3AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F92C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2222B21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598877960;
-	bh=8rOIdZ6wqgc1jq2tHq0/nusm6CFDfSurOY8zud5UQN8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rWYOYNMlplOw7xMnjl7SQ7K1FR/WdGArKaQSz5spOeBM83DyuR7oazAwaDS5wGnUr
-	 5HDpwQnzoAAb5eu+01e1WRXcsjGDtd7PW6hh9DaJt10nzUI0UwBQKoDDV1x5vY53Lm
-	 gyZKUDjdxxSDYEPVqVNF65iaMgDJ6tB3yqPMu98k=
+	by mail.kernel.org (Postfix) with ESMTP id CAF612068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:46:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B8RMICeU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgHaMp6 (ORCPT
+        id S1727852AbgHaMqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:45:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46802 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgHaMp4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:45:56 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B14342073A;
-        Mon, 31 Aug 2020 12:45:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598877956;
-        bh=8rOIdZ6wqgc1jq2tHq0/nusm6CFDfSurOY8zud5UQN8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSvjY00nngC1TPHjSpUATD6l8D/Sl2/MzPfM50BAfgXg+ZlHq6JZ3nihC/s9Rw56b
-         YDEGy92KSAzXPL8RG2kur8aqSw+5HbXZdz6lBgXIxbOcllF9r4BTQpoiaNhLBLJ3Z1
-         b6GFmfGPWZx4/HqYvExo86YzuVRcRnWSKhbCo4Ko=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: [PATCH 3/6] Documentation: tracing: Add tracing_on option to boot-time tracer
-Date:   Mon, 31 Aug 2020 21:45:52 +0900
-Message-Id: <159887795239.1330989.17724824075048692028.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <159887792384.1330989.5993224243767476896.stgit@devnote2>
-References: <159887792384.1330989.5993224243767476896.stgit@devnote2>
-User-Agent: StGit/0.19
+        Mon, 31 Aug 2020 08:46:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57834 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgHaMqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 08:46:00 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F15F6C061573;
+        Mon, 31 Aug 2020 05:45:59 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id nv17so3082616pjb.3;
+        Mon, 31 Aug 2020 05:45:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pa6JcLul+a6lE0D1xdaF9TYM4EfgCjAor7g5z7fUwhk=;
+        b=B8RMICeUUT2UI+437Vp/yRQTeZCUVfXHdJOIZIuWk0sy8oxdgge4Ozr3ka8okAg74m
+         hr1G0wYveXi0hQlsQB+qz9N0Suj1KdKavvHUDnMpud/P0SW2Z6aXcXhdnPCSX4TN5b6p
+         aM/MfBCJ1LvhVPYJzjmeL5nddpOdiuwDvKmS33zODu8eFo7CNUPLTfD9WJFla7tEjbwr
+         dkbA8ngHAFKIEPd3pGaWK0DAo3d6r3HfdmDuC4PFKzoFmwIyAgmZ6KvsL/rfyULCSdFl
+         bXvO0gLiQuhnW6IR43V/UTh4P6mYRkIGR+8kmNRMmhgwg/wVqOU1q2sfhsn4rjO7Jrsv
+         fJ0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pa6JcLul+a6lE0D1xdaF9TYM4EfgCjAor7g5z7fUwhk=;
+        b=bSwU/oHze+itdWnKXHmVeKZSEDBmeYEOU65LWKjbufV8IDn7si6fhvc0b35kTxqfK8
+         EJDzIAEw9EUqFU8NlmVbYv5Go9Lnoi+RNgv0ocBIhIhRmq1vj8w3OV8dfJQ0CBx+AaOA
+         47z/nyk+vHMOaq2tAQN963jNBeHbi2EP2nj8ti7aM68mMQvQLSy7dt+K8iVldKkRNrMp
+         UO6dKpphY9DB5lL9JSan2oSWL3HgWFoO+6+43JcQ2xv9NqsfmJFDGtXziD3hVWxyjOeO
+         +ZkdJA2F7VIjshe5C83a++xYnxwlEH1pWO4FXlKAtPC9SPiy4nLRfl5jhQEaHR8VUXLG
+         lKNg==
+X-Gm-Message-State: AOAM532VQu4RJdsldhye7Eb3jxHzMaj5+E7IcU5Wb/3+2fEQBUUTpdIm
+        YxeijUCDgf0D7gaAiLhuJpw3rholHffj4S7RJj4=
+X-Google-Smtp-Source: ABdhPJywKdmDfUuf9QY9ZvDBz7C0v4U1PQVaeuyyFA0xhSBtfgBnIYIFptTzhuSUt68hsPxDIkvTrWz1D9H4SkNQ1wE=
+X-Received: by 2002:a17:90a:2c06:: with SMTP id m6mr1261475pjd.129.1598877959382;
+ Mon, 31 Aug 2020 05:45:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200824054347.3805-1-william.sung@advantech.com.tw>
+ <CAHp75VeZLPR02xB2XRzec5mSBvq93XYZg56OOODxpFTPva6cXw@mail.gmail.com> <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
+In-Reply-To: <CAFv23QmDwcrdxEndH=mKMAomzt9kxG_f1Z6=Fd8iuuvCoY92SA@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 31 Aug 2020 15:45:42 +0300
+Message-ID: <CAHp75Vcup9LUk0fgjW9T2FK-K5GD3=3ycPHi74Oykc8rq_tJqA@mail.gmail.com>
+Subject: Re: [PATCH] iio: dac: ad5593r: Dynamically set AD5593R channel modes
+To:     AceLan Kao <acelan.kao@canonical.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     William Sung <william.sung@advantech.com.tw>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Campion Kang <Campion.Kang@advantech.com.tw>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add tracing_on option description to the boot-time tracer.
+On Mon, Aug 31, 2020 at 2:28 PM AceLan Kao <acelan.kao@canonical.com> wrote:
+> This patch is mainly for Advantech's UNO-420[1] which is a x86-based platform.
+> This platform is more like a development platform for customers to
+> customize their products,
+> so, specify the channel modes in ACPI table is not generic enough,
+> that's why William submit this patch.
+>
+> Are there other ways to specify or pass values to the module without
+> using module parameters?
+> It's good if we can leverage sysfs, but I don't know if there is one
+> for this scenario.
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- Documentation/trace/boottime-trace.rst |    4 ++++
- 1 file changed, 4 insertions(+)
+Can we provide DT bindings for that and use then in ACPI? ACPI has a
+possibility to reuse DT properties and compatible strings [1]. As far
+as I can see the driver uses fwnode API, so it supports ACPI case
+already [2]. So, what prevents you to utilize 'adi,mode' property?
 
-diff --git a/Documentation/trace/boottime-trace.rst b/Documentation/trace/boottime-trace.rst
-index dcb390075ca1..1341b449acaa 100644
---- a/Documentation/trace/boottime-trace.rst
-+++ b/Documentation/trace/boottime-trace.rst
-@@ -61,6 +61,10 @@ These options can be used for each instance including global ftrace node.
- ftrace.[instance.INSTANCE.]options = OPT1[, OPT2[...]]
-    Enable given ftrace options.
- 
-+ftrace.[instance.INSTANCE.]tracing_on = 0|1
-+   Enable/Disable tracing on this instance when boot.
-+   (you can enable it by the "traceon" event trigger action)
-+
- ftrace.[instance.INSTANCE.]trace_clock = CLOCK
-    Set given CLOCK to ftrace's trace_clock.
- 
+Also, we accept examples of ASL excerpt in meta-acpi project [3]. It
+has already plenty of examples [4] how to use PRP0001 for DIY /
+development boards.
 
+So, take all together I think this patch is simple redundant.
+
+[1]: https://www.kernel.org/doc/html/latest/firmware-guide/acpi/enumeration.html#device-tree-namespace-link-device-id
+[2]: https://elixir.bootlin.com/linux/v5.9-rc3/source/Documentation/devicetree/bindings/iio/dac/ad5592r.txt
+[3]: https://github.com/westeri/meta-acpi
+[4]: https://github.com/westeri/meta-acpi/tree/master/recipes-bsp/acpi-tables/samples
+
+P.S. Jonathan, it seems this driver has artificial ACPI HID. We
+probably have to remove it. However, ADS is indeed reserved for Analog
+Devices in PNP registry. Can we have AD's official answer on this?
+Cc'ing additional AD people.
+
+> 1. https://www.advantech.com/products/9a0cc561-8fc2-4e22-969c-9df90a3952b5/uno-420/mod_2d6a546b-39e3-4bc4-bbf4-ac89e6b7667c
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
