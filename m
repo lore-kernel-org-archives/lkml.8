@@ -2,712 +2,100 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,LONGWORDS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0805AC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C795EC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1F1F20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A72672076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:55:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIOAaWCI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728061AbgHaDuT (ORCPT
+        id S1726927AbgHaDzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:50:19 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:52237 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgHaDuS (ORCPT
+        Sun, 30 Aug 2020 23:55:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726584AbgHaDzP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 23:50:18 -0400
-Received: by mail-il1-f197.google.com with SMTP id m1so4164538iln.19
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 20:50:15 -0700 (PDT)
+        Sun, 30 Aug 2020 23:55:15 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79838C061573;
+        Sun, 30 Aug 2020 20:55:15 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b124so2132200pfg.13;
+        Sun, 30 Aug 2020 20:55:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Wg8+XIELhXp1eOdAN1w0GvhqUi4hDTzyY8WpXV067qI=;
+        b=ZIOAaWCIccTssd8TBtoljJNC1Zwi3xB+EeHq/60odFFAk7ap8xCAJCLbYzoAbM9EvE
+         mCuNBS/ZLA3cCd8n52aUzN+tzrLAUvBdFMA4nUqWww9YaxhFy19cGGkady3n14TNgzg9
+         oDs8yKQNE/djZPGM4NZJ2Pi1xMJcq0JKV+RTTKUo7F8cRWks/ZteMwSBnRA3fm/xzz/w
+         piSw9yUeLiRZ1pDElxyt0aSPYoS+phKxHejB7BcahILkJERw3ec9FPUCcv3uo2+0j0XJ
+         mqHT1RoewguMx6lHn5ht6MjWdLcyUuhaRisGZeQSXIAUxy3R2Pb3F7VjKogyYzAHbygE
+         9tow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=zceVDbGcvgYbdU3lYwv7BFnU1J/ri1YdGAYmDuUho/M=;
-        b=Xk5/ycu3mY9whssIIvgTmYEIAkekTBSu0GgAtsqAmBble7pqdGaL2/5+6qLqp2NebA
-         AkXLNd8wto3/mmgz7E7/M0GXsFwmMpqRH0V1cfC0YCZHvANX43STBSJWn0kgKTOuA2je
-         RCPnVBvYczFS4lDho1lK6eZgM1IxwT7N9d/FKwcvCT96NQDbKCZPHK4Z7tj/xoAvameb
-         q/N23x1bbN6Br9yWrs8u1UX8dn2jm5srbJnNKMmbC9H01N4OEqO5MUeyVXHu/WkiZxbW
-         7CdKVBqqiOqXmusEI4l9TwjU4caA9w8LrD+hpugOilaKSyMzqpQa60dtyscjbWcpe8lz
-         Dm1Q==
-X-Gm-Message-State: AOAM531JO4VGuZQ/D2CGs4PdAisU92hGnedAnyg0ECbKE0N0ZaDbtFfh
-        Wrb6yPoaAPV+DJE6gV36Nay7Jp0YGlQqQJI4ZDW0+CHJOgKg
-X-Google-Smtp-Source: ABdhPJxEMBhRKRv0cS9IPchOQI56JjDpARFzB7aVvb8FlJUNri9MGfTKibrLvZYnWgqlmnkj0o1S2LtxgISVkzMu1CsUfBDWWChw
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Wg8+XIELhXp1eOdAN1w0GvhqUi4hDTzyY8WpXV067qI=;
+        b=QFq2I9oLsArhn7DQs5tGPYtjfCW0iFs+VSScHgSUBFmEq/qp6uak4UG9UBmhkjokrd
+         lXiqwQW5BVCKct5z8JO0Soe95b8NCsk3+2gKiWrLRcmh1Lh6Tp3zSsGfcQzUEIBcdO7W
+         edkvchKPizqKyAdS1I3DSHNdDu3YdH1WWsC5iHR5HkS89fUzvXpuFo9gi6c8qzNRkLsF
+         nNoBqvzOr2Dt+cfjONYyd60cx2FkK8Pl8XxwI6j0YluBVM+z7oFWWqN5I9cfIDvh05CS
+         SbdvSjJFRdnh3PtNTmL99I5HR79qwm5pEx6rWuUuD1Yui9KftECIAiC2ql+kFxtxzMTX
+         zkJg==
+X-Gm-Message-State: AOAM5323XrtSUy5iRBlj+YBKB3O0lE7KhILH7DdSur/WvxAz4LEUJF1U
+        1WhBaoPrRhhiPfNccVhDOmpMAkLmb80=
+X-Google-Smtp-Source: ABdhPJw99fF7LlZyPCLHC4RpRR0gK4EMFXPGa4u154dgttVI2xu8puoWvDDlaHgC3hUpn/X2w8NA8g==
+X-Received: by 2002:a62:7d51:: with SMTP id y78mr7931535pfc.182.1598846114937;
+        Sun, 30 Aug 2020 20:55:14 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id p9sm5602658pjm.1.2020.08.30.20.55.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 20:55:14 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Andre Przywara <andre.przywara@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH 08/10] ARM: dts: Cygnus: Fix SP805 clocks
+Date:   Sun, 30 Aug 2020 20:55:06 -0700
+Message-Id: <20200831035506.1332109-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200828130602.42203-9-andre.przywara@arm.com>
+References: <20200828130602.42203-1-andre.przywara@arm.com> <20200828130602.42203-9-andre.przywara@arm.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:2c0f:: with SMTP id t15mr3193311ile.205.1598845815317;
- Sun, 30 Aug 2020 20:50:15 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 20:50:15 -0700
-In-Reply-To: <000000000000e5ea9e05ac9d16c1@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000df80ae05ae244c2b@google.com>
-Subject: Re: memory leak in do_seccomp
-From:   syzbot <syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, kafai@fb.com,
-        keescook@chromium.org, kpsingh@chromium.org,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, wad@chromium.org, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following issue on:
+On Fri, 28 Aug 2020 14:06:00 +0100, Andre Przywara <andre.przywara@arm.com> wrote:
+> The SP805 DT binding requires two clocks to be specified, but the
+> Broadcom Cygnus DT currently only specifies one clock.
+> 
+> In practice, Linux would pick a clock named "apb_pclk" for the bus
+> clock, and the Linux and U-Boot SP805 driver would use the first clock
+> to derive the actual watchdog counter frequency.
+> 
+> Since currently both are the very same clock, we can just double the
+> clock reference, and add the correct clock-names, to match the binding.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
 
-HEAD commit:    dcc5c6f0 Merge tag 'x86-urgent-2020-08-30' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10b297d5900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=903b9fecc3c6d231
-dashboard link: https://syzkaller.appspot.com/bug?extid=3ad9614a12f80994c32e
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14649561900000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118aacc1900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
-
-executing program
-executing program
-executing program
-executing program
-executing program
-BUG: memory leak
-unreferenced object 0xffff88811ba93600 (size 64):
-  comm "syz-executor680", pid 6503, jiffies 4294951104 (age 21.940s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
-    08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba936c0 (size 64):
-  comm "syz-executor680", pid 6507, jiffies 4294951104 (age 21.940s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 c8 36 a9 1b 81 88 ff ff  .........6......
-    c8 36 a9 1b 81 88 ff ff da fb d1 41 a1 10 39 25  .6.........A..9%
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93700 (size 64):
-  comm "syz-executor680", pid 6509, jiffies 4294951104 (age 21.940s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 37 a9 1b 81 88 ff ff  .........7......
-    08 37 a9 1b 81 88 ff ff d9 22 de 70 43 30 b3 2f  .7.......".pC0./
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93800 (size 64):
-  comm "syz-executor680", pid 6511, jiffies 4294951104 (age 21.940s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 38 a9 1b 81 88 ff ff  .........8......
-    08 38 a9 1b 81 88 ff ff e4 c1 14 15 81 90 49 44  .8............ID
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb800 (size 64):
-  comm "syz-executor680", pid 6506, jiffies 4294951104 (age 21.940s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 b8 3c 19 81 88 ff ff  ..........<.....
-    08 b8 3c 19 81 88 ff ff 87 43 ff ae fd 23 b0 15  ..<......C...#..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb740 (size 64):
-  comm "syz-executor680", pid 6513, jiffies 4294951104 (age 21.940s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b7 3c 19 81 88 ff ff  ........H.<.....
-    48 b7 3c 19 81 88 ff ff 0b 68 b6 93 80 9b 8d 35  H.<......h.....5
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb640 (size 64):
-  comm "syz-executor680", pid 6515, jiffies 4294951105 (age 21.930s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b6 3c 19 81 88 ff ff  ........H.<.....
-    48 b6 3c 19 81 88 ff ff b4 5e 22 0a b5 50 fa a5  H.<......^"..P..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93600 (size 64):
-  comm "syz-executor680", pid 6503, jiffies 4294951104 (age 23.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
-    08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba936c0 (size 64):
-  comm "syz-executor680", pid 6507, jiffies 4294951104 (age 23.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 c8 36 a9 1b 81 88 ff ff  .........6......
-    c8 36 a9 1b 81 88 ff ff da fb d1 41 a1 10 39 25  .6.........A..9%
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93700 (size 64):
-  comm "syz-executor680", pid 6509, jiffies 4294951104 (age 23.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 37 a9 1b 81 88 ff ff  .........7......
-    08 37 a9 1b 81 88 ff ff d9 22 de 70 43 30 b3 2f  .7.......".pC0./
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93800 (size 64):
-  comm "syz-executor680", pid 6511, jiffies 4294951104 (age 23.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 38 a9 1b 81 88 ff ff  .........8......
-    08 38 a9 1b 81 88 ff ff e4 c1 14 15 81 90 49 44  .8............ID
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb800 (size 64):
-  comm "syz-executor680", pid 6506, jiffies 4294951104 (age 23.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 b8 3c 19 81 88 ff ff  ..........<.....
-    08 b8 3c 19 81 88 ff ff 87 43 ff ae fd 23 b0 15  ..<......C...#..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb740 (size 64):
-  comm "syz-executor680", pid 6513, jiffies 4294951104 (age 23.180s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b7 3c 19 81 88 ff ff  ........H.<.....
-    48 b7 3c 19 81 88 ff ff 0b 68 b6 93 80 9b 8d 35  H.<......h.....5
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb640 (size 64):
-  comm "syz-executor680", pid 6515, jiffies 4294951105 (age 23.170s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b6 3c 19 81 88 ff ff  ........H.<.....
-    48 b6 3c 19 81 88 ff ff b4 5e 22 0a b5 50 fa a5  H.<......^"..P..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93600 (size 64):
-  comm "syz-executor680", pid 6503, jiffies 4294951104 (age 24.450s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
-    08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba936c0 (size 64):
-  comm "syz-executor680", pid 6507, jiffies 4294951104 (age 24.450s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 c8 36 a9 1b 81 88 ff ff  .........6......
-    c8 36 a9 1b 81 88 ff ff da fb d1 41 a1 10 39 25  .6.........A..9%
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93700 (size 64):
-  comm "syz-executor680", pid 6509, jiffies 4294951104 (age 24.450s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 37 a9 1b 81 88 ff ff  .........7......
-    08 37 a9 1b 81 88 ff ff d9 22 de 70 43 30 b3 2f  .7.......".pC0./
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93800 (size 64):
-  comm "syz-executor680", pid 6511, jiffies 4294951104 (age 24.450s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 38 a9 1b 81 88 ff ff  .........8......
-    08 38 a9 1b 81 88 ff ff e4 c1 14 15 81 90 49 44  .8............ID
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb800 (size 64):
-  comm "syz-executor680", pid 6506, jiffies 4294951104 (age 24.450s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 b8 3c 19 81 88 ff ff  ..........<.....
-    08 b8 3c 19 81 88 ff ff 87 43 ff ae fd 23 b0 15  ..<......C...#..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb740 (size 64):
-  comm "syz-executor680", pid 6513, jiffies 4294951104 (age 24.450s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b7 3c 19 81 88 ff ff  ........H.<.....
-    48 b7 3c 19 81 88 ff ff 0b 68 b6 93 80 9b 8d 35  H.<......h.....5
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb640 (size 64):
-  comm "syz-executor680", pid 6515, jiffies 4294951105 (age 24.440s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b6 3c 19 81 88 ff ff  ........H.<.....
-    48 b6 3c 19 81 88 ff ff b4 5e 22 0a b5 50 fa a5  H.<......^"..P..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93600 (size 64):
-  comm "syz-executor680", pid 6503, jiffies 4294951104 (age 25.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
-    08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba936c0 (size 64):
-  comm "syz-executor680", pid 6507, jiffies 4294951104 (age 25.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 c8 36 a9 1b 81 88 ff ff  .........6......
-    c8 36 a9 1b 81 88 ff ff da fb d1 41 a1 10 39 25  .6.........A..9%
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93700 (size 64):
-  comm "syz-executor680", pid 6509, jiffies 4294951104 (age 25.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 37 a9 1b 81 88 ff ff  .........7......
-    08 37 a9 1b 81 88 ff ff d9 22 de 70 43 30 b3 2f  .7.......".pC0./
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93800 (size 64):
-  comm "syz-executor680", pid 6511, jiffies 4294951104 (age 25.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 38 a9 1b 81 88 ff ff  .........8......
-    08 38 a9 1b 81 88 ff ff e4 c1 14 15 81 90 49 44  .8............ID
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb800 (size 64):
-  comm "syz-executor680", pid 6506, jiffies 4294951104 (age 25.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 b8 3c 19 81 88 ff ff  ..........<.....
-    08 b8 3c 19 81 88 ff ff 87 43 ff ae fd 23 b0 15  ..<......C...#..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb740 (size 64):
-  comm "syz-executor680", pid 6513, jiffies 4294951104 (age 25.710s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b7 3c 19 81 88 ff ff  ........H.<.....
-    48 b7 3c 19 81 88 ff ff 0b 68 b6 93 80 9b 8d 35  H.<......h.....5
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb640 (size 64):
-  comm "syz-executor680", pid 6515, jiffies 4294951105 (age 25.700s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b6 3c 19 81 88 ff ff  ........H.<.....
-    48 b6 3c 19 81 88 ff ff b4 5e 22 0a b5 50 fa a5  H.<......^"..P..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93600 (size 64):
-  comm "syz-executor680", pid 6503, jiffies 4294951104 (age 28.150s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
-    08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba936c0 (size 64):
-  comm "syz-executor680", pid 6507, jiffies 4294951104 (age 28.150s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 c8 36 a9 1b 81 88 ff ff  .........6......
-    c8 36 a9 1b 81 88 ff ff da fb d1 41 a1 10 39 25  .6.........A..9%
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93700 (size 64):
-  comm "syz-executor680", pid 6509, jiffies 4294951104 (age 28.150s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 37 a9 1b 81 88 ff ff  .........7......
-    08 37 a9 1b 81 88 ff ff d9 22 de 70 43 30 b3 2f  .7.......".pC0./
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93800 (size 64):
-  comm "syz-executor680", pid 6511, jiffies 4294951104 (age 28.150s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 38 a9 1b 81 88 ff ff  .........8......
-    08 38 a9 1b 81 88 ff ff e4 c1 14 15 81 90 49 44  .8............ID
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb800 (size 64):
-  comm "syz-executor680", pid 6506, jiffies 4294951104 (age 28.150s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 b8 3c 19 81 88 ff ff  ..........<.....
-    08 b8 3c 19 81 88 ff ff 87 43 ff ae fd 23 b0 15  ..<......C...#..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb740 (size 64):
-  comm "syz-executor680", pid 6513, jiffies 4294951104 (age 28.150s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b7 3c 19 81 88 ff ff  ........H.<.....
-    48 b7 3c 19 81 88 ff ff 0b 68 b6 93 80 9b 8d 35  H.<......h.....5
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb640 (size 64):
-  comm "syz-executor680", pid 6515, jiffies 4294951105 (age 28.140s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b6 3c 19 81 88 ff ff  ........H.<.....
-    48 b6 3c 19 81 88 ff ff b4 5e 22 0a b5 50 fa a5  H.<......^"..P..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93600 (size 64):
-  comm "syz-executor680", pid 6503, jiffies 4294951104 (age 29.390s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
-    08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba936c0 (size 64):
-  comm "syz-executor680", pid 6507, jiffies 4294951104 (age 29.390s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 c8 36 a9 1b 81 88 ff ff  .........6......
-    c8 36 a9 1b 81 88 ff ff da fb d1 41 a1 10 39 25  .6.........A..9%
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93700 (size 64):
-  comm "syz-executor680", pid 6509, jiffies 4294951104 (age 29.390s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 37 a9 1b 81 88 ff ff  .........7......
-    08 37 a9 1b 81 88 ff ff d9 22 de 70 43 30 b3 2f  .7.......".pC0./
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff88811ba93800 (size 64):
-  comm "syz-executor680", pid 6511, jiffies 4294951104 (age 29.390s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 38 a9 1b 81 88 ff ff  .........8......
-    08 38 a9 1b 81 88 ff ff e4 c1 14 15 81 90 49 44  .8............ID
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb800 (size 64):
-  comm "syz-executor680", pid 6506, jiffies 4294951104 (age 29.390s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 08 b8 3c 19 81 88 ff ff  ..........<.....
-    08 b8 3c 19 81 88 ff ff 87 43 ff ae fd 23 b0 15  ..<......C...#..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb740 (size 64):
-  comm "syz-executor680", pid 6513, jiffies 4294951104 (age 29.390s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b7 3c 19 81 88 ff ff  ........H.<.....
-    48 b7 3c 19 81 88 ff ff 0b 68 b6 93 80 9b 8d 35  H.<......h.....5
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-BUG: memory leak
-unreferenced object 0xffff8881193cb640 (size 64):
-  comm "syz-executor680", pid 6515, jiffies 4294951105 (age 29.380s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 48 b6 3c 19 81 88 ff ff  ........H.<.....
-    48 b6 3c 19 81 88 ff ff b4 5e 22 0a b5 50 fa a5  H.<......^"..P..
-  backtrace:
-    [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-    [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-    [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-    [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-    [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-    [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-    [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-executing program
-executing program
-
+Applied to qspi-fixes, thanks!
+--
+Florian
