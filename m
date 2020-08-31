@@ -2,118 +2,151 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 355F1C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BCDC43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B0FA20782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710D9206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:30:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NA4ctU1k"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sFgwc5cH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgHaE3X (ORCPT
+        id S1726167AbgHaEaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 00:29:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36934 "EHLO
+        Mon, 31 Aug 2020 00:30:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgHaE3R (ORCPT
+        with ESMTP id S1725794AbgHaEax (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 00:29:17 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED193C061575
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:29:14 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 17so3857335pfw.9
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 21:29:14 -0700 (PDT)
+        Mon, 31 Aug 2020 00:30:53 -0400
+Received: from mail-yb1-xb43.google.com (mail-yb1-xb43.google.com [IPv6:2607:f8b0:4864:20::b43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B04C1C061573;
+        Sun, 30 Aug 2020 21:30:53 -0700 (PDT)
+Received: by mail-yb1-xb43.google.com with SMTP id 189so3284955ybw.3;
+        Sun, 30 Aug 2020 21:30:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=fy+jYTLzmo8SG0PRGSLlA/pnVKtwE9a1uKPk/UDp9I4=;
-        b=NA4ctU1kZIKSEfqA8R2XSbBLEyXSCjda7w9pU9k/KMsgUTwNEPReFipZw7VUKCb0tb
-         TRy4OCOMUBA29mByAF5JiZgD0Qt9inZ3HuChAvAxxnFwXrWmjHGKxGXYkY3pmnynkb6z
-         OYvELM2mDyL8dfVNEkQ9c0DnRkmk1UGStGtJS4yOtZ00Pb6rmJE7QF2OElRDPHYb8zhH
-         ZMI7y/MvR3UJIrdxn12l0R3X6aml2dbxkz6FGd+Tj8kVb9zSYRQTLb3RqH+w3RQ+bWO7
-         quqAr0ZA4rwS1G12JBIlV2fxR6h8JtA5lJXbNfCDXLt3qmthqFeKLQMXFJNzVTsfzDlg
-         vb9A==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3EHX4IFDP9HkXUW+b+ZNzN+U/N5NbUIOOxj43RJQFP8=;
+        b=sFgwc5cHHE9FxursU6WRqYcmits9x/HyhItAsmn2E1mo5JX2JKbQ4kWAoVvXqJgHvX
+         CEr0Pums8JT3qlyKoAgYpS3yK+ibCQGxWNVbQZgisAMuZdXm9u/InCEZgPYhZMLGZydH
+         yd42w67EH6hWqQosjvmCFftCCPPp/at/gd3UhDMhUZJGFRT/JnHsiWGwocA66GWahivh
+         pb+Myve0noIccwNerGhDQD/cIEcMlIqPzyLeXsKabrkChvK3nT3re1P10cmNy0cj5lsL
+         mGaUjNxaOWScrpJXKjjr3m/W3J9uBUiBJRQe0HNBj0stSxKDZKyPYe+RqER4Imlt+dU7
+         iKdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=fy+jYTLzmo8SG0PRGSLlA/pnVKtwE9a1uKPk/UDp9I4=;
-        b=rJqh14XUkhr1AHpQYT5tKLmr/6NDUIvt3SVTGgme8kadreWScFCnRJaGkk8ghur5QN
-         W2JtYmtTZhVeS3UvYRxprxpstpf+S6Rq1zd5yDAxurf7GoCySOWhganfoEILrWVOT7fb
-         jN2sm6lQ/4/HJMlw+0bLl3QN1NUo46tkL6m/Fy3uJtP/2/B1M79Vt/kB7YOnW7GUfGyM
-         XrzhDM/4bXdi0rtABkUTXju3xOKYKBF5SP++e+DvoaETyfJbcH/l94Mm+uCvty2Gqo7+
-         P4UGmUU7iRe3lWUO8hBArQ0krPYX99Nmc5cT6mn4ld461aMbXqXMgKUUelBpRjwM0sow
-         whTw==
-X-Gm-Message-State: AOAM532MXeJBQC8SuVHH8i5M5m/h7utZHPho+sdycufi+fVuMa05f37Q
-        iFL3xNfD3aUP7EbZ90KABo6i4Q==
-X-Google-Smtp-Source: ABdhPJyD6b4IOWELQvuYc3r+NvPnogxg5ZJa39sm8LOUCLLFiHHrfalUW2QapDOWE73WPvEvqmk3zA==
-X-Received: by 2002:a63:ab43:: with SMTP id k3mr7183808pgp.426.1598848154284;
-        Sun, 30 Aug 2020 21:29:14 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id h9sm6641639pfq.18.2020.08.30.21.29.13
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Aug 2020 21:29:13 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 09:59:09 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] cpufreq: s5pv210: Use dev_err instead of pr_err in
- probe
-Message-ID: <20200831042909.jeg2rv6f3mhcnkim@vireshk-i7>
-References: <20200826160016.469-1-krzk@kernel.org>
- <20200826160016.469-2-krzk@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3EHX4IFDP9HkXUW+b+ZNzN+U/N5NbUIOOxj43RJQFP8=;
+        b=sa7OhCbVc7nysSYD8o0v82TShUJyM92sePNQ4qayjapOrcAMPuQ5Qe3Os/kjxXY+Gn
+         DMyg7+2TXaUEKJhKGtj+OrxDwwJa3dCqkdioOFJTo3nx1mnbBQWhECHfvUvU0bYFLOs4
+         4bSB8MUJyXy2FwvIzHfg4J5TlSCBLxadoZ7ZMujgFrM1IMgcPELRHZrE75+lA6pOUJl0
+         BbMMTO7Sx/HoOnboAs7KYWj1x0nPnv+9HikxKI54oURGAvefI8n+SNr61sslNLainobl
+         oXwRobd8fl765tn3LkH78Byqd9Nh0jhffh6u2HFQBNp2d2Do0Wb7RNOgH0qQkcGJQUdY
+         6w+w==
+X-Gm-Message-State: AOAM5309KbqDnq3PlKADiUQ6Y0NSPESWWscmOuUYeL0WB/JpfBXn8Bqj
+        7bqZMCKRnF0BNkim3b9vpWXoDxItzqqgUfuIkpQ=
+X-Google-Smtp-Source: ABdhPJygqDhnYzGy1ODmzpjWOWvVU0KHozgD8foEW/pFKDAAJ/I2ilsDU+17Efoxy6pCnydvcuH5XqRX2oBauPkkZ+s=
+X-Received: by 2002:a25:3803:: with SMTP id f3mr16938941yba.470.1598848253030;
+ Sun, 30 Aug 2020 21:30:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200826160016.469-2-krzk@kernel.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <CAJ1xhMUpqtKMuGUZdComskTqd0oOKCfDuVQT3+c13u=NSJLkBw@mail.gmail.com>
+In-Reply-To: <CAJ1xhMUpqtKMuGUZdComskTqd0oOKCfDuVQT3+c13u=NSJLkBw@mail.gmail.com>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Mon, 31 Aug 2020 14:30:42 +1000
+Message-ID: <CACAvsv6zUi=3mZTg11Y_6CVYkpCSO0RY-5+GiBZz+2EXCDmD-g@mail.gmail.com>
+Subject: Re: nouveau PUSHBUFFER_ERR on 5.9.0-rc2-next-20200824
+To:     Alexander Kapshuk <alexander.kapshuk@gmail.com>
+Cc:     Ben Skeggs <bskeggs@redhat.com>, Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        ML nouveau <nouveau@lists.freedesktop.org>,
+        Linux-Next <linux-next@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26-08-20, 18:00, Krzysztof Kozlowski wrote:
-> dev_err() allows easily to identify the device printing the message so
-> no need for __func__.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/cpufreq/s5pv210-cpufreq.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/s5pv210-cpufreq.c b/drivers/cpufreq/s5pv210-cpufreq.c
-> index 7dccdb364fcf..911a655895d8 100644
-> --- a/drivers/cpufreq/s5pv210-cpufreq.c
-> +++ b/drivers/cpufreq/s5pv210-cpufreq.c
-> @@ -616,8 +616,7 @@ static int s5pv210_cpufreq_probe(struct platform_device *pdev)
->  
->  	np = of_find_compatible_node(NULL, NULL, "samsung,s5pv210-clock");
->  	if (!np) {
-> -		pr_err("%s: failed to find clock controller DT node\n",
-> -			__func__);
-> +		dev_err(dev, "failed to find clock controller DT node\n");
->  		result = -ENODEV;
->  		goto err_clock;
->  	}
-> @@ -625,16 +624,14 @@ static int s5pv210_cpufreq_probe(struct platform_device *pdev)
->  	clk_base = of_iomap(np, 0);
->  	of_node_put(np);
->  	if (!clk_base) {
-> -		pr_err("%s: failed to map clock registers\n", __func__);
-> -		result = -EFAULT;
+On Tue, 25 Aug 2020 at 17:21, Alexander Kapshuk
+<alexander.kapshuk@gmail.com> wrote:
+>
+> Since upgrading to linux-next based on 5.9.0-rc1 and 5.9.0-rc2 I have
+> had my mouse pointer disappear soon after logging in, and I have
+> observed the system freezing temporarily when clicking on objects and
+> when typing text.
+> I have also found records of push buffer errors in dmesg output:
+> [ 6625.450394] nouveau 0000:01:00.0: disp: ERROR 1 [PUSHBUFFER_ERR] 02
+> [] chid 0 mthd 0000 data 00000400
+Hey,
 
-I have restored this back as it didn't look intentional.
+Yeah, I'm aware of this.  Lyude and I have both seen it, but it's been
+very painful to track down to what's actually causing it so far.  It
+likely is the commit you mentioned that's at fault, and I'm still
+working to find a proper solution before I revert it.
 
-Applied both. Thanks.
+Ben.
 
--- 
-viresh
+>
+> I tried setting CONFIG_NOUVEAU_DEBUG=5 (tracing) to try and collect
+> further debug info, but nothing caught the eye.
+>
+> The error message in question comes from nv50_disp_intr_error in
+> drivers/gpu/drm/nouveau/nvkm/engine/disp/nv50.c:613,645.
+> And nv50_disp_intr_error is called from nv50_disp_intr in the
+> following while block:
+> drivers/gpu/drm/nouveau/nvkm/engine/disp/nv50.c:647,658
+> void
+> nv50_disp_intr(struct nv50_disp *disp)
+> {
+>         struct nvkm_device *device = disp->base.engine.subdev.device;
+>         u32 intr0 = nvkm_rd32(device, 0x610020);
+>         u32 intr1 = nvkm_rd32(device, 0x610024);
+>
+>         while (intr0 & 0x001f0000) {
+>                 u32 chid = __ffs(intr0 & 0x001f0000) - 16;
+>                 nv50_disp_intr_error(disp, chid);
+>                 intr0 &= ~(0x00010000 << chid);
+>         }
+> ...
+> }
+>
+> Could this be in any way related to this series of commits?
+> commit 0a96099691c8cd1ac0744ef30b6846869dc2b566
+> Author: Ben Skeggs <bskeggs@redhat.com>
+> Date:   Tue Jul 21 11:34:07 2020 +1000
+>
+>     drm/nouveau/kms/nv50-: implement proper push buffer control logic
+>
+>     We had a, what was supposed to be temporary, hack in the KMS code where we'd
+>     completely drain an EVO/NVD channel's push buffer when wrapping to the start
+>     again, instead of treating it as a ring buffer.
+>
+>     Let's fix that, finally.
+>
+>     Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+>
+> Here are my GPU details:
+> 01:00.0 VGA compatible controller: NVIDIA Corporation GT216 [GeForce
+> 210] (rev a1)
+>         Subsystem: Micro-Star International Co., Ltd. [MSI] Device 8a93
+>         Kernel driver in use: nouveau
+>
+> The last linux-next kernel I built where the problem reported does not
+> manifest itself is 5.8.0-rc6-next-20200720.
+>
+> I would appreciate being given any pointers on how to further debug this.
+> Or is git bisect the only way to proceed with this?
+>
+> Thanks.
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
