@@ -2,93 +2,80 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94ED9C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAC8C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:49:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F88120936
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:48:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598860112;
-	bh=bzCEwJwBzyL8mUKGPxv8akcTe2V/jC3XhEh2aWcfKbQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=eO0Vo+JMqnB7rr/gDEEfqYbSbbdysElVCsTykhqn/AG1t5LPKHS+snQUSV1zztuSC
-	 tKST+WQJ/91MqdkZR5aWR5SlBV9ZQDOdA98RKb9qsDByAeNW6bDSxezz5wi+4eBUhS
-	 s53l1DWLaJ4loG4Ugbm3inDj0enS0mzipzqxXE8k=
+	by mail.kernel.org (Postfix) with ESMTP id 450C8208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:49:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUMZJ6tL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727111AbgHaHs3 (ORCPT
+        id S1727931AbgHaHtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:48:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgHaHsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:48:23 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0A8020738;
-        Mon, 31 Aug 2020 07:48:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598860103;
-        bh=bzCEwJwBzyL8mUKGPxv8akcTe2V/jC3XhEh2aWcfKbQ=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=eYlAGf5W8IFyry5inhks7nPA7dexSMHcPKmFMA9JUuu5Ja48tnVeXw10lD28Favtf
-         QyzmqDyOFM3IBXYj17Hip75dMDGK9d+UdArlhZyuGcR9FyVxcNI3V45chDF64WeX66
-         vc9EJs7ogjcUKnGoEAanNm8bjviU9VSeAnXjVMS8=
-Date:   Mon, 31 Aug 2020 09:48:19 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Dinghao Liu <dinghao.liu@zju.edu.cn>
-cc:     kjlu@umn.edu, Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Alexandrov Stansilav <neko@nya.ai>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: elan: Fix memleak in elan_input_configured
-In-Reply-To: <20200824072400.9612-1-dinghao.liu@zju.edu.cn>
-Message-ID: <nycvar.YFH.7.76.2008310947070.27422@cbobk.fhfr.pm>
-References: <20200824072400.9612-1-dinghao.liu@zju.edu.cn>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 31 Aug 2020 03:49:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgHaHts (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:49:48 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80FA5C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 00:49:46 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id w14so4535706eds.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 00:49:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=akEiOdpS0Gg/fXyATJX/L6/L6imxqJBwCo+dknusM4c=;
+        b=PUMZJ6tLcuQckS1up2hcmWmvYFTTItBVxCwxZOzgkclNgkfW2zxDrbOeyvIbA8smGM
+         6Rmio8WjZDwImOBaI39ZcQV0yCpysOK8gDN3IeHoXbVhuSPnCsCE0V8mdGAlY3+Dt8QW
+         OvsN9JbyoxW9KPB7jwWkSCoA+NjH5x1ym2rLnPEp2cYP6LPYFc2k8FjYHShH++l/o078
+         QOsadrQjUk18bJjE1ALasXMIb+ot42DsTLa/3zwM8V4L31YzOLhP6fDewecqTQT+oLxH
+         CYUxl28tayNt2u/MJLEZKuiClb8uqRzWch6m0AiGRiaXG/eP2O1jAvKcWYvPdMxx1Qvi
+         5Vng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=akEiOdpS0Gg/fXyATJX/L6/L6imxqJBwCo+dknusM4c=;
+        b=ZRPqEOJ+wWdfcg3AtK8DiqQZkrX6rj/lHY4WoHa+ezg0TbyWDaq8Kd8BM286vdC2zI
+         NCUcLnzds53LOho7GGW1xcHJDlsUXX7yc37jmN1VlbG6nnnR8MBEUwP5N7KcLD+XttLT
+         S43cB1F0RPB6w49TN/HOa08SkTGHtXNCJ7r+rEba+rrXCpIoZ9peTIj6ENF5GluA2mpq
+         Qajr5ahZ47iS6D3Og9YW6/kLeDyUEgAhPN0EO3xmtuPAICHujsgJn+1+dTORDJSwHXn+
+         TyJkBkU7Lwnd4op99d+YPuBD99Uo+pJbgHRd9rx8HZ9s0tDUqZcTSc8EuO3hJMHmZgkA
+         f68A==
+X-Gm-Message-State: AOAM531r1oUAYYV2sBocalFjc5qPTxipPrT10Yd/UvZEzHkroy2L3lgn
+        EETgDPZmC4uat+JBy6jliWuEs6OeHyj5ABUChSM=
+X-Google-Smtp-Source: ABdhPJywkdtbMb0DPS7FRH3KSjaBMgwx1BxD4mdOzvbs+JVIYp7rXFFxjiYVe5KcgD3G7V74Z63uwbYevV5+/VOOvbg=
+X-Received: by 2002:a50:8d4b:: with SMTP id t11mr57219edt.5.1598860182770;
+ Mon, 31 Aug 2020 00:49:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+References: <cover.1598859038.git.zong.li@sifive.com>
+In-Reply-To: <cover.1598859038.git.zong.li@sifive.com>
+From:   Pekka Enberg <penberg@gmail.com>
+Date:   Mon, 31 Aug 2020 10:49:26 +0300
+Message-ID: <CAOJsxLEHer5c-BPYnH6i_TW1iEJ+t4iF_8ZU49=Wvd2wSJ9+Gg@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Get cache information from userland
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        david.abdurachmanov@sifive.com,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 24 Aug 2020, Dinghao Liu wrote:
+For the series:
 
-> When input_mt_init_slots() fails, input should be
-> freed to prevent memleak.
-> 
-> Fixes: 9a6a4193d65b8 ("HID: Add driver for USB ELAN Touchpad")
-> Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-> ---
->  drivers/hid/hid-elan.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/hid/hid-elan.c b/drivers/hid/hid-elan.c
-> index 45c4f888b7c4..858442004258 100644
-> --- a/drivers/hid/hid-elan.c
-> +++ b/drivers/hid/hid-elan.c
-> @@ -188,6 +188,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
->  	ret = input_mt_init_slots(input, ELAN_MAX_FINGERS, INPUT_MT_POINTER);
->  	if (ret) {
->  		hid_err(hdev, "Failed to init elan MT slots: %d\n", ret);
-> +		input_free_device(input);
->  		return ret;
+Reviewed-by: Pekka Enberg <penberg@kernel.org>
 
-Good catch, but apparently it's not the only memleak there -- 
-input_mt_init_slots() allocates the input_mt slots and friends, so we need 
-input_mt_destroy_slots() there as well.
-
-Could you please add this to your patch too, while you are at fixing this 
-error codepath anyway, and resubmit?
-
-Thanks!
-
--- 
-Jiri Kosina
-SUSE Labs
-
+- Pekka
