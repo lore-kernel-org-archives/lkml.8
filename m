@@ -2,101 +2,90 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B7B8C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:35:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED420C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:36:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78F7C20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BA520678
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:36:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XacOx8Vm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgHaRfS (ORCPT
+        id S1727058AbgHaRgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:35:18 -0400
-Received: from mga05.intel.com ([192.55.52.43]:47928 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725954AbgHaRfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:35:17 -0400
-IronPort-SDR: QTwHxIgJ6BCmOagd6yRfqx884YIjgSBf3PLAFOJmhljjJyYiE7ZrKwY//lhXZicF59HqbNEcT4
- QAfQIWuSvFdQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="241842693"
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="241842693"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:35:15 -0700
-IronPort-SDR: cGVVcZvPecMsySxe4p+Aa46cW0pDw/6y+yCX4Qy4RfoOvq9vnu3LkaXOZowiA3OO7ZO7katJnK
- jpC/HjekF1Yg==
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="340726410"
-Received: from jbrandeb-mobl3.amr.corp.intel.com (HELO localhost) ([10.252.138.103])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:35:14 -0700
-Date:   Mon, 31 Aug 2020 10:35:12 -0700
-From:   Jesse Brandeburg <jesse.brandeburg@intel.com>
-To:     Lennart Sorensen <lsorense@csclub.uwaterloo.ca>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <intel-wired-lan@lists.osuosl.org>
-Subject: Re: [Intel-wired-lan] VRRP not working on i40e X722 S2600WFT
-Message-ID: <20200831103512.00001fab@intel.com>
-In-Reply-To: <20200828155616.3sd2ivrml2gpcvod@csclub.uwaterloo.ca>
-References: <20200827183039.hrfnb63cxq3pmv4z@csclub.uwaterloo.ca>
-        <20200828155616.3sd2ivrml2gpcvod@csclub.uwaterloo.ca>
-X-Mailer: Claws Mail 3.12.0 (GTK+ 2.24.28; i686-w64-mingw32)
+        Mon, 31 Aug 2020 13:36:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46602 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbgHaRgK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 13:36:10 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14BC1C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:36:10 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id i26so9258124ejb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=I3WeqjVx4wKF3MWJ0CP0zAUX9Wy/9s2/ETXzMNYwB5Q=;
+        b=XacOx8VmM+yH++N7e0sIqOtJmWLNk9ffuc2ukCaUK4p60sLubP87STHrtG3AOm3bau
+         AOwUQRCyJO/rbDScOA0psV5NrV4+NNJ06VU+2rL+exdRc4AkbpvubnNdccmW5U2bBvF4
+         ggoSFYDcAa3afRJhPNfMEzDhbXG2vhLqJdZH1jH1/y4WSEKHi+oUXAxWE3gFTcRR+Yio
+         s/EPdKmtrQHlXvstI9240h0DASqJXBpCpL6sbM9IYBYyuN5qfS/hNvhtrFk/vv5VaZ1j
+         ypaf6XDFc7mXQOg4OTo+NjGjmP7QDfDe25dER3mmSMMRzoMtFG6S/MolgT7nx6EBcD2g
+         zr6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=I3WeqjVx4wKF3MWJ0CP0zAUX9Wy/9s2/ETXzMNYwB5Q=;
+        b=LEDd/DADDNMaFS/uCnpywp2fa+mVjlDLbMA3JZj7KRZrbvkSoCR4RALQCi46VrYTpW
+         wcj2/OnDM3Pi61z63i+7eZ3IHOGur+1OaVrMjdNQC04ILjrh+ZGiBOUWrV7e+qzk1kf1
+         P46zh4JEdMEdprpOFc/7Z69pbGCyF5gaC0wQJyS/Doh8smCOhC0SYoH8Byl6XG66O6ck
+         QkwLJOwBAdwZBS3zq8wRT+p8zG91/YexQpjEbcqP+IhtU794loJYIX61s/xSZb7gihRT
+         BFmS7qHjuttj4iAoi5NC91rlU/+yuosZiSS215+rkPc1gRmKYYD/NweLUq04Brc5NVSz
+         k8Uw==
+X-Gm-Message-State: AOAM5302Ro2BwAfm0MNm+rjyFqq+ou3kjXu9N5v+3bjM6JbWbv2hKhG2
+        ZrPeJ4LYHchMERhM+5cUTKRDggtlv9I9DPfbixQCGefeBtoiiA==
+X-Google-Smtp-Source: ABdhPJypgdPk+DcH08XoTc3kQbk41mTVJZ00yFTKgS9NOuSvcp51PRDg74ysxyTvhvl4ZMuaq81IfvCMh7Z+/SN2RvI=
+X-Received: by 2002:a17:906:2a49:: with SMTP id k9mr2066689eje.117.1598895368429;
+ Mon, 31 Aug 2020 10:36:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Eric Curtin <ericcurtin17@gmail.com>
+Date:   Mon, 31 Aug 2020 18:35:57 +0100
+Message-ID: <CANpvso7UExmwsRDvz_mkbYLT801bBzFcjMQiwtJZfhvn=L_7ww@mail.gmail.com>
+Subject: Trying to run mptcp on my machine
+To:     Kernel development list <linux-kernel@vger.kernel.org>
+Cc:     fw@strlen.de, davem@davemloft.net, dcaratti@redhat.com,
+        matthieu.baerts@tessares.net, mathew.j.martineau@linux.intel.com,
+        pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lennart Sorensen wrote:
+Hi Guys,
 
-> On Thu, Aug 27, 2020 at 02:30:39PM -0400, Lennart Sorensen wrote:
-> > I have hit a new problem with the X722 chipset (Intel R1304WFT server).
-> > VRRP simply does not work.
-> > 
-> > When keepalived registers a vmac interface, and starts transmitting
-> > multicast packets with the vrp message, it never receives those packets
-> > from the peers, so all nodes think they are the master.  tcpdump shows
-> > transmits, but no receives.  If I stop keepalived, which deletes the
-> > vmac interface, then I start to receive the multicast packets from the
-> > other nodes.  Even in promisc mode, tcpdump can't see those packets.
-> > 
-> > So it seems the hardware is dropping all packets with a source mac that
-> > matches the source mac of the vmac interface, even when the destination
-> > is a multicast address that was subcribed to.  This is clearly not
-> > proper behaviour.
+I've been trying to get mptcp up and running on my machine (xubuntu
+20.04) with little joy. What I did was install 5,8,5 kernel from here:
 
-Thanks for the report Lennart, I understand your frustration, as this
-should probably work without user configuration.
+https://kernel.ubuntu.com/~kernel-ppa/mainline/v5.8.5/amd64/
 
-However, please give this command a try:
-ethtool --set-priv-flags ethX disable-source-pruning on
+Reboot, tried a curl:
 
+curl http://www.multipath-tcp.org
+Nay, Nay, Nay, your have an old computer that does not speak MPTCP.
+Shame on you!
 
-> > I tried a stock 5.8 kernel to check if a driver update helped, and updated
-> > the nvm firware to the latest 4.10 (which appears to be over a year old),
-> > and nothing changes the behaviour at all.
-> > 
-> > Seems other people have hit this problem too:
-> > http://mails.dpdk.org/archives/users/2018-May/003128.html
-> > 
-> > Unless someone has a way to fix this, we will have to change away from
-> > this hardware very quickly.  The IPsec NAT RSS defect we could tolerate
-> > although didn't like, while this is just unworkable.
-> > 
-> > Quite frustrated by this.  Intel network hardware was always great,
-> > how did the X722 make it out in this state.
-> 
-> Another case with the same problem on an X710:
-> 
-> https://www.talkend.net/post/13256.html
+Checked this flag:
 
-I don't know how to reply to this other thread, but it is about DPDK,
-which would require a code change or further investigation to issue the
-right command to the hardware to disable source pruning.
+sudo cat /proc/sys/net/mptcp/enabled
+1
 
+Even tried to run this guy in the kernel repo with no joy
+mptcp_connect.sh. Any pointers to get mptcp running? I couldn't find
+too much documentation on how to configure it on GNU/Linux.
