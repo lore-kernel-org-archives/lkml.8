@@ -2,105 +2,250 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C4FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C18EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5C442098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598870146;
-	bh=V1ZLMFYN+hd025pVnh+Yww7lnqsvYV7nIlFHgJ6wVF0=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=HZLxtr/1EOZ+yNuBjbA3OkwjvMrtIwjvMyt0eJUfVNCTCB4SBvxHpkjrNH41vPvIT
-	 rR3FUFuaNRtHWzMplCLPTp+24IpTfzQhL3/mFNS/T0c/Qv5//CUUqG4Ff5IBUkQdw4
-	 UlfezAHPLGB1A8hNMatAocGl1HHwZISCtY0irxlk=
+	by mail.kernel.org (Postfix) with ESMTP id A23472083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726248AbgHaKfp (ORCPT
+        id S1726528AbgHaKhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:35:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50762 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726446AbgHaKfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:35:36 -0400
-Received: from [192.168.0.50] (89-70-52-201.dynamic.chello.pl [89.70.52.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35ED020DD4;
-        Mon, 31 Aug 2020 10:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598870136;
-        bh=V1ZLMFYN+hd025pVnh+Yww7lnqsvYV7nIlFHgJ6wVF0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=QBKfUCQSPkEfS/h6P3Sqp+d62D6FYKrtw5pPhnOmSzIKEUfeuFhiIDB7AW4vjh4cl
-         7OC2WKi1VGNRtIZY/MIO9uQ5UVV9+IrnFEhW1bY/gSc9BMruuCvNktAMcyExGDJP6P
-         dQ5dT6pubfosL4soPm3ebl8MPyVf0sYhA9g9qbok=
-Subject: Re: [PATCH 23/33] ARM: dts: exynos: Remove empty camera pinctrl
- configuration in Odroid X/U3
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis GNUtoo Carikli <GNUtoo@cyberdimension.org>,
-        Simon Shields <simon@lineageos.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-References: <20200830135200.24304-1-krzk@kernel.org>
- <CGME20200830135508eucas1p21ad0d4f6a2ef78f854fc74750db3fa2a@eucas1p2.samsung.com>
- <20200830135200.24304-23-krzk@kernel.org>
- <c9daff05-dca7-f1b1-8cfe-46b185bf60dd@samsung.com>
- <CAJKOXPfR8YVmBqCd5+8B2TdM_tXZbWobK0pLxXxxkrsDEMR-vw@mail.gmail.com>
-From:   Sylwester Nawrocki <snawrocki@kernel.org>
-Message-ID: <96651e85-c27f-3167-7b41-2ea051c25c65@kernel.org>
-Date:   Mon, 31 Aug 2020 12:35:31 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 31 Aug 2020 06:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37470 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726503AbgHaKhQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 06:37:16 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC69FC061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 03:37:15 -0700 (PDT)
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=localhost)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1kChBR-0002wP-VC; Mon, 31 Aug 2020 12:37:06 +0200
+Message-ID: <e882838158cb9e81440c8cdeb25d80bf3310e8a8.camel@pengutronix.de>
+Subject: Re: [PATCH v9 0/5] Add support for iMX8MQ Display Controller
+ Subsystem
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Laurentiu Palcu <laurentiu.palcu@oss.nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     lukas@mntmn.com, agx@sigxcpu.org
+Date:   Mon, 31 Aug 2020 12:37:23 +0200
+In-Reply-To: <20200828083620.6m5yhcv7rg5tckzh@fsr-ub1864-141>
+References: <20200731081836.3048-1-laurentiu.palcu@oss.nxp.com>
+         <20200828083620.6m5yhcv7rg5tckzh@fsr-ub1864-141>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPfR8YVmBqCd5+8B2TdM_tXZbWobK0pLxXxxkrsDEMR-vw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Laurentiu,
 
-On 8/31/20 10:38, Krzysztof Kozlowski wrote:
-> On Mon, 31 Aug 2020 at 10:31, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->> On 30.08.2020 15:51, Krzysztof Kozlowski wrote:
->>> The camera's pinctrl configuration is simply empty and not effective.
->>> Remove it to fix dtbs_check warning:
->>>
->>>     arch/arm/boot/dts/exynos4412-odroidx.dt.yaml: camera: pinctrl-0: True is not of type 'array'
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->>
->> I think that this was intentional to properly enable support for
->> mem-2-mem mode in Exynos4-IS (FIMC), but I'm not sure what are the
->> default values if no pinctrl properties are provided. Sylwester, could
->> you comment?
+On Fr, 2020-08-28 at 11:36 +0300, Laurentiu Palcu wrote:
+> Hi Lucas,
 > 
-> Indeed it could be intentional... I see now errors:
-> [   33.752203] s5p-fimc-md soc:camera: Failed to get pinctrl: -19
-> 
-> I wonder why getting an empty pinctrl is needed... maybe the driver
-> should accept missing pinctrl?
+> I was wondering about the plans to merge this series. Since not many
+> people can test it properly due to lack of DCSS support in the upstream
+> NWL driver (which I heard it's coming soon) and a completely nonexistent
+> HDP driver, are we going to take a leap of faith and merge it as is? Or
+> should we wait?
 
-It might have been better to have the pinctrl properties optional, as there
-might be boards without the image sensor attached and FIMC could still be 
-used in memory-to-memory mode, as Marek pointed out. But it seems too late 
-now to change that. The binding defines the pinctrl properties as required 
-(Documentation/devicetree/bindings/media/samsung-fimc.txt) and we need to
-keep them in dtses.
+I think even if the bridges aren't ready yet, the driver is in a good
+enough shape to merge it. There's no point in letting it accumulate
+bitrot while waiting for the bridges to land. Also I guess it will make
+bridge driver development a lot easier when the DCSS driver is in-tree.
 
---
+> As to who is going to do the actual merge, I know we had a brief
+> discussion about it some time ago and I was supposed to apply for
+> drm-misc rights, however it feels a little awkward to merge my own
+> code... :) Though, I might not even qualify for drm-misc rights anyway,
+> considering I haven't been very active in this area... :/
+
+Please consider applying for drm-misc merge rights. Even if you don't
+do the initial merge I think it will come in handy in the long run.
+
+> On that note, I will probably need help with the merging, provided it's
+> still happenning. Will you be able to help me out with this?
+
+Sure, I'm having some time available this week. I'll give this v9
+another spin on my boards and will do the merge after that.
+
 Regards,
-Sylwester
+Lucas
+
+> Thanks,
+> laurentiu
+> 
+> On Fri, Jul 31, 2020 at 11:18:28AM +0300, Laurentiu Palcu wrote:
+> > From: Laurentiu Palcu <laurentiu.palcu@nxp.com>
+> > 
+> > Hi,
+> > 
+> > This patchset adds initial DCSS support for iMX8MQ chip. Initial support
+> > includes only graphics plane support (no video planes), no HDR10 capabilities,
+> > no graphics decompression (only linear, tiled and super-tiled buffers allowed).
+> > 
+> > Support for the rest of the features will be added incrementally, in subsequent
+> > patches.
+> > 
+> > The patchset was tested with both HDP driver (in the downstream tree) and the upstream
+> > MIPI-DSI driver (with a couple of patches on top, to make it work correctly with DCSS).
+> > 
+> > Thanks,
+> > Laurentiu
+> > 
+> > Changes in v9:
+> >  * Fixed a compilation issue found by Guido in his setup: 'select
+> >    VIDEOMODE_HELPERS' was missing from Kconfig;
+> >  * Use imx8mq-clock.h in the bindings file so one can understand what
+> >    those clock values mean;
+> >  * no other changes done. Couldn't address the hang Guido reported as
+> >    it's not happening in my setup. However, in my tree, there are some
+> >    extra NWL and ADV patches applied on top of upstream ones... Also,
+> >    removing them and testing only with upstream, even if there's no
+> >    image out, does not produce a hang... :/
+> > 
+> > Changes in v8:
+> >  * Removed 'select RESET_CONTROLLER" from Kconfig as Philipp pointed
+> >    out. SRC is not used in DCSS driver;
+> >  * Nothing else changed;
+> > 
+> > Changes in v7:
+> >  * Added a patch to initialize the connector using the drm_bridge_connector
+> >    API as Sam suggested. Tested it using NWL_DSI and ADV7535 with
+> >    Guido's patch [1] applied and one fix for ADV [2]. Also, some extra
+> >    patches for ADV and NWL were needed, from our downstream tree, which
+> >    will be upstreamed soon by their author;
+> >  * Rest of the patches are untouched;
+> > 
+> > [1] https://lists.freedesktop.org/archives/dri-devel/2020-July/273025.html
+> > [2] https://lists.freedesktop.org/archives/dri-devel/2020-July/273132.html
+> > 
+> > Changes in v6:
+> >  * Addressed Rob's comment and added "additionalProperties: false" at
+> >    the end of the bindings' properties. However, this change surfaced
+> >    an issue with the assigned-clock* properties not being documented in
+> >    the properties section. Added the descriptions and the bindings patch
+> >    will need another review;
+> >  * Added an entry for DCSS driver in the MAINTAINERS file;
+> >  * Removed the component framework patch altogether;
+> > 
+> > Changes in v5:
+> >  * Rebased to latest;
+> >  * Took out component framework support and made it a separate patch so
+> >    that people can still test with HDP driver, which makes use of it.
+> >    But the idea is to get rid of it once HDP driver's next versions
+> >    will remove component framework as well;
+> >  * Slight improvement to modesetting: avoid cutting off the pixel clock
+> >    if the new mode and the old one are equal. Also, in this case, is
+> >    not necessary to wait for DTG to shut off. This would allow to switch
+> >    from 8b RGB to 12b YUV422, for example, with no interruptions (at least
+> >    from DCSS point of view);
+> >  * Do not fire off CTXLD when going to suspend, unless it still has
+> >    entries that need to be committed to DCSS;
+> >  * Addressed Rob's comments on bindings;
+> > 
+> > Changes in v4:
+> >  * Addressed Lucas and Philipp's comments:
+> >    * Added DRM_KMS_CMA_HELPER dependency in Kconfig;
+> >    * Removed usage of devm_ functions since I'm already doing all the
+> >      clean-up in the submodules_deinit();
+> >    * Moved the drm_crtc_arm_vblank_event() in dcss_crtc_atomic_flush();
+> >    * Removed en_completion variable from dcss_crtc since this was
+> >      introduced mainly to avoid vblank timeout warnings which were fixed
+> >      by arming the vblank event in flush() instead of begin();
+> >    * Removed clks_on and irq_enabled flags since all the calls to
+> >      enabling/disabling clocks and interrupts were balanced;
+> >    * Removed the custom atomic_commit callback and used the DRM core
+> >      helper and, in the process, got rid of a workqueue that wasn't
+> >      necessary anymore;
+> >    * Fixed some minor DT binding issues flagged by Philipp;
+> >    * Some other minor changes suggested by Lucas;
+> >  * Removed YUV formats from the supported formats as these cannot work
+> >    without the HDR10 module CSCs and LUTs. Will add them back when I
+> >    will add support for video planes;
+> > 
+> > Changes in v3:
+> >  * rebased to latest linux-next and made it compile as drmP.h was
+> >    removed;
+> >  * removed the patch adding the VIDEO2_PLL clock. It's already applied;
+> >  * removed an unnecessary 50ms sleep in the dcss_dtg_sync_set();
+> >  * fixed a a spurious hang reported by Lukas Hartmann and encountered
+> >    by me several times;
+> >  * mask DPR and DTG interrupts by default, as they may come enabled from
+> >    U-boot;
+> > 
+> > Changes in v2:
+> >  * Removed '0x' in node's unit-address both in DT and yaml;
+> >  * Made the address region size lowercase, to be consistent;
+> >  * Removed some left-over references to P010;
+> >  * Added a Kconfig dependency of DRM && ARCH_MXC. This will also silence compilation
+> >    issues reported by kbuild for other architectures;
+> > 
+> > 
+> > Laurentiu Palcu (5):
+> >   drm/imx: compile imx directory by default
+> >   drm/imx: Add initial support for DCSS on iMX8MQ
+> >   drm/imx/dcss: use drm_bridge_connector API
+> >   MAINTAINERS: Add entry for i.MX 8MQ DCSS driver
+> >   dt-bindings: display: imx: add bindings for DCSS
+> > 
+> >  .../bindings/display/imx/nxp,imx8mq-dcss.yaml | 108 +++
+> >  MAINTAINERS                                   |   8 +
+> >  drivers/gpu/drm/Makefile                      |   2 +-
+> >  drivers/gpu/drm/imx/Kconfig                   |   2 +
+> >  drivers/gpu/drm/imx/Makefile                  |   1 +
+> >  drivers/gpu/drm/imx/dcss/Kconfig              |   9 +
+> >  drivers/gpu/drm/imx/dcss/Makefile             |   6 +
+> >  drivers/gpu/drm/imx/dcss/dcss-blkctl.c        |  70 ++
+> >  drivers/gpu/drm/imx/dcss/dcss-crtc.c          | 219 +++++
+> >  drivers/gpu/drm/imx/dcss/dcss-ctxld.c         | 424 +++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-dev.c           | 325 +++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-dev.h           | 177 ++++
+> >  drivers/gpu/drm/imx/dcss/dcss-dpr.c           | 562 ++++++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-drv.c           | 138 +++
+> >  drivers/gpu/drm/imx/dcss/dcss-dtg.c           | 409 +++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-kms.c           | 198 +++++
+> >  drivers/gpu/drm/imx/dcss/dcss-kms.h           |  44 +
+> >  drivers/gpu/drm/imx/dcss/dcss-plane.c         | 405 +++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-scaler.c        | 826 ++++++++++++++++++
+> >  drivers/gpu/drm/imx/dcss/dcss-ss.c            | 180 ++++
+> >  20 files changed, 4112 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/display/imx/nxp,imx8mq-dcss.yaml
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/Kconfig
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/Makefile
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-blkctl.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-crtc.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ctxld.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dev.h
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dpr.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-drv.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-dtg.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-kms.h
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-plane.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-scaler.c
+> >  create mode 100644 drivers/gpu/drm/imx/dcss/dcss-ss.c
+> > 
+> > -- 
+> > 2.23.0
+> > 
+
