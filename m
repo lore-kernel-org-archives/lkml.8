@@ -2,242 +2,180 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71377C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EC9C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4082020782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:42:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GPRxZjjC"
+	by mail.kernel.org (Postfix) with ESMTP id 9C3A220782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbgHaMmc (ORCPT
+        id S1726468AbgHaMo0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:42:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgHaMmT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:42:19 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E723C061573;
-        Mon, 31 Aug 2020 05:42:17 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id i26so7937303ejb.12;
-        Mon, 31 Aug 2020 05:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=b9Ri7SivWzc8iqz6YfSPi6XQVPBxsAkuCeZyT2uEIvQ=;
-        b=GPRxZjjC6gh5BiJyQALYOryKRoLIwgEDRxc/+w2QkdKky8v4s3iqXej4AHA4uGGhec
-         Srr0wWaFHSRibnOKsmGwLyD+fxh5j8dGOhriNH8znJ5edFbAht88I14NYkMAUdu1wiN4
-         8JFfJCi0dlVrlNnnoASacgl973aHHoNV0eTRXFGB6kWS9jLXP/eXupU4cFbictmbQo/G
-         tuAPvZ9A1yC8ohg1TCtWzWJk6xOMY4eGNKbZMXsMKA0G5k8oXqkly05K6qaBHdLAXAUk
-         ldXr/FbqCqkZXUR6bzaxrlyDEYfqb5pbuiNeaEtgIBxad2P5jroAhev2DdPYFzz1UYfk
-         ZUkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=b9Ri7SivWzc8iqz6YfSPi6XQVPBxsAkuCeZyT2uEIvQ=;
-        b=S7LZM/GbR/7KRwawzayyKTUIg7DqMoAhBdh4HEDML17K2WKZDFf3nY1wDLQLfrDWhE
-         NXGEe8IYHwHJg5JmbDZTbkDlz018nmVnP1afHr1STlRyGJwDsI47C1WBrlrDEp1Vpcpw
-         x+As18IQweemSv/zYaRfWmBuP7ISkDudUwMEDf+Z2bmunh/UCYDR8jyAYDweHXDXMb/s
-         v8inF6i9pjxFdl8v0fraZdLvJQOEO6FXnaAH+wKC9BvgXQqVt0pElHQ/FB10+pZ6mbzC
-         vl7RhKGdfDBhduZfULGXFCOUqdEZ/+9KznzVqt7EsTeRMETxRHQ8aTwd40MuuW6DFVFD
-         /CZA==
-X-Gm-Message-State: AOAM530/qSbaNdEDS2L1kKvFOyvJZF1vb7iZ/5aHjGNeMwz1wD/RU03a
-        +XVgSs0+kq1my9GGu6Nl/tw=
-X-Google-Smtp-Source: ABdhPJxjzVlOGnmjgXAM5UFe9O78WcSoj4mqTZLj4VmrWWOA95DoyfeyXQi9ZDEP/1uGNdg8PSdegg==
-X-Received: by 2002:a17:907:270d:: with SMTP id w13mr938949ejk.191.1598877736257;
-        Mon, 31 Aug 2020 05:42:16 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id re19sm4458397ejb.86.2020.08.31.05.42.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 05:42:15 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 14:42:14 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     JC Kuo <jckuo@nvidia.com>
-Cc:     gregkh@linuxfoundation.org, robh@kernel.org, jonathanh@nvidia.com,
-        kishon@ti.com, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, nkristam@nvidia.com
-Subject: Re: [PATCH v2 11/12] usb: host: xhci-tegra: unlink power domain
- devices
-Message-ID: <20200831124214.GG1689119@ulmo>
-References: <20200831044043.1561074-1-jckuo@nvidia.com>
- <20200831044043.1561074-12-jckuo@nvidia.com>
+        Mon, 31 Aug 2020 08:44:26 -0400
+Received: from smtp.h3c.com ([60.191.123.50]:51158 "EHLO h3cspam02-ex.h3c.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgHaMoT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 08:44:19 -0400
+Received: from h3cspam02-ex.h3c.com (localhost [127.0.0.2] (may be forged))
+        by h3cspam02-ex.h3c.com with ESMTP id 07VB44Iw027203
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:04:04 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX02-BASE.srv.huawei-3com.com ([10.8.0.65])
+        by h3cspam02-ex.h3c.com with ESMTPS id 07VB3phN027079
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 Aug 2020 19:03:51 +0800 (GMT-8)
+        (envelope-from tian.xianting@h3c.com)
+Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
+ DAG2EX02-BASE.srv.huawei-3com.com (10.8.0.65) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 31 Aug 2020 19:03:54 +0800
+Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
+ by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
+ mapi id 15.01.1713.004; Mon, 31 Aug 2020 19:03:54 +0800
+From:   Tianxianting <tian.xianting@h3c.com>
+To:     kernel test robot <lkp@intel.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
+        "sagi@grimberg.me" <sagi@grimberg.me>
+CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] nvme-pci: check req to prevent crash in nvme_handle_cqe()
+Thread-Topic: [PATCH] nvme-pci: check req to prevent crash in
+ nvme_handle_cqe()
+Thread-Index: AQHWf2RcPXKUYIdfu0aQ67Gvv7x69alRcK+AgACNmNA=
+Date:   Mon, 31 Aug 2020 11:03:54 +0000
+Message-ID: <fa48ae527de8458aa173bb242b83a97a@h3c.com>
+References: <20200831065311.40731-1-tian.xianting@h3c.com>
+ <202008311754.Gbt69JQN%lkp@intel.com>
+In-Reply-To: <202008311754.Gbt69JQN%lkp@intel.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.99.141.128]
+x-sender-location: DAG2
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="DWg365Y4B18r8evw"
-Content-Disposition: inline
-In-Reply-To: <20200831044043.1561074-12-jckuo@nvidia.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+X-DNSRBL: 
+X-MAIL: h3cspam02-ex.h3c.com 07VB3phN027079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I am very sorry, I used the wrong patch file :(
+I send it again. Please review, thanks.
 
---DWg365Y4B18r8evw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+-----Original Message-----
+From: kernel test robot [mailto:lkp@intel.com] 
+Sent: Monday, August 31, 2020 5:41 PM
+To: tianxianting (RD) <tian.xianting@h3c.com>; kbusch@kernel.org; axboe@fb.com; hch@lst.de; sagi@grimberg.me
+Cc: kbuild-all@lists.01.org; linux-nvme@lists.infradead.org; linux-kernel@vger.kernel.org; tianxianting (RD) <tian.xianting@h3c.com>
+Subject: Re: [PATCH] nvme-pci: check req to prevent crash in nvme_handle_cqe()
 
-On Mon, Aug 31, 2020 at 12:40:42PM +0800, JC Kuo wrote:
-> This commit unlinks xhci-tegra platform device with ss/host power
-> domain devices. Reasons for this change is - at elpg entry, phy
-> sleepwalk and wake configuration need to be done before powering
-> down ss/host partitions, and phy need be powered off after powering
-> down ss/host partitions. Sequence looks like roughly below:
->=20
->   tegra_xusb_enter_elpg() -> xhci_suspend()
->                           -> enable phy sleepwalk and wake if needed
->                           -> power down ss/host partitions
->                           -> power down phy
->=20
-> If ss/host power domains are linked to xhci-tegra platform device, we
-> are not able to perform the sequence like above.
->=20
-> This commit introduces:
->   1. tegra_xusb_unpowergate_partitions() to power up ss and host
->      partitions together. If ss/host power domain devices are
->      available, it invokes pm_runtime_get_sync() to request power
->      driver to power up partitions; If power domain devices are not
->      available, tegra_powergate_sequence_power_up() will be used to
->      power up partitions.
->=20
->   2. tegra_xusb_powergate_partitions() to power down ss and host
->      partitions together. If ss/host power domain devices are
->      available, it invokes pm_runtime_put_sync() to request power
->      driver to power down partitions; If power domain devices are not
->      available, tegra_powergate_power_off() will be used to power down
->      partitions.
->=20
-> Signed-off-by: JC Kuo <jckuo@nvidia.com>
-> ---
->  drivers/usb/host/xhci-tegra.c | 202 +++++++++++++++++++---------------
->  1 file changed, 111 insertions(+), 91 deletions(-)
->=20
-> diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
-> index 934be1686352..ce6526c2caf6 100644
-> --- a/drivers/usb/host/xhci-tegra.c
-> +++ b/drivers/usb/host/xhci-tegra.c
-> @@ -249,8 +249,6 @@ struct tegra_xusb {
-> =20
->  	struct device *genpd_dev_host;
->  	struct device *genpd_dev_ss;
-> -	struct device_link *genpd_dl_host;
-> -	struct device_link *genpd_dl_ss;
-> =20
->  	struct phy **phys;
->  	unsigned int num_phys;
-> @@ -814,36 +812,12 @@ static void tegra_xusb_phy_disable(struct tegra_xus=
-b *tegra)
-> =20
->  static int tegra_xusb_runtime_suspend(struct device *dev)
->  {
-> -	struct tegra_xusb *tegra =3D dev_get_drvdata(dev);
-> -
-> -	regulator_bulk_disable(tegra->soc->num_supplies, tegra->supplies);
-> -	tegra_xusb_clk_disable(tegra);
-> -
->  	return 0;
->  }
-> =20
->  static int tegra_xusb_runtime_resume(struct device *dev)
->  {
-> -	struct tegra_xusb *tegra =3D dev_get_drvdata(dev);
-> -	int err;
-> -
-> -	err =3D tegra_xusb_clk_enable(tegra);
-> -	if (err) {
-> -		dev_err(dev, "failed to enable clocks: %d\n", err);
-> -		return err;
-> -	}
-> -
-> -	err =3D regulator_bulk_enable(tegra->soc->num_supplies, tegra->supplies=
-);
-> -	if (err) {
-> -		dev_err(dev, "failed to enable regulators: %d\n", err);
-> -		goto disable_clk;
-> -	}
-> -
->  	return 0;
-> -
-> -disable_clk:
-> -	tegra_xusb_clk_disable(tegra);
-> -	return err;
->  }
-> =20
->  #ifdef CONFIG_PM_SLEEP
-> @@ -1019,10 +993,6 @@ static int tegra_xusb_load_firmware(struct tegra_xu=
-sb *tegra)
->  static void tegra_xusb_powerdomain_remove(struct device *dev,
->  					  struct tegra_xusb *tegra)
->  {
-> -	if (tegra->genpd_dl_ss)
-> -		device_link_del(tegra->genpd_dl_ss);
-> -	if (tegra->genpd_dl_host)
-> -		device_link_del(tegra->genpd_dl_host);
->  	if (!IS_ERR_OR_NULL(tegra->genpd_dev_ss))
->  		dev_pm_domain_detach(tegra->genpd_dev_ss, true);
->  	if (!IS_ERR_OR_NULL(tegra->genpd_dev_host))
-> @@ -1048,20 +1018,88 @@ static int tegra_xusb_powerdomain_init(struct dev=
-ice *dev,
->  		return err;
->  	}
-> =20
-> -	tegra->genpd_dl_host =3D device_link_add(dev, tegra->genpd_dev_host,
-> -					       DL_FLAG_PM_RUNTIME |
-> -					       DL_FLAG_STATELESS);
-> -	if (!tegra->genpd_dl_host) {
-> -		dev_err(dev, "adding host device link failed!\n");
-> -		return -ENODEV;
-> +	return 0;
-> +}
-> +
-> +static int tegra_xusb_unpowergate_partitions(struct tegra_xusb *tegra)
-> +{
-> +	struct device *dev =3D tegra->dev;
-> +	bool use_genpd;
-> +	int rc;
-> +
-> +	use_genpd =3D of_property_read_bool(dev->of_node, "power-domains");
+Hi Xianting,
 
-I don't think that's technically correct. Just because a "power-domains"
-property exists in DT doesn't mean any power domains are necessarily
-attached to the device. I think you'll need to check for something like
+Thank you for the patch! Yet something to improve:
 
-	if (dev->pm_domain)
+[auto build test ERROR on v5.9-rc2]
+[also build test ERROR on next-20200828] [cannot apply to linus/master v5.9-rc3] [If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in https://git-scm.com/docs/git-format-patch]
 
-here.
+url:    https://github.com/0day-ci/linux/commits/Xianting-Tian/nvme-pci-check-req-to-prevent-crash-in-nvme_handle_cqe/20200831-155653
+base:    d012a7190fc1fd72ed48911e77ca97ba4521bccd
+config: parisc-randconfig-r004-20200831 (attached as .config)
+compiler: hppa-linux-gcc (GCC) 9.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=parisc 
 
-Thierry
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
---DWg365Y4B18r8evw
-Content-Type: application/pgp-signature; name="signature.asc"
+All errors (new ones prefixed by >>):
 
------BEGIN PGP SIGNATURE-----
+   drivers/nvme/host/pci.c: In function 'nvme_handle_cqe':
+>> drivers/nvme/host/pci.c:3244: error: unterminated argument list invoking macro "dev_warn"
+    3244 | module_exit(nvme_exit);
+         | 
+>> drivers/nvme/host/pci.c:966:3: error: 'dev_warn' undeclared (first use in this function); did you mean '_dev_warn'?
+     966 |   dev_warn(nvmeq->dev->ctrl.device,
+         |   ^~~~~~~~
+         |   _dev_warn
+   drivers/nvme/host/pci.c:966:3: note: each undeclared identifier is reported only once for each function it appears in
+>> drivers/nvme/host/pci.c:966:11: error: expected ';' at end of input
+     966 |   dev_warn(nvmeq->dev->ctrl.device,
+         |           ^
+         |           ;
+   ......
+    3244 | module_exit(nvme_exit);
+         |            
+>> drivers/nvme/host/pci.c:966:3: error: expected declaration or 
+>> statement at end of input
+     966 |   dev_warn(nvmeq->dev->ctrl.device,
+         |   ^~~~~~~~
+>> drivers/nvme/host/pci.c:966:3: error: expected declaration or 
+>> statement at end of input
+   drivers/nvme/host/pci.c: At top level:
+   drivers/nvme/host/pci.c:105:13: warning: 'nvme_dev_disable' declared 'static' but never defined [-Wunused-function]
+     105 | static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown);
+         |             ^~~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:106:13: warning: '__nvme_disable_io_queues' declared 'static' but never defined [-Wunused-function]
+     106 | static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode);
+         |             ^~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:901:13: warning: 'nvme_pci_complete_rq' defined but not used [-Wunused-function]
+     901 | static void nvme_pci_complete_rq(struct request *req)
+         |             ^~~~~~~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:853:21: warning: 'nvme_queue_rq' defined but not used [-Wunused-function]
+     853 | static blk_status_t nvme_queue_rq(struct blk_mq_hw_ctx *hctx,
+         |                     ^~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:484:13: warning: 'nvme_commit_rqs' defined but not used [-Wunused-function]
+     484 | static void nvme_commit_rqs(struct blk_mq_hw_ctx *hctx)
+         |             ^~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:427:12: warning: 'nvme_pci_map_queues' defined but not used [-Wunused-function]
+     427 | static int nvme_pci_map_queues(struct blk_mq_tag_set *set)
+         |            ^~~~~~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:403:12: warning: 'nvme_init_request' defined but not used [-Wunused-function]
+     403 | static int nvme_init_request(struct blk_mq_tag_set *set, struct request *req,
+         |            ^~~~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:392:12: warning: 'nvme_init_hctx' defined but not used [-Wunused-function]
+     392 | static int nvme_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
+         |            ^~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:379:12: warning: 'nvme_admin_init_hctx' defined but not used [-Wunused-function]
+     379 | static int nvme_admin_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
+         |            ^~~~~~~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:371:15: warning: 'nvme_pci_iod_alloc_size' defined but not used [-Wunused-function]
+     371 | static size_t nvme_pci_iod_alloc_size(void)
+         |               ^~~~~~~~~~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:294:13: warning: 'nvme_dbbuf_set' defined but not used [-Wunused-function]
+     294 | static void nvme_dbbuf_set(struct nvme_dev *dev)
+         |             ^~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:282:13: warning: 'nvme_dbbuf_init' defined but not used [-Wunused-function]
+     282 | static void nvme_dbbuf_init(struct nvme_dev *dev,
+         |             ^~~~~~~~~~~~~~~
+   drivers/nvme/host/pci.c:241:12: warning: 'nvme_dbbuf_dma_alloc' defined but not used [-Wunused-function]
+     241 | static int nvme_dbbuf_dma_alloc(struct nvme_dev *dev)
+         |            ^~~~~~~~~~~~~~~~~~~~
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M8CYACgkQ3SOs138+
-s6FYOBAAn6uruJBlUL3AuXOdjpp44aJJBveMlik94Wwx/oD86M1WzjcV78S/l9+D
-hqTUZg94Zw+PUbBbCYWXJD63hT4hIUlErUE6PiBzvZfo4/kOh7p+XdRxcOgqH7S4
-pkcD05CGe3WhCyb+zZoplLB976rzhEp5y3G9/wq3ouxm+p/KwpRQRU/p9K1PtHZQ
-WNvMxfK0iV2h96yft3dMQ5Xt2sXda9q28t/9IJXAiRBLdGCZDoA64pP77Ut3RNJp
-9KrFJ/dUZasF9AAOpxYpQ4m502/gEsYGBMsjT8EfuSZe4C3vIwBRN7gv5lu9l/pS
-glLpjbyKzj2z+MlbrYZpoi4QG+ZH10xA1/ndwz90uOOxwLvser2++mCjQRXexY8x
-pub2cdL5PafolfIyHIMm+PcWUg33xdPbE+ychI6yZbHzTMutdwQAQXiUcfPoZnYu
-XD+sBRCFM/6JucRJmLskySjXqY8Qzs8/qi2g721W1cjtz0no+4VGRgF/VTcin307
-wVxWm8e0UFCBIV5ydNu2M8BDofJqCcqT0lidUR+fV9oqSoNxlJitaoo5tHsO7c3h
-2O/c2SQZpM/gNAMQFjYwuconxc4pQOhRv+yuhRuKFKfAvKTAh0FWVYwDA/jfFvix
-wkreSVjdyh4O2lVYBZSi4nCpVR4I7Sc11AyDcAt4y+pxW0JEOSM=
-=dc6T
------END PGP SIGNATURE-----
+# https://github.com/0day-ci/linux/commit/e3761e6c554adb55d40e176915df361ad9e272e1
+git remote add linux-review https://github.com/0day-ci/linux git fetch --no-tags linux-review Xianting-Tian/nvme-pci-check-req-to-prevent-crash-in-nvme_handle_cqe/20200831-155653
+git checkout e3761e6c554adb55d40e176915df361ad9e272e1
+vim +/dev_warn +3244 drivers/nvme/host/pci.c
 
---DWg365Y4B18r8evw--
+b60503ba432b16 drivers/block/nvme.c      Matthew Wilcox 2011-01-20  3239  
+b60503ba432b16 drivers/block/nvme.c      Matthew Wilcox 2011-01-20  3240  MODULE_AUTHOR("Matthew Wilcox <willy@linux.intel.com>");
+b60503ba432b16 drivers/block/nvme.c      Matthew Wilcox 2011-01-20  3241  MODULE_LICENSE("GPL");
+c78b47136f7ade drivers/block/nvme-core.c Keith Busch    2014-11-21  3242  MODULE_VERSION("1.0");
+b60503ba432b16 drivers/block/nvme.c      Matthew Wilcox 2011-01-20  3243  module_init(nvme_init);
+b60503ba432b16 drivers/block/nvme.c      Matthew Wilcox 2011-01-20 @3244  module_exit(nvme_exit);
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
