@@ -2,128 +2,131 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA6CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D2CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AD1920782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1902071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:40:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gBplDfQq"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EzcrI3fl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbgHaNkI (ORCPT
+        id S1727872AbgHaNko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:40:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbgHaNkB (ORCPT
+        Mon, 31 Aug 2020 09:40:44 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:46666 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbgHaNkm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:40:01 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17C45C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 06:40:01 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id bo3so8518528ejb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 06:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lddw3bdok3hAy1F/tQ2gv6hGO+6x8VFGDH1TfahaMjg=;
-        b=gBplDfQqLrkZ52/3bG7dQRrqKdekFZEh45gXZ5MsUHY486B3HK7oI65JYt4l0R3ldF
-         GNHW/tXR1MVsKES6Wqf1COb7UnAT3ZaQw63tIRNa5/T4qs0h8OMmXCsfgazVyJK79l8t
-         jn385EO8CLCYrRbQ23bb6Sth0ZtPsuO6k4k7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lddw3bdok3hAy1F/tQ2gv6hGO+6x8VFGDH1TfahaMjg=;
-        b=IZ0FTHpT2mjj+jPTFRqMwlCH8XQ+ml1iaIIWZz+PWUXmKAcGHfL3+84SgaqIsjIqT0
-         VjA4JtbB8oHdud3WmfM9UP2CvqC6BXm+pSOSSvsGjc9MF1PnYOatukm6y4NVr3RvrxV4
-         KAQiCHBO2K1YOSDbebTJ03R7aZ/bRFQUpkMHKN2+vN3oLlk7e3G6bZ24jY1J29sqIS5z
-         /EhwXApB4LfqxnVTiSJBZFOx0/Tu7Nn//G3WfGDYQN11qUA1Cecrav3eTFOhQP3P5k+P
-         Av1SaAWAoAsqHNIFg3ZJSYEzEtJGSsYYL+pZK9f5UEr012x7qCc8H/dOUBTEG2mYbwJC
-         rQhg==
-X-Gm-Message-State: AOAM532yTiZJ/9g/PSFTkDO1ylBfSP2hswNaEtIORZ1H1vyHEXQxdlhC
-        gNIYAcYZWDW5C4GEsr3ZYsURMX/8xZrpYA==
-X-Google-Smtp-Source: ABdhPJyUvFBVaojqCaFsQ/GEitC1y4QjQw5MxzDLGte0xZtgCg2sTwV/iQXOxbr/0iSE7fbgxbsnVw==
-X-Received: by 2002:a17:906:cf82:: with SMTP id um2mr1212257ejb.49.1598881199372;
-        Mon, 31 Aug 2020 06:39:59 -0700 (PDT)
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com. [209.85.218.49])
-        by smtp.gmail.com with ESMTPSA id p25sm4974464edm.60.2020.08.31.06.39.56
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 06:39:58 -0700 (PDT)
-Received: by mail-ej1-f49.google.com with SMTP id d11so8480120ejt.13
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 06:39:56 -0700 (PDT)
-X-Received: by 2002:a17:907:7292:: with SMTP id dt18mr1291762ejc.512.1598881195924;
- Mon, 31 Aug 2020 06:39:55 -0700 (PDT)
+        Mon, 31 Aug 2020 09:40:42 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VDZXad170145;
+        Mon, 31 Aug 2020 13:40:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=UcZelzQz1egJztiC3oTDk5ObhFphp8EDAemUUbgfzx0=;
+ b=EzcrI3fl/j7LAYCVchRSS8yiMf1hxzALf1nC45FgeNVpJUpwmh/VXDoGRYlvnvUgG/cW
+ Ei3UwfEhAuhwXJuUVo6OSoNN1Z5pgkWq+rpXR4eb42haH0FLjfEDlGHujPz5F6FXhujp
+ BsBolisY6mRw3h0OUKxUBJap/rEXh7hUhyXuNOMw2LeujcMekBpYKRRHGWbUJ+i8ba1o
+ mT6E0YSKRguPWDqiplkM4ZHXJ9YL7MVnuVzPS5g7EaMxED9DH+hOcCCRJeQ4vKE8dHrg
+ l1DYrmUW8QtTEKZh60OMQ800A2N4fyyimqdc32qjLeuONNgcYgruTVV/MG05tPNXWCnl MQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 337qrhdb27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 Aug 2020 13:40:34 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VDYujg030703;
+        Mon, 31 Aug 2020 13:40:33 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 3380sq0y92-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 13:40:33 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07VDeS4Y015193;
+        Mon, 31 Aug 2020 13:40:29 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 31 Aug 2020 06:40:28 -0700
+Date:   Mon, 31 Aug 2020 16:40:21 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Cengiz Can <cengiz@kernel.wtf>
+Cc:     "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH] staging: atomisp: Fix fallthrough keyword warning
+Message-ID: <20200831134021.GV8299@kadam>
+References: <20200831133011.91258-1-cengiz@kernel.wtf>
 MIME-Version: 1.0
-References: <20200827135205.1.I6981f9a9f0c12e60f8038f3b574184f8ffc1b9b5@changeid>
- <20200829074758.GA16838@amd>
-In-Reply-To: <20200829074758.GA16838@amd>
-From:   Raul Rangel <rrangel@chromium.org>
-Date:   Mon, 31 Aug 2020 07:39:44 -0600
-X-Gmail-Original-Message-ID: <CAHQZ30CuWSzaMNYSfh6Zr12Q1=GA_Yqpg0jaePDkFQjgsDDBPg@mail.gmail.com>
-Message-ID: <CAHQZ30CuWSzaMNYSfh6Zr12Q1=GA_Yqpg0jaePDkFQjgsDDBPg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Input: i8042 - Prevent intermixing i8042 commands
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-input <linux-input@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "S, Shirish" <Shirish.S@amd.com>,
-        Andy Shevchenko <andy@infradead.org>,
-        Dan Murphy <dmurphy@ti.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        "Lee, Chun-Yi" <jlee@suse.com>, Rajat Jain <rajatja@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831133011.91258-1-cengiz@kernel.wtf>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008310079
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 bulkscore=0
+ adultscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 spamscore=0 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008310079
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 1:48 AM Pavel Machek <pavel@ucw.cz> wrote:
->
-> On Thu 2020-08-27 13:52:22, Raul E Rangel wrote:
-> > The i8042_mutex must be held by writers of the AUX and KBD ports, as
-> > well as users of i8042_command. There were a lot of users of
-> > i8042_command that were not calling i8042_lock_chip/i8042_unlock_chip.
-> > This resulted in i8042_commands being issues in between PS/2
-> > transactions.
-> >
-> > This change moves the mutex lock into i8042_command and removes the
-> > burden of locking the mutex from the callers.
-> >
-> > It is expected that the i8042_mutex is locked before calling
-> > i8042_aux_write or i8042_kbd_write. This is currently done by the PS/2
-> > layer via ps2_begin_command and ps2_end_command. Other modules
-> > (serio_raw) do not currently lock the mutex, so there is still a
-> > possibility for intermixed commands.
->
->
-> > @@ -343,10 +330,14 @@ int i8042_command(unsigned char *param, int command)
-> >       unsigned long flags;
-> >       int retval;
-> >
-> > +     mutex_lock(&i8042_mutex);
-> > +
-> >       spin_lock_irqsave(&i8042_lock, flags);
-> >       retval = __i8042_command(param, command);
-> >       spin_unlock_irqrestore(&i8042_lock, flags);
-> >
-> > +      mutex_unlock(&i8042_mutex);
-> > +
-> >       return retval;
->
-> There's something wrong with whitespace here. Checkpatch?
->                                                                         Pavel
-It's fixed in the v2 patch: https://patchwork.kernel.org/patch/11741855/
+On Mon, Aug 31, 2020 at 04:30:12PM +0300, Cengiz Can wrote:
+> commit df561f6688fe ("treewide: Use fallthrough pseudo-keyword") from
+> Gustavo A. R. Silva replaced and standardized /* fallthrough */ comments
+> with 'fallthrough' pseudo-keyword.
+> 
+> However, in one of the switch-case statements, Coverity Static Analyzer
+> throws a warning that 'fallthrough' is unreachable due to the adjacent
+> 'return false' statement.
+> 
+> Since 'fallthrough' is actually an empty "do {} while(0)" this might be
+> due to compiler optimizations. But that needs further investigation.
+> 
+> In order to fix the unreachable code warning, make adjacent 'return
+> false' a part of the previous if statement's else clause.
+> 
+> Reported-by: Coverity Static Analyzer CID 1466511
+> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> ---
+>  drivers/staging/media/atomisp/pci/atomisp_compat_css20.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
+> index 1b2b2c68025b..aaa2d0e0851b 100644
+> --- a/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
+> +++ b/drivers/staging/media/atomisp/pci/atomisp_compat_css20.c
+> @@ -709,8 +709,8 @@ static bool is_pipe_valid_to_current_run_mode(struct atomisp_sub_device *asd,
+>  		if (pipe_id == IA_CSS_PIPE_ID_CAPTURE ||
+>  		    pipe_id == IA_CSS_PIPE_ID_PREVIEW)
+>  			return true;
+> -
+> -		return false;
+> +		else
+> +			return false;
+>  		fallthrough;
 
-Thanks
+Heh...  Still unreachable, but now it has a checkpatch.pl warning as
+well.  Just get rid of the bogus fallthrough annotation.
+
+>  	case ATOMISP_RUN_MODE_VIDEO:
+>  		if (!asd->continuous_mode->val) {
+
+regards,
+dan carpenter
+
