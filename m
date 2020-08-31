@@ -2,168 +2,121 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5829EC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 353BAC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFD22073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:36:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gCW8xyN3";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="nSZ9X+9R"
+	by mail.kernel.org (Postfix) with ESMTP id 0A2262068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598877393;
+	bh=kArTAMCnRklLSjboZvy3ishXpCwt8hGzMmtpI02TPmY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2bUgwLqNm6od7b23brdgm5bT1kQlUYBVnuS9yf93VObxiQtsEujcEu5BXYCfSBi9J
+	 Q4GhGIaXfJOaSyvY4NEhZbNDkKxl/Q1757psicnwPAm3uzsuBc47R3hju62D0HsVIv
+	 mLEtmeW49WmuDb6gocKwsx9w4CyIT6CLqIyoKO9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgHaMf6 (ORCPT
+        id S1726797AbgHaMg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:35:58 -0400
-Received: from esa1.hgst.iphmx.com ([68.232.141.245]:45698 "EHLO
-        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727946AbgHaMeZ (ORCPT
+        Mon, 31 Aug 2020 08:36:28 -0400
+Received: from mail-ej1-f67.google.com ([209.85.218.67]:41746 "EHLO
+        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727923AbgHaMen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:34:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1598877264; x=1630413264;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:content-transfer-encoding:mime-version;
-  bh=S4y4Vm8tut2wgHeLX6jE0JoYIjXp12q/wp9enCPTsY4=;
-  b=gCW8xyN3wdaapYoOwA3j4PkNsYlhnNIfrzpwpIVd1xR79GkIn3tJsStZ
-   VT60kedYxsx4f8ESk1oddsaLahHTvGrNbDwDou9ZE+w639reP9uoRIpyB
-   k1MM1+G0Jtf8P/rEcfSXF47ta+t5DdlcLT3dIdBstorQBG645raWugsXi
-   kJG3hJXcdKAV7flOT8BdKX0M1dzmkF4GvhYbWBF/inm5TZoVmt6UODRHr
-   HhyvDD4D/piz84T1Yf97HCEAXJAmFsEUcSzY/0zR/P+etgWbWhEkGn26J
-   uRwRKuLV53HIzx+9xyEyNakSRqBxZePBLIznT0mBbiqWUKqeFEdkzq8ni
-   Q==;
-IronPort-SDR: 3fvFAwSdJy18nOw4K5WyS8+shxvcRqcN60c0lKGXI0NIAeqXPbTz3663LYWbvX0wm3htMhhC0U
- jan9WmA+WnHgVl5G8HscCp+BkxmephQey3CUaJqGPGUr1tqtwGN0T/Hkx+okdYBYAQjsenguoY
- KMDMnL+O6tPYuSuvJEN9pKnJ1Dan99rfrccZY9EyWb+pzAZ4J0sTEo2XDbL2xNtP5YwWUGN17r
- JBLDh1inTuqdSMHa/e5XwPTK2qDB8ilK6bYf6jgg/8Klo8LtqVK6EuTQvSmbbw0NlPDEPzMl2J
- 7V0=
-X-IronPort-AV: E=Sophos;i="5.76,375,1592841600"; 
-   d="scan'208";a="255743429"
-Received: from mail-sn1nam02lp2055.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.55])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Aug 2020 20:32:05 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=UDhxE/a+wo3OySTib9Yh91MGwwlpv58xKimFhDgAIKtoMyCgrV4TxdL+c6F7VnsrlnExRSgM1XHIgxIstztg4m/23GgUI8Ivck6SFBnI67l8+uhKwDEIC/q+lfNtrEXemdRwAInB3rIRQk29GG3eyoSTsFdGx9yVLZodCYo6vaY+Cjedbs3WkjjUEpRKHGl4j7hbU/6/giM2CyjxVSXMdET26lMPp0T+dE//Z8KvSnqKZBiXTIKYw2ViWEt19bDrdfdKd3xjjPTgvv6BWMneUOH0cOYjlcrIFY1OWojPHEYM4Wh8eh9H4YkhWvuQ7EAJcSdKiogl7Ui1QQbfsG+xdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KTtYrBZP4gzZbQ1QIWCsEiIDvdU9FjH5vKDKdqsXGVk=;
- b=Ad/8wOvjUB12bRQ7lBfVoC1NVxBwt1/vhKxKVPIn0EJdN/6exIRrhqzmQfBxeKR9F/T2UY/0ZcttyBH8LN1gpOVxNG5XMqTYt6VZSNRF3HYXDBCgb6yeZ9DbuJOKbLZo7MczlEQxOBHdZjT4YmWAErXfRikLjAj5wTyJx7ILNpP1wsXQqt9xNbcubMm7ZajQcFkFOWls6VdyUUNrQpZ9+yLByJY1jPa1cCveLK7ll+bQHQ7sYVDCQw4N59ZMNRK6V2torrT9CGDc4ikS8OcxpEmyP2goqoSXH/D09BK6NMd4z889xHPkSrA/apSOolUUwzGX+T3NO/+Jh/mNN2pIhQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KTtYrBZP4gzZbQ1QIWCsEiIDvdU9FjH5vKDKdqsXGVk=;
- b=nSZ9X+9R3BM06DgAiBB/TdPTMqN15pWZZdKM5MBD2YwlwVzM/orkEBN7H8mZzrqVCVyNmu5gDwqQh2WP5e/r1y3xpqkGG+YXPQlAp6zeIhTChlvPh/6qfxzbKb2ukPwIUMQGC3y7gMWrfrW2A+qNKBO740AsGJpSU+WXaVByb1w=
-Authentication-Results: dabbelt.com; dkim=none (message not signed)
- header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
- by DM6PR04MB6092.namprd04.prod.outlook.com (2603:10b6:5:12b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Mon, 31 Aug
- 2020 12:32:05 +0000
-Received: from DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::607a:44ed:1477:83e]) by DM6PR04MB6201.namprd04.prod.outlook.com
- ([fe80::607a:44ed:1477:83e%7]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 12:32:05 +0000
-From:   Anup Patel <anup.patel@wdc.com>
-To:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Palmer Dabbelt <palmerdabbelt@google.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Atish Patra <atish.patra@wdc.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
-        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v14 17/17] RISC-V: KVM: Add MAINTAINERS entry
-Date:   Mon, 31 Aug 2020 18:00:15 +0530
-Message-Id: <20200831123015.336047-18-anup.patel@wdc.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831123015.336047-1-anup.patel@wdc.com>
-References: <20200831123015.336047-1-anup.patel@wdc.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:1a::32) To DM6PR04MB6201.namprd04.prod.outlook.com
- (2603:10b6:5:127::32)
+        Mon, 31 Aug 2020 08:34:43 -0400
+Received: by mail-ej1-f67.google.com with SMTP id b17so8230906ejq.8;
+        Mon, 31 Aug 2020 05:34:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gZ0CJ8Hc1sn63t+kbr2ePS/jsX1/ElRjSGgnzflGJ5c=;
+        b=cax9ChphkFYojvYUDC/EZeJX3Eu+ApEmKaXerOY8HA4jHHTplGcr0dJpYSLBYIM/f5
+         LI4ja2TxT8v22w5y9dcNEwdXpRAL37FxINKwP3lrzlBKgVGSk8dQHGp+x5TKbWwsk6AW
+         hyMTlgiCVp6+r34FihOoBFQEEfR6nj0CV7SkYViTzVSXa+nfegvCM4k4uvpofARnl+pw
+         SAg7YXyEkhYSP83WmSWCWh1sbYuUmp5/Bru6LBtbIP7vcLoz4G13hqzDpBdlLpA1JLjw
+         lpNSBZ42ePVGAwNOCJ+JjHzWcX4eX7Zf4uHrV6UOiaTQ6ZkJmCrmuZH9Rct1FJN2TzCU
+         TmdQ==
+X-Gm-Message-State: AOAM531f4tyj4A217hThUmoyRDYp4qgXijVH2kaCzIez888FMkuE2eIW
+        vVyo0E5N1C3Y9NEy+sMEusU=
+X-Google-Smtp-Source: ABdhPJwHQ+kbuB17V3EV8bJwx6CZ9YUlL7K7t8FmVxpql1tXRrhoh31zM7AD8jShfHwOzEmNhb7SKA==
+X-Received: by 2002:a17:906:edc4:: with SMTP id sb4mr956998ejb.144.1598877280585;
+        Mon, 31 Aug 2020 05:34:40 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.216])
+        by smtp.googlemail.com with ESMTPSA id y14sm1576652eje.10.2020.08.31.05.34.38
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 31 Aug 2020 05:34:39 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 14:34:36 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        alsa-devel@alsa-project.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 04/10] dt-bindings: mfd: syscon: Document Samsung Exynos
+ compatibles
+Message-ID: <20200831123436.GA27700@kozik-lap>
+References: <20200829142501.31478-1-krzk@kernel.org>
+ <CGME20200829142536eucas1p12c539f1cd45195adef96f8b752778fcf@eucas1p1.samsung.com>
+ <20200829142501.31478-4-krzk@kernel.org>
+ <8b0a42a3-e014-c2ed-7403-021f9a476fc8@samsung.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 12:32:00 +0000
-X-Mailer: git-send-email 2.25.1
-X-Originating-IP: [103.15.57.192]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 63f2b7f9-f63d-4072-c9d2-08d84da9de1b
-X-MS-TrafficTypeDiagnostic: DM6PR04MB6092:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB60923A765DCDAC4DD643EA008D510@DM6PR04MB6092.namprd04.prod.outlook.com>
-WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: uF0dvvn57m69yLMB5wgxvLLL6oCcCgjU2iLnvTcoKMQQa/uxN2BX0RpgUZL/ONZah2JzaVV1rtdGb+dUFtTLi7d/4KZKHAVuSy3mhmwijRz8N4E81wyCGzr5gsg53sl22TGTZi428fIpMvkIXGSwbKBdfdEcAURFT35+B814NDCgY/VMa1yU5P1GC7hdgmrhauvfX6q5TCcTf/qTbMHy+DbHt5Ly9zm9lANN/FnMxJ9G8gDkyBJHBj0dQTjOiHGmy1awQrOs6HMDYGakBKp+ah9EB4l+kI/DC2uQA1l2KFmhA6/XwmFnQL6TFmLYdrjleowc/FA4f91S/rHKQZbDSA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(44832011)(6666004)(52116002)(8676002)(86362001)(36756003)(478600001)(6486002)(7416002)(110136005)(8936002)(54906003)(66946007)(1076003)(66556008)(2906002)(26005)(186003)(66476007)(956004)(316002)(16576012)(4326008)(5660300002)(2616005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 3CdA+Vwe4hnIMtwnCQHT/DIsebF9NPU9QtzCc1L4kPfIBGy5v0lay1A2KU5kjvFaf70SsI7zVRVSdv2rkofwAr3fH3chb+Sd4f5tkpCAIV+2+ZjavjlFaapL5eVpfG2G71E+IrnhEjWnBIavOGoowZFxj8MPAQAsqhOGAkJhLRsvddGJT695hS30u2V3Aca3M0IPV3JyRjsifFFKjs3cEubvY6uTaE+yORWeuv9Ldi1jpjiqVVj5Qyk5AxFwoLX/LazjvEIaEZiy7PQVFjyV82KT3jZhakORZI0xY10QnqddV3GPunGs0VfVq1qqlN2M2RLZxNdyfbKuOJBGYak99zNCGhxvXiwgyc9Cttw9OC1AVi5djX4auqp2vEIdO8URsO2NuY5suCJ+hE9L/pn3YWVa5G14Sv1SqZcx49jc9J7RbmR5jO6wVD1MQPWH7sQl+B1z64FqZS3zalrZm6OhuxFFZC8ugqnHguTL7mQjTA338CwEyGbDTrjVv9Y3BFVqe2IOdOrR4K1tRmbikAqQXBqLE8XN+wZJ4P45KjOcTcVLnzoc4B97gkWCr9Vbpvg17KtFDp7xAY2psjLqakS1JkRbAh9agA9wXcSKM0FGDlsvLCKUD4WHnw1StR6J+z17gYaArlRc46LdDYZpAtxEGw==
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63f2b7f9-f63d-4072-c9d2-08d84da9de1b
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 12:32:04.9426
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fiRno5ICaalwDzpVodDZxIU0Ms/Fd9cndjLxJQQUUVBzsWM/Dl7Q60FCMQfaZeUVbrlL+rLw2ecIHroFJH769w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6092
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8b0a42a3-e014-c2ed-7403-021f9a476fc8@samsung.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as maintainer for KVM RISC-V and Atish as designated reviewer.
+On Mon, Aug 31, 2020 at 02:30:52PM +0200, Sylwester Nawrocki wrote:
+> On 29.08.2020 16:24, Krzysztof Kozlowski wrote:
+> > Samsung Exynos SoCs use syscon for system registers so document its
+> > compatibles.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/syscon.yaml | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> > index 049ec2ffc7f9..0f21943dea28 100644
+> > --- a/Documentation/devicetree/bindings/mfd/syscon.yaml
+> > +++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
+> > @@ -40,6 +40,10 @@ properties:
+> >                - allwinner,sun50i-a64-system-controller
+> >                - microchip,sparx5-cpu-syscon
+> >                - mstar,msc313-pmsleep
+> > +              - samsung,exynos3-sysreg
+> > +              - samsung,exynos4-sysreg
+> > +              - samsung,exynos5-sysreg
+> > +              - samsung,exynos5433-sysreg
+> 
+> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> 
+> Do you also have a patch updating Documentation/devicetree/
+> bindings/arm/samsung/sysreg.yaml with new compatibles?
 
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Anup Patel <anup.patel@wdc.com>
-Acked-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
----
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Good point. This file should be probably dropped as everything is
+documented in syscon.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e4647c84c987..abecd5bf990e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9564,6 +9564,17 @@ F:	arch/powerpc/include/uapi/asm/kvm*
- F:	arch/powerpc/kernel/kvm*
- F:	arch/powerpc/kvm/
- 
-+KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
-+M:	Anup Patel <anup.patel@wdc.com>
-+R:	Atish Patra <atish.patra@wdc.com>
-+L:	kvm@vger.kernel.org
-+L:	kvm-riscv@lists.infradead.org
-+S:	Maintained
-+T:	git git://github.com/kvm-riscv/linux.git
-+F:	arch/riscv/include/asm/kvm*
-+F:	arch/riscv/include/uapi/asm/kvm*
-+F:	arch/riscv/kvm/
-+
- KERNEL VIRTUAL MACHINE for s390 (KVM/s390)
- M:	Christian Borntraeger <borntraeger@de.ibm.com>
- M:	Janosch Frank <frankja@linux.ibm.com>
--- 
-2.25.1
-
+Best regards,
+Krzysztof
