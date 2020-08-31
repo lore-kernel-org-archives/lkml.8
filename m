@@ -2,89 +2,98 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25598C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25054C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E595E2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C47206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:56:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kLzRPQ09"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zsm0uIaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727043AbgHaDzl (ORCPT
+        id S1727819AbgHaD4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59946 "EHLO
+        Sun, 30 Aug 2020 23:56:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60004 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726126AbgHaDzk (ORCPT
+        with ESMTP id S1726126AbgHaD4D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 23:55:40 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2935FC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 20:55:40 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id q8so2713841lfb.6
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 20:55:40 -0700 (PDT)
+        Sun, 30 Aug 2020 23:56:03 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 997BDC061573;
+        Sun, 30 Aug 2020 20:56:03 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p37so3589198pgl.3;
+        Sun, 30 Aug 2020 20:56:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=st+ArUspW4cfoVkyw71QvK5Tr7yiSZTbcPXCqE9k4Fs=;
-        b=kLzRPQ096GT9g3Z+Z8cryY7oTlxYxGQ3+9PjvhuhX0gtolEE7ANyqgOLS64/MrdzYL
-         qT7C6i97ah1Hpvy5sk7dNDITzb0XdLQGKH5vU+LQJxFTxrEW8IBjy4HcD/xMiX6vP79q
-         hz41kqbBJPJ1USTcMqbya11vdMb3gJBpaev2y2MR1KAb8pisKETcRdQY1M7nnD8wvbP5
-         cfvTJr2k4Inm45vgiXD3gWku7+JxRJluQOBAAVuC6KpCuAZ8negB623XbcH9IDJhoE33
-         CpIZvDOdCTyiAWSWurA2SEdaw+yQU20kaxZg8d0eLe4fwpVlMcwyNtyDEn3+qa2Ale9K
-         fxrA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rPvqT5MBKDqJFIzQQKLIBGOzXfazoVXUPvdY/XCVcsQ=;
+        b=Zsm0uIaJ2Ysuzrin8V+yX101K+bGyz3LZIxhPoY5oHonRFynGVDVUWW7s4apbZft9F
+         vws6yFx2ss2+NYtRkRs+KFVzsbYP8Sb0i24czgs8LZxiPfuQs7nAQO1pHiy8fscjuNTt
+         6MbzXGNv9CmrwRgGn4NjAM+pjWy6UWD2gRmarr9cJ8Nj4SvPS1V7FFNLGV0YIWACpNF5
+         ADGqxQmmdn87GqrfzZ4C9iZaukRRWArT+vqEcimOrhSd5S5QVdTeY7nLpjYKQBJlNIcC
+         y0M2+a/0LplOrJsZERu3Fed9l/djAz1NQjYWR6k0PRkM5F4vwSEBZGLKokVeIR7+idQi
+         48Ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=st+ArUspW4cfoVkyw71QvK5Tr7yiSZTbcPXCqE9k4Fs=;
-        b=oIQOgF1Bv2uXVnOZYOilt7xLAYxbmL0zejfhipe1FZYQQcOUvmycrdoo9oAr1A0tBW
-         ug4TiOpI4sQheDOMCso9TS74CCO7xU6GHigINdURwuUpBjfGz2ApXV/QHx+2ueqx4YD8
-         76EsXcnIntoB5HSkMK57dW2/LPNpeaoQMTbgxx2JJGud9KifmMpSVxYcD7HaVqPbHPbQ
-         reN+tCoaWgKq3cKvHpEMjOtAuqiu/2KszOSKVqRMBM9EzRB0CW/8z+byV5G6L01OvDD5
-         cL3PGhQ6WRnC6Tc1AN2LpVfndp3yxucBZNNCdxFwegrS8dVzcjrcTDbYOiPhYwHITb3X
-         BXKA==
-X-Gm-Message-State: AOAM530tW3lr+bdpqWndTvfHPMXT+ZsFrSads66w95eDTyRlJjNb7N7l
-        vYsp1LniAzOLQsUKSRYt+kyfAQM8dfyaKfZbmXI=
-X-Google-Smtp-Source: ABdhPJxIsMVgf/aNMl2I8AppTt2CTCql4I2LzVgzXYWCtuowuZpK8it75q1FCxd4Ctm+ZmX1MT4hnRVUq0s+XO4umrU=
-X-Received: by 2002:a05:6512:6c1:: with SMTP id u1mr4692195lff.28.1598846138571;
- Sun, 30 Aug 2020 20:55:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rPvqT5MBKDqJFIzQQKLIBGOzXfazoVXUPvdY/XCVcsQ=;
+        b=TtOoI4VYvPWrJOWPgbfbJZo2OAomqU0o4gwy5JpoTG1dAV0FpB/9ova3BFLiIFYVGO
+         VJDp+Xh/zS+3zJlWpqNhBNqq96gMAXtXMPVh3Kqxdp2zM2Vi7c7X8teEnEQEoGM6L00f
+         EY6UKeGFlhXsHoVyHtdpOILi28+SoS7d8hIsNDUsFMBNvMxbEzVMqeiIu55aKl39fCy7
+         duEIcEg7CKsIqtblJGvfzxJY9htqHnPVysfUHsXDTOifT6/ZNKVbV3XeUwVDG0Kni3y+
+         zgo1j7yOkBoj+C8J9SjbiiI4+55H6vYNwpOL//xCb51DpZHs1QlDnP/Rn7QoAjLM3gJi
+         ITAA==
+X-Gm-Message-State: AOAM533yiRuWrjrajTV7BXkl8GP4y3XTTxOxM+gdvk2h05BYl8O2cy0s
+        x0wFocSFiN6YI4hkTuE7TMg=
+X-Google-Smtp-Source: ABdhPJydm5bIN9G7jSsjYH0yVpFWmYhUPzLMWIhaFn6qPm7BX5Cpl2GcrpjBN3FahTdn4RpQP5i8RA==
+X-Received: by 2002:a63:4643:: with SMTP id v3mr6962450pgk.269.1598846163148;
+        Sun, 30 Aug 2020 20:56:03 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id js19sm5347533pjb.33.2020.08.30.20.55.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 20:56:02 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     bcm-kernel-feedback-list@broadcom.com,
+        Andre Przywara <andre.przywara@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Viresh Kumar <vireshk@kernel.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>
+Subject: Re: [PATCH 09/10] ARM: dts: NSP: Fix SP805 clock-names
+Date:   Sun, 30 Aug 2020 20:55:54 -0700
+Message-Id: <20200831035554.1332246-1-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200828130602.42203-10-andre.przywara@arm.com>
+References: <20200828130602.42203-1-andre.przywara@arm.com> <20200828130602.42203-10-andre.przywara@arm.com>
 MIME-Version: 1.0
-References: <20200828054629.583577-1-daeho43@gmail.com> <61996dcd-6db1-13fc-8239-7e684f3ec49e@kernel.org>
- <CACOAw_wc29AROzFhcGyC73i_vYZC1NmHP60uQfP7X-j6y6=kSA@mail.gmail.com>
- <bd1a8ffa-83ff-b774-9bed-ed68025d0c7a@huawei.com> <CACOAw_y=O35_SFxdfsVER4+a+n-eE6f48NXF6CsAnj=Ms-dgkA@mail.gmail.com>
- <c4f58675-9df5-e3af-45fc-6fa924e3ee68@huawei.com>
-In-Reply-To: <c4f58675-9df5-e3af-45fc-6fa924e3ee68@huawei.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Mon, 31 Aug 2020 12:55:27 +0900
-Message-ID: <CACOAw_wZFAyyt8qPCFd-LQKpMGa1moyOqSBpUnaeM0z2Y5Z+cA@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent compressed file from being
- disabled after releasing cblocks
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, Daeho Jeong <daehojeong@google.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> - open(O_RDWR)
-> - ioctl(FS_IOC_SETFLAGS, F2FS_COMPR_FL)
-> - write()
-> - ioctl(RELEASE_COMPRESS_BLOCKS) -- inode is immutable now
-> - ioctl(FS_IOC_SETFLAGS, ~F2FS_COMPR_FL) -- Should we allow to update immutable inode?
-> as we know, normally, immutable inode should deny open(O_WRONLY or O_RDWR) and later update.
->
+On Fri, 28 Aug 2020 14:06:01 +0100, Andre Przywara <andre.przywara@arm.com> wrote:
+> The SP805 binding sets the name for the actual watchdog clock to
+> "wdog_clk" (with an underscore).
+> 
+> Change the name in the DTs for the Broadcom NSP platform to match that.
+> The Linux and U-Boot driver use the *first* clock for this purpose
+> anyway, so it does not break anything.
+> 
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ---
 
-For this case, with this patch we'll return -EINVAL for
-ioctl(FS_IOC_SETFLAGS, ~F2FS_COMPR_FL).
-I thought RESERVE_COMPRESS_BLOCKS ioctl is always required to get the
-file to normal mode after RELEASE_COMPRESS_BLOCKS is called.
+Applied to qspi-fixes, thanks!
+--
+Florian
