@@ -2,334 +2,122 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87749C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:16:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BC4C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 631672071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:16:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F24208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897769;
-	bh=PvgIqe8j2pWKExdulY1m2HLm5EABIIx67syr4+2mTG8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=t1IZkBwnLpC5/TiBM9EaborXLGSsrsDVLWMUGgxfixfElL/1ReeWYJLwXhgPvzJ1t
-	 8A+asHheSBw6KyMigPDQcQ9wAESfu8t10q2NMwgml+X8hLqlzqp0xvdfFPq1QKjxQJ
-	 FO25c+gsHJiP5EgDoCkyx6AdwzKMVxXpl4WhbCYk=
+	s=default; t=1598897838;
+	bh=nBLCefDFpPRBI7iy+jr3QX4FEPCl6D6hh4uvD48LT1U=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=k7p37kt81jZDfIqlO22ciul+rqK/clz8051UgQxAA9Fa+lnygl3K/8LsNSpnUunfi
+	 qm1Po6Db2V0B0QMqT7zEGewwm5Lirb9jUiIe5ph8pl0iCzi7nE2ROXMYZwQj/WjtUK
+	 458dAEtFRSZ8fQWoUuzG4GOxcGIWTIln/8Mb2mMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgHaSQI (ORCPT
+        id S1729283AbgHaSRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:16:08 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:38893 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgHaSQF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:16:05 -0400
-Received: by mail-ot1-f66.google.com with SMTP id y5so1557373otg.5;
-        Mon, 31 Aug 2020 11:16:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=o4n5ZY7UK+Af711a+jkirN1+LhqqnwPtEvzee1EZgVQ=;
-        b=jnp6EMzvOqwqbMx5rsei2Xtbr5yfT+Mh6MVq+zMokVlLHBgijWG1rqw0Rbqex4X+LQ
-         JAffiqnCur/eM41gwne8BCTjy4sKJKjBOPQP7WurATr84WyK1zz53BzezcrCyOkW4lsm
-         sA1nYVflHWCCf2P46v5Nux83g0L9Wc9FBBK9iVPjYcRRg3dGeFPAPKzIYHZ+5UQSkoka
-         hGb2Mag1cX41jinbui2582Jd69fM5D8IeclYuRwMOo03PHw1HU2BVrGV3FUf2zVxN6MJ
-         rViUrYU4603O2Z6TWT6LjSLfCNHWl7TGWyFe3QrTC8HM6qBVyTf4kPNta91+g/h9TTR1
-         OLrQ==
-X-Gm-Message-State: AOAM530qpcdW4gLNedOINseo+MGJ1Mp3/4mHD3W9AANCiaZtgcTqfDrg
-        9HkaqZlt3ctH8J7RFXgfL/0h6ZFT4n6niws64S4=
-X-Google-Smtp-Source: ABdhPJzBJPQaRTojkCAeMdHSRkL6m9XTsC8VIs0zJxh80sleWqbwgkmE6e3Q5Lca8pSIYGlWpVPWMcb9NsPkjJpc9P8=
-X-Received: by 2002:a9d:7e99:: with SMTP id m25mr1679295otp.118.1598897764330;
- Mon, 31 Aug 2020 11:16:04 -0700 (PDT)
+        Mon, 31 Aug 2020 14:17:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49782 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727058AbgHaSRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:17:16 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AEA22071B;
+        Mon, 31 Aug 2020 18:17:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598897835;
+        bh=nBLCefDFpPRBI7iy+jr3QX4FEPCl6D6hh4uvD48LT1U=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=j1qdUDQmZTatcZAwhBAZpNnAfj2RGdWw+8S8F6wtonS3Avt+OHwaJvj4dXNn1yjb7
+         LcYV4UZI4RDKnYIUObS3uTz8BI9ETOD7b6IHIPHH+m4yltVBLzMC1FJ4wU+O+Oxdre
+         GU1RscjWvKobMkc/k5ho3SP5T/v1yueHr3BnR+aA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 0902835230F1; Mon, 31 Aug 2020 11:17:15 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 11:17:15 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kernel-team@fb.com, mingo@kernel.org
+Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com
+Subject: [PATCH kcsan 0/19] KCSAN updates for v5.10
+Message-ID: <20200831181715.GA1530@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-References: <2240881.fzTuzKk6Gz@kreacher> <1825858.9IUoltcDtD@kreacher>
-In-Reply-To: <1825858.9IUoltcDtD@kreacher>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 31 Aug 2020 20:15:52 +0200
-Message-ID: <CAJZ5v0gJciEDUYwz80cAOTyZ7+3yDdzkKtGB3X6wjEh4aUM6BQ@mail.gmail.com>
-Subject: Re: [PATCH v3 4/5] cpufreq: intel_pstate: Add ->offline and ->online callbacks
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 27, 2020 at 5:28 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
->
-> Add ->offline and ->online driver callbacks to prepare for taking a
-> CPU offline and to restore its working configuration when it goes
-> back online, respectively, to avoid invoking the ->init callback on
-> every CPU online which is quite a bit of unnecessary overhead.
->
-> Define ->offline and ->online so that they can be used in the
-> passive mode as well as in the active mode and because ->offline
-> will do the majority of ->stop_cpu work, the passive mode does
-> not need that callback any more, so drop it from there.
->
-> Also modify the active mode ->suspend and ->resume callbacks to
-> prevent them from interfering with the new ->offline and ->online
-> ones in case the latter are invoked withing the system-wide suspend
-> and resume code flow and make the passive mode use them too.
->
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> ---
->
-> -> v2: Rearrange intel_pstate_init_cpu() to restore some of the previous
->        behavior of it to retain the current active-mode EPP management.
->
-> v2 -> v3:
->    * Fold the previous [5/5] in, rework intel_pstate_resume(), add
->      intel_pstate_suspend().
->    * Drop intel_pstate_hwp_save_state() and drop epp_saved from struct cpudata.
->    * Update the changelog.
->
-> ---
->  drivers/cpufreq/intel_pstate.c | 139 +++++++++++++++++++++------------
->  1 file changed, 91 insertions(+), 48 deletions(-)
->
-> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-> index b308c39b6204..a265ccbcbbd7 100644
-> --- a/drivers/cpufreq/intel_pstate.c
-> +++ b/drivers/cpufreq/intel_pstate.c
-> @@ -219,14 +219,13 @@ struct global_params {
->   * @epp_policy:                Last saved policy used to set EPP/EPB
->   * @epp_default:       Power on default HWP energy performance
->   *                     preference/bias
-> - * @epp_saved:         Saved EPP/EPB during system suspend or CPU offline
-> - *                     operation
->   * @epp_cached         Cached HWP energy-performance preference value
->   * @hwp_req_cached:    Cached value of the last HWP Request MSR
->   * @hwp_cap_cached:    Cached value of the last HWP Capabilities MSR
->   * @last_io_update:    Last time when IO wake flag was set
->   * @sched_flags:       Store scheduler flags for possible cross CPU update
->   * @hwp_boost_min:     Last HWP boosted min performance
-> + * @suspended:         Whether or not the driver has been suspended.
->   *
->   * This structure stores per CPU instance data for all CPUs.
->   */
-> @@ -258,13 +257,13 @@ struct cpudata {
->         s16 epp_powersave;
->         s16 epp_policy;
->         s16 epp_default;
-> -       s16 epp_saved;
->         s16 epp_cached;
->         u64 hwp_req_cached;
->         u64 hwp_cap_cached;
->         u64 last_io_update;
->         unsigned int sched_flags;
->         u32 hwp_boost_min;
-> +       bool suspended;
->  };
->
->  static struct cpudata **all_cpu_data;
-> @@ -871,12 +870,6 @@ static void intel_pstate_hwp_set(unsigned int cpu)
->
->         cpu_data->epp_policy = cpu_data->policy;
->
-> -       if (cpu_data->epp_saved >= 0) {
-> -               epp = cpu_data->epp_saved;
-> -               cpu_data->epp_saved = -EINVAL;
-> -               goto update_epp;
-> -       }
-> -
->         if (cpu_data->policy == CPUFREQ_POLICY_PERFORMANCE) {
->                 epp = intel_pstate_get_epp(cpu_data, value);
->                 cpu_data->epp_powersave = epp;
-> @@ -903,7 +896,6 @@ static void intel_pstate_hwp_set(unsigned int cpu)
->
->                 epp = cpu_data->epp_powersave;
->         }
-> -update_epp:
->         if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
->                 value &= ~GENMASK_ULL(31, 24);
->                 value |= (u64)epp << 24;
-> @@ -915,14 +907,24 @@ static void intel_pstate_hwp_set(unsigned int cpu)
->         wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
->  }
->
-> -static void intel_pstate_hwp_force_min_perf(int cpu)
-> +static void intel_pstate_hwp_offline(struct cpudata *cpu)
->  {
-> -       u64 value;
-> +       u64 value = READ_ONCE(cpu->hwp_req_cached);
->         int min_perf;
->
-> -       value = all_cpu_data[cpu]->hwp_req_cached;
-> +       if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
-> +               /*
-> +                * In case the EPP has been set to "performance" by the
-> +                * active mode "performance" scaling algorithm, replace that
-> +                * temporary value with the cached EPP one.
-> +                */
-> +               value &= ~GENMASK_ULL(31, 24);
-> +               value |= HWP_ENERGY_PERF_PREFERENCE(cpu->epp_cached);
-> +               WRITE_ONCE(cpu->hwp_req_cached, value);
-> +       }
-> +
->         value &= ~GENMASK_ULL(31, 0);
-> -       min_perf = HWP_LOWEST_PERF(all_cpu_data[cpu]->hwp_cap_cached);
-> +       min_perf = HWP_LOWEST_PERF(cpu->hwp_cap_cached);
->
->         /* Set hwp_max = hwp_min */
->         value |= HWP_MAX_PERF(min_perf);
-> @@ -932,19 +934,7 @@ static void intel_pstate_hwp_force_min_perf(int cpu)
->         if (boot_cpu_has(X86_FEATURE_HWP_EPP))
->                 value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
->
-> -       wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
-> -}
-> -
-> -static int intel_pstate_hwp_save_state(struct cpufreq_policy *policy)
-> -{
-> -       struct cpudata *cpu_data = all_cpu_data[policy->cpu];
-> -
-> -       if (!hwp_active)
-> -               return 0;
-> -
-> -       cpu_data->epp_saved = intel_pstate_get_epp(cpu_data, 0);
-> -
-> -       return 0;
-> +       wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
->  }
->
->  #define POWER_CTL_EE_ENABLE    1
-> @@ -971,8 +961,22 @@ static void set_power_ctl_ee_state(bool input)
->
->  static void intel_pstate_hwp_enable(struct cpudata *cpudata);
->
-> +static int intel_pstate_suspend(struct cpufreq_policy *policy)
-> +{
-> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
-> +
-> +       pr_debug("CPU %d suspending\n", cpu->cpu);
-> +
-> +       cpu->suspended = true;
-> +
-> +       return 0;
-> +}
-> +
->  static int intel_pstate_resume(struct cpufreq_policy *policy)
->  {
-> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
-> +
-> +       pr_debug("CPU %d resuming\n", cpu->cpu);
->
->         /* Only restore if the system default is changed */
->         if (power_ctl_ee_state == POWER_CTL_EE_ENABLE)
-> @@ -980,18 +984,22 @@ static int intel_pstate_resume(struct cpufreq_policy *policy)
->         else if (power_ctl_ee_state == POWER_CTL_EE_DISABLE)
->                 set_power_ctl_ee_state(false);
->
-> -       if (!hwp_active)
-> -               return 0;
-> +       if (hwp_active) {
-> +               mutex_lock(&intel_pstate_limits_lock);
->
-> -       mutex_lock(&intel_pstate_limits_lock);
-> +               /*
-> +                * Enable for all CPUs, because the boot CPU may not be the
-> +                * first one to resume.
-> +                */
-> +               intel_pstate_hwp_enable(cpu);
->
-> -       if (policy->cpu == 0)
-> -               intel_pstate_hwp_enable(all_cpu_data[policy->cpu]);
-> +               wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST,
-> +                             READ_ONCE(cpu->hwp_req_cached));
->
-> -       all_cpu_data[policy->cpu]->epp_policy = 0;
-> -       intel_pstate_hwp_set(policy->cpu);
-> +               mutex_unlock(&intel_pstate_limits_lock);
-> +       }
->
-> -       mutex_unlock(&intel_pstate_limits_lock);
-> +       cpu->suspended = false;
->
->         return 0;
->  }
-> @@ -1440,7 +1448,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
->                 wrmsrl_on_cpu(cpudata->cpu, MSR_HWP_INTERRUPT, 0x00);
->
->         wrmsrl_on_cpu(cpudata->cpu, MSR_PM_ENABLE, 0x1);
-> -       cpudata->epp_policy = 0;
->         if (cpudata->epp_default == -EINVAL)
->                 cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
->  }
-> @@ -2111,7 +2118,6 @@ static int intel_pstate_init_cpu(unsigned int cpunum)
->
->                 cpu->epp_default = -EINVAL;
->                 cpu->epp_powersave = -EINVAL;
-> -               cpu->epp_saved = -EINVAL;
->         }
->
->         cpu = all_cpu_data[cpunum];
-> @@ -2122,6 +2128,7 @@ static int intel_pstate_init_cpu(unsigned int cpunum)
->                 const struct x86_cpu_id *id;
->
->                 intel_pstate_hwp_enable(cpu);
-> +               cpu->epp_policy = 0;
->
->                 id = x86_match_cpu(intel_pstate_hwp_boost_ids);
->                 if (id && intel_pstate_acpi_pm_profile_server())
-> @@ -2308,28 +2315,59 @@ static int intel_pstate_verify_policy(struct cpufreq_policy_data *policy)
->         return 0;
->  }
->
-> -static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
-> +static int intel_pstate_cpu_offline(struct cpufreq_policy *policy)
->  {
-> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
-> +
-> +       pr_debug("CPU %d going offline\n", cpu->cpu);
-> +
-> +       if (cpu->suspended)
-> +               return 0;
-> +
-> +       intel_pstate_exit_perf_limits(policy);
-> +
-> +       /*
-> +        * If the CPU is an SMT thread and it goes offline with the performance
-> +        * settings different from the minimum, it will prevent its sibling
-> +        * from getting to lower performance levels, so force the minimum
-> +        * performance on CPU offline to prevent that from happening.
-> +        */
->         if (hwp_active)
-> -               intel_pstate_hwp_force_min_perf(policy->cpu);
-> +               intel_pstate_hwp_offline(cpu);
->         else
-> -               intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
-> +               intel_pstate_set_min_pstate(cpu);
-> +
-> +       return 0;
->  }
->
-> -static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
-> +static int intel_pstate_cpu_online(struct cpufreq_policy *policy)
->  {
-> -       pr_debug("CPU %d exiting\n", policy->cpu);
-> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
-> +
-> +       pr_debug("CPU %d going online\n", cpu->cpu);
-> +
-> +       if (cpu->suspended)
+Hello!
 
-_cpu_online() needs to enable HWP if "suspended", or the MSR accesses
-in _set_policy() will trigger warnings when resuming from ACPI S3.
+This series provides KCSAN updates:
 
-This has been fixed in the intel_pstate-testing branch already and I
-will send an update of the patch tomorrow.
+1.	Add support for atomic builtins.
 
-Thanks!
+2.	Add atomic builtin TSAN instrumentation to uaccess whitelist.
+
+3.	Add atomic builtin test case.
+
+4.	Support compounded read-write instrumentation.
+
+5.	objtool, kcsan: Add __tsan_read_write to uaccess whitelist.
+
+6.	Skew delay to be longer for certain access types.
+
+7.	Add missing CONFIG_KCSAN_IGNORE_ATOMICS checks.
+
+8.	Test support for compound instrumentation.
+
+9.	instrumented.h: Introduce read-write instrumentation hooks.
+
+10.	asm-generic/bitops: Use instrument_read_write() where appropriate.
+
+11.	locking/atomics: Use read-write instrumentation for atomic RMWs.
+
+12.	Simplify debugfs counter to name mapping.
+
+13.	Simplify constant string handling.
+
+14.	Remove debugfs test command.
+
+15.	Show message if enabled early.
+
+16.	Use pr_fmt for consistency.
+
+17.	Optimize debugfs stats counters.
+
+18.	bitops, kcsan: Partially revert instrumentation for non-atomic bitops.
+
+19.	Use tracing-safe version of prandom.
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+ include/asm-generic/atomic-instrumented.h            |  330 +++++++++----------
+ include/asm-generic/bitops/instrumented-atomic.h     |    6 
+ include/asm-generic/bitops/instrumented-lock.h       |    2 
+ include/asm-generic/bitops/instrumented-non-atomic.h |   36 +-
+ include/linux/instrumented.h                         |   30 +
+ include/linux/kcsan-checks.h                         |   45 +-
+ kernel/kcsan/core.c                                  |  238 +++++++++++--
+ kernel/kcsan/debugfs.c                               |  136 +------
+ kernel/kcsan/kcsan-test.c                            |  128 ++++++-
+ kernel/kcsan/kcsan.h                                 |   12 
+ kernel/kcsan/report.c                                |   10 
+ kernel/kcsan/selftest.c                              |    8 
+ lib/Kconfig.kcsan                                    |    5 
+ scripts/Makefile.kcsan                               |    2 
+ scripts/atomic/gen-atomic-instrumented.sh            |   21 -
+ tools/objtool/check.c                                |   55 +++
+ 16 files changed, 697 insertions(+), 367 deletions(-)
