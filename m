@@ -2,152 +2,115 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB29C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0125C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:32:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 906512078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FFA72078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:32:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6FtQVjb"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZvjSqQzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgHaX0R (ORCPT
+        id S1726078AbgHaXcP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 19:26:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
+        Mon, 31 Aug 2020 19:32:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgHaX0Q (ORCPT
+        with ESMTP id S1725814AbgHaXcO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 19:26:16 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61ADC061573;
-        Mon, 31 Aug 2020 16:26:16 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id n3so671606pjq.1;
-        Mon, 31 Aug 2020 16:26:16 -0700 (PDT)
+        Mon, 31 Aug 2020 19:32:14 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2CCC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:32:14 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id c15so4007779plq.4
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:32:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dVqPUed6NYAwD+JrLth2cd5hFPQoV0967E1Zso4MptU=;
-        b=C6FtQVjb+tO6vCWuzysuTcPpSGLKdJk7gkia3YFeAH23aoinfa3/PIuD4LDboFBjnH
-         JfPIXMT9AR3TcRuKpjhxHl2DBEzjUPOsl0OQHQzfWvEebntMDgmAuU+D/QAHs6r1Tvtq
-         Of46KsU+GKkJrtN2rJEfsf7HIDIr23qcIg4E6wQPr5cIeW1KUlRYp/MakFRAKVRqVn1Y
-         xPSf3g6GVRUW7dYFviCXzjhdVl867ysOH7yVbuKCjcO9+QMxtk0rTR5yFxEdnA8a1IyP
-         TYpn+fkJYoKYbgTI8TTNOAeXJiqr88qjCxtqY2ITftwLGtsTp6XRwpGkcvsOaRthfp4e
-         9tRg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iQyI5jnqhxLR4xdjLE0c/+hNgZMrXCOgjD35+oUtjqU=;
+        b=ZvjSqQzDPGWg2Eqva6xKVRgz+hFJP78RaHD2sJVVnrL+vrXsgQ+uwQVj9E1wMWRDzO
+         ssbgb3NsUL3bNnRdsOWJHlkmMxgL3we0QvYL9aECahkRL/l6o32ongZDC7wwUGG8IDPH
+         dReR8bv4wUcJbtihxUsjdSZqS+71cvYi5QqBPre1+v5wXO+7rXFx7xO779hreiDc5A/Y
+         7C0E8snSyR2mpdz1rlzI+ogR9nZ2Mb650LxwxprNK9e+brS7YW4UA3nUnZgW8reSPYYg
+         T18SH4AhejN96LZpvw+Jjybpr/WqhwMhDJN/yEL2X+Vn4W0+DP8nKgPpAwSv3tJPggfM
+         wcKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dVqPUed6NYAwD+JrLth2cd5hFPQoV0967E1Zso4MptU=;
-        b=gZCJZiytyN/cJVRatcIieByJVXhuVWfAmLeM6x2zgsCe+2o/k+JyFyXN+jKjxhEaS9
-         hmTYPIIVcZP4+4HsmPL8NuVl2G2fxQrk5/ROaFgXLl9h5JOprp2zqhStKN5HMkEVsO4q
-         YdkARKczsxIHOGGZO7xlB3M8MIAQ3f+VHaIj54JXlvagpYVFe9xHKfSjW8mGsQFKQBBt
-         FYRvVSD0lFPBqUKuR4eQ19zRumEyKecoMMKnkgFkle8NOJ0kmnh85N5s4chyqVqhQUl5
-         Atw8eifFMf2zgU4XFQP8zNf8de8VJEDeXGnBn+j+rf6PuNFI+oh1nzG879FhLvIvHcAI
-         572w==
-X-Gm-Message-State: AOAM5318cqN3WOR3Rw7uNJMSbtiQW/iFgpEcP9xBFZ65tS6+iDv0c83I
-        tNANxOQbT2nvW69UoQOy3Dk=
-X-Google-Smtp-Source: ABdhPJzJ6saM8zCmqhQnS70tKIwx+Bdr92ksZutTZ/A/cd+o9UimIAZzUJXkzj/t9etnpxk3zzC10A==
-X-Received: by 2002:a17:90a:5609:: with SMTP id r9mr1520433pjf.194.1598916376023;
-        Mon, 31 Aug 2020 16:26:16 -0700 (PDT)
-Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id w16sm686816pjd.50.2020.08.31.16.26.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 31 Aug 2020 16:26:15 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 16:26:08 -0700
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Subject: Re: [PATCH] usb: gadget: aspeed: fixup vhub port irq handling
-Message-ID: <20200831232607.GA4015@taoren-ubuntu-R90MNF91>
-References: <20200528011154.30355-1-rentao.bupt@gmail.com>
- <875z9hz8k3.fsf@kernel.org>
- <20200817225603.GA21228@taoren-ubuntu-R90MNF91>
- <87y2lv9m32.fsf@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iQyI5jnqhxLR4xdjLE0c/+hNgZMrXCOgjD35+oUtjqU=;
+        b=h1Cdz0+qamdaQ5Q6tWhLt38fOJydjkI2DIuBrxkVQmT19dFrQolgPhCVFAqeC9hfOm
+         dlb0gOUf0W1lHE/CGu4rAUdDng1LBcIr2oJTTBhDpspOVzYmN9SH/eanu3vhmU5xDiNs
+         OFZ+sGemKai2s1AbLJwLyQWqqyKhngBjzNl+vThpDbJOoPtekMkmMTLfJTzsrDyILfJy
+         JlmeZtto2xwfHTnFSRhIoxzoQeBrPx3paVyxz2BRuR6qIUOKvgfpbzKEW+zbI9Qs63eR
+         jph9vOFal+3eecP/gfraIqQW6ucBNFf7vyWDQwKh9OogcNzVRqkQNiMBl+loWlbKac4z
+         iA5A==
+X-Gm-Message-State: AOAM533YHRRaAbaX753xDJGu6n3nbktPgwskC3w0aZakJZVTs70dimcT
+        bk+nxjDUu43BIvJkPcd1ZRjBQEfvC30AcpzQOBnhBQ==
+X-Google-Smtp-Source: ABdhPJw+gaafisXpINYI34TQxTsth0ssWy/oLCFcgg41FYo58UoPTkKWjnATp12WnDc7coC5lj01OggEx9UB8dc3th4=
+X-Received: by 2002:a17:902:8f8f:: with SMTP id z15mr2890617plo.221.1598916733887;
+ Mon, 31 Aug 2020 16:32:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87y2lv9m32.fsf@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200826201420.3414123-1-ndesaulniers@google.com> <20200826214228.GB1005132@ubuntu-n2-xlarge-x86>
+In-Reply-To: <20200826214228.GB1005132@ubuntu-n2-xlarge-x86>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 31 Aug 2020 16:32:02 -0700
+Message-ID: <CAKwvOdkTN4BbVvwh8MPrVXERdHjQusmp9yAo09uW=698_fi0Fg@mail.gmail.com>
+Subject: Re: [PATCH] compiler-clang: add build check for clang 10.0.1
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 12:54:57PM +0300, Felipe Balbi wrote:
-> 
-> Hi,
-> 
-> Tao Ren <rentao.bupt@gmail.com> writes:
-> > On Mon, Aug 17, 2020 at 04:49:32PM +0300, Felipe Balbi wrote:
-> >> 
-> >> Hi,
-> >> 
-> >> rentao.bupt@gmail.com writes:
-> >> > From: Tao Ren <rentao.bupt@gmail.com>
-> >> >
-> >> > This is a follow-on patch for commit a23be4ed8f48 ("usb: gadget: aspeed:
-> >> > improve vhub port irq handling"): for_each_set_bit() is replaced with
-> >> > simple for() loop because for() loop runs faster on ASPEED BMC.
-> >> >
-> >> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> >> > ---
-> >> >  drivers/usb/gadget/udc/aspeed-vhub/core.c | 10 +++-------
-> >> >  drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  3 +++
-> >> >  2 files changed, 6 insertions(+), 7 deletions(-)
-> >> >
-> >> > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> >> > index cdf96911e4b1..be7bb64e3594 100644
-> >> > --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> >> > +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> >> > @@ -135,13 +135,9 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
-> >> >  
-> >> >  	/* Handle device interrupts */
-> >> >  	if (istat & vhub->port_irq_mask) {
-> >> > -		unsigned long bitmap = istat;
-> >> > -		int offset = VHUB_IRQ_DEV1_BIT;
-> >> > -		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
-> >> > -
-> >> > -		for_each_set_bit_from(offset, &bitmap, size) {
-> >> > -			i = offset - VHUB_IRQ_DEV1_BIT;
-> >> > -			ast_vhub_dev_irq(&vhub->ports[i].dev);
-> >> > +		for (i = 0; i < vhub->max_ports; i++) {
-> >> > +			if (istat & VHUB_DEV_IRQ(i))
-> >> > +				ast_vhub_dev_irq(&vhub->ports[i].dev);
-> >> 
-> >> how have you measured your statement above? for_each_set_bit() does
-> >> exactly what you did. Unless your architecture has an instruction which
-> >> helps finds the next set bit (like cls on ARM), which, then, makes it
-> >> much faster.
+On Wed, Aug 26, 2020 at 2:42 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> On Wed, Aug 26, 2020 at 01:14:19PM -0700, Nick Desaulniers wrote:
+> > During Plumbers 2020, we voted to just support the latest release of
+> > Clang for now.  Add a compile time check for this.
 > >
-> > I did some testing and result shows for() loop runs faster than
-> > for_each_set_bit() loop. Please refer to details below (discussion with
-> > Benjamin in the original patch) and kindly let me know your suggestions.
-> 
-> no strong feelings, just surprised that you're already worried about
-> 20~40 cycles of cpu time ;-)
-> 
-> Patch applied for next merge window
+> > Older clang's may work, but we will likely drop workarounds for older
+> > versions.
+>
+> I think this part of the commit message is a little wishy-washy. If we
 
-Thanks Felipe. Ben had some concerns about interrupt handling cost on
-AST2400 BMC (ARM9), hence we did the comparison and noticed the small
-difference :)
+Yep, you're right. I'm still in denial. Let me rip that bandaid off
+and send a v2, with your and Kees' suggestions.
 
+Sorry, the docs patch already got picked up. Let's follow up with
+additional patches to docs separately.
 
-Cheers,
+> are breaking the build for clang < 10.0.1, we are not saying "may work",
+> we are saying "won't work". Because of this, we should take the
+> opportunity to clean up behind us and revert/remove parts of:
+>
+> 87e0d4f0f37f ("kbuild: disable clang's default use of -fmerge-all-constants")
+> b0fe66cf0950 ("ARM: 8905/1: Emit __gnu_mcount_nc when using Clang 10.0.0 or newer")
+> b9249cba25a5 ("arm64: bti: Require clang >= 10.0.1 for in-kernel BTI support")
+> 3acf4be23528 ("arm64: vdso: Fix compilation with clang older than 8")
 
-Tao
+I'd prefer to see this land in mainline first; otherwise, I'm worried
+about this patch "racing" to mainline with those patches if they go
+via separate trees.  Thoughts?
+-- 
+Thanks,
+~Nick Desaulniers
