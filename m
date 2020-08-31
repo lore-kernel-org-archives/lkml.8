@@ -2,96 +2,92 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E6BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D497C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F401207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KfTFS1k1"
+	by mail.kernel.org (Postfix) with ESMTP id EC66C20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728255AbgHaPOb (ORCPT
+        id S1728274AbgHaPPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:14:31 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:18340 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728143AbgHaPO3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:14:29 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598886866; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=C08wNUsYTzB5AdfLy6zi8cAoZnfb3YPVv7p7dBqcL54=;
- b=KfTFS1k17i28DSOalpJL7kraSvJqn9U+yEFK0LD7BskFzX/jGI3SrFukT4qkp62D7z7dWUbX
- kpxdw0TOMFrBx7plwZztvrCPDbaQL2nQuK0U+pkS1WQpCDULt/yueDbvDH6OnY89frQnDho9
- UWUe+tutwJ5SSvEuIw/IGzYwspA=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f4d13d1947f606f7e63e7e5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 15:14:25
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 88955C433AD; Mon, 31 Aug 2020 15:14:24 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6DB90C433CA;
-        Mon, 31 Aug 2020 15:14:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6DB90C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Mon, 31 Aug 2020 11:15:43 -0400
+Received: from mga09.intel.com ([134.134.136.24]:37214 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbgHaPPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:15:42 -0400
+IronPort-SDR: Jqv2qd2ZDwx60MNQUPK89BPVQr1+p5Guwuoo9yJ7xpgltdo9MtiHusTWe+a2wJrnXBEdmiIqTS
+ 1Ld58yu5zfCQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="157998298"
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="157998298"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 08:15:41 -0700
+IronPort-SDR: v+uBZj2yz55phQgP83igUTAsDBunmkJ9f49VrBbrIS3NM4KS8+6pGtYENeFcFdHxEM6jugM9Bv
+ 4kF0z8JH/H9A==
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="501376518"
+Received: from jaeikcho-mobl.amr.corp.intel.com (HELO [10.213.165.6]) ([10.213.165.6])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 08:15:38 -0700
+Subject: Re: [PATCH 09/11] soundwire: intel: add dynamic debug trace for
+ clock-stop invalid configs
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+References: <20200829110047.GC2639@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <051afb2d-dd2e-0ea4-d8a9-980f5df136b7@linux.intel.com>
+Date:   Mon, 31 Aug 2020 10:15:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
+In-Reply-To: <20200829110047.GC2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH 04/16] wireless: ath11k: convert tasklets to use new
- tasklet_setup() API
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200817090637.26887-5-allen.cryptic@gmail.com>
-References: <20200817090637.26887-5-allen.cryptic@gmail.com>
-To:     Allen Pais <allen.cryptic@gmail.com>
-Cc:     kuba@kernel.org, jirislaby@kernel.org, mickflemm@gmail.com,
-        mcgrof@kernel.org, chunkeey@googlemail.com,
-        Larry.Finger@lwfinger.net, stas.yakovlev@gmail.com,
-        helmut.schaa@googlemail.com, pkshih@realtek.com,
-        yhchuang@realtek.com, dsd@gentoo.org, kune@deine-taler.de,
-        keescook@chromium.org, ath11k@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, b43-dev@lists.infradead.org,
-        brcm80211-dev-list.pdl@broadcom.com,
-        brcm80211-dev-list@cypress.com, Allen Pais <allen.lkml@gmail.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200831151424.88955C433AD@smtp.codeaurora.org>
-Date:   Mon, 31 Aug 2020 15:14:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allen Pais <allen.cryptic@gmail.com> wrote:
 
-> In preparation for unconditionally passing the
-> struct tasklet_struct pointer to all tasklet
-> callbacks, switch to using the new tasklet_setup()
-> and from_tasklet() to pass the tasklet pointer explicitly.
+>>>>>> Detect cases where the clock is assumed to be stopped but the IP is
+>>>>>> not in the relevant state, and add a dynamic debug trace.
+>>>>>
+>>>>> you meant a debug print..and it looks like error print below (also in title).
+>>>>
+>>>> I don't understand the comment. Is the 'trace' confusing and are you asking
+>>>> to e.g. change the commit message to 'add dynamic debug log'?
+>>>
+>>> Question is what is dynamic about this?
+>> dev_dbg() is part of the kernel dynamic debug capability...
+>>
+>> https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html
+>>
+>> Not sure what you are asking here?
 > 
-> Signed-off-by: Allen Pais <allen.lkml@gmail.com>
-> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> :-| where is dev_dbg() ?
+> 
+> See [1]
 
-Patch applied to ath-next branch of ath.git, thanks.
+> 
+> [1]
+> 
+>> +			dev_err(dev, "%s invalid configuration, clock was not stopped", __func__);
+> 
+>                          ^^^^^^^
 
-c08279a93191 ath11k: convert tasklets to use new tasklet_setup() API
+it's still a log using the "dynamic debug" framework.
 
--- 
-https://patchwork.kernel.org/patch/11717399/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+Again, what are you asking us to fix?
 
