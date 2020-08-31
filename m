@@ -2,141 +2,148 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E11C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C557C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52720214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:39:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oHRLDva7"
+	by mail.kernel.org (Postfix) with ESMTP id 2D72B208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:39:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598906379;
+	bh=l8jxjn/rMeXl1xTr/TAWKe9Rt5YZz1pcuYU7jXMBbv0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yxt23/gSx60DCyXC/PhX3ws0Ml294cnwHVJ7k3oZsDrgfMar0bYfy3EEsBkuG+d4L
+	 13Jf6XYGNYk8M6sGzYJraYnSJ4ZdK1HJ+YtbRpYs/kr//RKkkwi5PxcnhNEZGL3gOq
+	 gjlaGtd2NybRY2Gx7mS2knseydV17uaDEfBG0e4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgHaUjJ (ORCPT
+        id S1730168AbgHaUjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47232 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729028AbgHaUiy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:38:54 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93804C06123A;
-        Mon, 31 Aug 2020 13:38:53 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mm21so491705pjb.4;
-        Mon, 31 Aug 2020 13:38:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/pybmE7a8FIpjQvJ6DGP3d+JulP7r92A2J59iMGiCLM=;
-        b=oHRLDva7bE8NCj84o3Pw6XZLnP1yvvF0hDph2uVI7flXevbbdOYILUTOYyZCQ8otre
-         cCxr652BWFhSBLsdzy27Cb7Mddqacgb0iPwA8elKbwwEAVUBN15xECe0ThRuaHCOMdkR
-         dc3HEMkslEYv9RGiOcoN0hJsz9vazpaaDe3s/dlsGh7DjUCEhA4GdnYvIBBSn8VtTHcx
-         lvbLByvCgW0dL5AoLO91GPQcrbxAg2llOaYkOG9iH1BZqv6X0lnc9Cwlvy6dFLfDqm2M
-         w4tgaSsKeklGE8LZkIFRnECIGasMSWsPpNmoSLShXelmGeMJiFCs2p43c9vhVvKrOpPS
-         4Bvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/pybmE7a8FIpjQvJ6DGP3d+JulP7r92A2J59iMGiCLM=;
-        b=UnSbHLKTXEq1A8r6vt0UX7AC46YWjUgPNwUSQmcDyh49u8duuD56N1q9VtIK8vZB33
-         11c3dUM/7aPVdAn/V2NZJkNee7mBF38lvS2CQl1Za7dNdGPkkwvKJGPRlVncKjJWqXfn
-         y3hO1EOkqq/pOiGvO8Obr4418D1uoqzS+dCQtFApcgtBH7mgzmxHBdcD/jP9aJJAlEyP
-         jhcD+knCtmv8dLwFQBuxvM7mF/xVkuuHh8d6RGA0ITa1qJk1PhMzfPg3RAwCQy1jooM1
-         7+pBr0CIMvxpywuLeib5AdtmsLJBcXQzRSsf+lnD5rd4cr9Dy1KZAEZz7aMJ5K1bg5j+
-         3dwA==
-X-Gm-Message-State: AOAM5319ivjbF5lsnhOXqIx1O0V3y2VLArZgw2lkuUOFbbVH6UdwGB6x
-        JfOyZ9QVZyrGeBRReaSXaUM=
-X-Google-Smtp-Source: ABdhPJzxmla8Fw1rXgmVa/RE16rISQFkMFWRT5MPsRMrCIi9V2DCsAyGzGk3H5CzIrYzvPZULqAD2A==
-X-Received: by 2002:a17:902:a412:: with SMTP id p18mr2318693plq.283.1598906333078;
-        Mon, 31 Aug 2020 13:38:53 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id a26sm116850pfn.93.2020.08.31.13.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:38:52 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        rth@twiddle.net, ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        tony.luck@intel.com, fenghua.yu@intel.com, schnelle@linux.ibm.com,
-        gerald.schaefer@linux.ibm.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, davem@davemloft.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, James.Bottomley@HansenPartnership.com, deller@gmx.de
-Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
-Subject: [RESEND][PATCH 7/7] parisc: Avoid overflow at boundary_size
-Date:   Mon, 31 Aug 2020 13:38:11 -0700
-Message-Id: <20200831203811.8494-8-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200831203811.8494-1-nicoleotsuka@gmail.com>
-References: <20200831203811.8494-1-nicoleotsuka@gmail.com>
+        Mon, 31 Aug 2020 16:39:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33120 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728893AbgHaUja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 16:39:30 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B34AD2078B;
+        Mon, 31 Aug 2020 20:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598906369;
+        bh=l8jxjn/rMeXl1xTr/TAWKe9Rt5YZz1pcuYU7jXMBbv0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=1PeMevtCw8CwCifvJ+s/HCFOsVW6OEn1CN4vDyCxy7fJ09pcDHkwV1YalcP96rJbM
+         ZYR+njDjdonzAHaP5oueE7DhWIPojdgPv0Yxmuc12QeCYBfFeRaBVHOMhpfFI10dUk
+         MbhctG9Szz4x0xuPgoeEycNr3YSspt3ftfZkb5e8=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kCqaN-0086VA-S6; Mon, 31 Aug 2020 21:39:27 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 31 Aug 2020 21:39:27 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     syzbot <syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com>,
+        davem@davemloft.net, kuba@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Re: general protection fault in sock_close
+In-Reply-To: <20200831200328.GX1236603@ZenIV.linux.org.uk>
+References: <000000000000dc862405ae31ae9b@google.com>
+ <20200831200328.GX1236603@ZenIV.linux.org.uk>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <82748fc422a64d70c706951954a2dcfa@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: viro@zeniv.linux.org.uk, syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com, davem@davemloft.net, kuba@kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The boundary_size might be as large as ULONG_MAX, which means
-that a device has no specific boundary limit. So either "+ 1"
-or passing it to ALIGN() would potentially overflow.
+On 2020-08-31 21:03, Al Viro wrote:
+> On Mon, Aug 31, 2020 at 12:48:13PM -0700, syzbot wrote:
+>> Hello,
+>> 
+>> syzbot found the following issue on:
+>> 
+>> HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of 
+>> git://git.kernel.org/p..
+>> git tree:       upstream
+>> console output: 
+>> https://syzkaller.appspot.com/x/log.txt?x=16a85669900000
+>> kernel config:  
+>> https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
+>> dashboard link: 
+>> https://syzkaller.appspot.com/bug?extid=e24baf53dc389927a7c3
+>> compiler:       clang version 10.0.0 
+>> (https://github.com/llvm/llvm-project/ 
+>> c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+>> syz repro:      
+>> https://syzkaller.appspot.com/x/repro.syz?x=127d3c99900000
+> 
+>> The issue was bisected to:
+>> 
+>> commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
+>> Author: Marc Zyngier <maz@kernel.org>
+>> Date:   Wed Aug 19 16:12:17 2020 +0000
+>> 
+>>     epoll: Keep a reference on files added to the check list
+> 
+> All of those are essentially duplicates.
+> 
+> The minimal fix is below; I'm not happy with it long-term, but I'm 
+> still
+> digging through the eventpoll locking, and there's a good chance that 
+> this
+> is the least intrusive variant for -stable.  Folks, could you check if 
+> the
+> following patch fixes those suckers?  Again, all reports bisected to 
+> that
+> commit are essentially the same.
+> 
+> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
+> index e0decff22ae2..8107e06d7f6f 100644
+> --- a/fs/eventpoll.c
+> +++ b/fs/eventpoll.c
+> @@ -1995,9 +1995,9 @@ static int ep_loop_check_proc(void *priv, void
+> *cookie, int call_nests)
+>  			 * during ep_insert().
+>  			 */
+>  			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
+> -				get_file(epi->ffd.file);
+> -				list_add(&epi->ffd.file->f_tfile_llink,
+> -					 &tfile_check_list);
+> +				if (get_file_rcu(epi->ffd.file))
+> +					list_add(&epi->ffd.file->f_tfile_llink,
+> +						 &tfile_check_list);
+>  			}
+>  		}
+>  	}
 
-According to kernel defines:
-    #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
-    #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+I've managed to reproduce the issue using [1] (throw a few in a VM,
+see things explode like clockwork).
 
-We can simplify the logic here:
-  ALIGN(boundary + 1, 1 << shift) >> shift
-= ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-= {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-= [b + 1 + (1 << s) - 1] >> s
-= [b + (1 << s)] >> s
-= (b >> s) + 1
+With this patch on top of -rc3, the VM keep ticking away. FWIW:
 
-So fixing a potential overflow with the safer shortcut.
+Tested-by: Marc Zyngier <maz@kernel.org>
+Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the 
+check list")
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>
----
- drivers/parisc/ccio-dma.c  | 4 ++--
- drivers/parisc/sba_iommu.c | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
+Thanks,
 
-diff --git a/drivers/parisc/ccio-dma.c b/drivers/parisc/ccio-dma.c
-index a5507f75b524..c667d6aba764 100644
---- a/drivers/parisc/ccio-dma.c
-+++ b/drivers/parisc/ccio-dma.c
-@@ -356,8 +356,8 @@ ccio_alloc_range(struct ioc *ioc, struct device *dev, size_t size)
- 	** ggg sacrifices another 710 to the computer gods.
- 	*/
- 
--	boundary_size = ALIGN((unsigned long long)dma_get_seg_boundary(dev) + 1,
--			      1ULL << IOVP_SHIFT) >> IOVP_SHIFT;
-+	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-+	boundary_size = (dma_get_seg_boundary(dev) >> IOVP_SHIFT) + 1;
- 
- 	if (pages_needed <= 8) {
- 		/*
-diff --git a/drivers/parisc/sba_iommu.c b/drivers/parisc/sba_iommu.c
-index d4314fba0269..96bc2c617cbd 100644
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -342,8 +342,8 @@ sba_search_bitmap(struct ioc *ioc, struct device *dev,
- 	unsigned long shift;
- 	int ret;
- 
--	boundary_size = ALIGN((unsigned long long)dma_get_seg_boundary(dev) + 1,
--			      1ULL << IOVP_SHIFT) >> IOVP_SHIFT;
-+	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-+	boundary_size = (dma_get_seg_boundary(dev) >> IOVP_SHIFT) + 1;
- 
- #if defined(ZX1_SUPPORT)
- 	BUG_ON(ioc->ibase & ~IOVP_MASK);
+         M.
+
+[1] https://syzkaller.appspot.com/x/repro.c?x=140a19a9900000
 -- 
-2.17.1
-
+Jazz is not dead. It just smells funny...
