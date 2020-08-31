@@ -2,403 +2,213 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94315C43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2ADC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 741202073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 983A6206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:50:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598863838;
+	bh=w7GILwlnmbwNn51e2hei6U35hUGZv7Y4UBF1UqN+VkY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Qnp/tte6usvLspZeEPRI9KuMTkSCrPWVqH4C+DWX6Tl+yJtGICwZdZ0mNZK0iIHZt
+	 uNYooZVEGHKuaXP/nwDBWagBPj10hNG2mTQPR81f065QKalgkeFPD+djZQpQw0wG17
+	 cnfj0OS3oAUqDVqrXQrxxN/b72lrGd/r7GwMWvt8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgHaIu2 (ORCPT
+        id S1728356AbgHaIug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:50:28 -0400
-Received: from lucky1.263xmail.com ([211.157.147.133]:50892 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgHaIuZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:50:25 -0400
-Received: from localhost (unknown [192.168.167.172])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 0E61AC6506;
-        Mon, 31 Aug 2020 16:50:23 +0800 (CST)
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-ADDR-CHECKED4: 1
-X-ANTISPAM-LEVEL: 2
-X-ABS-CHECKED: 0
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P4753T140065176340224S1598863821295169_;
-        Mon, 31 Aug 2020 16:50:22 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <b455516213d7f9045c591227e836797e>
-X-RL-SENDER: jay.xu@rock-chips.com
-X-SENDER: xjq@rock-chips.com
-X-LOGIN-NAME: jay.xu@rock-chips.com
-X-FST-TO: linus.walleij@linaro.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-X-System-Flag: 0
-From:   Jianqun Xu <jay.xu@rock-chips.com>
-To:     linus.walleij@linaro.org, heiko@sntech.de
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Jianqun Xu <jay.xu@rock-chips.com>
-Subject: [PATCH 6/6] pinctrl: rockchip: populate platform device for rockchip gpio
-Date:   Mon, 31 Aug 2020 16:50:21 +0800
-Message-Id: <20200831085021.7288-1-jay.xu@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200831084753.7115-1-jay.xu@rock-chips.com>
-References: <20200831084753.7115-1-jay.xu@rock-chips.com>
+        Mon, 31 Aug 2020 04:50:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44540 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbgHaIuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:50:32 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AAA3206F0;
+        Mon, 31 Aug 2020 08:50:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598863832;
+        bh=w7GILwlnmbwNn51e2hei6U35hUGZv7Y4UBF1UqN+VkY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qFxZb6il+5SsynJ67x29zLpIox8zm3XWOtZcm9S2JOE5ZFix1+4cwEE7vIePPlsEK
+         St3EOgPQ6mUX8WyBy8y32oIr9m+Wn7K639mdQWdoCoxQwc3B+YbhfHvQK6GKnv/KlQ
+         17i5/uj/8MAo/SVOWhMJ+R+bNrjgeoC6hLtwUgxI=
+Date:   Mon, 31 Aug 2020 14:20:28 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     kishon@ti.com, thierry.reding@gmail.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 5/7] phy: tegra: xusb: Add support for charger detect
+Message-ID: <20200831085028.GG2639@vkoul-mobl>
+References: <1595238948-20531-1-git-send-email-nkristam@nvidia.com>
+ <1595238948-20531-6-git-send-email-nkristam@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595238948-20531-6-git-send-email-nkristam@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register both gpio driver and device as part of driver model, so that
-the '-gpio'/'-gpios' dependency in dts can be correctly handled by
-of_devlink/of_fwlink.
+On 20-07-20, 15:25, Nagarjuna Kristam wrote:
 
-Signed-off-by: Jianqun Xu <jay.xu@rock-chips.com>
----
- drivers/pinctrl/pinctrl-rockchip.c | 256 ++++++++++++++++-------------
- 1 file changed, 145 insertions(+), 111 deletions(-)
+> +#define USB2_BATTERY_CHRG_OTGPADX_CTL0(x)	(0x80 + (x) * 0x40)
+> +#define  PD_CHG					BIT(0)
+> +#define  VDCD_DET_FILTER_EN			BIT(4)
+> +#define  VDAT_DET				BIT(5)
+> +#define  VDAT_DET_FILTER_EN			BIT(8)
+> +#define  OP_SINK_EN				BIT(9)
+> +#define  OP_SRC_EN				BIT(10)
+> +#define  ON_SINK_EN				BIT(11)
+> +#define  ON_SRC_EN				BIT(12)
+> +#define  OP_I_SRC_EN				BIT(13)
+> +#define  ZIP_FILTER_EN				BIT(21)
+> +#define  ZIN_FILTER_EN				BIT(25)
+> +#define  DCD_DETECTED				BIT(26)
+> +
+> +#define USB2_BATTERY_CHRG_OTGPADX_CTL1(x)	(0x84 + (x) * 0x40)
+> +#define  PD_VREG				BIT(6)
+> +#define  VREG_LEV(x)				(((x) & 0x3) << 7)
+> +#define  VREG_DIR(x)				(((x) & 0x3) << 11)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 5b16b69e311f..9dc8daf38e63 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -3380,139 +3380,121 @@ static void rockchip_irq_disable(struct irq_data *d)
- }
- 
- static int rockchip_interrupts_register(struct platform_device *pdev,
--						struct rockchip_pinctrl *info)
-+						struct rockchip_pin_bank *bank)
- {
--	struct rockchip_pin_ctrl *ctrl = info->ctrl;
--	struct rockchip_pin_bank *bank = ctrl->pin_banks;
- 	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
- 	struct irq_chip_generic *gc;
- 	int ret;
--	int i;
- 
--	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
--		if (!bank->valid) {
--			dev_warn(&pdev->dev, "bank %s is not valid\n",
--				 bank->name);
--			continue;
--		}
-+	if (!bank->valid) {
-+		dev_warn(&pdev->dev, "bank %s is not valid\n",
-+			 bank->name);
-+		return -EINVAL;
-+	}
- 
--		ret = clk_enable(bank->clk);
--		if (ret) {
--			dev_err(&pdev->dev, "failed to enable clock for bank %s\n",
--				bank->name);
--			continue;
--		}
-+	ret = clk_enable(bank->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable clock for bank %s\n",
-+			bank->name);
-+		return ret;
-+	}
- 
--		bank->domain = irq_domain_add_linear(bank->of_node, 32,
--						&irq_generic_chip_ops, NULL);
--		if (!bank->domain) {
--			dev_warn(&pdev->dev, "could not initialize irq domain for bank %s\n",
--				 bank->name);
--			clk_disable(bank->clk);
--			continue;
--		}
-+	bank->domain = irq_domain_add_linear(bank->of_node, 32,
-+					&irq_generic_chip_ops, NULL);
-+	if (!bank->domain) {
-+		dev_warn(&pdev->dev, "could not initialize irq domain for bank %s\n",
-+			 bank->name);
-+		clk_disable(bank->clk);
-+		return -EINVAL;
-+	}
- 
--		ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
--					 "rockchip_gpio_irq", handle_level_irq,
--					 clr, 0, 0);
--		if (ret) {
--			dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
--				bank->name);
--			irq_domain_remove(bank->domain);
--			clk_disable(bank->clk);
--			continue;
--		}
-+	ret = irq_alloc_domain_generic_chips(bank->domain, 32, 1,
-+				 "rockchip_gpio_irq", handle_level_irq,
-+				 clr, 0, 0);
-+	if (ret) {
-+		dev_err(&pdev->dev, "could not alloc generic chips for bank %s\n",
-+			bank->name);
-+		irq_domain_remove(bank->domain);
-+		clk_disable(bank->clk);
-+		return ret;
-+	}
- 
--		gc = irq_get_domain_generic_chip(bank->domain, 0);
--		gc->reg_base = bank->reg_base;
--		gc->private = bank;
--		gc->chip_types[0].regs.mask = GPIO_INTMASK;
--		gc->chip_types[0].regs.ack = GPIO_PORTS_EOI;
--		gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
--		gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
--		gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
--		gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
--		gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
--		gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
--		gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
--		gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
--		gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
--		gc->wake_enabled = IRQ_MSK(bank->nr_pins);
-+	gc = irq_get_domain_generic_chip(bank->domain, 0);
-+	gc->reg_base = bank->reg_base;
-+	gc->private = bank;
-+	gc->chip_types[0].regs.mask = GPIO_INTMASK;
-+	gc->chip_types[0].regs.ack = GPIO_PORTS_EOI;
-+	gc->chip_types[0].chip.irq_ack = irq_gc_ack_set_bit;
-+	gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
-+	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-+	gc->chip_types[0].chip.irq_enable = rockchip_irq_enable;
-+	gc->chip_types[0].chip.irq_disable = rockchip_irq_disable;
-+	gc->chip_types[0].chip.irq_set_wake = irq_gc_set_wake;
-+	gc->chip_types[0].chip.irq_suspend = rockchip_irq_suspend;
-+	gc->chip_types[0].chip.irq_resume = rockchip_irq_resume;
-+	gc->chip_types[0].chip.irq_set_type = rockchip_irq_set_type;
-+	gc->wake_enabled = IRQ_MSK(bank->nr_pins);
- 
--		/*
--		 * Linux assumes that all interrupts start out disabled/masked.
--		 * Our driver only uses the concept of masked and always keeps
--		 * things enabled, so for us that's all masked and all enabled.
--		 */
--		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
--		writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
--		gc->mask_cache = 0xffffffff;
-+	/*
-+	 * Linux assumes that all interrupts start out disabled/masked.
-+	 * Our driver only uses the concept of masked and always keeps
-+	 * things enabled, so for us that's all masked and all enabled.
-+	 */
-+	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTMASK);
-+	writel_relaxed(0xffffffff, bank->reg_base + GPIO_INTEN);
-+	gc->mask_cache = 0xffffffff;
- 
--		irq_set_chained_handler_and_data(bank->irq,
--						 rockchip_irq_demux, bank);
--		clk_disable(bank->clk);
--	}
-+	irq_set_chained_handler_and_data(bank->irq,
-+					 rockchip_irq_demux, bank);
-+	clk_disable(bank->clk);
- 
- 	return 0;
- }
- 
- static int rockchip_gpiolib_register(struct platform_device *pdev,
--						struct rockchip_pinctrl *info)
-+						struct rockchip_pin_bank *bank)
- {
--	struct rockchip_pin_ctrl *ctrl = info->ctrl;
--	struct rockchip_pin_bank *bank = ctrl->pin_banks;
- 	struct gpio_chip *gc;
- 	int ret;
--	int i;
- 
--	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
--		if (!bank->valid) {
--			dev_warn(&pdev->dev, "bank %s is not valid\n",
--				 bank->name);
--			continue;
--		}
-+	if (!bank->valid) {
-+		dev_err(&pdev->dev, "bank %s is not valid\n", bank->name);
-+		return -EINVAL;
-+	}
- 
--		bank->gpio_chip = rockchip_gpiolib_chip;
-+	bank->gpio_chip = rockchip_gpiolib_chip;
- 
--		gc = &bank->gpio_chip;
--		gc->base = bank->pin_base;
--		gc->ngpio = bank->nr_pins;
--		gc->parent = &pdev->dev;
--		gc->of_node = bank->of_node;
--		gc->label = bank->name;
-+	gc = &bank->gpio_chip;
-+	gc->base = bank->pin_base;
-+	gc->ngpio = bank->nr_pins;
-+	gc->parent = &pdev->dev;
-+	gc->of_node = bank->of_node;
-+	gc->label = bank->name;
- 
--		ret = gpiochip_add_data(gc, bank);
--		if (ret) {
--			dev_err(&pdev->dev, "failed to register gpio_chip %s, error code: %d\n",
--							gc->label, ret);
--			goto fail;
--		}
-+	ret = gpiochip_add_data(gc, bank);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register %s (%d)\n", gc->label, ret);
-+		return ret;
- 	}
- 
--	rockchip_interrupts_register(pdev, info);
-+	if (!of_property_read_bool(bank->of_node, "gpio-ranges")) {
-+		struct device *parent = pdev->dev.parent;
-+		struct rockchip_pinctrl *info = dev_get_drvdata(parent);
-+		struct pinctrl_dev *pctldev;
- 
--	return 0;
-+		if (!info)
-+			return -ENODATA;
- 
--fail:
--	for (--i, --bank; i >= 0; --i, --bank) {
--		if (!bank->valid)
--			continue;
--		gpiochip_remove(&bank->gpio_chip);
--	}
--	return ret;
--}
--
--static int rockchip_gpiolib_unregister(struct platform_device *pdev,
--						struct rockchip_pinctrl *info)
--{
--	struct rockchip_pin_ctrl *ctrl = info->ctrl;
--	struct rockchip_pin_bank *bank = ctrl->pin_banks;
--	int i;
-+		pctldev = info->pctl_dev;
-+		if (!pctldev)
-+			return -ENODEV;
- 
--	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
--		if (!bank->valid)
--			continue;
--		gpiochip_remove(&bank->gpio_chip);
-+		ret = gpiochip_add_pin_range(gc, dev_name(pctldev->dev), 0, gc->base, gc->ngpio);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Failed to add pin range\n");
-+			gpiochip_remove(&bank->gpio_chip);
-+			return ret;
-+		}
- 	}
- 
- 	return 0;
-@@ -3752,6 +3734,46 @@ static int __maybe_unused rockchip_pinctrl_resume(struct device *dev)
- static SIMPLE_DEV_PM_OPS(rockchip_pinctrl_dev_pm_ops, rockchip_pinctrl_suspend,
- 			 rockchip_pinctrl_resume);
- 
-+static int rockchip_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *parent = pdev->dev.parent;
-+	struct rockchip_pinctrl *info = dev_get_drvdata(parent);
-+	struct rockchip_pin_ctrl *ctrl = info ? (info->ctrl) : NULL;
-+	struct rockchip_pin_bank *bank;
-+	int ret, i;
-+
-+	if (!info || !ctrl)
-+		return -EINVAL;
-+
-+	if (!of_find_property(np, "gpio-controller", NULL))
-+		return -ENODEV;
-+
-+	bank = ctrl->pin_banks;
-+	for (i = 0; i < ctrl->nr_banks; ++i, ++bank) {
-+		if (!strcmp(bank->name, np->name)) {
-+			bank->of_node = np;
-+
-+			if (!rockchip_get_bank_data(bank, info))
-+				bank->valid = true;
-+
-+			break;
-+		}
-+	}
-+
-+	bank->of_node = pdev->dev.of_node;
-+
-+	ret = rockchip_gpiolib_register(pdev, bank);
-+	if (ret)
-+		return ret;
-+
-+	ret = rockchip_interrupts_register(pdev, bank);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
- static int rockchip_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct rockchip_pinctrl *info;
-@@ -3823,18 +3845,20 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 			return PTR_ERR(info->regmap_pmu);
- 	}
- 
--	ret = rockchip_gpiolib_register(pdev, info);
--	if (ret)
--		return ret;
--
- 	ret = rockchip_pinctrl_register(pdev, info);
- 	if (ret) {
--		rockchip_gpiolib_unregister(pdev, info);
-+		dev_err(&pdev->dev, "failed to register pinctrl device\n");
- 		return ret;
- 	}
- 
- 	platform_set_drvdata(pdev, info);
- 
-+	ret = of_platform_populate(np, rockchip_bank_match, NULL, dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register gpio device\n");
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -4254,6 +4278,14 @@ static const struct of_device_id rockchip_pinctrl_dt_match[] = {
- 	{},
- };
- 
-+static struct platform_driver rockchip_gpio_driver = {
-+	.probe		= rockchip_gpio_probe,
-+	.driver = {
-+		.name	= "rockchip-gpio",
-+		.of_match_table = rockchip_bank_match,
-+	},
-+};
-+
- static struct platform_driver rockchip_pinctrl_driver = {
- 	.probe		= rockchip_pinctrl_probe,
- 	.driver = {
-@@ -4265,7 +4297,9 @@ static struct platform_driver rockchip_pinctrl_driver = {
- 
- static int __init rockchip_pinctrl_drv_register(void)
- {
--	return platform_driver_register(&rockchip_pinctrl_driver);
-+	platform_driver_register(&rockchip_pinctrl_driver);
-+
-+	return platform_driver_register(&rockchip_gpio_driver);
- }
- postcore_initcall(rockchip_pinctrl_drv_register);
- 
+GENMASK and FIELD_PREP please
+
+> +static void
+> +tegra_xusb_padctl_set_debounce_time(struct tegra_xusb_padctl *padctl,
+> +				    u32 debounce)
+> +{
+> +	u32 value;
+> +
+> +	value = padctl_readl(padctl,
+> +		XUSB_PADCTL_USB2_BATTERY_CHRG_TDCD_DBNC_TIMER_0);
+
+Single line
+
+> +static void
+> +tegra_xusb_padctl_charger_detect_on(struct tegra_xusb_padctl *padctl, u32 index)
+> +{
+> +	u32 value;
+> +
+> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+> +	value &= ~USB2_OTG_PD_ZI;
+> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+> +
+> +	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+> +	value |= (USB2_OTG_PD2 | USB2_OTG_PD2_OVRD_EN);
+> +	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(index));
+> +
+> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+> +	value &= ~PD_CHG;
+> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+
+maybe a padctl_updatel() helper to do read, modify and write
+
+> +static void tegra_xusb_padctl_dcd(struct tegra_xusb_padctl *padctl, u32 index)
+> +{
+> +	u32 value;
+> +	unsigned int offset;
+> +	bool ret = false;
+> +
+> +	/* Turn on IDP_SRC */
+> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+> +	value |= OP_I_SRC_EN;
+> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+> +
+> +	/* Turn on D- pull-down resistor */
+> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+> +	value |= USBON_RPD_OVRD_VAL;
+> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+> +
+> +	/* Wait for TDCD_DBNC (DCD debounce), refer to BC1.2 spec Table 5 */
+> +	usleep_range(10000, 20000);
+> +
+> +	offset = USB2_BATTERY_CHRG_OTGPADX_CTL0(index);
+> +	ret = readl_poll_timeout(padctl->regs + offset, value,
+> +				 value & DCD_DETECTED, 20000,
+> +				 TDCD_TIMEOUT_MS * 1000);
+> +	if (!ret)
+> +		dev_warn(padctl->dev, "%s: DCD timeout.", __func__);
+
+Not dev_err() ? and continue after this?
+
+> +static bool
+> +tegra_xusb_padctl_primary_secondary(struct tegra_xusb_padctl *padctl, u32 index,
+> +				    bool is_primary)
+> +{
+> +	u32 value;
+> +	u32 config = is_primary ? (OP_SRC_EN | ON_SINK_EN) :
+> +				  (ON_SRC_EN | OP_SINK_EN);
+> +	bool ret = false;
+> +
+> +	if (is_primary)
+> +		/* data contact detection */
+> +		tegra_xusb_padctl_dcd(padctl, index);
+> +
+> +	/* Source D- to D+ */
+> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+> +	value |= config;
+> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+> +
+> +	/*
+> +	 * Wait for TVDPSRC_ON/TVDMSRC_ON(D+/- voltage source on time),
+> +	 * refer to BC1.2 spec Table 5
+> +	 */
+> +	msleep(40);
+> +
+> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL0(index));
+> +	if (is_primary)
+> +		ret = !!(value & VDAT_DET);
+> +	else
+> +		ret = !(value & VDAT_DET);
+
+How about 
+
+        ret = !(value & VDAT_DET);
+        if (is_primary)
+                ret = !ret;
+
+> +#define VON_DIV2P0_DET BIT(0)
+> +#define VON_DIV2P7_DET BIT(1)
+> +#define VOP_DIV2P0_DET BIT(2)
+> +#define VOP_DIV2P7_DET BIT(3)
+> +
+> +#define VREG_CUR_LEVEL_0        500
+> +#define VREG_CUR_LEVEL_1        900
+> +#define VREG_CUR_LEVEL_2        1500
+> +#define VREG_CUR_LEVEL_3        2000
+
+tabs or spaces, pick one please, not both
+
+> +
+> +#define IS_CUR_IN_RANGE(ma, low, high)  \
+> +	((ma >= VREG_CUR_LEVEL_##low) && (ma <= (VREG_CUR_LEVEL_##high - 1)))
+> +#define VREG_LVL(ma, level)     IS_CUR_IN_RANGE(ma, level, level + 1)
+> +
+> +static void tegra_xusb_padctl_vbus_pad_portection(struct tegra_xusb_port *port)
+> +{
+> +	struct tegra_xusb_padctl *padctl = port->padctl;
+> +	int level = 0;
+> +	enum tegra_vbus_dir dir = TEGRA_VBUS_SINK;
+> +	int max_ua, min_ua;
+
+reverse christmas tree please
+
+> +static enum usb_charger_type tegra_xusb_charger_detect(struct usb_phy *usb_phy)
+> +{
+> +	struct tegra_xusb_port *port = container_of(usb_phy,
+> +						    struct tegra_xusb_port,
+> +						    usb_phy);
+
+how about:
+
+        struct tegra_xusb_port *port = 
+                        container_of(usb_phy, struct tegra_xusb_port, usb_phy);
 -- 
-2.17.1
-
-
-
+~Vinod
