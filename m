@@ -2,259 +2,210 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD70AC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD92C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:23:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BE242073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CC542073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:23:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RwBxZsWs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ritamIe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbgHaQXG (ORCPT
+        id S1728719AbgHaQXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727991AbgHaQXD (ORCPT
+        Mon, 31 Aug 2020 12:23:52 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33762 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726167AbgHaQXv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:23:03 -0400
-Received: from mail-ot1-x336.google.com (mail-ot1-x336.google.com [IPv6:2607:f8b0:4864:20::336])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DF92C061573;
-        Mon, 31 Aug 2020 09:23:03 -0700 (PDT)
-Received: by mail-ot1-x336.google.com with SMTP id v16so5807069otp.10;
-        Mon, 31 Aug 2020 09:23:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H4dLG1Zt/IPI+/a3J8l/0wzUefijYE2Blkm8CezvRtA=;
-        b=RwBxZsWspKLQMK3XaGMrdOhl2LbDnHZtuQxrEkK1/P84qkZMoCnsLKCaj2TaLBPeiv
-         /Cjf4xRO4L4/fwopa6H/XWpa7+3OZLV/8+NrPXOhtrXHQykrJnRnCOTBWLbc+h6HftSv
-         QEYh+Jmey1UtFP6HB0wwtorKHP9mM4uko5yXqT8dILjhKfQHBxXD4F5HpRmbHXV4tyTa
-         nEyELg71wk8TXdKJVnjjEiURYh3MRU1kJkpIip4DusCdnUSzIaodKckUNP3OLxUfHG67
-         YIk7FHE9hejuTlxkhhSZbD9vr9WsQam1eO5zPsgJ+c5Fx1Z+dmp3WPk0di6A+/XXkwYj
-         AbdQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H4dLG1Zt/IPI+/a3J8l/0wzUefijYE2Blkm8CezvRtA=;
-        b=Syu3Pezsub5LVoLXCX61L8UXSqIJmupN66yqTp8dhZvYujAjEfnz+aNvT/S+ZTcup4
-         PIxnnAl+MhYfpSjWWtKLZf3PRTxmYDd0JY83mOefPFHdTPZK7iIeWzr6N0CZRT0oyLZF
-         GHQiPrS0iEX24QWGrnr8yPZcEHU30GFGPwKfGwmXNiUTMuoBn0kjN8c886na4wJnptmU
-         PhJwI5ozs7Bob8D6UcQcMpQUKGdbWt9fKTlau0zr4wq/zXoM9q8z+CoLpFcSfGgdVFo5
-         zP9pvQkJsV8KNFIDY8yQmGKe2rzjbdDLZ9mWfWhzj0mO8YWAX8UX8dit3nh6bBMjbSEM
-         iozw==
-X-Gm-Message-State: AOAM531rNQ44zycQnPZNx/8rvdUx21jMsizad1EGbL34gM7XFI3MNRwS
-        rTIyeN+SagZ3V6Uz6OJQ1q5qHhTVZ1LQf2yFpZOgaMmaEEg=
-X-Google-Smtp-Source: ABdhPJxrJpBFwh9m9xbImS73NBC+UgYuXHlrXAXjgNehMyHSDt3BEBWSr08G4H463m+UXPJt1C+8Si2QVofupPntAb0=
-X-Received: by 2002:a05:6830:89:: with SMTP id a9mr1398136oto.53.1598890980963;
- Mon, 31 Aug 2020 09:23:00 -0700 (PDT)
+        Mon, 31 Aug 2020 12:23:51 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VGK4gO021837;
+        Mon, 31 Aug 2020 16:23:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=eXk40iRCZSvVH+hEE+dQYwB01cRq53luX+lj7L8sVyY=;
+ b=ritamIe1H1benSupenZEiqyK4JC7i4ameoQ1eAsUW6djgSoljLlmb+4kbPbUIZU2syXA
+ S1xL/y667c7Z3bLGWu1RLOrG8Idnn8eUsspTalfVwwVa2Fzxvggbqj6ArP3D8pWhfGtO
+ zSnIfMEbzk1ztiBrIxKpdn5QDvXNfArdef+cw7XwLbUyLY4ztCFzRw8HQz+kOh6gEqkm
+ ucBmIVax+rnthMdgzISTgpHd7hCCg0SzuY0jvk+Glbgm3IppQgmTYi/3CyHfnK10dyVN
+ 7ToPcoPX8nx0rEvouFjUoVWWyabtXmfLyxZx63WYr+7XygLebaUh6Ra6yiC9C++QC9wT Tw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 337eyky66m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 Aug 2020 16:23:42 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VGKZ6d048031;
+        Mon, 31 Aug 2020 16:23:41 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 3380x0nktc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 16:23:41 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07VGNde8007754;
+        Mon, 31 Aug 2020 16:23:40 GMT
+Received: from concerto.us.oracle.com (/10.65.179.108)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 31 Aug 2020 09:23:39 -0700
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+To:     stern@rowland.harvard.edu, gregkh@linuxfoundation.org,
+        erkka.talvitie@vincit.fi
+Cc:     Khalid Aziz <khalid.aziz@oracle.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low speed devices
+Date:   Mon, 31 Aug 2020 10:23:30 -0600
+Message-ID: <cover.1598887346.git.khalid@gonehiking.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <CAPY=qRRekJonX_iX3s4bfietm9D_GM+S4cDGXbj9nMOefJBdTw@mail.gmail.com>
- <71c9048e530e1b67b6750b1a9eda175d98096ccc.camel@gmail.com>
-In-Reply-To: <71c9048e530e1b67b6750b1a9eda175d98096ccc.camel@gmail.com>
-From:   Subhashini Rao Beerisetty <subhashbeerisetty@gmail.com>
-Date:   Mon, 31 Aug 2020 21:52:47 +0530
-Message-ID: <CAPY=qRSbJaqOZ30556SWTgrTMegsmdb9-DoM7R66fb=rLWP6eQ@mail.gmail.com>
-Subject: Re: cpu-freq: running the perf increases the data rate?
-To:     dedekind1@gmail.com
-Cc:     linux-pm@vger.kernel.org,
-        kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="000000000000f4a3f505ae2ed049"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008310097
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 clxscore=1011 spamscore=0 bulkscore=0 impostorscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008310097
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20200831162330.vYt8YCe5Y85lRHdBagkZ2uPrq4jojNOvzN21c8YPETQ@z>
 
---000000000000f4a3f505ae2ed049
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Aug 28, 2020 at 6:04 PM Artem Bityutskiy <dedekind1@gmail.com> wrot=
-e:
->
-> On Thu, 2020-08-27 at 22:25 +0530, Subhashini Rao Beerisetty wrote:
-> > I have an application which finds the data rate over the PCIe
-> > interface. I=E2=80=99m getting the lesser data rate in one of my Linux =
-X86
-> > systems.
->
-> Some more description, may be? Do you have a PCIe device reading one
-> RAM buffer and then writing to another RAM buffer? Or does it generate
-> dome data and writes them to a RAM buffer? Presumably it uses DMA? How
-> much is the CPU involved into the process? Are we talking about
-> transferring few kilobytes or gigabytes?
-Thanks a lot for your help and reply.
-Regarding hardware setup, Xilinx PCIe FPGA endpoint is connected to
-HOST CPU via PCIe bus.
-Xilinx PCIe FPGA endpoint has the DMA_REF block and it provides a
-mechanism to DMA transfer data at the maximum rate between host CPU
-memory and a FIFO in the DMA-REF block.
-The host software sets up some data in it=E2=80=99s memory, it then transfe=
-rs
-the data to the DMA-REF=E2=80=99s FIFO and then reads it back into a differ=
-ent
-location in its host memory. This is repeated in a loop.  There is a
-register in the DMA-REF block that gives an indication of transfer
-speed.
+[Resending since I screwed up linux-usb mailing list address in
+cut-n-paste in original email]
 
 
->
-> > When I change the scaling_governor from "powersave" to "performance"
-> > mode for each CPU, then there is slight improvement in the PCIe data
-> > rate.
->
-> Definitely this makes your CPU(s) run at max speed, but depending on
-> platform and settings, this may also affect C-states. Are the CPU(s)
-> generally idle while you measure, or busy (involved into the test)? You
-> could run 'turbostat' while measuring the bandwidth, to get some CPU
-> statistics (e.g., do C-states happen during the PCI test, how busy are
-> the CPUs).
->
-> > Parallely I started profiling the workload with perf. Whenever I start
-> > running the profile command =E2=80=9Cperf stat -a -d -p <PID>=E2=80=9D =
-surprisingly
-> > the application resulted in excellent data rate over PCIe, but when I
-> > kill the perf command again PCIe data rate drops. I am really confused
-> > about this behavior.Any clues from this behaviour?
->
-> Well, one possible reason that comes to mind - you get rid of C-states
-> when you rung perf, and this increases the PCI bandwidth. You can just
-> try disabling C-states (there are sysfs knobs) and check it out.
-> Turbostat could be useful to check for this (with and without perf, run
-> 'turbostat sleep 10' or something like this (measure for 10 seconds in
-> this example), do this while running your PCI test.
-Disabling the C-states improved the throughput a lot, thanks a lot for
-pointing this out. Could you please give some more explanation on how
-disabling C-states improved the throughput?
-As you suggested I collected and attached the turbostat log with and
-without perf while running the PCIe test.
-In my system, only 'performance\powersave' are listed in
-scaling_available_governors. Rest other governors
-"userspace\ondemand\schedutil" are not listed in available_goverors.
-What might be the reason for this?
+I recently replaced the motherboard on my desktop with an MSI B450-A
+Pro Max motherboard. Since then my keybaords, mouse and tablet have
+become very unreliable. I see messages like this over and over in
+dmesg:
 
->
-> But I am really just guessing here, I do not know enough about your
-> test and the system (e.g., "a Linux x86" system can be so many things,
-> like Intel or AMD server or a mobile device)=E2=80=A6
-It's an Intel Atom processor.
->
->
+ug 23 00:01:49 rhapsody kernel: [198769.314732] usb 1-2.4: reset full-speed USB
+ device number 27 using ehci-pci
+Aug 23 00:01:49 rhapsody kernel: [198769.562234] usb 1-2.1: reset full-speed USB
+ device number 28 using ehci-pci
+Aug 23 00:01:52 rhapsody kernel: [198772.570704] usb 1-2.1: reset full-speed USB
+ device number 28 using ehci-pci
+Aug 23 00:02:02 rhapsody kernel: [198782.526669] usb 1-2.4: reset full-speed USB
+ device number 27 using ehci-pci
+Aug 23 00:02:03 rhapsody kernel: [198782.714660] usb 1-2.1: reset full-speed USB
+ device number 28 using ehci-pci
+Aug 23 00:02:04 rhapsody kernel: [198784.210171] usb 1-2.3: reset low-speed USB device number 26 using ehci-pci
+Aug 23 00:02:06 rhapsody kernel: [198786.110181] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
+Aug 23 00:02:08 rhapsody kernel: [198787.726158] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
+Aug 23 00:02:10 rhapsody kernel: [198790.126628] usb 1-2.1: reset full-speed USB device number 28 using ehci-pci
+Aug 23 00:02:10 rhapsody kernel: [198790.314141] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
+Aug 23 00:02:12 rhapsody kernel: [198792.518765] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
 
---000000000000f4a3f505ae2ed049
-Content-Type: text/plain; charset="US-ASCII"; name="trubostat_with_perf.txt"
-Content-Disposition: attachment; filename="trubostat_with_perf.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_keipum270>
-X-Attachment-Id: f_keipum270
+The devices I am using are:
 
-dHVyYm9zdGF0IHZlcnNpb24gMTcuMDYuMjMgLSBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz4K
-Q1BVSUQoMCk6IEdlbnVpbmVJbnRlbCAxMSBDUFVJRCBsZXZlbHM7IGZhbWlseTptb2RlbDpzdGVw
-cGluZyAweDY6Mzc6OSAoNjo1NTo5KQpDUFVJRCgxKTogU1NFMyBNT05JVE9SIC0gRUlTVCBUTTIg
-VFNDIE1TUiBBQ1BJLVRNIFRNCkNQVUlEKDYpOiBBUEVSRiwgTm8tVFVSQk8sIERUUywgTm8tUFRN
-LCBOby1IV1AsIE5vLUhXUG5vdGlmeSwgTm8tSFdQd2luZG93LCBOby1IV1BlcHAsIE5vLUhXUHBr
-ZywgRVBCCmNwdTI6IE1TUl9JQTMyX01JU0NfRU5BQkxFOiAweDAwODUwMDg5IChUQ0MgRUlTVCBO
-by1NV0FJVCBQUkVGRVRDSCBUVVJCTykKQ1BVSUQoNyk6IE5vLVNHWApTTE0gQkNMSzogODMuMyBN
-aHoKY3B1MjogTVNSX0NDNl9ERU1PVElPTl9QT0xJQ1lfQ09ORklHOiAweDAwMDAwMDAwIChESVNh
-YmxlLUNDNi1EZW1vdGlvbikKY3B1MjogTVNSX01DNl9ERU1PVElPTl9QT0xJQ1lfQ09ORklHOiAw
-eDAwMDAwMDAwIChESVNhYmxlLU1DNi1EZW1vdGlvbikKUkFQTDogNDU4MSBzZWMuIEpvdWxlIENv
-dW50ZXIgUmFuZ2UsIGF0IDMwIFdhdHRzCmNwdTI6IE1TUl9QTEFURk9STV9JTkZPOiAweDYwMDAw
-MDAxNzAwCjYgKiA4My4zID0gNDk5LjggTUh6IG1heCBlZmZpY2llbmN5IGZyZXF1ZW5jeQoyMyAq
-IDgzLjMgPSAxOTE1LjkgTUh6IGJhc2UgZnJlcXVlbmN5CmNwdTI6IE1TUl9JQTMyX1BPV0VSX0NU
-TDogMHgwMDAwMDAwMCAoQzFFIGF1dG8tcHJvbW90aW9uOiBESVNhYmxlZCkKY3B1MjogTVNSX0FU
-T01fQ09SRV9SQVRJT1M6IDB4MDAxNzA2MDIKMiAqIDgzLjMgPSAxNjYuNiBNSHogbWluaW11bSBv
-cGVyYXRpbmcgZnJlcXVlbmN5CjYgKiA4My4zID0gNDk5LjggTUh6IGxvdyBmcmVxdWVuY3kgbW9k
-ZSAoTEZNKQoyMyAqIDgzLjMgPSAxOTE1LjkgTUh6IGJhc2UgZnJlcXVlbmN5CmNwdTI6IE1TUl9B
-VE9NX0NPUkVfVFVSQk9fUkFUSU9TOiAweDE3MTcxNzE3CjIzICogODMuMyA9IDE5MTUuOSBNSHog
-bWF4IHR1cmJvIDQgYWN0aXZlIGNvcmVzCjIzICogODMuMyA9IDE5MTUuOSBNSHogbWF4IHR1cmJv
-IDMgYWN0aXZlIGNvcmVzCjIzICogODMuMyA9IDE5MTUuOSBNSHogbWF4IHR1cmJvIDIgYWN0aXZl
-IGNvcmVzCjIzICogODMuMyA9IDE5MTUuOSBNSHogbWF4IHR1cmJvIDEgYWN0aXZlIGNvcmUKY3B1
-MjogTVNSX1BLR19DU1RfQ09ORklHX0NPTlRST0w6IDB4MDAxNzAwMGYgKFVObG9ja2VkOiBwa2ct
-Y3N0YXRlLWxpbWl0PTE1OiBwYzcpCmNwdTI6IFBPTEw6IENQVUlETEUgQ09SRSBQT0xMIElETEUK
-Y3B1MjogQzE6IE1XQUlUIDB4MDAKY3B1MjogQzZOOiBNV0FJVCAweDU4CmNwdTI6IEM2UzogTVdB
-SVQgMHg1MgpjcHUyOiBjcHVmcmVxIGRyaXZlcjogaW50ZWxfcHN0YXRlCmNwdTI6IGNwdWZyZXEg
-Z292ZXJub3I6IHBlcmZvcm1hbmNlCmNwdWZyZXEgaW50ZWxfcHN0YXRlIG5vX3R1cmJvOiAxCmNw
-dTA6IE1TUl9JQTMyX0VORVJHWV9QRVJGX0JJQVM6IDB4MDAwMDAwMDYgKGJhbGFuY2VkKQpjcHUw
-OiBNU1JfUkFQTF9QT1dFUl9VTklUOiAweDAwMDAwNTA1ICgwLjAzMTI1MCBXYXR0cywgMC4wMDAw
-MzIgSm91bGVzLCAwLjAwMDk3NyBzZWMuKQpjcHUwOiBNU1JfUEtHX1BPV0VSX0xJTUlUOiAweDAw
-Mzg4MGZhIChVTmxvY2tlZCkKY3B1MDogUEtHIExpbWl0ICMxOiBFTmFibGVkICg3LjgxMjUwMCBX
-YXR0cywgMjYyMTQ0LjAwMDAwMCBzZWMsIGNsYW1wIERJU2FibGVkKQpjcHUwOiBQS0cgTGltaXQg
-IzI6IERJU2FibGVkICgwLjAwMDAwMCBXYXR0cywgMC4wMDA5NzcqIHNlYywgY2xhbXAgRElTYWJs
-ZWQpCmNwdTA6IE1TUl9QUDBfUE9XRVJfTElNSVQ6IDB4MDAwMjAwMDAgKFVObG9ja2VkKQpjcHUw
-OiBDb3JlcyBMaW1pdDogRElTYWJsZWQgKDAuMDAwMDAwIFdhdHRzLCAwLjAwMTk1MyBzZWMsIGNs
-YW1wIERJU2FibGVkKQpjcHUwOiBNU1JfSUEzMl9URU1QRVJBVFVSRV9UQVJHRVQ6IDB4MDA2ZTAw
-MDAgKDExMCBDKQo0MC4wMDQ0MTcgc2VjCkNvcmUJQ1BVCUF2Z19NSHoJQnVzeSUJQnp5X01IeglU
-U0NfTUh6CUlSUQlTTUkJQzEJQzZOCUM2UwlDMSUJQzZOJQlDNlMlCUNQVSVjMQlDUFUlYzYJTW9k
-JWM2CUNvcmVUbXAJR0ZYJXJjNglQa2clcGM2CVBrZ1dhdHQJQ29yV2F0dAotCS0JNzQ4CTM5LjMz
-CTE5MDEJMTkxNwk0NTg1NjAJMAkxNTY2MjgwCTE4ODkJNzc3NQk0My4wNwkwLjI5CTE4LjE5CTQy
-LjIzCTE3Ljg1CTEzLjU2CTI5CTEwMC4wMAkxMS44MAkxLjE0CTAuOTUKMAkwCTY0MwkzMy44OQkx
-ODk2CTE5MTcJMzM2NDcJMAk0MDUzMzkJNDkyCTE5NTAJNDguNDQJMC4zMQkxOC4yOAk0Ny41Nwkx
-Ny42OQkxMy4zMgkyOAkxMDAuMDAJMTEuODAJMS4xNAkwLjk1CjEJMQkxMDY0CTU1Ljc4CTE5MDYJ
-MTkxNwkzNTg1MjEJMAk0NDk4NzUJMjUJMTkxMAkyNy4zNwkwLjAzCTE3LjgzCTI2LjQxCTE3LjM0
-CTEzLjMyCTI5CjIJMgk2NDcJMzQuMTQJMTg5NQkxOTE3CTMzODIxCTAJMzU5MTU1CTUxNwkxOTQw
-CTQ4LjIxCTAuMjkJMTguMjAJNDcuNDMJMTcuODYJMTMuODEJMjgKMwkzCTYzOAkzMy41MgkxOTAy
-CTE5MTcJMzI1NzEJMAkzNTE5MTEJODU1CTE5NzUJNDguMjcJMC41NAkxOC40Nwk0Ny41MQkxOC41
-MQkxMy44MQkyOAo=
---000000000000f4a3f505ae2ed049
-Content-Type: text/plain; charset="US-ASCII"; name="trubostat_without_perf.txt"
-Content-Disposition: attachment; filename="trubostat_without_perf.txt"
-Content-Transfer-Encoding: base64
-Content-ID: <f_keipum2v1>
-X-Attachment-Id: f_keipum2v1
+- Logitech K360 wireless keyboard
+- Wired Lenovo USB keyboard
+- Wired Lenovo USB mouse
+- Wired Wacom Intuos tablet
 
-dHVyYm9zdGF0IHZlcnNpb24gMTcuMDYuMjMgLSBMZW4gQnJvd24gPGxlbmJAa2VybmVsLm9yZz4K
-Q1BVSUQoMCk6IEdlbnVpbmVJbnRlbCAxMSBDUFVJRCBsZXZlbHM7IGZhbWlseTptb2RlbDpzdGVw
-cGluZyAweDY6Mzc6OSAoNjo1NTo5KQpDUFVJRCgxKTogU1NFMyBNT05JVE9SIC0gRUlTVCBUTTIg
-VFNDIE1TUiBBQ1BJLVRNIFRNCkNQVUlEKDYpOiBBUEVSRiwgTm8tVFVSQk8sIERUUywgTm8tUFRN
-LCBOby1IV1AsIE5vLUhXUG5vdGlmeSwgTm8tSFdQd2luZG93LCBOby1IV1BlcHAsIE5vLUhXUHBr
-ZywgRVBCCmNwdTI6IE1TUl9JQTMyX01JU0NfRU5BQkxFOiAweDAwODUwMDg5IChUQ0MgRUlTVCBO
-by1NV0FJVCBQUkVGRVRDSCBUVVJCTykKQ1BVSUQoNyk6IE5vLVNHWApTTE0gQkNMSzogODMuMyBN
-aHoKY3B1MjogTVNSX0NDNl9ERU1PVElPTl9QT0xJQ1lfQ09ORklHOiAweDAwMDAwMDAwIChESVNh
-YmxlLUNDNi1EZW1vdGlvbikKY3B1MjogTVNSX01DNl9ERU1PVElPTl9QT0xJQ1lfQ09ORklHOiAw
-eDAwMDAwMDAwIChESVNhYmxlLU1DNi1EZW1vdGlvbikKUkFQTDogNDU4MSBzZWMuIEpvdWxlIENv
-dW50ZXIgUmFuZ2UsIGF0IDMwIFdhdHRzCmNwdTI6IE1TUl9QTEFURk9STV9JTkZPOiAweDYwMDAw
-MDAxNzAwCjYgKiA4My4zID0gNDk5LjggTUh6IG1heCBlZmZpY2llbmN5IGZyZXF1ZW5jeQoyMyAq
-IDgzLjMgPSAxOTE1LjkgTUh6IGJhc2UgZnJlcXVlbmN5CmNwdTI6IE1TUl9JQTMyX1BPV0VSX0NU
-TDogMHgwMDAwMDAwMCAoQzFFIGF1dG8tcHJvbW90aW9uOiBESVNhYmxlZCkKY3B1MjogTVNSX0FU
-T01fQ09SRV9SQVRJT1M6IDB4MDAxNzA2MDIKMiAqIDgzLjMgPSAxNjYuNiBNSHogbWluaW11bSBv
-cGVyYXRpbmcgZnJlcXVlbmN5CjYgKiA4My4zID0gNDk5LjggTUh6IGxvdyBmcmVxdWVuY3kgbW9k
-ZSAoTEZNKQoyMyAqIDgzLjMgPSAxOTE1LjkgTUh6IGJhc2UgZnJlcXVlbmN5CmNwdTI6IE1TUl9B
-VE9NX0NPUkVfVFVSQk9fUkFUSU9TOiAweDE3MTcxNzE3CjIzICogODMuMyA9IDE5MTUuOSBNSHog
-bWF4IHR1cmJvIDQgYWN0aXZlIGNvcmVzCjIzICogODMuMyA9IDE5MTUuOSBNSHogbWF4IHR1cmJv
-IDMgYWN0aXZlIGNvcmVzCjIzICogODMuMyA9IDE5MTUuOSBNSHogbWF4IHR1cmJvIDIgYWN0aXZl
-IGNvcmVzCjIzICogODMuMyA9IDE5MTUuOSBNSHogbWF4IHR1cmJvIDEgYWN0aXZlIGNvcmUKY3B1
-MjogTVNSX1BLR19DU1RfQ09ORklHX0NPTlRST0w6IDB4MDAxNzAwMGYgKFVObG9ja2VkOiBwa2ct
-Y3N0YXRlLWxpbWl0PTE1OiBwYzcpCmNwdTI6IFBPTEw6IENQVUlETEUgQ09SRSBQT0xMIElETEUK
-Y3B1MjogQzE6IE1XQUlUIDB4MDAKY3B1MjogQzZOOiBNV0FJVCAweDU4CmNwdTI6IEM2UzogTVdB
-SVQgMHg1MgpjcHUyOiBjcHVmcmVxIGRyaXZlcjogaW50ZWxfcHN0YXRlCmNwdTI6IGNwdWZyZXEg
-Z292ZXJub3I6IHBlcmZvcm1hbmNlCmNwdWZyZXEgaW50ZWxfcHN0YXRlIG5vX3R1cmJvOiAxCmNw
-dTA6IE1TUl9JQTMyX0VORVJHWV9QRVJGX0JJQVM6IDB4MDAwMDAwMDYgKGJhbGFuY2VkKQpjcHUw
-OiBNU1JfUkFQTF9QT1dFUl9VTklUOiAweDAwMDAwNTA1ICgwLjAzMTI1MCBXYXR0cywgMC4wMDAw
-MzIgSm91bGVzLCAwLjAwMDk3NyBzZWMuKQpjcHUwOiBNU1JfUEtHX1BPV0VSX0xJTUlUOiAweDAw
-Mzg4MGZhIChVTmxvY2tlZCkKY3B1MDogUEtHIExpbWl0ICMxOiBFTmFibGVkICg3LjgxMjUwMCBX
-YXR0cywgMjYyMTQ0LjAwMDAwMCBzZWMsIGNsYW1wIERJU2FibGVkKQpjcHUwOiBQS0cgTGltaXQg
-IzI6IERJU2FibGVkICgwLjAwMDAwMCBXYXR0cywgMC4wMDA5NzcqIHNlYywgY2xhbXAgRElTYWJs
-ZWQpCmNwdTA6IE1TUl9QUDBfUE9XRVJfTElNSVQ6IDB4MDAwMjAwMDAgKFVObG9ja2VkKQpjcHUw
-OiBDb3JlcyBMaW1pdDogRElTYWJsZWQgKDAuMDAwMDAwIFdhdHRzLCAwLjAwMTk1MyBzZWMsIGNs
-YW1wIERJU2FibGVkKQpjcHUwOiBNU1JfSUEzMl9URU1QRVJBVFVSRV9UQVJHRVQ6IDB4MDA2ZTAw
-MDAgKDExMCBDKQo0MC4wMDM4MDcgc2VjCkNvcmUJQ1BVCUF2Z19NSHoJQnVzeSUJQnp5X01IeglU
-U0NfTUh6CUlSUQlTTUkJQzEJQzZOCUM2UwlDMSUJQzZOJQlDNlMlCUNQVSVjMQlDUFUlYzYJTW9k
-JWM2CUNvcmVUbXAJR0ZYJXJjNglQa2clcGM2CVBrZ1dhdHQJQ29yV2F0dAotCS0JNTIyCTI3LjIz
-CTE5MTUJMTkxNwkyODUwNzQJMAk3ODQxMzIJODYzMzYJMTY4MjM1CTMxLjE3CTEzLjQxCTI4Ljg5
-CTMwLjc1CTI2Ljk3CTMuNzUJMzAJMTAwLjAwCTMuNjAJMS4xMgkwLjk0CjAJMAk0MTIJMjEuNTAJ
-MTkxNQkxOTE3CTExMjI5CTAJMTU1ODQwCTEzMjI5CTY5NzQ2CTI0LjY4CTcuOTUJNDYuNTcJMjQu
-MzUJMzUuMjgJMy44MAkyOQkxMDAuMDAJMy42MAkxLjEyCTAuOTQKMQkxCTc2NAkzOS45MQkxOTE0
-CTE5MTcJMjQyNjQ5CTAJMjY5OTI1CTI1MTc5CTMyNDE4CTI2Ljk1CTEzLjQ0CTIwLjUyCTI2LjM4
-CTE5LjI2CTMuODAJMjkKMgkyCTQ3NgkyNC44MgkxOTE1CTE5MTcJMTY1NDkJMAkyMjQzNzcJMjc4
-MzkJMTI2OQk0OC44NQkyMS41Mgk1LjQ0CTQ4LjM2CTE5LjA0CTMuNzAJMzAKMwkzCTQzNQkyMi43
-MAkxOTE1CTE5MTcJMTQ2NDcJMAkxMzM5OTAJMjAwODkJNjQ4MDIJMjQuMTkJMTAuNzQJNDMuMDUJ
-MjMuOTAJMzQuMjgJMy43MAkzMAo=
---000000000000f4a3f505ae2ed049--
+After a reset, the wireless keyboard simply stops working. Rest of
+the devices keep seeing intermittent failure.
+
+I tried various combinations of hubs and USB controllers to see what
+works. MSI B450-A motherboard has USB 3.0 and USB 3.1 controllers. I
+added a USB 2.0 PCI card as well for this test:
+
+03:00.0 USB controller: Advanced Micro Devices, Inc. [AMD] 400 Series Chipset USB 3.1 XHCI Controller (rev 01)
+29:01.0 USB controller: NEC Corporation OHCI USB Controller (rev 43)
+29:01.1 USB controller: NEC Corporation OHCI USB Controller (rev 43)
+29:01.2 USB controller: NEC Corporation uPD72010x USB 2.0 Controller (rev 04)
+2c:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] Matisse USB 3.0 Host Controller
+
+I have a bus powered USB 3.0 hub, a bus powered USB 2.0 hub and a
+self powered USB 2.0 hub built into my monitor.
+
+I have connected my devices directly into the ports on motherboard
+and PCI card as well as into external hub. Here are the results I
+saw when devices wee plugged into various combination of ports:
+
+1. USB 3.0/3.1 controller - does NOT work
+2. USB 2.0 controller - WORKS
+3. USB 3.0/3.1 controller -> Self powered USB 2.0 hub in monitor - does
+   NOT work
+4. USB 3.0/3.1 controller -> bus powered USB 3.0 hub - does NOT work
+5. USB 3.0/3.1 controller -> Bus powered USB 2.0 hub - WORKS
+7. USB 2.0 controller -> Bus powered USB 3.0 hub - does NOT work
+8. USB 2.0 controller -> Bus powered 2.0 hub - Does not work
+
+I narrowed the failure down to following lines (this code was added
+in 5.5 with commit 64cc3f12d1c7 "USB: EHCI: Do not return -EPIPE
+when hub is disconnected"):
+
+drivers/usb/host/ehci-q.c:
+
+ 217                 } else if ((token & QTD_STS_MMF) &&
+ 218                                         (QTD_PID(token) == PID_CODE_IN)) {
+ 219                         status = -EPROTO;
+ 220                 /* CERR nonzero + halt --> stall */
+
+At the time of failure, when we reach this conditional, token is
+either 0x80408d46 or 0x408d46 which means following bits are set:
+
+QTD_STS_STS, QTD_STS_MMF, QTD_STS_HALT, QTD_IOC, QTD_TOGGLE
+
+and 
+
+        QTD_PID = 1
+        QTD_CERR = 3
+        QTD_LENGTH = 0x40 (64)
+
+This causes  the branch "(token & QTD_STS_MMF) && (QTD_PID(token) ==
+PID_CODE_IN" to be taken and qtd_copy_status() returns EPROTO. This
+return value in qh_completions() results in ehci_clear_tt_buffer()
+being called:
+
+drivers/usb/host/ehci-q.c:
+ 472                         /* As part of low/full-speed endpoint-halt processi     ng
+ 473                          * we must clear the TT buffer (11.17.5).
+ 474                          */
+ 475                         if (unlikely(last_status != -EINPROGRESS &&
+ 476                                         last_status != -EREMOTEIO)) {
+ 477                                 /* The TT's in some hubs malfunction when t     hey
+ 478                                  * receive this request following a STALL (     they
+ 479                                  * stop sending isochronous packets).  Sinc     e a
+ 480                                  * STALL can't leave the TT buffer in a bus     y
+ 481                                  * state (if you believe Figures 11-48 - 11     -51
+ 482                                  * in the USB 2.0 spec), we won't clear the      TT
+ 483                                  * buffer in this case.  Strictly speaking      this
+ 484                                  * is a violation of the spec.
+ 485                                  */
+ 486                                 if (last_status != -EPIPE)
+ 487                                         ehci_clear_tt_buffer(ehci, qh, urb,
+ 488                                                         token);
+ 489                         }
+
+It seems like clearing TT buffers in this case is resulting in hub
+hanging. A USB reset gets it going again until we repeat the cycle
+over again. The comment in this code says "The TT's in some hubs
+malfunction when they receive this request following a STALL (they
+stop sending isochronous packets)". That may be what is happening.
+
+Removing the code that returns EPROTO for such case solves the
+problem on my machine (as in the RFC patch) but that probably is not
+the right solution. I do not understand USB protocol well enough to
+propose a better solution. Does anyone have a better idea?
+
+
+Khalid Aziz (1):
+  usb: ehci: Remove erroneous return of EPROTO upon detection of stall 
+
+ drivers/usb/host/ehci-q.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+-- 
+2.25.1
+
