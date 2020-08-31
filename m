@@ -2,182 +2,265 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE55C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3072BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7161720738
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CDD9ulTl"
+	by mail.kernel.org (Postfix) with ESMTP id 01232206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:36:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598859368;
+	bh=AmuiRA9ag6zrrQLhZzSQH64RuSqSCWUPiji2PS7IRfg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GgCrZptUW3X4xazb11oZWbWJffEMC4nHyqHAeUfrg2nekfMXoaxGIDpBYXDM48G68
+	 yGgQhsmqNrlgdTvIAYKUK+Ow/XGYrfgXP9DxtJV8J/QnSHCOwxCqXnmfWuvO6eq56s
+	 AwIIH6GKr/NZKFzWYBwE/rjx2R4Vkz6gP6oioXz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgHaHe5 (ORCPT
+        id S1728004AbgHaHgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:34:57 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:22867 "EHLO m43-7.mailgun.net"
+        Mon, 31 Aug 2020 03:36:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgHaHe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:34:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598859296; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=jgiqhD6mEWmgkZ8iCooIwuov0Mq1aYTRhNXeEovmpSI=; b=CDD9ulTljrHbYxYk9qfBaDq6r3Yq3kPyk+2B3gY3v3W0n4b2OfHkt1juKwg2F96EoLPojqn+
- voLU1OOY2XZlBCsTJ6FavFrBLiWXxZJt8QTMNLOvz+Q7Wk6KWFCRbt4lGNgPB2FXJbNXeXlQ
- +E4d92RssBymTutdHxR2Yn7Uh+I=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f4ca81ea816b7fb48d07ee5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 07:34:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 6A6EEC43395; Mon, 31 Aug 2020 07:34:53 +0000 (UTC)
-Received: from [10.110.39.192] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725794AbgHaHgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:36:00 -0400
+Received: from localhost (unknown [122.171.38.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F497C433CA;
-        Mon, 31 Aug 2020 07:34:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F497C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [RFC v5 4/6] usb: gadget: configfs: Check USB configuration
- before adding
-To:     Peter Chen <peter.chen@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "balbi@kernel.org" <balbi@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "jackp@codeaurora.org" <jackp@codeaurora.org>
-References: <20200829055846.19034-1-wcheng@codeaurora.org>
- <20200829055846.19034-5-wcheng@codeaurora.org>
- <20200831022825.GA15756@b29397-desktop>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <2631cd0b-66d4-aabc-dc41-9ae5e84fa90d@codeaurora.org>
-Date:   Mon, 31 Aug 2020 00:34:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F5A8206EB;
+        Mon, 31 Aug 2020 07:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598859359;
+        bh=AmuiRA9ag6zrrQLhZzSQH64RuSqSCWUPiji2PS7IRfg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=omVR4E1V9p59SGh3NCwkGPbmZ4yk/C/d/XOEDQpdjEleYqYq/n7fV+WAEz8AwOg0o
+         SaApy4rCEULKr1VjvVTTOL0PfAOq180K4h16Ov1mVNF7/k+GlTryeeTwkkS+8xrIeM
+         n5V+9MfMGUv2Yuor0Z1kAymt+BfsndpTc+08KuVQ=
+Date:   Mon, 31 Aug 2020 13:05:54 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Nagarjuna Kristam <nkristam@nvidia.com>
+Cc:     kishon@ti.com, thierry.reding@gmail.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V5 4/7] phy: tegra: xusb: Add soc ops API to enable UTMI
+ PAD protection
+Message-ID: <20200831073554.GF2639@vkoul-mobl>
+References: <1595238948-20531-1-git-send-email-nkristam@nvidia.com>
+ <1595238948-20531-5-git-send-email-nkristam@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200831022825.GA15756@b29397-desktop>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1595238948-20531-5-git-send-email-nkristam@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/30/2020 7:29 PM, Peter Chen wrote:
-> On 20-08-28 22:58:44, Wesley Cheng wrote:
->> Ensure that the USB gadget is able to support the configuration being
->> added based on the number of endpoints required from all interfaces.  This
->> is for accounting for any bandwidth or space limitations.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->> ---
->>  drivers/usb/gadget/configfs.c | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/drivers/usb/gadget/configfs.c b/drivers/usb/gadget/configfs.c
->> index 56051bb97349..7c74c04b1d8c 100644
->> --- a/drivers/usb/gadget/configfs.c
->> +++ b/drivers/usb/gadget/configfs.c
->> @@ -1361,6 +1361,7 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
->>  		struct usb_function *f;
->>  		struct usb_function *tmp;
->>  		struct gadget_config_name *cn;
->> +		unsigned long ep_map = 0;
->>  
->>  		if (gadget_is_otg(gadget))
->>  			c->descriptors = otg_desc;
->> @@ -1390,7 +1391,28 @@ static int configfs_composite_bind(struct usb_gadget *gadget,
->>  				list_add(&f->list, &cfg->func_list);
->>  				goto err_purge_funcs;
->>  			}
->> +			if (f->ss_descriptors) {
->> +				struct usb_descriptor_header **d;
->> +
->> +				d = f->ss_descriptors;
->> +				for (; *d; ++d) {
->> +					struct usb_endpoint_descriptor *ep;
->> +					int addr;
->> +
->> +					if ((*d)->bDescriptorType != USB_DT_ENDPOINT)
->> +						continue;
->> +
->> +					ep = (struct usb_endpoint_descriptor *)*d;
->> +					addr = ((ep->bEndpointAddress & 0x80) >> 3) |
->> +						(ep->bEndpointAddress & 0x0f);
+On 20-07-20, 15:25, Nagarjuna Kristam wrote:
+> When USB charger is enabled, UTMI PAD needs to be protected according
+> to the direction and current level. Add support for the same on Tegra210
+> and Tegra186.
 > 
-> ">> 3" or "<< 3?
+> Signed-off-by: Nagarjuna Kristam <nkristam@nvidia.com>
+> Acked-by: Thierry Reding <treding@nvidia.com>
+> ---
+> V5:
+>  - No changes.
+> ---
+> V4:
+>  - Added Acked-by updates to commit message.
+> ---
+> V3:
+>  - Alligned function and its arguments.
+>  - Fixed other comments from Thierry.
+> ---
+> V2:
+>  - Commit message coorected.
+>  - Patch re-based.
+> ---
+>  drivers/phy/tegra/xusb-tegra186.c | 40 +++++++++++++++++++++++++++++++++++++++
+>  drivers/phy/tegra/xusb-tegra210.c | 32 +++++++++++++++++++++++++++++++
+>  drivers/phy/tegra/xusb.h          | 13 +++++++++++++
+>  3 files changed, 85 insertions(+)
 > 
+> diff --git a/drivers/phy/tegra/xusb-tegra186.c b/drivers/phy/tegra/xusb-tegra186.c
+> index f862254..59b78a7 100644
+> --- a/drivers/phy/tegra/xusb-tegra186.c
+> +++ b/drivers/phy/tegra/xusb-tegra186.c
+> @@ -68,6 +68,13 @@
+>  #define   PORTX_SPEED_SUPPORT_MASK		(0x3)
+>  #define     PORT_SPEED_SUPPORT_GEN1		(0x0)
+>  
+> +#define USB2_BATTERY_CHRG_OTGPADX_CTL1(x)       (0x84 + (x) * 0x40)
+> +#define  PD_VREG                                (1 << 6)
+> +#define  VREG_LEV(x)                            (((x) & 0x3) << 7)
+> +#define  VREG_DIR(x)                            (((x) & 0x3) << 11)
 
-Hi Peter,
+maybe FIELD_GET() would be better, avoids error with shifts
 
-Thanks for your comments.  It should be ">> 3" as we want to utilize the
-corresponding USB_DIR_IN bit in the bitmap to set the correct bit.
-(USB_DIR_IN = 0x80)
+> +#define  VREG_DIR_IN                            VREG_DIR(1)
+> +#define  VREG_DIR_OUT                           VREG_DIR(2)
+> +
+>  #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x)	(0x88 + (x) * 0x40)
+>  #define  HS_CURR_LEVEL(x)			((x) & 0x3f)
+>  #define  TERM_SEL				BIT(25)
+> @@ -289,6 +296,37 @@ static void tegra_phy_xusb_utmi_pad_power_down(struct phy *phy)
+>  	usb2->powered_on = false;
+>  }
+>  
+> +static void
+> +tegra186_xusb_padctl_utmi_pad_set_protection(struct tegra_xusb_port *port,
+> +					     int level,
+> +					     enum tegra_vbus_dir dir)
+> +{
+> +	u32 value;
+> +	struct tegra_xusb_padctl *padctl = port->padctl;
+> +	unsigned int index = port->index;
+> +
+> +	value = padctl_readl(padctl, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+> +
+> +	if (level < 0) {
+> +		/* disable pad protection */
+> +		value |= PD_VREG;
+> +		value &= ~VREG_LEV(~0);
+> +		value &= ~VREG_DIR(~0);
+> +	} else {
+> +		if (dir == TEGRA_VBUS_SOURCE)
+> +			value |= VREG_DIR_OUT;
+> +		else if (dir == TEGRA_VBUS_SINK)
+> +			value |= VREG_DIR_IN;
+> +
+> +		value &= ~PD_VREG;
+> +		value &= ~VREG_DIR(~0);
+> +		value &= ~VREG_LEV(~0);
+> +		value |= VREG_LEV(level);
 
->> +					set_bit(addr, &ep_map);
-> 
-> You want to record all endpoints on ep_map? Considering there are
-> four EP_IN (1-4), and four EP_OUT (1-4), what the value of ep_map
-> would like?
-> 
+This would look much cleaner with FIELD_PREP() or u32_encoded_bits()
 
-So for example, if a configuration uses EP8IN and EP9OUT, then the
-ep_map will look like:
+> +	}
+> +
+> +	padctl_writel(padctl, value, USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+> +}
+> +
+>  static int tegra186_xusb_padctl_vbus_override(struct tegra_xusb_padctl *padctl,
+>  					       bool status)
+>  {
+> @@ -935,6 +973,8 @@ static const struct tegra_xusb_padctl_ops tegra186_xusb_padctl_ops = {
+>  	.vbus_override = tegra186_xusb_padctl_vbus_override,
+>  	.utmi_pad_power_on = tegra_phy_xusb_utmi_pad_power_on,
+>  	.utmi_pad_power_down = tegra_phy_xusb_utmi_pad_power_down,
+> +	.utmi_pad_set_protection =
+> +			tegra186_xusb_padctl_utmi_pad_set_protection,
 
-EP8-IN:
-addr = ((0x88 & 0x80) >> 3) | (0x88 & 0xf) --> 0x18
+single line please
 
-EP9-OUT:
-addr = ((0x9 & 0x80) >> 3) | (0x9 & 0xf) --> 0x9
+>  };
+>  
+>  #if IS_ENABLED(CONFIG_ARCH_TEGRA_186_SOC)
+> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-tegra210.c
+> index 2e5f71c..3aff284 100644
+> --- a/drivers/phy/tegra/xusb-tegra210.c
+> +++ b/drivers/phy/tegra/xusb-tegra210.c
+> @@ -74,6 +74,8 @@
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_MASK 0x3
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV_VAL 0x1
+>  #define XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18 (1 << 6)
+> +#define USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV(x) (((x) & 0x3) << 7)
+> +#define USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_DIR(x) (((x) & 0x3) << 11)
+>  
+>  #define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x088 + (x) * 0x40)
+>  #define XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD_ZI (1 << 29)
+> @@ -1116,6 +1118,34 @@ static void tegra210_usb2_pad_power_down(struct phy *phy)
+>  	usb2->powered_on = false;
+>  }
+>  
+> +static void
+> +tegra210_xusb_padctl_utmi_pad_set_protection(struct tegra_xusb_port *port,
+> +					     int level,
+> +					     enum tegra_vbus_dir dir)
 
-ep_map = ep_map = 0x01000200
+single line and aligned to preceeding parenthesis (hint checkpatch.pl
+with --strict option tells you so)
 
-The lower 16 bits will carry the OUT endpoints, whereas the upper 16
-bits are the IN endpoints. (ie bit16 = ep0in, bit0 = ep0out)
 
->> +				}
->> +			}
->>  		}
->> +		ret = usb_gadget_check_config(cdev->gadget, ep_map);
->> +		if (ret)
->> +			goto err_purge_funcs;
->> +
-> 
-> You may move this patch after your 4nd patch to avoid "git bisect"
-> issue.
-> 
+> +{
+> +	u32 value;
+> +	struct tegra_xusb_padctl *padctl = port->padctl;
+> +	unsigned int index = port->index;
+> +
+> +	value = padctl_readl(padctl,
+> +			     XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
 
-Sure, thanks for the suggestion, will do that in the next rev.
+Single line please
 
-Thanks
-Wesley
+> +
+> +	if (level < 0) {
+> +		/* disable pad protection */
+> +		value |= XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
+> +		value &= USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV(~0);
+> +		value &= ~USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_DIR(~0);
+> +	} else {
+> +		value &= ~XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_FIX18;
+> +		value &= ~USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_DIR(~0);
+> +		value &= USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV(~0);
+> +		value |= USB2_BATTERY_CHRG_OTGPAD_CTL1_VREG_LEV(level);
+> +	}
+> +
+> +	padctl_writel(padctl, value,
+> +		      XUSB_PADCTL_USB2_BATTERY_CHRG_OTGPADX_CTL1(index));
+> +}
+> +
+>  static int tegra210_usb2_phy_set_mode(struct phy *phy, enum phy_mode mode,
+>  				      int submode)
+>  {
+> @@ -2291,6 +2321,8 @@ static const struct tegra_xusb_padctl_ops tegra210_xusb_padctl_ops = {
+>  	.utmi_port_reset = tegra210_utmi_port_reset,
+>  	.utmi_pad_power_on = tegra210_usb2_pad_power_on,
+>  	.utmi_pad_power_down = tegra210_usb2_pad_power_down,
+> +	.utmi_pad_set_protection =
+> +			tegra210_xusb_padctl_utmi_pad_set_protection,
 
->>  		usb_ep_autoconfig_reset(cdev->gadget);
->>  	}
->>  	if (cdev->use_os_string) {
->> -- 
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
->> a Linux Foundation Collaborative Project
->>
-> 
+Here too
+
+>  };
+>  
+>  static const char * const tegra210_xusb_padctl_supply_names[] = {
+> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+> index 6995fc4..475bcc6 100644
+> --- a/drivers/phy/tegra/xusb.h
+> +++ b/drivers/phy/tegra/xusb.h
+> @@ -259,6 +259,17 @@ to_sata_pad(struct tegra_xusb_pad *pad)
+>   */
+>  struct tegra_xusb_port_ops;
+>  
+> +/*
+> + * Tegra OTG port VBUS direction:
+> + * default (based on port capability) or
+> + * as source or sink
+> + */
+> +enum tegra_vbus_dir {
+> +	TEGRA_VBUS_DEFAULT,
+> +	TEGRA_VBUS_SOURCE,
+> +	TEGRA_VBUS_SINK
+> +};
+> +
+>  struct tegra_xusb_port {
+>  	struct tegra_xusb_padctl *padctl;
+>  	struct tegra_xusb_lane *lane;
+> @@ -398,6 +409,8 @@ struct tegra_xusb_padctl_ops {
+>  	int (*utmi_port_reset)(struct phy *phy);
+>  	void (*utmi_pad_power_on)(struct phy *phy);
+>  	void (*utmi_pad_power_down)(struct phy *phy);
+> +	void (*utmi_pad_set_protection)(struct tegra_xusb_port *port,
+> +					int level, enum tegra_vbus_dir dir);
+>  };
+>  
+>  struct tegra_xusb_padctl_soc {
+> -- 
+> 2.7.4
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+~Vinod
