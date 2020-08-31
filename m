@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3486DC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6E9C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA7D020EDD
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22F4520EDD
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598896907;
-	bh=ZpEymyqav3YyMpdsc6ES/niPTHg4XJIiINsSUIRbYEM=;
+	s=default; t=1598896912;
+	bh=OV4rdtDJfndd8yIlNe+o4Ki+VpzlQTxASJjsVeMAmWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sBha3MYmm5aiDG6L6BSodNc1L6uOijU3jAcRnesp5n667H57TSj1kHGu6+DopKd5r
-	 1gIX303DHsw10CdkeJiB0YLJ8BvxSGeRo50RKFmtHQBvx5tKwwWzk6V1dCthK+sNrA
-	 6hpevRFD/ejkoyw8KtUooEA5EV39xOaSpB5fntcM=
+	b=nzXvm8xkjgTe9dWwViqELPzY/Pl4DmnSDd6KV0T5avH+cG/n6Kc3FlwO/N3SlfQ3X
+	 I9B1+nHlrVr2QC42/Pxs/8zPqNnCIZTgLoZW2DDaXLRy2sMpG5m96y4mTTAkhhoXPV
+	 PiK5WXnaCP0YsFBlXVgX9G9I1gP9cjbuERwkCMdE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbgHaSBo (ORCPT
+        id S1729058AbgHaSBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:01:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36100 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:01:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbgHaSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728772AbgHaSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:01:26 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5C0C215A4;
-        Mon, 31 Aug 2020 18:01:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7780C21707;
+        Mon, 31 Aug 2020 18:01:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598896884;
-        bh=ZpEymyqav3YyMpdsc6ES/niPTHg4XJIiINsSUIRbYEM=;
+        s=default; t=1598896886;
+        bh=OV4rdtDJfndd8yIlNe+o4Ki+VpzlQTxASJjsVeMAmWQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c3ODGLOpgu8VVg1oeFwi+e1udzdL0dGBwE+29tTqmqFFMnjHNIffWbMNK8N/I5iNc
-         Wtq7TjxwUj6A46BYatfnL2WBZEcXvrEqUYnATVf2DDYRMkmvy/+L3cpGpG5x2rfBDE
-         8rNJN8lrPDkgmJotUOqoa+98SKzDUqvG/7IYqgZs=
+        b=WBMhrXPqNrjbNozJLgrbF0I9Daiv9qPQCga4nI/foekBthdIzdIyliuhJM4c6nC74
+         k4EH+rrft/w1BsIlACxqq+Z2YsE4kZksM2aG40aLsYBh569NyPSLqL2KEkW7N7n1rb
+         bssE3AD2+5BPYW3P6rHkT2kjtbM2xUAmOUqzJDUU=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 13/24] rcu: Add READ_ONCE() to rcu_do_batch() access to rcu_kick_kthreads
-Date:   Mon, 31 Aug 2020 11:01:05 -0700
-Message-Id: <20200831180116.32690-13-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 19/24] rcu/nocb: Add a warning for non-GP kthread running GP code
+Date:   Mon, 31 Aug 2020 11:01:11 -0700
+Message-Id: <20200831180116.32690-19-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180050.GA32590@paulmck-ThinkPad-P72>
 References: <20200831180050.GA32590@paulmck-ThinkPad-P72>
@@ -61,36 +61,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Given that sysfs can change the value of rcu_kick_kthreads at any time,
-this commit adds a READ_ONCE() to the sole access to that variable.
+This commit increases RCU's ability to defend itself by emitting a warning
+if one of the nocb CB kthreads invokes the GP kthread's wait function.
+This warning augments a similar check that is carried out at the end
+of rcutorture testing and when RCU CPU stall warnings are emitted.
+The problem with those checks is that the miscreants have long since
+departed and disposed of any and all evidence.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree_stall.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/rcu/tree_plugin.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/rcu/tree_stall.h b/kernel/rcu/tree_stall.h
-index b5d3b47..a1780a6 100644
---- a/kernel/rcu/tree_stall.h
-+++ b/kernel/rcu/tree_stall.h
-@@ -158,7 +158,7 @@ static void rcu_stall_kick_kthreads(void)
- {
- 	unsigned long j;
- 
--	if (!rcu_kick_kthreads)
-+	if (!READ_ONCE(rcu_kick_kthreads))
- 		return;
- 	j = READ_ONCE(rcu_state.jiffies_kick_kthreads);
- 	if (time_after(jiffies, j) && rcu_state.gp_kthread &&
-@@ -580,7 +580,7 @@ static void check_cpu_stall(struct rcu_data *rdp)
- 	unsigned long js;
- 	struct rcu_node *rnp;
- 
--	if ((rcu_stall_is_suppressed() && !rcu_kick_kthreads) ||
-+	if ((rcu_stall_is_suppressed() && !READ_ONCE(rcu_kick_kthreads)) ||
- 	    !rcu_gp_in_progress())
- 		return;
- 	rcu_stall_kick_kthreads();
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 4d63ee3..cb1e8c8 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -1926,6 +1926,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
+ 	 * nearest grace period (if any) to wait for next.  The CB kthreads
+ 	 * and the global grace-period kthread are awakened if needed.
+ 	 */
++	WARN_ON_ONCE(my_rdp->nocb_gp_rdp != my_rdp);
+ 	for (rdp = my_rdp; rdp; rdp = rdp->nocb_next_cb_rdp) {
+ 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("Check"));
+ 		rcu_nocb_lock_irqsave(rdp, flags);
 -- 
 2.9.5
 
