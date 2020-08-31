@@ -2,126 +2,120 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD94EC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42BFCC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87AF52076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:15:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uTtwIMq+"
+	by mail.kernel.org (Postfix) with ESMTP id 185402076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:19:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598836759;
+	bh=mgkYqqYUY/6gm3kecIYTT61uw6xviBxBd6zQOEXZCAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CMDMe/E8L76xkdSxNTO83RklltYU69+fZnvn5/tdlBqVnFSD3wqS7HyxFyl4We+ns
+	 kxlm6L+Ojgw0SZHAsD6/mr+1EuDeIUdKqEx4kqFwg2iwXDyE5GDuwdpJcbIfRaK7od
+	 o7dUhUYRglaXn4CHsSNMoWTHZHUwJnMLU0GG+ia0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbgHaBPl (ORCPT
+        id S1726771AbgHaBTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:15:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726452AbgHaBPe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:15:34 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC37DC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:15:33 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id v12so4766677ljc.10
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:15:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yqUWQbTaTXuhonfPRcWx/5CuPzZ/iSXPPKYi6cmnxaA=;
-        b=uTtwIMq+zW+o4aunGvghOfJaFbl+9Nfl8a6X133j24hZCsYvegdEvYEDZ1cn6YiXL2
-         oc0Z1pG8TgwaNp67lsAaDhKMWF8KX5u4VRWuwQOfcQyAnXOmB2GQuP6H7vnNDAF/n3fO
-         RB3zKm7wy70tJHVT7bFJM1uufiTgK/XZ10tbz6uNhmpSt3Xv+519kh34Dqa0HyihLwmy
-         wZ+pKEINVkQzqtc6q/kevGuDtfG6m4jit8IRlQhQfPw+W/fw8Fnbcs+Blu/X/lQN8n+d
-         qO2dnfbKL2xqGMw2yuF/vWkz4qDVy0OXAHJQOxp6b36uHo99WHRyooVIEzQRxw9jxxq9
-         gowQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yqUWQbTaTXuhonfPRcWx/5CuPzZ/iSXPPKYi6cmnxaA=;
-        b=HCMPxUykUr6cU7BWc42N6pUPCVGm8lDtX8k43FXjoOZVkbHBg/TffWJlpOn4dpQw8m
-         /ctuULbNzMf9R7nmErlCYY+1xKVi8+4QhVeiS+i5CwWUK1MSt9khvm2BFzbxpAqAHBy1
-         LlvFTyBVMgNsrD4h/e+qK3HcHksVywaI2VAxygaXsWl/wwzuhiFbA6Js0JYHs6hSDfm8
-         VPSS/7Vn7EQFfgMQwobjqh9XYgQLrA2ZZjMLpSL2HdzdW7EfiIrLGYojY4pMwBLVaMF7
-         jmQqDURF0K9hhl8+s2uW7G32puV+a7LJCzomQqRoGGTRZia/gTw3fPOJAEAFldG/JJHC
-         4xvw==
-X-Gm-Message-State: AOAM533VV417+oKE9eY/KLCmj/Oum4VXz4DpLWiKy3XVKzdQiG/HoOiW
-        OcHpEnrd7WjZm92J1GW/pf379uSHHA6IC/Gur65Uvw==
-X-Google-Smtp-Source: ABdhPJyrdu517siGjMDH4/Hzxq0grj9bjXKHwadgRENiyu81gHSD9vEvdAEiN4XvZknaPnf8wkHI2CH6MRE+WZGG6iU=
-X-Received: by 2002:a2e:92cd:: with SMTP id k13mr2330316ljh.138.1598836531623;
- Sun, 30 Aug 2020 18:15:31 -0700 (PDT)
+        Sun, 30 Aug 2020 21:19:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbgHaBTO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 21:19:14 -0400
+Received: from dragon (80.251.214.228.16clouds.com [80.251.214.228])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66E5F2076D;
+        Mon, 31 Aug 2020 01:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598836754;
+        bh=mgkYqqYUY/6gm3kecIYTT61uw6xviBxBd6zQOEXZCAM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GXNEbO+SnauOYu3JJOlhkAe3HD9/ab4KZUF0PKhs1z2rbVWpvjXn6bmcQkGQgCMro
+         cRY4/DUigBPD/m5bIGkMpap2xO0PLtqJDZDbl7GstMwkDEkOuzBKFkV4ji1ZbpDsHB
+         jovmN2oGap9fbOAWOzezTNuR4KstOSl97MprfXhI=
+Date:   Mon, 31 Aug 2020 09:19:07 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, robh@kernel.org,
+        kernel@puri.sm, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, mchehab@kernel.org,
+        Anson.Huang@nxp.com, agx@sigxcpu.org, angus@akkea.ca,
+        broonie@kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 2/3] MAINTAINERS: Add Purism Librem 5 section to the
+ list
+Message-ID: <20200831011906.GB4488@dragon>
+References: <20200821121755.24599-1-martin.kepplinger@puri.sm>
+ <20200821121755.24599-2-martin.kepplinger@puri.sm>
+ <20200830131459.GL32096@dragon>
+ <1d7c6ef2794bedca7e3164e5435f46864eacddfa.camel@perches.com>
 MIME-Version: 1.0
-References: <20200829020002.GC3265@brightrain.aerifal.cx> <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
- <20200830163657.GD3265@brightrain.aerifal.cx> <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
- <20200830184334.GE3265@brightrain.aerifal.cx> <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
- <20200830200029.GF3265@brightrain.aerifal.cx>
-In-Reply-To: <20200830200029.GF3265@brightrain.aerifal.cx>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 31 Aug 2020 03:15:04 +0200
-Message-ID: <CAG48ez2tOBAKLaX-siRZPCLiiy-s65w2mFGDGr4q2S7WFxpK1A@mail.gmail.com>
-Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-To:     Rich Felker <dalias@libc.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1d7c6ef2794bedca7e3164e5435f46864eacddfa.camel@perches.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 10:00 PM Rich Felker <dalias@libc.org> wrote:
-> On Sun, Aug 30, 2020 at 09:02:31PM +0200, Jann Horn wrote:
-> > On Sun, Aug 30, 2020 at 8:43 PM Rich Felker <dalias@libc.org> wrote:
-> > > On Sun, Aug 30, 2020 at 08:31:36PM +0200, Jann Horn wrote:
-> > > > On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > So just checking IS_APPEND in the code paths used by
-> > > > > pwritev2 (and erroring out rather than silently writing output at the
-> > > > > wrong place) should suffice to preserve all existing security
-> > > > > invariants.
-> > > >
-> > > > Makes sense.
-> > >
-> > > There are 3 places where kiocb_set_rw_flags is called with flags that
-> > > seem to be controlled by userspace: aio.c, io_uring.c, and
-> > > read_write.c. Presumably each needs to EPERM out on RWF_NOAPPEND if
-> > > the underlying inode is S_APPEND. To avoid repeating the same logic in
-> > > an error-prone way, should kiocb_set_rw_flags's signature be updated
-> > > to take the filp so that it can obtain the inode and check IS_APPEND
-> > > before accepting RWF_NOAPPEND? It's inline so this should avoid
-> > > actually loading anything except in the codepath where
-> > > flags&RWF_NOAPPEND is nonzero.
-> >
-> > You can get the file pointer from ki->ki_filp. See the RWF_NOWAIT
-> > branch of kiocb_set_rw_flags().
->
-> Thanks. I should have looked for that. OK, so a fixup like this on top
-> of the existing patch?
->
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index 473289bff4c6..674131e8d139 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -3457,8 +3457,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
->                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
->         if (flags & RWF_APPEND)
->                 ki->ki_flags |= IOCB_APPEND;
-> -       if (flags & RWF_NOAPPEND)
-> +       if (flags & RWF_NOAPPEND) {
-> +               if (IS_APPEND(file_inode(ki->ki_filp)))
-> +                       return -EPERM;
->                 ki->ki_flags &= ~IOCB_APPEND;
-> +       }
->         return 0;
->  }
->
-> If this is good I'll submit a v2 as the above squashed with the
-> original patch.
+On Sun, Aug 30, 2020 at 08:32:01AM -0700, Joe Perches wrote:
+> On Sun, 2020-08-30 at 21:15 +0800, Shawn Guo wrote:
+> > On Fri, Aug 21, 2020 at 02:17:54PM +0200, Martin Kepplinger wrote:
+> > > Add development information for the devicetree files for hardware
+> > > by Purism SPC.
+> > > 
+> > > Signed-off-by: Martin Kepplinger <martin.kepplinger@puri.sm>
+> > 
+> > I decided to drop this patch from my queue, as I took the suggestion
+> > from Joe and sent a patch to have get_maintainer report email address
+> > in the dts file.
+> 
+> It's OK to find maintainers in files, but what about the
+> B: bug reporting and T: source code repository location lines,
+> 
+> Those seem useful.
 
-Looks good to me.
+Hmm, I doubt they are practically useful for just a number of dts files.
+They are more used for out-of-tree Librem5 kernel drivers, I guess.
+
+Shawn
+
+> 
+> > > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+> > > @@ -14061,6 +14061,13 @@ T:	git git://linuxtv.org/media_tree.git
+> > >  F:	Documentation/admin-guide/media/pulse8-cec.rst
+> > >  F:	drivers/media/cec/usb/pulse8/
+> > >  
+> > > +PURISM LIBREM 5
+> > > +M:	Purism Kernel Team <kernel@puri.sm>
+> 
+> People feel like their mails go into a void when no
+> responses happen after sending to nameless addresses.
+> 
+> It's better to have a named individual as a maintainer
+> rather than an unspecified exploder address.
+> 
+> It's OK to have both, but just the exploder doesn't
+> really have that much value as it's faceless.
+> 
+> > > +S:	Supported
+> > > +B:	https://source.puri.sm/Librem5/linux-next/issues
+> > > +T:	https://source.puri.sm/Librem5/linux-next
+> 
+> This T: line should be something else.
+> 
+> Perhaps
+> W;	https://source.puri.sm/Librem5/linux-next
+> T:	git https://source.puri.sm/Librem5/linux-next.git
+> 
+> > > +F:	arch/arm64/boot/dts/freescale/imx8mq-librem5*
+> 
+> 
