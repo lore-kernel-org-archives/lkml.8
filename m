@@ -2,363 +2,167 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC19C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39583C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58CF42098B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110B72098B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t0MfFI/V"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Fczk9IkS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHaLxm (ORCPT
+        id S1727044AbgHaLxx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:53:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49692 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgHaLxl (ORCPT
+        Mon, 31 Aug 2020 07:53:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29898 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726121AbgHaLxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:53:45 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VBl3E9112787;
         Mon, 31 Aug 2020 07:53:41 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EECDC061573;
-        Mon, 31 Aug 2020 04:53:39 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id n22so716725edt.4;
-        Mon, 31 Aug 2020 04:53:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GXk7qI7N4bQmfsEAs5tr94//1pxOpXUujDZHPwZhTbY=;
-        b=t0MfFI/VvF3AgjVOr2OHiF3lYvL3eCHzR1fJ2mOyq+lHuQrkRAs35aw3SNjCdGXCn6
-         uj2iNqgITBUKQyXGZIZMdsxpN6G4BNcrUCJEImuqTEtCfLAc6yxWChJyc/7TQEEOnYzl
-         Ifty2wQ5KO8foMvO4QuEfGxL2tAaQHxnwYkkvy09LcqbZFnUy2qWnJtMA2RhQv6J8MtO
-         LiPeEtHz3Xge7bpIJNEsYpGErrcPGmYxPUGmDqdjkVAybBXl0YSlk5YxN1ZrtVfUIp89
-         gFxjKFkyEVdwjPpDT+cD8Dh8iyiwJRQb6V4LiXqsj6M2gjthUkbOfjHyGHog6h76d7hO
-         5JiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GXk7qI7N4bQmfsEAs5tr94//1pxOpXUujDZHPwZhTbY=;
-        b=X6UpsrDFcl/JI1QDn8Ur4lHEuQx+AZZZpJIZoMzxvzwRSQTLLfC5mf05tQ16Qm5ts3
-         fV34BHtyeRXLuLAhMdtCBLiFJLs9k3zqLdSd0NU4860r0llj8YeMeXgINPzgpWNUu5tr
-         YZLrQF3V4VtqbKpYNgzLngGbIAbCYiFdoXjF35vWUpMwN4HkJJIR6UeEE41d4Fj39Ffb
-         As5FTGMuvmLU3UMI/q1r+JQzj5G/inOgE5g/8J7gnUJxG0d8SV/J+oGDNLoTcLVIkp/2
-         +fmPTUapLkhGHXio+Nzv1oo6U1vj0de/sMJ4un0D9kcacRWVdxqFaALelnm1Ps3KjdQ6
-         fvAg==
-X-Gm-Message-State: AOAM532HSUM3GfCPtf3bEqrMHLjOFtVfbrUXbf2pHaw1XXhqNq0IXEN/
-        6FyGGHpL1rVM+YA0kKWadBA=
-X-Google-Smtp-Source: ABdhPJzkhTekhK2NnvINKM71d6x+uStF50c9YcO/gEbkyLskv8ZfDqA1DyhgZbQXKcC8xiR1gNfbww==
-X-Received: by 2002:a05:6402:10d3:: with SMTP id p19mr916991edu.380.1598874817936;
-        Mon, 31 Aug 2020 04:53:37 -0700 (PDT)
-Received: from localhost ([62.96.65.119])
-        by smtp.gmail.com with ESMTPSA id g25sm7328404edp.22.2020.08.31.04.53.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 04:53:36 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 13:53:30 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     JC Kuo <jckuo@nvidia.com>
-Cc:     gregkh@linuxfoundation.org, robh@kernel.org, jonathanh@nvidia.com,
-        kishon@ti.com, linux-tegra@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, nkristam@nvidia.com
-Subject: Re: [PATCH v2 04/12] phy: tegra: xusb: t210: add lane_iddq operations
-Message-ID: <20200831115330.GB1689119@ulmo>
-References: <20200831044043.1561074-1-jckuo@nvidia.com>
- <20200831044043.1561074-5-jckuo@nvidia.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=dWs1aPRnbLqL7dCuJTLoW8QWOr4jUzutJnEADk/bUYg=;
+ b=Fczk9IkS8Y0OufXLWLcK5iaQTBa5nwAvb4rUiEBtaoUFAnxUlYHyk0BjQooYi6dbi3sE
+ nS7j45CnMsMSIk+dr6v/RNBbT/VM0IoDbQh4gcY/HQMFlKhC2d5nwnxDaACsdevTwL3Z
+ OMlcuk/hzWZWjTruTDj669hgTdIkD1um7nVNJjZ5SekUaw6Y7XvRp5QOdjONT0gAhrCf
+ L8p0B3tGVhGQhjh6F6d72XgXU/VI4+JOZFLgj5tu6Tos0/reVJJo91qgDAt6IQzjMtN3
+ w108LpExO+iZDoxogncWjACxZD7E5K+U3epgOWAKlG1tSRbb/tT0ZHJRPnvIAv51h9/1 /Q== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3390mw030g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 07:53:41 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07VBlnLg009755;
+        Mon, 31 Aug 2020 11:53:40 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma04ams.nl.ibm.com with ESMTP id 337en823vd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 11:53:39 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07VBrbAd31523170
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 11:53:37 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30ABB4203F;
+        Mon, 31 Aug 2020 11:53:37 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9962242041;
+        Mon, 31 Aug 2020 11:53:36 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.20.219])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 31 Aug 2020 11:53:36 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
+ folding
+To:     Gerald Schaefer <gerald.schaefer@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Message-ID: <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
+Date:   Mon, 31 Aug 2020 13:53:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+In-Reply-To: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ZoaI/ZTpAVc4A5k6"
-Content-Disposition: inline
-In-Reply-To: <20200831044043.1561074-5-jckuo@nvidia.com>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-31_04:2020-08-31,2020-08-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
+ suspectscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
+ impostorscore=0 bulkscore=0 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008310062
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ZoaI/ZTpAVc4A5k6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Aug 31, 2020 at 12:40:35PM +0800, JC Kuo wrote:
-> As per Tegra210 TRM, before changing lane assignments, driver should
-> keep lanes in IDDQ and sleep state; after changing lane assignments,
-> driver should bring lanes out of IDDQ.
-> This commit implements the required operations.
->=20
-> Signed-off-by: JC Kuo <jckuo@nvidia.com>
-> ---
->  drivers/phy/tegra/xusb-tegra210.c | 94 +++++++++++++++++++++++++++++++
->  drivers/phy/tegra/xusb.c          |  6 ++
->  drivers/phy/tegra/xusb.h          |  4 +-
->  3 files changed, 103 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-t=
-egra210.c
-> index 3a2d9797fb9f..fe1ab440424d 100644
-> --- a/drivers/phy/tegra/xusb-tegra210.c
-> +++ b/drivers/phy/tegra/xusb-tegra210.c
-> @@ -198,6 +198,18 @@
->  #define XUSB_PADCTL_UPHY_MISC_PAD_CTL1_AUX_RX_TERM_EN BIT(18)
->  #define XUSB_PADCTL_UPHY_MISC_PAD_CTL1_AUX_RX_MODE_OVRD BIT(13)
-> =20
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_PX_CTL2(x) (0x464 + (x) * 0x40)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ BIT(0)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ_OVRD BIT(1)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_MASK (0x3 << 4)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_VAL (0x3 << 4)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_PWR_OVRD BIT(24)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ BIT(8)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ_OVRD BIT(9)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_MASK (0x3 << 12)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_VAL (0x3 << 12)
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_PWR_OVRD BIT(25)
-> +
->  #define XUSB_PADCTL_UPHY_PLL_S0_CTL1 0x860
-> =20
->  #define XUSB_PADCTL_UPHY_PLL_S0_CTL2 0x864
-> @@ -209,6 +221,7 @@
->  #define XUSB_PADCTL_UPHY_PLL_S0_CTL8 0x87c
-> =20
->  #define XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL1 0x960
-> +#define XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL2 0x964
-> =20
->  #define XUSB_PADCTL_UPHY_USB3_PADX_ECTL1(x) (0xa60 + (x) * 0x40)
->  #define XUSB_PADCTL_UPHY_USB3_PAD_ECTL1_TX_TERM_CTRL_SHIFT 16
-> @@ -1636,6 +1649,63 @@ static const struct tegra_xusb_pad_soc tegra210_hs=
-ic_pad =3D {
->  	.ops =3D &tegra210_hsic_ops,
->  };
-> =20
-> +static void
-> +tegra210_uphy_lane_iddq_enable(struct tegra_xusb_padctl *padctl, unsigne=
-d lane)
-> +{
-> +	u32 val, offset;
-> +
-> +	if (lane <=3D 6)
-> +		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_PX_CTL2(lane);
-> +	else if (lane =3D=3D 7)
-> +		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL2;
-> +	else {
-> +		WARN(true, "invalid lane %u\n", lane);
-> +		return;
-> +	}
-> +
-> +	val =3D padctl_readl(padctl, offset);
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ_OVRD;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ_OVRD;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_PWR_OVRD;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_PWR_OVRD;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ;
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_MASK;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_VAL;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ;
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_MASK;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_VAL;
-> +	padctl_writel(padctl, val, offset);
-> +}
-> +
-> +static void
-> +tegra210_uphy_lane_iddq_disable(struct tegra_xusb_padctl *padctl, unsign=
-ed lane)
-> +{
-> +	u32 val, offset;
-> +
-> +	if (lane <=3D 6)
-> +		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_PX_CTL2(lane);
-> +	else if (lane =3D=3D 7)
-> +		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL2;
-> +	else {
-> +		WARN(true, "invalid lane %d\n", lane);
-> +		return;
-> +	}
-> +
-> +	val =3D padctl_readl(padctl, offset);
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ_OVRD;
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ_OVRD;
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_PWR_OVRD;
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_PWR_OVRD;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ;
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_MASK;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_VAL;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ;
-> +	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_MASK;
-> +	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_VAL;
-> +	padctl_writel(padctl, val, offset);
-> +}
-> +
-> +
->  static const char *tegra210_pcie_functions[] =3D {
->  	"pcie-x1",
->  	"usb3-ss",
-> @@ -1808,9 +1878,21 @@ static void tegra210_pcie_lane_remove(struct tegra=
-_xusb_lane *lane)
->  	kfree(pcie);
->  }
-> =20
-> +static void tegra210_pcie_lane_iddq_enable(struct tegra_xusb_lane *lane)
-> +{
-> +	tegra210_uphy_lane_iddq_enable(lane->pad->padctl, lane->index);
-> +}
-> +
-> +static void tegra210_pcie_lane_iddq_disable(struct tegra_xusb_lane *lane)
-> +{
-> +	tegra210_uphy_lane_iddq_disable(lane->pad->padctl, lane->index);
-> +}
-> +
->  static const struct tegra_xusb_lane_ops tegra210_pcie_lane_ops =3D {
->  	.probe =3D tegra210_pcie_lane_probe,
->  	.remove =3D tegra210_pcie_lane_remove,
-> +	.iddq_enable =3D tegra210_pcie_lane_iddq_enable,
-> +	.iddq_disable =3D tegra210_pcie_lane_iddq_disable,
->  };
-> =20
->  static int tegra210_pcie_phy_init(struct phy *phy)
-> @@ -1971,9 +2053,21 @@ static void tegra210_sata_lane_remove(struct tegra=
-_xusb_lane *lane)
->  	kfree(sata);
->  }
-> =20
-> +static void tegra210_sata_lane_iddq_enable(struct tegra_xusb_lane *lane)
-> +{
-> +	tegra210_uphy_lane_iddq_enable(lane->pad->padctl, lane->index + 7);
-> +}
-> +
-> +static void tegra210_sata_lane_iddq_disable(struct tegra_xusb_lane *lane)
-> +{
-> +	tegra210_uphy_lane_iddq_disable(lane->pad->padctl, lane->index + 7);
-> +}
+On 28.08.20 16:03, Gerald Schaefer wrote:
+[...]
+> We came up with two possible fix-ups, both will introduce some gup-specific
+> helper functions, which will have no effect on other archs than s390.
+> 
+> Patch 1 is the solution that has already been discussed in
+> https://lkml.kernel.org/r/20190418100218.0a4afd51@mschwideX1
+> It will additionally pass along pXd pointers in gup_pXd_range, and
+> also introduce pXd_offset_orig for s390, which takes an additional
+> pXd entry value parameter. This allows correctly returning / incrementing
+> pointers while still preseving the READ_ONCE logic for gup_fast.
+> 
+> Patch 2 would instead introduce new gup_pXd_addr_end helpers, which take
+> an additional pXd entry value parameter, that can be used on s390
+> to determine the correct page table level and return corresponding
+> end / boundary. With that, the pointer iteration will always
+> happen in gup_pgd_range.
+> 
 
-This looks like abstraction at the wrong level. You introduce this
-arbtitrary offset 7 to differentiate between the two types, whereas what
-you really only seem to be after is to get the correct offset.
+> Comments / preferences are welcome. As a last resort, we might also
+> revert back to the s390-specific gup_fast code, if none of the options
+> are agreeable.
 
-Can't we instead make tegra210_uphy_lane_iddq_{enable,disable}() take
-the offset instead and push the logic to pick the offset into the
-callers? We could then have an extra helper that determines the offset
-=66rom the lane if we want to avoid duplicating that logic.
-
-Or perhaps an even better way would be to store the offset to this MISC
-register in struct tegra_xusb_lane_soc? Something like this perhaps:
-
-    struct tegra_xusb_lane_soc {
-        ...
-        struct {
-            unsigned int misc;
-        } regs;
-    };
-
-That way we don't even have to go through two layers but instead can
-operate on the struct tegra_xusb_lane directly.
-
-> +
->  static const struct tegra_xusb_lane_ops tegra210_sata_lane_ops =3D {
->  	.probe =3D tegra210_sata_lane_probe,
->  	.remove =3D tegra210_sata_lane_remove,
-> +	.iddq_enable =3D tegra210_sata_lane_iddq_enable,
-> +	.iddq_disable =3D tegra210_sata_lane_iddq_disable,
->  };
-> =20
->  static int tegra210_sata_phy_init(struct phy *phy)
-> diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-> index b48b590aa0c1..74abd67e3a31 100644
-> --- a/drivers/phy/tegra/xusb.c
-> +++ b/drivers/phy/tegra/xusb.c
-> @@ -321,11 +321,17 @@ static void tegra_xusb_lane_program(struct tegra_xu=
-sb_lane *lane)
->  	if (soc->num_funcs < 2)
->  		return;
-> =20
-> +	if (lane->pad->ops->iddq_enable && lane->pad->ops->iddq_disable)
-> +		lane->pad->ops->iddq_enable(lane);
-
-You can drop the second check because it isn't relevant here.
-
-> +
->  	/* choose function */
->  	value =3D padctl_readl(padctl, soc->offset);
->  	value &=3D ~(soc->mask << soc->shift);
->  	value |=3D lane->function << soc->shift;
->  	padctl_writel(padctl, value, soc->offset);
-> +
-> +	if (lane->pad->ops->iddq_enable && lane->pad->ops->iddq_disable)
-> +		lane->pad->ops->iddq_disable(lane);
-
-Similarly, the first check can be dropped here because only the second
-is relevant. It might make sense to only support IDDQ if both callbacks
-are implemented, but that's not something we need to check at this
-level. The check here is only to avoid calling a NULL function. If you
-absolutely want to do sanity checks, do them at ->probe() time. But I
-don't think we need that here. It's up to the developer to get this
-right.
-
->  }
-> =20
->  static void tegra_xusb_pad_program(struct tegra_xusb_pad *pad)
-> diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
-> index 0c828694cf2d..485b692a3b15 100644
-> --- a/drivers/phy/tegra/xusb.h
-> +++ b/drivers/phy/tegra/xusb.h
-> @@ -22,6 +22,7 @@ struct phy;
->  struct phy_provider;
->  struct platform_device;
->  struct regulator;
-> +struct tegra_xusb_padctl;
-> =20
->  /*
->   * lanes
-> @@ -126,6 +127,8 @@ struct tegra_xusb_lane_ops {
->  					 struct device_node *np,
->  					 unsigned int index);
->  	void (*remove)(struct tegra_xusb_lane *lane);
-> +	void (*iddq_enable)(struct tegra_xusb_lane *lane);
-> +	void (*iddq_disable)(struct tegra_xusb_lane *lane);
->  };
-> =20
->  bool tegra_xusb_lane_check(struct tegra_xusb_lane *lane, const char *fun=
-ction);
-> @@ -134,7 +137,6 @@ bool tegra_xusb_lane_check(struct tegra_xusb_lane *la=
-ne, const char *function);
->   * pads
->   */
->  struct tegra_xusb_pad_soc;
-> -struct tegra_xusb_padctl;
-> =20
->  struct tegra_xusb_pad_ops {
->  	struct tegra_xusb_pad *(*probe)(struct tegra_xusb_padctl *padctl,
-
-These last two hunks look like leftovers. I don't see why they are
-needed here.
-
-Thierry
-
---ZoaI/ZTpAVc4A5k6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M5LQACgkQ3SOs138+
-s6Ghkw//YI4c0PDUp2NZlN2Sk6ZPCpsy/Tztt0WRmu6b9WMymhXr4D9+jykl97BF
-7LlDt9fi/E+vXdnTqHyTgACDq7zO5AeXrzE8g4az2/EeKRmxIN7eNxnnz2JAOipY
-A7Q8GxBK40CmwgnuYAXk53jEFRRNRMQ9net9U9rX/ivJhNSuo2/L8oxXPdcXi9lS
-AGsIy17GPYTBabxP1Eann2mgqjLQvH4JsQgkNOK0U3n7W6SdOpUWFOZjf9q8XhKH
-Wj3brktQFS8bOg997ohdMZiif11QVieQmHsdOxbtbWwaLzOqalgCHQmUV7H6/aWJ
-tdg/V4LNg+NzAiupC3pyB0Z9FFt3b5prJs36oECeBYkRhp6qKs6uhBBnJ4eToFbI
-IAvbfaPqg6s+T9lwXkV93pTPP/vwKUQb6miXBKVIyYLfLlTZtCrVfJEzJ1Y5nXxW
-s03X2KM//HRynwGuV602vYJ8xzLEIkGyjDWpumYQkIkt6KjNabSbZs1EIGQONa76
-C/OZzIQVorHX/w5LAkR9aP8ulYcKNqXz/cXJyoacDeR6q5U9symFPWMQGDCbKD5m
-6/KELU+TRrzpv4c8VoWIllZBTAm9hXDzYb4g6+FD6wpEFfkZ6GkwcMn+V0xXsGBQ
-ZGKeKddkQtbYH+SwHl4Z/TRWJ4PgM6mvrPwevOasAniNiq9DTSE=
-=hbGZ
------END PGP SIGNATURE-----
-
---ZoaI/ZTpAVc4A5k6--
+given that this is a data integrity issue, I think it would be good to 
+have some feedback soon if option 1 or option 2 would be acceptable 
+from a common code perspective. Andrew, who of the mm people would 
+be the right one to decide?
