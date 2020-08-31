@@ -2,160 +2,139 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0677FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 892B7C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE90920DD4
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64BFF2098B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:59:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hdX++FVt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fJ4KqbNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726722AbgHaL4B (ORCPT
+        id S1726523AbgHaL7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:56:01 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36658 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726167AbgHaL4A (ORCPT
+        Mon, 31 Aug 2020 07:59:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbgHaL7B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:56:00 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VB2tNO140261;
-        Mon, 31 Aug 2020 07:55:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=3NqTThVQ8eaoP7oELAZFEv4/SLtWiHWWrwVAhpVkpk8=;
- b=hdX++FVthQmmHIUCRF++GF+br4ETo0E1IXszaV4waSDggNyyW+CblURewKoKVE9+7+wX
- jtlkmTbFSyWezqvgj1dYxn6J7yPOnt2++gvO+ImtTwz2qgou4AO96IEmcHENte+sHzaO
- X+IEjlFggT49gLLpfU1QB7/TusX9uwRJvuDeKEvelBOyH9uo65NusT/Qj/2WBLHhfOgJ
- ExiKBB9JMK+M9+pqm+jk5Dnmbi2CZxPIsgYQxQh3VEn+dOSWbQy8GZ9zChzuTsS7CgHu
- pG9zZRBKwvMmsT78twDDRPkcm0evGR2nUKvPg9nF53vadfKkJtW1uaVfkMWUR2Y+txB+ 8g== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 338xgvbgf9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 07:55:54 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07VBPJih031055;
-        Mon, 31 Aug 2020 07:55:54 -0400
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 338xgvbget-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 07:55:53 -0400
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07VBmS5r002148;
-        Mon, 31 Aug 2020 11:55:52 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma05fra.de.ibm.com with ESMTP id 337en819qt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 11:55:52 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07VBtnPh26411484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 11:55:49 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47839A405B;
-        Mon, 31 Aug 2020 11:55:49 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C219A4051;
-        Mon, 31 Aug 2020 11:55:46 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.2.129])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 31 Aug 2020 11:55:45 +0000 (GMT)
-Message-ID: <4802c73c2ed22c64ea4f315d3115ead919c3205e.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 1/6] IMA: generalize keyring specific measurement
- constructs
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
-        agk@redhat.com, snitzer@redhat.com, gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Date:   Mon, 31 Aug 2020 07:55:45 -0400
-In-Reply-To: <20200828015704.6629-2-tusharsu@linux.microsoft.com>
-References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
-         <20200828015704.6629-2-tusharsu@linux.microsoft.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-31_04:2020-08-31,2020-08-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxscore=0
- spamscore=0 adultscore=0 mlxlogscore=999 phishscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008310062
+        Mon, 31 Aug 2020 07:59:01 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48036C061573;
+        Mon, 31 Aug 2020 04:59:01 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id c8so1519596edv.5;
+        Mon, 31 Aug 2020 04:59:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ykiShrw6bxhIypPHvE5LttRsRsZen1FO3FKIqs9CWQ0=;
+        b=fJ4KqbNOkfyF+3ZdPXYbwLy44hmBg1Tivk3Zfvin3k+//S7ZifWvZ6t+Y5O4u19HY0
+         ZmwYn3ngNhBW1qh74QZ1fZ5Xktu52VuGnOro4a9EHhMUVjpgvBcw70tsIpa6wU/HoMoU
+         KCwD6WCZxJE3k7enVg89JQHTz37A/ejCBbygeMDuoCwaYorxTrhpd1weJVUbtjHa/2V1
+         SkdMbrN0UsxgbrA6ltbDfVG3NBn2Z7wJHjtxZodCQyBvvj5J+wg6D4z6+r1y7+UIO366
+         7POCXR0DUUVXC90LJ/O8mQ6Ozvxj3nD6ioUYQqwGxYcf2BFLxoTZMuJF6leu4mtvw/L9
+         gBHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ykiShrw6bxhIypPHvE5LttRsRsZen1FO3FKIqs9CWQ0=;
+        b=EKWULt6wtX0xtTBaVF6v31/3H1q1chFUKbrXCBQWTHEg0XFEo7DCX0ei6g2p0TfnaH
+         2AJmChHuDKZ6U2+OGNFVYt6NWZ8w8/S2uuAvUS5cahJeiOzHRDEZ8ML11hQzumiu2zWv
+         OMfPuJDmNcufUoj73v9FDHAB4Cm1Fu4QwCYqcpP13ab4uqrRQl8dRZDmBp2vH2hfNFQl
+         zORKF7hujqMKpIqNNDXpgKLqBi1lcNuzEtk/ABaa0hLBJKsRmbZ18unv3yXry6wuUd7v
+         ohl70siBJWX+geVv2hFynFGSyEjtg2R237s7gIny0vrRxXS0kkTgw/nYY4GtNQ8Tc9uD
+         Dm+w==
+X-Gm-Message-State: AOAM531CRiQjXLwYOPIVOVutX60wh0yRW8q4tijgjM/us6dVOOVS7rlj
+        73/r3cn2wGsZTVHBCrV336kNkbd9PnUaug==
+X-Google-Smtp-Source: ABdhPJwWc9p4KFa3upTd2QiNJtoMpLtA6Eb/+F5bg1FC0O4KE4g7LqIkCi18snad5YgU97VqLq8I/A==
+X-Received: by 2002:a05:6402:a46:: with SMTP id bt6mr884982edb.269.1598875140015;
+        Mon, 31 Aug 2020 04:59:00 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id oi24sm7919016ejb.69.2020.08.31.04.58.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 04:58:58 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 13:58:57 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     JC Kuo <jckuo@nvidia.com>
+Cc:     gregkh@linuxfoundation.org, robh@kernel.org, jonathanh@nvidia.com,
+        kishon@ti.com, linux-tegra@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, nkristam@nvidia.com
+Subject: Re: [PATCH v2 05/12] phy: tegra: xusb: add sleepwalk and
+ suspend/resume
+Message-ID: <20200831115857.GC1689119@ulmo>
+References: <20200831044043.1561074-1-jckuo@nvidia.com>
+ <20200831044043.1561074-6-jckuo@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xo44VMWPx7vlQ2+2"
+Content-Disposition: inline
+In-Reply-To: <20200831044043.1561074-6-jckuo@nvidia.com>
+User-Agent: Mutt/1.14.6 (2020-07-11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-27 at 18:56 -0700, Tushar Sugandhi wrote:
-> IMA functions such as ima_match_keyring(), process_buffer_measurement(),
-> ima_match_policy() etc. handle data specific to keyrings. Currently,
-> these constructs are not generic to handle any func specific data.
-> This makes it harder to extend without code duplication.
-> 
-> Refactor the keyring specific measurement constructs to be generic and
-> reusable in other measurement scenarios.
 
-Mostly this patch changes the variable name from keyring to func_data,
-which is good.  Other changes should be minimized.
+--xo44VMWPx7vlQ2+2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> ---
+Again, use a capital letter to start the subject after the prefix.
 
-<snip>
+On Mon, Aug 31, 2020 at 12:40:36PM +0800, JC Kuo wrote:
+> This commit adds sleepwalk/wake and suspend/resume interfaces
+> to Tegra XUSB PHY driver.
+>=20
+> Tegra XUSB host controller driver makes use of sleepwalk functions
+> to enable/disable sleepwalk circuit which is in always-on partition
+> can respond to USB resume signals when controller is not powered.
 
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index fe1df373c113..8866e84d0062 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -451,15 +451,21 @@ int ima_lsm_policy_change(struct notifier_block *nb, unsigned long event,
->  }
->  
->  /**
-> - * ima_match_keyring - determine whether the keyring matches the measure rule
-> - * @rule: a pointer to a rule
-> - * @keyring: name of the keyring to match against the measure rule
-> + * ima_match_rule_data - determine whether the given func_data matches
-> + *			 the measure rule data
-> + * @rule: IMA policy rule
-> + * @opt_list: rule data to match func_data against
-> + * @func_data: data to match against the measure rule data
-> + * @allow_empty_opt_list: If true matches all func_data
->   * @cred: a pointer to a credentials structure for user validation
->   *
-> - * Returns true if keyring matches one in the rule, false otherwise.
-> + * Returns true if func_data matches one in the rule, false otherwise.
->   */
-> -static bool ima_match_keyring(struct ima_rule_entry *rule,
-> -			      const char *keyring, const struct cred *cred)
-> +static bool ima_match_rule_data(struct ima_rule_entry *rule,
-> +				const struct ima_rule_opt_list *opt_list, 
+"and can respond to ..."?
 
-Ok
+> Sleepwalk can be enabled/disabled for any USB phy individually.
 
-> +				const char *func_data,
-> +				bool allow_empty_opt_list,
+"USB PHY"
 
-As the policy is loaded, shouldn't the rules should be checked, not
-here on usage?
+>=20
+>   - tegra_xusb_padctl_enable_phy_sleepwalk()
+>   - tegra_xusb_padctl_disable_phy_sleepwalk()
+>=20
+> Tegra XUSB host controller driver makes use of wake functions to
+> enable/disable/query wake circuit which is in always-on partition
+> can wake system up when USB resume happens.
+> Wake circuit can be enabled/disabled for any USB phy individually.
 
-Mimi
+"USB PHY"
 
-> +				const struct cred *cred)
->  {
->  	bool matched = false;
->  	size_t i;
-> 
+Thierry
 
+--xo44VMWPx7vlQ2+2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl9M5gEACgkQ3SOs138+
+s6GNGhAAtD/MM6G/93WyWLJxQKN2+HjJXdkYSw8dtZ63vdet0kn74caMljKlEWLp
+PzQ0KHRho3lVLKDiDMolJlKnqk1b9DYZZz83W2vK9noRUDCyEQkgQ342paazKJk5
+/9GfGEJ0E9QnuySJ2wisfZVoJ+yKZHMaL6zdmaD0pXdiin9OQRA3oMcubTkhHCzY
+XMtdFqwAjePwgHP02Qbi2gI2Npzy++q6/kGwVStBW0DdTn7d3Sq9pGeyuzUSi333
+fCKTmWUDISVKa6tjreO5hW6au9F0Q5nC3Pe4ypQ3yUmBFFicxuy0w8VwR5bAEmbw
+XVeLGqAAfoLvJdos2BBNC9fKQM7OvPyj8tE4BypSj4BRwKFa9Fut21W/ZSGYrfO+
+0ntLTl1LIvpbRoA8e3JodATIrcJ82dTb8ehWDErSjbPXcCsCyejm7w7NOU4wSMgN
+KoZpYJFiitdfhOJ26agBRGI3oAsXTPKmqkH18wx9IH9AuRCXOKVSqdQHz41i0nhN
+xuAZ/MAa+AB2gV1W/Ii8co5c0CBKmH5PraVfsfROB03KdZNedmjvHkji17WfAygH
+aqEOky3ZGTYZb85NuIAbsDhTzqD7qt6pdnRqee1kGuXBMm09X41PjP1JEHxDXhpY
+Of5T0djDWkN7hV0QQPlj8TJsREUO3F73ybQLEUcKpleta5lochI=
+=UVSr
+-----END PGP SIGNATURE-----
+
+--xo44VMWPx7vlQ2+2--
