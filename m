@@ -2,203 +2,87 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1759C43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6444C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5CED20E65
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:11:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LIRDAs+N"
+	by mail.kernel.org (Postfix) with ESMTP id CCAA8206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbgHaILK (ORCPT
+        id S1728077AbgHaINp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:11:10 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:44737 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbgHaILH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:11:07 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200831081104euoutp0244b9fcf7baab28a40571e07329270e4c~wTAgAoDYO0943109431euoutp02R
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:11:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200831081104euoutp0244b9fcf7baab28a40571e07329270e4c~wTAgAoDYO0943109431euoutp02R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598861465;
-        bh=L4Y2MN3eNaoXj8sBu+7wSf3vN95kUkOb7XJy86InDnk=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=LIRDAs+NO3B50ImcVa8Ersph4f/eDz47G/BZI2mJ0XiRpZMZS6eDfeRdXCXmjTF3w
-         uQgVGvSAPhQhuPftETYdA5YwJSIG0JxOCpdlfqnTi2O8mjxpIt4wY+uQ8Rls8OMk2x
-         X9Noa8BFq/WJBDoDkBeLrlHsNnGBs+NvCa2uIfL4=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200831081104eucas1p2e204496088d78ba11d4e40ff2d2a5868~wTAfocBas1051910519eucas1p2v;
-        Mon, 31 Aug 2020 08:11:04 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 35.77.06456.890BC4F5; Mon, 31
-        Aug 2020 09:11:04 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200831081104eucas1p1be98b7d24013fce8e37c886a1734f427~wTAfNSYbX1551415514eucas1p1L;
-        Mon, 31 Aug 2020 08:11:04 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200831081104eusmtrp2346272fc0075a1cef0f7f0b5b62a4bb2~wTAfLi2R80483604836eusmtrp2l;
-        Mon, 31 Aug 2020 08:11:04 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-63-5f4cb0986128
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id D7.8C.06017.790BC4F5; Mon, 31
-        Aug 2020 09:11:04 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200831081103eusmtip25d8e3e346e91aaefcc0a51d457ad9895~wTAeXZGpx0707407074eusmtip2b;
-        Mon, 31 Aug 2020 08:11:03 +0000 (GMT)
-Subject: Re: [RFT 3/4] ARM: dts: exynos: Move CMU assigned ISP clocks to
- buses in Exynos3250
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Hoegeun Kwon <hoegeun.kwon@samsung.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <6ed67a82-0f29-7384-203d-dcb2e58c5a8d@samsung.com>
-Date:   Mon, 31 Aug 2020 10:11:02 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.12.0
+        Mon, 31 Aug 2020 04:13:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53536 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgHaINo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:13:44 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7BB3DAEBA;
+        Mon, 31 Aug 2020 08:14:17 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 10:13:41 +0200
+From:   Jean Delvare <jdelvare@suse.de>
+To:     wsa@kernel.org
+Cc:     Jeffrey Lin <jeffrey@icurse.nl>, linux-i2c@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: i801: Register lis3lv02d I2C device on Dell
+ Latitude 5480
+Message-ID: <20200831101341.476ce06f@endymion>
+In-Reply-To: <20200805093347.GM1229@kunai>
+References: <20200616234130.814499-1-jeffrey@icurse.nl>
+        <20200805093347.GM1229@kunai>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200829172532.29358-3-krzk@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe3cuO45mZ0vxoSucKDKykm6HiqjWh8PqQ1R+CbysOpjkpmxO
-        M6LUyLVp97Q1Vo4uNMy0dGmzUhJzmDlLTcMM71TasLJZRrS2HS2//f/P83uf//PAS2HyD8Qc
-        KkmTxms1qmSGlOCVDRPuKPP9nfGrbvfOZ8+4G0XsA3MZwfoqL2BsUb2bYNu9oyQ7esdEsucG
-        RjC2peW+mC0f6CDYtmoryZpbakTsqaf1YtY+8RCxhqFPGDtRfR3fMot7Om7DOaflvZgrLzaS
-        XNV4L8H15LlEXMWtE9ytwjckd9ZRjLix8gW7QvZJNh3kk5PSee3KzQmSQzmGcZT6I/xI4UtF
-        FqqQmVAIBfQacBZ8xU1IQslpO4Jsw01SMN8RXMy+hgQzhuBjZx459WTYbZyk7iB4cMkqFswo
-        go5+Kx6gZtNxUHLTFWyE0a8xKO1pDjYwmofHngYioEk6GkweU3CslN4MDl9BkMHpxfDO2BVk
-        wv2DGl704wIjg8arg0EdQq+Fz/kvMGHmQqjyWCd1BHQNFokCwUCfouBsfi0u7L0dip90TOrZ
-        MOxyiAU9D3zOqQcnEfS574kFk4+gLceMBGojdLt/+Vel/BGRUFa9Uihvhc673eJAGehQeOuR
-        CUuEwsXKK5hQlsLpXLlALwGLq/Rf7LNXrdh5xFimnWaZdo5l2jmW/7k2hBejCF6vUyfyumgN
-        n7FCp1Lr9JrEFQdS1OXI//2a/ri+PULe1v11iKYQM1P68/mOeDmhStdlqusQUBgTJt3W3BQn
-        lx5UZR7ltSnxWn0yr6tDcymciZCuvvEpVk4nqtL4wzyfymunuiIqZE4WimqKdQw9L/wS6VXk
-        RB1vupy5LmPEpqjdmNssa4C8VKfSFqP0qvTblDHaLs/pdGZhHx/ZvXRYs5xQ1/wuklgWpRu+
-        xCmrQrkNf8baH9Xsti9SZDeWpM60J4zaDjhlZsOx3L4BR62JGNljZ3131+fqY7LMDleBcYbC
-        G8+c38vgukOq6GWYVqf6C6EOk+d6AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrJIsWRmVeSWpSXmKPExsVy+t/xe7ozNvjEG+z/xmjRe+4kk8XGGetZ
-        Lf5vm8hsMf/IOVaLK1/fs1m8X97FZtH/+DWzxfnzG9gtNj2+xmpxedccNosZ5/cxWbTuPcJu
-        seLnVkaL9qcvmS1+7prH4sDvsffbAhaPnbPusntsWtXJ5rH92wNWj/vdx5k8Ni+p91gy7Sqb
-        R9+WVYwenzfJBXBG6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZk
-        lqUW6dsl6GU0tX9jLPguWjHtjHMD42bBLkZODgkBE4lX5zrZuhi5OIQEljJK/NvUywyRkJE4
-        Oa2BFcIWlvhzrQuq6C2jRO+P0+wgCWGBOInjh2+ygCREBC4yS2xaNwcswSyQKjGxaSoTRMdm
-        Ronpe+4zgiTYBAwlut6CjOLk4BWwk9jyfyoLiM0ioCpxu/MW2DpRoKlnel5A1QhKnJz5BKyG
-        U8BU4k3PKWaIBWYS8zY/hLLlJba/nQNli0vcejKfaQKj0Cwk7bOQtMxC0jILScsCRpZVjCKp
-        pcW56bnFRnrFibnFpXnpesn5uZsYgdG+7djPLTsYu94FH2IU4GBU4uH9cdQ7Xog1say4MvcQ
-        owQHs5IIr9PZ03FCvCmJlVWpRfnxRaU5qcWHGE2BnpvILCWanA9MRHkl8YamhuYWlobmxubG
-        ZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhjNlru53dh6fdvWlj8iKTP5s0599Sya+uXn
-        g/7yTXu658dn/DnYw7CrMDP/v/6mNw+vtIo8557/Iep+6JaKrR8Lp6+N5hM4m6x+0+yYu4zz
-        iQ1rrt/kUOpw8z/3b9KJGJe5NZNsL10Iu+7Ne98hVJL/xcXXV9TiVujc8jih5fM89PuxsJ9L
-        EuPclViKMxINtZiLihMByz1vjgwDAAA=
-X-CMS-MailID: 20200831081104eucas1p1be98b7d24013fce8e37c886a1734f427
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200829172553eucas1p1b62ad1cac6e0eea1dbb4669f09949419
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200829172553eucas1p1b62ad1cac6e0eea1dbb4669f09949419
-References: <20200829172532.29358-1-krzk@kernel.org>
-        <CGME20200829172553eucas1p1b62ad1cac6e0eea1dbb4669f09949419@eucas1p1.samsung.com>
-        <20200829172532.29358-3-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+Hi Wolfram,
 
-On 29.08.2020 19:25, Krzysztof Kozlowski wrote:
-> Commit 52005dece527 ("ARM: dts: Add assigned clock parents to CMU node
-> for exynos3250") added assigned clocks under Clock Management Unit to
-> fix hangs when accessing ISP registers.
->
-> This is not the place for it as CMU does not have a required "clocks"
-> property:
->
->    arch/arm/boot/dts/exynos3250-artik5-eval.dt.yaml: clock-controller@10030000: 'clocks' is a dependency of 'assigned-clocks'
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> ---
->
-> Not tested and I wonder whether actually correct. For example, what will
-> happen if devfreq (exynos-bus) is not built in?
->
-> Could someone verify it?
+On Wed, 05 Aug 2020 11:33:47 +0200, wsa@kernel.org wrote:
+> On Tue, Jun 16, 2020 at 07:41:30PM -0400, Jeffrey Lin wrote:
+> > Value of /sys/devices/platform/lis3lv02d/position when
+> >     Horizontal:     (36,-108,-1152)
+> >     Left elevated:  (-432,-126,-1062)
+> >     Front elevated: (36,594,-936)
+> >     Upside down:    (-126,-252,1098)
+> > 
+> > Signed-off-by: Jeffrey Lin <jeffrey@icurse.nl>  
+> 
+> Jean?
+> 
+> > ---
+> >  drivers/i2c/busses/i2c-i801.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
+> > index fea644921a76..d7c802e20ae6 100644
+> > --- a/drivers/i2c/busses/i2c-i801.c
+> > +++ b/drivers/i2c/busses/i2c-i801.c
+> > @@ -1268,6 +1268,7 @@ static const struct {
+> >  	/*
+> >  	 * Additional individual entries were added after verification.
+> >  	 */
+> > +	{ "Latitude 5480",      0x29 },
+> >  	{ "Vostro V131",        0x1d },
+> >  };
+> >  
 
-Sorry, but this patch is not correct. Those clocks has noting with 
-bus-freq. The assigned clocks property should stay where it is. Maybe 
-one need to fix the schemas for dts verification. Those clocks has to be 
-set (and so generic clock framework does) according to the assigned 
-clocks properties once the clock controller is instantiated.
+No actual code change and not something I can test, so pretty much any
+kernel developer is as qualified as I am to deal with it. But yes, OK,
+I'm listed as the maintainer for this driver, so I should have replied
+earlier, sorry.
 
-The only alternative would be to add exynos-subcmu variant to properly 
-link CMU with the ISP power domain, but assuming that there is no Exynos 
-3250 ISP driver in mainline (and probably never will be), it is safe to 
-keep those clocks sourced from 24MHz crystal.
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
 
-
-> ---
->   arch/arm/boot/dts/exynos3250.dtsi | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index c67c70e46794..6d467022d929 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -214,10 +214,6 @@
->   			compatible = "samsung,exynos3250-cmu";
->   			reg = <0x10030000 0x20000>;
->   			#clock-cells = <1>;
-> -			assigned-clocks = <&cmu CLK_MOUT_ACLK_400_MCUISP_SUB>,
-> -					  <&cmu CLK_MOUT_ACLK_266_SUB>;
-> -			assigned-clock-parents = <&cmu CLK_FIN_PLL>,
-> -						 <&cmu CLK_FIN_PLL>;
->   		};
->   
->   		cmu_dmc: clock-controller@105c0000 {
-> @@ -835,6 +831,8 @@
->   			compatible = "samsung,exynos-bus";
->   			clocks = <&cmu CLK_DIV_ACLK_400_MCUISP>;
->   			clock-names = "bus";
-> +			assigned-clocks = <&cmu CLK_MOUT_ACLK_400_MCUISP_SUB>;
-> +			assigned-clock-parents = <&cmu CLK_FIN_PLL>;
->   			operating-points-v2 = <&bus_mcuisp_opp_table>;
->   			status = "disabled";
->   		};
-> @@ -843,6 +841,8 @@
->   			compatible = "samsung,exynos-bus";
->   			clocks = <&cmu CLK_DIV_ACLK_266>;
->   			clock-names = "bus";
-> +			assigned-clocks =  <&cmu CLK_MOUT_ACLK_266_SUB>;
-> +			assigned-clock-parents = <&cmu CLK_FIN_PLL>;
->   			operating-points-v2 = <&bus_isp_opp_table>;
->   			status = "disabled";
->   		};
-
-Best regards
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Jean Delvare
+SUSE L3 Support
