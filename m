@@ -2,79 +2,92 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB8BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D1EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52EFF2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159A220866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:02:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598896970;
+	bh=xBYCcO3EI/laB8yUb8DrmnchvpxpQDbnTIfeq3TmuJI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=lWxiVvsjAmGVMt+CymeJ22NimdAnBSNCng6YH8ojU99oBWcQtaH+sB91VHp7yHJpE
+	 sIvsf8eQ5gVRBEaQoUoZhCtDHKbIVp0sng+jaoVP8JR/Y81Cd1qVUBQwPRhPrXUIDR
+	 OaBWWWIJncmSjtDZJy4qq5uBaOsDwzkhcGsvSy4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbgHaSCn (ORCPT
+        id S1728975AbgHaSBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:02:43 -0400
-Received: from mga01.intel.com ([192.55.52.88]:38826 "EHLO mga01.intel.com"
+        Mon, 31 Aug 2020 14:01:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726117AbgHaSCZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:02:25 -0400
-IronPort-SDR: rzlPnvnlq7jGtrPHCA6BOM8SxxxwU3MYkR1ZzxDdDadConURZblh/WJiSIayoQmOyZ6AHuq4Du
- FfuUAXcrh0Ow==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175078414"
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="175078414"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 11:02:23 -0700
-IronPort-SDR: asqsnI5DoYu89u4oqVfxs5wCJTx/nIRMKCyUJqY9oQH0nMt/1lZp5dZIMLja8wDB9r796Vf3NA
- q5ImjB9kQZPg==
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="330777988"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 11:02:14 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id 5DB5E20623; Mon, 31 Aug 2020 21:02:11 +0300 (EEST)
-Date:   Mon, 31 Aug 2020 21:02:11 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Xingyu Wu <wuxy@bitland.com.cn>
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, davem@davemloft.net,
-        shawnx.tu@intel.com, hverkuil-cisco@xs4all.nl,
-        dave.stevenson@raspberrypi.com, manivannan.sadhasivam@linaro.org,
-        bingbu.cao@intel.com, tfiga@chromium.org, drinkcat@chromium.org,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, dongchun.zhu@mediatek.com,
-        sj.huang@mediatek.com, darfur_liu@gcoreinc.com, hao.he7@gmail.com,
-        hao.he@bitland.com.cn
-Subject: Re: [PATCH V3] Add GalaxyCore image sensor driver
-Message-ID: <20200831180211.GQ31019@paasikivi.fi.intel.com>
-References: <1597380295-6297-1-git-send-email-wuxy@bitland.com.cn>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1597380295-6297-1-git-send-email-wuxy@bitland.com.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1728306AbgHaSBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:01:21 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 404962151B;
+        Mon, 31 Aug 2020 18:01:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598896880;
+        bh=xBYCcO3EI/laB8yUb8DrmnchvpxpQDbnTIfeq3TmuJI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lbRpxAFSHMmTbcUVpW3heSbRuOV2soYx1J2ztcylzJmppEWwwuTiiHBmHlkNCkRaU
+         D4KCDpAYPiLA3IcOprbrWt4zqAcE5PJYi+m9GngLzqg0inzhqb+YVeTtZD8V8l+B9n
+         1woZvfV88yNvq3E5nYN6dzuEjYkSANvzYb7hepWc=
+From:   paulmck@kernel.org
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 04/24] rcu: Initialize at declaration time in rcu_exp_handler()
+Date:   Mon, 31 Aug 2020 11:00:56 -0700
+Message-Id: <20200831180116.32690-4-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200831180050.GA32590@paulmck-ThinkPad-P72>
+References: <20200831180050.GA32590@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xingyu,
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-On Fri, Aug 14, 2020 at 12:44:51PM +0800, Xingyu Wu wrote:
-> This patch series add GalaxyCore GC5035 image sensor driver.
-> 
-> Change in v3:
-> 1.Optimize gc5035 driver.
-> 2.Redescibe reset-gpio in documentation.
+This commit moves the initialization of the CONFIG_PREEMPT=n version of
+the rcu_exp_handler() function's rdp and rnp local variables into their
+respective declarations to save a couple lines of code.
 
-It seems the e-mails you're sending do not end up to LMML nor kernel.org
-Patchwork.
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/rcu/tree_exp.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-I'm not sure why, but that needs to be fixed.
-
+diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+index 1888c0e..8760b6e 100644
+--- a/kernel/rcu/tree_exp.h
++++ b/kernel/rcu/tree_exp.h
+@@ -732,11 +732,9 @@ static void rcu_exp_need_qs(void)
+ /* Invoked on each online non-idle CPU for expedited quiescent state. */
+ static void rcu_exp_handler(void *unused)
+ {
+-	struct rcu_data *rdp;
+-	struct rcu_node *rnp;
++	struct rcu_data *rdp = this_cpu_ptr(&rcu_data);
++	struct rcu_node *rnp = rdp->mynode;
+ 
+-	rdp = this_cpu_ptr(&rcu_data);
+-	rnp = rdp->mynode;
+ 	if (!(READ_ONCE(rnp->expmask) & rdp->grpmask) ||
+ 	    __this_cpu_read(rcu_data.cpu_no_qs.b.exp))
+ 		return;
 -- 
-Kind regards,
+2.9.5
 
-Sakari Ailus
