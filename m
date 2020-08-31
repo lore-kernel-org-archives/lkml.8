@@ -2,232 +2,168 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125FEC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5829EC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF2032068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DFD22073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:36:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWi+7MgN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="gCW8xyN3";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="nSZ9X+9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgHaMfV (ORCPT
+        id S1726946AbgHaMf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:35:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727949AbgHaMdZ (ORCPT
+        Mon, 31 Aug 2020 08:35:58 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:45698 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727946AbgHaMeZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:33:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D80CC061239;
-        Mon, 31 Aug 2020 05:33:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id a26so8300647ejc.2;
-        Mon, 31 Aug 2020 05:33:24 -0700 (PDT)
+        Mon, 31 Aug 2020 08:34:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1598877264; x=1630413264;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:content-transfer-encoding:mime-version;
+  bh=S4y4Vm8tut2wgHeLX6jE0JoYIjXp12q/wp9enCPTsY4=;
+  b=gCW8xyN3wdaapYoOwA3j4PkNsYlhnNIfrzpwpIVd1xR79GkIn3tJsStZ
+   VT60kedYxsx4f8ESk1oddsaLahHTvGrNbDwDou9ZE+w639reP9uoRIpyB
+   k1MM1+G0Jtf8P/rEcfSXF47ta+t5DdlcLT3dIdBstorQBG645raWugsXi
+   kJG3hJXcdKAV7flOT8BdKX0M1dzmkF4GvhYbWBF/inm5TZoVmt6UODRHr
+   HhyvDD4D/piz84T1Yf97HCEAXJAmFsEUcSzY/0zR/P+etgWbWhEkGn26J
+   uRwRKuLV53HIzx+9xyEyNakSRqBxZePBLIznT0mBbiqWUKqeFEdkzq8ni
+   Q==;
+IronPort-SDR: 3fvFAwSdJy18nOw4K5WyS8+shxvcRqcN60c0lKGXI0NIAeqXPbTz3663LYWbvX0wm3htMhhC0U
+ jan9WmA+WnHgVl5G8HscCp+BkxmephQey3CUaJqGPGUr1tqtwGN0T/Hkx+okdYBYAQjsenguoY
+ KMDMnL+O6tPYuSuvJEN9pKnJ1Dan99rfrccZY9EyWb+pzAZ4J0sTEo2XDbL2xNtP5YwWUGN17r
+ JBLDh1inTuqdSMHa/e5XwPTK2qDB8ilK6bYf6jgg/8Klo8LtqVK6EuTQvSmbbw0NlPDEPzMl2J
+ 7V0=
+X-IronPort-AV: E=Sophos;i="5.76,375,1592841600"; 
+   d="scan'208";a="255743429"
+Received: from mail-sn1nam02lp2055.outbound.protection.outlook.com (HELO NAM02-SN1-obe.outbound.protection.outlook.com) ([104.47.36.55])
+  by ob1.hgst.iphmx.com with ESMTP; 31 Aug 2020 20:32:05 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UDhxE/a+wo3OySTib9Yh91MGwwlpv58xKimFhDgAIKtoMyCgrV4TxdL+c6F7VnsrlnExRSgM1XHIgxIstztg4m/23GgUI8Ivck6SFBnI67l8+uhKwDEIC/q+lfNtrEXemdRwAInB3rIRQk29GG3eyoSTsFdGx9yVLZodCYo6vaY+Cjedbs3WkjjUEpRKHGl4j7hbU/6/giM2CyjxVSXMdET26lMPp0T+dE//Z8KvSnqKZBiXTIKYw2ViWEt19bDrdfdKd3xjjPTgvv6BWMneUOH0cOYjlcrIFY1OWojPHEYM4Wh8eh9H4YkhWvuQ7EAJcSdKiogl7Ui1QQbfsG+xdQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KTtYrBZP4gzZbQ1QIWCsEiIDvdU9FjH5vKDKdqsXGVk=;
+ b=Ad/8wOvjUB12bRQ7lBfVoC1NVxBwt1/vhKxKVPIn0EJdN/6exIRrhqzmQfBxeKR9F/T2UY/0ZcttyBH8LN1gpOVxNG5XMqTYt6VZSNRF3HYXDBCgb6yeZ9DbuJOKbLZo7MczlEQxOBHdZjT4YmWAErXfRikLjAj5wTyJx7ILNpP1wsXQqt9xNbcubMm7ZajQcFkFOWls6VdyUUNrQpZ9+yLByJY1jPa1cCveLK7ll+bQHQ7sYVDCQw4N59ZMNRK6V2torrT9CGDc4ikS8OcxpEmyP2goqoSXH/D09BK6NMd4z889xHPkSrA/apSOolUUwzGX+T3NO/+Jh/mNN2pIhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hbcUYwYW/xJDLtbCqjA6b7sU1ZfzYZFemLdx1cJX5XA=;
-        b=CWi+7MgN9lN1o9/Gla8LTUEZXuTqcW621vsMgcTys05vudCBxOQqVdt3eIxg0xZ684
-         Z5LS2jOzihJoWu7RUij/ngwzO7OPP3gDvJUKpfXSWF15+pVlnd2JbEffONNHLckeiBbn
-         XMUItGS/S5un58oWy/8dNw42Dm3Eee+28ijJ507vL2p7jzbZVY3/5KD1vF5PzPRQdJGj
-         UE+yFphAlabWPDjXUgLmZgBNPpcLL+Q+9YEuila8S/qRU9BJJJLGEpOh4/4nSyxCIAhi
-         TumItxAqUhVGFyDvkYYLYNf1eTJmKW4lAwO+YIPF8o/ZRMToQiiklPKlFInSiC0k64b8
-         6pTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hbcUYwYW/xJDLtbCqjA6b7sU1ZfzYZFemLdx1cJX5XA=;
-        b=SlkFXePxOeUAE0+19+8e61hxgems+DDifClHROeejzXxiiJL07RzSo2tpoDyqkuwAh
-         lcs/ZC3WbKVtcEfPf7mKvlmi7aRTxJqJWJK0hrlhyVV2yL9Lc06/Hg8daa+lRMYTmCLM
-         KnO0JpkMYAlMfLYLDo4AEpI3nuzJ0Rw+Tdw+We86HsHXpxmAr4Z4mpQZ/Y0X1VfPQ1OZ
-         3DQ+TtUyxB24nPQcLS0erzQ7uWNMdJ6IC0kn/9kw5e+VESBgl/jvGUrkbcLfgwQcUjAA
-         /LCQzNBajDbpjWZ7dzUX4F1rQ3nxlZGcHk4Zw1toB169AjGMpXzCZHctnCl81fLtXz8L
-         b7vA==
-X-Gm-Message-State: AOAM5308qzc6gXPCPy/6nV+9KIc/O1B0+pG/P+6uVDhBTNtoYeIzkj+o
-        n6i7U+FuswkMB8KxmKHOylVOrvCYG8Bn6A==
-X-Google-Smtp-Source: ABdhPJy/8IkFbalv91EKccdsv+UO41f+dzMA/FEZXgFGihTYsRlXiL+amrnzkGKIBJJQ7odSUi1VYA==
-X-Received: by 2002:a17:906:6884:: with SMTP id n4mr1017257ejr.50.1598877202929;
-        Mon, 31 Aug 2020 05:33:22 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:b116:6da2:9c8c:de81? (p200300ea8f235700b1166da29c8cde81.dip0.t-ipconnect.de. [2003:ea:8f23:5700:b116:6da2:9c8c:de81])
-        by smtp.googlemail.com with ESMTPSA id r26sm8090266ejb.102.2020.08.31.05.33.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 05:33:22 -0700 (PDT)
-Subject: Re: fsl_espi errors on v5.7.15
-To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "paulus@samba.org" <paulus@samba.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>
-References: <42107721-614b-96e8-68d9-4b888206562e@alliedtelesis.co.nz>
- <1020029e-4cb9-62ba-c6d6-e6b9bdf93aac@gmail.com>
- <1598510348.1g7wt0s02s.astroid@bobo.none>
- <0068446e-06f8-6648-2f40-56f324c1ee6e@alliedtelesis.co.nz>
- <1598788275.m90vz24p6x.astroid@bobo.none>
- <524a0f50-f954-f5a7-eccb-66eece59c7c4@alliedtelesis.co.nz>
- <5ca7ba48-ef9c-2b7c-67ff-88d0a2c9f380@gmail.com>
- <6a9eb498-2982-05de-52f9-da5f6a626e49@alliedtelesis.co.nz>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <5bf05188-a52e-c8c0-9d2d-c87eff6f1588@gmail.com>
-Date:   Mon, 31 Aug 2020 14:33:16 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KTtYrBZP4gzZbQ1QIWCsEiIDvdU9FjH5vKDKdqsXGVk=;
+ b=nSZ9X+9R3BM06DgAiBB/TdPTMqN15pWZZdKM5MBD2YwlwVzM/orkEBN7H8mZzrqVCVyNmu5gDwqQh2WP5e/r1y3xpqkGG+YXPQlAp6zeIhTChlvPh/6qfxzbKb2ukPwIUMQGC3y7gMWrfrW2A+qNKBO740AsGJpSU+WXaVByb1w=
+Authentication-Results: dabbelt.com; dkim=none (message not signed)
+ header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
+ by DM6PR04MB6092.namprd04.prod.outlook.com (2603:10b6:5:12b::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Mon, 31 Aug
+ 2020 12:32:05 +0000
+Received: from DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::607a:44ed:1477:83e]) by DM6PR04MB6201.namprd04.prod.outlook.com
+ ([fe80::607a:44ed:1477:83e%7]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
+ 12:32:05 +0000
+From:   Anup Patel <anup.patel@wdc.com>
+To:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Alexander Graf <graf@amazon.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
+        kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
+Subject: [PATCH v14 17/17] RISC-V: KVM: Add MAINTAINERS entry
+Date:   Mon, 31 Aug 2020 18:00:15 +0530
+Message-Id: <20200831123015.336047-18-anup.patel@wdc.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200831123015.336047-1-anup.patel@wdc.com>
+References: <20200831123015.336047-1-anup.patel@wdc.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:1a::32) To DM6PR04MB6201.namprd04.prod.outlook.com
+ (2603:10b6:5:127::32)
 MIME-Version: 1.0
-In-Reply-To: <6a9eb498-2982-05de-52f9-da5f6a626e49@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 12:32:00 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [103.15.57.192]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 63f2b7f9-f63d-4072-c9d2-08d84da9de1b
+X-MS-TrafficTypeDiagnostic: DM6PR04MB6092:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM6PR04MB60923A765DCDAC4DD643EA008D510@DM6PR04MB6092.namprd04.prod.outlook.com>
+WDCIPOUTBOUND: EOP-TRUE
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: uF0dvvn57m69yLMB5wgxvLLL6oCcCgjU2iLnvTcoKMQQa/uxN2BX0RpgUZL/ONZah2JzaVV1rtdGb+dUFtTLi7d/4KZKHAVuSy3mhmwijRz8N4E81wyCGzr5gsg53sl22TGTZi428fIpMvkIXGSwbKBdfdEcAURFT35+B814NDCgY/VMa1yU5P1GC7hdgmrhauvfX6q5TCcTf/qTbMHy+DbHt5Ly9zm9lANN/FnMxJ9G8gDkyBJHBj0dQTjOiHGmy1awQrOs6HMDYGakBKp+ah9EB4l+kI/DC2uQA1l2KFmhA6/XwmFnQL6TFmLYdrjleowc/FA4f91S/rHKQZbDSA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(44832011)(6666004)(52116002)(8676002)(86362001)(36756003)(478600001)(6486002)(7416002)(110136005)(8936002)(54906003)(66946007)(1076003)(66556008)(2906002)(26005)(186003)(66476007)(956004)(316002)(16576012)(4326008)(5660300002)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: 3CdA+Vwe4hnIMtwnCQHT/DIsebF9NPU9QtzCc1L4kPfIBGy5v0lay1A2KU5kjvFaf70SsI7zVRVSdv2rkofwAr3fH3chb+Sd4f5tkpCAIV+2+ZjavjlFaapL5eVpfG2G71E+IrnhEjWnBIavOGoowZFxj8MPAQAsqhOGAkJhLRsvddGJT695hS30u2V3Aca3M0IPV3JyRjsifFFKjs3cEubvY6uTaE+yORWeuv9Ldi1jpjiqVVj5Qyk5AxFwoLX/LazjvEIaEZiy7PQVFjyV82KT3jZhakORZI0xY10QnqddV3GPunGs0VfVq1qqlN2M2RLZxNdyfbKuOJBGYak99zNCGhxvXiwgyc9Cttw9OC1AVi5djX4auqp2vEIdO8URsO2NuY5suCJ+hE9L/pn3YWVa5G14Sv1SqZcx49jc9J7RbmR5jO6wVD1MQPWH7sQl+B1z64FqZS3zalrZm6OhuxFFZC8ugqnHguTL7mQjTA338CwEyGbDTrjVv9Y3BFVqe2IOdOrR4K1tRmbikAqQXBqLE8XN+wZJ4P45KjOcTcVLnzoc4B97gkWCr9Vbpvg17KtFDp7xAY2psjLqakS1JkRbAh9agA9wXcSKM0FGDlsvLCKUD4WHnw1StR6J+z17gYaArlRc46LdDYZpAtxEGw==
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 63f2b7f9-f63d-4072-c9d2-08d84da9de1b
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 12:32:04.9426
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: fiRno5ICaalwDzpVodDZxIU0Ms/Fd9cndjLxJQQUUVBzsWM/Dl7Q60FCMQfaZeUVbrlL+rLw2ecIHroFJH769w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.08.2020 23:59, Chris Packham wrote:
-> 
-> On 31/08/20 9:41 am, Heiner Kallweit wrote:
->> On 30.08.2020 23:00, Chris Packham wrote:
->>> On 31/08/20 12:30 am, Nicholas Piggin wrote:
->>>> Excerpts from Chris Packham's message of August 28, 2020 8:07 am:
->>> <snip>
->>>
->>>>>>>>> I've also now seen the RX FIFO not empty error on the T2080RDB
->>>>>>>>>
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
->>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
->>>>>>>>>
->>>>>>>>> With my current workaround of emptying the RX FIFO. It seems
->>>>>>>>> survivable. Interestingly it only ever seems to be 1 extra byte in the
->>>>>>>>> RX FIFO and it seems to be after either a READ_SR or a READ_FSR.
->>>>>>>>>
->>>>>>>>> fsl_espi ffe110000.spi: tx 70
->>>>>>>>> fsl_espi ffe110000.spi: rx 03
->>>>>>>>> fsl_espi ffe110000.spi: Extra RX 00
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
->>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
->>>>>>>>> fsl_espi ffe110000.spi: tx 05
->>>>>>>>> fsl_espi ffe110000.spi: rx 00
->>>>>>>>> fsl_espi ffe110000.spi: Extra RX 03
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
->>>>>>>>> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
->>>>>>>>> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
->>>>>>>>> fsl_espi ffe110000.spi: tx 05
->>>>>>>>> fsl_espi ffe110000.spi: rx 00
->>>>>>>>> fsl_espi ffe110000.spi: Extra RX 03
->>>>>>>>>
->>>>>>>>>    From all the Micron SPI-NOR datasheets I've got access to it is
->>>>>>>>> possible to continually read the SR/FSR. But I've no idea why it
->>>>>>>>> happens some times and not others.
->>>>>>>> So I think I've got a reproduction and I think I've bisected the problem
->>>>>>>> to commit 3282a3da25bd ("powerpc/64: Implement soft interrupt replay in
->>>>>>>> C"). My day is just finishing now so I haven't applied too much scrutiny
->>>>>>>> to this result. Given the various rabbit holes I've been down on this
->>>>>>>> issue already I'd take this information with a good degree of skepticism.
->>>>>>>>
->>>>>>> OK, so an easy test should be to re-test with a 5.4 kernel.
->>>>>>> It doesn't have yet the change you're referring to, and the fsl-espi driver
->>>>>>> is basically the same as in 5.7 (just two small changes in 5.7).
->>>>>> There's 6cc0c16d82f88 and maybe also other interrupt related patches
->>>>>> around this time that could affect book E, so it's good if that exact
->>>>>> patch is confirmed.
->>>>> My confirmation is basically that I can induce the issue in a 5.4 kernel
->>>>> by cherry-picking 3282a3da25bd. I'm also able to "fix" the issue in
->>>>> 5.9-rc2 by reverting that one commit.
->>>>>
->>>>> I both cases it's not exactly a clean cherry-pick/revert so I also
->>>>> confirmed the bisection result by building at 3282a3da25bd (which sees
->>>>> the issue) and the commit just before (which does not).
->>>> Thanks for testing, that confirms it well.
->>>>
->>>> [snip patch]
->>>>
->>>>> I still saw the issue with this change applied. PPC_IRQ_SOFT_MASK_DEBUG
->>>>> didn't report anything (either with or without the change above).
->>>> Okay, it was a bit of a shot in the dark. I still can't see what
->>>> else has changed.
->>>>
->>>> What would cause this, a lost interrupt? A spurious interrupt? Or
->>>> higher interrupt latency?
->>>>
->>>> I don't think the patch should cause significantly worse latency,
->>>> (it's supposed to be a bit better if anything because it doesn't set
->>>> up the full interrupt frame). But it's possible.
->>> My working theory is that the SPI_DON indication is all about the TX
->>> direction an now that the interrupts are faster we're hitting an error
->>> because there is still RX activity going on. Heiner disagrees with my
->>> interpretation of the SPI_DON indication and the fact that it doesn't
->>> happen every time does throw doubt on it.
->>>
->> It's right that the eSPI spec can be interpreted that SPI_DON refers to
->> TX only. However this wouldn't really make sense, because also for RX
->> we program the frame length, and therefore want to be notified once the
->> full frame was received. Also practical experience shows that SPI_DON
->> is set also after RX-only transfers.
->> Typical SPI NOR use case is that you write read command + start address,
->> followed by a longer read. If the TX-only interpretation would be right,
->> we'd always end up with SPI_DON not being set.
->>
->>> I can't really explain the extra RX byte in the fifo. We know how many
->>> bytes to expect and we pull that many from the fifo so it's not as if
->>> we're missing an interrupt causing us to skip the last byte. I've been
->>> looking for some kind of off-by-one calculation but again if it were
->>> something like that it'd happen all the time.
->>>
->> Maybe it helps to know what value this extra byte in the FIFO has. Is it:
->> - a duplicate of the last read byte
->> - or the next byte (at <end address> + 1)
->> - or a fixed value, e.g. always 0x00 or 0xff
-> 
-> The values were up thread a bit but I'll repeat them here
-> 
-> fsl_espi ffe110000.spi: tx 70
-> fsl_espi ffe110000.spi: rx 03
-> fsl_espi ffe110000.spi: Extra RX 00
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
-> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
-> fsl_espi ffe110000.spi: tx 05
-> fsl_espi ffe110000.spi: rx 00
-> fsl_espi ffe110000.spi: Extra RX 03
-> fsl_espi ffe110000.spi: Transfer done but SPIE_DON isn't set!
-> fsl_espi ffe110000.spi: Transfer done but rx/tx fifo's aren't empty!
-> fsl_espi ffe110000.spi: SPIE_RXCNT = 1, SPIE_TXCNT = 32
-> fsl_espi ffe110000.spi: tx 05
-> fsl_espi ffe110000.spi: rx 00
-> fsl_espi ffe110000.spi: Extra RX 03
-> 
-> 
-> The rx 00 Extra RX 03 is a bit concerning. I've only ever seen them with
-> either a READ_SR or a READ_FSR. Never a data read.
-> 
-Just remembered something about SPIE_DON:
-Transfers are always full duplex, therefore in case of a read the chip
-sends dummy zero's. Having said that in case of a read SPIE_DON means
-that the last dummy zero was shifted out.
+Add myself as maintainer for KVM RISC-V and Atish as designated reviewer.
 
-READ_SR and READ_FSR are the shortest transfers, 1 byte out and 1 byte in.
-So the issue may have a dependency on the length of the transfer.
-However I see no good explanation so far. You can try adding a delay of
-a few miroseconds between the following to commands in fsl_espi_bufs().
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Alexander Graf <graf@amazon.com>
+---
+ MAINTAINERS | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-	fsl_espi_write_reg(espi, ESPI_SPIM, mask);
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e4647c84c987..abecd5bf990e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9564,6 +9564,17 @@ F:	arch/powerpc/include/uapi/asm/kvm*
+ F:	arch/powerpc/kernel/kvm*
+ F:	arch/powerpc/kvm/
+ 
++KERNEL VIRTUAL MACHINE FOR RISC-V (KVM/riscv)
++M:	Anup Patel <anup.patel@wdc.com>
++R:	Atish Patra <atish.patra@wdc.com>
++L:	kvm@vger.kernel.org
++L:	kvm-riscv@lists.infradead.org
++S:	Maintained
++T:	git git://github.com/kvm-riscv/linux.git
++F:	arch/riscv/include/asm/kvm*
++F:	arch/riscv/include/uapi/asm/kvm*
++F:	arch/riscv/kvm/
++
+ KERNEL VIRTUAL MACHINE for s390 (KVM/s390)
+ M:	Christian Borntraeger <borntraeger@de.ibm.com>
+ M:	Janosch Frank <frankja@linux.ibm.com>
+-- 
+2.25.1
 
-	/* Prevent filling the fifo from getting interrupted */
-	spin_lock_irq(&espi->lock);
-
-Maybe enabling interrupts and seeing the SPIE_DON interrupt are too close.
