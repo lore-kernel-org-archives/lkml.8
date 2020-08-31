@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A406C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 146AAC2BB84
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6EE207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE85207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888356;
-	bh=enPaakcvPoIVnN5PoXGGX7Ex4yMClA/+TEGHC+05xf0=;
+	s=default; t=1598888374;
+	bh=EIDdbwiV7I3/UvfbBAlS1QNVUgyFXb53fT0NauxxnSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMgweZlRd1PAv8Mt0CxPiHyD6c4PUGPweoL2vLh2EnlotwFJ2N2rxmSLFOzONUlie
-	 aCqRcwKDlAuuFnJ2QSG+/YhL2yiWgjlRgu5qMCkQrWCGB8KWv+w4V8uwm6781wHPUT
-	 vPMqnSz675wtUka2vzjZJG4jjhjwU3WUr0EfiQSA=
+	b=wMCzQIw+jaHF6KO3kmG+lETJpQLqkVDpTr6kYq53LrAExIgh7OtHhv+mKCA/IXg20
+	 sBMlGymMdFoX4mwMwgL0RwL/OJqNS6TvIEt47hu1jfEHk0mxEdHssojI9Ya22eVufl
+	 HsGrZabfOuEiL9vFW2YE4OaXh5SX7ESkQNhr3v8g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbgHaPjO (ORCPT
+        id S1729041AbgHaPje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:39:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39480 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:39:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbgHaPaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:14 -0400
+        id S1728531AbgHaPaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:08 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AC2B20767;
-        Mon, 31 Aug 2020 15:30:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD863214D8;
+        Mon, 31 Aug 2020 15:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887814;
-        bh=enPaakcvPoIVnN5PoXGGX7Ex4yMClA/+TEGHC+05xf0=;
+        s=default; t=1598887807;
+        bh=EIDdbwiV7I3/UvfbBAlS1QNVUgyFXb53fT0NauxxnSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SpUsS9h59eRyWCiWfYxY1/llhcIZi+OTLbzc2BHD3mOaxPYzliIO4wMIjWYd3Yfwr
-         aliK2vMe8VHdJ8doAltYZ8NVDC+1FdJGvDuglwX5XEbTUZsTmQGjG6TOXsPzvQ8UGN
-         ZicyYFumvibmi+20QgZbdgvEq7OCAfjNCAKCC5Qw=
+        b=IBDVHeU58ZlK3PWD/zPuCf+acmwQ/hysdo+5U5DMhrdXThNz/6ENZLjbgSL9F+x4z
+         /7iBtytC2OqLhYz95KBXpru+dexTn29ukpWi9YMv4FEfZ4PlB7S+L6/N85L1FI1OmI
+         mpVasiW9MbBcQz50WZvwmt1P4NSpp28OnLjOAGHI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, ceph-devel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.8 26/42] ceph: don't allow setlease on cephfs
-Date:   Mon, 31 Aug 2020 11:29:18 -0400
-Message-Id: <20200831152934.1023912-26-sashal@kernel.org>
+Cc:     Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
+Subject: [PATCH AUTOSEL 5.8 22/42] gfs2: add some much needed cleanup for log flushes that fail
+Date:   Mon, 31 Aug 2020 11:29:14 -0400
+Message-Id: <20200831152934.1023912-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -59,37 +59,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Layton <jlayton@kernel.org>
+From: Bob Peterson <rpeterso@redhat.com>
 
-[ Upstream commit 496ceaf12432b3d136dcdec48424312e71359ea7 ]
+[ Upstream commit 462582b99b6079a6fbcdfc65bac49f5c2a27cfff ]
 
-Leases don't currently work correctly on kcephfs, as they are not broken
-when caps are revoked. They could eventually be implemented similarly to
-how we did them in libcephfs, but for now don't allow them.
+When a log flush fails due to io errors, it signals the failure but does
+not clean up after itself very well. This is because buffers are added to
+the transaction tr_buf and tr_databuf queue, but the io error causes
+gfs2_log_flush to bypass the "after_commit" functions responsible for
+dequeueing the bd elements. If the bd elements are added to the ail list
+before the error, function ail_drain takes care of dequeueing them.
+But if they haven't gotten that far, the elements are forgotten and
+make the transactions unable to be freed.
 
-[ idryomov: no need for simple_nosetlease() in ceph_dir_fops and
-  ceph_snapdir_fops ]
+This patch introduces new function trans_drain which drains the bd
+elements from the transaction so they can be freed properly.
 
-Signed-off-by: Jeff Layton <jlayton@kernel.org>
-Reviewed-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Bob Peterson <rpeterso@redhat.com>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/file.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/gfs2/log.c   | 31 +++++++++++++++++++++++++++++++
+ fs/gfs2/trans.c |  1 +
+ 2 files changed, 32 insertions(+)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 26172bb90a459..c53c1499f7c58 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -2506,6 +2506,7 @@ const struct file_operations ceph_file_fops = {
- 	.mmap = ceph_mmap,
- 	.fsync = ceph_fsync,
- 	.lock = ceph_lock,
-+	.setlease = simple_nosetlease,
- 	.flock = ceph_flock,
- 	.splice_read = generic_file_splice_read,
- 	.splice_write = iter_file_splice_write,
+diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
+index a76e55bc28ebf..27f467a0f008e 100644
+--- a/fs/gfs2/log.c
++++ b/fs/gfs2/log.c
+@@ -901,6 +901,36 @@ static void empty_ail1_list(struct gfs2_sbd *sdp)
+ 	}
+ }
+ 
++/**
++ * drain_bd - drain the buf and databuf queue for a failed transaction
++ * @tr: the transaction to drain
++ *
++ * When this is called, we're taking an error exit for a log write that failed
++ * but since we bypassed the after_commit functions, we need to remove the
++ * items from the buf and databuf queue.
++ */
++static void trans_drain(struct gfs2_trans *tr)
++{
++	struct gfs2_bufdata *bd;
++	struct list_head *head;
++
++	if (!tr)
++		return;
++
++	head = &tr->tr_buf;
++	while (!list_empty(head)) {
++		bd = list_first_entry(head, struct gfs2_bufdata, bd_list);
++		list_del_init(&bd->bd_list);
++		kmem_cache_free(gfs2_bufdata_cachep, bd);
++	}
++	head = &tr->tr_databuf;
++	while (!list_empty(head)) {
++		bd = list_first_entry(head, struct gfs2_bufdata, bd_list);
++		list_del_init(&bd->bd_list);
++		kmem_cache_free(gfs2_bufdata_cachep, bd);
++	}
++}
++
+ /**
+  * gfs2_log_flush - flush incore transaction(s)
+  * @sdp: the filesystem
+@@ -1005,6 +1035,7 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
+ 
+ out:
+ 	if (gfs2_withdrawn(sdp)) {
++		trans_drain(tr);
+ 		/**
+ 		 * If the tr_list is empty, we're withdrawing during a log
+ 		 * flush that targets a transaction, but the transaction was
+diff --git a/fs/gfs2/trans.c b/fs/gfs2/trans.c
+index a3dfa3aa87ad9..d897dd73c5999 100644
+--- a/fs/gfs2/trans.c
++++ b/fs/gfs2/trans.c
+@@ -52,6 +52,7 @@ int gfs2_trans_begin(struct gfs2_sbd *sdp, unsigned int blocks,
+ 		tr->tr_reserved += gfs2_struct2blk(sdp, revokes);
+ 	INIT_LIST_HEAD(&tr->tr_databuf);
+ 	INIT_LIST_HEAD(&tr->tr_buf);
++	INIT_LIST_HEAD(&tr->tr_list);
+ 	INIT_LIST_HEAD(&tr->tr_ail1_list);
+ 	INIT_LIST_HEAD(&tr->tr_ail2_list);
+ 
 -- 
 2.25.1
 
