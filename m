@@ -2,143 +2,135 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7BEC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AADC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 824CA2073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 355E12073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="fQpZacdn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AOdCeQxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbgHaH6v (ORCPT
+        id S1728074AbgHaH7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:58:51 -0400
-Received: from mx1.tq-group.com ([62.157.118.193]:23825 "EHLO mx1.tq-group.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgHaH6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:58:48 -0400
-IronPort-SDR: aW48Qhm+twaX2qlVg3Do+gTihhJUNur1nE8Kt7Gox9N13xf9buBscX+fXgDBqQdU42JzyDm9/o
- 2/6Zz1OgJHq8dr6yhAQ3/Tgaw1WYZW83B9gWxWTpRraLBYSDwQz8MxKlDcL24XwlHTEf1jJFun
- PaXlZrs7az5HmYVG8wxblRua1flbKqj5rwmOWsDIhSYhG0n2T+AdEL9rOqgXslUDV9UQ2IX/Br
- iWt3R5nQRKKlMIhhwazOPmBINS+BVFveCVkrm5WcdegVm4JY/WK22zR+yOMGybTGqGgEeW/zVM
- Pmg=
-X-IronPort-AV: E=Sophos;i="5.76,374,1592863200"; 
-   d="scan'208";a="13658304"
-Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
-  by mx1-pgp.tq-group.com with ESMTP; 31 Aug 2020 09:58:45 +0200
-Received: from mx1.tq-group.com ([192.168.6.7])
-  by tq-pgp-pr1.tq-net.de (PGP Universal service);
-  Mon, 31 Aug 2020 09:58:45 +0200
-X-PGP-Universal: processed;
-        by tq-pgp-pr1.tq-net.de on Mon, 31 Aug 2020 09:58:45 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1598860725; x=1630396725;
-  h=message-id:subject:from:to:cc:date:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=vyCow1rPqvLNj8Yuh9CZ0tVP0KoFa72Scu/pyJZGO20=;
-  b=fQpZacdnZRyU92CerHJYvaJGJp5mNQ9h7q5s+1q1XnQnaj+jVWWWE2Gm
-   X83cSSknF0GyM/QWRaunsvSahfpXEkZn08hXfz9/geDROnBRY55OwdNvg
-   beW0ly3cJd0jjCfw/Y0XmkZ7L+0+DOV153xwC7zCG4VtFBzyK5jbAtq2s
-   ar12i/jh0m/9JFO62AgvwFYgkMEtgIBzVxmwkBxeNOBUSdId9ajk4nfqa
-   AZsZLufuJqdgCRyV6Bpw8O+7AxvQ/l6XkjTZuP0mgJPAOfN2BkqHIlQli
-   tlHA0Q8FWT4NGavXo6PPzcBc/AOUlklEJPQfGK4wkuOjxAzTjHWFtdWts
-   Q==;
-IronPort-SDR: xSrRVFkECV8huYMhm5XOtvRW4br2dXyeq8ohB6S90OWRTpVT5ggO3W1Qn7yr+EUOgVHbFgFxUi
- bqNXXrN52QefdPgIhy/5eE18LzuZJWmIA6CJQr4ufLA2h5eJBuGUyCyfSECSuKxiRnbhgml28x
- KO+aQXlQbP1wtZjIFLBjsrBTk5Y4AoeUQ1ibcpsho3sE23c7LlECtIOMBdMraKrSVzsK7yt/y+
- g7qAMXBm/ysVECwCxqsgRE1R7jH6YCOIAYbYYPGLElF7/4ntC1ZAv5kfvITnRZ+9Ucrnn3KTlm
- D4c=
-X-IronPort-AV: E=Sophos;i="5.76,374,1592863200"; 
-   d="scan'208";a="13658303"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 31 Aug 2020 09:58:45 +0200
-Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
-        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id EDEC7280065;
-        Mon, 31 Aug 2020 09:58:44 +0200 (CEST)
-Message-ID: <4e1182d756a81e10b32b465bb36938cb62a98cdd.camel@ew.tq-group.com>
-Subject: Re: [PATCH mmc-next v3 1/2] dt-bindings: mmc: add alias example
-From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 31 Aug 2020 09:58:42 +0200
-In-Reply-To: <20200828222440.GA3507259@bogus>
-References: <20200825134441.17537-1-matthias.schiffer@ew.tq-group.com>
-         <20200828222440.GA3507259@bogus>
+        Mon, 31 Aug 2020 03:59:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41116 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728197AbgHaH6z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:58:55 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A17BCC061573;
+        Mon, 31 Aug 2020 00:58:53 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g128so4902639iof.11;
+        Mon, 31 Aug 2020 00:58:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZGpi+5qwZTXlfGi+xb+oDjdA7kPA3G9h6znjI9BQew0=;
+        b=AOdCeQxT2jAza4/PKUwlGY32t9Nu7VJ5ktqVkH9a1b+k0F12J3MfmkECzbTg4jufCA
+         jCLvQ2XJtHbIS7gI8U9W7STv4m4hPisAQzGqLu7M/q/P0enBWtyOWHIHtgGAufrSB7dg
+         tBqkJuASBrVp+c5X0GQPi5qcvxUNK7P/wxe4Vkx+HCr6visW3UrptXnjGezadJCgGNwe
+         /W6hhR4r5K9nnR3Rvj9IhbSYddF5UfI0wyYgXi4vjl5iID0mdpVHCiB82Z9WXdLmZvhQ
+         eP8hGLezFV+mc0u9s8IQQdaMS43NOxx+B/DkjqKmXCoN3P2VLa1bEwwm+iD/z9qZ3DP+
+         d0Ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZGpi+5qwZTXlfGi+xb+oDjdA7kPA3G9h6znjI9BQew0=;
+        b=tsoctX4Z9NqCE3TYx8pMoknJpAwrcbDBHX2QajuwKxOMB+OhfkNhawsmi8RyQsgPjp
+         dYTCAwH1+of1cZnFTEtWEQsu64pJ1PKoiHCnWOvFWqEJJLh9FS/Y5K0SeBsz5Btb6He7
+         jbZw0XZeR5hCVQQLis0WljOBxuI6thvPaIcy3ePbkcjRh2WUUIvMyBM6HmxTm14/dLAd
+         C1oYPmcqzj95ftChu3koiwvyZiEtLa2bYESNRJTDmLx025OLlJoSFYrS8P7IkhOVmfZ+
+         S8P49pPUcKK4ruiLHLaBgE6Jc2aVCGuhg4fRwNI4MihBNCJrj26t/ygaEklBSnMv4LDU
+         KvJA==
+X-Gm-Message-State: AOAM530K5ffCsnWUyq6d7FEIadEEmFo6pKPAGAyv6xb9h0NONuBihbSe
+        /OzqUs60B3Yrr1dA3w3ACa51qJOU8hZGtYyol2fnV6nMcg==
+X-Google-Smtp-Source: ABdhPJyzPNmQVuqnQsiy0uTVTWNT0Qbgcw6B7+74VyKPKvBv+1lPzo8yJnHlFDeW92m9d2egkd4N7kv/NrWlfHp+aTI=
+X-Received: by 2002:a5d:954f:: with SMTP id a15mr361144ios.53.1598860733041;
+ Mon, 31 Aug 2020 00:58:53 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200830122051.197892-1-tali.perry1@gmail.com> <CAHp75VeX7OUeF=K_NmtXU4LACS9MxN1=nbSn01rvy-1MXoBL3Q@mail.gmail.com>
+In-Reply-To: <CAHp75VeX7OUeF=K_NmtXU4LACS9MxN1=nbSn01rvy-1MXoBL3Q@mail.gmail.com>
+From:   Avi Fishman <avifishman70@gmail.com>
+Date:   Mon, 31 Aug 2020 10:57:31 +0300
+Message-ID: <CAKKbWA46wSmvRshtMcShg8ka6aR2rYaB9b70EEYdQAHzJ=700g@mail.gmail.com>
+Subject: Re: [PATCH v2] i2c: npcm7xx: bug fix timeout (usec instead of msec)
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Tali Perry <tali.perry1@gmail.com>, kunyi@google.com,
+        xqiu@google.com, Benjamin Fair <benjaminfair@google.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-08-28 at 16:24 -0600, Rob Herring wrote:
-> On Tue, Aug 25, 2020 at 03:44:40PM +0200, Matthias Schiffer wrote:
-> > As for I2C and SPI, it now is possible to reserve a fixed index for
-> > mmc/mmcblk devices.
-> > 
-> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
-> > >
-> > ---
-> > 
-> > v3: new patch
-> > 
-> >  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 8
-> > ++++++++
-> >  1 file changed, 8 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/mmc-
-> > controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-
-> > controller.yaml
-> > index b96da0c7f819..22ed4a36c65d 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
-> > @@ -367,6 +367,14 @@ examples:
-> >      };
-> >  
-> >    - |
-> > +    /*
-> > +     * Optionally define an alias to reserve a fixed index for the
-> > +     * mmc and mmcblk devices
-> > +     */
-> > +    aliases {
-> > +        mmc0 = &mmc3;
-> > +    };
-> 
-> This will break if we improve schemas because this node is actually 
-> /example-1/aliases.
-> 
-> So please drop. If you want, I'd really like to have a defined set
-> (i.e. 
-> a schema) of alias names. This would require deleting a bunch on
-> some 
-> platforms that just made up a bunch of them.
+On Sun, Aug 30, 2020 at 9:01 PM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Sun, Aug 30, 2020 at 3:23 PM Tali Perry <tali.perry1@gmail.com> wrote:
+>
+> >
+> > i2c: npcm7xx: bug fix timeout (usec instead of msec)
+>
+> This commit message is awful. Please read [1] as a tutorial how to
+> write a commit messages.
+>
 
-Ulf suggested that I add some kind of documentation about the new mmc
-alias support to the binding docs.
+Would this be better:
+i2c: npcm7xx: Fix microsecond timeout calculation
 
-As long as we don't have a proper schema for aliases, should I just add
-an explanation to the toplevel description of
-Documentation/devicetree/bindings/mmc/mmc-controller.yaml, or maybe a
-comment?
+Inside npcm_i2c_master_xfer() we calculate a timeout for the entire
+transaction in microseconds, the calculation was wrong so big i2c
+massages would timeout before they ended.
+This commit fix that.
+
+> [1]: https://chris.beams.io/posts/git-commit/
+>
+> ...
+>
+> > -       /* Adaptive TimeOut: astimated time in usec + 100% margin */
+> > -       timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
+> > +       /*
+> > +        * Adaptive TimeOut: estimated time in usec + 100% margin:
+> > +        * 2: double the timeout for clock stretching case
+> > +        * 9: bits per transaction (including the ack/nack)
+>
+> > +        * 1000000: micro second in a second
+>
+> No need. See below.
+>
+> > +        */
+>
+> > +       timeout_usec = (2 * 9 * 1000000 / bus->bus_freq) * (2 + nread + nwrite);
+>
+> USEC_PER_SEC
+
+OK
+
+>
+> >         timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
+> >         if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
+> >                 dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
 
 
-> 
-> > +
-> >      mmc3: mmc@1c12000 {
-> >          #address-cells = <1>;
-> >          #size-cells = <0>;
-> > -- 
-> > 2.17.1
-> > 
 
+-- 
+Regards,
+Avi
