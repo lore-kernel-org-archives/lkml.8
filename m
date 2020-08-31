@@ -2,103 +2,128 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E27C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:27:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BEB8C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E1352083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:27:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3251E20719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:33:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPEKhd5I"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LXRzpgPC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728813AbgHaQ1g (ORCPT
+        id S1728699AbgHaQdt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35950 "EHLO
+        Mon, 31 Aug 2020 12:33:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727019AbgHaQ1d (ORCPT
+        with ESMTP id S1726939AbgHaQdr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:27:33 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35F1DC061573;
-        Mon, 31 Aug 2020 09:27:33 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id m22so9283244eje.10;
-        Mon, 31 Aug 2020 09:27:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=SjkPVYxB5yDQozKKyg93dD4UPzuBbpy4hriw+7/zkq8=;
-        b=pPEKhd5I64Z33bNVBkySIMIUVIUdu2NT2tC0PfPkxG+YVVYOD5GRDZoaff9qsD5XIF
-         OdDFTf3Wp52WqDxtFZ0lp4uQT1BIrSWaNqui18ls5VEU9jf5xfajQhWA/M2Zun7CQXTX
-         mxyPA51X6dLKWJWOrCYV7qdUXEWS4Kn8QiiKs0DQKkV6zoGeWiH0xiJ8IW14w+gj8EDa
-         EwLvXE0SK6Lxb8V1KiYDSHZO/xWZhiR/Te4LBK2ocfQlWsbYtQzvI8dQ9O2/6xzUk599
-         9UNcZRw+RGKic5l7qur3xVCFlqWdkNXytXVyywjsrhJ041aHMohuFAyzuS3iJj8bDiHP
-         m/Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SjkPVYxB5yDQozKKyg93dD4UPzuBbpy4hriw+7/zkq8=;
-        b=Ib+aM3muAclET5B9sV68g6cU3PUwGTAq7JH61C+D10Z6/J60sOMOheC8cE8iGPYGsa
-         EYJrZsthhEPufAVFCQfGqrcWsLBarjY0l27iGOeZL9bvvGRfVGRox4jqvsnjtPj7gY1F
-         C1oSLCfYqZZmLDjMyoatulzYH4A/U7kOaIr3qzfcLoDqpT1i4+MCC5GIPqxvTbIUk4xq
-         lqFURR+KPcVAN6ppur9gniWM55QR++J3MZpazpW8plvEy+KaKG3nmbmUYOQrymR65cE+
-         Zod9/AL1LJHyNX+3hurpTrpBhC7Gil6BTvPmByuD1KHHj1z73OXApVRTuVwRcc3DlW66
-         H5Vg==
-X-Gm-Message-State: AOAM533LwYQHlEye6q5klDJnLfY+dml2L2Z7Z5LrKC/SZ5XKi+593PgH
-        hIpsz2FsdhdgBPiMBA7Byz+G0HdN7QB7FFC6WjI=
-X-Google-Smtp-Source: ABdhPJxROfV7irWAUtCcIY36o5yTISjHt9MdXbWU8Fo3Q4BCAYYYKod7r0vUB1j3HTy1SinnYCxpZLieWM+ASpVfniU=
-X-Received: by 2002:a17:906:95d1:: with SMTP id n17mr1900867ejy.324.1598891251873;
- Mon, 31 Aug 2020 09:27:31 -0700 (PDT)
+        Mon, 31 Aug 2020 12:33:47 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E3FBC061573;
+        Mon, 31 Aug 2020 09:33:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=FgLXQxJ/NDEatUXABHJhKQNrUujDA65Yd4agi39NOzo=; b=LXRzpgPC5zmKZi4+8QM3iTYS4v
+        VbjgtqcGXgzTUik1ho68W1JPwfaC+39tsLPrt88oLnjYC0KJPGi123jum5jlbpX0L+Xu4ufl8VyYL
+        juB0JI5hdkMUvOc/3xtxo6TlLVJ489aP0yPoUVM44jRnJww/E1x3eKpI7LEuvCN0mbMqaLqGeR98r
+        lxklr9IoJ2iqTkbDxm2gBdXZnREwAi7mSOdslHp4x8+iu7kbsEQYhupwnT+zi8Q+64d+aWEVO+vcj
+        4mamsP+mic2mxiFfOTa4xlQeoLEroeVnugYrVaPEBgzMxSQ4RJ3xdjrdbSsFojXsJIkDujW42Ok43
+        csGJXuVQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCmka-0007TN-Gl; Mon, 31 Aug 2020 16:33:44 +0000
+Subject: Re: [PATCH] microblaze: fix kbuild redundant file warning
+To:     Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>
+References: <21eddfa7-2b7c-00c4-ad5b-40878036f987@infradead.org>
+ <f7ce291e-47be-549b-7163-0744e7ea35d5@xilinx.com>
+ <CAK7LNARfGY_o25mfB-QyQ5ezQW00OMPpbsN+be8LF_mojX39yA@mail.gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <b4e755d2-9508-a1e8-2ee5-6bb080cec2ed@infradead.org>
+Date:   Mon, 31 Aug 2020 09:33:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-References: <20200828141344.2277088-1-alinde@google.com> <CAC5umyiNw7FA__Y3HZ1UEG8Y6uQDgAWHTJpOVf7okERzpCjnRg@mail.gmail.com>
- <CAG_fn=XDTWYbxb1Hy1p0hdOtOejZPWvDXfitysK7wUOsPAE_XQ@mail.gmail.com>
-In-Reply-To: <CAG_fn=XDTWYbxb1Hy1p0hdOtOejZPWvDXfitysK7wUOsPAE_XQ@mail.gmail.com>
-From:   Akinobu Mita <akinobu.mita@gmail.com>
-Date:   Tue, 1 Sep 2020 01:27:20 +0900
-Message-ID: <CAC5umyhmZmM4+FVDsyDzaUOpFsqd=RTopEpFuuMgnpQ+rzb1ZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] add fault injection to user memory access
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Albert Linde <albert.linde@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Marco Elver <elver@google.com>, linux-doc@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Albert van der Linde <alinde@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAK7LNARfGY_o25mfB-QyQ5ezQW00OMPpbsN+be8LF_mojX39yA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew,
+On 8/31/20 9:22 AM, Masahiro Yamada wrote:
+> On Mon, Aug 31, 2020 at 11:01 PM Michal Simek <michal.simek@xilinx.com> wrote:
+>>
+>> Hi,
+>>
+>> On 28. 08. 20 20:35, Randy Dunlap wrote:
+>>> From: Randy Dunlap <rdunlap@infradead.org>
+>>>
+>>> Fix build warning since this file is already listed in
+>>> include/asm-generic/Kbuild.
+>>>
+>>> ../scripts/Makefile.asm-generic:25: redundant generic-y found in arch/microblaze/include/asm/Kbuild: hw_irq.h
+>>>
+>>> Fixes: 7e8f54cd4e26 ("microblaze: Remove empty headers")
+>>
+>> The patch is fine but this commit is wrong one. At that time
+>> asm-generic/Kbuild didn't contain hw_irq.h as mandatory
+>>
+>> The commit 630f289b7114c0e68519cbd634e2b7ec804ca8c5 added it.
+>>
+>> Masahiro: Can you please check?
+>>
+>> Thanks,
+>> Michal
+> 
+> 
+> 
+> Michal, you are right.
+> 
+> $ git merge-base 7e8f54cd  630f289
+> 7e8f54cd4e2628fada942fe9ba1fc46e99e94218
+> 
+> 
+> 630f289 has 7e8f54cd
+> as an ancestor.
+> 
+> 
+> You did not do anything wrong.
+> Me neither.
+> Both sides submitted correct patches.
+> 
+> 
+> One unfortunate thing occurred
+> when 630f289 got in via akpm tree.
+> 
+> Andrew Morton manages patches by
+> quilt instead of git.
+> 
+> He rebases patches before sending them to
+> Linus in the MW, but does not check the
+> rebased result.
+> 
+> 
+> You can replace the tag with:
+> 
+> Fixes: 630f289b7114 ("asm-generic: make more kernel-space headers mandatory")
 
-Could you take a look at this series, and consider taking in -mm tree?
+Thanks to both of you.
 
-2020=E5=B9=B49=E6=9C=881=E6=97=A5(=E7=81=AB) 0:49 Alexander Potapenko <glid=
-er@google.com>:
->
-> > This series looks good to me.
->
-> Great!
->
-> Which tree do fault injection patches normally go to?
->
-> > Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
->
-> Reviewed-by: Alexander Potapenko <glider@google.com>
+I'll resend the patch.
+
+-- 
+~Randy
+
