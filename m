@@ -2,142 +2,194 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6A2AC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DD0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:27:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90FF1208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4574720DD4
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:27:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oeeE/PuR"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VMIbLDRM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgHaL1b (ORCPT
+        id S1727883AbgHaL1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:27:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44540 "EHLO
+        Mon, 31 Aug 2020 07:27:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbgHaLXe (ORCPT
+        with ESMTP id S1726946AbgHaL0m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:23:34 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66E60C0619C0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:11:45 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id k25so3165070ljg.9
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:11:45 -0700 (PDT)
+        Mon, 31 Aug 2020 07:26:42 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD0BC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:26:41 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id t11so2886035plr.5
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:26:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JeV1i5lWS5ilgVHVwdjZqOEdjNx7M/tcM6QuH1mqWxI=;
-        b=oeeE/PuRPNM0RLwf6s3xs1I8wmqzw/mMxpN5x0dgQOh1WJNugozsHSXKZy0ulJi9Tw
-         lTguqxtZHQPiAka5zspnfcNDRChLgkaHAEdAtE2xXRnA3kNC3ckWkomiR8ojp4KAOqQQ
-         Dw7DhLiw/CDMM3/V440PqlKDv/URSPrL75PfRbsvmT2eYSxzCufL4a58nNsEjKHDewgp
-         HLjjkCjIhXMzyVwDUdvhD2tWo1ppV5dGDuJ3dDFnM2GCjk4oBRaNOq4d6rT1YBopYPHG
-         A8hrsMsU0IbsJh6CxtVDpvXxnvPOi14aavTZ0Q1ZYS9mN8Bq0OT+Y1p3P7qktoCQPOTE
-         7DgA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tH82aWUMA2UBnyH/sX2Mzmczxh4jcROvZV+v6BjFVRo=;
+        b=VMIbLDRMLVktTIUf5zOOIdeqrwLw/V7tJr4rRKsS1JoGBJ4suScF0zyi0gT9tVpLrC
+         0lbZBiw/vQDNteulBImtfq+TUOpnBVGJJMUe2LVFOt/Iuo1GUg67zn6rE2hqO1ORDqyr
+         3EQUaprmf2kbt/cbgoqmqyE8C1aev6T+LMoAEDt5WWW/OXkazfVvq5D/n3CanLDTsDCX
+         4hPMsJeJcQ6Mvnv7ZPUUJ9TAaApOTyW6vLz6pmpX109HfW33joz+K619BG9tXjGJlt1m
+         TWULz0V7MTagWxrZynTRiXPxujWKXMxLwnH9q0In6SNZFrk2xoBqukRM8t5/2KhNTloH
+         a8pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JeV1i5lWS5ilgVHVwdjZqOEdjNx7M/tcM6QuH1mqWxI=;
-        b=tyPz1Zrm8q/ClS3H+3gwV3mN96cKAuB2WedBIywHYkvoEgU//DbwOIm7ua+64R/nhx
-         baUgiXoFLD+X1g8ZanqayqHX7AtWJqzr/8S2FbcNQnnAffyeuKmrKNZaTJX5ojZydLmX
-         yC2Z/tMqL3nmqyqiCSswF35yNZcFWrFDvPwlCfYiOBWvwPCmXE+1zbkjaqZ4ahkfML7f
-         qng5ZBiOMiekEdh/QY93flnYitUaZn3yyogd7N/1G+Io1xljEHY8CaIMeEnqpsx7CcFW
-         OpQuM7io+mNs40FGyqapkl9jEQZj5l8/GIs1tfsoK5bNZiAJgILcIxFie16z0LKMj0LN
-         ERLg==
-X-Gm-Message-State: AOAM531zeD7lbvm9N0wxO/Kf0UGqY/+BoxJzN+2kSw0d0jhfWfdUozOy
-        LOv1SAsG0pbpxjNOqPQNx/nGHG/Rz2wlvdJ+
-X-Google-Smtp-Source: ABdhPJxLcxE20sCGKOJbR/9yyDZnWfHcBcCwucZsZbu1c9zAD3CLOcuo1I6y7bEJJQUzr0tzk87Egg==
-X-Received: by 2002:a2e:a49c:: with SMTP id h28mr447582lji.234.1598872303781;
-        Mon, 31 Aug 2020 04:11:43 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-180-79.NA.cust.bahnhof.se. [98.128.180.79])
-        by smtp.gmail.com with ESMTPSA id g63sm1891215lfd.28.2020.08.31.04.11.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 04:11:42 -0700 (PDT)
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [GIT PULL] MMC fixes for v5.9-rc4
-Date:   Mon, 31 Aug 2020 13:11:41 +0200
-Message-Id: <20200831111141.19238-1-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tH82aWUMA2UBnyH/sX2Mzmczxh4jcROvZV+v6BjFVRo=;
+        b=FhbgnZdB9IKyxQlKa5dSvMxWWYaQJPffhre+RFWFABftnDV/n6K//s3rQmavb84FqN
+         /i9MYgxXdsXmnmnoMM7Qo7k9wyL1nsj2r3LhL9BQ7cqpN83VuXC1mYNza6VnZsQ8Gcuc
+         XVnu4QrxRZA4Gy8ck6n6ielquua5MCwuMKlDtrgICwKwqijLdey/kVy/HJ0R73vHC4fs
+         TZQ9f6RI1oUtLRk9fG5wXm9Ghvi3P5okguQTFAx4SlriznyOJoAkdouFp+PCcRe9QreR
+         jMUuMDHbb241FYJ6bb93zriLMe8Fwj3+axu3nhTUfjCsGUYG0BMxTS5/jTVn0jGXxI3g
+         Vm6g==
+X-Gm-Message-State: AOAM5307H9NLxxzFIzlsZF+uLgcoIwAnZ9t/9imnOMEPXrQj58ipNvEF
+        5a6b6vWWD2902VYk6IYEI8F1wQ==
+X-Google-Smtp-Source: ABdhPJw7Qs9sAfIfxfyEUjotME5wfjebiejj1Z5GBugIjslzE7U6vI8f7h5B/OqApj9KB4CR3Arysg==
+X-Received: by 2002:a17:902:bd06:: with SMTP id p6mr714908pls.255.1598873200817;
+        Mon, 31 Aug 2020 04:26:40 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id v20sm7018867pju.14.2020.08.31.04.26.39
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 31 Aug 2020 04:26:39 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 16:56:38 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ionela Voinescu <ionela.voinescu@arm.com>
+Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Peter Puhov <peter.puhov@linaro.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>
+Subject: Re: [RFC 0/3] cpufreq: cppc: Add support for frequency invariance
+Message-ID: <20200831112638.v6vyljefggptij2v@vireshk-i7>
+References: <cover.1594289009.git.viresh.kumar@linaro.org>
+ <20200709124349.GA15342@arm.com>
+ <20200710030032.3yq3lqqybhy5m744@vireshk-i7>
+ <CAKfTPtBpOdRSV0gb2CoC8J9GnuPiqZ+MbQLLc6NdSmjJhb0cgA@mail.gmail.com>
+ <20200825095629.GA15469@arm.com>
+ <20200827075149.ixunmyi3m6ygtehu@vireshk-i7>
+ <20200827112740.GA9923@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200827112740.GA9923@arm.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 27-08-20, 12:27, Ionela Voinescu wrote:
+> I don't see it as anyone registering for freq invariance, rather the
+> freq invariance framework chooses its source of information (AMU, CPPC,
+> cpufreq).
 
-Here's a PR with a couple of MMC fixes intended for v5.9-rc4. Details about the
-highlights are as usual found in the signed tag.
+Yeah, either way is fine for me.
 
-Please pull this in!
+> > i.e. if CPPC registers for it first then there is no need to check
+> > AMUs further (as CPPC will be using AMUs anyway), else we will
+>                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> Not necessarily. Even if AMUs are present, they are only used for CPPC's
+> delivered and reference performance counters if the ACPI _CPC entry
+> specifies FFH as method:
+> 
+>   ResourceTemplate(){Register(FFixedHW, 0x40, 0, 1, 0x4)},
+>   ResourceTemplate(){Register(FFixedHW, 0x40, 0, 0, 0x4)},
 
-Kind regards
-Ulf Hansson
+Right.
 
+> While I understand your point (accessing AMUs through CPPC's read
+> functions to implement invariance) I don't think it's worth tying the
+> two together.
+> 
+> I see the two functionalities as independent:
+>  - frequency invariance with whichever source of information is valid
+>    (AMUs, cpufreq, etc) is separate from
+>  - CPPC's delivered and reference performance counters, which currently
+>    are used in cpufreq's .get() function.
+> 
+> Therefore, taking each of the scenarios one by one:
+>  - All CPUs support AMUs: the freq invariance initialisation code will
+>    find AMUs valid and it will use them to set the scale factor;
+>    completely independently, if the FFH method is specified for CPPC's
+>    delivered and reference performance counters, it will also use
+>    AMUs, even if, let's say, invariance is disabled.
+> 
+>  - None of the CPUs support AMUs, but the _CPC entry specifies some
+>    platform specific counters for delivered and reference performance.
+>    With the current mainline code neither cpufreq or counter based
+>    invariance is supported, but the CPPC counters can be used in the
+>    cppc_cpufreq driver for the .get() function.
+> 
+>    But with the above new functionality we can detect that AMUs are not
+>    supported and expose the CPPC counters to replace them in
+>    implementing invariance.
+> 
+>  - Mixed scenarios are also supported if we play our cards right and
+>    implement the above per-cpu.
+> 
+> 
+> I'm thinking that having some well defined invariance sources might work
+> well: it will simplify the init function (go through all registered
+> sources and choose (per-cpu) the one that's valid) and allow for
+> otherwise generic invariance support. Something like:
+> 
+> enum freq_inv_source {INV_CPUFREQ, INV_AMU_COUNTERS, INV_CPPC_COUNTERS};
+> 
+> struct freq_inv_source {
+> 	enum freq_inv_source source;
+> 	bool (*valid)(int cpu);
+> 	u64 (*read_corecnt)(int cpu);
+> 	u64 (*read_constcnt)(int cpu);
+> 	u64 (*max_rate)(int cpu);
+> 	u64 (*ref_rate)(int cpu);
+> }
+> 
+> I am in the middle of unifying AMU counter and cpufreq invariance through
+> something like this, so if you like the idea and you don't think I'm
+> stepping too much on your toes with this, I can consider the usecase in
+> my (what should be) generic support. So in the end this might end up
+> being just a matter of adding a new invariance source (CPPC counters).
 
-The following changes since commit 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5:
+Okay, if you have already started working on that, no issues from my
+side. I can just get the relevant stuff from CPPC added once you
+provide that layer..
 
-  Linux 5.9-rc1 (2020-08-16 13:04:57 -0700)
+> My only worry is that while I know how a cpufreq source behaves and how
+> AMU counters behave, I'm not entirely sure what to expect from CPPC
 
-are available in the Git repository at:
+Neither do I :)
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.9-rc1
+> counters: if they are always appropriate for updates on the tick (not
+> blocking),
 
-for you to fetch changes up to 8048822bac01936fda2c7b924a52131da81e6198:
+The update stuff may sleep here and so I had to do stuff in the
+irq-work handler in my patch.
 
-  sdhci: tegra: Add missing TMCLK for data timeout (2020-08-28 10:31:39 +0200)
+> if they both stop during idle, if there is save/restore
+> functionality before/after idle, etc.
 
-----------------------------------------------------------------
-MMC host:
- - sdhci-acpi: Fix HS400 tuning for AMDI0040
- - sdhci-pci: Fix reset of CQHCI for Intel GLK-based controllers
- - sdhci-tegra: Use correct timeout clock for Tegra186/194/210
- - mtk-sd: Fix eMMC mounting on mt7622/Bpi-64
+This I will check.
 
-----------------------------------------------------------------
-Adrian Hunter (1):
-      mmc: sdhci-pci: Fix SDHCI_RESET_ALL for CQHCI for Intel GLK-based controllers
-
-Michal Simek (1):
-      dt-bindings: mmc: Add missing description for clk_in/out_sd1
-
-Raul E Rangel (1):
-      mmc: sdhci-acpi: Fix HS400 tuning for AMDI0040
-
-Sowjanya Komatineni (7):
-      sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra210
-      sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
-      dt-bindings: mmc: tegra: Add tmclk for Tegra210 and later
-      arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
-      arm64: tegra: Add missing timeout clock to Tegra186 SDMMC nodes
-      arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
-      sdhci: tegra: Add missing TMCLK for data timeout
-
-Wenbin Mei (3):
-      mmc: dt-bindings: Add resets/reset-names for Mediatek MMC bindings
-      mmc: mediatek: add optional module reset property
-      arm64: dts: mt7622: add reset node for mmc device
-
- .../devicetree/bindings/mmc/arasan,sdhci.yaml      | 10 +++-
- Documentation/devicetree/bindings/mmc/mtk-sd.txt   |  2 +
- .../bindings/mmc/nvidia,tegra20-sdhci.txt          | 32 ++++++++++-
- arch/arm64/boot/dts/mediatek/mt7622.dtsi           |  2 +
- arch/arm64/boot/dts/nvidia/tegra186.dtsi           | 20 ++++---
- arch/arm64/boot/dts/nvidia/tegra194.dtsi           | 15 +++--
- arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 20 ++++---
- drivers/mmc/host/mtk-sd.c                          | 13 +++++
- drivers/mmc/host/sdhci-acpi.c                      | 67 ++++++++++++++++++----
- drivers/mmc/host/sdhci-pci-core.c                  | 10 +++-
- drivers/mmc/host/sdhci-tegra.c                     | 55 ++++++++++++++++--
- 11 files changed, 203 insertions(+), 43 deletions(-)
+-- 
+viresh
