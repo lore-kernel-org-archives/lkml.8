@@ -2,111 +2,66 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C36ADC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF306C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:26:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29272068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:25:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AMICkpYp"
+	by mail.kernel.org (Postfix) with ESMTP id D34D12076D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:26:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgHaBZs (ORCPT
+        id S1726952AbgHaBZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:25:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgHaBZr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:25:47 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92420C061573;
-        Sun, 30 Aug 2020 18:25:46 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id y6so2277340plt.3;
-        Sun, 30 Aug 2020 18:25:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=eARx1NqbK9cEMSTK0kovkIRCeTmjYLrGl8JwZL49msc=;
-        b=AMICkpYpQtfwYuM5YfzmKI/2S9Dy7iamVYX274pCkmLkM020DzLO/KECFWB0LrrYRA
-         EHvm2gwJNKHGFSM3G1i5kLcG6PSFldnFM3tHw5B6GDChDXhjmI99A6t7UQnerBn0+njY
-         yCjTCAyPvSArL44z50DFQxOXq/8d3d7yUHKkoylWkVDmYRRT/wYyRWxwP9Dd9LfFukU2
-         ET9jTGnrgi+N09mEZVeUECtMglYsdQDVn5Gv7BcQg8KEZEWtCJEdqbhvjQO+kIqOk4Fc
-         qG0ef/Oqzc6xSoMqmyj82eKigo0G/7wiERd2/zdTZYPqPa5FrEUN42l/MvQxC32emVyf
-         jj2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=eARx1NqbK9cEMSTK0kovkIRCeTmjYLrGl8JwZL49msc=;
-        b=JY88aT06G9DvEIMR3wZmGKmLU9kGvQ/zVq6sqedB8hIzUmiz4HBm0A1EFGIj0SJYoO
-         Xu5Nni58JoeXboritelDWICdhPsqBkKbGbGFMzv5zPXKkfBstCEImzESXavK8tH+qUrT
-         h9On/zvg3yGpDkLdD7wgwdy4aUKklC2UDpA0xFoldzZHFxVEJycqNvpONN7PpJIIHU5K
-         P29wug7QxsCUQM+9gdU11VN9U69zI/Ncz9AyDvkPMsSIA1LtZGvS1MtjaEv3Ephoy4jE
-         IEj5ieYNahNr3BUQwgWnFBvqWnsO4ekfqe3jr41g6GtylhryVp8f0EgsdhEmaUqyns13
-         V6Yg==
-X-Gm-Message-State: AOAM533wXy73VhhrD9hnTiyIrcuw4l4E9q6RMMLTQOMK9mFFchaqGQ+D
-        HP2wvApcxOdIF1igEynA7vM=
-X-Google-Smtp-Source: ABdhPJx/37k6JWKk7f4bhAcf3BKShVBZljvH6AJ/SamaTx0TBqUROompCQBrZqrwy1BdpiHRWFV0kQ==
-X-Received: by 2002:a17:90b:4b89:: with SMTP id lr9mr8718820pjb.126.1598837145608;
-        Sun, 30 Aug 2020 18:25:45 -0700 (PDT)
-Received: from localhost ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id d1sm5201193pjs.17.2020.08.30.18.25.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 18:25:45 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 11:25:39 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 1/4] mm: fix exec activate_mm vs TLB shootdown and lazy
- tlb switching race
-To:     peterz@infradead.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org
-References: <20200828100022.1099682-1-npiggin@gmail.com>
-        <20200828100022.1099682-2-npiggin@gmail.com>
-        <20200828111525.GX1362448@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200828111525.GX1362448@hirez.programming.kicks-ass.net>
+        Sun, 30 Aug 2020 21:25:58 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:3145 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726454AbgHaBZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 21:25:56 -0400
+Received: from dggeme704-chm.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id BFDD2B36FDBE82421A6E;
+        Mon, 31 Aug 2020 09:25:54 +0800 (CST)
+Received: from dggeme753-chm.china.huawei.com (10.3.19.99) by
+ dggeme704-chm.china.huawei.com (10.1.199.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Mon, 31 Aug 2020 09:25:54 +0800
+Received: from dggeme753-chm.china.huawei.com ([10.7.64.70]) by
+ dggeme753-chm.china.huawei.com ([10.7.64.70]) with mapi id 15.01.1913.007;
+ Mon, 31 Aug 2020 09:25:54 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     David Ahern <dsahern@gmail.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] net: ipv4: remove unused arg exact_dif in compute_score
+Thread-Topic: [PATCH] net: ipv4: remove unused arg exact_dif in compute_score
+Thread-Index: AdZ/NXnw82ZyWQToPkuXI0Hgq8w2zQ==
+Date:   Mon, 31 Aug 2020 01:25:54 +0000
+Message-ID: <7244626ca1494044bdd44c8269cfda91@huawei.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.174.178.74]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Message-Id: <1598836589.75k5wmftvn.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from peterz@infradead.org's message of August 28, 2020 9:15 pm:
-> On Fri, Aug 28, 2020 at 08:00:19PM +1000, Nicholas Piggin wrote:
->=20
->> Closing this race only requires interrupts to be disabled while ->mm
->> and ->active_mm are being switched, but the TLB problem requires also
->> holding interrupts off over activate_mm. Unfortunately not all archs
->> can do that yet, e.g., arm defers the switch if irqs are disabled and
->> expects finish_arch_post_lock_switch() to be called to complete the
->> flush; um takes a blocking lock in activate_mm().
->=20
-> ARM at least has activate_mm() :=3D switch_mm(), so it could be made to
-> work.
->
-
-Yeah, so long as that post_lock_switch switch did the right thing with
-respect to its TLB flushing. It should do because arm doesn't seem to
-check ->mm or ->active_mm (and if it was broken, the scheduler context
-switch would be suspect too). I don't think the fix would be hard, just
-that I don't have a good way to test it and qemu isn't great for testing
-this kind of thing.
-
-um too I think could probably defer that lock until after interrupts are
-enabled again. I might throw a bunch of arch conversion patches over the
-wall if this gets merged and try to move things along.
-
-Thanks,
-Nick
+RGF2aWQgQWhlcm4gPGRzYWhlcm5AZ21haWwuY29tPiB3cm90ZToNCj5PbiA4LzI5LzIwIDM6MDEg
+QU0sIE1pYW9oZSBMaW4gd3JvdGU6DQo+PiBAQCAtMjc3LDE1ICsyNzcsMTMgQEAgc3RhdGljIHN0
+cnVjdCBzb2NrICppbmV0X2xoYXNoMl9sb29rdXAoc3RydWN0IG5ldCAqbmV0LA0KPj4gIAkJCQlj
+b25zdCBfX2JlMzIgZGFkZHIsIGNvbnN0IHVuc2lnbmVkIHNob3J0IGhudW0sDQo+PiAgCQkJCWNv
+bnN0IGludCBkaWYsIGNvbnN0IGludCBzZGlmKQ0KPj4gIHsNCj4+IC0JYm9vbCBleGFjdF9kaWYg
+PSBpbmV0X2V4YWN0X2RpZl9tYXRjaChuZXQsIHNrYik7DQo+DQo+aW5ldF9leGFjdF9kaWZfbWF0
+Y2ggaXMgbm8gbG9uZ2VyIG5lZWRlZCBhZnRlciB0aGUgYWJvdmUgaXMgcmVtb3ZlZC4NCg0KT2gs
+IEkgbWlzc2VkIGl0LiBXaWxsIHJlbW92ZSBpbmV0X2V4YWN0X2RpZl9tYXRjaCgpIGluIHYyLiBN
+YW55IHRoYW5rcyBmb3IgcmV2aWV3IGFuZCByZXBseS4NCg0K
