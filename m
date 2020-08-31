@@ -2,149 +2,110 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF0DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF5C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D960420719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4EA208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:56:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="TgaNE0U6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TOQdblEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgHaNzv (ORCPT
+        id S1727939AbgHaN4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:55:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40610 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbgHaNzt (ORCPT
+        Mon, 31 Aug 2020 09:56:24 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41908 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727066AbgHaN4S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:55:49 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45EEBC061573;
-        Mon, 31 Aug 2020 06:55:48 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (62-78-145-57.bb.dnainternet.fi [62.78.145.57])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 852DE277;
-        Mon, 31 Aug 2020 15:55:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1598882142;
-        bh=YjANQfU2PJKUK7bbJGGRHgkqFKMb/cIwpm/y1CxpPFo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TgaNE0U6odJlc+9i7YVK1k2SQkBoNtxo4hGNQlMmNAzKd4fUS5IuO3uR+9h5oDh3w
-         MnDSjQLm9AOe+luMB6ZBC9OciWwGpHUoydsPN04ThTSr6u5leAnX1QYC5y0hQwA+1H
-         Yye2SAgS6kd3fLDVPFXwlQFhtyDCagxbFLC+19k4=
-Date:   Mon, 31 Aug 2020 16:55:21 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Cc:     Pavel Machek <pavel@ucw.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.19 08/38] media: pci: ttpci: av7110: fix
- possible buffer overflow caused by bad DMA value in debiirq()
-Message-ID: <20200831135521.GB16155@pendragon.ideasonboard.com>
-References: <20200821161807.348600-1-sashal@kernel.org>
- <20200821161807.348600-8-sashal@kernel.org>
- <20200829121020.GA20944@duo.ucw.cz>
- <20200829171600.GA7465@pendragon.ideasonboard.com>
- <9e797c3a-033b-3473-ac03-1566d40e90d2@tsinghua.edu.cn>
- <20200830222549.GD6043@pendragon.ideasonboard.com>
- <665f2e2d-b133-05be-17d5-49b860474ce5@tsinghua.edu.cn>
+        Mon, 31 Aug 2020 09:56:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598882176;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=xBjZRrtnn2DymOUf25LFqlHNqeGn8G4I2kGQPVNxJtk=;
+        b=TOQdblElVmSZs1exXJkedbWPH2bboHuygHes0IwBT58wYyF4w4gzA/ldlODZe+trA2glWf
+        sivE7TUFTNFuGxdWucdmby78mBBErQupyShzi/IDAxvE6LAkSHCPyBCfBFUpYsuzIVRgu2
+        qmX+G5fH6jT257yEdCvaq+7Ea+LOMAo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-DLJnIK9QPMSrShr4w4i1Uw-1; Mon, 31 Aug 2020 09:56:14 -0400
+X-MC-Unique: DLJnIK9QPMSrShr4w4i1Uw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5A81802B60;
+        Mon, 31 Aug 2020 13:56:12 +0000 (UTC)
+Received: from krava (unknown [10.40.192.186])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 575111002391;
+        Mon, 31 Aug 2020 13:56:10 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 15:56:09 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 1/7] perf util: Create streams
+Message-ID: <20200831135609.GE406859@krava>
+References: <20200824233513.16930-1-yao.jin@linux.intel.com>
+ <20200824233513.16930-2-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <665f2e2d-b133-05be-17d5-49b860474ce5@tsinghua.edu.cn>
+In-Reply-To: <20200824233513.16930-2-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jia-Ju,
+On Tue, Aug 25, 2020 at 07:35:07AM +0800, Jin Yao wrote:
 
-On Mon, Aug 31, 2020 at 09:45:14PM +0800, Jia-Ju Bai wrote:
-> On 2020/8/31 6:25, Laurent Pinchart wrote:
-> > On Sun, Aug 30, 2020 at 03:33:11PM +0800, Jia-Ju Bai wrote:
-> >> On 2020/8/30 1:16, Laurent Pinchart wrote:
-> >>> On Sat, Aug 29, 2020 at 02:10:20PM +0200, Pavel Machek wrote:
-> >>>> Hi!
-> >>>>
-> >>>>> The value av7110->debi_virt is stored in DMA memory, and it is assigned
-> >>>>> to data, and thus data[0] can be modified at any time by malicious
-> >>>>> hardware. In this case, "if (data[0] < 2)" can be passed, but then
-> >>>>> data[0] can be changed into a large number, which may cause buffer
-> >>>>> overflow when the code "av7110->ci_slot[data[0]]" is used.
-> >>>>>
-> >>>>> To fix this possible bug, data[0] is assigned to a local variable, which
-> >>>>> replaces the use of data[0].
-> >>>>
-> >>>> I'm pretty sure hardware capable of manipulating memory can work
-> >>>> around any such checks, but...
-> >>>>
-> >>>>> +++ b/drivers/media/pci/ttpci/av7110.c
-> >>>>> @@ -424,14 +424,15 @@ static void debiirq(unsigned long cookie)
-> >>>>>    	case DATA_CI_GET:
-> >>>>>    	{
-> >>>>>    		u8 *data = av7110->debi_virt;
-> >>>>> +		u8 data_0 = data[0];
-> >>>>>    
-> >>>>> -		if ((data[0] < 2) && data[2] == 0xff) {
-> >>>>> +		if (data_0 < 2 && data[2] == 0xff) {
-> >>>>>    			int flags = 0;
-> >>>>>    			if (data[5] > 0)
-> >>>>>    				flags |= CA_CI_MODULE_PRESENT;
-> >>>>>    			if (data[5] > 5)
-> >>>>>    				flags |= CA_CI_MODULE_READY;
-> >>>>> -			av7110->ci_slot[data[0]].flags = flags;
-> >>>>> +			av7110->ci_slot[data_0].flags = flags;
-> >>>>
-> >>>> This does not even do what it says. Compiler is still free to access
-> >>>> data[0] multiple times. It needs READ_ONCE() to be effective.
-> >>>
-> >>> Yes, it seems quite dubious to me. If we *really* want to guard against
-> >>> rogue hardware here, the whole DMA buffer should be copied. I don't
-> >>> think it's worth it, a rogue PCI device can do much more harm.
-> >>
-> >>  From the original driver code, data[0] is considered to be bad and thus
-> >> it should be checked, because the content of the DMA buffer may be
-> >> problematic.
-> >>
-> >> Based on this consideration, data[0] can be also modified to bypass the
-> >> check, and thus its value should be copied to a local variable for the
-> >> check and use.
-> >
-> > What makes you think the hardware would do that ?
-> 
-> Several recent papers show that the bad values from malicious or 
-> problematic hardware can cause security problems:
-> [NDSS'19] PeriScope: An Effective Probing and Fuzzing Framework for the 
-> Hardware-OS Boundary
-> [NDSS'19] Thunderclap: Exploring Vulnerabilities in Operating System 
-> IOMMU Protection via DMA from Untrustworthy Peripherals
-> [USENIX Security'20] USBFuzz: A Framework for Fuzzing USB Drivers by 
-> Device Emulation
-> 
-> In this case, the values from DMA can be bad, and the driver should 
-> carefully check these values to avoid security problems.
-> IOMMU is an effective method to prevent the hardware from accessing 
-> arbitrary memory address via DMA, but it does not check whether the 
-> values from DMA are safe.
-> 
-> I find that some drivers (including the av7110 driver) check (or try to 
-> check) the values from DMA, and thus I think these drivers have 
-> considered such security problems.
-> However, some of these checks are not rigorous, so that they can be 
-> bypassed in some cases. The problem that I reported is such an example.
+SNIP
 
-The AV7110 is an old chip, I'm not even sure if it can be used with a
-modern system that supports IOMMUs for PCI devices. Without that, it's
-game over anyway. Before trying to address the issue of a malicious
-AV7110 playing with DMA and CPU races, I would ensure that it's worth
-it.
+> +						  int nr_streams_max,
+> +						  enum stream_type type)
+> +{
+> +	struct evsel_streams *es;
+> +	int nr_evsel = evlist->core.nr_entries, ret = -1;
+> +
+> +	es = create_evsel_streams(nr_evsel, nr_streams_max);
+> +	if (!es)
+> +		return NULL;
+> +
+> +	if (type == STREAM_CALLCHAIN)
+> +		ret = evlist_init_callchain_streams(evlist, es, nr_evsel);
+> +
+> +	if (ret) {
+> +		free_evsel_streams(es, nr_evsel);
+> +		return NULL;
+> +	}
+> +
+> +	return es;
+> +}
+> diff --git a/tools/perf/util/stream.h b/tools/perf/util/stream.h
+> new file mode 100644
+> index 000000000000..a8a0172b4d13
+> --- /dev/null
+> +++ b/tools/perf/util/stream.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __PERF_STREAM_H
+> +#define __PERF_STREAM_H
+> +
+> +#include "callchain.h"
+> +
+> +enum stream_type {
+> +	STREAM_NONE = 0,
+> +	STREAM_CALLCHAIN
 
--- 
-Regards,
+do you plan to add more types?
 
-Laurent Pinchart
+jirka
+
