@@ -2,95 +2,159 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F25BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9260FC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E34520719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:47:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="KCWN1aD6"
+	by mail.kernel.org (Postfix) with ESMTP id 7764320719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727883AbgHaNry (ORCPT
+        id S1727906AbgHaNrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:47:54 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:36698 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgHaNqS (ORCPT
+        Mon, 31 Aug 2020 09:47:55 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43642 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgHaNr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:46:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VDipvu082687;
-        Mon, 31 Aug 2020 13:46:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=7XrKIEjokhT39cb4dngP7JBKkU6deHs5tXu4INGwQow=;
- b=KCWN1aD6eukPdtoLctc1Q+Pj9jHE4tn5AxjXIZSjwNIri2p36JYknCZKOAZZX6X5eYSt
- YO7hJNcpfmu0PPyoXxYLxLHduULiUT/3enzYamN2zuy4IUBGYybSc1j4sxRbtTKVoAnk
- NHVqlg6PikYRGwaPcgxVEZ43WNLuuu+jHJZe+2f4oYbAuWqv2hOE7Rd4X8SrJjKfqT5E
- 0SbB4/lcJf9F+tGHxhVPPUVbn5AtN0+PDLZdjBLXIaa1uuWOtp0gMwq7el4379tIATe6
- asOJoFeEdPdkN28+QP8qbzxWZBrG8MtGhK2tu/FVhHunzK+e8Fophjj1ggIBYc5b0fr1 wg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 337eeqpb97-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 31 Aug 2020 13:46:06 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07VDjA0q158834;
-        Mon, 31 Aug 2020 13:46:05 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 3380kknhsk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 13:46:05 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 07VDk4i7003609;
-        Mon, 31 Aug 2020 13:46:04 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 31 Aug 2020 06:46:04 -0700
-Date:   Mon, 31 Aug 2020 16:45:57 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     devel@driverdev.osuosl.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH] staging: atomisp: Fix fallthrough keyword warning
-Message-ID: <20200831134557.GW8299@kadam>
-References: <20200831133011.91258-1-cengiz@kernel.wtf>
- <20200831134021.GV8299@kadam>
+        Mon, 31 Aug 2020 09:47:29 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kCk8y-00062w-R6; Mon, 31 Aug 2020 13:46:44 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian@brauner.io>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-kselftest@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-api@vger.kernel.org,
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [PATCH 1/4] pidfd: support PIDFD_NONBLOCK in pidfd_open()
+Date:   Mon, 31 Aug 2020 15:45:48 +0200
+Message-Id: <20200831134551.1599689-2-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200831134551.1599689-1-christian.brauner@ubuntu.com>
+References: <20200831134551.1599689-1-christian.brauner@ubuntu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831134021.GV8299@kadam>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 adultscore=0
- mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008310080
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2008310080
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Really I think this function is pretty buggy.  It shouldn't be falling
-through at all...  I reported it a couple days back so it's possible
-that someone is working on a fix already.
+Introduce PIDFD_NONBLOCK to support non-blocking pidfd file descriptors.
 
-regards,
-dan carpenter
+Ever since the introduction of pidfds and more advanced async io various
+programming languages such as Rust have grown support for async event
+libraries. These libraries are created to help build epoll-based event loops
+around file descriptors. A common pattern is to automatically make all file
+descriptors they manage to O_NONBLOCK.
+
+For such libraries the EAGAIN error code is treated specially. When a function
+is called that returns EAGAIN the function isn't called again until the event
+loop indicates the the file descriptor is ready. Supporting EAGAIN when
+waiting on pidfds makes such libraries just work with little effort. In the
+following patch we will extend waitid() internally to support non-blocking
+pidfds.
+
+Link: https://lore.kernel.org/lkml/20200811181236.GA18763@localhost/
+Link: https://github.com/joshtriplett/async-pidfd
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Sargun Dhillon <sargun@sargun.me>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Suggested-by: Josh Triplett <josh@joshtriplett.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+---
+ include/uapi/linux/pidfd.h | 12 ++++++++++++
+ kernel/pid.c               | 12 +++++++-----
+ 2 files changed, 19 insertions(+), 5 deletions(-)
+ create mode 100644 include/uapi/linux/pidfd.h
+
+diff --git a/include/uapi/linux/pidfd.h b/include/uapi/linux/pidfd.h
+new file mode 100644
+index 000000000000..5406fbc13074
+--- /dev/null
++++ b/include/uapi/linux/pidfd.h
+@@ -0,0 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++
++#ifndef _UAPI_LINUX_PIDFD_H
++#define _UAPI_LINUX_PIDFD_H
++
++#include <linux/types.h>
++#include <linux/fcntl.h>
++
++/* Flags for pidfd_open().  */
++#define PIDFD_NONBLOCK O_NONBLOCK
++
++#endif /* _UAPI_LINUX_PIDFD_H */
+diff --git a/kernel/pid.c b/kernel/pid.c
+index b2562a7ce525..74ddbff1a6ba 100644
+--- a/kernel/pid.c
++++ b/kernel/pid.c
+@@ -43,6 +43,7 @@
+ #include <linux/sched/task.h>
+ #include <linux/idr.h>
+ #include <net/sock.h>
++#include <uapi/linux/pidfd.h>
+ 
+ struct pid init_struct_pid = {
+ 	.count		= REFCOUNT_INIT(1),
+@@ -522,7 +523,8 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+ /**
+  * pidfd_create() - Create a new pid file descriptor.
+  *
+- * @pid:  struct pid that the pidfd will reference
++ * @pid:   struct pid that the pidfd will reference
++ * @flags: flags to pass
+  *
+  * This creates a new pid file descriptor with the O_CLOEXEC flag set.
+  *
+@@ -532,12 +534,12 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+  * Return: On success, a cloexec pidfd is returned.
+  *         On error, a negative errno number will be returned.
+  */
+-static int pidfd_create(struct pid *pid)
++static int pidfd_create(struct pid *pid, unsigned int flags)
+ {
+ 	int fd;
+ 
+ 	fd = anon_inode_getfd("[pidfd]", &pidfd_fops, get_pid(pid),
+-			      O_RDWR | O_CLOEXEC);
++			      flags | O_RDWR | O_CLOEXEC);
+ 	if (fd < 0)
+ 		put_pid(pid);
+ 
+@@ -565,7 +567,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ 	int fd;
+ 	struct pid *p;
+ 
+-	if (flags)
++	if (flags & ~PIDFD_NONBLOCK)
+ 		return -EINVAL;
+ 
+ 	if (pid <= 0)
+@@ -576,7 +578,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+ 		return -ESRCH;
+ 
+ 	if (pid_has_task(p, PIDTYPE_TGID))
+-		fd = pidfd_create(p);
++		fd = pidfd_create(p, flags);
+ 	else
+ 		fd = -EINVAL;
+ 
+-- 
+2.28.0
 
