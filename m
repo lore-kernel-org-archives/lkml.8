@@ -2,70 +2,90 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0B1C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37D1C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 962C42083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB39D2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:29:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qqQ7TXZe"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ElyeizVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbgHaR0q (ORCPT
+        id S1728889AbgHaR3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:26:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45118 "EHLO
+        Mon, 31 Aug 2020 13:29:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726249AbgHaR0p (ORCPT
+        with ESMTP id S1726249AbgHaR3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:26:45 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C06CDC061573;
-        Mon, 31 Aug 2020 10:26:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ju0PVpNY3/ckdFWEkNKtSiQqosF3ht57RIZrGyS4lo8=; b=qqQ7TXZeKin0LumxSCewynACa9
-        L5lqeKhlui5AoMn4oHoZiCon7WwhQwVCbB9tceI4745HaM/ZNJDFM9kguVqZFbtO8Zen+mCiHSiUe
-        m+EpUVyHI35nH+mPkZpkhZmq1DPKoBbgfkNXICHjm/PWCjlAuEAf71i1em3FNqAE7C0uzejBrgmvq
-        NIGKcqTKWp6E7HDTfuc4/HwQ4vgHR8kU6o8DAHu6miO2lELnBz97yhZG0+dREiDugZCVdyYWzyfll
-        DNGUqe6mv+xFLJsfA0wEjHFjuxL0WwM0F+YPsDy12idhs6QndTZUtU/aYSGhCVu83OdVpHB6kTJk5
-        3a600W4Q==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCnZp-0007pK-19; Mon, 31 Aug 2020 17:26:41 +0000
-Date:   Mon, 31 Aug 2020 18:26:40 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     darrick.wong@oracle.com, hch@infradead.org,
-        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] iomap: Fix WARN_ON_ONCE() from unprivileged users
-Message-ID: <20200831172640.GA30014@infradead.org>
-References: <20200831172534.12464-1-cai@lca.pw>
+        Mon, 31 Aug 2020 13:29:38 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E80A1C061573;
+        Mon, 31 Aug 2020 10:29:37 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f085000329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5000:329c:23ff:fea6:a903])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4D07B1EC046E;
+        Mon, 31 Aug 2020 19:29:36 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598894976;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=O+3kGo9AcF/oQlR2tC8jA9namYjaga9k9yudwhiCdVM=;
+        b=ElyeizVP/gBBpMUDymDy6CopTQOFNofQEJLEKvHVg4Q5dCwCu2XHKbCs1/DtSTkEc3WVzI
+        Az6tEuTeHKezXKztzXk6SN0j+1k1K60M8VItZXESp9Y+I0yC1lv4Sp1jSHJUNksIkEj3El
+        pD+kbT5hnIRkGoCVZni2rs5BoVzKsF0=
+Date:   Mon, 31 Aug 2020 19:29:37 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
+        Kees Cook <keescook@chromium.org>, hpa@zytor.com,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Juergen Gross <jgross@suse.com>,
+        David Rientjes <rientjes@google.com>,
+        Cfir Cohen <cfir@google.com>,
+        Erdem Aktas <erdemaktas@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Stunes <mstunes@vmware.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Martin Radev <martin.b.radev@gmail.com>,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 72/76] x86/head/64: Rename start_cpu0
+Message-ID: <20200831172937.GM27517@zn.tnic>
+References: <20200824085511.7553-1-joro@8bytes.org>
+ <20200824085511.7553-73-joro@8bytes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200831172534.12464-1-cai@lca.pw>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200824085511.7553-73-joro@8bytes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 01:25:34PM -0400, Qian Cai wrote:
-> It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
-> unprivileged users which would taint the kernel, or worse - panic if
-> panic_on_warn or panic_on_taint is set. Hence, just convert it to
-> pr_warn_ratelimited() to let users know their workloads are racing.
-> Thank Dave Chinner for the initial analysis of the racing reproducers.
+On Mon, Aug 24, 2020 at 10:55:07AM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> For SEV-ES this entry point will be used for restarting APs after they
+> have been offlined. Remove the '0' from the name to reflect that.
 
-Looks good,
+Sure but only for SEV-ES guests and your change is unconditional. I
+think you can drop this patch - it doesn't really matter what the
+function is called.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
