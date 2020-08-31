@@ -2,145 +2,131 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC5AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97113C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9CFE206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:38:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 706D1206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:38:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZQSYiPZc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgHaTi0 (ORCPT
+        id S1729618AbgHaTig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 15:38:26 -0400
-Received: from mail-il1-f198.google.com ([209.85.166.198]:52541 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729581AbgHaTiT (ORCPT
+        Mon, 31 Aug 2020 15:38:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728865AbgHaTif (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 15:38:19 -0400
-Received: by mail-il1-f198.google.com with SMTP id m1so5918939iln.19
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:38:19 -0700 (PDT)
+        Mon, 31 Aug 2020 15:38:35 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26336C061573;
+        Mon, 31 Aug 2020 12:38:35 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id q13so6586114ejo.9;
+        Mon, 31 Aug 2020 12:38:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=BxkwfFtwYfG6geWP6qay6mU0JJ9SDlVBhDfv2d4WbyU=;
+        b=ZQSYiPZcXrYI9uWJ62qBJTIgZc68QR6thdOSu93hD3MzDSiIYhSvp/VuDGGsTCAEZT
+         5IQmUB6lG2M2SQdfcmsnK7koxa/+0m9h7p7iwPIlBJYkl8V/ZIqrNnFx2ArbOnSX069q
+         iImJJZvDhuWzf4Ne8TZTRnxHRwMw6emCaOCr+FXbOG1K7UREj1AtKRHHqw/IN7WuXnT8
+         C4OXWxy9TAXTcSJ12QF50mw3uhtEld6vZhrMvLd0GJIwycLAwCKGvlnWPYIFV4n3Ylkv
+         5GnjTSRuR5E8l7jwSZvYz5tL6zQ9rZpI8gKrh1DzAGvQPdPREBlIFx/5DPP0ym54XPfj
+         6bJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=m4SliDazaCKI2mSnRd41TiQtA9peqJpo0sHHFYg5U3k=;
-        b=nWQKxslFx1Hphm08eOjnFRq2tIK6E1x/zpc4KgoV/pVPkxh8b9aJbyOLbRCwcnZHue
-         6jSM6nUwTd5DNqJZ+ue6vCJxGTeOHimBeP5VmQ9UH84JbzU4aB5wxhqspuZsCDP1GxCY
-         a39dLehkCJvwI9yjKnRd0yBNHR5YdCIUiM6q40Y3JHnkftdvYJOvsxwVYD2muNQE6PvA
-         3mQDea383sHbSpei3SeU2UgfL/PomsxHrzX8d9i9xZ005DTQHCMrmJJz/nL69qPrvfm7
-         3EJnqafdpOkM7leNoOn7qp+yUTd/TlNPF8MEEl+c7ChfrMAzGQYDPZHI/6xeIyXRtmbu
-         hZ2A==
-X-Gm-Message-State: AOAM531+5B9+9LOIXqtEkvoRO+xTIrWVccK++XDCF+DJS+hwSUQUtP4p
-        MyN9Tm+lhM5KrTczE1Kslo+74PX8jYvFuelmKxYGUS/7SmKe
-X-Google-Smtp-Source: ABdhPJxhZWN8RKGXRXOxycv8ae9XQ+1mKP0JphK94FqsUNlpDSQ5nXyVjLiDOtpxbct+Pn+RsBadYwJZixnZTB6uTNss9SMD1eDb
-MIME-Version: 1.0
-X-Received: by 2002:a05:6602:2013:: with SMTP id y19mr2567630iod.148.1598902698653;
- Mon, 31 Aug 2020 12:38:18 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 12:38:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006240f605ae318b1c@google.com>
-Subject: general protection fault in __sock_release (3)
-From:   syzbot <syzbot+0cd67947050ba830202c@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=BxkwfFtwYfG6geWP6qay6mU0JJ9SDlVBhDfv2d4WbyU=;
+        b=LGuv24EsEBjqc8s2YLO+kvIN4SOc2hkeuGbqxXilQtS+S8K90WQWYlkHsLvH2X4JCi
+         rypzWfJMEOdcn/qX25qv+kHCjrzUISitNII99bSk+y4hQVm7M5fuBoYllLnNSbgoveqE
+         EpgdUhdcDj4755fTlBVcNZi2yUjDg2fkg5YPju5Ps+68bIXDbjx5GQKJL3F7waXPj2Qv
+         HBNJd5TQjR3DO0ob/X/kS+J/FdyCpGz7GulqUtn4IgyMelpL0t5dAklmcXudmZDrbm1A
+         5zSpdbNyUZDfC2CVKQdnJl0OifnxK91Sn9LfZ6RfJ7BSvvRKQTz/qTLwvtbMtXoXXnT2
+         2KuQ==
+X-Gm-Message-State: AOAM532TtcNycsNhCEEcy4PVfLOm5orVRXmqg7JZ3AkXFzMOgWVYpAGz
+        Mpqq/iXOBuR56iN54H7eH7dAykX0tnc=
+X-Google-Smtp-Source: ABdhPJyhVmXbzZQkZquFJp9KcOeQF+UKEMNNkdfn2SOULX5XD8spOsjPQNMXSl6KwKewjOXL8lIisg==
+X-Received: by 2002:a17:906:5206:: with SMTP id g6mr2508687ejm.292.1598902713833;
+        Mon, 31 Aug 2020 12:38:33 -0700 (PDT)
+Received: from ubuntu-laptop (ip5f5bfce6.dynamic.kabel-deutschland.de. [95.91.252.230])
+        by smtp.googlemail.com with ESMTPSA id hk14sm8859318ejb.88.2020.08.31.12.38.32
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 31 Aug 2020 12:38:32 -0700 (PDT)
+Message-ID: <137effceca0474e30bfbbfbbd71f9fbca53e1b9b.camel@gmail.com>
+Subject: Re: [PATCH v1 1/2] scsi: ufs: Abort tasks before clear them from
+ doorbell
+From:   Bean Huo <huobean@gmail.com>
+To:     Can Guo <cang@codeaurora.org>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Mon, 31 Aug 2020 21:38:30 +0200
+In-Reply-To: <ca7a01a24c8189646b5e7bb6bc8899bb@codeaurora.org>
+References: <1598321228-21093-1-git-send-email-cang@codeaurora.org>
+         <1598321228-21093-2-git-send-email-cang@codeaurora.org>
+         <26bfbdf4e5c5802cce6b0ddf5eddbd75bd306d0f.camel@gmail.com>
+         <ca7a01a24c8189646b5e7bb6bc8899bb@codeaurora.org>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 2020-08-31 at 09:20 +0800, Can Guo wrote:
+> On 2020-08-31 02:11, Bean Huo wrote:
+> > Hi Can
+> > This patch conflicts and be not in line with this series patches :
+> > h
+> > ttps://patchwork.kernel.org/cover/11709279/, which has been applied
+> > into 5.9/scsi-fixes. But they are not apppiled in the 5.9/scsi-
+> > queue.
+> > 
+> > Maybe you should rebase your patch from scsi-fixes branch. or do
+> > you
+> > have another better option?
+> > 
+> > Thanks,
+> > Bean
+> > 
+> 
+> I am pushing this change due to LINERSET handling needs it and
+> LINERESET
+> handling is added based on my previous changes to err_handler, which
+> are
+> picked by 5.10/scsi-queue. So the two are applied for 5.10/scsi-
+> queue 
+> only.
+> Any conflicts you see on 5.10/scsi-queue?
 
-syzbot found the following issue on:
+Hi Can
+I meant scsi-fixes branch. no conflict with scsi-queue branch. If the
+the changes in the scsi-fixes branch  will never be merged to scsi-
+queue branch.It is fine.
 
-HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16b2cdd5900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=978db74cb30aa994
-dashboard link: https://syzkaller.appspot.com/bug?extid=0cd67947050ba830202c
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10bd47e5900000
+Thanks,
+Bean
 
-The issue was bisected to:
+> 
+> Thanks,
+> 
+> Can Guo.
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
-Author: Marc Zyngier <maz@kernel.org>
-Date:   Wed Aug 19 16:12:17 2020 +0000
-
-    epoll: Keep a reference on files added to the check list
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13b440d1900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=107440d1900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=17b440d1900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+0cd67947050ba830202c@syzkaller.appspotmail.com
-Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the check list")
-
-general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-CPU: 1 PID: 11412 Comm: syz-executor.0 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__sock_release+0xbb/0x280 net/socket.c:596
-Code: ff df 48 c1 ea 03 80 3c 02 00 0f 85 a5 01 00 00 48 b8 00 00 00 00 00 fc ff df 4c 8b 63 20 49 8d 7c 24 10 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 8e 01 00 00 48 89 df 41 ff 54 24 10 48 8d 7b 18
-RSP: 0018:ffffc9000865fe28 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880859f7a80 RCX: 1ffff920010cbf67
-RDX: 0000000000000002 RSI: 0000000000000004 RDI: 0000000000000010
-RBP: ffff8880859f7c20 R08: ffff8880859f7c20 R09: ffff8880859f7c33
-R10: ffffed1010b3ef86 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff8880859f7aa0 R14: 0000000000000000 R15: ffff888089fe9818
-FS:  000000000323b940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f3d38ba1db8 CR3: 00000000a92fc000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- sock_close+0x18/0x20 net/socket.c:1277
- __fput+0x285/0x920 fs/file_table.c:281
- task_work_run+0xdd/0x190 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
- exit_to_user_mode_prepare+0x195/0x1c0 kernel/entry/common.c:167
- syscall_exit_to_user_mode+0x59/0x2b0 kernel/entry/common.c:242
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x416f01
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48 83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48 89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffdc1b3fe40 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000416f01
-RDX: 00000000000f4240 RSI: 0000000000000081 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 0000000001190358 R09: 0000000000000000
-R10: 00007ffdc1b3ff20 R11: 0000000000000293 R12: 0000000001190360
-R13: 0000000000000000 R14: ffffffffffffffff R15: 000000000118cf4c
-Modules linked in:
----[ end trace 99238214bf463a8c ]---
-RIP: 0010:__sock_release+0xbb/0x280 net/socket.c:596
-Code: ff df 48 c1 ea 03 80 3c 02 00 0f 85 a5 01 00 00 48 b8 00 00 00 00 00 fc ff df 4c 8b 63 20 49 8d 7c 24 10 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 8e 01 00 00 48 89 df 41 ff 54 24 10 48 8d 7b 18
-RSP: 0018:ffffc9000865fe28 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880859f7a80 RCX: 1ffff920010cbf67
-RDX: 0000000000000002 RSI: 0000000000000004 RDI: 0000000000000010
-RBP: ffff8880859f7c20 R08: ffff8880859f7c20 R09: ffff8880859f7c33
-R10: ffffed1010b3ef86 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff8880859f7aa0 R14: 0000000000000000 R15: ffff888089fe9818
-FS:  000000000323b940(0000) GS:ffff8880ae700000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f3d38ba1db8 CR3: 00000000a92fc000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
