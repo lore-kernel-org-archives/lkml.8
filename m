@@ -2,115 +2,129 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43943C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:41:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2138BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A8F52073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:41:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2E22100A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:44:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c9DSp+F/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bkkJRoHQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbgHaIl0 (ORCPT
+        id S1728041AbgHaIn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:41:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47704 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726800AbgHaIlU (ORCPT
+        Mon, 31 Aug 2020 04:43:59 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49086 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725829AbgHaIn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:41:20 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22D85C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 01:41:20 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id g6so2612363pjl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 01:41:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=eYb5KpT1V07RPnlSuRsMWwBmtGIT5ttBS72iMXyylIc=;
-        b=c9DSp+F/t4Lv/naJp2z8zanWeIlwgvVuwoKE5H7UcvekIrgvh7vO/uqf3/+c8tUpgR
-         r/z3VIZJphzh0KSYCvPPKNv8PglIG7J2wkU8Y96/WoTTK4DZVBjrjq+uWQ2s5oKVHLsO
-         sn/cYjp8yLJoJAg3yeU1AZ9/nHY7VEG6bDh4sPzEv3leruDXjHOZ7eAXFo/ORUVvNFXB
-         ELX0HnU/KYt38VTTVqmzYdumStOxWDB/C3JvhFKYoMoejdUJDRGMoN08PkEz6mwCtyJ6
-         qeSEBfDhuKjtPIyRG+xsw05nsIPWsxaPkM9y8R9WKZisjHx7cFS2PbFEUgvNomuIuzyM
-         ecyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=eYb5KpT1V07RPnlSuRsMWwBmtGIT5ttBS72iMXyylIc=;
-        b=O5KWD5F1VChLFDQR3H+Mm0QKZqSMrcqcpp9GagLcW8sqWnjvpwARWgn6F57pqU8xvy
-         C5KQvqdvvQYjLgZFwavvwZpGPkjHIYGR49QakFXasfDB+E8eJ695xatMf0/oxR+Z7NW1
-         2ohNGOe2Q1YhEARRKF7UPxDDYucRbDOfeRJYUwJ4UkUIrLyhcA3yATpetiaHLNPVW1rk
-         s6dd/ldre94Jhv38i+YO8FuNCt1hg/SK38SOlT3XiOUdFjAU/J7zYxsv1ii5UWD66ieb
-         pv7fk3rA4eT3l3fy8v4Sd20huFUSNqTARMADvGpxBBR9ztXqiWt4W8xhqyUHIbRCKvy/
-         hH6A==
-X-Gm-Message-State: AOAM53002sQ+74qkhLtgnwvzVd1xWVWw7VtLaX56WOu0uRi2HJFB3BJH
-        w9D/g+VPlZ7ebsRgmhF7NT5B7A==
-X-Google-Smtp-Source: ABdhPJzVGSLNLHl/Fg5vdyWAY70juhup0Vyl2NaEKnZepVk/rNvw4WAFyMHDYLPrAJz6toDsdvf2eg==
-X-Received: by 2002:a17:90a:17cb:: with SMTP id q69mr429283pja.56.1598863279409;
-        Mon, 31 Aug 2020 01:41:19 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id o23sm6939940pgm.18.2020.08.31.01.41.18
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 01:41:18 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 14:11:11 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] ARM: tegra: Pass multiple versions in
- opp-supported-hw property
-Message-ID: <20200831084111.6udzvrdonxgzju4l@vireshk-i7>
-References: <cover.1598442485.git.viresh.kumar@linaro.org>
- <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
- <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
- <20200831043908.mtw4dglybcmcabjb@vireshk-i7>
- <0da380c2-9161-d450-afd2-4b159c8cfb7d@gmail.com>
+        Mon, 31 Aug 2020 04:43:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598863437;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=V4K8rXeyJc2+QDNAjPYsrpXyE/fuhyVNVpHCkaWg2ME=;
+        b=bkkJRoHQAnMONuoWZQ/JTdSeRxKdcDhVvWm/vYGYgIUQz4uXUihUA02anXHPzvMdTtFHuP
+        Yuo6XISkaOXok+23y1pePxV/54oRPDYGY+aKGSirVRyOJp7NjCWxStfsqL8pknHydCLmB4
+        DSRhbNco6j9gS0FfcSp1cUnHm02dzAA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-tB9Ocn1rO9CHbTbYSuByCA-1; Mon, 31 Aug 2020 04:43:55 -0400
+X-MC-Unique: tB9Ocn1rO9CHbTbYSuByCA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 673B21DDEC;
+        Mon, 31 Aug 2020 08:43:53 +0000 (UTC)
+Received: from krava (unknown [10.40.193.236])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C8C2B19C4F;
+        Mon, 31 Aug 2020 08:43:49 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 10:43:48 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Kajol Jain <kjain@linux.ibm.com>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        john.garry@huawei.com
+Subject: Re: [PATCH v6 1/5] perf/jevents: Remove jevents.h file
+Message-ID: <20200831084348.GB287892@krava>
+References: <20200827130958.189146-1-kjain@linux.ibm.com>
+ <20200827130958.189146-2-kjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <0da380c2-9161-d450-afd2-4b159c8cfb7d@gmail.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200827130958.189146-2-kjain@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31-08-20, 10:54, Dmitry Osipenko wrote:
-> 31.08.2020 07:39, Viresh Kumar пишет:
-> ...
-> >>> Dmitry, I think there is further scope of simplifying stuff here by
-> >>> using the opp-microvolt-<name> property and corresponding
-> >>> dev_pm_opp_set_prop_name() call.
-> > 
-> > Any inputs on this Dmitry ?
+On Thu, Aug 27, 2020 at 06:39:54PM +0530, Kajol Jain wrote:
+> This patch removes jevents.h file and add its data inside
+> jevents.c as this file is only included there.
 > 
-> Could you please give an example?
+> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+> ---
+>  tools/perf/pmu-events/jevents.c |  9 ++++++++-
+>  tools/perf/pmu-events/jevents.h | 23 -----------------------
+>  2 files changed, 8 insertions(+), 24 deletions(-)
+>  delete mode 100644 tools/perf/pmu-events/jevents.h
+> 
+> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+> index fa86c5f997cc..1c55cc754b5a 100644
+> --- a/tools/perf/pmu-events/jevents.c
+> +++ b/tools/perf/pmu-events/jevents.c
+> @@ -48,11 +48,18 @@
+>  #include <linux/list.h>
+>  #include "jsmn.h"
+>  #include "json.h"
+> -#include "jevents.h"
+>  
+>  int verbose;
+>  char *prog;
+>  
+> +#ifndef min
+> +#define min(x, y) ({				\
+> +	typeof(x) _min1 = (x);			\
+> +	typeof(y) _min2 = (y);			\
+> +	(void)(&_min1 == &_min2);		\
+> +	_min1 < _min2 ? _min1 : _min2; })
+> +#endif
+> +
+>  int eprintf(int level, int var, const char *fmt, ...)
+>  {
+>  
+> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
+> deleted file mode 100644
+> index 2afc8304529e..000000000000
+> --- a/tools/perf/pmu-events/jevents.h
+> +++ /dev/null
+> @@ -1,23 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0 */
+> -#ifndef JEVENTS_H
+> -#define JEVENTS_H 1
+> -
+> -int json_events(const char *fn,
+> -		int (*func)(void *data, char *name, char *event, char *desc,
+> -				char *long_desc,
+> -				char *pmu,
+> -				char *unit, char *perpkg, char *metric_expr,
+> -				char *metric_name, char *metric_group,
+> -				char *deprecated, char *metric_constraint),
+> -		void *data);
+> -char *get_cpu_str(void);
 
-There are many users of it in the kernel. grep for "opp-microvolt-" in
-the DT files and you will see.
+I think you can also remove get_cpu_str from jevents.c
 
-The use of this property is to specific multiple microvolt properties
-to the same frequency without a need to create separate nodes for them
-all. The right microvolt property will be selected based on the call
-made to dev_pm_opp_set_prop_name(), search for that too in kernel.
+thanks,
+jirka
 
--- 
-viresh
