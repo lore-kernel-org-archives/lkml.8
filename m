@@ -2,109 +2,243 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4569DC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCB1C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25EF120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1794206B5
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 06:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cMuyRTSx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgHaG17 (ORCPT
+        id S1726526AbgHaGcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 02:27:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10738 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725794AbgHaG16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 02:27:58 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2EB4BFA26646CA0B97BD;
-        Mon, 31 Aug 2020 14:27:56 +0800 (CST)
-Received: from huawei.com (10.175.104.175) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 31 Aug 2020
- 14:27:47 +0800
-From:   Miaohe Lin <linmiaohe@huawei.com>
-To:     <davem@davemloft.net>, <kuznet@ms2.inr.ac.ru>,
-        <yoshfuji@linux-ipv6.org>, <kuba@kernel.org>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linmiaohe@huawei.com>
-Subject: [PATCH v2] net: ipv4: remove unused arg exact_dif in compute_score
-Date:   Mon, 31 Aug 2020 02:26:34 -0400
-Message-ID: <20200831062634.8481-1-linmiaohe@huawei.com>
-X-Mailer: git-send-email 2.19.1
+        Mon, 31 Aug 2020 02:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725891AbgHaGcp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 02:32:45 -0400
+Received: from mail-vs1-xe34.google.com (mail-vs1-xe34.google.com [IPv6:2607:f8b0:4864:20::e34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC4B2C061236
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 23:32:44 -0700 (PDT)
+Received: by mail-vs1-xe34.google.com with SMTP id a13so2627432vso.12
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 23:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=JL5FY/OPoxC6HDWJYlv4yemjpNN92vvIN4CMSxtN6co=;
+        b=cMuyRTSxyhExkZY0IKNSWlVvO8PuH5Ok63c4pQ9nutHuvq2NWmeGFZJRG1IDHzqY8Q
+         cIZwp2JhXWSUOq9UojMJbh+mQk+yzS31Vc23awkX6gzCudYOuf6XYs4UgNnH8S1DzvEY
+         JWZ5xdwn/SRpSX9QhihOqPOXU5UBEItfwrSuL8nsYby9QjLXgzxdNBPiMnoMMqxinIt8
+         f2aZ8fGRQqOG4lprhboGisuN+ZPhkiHTi2In5WeKxBRsfdDnwybgFMFWcNF8W476CJky
+         qX2XGIpLab2UOus7H6JYxviic+Dp12HREV7rndufZMvTSyj1yGME0SzW19qdzw2jWbJ5
+         hTYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=JL5FY/OPoxC6HDWJYlv4yemjpNN92vvIN4CMSxtN6co=;
+        b=dFOKRgvxttrfQzZI/UQoIXvyaCm/SSLBQWC7X+TeBfBxRoBXonzbWGXGooVnXhFKS0
+         cgRDrxIhhi7dNIj+EpOtxNyTIIY8J04WDofPIKC5Yp63KfeE38IDvFA9HwRnCiQJfFeG
+         0o117KKP70U4NuP/B/4aJbfvVWECh9d3hodUrZ9jiRXt0yAkqsXFiDhtPmxM8C3nXt7z
+         xIw9M/HdOrLjuHnZ8Yg+wflEFsg9Y3BOiq5Lcimlgee/bohvfK7PCZxKqNUSeIs9CoRJ
+         pUAKh+itQOW1ova13zDfTeN297iBxhrbAA6nvq3u25lOZjdzL9NzMmtTLgl8/hlrLRt2
+         csKg==
+X-Gm-Message-State: AOAM5325h0m5bTRc6Sio1W517/9pN7tauzR4iLgc3nOCDmrbecKIxXZL
+        O5gXHXRxvAry/+3HFAxs9g5nsSOmRjdlnCMlvMGMPyLixFLbcQSn
+X-Google-Smtp-Source: ABdhPJzOO76mzWnFTJKnD/SXT05L8mq2/oW90RWTXbauVOOkxUkgcAw1KvyWdnOAxbqvkf4WnYp37Ns7eHcYcwoOJXg=
+X-Received: by 2002:a67:7905:: with SMTP id u5mr41080vsc.179.1598855562545;
+ Sun, 30 Aug 2020 23:32:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.104.175]
-X-CFilter-Loop: Reflected
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 31 Aug 2020 12:02:31 +0530
+Message-ID: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
+Subject: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and OF
+ driver helper
+To:     open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>
+Cc:     Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The arg exact_dif is not used anymore, remove it. inet_exact_dif_match()
-is no longer needed after the above is removed, so remove it too.
+While booting linux mainline kernel on arm64 db410c this kernel warning
+noticed.
 
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
----
- include/net/tcp.h          | 10 ----------
- net/ipv4/inet_hashtables.c |  6 ++----
- 2 files changed, 2 insertions(+), 14 deletions(-)
+metadata:
+  git branch: master
+  git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+  git commit: f75aef392f869018f78cfedf3c320a6b3fcfda6b
+  git describe: v5.9-rc3
+  make_kernelversion: 5.9.0-rc3
+  kernel-config:
+http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-mainline/2965/config
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index eab6c7510b5b..0d11db6436c8 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -941,16 +941,6 @@ INDIRECT_CALLABLE_DECLARE(void tcp_v6_early_demux(struct sk_buff *skb));
- 
- #endif
- 
--static inline bool inet_exact_dif_match(struct net *net, struct sk_buff *skb)
--{
--#if IS_ENABLED(CONFIG_NET_L3_MASTER_DEV)
--	if (!net->ipv4.sysctl_tcp_l3mdev_accept &&
--	    skb && ipv4_l3mdev_skb(IPCB(skb)->flags))
--		return true;
--#endif
--	return false;
--}
--
- /* TCP_SKB_CB reference means this can not be used from early demux */
- static inline int tcp_v4_sdif(struct sk_buff *skb)
- {
-diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
-index 239e54474b65..8cbe74313f38 100644
---- a/net/ipv4/inet_hashtables.c
-+++ b/net/ipv4/inet_hashtables.c
-@@ -228,7 +228,7 @@ static void inet_unhash2(struct inet_hashinfo *h, struct sock *sk)
- 
- static inline int compute_score(struct sock *sk, struct net *net,
- 				const unsigned short hnum, const __be32 daddr,
--				const int dif, const int sdif, bool exact_dif)
-+				const int dif, const int sdif)
- {
- 	int score = -1;
- 
-@@ -277,15 +277,13 @@ static struct sock *inet_lhash2_lookup(struct net *net,
- 				const __be32 daddr, const unsigned short hnum,
- 				const int dif, const int sdif)
- {
--	bool exact_dif = inet_exact_dif_match(net, skb);
- 	struct inet_connection_sock *icsk;
- 	struct sock *sk, *result = NULL;
- 	int score, hiscore = 0;
- 
- 	inet_lhash2_for_each_icsk_rcu(icsk, &ilb2->head) {
- 		sk = (struct sock *)icsk;
--		score = compute_score(sk, net, hnum, daddr,
--				      dif, sdif, exact_dif);
-+		score = compute_score(sk, net, hnum, daddr, dif, sdif);
- 		if (score > hiscore) {
- 			result = lookup_reuseport(net, sk, skb, doff,
- 						  saddr, sport, daddr, hnum);
+Boot log,
+
+[    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
+[    0.000000] Linux version 5.9.0-rc3 (oe-user@oe-host)
+(aarch64-linaro-linux-gcc (GCC) 7.3.0, GNU ld (GNU Binutils)
+2.30.0.20180208) #1 SMP PREEMPT Mon Aug 31 00:23:15 UTC 2020
+[    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
+<>
+[    5.299090] sdhci: Secure Digital Host Controller Interface driver
+[    5.299140] sdhci: Copyright(c) Pierre Ossman
+[    5.304313]
+[    5.307771] Synopsys Designware Multimedia Card Interface Driver
+[    5.308588] =============================
+[    5.308593] WARNING: suspicious RCU usage
+[    5.316628] sdhci-pltfm: SDHCI platform and OF driver helper
+[    5.320052] 5.9.0-rc3 #1 Not tainted
+[    5.320057] -----------------------------
+[    5.320063] /usr/src/kernel/include/trace/events/lock.h:37
+suspicious rcu_dereference_check() usage!
+[    5.320068]
+[    5.320068] other info that might help us debug this:
+[    5.320068]
+[    5.320074]
+[    5.320074] rcu_scheduler_active = 2, debug_locks = 1
+[    5.320078] RCU used illegally from extended quiescent state!
+[    5.320084] no locks held by swapper/0/0.
+[    5.320089]
+[    5.320089] stack backtrace:
+[    5.320098] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
+[    5.346354] sdhci_msm 7864900.sdhci: Got CD GPIO
+[    5.346446] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    5.346452] Call trace:
+[    5.346463]  dump_backtrace+0x0/0x1f8
+[    5.346471]  show_stack+0x2c/0x38
+[    5.346480]  dump_stack+0xec/0x15c
+[    5.346490]  lockdep_rcu_suspicious+0xd4/0xf8
+[    5.346499]  lock_acquire+0x3d0/0x440
+[    5.346510]  _raw_spin_lock_irqsave+0x80/0xb0
+[    5.413118]  __pm_runtime_suspend+0x34/0x1d0
+[    5.417457]  psci_enter_domain_idle_state+0x4c/0xb0
+[    5.421795]  cpuidle_enter_state+0xc8/0x610
+[    5.426392]  cpuidle_enter+0x3c/0x50
+[    5.430561]  call_cpuidle+0x44/0x80
+[    5.434378]  do_idle+0x240/0x2a0
+[    5.437589]  cpu_startup_entry+0x2c/0x78
+[    5.441063]  rest_init+0x1ac/0x280
+[    5.444970]  arch_call_rest_init+0x14/0x1c
+[    5.448180]  start_kernel+0x50c/0x544
+[    5.452395]
+[    5.452399]
+[    5.452403] =============================
+[    5.452406] WARNING: suspicious RCU usage
+[    5.452409] 5.9.0-rc3 #1 Not tainted
+[    5.452412] -----------------------------
+[    5.452417] /usr/src/kernel/include/trace/events/ipi.h:36
+suspicious rcu_dereference_check() usage!
+[    5.452420]
+[    5.452424] other info that might help us debug this:
+[    5.452426]
+[    5.452429]
+[    5.452432] rcu_scheduler_active = 2, debug_locks = 1
+[    5.452436] RCU used illegally from extended quiescent state!
+[    5.452440] 1 lock held by swapper/0/0:
+[    5.452443]  #0: ffff8000127408f8 (logbuf_lock){-...}-{2:2}, at:
+vprintk_emit+0xb0/0x358
+[    5.452458]
+[    5.452461] stack backtrace:
+[    5.452465] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
+[    5.452469] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    5.452472] Call trace:
+[    5.452476]  dump_backtrace+0x0/0x1f8
+[    5.452479]  show_stack+0x2c/0x38
+[    5.452481]  dump_stack+0xec/0x15c
+[    5.452485]  lockdep_rcu_suspicious+0xd4/0xf8
+[    5.452489]  arch_irq_work_raise+0x208/0x210
+[    5.452493]  __irq_work_queue_local+0x64/0x88
+[    5.452495]  irq_work_queue+0x3c/0x88
+[    5.452499]  printk_safe_log_store+0x148/0x178
+[    5.452502]  vprintk_func+0x1cc/0x2b8
+[    5.452506]  printk+0x74/0x94
+[    5.452509]  lockdep_rcu_suspicious+0x28/0xf8
+[    5.452512]  lock_release+0x338/0x360
+[    5.452516]  _raw_spin_unlock+0x3c/0xa0
+[    5.452519]  vprintk_emit+0xf8/0x358
+[    5.452522]  vprintk_default+0x48/0x58
+[    5.452526]  vprintk_func+0xec/0x2b8
+[    5.452528]  printk+0x74/0x94
+[    5.452532]  lockdep_rcu_suspicious+0x28/0xf8
+[    5.452535]  lock_acquire+0x3d0/0x440
+[    5.452538]  _raw_spin_lock_irqsave+0x80/0xb0
+[    5.452542]  __pm_runtime_suspend+0x34/0x1d0
+[    5.452545]  psci_enter_domain_idle_state+0x4c/0xb0
+[    5.452549]  cpuidle_enter_state+0xc8/0x610
+[    5.452552]  cpuidle_enter+0x3c/0x50
+[    5.452555]  call_cpuidle+0x44/0x80
+[    5.452559]  do_idle+0x240/0x2a0
+[    5.452562]  cpu_startup_entry+0x2c/0x78
+[    5.452564]  rest_init+0x1ac/0x280
+[    5.452568]  arch_call_rest_init+0x14/0x1c
+[    5.452571]  start_kernel+0x50c/0x544
+[    5.452575] =============================
+[    5.452578] WARNING: suspicious RCU usage
+[    5.452582] 5.9.0-rc3 #1 Not tainted
+[    5.452585] -----------------------------
+[    5.452590] /usr/src/kernel/include/trace/events/lock.h:63
+suspicious rcu_dereference_check() usage!
+[    5.452593]
+[    5.452596] other info that might help us debug this:
+[    5.452599]
+[    5.452601]
+[    5.452605] rcu_scheduler_active = 2, debug_locks = 1
+[    5.452609] RCU used illegally from extended quiescent state!
+[    5.452612] 1 lock held by swapper/0/0:
+[    5.452615]  #0: ffff8000127408f8 (logbuf_lock){-...}-{2:2}, at:
+vprintk_emit+0xb0/0x358
+[    5.452630]
+[    5.452633] stack backtrace:
+[    5.452636] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
+[    5.452640] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+[    5.452643] Call trace:
+[    5.452646]  dump_backtrace+0x0/0x1f8
+[    5.452649]  show_stack+0x2c/0x38
+[    5.452652]  dump_stack+0xec/0x15c
+[    5.452656]  lockdep_rcu_suspicious+0xd4/0xf8
+[    5.452659]  lock_release+0x338/0x360
+[    5.452662]  _raw_spin_unlock+0x3c/0xa0
+[    5.452665]  vprintk_emit+0xf8/0x358
+[    5.452669]  vprintk_default+0x48/0x58
+[    5.452671]  vprintk_func+0xec/0x2b8
+[    5.452674]  printk+0x74/0x94
+[    5.452677]  lockdep_rcu_suspicious+0x28/0xf8
+[    5.452680]  lock_acquire+0x3d0/0x440
+[    5.452683]  _raw_spin_lock_irqsave+0x80/0xb0
+[    5.452686]  __pm_runtime_suspend+0x34/0x1d0
+[    5.452690]  psci_enter_domain_idle_state+0x4c/0xb0
+[    5.452693]  cpuidle_enter_state+0xc8/0x610
+[    5.452696]  cpuidle_enter+0x3c/0x50
+[    5.452698]  call_cpuidle+0x44/0x80
+[    5.452701]  do_idle+0x240/0x2a0
+[    5.452704]  cpu_startup_entry+0x2c/0x78
+[    5.452708]  rest_init+0x1ac/0x280
+[    5.452711]  arch_call_rest_init+0x14/0x1c
+[    5.452714]  start_kernel+0x50c/0x544
+
+full test log link,
+https://qa-reports.linaro.org/lkft/linux-mainline-oe/build/v5.9-rc3/testrun/3137660/suite/linux-log-parser/test/check-kernel-warning-1722813/log
+
 -- 
-2.19.1
-
+Linaro LKFT
+https://lkft.linaro.org
