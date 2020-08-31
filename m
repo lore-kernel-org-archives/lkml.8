@@ -2,97 +2,125 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1A5C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1E5C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668152071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B6022068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:32:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WDX0cwBQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZ/RE6qq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgHaSbs (ORCPT
+        id S1729371AbgHaScG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:31:48 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:55299 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726174AbgHaSbr (ORCPT
+        Mon, 31 Aug 2020 14:32:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55558 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729216AbgHaScE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:31:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598898707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=RxJLlZuQTfe0nzxxsZvFwjkSWTHqtnjzt8kLm8TmuCk=;
-        b=WDX0cwBQCI8wAmWP8j7BEqB/sz8s5TI3QQGf6YTP0EprCalJoL4KLkyWKV2lvvWDI2D3sn
-        R2FzNpODhhzED5O8WWsHVyZbx3FTJwHJycv+zl5i8UjFoerZZjWz+jVek5A0Aep4FgkcQN
-        OmKopjGz1iiNXFKZ5698XAeX2vnzrgc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-566-9T-JruPWPqiJYtb7vtNn6A-1; Mon, 31 Aug 2020 14:31:45 -0400
-X-MC-Unique: 9T-JruPWPqiJYtb7vtNn6A-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E43FB1084C81;
-        Mon, 31 Aug 2020 18:31:43 +0000 (UTC)
-Received: from treble (ovpn-114-37.rdu2.redhat.com [10.10.114.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3AFEB7A41A;
-        Mon, 31 Aug 2020 18:31:42 +0000 (UTC)
-Date:   Mon, 31 Aug 2020 13:31:40 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Julien Thierry <jthierry@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
-        raphael.gault@arm.com, benh@kernel.crashing.org
-Subject: Re: [PATCH v2 8/9] frame: Make unwind hints definitions available to
- other architectures
-Message-ID: <20200831183140.xxadcua3ggldbo6q@treble>
-References: <20200730094652.28297-1-jthierry@redhat.com>
- <20200730094652.28297-9-jthierry@redhat.com>
- <20200730145613.lbsexjcqwj67ktmb@treble>
- <12615fa7-8ba9-1daa-f648-644bf16110f2@redhat.com>
+        Mon, 31 Aug 2020 14:32:04 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0F39C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:32:03 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id w13so6917131wrk.5
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:32:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/ZFV5OhR4lC3CDEKGvIih7tt3e4EfiSPTJ9kPq158BY=;
+        b=EZ/RE6qqu7G3Fmz+/u860xOlABVaOjwocu5TV+Fm2IKH/e3MSwCnOs0xn6rj2d/XCn
+         tUvXRBNRF5hzeybcQFsw4FU0nRsyeSAhJhlKMezhnBPlRZ0vO+QjrwVYltyAIHXEASIM
+         gl5nRHoU6KFYbot0g/RQRWfzKiv66HkuZdYRhwYwc9wMALevbBJLBlWV11TeiRR6CWzJ
+         CwY3p7gXBFmX6D9imEXLEem6tmuzEpUvo6qjySDEH3Ps2N0cp5oKulIZIVX45D6Cz+lt
+         40Odn+lv8PATf/Iv+Xk299AFYMNXtG8fplExOQXl+jkRxbBhv0ezzrBbscFtxlZ2C646
+         S3Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/ZFV5OhR4lC3CDEKGvIih7tt3e4EfiSPTJ9kPq158BY=;
+        b=X1iabFsfeT3FSYaOvllGNDv6NglH2OEgC9PwoftkYOppxKjn/Xk0IGXQa0brcf/+uT
+         aBJt2BdRhSUl06Nq8bZqw15CmF+1kLzihYnbH745kVBTA4whgZR6faLEik7cnhgjv7EU
+         CmgCC6z8s8fAI3HfSOV0zOf6ejzMa49X3ykmcilMajFYWsyXeVKiaAoVsh+d8vMFLeyZ
+         qmKjpvs1dDGMTCvCrG8aIR0VC717iX1S384YSd+pqesVdh1o5RTFOzP3MZFVP4XhvZAk
+         SjB07RInZW4H1N2zzWNph/XpqHPYEMto3S4BUKbyBs65KrFLSv7cjdhMKUyZvbjyRMDV
+         1qsg==
+X-Gm-Message-State: AOAM531RIZpXO6B9m33cN7tupRYfvLUsz/kwkaqvzFqVdzzpnC7uaK50
+        sPoBefjbEMwiIRcO2wIMzgCLLcgUXGPirLvjASZyCw==
+X-Google-Smtp-Source: ABdhPJz0BghDHQACx6mv+1qWTLE4jnnjQtAR2MSFlnYkFTJB+1+N6USPsX0n6iz6zIpOuLimAK8t9xOGDautZX4xDWk=
+X-Received: by 2002:adf:db52:: with SMTP id f18mr2708925wrj.397.1598898722363;
+ Mon, 31 Aug 2020 11:32:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <12615fa7-8ba9-1daa-f648-644bf16110f2@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+References: <20200828141344.2277088-1-alinde@google.com> <CAC5umyiNw7FA__Y3HZ1UEG8Y6uQDgAWHTJpOVf7okERzpCjnRg@mail.gmail.com>
+ <CAG_fn=XDTWYbxb1Hy1p0hdOtOejZPWvDXfitysK7wUOsPAE_XQ@mail.gmail.com> <CAC5umyhmZmM4+FVDsyDzaUOpFsqd=RTopEpFuuMgnpQ+rzb1ZQ@mail.gmail.com>
+In-Reply-To: <CAC5umyhmZmM4+FVDsyDzaUOpFsqd=RTopEpFuuMgnpQ+rzb1ZQ@mail.gmail.com>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 31 Aug 2020 20:31:51 +0200
+Message-ID: <CAG_fn=WK8P5ytLtPAzW1FswTz1OcTkfyB4pmUYJWWmjWYAm21Q@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] add fault injection to user memory access
+To:     Akinobu Mita <akinobu.mita@gmail.com>
+Cc:     Albert Linde <albert.linde@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Marco Elver <elver@google.com>, linux-doc@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Albert van der Linde <alinde@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 01:12:04PM +0100, Julien Thierry wrote:
-> 
-> 
-> On 7/30/20 3:56 PM, Josh Poimboeuf wrote:
-> > On Thu, Jul 30, 2020 at 10:46:51AM +0100, Julien Thierry wrote:
-> > > Unwind hints are useful to provide objtool with information about stack
-> > > states in non-standard functions/code.
-> > > While the type of information being provided might be very arch
-> > > specific, the mechanism to provide the information can be useful for
-> > > other architectures.
-> > > 
-> > > Move the relevant unwint hint definitions for all architectures to
-> > > see.
-> > 
-> > The scope of include/linux/frame.h has been creeping, it's no longer
-> > just about frame pointers.  Maybe we should rename it to objtool.h.
-> > 
-> 
-> I missed this comment until now, sorry.
-> 
-> The name "objtool.h" might conflict with tools/objtool/objtool.h. What about
-> "objtool_utils.h" or "objtool_defs.h" ?
+Hi Andrew,
 
-There shouldn't be a conflict: objtool doesn't include kernel headers
-directly; and even if it did need a copy (in tools/include/linux), it
-would be referenced as <linux/objtool.h> instead of "objtool.h".
+On Mon, Aug 31, 2020 at 6:27 PM Akinobu Mita <akinobu.mita@gmail.com> wrote=
+:
+>
+> Andrew,
+>
+> Could you take a look at this series, and consider taking in -mm tree?
 
--- 
-Josh
+Please consider picking v3 patches that address Peter's comments instead.
 
+>
+> 2020=E5=B9=B49=E6=9C=881=E6=97=A5(=E7=81=AB) 0:49 Alexander Potapenko <gl=
+ider@google.com>:
+> >
+> > > This series looks good to me.
+> >
+> > Great!
+> >
+> > Which tree do fault injection patches normally go to?
+> >
+> > > Reviewed-by: Akinobu Mita <akinobu.mita@gmail.com>
+> >
+> > Reviewed-by: Alexander Potapenko <glider@google.com>
+
+
+
+--=20
+Alexander Potapenko
+Software Engineer
+
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
+
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
