@@ -2,125 +2,123 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLACK autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D80BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6A8C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64D2020757
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E1CE2074B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:30:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nftfqZ8D"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="uKscBZWh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726479AbgHaAYN (ORCPT
+        id S1726491AbgHaAan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 20:24:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55612 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgHaAYL (ORCPT
+        Sun, 30 Aug 2020 20:30:43 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:38614 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726179AbgHaAam (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 20:24:11 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEE7EC061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 17:24:10 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id 2so2215893pjx.5
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 17:24:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZnfXYUbCB2BbWKqT6zdvNTUKiLkNrjoRnmWZrCX/fz8=;
-        b=nftfqZ8DnVy4hFsXpIRjiH68UiYa/itmOgKxyJ8MtRpETwtiFJSTo0RhIvPObdIiY9
-         nDlO0/B9dtHyjgyLPWLM+2wCwsrBlZqGDjDp7PK1wIL/Npo5eUmrWKrMa/haOcTSEAVV
-         9F7DjOt8O93v4r+x69+HXwwjF2A9xW2S8RfWZadS3vBFgW5J2MkdvDrjyTVIFPaToAVp
-         daKOR28aP1Xrh0JonpUVoTEPh6ZzEhyty1DB8lwKEgQ7uH0vjBMDORM6K5i/wvPOLQkA
-         UNQcpiys4UE5avtviwdPsmiuXK/GpfQgFpB4CyNoBTRCF4zHkucKJHbfx5PnuODnzFBU
-         Dj3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZnfXYUbCB2BbWKqT6zdvNTUKiLkNrjoRnmWZrCX/fz8=;
-        b=Q2vSKk3XSwOsgqvQPFTOiyDu6+AhfanCjXDbvfip3iMIM/R54QoLFNeVV0JXEOYUua
-         FCxk8UcRoGDKEmMNtQsIxw6Xt4t75BS/q/d64KkUJ5ZF7ysMFFGYU1n/tXph2ZA579zo
-         YEmmOUN8kGdqXb7hxQCCNzD7oSRG1sNwghXCIOBai7E9CgMOx1fUSgm8Os3aXh8yF2Vt
-         2louyDxKc8QrluSuKeDo4+L4Xgcchpmb5Y6Pv50aTN5+GvQCmz6mAoo1xjP454a9LMFs
-         lKbnbo6QwAPnGHWlsxf354zh55o0yzce0TGfzDeY3isBu5hyofPsaYTXDMUYICsdOUEF
-         MVXQ==
-X-Gm-Message-State: AOAM530XKnuBRvH/qTPfjEeUM0IuItMBAhH9Ila0IZB6fcDRog7QACQ8
-        0BfTZ8+lFXpEFK9nx67ytJg/3Ci1IeI=
-X-Google-Smtp-Source: ABdhPJxU3uC9s/QR9RBkZO0HL/4Vd28NyPzLtSUUf2pebZcDvM1d2R8ZoAsqQXsstWSWBAJEn3zBIA==
-X-Received: by 2002:a17:90a:eb17:: with SMTP id j23mr8148264pjz.151.1598833449671;
-        Sun, 30 Aug 2020 17:24:09 -0700 (PDT)
-Received: from daehojeong1.seo.corp.google.com ([2401:fa00:d:1:a6ae:11ff:fe18:6ce2])
-        by smtp.gmail.com with ESMTPSA id r33sm5244826pgm.75.2020.08.30.17.24.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 17:24:08 -0700 (PDT)
-From:   Daeho Jeong <daeho43@gmail.com>
-To:     linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
-Cc:     Daeho Jeong <daehojeong@google.com>
-Subject: [PATCH] f2fs: add block address limit check to compressed file
-Date:   Mon, 31 Aug 2020 09:24:01 +0900
-Message-Id: <20200831002401.3159134-1-daeho43@gmail.com>
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+        Sun, 30 Aug 2020 20:30:42 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V0P2TH047948;
+        Mon, 31 Aug 2020 00:30:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=5tC/wlNp0puD7zLA31pTRgiOEnDcLFU5sUbJV8KxuXM=;
+ b=uKscBZWhSvshBAPv2PtL4Yu6Jd1xQS0miJM5DBl2CS1NoZjFK1cuIzIOqpK3KzU5sEma
+ NdXkgjbIvsao7PmWWAM7yrHwKRCS8M5K7rilMvwkhUsg/hR20xZnv0PiMreBkATk4cpC
+ X/tg8FlbJNnBskybbXh+i5CC/eWMPEAJ1bDiWmoFdoZ1LDuBweB1Y5r0Lc71E8sP5Ktm
+ 6phRhBpYHzI7JSKuxuayY9glVHh7R9adxBNtam0Q7egYKX1pvzeHmhrkMcLl+08IxJ+v
+ dO6N3Ahu3RcymviBhoWg+3clSP0CwA4z7z/e/0wFEogiejlC+KK4O6PoPWDiS5zmTnhj RQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 337eeqknmp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 31 Aug 2020 00:30:33 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 07V0QVv0016374;
+        Mon, 31 Aug 2020 00:30:33 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 3380wxrrs2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 00:30:32 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 07V0UUSV028133;
+        Mon, 31 Aug 2020 00:30:30 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 30 Aug 2020 17:30:30 -0700
+Date:   Sun, 30 Aug 2020 17:30:33 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iomap: fix WARN_ON_ONCE() from unprivileged users
+Message-ID: <20200831003033.GZ6096@magnolia>
+References: <20200830013057.14664-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200830013057.14664-1-cai@lca.pw>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 suspectscore=56 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008310001
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9729 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=56
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2008310001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daeho Jeong <daehojeong@google.com>
+On Sat, Aug 29, 2020 at 09:30:57PM -0400, Qian Cai wrote:
+> It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
+> unprivileged users which would taint the kernel, or worse - panic if
+> panic_on_warn or panic_on_taint is set. Hence, just convert it to
+> pr_warn_ratelimited() to let users know their workloads are racing.
+> Thanks Dave Chinner for the initial analysis of the racing reproducers.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  fs/iomap/direct-io.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index c1aafb2ab990..6a6b4bc13269 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -389,7 +389,14 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  	case IOMAP_INLINE:
+>  		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+>  	default:
+> -		WARN_ON_ONCE(1);
+> +		/*
+> +		 * DIO is not serialised against mmap() access at all, and so
+> +		 * if the page_mkwrite occurs between the writeback and the
+> +		 * iomap_apply() call in the DIO path, then it will see the
+> +		 * DELALLOC block that the page-mkwrite allocated.
+> +		 */
+> +		pr_warn_ratelimited("page_mkwrite() is racing with DIO read (iomap->type = %u).\n",
+> +				    iomap->type);
 
-Need to add block address range check to compressed file case and
-avoid calling get_data_block_bmap() for compressed file.
+Shouldn't we log the name of triggering process and the file path?  Sort
+of like what dio_warn_stale_pagecache does?
 
-Signed-off-by: Daeho Jeong <daehojeong@google.com>
----
- fs/f2fs/data.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+--D
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index c1b676be67b9..48cab85205e2 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1755,10 +1755,6 @@ static int get_data_block_dio(struct inode *inode, sector_t iblock,
- static int get_data_block_bmap(struct inode *inode, sector_t iblock,
- 			struct buffer_head *bh_result, int create)
- {
--	/* Block number less than F2FS MAX BLOCKS */
--	if (unlikely(iblock >= F2FS_I_SB(inode)->max_file_blocks))
--		return -EFBIG;
--
- 	return __get_data_block(inode, iblock, bh_result, create,
- 						F2FS_GET_BLOCK_BMAP, NULL,
- 						NO_CHECK_TYPE, create);
-@@ -3753,11 +3749,16 @@ static sector_t f2fs_bmap(struct address_space *mapping, sector_t block)
- 	if (mapping_tagged(mapping, PAGECACHE_TAG_DIRTY))
- 		filemap_write_and_wait(mapping);
- 
--	if (f2fs_compressed_file(inode))
--		blknr = f2fs_bmap_compress(inode, block);
-+	/* Block number less than F2FS MAX BLOCKS */
-+	if (unlikely(block >= F2FS_I_SB(inode)->max_file_blocks))
-+		goto out;
- 
--	if (!get_data_block_bmap(inode, block, &tmp, 0))
--		blknr = tmp.b_blocknr;
-+	if (f2fs_compressed_file(inode)) {
-+		blknr = f2fs_bmap_compress(inode, block);
-+	} else {
-+		if (!get_data_block_bmap(inode, block, &tmp, 0))
-+			blknr = tmp.b_blocknr;
-+	}
- out:
- 	trace_f2fs_bmap(inode, block, blknr);
- 	return blknr;
--- 
-2.28.0.402.g5ffc5be6b7-goog
-
+>  		return -EIO;
+>  	}
+>  }
+> -- 
+> 2.18.4
+> 
