@@ -2,77 +2,118 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E84C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08215C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28741204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2042204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:05:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="ZSrrE7lj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgHaRFe (ORCPT
+        id S1728845AbgHaRFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:05:34 -0400
-Received: from mga09.intel.com ([134.134.136.24]:46756 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727929AbgHaRFd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:05:33 -0400
-IronPort-SDR: CL7c+Xpi0qrFPH+8/0w+0aJ2womaQG2SLPo+2a/+CIFGDhInaWSGaPk63JswfuPBkyfthxJ6Bb
- 2i4HpU5NLUOQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="158029315"
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="158029315"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:05:31 -0700
-IronPort-SDR: g1lBwoztU18Wr7S0DWGuq3tbcYExMT/QZn8OFKF923kdQq46pJ+q4zZ3eY/Cb+ZbwI/PrYW3dW
- T0gE+K7HjxiA==
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="476807046"
-Received: from paasikivi.fi.intel.com ([10.237.72.42])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:05:27 -0700
-Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
-        id C12D020623; Mon, 31 Aug 2020 20:05:24 +0300 (EEST)
-Date:   Mon, 31 Aug 2020 20:05:24 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: Re: [PATCH v6 1/6] i2c: Allow an ACPI driver to manage the device's
- power state during probe
-Message-ID: <20200831170524.GM31019@paasikivi.fi.intel.com>
-References: <20200826115432.6103-1-sakari.ailus@linux.intel.com>
- <20200826115432.6103-2-sakari.ailus@linux.intel.com>
- <20200831100022.GB1070@ninjato>
+        Mon, 31 Aug 2020 13:05:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41820 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728829AbgHaRFi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 13:05:38 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C6F9C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:05:37 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id g14so6788116iom.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:05:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NupQwOin7OIUMIEQkBORyIATGdqAz+bfGvsiSPmfA0g=;
+        b=ZSrrE7lja8S44m6VDFYpuUVPj180evZgepv+n5Olz62tJeG0Mm1veMfhBfsAzclMDD
+         rCgw+cTEYzFaVjKm8FruvNBxQ+DCr6mi7KNx8Yu5V04AlHm2IP73U+weUhecberMWoiN
+         dJysYL7nXrAjuGZhjiwnFAbOdk08W2jihSLi6xBeLQ+6/5Y4J7YlSB8/czZ9Xdam4hF9
+         ItM4t8BNCQexQ0BtVZoPD01thRQKRh7R0QHo/AyofQXoJZw3l8l/sOXubq1s4NET6gtj
+         3IAcyViBF75bWfpg7iP8tyZYH6pziaXSAWfgSzbdnJ2dQQPOHdvgP3JZal708Ib+4zY7
+         Bp5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NupQwOin7OIUMIEQkBORyIATGdqAz+bfGvsiSPmfA0g=;
+        b=Se/74DHA/ppQ3rfSz8doDLSkJpRlbCig+XF4kxyhq6dJYfDTiegJ/1Cu97hBTJWa39
+         YWN253nvEA64o1pyo6QGMkaILMawXpZemgNgHKNzExmrPBLd9hwhawMnP4xrlvIsTFXc
+         O5DaZBxa1gWsieGFyBk38sjSoBl4zB4zxkYPmJichSJbzIVAZVY1wZbryBLh5gKNiQn9
+         o3+BZOPRKWDD4NJCpYToSyVI7CZQT9naXABe7LAQh/1jQmyywX3dwXTrL8hvhKafUz3G
+         jdwU2XVrROiIf3e37THt9hRkH0vNH7GSlQ+lI9fwt8dMLZ75Trd9/cBnOjrz2CI+M20i
+         HiBw==
+X-Gm-Message-State: AOAM532fARAYTbolqnDcBCV1FzhxuTIWid/meoTTLnu+baUPn2xhnj11
+        /B0zX3qbbvc02kOXOmcihiWYcQ==
+X-Google-Smtp-Source: ABdhPJwEAn6jxmt9zWEmcq/dBYqtgWifA/B8Ppg0qLdObo/ZA6Scud2q2DgBy9rgnrAG+TkyWisGkA==
+X-Received: by 2002:a02:a30b:: with SMTP id q11mr2053911jai.77.1598893536338;
+        Mon, 31 Aug 2020 10:05:36 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id k16sm4626707ilc.38.2020.08.31.10.05.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 10:05:35 -0700 (PDT)
+Subject: Re: [PATCH v2] vfs: add RWF_NOAPPEND flag for pwritev2
+To:     Jann Horn <jannh@google.com>, Rich Felker <dalias@libc.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Pavel Begunkov <asml.silence@gmail.com>
+References: <20200831153207.GO3265@brightrain.aerifal.cx>
+ <CAG48ez39WNuoxYO=RaW5OeVGSOy=uEAZ+xW_++TP7yjkUKGqkg@mail.gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <a9d26744-ba7a-2223-7284-c0d1a5ddab8a@kernel.dk>
+Date:   Mon, 31 Aug 2020 11:05:34 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831100022.GB1070@ninjato>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAG48ez39WNuoxYO=RaW5OeVGSOy=uEAZ+xW_++TP7yjkUKGqkg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 12:00:23PM +0200, Wolfram Sang wrote:
+On 8/31/20 9:46 AM, Jann Horn wrote:
+> On Mon, Aug 31, 2020 at 5:32 PM Rich Felker <dalias@libc.org> wrote:
+>> The pwrite function, originally defined by POSIX (thus the "p"), is
+>> defined to ignore O_APPEND and write at the offset passed as its
+>> argument. However, historically Linux honored O_APPEND if set and
+>> ignored the offset. This cannot be changed due to stability policy,
+>> but is documented in the man page as a bug.
+>>
+>> Now that there's a pwritev2 syscall providing a superset of the pwrite
+>> functionality that has a flags argument, the conforming behavior can
+>> be offered to userspace via a new flag. Since pwritev2 checks flag
+>> validity (in kiocb_set_rw_flags) and reports unknown ones with
+>> EOPNOTSUPP, callers will not get wrong behavior on old kernels that
+>> don't support the new flag; the error is reported and the caller can
+>> decide how to handle it.
+>>
+>> Signed-off-by: Rich Felker <dalias@libc.org>
 > 
-> > +	unsigned int flags;
+> Reviewed-by: Jann Horn <jannh@google.com>
 > 
-> u32?
+> Note that if this lands, Michael Kerrisk will probably be happy if you
+> send a corresponding patch for the manpage man2/readv.2.
 > 
+> Btw, I'm not really sure whose tree this should go through - VFS is
+> normally Al Viro's turf, but it looks like the most recent
+> modifications to this function have gone through Jens Axboe's tree?
 
-Yes.
+Should probably go through Al's tree, I've only carried them when
+they've been associated with io_uring in some shape or form.
 
 -- 
-Sakari Ailus
+Jens Axboe
+
