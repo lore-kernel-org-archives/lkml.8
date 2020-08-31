@@ -2,111 +2,166 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D64C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A874C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:25:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6502A20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:24:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="kYW61x2z"
+	by mail.kernel.org (Postfix) with ESMTP id 6C67B20678
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:25:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598898310;
+	bh=dpPlabcOEmGL+DDjEUw9cBhzwNQ1nvHDc4JC1aQdK/k=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=G2qabz+l+RjQvaz3wwjCH/QsU+vjhIuaxnsqVcm/w/rd71pHfUh2uNHNdQJ9129nF
+	 /ZyEWZnlZ4q0DrR1a8hA+k67PwWjnZcWLgOjKweb/J1FMyM40PCsR/JWcz6RVXuH1i
+	 YF/LHStakxfa3dSeOculEOcmnoz0o0/q+J5IYu/g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729848AbgHaSYw (ORCPT
+        id S1729853AbgHaSZJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:24:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54434 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729247AbgHaSYv (ORCPT
+        Mon, 31 Aug 2020 14:25:09 -0400
+Received: from conuserg-12.nifty.com ([210.131.2.79]:32850 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729232AbgHaSZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:24:51 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BE4C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:24:51 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id d20so4270005qka.5
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:24:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Hv640m4QkJdkTl9Q76dQvaUvN3yaHlXk40EdjG2dAxU=;
-        b=kYW61x2zxq/v2MAjtM1SNuP5dO2xGEionNS42MAxP4Ma8vuz/TuCLOA2zrC1SLEsU8
-         mqr0GxH5Mz5wcxZYWwXCNE9hs3XryDoF/Xm2gxhzowNNk0bjU1fO0gVSyh4jTJA7tCoY
-         NiFP+T+sZg5gVrG/kUsNAkBGWDGtSm+H4E1hejCX2Q350AyDjtCuJyVA5zXpIkCxFUeR
-         yWS/J7YoYyvAL9ARO3Ld57mG2/F7X7oW+pOUjWf+LNIWJJyGU3PX/bJy77Oft7Q+RWIp
-         xTwf+3cwAiJ3rBz0Jaevclu5sJRuKNyDM4SL1SU5Q2PthC2gHXYk0e0PdczyTHY70UIC
-         NTHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Hv640m4QkJdkTl9Q76dQvaUvN3yaHlXk40EdjG2dAxU=;
-        b=MZHR+CYcPfDoMyGkVsTUSgPBdzPlRZmgSMeyyQKZppWyY7tM7DESGxlVz4z4A8cqOH
-         cy1jZgms1D60bs6IQjVv6szlO1chhBHK1+iE6zOITItWyJY86r/IoTvgrvK4Y6FKRiK5
-         KP7AQ+iW0AdmFBzgc7mSHHthTAxr2kxG4fePTpWYIZDjGOGu2hwCSVtzEN24G9KS63eC
-         2r5dnuw993VnhA747kRx4/XAbP2G1mhpGyPpLdQFwyr1ggqWm4BXdGKpXC8X/Nw3fpoM
-         EZFDpDXSQw94SEhepWq5N8Ytv5d6UKGAhw013goIsu8+dRd+7xEPe46HtH3aJgsu2H2P
-         Mrfw==
-X-Gm-Message-State: AOAM531iHZ8OUBZMRsSehu9PwTziirXTf7iGFTPpxh9yoMpkjqq5793J
-        a1/NaNG+inxh2subZD0pb1zatQ==
-X-Google-Smtp-Source: ABdhPJyV6ew6dwpr4lrBr5AcKDSn1rykBLekoGp72e7NKLLUDp5XJXZwZCR1f2xKU5oO/2sXd3E2Yw==
-X-Received: by 2002:a05:620a:1257:: with SMTP id a23mr2322807qkl.207.1598898290431;
-        Mon, 31 Aug 2020 11:24:50 -0700 (PDT)
-Received: from localhost.localdomain.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id e9sm3352144qkb.8.2020.08.31.11.24.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 11:24:49 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     darrick.wong@oracle.com
-Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v4] iomap: fix WARN_ON_ONCE() from unprivileged users
-Date:   Mon, 31 Aug 2020 14:23:53 -0400
-Message-Id: <20200831182353.14593-1-cai@lca.pw>
-X-Mailer: git-send-email 2.18.4
+        Mon, 31 Aug 2020 14:25:09 -0400
+Received: from oscar.flets-west.jp (softbank126090211135.bbtec.net [126.90.211.135]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 07VIMj78001504;
+        Tue, 1 Sep 2020 03:22:46 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 07VIMj78001504
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1598898166;
+        bh=gDsWGmkcPm9WZCCqq0YASfbSSSRYZcdi2ssPSrYsKcY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IhZU2MnvJ7cGF9KHjklnkzDYggoJw15wUj3pFLZNEy0Mo1ectN0fiNrHR5Yi5r98w
+         Aw29vLPyVa4PoFzaGGR7OaDGdRruW7jzanXrm5mgWBfQX9kzt3fZxRdMo+SSMqv7Wq
+         fY2VaciLqDsWrElIqNwth4cbkrLx/ihzL8InqhsrIMxPgtOYRPTQd+GkNvR9wD8CbV
+         C59ToNLdXYfTY4hI+9dEHsUggli+kQDrZxBcVg6UwfgfgOLBEvIDUoMGg1HOyyBWvH
+         c7kDh4F1LsI93yNrr+MYTpYQCJx+dIFj2cCqIMqiL78QKk0p3PsRjb5bNZvsTqNg+M
+         knl6RhtaDhykg==
+X-Nifty-SrcIP: [126.90.211.135]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] arch: vdso: add vdso linker script to 'targets' instead of extra-y
+Date:   Tue,  1 Sep 2020 03:22:39 +0900
+Message-Id: <20200831182239.480317-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
-unprivileged users which would taint the kernel, or worse - panic if
-panic_on_warn or panic_on_taint is set. Hence, just convert it to
-pr_warn_ratelimited() to let users know their workloads are racing.
-Thank Dave Chinner for the initial analysis of the racing reproducers.
+The vdso linker script is preprocessed on demand.
+Adding it to 'targets' is enough to include the .cmd file.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 ---
-v4: use %pD4.
-v3: Keep the default case and update the message.
-v2: Record the path, pid and command as well.
 
- fs/iomap/direct-io.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/kernel/vdso/Makefile     | 2 +-
+ arch/arm64/kernel/vdso32/Makefile   | 2 +-
+ arch/nds32/kernel/vdso/Makefile     | 2 +-
+ arch/powerpc/kernel/vdso32/Makefile | 2 +-
+ arch/powerpc/kernel/vdso64/Makefile | 2 +-
+ arch/s390/kernel/vdso64/Makefile    | 2 +-
+ 6 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-index c1aafb2ab990..9519113ebc35 100644
---- a/fs/iomap/direct-io.c
-+++ b/fs/iomap/direct-io.c
-@@ -388,6 +388,16 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
- 		return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
- 	case IOMAP_INLINE:
- 		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
-+	case IOMAP_DELALLOC:
-+		/*
-+		 * DIO is not serialised against mmap() access at all, and so
-+		 * if the page_mkwrite occurs between the writeback and the
-+		 * iomap_apply() call in the DIO path, then it will see the
-+		 * DELALLOC block that the page-mkwrite allocated.
-+		 */
-+		pr_warn_ratelimited("Direct I/O collision with buffered writes! File: %pD4 Comm: %.20s\n",
-+				    dio->iocb->ki_filp, current->comm);
-+		return -EIO;
- 	default:
- 		WARN_ON_ONCE(1);
- 		return -EIO;
+diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Makefile
+index 45d5cfe46429..7cd8aafbe96e 100644
+--- a/arch/arm64/kernel/vdso/Makefile
++++ b/arch/arm64/kernel/vdso/Makefile
+@@ -54,7 +54,7 @@ endif
+ GCOV_PROFILE := n
+ 
+ obj-y += vdso.o
+-extra-y += vdso.lds
++targets += vdso.lds
+ CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+ 
+ # Force dependency (incbin is bad)
+diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
+index d6adb4677c25..572475b7b7ed 100644
+--- a/arch/arm64/kernel/vdso32/Makefile
++++ b/arch/arm64/kernel/vdso32/Makefile
+@@ -155,7 +155,7 @@ asm-obj-vdso := $(addprefix $(obj)/, $(asm-obj-vdso))
+ obj-vdso := $(c-obj-vdso) $(c-obj-vdso-gettimeofday) $(asm-obj-vdso)
+ 
+ obj-y += vdso.o
+-extra-y += vdso.lds
++targets += vdso.lds
+ CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+ 
+ # Force dependency (vdso.s includes vdso.so through incbin)
+diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Makefile
+index 7c3c1ccb196e..55df25ef0057 100644
+--- a/arch/nds32/kernel/vdso/Makefile
++++ b/arch/nds32/kernel/vdso/Makefile
+@@ -20,7 +20,7 @@ GCOV_PROFILE := n
+ 
+ 
+ obj-y += vdso.o
+-extra-y += vdso.lds
++targets += vdso.lds
+ CPPFLAGS_vdso.lds += -P -C -U$(ARCH)
+ 
+ # Force dependency
+diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+index 87ab1152d5ce..fd5072a4c73c 100644
+--- a/arch/powerpc/kernel/vdso32/Makefile
++++ b/arch/powerpc/kernel/vdso32/Makefile
+@@ -29,7 +29,7 @@ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+ asflags-y := -D__VDSO32__ -s
+ 
+ obj-y += vdso32_wrapper.o
+-extra-y += vdso32.lds
++targets += vdso32.lds
+ CPPFLAGS_vdso32.lds += -P -C -Upowerpc
+ 
+ # Force dependency (incbin is bad)
+diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
+index 38c317f25141..c737b3ea3207 100644
+--- a/arch/powerpc/kernel/vdso64/Makefile
++++ b/arch/powerpc/kernel/vdso64/Makefile
+@@ -17,7 +17,7 @@ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+ asflags-y := -D__VDSO64__ -s
+ 
+ obj-y += vdso64_wrapper.o
+-extra-y += vdso64.lds
++targets += vdso64.lds
+ CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
+ 
+ # Force dependency (incbin is bad)
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index 4a66a1cb919b..d0d406cfffa9 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -25,7 +25,7 @@ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+ $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
+ 
+ obj-y += vdso64_wrapper.o
+-extra-y += vdso64.lds
++targets += vdso64.lds
+ CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
+ 
+ # Disable gcov profiling, ubsan and kasan for VDSO code
 -- 
-2.18.4
+2.25.1
 
