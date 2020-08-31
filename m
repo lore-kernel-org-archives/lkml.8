@@ -2,30 +2,30 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9260FC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7764320719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A50220719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbgHaNrz (ORCPT
+        id S1727918AbgHaNsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:47:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43642 "EHLO
+        Mon, 31 Aug 2020 09:48:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:43635 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbgHaNr3 (ORCPT
+        with ESMTP id S1727786AbgHaNra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:47:29 -0400
+        Mon, 31 Aug 2020 09:47:30 -0400
 Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein.fritz.box)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1kCk8y-00062w-R6; Mon, 31 Aug 2020 13:46:44 +0000
+        id 1kCk90-00062w-9A; Mon, 31 Aug 2020 13:46:46 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Christian Brauner <christian@brauner.io>,
@@ -40,10 +40,11 @@ Cc:     Christian Brauner <christian@brauner.io>,
         linux-kselftest@vger.kernel.org,
         Josh Triplett <josh@joshtriplett.org>,
         Jens Axboe <axboe@kernel.dk>, linux-api@vger.kernel.org,
-        Christian Brauner <christian.brauner@ubuntu.com>
-Subject: [PATCH 1/4] pidfd: support PIDFD_NONBLOCK in pidfd_open()
-Date:   Mon, 31 Aug 2020 15:45:48 +0200
-Message-Id: <20200831134551.1599689-2-christian.brauner@ubuntu.com>
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Shuah Khan <shuah@kernel.org>
+Subject: [PATCH 3/4] tests: port pidfd_wait to kselftest harness
+Date:   Mon, 31 Aug 2020 15:45:50 +0200
+Message-Id: <20200831134551.1599689-4-christian.brauner@ubuntu.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200831134551.1599689-1-christian.brauner@ubuntu.com>
 References: <20200831134551.1599689-1-christian.brauner@ubuntu.com>
@@ -54,107 +55,293 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce PIDFD_NONBLOCK to support non-blocking pidfd file descriptors.
+All of the new pidfd selftests already use the new kselftest harness
+infrastructure. It makes for clearer output, makes the code easier to
+understand, and makes adding new tests way simpler.
 
-Ever since the introduction of pidfds and more advanced async io various
-programming languages such as Rust have grown support for async event
-libraries. These libraries are created to help build epoll-based event loops
-around file descriptors. A common pattern is to automatically make all file
-descriptors they manage to O_NONBLOCK.
-
-For such libraries the EAGAIN error code is treated specially. When a function
-is called that returns EAGAIN the function isn't called again until the event
-loop indicates the the file descriptor is ready. Supporting EAGAIN when
-waiting on pidfds makes such libraries just work with little effort. In the
-following patch we will extend waitid() internally to support non-blocking
-pidfds.
-
-Link: https://lore.kernel.org/lkml/20200811181236.GA18763@localhost/
-Link: https://github.com/joshtriplett/async-pidfd
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Sargun Dhillon <sargun@sargun.me>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Suggested-by: Josh Triplett <josh@joshtriplett.org>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: linux-kselftest@vger.kernel.org
 Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
 ---
- include/uapi/linux/pidfd.h | 12 ++++++++++++
- kernel/pid.c               | 12 +++++++-----
- 2 files changed, 19 insertions(+), 5 deletions(-)
- create mode 100644 include/uapi/linux/pidfd.h
+ tools/testing/selftests/pidfd/pidfd_wait.c | 213 ++++-----------------
+ 1 file changed, 39 insertions(+), 174 deletions(-)
 
-diff --git a/include/uapi/linux/pidfd.h b/include/uapi/linux/pidfd.h
-new file mode 100644
-index 000000000000..5406fbc13074
---- /dev/null
-+++ b/include/uapi/linux/pidfd.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+
-+#ifndef _UAPI_LINUX_PIDFD_H
-+#define _UAPI_LINUX_PIDFD_H
-+
-+#include <linux/types.h>
-+#include <linux/fcntl.h>
-+
-+/* Flags for pidfd_open().  */
-+#define PIDFD_NONBLOCK O_NONBLOCK
-+
-+#endif /* _UAPI_LINUX_PIDFD_H */
-diff --git a/kernel/pid.c b/kernel/pid.c
-index b2562a7ce525..74ddbff1a6ba 100644
---- a/kernel/pid.c
-+++ b/kernel/pid.c
-@@ -43,6 +43,7 @@
- #include <linux/sched/task.h>
- #include <linux/idr.h>
- #include <net/sock.h>
-+#include <uapi/linux/pidfd.h>
+diff --git a/tools/testing/selftests/pidfd/pidfd_wait.c b/tools/testing/selftests/pidfd/pidfd_wait.c
+index 7079f8eef792..075c716f6fb8 100644
+--- a/tools/testing/selftests/pidfd/pidfd_wait.c
++++ b/tools/testing/selftests/pidfd/pidfd_wait.c
+@@ -17,7 +17,7 @@
+ #include <unistd.h>
  
- struct pid init_struct_pid = {
- 	.count		= REFCOUNT_INIT(1),
-@@ -522,7 +523,8 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
- /**
-  * pidfd_create() - Create a new pid file descriptor.
-  *
-- * @pid:  struct pid that the pidfd will reference
-+ * @pid:   struct pid that the pidfd will reference
-+ * @flags: flags to pass
-  *
-  * This creates a new pid file descriptor with the O_CLOEXEC flag set.
-  *
-@@ -532,12 +534,12 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
-  * Return: On success, a cloexec pidfd is returned.
-  *         On error, a negative errno number will be returned.
-  */
--static int pidfd_create(struct pid *pid)
-+static int pidfd_create(struct pid *pid, unsigned int flags)
+ #include "pidfd.h"
+-#include "../kselftest.h"
++#include "../kselftest_harness.h"
+ 
+ #define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
+ 
+@@ -32,9 +32,8 @@ static int sys_waitid(int which, pid_t pid, siginfo_t *info, int options,
+ 	return syscall(__NR_waitid, which, pid, info, options, ru);
+ }
+ 
+-static int test_pidfd_wait_simple(void)
++TEST(wait_simple)
  {
- 	int fd;
+-	const char *test_name = "pidfd wait simple";
+ 	int pidfd = -1, status = 0;
+ 	pid_t parent_tid = -1;
+ 	struct clone_args args = {
+@@ -50,76 +49,40 @@ static int test_pidfd_wait_simple(void)
+ 	};
  
- 	fd = anon_inode_getfd("[pidfd]", &pidfd_fops, get_pid(pid),
--			      O_RDWR | O_CLOEXEC);
-+			      flags | O_RDWR | O_CLOEXEC);
- 	if (fd < 0)
- 		put_pid(pid);
+ 	pidfd = open("/proc/self", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
+-	if (pidfd < 0)
+-		ksft_exit_fail_msg("%s test: failed to open /proc/self %s\n",
+-				   test_name, strerror(errno));
++	ASSERT_GE(pidfd, 0);
  
-@@ -565,7 +567,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
- 	int fd;
- 	struct pid *p;
+ 	pid = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
+-	if (pid == 0)
+-		ksft_exit_fail_msg(
+-			"%s test: succeeded to wait on invalid pidfd %s\n",
+-			test_name, strerror(errno));
+-	close(pidfd);
++	ASSERT_NE(pid, 0);
++	EXPECT_EQ(close(pidfd), 0);
+ 	pidfd = -1;
  
--	if (flags)
-+	if (flags & ~PIDFD_NONBLOCK)
- 		return -EINVAL;
+ 	pidfd = open("/dev/null", O_RDONLY | O_CLOEXEC);
+-	if (pidfd == 0)
+-		ksft_exit_fail_msg("%s test: failed to open /dev/null %s\n",
+-				   test_name, strerror(errno));
++	ASSERT_GE(pidfd, 0);
  
- 	if (pid <= 0)
-@@ -576,7 +578,7 @@ SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
- 		return -ESRCH;
+ 	pid = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
+-	if (pid == 0)
+-		ksft_exit_fail_msg(
+-			"%s test: succeeded to wait on invalid pidfd %s\n",
+-			test_name, strerror(errno));
+-	close(pidfd);
++	ASSERT_NE(pid, 0);
++	EXPECT_EQ(close(pidfd), 0);
+ 	pidfd = -1;
  
- 	if (pid_has_task(p, PIDTYPE_TGID))
--		fd = pidfd_create(p);
-+		fd = pidfd_create(p, flags);
- 	else
- 		fd = -EINVAL;
+ 	pid = sys_clone3(&args);
+-	if (pid < 0)
+-		ksft_exit_fail_msg("%s test: failed to create new process %s\n",
+-				   test_name, strerror(errno));
++	ASSERT_GE(pid, 1);
  
+ 	if (pid == 0)
+ 		exit(EXIT_SUCCESS);
+ 
+ 	pid = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
+-	if (pid < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: failed to wait on process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
+-
+-	if (!WIFEXITED(info.si_status) || WEXITSTATUS(info.si_status))
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected status received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
+-	close(pidfd);
+-
+-	if (info.si_signo != SIGCHLD)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_signo, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	if (info.si_code != CLD_EXITED)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_code, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	if (info.si_pid != parent_tid)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_pid, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	ksft_test_result_pass("%s test: Passed\n", test_name);
+-	return 0;
++	ASSERT_GE(pid, 0);
++	ASSERT_EQ(WIFEXITED(info.si_status), true);
++	ASSERT_EQ(WEXITSTATUS(info.si_status), 0);
++	EXPECT_EQ(close(pidfd), 0);
++
++	ASSERT_EQ(info.si_signo, SIGCHLD);
++	ASSERT_EQ(info.si_code, CLD_EXITED);
++	ASSERT_EQ(info.si_pid, parent_tid);
+ }
+ 
+-static int test_pidfd_wait_states(void)
++TEST(wait_states)
+ {
+-	const char *test_name = "pidfd wait states";
+ 	int pidfd = -1, status = 0;
+ 	pid_t parent_tid = -1;
+ 	struct clone_args args = {
+@@ -135,9 +98,7 @@ static int test_pidfd_wait_states(void)
+ 	};
+ 
+ 	pid = sys_clone3(&args);
+-	if (pid < 0)
+-		ksft_exit_fail_msg("%s test: failed to create new process %s\n",
+-				   test_name, strerror(errno));
++	ASSERT_GE(pid, 0);
+ 
+ 	if (pid == 0) {
+ 		kill(getpid(), SIGSTOP);
+@@ -145,127 +106,31 @@ static int test_pidfd_wait_states(void)
+ 		exit(EXIT_SUCCESS);
+ 	}
+ 
+-	ret = sys_waitid(P_PIDFD, pidfd, &info, WSTOPPED, NULL);
+-	if (ret < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: failed to wait on WSTOPPED process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
+-
+-	if (info.si_signo != SIGCHLD)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_signo, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	if (info.si_code != CLD_STOPPED)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_code, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	if (info.si_pid != parent_tid)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_pid, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	ret = sys_pidfd_send_signal(pidfd, SIGCONT, NULL, 0);
+-	if (ret < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: failed to send signal to process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
+-
+-	ret = sys_waitid(P_PIDFD, pidfd, &info, WCONTINUED, NULL);
+-	if (ret < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: failed to wait WCONTINUED on process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
++	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WSTOPPED, NULL), 0);
++	ASSERT_EQ(info.si_signo, SIGCHLD);
++	ASSERT_EQ(info.si_code, CLD_STOPPED);
++	ASSERT_EQ(info.si_pid, parent_tid);
+ 
+-	if (info.si_signo != SIGCHLD)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_signo, parent_tid, pidfd,
+-			strerror(errno));
++	ASSERT_EQ(sys_pidfd_send_signal(pidfd, SIGCONT, NULL, 0), 0);
+ 
+-	if (info.si_code != CLD_CONTINUED)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_code, parent_tid, pidfd,
+-			strerror(errno));
++	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WCONTINUED, NULL), 0);
++	ASSERT_EQ(info.si_signo, SIGCHLD);
++	ASSERT_EQ(info.si_code, CLD_CONTINUED);
++	ASSERT_EQ(info.si_pid, parent_tid);
+ 
+-	if (info.si_pid != parent_tid)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_pid, parent_tid, pidfd,
+-			strerror(errno));
++	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WUNTRACED, NULL), 0);
++	ASSERT_EQ(info.si_signo, SIGCHLD);
++	ASSERT_EQ(info.si_code, CLD_STOPPED);
++	ASSERT_EQ(info.si_pid, parent_tid);
+ 
+-	ret = sys_waitid(P_PIDFD, pidfd, &info, WUNTRACED, NULL);
+-	if (ret < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: failed to wait on WUNTRACED process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
++	ASSERT_EQ(sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0), 0);
+ 
+-	if (info.si_signo != SIGCHLD)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_signo, parent_tid, pidfd,
+-			strerror(errno));
++	ASSERT_EQ(sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL), 0);
++	ASSERT_EQ(info.si_signo, SIGCHLD);
++	ASSERT_EQ(info.si_code, CLD_KILLED);
++	ASSERT_EQ(info.si_pid, parent_tid);
+ 
+-	if (info.si_code != CLD_STOPPED)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_code, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	if (info.si_pid != parent_tid)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_pid, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	ret = sys_pidfd_send_signal(pidfd, SIGKILL, NULL, 0);
+-	if (ret < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: failed to send SIGKILL to process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
+-
+-	ret = sys_waitid(P_PIDFD, pidfd, &info, WEXITED, NULL);
+-	if (ret < 0)
+-		ksft_exit_fail_msg(
+-			"%s test: failed to wait on WEXITED process with pid %d and pidfd %d: %s\n",
+-			test_name, parent_tid, pidfd, strerror(errno));
+-
+-	if (info.si_signo != SIGCHLD)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_signo value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_signo, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	if (info.si_code != CLD_KILLED)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_code value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_code, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	if (info.si_pid != parent_tid)
+-		ksft_exit_fail_msg(
+-			"%s test: unexpected si_pid value %d received after waiting on process with pid %d and pidfd %d: %s\n",
+-			test_name, info.si_pid, parent_tid, pidfd,
+-			strerror(errno));
+-
+-	close(pidfd);
+-
+-	ksft_test_result_pass("%s test: Passed\n", test_name);
+-	return 0;
++	EXPECT_EQ(close(pidfd), 0);
+ }
+ 
+-int main(int argc, char **argv)
+-{
+-	ksft_print_header();
+-	ksft_set_plan(2);
+-
+-	test_pidfd_wait_simple();
+-	test_pidfd_wait_states();
+-
+-	return ksft_exit_pass();
+-}
++TEST_HARNESS_MAIN
 -- 
 2.28.0
 
