@@ -2,148 +2,103 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C557C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A149AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D72B208A9
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598906379;
-	bh=l8jxjn/rMeXl1xTr/TAWKe9Rt5YZz1pcuYU7jXMBbv0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yxt23/gSx60DCyXC/PhX3ws0Ml294cnwHVJ7k3oZsDrgfMar0bYfy3EEsBkuG+d4L
-	 13Jf6XYGNYk8M6sGzYJraYnSJ4ZdK1HJ+YtbRpYs/kr//RKkkwi5PxcnhNEZGL3gOq
-	 gjlaGtd2NybRY2Gx7mS2knseydV17uaDEfBG0e4k=
+	by mail.kernel.org (Postfix) with ESMTP id 7D089208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:40:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgHaUjh (ORCPT
+        id S1728841AbgHaUkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:39:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33120 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728893AbgHaUja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:39:30 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 31 Aug 2020 16:40:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47454 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgHaUkX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 16:40:23 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1244C061573;
+        Mon, 31 Aug 2020 13:40:22 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B34AD2078B;
-        Mon, 31 Aug 2020 20:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598906369;
-        bh=l8jxjn/rMeXl1xTr/TAWKe9Rt5YZz1pcuYU7jXMBbv0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=1PeMevtCw8CwCifvJ+s/HCFOsVW6OEn1CN4vDyCxy7fJ09pcDHkwV1YalcP96rJbM
-         ZYR+njDjdonzAHaP5oueE7DhWIPojdgPv0Yxmuc12QeCYBfFeRaBVHOMhpfFI10dUk
-         MbhctG9Szz4x0xuPgoeEycNr3YSspt3ftfZkb5e8=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kCqaN-0086VA-S6; Mon, 31 Aug 2020 21:39:27 +0100
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 5F523634C87;
+        Mon, 31 Aug 2020 23:40:05 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kCqaz-0000zO-9s; Mon, 31 Aug 2020 23:40:05 +0300
+Date:   Mon, 31 Aug 2020 23:40:05 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, hverkuil@xs4all.nl,
+        luca@lucaceresoli.net, leonl@leopardimaging.com,
+        robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] dt-bindings: media: imx274: Move clock and
+ supplies to required properties
+Message-ID: <20200831204005.GF844@valkosipuli.retiisi.org.uk>
+References: <1598903558-9691-1-git-send-email-skomatineni@nvidia.com>
+ <1598903558-9691-4-git-send-email-skomatineni@nvidia.com>
+ <20200831201757.GC844@valkosipuli.retiisi.org.uk>
+ <5c341ed9-6077-e935-de50-ff9f5f17edcf@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 31 Aug 2020 21:39:27 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     syzbot <syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com>,
-        davem@davemloft.net, kuba@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: general protection fault in sock_close
-In-Reply-To: <20200831200328.GX1236603@ZenIV.linux.org.uk>
-References: <000000000000dc862405ae31ae9b@google.com>
- <20200831200328.GX1236603@ZenIV.linux.org.uk>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <82748fc422a64d70c706951954a2dcfa@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: viro@zeniv.linux.org.uk, syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com, davem@davemloft.net, kuba@kernel.org, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c341ed9-6077-e935-de50-ff9f5f17edcf@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-31 21:03, Al Viro wrote:
-> On Mon, Aug 31, 2020 at 12:48:13PM -0700, syzbot wrote:
->> Hello,
->> 
->> syzbot found the following issue on:
->> 
->> HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of 
->> git://git.kernel.org/p..
->> git tree:       upstream
->> console output: 
->> https://syzkaller.appspot.com/x/log.txt?x=16a85669900000
->> kernel config:  
->> https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
->> dashboard link: 
->> https://syzkaller.appspot.com/bug?extid=e24baf53dc389927a7c3
->> compiler:       clang version 10.0.0 
->> (https://github.com/llvm/llvm-project/ 
->> c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
->> syz repro:      
->> https://syzkaller.appspot.com/x/repro.syz?x=127d3c99900000
+On Mon, Aug 31, 2020 at 01:37:21PM -0700, Sowjanya Komatineni wrote:
 > 
->> The issue was bisected to:
->> 
->> commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
->> Author: Marc Zyngier <maz@kernel.org>
->> Date:   Wed Aug 19 16:12:17 2020 +0000
->> 
->>     epoll: Keep a reference on files added to the check list
-> 
-> All of those are essentially duplicates.
-> 
-> The minimal fix is below; I'm not happy with it long-term, but I'm 
-> still
-> digging through the eventpoll locking, and there's a good chance that 
-> this
-> is the least intrusive variant for -stable.  Folks, could you check if 
-> the
-> following patch fixes those suckers?  Again, all reports bisected to 
-> that
-> commit are essentially the same.
-> 
-> diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-> index e0decff22ae2..8107e06d7f6f 100644
-> --- a/fs/eventpoll.c
-> +++ b/fs/eventpoll.c
-> @@ -1995,9 +1995,9 @@ static int ep_loop_check_proc(void *priv, void
-> *cookie, int call_nests)
->  			 * during ep_insert().
->  			 */
->  			if (list_empty(&epi->ffd.file->f_tfile_llink)) {
-> -				get_file(epi->ffd.file);
-> -				list_add(&epi->ffd.file->f_tfile_llink,
-> -					 &tfile_check_list);
-> +				if (get_file_rcu(epi->ffd.file))
-> +					list_add(&epi->ffd.file->f_tfile_llink,
-> +						 &tfile_check_list);
->  			}
->  		}
->  	}
+> On 8/31/20 1:17 PM, Sakari Ailus wrote:
+> > Hi Sowjanya,
+> > 
+> > On Mon, Aug 31, 2020 at 12:52:37PM -0700, Sowjanya Komatineni wrote:
+> > > Clock and supplies are external to IMX274 sensor and are dependent
+> > > on camera module design.
+> > > 
+> > > So, this patch moves them to required properties.
+> > > 
+> > > Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> > > ---
+> > >   Documentation/devicetree/bindings/media/i2c/imx274.txt | 6 +++---
+> > >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+> > > index d0a5c899..b43bed6 100644
+> > > --- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
+> > > +++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
+> > > @@ -10,15 +10,15 @@ at 1440 Mbps.
+> > >   Required Properties:
+> > >   - compatible: value should be "sony,imx274" for imx274 sensor
+> > >   - reg: I2C bus address of the device
+> > > -
+> > > -Optional Properties:
+> > > -- reset-gpios: Sensor reset GPIO
+> > >   - clocks: Reference to the input clock.
+> > >   - clock-names: Should be "inck".
+> > >   - vana-supply: Sensor 2.8v analog supply.
+> > >   - vdig-supply: Sensor 1.8v digital core supply.
+> > >   - vddl-supply: Sensor digital IO 1.2v supply.
+> > If these have been optional in the past I don't think we can start
+> > requiring them now.
+> > 
+> > The framework will just give the driver a dummy regulator if one isn't
+> > found.
+> These were added recently with my patches. So I hope should be ok to make
+> them required as they are external to sensor
 
-I've managed to reproduce the issue using [1] (throw a few in a VM,
-see things explode like clockwork).
+The bindings were added back in 2017, so they're not really recent.
 
-With this patch on top of -rc3, the VM keep ticking away. FWIW:
-
-Tested-by: Marc Zyngier <maz@kernel.org>
-Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the 
-check list")
-
-Thanks,
-
-         M.
-
-[1] https://syzkaller.appspot.com/x/repro.c?x=140a19a9900000
 -- 
-Jazz is not dead. It just smells funny...
+Sakari Ailus
