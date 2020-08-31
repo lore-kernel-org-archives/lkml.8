@@ -2,90 +2,116 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E0EC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF93C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAF1C20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:18:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A12E0206FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RnCAH4XI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbgHaVS3 (ORCPT
+        id S1730240AbgHaVVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 17:18:29 -0400
-Received: from correo.us.es ([193.147.175.20]:50194 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730222AbgHaVS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 17:18:27 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 121651C4423
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:18:24 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 058CDDA789
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:18:24 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id DF530DA7B9; Mon, 31 Aug 2020 23:18:23 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 8465BDA78B;
-        Mon, 31 Aug 2020 23:18:21 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Mon, 31 Aug 2020 23:18:21 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (unknown [90.77.255.23])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id 44245426CCB9;
-        Mon, 31 Aug 2020 23:18:21 +0200 (CEST)
-Date:   Mon, 31 Aug 2020 23:18:20 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Julian Anastasov <ja@ssi.bg>
-Cc:     Yaroslav Bolyukin <iam@lach.pw>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCHv5 net-next] ipvs: remove dependency on ip6_tables
-Message-ID: <20200831211820.GB24186@salvia>
-References: <alpine.LFD.2.23.451.2008291233110.3043@ja.home.ssi.bg>
- <20200829135953.20228-1-iam@lach.pw>
- <alpine.LFD.2.23.451.2008312005270.4425@ja.home.ssi.bg>
+        Mon, 31 Aug 2020 17:21:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53948 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728649AbgHaVVU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 17:21:20 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30F7C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:21:19 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f18so1389987pfa.10
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bcxQD2Sn/2bUGUgYSdbw9/nm0Vv2nDYXnd0y7jH8pec=;
+        b=RnCAH4XIYXFutKK+MrfQTe25TGSO7ZeTBeo27ijs0y0ym14WJ4YUkp0Qa0tlOfZrfu
+         d6h8HxDPQsjvBIZbtjC0KFDIPPae741UZABCuIJHLMLsW20MseA4EdHjL/MndQKvwGvZ
+         y6kV5POE49Bu+TO7Oy3cfmEQXv9t/k5j7OmmxhmW5zkdDAcrPjIBPlwX55xMSJd4nh7B
+         mjqv/YBlp98PD7WXqcswgqhg+21wLH98QUcfMidWgacAxa0or2nKjdtmnUJNJVHKmRh6
+         JsxUOsI9IGZ19tl3jhSP8+quIUalEQt2j3ur1ExOdLdFIwDZ6HJ1L9gRqojTCQBBpXwK
+         rdTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bcxQD2Sn/2bUGUgYSdbw9/nm0Vv2nDYXnd0y7jH8pec=;
+        b=BcgTqvWc3sf8FPm+PUFfUMRschiZrlw6DwFT4O3sLuwhIM8bNuMPmd2t/tdA0vVU/y
+         nIMGnc7m55zb9HB2eKUeWPXLIpD2xtxZ1ph+reTodRQczoOSfYtVx4BL01o7DlEzK/Im
+         PUqFRuTg97hBTG4dogo4StyaU6x66Fm3tQvQMCl6makDB+cgxCaoAVTdBReKAh+ssS3V
+         6ddKK8pgetNE0da5RCjystK91OK4L+A6gi9YdXmppuH5K9Zqm0EAp4B+GzEPSQHNoglp
+         O5ZuZdMNGwygsj9OTIJu9uRpI9iAmESNWV4x9YAIw5HZevM8tnXSLeQoKl/yDVBaCMH0
+         bsrQ==
+X-Gm-Message-State: AOAM530KHdtz+0WOQaTVukWu0CX0jrHAFrMIzJttyKee5Pw8BAtIPlsw
+        cg/Z5KMWhms0ndmb6sCk50OJZJtxVHM=
+X-Google-Smtp-Source: ABdhPJyZQ3xkdg7sLV2Kx4H8hS0SzKfHcYEtbNbzcy7L1p8EP8DE98CQkZ26JHkoK4iuuXPd1auMNw==
+X-Received: by 2002:aa7:9569:: with SMTP id x9mr2815283pfq.16.1598908878426;
+        Mon, 31 Aug 2020 14:21:18 -0700 (PDT)
+Received: from localhost (g223.115-65-55.ppp.wakwak.ne.jp. [115.65.55.223])
+        by smtp.gmail.com with ESMTPSA id y7sm540803pjm.3.2020.08.31.14.21.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 14:21:17 -0700 (PDT)
+From:   Stafford Horne <shorne@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>, Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Mike Rapoport <rppt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        openrisc@lists.librecores.org
+Subject: [PATCH] openrisc: Reserve memblock for initrd
+Date:   Tue,  1 Sep 2020 06:21:01 +0900
+Message-Id: <20200831212102.4014642-1-shorne@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.23.451.2008312005270.4425@ja.home.ssi.bg>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Virus-Scanned: ClamAV using ClamSMTP
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 08:12:05PM +0300, Julian Anastasov wrote:
-> 
-> 	Hello,
-> 
-> On Sat, 29 Aug 2020, Yaroslav Bolyukin wrote:
-> 
-> > This dependency was added because ipv6_find_hdr was in iptables specific
-> > code but is no longer required
-> > 
-> > Fixes: f8f626754ebe ("ipv6: Move ipv6_find_hdr() out of Netfilter code.")
-> > Fixes: 63dca2c0b0e7 ("ipvs: Fix faulty IPv6 extension header handling in IPVS").
-> > Signed-off-by: Yaroslav Bolyukin <iam@lach.pw>
-> 
-> 	Looks good to me, thanks! May be maintainers will
-> remove the extra dot after the Fixes line.
+Recently OpenRISC added support for external initrd images, but I found
+some instability when using larger buildroot initrd images. It turned
+out that I forgot to reserve the memblock space for the initrd image.
 
-Applied, thanks. I have also removed the extra dot.
+This patch fixes the instability issue by reserving memblock space.
+
+Fixes: ff6c923dbec3 ("openrisc: Add support for external initrd images")
+Signed-off-by: Stafford Horne <shorne@gmail.com>
+---
+ arch/openrisc/kernel/setup.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+index b18e775f8be3..2c8aa53cc7ba 100644
+--- a/arch/openrisc/kernel/setup.c
++++ b/arch/openrisc/kernel/setup.c
+@@ -80,6 +80,15 @@ static void __init setup_memory(void)
+ 	 */
+ 	memblock_reserve(__pa(_stext), _end - _stext);
+ 
++#ifdef CONFIG_BLK_DEV_INITRD
++	/* Then reserve the initrd, if any */
++	if (initrd_start && (initrd_end > initrd_start)) {
++		memblock_reserve(ALIGN_DOWN(__pa(initrd_start), PAGE_SIZE),
++			ALIGN(initrd_end, PAGE_SIZE) -
++			ALIGN_DOWN(initrd_start, PAGE_SIZE));
++	}
++#endif /* CONFIG_BLK_DEV_INITRD */
++
+ 	early_init_fdt_reserve_self();
+ 	early_init_fdt_scan_reserved_mem();
+ 
+-- 
+2.26.2
+
