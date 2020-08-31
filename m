@@ -2,117 +2,245 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EA9C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F117EC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8318120738
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACE5E21548
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:48:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Np8eJ16y"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="Fth+nhDD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbgHaDfx (ORCPT
+        id S1727042AbgHaDs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:35:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56896 "EHLO
+        Sun, 30 Aug 2020 23:48:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58896 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgHaDfw (ORCPT
+        with ESMTP id S1726126AbgHaDsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 23:35:52 -0400
-Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9405AC061573;
-        Sun, 30 Aug 2020 20:35:51 -0700 (PDT)
-Received: by mail-ed1-x544.google.com with SMTP id ay8so4086690edb.8;
-        Sun, 30 Aug 2020 20:35:51 -0700 (PDT)
+        Sun, 30 Aug 2020 23:48:55 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8AFAC061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 20:48:54 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id l9so762643plt.8
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 20:48:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Es49Pktfv7cyRBR2isn8kE0O0ZV8xR4yhOVye/VQUrk=;
-        b=Np8eJ16yZ5iMi3JnVsjqeMJX6+O7o5Ri0YyeWM6xIP2rHgwlMYXKwdrjJFPowbg/BA
-         Qnr2rsfVzQudIyB4cK4lD/oNRmPcWdr8Tm3bCZG9DNxyK38R0k0EkF38KUbtIzV7ScCs
-         44b/yRnPTi24WZi3x+sC4lM5sLHPLrC56iNp8=
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=q19Ah/81RNhSSUoDdSA3qN0BsGo/zMdRerlp4Tfhi0I=;
+        b=Fth+nhDDLQG50Ss+0l3gRgXCF8BXKE4rUp0l8pcUQhp6sL/jQPd+NSeaWf8ZufNrgw
+         WNA/KAzoP/VQR0LXlpNg8HF4OyD85DZwPmFCubfRH/6ddzNv37LyCEoqXTSDvEF0+4Yr
+         XVdRq1Bg7VCqVOcgRc2905NVvbos89CR1ZmwqKLFDpNbqmBx14rDult6nNGCDRNmp58v
+         JNZVv/Es6RKIqbzft7gJLIH9n0LwNbS58kAeYmZq+PLl5mMvdvTMCG/dHL3bYFcUDtUQ
+         tjI0WwCVa3liO+AjA2k8rUfxPL1vgBH0TbKzCtNkcAsuWicuwGpcrEDV+KGIFZCqyI0l
+         zDCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Es49Pktfv7cyRBR2isn8kE0O0ZV8xR4yhOVye/VQUrk=;
-        b=NGfsUVZa9FUQ6OxsUJy2KpKcR+J8+eRIi7nzCFkji9gCERmr/Gw1vGuY69pclKrlUJ
-         mt+KsfYM7I1hYEXnnJyxP4SzAOvF2XVWKtHvtbivkHVedW0hmOFjamiCfaMIoV87hDBh
-         kvoU/XrD1FUimroG2PZ3KBAZMnTDQk7WD/wqpsWcJMDdQ/N9lD+YH8lxsdfhbiGxH/jt
-         LUcBKdTvyhRW7pdGZbJpN6TNVWdh5pbPYkBz3oNGziO8b6hBQWaj06PCIJwrR1KbzLy8
-         x91f6sEtOkyTVp1vjL7GgWnTqoF/yiu7GxPw4NEReOxyO0oz4BqRT/02K4Dgpm3WRb9r
-         QOqQ==
-X-Gm-Message-State: AOAM531++k0FHyjGzDtRowb/NteYSFtA/uOuWvXf8Xl9c99OTuhPsr9D
-        iX1kUutSJRMNuFFamQO2A5udeTof0ZDtQfBloZs=
-X-Google-Smtp-Source: ABdhPJx7qh+mNkv4fszmTyhwOjH5PtQGv7TcGVXG2A3V0/1q8FyjFJn4lSFRahcWP+iQ09eNAAQjowrra3y2n+LSM3I=
-X-Received: by 2002:a05:6402:ca7:: with SMTP id cn7mr1902945edb.143.1598844949735;
- Sun, 30 Aug 2020 20:35:49 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200830213121.239533-1-tali.perry1@gmail.com>
-In-Reply-To: <20200830213121.239533-1-tali.perry1@gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 31 Aug 2020 03:35:36 +0000
-Message-ID: <CACPK8Xev4w4BxrxR1zQPk=wiHCK2fSGD9tEeAQwPe_uayGw_CA@mail.gmail.com>
-Subject: Re: [PATCH v3] i2c: npcm7xx: Fix timeout calculation
-To:     Tali Perry <tali.perry1@gmail.com>
-Cc:     Kun Yi <kunyi@google.com>, xqiu@google.com,
-        Benjamin Fair <benjaminfair@google.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=q19Ah/81RNhSSUoDdSA3qN0BsGo/zMdRerlp4Tfhi0I=;
+        b=ItTjfI+jZVThl+MT/mEUBpsHquBABNoIWCr93XydGOpV7aXZWfWv/FIjXZtOdOZJwD
+         wnSGUNQ2oerDECAplz18Gd77fmUV14VwgJUDn7ZhM2lbTenioYF4LN6QzAL4WWwrD+FG
+         CpUGmTkwCP1o2a4Ir4BoFs90noEN/PW0Mg1LPA9FsDX6kKMPhzVSmZLKM1nyJXVF0bPC
+         993XFp9g0L6cNGTE0S7NTcz2MocHFjrhNVRH8BVHXnrmLOHHlKl8o79FZVwIm18+3Kuf
+         qJZuDL8zy0CkdvvPSnIloRYyBO4aEi4rw+t2Jh633qqDw1zFraJ0BXhgkkdE1PM2/DKk
+         eIiA==
+X-Gm-Message-State: AOAM533y3ifrUW54j0JCcJLdxcGCsa3VA+FtFwjSBpItY+YJLy0RxVKo
+        Ea60b2DPFsyZSYrunoLkcgdotAfIyyQ8nA==
+X-Google-Smtp-Source: ABdhPJzO5ilNMmxhH9hkfytSN97xviAVxs3X9YvkCrB5rkGWoADzociXWq/PkxE+nRfu6ETCOOok4w==
+X-Received: by 2002:a17:90a:8e82:: with SMTP id f2mr9055568pjo.11.1598845733887;
+        Sun, 30 Aug 2020 20:48:53 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id b24sm5399634pjp.22.2020.08.30.20.48.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Aug 2020 20:48:53 -0700 (PDT)
+Subject: Re: [PATCH v1 01/10] powerpc/pseries/iommu: Replace hard-coded page
+ shift
+To:     Oliver O'Halloran <oohall@gmail.com>
+Cc:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+ <20200817234033.442511-2-leobras.c@gmail.com>
+ <6232948f-033d-8322-e656-544f12c5f784@ozlabs.ru>
+ <31e913d842693b6e107cb2b8e51fd45118b1bd2c.camel@gmail.com>
+ <1e77a3d9-dff9-f58b-45be-77be7cbea41a@ozlabs.ru>
+ <93037398c7afaabc0411890998f3f29f741c8aff.camel@gmail.com>
+ <aaaf993a-d233-f5be-b809-5911a6a9872d@ozlabs.ru>
+ <CAOSf1CG49ztvNoG43hcSHyLB9UY6Nc8maY_q6nvQmiyFQOAp3A@mail.gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <1bba12c6-f1ec-9f1e-1d3e-c1efa5ceb7c7@ozlabs.ru>
+Date:   Mon, 31 Aug 2020 13:48:46 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <CAOSf1CG49ztvNoG43hcSHyLB9UY6Nc8maY_q6nvQmiyFQOAp3A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 30 Aug 2020 at 21:31, Tali Perry <tali.perry1@gmail.com> wrote:
->
-> timeout_usec value calculation was wrong, the calculated value
-> was in msec instead of usec.
->
-> Signed-off-by: Tali Perry <tali.perry1@gmail.com>
-> Reviewed-by: Avi Fishman <avifishman70@gmail.com>
 
-Fixes: 56a1485b102e ("i2c: npcm7xx: Add Nuvoton NPCM I2C controller driver")
-Reviewed-by: Joel Stanley <joel@jms.id.au>
 
-Cheers,
+On 31/08/2020 11:41, Oliver O'Halloran wrote:
+> On Mon, Aug 31, 2020 at 10:08 AM Alexey Kardashevskiy <aik@ozlabs.ru> wrote:
+>>
+>> On 29/08/2020 05:55, Leonardo Bras wrote:
+>>> On Fri, 2020-08-28 at 12:27 +1000, Alexey Kardashevskiy wrote:
+>>>>
+>>>> On 28/08/2020 01:32, Leonardo Bras wrote:
+>>>>> Hello Alexey, thank you for this feedback!
+>>>>>
+>>>>> On Sat, 2020-08-22 at 19:33 +1000, Alexey Kardashevskiy wrote:
+>>>>>>> +#define TCE_RPN_BITS             52              /* Bits 0-51 represent RPN on TCE */
+>>>>>>
+>>>>>> Ditch this one and use MAX_PHYSMEM_BITS instead? I am pretty sure this
+>>>>>> is the actual limit.
+>>>>>
+>>>>> I understand this MAX_PHYSMEM_BITS(51) comes from the maximum physical memory addressable in the machine. IIUC, it means we can access physical address up to (1ul << MAX_PHYSMEM_BITS).
+>>>>>
+>>>>> This 52 comes from PAPR "Table 9. TCE Definition" which defines bits
+>>>>> 0-51 as the RPN. By looking at code, I understand that it means we may input any address < (1ul << 52) to TCE.
+>>>>>
+>>>>> In practice, MAX_PHYSMEM_BITS should be enough as of today, because I suppose we can't ever pass a physical page address over
+>>>>> (1ul << 51), and TCE accepts up to (1ul << 52).
+>>>>> But if we ever increase MAX_PHYSMEM_BITS, it doesn't necessarily means that TCE_RPN_BITS will also be increased, so I think they are independent values.
+>>>>>
+>>>>> Does it make sense? Please let me know if I am missing something.
+>>>>
+>>>> The underlying hardware is PHB3/4 about which the IODA2 Version 2.4
+>>>> 6Apr2012.pdf spec says:
+>>>>
+>>>> "The number of most significant RPN bits implemented in the TCE is
+>>>> dependent on the max size of System Memory to be supported by the platform".
+>>>>
+>>>> IODA3 is the same on this matter.
+>>>>
+>>>> This is MAX_PHYSMEM_BITS and PHB itself does not have any other limits
+>>>> on top of that. So the only real limit comes from MAX_PHYSMEM_BITS and
+>>>> where TCE_RPN_BITS comes from exactly - I have no idea.
+>>>
+>>> Well, I created this TCE_RPN_BITS = 52 because the previous mask was a
+>>> hardcoded 40-bit mask (0xfffffffffful), for hard-coded 12-bit (4k)
+>>> pagesize, and on PAPR+/LoPAR also defines TCE as having bits 0-51
+>>> described as RPN, as described before.
+>>>
+>>> IODA3 Revision 3.0_prd1 (OpenPowerFoundation), Figure 3.4 and 3.5.
+>>> shows system memory mapping into a TCE, and the TCE also has bits 0-51
+>>> for the RPN (52 bits). "Table 3.6. TCE Definition" also shows it.
+>>>> In fact, by the looks of those figures, the RPN_MASK should always be a
+>>> 52-bit mask, and RPN = (page >> tceshift) & RPN_MASK.
+>>
+>> I suspect the mask is there in the first place for extra protection
+>> against too big addresses going to the TCE table (or/and for virtial vs
+>> physical addresses). Using 52bit mask makes no sense for anything, you
+>> could just drop the mask and let c compiler deal with 64bit "uint" as it
+>> is basically a 4K page address anywhere in the 64bit space. Thanks,
+> 
+> Assuming 4K pages you need 52 RPN bits to cover the whole 64bit
+> physical address space. The IODA3 spec does explicitly say the upper
+> bits are optional and the implementation only needs to support enough
+> to cover up to the physical address limit, which is 56bits of P9 /
+> PHB4. If you want to validate that the address will fit inside of
+> MAX_PHYSMEM_BITS then fine, but I think that should be done as a
+> WARN_ON or similar rather than just silently masking off the bits.
 
-Joel
+We can do this and probably should anyway but I am also pretty sure we
+can just ditch the mask and have the hypervisor return an error which
+will show up in dmesg.
 
-> ---
->  drivers/i2c/busses/i2c-npcm7xx.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-npcm7xx.c b/drivers/i2c/busses/i2c-npcm7xx.c
-> index 75f07138a6fa..dfcf04e1967f 100644
-> --- a/drivers/i2c/busses/i2c-npcm7xx.c
-> +++ b/drivers/i2c/busses/i2c-npcm7xx.c
-> @@ -2093,8 +2093,12 @@ static int npcm_i2c_master_xfer(struct i2c_adapter *adap, struct i2c_msg *msgs,
->                 }
->         }
->
-> -       /* Adaptive TimeOut: astimated time in usec + 100% margin */
-> -       timeout_usec = (2 * 10000 / bus->bus_freq) * (2 + nread + nwrite);
-> +       /*
-> +        * Adaptive TimeOut: estimated time in usec + 100% margin:
-> +        * 2: double the timeout for clock stretching case
-> +        * 9: bits per transaction (including the ack/nack)
-> +        */
-> +       timeout_usec = (2 * 9 * USEC_PER_SEC / bus->bus_freq) * (2 + nread + nwrite);
->         timeout = max(msecs_to_jiffies(35), usecs_to_jiffies(timeout_usec));
->         if (nwrite >= 32 * 1024 || nread >= 32 * 1024) {
->                 dev_err(bus->dev, "i2c%d buffer too big\n", bus->num);
->
-> base-commit: d012a7190fc1fd72ed48911e77ca97ba4521bccd
-> --
-> 2.22.0
->
+
+-- 
+Alexey
