@@ -2,122 +2,122 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EAAC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73D50208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:08:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77C8B208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:08:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WleO7IUH"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="uQItU2Fe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgHaJIB (ORCPT
+        id S1728358AbgHaJIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:08:01 -0400
-Received: from mail-am6eur05on2054.outbound.protection.outlook.com ([40.107.22.54]:40220
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726102AbgHaJH5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:07:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=USRJ6OViOexlaGfjG8fgFfr+w3/HNAFyFop8XzhvVIBK8jrzTFMZYFzdase6Sfito8O9isezoMWKpAQxi/dekYTVCB6fnQTj66okhfzWbOMpJkU8uvdeMo6vLn6SKeRSy3dywLSd9d1nIpCUGWTch3emxt4a6rL/lnqo2PaHGPWJiDuT3bYxv2kl9/HOLEv3BhEynj3r47PdEU68fKqX3vR4upjSyfj8Vau41VdF4Jv8wB6UsOFmQRFpXTpxqfJBgabQnRgau60Yg/kTxkNj+vixKisWWWjqwi9cipdKrQtzEloQEuAQY2QmSN1cei182ugd4bECZfX9Zgfj1tAc+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/CWNFQ98p20i+FbHHV4C5MepiBoqftIuGPLV44/lO0=;
- b=HiH1BZBIViTfX2RicDriFuWy4DYsBtBykIZpa8PvTjP6+JkrXUOcgEwF9L699USKjzk7Rb6fi4Vf5/gxGWzL3kUgPa+zVQFHie4dwO6OgVzs3iy+jaFHWXIzA5rjOEF/RFZxQYvaWO1XTbNRa9Sd8jdhyelJCSN06OMwy/opJsL2MVhwkiPWYtxXQU0zZyjTmPwumR2bCUNKF2I8T29Ljf39OcOatbzLUjwYJwq/NSgJhOLa3p6drzOZMcIxnZol7WKkX9+d17R1equw9Z3NdahBPhNy5w2OiYKbpx8NDkWAuse7H6CgZdhgP66b93TMPcg0Xsl5hcv4aA2B1f2a9Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E/CWNFQ98p20i+FbHHV4C5MepiBoqftIuGPLV44/lO0=;
- b=WleO7IUHG0IosDyUxWtUxNQrWFbKZHUL5KbFLAHYs7ZR8Bs94MXSoqqZPUb3byqXyt5BAXS0mPyQhJSBRsqidjwr59VnS6I6lPRgs6gmVgbyfXMN7U6OyFuKMcrJlvVlUlfkwBscbQT2qN0UG+S4eZTkmj53oEmxS+gTbL1yzww=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB8PR04MB5657.eurprd04.prod.outlook.com (2603:10a6:10:a6::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Mon, 31 Aug
- 2020 09:07:53 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232%12]) with mapi id 15.20.3326.025; Mon, 31 Aug
- 2020 09:07:53 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] cpufreq: dt: delay the clk/regulator check
-Thread-Topic: [PATCH] cpufreq: dt: delay the clk/regulator check
-Thread-Index: AQHWf3AAZbBH4ndxZkqgPA9p6ygXkalR5w+AgAAGS9A=
-Date:   Mon, 31 Aug 2020 09:07:53 +0000
-Message-ID: <DB6PR0402MB27605875A6F85CE06790BD0E88510@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <20200831084858.2398-1-peng.fan@nxp.com>
- <20200831084441.uvw4jx4cbfh5y3e6@vireshk-i7>
-In-Reply-To: <20200831084441.uvw4jx4cbfh5y3e6@vireshk-i7>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 3f5de8ca-9c79-45c1-44eb-08d84d8d5835
-x-ms-traffictypediagnostic: DB8PR04MB5657:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB56572CE3B36C37A4B894110788510@DB8PR04MB5657.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /+N03jClKF8j7XBVDGijG5H0QDInCJaDoNNPZknexqjXVusUT/wXWrxPu9KJBLMSL5fbPz1CK81n+vz9xbnnY/1SFelujokvsuJ5HnckGwjvhNPwbxlUmRf2dw+YQf3tKHQcmp5pYtw8E+mwi9hNw0jfh3pK0BcveRuAnI946ShPTFF0EdyNIq74rc+Iwqq9gMq5yw+69B+14HgVH4f71CFaUa16NaZfbQ5FsIBuma1QYhbKilbaIUBfR+uBaHSs8418C7ETJQ0VQvoOi525lrnrYZxbPO9/5y41cSR2IDCA+v/j6U3Rsi5Qm+/Uw8v/RO7K1ZKNhIlau0OQgayfBA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(366004)(396003)(39860400002)(64756008)(186003)(86362001)(66446008)(9686003)(66556008)(44832011)(66476007)(76116006)(71200400001)(52536014)(26005)(66946007)(478600001)(33656002)(8676002)(8936002)(316002)(5660300002)(55016002)(54906003)(6916009)(53546011)(7696005)(4744005)(4326008)(2906002)(6506007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 1MZe72Mc1uEOo2fipudR+k0cMOz3cIqQQ3BNon8ICFutuc+Sqs7yKSazVzfTEeX0cOrPCmGXXXCqs1eVhSQ/scqMcGRmk7fr0dD6ccfac0PnzxwvvokEJqaERwthP7v3OtR8tsOvH71UuDcyC/ML+zu+xi5ev2wQjHuTdgXs369Kyi+wknK7Bbm5fFFzSS0Gdax7Nohldx/lpscp/vuG/SCSgtCl1fDMdgvB7A7L6RX/x/3BJRc6JViY0pGEqflU5a3ASTa5TtsZpZaB9qFmsbvgnVJW7mBRaqyaR7d7oGQAbnQ/5orqAZC3hhTsbOsk2Fu2ho9trfG5//zJ6SzkavRYbWRijhRL4AskHFKHQQoqKLyRVPvUtIX9iYRP+oIrZtOsa+/5pmNuF+v2BP426kpwoIbK1Qor7w2r352EV+21evzgk7msw5nvjyHKVpLPMkGdxMGBS0FmfLMcKs3S6hknoNUa/vzwz9RCPn6G7/kPzEauwJcNVhqlQ9ZUfnof/BKgCALWLW6OaRHqDD2vZEYisOtDaR8zIjSptXiYh8lrxqHYiOE9yajYRkdnzM5aoIDhtR3NkXj8en0BaSHq8g6sKtfXCAfeF+SsmhAOjvK9GMKudwUfoadsZRRfXT7lPGAWK9NfY7wnnWVwOtINLQ==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 31 Aug 2020 05:08:42 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:45342 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728290AbgHaJIk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:08:40 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 07V98a5r063080;
+        Mon, 31 Aug 2020 04:08:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598864916;
+        bh=MjsvdfEMy6GjtTN6j2sOW8wOL0kqR2f7yz1NLZ13fG8=;
+        h=From:To:CC:Subject:Date;
+        b=uQItU2FeegecNeaODB/TbUPNavPcfSh+ygM/pNQ3BdiZux/mjn8VnkFJn/oLMfeGt
+         rkXIrEGe6JkLjZFJqlqiO0/ree4ktyxwAoTARfBrpYaJfonQwH7A6axe2plSWMVmo/
+         mwJAclWTkuMbCsoJ50XyziBArbyMMT1a7aKzT5eo=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07V98awq052252;
+        Mon, 31 Aug 2020 04:08:36 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 31
+ Aug 2020 04:08:36 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Mon, 31 Aug 2020 04:08:36 -0500
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 07V98YWk026158;
+        Mon, 31 Aug 2020 04:08:34 -0500
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <linux-kernel@vger.kernel.org>, <lokeshvutla@ti.com>, <nm@ti.com>
+Subject: [PATCH] dmaengine: ti: k3-udma: Update rchan_oes_offset for am654 SYSFW ABI 3.0
+Date:   Mon, 31 Aug 2020 12:10:19 +0300
+Message-ID: <20200831091019.25273-1-peter.ujfalusi@ti.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3f5de8ca-9c79-45c1-44eb-08d84d8d5835
-X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2020 09:07:53.7429
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ksiV9upZzxxlhhju/BkaUjDst6u/qE0muf9WNn/XWFAeHh+f9NzIkJRGn4NTNICd0t7IBFUlwYi36dZ60sNovA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5657
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH] cpufreq: dt: delay the clk/regulator check
->=20
-> On 31-08-20, 16:48, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > cpufreq_init could be used to do check clk/regulator check, there is
-> > no need to duplicate the work in resources_available.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
->=20
-> Hi can you please see if this happens on linux-next as well ? The routine
-> resources_available() isn't there anymore.
+SYSFW ABI 3.0 has changed the rchan_oes_offset value for am654 to support
+SR2.
 
-Not happen in Linux-next after I rebase.
+Since the kernel now needs SYSFW API 3.0 to work because the merged irqchip
+update, we need to also update the am654 rchan_oes_offset.
 
-Thanks,
-Peng.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+Hi Vinod,
 
->=20
-> --
-> viresh
+A series from Lokesh to support sysfw ABI 3.0 and newer is now in mainline
+under v5.9-rc3 tag.
+With his series Linux can not really boot into a usable state with older sysfw
+and the ABI 3.0 have additional changes affecting UDMA on am654:
+the rchan_oes_offset number is changed to better align with j72xx and to be able
+to support both SR1 and SR2 of am654.
+
+Can you send this patch for -rc4 to fix the regression now in mainline?
+The regression is that one can not request TR mode channel to service a
+peripheral.
+
+We do not have users upstream depending on this, but I do have out of tree audio
+support and cutomers might pick up 5.9 from mainline when it is released.
+
+Thank you,
+Peter
+
+ drivers/dma/ti/k3-udma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
+index 989998b6e078..9a7048bcf0f1 100644
+--- a/drivers/dma/ti/k3-udma.c
++++ b/drivers/dma/ti/k3-udma.c
+@@ -3091,14 +3091,14 @@ static struct udma_match_data am654_main_data = {
+ 	.psil_base = 0x1000,
+ 	.enable_memcpy_support = true,
+ 	.statictr_z_mask = GENMASK(11, 0),
+-	.rchan_oes_offset = 0x2000,
++	.rchan_oes_offset = 0x200,
+ };
+ 
+ static struct udma_match_data am654_mcu_data = {
+ 	.psil_base = 0x6000,
+ 	.enable_memcpy_support = false,
+ 	.statictr_z_mask = GENMASK(11, 0),
+-	.rchan_oes_offset = 0x2000,
++	.rchan_oes_offset = 0x200,
+ };
+ 
+ static struct udma_match_data j721e_main_data = {
+-- 
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
