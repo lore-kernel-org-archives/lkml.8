@@ -2,250 +2,153 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E543C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26C9C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:12:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4902C208A9
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:08:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="U7r4m9+E"
+	by mail.kernel.org (Postfix) with ESMTP id 914152073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598915563;
+	bh=OYx4gWy0INzeUxyzwos2MBa9BzopDIOMq38s9ZL0LxE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=a5/5KO/S4+rwqqYYEYFKl/lkzaa7cMGXRJ1rmnWypg+ZuiBvlu/I5rFEpyETd6SRV
+	 6Iu9nD+hPe2x9R5ZLHLuLcwRqFBz6RVW5ho2saBnw9C3tzRwABtMO2Lw7msbjM0tFw
+	 fiu2DxwH2VykS0Is4rHIJA/TEEak3cetI7R7vd1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726266AbgHaXI4 (ORCPT
+        id S1726107AbgHaXMl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 19:08:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42716 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgHaXIz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 19:08:55 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393A6C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:08:55 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id w11so2455311lfn.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:08:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oFOwZqPQy+End9TmkGk8//KnSSeYvzkG/gwOBN2yU+c=;
-        b=U7r4m9+EyjAb37Q9nfGOYH+65wJydKc9ZpUlzQSMbBhUrAO638rRw1OfoJo38Y7i0w
-         ILyY7Go+C0LtWzuH3KBIhwk+blaoPglXMgiPj6rt9k6gF5wBqjQJt1rc1CvsioG1SlyZ
-         TaiJH98zhI5O68YC8POrADP3vwxkml9G2gfY3jCU+pS/zgmX8Tn0ZPaMCvz7pMIefET+
-         z4LrBHiJ61leUHbIhOO/PvQzDLJ6OvJd2lsYldtxJbLNcR/0JF5p+1S+lNngBvioBH3u
-         oH+sy3bbcDCg1trAaU9et2yI24KVRnpGTbZYOEZFmmYyAqfYaa0sRKdtspsLQV+VYi7K
-         YSPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oFOwZqPQy+End9TmkGk8//KnSSeYvzkG/gwOBN2yU+c=;
-        b=rFAkd8R8wE5c98YcElQHBC+7EiqTMYG3eo+CRrbchcemmsu6CvH89I1eoKDlrEIfEg
-         gCr+hM2grLBg56jDnoZo09NvTRXuWBtG9K1lmJHUEeyNwlo4OLJUMLFXakBLTM2+NArc
-         4uZ5Cv3/iw0KYhyYma8gYqUywfv8lVAC4I5m9SmCDP/2JrkWvt7QH1LK7M4JRwz8vMaK
-         JF6ncwJIW3Jhc5YUxdq2eRUv/j05QfvXeM8tdR3ixW2XklKaTIuCNbY2TbVFZ0/gVRTf
-         RdyC8U6YpqxRwFbkET2L+MryuqrRwFUg1YcBn2xcvQq4+ZzPbBcSv7BXXwZF6rO2znhO
-         gzcA==
-X-Gm-Message-State: AOAM532xQqY1b79gAbB0fr599qw32ZSyOO/XzHGw6qI4csu4LKQU3mRP
-        CBjtpSnRM/FjW2qRUrQIbhSDmqf5cq4Ztrzp8UW0kjbDreQ=
-X-Google-Smtp-Source: ABdhPJwcC+K8YjkWSdaZ0phbx58pLddBVpuLH4E99ms1abUprg6Tf8kQ16VTRgNyVRvhx0TxwXc1bfsHzxWt/xCrQYA=
-X-Received: by 2002:a05:6512:1048:: with SMTP id c8mr1663540lfb.101.1598915333216;
- Mon, 31 Aug 2020 16:08:53 -0700 (PDT)
+        Mon, 31 Aug 2020 19:12:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55268 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725814AbgHaXMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 19:12:41 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97CD82064B;
+        Mon, 31 Aug 2020 23:12:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598915560;
+        bh=OYx4gWy0INzeUxyzwos2MBa9BzopDIOMq38s9ZL0LxE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Pmj09cjbzIDHktRbdLtunZYruAU7xs8CUARjslGhZo0wPCacthFKZtoc2Ip8GAAXI
+         DAOr9tTrFgwlg0sz+fdqz5WGw1x8KKOPj+3cqQ+7AO+ZzFLu7ucbNaq17OnVUtfzM1
+         fhpWjrmCnqtd6P5l/d2Jnx3KblMFrBFFAOhrbWPU=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 6F7ED35230F1; Mon, 31 Aug 2020 16:12:40 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 16:12:40 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Akira Yokosawa <akiyks@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, stern@rowland.harvard.edu,
+        parri.andrea@gmail.com, will@kernel.org, peterz@infradead.org,
+        boqun.feng@gmail.com, npiggin@gmail.com, dhowells@redhat.com,
+        j.alglave@ucl.ac.uk, luc.maranget@inria.fr
+Subject: Re: [PATCH kcsan 8/9] tools/memory-model: Document categories of
+ ordering primitives
+Message-ID: <20200831231240.GG2855@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
+ <20200831182037.2034-8-paulmck@kernel.org>
+ <48f1fcd2-de89-b21e-f5a6-96c8e8861706@gmail.com>
 MIME-Version: 1.0
-References: <20200826230225.3782486-1-posk@google.com> <2086453141.23738.1598888098693.JavaMail.zimbra@efficios.com>
-In-Reply-To: <2086453141.23738.1598888098693.JavaMail.zimbra@efficios.com>
-From:   Peter Oskolkov <posk@google.com>
-Date:   Mon, 31 Aug 2020 16:08:41 -0700
-Message-ID: <CAPNVh5fWuEjyc9SxGt+Ex+bUrbLjUJt4bDhg=03y4jtSAh1igA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 v5] rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     paulmck <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>,
-        Peter Oskolkov <posk@posk.io>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48f1fcd2-de89-b21e-f5a6-96c8e8861706@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 8:35 AM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
+On Tue, Sep 01, 2020 at 07:34:20AM +0900, Akira Yokosawa wrote:
+> On Mon, 31 Aug 2020 11:20:36 -0700, paulmck@kernel.org wrote:
+> > From: "Paul E. McKenney" <paulmck@kernel.org>
+> > 
+> > The Linux kernel has a number of categories of ordering primitives, which
+> > are recorded in the LKMM implementation and hinted at by cheatsheet.txt.
+> > But there is no overview of these categories, and such an overview
+> > is needed in order to understand multithreaded LKMM litmus tests.
+> > This commit therefore adds an ordering.txt as well as extracting a
+> > control-dependencies.txt from memory-barriers.txt.  It also updates the
+> > README file.
+> > 
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > ---
+> >  tools/memory-model/Documentation/README       |  24 +-
+> >  tools/memory-model/Documentation/ordering.txt | 462 ++++++++++++++++++++++++++
+> >  tools/memory-model/control-dependencies.txt   | 256 ++++++++++++++
+> >  3 files changed, 740 insertions(+), 2 deletions(-)
+> >  create mode 100644 tools/memory-model/Documentation/ordering.txt
+> >  create mode 100644 tools/memory-model/control-dependencies.txt
+> 
+> Hi Paul,
+> 
+> Didn't you mean to put control-dependencies.txt under tools/memory-model/Documentation/ ?
 
-Thanks for the review!
+Indeed I did, good catch, thank you!
 
->
-> ----- On Aug 26, 2020, at 7:02 PM, Peter Oskolkov posk@google.com wrote:
-> [...]
-> >
-> > static void ipi_mb(void *info)
-> > {
-> > +#ifdef CONFIG_RSEQ
-> > +     int *flags = info;
+							Thanx, Paul
+
+>         Thanks, Akira
+> 
+> > 
+> > diff --git a/tools/memory-model/Documentation/README b/tools/memory-model/Documentation/README
+> > index 4326603..16177aa 100644
+> > --- a/tools/memory-model/Documentation/README
+> > +++ b/tools/memory-model/Documentation/README
+> > @@ -8,10 +8,19 @@ number of places.
+> >  
+> >  This document therefore describes a number of places to start reading
+> >  the documentation in this directory, depending on what you know and what
+> > -you would like to learn:
+> > +you would like to learn.  These are cumulative, that is, understanding
+> > +of the documents earlier in this list is required by the documents later
+> > +in this list.
+> >  
+> >  o	You are new to Linux-kernel concurrency: simple.txt
+> >  
+> > +o	You have some background in Linux-kernel concurrency, and would
+> > +	like an overview of the types of low-level concurrency primitives
+> > +	that are provided:  ordering.txt
 > > +
-> > +     if (flags && (*flags == MEMBARRIER_FLAG_RSEQ))
-> > +             rseq_preempt(current);
-> > +#endif
->
-> Please lift this into a new ipi_rseq(), which will be defined as an empty function
-> if RSEQ is not defined.
-
-Done.
-
->
->
-> >       smp_mb();       /* IPIs should be serializing but paranoid. */
-> > }
-> >
-> > @@ -129,19 +143,26 @@ static int membarrier_global_expedited(void)
-> >       return 0;
-> > }
-> >
-> > -static int membarrier_private_expedited(int flags)
-> > +static int membarrier_private_expedited(int flags, int cpu_id)
-> > {
-> >       int cpu;
-> >       cpumask_var_t tmpmask;
-> >       struct mm_struct *mm = current->mm;
-> >
-> > -     if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
-> > +     if (flags == MEMBARRIER_FLAG_SYNC_CORE) {
->
-> I'm not sure why we need to change the behavior from a mask on flags to
-> an equality, which means this behaves more like a list of items rather
-> than flags.
->
-> It's one thing to disallow combining things like SYNC_CORE and RSEQ in the
-> ABI, but I wonder why we need to change the flags behavior to an equality
-> for the internal flags.
-
-I do not feel too strongly about this, but using "flags & XXX" implies
-that flags is a bitmask that can have more than one bit set. I was actually
-confused initially by this and was trying to figure out where / how more than
-one bit can be set, and where / how this is handled. By explicitly using "=="
-the code indicates that (at the moment) this is not a bitmask.
-
-I can revert the change back to "&" if you think it is better than having "==".
-
->
-> >               if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
-> >                       return -EINVAL;
-> >               if (!(atomic_read(&mm->membarrier_state) &
-> >                     MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY))
-> >                       return -EPERM;
-> > +     } else if (flags == MEMBARRIER_FLAG_RSEQ) {
-> > +             if (!IS_ENABLED(CONFIG_RSEQ))
-> > +                     return -EINVAL;
-> > +             if (!(atomic_read(&mm->membarrier_state) &
-> > +                   MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ_READY))
-> > +                     return -EPERM;
-> >       } else {
-> > +             BUG_ON(flags != 0);
-> >               if (!(atomic_read(&mm->membarrier_state) &
-> >                     MEMBARRIER_STATE_PRIVATE_EXPEDITED_READY))
-> >                       return -EPERM;
-> > @@ -174,6 +195,8 @@ static int membarrier_private_expedited(int flags)
-> >                */
-> >               if (cpu == raw_smp_processor_id())
-> >                       continue;
-> > +             if (cpu_id >= 0 && cpu != cpu_id)
-> > +                     continue;
->
-> When the cpu is specified, it seems rather inefficient to iterate on all
-> cpus to skip all but the one we are looking for. I suspect we don't want
-> to go through the loop in that case.
-
-Done. The code is a bit more complicated now, but definitely more
-efficient.
-
->
-> >               p = rcu_dereference(cpu_rq(cpu)->curr);
-> >               if (p && p->mm == mm)
-> >                       __cpumask_set_cpu(cpu, tmpmask);
-> > @@ -181,7 +204,7 @@ static int membarrier_private_expedited(int flags)
-> >       rcu_read_unlock();
-> >
-> >       preempt_disable();
-> > -     smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
-> > +     smp_call_function_many(tmpmask, ipi_mb, &flags, 1);
-> >       preempt_enable();
-> >
-> >       free_cpumask_var(tmpmask);
-> > @@ -283,11 +306,18 @@ static int membarrier_register_private_expedited(int
-> > flags)
-> >           set_state = MEMBARRIER_STATE_PRIVATE_EXPEDITED,
-> >           ret;
-> >
-> > -     if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
-> > +     if (flags == MEMBARRIER_FLAG_SYNC_CORE) {
->
-> Same comment about changing this internal flags behavior from mask to equality.
-
-Same reply :)
-
-I can revert the change, but it will look weird, imho - the code does not
-treat flags as a bitmask, and changing it to actually work with flags a bitmask
-will make it more complicated without a real use case at the moment.
-
->
-> >               if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
-> >                       return -EINVAL;
-> >               ready_state =
-> >                       MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY;
-> > +     } else if (flags == MEMBARRIER_FLAG_RSEQ) {
-> > +             if (!IS_ENABLED(CONFIG_RSEQ))
-> > +                     return -EINVAL;
-> > +             ready_state =
-> > +                     MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ_READY;
-> > +     } else {
-> > +             BUG_ON(flags != 0);
-> >       }
-> >
-> >       /*
-> > @@ -299,6 +329,8 @@ static int membarrier_register_private_expedited(int flags)
-> >               return 0;
-> >       if (flags & MEMBARRIER_FLAG_SYNC_CORE)
-> >               set_state |= MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE;
-> > +     if (flags & MEMBARRIER_FLAG_RSEQ)
-> > +             set_state |= MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ;
->
-> This one still behaves like a mask, so there is a discrepancy between registration
-> and action functions.
-
-Yes, and I vaguely remember you saying that commands being distinct bits
-is for "discoverability", not for any "ORing" of commands at the moment.
-
-[...]
-
-> > +SYSCALL_DEFINE3(membarrier, int, cmd, int, flags, int, cpu_id)
-> > {
-> > -     if (unlikely(flags))
-> > +     if (unlikely(flags) && cmd != MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
->
-> I would prefer that we deal with flags and cpu_id entirely here rather than
-> half here, half below, with e.g.:
->
-> switch (cmd) {
-> case MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ:
->     if (unlikely(flags && flags != MEMBARRIER_CMD_FLAG_CPU))
->         return -EINVAL;
->     break;
-> default:
->     if (unlikely(flags))
->         return -EINVAL;
-> }
->
-> if (!(flags & MEMBARRIER_CMD_FLAG_CPU))
->     cpu_id = -1;
-
-Done.
-
-[...]
+> > +	Here, "low level" means atomic operations to single locations in
+> > +	memory.
+> > +
+> >  o	You are familiar with the concurrency facilities that you
+> >  	need, and just want to get started with LKMM litmus tests:
+> >  	litmus-tests.txt
+> > @@ -20,6 +29,9 @@ o	You are familiar with Linux-kernel concurrency, and would
+> >  	like a detailed intuitive understanding of LKMM, including
+> >  	situations involving more than two threads: recipes.txt
+> >  
+> > +o	You would like a detailed understanding of what your compiler can
+> > +	and cannot do to control dependencies: control-dependencies.txt
+> > +
+> >  o	You are familiar with Linux-kernel concurrency and the
+> >  	use of LKMM, and would like a cheat sheet to remind you
+> >  	of LKMM's guarantees: cheatsheet.txt
+> > @@ -37,12 +49,16 @@ o	You are interested in the publications related to LKMM, including
+> >  DESCRIPTION OF FILES
+> >  ====================
+> >  
+> > -Documentation/README
+> > +README
+> >  	This file.
+> >  
+> >  Documentation/cheatsheet.txt
+> >  	Quick-reference guide to the Linux-kernel memory model.
+> >  
+> > +Documentation/control-dependencies.txt
+> > +	A guide to preventing compiler optimizations from destroying
+> > +	your control dependencies.
+> > +
+> >  Documentation/explanation.txt
+> >  	Describes the memory model in detail.
+> [...]
