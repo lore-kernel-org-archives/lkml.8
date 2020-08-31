@@ -2,141 +2,146 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB53CC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:06:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 482BBC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BCC8206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:06:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22288206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:07:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p9VzVxLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgHaIGQ (ORCPT
+        id S1728117AbgHaIHc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:06:16 -0400
-Received: from mga14.intel.com ([192.55.52.115]:64862 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgHaIGQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:06:16 -0400
-IronPort-SDR: XTRTDcd2iyORPEhiINzZlmH7OKVL3I6nQe3aaiOvG7vsw32S1hGh0r6UHsyoFbf89fGSOIj2nR
- mjlbHNr1fDXQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="156187954"
-X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
-   d="scan'208";a="156187954"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 01:06:15 -0700
-IronPort-SDR: MzetQxh5WB2oqzvYa3Ios8QJ+JHPF+ap2KYsbyJ7afe+4JqCYu8FYDHExmUGjf6ue2w+MuYRFN
- m6CqGSZJdz1A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
-   d="scan'208";a="281585131"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga007.fm.intel.com with ESMTP; 31 Aug 2020 01:06:14 -0700
-Received: from [10.213.47.150] (mreddy3x-MOBL.gar.corp.intel.com [10.213.47.150])
-        by linux.intel.com (Postfix) with ESMTP id A821A5803C5;
-        Mon, 31 Aug 2020 01:06:11 -0700 (PDT)
-Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
-        malliamireddy009@gmail.com
-References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
- <20200814203222.GA2674896@bogus>
- <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
- <20200825112107.GN2639@vkoul-mobl>
- <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
- <20200828104530.GT2639@vkoul-mobl>
-From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
-Message-ID: <09547b0e-1c2e-d916-d4c0-f66b0110e173@linux.intel.com>
-Date:   Mon, 31 Aug 2020 16:06:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Mon, 31 Aug 2020 04:07:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42432 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbgHaIHY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:07:24 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A4FDC061573;
+        Mon, 31 Aug 2020 01:07:22 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id w13so4960424wrk.5;
+        Mon, 31 Aug 2020 01:07:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Kj7OGziR3MgIah9Mcm+KkptCh/JY3xwVQZr8wUniyVM=;
+        b=p9VzVxLsWY+zFrqOBhD8usiIwGyeYSin57HeGT7R6Xf8R91XweDGVUBZ6VKfH3GmBn
+         KxHKBQEi8JYTnSniF1P95yk4suvegVJ3RLh5l4j/brsOY+o+iWgjJ8Nm48/l/8hrYDcy
+         4ATHbKHUCDSmBK3O9wBA/N/U57cAMhat4YOuWe2VgeELCGhm5BVqu/2uOo8jZwcbe+W3
+         AFapjovrOT1GYeZKF8zuYBhEJxFfTHNwP4mDcdiwsPSVqefWu3eNYiEKt/xNH8a32/+i
+         Cu9uYFJAuSEJXLExTW+U4TEOJK8Ec5giI5d7PWFeQR9wyyb88PfPZFPBN8Xl+l5gR9Aw
+         C7NQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Kj7OGziR3MgIah9Mcm+KkptCh/JY3xwVQZr8wUniyVM=;
+        b=itozRpctWtKClQAmvChgwknf0uWV8wapqkr3weAy0sZV+RVdS3jJhL26ME17kXMUSo
+         IpoikaLncwGo2/7ooaMsRjQat59Oup7S3zPd1ci3+RXwZO1Anws7g/LXM90L2OPDdDLi
+         2IeJgeEdlA4SwyoOpxcmyFgJueicp/TlnICy1A8dFgq7hoL/K6lYLC37jzjdq0YdNm8u
+         j/91ez3BgjmubC4T54sNkh+aYken453fUAlPkjh/I6qewba/VQXJ+DLOtDqwvAD7tVKn
+         6Owrxe4m3WLncJ+0i0PckSYXgj0Qg3EXGTl+XInfnJiL9KS/zbpSanatwaE94F6H/OEV
+         MOEA==
+X-Gm-Message-State: AOAM5325KnZCDBmrGG2wqAxGUBu2YiyY7zpbU045mjpXmJGyPwsMvVMZ
+        Kr2F0QIHsAWhi/ogwm5yiX45DEdJ26M=
+X-Google-Smtp-Source: ABdhPJzPjGh0MYKkT+308s50rP4IFYltMNUoUmJAMlK+uKkiT8cgBV5yT/IwFBTBrbaI9hP+3C1rvQ==
+X-Received: by 2002:adf:9ed4:: with SMTP id b20mr492462wrf.206.1598861240600;
+        Mon, 31 Aug 2020 01:07:20 -0700 (PDT)
+Received: from [192.168.8.147] ([37.164.5.65])
+        by smtp.gmail.com with ESMTPSA id k22sm8675238wrd.29.2020.08.31.01.07.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 01:07:20 -0700 (PDT)
+Subject: Re: [PATCH v3] net: Use standardized (IANA) local port range
+To:     Stephen Hemminger <stephen@networkplumber.org>,
+        Bart Groeneveld <avi@bartavi.nl>
+Cc:     linux-kernel@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200828203959.32010-1-avi@bartavi.nl>
+ <20200828204447.32838-1-avi@bartavi.nl> <20200828145203.65395ad8@hermes.lan>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <bf42f6fd-cd06-02d6-d7b6-233a0602c437@gmail.com>
+Date:   Mon, 31 Aug 2020 10:07:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200828104530.GT2639@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200828145203.65395ad8@hermes.lan>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
 
-Thanks for the review. Please see my comment inline.
 
-On 8/28/2020 6:45 PM, Vinod Koul wrote:
-> On 27-08-20, 17:54, Reddy, MallikarjunaX wrote:
->> Hi Vinod,
->> Thanks for the review comments.
+On 8/28/20 2:52 PM, Stephen Hemminger wrote:
+> On Fri, 28 Aug 2020 22:44:47 +0200
+> Bart Groeneveld <avi@bartavi.nl> wrote:
+> 
+>> IANA specifies User ports as 1024-49151,
+>> and Private ports (local/ephemeral/dynamic/w/e) as 49152-65535 [1].
 >>
->> On 8/25/2020 7:21 PM, Vinod Koul wrote:
->>> On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
->>>
->>>>>> +
->>>>>> +            intel,chans:
->>>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
->>>>>> +              description:
->>>>>> +                 The channels included on this port. Format is channel start
->>>>>> +                 number and how many channels on this port.
->>>>> Why does this need to be in DT? This all seems like it can be in the dma
->>>>> cells for each client.
->>>> (*ABC)
->>>> Yes. We need this.
->>>> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
->>>> channels. and the logical channel mapping for the peripherals also differ
->>>> b/w old and new SOCs.
->>>>
->>>> Because of this hardware limitation we are trying to configure the total
->>>> channels and port-channel mapping dynamically from device tree.
->>>>
->>>> based on port name we are trying to configure the default values for
->>>> different peripherals(ports).
->>>> Example: burst length is not same for all ports, so using port name to do
->>>> default configurations.
->>> Sorry that does not make sense to me, why not specify the values to be
->>> used here instead of defining your own name scheme!
->> OK. Agreed. I will remove port name from DT and only use intel,chans
-> what is intel,chans, why not use dma-channels?
-  The intel,chans says about the channels included on the correspondng 
-port. Format is channel start number and how many channels on this port.
-  The reasong behind using this attribute instead of standrad 
-dma-channels is...
+>> This means Linux uses 32768-49151 'illegally'.
+>> This is not just a matter of following specifications:
+>> IANA actually assigns numbers in this range [1].
+>>
+>> I understand that Linux uses 61000-65535 for masquarading/NAT [2],
+>> so I left the high value at 60999.
+>> This means the high value still does not follow the specification,
+>> but it also doesn't conflict with it.
+>>
+>> This change will effectively halve the available ephemeral ports,
+>> increasing the risk of port exhaustion. But:
+>> a) I don't think that warrants ignoring standards.
+>> 	Consider for example setting up a (corporate) firewall blocking
+>> 	all unknown external services.
+>> 	It will only allow outgoing trafiic at port 80,443 and 49152-65535.
+>> 	A Linux computer behind such a firewall will not be able to connect
+>> 	to *any* external service *half of the time*.
+>> 	Of course, the firewall can be adjusted to also allow 32768-49151,
+>> 	but that allows computers to use some services against the policy.
+>> b) It is only an issue with more than 11848 *outgoing* connections.
+>> 	I think that is a niche case (I know, citation needed, but still).
+>> 	If someone finds themselves in such a niche case,
+>> 	they can still modify ip_local_port_range.
+>>
+>> This patch keeps the low and high value at different parity,
+>> as to optimize port assignment [3].
+>>
+>> [1]: https://www.iana.org/assignments/service-names-port-numbers/service-names-port-numbers.txt
+>> [2]: https://marc.info/?l=linux-kernel&m=117900026927289
+>> [3]: See for example commit 1580ab63fc9a03593072cc5656167a75c4f1d173 ("tcp/dccp: better use of ephemeral ports in connect()")
+>>
+>> Signed-off-by: Bart Groeneveld <avi@bartavi.nl>
+> 
+> Changing the default range impacts existing users. Since Linux has been doing
+> this for so long, I don't think just because a standards body decided to reserve
+> some space is sufficient justification to do this.
+> 
 
+Agreed.
 
-DMA_VER22 HW supports 22 channels. But there is a hole in HW, total it 
-can use only 16.
+There is a sysctl, allowing admins/distros to opt-in to whatever IANA values of the days
+if they really want.
 
-Old soc supports 4ports and 16 channels.
-New soc supports 6ports and 22 channels.
-(old and new soc carry the same version VER22)
+We have already many issues caused by ephemeral range being too small.
 
-port channel mapping for the old and new soc also not the same.
-old soc: logical channels:(Rx, Tx)
-0, 1 - SPI0
-2, 3 - SPI1
-4, 5 - HSNAND
-12, 14, 13, 15 - Memcopy
+For instance I often have to debug issues caused by some distros
+changing sysctl_tcp_rfc1337 to 1, hurting some real applications.
 
-New soc: Logical channels(Rx, Tx)
-0, 1 - SPI0
-2, 3 - SPI1
-4, 5 - SPI2
-6, 7 - SPI3
-8, 9 - HSNAND
-10 to 21 - Mcopy
-
-Because of these reasons we are trying to use "intel,chans" attribute, 
-and reading then number of channels from the dt.
-Advantaage:
-1. we can map the channels correspondign to port
-2. Dynamically configure the channels (due to hw limitation)
-
-If this is not ok, please suggest us the better way to handle this.
->
