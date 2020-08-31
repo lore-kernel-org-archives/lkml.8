@@ -7,59 +7,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BC5C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2727C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D85E20639
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:50:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C121F20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:50:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="knBREK3D"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="HW8I1YgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgHaRux (ORCPT
+        id S1728289AbgHaRu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:50:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49112 "EHLO
+        Mon, 31 Aug 2020 13:50:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49120 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726085AbgHaRuv (ORCPT
+        with ESMTP id S1726085AbgHaRux (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:50:51 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B317CC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:50:51 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id w17so9895826ybl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:50:51 -0700 (PDT)
+        Mon, 31 Aug 2020 13:50:53 -0400
+Received: from mail-io1-xd49.google.com (mail-io1-xd49.google.com [IPv6:2607:f8b0:4864:20::d49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6B4C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:50:53 -0700 (PDT)
+Received: by mail-io1-xd49.google.com with SMTP id h8so4612207ioa.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:50:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=JpWL57E/IIAL9R1H0roONADTldmwz1McUqD3J7o9bl0=;
-        b=knBREK3DrTQlkiin5j15dgIYsIECOHJXCsck6vGRe6vUS6N6qDIc6aVfoMM+0UuMGj
-         7aofl7ZzlV+/ybYpNv+MLmlskZ4gAOWUuW3HIBnO5Xy+L24sKJYvl5n2Fc/Xo7CN9l6I
-         mktKoBS61HT19+MddqdZ9ZBOx9O7RhhsXkkUQiaSerge46HDozxhXGCKfwH2B4dy9rm0
-         y8ZFDWvg9hwAwujA/Sr50czu7FPPu6Iw50LK7583+8+buvvJOjP5l4DZnVJ0NwYz99Np
-         /Y8Ls/MJgIp4Ic98iDLIVvT0etqPSzpPGNm69iUY3G0clpmIWs2g7hN95jWQFX0LTEjU
-         wj6w==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=WJ86J1Rh/9a+OExkI0rJlOFHOUeu/5tIWacuz+P7JAc=;
+        b=HW8I1YgZCnmOLwNMaMPR8Sc9pNUApCmj+dz2XsrVb+X/SNyph/zuGantqb4pgta39U
+         KQGbOfOjQGNePPnYLR/r429Li0FzwweyZvT5M1Sa1B+9AbEtJB5h5ZgK2Rxw+tDUs811
+         LRSEOdNQyFkBN0CFGhpsfHaFZvif/OtBteR3Zn8ydBzMdEWLEZMvMk/Mm9bu9Om3s6LC
+         k08kYtCBseeOND4PalCgqnwuU3h36DkgbnC6GK7p7jLKda1YL1EkO3iWVnQoUoA4Fl2r
+         PNzBxiLUIfpFOyLhfFyDZQFX17fBelHRHsTiPW0TBMxp3Ge3zXPAbNLMiA2rNLA8Nylv
+         UWxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=JpWL57E/IIAL9R1H0roONADTldmwz1McUqD3J7o9bl0=;
-        b=RerYfbc06WjjjW97xrilgl6325Xyq01JQLOv2KHhyU1sYExiYfQCUX7sYdxO3Ze7Af
-         hwH8v+xwp2Qtiqx+hYEHYMJxAyJpbqKPraaBhCINDx410w8vBg/9y5cNxJQLMl28J7zm
-         5iZGjNdZgD0gVpQrPLpnR/YyJL3RTzSTvk2Yk1d2p/JqO/tU/KW2rCS0AJD/sJfir18V
-         eLxM/QaUg68I8la3utHaIQXLd53ae8Txdk1OPbqsv6SjPFLykf33+i64QCJHBdSlxe87
-         IPNRha4doEPesdzWepJmwCte5hwOr17UGPb1xhsZ5pfnRg78GFocIYhCRuZyKRdIslN6
-         1DCA==
-X-Gm-Message-State: AOAM533HyvQuIggA+M1e0t6j1ff/mBmfynCwvQ4EMAJzpp6PXWHh+ZOG
-        s1ZHKR1r8m6uoAxQ5TGQElO59LJDd+8=
-X-Google-Smtp-Source: ABdhPJx9rXxD1uqCrBCzxGHI+Q0iPaRack91VwRf10zVbssXVm/L8ws1r6QoHwp4qni6pMnDnPx7YLRzNRc=
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=WJ86J1Rh/9a+OExkI0rJlOFHOUeu/5tIWacuz+P7JAc=;
+        b=JieDZIHDmlfzfUvuuACE3zi0BXqh4nfVtlDVs2ptu9ZFvmHZPdMwS8nXRm3121W3X5
+         ubLvg6lK4ZqOUIpWyxeekpLXKTZEURuji4r87K59TAW2k5qiMtG5rFyUnO8tfc0bjBv6
+         A+fvehJD1Uz7IPakqClYDXK8rwjQOCNvzlUf621P8I1Sdkhg4bE/N7k2rext3kr5PSwf
+         duhfX1UWdUipO68PX1HgxEr/wBvSHEICZ5nzu1RP37ZLonkWr9R/BrssPbf0GZlUYoMk
+         PzT2T5n6j+jdn6Y95wg6PHImDaRJ24WUU37h0SNV6jb7IYgein11xYaRst350bob6CMP
+         t9Nw==
+X-Gm-Message-State: AOAM5323hiixKIwBRtlxVQLDWJEpB2+XJYY38q0hfU4tPgKRE3AcZU8E
+        kiK45DK3w7Cb2BB2b8mty8349hO+VY0=
+X-Google-Smtp-Source: ABdhPJyEmB54MPwn+rzZUmhXVP5xIYQCPFUTfjuW/TXcdPEGT6mWsUn1s2ENBY0cwGSp4EbLtkPuNTkDlXQ=
 X-Received: from yuzhao.bld.corp.google.com ([2620:15c:183:200:7220:84ff:fe09:2d90])
- (user=yuzhao job=sendgmr) by 2002:a5b:d0a:: with SMTP id y10mr4071246ybp.128.1598896250522;
- Mon, 31 Aug 2020 10:50:50 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 11:50:41 -0600
-Message-Id: <20200831175042.3527153-1-yuzhao@google.com>
+ (user=yuzhao job=sendgmr) by 2002:a92:7a0a:: with SMTP id v10mr2027625ilc.99.1598896251830;
+ Mon, 31 Aug 2020 10:50:51 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 11:50:42 -0600
+In-Reply-To: <20200831175042.3527153-1-yuzhao@google.com>
+Message-Id: <20200831175042.3527153-2-yuzhao@google.com>
 Mime-Version: 1.0
+References: <20200831175042.3527153-1-yuzhao@google.com>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH v2 1/2] mm: use add_page_to_lru_list()/page_lru()/page_off_lru()
+Subject: [PATCH v2 2/2] mm: use self-explanatory macros rather than "2"
 From:   Yu Zhao <yuzhao@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Alex Shi <alex.shi@linux.alibaba.com>, linux-mm@kvack.org,
@@ -70,84 +73,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a trivial but worth having clean-up patch. There should be
-no side effects except page->lru is temporarily poisoned after it's
-deleted but before it's added to the new list in move_pages_to_lru()
-(which is not a problem).
-
-[ I was under false impression that page_off_lru() clears PG_lru;
-  Alex Shi <alex.shi@linux.alibaba.com> pointed that out. So in v2,
-  we keep __ClearPageLRU(). ]
+This is a trivial clean-up patch. Take it or leave it.
 
 Signed-off-by: Yu Zhao <yuzhao@google.com>
 ---
- mm/swap.c   |  4 +---
- mm/vmscan.c | 13 ++++---------
- 2 files changed, 5 insertions(+), 12 deletions(-)
+ include/linux/mmzone.h | 12 ++++++++----
+ include/linux/vmstat.h |  2 +-
+ mm/vmscan.c            |  2 +-
+ 3 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/mm/swap.c b/mm/swap.c
-index 40bf20a75278..2735ecf0f566 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -597,11 +597,9 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- {
- 	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
--		bool active = PageActive(page);
- 		int nr_pages = thp_nr_pages(page);
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 8379432f4f2f..be1cdbf8317f 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -266,6 +266,8 @@ static inline bool is_active_lru(enum lru_list lru)
+ 	return (lru == LRU_ACTIVE_ANON || lru == LRU_ACTIVE_FILE);
+ }
  
--		del_page_from_lru_list(page, lruvec,
--				       LRU_INACTIVE_ANON + active);
-+		del_page_from_lru_list(page, lruvec, page_lru(page));
- 		ClearPageActive(page);
- 		ClearPageReferenced(page);
- 		/*
++#define ANON_AND_FILE 2
++
+ enum lruvec_flags {
+ 	LRUVEC_CONGESTED,		/* lruvec has many dirty pages
+ 					 * backed by a congested BDI
+@@ -283,8 +285,8 @@ struct lruvec {
+ 	unsigned long			file_cost;
+ 	/* Non-resident age, driven by LRU movement */
+ 	atomic_long_t			nonresident_age;
+-	/* Refaults at the time of last reclaim cycle, anon=0, file=1 */
+-	unsigned long			refaults[2];
++	/* Refaults at the time of last reclaim cycle */
++	unsigned long			refaults[ANON_AND_FILE];
+ 	/* Various lruvec state flags (enum lruvec_flags) */
+ 	unsigned long			flags;
+ #ifdef CONFIG_MEMCG
+@@ -406,6 +408,8 @@ enum zone_type {
+ 
+ #ifndef __GENERATING_BOUNDS_H
+ 
++#define ASYNC_AND_SYNC 2
++
+ struct zone {
+ 	/* Read-mostly fields */
+ 
+@@ -525,8 +529,8 @@ struct zone {
+ #if defined CONFIG_COMPACTION || defined CONFIG_CMA
+ 	/* pfn where compaction free scanner should start */
+ 	unsigned long		compact_cached_free_pfn;
+-	/* pfn where async and sync compaction migration scanner should start */
+-	unsigned long		compact_cached_migrate_pfn[2];
++	/* pfn where compaction migration scanner should start */
++	unsigned long		compact_cached_migrate_pfn[ASYNC_AND_SYNC];
+ 	unsigned long		compact_init_migrate_pfn;
+ 	unsigned long		compact_init_free_pfn;
+ #endif
+diff --git a/include/linux/vmstat.h b/include/linux/vmstat.h
+index 91220ace31da..d5431c1bf6e5 100644
+--- a/include/linux/vmstat.h
++++ b/include/linux/vmstat.h
+@@ -28,7 +28,7 @@ struct reclaim_stat {
+ 	unsigned nr_writeback;
+ 	unsigned nr_immediate;
+ 	unsigned nr_pageout;
+-	unsigned nr_activate[2];
++	unsigned nr_activate[ANON_AND_FILE];
+ 	unsigned nr_ref_keep;
+ 	unsigned nr_unmap_fail;
+ 	unsigned nr_lazyfree_fail;
 diff --git a/mm/vmscan.c b/mm/vmscan.c
-index 99e1796eb833..1b871c3987e7 100644
+index 1b871c3987e7..b454cc17e5a3 100644
 --- a/mm/vmscan.c
 +++ b/mm/vmscan.c
-@@ -1845,13 +1845,12 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 	int nr_pages, nr_moved = 0;
- 	LIST_HEAD(pages_to_free);
- 	struct page *page;
--	enum lru_list lru;
- 
- 	while (!list_empty(list)) {
- 		page = lru_to_page(list);
- 		VM_BUG_ON_PAGE(PageLRU(page), page);
-+		list_del(&page->lru);
- 		if (unlikely(!page_evictable(page))) {
--			list_del(&page->lru);
- 			spin_unlock_irq(&pgdat->lru_lock);
- 			putback_lru_page(page);
- 			spin_lock_irq(&pgdat->lru_lock);
-@@ -1860,16 +1859,11 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 		lruvec = mem_cgroup_page_lruvec(page, pgdat);
- 
- 		SetPageLRU(page);
--		lru = page_lru(page);
--
--		nr_pages = thp_nr_pages(page);
--		update_lru_size(lruvec, lru, page_zonenum(page), nr_pages);
--		list_move(&page->lru, &lruvec->lists[lru]);
-+		add_page_to_lru_list(page, lruvec, page_lru(page));
- 
- 		if (put_page_testzero(page)) {
- 			__ClearPageLRU(page);
--			__ClearPageActive(page);
--			del_page_from_lru_list(page, lruvec, lru);
-+			del_page_from_lru_list(page, lruvec, page_off_lru(page));
- 
- 			if (unlikely(PageCompound(page))) {
- 				spin_unlock_irq(&pgdat->lru_lock);
-@@ -1878,6 +1872,7 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
- 			} else
- 				list_add(&page->lru, &pages_to_free);
- 		} else {
-+			nr_pages = thp_nr_pages(page);
- 			nr_moved += nr_pages;
- 			if (PageActive(page))
- 				workingset_age_nonresident(lruvec, nr_pages);
+@@ -2232,7 +2232,7 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+ 	struct mem_cgroup *memcg = lruvec_memcg(lruvec);
+ 	unsigned long anon_cost, file_cost, total_cost;
+ 	int swappiness = mem_cgroup_swappiness(memcg);
+-	u64 fraction[2];
++	u64 fraction[ANON_AND_FILE];
+ 	u64 denominator = 0;	/* gcc */
+ 	enum scan_balance scan_balance;
+ 	unsigned long ap, fp;
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
