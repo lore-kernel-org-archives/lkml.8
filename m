@@ -2,248 +2,173 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3963C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:52:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61FA2206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCBB1206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="f6Bmje31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgHaIvy convert rfc822-to-8bit (ORCPT
+        id S1728343AbgHaIwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:51:54 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2710 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725978AbgHaIvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:51:53 -0400
-Received: from lhreml731-chm.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 90684E58730BB099C92E;
-        Mon, 31 Aug 2020 09:51:51 +0100 (IST)
-Received: from fraeml701-chm.china.huawei.com (10.206.15.50) by
- lhreml731-chm.china.huawei.com (10.201.108.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Mon, 31 Aug 2020 09:51:51 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml701-chm.china.huawei.com (10.206.15.50) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Mon, 31 Aug 2020 10:51:50 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Mon, 31 Aug 2020 10:51:50 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "mjg59@google.com" <mjg59@google.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>
-Subject: RE: [PATCH 06/11] evm: Allow setxattr() and setattr() if metadata
- digest won't change
-Thread-Topic: [PATCH 06/11] evm: Allow setxattr() and setattr() if metadata
- digest won't change
-Thread-Index: AQHWRYqUlnQLtNKv1EOX9vSSVMUNoKlHdHOAgArmSEA=
-Date:   Mon, 31 Aug 2020 08:51:50 +0000
-Message-ID: <920bb5b700bf41f08ae74de8b14aaf41@huawei.com>
-References: <20200618160329.1263-2-roberto.sassu@huawei.com>
-         <20200618160458.1579-6-roberto.sassu@huawei.com>
- <802588e6892951076babbc48aa0320032e4b1926.camel@linux.ibm.com>
-In-Reply-To: <802588e6892951076babbc48aa0320032e4b1926.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.205.186]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 31 Aug 2020 04:52:16 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52078 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725978AbgHaIwN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:52:13 -0400
+Received: from zn.tnic (p200300ec2f085000813a34d1eba5207f.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5000:813a:34d1:eba5:207f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C27221EC02F2;
+        Mon, 31 Aug 2020 10:52:07 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1598863927;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=2FzP/LvkqUgFGgtj8Jdm6U/F975hJtQOcYmgKmxdTew=;
+        b=f6Bmje31otGkvraw5KTpsx4FRsRfwx8yvp2U8CfixJu6w2daX7PKI70wy6ktlQJakpMJGE
+        SvPG660bCO0X5LAxbQHfEbYbcui6cRng5yj3PCltWtTga0uSzRY1A0PeIF+S1pJdm3DA7r
+        zFeYYwTxuxv+SJat3BZg1DoX4Ct+aK8=
+Date:   Mon, 31 Aug 2020 10:52:03 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     robh+dt@kernel.org, palmer@dabbelt.com, paul.walmsley@sifive.com,
+        mchehab@kernel.org, tony.luck@intel.com, aou@eecs.berkeley.edu,
+        james.morse@arm.com, rrichter@marvell.com,
+        devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org,
+        sachin.ghadi@sifive.com
+Subject: Re: [PATCH 3/3] edac: sifive: Add EDAC support for Memory Controller
+ in SiFive SoCs
+Message-ID: <20200831085203.GB27517@zn.tnic>
+References: <1598357182-4226-1-git-send-email-yash.shah@sifive.com>
+ <1598357182-4226-4-git-send-email-yash.shah@sifive.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1598357182-4226-4-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> Sent: Monday, August 24, 2020 2:17 PM
-> On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
-> > If metadata are immutable, they cannot be changed. If metadata are
-> already
-> > set to the final value before cp and tar restore the value from the source,
-> > those applications display an error even if the operation is legitimate
-> > (they don't change the value).
+
+> Subject: Re: [PATCH 3/3] edac: sifive: Add EDAC support for Memory Controller in SiFive SoCs
+
+Fix subject prefix: "EDAC/sifive: ..."
+
+On Tue, Aug 25, 2020 at 05:36:22PM +0530, Yash Shah wrote:
+> Add Memory controller EDAC support in exisiting SiFive platform EDAC
+
+s/in exisiting/to the/
+
+> driver. It registers for notifier events from the SiFive DDR controller
+> driver for DDR ECC events.
+
+Simplify:
+
+"It registers for ECC notifier events from the memory controller."
+
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  drivers/edac/Kconfig       |   2 +-
+>  drivers/edac/sifive_edac.c | 117 +++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 118 insertions(+), 1 deletion(-)
 > 
-> "metadata" is singular.   The first sentence would be clearer by using
-> the specific metadata.  What problem are you trying to solve?  It
-> doesn't look like you're trying to solve the problem of writing the EVM
-> portable signatures without an exiting HMAC.
-> 
-> >
-> > This patch determines whether setxattr()/setattr() change metadata and,
-> if
-> > not, allows the operations even if metadata are immutable.
-> 
-> Doesn't setxattr/setattr always change file metadata?  Please describe
-> the real problem.
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 7b6ec30..f8b3b53 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -462,7 +462,7 @@ config EDAC_ALTERA_SDMMC
+>  
+>  config EDAC_SIFIVE
+>  	bool "Sifive platform EDAC driver"
+> -	depends on EDAC=y && SIFIVE_L2
+> +	depends on EDAC=y && (SIFIVE_L2 || SIFIVE_DDR)
+>  	help
+>  	  Support for error detection and correction on the SiFive SoCs.
+>  
+> diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
+> index 3a3dcb1..cf032685 100644
+> --- a/drivers/edac/sifive_edac.c
+> +++ b/drivers/edac/sifive_edac.c
+> @@ -11,14 +11,120 @@
+>  #include <linux/platform_device.h>
+>  #include "edac_module.h"
+>  #include <soc/sifive/sifive_l2_cache.h>
+> +#include <soc/sifive/sifive_ddr.h>
+>  
+>  #define DRVNAME "sifive_edac"
+> +#define SIFIVE_EDAC_MOD_NAME "Sifive ECC Manager"
 
-Yes. The problem is that tar/cp change metadata even if its value is
-already correct after the file has been created. These operations
-will be denied because metadata is immutable and verification
-succeeds.
+s/SIFIVE_EDAC_MOD_NAME/EDAC_MOD_NAME/g
 
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > ---
-> >  security/integrity/evm/evm_main.c | 72
-> +++++++++++++++++++++++++++++++
-> >  1 file changed, 72 insertions(+)
-> >
-> > diff --git a/security/integrity/evm/evm_main.c
-> b/security/integrity/evm/evm_main.c
-> > index 30072030f05d..41cc6a4aaaab 100644
-> > --- a/security/integrity/evm/evm_main.c
-> > +++ b/security/integrity/evm/evm_main.c
-> > @@ -18,6 +18,7 @@
-> >  #include <linux/integrity.h>
-> >  #include <linux/evm.h>
-> >  #include <linux/magic.h>
-> > +#include <linux/posix_acl_xattr.h>
-> >
-> >  #include <crypto/hash.h>
-> >  #include <crypto/hash_info.h>
-> > @@ -305,6 +306,56 @@ static enum integrity_status
-> evm_verify_current_integrity(struct dentry *dentry)
-> >  	return evm_verify_hmac(dentry, NULL, NULL, 0, NULL);
-> >  }
-> >
-> > +static int evm_xattr_acl_change(struct dentry *dentry, const char
-> *xattr_name,
-> > +				const void *xattr_value, size_t
-> xattr_value_len)
-> > +{
-> > +	umode_t mode;
-> > +	struct posix_acl *acl = NULL, *acl_res;
-> > +	struct inode *inode = d_backing_inode(dentry);
-> > +	int rc;
-> > +
-> > +	/* UID/GID in ACL have been already converted from user to init ns
-> */
-> > +	acl = posix_acl_from_xattr(&init_user_ns, xattr_value,
-> xattr_value_len);
-> > +	if (!acl)
-> > +		return 1;
-> > +
-> > +	acl_res = acl;
-> > +	rc = posix_acl_update_mode(inode, &mode, &acl_res);
-> > +
-> > +	posix_acl_release(acl);
-> > +
-> > +	if (rc)
-> > +		return 1;
-> > +
-> > +	if (acl_res && inode->i_mode != mode)
-> > +		return 1;
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int evm_xattr_change(struct dentry *dentry, const char
-> *xattr_name,
-> > +			    const void *xattr_value, size_t xattr_value_len)
-> > +{
-> > +	char *xattr_data = NULL;
-> > +	int rc = 0;
-> > +
-> > +	if (posix_xattr_acl(xattr_name))
-> > +		return evm_xattr_acl_change(dentry, xattr_name,
-> xattr_value,
-> > +					    xattr_value_len);
-> > +
-> > +	rc = vfs_getxattr_alloc(dentry, xattr_name, &xattr_data, 0,
-> GFP_NOFS);
-> > +	if (rc < 0)
-> > +		return 1;
-> > +
-> > +	if (rc == xattr_value_len)
-> > +		rc = memcmp(xattr_value, xattr_data, rc);
-> > +	else
-> > +		rc = 1;
-> > +
-> > +	kfree(xattr_data);
-> > +	return rc;
-> > +}
-> > +
-> >  /*
-> >   * evm_protect_xattr - protect the EVM extended attribute
-> >   *
-> > @@ -361,6 +412,10 @@ static int evm_protect_xattr(struct dentry
-> *dentry, const char *xattr_name,
-> >  	if (evm_status == INTEGRITY_FAIL_IMMUTABLE)
-> >  		return 0;
-> >
-> > +	if (evm_status == INTEGRITY_PASS_IMMUTABLE &&
-> > +	    !evm_xattr_change(dentry, xattr_name, xattr_value,
-> xattr_value_len))
-> > +		return 0;
-> > +
-> >  	if (evm_status != INTEGRITY_PASS)
-> >  		integrity_audit_msg(AUDIT_INTEGRITY_METADATA,
-> d_backing_inode(dentry),
-> >  				    dentry->d_name.name,
-> "appraise_metadata",
-> > @@ -477,6 +532,19 @@ void evm_inode_post_removexattr(struct dentry
-> *dentry, const char *xattr_name)
-> >  	evm_update_evmxattr(dentry, xattr_name, NULL, 0);
-> >  }
-> >
-> > +static int evm_attr_change(struct dentry *dentry, struct iattr *attr)
-> 
-> static functions don't normally require a function comment, but in this
-> case it wouldn't hurt to clarify why the uid, gid, mode bits are set,
-> but aren't being modified.
-> Similarly a function comment would help with the readability of
-> evm_xattr_acl_change().
+like the other EDAC drivers.
 
-Ok.
+...
 
-Roberto
+> +static int ecc_mc_register(struct platform_device *pdev)
+> +{
+> +	struct sifive_edac_mc_priv *p;
+> +	struct edac_mc_layer layers[1];
+> +	int ret;
+> +
+> +	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
+> +	if (!p)
+> +		return -ENOMEM;
+> +
+> +	p->notifier.notifier_call = ecc_mc_err_event;
+> +	platform_set_drvdata(pdev, p);
+> +
+> +	layers[0].type = EDAC_MC_LAYER_CHIP_SELECT;
+> +	layers[0].size = 1;
+> +	layers[0].is_virt_csrow = true;
+> +
+> +	p->mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, 0);
+> +	if (!p->mci) {
+> +		dev_err(&pdev->dev, "Failed mem allocation for mc instance\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	p->mci->pdev = &pdev->dev;
+> +	/* Initialize controller capabilities */
+> +	p->mci->mtype_cap = MEM_FLAG_DDR4;
+> +	p->mci->edac_ctl_cap = EDAC_FLAG_NONE | EDAC_FLAG_SECDED;
+> +	p->mci->edac_cap = EDAC_FLAG_SECDED;
+> +	p->mci->scrub_cap = SCRUB_UNKNOWN;
+> +	p->mci->scrub_mode = SCRUB_HW_PROG;
+> +	p->mci->ctl_name = dev_name(&pdev->dev);
+> +	p->mci->dev_name = dev_name(&pdev->dev);
+> +	p->mci->mod_name = SIFIVE_EDAC_MOD_NAME;
+> +	p->mci->ctl_page_to_phys = NULL;
+> +
+> +	/* Interrupt feature is supported by cadence mc */
+> +	edac_op_state = EDAC_OPSTATE_INT;
+> +
+> +	ret = edac_mc_add_mc(p->mci);
+> +	if (ret) {
+> +		edac_printk(KERN_ERR, SIFIVE_EDAC_MOD_NAME,
+> +			    "Failed to register with EDAC core\n");
+> +		goto err;
+> +	}
+> +
+> +#ifdef CONFIG_SIFIVE_DDR
 
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
+It seems all that ifdeffery can be replaced with
 
-> Mimi
-> 
-> > +{
-> > +	struct inode *inode = d_backing_inode(dentry);
-> > +	unsigned int ia_valid = attr->ia_valid;
-> > +
-> > +	if ((!(ia_valid & ATTR_UID) || uid_eq(attr->ia_uid, inode->i_uid))
-> &&
-> > +	    (!(ia_valid & ATTR_GID) || gid_eq(attr->ia_gid, inode->i_gid)) &&
-> > +	    (!(ia_valid & ATTR_MODE) || attr->ia_mode == inode->i_mode))
-> > +		return 0;
-> > +
-> > +	return 1;
-> > +}
-> > +
-> >  /**
-> >   * evm_inode_setattr - prevent updating an invalid EVM extended
-> attribute
-> >   * @dentry: pointer to the affected dentry
-> > @@ -506,6 +574,10 @@ int evm_inode_setattr(struct dentry *dentry,
-> struct iattr *attr)
-> >  	    (evm_status == INTEGRITY_FAIL_IMMUTABLE))
-> >  		return 0;
-> >
-> > +	if (evm_status == INTEGRITY_PASS_IMMUTABLE &&
-> > +	    !evm_attr_change(dentry, attr))
-> > +		return 0;
-> > +
-> >  	integrity_audit_msg(AUDIT_INTEGRITY_METADATA,
-> d_backing_inode(dentry),
-> >  			    dentry->d_name.name, "appraise_metadata",
-> >  			    integrity_status_msg[evm_status], -EPERM, 0);
-> 
+	if (IS_ENABLED(CONFIG_...))
 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
