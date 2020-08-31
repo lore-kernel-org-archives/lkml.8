@@ -2,96 +2,103 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4157AC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26552C43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1999C2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:20:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B222087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:23:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L57r1yIE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TRawU+1/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgHaUUS (ORCPT
+        id S1729971AbgHaUX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:20:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44210 "EHLO
+        Mon, 31 Aug 2020 16:23:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgHaUUQ (ORCPT
+        with ESMTP id S1728129AbgHaUX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:20:16 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA8E6C061573;
-        Mon, 31 Aug 2020 13:20:15 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id h10so7415344ioq.6;
-        Mon, 31 Aug 2020 13:20:15 -0700 (PDT)
+        Mon, 31 Aug 2020 16:23:27 -0400
+Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5F8C061573;
+        Mon, 31 Aug 2020 13:23:27 -0700 (PDT)
+Received: by mail-lj1-x22a.google.com with SMTP id w14so8242404ljj.4;
+        Mon, 31 Aug 2020 13:23:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1AcHyU9YuFtC3DFhxq+uyC++FLYMrBvu+K8DsXLlF50=;
-        b=L57r1yIEAC4y68d5tuxwG6HxUO+Kvc7FTcQEevBspZ2lczXjuGs/WRqtev5l3AJHVR
-         2CRHwIaFxCalysWU+C370cuuM5ZVE6cubV9hrFAPLBKcTUHtY4jHPLZrP032fsBw2uWj
-         yL/5tJTSNkaGfeo+XZfYPVVHTXHDFJ8FFrjtbI54b5xr+5nY3G6VFVoHJZPS2prU7l77
-         CbM3NtRUACveM8tojUsIe99Zm1Gy4MNGu/NNLWBDoZa1BzJ4DegR9wn2lTFELh1maQf2
-         gLijELp7NdUxGXqz7p76Gb1py2GWHk4ingx9c800kqwY3NNjsNGypwVb7H1zS7gcf++x
-         WAng==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kFKd8H+fYcsnXikLZwEK7Kis8FaXYZ+WoHtlNYHj6YY=;
+        b=TRawU+1/VIDgjh+KJAHd77ib+z8P8nWexHRXuAKwH/8XfVUFQRwEFLSoU7czyf+YHV
+         jCgENpnLMWLn3xdFjKGDibTIkymg/qK9pes1IKnCFVn1ZtUwtdMyHGPXi9WwmhfbdoJR
+         Crdo2o09jcnaCMQc3CCPFBY6HcjSFjhD6Rv1Uz4P5ZVmK9CMRxqWvp1fsU+kQJ9Cg3uN
+         4Ilp6i18m7N8J4wZB/rgb+gms1kvS7zUKXSkWmdfbsvv99OoRgI9r08QZxVWmd8doXi1
+         dcHY61aw2LuCsMP5/625FW/CGsf8lweVXtnCE9rV0/Vs6wA/kTvSzBIC4Ij1rDS3PULQ
+         Spyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=1AcHyU9YuFtC3DFhxq+uyC++FLYMrBvu+K8DsXLlF50=;
-        b=E6nPmXLMSPbfHHA1e9BDHjX8aOjfB25Sl6VC1wv4NffAfGcbjaZF2PfZ4er/tiaBI+
-         4DADOkkWDsbC10RySw7+tgEetPdVpyLPK5CUAIAcn3i/flXzDwfhfTw0G4lxU8+PQA5U
-         31N/yoJG1GvdMXFO5ZCv+fXjTAQCmkT3xQD3dvE2KRYFyNlou7+r/U8Buxvny331cehH
-         PYAFUbAO3RPn/mwC/HzseSJwm6N7ZDB/4t+0F14rOpIQe+KveXhYs5Dbed+nlZ5tCGQ2
-         mIrs12Ba7wtnZphWRvO9kRuoYmjGpVk2lghBc32kFSSQsAqfziG/6UDzK+UeuqGuEOre
-         t7kg==
-X-Gm-Message-State: AOAM530Mu8JyvLjeHtD7EOBMBs74pRx3hR3HjPXyJCgiGgluGjB/83fm
-        qku/3YPp2T/IVnMYHbnFyWN3A+jf4EgVcA==
-X-Google-Smtp-Source: ABdhPJyjbMnnlGAQs2AuOdQXhylMvRrPZUx2AOiJ+p0dHfbsAwg3Edkz5G+J554Kvwn1fjYNQ+jeUQ==
-X-Received: by 2002:a5d:97cd:: with SMTP id k13mr2675127ios.164.1598905213803;
-        Mon, 31 Aug 2020 13:20:13 -0700 (PDT)
-Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:4c46:c3b0:e367:75b2])
-        by smtp.googlemail.com with ESMTPSA id e28sm4390898ill.79.2020.08.31.13.20.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 13:20:13 -0700 (PDT)
-Subject: Re: [PATCH v2] net: ipv4: remove unused arg exact_dif in
- compute_score
-To:     Miaohe Lin <linmiaohe@huawei.com>, davem@davemloft.net,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org, kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200831062634.8481-1-linmiaohe@huawei.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <8028a4f8-72fc-2261-eb30-522e4b52282c@gmail.com>
-Date:   Mon, 31 Aug 2020 14:20:12 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        bh=kFKd8H+fYcsnXikLZwEK7Kis8FaXYZ+WoHtlNYHj6YY=;
+        b=lM5r3W7jGpePZE1kQh4JKgfM32ND6Y9xHAZCirsclUYALIULJaPuucBiME3ulZ7P9b
+         URLACKrK+BsgH/9ql38f0rr9isv2Gef7rqVF11JKyQ7k2rDqZYDDmuVluatmE/BwzfhC
+         AuspzuT3IF32Bm//0BnOOSjIJFrQCXF4DaWHKvxnBuGdclXqfaVAn8zKfOxjsxwrBt5b
+         zGhx6W1oAQbk1aCQBIKsLGIhCaPUX3NNH/HPDhtavgW3GKxQjUGl34gh+DC1688nGdkX
+         SIsq+75IRNDLel/KoZbggobm7yw93tZ0TjY1FeQL90JJZkNzKW4hlBEruuHNTaEIYAhy
+         phOA==
+X-Gm-Message-State: AOAM530qRjS60sOpDYzuhExvOpmJ5cIvvTlBfKn+SCBKBsC8we+DWFSZ
+        TXnlPYiCycilHePLbfHgeYsPELQ9bNk=
+X-Google-Smtp-Source: ABdhPJyAokqCkfKjFH8sd/+mlBBXpBJ2ZweoTY0E8lZ+rS8yA/OxO0uXDU/rh4UKP+Vp1JFSJwP6pA==
+X-Received: by 2002:a2e:b8cb:: with SMTP id s11mr1486897ljp.110.1598905405704;
+        Mon, 31 Aug 2020 13:23:25 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id z20sm1769054ljk.97.2020.08.31.13.23.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 13:23:25 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v1 00/12] Improvements for Tegra I2C driver
+Date:   Mon, 31 Aug 2020 23:22:51 +0300
+Message-Id: <20200831202303.15391-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200831062634.8481-1-linmiaohe@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/31/20 12:26 AM, Miaohe Lin wrote:
-> The arg exact_dif is not used anymore, remove it. inet_exact_dif_match()
-> is no longer needed after the above is removed, so remove it too.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  include/net/tcp.h          | 10 ----------
->  net/ipv4/inet_hashtables.c |  6 ++----
->  2 files changed, 2 insertions(+), 14 deletions(-)
-> 
+Hello!
 
-Reviewed-by: David Ahern <dsahern@gmail.com>
+This series performs a small refactoring of the Tegra I2C driver code and
+hardens the atomic-transfer mode.
+
+Dmitry Osipenko (12):
+  i2c: tegra: Make tegra_i2c_flush_fifos() usable in atomic transfer
+  i2c: tegra: Add missing newline before returns
+  i2c: tegra: Clean up messages in the code
+  i2c: tegra: Don't ignore tegra_i2c_flush_fifos() error
+  i2c: tegra: Use reset_control_reset()
+  i2c: tegra: Improve formatting of function variables
+  i2c: tegra: Use dev_err_probe()
+  i2c: tegra: Runtime PM always available on Tegra
+  i2c: tegra: Clean up probe function
+  i2c: tegra: Drop '_timeout' from wait/poll function names
+  i2c: tegra: Remove likely/unlikely from the code
+  i2c: tegra: Factor out error recovery from tegra_i2c_xfer_msg()
+
+ drivers/i2c/busses/i2c-tegra.c | 601 ++++++++++++++++++---------------
+ 1 file changed, 338 insertions(+), 263 deletions(-)
+
+-- 
+2.27.0
 
