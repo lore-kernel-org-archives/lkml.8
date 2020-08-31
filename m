@@ -2,127 +2,100 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11070C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83424C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E13DF20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:10:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598832601;
-	bh=HFBdfPzTptfAzARHMrR3+vfms6te3nWvd7UFRNZIZJs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nCaBco/NraUz0gG6uA1FuESafy79HRrFqt8dB9Ddpd/E81VXxlYrW1MBV5XzDWb34
-	 fmyqjaOCRl72746bHK/WQJSSH+oy6ypdOD07mr3KD8p6eKzhUfstOpeARkQQFq1k+X
-	 3S6lEIejThh8k0sb0Mj8H3IA19IqrTlc+C8KXiN4=
+	by mail.kernel.org (Postfix) with ESMTP id 58AD92151B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:10:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F3CnXuCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726572AbgHaAKA (ORCPT
+        id S1726654AbgHaAKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 20:10:00 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46645 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726430AbgHaAJ7 (ORCPT
+        Sun, 30 Aug 2020 20:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53492 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726404AbgHaAKN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 20:09:59 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 31so3336249pgy.13;
-        Sun, 30 Aug 2020 17:09:58 -0700 (PDT)
+        Sun, 30 Aug 2020 20:10:13 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A06C061573;
+        Sun, 30 Aug 2020 17:10:13 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id g207so3615087pfb.1;
+        Sun, 30 Aug 2020 17:10:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=qLPEfrUi2jCIWCjZKRo6ZLLPjq6acaeWm3ALBWaznXk=;
+        b=F3CnXuCn2pzKt3lquHeMzcnfquvPYqjIIQrtoVQ84O4mtYiNWRWGSKyMzzLuDuhGR4
+         Nssb7lzRM/8lmZn3YJ/SDCYbCK1WuoIDIOLyZIoCfI3iBh0ZaKcgxUz1KdFsHqvFBFhd
+         JFgXycahfNDgPcdZzml0356S32S3kCnUReHH0TM+YcG0DuVLLILPwNtTxc6IzG//KJP5
+         vTDafW5Mg2L7N4q+XmztACw6cYDx5XNBq7kGiriHSjFiivFuSsbngdaP8f2YoCKeaF5z
+         K24hzkPCpJZNT/X3sG6KbmlL/C7QVm79GnceeFKDJz4tJIzhc9ecsuX7QBcJclyJQnDI
+         og+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iucP1YZuWrUVKjxqd1bXpSN+6NlJ9Lp0LD1bL/fThsw=;
-        b=gH+fLqW58xwri18XYvcehOVAHK2Tuhjc7dsy+jhiWpfjx7NNAIYsMonIViSgdE8cw0
-         L8Pily16Xd0yzcPzkmfpIT64WJiyMZAzCDpWRoezaGZxm6Jbi93dSYduejIMz0QyFq5x
-         LciQAG8T8a5TaHUaLoH941AvxeajPPM+12GUY9Gob9sk1jZmyFkTRuSrezRtlDlWM6V4
-         nTM+k7TLKmg3pwAw5s3pbO6cL5V05sD3/5aiPZGw/QdJ5KofdtA4kWKj+8AdD1mR7boO
-         Sr+5vtz3YvCQqd9Sz4dN3D6O2WrZjMXx4tbvZbOUQji5ilcMn1iVcGfjsmBXjxu5DczC
-         bg4Q==
-X-Gm-Message-State: AOAM5335HwyMnJrfR5KoDSnkqsyCfyBr6RuCP1FMwKerXQESrVkNHRLD
-        qakCE+/b9ZwEuyVh57Tlpi4=
-X-Google-Smtp-Source: ABdhPJzGEkah4QjovWTx4O9dQqzC6p7ZVByNOuKX28HvpeMaEXxCmulr6ZefC8TTw0dsOpockaLF1w==
-X-Received: by 2002:a63:e018:: with SMTP id e24mr6219495pgh.175.1598832598485;
-        Sun, 30 Aug 2020 17:09:58 -0700 (PDT)
-Received: from localhost ([2601:647:5b00:1161:a4cc:eef9:fbc0:2781])
-        by smtp.gmail.com with ESMTPSA id a6sm5270233pgt.70.2020.08.30.17.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 17:09:58 -0700 (PDT)
-Date:   Sun, 30 Aug 2020 17:09:57 -0700
-From:   Moritz Fischer <mdf@kernel.org>
-To:     Luca Ceresoli <luca@lucaceresoli.net>
-Cc:     linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>,
-        Tom Rix <trix@redhat.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Anatolij Gustschin <agust@denx.de>
-Subject: Re: [PATCH v4 5/5] fpga manager: xilinx-spi: provide better
- diagnostics on programming failure
-Message-ID: <20200831000957.GE7421@epycbox.lan>
-References: <20200830163850.8380-1-luca@lucaceresoli.net>
- <20200830163850.8380-5-luca@lucaceresoli.net>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qLPEfrUi2jCIWCjZKRo6ZLLPjq6acaeWm3ALBWaznXk=;
+        b=X/EWMkQVfuS4gERhDQqbdQYQXCRvkUWTXm+FvxNwZ+vQOj9apiJUlE/d7InOT2ro47
+         yXFlYoMstB83fsoAmPwL3tdyoRqz4ZtyI6Z2sNhShEjqWzE09y+kamXK5PF8EzS4svum
+         EkbHnqEHcgDjXwHBX6mWcpnXhnbdSyxhZI8nP8NsQ/cyY+Ke1F/rYG/dhMeIerN+yHHP
+         Xi26+tpM59Lnd4PKU/+5Lu1Io+XhlKc2v2D7WvLRHhaCw/MBc7uL8yCTY350SHDPBZQK
+         VbZRHfY9hm/zwdPkH+Pl4ptl5AnIbtBiIZ8OiA9KhJDss9kvxk538V6uoDcltBXX1ap9
+         WIGA==
+X-Gm-Message-State: AOAM530SbBufLc4UdCfEc/QyTVcCsUAmHXKhNAwBM3YQdFM+bhaGMz6u
+        FzI1a6j10wc/82QPXrGMbQw=
+X-Google-Smtp-Source: ABdhPJwWpKZRGsCUjZpmp33QErRgjRznzLg4iQdazkktoI5TvtWGJPMJCAhKW2BkvmSCD8WTPNRe2Q==
+X-Received: by 2002:a63:cb0a:: with SMTP id p10mr2440832pgg.314.1598832612609;
+        Sun, 30 Aug 2020 17:10:12 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q5sm5961917pfu.16.2020.08.30.17.10.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 30 Aug 2020 17:10:11 -0700 (PDT)
+Date:   Sun, 30 Aug 2020 17:10:10 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@iki.fi>,
+        linux-uvc-devel@lists.sourceforge.net, linux-usb@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] media: uvcvideo: Fix race conditions
+Message-ID: <20200831001010.GA92208@roeck-us.net>
+References: <20200830150443.167286-1-linux@roeck-us.net>
+ <20200830155833.GA6043@pendragon.ideasonboard.com>
+ <ac2080a1-3b00-ac9e-cd49-d1ee84c6ca25@roeck-us.net>
+ <20200830213621.GC6043@pendragon.ideasonboard.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200830163850.8380-5-luca@lucaceresoli.net>
+In-Reply-To: <20200830213621.GC6043@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 06:38:50PM +0200, Luca Ceresoli wrote:
-> When the DONE pin does not go high after programming to confirm programming
-> success, the INIT_B pin provides some info on the reason. Use it if
-> available to provide a more explanatory error message.
+On Mon, Aug 31, 2020 at 12:36:21AM +0300, Laurent Pinchart wrote:
+> Hi Guenter,
 > 
-> Reviewed-by: Tom Rix <trix@redhat.com>
-> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
-> 
-> ---
-> 
-> Changes in v4:
->  - add Reviewed-by Tom Rix
-> 
-> Changes in v3: none.
-> 
-> Changes in v2:
->  - also check for gpiod_get_value() errors (Tom Rix)
-> ---
->  drivers/fpga/xilinx-spi.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/fpga/xilinx-spi.c b/drivers/fpga/xilinx-spi.c
-> index 52aab5a1f0ba..824abbbd631e 100644
-> --- a/drivers/fpga/xilinx-spi.c
-> +++ b/drivers/fpga/xilinx-spi.c
-> @@ -195,7 +195,21 @@ static int xilinx_spi_write_complete(struct fpga_manager *mgr,
->  			return 0;
->  	}
->  
-> -	dev_err(&mgr->dev, "Timeout after config data transfer\n");
-> +	if (conf->init_b) {
-> +		ret = gpiod_get_value(conf->init_b);
-> +
-> +		if (ret < 0) {
-> +			dev_err(&mgr->dev, "Error reading INIT_B (%d)\n", ret);
-> +			return ret;
-> +		}
-> +
-> +		dev_err(&mgr->dev,
-> +			ret ? "CRC error or invalid device\n"
-> +			: "Missing sync word or incomplete bitstream\n");
-> +	} else {
-> +		dev_err(&mgr->dev, "Timeout after config data transfer\n");
-> +	}
-> +
->  	return -ETIMEDOUT;
->  }
->  
-> -- 
-> 2.28.0
-> 
-Applied to for-next,
+[ ... ]
 
-Thanks
+> I'll try to prototype what I envision would be a good solution in the
+> V4L2 core. If stars align, I may even try to push it one level up, to
+> the chardev layer. Would you then be able to test it ?
+> 
+
+Sure, I'll be happy to do that.
+
+I ordered a couple of non-UVC webcams (pwc and gspca) from eBay for
+comparison. Both of those use the v4l2 locking mechanism, so we should
+be able to see the difference.
+
+Thanks,
+Guenter
