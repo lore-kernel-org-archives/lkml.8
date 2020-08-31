@@ -2,154 +2,98 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F479C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EB3C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:41:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 124F320738
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:41:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S+MWB5xi"
+	by mail.kernel.org (Postfix) with ESMTP id 49DB920738
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:41:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgHaHlP (ORCPT
+        id S1727964AbgHaHlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:41:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbgHaHlO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:41:14 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9736EC061573;
-        Mon, 31 Aug 2020 00:41:13 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id d11so7106072ejt.13;
-        Mon, 31 Aug 2020 00:41:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:references:in-reply-to:subject:date:message-id
-         :mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=7Z43O8JfZGEOJbTzWct2j97b+Vzag2iDAFjhrBOZbh0=;
-        b=S+MWB5xid8EsnfOETftW1wAbWseRY5MXzdNZM9USHLL8XGbBlAeLuQ2FfISqCHQ92x
-         8CSeMUqgJhww2DGgnCZ94v9R1b3HLuvlPWvdjFriEP5s7hnW/KRpAWGyrWhXUY/ZJ3HW
-         qeC3JxMviUK2YLQsK2gUSk7DAgwpo2y80xuMeQsO4zs60qGdzdWHuVQoIZ5lkAW5YX/1
-         kGTCLmizZqGvOe/GediJrnutq/Kz+Cdq9dFAp9XxUTp11PH3QnEWMX2Pj6vrNWSJYFWD
-         OiduQgH3tT6FcXc7HmWZ0vHF3jG1qgSYQRNBEQfG2Scg41+jlou8ZoxCYjXW0wD6U7SW
-         0exA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:references:in-reply-to:subject:date
-         :message-id:mime-version:content-transfer-encoding:content-language
-         :thread-index;
-        bh=7Z43O8JfZGEOJbTzWct2j97b+Vzag2iDAFjhrBOZbh0=;
-        b=j6OS+qXysPwVPskxM6/7Y62IrS8TSmkORHQCUWy4wxgY4c8Jfl6oc3OoOeXCTJWufj
-         MrdsM01LlRFIUxNEE9ip0jcn3lvwvPl2Kqi0ttIeO4an8pxD1rYxre2JlhVvRLCZISVc
-         Or4aAW9Da9ssbWUtgc1PKbOzW3YTdHjp7R/hTrS0XN6J56/KnKIMq2chzn+3jF0VyVaw
-         OZ02gi0gKQKs+hNbxeq1/eMhZkygzu5h4ogyvM+kC0P7rP5wWv4gF5BelyI62JOcggg2
-         T7t0h9xikW+vRA6+L0ET/Wa4iPrpr0gKF2KTd53Yb/orDDDcMp092KHiMpl2zG7MVitl
-         WkMA==
-X-Gm-Message-State: AOAM533+GpfQLXg6Uc/H3LQGGRu7CWqZpNThDrCCQbgIOGJdKD/aQBJI
-        pshQGrTG29jOt5PooR0CwP4Yos1huGTcBQ==
-X-Google-Smtp-Source: ABdhPJwxxiJehrUW9GHFwB1NqvNIaDSokucVYNCAH43/+KBG9jum7Hb1k5l5vKcsxSDmbwlJRS7Eow==
-X-Received: by 2002:a17:906:28c4:: with SMTP id p4mr6211271ejd.345.1598859671637;
-        Mon, 31 Aug 2020 00:41:11 -0700 (PDT)
-Received: from AnsuelXPS (host-95-235-252-96.retail.telecomitalia.it. [95.235.252.96])
-        by smtp.gmail.com with ESMTPSA id fy8sm7466618ejb.9.2020.08.31.00.41.09
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 00:41:10 -0700 (PDT)
-From:   <ansuelsmth@gmail.com>
-To:     "'Sibi Sankar'" <sibis@codeaurora.org>,
-        "'Viresh Kumar'" <viresh.kumar@linaro.org>
-Cc:     <vincent.guittot@linaro.org>, <saravanak@google.com>,
-        "'Sudeep Holla'" <sudeep.holla@arm.com>,
-        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
-        "'Rob Herring'" <robh+dt@kernel.org>, <linux-pm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200821140026.19643-1-ansuelsmth@gmail.com> <20200824104053.kpjpwzl2iw3lpg2m@vireshk-i7> <b339e01f9d1e955137120daa06d26228@codeaurora.org>
-In-Reply-To: <b339e01f9d1e955137120daa06d26228@codeaurora.org>
-Subject: R: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
-Date:   Mon, 31 Aug 2020 09:41:08 +0200
-Message-ID: <039d01d67f6a$188700d0$49950270$@gmail.com>
+        Mon, 31 Aug 2020 03:41:49 -0400
+Received: from mga07.intel.com ([134.134.136.100]:40133 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbgHaHlr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:41:47 -0400
+IronPort-SDR: 4254C8aXT6dRX6qs7UNK+8/OKXyvlGtNt5OEMl0sMiZJJf5D4jo/ZKB0m0tCUFcnBWVc00jgZF
+ 9JMhJ18jGZ0Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="221161349"
+X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
+   d="scan'208";a="221161349"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 00:41:47 -0700
+IronPort-SDR: S9SelScZLG7eJP7rskUxGTRpHzlWM7DL6JqG7vohq36J50IAXKbcwd9Cop8AB6QREyxC+ldyYL
+ 2ywPqvQSZoEw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
+   d="scan'208";a="296842583"
+Received: from lkp-server02.sh.intel.com (HELO 301dc1beeb51) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 31 Aug 2020 00:41:44 -0700
+Received: from kbuild by 301dc1beeb51 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kCeRj-0001A4-Dy; Mon, 31 Aug 2020 07:41:43 +0000
+Date:   Mon, 31 Aug 2020 15:41:34 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "x86-ml" <x86@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [tip:x86/cpu] BUILD SUCCESS
+ 61aa9a0a5eae2100c171698bffabde8d5e9f694d
+Message-ID: <5f4ca9ae.sBRer8M9Djmvpcbe%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: it
-Thread-Index: AQHE1KUT8lrzCHz2sVzN5qwVSE5wCwFurxwcAoW98xCpVYZpUA==
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/cpu
+branch HEAD: 61aa9a0a5eae2100c171698bffabde8d5e9f694d  x86/kvm: Expose TSX Suspend Load Tracking feature
 
+elapsed time: 720m
 
-> -----Messaggio originale-----
-> Da: sibis=3Dcodeaurora.org@mg.codeaurora.org
-> <sibis=3Dcodeaurora.org@mg.codeaurora.org> Per conto di Sibi Sankar
-> Inviato: luned=EC 31 agosto 2020 07:46
-> A: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: Ansuel Smith <ansuelsmth@gmail.com>; vincent.guittot@linaro.org;
-> saravanak@google.com; Sudeep Holla <sudeep.holla@arm.com>; Rafael J.
-> Wysocki <rjw@rjwysocki.net>; Rob Herring <robh+dt@kernel.org>; linux-
-> pm@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Oggetto: Re: [RFC PATCH v3 0/2] Add Krait Cache Scaling support
->=20
-> On 2020-08-24 16:10, Viresh Kumar wrote:
-> > +Vincent/Saravana/Sibi
-> >
-> > On 21-08-20, 16:00, Ansuel Smith wrote:
-> >> This adds Krait Cache scaling support using the cpufreq notifier.
-> >> I have some doubt about where this should be actually placed (clk =
-or
-> >> cpufreq)?
-> >> Also the original idea was to create a dedicated cpufreq driver =
-(like
-> >> it's done in
-> >> the codeaurora qcom repo) by copying the cpufreq-dt driver and =
-adding
-> >> the cache
-> >> scaling logic but i still don't know what is better. Have a very
-> >> similar driver or
-> >> add a dedicated driver only for the cache using the cpufreq =
-notifier
-> >> and do the
-> >> scale on every freq transition.
-> >> Thanks to everyone who will review or answer these questions.
-> >
-> > Saravana was doing something with devfreq to solve such issues if I
-> > wasn't mistaken.
-> >
-> > Sibi ?
->=20
-> IIRC the final plan was to create a devfreq device
-> and devfreq-cpufreq based governor to scale them, this
-> way one can switch to a different governor if required.
+configs tested: 27
+configs skipped: 55
 
-So in this case I should convert this patch to a devfreq driver-=20
-Isn't overkill to use a governor for such a task?
-(3 range based on the cpufreq?)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> (I don't see if ^^ applies well for l2 though). In the
-> interim until such a solution is acked on the list we
-> just scale the resources directly from the cpufreq
+i386                             alldefconfig
+i386                             allyesconfig
+i386                                defconfig
+i386                 randconfig-a001-20200831
+i386                 randconfig-a002-20200831
+i386                 randconfig-a004-20200831
+i386                 randconfig-a006-20200831
+i386                 randconfig-a005-20200831
+i386                 randconfig-a003-20200831
+x86_64               randconfig-a012-20200831
+x86_64               randconfig-a015-20200831
+x86_64               randconfig-a014-20200831
+x86_64               randconfig-a011-20200831
+x86_64               randconfig-a016-20200831
+x86_64               randconfig-a013-20200831
+i386                 randconfig-a013-20200831
+i386                 randconfig-a011-20200831
+i386                 randconfig-a012-20200831
+i386                 randconfig-a015-20200831
+i386                 randconfig-a016-20200831
+i386                 randconfig-a014-20200831
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
 
-In this case for this SoC we can't really scale the L2 freq
-with the cpu since we observed a bug and we need to switch
-back to the idle freq sometimes. Also this SoC use the generic
-cpufreq-dt driver and doesn't have a dedicated driver. So we
-must use a notifier.
-
-> driver. On SDM845/SC7180 SoCs, L3 is modeled as a
-> interconnect provider and is directly scaled from the
-> cpufreq-hw driver.
->=20
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project.
-
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
