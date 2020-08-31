@@ -2,243 +2,375 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C818FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:24:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E235C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:24:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C0A12087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:24:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s2SjT3e5"
+	by mail.kernel.org (Postfix) with ESMTP id 501572087D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:24:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbgHaUYI (ORCPT
+        id S1730081AbgHaUYN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:24:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44768 "EHLO
+        Mon, 31 Aug 2020 16:24:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729993AbgHaUXe (ORCPT
+        with ESMTP id S1729993AbgHaUYI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:23:34 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD0AFC061575;
-        Mon, 31 Aug 2020 13:23:32 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id w14so8242698ljj.4;
-        Mon, 31 Aug 2020 13:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GLHlPtKZW3oaSnAxdxb6Ut2lkaobqhUaiSU4BDIhVwo=;
-        b=s2SjT3e5zert8kx3/5iT0KLS2r/M2QZPRU+fOo1Ej8jCqasA/C4EWk65mCz8t0Abc8
-         rJ/2+iRYqi71Uy6+XL8I0hekJbHq+WKIBOjSAbGRtJDb81Lji9CgJX8G56PuVsvneJd9
-         VtKq/wECUEW0A45aqY5UAPgqIZMLFFYxDHxwxc2+X/hrZStL8gEg/gDXdwa5IOGDQ4vp
-         nQ/0HMfT69UJHBNev9lNZ5EjG3GWI+4UBVvuxWkxpdY/iWXB5IuWtNdHPV+vd/IzFaOq
-         ghNkoR9hvpe5Id8CQRADbkItJOdQB68tDu8LXH/Btw5vNLiMqu7Ik6HugHsUZKp4gKcK
-         KC3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GLHlPtKZW3oaSnAxdxb6Ut2lkaobqhUaiSU4BDIhVwo=;
-        b=nGmEHifOifSq4uvMrvfDAw61F9gwuuEjRZhzstDTR/qrac6W/3EXlZsjZPOCEsktUU
-         EndT1GKHteAJ9FQYqJhHiHrcO8W4qiIr/0BxSDJOT44sNU+w8qJoSr/VkIYf2zJSHExj
-         w/944ITzaqMWCrNzAekcK+Pr+cyvaFhj1KS6Yu0gXnYkcfi1M2ZZOgYxwA7DtqNDirX6
-         kuuoZ1D+WUoA+/H1rJPV1y9ZUFqdZQtqg4Y41JijfQ1mOldgiZWiyZ8SpaQ0Q2x5d0qn
-         GmL6f29In+jfbLbvISnhxXuop7U/jkBiP4IhSxs6aLUI8dVEZWajle21knsA0GfksQCI
-         5zRg==
-X-Gm-Message-State: AOAM530wbc65y0HAX3jtWzTuSykBuFNI/ZEHLNyd8Sc5af4eOv7jLxOH
-        sQ063hlowGQuXviEe9iBUzs=
-X-Google-Smtp-Source: ABdhPJxUJ8ffttDOOKmAUBy3luHUOjhvo5Ks3SEUuUzrQnHA6uys/qvPMM57XkQ+cMi1ywycUB6DLw==
-X-Received: by 2002:a05:651c:1b4:: with SMTP id c20mr1320998ljn.432.1598905411289;
-        Mon, 31 Aug 2020 13:23:31 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id z20sm1769054ljk.97.2020.08.31.13.23.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:23:30 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Mon, 31 Aug 2020 16:24:08 -0400
+Received: from hillosipuli.retiisi.org.uk (hillosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::81:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8627CC061573;
+        Mon, 31 Aug 2020 13:24:08 -0700 (PDT)
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AEBD6634C87;
+        Mon, 31 Aug 2020 23:23:50 +0300 (EEST)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1kCqLG-0000zA-I3; Mon, 31 Aug 2020 23:23:50 +0300
+Date:   Mon, 31 Aug 2020 23:23:50 +0300
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, hverkuil@xs4all.nl,
+        luca@lucaceresoli.net, leonl@leopardimaging.com,
+        robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 06/12] i2c: tegra: Improve formatting of function variables
-Date:   Mon, 31 Aug 2020 23:22:57 +0300
-Message-Id: <20200831202303.15391-7-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200831202303.15391-1-digetx@gmail.com>
-References: <20200831202303.15391-1-digetx@gmail.com>
+Subject: Re: [PATCH v4 4/4] media: i2c: imx274: Add IMX274 power on and off
+ sequence
+Message-ID: <20200831202350.GD844@valkosipuli.retiisi.org.uk>
+References: <1598903558-9691-1-git-send-email-skomatineni@nvidia.com>
+ <1598903558-9691-5-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598903558-9691-5-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorder the definition of variables in the code in order to make code
-easier to read.
+Hi Sowjanya,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/i2c/busses/i2c-tegra.c | 51 ++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 30 deletions(-)
+Thanks for the update.
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 6957be34bc41..2c00f2e39514 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -419,8 +419,8 @@ static void tegra_i2c_release_dma(struct tegra_i2c_dev *i2c_dev)
- static int tegra_i2c_init_dma(struct tegra_i2c_dev *i2c_dev)
- {
- 	struct dma_chan *chan;
--	u32 *dma_buf;
- 	dma_addr_t dma_phys;
-+	u32 *dma_buf;
- 	int err;
- 
- 	if (!i2c_dev->hw->has_apb_dma || i2c_dev->is_vi)
-@@ -513,11 +513,11 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
- 
- static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- {
--	u32 val;
--	int rx_fifo_avail;
--	u8 *buf = i2c_dev->msg_buf;
- 	size_t buf_remaining = i2c_dev->msg_buf_remaining;
-+	u8 *buf = i2c_dev->msg_buf;
- 	int words_to_transfer;
-+	int rx_fifo_avail;
-+	u32 val;
- 
- 	/*
- 	 * Catch overflow due to message fully sent
-@@ -574,11 +574,11 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 
- static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- {
--	u32 val;
--	int tx_fifo_avail;
--	u8 *buf = i2c_dev->msg_buf;
- 	size_t buf_remaining = i2c_dev->msg_buf_remaining;
-+	u8 *buf = i2c_dev->msg_buf;
- 	int words_to_transfer;
-+	int tx_fifo_avail;
-+	u32 val;
- 
- 	if (i2c_dev->hw->has_mst_fifo) {
- 		val = i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
-@@ -785,11 +785,8 @@ static void tegra_i2c_vi_init(struct tegra_i2c_dev *i2c_dev)
- 
- static int tegra_i2c_init(struct tegra_i2c_dev *i2c_dev, bool clk_reinit)
- {
--	u32 val;
-+	u32 val, clk_divisor, clk_multiplier, tsu_thd, tlow, thigh;
- 	int err;
--	u32 clk_divisor, clk_multiplier;
--	u32 tsu_thd;
--	u8 tlow, thigh;
- 
- 	reset_control_reset(i2c_dev->rst);
- 
-@@ -895,9 +892,9 @@ static int tegra_i2c_disable_packet_mode(struct tegra_i2c_dev *i2c_dev)
- 
- static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- {
--	u32 status;
- 	const u32 status_err = I2C_INT_NO_ACK | I2C_INT_ARBITRATION_LOST;
- 	struct tegra_i2c_dev *i2c_dev = dev_id;
-+	u32 status;
- 
- 	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
- 
-@@ -1001,12 +998,11 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- static void tegra_i2c_config_fifo_trig(struct tegra_i2c_dev *i2c_dev,
- 				       size_t len)
- {
--	u32 val, reg;
--	u8 dma_burst;
- 	struct dma_slave_config slv_config = {0};
-+	unsigned long reg_offset;
-+	u32 val, reg, dma_burst;
- 	struct dma_chan *chan;
- 	int ret;
--	unsigned long reg_offset;
- 
- 	if (i2c_dev->hw->has_mst_fifo)
- 		reg = I2C_MST_FIFO_CONTROL;
-@@ -1132,9 +1128,9 @@ tegra_i2c_wait_completion_timeout(struct tegra_i2c_dev *i2c_dev,
- static int tegra_i2c_issue_bus_clear(struct i2c_adapter *adap)
- {
- 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
--	int err;
- 	unsigned long time_left;
- 	u32 reg;
-+	int err;
- 
- 	reinit_completion(&i2c_dev->msg_complete);
- 	reg = FIELD_PREP(I2C_BC_SCLK_THRESHOLD, 9) | I2C_BC_STOP_COND |
-@@ -1170,14 +1166,12 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
- 			      struct i2c_msg *msg,
- 			      enum msg_end_type end_state)
- {
--	u32 packet_header;
--	u32 int_mask;
--	unsigned long time_left;
--	size_t xfer_size;
-+	unsigned long time_left, xfer_time = 100;
-+	u32 packet_header, int_mask;
- 	u32 *buffer = NULL;
--	int err = 0;
-+	size_t xfer_size;
- 	bool dma;
--	u16 xfer_time = 100;
-+	int err;
- 
- 	err = tegra_i2c_flush_fifos(i2c_dev);
- 	if (err)
-@@ -1371,8 +1365,7 @@ static int tegra_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msgs[],
- 			  int num)
- {
- 	struct tegra_i2c_dev *i2c_dev = i2c_get_adapdata(adap);
--	int i;
--	int ret;
-+	int i, ret;
- 
- 	ret = pm_runtime_get_sync(i2c_dev->dev);
- 	if (ret < 0) {
-@@ -1427,8 +1420,8 @@ static u32 tegra_i2c_func(struct i2c_adapter *adap)
- static void tegra_i2c_parse_dt(struct tegra_i2c_dev *i2c_dev)
- {
- 	struct device_node *np = i2c_dev->dev->of_node;
--	int ret;
- 	bool multi_mode;
-+	int ret;
- 
- 	ret = of_property_read_u32(np, "clock-frequency",
- 				   &i2c_dev->bus_clk_rate);
-@@ -1654,14 +1647,12 @@ MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
- static int tegra_i2c_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct clk *div_clk, *fast_clk;
- 	struct tegra_i2c_dev *i2c_dev;
-+	phys_addr_t base_phys;
- 	struct resource *res;
--	struct clk *div_clk;
--	struct clk *fast_clk;
- 	void __iomem *base;
--	phys_addr_t base_phys;
--	int irq;
--	int ret;
-+	int irq, ret;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base_phys = res->start;
+On Mon, Aug 31, 2020 at 12:52:38PM -0700, Sowjanya Komatineni wrote:
+> IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
+> and VDDL digital io 1.2V supply which are optional based on camera
+> module design.
+> 
+> IMX274 also need external 24Mhz clock and is optional based on
+> camera module design.
+> 
+> This patch adds support for IMX274 power on and off to enable and
+> disable these supplies and external clock.
+> 
+> Reviewed-by: Luca Ceresoli <luca@lucaceresoli.net>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/media/i2c/imx274.c | 151 ++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 148 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
+> index a4b9dfd..18a1e87 100644
+> --- a/drivers/media/i2c/imx274.c
+> +++ b/drivers/media/i2c/imx274.c
+> @@ -18,7 +18,9 @@
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+>  #include <linux/of_gpio.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+>  #include <linux/slab.h>
+>  #include <linux/v4l2-mediabus.h>
+>  #include <linux/videodev2.h>
+> @@ -131,6 +133,15 @@
+>  #define IMX274_TABLE_WAIT_MS			0
+>  #define IMX274_TABLE_END			1
+>  
+> +/* regulator supplies */
+> +static const char * const imx274_supply_names[] = {
+> +	"vddl",  /* IF (1.2V) supply */
+> +	"vdig",  /* Digital Core (1.8V) supply */
+> +	"vana",  /* Analog (2.8V) supply */
+> +};
+> +
+> +#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
+> +
+>  /*
+>   * imx274 I2C operation related structure
+>   */
+> @@ -501,6 +512,8 @@ struct imx274_ctrls {
+>   * @frame_rate: V4L2 frame rate structure
+>   * @regmap: Pointer to regmap structure
+>   * @reset_gpio: Pointer to reset gpio
+> + * @supplies: imx274 analog and digital supplies
+
+There's interface, too. You could also omit what there is as it's easily
+visible elsewhere.
+
+> + * @inck: input clock to imx274
+>   * @lock: Mutex structure
+>   * @mode: Parameters for the selected readout mode
+>   */
+> @@ -514,6 +527,8 @@ struct stimx274 {
+>  	struct v4l2_fract frame_interval;
+>  	struct regmap *regmap;
+>  	struct gpio_desc *reset_gpio;
+> +	struct regulator_bulk_data supplies[IMX274_NUM_SUPPLIES];
+> +	struct clk *inck;
+>  	struct mutex lock; /* mutex lock for operations */
+>  	const struct imx274_mode *mode;
+>  };
+> @@ -767,6 +782,75 @@ static void imx274_reset(struct stimx274 *priv, int rst)
+>  	usleep_range(IMX274_RESET_DELAY1, IMX274_RESET_DELAY2);
+>  }
+>  
+> +/*
+> + * imx274_power_on - Function called to power on the sensor
+> + * @imx274: Pointer to device structure
+> + */
+> +static int imx274_power_on(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct stimx274 *imx274 = to_imx274(sd);
+> +	int ret;
+> +
+> +	/* keep sensor in reset before power on */
+> +	imx274_reset(imx274, 0);
+> +
+> +	ret = clk_prepare_enable(imx274->inck);
+> +	if (ret) {
+> +		dev_err(&imx274->client->dev,
+> +			"Failed to enable input clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_bulk_enable(IMX274_NUM_SUPPLIES, imx274->supplies);
+> +	if (ret) {
+> +		dev_err(&imx274->client->dev,
+> +			"Failed to enable regulators: %d\n", ret);
+> +		goto fail_reg;
+> +	}
+> +
+> +	usleep_range(1, 2);
+> +	imx274_reset(imx274, 1);
+> +
+> +	return 0;
+> +
+> +fail_reg:
+> +	regulator_bulk_disable(IMX274_NUM_SUPPLIES, imx274->supplies);
+> +	clk_disable_unprepare(imx274->inck);
+> +	return ret;
+> +}
+> +
+> +/*
+> + * imx274_power_off - Function called to power off the sensor
+> + * @imx274: Pointer to device structure
+> + */
+> +static int imx274_power_off(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+> +	struct stimx274 *imx274 = to_imx274(sd);
+> +
+> +	imx274_reset(imx274, 0);
+> +
+> +	regulator_bulk_disable(IMX274_NUM_SUPPLIES, imx274->supplies);
+> +
+> +	clk_disable_unprepare(imx274->inck);
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx274_get_regulators(struct device *dev, struct stimx274 *imx274)
+> +{
+> +	int i;
+
+unsigned int
+
+> +
+> +	for (i = 0; i < IMX274_NUM_SUPPLIES; i++)
+> +		imx274->supplies[i].supply = imx274_supply_names[i];
+> +
+> +	return devm_regulator_bulk_get(dev, IMX274_NUM_SUPPLIES,
+> +					imx274->supplies);
+> +}
+> +
+>  /**
+>   * imx274_s_ctrl - This is used to set the imx274 V4L2 controls
+>   * @ctrl: V4L2 control to be set
+> @@ -781,6 +865,9 @@ static int imx274_s_ctrl(struct v4l2_ctrl *ctrl)
+>  	struct stimx274 *imx274 = to_imx274(sd);
+>  	int ret = -EINVAL;
+>  
+> +	if (!pm_runtime_get_if_in_use(&imx274->client->dev))
+> +		return 0;
+> +
+>  	dev_dbg(&imx274->client->dev,
+>  		"%s : s_ctrl: %s, value: %d\n", __func__,
+>  		ctrl->name, ctrl->val);
+> @@ -811,6 +898,8 @@ static int imx274_s_ctrl(struct v4l2_ctrl *ctrl)
+>  		break;
+>  	}
+>  
+> +	pm_runtime_put(&imx274->client->dev);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -1327,6 +1416,13 @@ static int imx274_s_stream(struct v4l2_subdev *sd, int on)
+>  	mutex_lock(&imx274->lock);
+>  
+>  	if (on) {
+> +		ret = pm_runtime_get_sync(&imx274->client->dev);
+> +		if (ret < 0) {
+> +			pm_runtime_put_noidle(&imx274->client->dev);
+> +			mutex_unlock(&imx274->lock);
+> +			return ret;
+> +		}
+> +
+>  		/* load mode registers */
+>  		ret = imx274_mode_regs(imx274);
+>  		if (ret)
+> @@ -1362,6 +1458,7 @@ static int imx274_s_stream(struct v4l2_subdev *sd, int on)
+>  		ret = imx274_write_table(imx274, imx274_stop);
+>  		if (ret)
+>  			goto fail;
+> +		pm_runtime_put(&imx274->client->dev);
+>  	}
+>  
+>  	mutex_unlock(&imx274->lock);
+> @@ -1369,6 +1466,7 @@ static int imx274_s_stream(struct v4l2_subdev *sd, int on)
+>  	return 0;
+>  
+>  fail:
+> +	pm_runtime_put(&imx274->client->dev);
+>  	mutex_unlock(&imx274->lock);
+>  	dev_err(&imx274->client->dev, "s_stream failed\n");
+>  	return ret;
+> @@ -1834,6 +1932,14 @@ static int imx274_probe(struct i2c_client *client)
+>  
+>  	mutex_init(&imx274->lock);
+>  
+> +	imx274->inck = devm_clk_get_optional(&client->dev, "inck");
+> +	ret = imx274_get_regulators(&client->dev, imx274);
+> +	if (ret) {
+> +		dev_err(&client->dev,
+> +			"Failed to get power regulators, err: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+>  	/* initialize format */
+>  	imx274->mode = &imx274_modes[IMX274_DEFAULT_BINNING];
+>  	imx274->crop.width = IMX274_MAX_WIDTH;
+> @@ -1881,15 +1987,23 @@ static int imx274_probe(struct i2c_client *client)
+>  		goto err_me;
+>  	}
+>  
+> -	/* pull sensor out of reset */
+> -	imx274_reset(imx274, 1);
+> +	/* power on the sensor */
+> +	ret = imx274_power_on(&client->dev);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev,
+> +			"%s : imx274 power on failed\n", __func__);
+> +		goto err_me;
+> +	}
+> +
+> +	pm_runtime_set_active(&client->dev);
+> +	pm_runtime_enable(&client->dev);
+>  
+>  	/* initialize controls */
+>  	ret = v4l2_ctrl_handler_init(&imx274->ctrls.handler, 4);
+>  	if (ret < 0) {
+>  		dev_err(&client->dev,
+>  			"%s : ctrl handler init Failed\n", __func__);
+> -		goto err_me;
+> +		goto err_disable_rpm;
+>  	}
+>  
+>  	imx274->ctrls.handler.lock = &imx274->lock;
+> @@ -1951,11 +2065,16 @@ static int imx274_probe(struct i2c_client *client)
+>  		goto err_ctrls;
+>  	}
+>  
+> +	pm_runtime_idle(&client->dev);
+> +
+>  	dev_info(&client->dev, "imx274 : imx274 probe success !\n");
+>  	return 0;
+>  
+>  err_ctrls:
+>  	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
+> +err_disable_rpm:
+> +	pm_runtime_disable(&client->dev);
+> +	pm_runtime_set_suspended(&client->dev);
+>  err_me:
+>  	media_entity_cleanup(&sd->entity);
+>  err_regmap:
+> @@ -1968,19 +2087,45 @@ static int imx274_remove(struct i2c_client *client)
+>  	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+>  	struct stimx274 *imx274 = to_imx274(sd);
+>  
+> +	pm_runtime_get_sync(&imx274->client->dev);
+> +
+>  	/* stop stream */
+
+This really shouldn't happen and the driver isn't expected to handle it
+either.
+
+>  	imx274_write_table(imx274, imx274_stop);
+>  
+>  	v4l2_async_unregister_subdev(sd);
+>  	v4l2_ctrl_handler_free(&imx274->ctrls.handler);
+> +
+> +	pm_runtime_put(&client->dev);
+> +	pm_runtime_disable(&client->dev);
+> +	pm_runtime_set_suspended(&client->dev);
+> +
+>  	media_entity_cleanup(&sd->entity);
+>  	mutex_destroy(&imx274->lock);
+>  	return 0;
+>  }
+>  
+> +static int __maybe_unused imx274_runtime_suspend(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +
+> +	return imx274_power_off(&client->dev);
+> +}
+> +
+> +static int __maybe_unused imx274_runtime_resume(struct device *dev)
+> +{
+> +	struct i2c_client *client = to_i2c_client(dev);
+> +
+> +	return imx274_power_on(&client->dev);
+> +}
+
+There's no need for the two wrappers, please remove them.
+
+> +
+> +static const struct dev_pm_ops imx274_pm_ops = {
+> +	SET_RUNTIME_PM_OPS(imx274_runtime_suspend, imx274_runtime_resume, NULL)
+> +};
+> +
+>  static struct i2c_driver imx274_i2c_driver = {
+>  	.driver = {
+>  		.name	= DRIVER_NAME,
+> +		.pm = &imx274_pm_ops,
+>  		.of_match_table	= imx274_of_id_table,
+>  	},
+>  	.probe_new	= imx274_probe,
+
 -- 
-2.27.0
+Kind regards,
 
+Sakari Ailus
