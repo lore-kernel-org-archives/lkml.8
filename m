@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8D5C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64B4C433E6
 	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9F7F2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B27342083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1598897492;
-	bh=oNI0rVyhAa3e3M0tZqUyhGaWitcL9S6WNg3KZaOXpts=;
+	bh=RT8zUpvBeGSNkpNMBCtjwCvDmhV5N9JXCZ8P2M0fqTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oyvo1M4nW8/9aZbU+70kIFXVX6hgMQy3A7+dl0CDDSLksolC1TapHH8JpguQpwMWZ
-	 ZTkkZU0butalzldCvjVU8/GeasBOTx8+8H094uspQZBlSDZ67TeYDwrHJij5wPzZ4c
-	 VcSjEeD1vgAwRurrqD4VgQjNuBt5Pf6OA1Jym1rg=
+	b=L1al70G3iZp9shJjyelIZK1pAKBKVinRMYZLsXNUHYiZ++u8rB4LklsgDaxdSykAW
+	 yx2R0KTyflDM2D0xz5vGEZX64z6isgX9mZApx051lX2DROIbT28vrlIzj4LbDW2+B7
+	 zOCAeHmFGl13f3hJQdGeks1Daf9+nZImrBdgUekM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729370AbgHaSLb (ORCPT
+        id S1729430AbgHaSLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 31 Aug 2020 14:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:35776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728885AbgHaSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728480AbgHaSLW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:11:22 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6859A21473;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3778A20E65;
         Mon, 31 Aug 2020 18:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598897482;
-        bh=oNI0rVyhAa3e3M0tZqUyhGaWitcL9S6WNg3KZaOXpts=;
+        bh=RT8zUpvBeGSNkpNMBCtjwCvDmhV5N9JXCZ8P2M0fqTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xlPYFOgAhxbA2tlWpScktn/PuyVp1TuYbusp0YeZIqMqVpXrm2B7tybWOIOPZjl5L
-         mKhE9wl9SF6+evZDd2MPhQWQasM6obWUpnWnla45gBY2Am2tvdJNWNbHIHgH3T/yjR
-         sA4TLKqV3MVzlELUKyq4JruziFAzLKYhD8+62Z/0=
+        b=q3MEF7sMIx+W869ni9dtu7ZxfvJOLDLQ2pNq3AHsOAv/bJ/UvrWyEuuDmZMlD+WM5
+         Qhn1HWDJyTdWEZb1SpvUxEsF4vgTk+XnLCNSsL/Ye6xy71qFlDSIRdgz0sKvz3/SFI
+         NCLJBkMK9MvSs+yZs7pNvm32HU1HUBlJkcfAIprA=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 03/13] rcu: Restrict default jiffies_till_first_fqs for strict RCU GPs
-Date:   Mon, 31 Aug 2020 11:11:10 -0700
-Message-Id: <20200831181120.1044-3-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 02/13] rcu: Reduce leaf fanout for strict RCU grace periods
+Date:   Mon, 31 Aug 2020 11:11:09 -0700
+Message-Id: <20200831181120.1044-2-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831181101.GA950@paulmck-ThinkPad-P72>
 References: <20200831181101.GA950@paulmck-ThinkPad-P72>
@@ -61,34 +61,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-If there are idle CPUs, RCU's grace-period kthread will wait several
-jiffies before even thinking about polling them.  This promotes
-efficiency, which is normally a good thing, but when the kernel
-has been built with CONFIG_RCU_STRICT_GRACE_PERIOD=y, we care more
-about short grace periods.  This commit therefore restricts the
-default jiffies_till_first_fqs value to zero in kernels built with
-CONFIG_RCU_STRICT_GRACE_PERIOD=y, which causes RCU's grace-period kthread
-to poll for idle CPUs immediately after starting a grace period.
+Because strict RCU grace periods will complete more quickly, they will
+experience greater lock contention on each leaf rcu_node structure's
+->lock.  This commit therefore reduces the leaf fanout in order to reduce
+this lock contention.
+
+Note that this also has the effect of reducing the number of CPUs
+supported to 16 in the case of CONFIG_RCU_FANOUT_LEAF=2 or 81 in the
+case of CONFIG_RCU_FANOUT_LEAF=3.  However, greater numbers of CPUs are
+probably a bad idea when using CONFIG_RCU_STRICT_GRACE_PERIOD=y.  Those
+wishing to live dangerously are free to edit their kernel/rcu/Kconfig
+files accordingly.
 
 Reported-by Jann Horn <jannh@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/rcu/Kconfig | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 8ce77d9..8551159 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -485,7 +485,7 @@ module_param(qhimark, long, 0444);
- module_param(qlowmark, long, 0444);
- module_param(qovld, long, 0444);
+diff --git a/kernel/rcu/Kconfig b/kernel/rcu/Kconfig
+index 0ebe15a..b71e21f 100644
+--- a/kernel/rcu/Kconfig
++++ b/kernel/rcu/Kconfig
+@@ -135,10 +135,12 @@ config RCU_FANOUT
  
--static ulong jiffies_till_first_fqs = ULONG_MAX;
-+static ulong jiffies_till_first_fqs = IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 0 : ULONG_MAX;
- static ulong jiffies_till_next_fqs = ULONG_MAX;
- static bool rcu_kick_kthreads;
- static int rcu_divisor = 7;
+ config RCU_FANOUT_LEAF
+ 	int "Tree-based hierarchical RCU leaf-level fanout value"
+-	range 2 64 if 64BIT
+-	range 2 32 if !64BIT
++	range 2 64 if 64BIT && !RCU_STRICT_GRACE_PERIOD
++	range 2 32 if !64BIT && !RCU_STRICT_GRACE_PERIOD
++	range 2 3 if RCU_STRICT_GRACE_PERIOD
+ 	depends on TREE_RCU && RCU_EXPERT
+-	default 16
++	default 16 if !RCU_STRICT_GRACE_PERIOD
++	default 2 if RCU_STRICT_GRACE_PERIOD
+ 	help
+ 	  This option controls the leaf-level fanout of hierarchical
+ 	  implementations of RCU, and allows trading off cache misses
 -- 
 2.9.5
 
