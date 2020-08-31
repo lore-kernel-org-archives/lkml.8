@@ -2,260 +2,154 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83D0C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4963C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE0D0207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="k5OzW1/N"
+	by mail.kernel.org (Postfix) with ESMTP id 7DD172073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598872919;
+	bh=luuKNVi+KwBr1ekM6udfXcrivJveuP/tHqNrnFBYWzo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2hoiHCj3QCll8Lyo2Y45QuKbEJ6R5C7YjqdPOJvUzNTCB1CfPONlsAMsXJPjvpPpj
+	 qzA1nN9sPb0l5vUQen51wVOoBa1/33n3nmDcDPzad/Y29nJ+wFWiyUcNPukD8ahiIe
+	 vFLIOo0wazHOq/3F9EEE8F90nusZ6Z+6ttACRRL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgHaLVT (ORCPT
+        id S1727053AbgHaLVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726468AbgHaLFO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:05:14 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CAECC061573;
-        Mon, 31 Aug 2020 04:05:14 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f085000329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5000:329c:23ff:fea6:a903])
+        Mon, 31 Aug 2020 07:21:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34028 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726726AbgHaLR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:17:58 -0400
+Received: from localhost (unknown [122.171.38.130])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E066A1EC03D2;
-        Mon, 31 Aug 2020 13:05:11 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598871912;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=UWhp3f9YxF2VMm1TSSMKQUkz2bSONkfaUSAxBdUgOxk=;
-        b=k5OzW1/NI8KbRGxEcrXotZry45yEGl//5nMPTkaRBks0dcPHNxwjBC8KsJQMfcY9urmNfq
-        INHp/tjubr1rjgpYgrgiPabVNSFsFXrRZlbdMRQEVP3dOZlRmKoqeqdMLFaoX+xadfQQUS
-        zjWGPdiy0Xcm0ORa3M/qfT9X13azCLs=
-Date:   Mon, 31 Aug 2020 13:05:07 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 46/76] x86/sev-es: Adjust #VC IST Stack on entering
- NMI handler
-Message-ID: <20200831110507.GF27517@zn.tnic>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-47-joro@8bytes.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0162D206F0;
+        Mon, 31 Aug 2020 11:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598872136;
+        bh=luuKNVi+KwBr1ekM6udfXcrivJveuP/tHqNrnFBYWzo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q9i5JjFRgd6CT0v9YoaM43xpHDTkyeMvqzq3Ssb0Bwy66dDENHm+T2c4kSr9F6e5F
+         yEMdfTYkuFjp5dQur7ohdLp0G40YvgqkgngONSvuR2XT1YwwpxfCQsGF1eAe8OHKhd
+         h9qDDRaJm9JIIW54F64ilO+Gwlnky3sIxbz/qE8Y=
+Date:   Mon, 31 Aug 2020 16:38:52 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Liam Beguin <liambeguin@gmail.com>
+Cc:     geert@linux-m68k.org, kishon@ti.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/1] phy: tusb1210: use bitmasks to set
+ VENDOR_SPECIFIC2
+Message-ID: <20200831110852.GO2639@vkoul-mobl>
+References: <20200822205320.9746-1-liambeguin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-47-joro@8bytes.org>
+In-Reply-To: <20200822205320.9746-1-liambeguin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:41AM +0200, Joerg Roedel wrote:
-> diff --git a/arch/x86/kernel/nmi.c b/arch/x86/kernel/nmi.c
-> index 4fc9954a9560..951f098a4bf5 100644
-> --- a/arch/x86/kernel/nmi.c
-> +++ b/arch/x86/kernel/nmi.c
-> @@ -33,6 +33,7 @@
->  #include <asm/reboot.h>
->  #include <asm/cache.h>
->  #include <asm/nospec-branch.h>
-> +#include <asm/sev-es.h>
+Hi Liam,
+
+On 22-08-20, 16:53, Liam Beguin wrote:
+> From: Liam Beguin <lvb@xiphos.com>
+> 
+> Start by reading the content of the VENDOR_SPECIFIC2 register and update
+> each bit field based on device properties when defined.
+> 
+> The use of bit masks prevents fields from overriding each other and
+> enables users to clear bits which are set by default, like datapolarity
+> in this instance.
+> 
+> Signed-off-by: Liam Beguin <lvb@xiphos.com>
+> ---
+> Changes since v1:
+> - use set_mask_bits
+> 
+> Changes since v2:
+> - fix missing bit shift dropped in v2
+> - rebase on 5.9-rc1
+> 
+> Changes since v3:
+> - switch to u8p_replace_bits() since there's little reason to protect
+>   against concurrent access
+> 
+>  drivers/phy/ti/phy-tusb1210.c | 27 ++++++++++++++-------------
+>  1 file changed, 14 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/phy/ti/phy-tusb1210.c b/drivers/phy/ti/phy-tusb1210.c
+> index d8d0cc11d187..a63213f5972a 100644
+> --- a/drivers/phy/ti/phy-tusb1210.c
+> +++ b/drivers/phy/ti/phy-tusb1210.c
+> @@ -7,15 +7,16 @@
+>   * Author: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+>   */
+>  #include <linux/module.h>
+> +#include <linux/bitfield.h>
+>  #include <linux/ulpi/driver.h>
+>  #include <linux/ulpi/regs.h>
+>  #include <linux/gpio/consumer.h>
+>  #include <linux/phy/ulpi_phy.h>
 >  
->  #define CREATE_TRACE_POINTS
->  #include <trace/events/nmi.h>
-> @@ -488,6 +489,9 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
->  	this_cpu_write(nmi_cr2, read_cr2());
->  nmi_restart:
+>  #define TUSB1210_VENDOR_SPECIFIC2		0x80
+> -#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT	0
+> -#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT	4
+> -#define TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT	6
+> +#define TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK	GENMASK(3, 0)
+> +#define TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK	GENMASK(5, 4)
+> +#define TUSB1210_VENDOR_SPECIFIC2_DP_MASK	BIT(6)
 >  
-> +	/* Needs to happen before DR7 is accessed */
-
-... because? Let's explain why.
-
-> +	sev_es_ist_enter(regs);
-> +
->  	this_cpu_write(nmi_dr7, local_db_save());
+>  struct tusb1210 {
+>  	struct ulpi *ulpi;
+> @@ -118,22 +119,22 @@ static int tusb1210_probe(struct ulpi *ulpi)
+>  	 * diagram optimization and DP/DM swap.
+>  	 */
 >  
->  	irq_state = idtentry_enter_nmi(regs);
-> @@ -501,6 +505,8 @@ DEFINE_IDTENTRY_RAW(exc_nmi)
+> +	reg = ulpi_read(ulpi, TUSB1210_VENDOR_SPECIFIC2);
+> +
+>  	/* High speed output drive strength configuration */
+> -	device_property_read_u8(&ulpi->dev, "ihstx", &val);
+> -	reg = val << TUSB1210_VENDOR_SPECIFIC2_IHSTX_SHIFT;
+> +	if (!device_property_read_u8(&ulpi->dev, "ihstx", &val))
+> +		u8p_replace_bits(&reg, val, (u8)TUSB1210_VENDOR_SPECIFIC2_IHSTX_MASK);
+
+Any reason for using u8p_replace_bits and not u8_replace_bits? 
+
+Also please drop the u8 casts above, they seem unnecessary here
+
 >  
->  	local_db_restore(this_cpu_read(nmi_dr7));
+>  	/* High speed output impedance configuration */
+> -	device_property_read_u8(&ulpi->dev, "zhsdrv", &val);
+> -	reg |= val << TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_SHIFT;
+> +	if (!device_property_read_u8(&ulpi->dev, "zhsdrv", &val))
+> +		u8p_replace_bits(&reg, val, (u8)TUSB1210_VENDOR_SPECIFIC2_ZHSDRV_MASK);
 >  
-> +	sev_es_ist_exit();
-> +
->  	if (unlikely(this_cpu_read(nmi_cr2) != read_cr2()))
->  		write_cr2(this_cpu_read(nmi_cr2));
->  	if (this_cpu_dec_return(nmi_state))
-> diff --git a/arch/x86/kernel/sev-es.c b/arch/x86/kernel/sev-es.c
-> index 64002d86a237..95831d103418 100644
-> --- a/arch/x86/kernel/sev-es.c
-> +++ b/arch/x86/kernel/sev-es.c
-> @@ -52,6 +52,9 @@ struct sev_es_runtime_data {
+>  	/* DP/DM swap control */
+> -	device_property_read_u8(&ulpi->dev, "datapolarity", &val);
+> -	reg |= val << TUSB1210_VENDOR_SPECIFIC2_DP_SHIFT;
+> +	if (!device_property_read_u8(&ulpi->dev, "datapolarity", &val))
+> +		u8p_replace_bits(&reg, val, (u8)TUSB1210_VENDOR_SPECIFIC2_DP_MASK);
 >  
->  static DEFINE_PER_CPU(struct sev_es_runtime_data*, runtime_data);
+> -	if (reg) {
+> -		ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
+> -		tusb->vendor_specific2 = reg;
+> -	}
+> +	ulpi_write(ulpi, TUSB1210_VENDOR_SPECIFIC2, reg);
+> +	tusb->vendor_specific2 = reg;
 >  
-> +DEFINE_STATIC_KEY_FALSE(sev_es_enable_key);
-> +EXPORT_SYMBOL_GPL(sev_es_enable_key);
-
-So the GPL export is not needed. The key itself can be made static when
-you uninline the sev_es_ist_enter/exit accessors as they're called only
-in nmi.c but I guess Peter would object to that in high-NMI-load perf
-scenarios...
-
-The export looks unneeded tho.
-
-> +
->  static void __init sev_es_setup_vc_stacks(int cpu)
->  {
->  	struct sev_es_runtime_data *data;
-> @@ -73,6 +76,59 @@ static void __init sev_es_setup_vc_stacks(int cpu)
->  	cea_set_pte((void *)vaddr, pa, PAGE_KERNEL);
->  }
->  
-> +static __always_inline bool on_vc_stack(unsigned long sp)
-> +{
-> +	return ((sp >= __this_cpu_ist_bot_va(VC)) && (sp < __this_cpu_ist_top_va(VC)));
-> +}
-> +
-> +/*
-> + * This function handles the case when an NM is raised in the #VC exception
-
-					     NMI
-
-> + * handler entry code. In this case the IST entry for VC must be adjusted, so
-
-"VC" or "#VC"? Choose one pls.
-
-> + * that any subsequent VC exception will not overwrite the stack contents of the
-> + * interrupted VC handler.
-> + *
-> + * The IST entry is adjusted unconditionally so that it can be also be
-> + * unconditionally back-adjusted in sev_es_ist_exit(). Otherwise a nested
-		      ^^^^^^^^^^^^^
-
-"adjusted back"
-
-> + * sev_es_ist_exit() call may back-adjust the IST entry too early.
-
-Ditto.
-
-> + */
-> +void noinstr __sev_es_ist_enter(struct pt_regs *regs)
-> +{
-> +	unsigned long old_ist, new_ist;
-> +	unsigned long *p;
-> +
-> +	/* Read old IST entry */
-> +	old_ist = __this_cpu_read(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC]);
-> +
-> +	/* Make room on the IST stack */
-> +	if (on_vc_stack(regs->sp))
-> +		new_ist = ALIGN_DOWN(regs->sp, 8) - sizeof(old_ist);
-> +	else
-> +		new_ist = old_ist - sizeof(old_ist);
-> +
-> +	/* Store old IST entry */
-> +	p       = (unsigned long *)new_ist;
-> +	*p      = old_ist;
-
-What's wrong with:
-
-	*(unsigned long *)new_ist = old_ist;
-
-?
-
-> +
-> +	/* Set new IST entry */
-> +	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], new_ist);
-> +}
-> +
-> +void noinstr __sev_es_ist_exit(void)
-> +{
-> +	unsigned long ist;
-> +	unsigned long *p;
-> +
-> +	/* Read IST entry */
-> +	ist = __this_cpu_read(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC]);
-> +
-> +	if (WARN_ON(ist == __this_cpu_ist_top_va(VC)))
-> +		return;
-> +
-> +	/* Read back old IST entry and write it to the TSS */
-> +	p = (unsigned long *)ist;
-> +	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], *p);
-
-And
-
-	this_cpu_write(cpu_tss_rw.x86_tss.ist[IST_INDEX_VC], *(unsigned long *)ist);
-
-?
-
-> +}
-> +
->  /* Needed in vc_early_forward_exception */
->  void do_early_exception(struct pt_regs *regs, int trapnr);
->  
-> @@ -277,6 +333,9 @@ void __init sev_es_init_vc_handling(void)
->  	if (!sev_es_active())
->  		return;
->  
-> +	/* Enable SEV-ES special handling */
-> +	static_branch_enable(&sev_es_enable_key);
-> +
->  	/* Initialize per-cpu GHCB pages */
->  	for_each_possible_cpu(cpu) {
->  		sev_es_alloc_runtime_data(cpu);
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 74cfe6eb7ebb..030d882eaad1 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -59,6 +59,7 @@
->  #include <asm/umip.h>
->  #include <asm/insn.h>
->  #include <asm/insn-eval.h>
-> +#include <asm/sev-es.h>
->  
->  #ifdef CONFIG_X86_64
->  #include <asm/x86_init.h>
-> @@ -731,6 +732,7 @@ static bool is_sysenter_singlestep(struct pt_regs *regs)
->  
->  static __always_inline void debug_enter(unsigned long *dr6, unsigned long *dr7)
->  {
-> +
->  	/*
->  	 * Disable breakpoints during exception handling; recursive exceptions
->  	 * are exceedingly 'fun'.
-
-Leftover hunk which got committed my mistake.
-
-Thx.
+>  	tusb->phy = ulpi_phy_create(ulpi, &phy_ops);
+>  	if (IS_ERR(tusb->phy))
+> 
+> base-commit: 9123e3a74ec7b934a4a099e98af6a61c2f80bbf5
+> -- 
+> 2.27.0
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+~Vinod
