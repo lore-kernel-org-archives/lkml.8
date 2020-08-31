@@ -2,125 +2,94 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA5C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA80C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 870F7208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC13C208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:07:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgHaJDi (ORCPT
+        id S1728245AbgHaJG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:03:38 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2711 "EHLO huawei.com"
+        Mon, 31 Aug 2020 05:06:59 -0400
+Received: from spam.zju.edu.cn ([61.164.42.155]:27918 "EHLO zju.edu.cn"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725829AbgHaJDh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:03:37 -0400
-Received: from lhreml724-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 576012F4CDB1E4693974;
-        Mon, 31 Aug 2020 10:03:35 +0100 (IST)
-Received: from [127.0.0.1] (10.210.167.41) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Mon, 31 Aug
- 2020 10:03:34 +0100
-Subject: Re: [PATCH v6 1/5] perf/jevents: Remove jevents.h file
-To:     Jiri Olsa <jolsa@redhat.com>, Kajol Jain <kjain@linux.ibm.com>
-CC:     <acme@kernel.org>, <peterz@infradead.org>, <mingo@redhat.com>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <pc@us.ibm.com>, <namhyung@kernel.org>, <ak@linux.intel.com>,
-        <yao.jin@linux.intel.com>, <linux-kernel@vger.kernel.org>,
-        <linux-perf-users@vger.kernel.org>, <irogers@google.com>,
-        <maddy@linux.ibm.com>, <ravi.bangoria@linux.ibm.com>
-References: <20200827130958.189146-1-kjain@linux.ibm.com>
- <20200827130958.189146-2-kjain@linux.ibm.com> <20200831084348.GB287892@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <ca73d0ff-0dfa-8d9e-1cb8-5791a78eb4e2@huawei.com>
-Date:   Mon, 31 Aug 2020 10:01:03 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20200831084348.GB287892@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.167.41]
-X-ClientProxiedBy: lhreml721-chm.china.huawei.com (10.201.108.72) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+        id S1725829AbgHaJG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:06:57 -0400
+Received: from localhost.localdomain (unknown [10.192.85.18])
+        by mail-app3 (Coremail) with SMTP id cC_KCgBHYt6kvUxfhYZ9Aw--.31096S4;
+        Mon, 31 Aug 2020 17:06:47 +0800 (CST)
+From:   Dinghao Liu <dinghao.liu@zju.edu.cn>
+To:     dinghao.liu@zju.edu.cn, kjlu@umn.edu
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] HID: elan: Fix memleak in elan_input_configured
+Date:   Mon, 31 Aug 2020 17:06:43 +0800
+Message-Id: <20200831090643.32489-1-dinghao.liu@zju.edu.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: cC_KCgBHYt6kvUxfhYZ9Aw--.31096S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7XryxXr1rZFWUuFyfWrW8tFb_yoWktFg_W3
+        409wnrWF1DtFsYkrnrKrWfZryDZr4vvFyfXF1vqF1fJry7X3yDu3y3ZFn7Ga4Ygw47u3W0
+        9a4DWr4IyrsIkjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUb2kFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AK
+        wVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20x
+        vE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26rxl6s0DM28EF7xvwVC2z280
+        aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07
+        x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18
+        McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr4
+        1lF7I21c0EjII2zVCS5cI20VAGYxC7MxAIw28IcxkI7VAKI48JMxAIw28IcVCjz48v1sIE
+        Y20_GFWkJr1UJwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+        8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41l
+        IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+        AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+        z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
+X-CM-SenderInfo: qrrzjiaqtzq6lmxovvfxof0/1tbiAgUJBlZdtPuUJQAAs9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 31/08/2020 09:43, Jiri Olsa wrote:
-> On Thu, Aug 27, 2020 at 06:39:54PM +0530, Kajol Jain wrote:
->> This patch removes jevents.h file and add its data inside
->> jevents.c as this file is only included there.
->>
->> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->> ---
->>   tools/perf/pmu-events/jevents.c |  9 ++++++++-
->>   tools/perf/pmu-events/jevents.h | 23 -----------------------
->>   2 files changed, 8 insertions(+), 24 deletions(-)
->>   delete mode 100644 tools/perf/pmu-events/jevents.h
->>
->> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
->> index fa86c5f997cc..1c55cc754b5a 100644
->> --- a/tools/perf/pmu-events/jevents.c
->> +++ b/tools/perf/pmu-events/jevents.c
->> @@ -48,11 +48,18 @@
->>   #include <linux/list.h>
->>   #include "jsmn.h"
->>   #include "json.h"
->> -#include "jevents.h"
->>   
->>   int verbose;
->>   char *prog;
->>   
->> +#ifndef min
->> +#define min(x, y) ({				\
->> +	typeof(x) _min1 = (x);			\
->> +	typeof(y) _min2 = (y);			\
->> +	(void)(&_min1 == &_min2);		\
->> +	_min1 < _min2 ? _min1 : _min2; })
->> +#endif
+When input_mt_init_slots() fails, input should be freed
+to prevent memleak. When input_register_device() fails,
+we should call input_mt_destroy_slots() to free memory
+allocated by input_mt_init_slots().
 
-Wondering what is special about this definition of min that it's 
-required? Compiled ok for me without it.
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+---
 
->> +
->>   int eprintf(int level, int var, const char *fmt, ...)
->>   {
->>   
->> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
->> deleted file mode 100644
->> index 2afc8304529e..000000000000
->> --- a/tools/perf/pmu-events/jevents.h
->> +++ /dev/null
->> @@ -1,23 +0,0 @@
->> -/* SPDX-License-Identifier: GPL-2.0 */
->> -#ifndef JEVENTS_H
->> -#define JEVENTS_H 1
->> -
->> -int json_events(const char *fn,
->> -		int (*func)(void *data, char *name, char *event, char *desc,
->> -				char *long_desc,
->> -				char *pmu,
->> -				char *unit, char *perpkg, char *metric_expr,
->> -				char *metric_name, char *metric_group,
->> -				char *deprecated, char *metric_constraint),
->> -		void *data);
->> -char *get_cpu_str(void);
-> 
-> I think you can also remove get_cpu_str from jevents.c
-> 
-> thanks,
-> jirka
-> 
-> .
-> 
+Changelog:
+
+v2: - Add input_mt_destroy_slots() on failure of
+      input_register_device().
+---
+ drivers/hid/hid-elan.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/hid/hid-elan.c b/drivers/hid/hid-elan.c
+index 45c4f888b7c4..dae193749d44 100644
+--- a/drivers/hid/hid-elan.c
++++ b/drivers/hid/hid-elan.c
+@@ -188,6 +188,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	ret = input_mt_init_slots(input, ELAN_MAX_FINGERS, INPUT_MT_POINTER);
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to init elan MT slots: %d\n", ret);
++		input_free_device(input);
+ 		return ret;
+ 	}
+ 
+@@ -198,6 +199,7 @@ static int elan_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	if (ret) {
+ 		hid_err(hdev, "Failed to register elan input device: %d\n",
+ 			ret);
++		input_mt_destroy_slots(input);
+ 		input_free_device(input);
+ 		return ret;
+ 	}
+-- 
+2.17.1
 
