@@ -2,93 +2,100 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB9FEC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 638CEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4EA2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897128;
-	bh=g0hpcrkEi54ga7ismJwBhjJEbD+UQ5S53wU+Ac2tE0A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mZmNAru9ISSWB3TuyxF0dRDSTCIHEdwpHOViZDLtu3PIrKITsG5ihD/+5tAY4rqZo
-	 olARpkq1VbD7jQlyG9OwMNVeznNI83r4iCEFz5ahiyFbhTAmSXpuv23sbA4cOoDSsb
-	 Fe+XqV/ZP6WfU/Q58U6H5vS6a3Wsnj8aPBCeV6W0=
+	by mail.kernel.org (Postfix) with ESMTP id 250302083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:05:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qqc7fRH7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgHaSF1 (ORCPT
+        id S1729468AbgHaSFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:05:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44262 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbgHaSEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:04:09 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA3521582;
-        Mon, 31 Aug 2020 18:04:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897049;
-        bh=g0hpcrkEi54ga7ismJwBhjJEbD+UQ5S53wU+Ac2tE0A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rMgvONI7/fkvhW+bRZyl1g+3oxm9AC041NL3rZnFkkc9pawFg/XXG/Q+UvpjiMaVw
-         eaL/4UQW3ht4E9RhIjszpRvvKqn4nsWyBx4Gn5zFPU3mmwazPHVrboGgEpqUaPOeNy
-         gxRGK7AuIBr4F5RksmTmsU71alUJVKgj4cfDl5e8=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 04/14] locktorture: Make function torture_percpu_rwsem_init() static
-Date:   Mon, 31 Aug 2020 11:03:56 -0700
-Message-Id: <20200831180406.494-4-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200831180348.GA416@paulmck-ThinkPad-P72>
-References: <20200831180348.GA416@paulmck-ThinkPad-P72>
+        Mon, 31 Aug 2020 14:05:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51364 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729088AbgHaSFR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:05:17 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0523C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:05:16 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id s15so3069273qvv.7
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:05:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vnQDmM3Y8VUdtCiO/ltS5fo251Xne+kzbECtkIEbMh4=;
+        b=qqc7fRH7cSLGx0hFoBZYnjshuA5fcxz7qjblG2Q0bETEUDLwyZQbLF/6xetFb2acjW
+         FrJGUKtC2W798soZNAsTpRsS9bb260BWCoeKakdX9tzbq7a1hRIEA9r81tk1Rj49DYe/
+         UHYst0p2iNJtFKSBNejq3bA4N4YZG+cXyIgyqvQ8III0RYmg8Y7dueaBWb+roS6lHgrX
+         xxSfzYIHaTkiPo3L8c4wrUKO8bM53yYDhrYW9Ay3MCGgFrh8KpbnDpCv91VO20xYdlbg
+         3rhL5c+/JVRMYYzsPdWL45RrgMhvb9BMVtopYfZZ5xtZhYZS0R4g7bZDqOjnL7HheW/t
+         Eb+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vnQDmM3Y8VUdtCiO/ltS5fo251Xne+kzbECtkIEbMh4=;
+        b=ulH74r2prvtiecX3AXOkNIjDaQYTd1AhxgAkDRgIpUb7C0kH1gXoNav+BBX0oyrpzX
+         uW9ff50pXcxWXt4lMGu/185yQE3mByvysa5mJpauJXi0FAz/4vNZI+f5eigNEiLeozCG
+         gRhUpvQwIYUBdDSeDTbD4u+77BUr/koVrFZY2xUINOGO3sfdkcA0F/VSbKzKDtIU0Eez
+         y0LDJPkZpTpssgPvcUjtgjqe7FieYNBqiNkie2Ri2g3X5UJWZodI/F5pM1o6Mx9HnDoU
+         y7TfeJz8V+MPNIhZ6LN28upcZWYn6/uRYMctVziudumNIyEA1qkOccjezw7k7bWXi207
+         vR1A==
+X-Gm-Message-State: AOAM530N/fCAbdtxckBY3nBikAmOniSfkguD0JmBfNtJmHzvtGlMLB0t
+        cd3Olgf4WTDTVZcuNL0NwoK6Sg==
+X-Google-Smtp-Source: ABdhPJzqNSDrgeEQze3GKyRQwVFa6wtY+F5LnFBzz9wyqUcAPQZ2u9ZghEcn6ShhhXgEd5afNN8d6w==
+X-Received: by 2002:a0c:a9d6:: with SMTP id c22mr2266372qvb.102.1598897115990;
+        Mon, 31 Aug 2020 11:05:15 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d9sm10024507qkj.83.2020.08.31.11.05.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 11:05:15 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 14:05:13 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     darrick.wong@oracle.com, hch@infradead.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] iomap: Fix WARN_ON_ONCE() from unprivileged users
+Message-ID: <20200831180513.GC4080@lca.pw>
+References: <20200831172534.12464-1-cai@lca.pw>
+ <20200831174219.GI14765@casper.infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831174219.GI14765@casper.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+On Mon, Aug 31, 2020 at 06:42:19PM +0100, Matthew Wilcox wrote:
+> On Mon, Aug 31, 2020 at 01:25:34PM -0400, Qian Cai wrote:
+> > +	case IOMAP_DELALLOC:
+> > +		/*
+> > +		 * DIO is not serialised against mmap() access at all, and so
+> > +		 * if the page_mkwrite occurs between the writeback and the
+> > +		 * iomap_apply() call in the DIO path, then it will see the
+> > +		 * DELALLOC block that the page-mkwrite allocated.
+> > +		 */
+> > +		path = file_path(dio->iocb->ki_filp, pathname,
+> > +				 sizeof(pathname));
+> > +		if (IS_ERR(path))
+> > +			path = "(unknown)";
+> > +
+> > +		pr_warn_ratelimited("Direct I/O collision with buffered writes! File: %s Comm: %.20s\n",
+> > +				    path, current->comm);
+> 
+> "File: %pD4"?
 
-The sparse tool complains as follows:
-
-kernel/locking/locktorture.c:569:6: warning:
- symbol 'torture_percpu_rwsem_init' was not declared. Should it be static?
-
-And this function is not used outside of locktorture.c,
-so this commit marks it static.
-
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/locking/locktorture.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
-index 9cfa5e8..62d215b 100644
---- a/kernel/locking/locktorture.c
-+++ b/kernel/locking/locktorture.c
-@@ -566,7 +566,7 @@ static struct lock_torture_ops rwsem_lock_ops = {
- #include <linux/percpu-rwsem.h>
- static struct percpu_rw_semaphore pcpu_rwsem;
- 
--void torture_percpu_rwsem_init(void)
-+static void torture_percpu_rwsem_init(void)
- {
- 	BUG_ON(percpu_init_rwsem(&pcpu_rwsem));
- }
--- 
-2.9.5
-
+Sounds like a good idea. I could use that.
