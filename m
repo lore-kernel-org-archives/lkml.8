@@ -5,73 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5514C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E20C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C55721734
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:32:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F2AB21655
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:33:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Wx/kT1wZ";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="M/Z58/MA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="QXRY4nKd";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="O8+CASP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgHaMcZ (ORCPT
+        id S1728172AbgHaMdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:32:25 -0400
-Received: from esa5.hgst.iphmx.com ([216.71.153.144]:55132 "EHLO
-        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbgHaMbP (ORCPT
+        Mon, 31 Aug 2020 08:33:21 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:41599 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727949AbgHaMbc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:31:15 -0400
+        Mon, 31 Aug 2020 08:31:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
   d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1598877076; x=1630413076;
+  t=1598877092; x=1630413092;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:content-transfer-encoding:mime-version;
-  bh=cLNORs4VrSfT1WFyVmW0i3WYt/PjIBEmw4+g9G2Hipg=;
-  b=Wx/kT1wZ2HnWENikwRRIKLyg0J5Gsw28IdJ0JBuasjuEasru70W/kuhb
-   3tXBpqz0KEybNxj0vqU+4Rc8RCGkDHjX5moCY1WMqdcnVxcniBPw4rLYh
-   tjx4O3cEcKvxNZp8kUx2UfJ8UuftMGqrriGscbexyqi+n+4dBGFGgM6xs
-   /WYzPjreXgCFRPql07sO1c2EIBJOKzZYiUQpioq4V8Hp4nS2YnaX/bUbL
-   I6vKfp97Z5IUbvPg37gU0IpoqretEc8I+sDxPlQSlfnMtECBIcckKiA9s
-   4ezUSeDesMNz72BCByRI/mV+gKj74LZn2ELlNTomEkfSTjKnP6hAGUUo2
-   w==;
-IronPort-SDR: tJnZdF5l9iCWeWQDcaH+4nsa7xRWEMFkdki7IZ5oYZsphpheuAERuLsQvC8eB54tOyulhfcB+6
- xbEeAcWZlo8zMV2oeHLsZNg7qzPT/cLVQ2XALWmI1mDFM/tXyUBZZC0rwv5IMX/i39uN8c+sj8
- WX3z+pt4qQ6DUHjBEJkr16yMUHMJXJT0z8y8W1p+RmAzKgRnmXXTQlcn9+CCpOQEEn+mbbgRkS
- lqfy6bMFXzsYcV9ceHPU75pXDicjMOJyrgzumqJPfHR9S3N1YU+7e9CjK1w6dNNzfNcBJlic9u
- 5Qs=
+  bh=Eb/WCpMQveTfK5X5yFrmAVEGvW/aJpLqwQPsnj6u/e4=;
+  b=QXRY4nKdhn6f6APO3t0jifrZ3UrmsbbsaGwzQ2glGx83DDKnNj0fyP8j
+   GOxFttKqbi9/xnfGROnAgAsYqoAGemxdml6wD8ga8FXIjdfR3JopVP5fr
+   bDE1wn4Y3+Oi0oetWv4tI4NxphItR0QQr9kSmq9eV1vQrh+WtiZ5wBEWu
+   9d18zdgpIbe3c0cYKdydTJjK6mhrOQfxOhB03TqoI+e7fcmEiw0y80OPY
+   n51u6yqn6wd7mOx4ShhTTqlIeulbxHDZtnyD7+eGLgaF8XPQ+pefeza7E
+   E50HLT/FrjGnmin98fZmq50LZsLpsfxcKlEBzNcQ3Prh9vYAEtjN3ylhO
+   A==;
+IronPort-SDR: PwtxmvQTqdEL8KIJdxOyYAMEKsli5RVP3nEzinB4lGTO0G/NF2EBqtS+9Me0mpMktthmOixkWP
+ N3SfS73nfU7YK3Urh4l5EKgdwRHGdUCSLad6IPhv5ISNHx+58I/VkFAiMXWSGlOVZFAhaJvrS4
+ T1sY1mQWI6yAHuYGect82x6DSG/shZwzhpWWsbDuvIsSBqWkEOHyMzeTD5x6q0HATlBQ42IsaC
+ iQOLEZxbz0qHGVUk82Mwn40SLjvg8GcOqHz2rppiVeHNJOCnee6t0MFnJ+0J9RDrsLQkGnB3U+
+ sOU=
 X-IronPort-AV: E=Sophos;i="5.76,375,1592841600"; 
-   d="scan'208";a="146216629"
-Received: from mail-dm6nam10lp2107.outbound.protection.outlook.com (HELO NAM10-DM6-obe.outbound.protection.outlook.com) ([104.47.58.107])
-  by ob1.hgst.iphmx.com with ESMTP; 31 Aug 2020 20:31:02 +0800
+   d="scan'208";a="150559651"
+Received: from mail-dm6nam12lp2173.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.173])
+  by ob1.hgst.iphmx.com with ESMTP; 31 Aug 2020 20:31:31 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WytD+ZWvR5mrIOLfi3Aw/lJQdhHy2Rn2y4O6uzUslQypZd2fV1wUfO+oFa/TG8T5dfCGxQtDXMdOghp6LbOZ+aX1tcPCaBrZi/rv6ABaQWGzhHv9dcet8ieGMCfgQ3mHH8KBhJfOF21WHyu5hHqwCLbpUNxjm0DllamTfZ7ry/qAnFVXTwxrEshxxAFFwMPHWjE9Ld/ELhOshRvkWiCMAlPLkEJgoFQdAIWHoaWTIkmNPf8T0asadSmBAMpZqb4+VGkW0nqNPX9WVnCqDdYLS8Hg36ks3AmX/bVzcDT1AzxdZDBbkQXyPvgBxnytG1+6/bL+bRY1R7Jfy4FD0tvOeQ==
+ b=NlgkMztFkiL8HHPuYncea1AtGYSDI2vC4zVm8pJvr83SBvhyaPyZFKC4Kln2XBbVykTAjyf8v64SLkjkcSofznIBaxqxkrBOZyYv4ICogfrTAkw0pppQ89WvPsRDUeToG3JEV9714n/z18H91msIW3YXXL9mx5Zw/joPLSz/3Iyi7//jScvIeMHNxlyJ+EzawPF4YVbrH6UhISUbcDarlbQU2qxCVKQM9GK2Dmxa87sdXwjkbuca0hdq3/gjRa3cz5RaCyk2H2WV+6GOFF9tDjBo7SusiSG6+CNSbGMnuWP1tZEgbc9jMJyWnklX43BgXpCDD4m+Jp3hXNSGJK9bXQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O++J6HONI/ml1r5F6UkME5uIgzWd8QoktrozR3g/8Ww=;
- b=DJB8dUR0RNNArRY9HT5If5SfhgDs27v7B4Iu+RxA7yD2MxD9Q4bWQU2GY9R5f8bl1fPU1qSNimrebnwMhDbYrzcFoEdFGgUWIzvXE9Y8MB5NlSv3f5l3gym0UwxwTSYB7o1baH27pC/Lrj/Wv2d4l06R15rzUf30bKP7UBWBaKe1DjeinZqLlEiS6nZy8AxNIBrOAEzJsoj7pjo7luYLwxQ+IWseVp3cDGwoKZo3lwfCNszvJ1u9sgUl8E6GzOebjMrkEc25Ctx5qOS8ViAJkzAkNyr/2H793QzLjKYSdw/ZiYIO0FNIq2hlfUIPYIhL362vQpJOGMZd2ohVl2uV1g==
+ bh=PpuuCIWYMSxGCJ00nxbxBdW/2K382EAmXLXDkxTUq7I=;
+ b=mVSTK/GClOiPgyjq7xLFFEsLkhwwi+xbsreG2WJbWhi125lGV/5vOeD2jAwnmCu0FJIKvMumsFrLUU50sx90iVddi9NneXX3clYYA7eObCz2mglOSeECKAK6i309M8ffON3j5zoVGVmFopsnWRLui2aShDyoIS3pPrUh2MR1YJGAh1pPH1MoYKZkLOs3PbeY5wRvtXPqejrk4XrYkhxj7QpUyn4ZljTykKor9+wWKf2oHVlfqpFA+oFmGeDSV1+XnLvk5GtenIYtiAGoPnnWgfJCYhQKXkn3KtEKxyHAM69AJ+ep4Jx/3uGgZO081OnSCd7ZT/vifyD5NmKy/8XZ1g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
  header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O++J6HONI/ml1r5F6UkME5uIgzWd8QoktrozR3g/8Ww=;
- b=M/Z58/MAaU+GNQUkTNw5V2dQKLYeTWDek+84iN3gCktVGBhWcVOK+shTDBkgT4kTNpGzIB1mHSbLu1VlDTrWD03gEafqXettA8RVcNguaJ7Ajf2X0l51VfmmMPaarRebatja7GkMcnUl1BS8+QA3hpcziCDKn5R+NCHZjW3rfAk=
+ bh=PpuuCIWYMSxGCJ00nxbxBdW/2K382EAmXLXDkxTUq7I=;
+ b=O8+CASP/7PvVjL3E6ZQBFINRCSdC9PkInaITp0JNuWV3Fz//rsDlZP2FaDaHP9VCSLCfS8msVg+tmiRWgTufdajV4+7Hb2znJmS7sPkIJ8PT3I5o3kIilwu82UZw+OC5HSRP4w/xYrCNoKK1vqmT0en8niRZwskqAJi31zKSVK8=
 Authentication-Results: dabbelt.com; dkim=none (message not signed)
  header.d=none;dabbelt.com; dmarc=none action=none header.from=wdc.com;
 Received: from DM6PR04MB6201.namprd04.prod.outlook.com (2603:10b6:5:127::32)
- by DM6PR04MB6124.namprd04.prod.outlook.com (2603:10b6:5:122::13) with
+ by DM6PR04MB6092.namprd04.prod.outlook.com (2603:10b6:5:12b::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Mon, 31 Aug
- 2020 12:31:00 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Mon, 31 Aug
+ 2020 12:31:29 +0000
 Received: from DM6PR04MB6201.namprd04.prod.outlook.com
  ([fe80::607a:44ed:1477:83e]) by DM6PR04MB6201.namprd04.prod.outlook.com
  ([fe80::607a:44ed:1477:83e%7]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 12:31:00 +0000
+ 12:31:29 +0000
 From:   Anup Patel <anup.patel@wdc.com>
 To:     Palmer Dabbelt <palmer@dabbelt.com>,
         Palmer Dabbelt <palmerdabbelt@google.com>,
@@ -84,10 +85,11 @@ Cc:     Alexander Graf <graf@amazon.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         Anup Patel <anup@brainfault.org>, kvm@vger.kernel.org,
         kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>
-Subject: [PATCH v14 04/17] RISC-V: KVM: Implement VCPU interrupts and requests handling
-Date:   Mon, 31 Aug 2020 18:00:02 +0530
-Message-Id: <20200831123015.336047-5-anup.patel@wdc.com>
+        linux-kernel@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
+        Yifei Jiang <jiangyifei@huawei.com>
+Subject: [PATCH v14 10/17] RISC-V: KVM: Implement stage2 page table programming
+Date:   Mon, 31 Aug 2020 18:00:08 +0530
+Message-Id: <20200831123015.336047-11-anup.patel@wdc.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831123015.336047-1-anup.patel@wdc.com>
 References: <20200831123015.336047-1-anup.patel@wdc.com>
@@ -98,386 +100,883 @@ X-ClientProxiedBy: BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM
  (2603:10b6:5:127::32)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 12:30:55 +0000
+Received: from 255.255.255.255 (255.255.255.255) by BM1PR0101CA0046.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 12:31:24 +0000
 X-Mailer: git-send-email 2.25.1
 X-Originating-IP: [103.15.57.192]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 69a78e5c-7e9d-47f8-5582-08d84da9b762
-X-MS-TrafficTypeDiagnostic: DM6PR04MB6124:
+X-MS-Office365-Filtering-Correlation-Id: 5a5e7bc9-fd65-46bd-3dbf-08d84da9c92e
+X-MS-TrafficTypeDiagnostic: DM6PR04MB6092:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR04MB6124D8EB93B54CBC83C6528E8D510@DM6PR04MB6124.namprd04.prod.outlook.com>
+X-Microsoft-Antispam-PRVS: <DM6PR04MB6092A8CEAB8A851EF6EDA5068D510@DM6PR04MB6092.namprd04.prod.outlook.com>
 WDCIPOUTBOUND: EOP-TRUE
-X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: GGOED2VAgNM9o8JFrpkxbYHSL3DSwamtOYYhij9u7hrUxijApuViOK1z7vclHiTIHFhzCRC+yI9hQMZyU40ZE7tXLHJ04pgeUg6twvbNSW0JHA/4aczSLHKpB1eSjqULJbw8/d3WsKRcsatUyN/ePJ9l3mZ7tWS2PSA34qymbwoTlv1cgx8LPh8rvRyzx/LalRJxjv6duul3UG7kCZzYARJ0SEGSXpzDxjkJm3/lMXyTW4vjl9MGASLhnORwALWxFbMBYPyOeP1JwC3FZzTpOnomMXmhd+EYxroUUdLiKgVFzcXeX6UEiIxIK+/7VCzu
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(136003)(366004)(346002)(396003)(8676002)(8936002)(478600001)(52116002)(86362001)(1076003)(54906003)(7416002)(110136005)(6486002)(66556008)(36756003)(5660300002)(66476007)(4326008)(2906002)(66946007)(2616005)(6666004)(26005)(956004)(316002)(83380400001)(16576012)(186003)(44832011);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: EDU6H1j0BjtP9q8ZkFLPrLqWEVTYW3y9LvUT1FYylcHbpszKJkKuNx9uqIBfp+Ppyn+vheX8j0Qr4vg6cGiTmvWwvxaNTPEHw/FD9q8Wb0kIvQH65WbG4p317j4BGYWsVgzSSOeAjKNigS5RTwpYf34Tzsg/Q0NSUishcb34lKgpM+hYmAo6OVYsDrqh8Wd5auUL4I04qEWG7wOjTqwyM11+9y7CHyu0d1iR3EafJdwFbzd2dfJsQLnpoPuHmeOPOkMblO9kCsbAspU112uaGBNEklqZuYr/VSE3oem27J//40eZLP8nPP1AyTBP/JhAGUIZvw/SRDaBas2G+TnHZTljPFFPGreWbSqd8ajfxPWuFeLtDJXVH3WxLE1h6+MDZjuczvy5gKGe7V3+185taR6p/BX59x79DXnbFoaHT1ErjR0BPIypBhS/WXllfVPZdlI8vriVFbEIiz93RrMd1wAZgs65qDNC9cpZ1yTUCOpVVhRhbzrLzfRVwpopdeZHEGKlLrQCuYKlQN1a+58RqEjSvVrV1fyKjGZ/UMlXVlXERH0QL2KCXQPUVdhAYY0UxX+wTSUUVTga7hIy02OjD6ZIvY6u3EpupiYcxIc0all3MkxCgvaNwAhmtTwdzcyrrUPWuLAlGtoqvkhDF0Cf3A==
+X-Microsoft-Antispam-Message-Info: AvPAaAzZbhTcbnQL7mWb87V1Z3nNJjiuGMj2LgcQFCzWgdtGNQpZowg/igkzMnt2exHXDN4CoLv2mE9vw0xHolCJOB/SK3eA3gCZpLWprkBXwADlbHY/CM8bW6OMsvGXF6YI7nsXVYMGywJn84jc6b9Z/cEdfg6N6iGTAm1O8mq5c87yO0rtYQvej8MHlpJ86hT100iC6Oe8w/Xaeh/v/KAw/djRT3Z5t43gpbNQ8cK3qv9HtFBmkv/X8zM/Khno5401BLbXTeVjeg6vnnKKsIvMBhUyaz3qAFhGL6VbxRVhWUrQVjmDmdZosUS0NUN4
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR04MB6201.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(44832011)(6666004)(52116002)(8676002)(86362001)(36756003)(478600001)(6486002)(7416002)(30864003)(110136005)(8936002)(54906003)(83380400001)(66946007)(1076003)(66556008)(2906002)(26005)(186003)(66476007)(956004)(316002)(16576012)(4326008)(5660300002)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData: RQ2czMlxR1K4wCYCgS3LXdz2tJbNb918sVX+vGJdbcridSvHRSVFZI8sS2C3DqjaagRnjCpu3W+OwjrN0nKrEFeBC7lah+E0T//lB13HNhtyFPFJ5Bi3QKdVQMgB0B7zc78+++VBPnJMSaKnHrFCh5EfFXRP434WRX6raVrv+uSzZODbkqoNUoY39wlrJr2kmPlY4sxQ0UkUjMlkWJqdpso0CSOhOajli3tUxqmM8P2LBSXj4pT5owQ89b851hfEFVoeCzhvIrAnOaQScJp+d1yPjyVKaqqx9oFHaMVoE0EpC/Uqm9V49BsGu6okPDd85pRLrIcEst9gwJ/GOpdN21vEEy0i3gyYBTJMz0iPdIglgajDd4cwCuZnsMblZT19uYVV4prv8yLHofteZOW81O/mI6wlk426Oj0joRqIVFIeFaYV7NRgEIiAQr0ZFj1+/i5r0qawPcmb6hy9tZplbfJujxoH4ckNueqZWpBW5WGWVhbnrWARX4fF6FTrAc1/rIooXhlBZ4X9tTnn6goC7oMj1FzgF8dJ87ADCi8DFMTlod4I4c/XA8/IHEF1/t+bK7GlxmB8Anr6plyfhh3koB8vaSTYSth5k6OzMwOw+i58Fnce3a0fsGsfEeZJDJqT0VEzVsRf5mPxbIl4XGLiGg==
 X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69a78e5c-7e9d-47f8-5582-08d84da9b762
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5a5e7bc9-fd65-46bd-3dbf-08d84da9c92e
 X-MS-Exchange-CrossTenant-AuthSource: DM6PR04MB6201.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 12:31:00.0038
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 12:31:29.7464
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: b61c8803-16f3-4c35-9b17-6f65f441df86
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fjNmcORAOH+k4+Ahf0LLybrP71jrN5xVxeo8dyRj5rDyA4irppBzRHAlHtFJII1fH5ZFDWkg/FOf8lhD7iwqgw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6124
+X-MS-Exchange-CrossTenant-UserPrincipalName: xg5i9EFNjUP1c4glBEyANTZH/Sho/LgtBulW2Hz0kNLxZdIYxpRfX2Y01fMn1X7xlTXA/V+U/j8+Lw1Omyumfw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR04MB6092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch implements VCPU interrupts and requests which are both
-asynchronous events.
+This patch implements all required functions for programming
+the stage2 page table for each Guest/VM.
 
-The VCPU interrupts can be set/unset using KVM_INTERRUPT ioctl from
-user-space. In future, the in-kernel IRQCHIP emulation will use
-kvm_riscv_vcpu_set_interrupt() and kvm_riscv_vcpu_unset_interrupt()
-functions to set/unset VCPU interrupts.
+At high-level, the flow of stage2 related functions is similar
+from KVM ARM/ARM64 implementation but the stage2 page table
+format is quite different for KVM RISC-V.
 
-Important VCPU requests implemented by this patch are:
-KVM_REQ_SLEEP       - set whenever VCPU itself goes to sleep state
-KVM_REQ_VCPU_RESET  - set whenever VCPU reset is requested
-
-The WFI trap-n-emulate (added later) will use KVM_REQ_SLEEP request
-and kvm_riscv_vcpu_has_interrupt() function.
-
-The KVM_REQ_VCPU_RESET request will be used by SBI emulation (added
-later) to power-up a VCPU in power-off state. The user-space can use
-the GET_MPSTATE/SET_MPSTATE ioctls to get/set power state of a VCPU.
-
+[jiangyifei: stage2 dirty log support]
+Signed-off-by: Yifei Jiang <jiangyifei@huawei.com>
 Signed-off-by: Anup Patel <anup.patel@wdc.com>
 Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 Reviewed-by: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Alexander Graf <graf@amazon.com>
 ---
- arch/riscv/include/asm/kvm_host.h |  23 ++++
- arch/riscv/include/uapi/asm/kvm.h |   3 +
- arch/riscv/kvm/vcpu.c             | 182 +++++++++++++++++++++++++++---
- 3 files changed, 195 insertions(+), 13 deletions(-)
+ arch/riscv/include/asm/kvm_host.h     |  12 +
+ arch/riscv/include/asm/pgtable-bits.h |   1 +
+ arch/riscv/kvm/Kconfig                |   1 +
+ arch/riscv/kvm/main.c                 |  19 +
+ arch/riscv/kvm/mmu.c                  | 647 +++++++++++++++++++++++++-
+ arch/riscv/kvm/vm.c                   |   6 -
+ 6 files changed, 670 insertions(+), 16 deletions(-)
 
 diff --git a/arch/riscv/include/asm/kvm_host.h b/arch/riscv/include/asm/kvm_host.h
-index 43e85523a07e..8829bed4517f 100644
+index ca4eb4ce1335..5d70c8cf3733 100644
 --- a/arch/riscv/include/asm/kvm_host.h
 +++ b/arch/riscv/include/asm/kvm_host.h
-@@ -133,6 +133,21 @@ struct kvm_vcpu_arch {
- 	/* CPU CSR context upon Guest VCPU reset */
- 	struct kvm_vcpu_csr guest_reset_csr;
- 
-+	/*
-+	 * VCPU interrupts
-+	 *
-+	 * We have a lockless approach for tracking pending VCPU interrupts
-+	 * implemented using atomic bitops. The irqs_pending bitmap represent
-+	 * pending interrupts whereas irqs_pending_mask represent bits changed
-+	 * in irqs_pending. Our approach is modeled around multiple producer
-+	 * and single consumer problem where the consumer is the VCPU itself.
-+	 */
-+	unsigned long irqs_pending;
-+	unsigned long irqs_pending_mask;
-+
-+	/* VCPU power-off state */
-+	bool power_off;
-+
- 	/* Don't run the VCPU (blocked) */
- 	bool pause;
- 
-@@ -157,4 +172,12 @@ int kvm_riscv_vcpu_exit(struct kvm_vcpu *vcpu, struct kvm_run *run,
- 
- static inline void __kvm_riscv_switch_to(struct kvm_vcpu_arch *vcpu_arch) {}
- 
-+int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq);
-+int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq);
-+void kvm_riscv_vcpu_flush_interrupts(struct kvm_vcpu *vcpu);
-+void kvm_riscv_vcpu_sync_interrupts(struct kvm_vcpu *vcpu);
-+bool kvm_riscv_vcpu_has_interrupts(struct kvm_vcpu *vcpu, unsigned long mask);
-+void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu);
-+void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu);
-+
- #endif /* __RISCV_KVM_HOST_H__ */
-diff --git a/arch/riscv/include/uapi/asm/kvm.h b/arch/riscv/include/uapi/asm/kvm.h
-index 984d041a3e3b..3d3d703713c6 100644
---- a/arch/riscv/include/uapi/asm/kvm.h
-+++ b/arch/riscv/include/uapi/asm/kvm.h
-@@ -18,6 +18,9 @@
- 
- #define KVM_COALESCED_MMIO_PAGE_OFFSET 1
- 
-+#define KVM_INTERRUPT_SET	-1U
-+#define KVM_INTERRUPT_UNSET	-2U
-+
- /* for KVM_GET_REGS and KVM_SET_REGS */
- struct kvm_regs {
+@@ -76,6 +76,13 @@ struct kvm_mmio_decode {
+ 	int return_handled;
  };
-diff --git a/arch/riscv/kvm/vcpu.c b/arch/riscv/kvm/vcpu.c
-index 84deeddbffbe..7acb2e622597 100644
---- a/arch/riscv/kvm/vcpu.c
-+++ b/arch/riscv/kvm/vcpu.c
-@@ -11,6 +11,7 @@
- #include <linux/err.h>
- #include <linux/kdebug.h>
- #include <linux/module.h>
-+#include <linux/percpu.h>
- #include <linux/uaccess.h>
- #include <linux/vmalloc.h>
+ 
++#define KVM_MMU_PAGE_CACHE_NR_OBJS	32
++
++struct kvm_mmu_page_cache {
++	int nobjs;
++	void *objects[KVM_MMU_PAGE_CACHE_NR_OBJS];
++};
++
+ struct kvm_cpu_trap {
+ 	unsigned long sepc;
+ 	unsigned long scause;
+@@ -177,6 +184,9 @@ struct kvm_vcpu_arch {
+ 	/* MMIO instruction details */
+ 	struct kvm_mmio_decode mmio_decode;
+ 
++	/* Cache pages needed to program page tables with spinlock held */
++	struct kvm_mmu_page_cache mmu_page_cache;
++
+ 	/* VCPU power-off state */
+ 	bool power_off;
+ 
+@@ -205,6 +215,8 @@ void kvm_riscv_stage2_flush_cache(struct kvm_vcpu *vcpu);
+ int kvm_riscv_stage2_alloc_pgd(struct kvm *kvm);
+ void kvm_riscv_stage2_free_pgd(struct kvm *kvm);
+ void kvm_riscv_stage2_update_hgatp(struct kvm_vcpu *vcpu);
++void kvm_riscv_stage2_mode_detect(void);
++unsigned long kvm_riscv_stage2_mode(void);
+ 
+ void kvm_riscv_stage2_vmid_detect(void);
+ unsigned long kvm_riscv_stage2_vmid_bits(void);
+diff --git a/arch/riscv/include/asm/pgtable-bits.h b/arch/riscv/include/asm/pgtable-bits.h
+index bbaeb5d35842..be49d62fcc2b 100644
+--- a/arch/riscv/include/asm/pgtable-bits.h
++++ b/arch/riscv/include/asm/pgtable-bits.h
+@@ -26,6 +26,7 @@
+ 
+ #define _PAGE_SPECIAL   _PAGE_SOFT
+ #define _PAGE_TABLE     _PAGE_PRESENT
++#define _PAGE_LEAF      (_PAGE_READ | _PAGE_WRITE | _PAGE_EXEC)
+ 
+ /*
+  * _PAGE_PROT_NONE is set on not-present pages (and ignored by the hardware) to
+diff --git a/arch/riscv/kvm/Kconfig b/arch/riscv/kvm/Kconfig
+index b42979f84042..633063edaee8 100644
+--- a/arch/riscv/kvm/Kconfig
++++ b/arch/riscv/kvm/Kconfig
+@@ -23,6 +23,7 @@ config KVM
+ 	select PREEMPT_NOTIFIERS
+ 	select ANON_INODES
+ 	select KVM_MMIO
++	select KVM_GENERIC_DIRTYLOG_READ_PROTECT
+ 	select HAVE_KVM_VCPU_ASYNC_IOCTL
+ 	select HAVE_KVM_EVENTFD
+ 	select SRCU
+diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
+index 49a4941e3838..421ecf4e6360 100644
+--- a/arch/riscv/kvm/main.c
++++ b/arch/riscv/kvm/main.c
+@@ -64,6 +64,8 @@ void kvm_arch_hardware_disable(void)
+ 
+ int kvm_arch_init(void *opaque)
+ {
++	const char *str;
++
+ 	if (!riscv_isa_extension_available(NULL, h)) {
+ 		kvm_info("hypervisor extension not available\n");
+ 		return -ENODEV;
+@@ -79,10 +81,27 @@ int kvm_arch_init(void *opaque)
+ 		return -ENODEV;
+ 	}
+ 
++	kvm_riscv_stage2_mode_detect();
++
+ 	kvm_riscv_stage2_vmid_detect();
+ 
+ 	kvm_info("hypervisor extension available\n");
+ 
++	switch (kvm_riscv_stage2_mode()) {
++	case HGATP_MODE_SV32X4:
++		str = "Sv32x4";
++		break;
++	case HGATP_MODE_SV39X4:
++		str = "Sv39x4";
++		break;
++	case HGATP_MODE_SV48X4:
++		str = "Sv48x4";
++		break;
++	default:
++		return -ENODEV;
++	}
++	kvm_info("using %s G-stage page table format\n", str);
++
+ 	kvm_info("VMID %ld bits available\n", kvm_riscv_stage2_vmid_bits());
+ 
+ 	return 0;
+diff --git a/arch/riscv/kvm/mmu.c b/arch/riscv/kvm/mmu.c
+index 8fb356e68cc5..35b9aabe6c57 100644
+--- a/arch/riscv/kvm/mmu.c
++++ b/arch/riscv/kvm/mmu.c
+@@ -17,11 +17,415 @@
  #include <linux/sched/signal.h>
-@@ -54,6 +55,9 @@ static void kvm_riscv_reset_vcpu(struct kvm_vcpu *vcpu)
- 	memcpy(csr, reset_csr, sizeof(*csr));
- 
- 	memcpy(cntx, reset_cntx, sizeof(*cntx));
+ #include <asm/page.h>
+ #include <asm/pgtable.h>
++#include <asm/sbi.h>
 +
-+	WRITE_ONCE(vcpu->arch.irqs_pending, 0);
-+	WRITE_ONCE(vcpu->arch.irqs_pending_mask, 0);
- }
- 
- int kvm_arch_vcpu_precreate(struct kvm *kvm, unsigned int id)
-@@ -102,8 +106,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
- 
- int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu)
- {
--	/* TODO: */
--	return 0;
-+	return kvm_riscv_vcpu_has_interrupts(vcpu, 1UL << IRQ_VS_TIMER);
- }
- 
- void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu)
-@@ -116,20 +119,18 @@ void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu)
- 
- int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu)
- {
--	/* TODO: */
--	return 0;
-+	return (kvm_riscv_vcpu_has_interrupts(vcpu, -1UL) &&
-+		!vcpu->arch.power_off && !vcpu->arch.pause);
- }
- 
- int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu)
- {
--	/* TODO: */
--	return 0;
-+	return kvm_vcpu_exiting_guest_mode(vcpu) == IN_GUEST_MODE;
- }
- 
- bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu)
- {
--	/* TODO: */
--	return false;
-+	return (vcpu->arch.guest_context.sstatus & SR_SPP) ? true : false;
- }
- 
- bool kvm_arch_has_vcpu_debugfs(void)
-@@ -150,7 +151,21 @@ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
- long kvm_arch_vcpu_async_ioctl(struct file *filp,
- 			       unsigned int ioctl, unsigned long arg)
- {
--	/* TODO; */
-+	struct kvm_vcpu *vcpu = filp->private_data;
-+	void __user *argp = (void __user *)arg;
++#ifdef CONFIG_64BIT
++static unsigned long stage2_mode = (HGATP_MODE_SV39X4 << HGATP_MODE_SHIFT);
++static unsigned long stage2_pgd_levels = 3;
++#define stage2_index_bits	9
++#else
++static unsigned long stage2_mode = (HGATP_MODE_SV32X4 << HGATP_MODE_SHIFT);
++static unsigned long stage2_pgd_levels = 2;
++#define stage2_index_bits	10
++#endif
 +
-+	if (ioctl == KVM_INTERRUPT) {
-+		struct kvm_interrupt irq;
++#define stage2_pgd_xbits	2
++#define stage2_pgd_size	(1UL << (HGATP_PAGE_SHIFT + stage2_pgd_xbits))
++#define stage2_gpa_bits	(HGATP_PAGE_SHIFT + \
++			 (stage2_pgd_levels * stage2_index_bits) + \
++			 stage2_pgd_xbits)
++#define stage2_gpa_size	((gpa_t)(1ULL << stage2_gpa_bits))
 +
-+		if (copy_from_user(&irq, argp, sizeof(irq)))
-+			return -EFAULT;
-+
-+		if (irq.irq == KVM_INTERRUPT_SET)
-+			return kvm_riscv_vcpu_set_interrupt(vcpu, IRQ_VS_EXT);
-+		else
-+			return kvm_riscv_vcpu_unset_interrupt(vcpu, IRQ_VS_EXT);
-+	}
-+
- 	return -ENOIOCTLCMD;
- }
- 
-@@ -199,18 +214,121 @@ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- 	return -EINVAL;
- }
- 
-+void kvm_riscv_vcpu_flush_interrupts(struct kvm_vcpu *vcpu)
++static inline unsigned long stage2_pte_index(gpa_t addr, u32 level)
 +{
-+	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
-+	unsigned long mask, val;
++	unsigned long mask;
++	unsigned long shift = HGATP_PAGE_SHIFT + (stage2_index_bits * level);
 +
-+	if (READ_ONCE(vcpu->arch.irqs_pending_mask)) {
-+		mask = xchg_acquire(&vcpu->arch.irqs_pending_mask, 0);
-+		val = READ_ONCE(vcpu->arch.irqs_pending) & mask;
++	if (level == (stage2_pgd_levels - 1))
++		mask = (PTRS_PER_PTE * (1UL << stage2_pgd_xbits)) - 1;
++	else
++		mask = PTRS_PER_PTE - 1;
 +
-+		csr->hvip &= ~mask;
-+		csr->hvip |= val;
-+	}
++	return (addr >> shift) & mask;
 +}
 +
-+void kvm_riscv_vcpu_sync_interrupts(struct kvm_vcpu *vcpu)
++static inline unsigned long stage2_pte_page_vaddr(pte_t pte)
 +{
-+	unsigned long hvip;
-+	struct kvm_vcpu_arch *v = &vcpu->arch;
-+	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
++	return (unsigned long)pfn_to_virt(pte_val(pte) >> _PAGE_PFN_SHIFT);
++}
 +
-+	/* Read current HVIP and HIE CSRs */
-+	hvip = csr_read(CSR_HVIP);
-+	csr->hie = csr_read(CSR_HIE);
++static int stage2_page_size_to_level(unsigned long page_size, u32 *out_level)
++{
++	u32 i;
++	unsigned long psz = 1UL << 12;
 +
-+	/* Sync-up HVIP.VSSIP bit changes does by Guest */
-+	if ((csr->hvip ^ hvip) & (1UL << IRQ_VS_SOFT)) {
-+		if (hvip & (1UL << IRQ_VS_SOFT)) {
-+			if (!test_and_set_bit(IRQ_VS_SOFT,
-+					      &v->irqs_pending_mask))
-+				set_bit(IRQ_VS_SOFT, &v->irqs_pending);
-+		} else {
-+			if (!test_and_set_bit(IRQ_VS_SOFT,
-+					      &v->irqs_pending_mask))
-+				clear_bit(IRQ_VS_SOFT, &v->irqs_pending);
++	for (i = 0; i < stage2_pgd_levels; i++) {
++		if (page_size == (psz << (i * stage2_index_bits))) {
++			*out_level = i;
++			return 0;
 +		}
 +	}
++
++	return -EINVAL;
 +}
 +
-+int kvm_riscv_vcpu_set_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
++static int stage2_level_to_page_size(u32 level, unsigned long *out_pgsize)
 +{
-+	if (irq != IRQ_VS_SOFT &&
-+	    irq != IRQ_VS_TIMER &&
-+	    irq != IRQ_VS_EXT)
++	if (stage2_pgd_levels < level)
 +		return -EINVAL;
 +
-+	set_bit(irq, &vcpu->arch.irqs_pending);
-+	smp_mb__before_atomic();
-+	set_bit(irq, &vcpu->arch.irqs_pending_mask);
-+
-+	kvm_vcpu_kick(vcpu);
++	*out_pgsize = 1UL << (12 + (level * stage2_index_bits));
 +
 +	return 0;
 +}
 +
-+int kvm_riscv_vcpu_unset_interrupt(struct kvm_vcpu *vcpu, unsigned int irq)
++static int stage2_cache_topup(struct kvm_mmu_page_cache *pcache,
++			      int min, int max)
 +{
-+	if (irq != IRQ_VS_SOFT &&
-+	    irq != IRQ_VS_TIMER &&
-+	    irq != IRQ_VS_EXT)
-+		return -EINVAL;
++	void *page;
 +
-+	clear_bit(irq, &vcpu->arch.irqs_pending);
-+	smp_mb__before_atomic();
-+	set_bit(irq, &vcpu->arch.irqs_pending_mask);
++	BUG_ON(max > KVM_MMU_PAGE_CACHE_NR_OBJS);
++	if (pcache->nobjs >= min)
++		return 0;
++	while (pcache->nobjs < max) {
++		page = (void *)__get_free_page(GFP_KERNEL | __GFP_ZERO);
++		if (!page)
++			return -ENOMEM;
++		pcache->objects[pcache->nobjs++] = page;
++	}
 +
 +	return 0;
 +}
 +
-+bool kvm_riscv_vcpu_has_interrupts(struct kvm_vcpu *vcpu, unsigned long mask)
++static void stage2_cache_flush(struct kvm_mmu_page_cache *pcache)
 +{
-+	return (READ_ONCE(vcpu->arch.irqs_pending) &
-+		vcpu->arch.guest_csr.hie & mask) ? true : false;
++	while (pcache && pcache->nobjs)
++		free_page((unsigned long)pcache->objects[--pcache->nobjs]);
 +}
 +
-+void kvm_riscv_vcpu_power_off(struct kvm_vcpu *vcpu)
++static void *stage2_cache_alloc(struct kvm_mmu_page_cache *pcache)
 +{
-+	vcpu->arch.power_off = true;
-+	kvm_make_request(KVM_REQ_SLEEP, vcpu);
-+	kvm_vcpu_kick(vcpu);
++	void *p;
++
++	if (!pcache)
++		return NULL;
++
++	BUG_ON(!pcache->nobjs);
++	p = pcache->objects[--pcache->nobjs];
++
++	return p;
 +}
 +
-+void kvm_riscv_vcpu_power_on(struct kvm_vcpu *vcpu)
++static bool stage2_get_leaf_entry(struct kvm *kvm, gpa_t addr,
++				  pte_t **ptepp, u32 *ptep_level)
 +{
-+	vcpu->arch.power_off = false;
-+	kvm_vcpu_wake_up(vcpu);
++	pte_t *ptep;
++	u32 current_level = stage2_pgd_levels - 1;
++
++	*ptep_level = current_level;
++	ptep = (pte_t *)kvm->arch.pgd;
++	ptep = &ptep[stage2_pte_index(addr, current_level)];
++	while (ptep && pte_val(*ptep)) {
++		if (pte_val(*ptep) & _PAGE_LEAF) {
++			*ptep_level = current_level;
++			*ptepp = ptep;
++			return true;
++		}
++
++		if (current_level) {
++			current_level--;
++			*ptep_level = current_level;
++			ptep = (pte_t *)stage2_pte_page_vaddr(*ptep);
++			ptep = &ptep[stage2_pte_index(addr, current_level)];
++		} else {
++			ptep = NULL;
++		}
++	}
++
++	return false;
 +}
 +
- int kvm_arch_vcpu_ioctl_get_mpstate(struct kvm_vcpu *vcpu,
- 				    struct kvm_mp_state *mp_state)
++static void stage2_remote_tlb_flush(struct kvm *kvm, u32 level, gpa_t addr)
++{
++	struct cpumask hmask;
++	unsigned long size = PAGE_SIZE;
++	struct kvm_vmid *vmid = &kvm->arch.vmid;
++
++	if (stage2_level_to_page_size(level, &size))
++		return;
++	addr &= ~(size - 1);
++
++	/*
++	 * TODO: Instead of cpu_online_mask, we should only target CPUs
++	 * where the Guest/VM is running.
++	 */
++	preempt_disable();
++	riscv_cpuid_to_hartid_mask(cpu_online_mask, &hmask);
++	sbi_remote_hfence_gvma_vmid(cpumask_bits(&hmask), addr, size,
++				    READ_ONCE(vmid->vmid));
++	preempt_enable();
++}
++
++static int stage2_set_pte(struct kvm *kvm, u32 level,
++			   struct kvm_mmu_page_cache *pcache,
++			   gpa_t addr, const pte_t *new_pte)
++{
++	u32 current_level = stage2_pgd_levels - 1;
++	pte_t *next_ptep = (pte_t *)kvm->arch.pgd;
++	pte_t *ptep = &next_ptep[stage2_pte_index(addr, current_level)];
++
++	if (current_level < level)
++		return -EINVAL;
++
++	while (current_level != level) {
++		if (pte_val(*ptep) & _PAGE_LEAF)
++			return -EEXIST;
++
++		if (!pte_val(*ptep)) {
++			next_ptep = stage2_cache_alloc(pcache);
++			if (!next_ptep)
++				return -ENOMEM;
++			*ptep = pfn_pte(PFN_DOWN(__pa(next_ptep)),
++					__pgprot(_PAGE_TABLE));
++		} else {
++			if (pte_val(*ptep) & _PAGE_LEAF)
++				return -EEXIST;
++			next_ptep = (pte_t *)stage2_pte_page_vaddr(*ptep);
++		}
++
++		current_level--;
++		ptep = &next_ptep[stage2_pte_index(addr, current_level)];
++	}
++
++	*ptep = *new_pte;
++	if (pte_val(*ptep) & _PAGE_LEAF)
++		stage2_remote_tlb_flush(kvm, current_level, addr);
++
++	return 0;
++}
++
++static int stage2_map_page(struct kvm *kvm,
++			   struct kvm_mmu_page_cache *pcache,
++			   gpa_t gpa, phys_addr_t hpa,
++			   unsigned long page_size,
++			   bool page_rdonly, bool page_exec)
++{
++	int ret;
++	u32 level = 0;
++	pte_t new_pte;
++	pgprot_t prot;
++
++	ret = stage2_page_size_to_level(page_size, &level);
++	if (ret)
++		return ret;
++
++	/*
++	 * A RISC-V implementation can choose to either:
++	 * 1) Update 'A' and 'D' PTE bits in hardware
++	 * 2) Generate page fault when 'A' and/or 'D' bits are not set
++	 *    PTE so that software can update these bits.
++	 *
++	 * We support both options mentioned above. To achieve this, we
++	 * always set 'A' and 'D' PTE bits at time of creating stage2
++	 * mapping. To support KVM dirty page logging with both options
++	 * mentioned above, we will write-protect stage2 PTEs to track
++	 * dirty pages.
++	 */
++
++	if (page_exec) {
++		if (page_rdonly)
++			prot = PAGE_READ_EXEC;
++		else
++			prot = PAGE_WRITE_EXEC;
++	} else {
++		if (page_rdonly)
++			prot = PAGE_READ;
++		else
++			prot = PAGE_WRITE;
++	}
++	new_pte = pfn_pte(PFN_DOWN(hpa), prot);
++	new_pte = pte_mkdirty(new_pte);
++
++	return stage2_set_pte(kvm, level, pcache, gpa, &new_pte);
++}
++
++enum stage2_op {
++	STAGE2_OP_NOP = 0,	/* Nothing */
++	STAGE2_OP_CLEAR,	/* Clear/Unmap */
++	STAGE2_OP_WP,		/* Write-protect */
++};
++
++static void stage2_op_pte(struct kvm *kvm, gpa_t addr,
++			  pte_t *ptep, u32 ptep_level, enum stage2_op op)
++{
++	int i, ret;
++	pte_t *next_ptep;
++	u32 next_ptep_level;
++	unsigned long next_page_size, page_size;
++
++	ret = stage2_level_to_page_size(ptep_level, &page_size);
++	if (ret)
++		return;
++
++	BUG_ON(addr & (page_size - 1));
++
++	if (!pte_val(*ptep))
++		return;
++
++	if (ptep_level && !(pte_val(*ptep) & _PAGE_LEAF)) {
++		next_ptep = (pte_t *)stage2_pte_page_vaddr(*ptep);
++		next_ptep_level = ptep_level - 1;
++		ret = stage2_level_to_page_size(next_ptep_level,
++						&next_page_size);
++		if (ret)
++			return;
++
++		if (op == STAGE2_OP_CLEAR)
++			set_pte(ptep, __pte(0));
++		for (i = 0; i < PTRS_PER_PTE; i++)
++			stage2_op_pte(kvm, addr + i * next_page_size,
++					&next_ptep[i], next_ptep_level, op);
++		if (op == STAGE2_OP_CLEAR)
++			put_page(virt_to_page(next_ptep));
++	} else {
++		if (op == STAGE2_OP_CLEAR)
++			set_pte(ptep, __pte(0));
++		else if (op == STAGE2_OP_WP)
++			set_pte(ptep, __pte(pte_val(*ptep) & ~_PAGE_WRITE));
++		stage2_remote_tlb_flush(kvm, ptep_level, addr);
++	}
++}
++
++static void stage2_unmap_range(struct kvm *kvm, gpa_t start, gpa_t size)
++{
++	int ret;
++	pte_t *ptep;
++	u32 ptep_level;
++	bool found_leaf;
++	unsigned long page_size;
++	gpa_t addr = start, end = start + size;
++
++	while (addr < end) {
++		found_leaf = stage2_get_leaf_entry(kvm, addr,
++						   &ptep, &ptep_level);
++		ret = stage2_level_to_page_size(ptep_level, &page_size);
++		if (ret)
++			break;
++
++		if (!found_leaf)
++			goto next;
++
++		if (!(addr & (page_size - 1)) && ((end - addr) >= page_size))
++			stage2_op_pte(kvm, addr, ptep,
++				      ptep_level, STAGE2_OP_CLEAR);
++
++next:
++		addr += page_size;
++	}
++}
++
++static void stage2_wp_range(struct kvm *kvm, gpa_t start, gpa_t end)
++{
++	int ret;
++	pte_t *ptep;
++	u32 ptep_level;
++	bool found_leaf;
++	gpa_t addr = start;
++	unsigned long page_size;
++
++	while (addr < end) {
++		found_leaf = stage2_get_leaf_entry(kvm, addr,
++						   &ptep, &ptep_level);
++		ret = stage2_level_to_page_size(ptep_level, &page_size);
++		if (ret)
++			break;
++
++		if (!found_leaf)
++			goto next;
++
++		if (!(addr & (page_size - 1)) && ((end - addr) >= page_size))
++			stage2_op_pte(kvm, addr, ptep,
++				      ptep_level, STAGE2_OP_WP);
++
++next:
++		addr += page_size;
++	}
++}
++
++void stage2_wp_memory_region(struct kvm *kvm, int slot)
++{
++	struct kvm_memslots *slots = kvm_memslots(kvm);
++	struct kvm_memory_slot *memslot = id_to_memslot(slots, slot);
++	phys_addr_t start = memslot->base_gfn << PAGE_SHIFT;
++	phys_addr_t end = (memslot->base_gfn + memslot->npages) << PAGE_SHIFT;
++
++	spin_lock(&kvm->mmu_lock);
++	stage2_wp_range(kvm, start, end);
++	spin_unlock(&kvm->mmu_lock);
++	kvm_flush_remote_tlbs(kvm);
++}
++
++int stage2_ioremap(struct kvm *kvm, gpa_t gpa, phys_addr_t hpa,
++		   unsigned long size, bool writable)
++{
++	pte_t pte;
++	int ret = 0;
++	unsigned long pfn;
++	phys_addr_t addr, end;
++	struct kvm_mmu_page_cache pcache = { 0, };
++
++	end = (gpa + size + PAGE_SIZE - 1) & PAGE_MASK;
++	pfn = __phys_to_pfn(hpa);
++
++	for (addr = gpa; addr < end; addr += PAGE_SIZE) {
++		pte = pfn_pte(pfn, PAGE_KERNEL);
++
++		if (!writable)
++			pte = pte_wrprotect(pte);
++
++		ret = stage2_cache_topup(&pcache,
++					 stage2_pgd_levels,
++					 KVM_MMU_PAGE_CACHE_NR_OBJS);
++		if (ret)
++			goto out;
++
++		spin_lock(&kvm->mmu_lock);
++		ret = stage2_set_pte(kvm, 0, &pcache, addr, &pte);
++		spin_unlock(&kvm->mmu_lock);
++		if (ret)
++			goto out;
++
++		pfn++;
++	}
++
++out:
++	stage2_cache_flush(&pcache);
++	return ret;
++
++}
++
++void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
++					     struct kvm_memory_slot *slot,
++					     gfn_t gfn_offset,
++					     unsigned long mask)
++{
++	phys_addr_t base_gfn = slot->base_gfn + gfn_offset;
++	phys_addr_t start = (base_gfn +  __ffs(mask)) << PAGE_SHIFT;
++	phys_addr_t end = (base_gfn + __fls(mask) + 1) << PAGE_SHIFT;
++
++	stage2_wp_range(kvm, start, end);
++}
+ 
+ void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
+ {
+ }
+ 
++void kvm_arch_flush_remote_tlbs_memslot(struct kvm *kvm,
++					struct kvm_memory_slot *memslot)
++{
++	kvm_flush_remote_tlbs(kvm);
++}
++
+ void kvm_arch_free_memslot(struct kvm *kvm, struct kvm_memory_slot *free)
+ {
+ }
+@@ -38,7 +442,7 @@ void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
+ 
+ void kvm_arch_flush_shadow_all(struct kvm *kvm)
  {
 -	/* TODO: */
-+	if (vcpu->arch.power_off)
-+		mp_state->mp_state = KVM_MP_STATE_STOPPED;
++	kvm_riscv_stage2_free_pgd(kvm);
+ }
+ 
+ void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+@@ -52,7 +456,13 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				const struct kvm_memory_slot *new,
+ 				enum kvm_mr_change change)
+ {
+-	/* TODO: */
++	/*
++	 * At this point memslot has been committed and there is an
++	 * allocated dirty_bitmap[], dirty pages will be tracked while
++	 * the memory slot is write protected.
++	 */
++	if (change != KVM_MR_DELETE && mem->flags & KVM_MEM_LOG_DIRTY_PAGES)
++		stage2_wp_memory_region(kvm, mem->slot);
+ }
+ 
+ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+@@ -60,35 +470,252 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+ 				const struct kvm_userspace_memory_region *mem,
+ 				enum kvm_mr_change change)
+ {
+-	/* TODO: */
+-	return 0;
++	hva_t hva = mem->userspace_addr;
++	hva_t reg_end = hva + mem->memory_size;
++	bool writable = !(mem->flags & KVM_MEM_READONLY);
++	int ret = 0;
++
++	if (change != KVM_MR_CREATE && change != KVM_MR_MOVE &&
++			change != KVM_MR_FLAGS_ONLY)
++		return 0;
++
++	/*
++	 * Prevent userspace from creating a memory region outside of the GPA
++	 * space addressable by the KVM guest GPA space.
++	 */
++	if ((memslot->base_gfn + memslot->npages) >=
++	    (stage2_gpa_size >> PAGE_SHIFT))
++		return -EFAULT;
++
++	mmap_read_lock(current->mm);
++
++	/*
++	 * A memory region could potentially cover multiple VMAs, and
++	 * any holes between them, so iterate over all of them to find
++	 * out if we can map any of them right now.
++	 *
++	 *     +--------------------------------------------+
++	 * +---------------+----------------+   +----------------+
++	 * |   : VMA 1     |      VMA 2     |   |    VMA 3  :    |
++	 * +---------------+----------------+   +----------------+
++	 *     |               memory region                |
++	 *     +--------------------------------------------+
++	 */
++	do {
++		struct vm_area_struct *vma = find_vma(current->mm, hva);
++		hva_t vm_start, vm_end;
++
++		if (!vma || vma->vm_start >= reg_end)
++			break;
++
++		/*
++		 * Mapping a read-only VMA is only allowed if the
++		 * memory region is configured as read-only.
++		 */
++		if (writable && !(vma->vm_flags & VM_WRITE)) {
++			ret = -EPERM;
++			break;
++		}
++
++		/* Take the intersection of this VMA with the memory region */
++		vm_start = max(hva, vma->vm_start);
++		vm_end = min(reg_end, vma->vm_end);
++
++		if (vma->vm_flags & VM_PFNMAP) {
++			gpa_t gpa = mem->guest_phys_addr +
++				    (vm_start - mem->userspace_addr);
++			phys_addr_t pa;
++
++			pa = (phys_addr_t)vma->vm_pgoff << PAGE_SHIFT;
++			pa += vm_start - vma->vm_start;
++
++			/* IO region dirty page logging not allowed */
++			if (memslot->flags & KVM_MEM_LOG_DIRTY_PAGES) {
++				ret = -EINVAL;
++				goto out;
++			}
++
++			ret = stage2_ioremap(kvm, gpa, pa,
++					     vm_end - vm_start, writable);
++			if (ret)
++				break;
++		}
++		hva = vm_end;
++	} while (hva < reg_end);
++
++	if (change == KVM_MR_FLAGS_ONLY)
++		goto out;
++
++	spin_lock(&kvm->mmu_lock);
++	if (ret)
++		stage2_unmap_range(kvm, mem->guest_phys_addr,
++				   mem->memory_size);
++	spin_unlock(&kvm->mmu_lock);
++
++out:
++	mmap_read_unlock(current->mm);
++	return ret;
+ }
+ 
+ int kvm_riscv_stage2_map(struct kvm_vcpu *vcpu,
+ 			 struct kvm_memory_slot *memslot,
+ 			 gpa_t gpa, unsigned long hva, bool is_write)
+ {
+-	/* TODO: */
+-	return 0;
++	int ret;
++	kvm_pfn_t hfn;
++	bool writeable;
++	short vma_pageshift;
++	gfn_t gfn = gpa >> PAGE_SHIFT;
++	struct vm_area_struct *vma;
++	struct kvm *kvm = vcpu->kvm;
++	struct kvm_mmu_page_cache *pcache = &vcpu->arch.mmu_page_cache;
++	bool logging = (memslot->dirty_bitmap &&
++			!(memslot->flags & KVM_MEM_READONLY)) ? true : false;
++	unsigned long vma_pagesize;
++
++	mmap_read_lock(current->mm);
++
++	vma = find_vma_intersection(current->mm, hva, hva + 1);
++	if (unlikely(!vma)) {
++		kvm_err("Failed to find VMA for hva 0x%lx\n", hva);
++		mmap_read_unlock(current->mm);
++		return -EFAULT;
++	}
++
++	if (is_vm_hugetlb_page(vma))
++		vma_pageshift = huge_page_shift(hstate_vma(vma));
 +	else
-+		mp_state->mp_state = KVM_MP_STATE_RUNNABLE;
++		vma_pageshift = PAGE_SHIFT;
++	vma_pagesize = 1ULL << vma_pageshift;
++	if (logging || (vma->vm_flags & VM_PFNMAP))
++		vma_pagesize = PAGE_SIZE;
++
++	if (vma_pagesize == PMD_SIZE || vma_pagesize == PGDIR_SIZE)
++		gfn = (gpa & huge_page_mask(hstate_vma(vma))) >> PAGE_SHIFT;
++
++	mmap_read_unlock(current->mm);
++
++	if (vma_pagesize != PGDIR_SIZE &&
++	    vma_pagesize != PMD_SIZE &&
++	    vma_pagesize != PAGE_SIZE) {
++		kvm_err("Invalid VMA page size 0x%lx\n", vma_pagesize);
++		return -EFAULT;
++	}
++
++	/* We need minimum second+third level pages */
++	ret = stage2_cache_topup(pcache, stage2_pgd_levels,
++				 KVM_MMU_PAGE_CACHE_NR_OBJS);
++	if (ret) {
++		kvm_err("Failed to topup stage2 cache\n");
++		return ret;
++	}
++
++	hfn = gfn_to_pfn_prot(kvm, gfn, is_write, &writeable);
++	if (hfn == KVM_PFN_ERR_HWPOISON) {
++		send_sig_mceerr(BUS_MCEERR_AR, (void __user *)hva,
++				vma_pageshift, current);
++		return 0;
++	}
++	if (is_error_noslot_pfn(hfn))
++		return -EFAULT;
++
++	/*
++	 * If logging is active then we allow writable pages only
++	 * for write faults.
++	 */
++	if (logging && !is_write)
++		writeable = false;
++
++	spin_lock(&kvm->mmu_lock);
++
++	if (writeable) {
++		kvm_set_pfn_dirty(hfn);
++		mark_page_dirty(kvm, gfn);
++		ret = stage2_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
++				      vma_pagesize, false, true);
++	} else {
++		ret = stage2_map_page(kvm, pcache, gpa, hfn << PAGE_SHIFT,
++				      vma_pagesize, true, true);
++	}
++
++	if (ret)
++		kvm_err("Failed to map in stage2\n");
++
++	spin_unlock(&kvm->mmu_lock);
++	kvm_set_pfn_accessed(hfn);
++	kvm_release_pfn_clean(hfn);
++	return ret;
+ }
+ 
+ void kvm_riscv_stage2_flush_cache(struct kvm_vcpu *vcpu)
+ {
+-	/* TODO: */
++	stage2_cache_flush(&vcpu->arch.mmu_page_cache);
+ }
+ 
+ int kvm_riscv_stage2_alloc_pgd(struct kvm *kvm)
+ {
+-	/* TODO: */
++	if (kvm->arch.pgd != NULL) {
++		kvm_err("kvm_arch already initialized?\n");
++		return -EINVAL;
++	}
++
++	kvm->arch.pgd = alloc_pages_exact(stage2_pgd_size,
++					  GFP_KERNEL | __GFP_ZERO);
++	if (!kvm->arch.pgd)
++		return -ENOMEM;
++	kvm->arch.pgd_phys = virt_to_phys(kvm->arch.pgd);
 +
  	return 0;
  }
  
- int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
- 				    struct kvm_mp_state *mp_state)
+ void kvm_riscv_stage2_free_pgd(struct kvm *kvm)
  {
 -	/* TODO: */
--	return 0;
-+	int ret = 0;
++	void *pgd = NULL;
 +
-+	switch (mp_state->mp_state) {
-+	case KVM_MP_STATE_RUNNABLE:
-+		vcpu->arch.power_off = false;
-+		break;
-+	case KVM_MP_STATE_STOPPED:
-+		kvm_riscv_vcpu_power_off(vcpu);
-+		break;
-+	default:
-+		ret = -EINVAL;
++	spin_lock(&kvm->mmu_lock);
++	if (kvm->arch.pgd) {
++		stage2_unmap_range(kvm, 0UL, stage2_gpa_size);
++		pgd = READ_ONCE(kvm->arch.pgd);
++		kvm->arch.pgd = NULL;
++		kvm->arch.pgd_phys = 0;
 +	}
++	spin_unlock(&kvm->mmu_lock);
 +
-+	return ret;
++	if (pgd)
++		free_pages_exact(pgd, stage2_pgd_size);
  }
  
- int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
-@@ -234,7 +352,33 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
- 
- static void kvm_riscv_check_vcpu_requests(struct kvm_vcpu *vcpu)
+ void kvm_riscv_stage2_update_hgatp(struct kvm_vcpu *vcpu)
  {
 -	/* TODO: */
-+	struct rcuwait *wait = kvm_arch_vcpu_get_wait(vcpu);
++	unsigned long hgatp = stage2_mode;
++	struct kvm_arch *k = &vcpu->kvm->arch;
 +
-+	if (kvm_request_pending(vcpu)) {
-+		if (kvm_check_request(KVM_REQ_SLEEP, vcpu)) {
-+			rcuwait_wait_event(wait,
-+				(!vcpu->arch.power_off) && (!vcpu->arch.pause),
-+				TASK_INTERRUPTIBLE);
++	hgatp |= (READ_ONCE(k->vmid.vmid) << HGATP_VMID_SHIFT) &
++		 HGATP_VMID_MASK;
++	hgatp |= (k->pgd_phys >> PAGE_SHIFT) & HGATP_PPN;
 +
-+			if (vcpu->arch.power_off || vcpu->arch.pause) {
-+				/*
-+				 * Awaken to handle a signal, request to
-+				 * sleep again later.
-+				 */
-+				kvm_make_request(KVM_REQ_SLEEP, vcpu);
-+			}
-+		}
++	csr_write(CSR_HGATP, hgatp);
 +
-+		if (kvm_check_request(KVM_REQ_VCPU_RESET, vcpu))
-+			kvm_riscv_reset_vcpu(vcpu);
-+	}
++	if (!kvm_riscv_stage2_vmid_bits())
++		__kvm_riscv_hfence_gvma_all();
 +}
 +
-+static void kvm_riscv_update_hvip(struct kvm_vcpu *vcpu)
++void kvm_riscv_stage2_mode_detect(void)
 +{
-+	struct kvm_vcpu_csr *csr = &vcpu->arch.guest_csr;
++#ifdef CONFIG_64BIT
++	/* Try Sv48x4 stage2 mode */
++	csr_write(CSR_HGATP, HGATP_MODE_SV48X4 << HGATP_MODE_SHIFT);
++	if ((csr_read(CSR_HGATP) >> HGATP_MODE_SHIFT) == HGATP_MODE_SV48X4) {
++		stage2_mode = (HGATP_MODE_SV48X4 << HGATP_MODE_SHIFT);
++		stage2_pgd_levels = 4;
++	}
++	csr_write(CSR_HGATP, 0);
 +
-+	csr_write(CSR_HVIP, csr->hvip);
++	__kvm_riscv_hfence_gvma_all();
++#endif
++}
++
++unsigned long kvm_riscv_stage2_mode(void)
++{
++	return stage2_mode >> HGATP_MODE_SHIFT;
  }
+diff --git a/arch/riscv/kvm/vm.c b/arch/riscv/kvm/vm.c
+index 282d67617229..6cde69a82252 100644
+--- a/arch/riscv/kvm/vm.c
++++ b/arch/riscv/kvm/vm.c
+@@ -12,12 +12,6 @@
+ #include <linux/uaccess.h>
+ #include <linux/kvm_host.h>
  
- int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
-@@ -298,6 +442,15 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 		srcu_read_unlock(&vcpu->kvm->srcu, vcpu->arch.srcu_idx);
- 		smp_mb__after_srcu_read_unlock();
- 
-+		/*
-+		 * We might have got VCPU interrupts updated asynchronously
-+		 * so update it in HW.
-+		 */
-+		kvm_riscv_vcpu_flush_interrupts(vcpu);
-+
-+		/* Update HVIP CSR for current CPU */
-+		kvm_riscv_update_hvip(vcpu);
-+
- 		if (ret <= 0 ||
- 		    kvm_request_pending(vcpu)) {
- 			vcpu->mode = OUTSIDE_GUEST_MODE;
-@@ -325,6 +478,9 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
- 		trap.htval = csr_read(CSR_HTVAL);
- 		trap.htinst = csr_read(CSR_HTINST);
- 
-+		/* Syncup interrupts state with HW */
-+		kvm_riscv_vcpu_sync_interrupts(vcpu);
-+
- 		/*
- 		 * We may have taken a host interrupt in VS/VU-mode (i.e.
- 		 * while executing the guest). This interrupt is still
+-int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log)
+-{
+-	/* TODO: To be added later. */
+-	return -EOPNOTSUPP;
+-}
+-
+ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ {
+ 	int r;
 -- 
 2.25.1
 
