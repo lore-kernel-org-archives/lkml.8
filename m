@@ -2,110 +2,111 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DF5C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0F7C43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4EA208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4F4C208CA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:56:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TOQdblEl"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uawDkVr2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgHaN4Y (ORCPT
+        id S1727895AbgHaN4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:56:24 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41908 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727066AbgHaN4S (ORCPT
+        Mon, 31 Aug 2020 09:56:23 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:53616 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726586AbgHaN4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:56:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598882176;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xBjZRrtnn2DymOUf25LFqlHNqeGn8G4I2kGQPVNxJtk=;
-        b=TOQdblElVmSZs1exXJkedbWPH2bboHuygHes0IwBT58wYyF4w4gzA/ldlODZe+trA2glWf
-        sivE7TUFTNFuGxdWucdmby78mBBErQupyShzi/IDAxvE6LAkSHCPyBCfBFUpYsuzIVRgu2
-        qmX+G5fH6jT257yEdCvaq+7Ea+LOMAo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-DLJnIK9QPMSrShr4w4i1Uw-1; Mon, 31 Aug 2020 09:56:14 -0400
-X-MC-Unique: DLJnIK9QPMSrShr4w4i1Uw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 31 Aug 2020 09:56:15 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598882174; h=Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Message-ID: In-Reply-To: Date: References: Subject: Cc:
+ To: From: Sender; bh=l4ktEq8o7WvDy0rk/XyMBx2xUqUH9rI3Uw2PKVTyEv8=; b=uawDkVr2y6MipQeh/CfxlJZBjFwVcnceqayTjpvOtGH7a9kHZKGcwwVcF5P0nEo4whWHTW9F
+ y635lxZmbg9JEPHa3QgGX7CIiJLHe5lMmLHizkjdFhESHmGJtjqDtCZl4p8k/LGmCvPO++8E
+ ITwlw/X77nQ8/9ta9s9XuPZvYzU=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
+ 5f4d017c73afa3417e6b8d0a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 13:56:12
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 76E16C433CA; Mon, 31 Aug 2020 13:56:11 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B5A81802B60;
-        Mon, 31 Aug 2020 13:56:12 +0000 (UTC)
-Received: from krava (unknown [10.40.192.186])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 575111002391;
-        Mon, 31 Aug 2020 13:56:10 +0000 (UTC)
-Date:   Mon, 31 Aug 2020 15:56:09 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Jin Yao <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v4 1/7] perf util: Create streams
-Message-ID: <20200831135609.GE406859@krava>
-References: <20200824233513.16930-1-yao.jin@linux.intel.com>
- <20200824233513.16930-2-yao.jin@linux.intel.com>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B9EE8C433CA;
+        Mon, 31 Aug 2020 13:56:08 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B9EE8C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Christian Lamparter <chunkeey@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org,
+        Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
+        Johannes Berg <johannes@sipsolutions.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH v2 08/30] net: wireless: ath: carl9170: Convert 'ar9170_qmap' to inline function
+References: <20200814113933.1903438-1-lee.jones@linaro.org>
+        <20200814113933.1903438-9-lee.jones@linaro.org>
+        <20200827093351.GA1627017@dell> <5498132.V4cn31ggaO@debian64>
+Date:   Mon, 31 Aug 2020 16:56:06 +0300
+In-Reply-To: <5498132.V4cn31ggaO@debian64> (Christian Lamparter's message of
+        "Fri, 28 Aug 2020 22:28:20 +0200")
+Message-ID: <877dte7wcp.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200824233513.16930-2-yao.jin@linux.intel.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Aug 25, 2020 at 07:35:07AM +0800, Jin Yao wrote:
+Christian Lamparter <chunkeey@gmail.com> writes:
 
-SNIP
+> On Thursday, 27 August 2020 11:33:51 CEST Lee Jones wrote:
+>> 'ar9170_qmap' is used in some source files which include carl9170.h,
+>> but not all of them.  A 'defined but not used' warning is thrown when
+>> compiling the ones which do not use it.
+>>=20
+>> Fixes the following W=3D1 kernel build warning(s)
+>>=20
+>>  from drivers/net/wireless/ath/carl9170/carl9170.h:57,
+>>  In file included from drivers/net/wireless/ath/carl9170/carl9170.h:57,
+>>  drivers/net/wireless/ath/carl9170/carl9170.h:71:17: warning:
+>> =E2=80=98ar9170_qmap=E2=80=99 defined but not used [-Wunused-const-varia=
+ble=3D]
+>>=20
+>>  NB: Snipped - lots of these repeat
+>>=20
+>> Cc: Christian Lamparter <chunkeey@googlemail.com>
+>> Cc: Kalle Valo <kvalo@codeaurora.org>
+>> Cc: "David S. Miller" <davem@davemloft.net>
+>> Cc: Jakub Kicinski <kuba@kernel.org>
+>> Cc: Johannes Berg <johannes@sipsolutions.net>
+>> Cc: linux-wireless@vger.kernel.org
+>> Cc: netdev@vger.kernel.org
+>> Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> ---
+>
+> For what it's worth:
+> Acked-by: Christian Lamparter <chunkeey@gmail.com>
 
-> +						  int nr_streams_max,
-> +						  enum stream_type type)
-> +{
-> +	struct evsel_streams *es;
-> +	int nr_evsel = evlist->core.nr_entries, ret = -1;
-> +
-> +	es = create_evsel_streams(nr_evsel, nr_streams_max);
-> +	if (!es)
-> +		return NULL;
-> +
-> +	if (type == STREAM_CALLCHAIN)
-> +		ret = evlist_init_callchain_streams(evlist, es, nr_evsel);
-> +
-> +	if (ret) {
-> +		free_evsel_streams(es, nr_evsel);
-> +		return NULL;
-> +	}
-> +
-> +	return es;
-> +}
-> diff --git a/tools/perf/util/stream.h b/tools/perf/util/stream.h
-> new file mode 100644
-> index 000000000000..a8a0172b4d13
-> --- /dev/null
-> +++ b/tools/perf/util/stream.h
-> @@ -0,0 +1,30 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __PERF_STREAM_H
-> +#define __PERF_STREAM_H
-> +
-> +#include "callchain.h"
-> +
-> +enum stream_type {
-> +	STREAM_NONE = 0,
-> +	STREAM_CALLCHAIN
+BTW for me Acked-by tags from the maintainer are very useful. Patchwork
+even collects them automatically and shows the statistics so I can
+quickly see what patches are ready to be applied. So please do send them
+if you can :)
 
-do you plan to add more types?
-
-jirka
-
+--=20
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatc=
+hes
