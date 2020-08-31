@@ -2,143 +2,121 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2081BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:50:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7AA9C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF4FB20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598889044;
-	bh=dQpfZaNAgiClmqPKDMjF2Yz+e+jKQj4shrJqtvKqmiU=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=jgkaP6ouWH3OFn8kcWCDiUZfqATcY9LeZThMTDluYoNe+MZSbaLHTs2oIckrpGnYi
-	 mdFJ/3l//GEPRqif4ekC2BhOp0nO4sJoeAfjYNHuc/4/DxO2j0FQpE5Cjpnc6NsW+O
-	 YRrLTxswNw2GxKfcnm3716XBkwUNfzimXYB/7TA4=
+	by mail.kernel.org (Postfix) with ESMTP id 6A9C020719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:52:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="AQjMHMN5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgHaPul (ORCPT
+        id S1727799AbgHaPwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:50:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38836 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727919AbgHaPui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:50:38 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        Mon, 31 Aug 2020 11:52:05 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:59507 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727919AbgHaPwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:52:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598889121; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=UiCtEuXB1/ghowuh3jHXLuUWPllC4130UQOUkOzWhjg=;
+ b=AQjMHMN5kLIQv0ozvoWwyATpU2HZbTvAatiOrGUYeIN59xgzHiPUS6+27Un1ztfsbeY2Vgar
+ I8v9vSrPPds+fVJ8eBgmi6h0Rq7KL9qZcUCRXQMp2SQFGTgJ80am1g+RbYBa79qRbAocGIXv
+ gpx4xgWPYxENRIjhlru1Npc6S6I=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5f4d1c979bdf68cc0373e20b (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 15:51:51
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0DCB5C4339C; Mon, 31 Aug 2020 15:51:51 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15A8720719;
-        Mon, 31 Aug 2020 15:50:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598889038;
-        bh=dQpfZaNAgiClmqPKDMjF2Yz+e+jKQj4shrJqtvKqmiU=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=UPJGD3bGtMa66nUuXu0AMi7MvPz9rC5TKF3LYd/4vWqqQCJVy3FJKLjmD2loTjGOf
-         ena/H6xC5KFKXCf1As5JTQULkFZGzng4JeU2kQZiEY/+oB73SZKPm7IiswCvLCLQE2
-         kYJbTBKXTHS5lZ6zxRybQw13KZNAIWy/VAIpRUYQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id D0ABA3522A20; Mon, 31 Aug 2020 08:50:37 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 08:50:37 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-Subject: Re: [rcuperf] 4e88ec4a9e:
- UBSAN:division-overflow_in_arch/x86/include/asm/div64.h
-Message-ID: <20200831155037.GZ2855@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200831120122.GH4299@shao2-debian>
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 22DADC433CA;
+        Mon, 31 Aug 2020 15:51:47 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 22DADC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831120122.GH4299@shao2-debian>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 16/28] wireless: marvell: mwifiex: init: Move
+ 'tos_to_tid_inv'
+ to where it's used
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200819072402.3085022-17-lee.jones@linaro.org>
+References: <20200819072402.3085022-17-lee.jones@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200831155151.0DCB5C4339C@smtp.codeaurora.org>
+Date:   Mon, 31 Aug 2020 15:51:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 08:01:22PM +0800, kernel test robot wrote:
-> Greeting,
-> 
-> FYI, we noticed the following commit (built with gcc-9):
-> 
-> commit: 4e88ec4a9eb17527e640b063f79e5b875733eb53 ("rcuperf: Change rcuperf to rcuscale")
-> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
-> 
-> 
-> in testcase: trinity
-> with following parameters:
-> 
-> 	runtime: 300s
-> 
-> test-description: Trinity is a linux system call fuzz tester.
-> test-url: http://codemonkey.org.uk/projects/trinity/
-> 
-> 
-> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
-> 
-> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
-> 
-> 
-> +---------------------------------------------------------+------------+------------+
-> |                                                         | 65bd77f554 | 4e88ec4a9e |
-> +---------------------------------------------------------+------------+------------+
-> | boot_successes                                          | 13         | 0          |
-> | boot_failures                                           | 0          | 14         |
-> | UBSAN:division-overflow_in_arch/x86/include/asm/div64.h | 0          | 14         |
-> | error:#[##]                                             | 0          | 14         |
-> | EIP:main_func.cold                                      | 0          | 14         |
-> | Kernel_panic-not_syncing:Fatal_exception                | 0          | 14         |
-> +---------------------------------------------------------+------------+------------+
-> 
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kernel test robot <lkp@intel.com>
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Does the patch below fix this for you?
+> 'tos_to_tid_inv' is only used in 2 of 17 files it's current being
+> included into.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  In file included from drivers/net/wireless/marvell/mwifiex/main.c:23:
+>  In file included from drivers/net/wireless/marvell/mwifiex/cmdevt.c:26:
+>  In file included from drivers/net/wireless/marvell/mwifiex/util.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/txrx.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/11n.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/wmm.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/11n_aggr.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/join.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/sta_cmd.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/sta_ioctl.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/sta_event.c:25:
+>  In file included from drivers/net/wireless/marvell/mwifiex/uap_txrx.c:23:
+>  In file included from drivers/net/wireless/marvell/mwifiex/sdio.c:27:
+>  In file included from drivers/net/wireless/marvell/mwifiex/sta_tx.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:41:17: warning: ‘tos_to_tid_inv’ defined but not used [-Wunused-const-variable=]
+>  41 | static const u8 tos_to_tid_inv[] = {
+> 
+>  NB: Snipped for brevity
+> 
+> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+> Cc: Xinming Hu <huxinming820@gmail.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-							Thanx, Paul
+The patch creates two duplicate arrays, this makes it worse than it was
+before.
 
-------------------------------------------------------------------------
+Patch set to Changes Requested.
 
-commit d301e320e952e2e604d83d9540e52510b0eb3d94
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Thu Aug 27 09:58:19 2020 -0700
+-- 
+https://patchwork.kernel.org/patch/11723177/
 
-    refscale: Bounds-check module parameters
-    
-    The default value for refscale.nreaders is -1, which results in the code
-    setting the value to three-quarters of the number of CPUs.  On single-CPU
-    systems, this results in three-quarters of the value one, which the C
-    language's integer arithmetic rounds to zero.  This in turn results in
-    a divide-by-zero error.
-    
-    This commit therefore adds bounds checking to the refscale module
-    parameters, so that if they are less than one, they are set to the
-    value one.
-    
-    Reported-by: kernel test robot <lkp@intel.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
-diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
-index 952595c..fb5f20d 100644
---- a/kernel/rcu/refscale.c
-+++ b/kernel/rcu/refscale.c
-@@ -681,6 +681,12 @@ ref_scale_init(void)
- 	// Reader tasks (default to ~75% of online CPUs).
- 	if (nreaders < 0)
- 		nreaders = (num_online_cpus() >> 1) + (num_online_cpus() >> 2);
-+	if (WARN_ONCE(loops <= 0, "%s: loops = %ld, adjusted to 1\n", __func__, loops))
-+		loops = 1;
-+	if (WARN_ONCE(nreaders <= 0, "%s: nreaders = %d, adjusted to 1\n", __func__, nreaders))
-+		nreaders = 1;
-+	if (WARN_ONCE(nruns <= 0, "%s: nruns = %d, adjusted to 1\n", __func__, nruns))
-+		nruns = 1;
- 	reader_tasks = kcalloc(nreaders, sizeof(reader_tasks[0]),
- 			       GFP_KERNEL);
- 	if (!reader_tasks) {
