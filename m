@@ -2,116 +2,117 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA3CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C48C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A93FA20678
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8590C20658
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgHaRMW (ORCPT
+        id S1729016AbgHaRND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:12:22 -0400
-Received: from mg.ssi.bg ([178.16.128.9]:41756 "EHLO mg.ssi.bg"
+        Mon, 31 Aug 2020 13:13:03 -0400
+Received: from mga05.intel.com ([192.55.52.43]:45914 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbgHaRMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:12:20 -0400
-Received: from mg.ssi.bg (localhost [127.0.0.1])
-        by mg.ssi.bg (Proxmox) with ESMTP id 1B84C247A0;
-        Mon, 31 Aug 2020 20:12:17 +0300 (EEST)
-Received: from ink.ssi.bg (ink.ssi.bg [178.16.128.7])
-        by mg.ssi.bg (Proxmox) with ESMTP id 7A1112479F;
-        Mon, 31 Aug 2020 20:12:16 +0300 (EEST)
-Received: from ja.ssi.bg (unknown [178.16.129.10])
-        by ink.ssi.bg (Postfix) with ESMTPS id DD17E3C24C7;
-        Mon, 31 Aug 2020 20:12:09 +0300 (EEST)
-Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-        by ja.ssi.bg (8.15.2/8.15.2) with ESMTP id 07VHC5NF006196;
-        Mon, 31 Aug 2020 20:12:06 +0300
-Date:   Mon, 31 Aug 2020 20:12:05 +0300 (EEST)
-From:   Julian Anastasov <ja@ssi.bg>
-To:     Yaroslav Bolyukin <iam@lach.pw>
-cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Wensong Zhang <wensong@linux-vs.org>,
-        Simon Horman <horms@verge.net.au>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        lvs-devel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCHv5 net-next] ipvs: remove dependency on ip6_tables
-In-Reply-To: <20200829135953.20228-1-iam@lach.pw>
-Message-ID: <alpine.LFD.2.23.451.2008312005270.4425@ja.home.ssi.bg>
-References: <alpine.LFD.2.23.451.2008291233110.3043@ja.home.ssi.bg> <20200829135953.20228-1-iam@lach.pw>
+        id S1727044AbgHaRNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 13:13:02 -0400
+IronPort-SDR: dfkRCZWL5j641E5QWBkEgOypzc5Y+42uo89zke1iEls5xve07dGl+G9A9fLqA8P4R6H7/FPUMe
+ UX1BaYxfmtBg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="241838518"
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="241838518"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:12:59 -0700
+IronPort-SDR: Y41XvCv6aivpF6BcwaaJivkQ0Jd2PyWIKbmvWPSvEAOkXy+DJxzAzfn8LfU6MWpD59gSRgXXqf
+ uvR5w9wPR7IQ==
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="301118539"
+Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.147])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 10:12:58 -0700
+Date:   Mon, 31 Aug 2020 10:12:57 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Hao Li <lihao2018.fnst@cn.fujitsu.com>
+Cc:     viro@zeniv.linux.org.uk, david@fromorbit.com,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-xfs@vger.kernel.org, y-goto@fujitsu.com
+Subject: Re: [PATCH] fs: Handle I_DONTCACHE in iput_final() instead of
+ generic_drop_inode()
+Message-ID: <20200831171257.GF1422350@iweiny-DESK2.sc.intel.com>
+References: <20200831101313.168889-1-lihao2018.fnst@cn.fujitsu.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831101313.168889-1-lihao2018.fnst@cn.fujitsu.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-	Hello,
-
-On Sat, 29 Aug 2020, Yaroslav Bolyukin wrote:
-
-> This dependency was added because ipv6_find_hdr was in iptables specific
-> code but is no longer required
+On Mon, Aug 31, 2020 at 06:13:13PM +0800, Hao Li wrote:
+> If generic_drop_inode() returns true, it means iput_final() can evict
+> this inode regardless of whether it is dirty or not. If we check
+> I_DONTCACHE in generic_drop_inode(), any inode with this bit set will be
+> evicted unconditionally. This is not the desired behavior because
+> I_DONTCACHE only means the inode shouldn't be cached on the LRU list.
+> As for whether we need to evict this inode, this is what
+> generic_drop_inode() should do. This patch corrects the usage of
+> I_DONTCACHE.
 > 
-> Fixes: f8f626754ebe ("ipv6: Move ipv6_find_hdr() out of Netfilter code.")
-> Fixes: 63dca2c0b0e7 ("ipvs: Fix faulty IPv6 extension header handling in IPVS").
-> Signed-off-by: Yaroslav Bolyukin <iam@lach.pw>
+> This patch was proposed in [1].
+> 
+> [1]: https://lore.kernel.org/linux-fsdevel/20200831003407.GE12096@dread.disaster.area/
+> 
+> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
 
-	Looks good to me, thanks! May be maintainers will
-remove the extra dot after the Fixes line.
+Thanks!  I think this looks good, but shouldn't we add?  It seems like this is
+a bug right?
 
-Acked-by: Julian Anastasov <ja@ssi.bg>
+Fixes: dae2f8ed7992 ("fs: Lift XFS_IDONTCACHE to the VFS layer")
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
 
 > ---
->  Missed canonical patch format section, subsystem is now spevified
+>  fs/inode.c         | 3 ++-
+>  include/linux/fs.h | 3 +--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
->  include/net/ip_vs.h        | 3 ---
->  net/netfilter/ipvs/Kconfig | 1 -
->  2 files changed, 4 deletions(-)
-> 
-> diff --git a/include/net/ip_vs.h b/include/net/ip_vs.h
-> index 9a59a3378..d609e957a 100644
-> --- a/include/net/ip_vs.h
-> +++ b/include/net/ip_vs.h
-> @@ -25,9 +25,6 @@
->  #include <linux/ip.h>
->  #include <linux/ipv6.h>			/* for struct ipv6hdr */
->  #include <net/ipv6.h>
-> -#if IS_ENABLED(CONFIG_IP_VS_IPV6)
-> -#include <linux/netfilter_ipv6/ip6_tables.h>
-> -#endif
->  #if IS_ENABLED(CONFIG_NF_CONNTRACK)
->  #include <net/netfilter/nf_conntrack.h>
->  #endif
-> diff --git a/net/netfilter/ipvs/Kconfig b/net/netfilter/ipvs/Kconfig
-> index 2c1593089..eb0e329f9 100644
-> --- a/net/netfilter/ipvs/Kconfig
-> +++ b/net/netfilter/ipvs/Kconfig
-> @@ -29,7 +29,6 @@ if IP_VS
->  config	IP_VS_IPV6
->  	bool "IPv6 support for IPVS"
->  	depends on IPV6 = y || IP_VS = IPV6
-> -	select IP6_NF_IPTABLES
->  	select NF_DEFRAG_IPV6
->  	help
->  	  Add IPv6 support to IPVS.
-> --
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 72c4c347afb7..4e45d5ea3d0f 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -1625,7 +1625,8 @@ static void iput_final(struct inode *inode)
+>  	else
+>  		drop = generic_drop_inode(inode);
+>  
+> -	if (!drop && (sb->s_flags & SB_ACTIVE)) {
+> +	if (!drop && !(inode->i_state & I_DONTCACHE) &&
+> +			(sb->s_flags & SB_ACTIVE)) {
+>  		inode_add_lru(inode);
+>  		spin_unlock(&inode->i_lock);
+>  		return;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index e019ea2f1347..93caee80ce47 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2922,8 +2922,7 @@ extern int inode_needs_sync(struct inode *inode);
+>  extern int generic_delete_inode(struct inode *inode);
+>  static inline int generic_drop_inode(struct inode *inode)
+>  {
+> -	return !inode->i_nlink || inode_unhashed(inode) ||
+> -		(inode->i_state & I_DONTCACHE);
+> +	return !inode->i_nlink || inode_unhashed(inode);
+>  }
+>  extern void d_mark_dontcache(struct inode *inode);
+>  
+> -- 
 > 2.28.0
-
-Regards
-
---
-Julian Anastasov <ja@ssi.bg>
-
+> 
+> 
+> 
