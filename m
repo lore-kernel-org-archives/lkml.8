@@ -2,202 +2,146 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D189C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5EAC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6AABE208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C090C2137B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:15:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="Suk9Hv4X"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EowjvH/n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726839AbgHaMPK (ORCPT
+        id S1727061AbgHaMPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:15:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52994 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726224AbgHaMPE (ORCPT
+        Mon, 31 Aug 2020 08:15:41 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59995 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgHaMPi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:15:04 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E171C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:15:04 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id e17so5032997wme.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:15:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=CXDVX0YGELPDSa9HVQRD/zIo3Ak3H4cRsj5762Lwo2k=;
-        b=Suk9Hv4XqaEVcYgIX72xD9qy6GzEbaukryuo/LPaLlbBcQl0JfpaSVflC0+G/dhh+d
-         EhDQLGm1HQjtbAzMnd9KvkCmMSrv3N1mYUpSdiHh7RJJX3h5QrrDUw7CksT9/aCb79Qa
-         y0lp3CE8bhy9iInAcoJv+cD6xQyMwU45tqSyS1rNULkYizJNQfR8NHxwFVEO9/L3TGHy
-         ePM9hcNTIrFbUrN2VGjNrXlnJLtZKYKtE7HJm6jwEAowPM1rq2gNUfuW32h5f0Z+Sjix
-         VNjoDbV4CLRdKSdWaUaEkkgN7jHFGuw1vQlDdowhlQFTi7v9rRtq9q1tPWDf45CqZ22S
-         f9fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=CXDVX0YGELPDSa9HVQRD/zIo3Ak3H4cRsj5762Lwo2k=;
-        b=niklsThhLhxLyZhRg2gsDc85Y2vpn/B3BoAAPQBeipyXpYx3l5Ypt9DtrEAKJ3hHPc
-         Gg93J29hVG/7N+5YeGSicWwZ4gePTYDGCogO6t3krKhdVyK3UdoFar67zgVO9ux8xvAA
-         0ePPsT5gn5mQnVVCgd9kNpIDrhw4c70hvzyVug71qOi9P/3VK5wnwpDaQjsEVc0slTWH
-         k/PCkABLRrI/C6mZRDzwz8iWUXZdbMEO+iqoHoHTE5SDZmht/ow7hXNqO4/QKJ6PYS0L
-         XKaPFEqr5Uc96e5mScV8mBcWqYU/FleY8rXTYWaXKbLa/fsFV9BdnB1Gb1LGhkCDgr+K
-         fXig==
-X-Gm-Message-State: AOAM5317+8wl0Hq/v+g5nqUBAzo+a/HfTnLTxEXjlW/khiQY514IKIOm
-        6hi0t+lUscZnVNVPJuGnqjejPA==
-X-Google-Smtp-Source: ABdhPJxI4FQAA9nLp+cBM2Zp8GbhP4AfLQr1AzKsa0RP42KutjwrSTnkJlyUuTOuzaS252dE0ZOpSg==
-X-Received: by 2002:a1c:20d3:: with SMTP id g202mr1151473wmg.54.1598876103080;
-        Mon, 31 Aug 2020 05:15:03 -0700 (PDT)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id u16sm11347086wmc.7.2020.08.31.05.15.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 05:15:02 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 14:15:01 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
- to devlink reload command
-Message-ID: <20200831121501.GD3794@nanopsycho.orion>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
- <1598801254-27764-2-git-send-email-moshe@mellanox.com>
+        Mon, 31 Aug 2020 08:15:38 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200831121537euoutp02faeba7950d752f58d988cd89f2d814bc~wWWAo2Ark1187811878euoutp02V
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:15:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200831121537euoutp02faeba7950d752f58d988cd89f2d814bc~wWWAo2Ark1187811878euoutp02V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598876137;
+        bh=UJaaP850TcSo0Wk4YAvKHVnjzMrMzArNu+6pdtEXdic=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=EowjvH/nrcmSMQjQbvddNNvMMRPsnK8IgMgf2tF3EgFyvo1yLUN9IwpQi/IVnQv9O
+         6V98la2sA7tXlYxlp3XjSUJbmCr0esbF5drthzEgat+b/6ATqaT3YwuTWvNhoaj7rF
+         BR9oDOw3n4aABUenVDwiJGoXe/VFOiRvaommk0ds=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200831121536eucas1p27115e29900beb7719f5d71c84ab00f4e~wWWAJe8_L2676526765eucas1p2W;
+        Mon, 31 Aug 2020 12:15:36 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 79.5C.05997.8E9EC4F5; Mon, 31
+        Aug 2020 13:15:36 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200831121536eucas1p1699b8f10f2312de987ec27cff551db49~wWV-sf3Px2392423924eucas1p1n;
+        Mon, 31 Aug 2020 12:15:36 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200831121536eusmtrp233519dc8867fe1bda633ce061dabfe4a~wWV-rdhkM2586825868eusmtrp2H;
+        Mon, 31 Aug 2020 12:15:36 +0000 (GMT)
+X-AuditID: cbfec7f4-677ff7000000176d-a3-5f4ce9e8db07
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id D2.4C.06314.8E9EC4F5; Mon, 31
+        Aug 2020 13:15:36 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200831121534eusmtip1a908de5eccebd235b68a4c3ca3458167~wWV_AZ6hT2131921319eusmtip1o;
+        Mon, 31 Aug 2020 12:15:34 +0000 (GMT)
+Subject: Re: [PATCH 02/10] dt-bindings: gpu: arm,mali-midgard: Use
+ unevaluatedProperties
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        alsa-devel@alsa-project.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <618bd5f4-0100-c219-5d5e-77743de22a7a@samsung.com>
+Date:   Mon, 31 Aug 2020 14:15:33 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598801254-27764-2-git-send-email-moshe@mellanox.com>
+In-Reply-To: <20200829142501.31478-2-krzk@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUxTQRSGnbuDFoe6cIJbUhcUg4iimahx19xEYtT4YEwAi9yAkYJpBcQX
+        FUWQTXCJ2BBAo4JEI5aliIJJBeoSi8rigqYquABR1Basa+VyIfL2/Wf+M+f8kxFo9UnOV9gV
+        u1fSx2pjNJwnU9X4wxbwsSskfP5z1yySZbtHkZbHFopcz7vGktNvOjny1PmBJQWOKcRdlUuT
+        wnobS1r6ejlywp7DkOMdPTRpairjib2vAZH+ljSKmDraWNJck8+RvKY6ilytf8WTlNp6njwu
+        cVIk9V0XTcpNp+mVE8UyRzIn1vYXMeIN4yteNJUe48SXbbc48bPNxovm/tesaM+wUmL5hQNi
+        dkUpEh2mqZtGb/dcFinF7EqQ9IHLd3hGdze/Q3ta6H3lde/pgyiTTkceAuBgSM2s59ORp6DG
+        JQgq7Z8ZRTgR2FPucLJLjR0InC7v4Y4vx1xDHcUILH8+DomvCE7d+TYgBGEc3g7mvBC5Ph63
+        M+BMLxs00bgdgaunl5ev4nAQZDVkI5lVeDkcvfR3kBk8E049cg/yBBwGldZWSvF4w72znYzM
+        HngRVP56wspMYx940VlIKTwNzJ/yaXkY4LsCVJpzh5KuheeHL1MKj4NuawWv8GRw35Cb5YbD
+        CDJvtvOKyBl4AWsRUlxL4aXtJydno/EcuFYTqJRXwZGcc4ORAXvBs0/eyhJecKLqDK2UVZB2
+        VK24Z8Cv0jNDK/hCRqebyUEa44hoxhFxjCPiGP/PLUJMKfKR4g26KMmwIFZKnGfQ6gzxsVHz
+        dsbpTGjgqz74a3VWo5rfERaEBaQZo3I1bAhXs9oEQ5LOgkCgNeNVqx8+CFOrIrVJ+yV9XLg+
+        PkYyWNAkgdH4qBae7wpV4yjtXmm3JO2R9MOnlODhexAlskvWX8m6pQ0NMr8tyBz9MyBMc9E/
+        5VIDigjOqnauyy+JLF4zZYUf+6isKLXpdlzf7wOwqnfm13NLuhZGx39P6sP33wb7XdiftPmh
+        ddP72R1bFx//0B/gkey/5Ztf46jqN90hW3URGdO2vUaJYyNaE9Iaszd+P1Rx2VEcGpLbkzB9
+        brKGMURrg/xpvUH7D2po3DOmAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsVy+t/xu7ovXvrEG7Qd4bLoPXeSyeLKxUNM
+        FhtnrGe1mPrwCZvF9S/PWS3mfZa1+L9tIrPF/CPnWC2ufH3PZjHp/gQWi/7Hr5ktzp/fwG5x
+        /+tRRotvVzqYLDY9vsZqcXnXHDaLGef3MVmsPXKX3aJ17xF2i4srvjBZtD99yWyxedNUZgcx
+        jw2fm9g89n5bwOKxc9Zddo9NqzrZPO5c28Pm8e7cOXaP7d8esHrc7z7O5LF5Sb1H35ZVjB6f
+        N8kFcEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXo
+        Zby6/JSx4ApzxeZ9z5gbGHuYuxg5OSQETCQ+dP5g72Lk4hASWMoo8XfpXSCHAyghJTG/RQmi
+        Rljiz7UuNoia94wSv9/1MoLUCAtESWyf4QMSFxG4zSLx4uYzsKHMAncZJc7Ol4Jo2Mwosebp
+        fEaQBJuAoUTv0T4wm1fATqJt2T8wm0VAVWLKhf9gtqhAnMTj3v/MEDWCEidnPmEBsTkFTCW2
+        /r7ECrFAXeLPvEtQy8Qlbj2ZzwRhy0tsfzuHeQKj0Cwk7bOQtMxC0jILScsCRpZVjCKppcW5
+        6bnFhnrFibnFpXnpesn5uZsYgSlk27Gfm3cwXtoYfIhRgINRiYf3x1HveCHWxLLiytxDjBIc
+        zEoivE5nT8cJ8aYkVlalFuXHF5XmpBYfYjQFem4is5Rocj4wveWVxBuaGppbWBqaG5sbm1ko
+        ifN2CByMERJITyxJzU5NLUgtgulj4uCUamBsruxOkFvz6YPHhBf/bWRFhHPN+PYd6P3+duU8
+        IYnbC5olzBqsw573eXDkVQvU+W9gU2O47JLzqG6bhRmv8MffjN1XRG7c15cOrlHd/nXTlxrh
+        tpZwjzVcu5bcW2rXZJ7bnJ8eJyaunRRyqndahuJDH8FIO0HPlFdmxcJsl3fb37huP/tArhJL
+        cUaioRZzUXEiAEOjGK03AwAA
+X-CMS-MailID: 20200831121536eucas1p1699b8f10f2312de987ec27cff551db49
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200829142527eucas1p21347ea8f219b266872f6b78c376ccd67
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200829142527eucas1p21347ea8f219b266872f6b78c376ccd67
+References: <20200829142501.31478-1-krzk@kernel.org>
+        <CGME20200829142527eucas1p21347ea8f219b266872f6b78c376ccd67@eucas1p2.samsung.com>
+        <20200829142501.31478-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sun, Aug 30, 2020 at 05:27:21PM CEST, moshe@mellanox.com wrote:
->Add devlink reload action to allow the user to request a specific reload
->action. The action parameter is optional, if not specified then devlink
->driver re-init action is used (backward compatible).
->Note that when required to do firmware activation some drivers may need
->to reload the driver. On the other hand some drivers may need to reset
->the firmware to reinitialize the driver entities. Therefore, the devlink
->reload command returns the actions which were actually done.
->However, in case fw_activate_no_reset action is selected, then no other
->reload action is allowed.
->Reload actions supported are:
->driver_reinit: driver entities re-initialization, applying devlink-param
->               and devlink-resource values.
->fw_activate: firmware activate.
->fw_activate_no_reset: Activate new firmware image without any reset.
->                      (also known as: firmware live patching).
->
->command examples:
->$devlink dev reload pci/0000:82:00.0 action driver_reinit
->reload_actions_done:
->  driver_reinit
->
->$devlink dev reload pci/0000:82:00.0 action fw_activate
->reload_actions_done:
->  driver_reinit fw_activate
->
->Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
->---
->v2 -> v3:
->- Replace fw_live_patch action by fw_activate_no_reset
->- Devlink reload returns the actions done over netlink reply
->v1 -> v2:
->- Instead of reload levels driver,fw_reset,fw_live_patch have reload
->  actions driver_reinit,fw_activate,fw_live_patch
->- Remove driver default level, the action driver_reinit is the default
->  action for all drivers
->---
-
-[...]
-
-
->diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
->index 08d101138fbe..c42b66d88884 100644
->--- a/drivers/net/ethernet/mellanox/mlxsw/core.c
->+++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
->@@ -1113,7 +1113,7 @@ mlxsw_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
+On 29.08.2020 16:24, Krzysztof Kozlowski wrote:
+> Additional properties or nodes actually might appear (e.g. operating
+> points table) so use unevaluatedProperties to fix dtbs_check warnings
+> like:
 > 
-> static int
-> mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
->-					  bool netns_change,
->+					  bool netns_change, enum devlink_reload_action action,
-> 					  struct netlink_ext_ack *extack)
-> {
-> 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
->@@ -1126,15 +1126,23 @@ mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
-> }
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: gpu@14ac0000:
+>     'opp_table' does not match any of the regexes: 'pinctrl-[0-9]+'
 > 
-> static int
->-mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink,
->-					struct netlink_ext_ack *extack)
->+mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink, enum devlink_reload_action action,
->+					struct netlink_ext_ack *extack, unsigned long *actions_done)
-> {
-> 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
->+	int err;
-> 
->-	return mlxsw_core_bus_device_register(mlxsw_core->bus_info,
->-					      mlxsw_core->bus,
->-					      mlxsw_core->bus_priv, true,
->-					      devlink, extack);
->+	err = mlxsw_core_bus_device_register(mlxsw_core->bus_info,
->+					     mlxsw_core->bus,
->+					     mlxsw_core->bus_priv, true,
->+					     devlink, extack);
->+	if (err)
->+		return err;
->+	if (actions_done)
->+		*actions_done = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
->+				BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE);
->+
->+	return 0;
-> }
-> 
-> static int mlxsw_devlink_flash_update(struct devlink *devlink,
->@@ -1268,6 +1276,8 @@ mlxsw_devlink_trap_policer_counter_get(struct devlink *devlink,
-> }
-> 
-> static const struct devlink_ops mlxsw_devlink_ops = {
->+	.supported_reload_actions	= BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
->+					  BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE),
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-This is confusing and open to interpretation. Does this mean that the
-driver supports:
-1) REINIT && FW_ACTIVATE
-2) REINIT || FW_ACTIVATE
-?
-
-Because mlxsw supports only 1. I guess that mlx5 supports both. This
-needs to be distinguished.
-
-I think you need an array of combinations. Or perhaps rather to extend
-the enum with combinations. You kind of have it already with
-DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET
-
-Maybe we can have something like:
-DEVLINK_RELOAD_ACTION_DRIVER_REINIT
-DEVLINK_RELOAD_ACTION_DRIVER_REINIT_FW_ACTIVATE_RESET
-DEVLINK_RELOAD_ACTION_FW_ACTIVATE_RESET
-DEVLINK_RELOAD_ACTION_FW_ACTIVATE (this is the original FW_ACTIVATE_NO_RESET)
-
-Each has very clear meaning.
-
-Also, then the "actions_done" would be a simple enum, directly returned
-to the user. No bitfield needed.
-
-
-> 	.reload_down		= mlxsw_devlink_core_bus_device_reload_down,
-> 	.reload_up		= mlxsw_devlink_core_bus_device_reload_up,
-> 	.port_type_set			= mlxsw_devlink_port_type_set,
-
-[...]
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
