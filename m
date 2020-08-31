@@ -8,65 +8,65 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847BEC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9FCC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6434D208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABD72071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ck/m3fO1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joFCO9aP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbgHaSXJ (ORCPT
+        id S1729903AbgHaSXH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:23:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54148 "EHLO
+        Mon, 31 Aug 2020 14:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729725AbgHaSXE (ORCPT
+        with ESMTP id S1729767AbgHaSXF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:23:04 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED39AC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:23:03 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id j2so7040530ioj.7
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:23:03 -0700 (PDT)
+        Mon, 31 Aug 2020 14:23:05 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F6AC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:23:05 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id d190so6106175iof.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:23:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/YEL2sT07e48hoT0+vsetk/IvirpQ7LEfHojHk2BQCs=;
-        b=ck/m3fO1xWI/k1U6ETZWVA2a0KrXgETKMqcl2K0S1DHKhyCHJGiV74e9C3fs+XMY3R
-         2GKQEcBeq9Izm6EHz3ELyej4jqSZ9QMhO6gaAQTlZuGjcddzjD0c+9qOIJ5rhAludUdT
-         Z/vdzqy4MxRdcey/xsapf14Iqc11rYN/d3+NVJl88UGD3IIOyudChKVQyACdmHkPaCYC
-         Ur6OHZktnK02NAIXcoVSldYHPsK6RFVPQPI1RS9mSB99SVUKYbqMGN0rC6mO30JMwnOW
-         izGat9ltRwo7BKRDhIISCxyC6hElN8WXnjGyE6vdGwxntMrIvWtL5uHLD1b+cudX22cM
-         SKTQ==
+        bh=xv8rGjKL3AwaVAY3DveNACmKtTJqRUUuSopt9eMG6Sg=;
+        b=joFCO9aPkwFdN3+LMX0pw3+AcTzaOnmd3vAoxDSr0miya+xkD5Q3Ww2WoPKJ8zmINc
+         8cTGbp4nwt2bPZEj55JmmAkwFKvMRTlGKZ2wi9THLyOAaRucncX4QUmxsJq6CHoavYCr
+         ughYYusRskGtr1JJVKa7xJ9rxdQs5X1H2HrmY96C0kogl8G1QyVG3PUxSuJ0C3D1Lxv9
+         KcvWSk75PWEPhekhVjcLIc+Xc1bK3OSGLmZuRKq26v0Gbz778mRaz+H37ti700WzGl2p
+         YSaMg/3FQP82QGXLiE3Gj4f/QsKJchu+0HJU9NNvgtImqPDI2djCMzHjOUK8vVO7YZGZ
+         9UCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/YEL2sT07e48hoT0+vsetk/IvirpQ7LEfHojHk2BQCs=;
-        b=iYOI8Xh5KjxMID12uHzBX1smX114eKTH44VNDpJEvLVjMUyYOjkM+DGjC6JspziVef
-         MazakQEoLYhMT8BeU4Shwc9Hni2doGz0FL6Nd6aj/Oqnvg5/UrBhtkMan1w7fW/hb/4G
-         pFb3t70E7JUMbsDLhFjKiY1Ls+CWk88UTpGW90hJMt0+OpniffWLgBtIWc55K7KUTbSG
-         YpDZfTCZhxE2JcU4oCh3tKBvVsvfkA871jFYgjQxxItDGFMrPMJnloQyp86M9yrabrV5
-         veQy+xGUA+Hwzd3aDVFjP3Hg70e/uRTWLz0KG1zA+jiwDBCec1kBCXBGRFd9lo0n7UYq
-         Famw==
-X-Gm-Message-State: AOAM531NAApthepas2p/VLqXW7miNKRXpmamJX4GhcyKGii9ZgkE9d/Z
-        +I0pAy+IUtX76r9u4amMwp0=
-X-Google-Smtp-Source: ABdhPJzohRMx3RZk5tsn04pfTQBRYbOXkR521Hw26xy41w3CZlFY1uJ7WkN42e9rnSpNnU1Q7uDqPA==
-X-Received: by 2002:a02:1004:: with SMTP id 4mr2430142jay.127.1598898183259;
-        Mon, 31 Aug 2020 11:23:03 -0700 (PDT)
+        bh=xv8rGjKL3AwaVAY3DveNACmKtTJqRUUuSopt9eMG6Sg=;
+        b=kNU0Vb5ZAeKizByTwX0nnp7O31IDHvDv8YLbiHv2loykisUksm+sXWZ3gNUZ0QxhZa
+         Frwd2ttXBGrKfal+IxarZexYTDEenOm0mwepvOdYMCPiRroWhwoW7hLkfBnQhU1Oq42J
+         KTHfJR0QxhS6NKTt5N7gRqiWInSdQA9MbqHHUceqeZ5vOQzGPO0wQ2cjJm9fG6HUF/eh
+         j9Wd1Cf4k2UzqLxjru3Fo3JZVCYmaRsfRybXBZNS5hTnLjCYzfxONPLeesY0xxV10gq8
+         ORaIl1B4tRVCFyb9cfBXFZCCHNTL0C56l8Ih+papEmuWyc5/7eR2kbu5NLrADqNr9eP8
+         Xtzw==
+X-Gm-Message-State: AOAM530Hh1lFeIWygr+JYTjRTr3NjiSf66POvBpCE+ZtdJ1sZB5cXjqI
+        +tw+dBKsO2IVfNo5aZ62FME=
+X-Google-Smtp-Source: ABdhPJzBxffsjRS306lzQbjmhFGK2u2q6uduTo/rEalzCIBbICArYTe2nwuVweajJC+vNlOTk08vjg==
+X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr2287381ioq.41.1598898184551;
+        Mon, 31 Aug 2020 11:23:04 -0700 (PDT)
 Received: from frodo.hsd1.co.comcast.net ([2601:284:8203:5970::dc2e])
-        by smtp.googlemail.com with ESMTPSA id p18sm4129017iog.1.2020.08.31.11.23.01
+        by smtp.googlemail.com with ESMTPSA id p18sm4129017iog.1.2020.08.31.11.23.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 11:23:02 -0700 (PDT)
+        Mon, 31 Aug 2020 11:23:04 -0700 (PDT)
 From:   Jim Cromie <jim.cromie@gmail.com>
 To:     jbaron@akamai.com, gregkh@linuxfoundation.org,
         linux-kernel@vger.kernel.org
 Cc:     Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v3 2/3] dyndbg: refine export, rename to dynamic_debug_exec_queries()
-Date:   Mon, 31 Aug 2020 12:22:09 -0600
-Message-Id: <20200831182210.850852-3-jim.cromie@gmail.com>
+Subject: [PATCH v3 3/3] dyndbg: fix problem parsing format="foo bar"
+Date:   Mon, 31 Aug 2020 12:22:10 -0600
+Message-Id: <20200831182210.850852-4-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200831182210.850852-1-jim.cromie@gmail.com>
 References: <20200831182210.850852-1-jim.cromie@gmail.com>
@@ -77,139 +77,101 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 4c0d77828d4f ("dyndbg: export ddebug_exec_queries")
+commit 14775b049642 ("dyndbg: accept query terms like file=bar and module=foo")
 
-had a few problems:
- - broken non DYNAMIC_DEBUG_CORE configs, sparse warning
- - the exported function modifies query string, breaks on RO strings.
- - func name follows internal convention, shouldn't be exposed as is.
+added the combined keyword=value parsing poorly; revert most of it,
+keeping the keyword & arg change.
 
-1st is fixed in header with ifdefd function prototype or stub defn.
-Also remove an obsolete HAVE-symbol ifdef-comment, and add others.
+Instead, fix the tokenizer for the new input, by terminating the
+keyword (an unquoted word) on '=' as well as space, thus letting the
+tokenizer work on the quoted argument, like it would have previously.
 
-Fix others by wrapping existing internal function with a new one,
-named in accordance with module-prefix naming convention, before
-export hits v5.9.0.  In new function, copy query string to a local
-buffer, so users can pass hard-coded/RO queries, and internal function
-can be used unchanged.
+Also add a few debug-prints to show more parsing context, into
+tokenizer and parse-query, and use "keyword, value" in others.
 
-Fixes: 4c0d77828d4f ("dyndbg: export ddebug_exec_queries")
+Fixes: 14775b049642 ("dyndbg: accept query terms like file=bar and module=foo")
 ---
-v2- code improvements, per Joe Perches
-v3- commit message fixups
+-v3 commit message, checkpatch fixes
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- include/linux/dynamic_debug.h | 20 ++++++++++++++++----
- lib/dynamic_debug.c           | 27 +++++++++++++++++++++++++--
- 2 files changed, 41 insertions(+), 6 deletions(-)
+ lib/dynamic_debug.c | 38 +++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
 
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index aa9ff9e1c0b3..8aa0c7c2608c 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -49,6 +49,10 @@ struct _ddebug {
- 
- 
- #if defined(CONFIG_DYNAMIC_DEBUG_CORE)
-+
-+/* exported for module authors to exercise >control */
-+int dynamic_debug_exec_queries(const char *query, const char *modname);
-+
- int ddebug_add_module(struct _ddebug *tab, unsigned int n,
- 				const char *modname);
- extern int ddebug_remove_module(const char *mod_name);
-@@ -105,7 +109,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 	static_branch_unlikely(&descriptor.key.dd_key_false)
- #endif
- 
--#else /* !HAVE_JUMP_LABEL */
-+#else /* !CONFIG_JUMP_LABEL */
- 
- #define _DPRINTK_KEY_INIT
- 
-@@ -117,7 +121,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 	unlikely(descriptor.flags & _DPRINTK_FLAGS_PRINT)
- #endif
- 
--#endif
-+#endif /* CONFIG_JUMP_LABEL */
- 
- #define __dynamic_func_call(id, fmt, func, ...) do {	\
- 	DEFINE_DYNAMIC_DEBUG_METADATA(id, fmt);		\
-@@ -172,10 +176,11 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 				   KERN_DEBUG, prefix_str, prefix_type,	\
- 				   rowsize, groupsize, buf, len, ascii)
- 
--#else
-+#else /* !CONFIG_DYNAMIC_DEBUG_CORE */
- 
- #include <linux/string.h>
- #include <linux/errno.h>
-+#include <linux/printk.h>
- 
- static inline int ddebug_add_module(struct _ddebug *tab, unsigned int n,
- 				    const char *modname)
-@@ -210,6 +215,13 @@ static inline int ddebug_dyndbg_module_param_cb(char *param, char *val,
- 		print_hex_dump(KERN_DEBUG, prefix_str, prefix_type,	\
- 				rowsize, groupsize, buf, len, ascii);	\
- 	} while (0)
--#endif
-+
-+static inline int dynamic_debug_exec_queries(const char *query, const char *modname)
-+{
-+	pr_warn("kernel not built with CONFIG_DYNAMIC_DEBUG_CORE\n");
-+	return 0;
-+}
-+
-+#endif /* !CONFIG_DYNAMIC_DEBUG_CORE */
- 
- #endif
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 01b7d0210412..08e4b057514c 100644
+index 08e4b057514c..04f4c80b0d16 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -525,7 +525,7 @@ static int ddebug_exec_query(char *query_string, const char *modname)
-    last error or number of matching callsites.  Module name is either
-    in param (for boot arg) or perhaps in query string.
- */
--int ddebug_exec_queries(char *query, const char *modname)
-+static int ddebug_exec_queries(char *query, const char *modname)
+@@ -237,6 +237,7 @@ static int ddebug_tokenize(char *buf, char *words[], int maxwords)
  {
- 	char *split;
- 	int i, errs = 0, exitcode = 0, rc, nfound = 0;
-@@ -557,7 +557,30 @@ int ddebug_exec_queries(char *query, const char *modname)
- 		return exitcode;
- 	return nfound;
- }
--EXPORT_SYMBOL_GPL(ddebug_exec_queries);
-+
-+/**
-+ * dynamic_debug_exec_queries - select and change dynamic-debug prints
-+ * @query: query-string described in admin-guide/dynamic-debug-howto
-+ * @modname: string containing module name, usually &module.mod_name
-+ *
-+ * This uses the >/proc/dynamic_debug/control reader, allowing module
-+ * authors to modify their dynamic-debug callsites. The modname is
-+ * canonically struct module.mod_name, but can also be null or a
-+ * module-wildcard, for example: "drm*".
-+ */
-+int dynamic_debug_exec_queries(const char *query, const char *modname)
-+{
-+	int rc;
-+	char *qry = kstrndup(query, PAGE_SIZE, GFP_KERNEL);
-+
-+	if (!query)
-+		return -ENOMEM;
-+
-+	rc = ddebug_exec_queries(qry, modname);
-+	kfree(qry);
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(dynamic_debug_exec_queries);
+ 	int nwords = 0;
  
- #define PREFIX_SIZE 64
++	vpr_info("entry, buf:'%s'\n", buf);
+ 	while (*buf) {
+ 		char *end;
  
+@@ -247,6 +248,8 @@ static int ddebug_tokenize(char *buf, char *words[], int maxwords)
+ 		if (*buf == '#')
+ 			break;	/* token starts comment, skip rest of line */
+ 
++		vpr_info("start-of-word:%d '%s'\n", nwords, buf);
++
+ 		/* find `end' of word, whitespace separated or quoted */
+ 		if (*buf == '"' || *buf == '\'') {
+ 			int quote = *buf++;
+@@ -257,7 +260,9 @@ static int ddebug_tokenize(char *buf, char *words[], int maxwords)
+ 				return -EINVAL;	/* unclosed quote */
+ 			}
+ 		} else {
+-			for (end = buf; *end && !isspace(*end); end++)
++			for (end = buf;
++			     *end && *end != '=' && !isspace(*end);
++			     end++)
+ 				;
+ 			BUG_ON(end == buf);
+ 		}
+@@ -373,30 +378,21 @@ static int ddebug_parse_query(char *words[], int nwords,
+ 	unsigned int i;
+ 	int rc = 0;
+ 	char *fline;
+-	char *keyword, *arg;
+ 
+-	if (modname)
++	if (nwords % 2 != 0) {
++		pr_err("expecting pairs of match-spec <value>\n");
++		return -EINVAL;
++	}
++	if (modname) {
+ 		/* support $modname.dyndbg=<multiple queries> */
++		vpr_info("module:%s queries:'%s'\n", modname);
+ 		query->module = modname;
++	}
++	for (i = 0; i < nwords; i += 2) {
++		char *keyword = words[i];
++		char *arg = words[i+1];
+ 
+-	for (i = 0; i < nwords; i++) {
+-		/* accept keyword=arg */
+-		vpr_info("%d w:%s\n", i, words[i]);
+-
+-		keyword = words[i];
+-		arg = strchr(keyword, '=');
+-		if (arg) {
+-			*arg++ = '\0';
+-		} else {
+-			i++; /* next word is arg */
+-			if (!(i < nwords)) {
+-				pr_err("missing arg to keyword: %s\n", keyword);
+-				return -EINVAL;
+-			}
+-			arg = words[i];
+-		}
+-		vpr_info("%d key:%s arg:%s\n", i, keyword, arg);
+-
++		vpr_info("keyword:'%s' value:'%s'\n", keyword, arg);
+ 		if (!strcmp(keyword, "func")) {
+ 			rc = check_set(&query->function, arg, "func");
+ 		} else if (!strcmp(keyword, "file")) {
 -- 
 2.26.2
 
