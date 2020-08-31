@@ -2,124 +2,287 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CAAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51912C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FD4206CD
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B7120658
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 00:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RM5wdxd3"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="Hc5BjyPG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726851AbgHaAtT (ORCPT
+        id S1726554AbgHaAuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 20:49:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59500 "EHLO
+        Sun, 30 Aug 2020 20:50:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726179AbgHaAtR (ORCPT
+        with ESMTP id S1726179AbgHaAuY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 20:49:17 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0CCC061573;
-        Sun, 30 Aug 2020 17:49:16 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id p37so3394139pgl.3;
-        Sun, 30 Aug 2020 17:49:16 -0700 (PDT)
+        Sun, 30 Aug 2020 20:50:24 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80778C061573
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 17:50:24 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id c15so2246071plq.4
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 17:50:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0Guz5EKXwEpkv/nUEhZYoZRJ0rFUuHiQDO00n0OIgRo=;
-        b=RM5wdxd3U/Kntyhx05fMUd8Gxt0L9h/SAMglNvnLfGz/VT76untR5SYnEhS+4/fY7u
-         fJ1BDdblWLIim8SdgS27vHtwVESsFxUSE7JoFAwcoRfQitfswP9Noudp0mv5lgIrvxdB
-         fK4yeqHY0h5CPGOdN4xmjbWYCuQIHz9GfNkg37TphXOoCEk/QcWL94IsB4bQPamXZwlo
-         ++yEGt4zzlJumb4UQTcct55YQImTa2CecIeSinDSIy5SwMtpywik1bL3E5ysMRdCxURb
-         0kqaIqbxZUg3v3LDffYK9DMcvzMbizNLc+NY7JDKP2vVnLEKWo9Hg64YzZAx0Nul0YNI
-         6IYw==
+        d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=T72j5wynVI1JVm5QYaekdyXfWhQKc9IY9oJ7ZdZfgrI=;
+        b=Hc5BjyPGwhtnMrYBw+FUYMSy1sg0AoBxyUp0Tse+A7cXvELA8mA630/2240HRQt8Ez
+         W+DN7Vm+88l5OOuHkg6GXor8IDJMY6v2viB9wTWYAgysZ4zU/C32V8UpigLJkzgJ5fiS
+         +mxeGjyQO6G7q1hQYTC5/TdGg5WXafgj1Udn1Zu+2pFK+JyZFvvochhTOFny2KIV1mq/
+         K6+2KaqRM/NPa+YERRSRwtfCSvghzDyYobJn3oY2fMVR5BsN1f7Ym4GBF6/YP957RB3Z
+         jp4LDRXOCc/qdcnOoreONpwVd16Bl5d86vkB+OkkouqkslgY7Wk4oKbbdtk4UJWYK+sB
+         MAIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0Guz5EKXwEpkv/nUEhZYoZRJ0rFUuHiQDO00n0OIgRo=;
-        b=Lh+Nz2ldqZkhfKmyGTDXz3QqZFNFLXNjgQH8LReFzDjUYoErDTTlO0F5zUPc2nY6eX
-         TGW6/9id+ohmjfcf/o8sWburBP9qNoNr8h3cH8pqQg9S1lVe8hcAeKAISRyEjYcU1YE9
-         5PnPkJIm/0DZvm2HPRLkseNrBhV4Jvfd3ZjaNHyIAGoSKCmWjgKVdhLl8WKI2nD0EmNd
-         zjZnPqUIoHy2McXHvtJ/QDSgJ8yOr/Rx8ebk9psh5EMyv6SLjmeNttZWJNhf8qYa1xBz
-         plL73n2K4sJnWLyZZOwRfIw/as6Nc0WFY3kfqo11+xMhc4nhEnN6XwgR2xoP/rEC6d4c
-         3QqQ==
-X-Gm-Message-State: AOAM532hOsXfoC/0DE58d9T8hj/qd1CkRQwlCAhi52mY0gu/16KH+ty4
-        n/8Zj7fKiV1gxTXUo90JJIM=
-X-Google-Smtp-Source: ABdhPJy9Q+ruWzENtv+aRxYGNyGKR9kqfdn/1y0GndRsWE4YuYVC8+GiQgMUvSrmaV8EqIh6pZ4qwA==
-X-Received: by 2002:a63:3809:: with SMTP id f9mr6229037pga.18.1598834956476;
-        Sun, 30 Aug 2020 17:49:16 -0700 (PDT)
-Received: from billa.force10networks.com (c-73-231-197-145.hsd1.ca.comcast.net. [73.231.197.145])
-        by smtp.gmail.com with ESMTPSA id u2sm5161140pjj.57.2020.08.30.17.49.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 30 Aug 2020 17:49:15 -0700 (PDT)
-From:   Nirenjan Krishnan <nirenjan@gmail.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nirenjan Krishnan <nirenjan@gmail.com>
-Subject: [PATCH] HID: quirks: Set INCREMENT_USAGE_ON_DUPLICATE for all Saitek X52 devices
-Date:   Sun, 30 Aug 2020 17:48:59 -0700
-Message-Id: <20200831004859.493827-2-nirenjan@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831004859.493827-1-nirenjan@gmail.com>
-References: <20200831004859.493827-1-nirenjan@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=T72j5wynVI1JVm5QYaekdyXfWhQKc9IY9oJ7ZdZfgrI=;
+        b=NS2hghZEpqA3Ad7UbS65iDjJTrBAWRrKu31/epUdvAz8x8foe1QeUxg933gTkqjXPl
+         rcpl6TZaG/ev2D3Edgyvk0SCjycUNI/pz5+P8tu4iUPx8d+mbMQ2o6ufQHkwepUgFLAz
+         3bkItMjMwotDcTBCTZuUSS8RXlC8+MZgjjq7JwQFAB7p0CRVuZbEfgZp4FGnd//WWjQw
+         R63bOSV7En9pluIg9kujfecJKPECuoqN+ulX0qVSd53ISZxLWIiPXJoQd2nVGwP5fpFy
+         6DcQou2kohgSjN0Vq5EnQAuECrFje7FbZHpjbsrg5nJ1yQ1nMscd0BmcLzqaHUDZ1efw
+         sBPw==
+X-Gm-Message-State: AOAM532pKjPvel16tO/+jN0VDL63VaFxbac6CnTv5tDHxvAizd/8eqGj
+        keqoUjUGi9xnznwjpTUPTPPhs3UxxPRFMw==
+X-Google-Smtp-Source: ABdhPJzXW3yHm0QPGiDAqOBvMiwye/arrSSA89MzkAmAkRNLT8WD8A8x9rFSnxLlHHbpj8qCqKoM7w==
+X-Received: by 2002:a17:90b:4ac7:: with SMTP id mh7mr7968021pjb.99.1598835023639;
+        Sun, 30 Aug 2020 17:50:23 -0700 (PDT)
+Received: from [192.168.10.94] (124-171-83-152.dyn.iinet.net.au. [124.171.83.152])
+        by smtp.gmail.com with ESMTPSA id v13sm5814819pfn.153.2020.08.30.17.50.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Aug 2020 17:50:22 -0700 (PDT)
+Subject: Re: [PATCH v1 07/10] powerpc/pseries/iommu: Allow DDW windows
+ starting at 0x00
+To:     Leonardo Bras <leobras.c@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Joel Stanley <joel@jms.id.au>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Brian King <brking@linux.vnet.ibm.com>,
+        Murilo Fossa Vicentini <muvic@linux.ibm.com>,
+        David Dai <zdai@linux.vnet.ibm.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20200817234033.442511-1-leobras.c@gmail.com>
+ <20200817234033.442511-8-leobras.c@gmail.com>
+ <3fda1c2d-20f2-7789-e072-47fe966f0265@ozlabs.ru>
+ <2d2b1a048faf75c8e68f95b3bf2d9514721786c6.camel@gmail.com>
+From:   Alexey Kardashevskiy <aik@ozlabs.ru>
+Autocrypt: addr=aik@ozlabs.ru; keydata=
+ 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
+Message-ID: <cc8e2e4b-561c-3f1d-7a00-f1043753c964@ozlabs.ru>
+Date:   Mon, 31 Aug 2020 10:50:16 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <2d2b1a048faf75c8e68f95b3bf2d9514721786c6.camel@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Saitek X52 family of joysticks has a pair of axes that were
-originally (by the Windows driver) used as mouse pointer controls. The
-corresponding usage page is the Game Controls page, which is not
-recognized by the generic HID driver, and therefore, both axes get
-mapped to ABS_MISC. The quirk makes the second axis get mapped to
-ABS_MISC+1, and therefore made available separately.
 
-One Saitek X52 device is already fixed. This patch fixes the other two
-known devices with VID/PID 06a3:0255 and 06a3:0762.
 
-Signed-off-by: Nirenjan Krishnan <nirenjan@gmail.com>
----
- drivers/hid/hid-ids.h    | 2 ++
- drivers/hid/hid-quirks.c | 2 ++
- 2 files changed, 4 insertions(+)
+On 29/08/2020 00:04, Leonardo Bras wrote:
+> On Mon, 2020-08-24 at 13:44 +1000, Alexey Kardashevskiy wrote:
+>>
+>>> On 18/08/2020 09:40, Leonardo Bras wrote:
+>>> enable_ddw() currently returns the address of the DMA window, which is
+>>> considered invalid if has the value 0x00.
+>>>
+>>> Also, it only considers valid an address returned from find_existing_ddw
+>>> if it's not 0x00.
+>>>
+>>> Changing this behavior makes sense, given the users of enable_ddw() only
+>>> need to know if direct mapping is possible. It can also allow a DMA window
+>>> starting at 0x00 to be used.
+>>>
+>>> This will be helpful for using a DDW with indirect mapping, as the window
+>>> address will be different than 0x00, but it will not map the whole
+>>> partition.
+>>>
+>>> Signed-off-by: Leonardo Bras <leobras.c@gmail.com>
+>>> ---
+>>>  arch/powerpc/platforms/pseries/iommu.c | 30 ++++++++++++--------------
+>>>  1 file changed, 14 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+>>> index fcdefcc0f365..4031127c9537 100644
+>>> --- a/arch/powerpc/platforms/pseries/iommu.c
+>>> +++ b/arch/powerpc/platforms/pseries/iommu.c
+>>> @@ -852,24 +852,25 @@ static void remove_ddw(struct device_node *np, bool remove_prop)
+>>>  			np, ret);
+>>>  }
+>>>>  
+>>> -static u64 find_existing_ddw(struct device_node *pdn)
+>>> +static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
+>>>  {
+>>>  	struct direct_window *window;
+>>>  	const struct dynamic_dma_window_prop *direct64;
+>>> -	u64 dma_addr = 0;
+>>> +	bool found = false;
+>>>  
+>>>  	spin_lock(&direct_window_list_lock);
+>>>  	/* check if we already created a window and dupe that config if so */
+>>>  	list_for_each_entry(window, &direct_window_list, list) {
+>>>  		if (window->device == pdn) {
+>>>  			direct64 = window->prop;
+>>> -			dma_addr = be64_to_cpu(direct64->dma_base);
+>>> +			*dma_addr = be64_to_cpu(direct64->dma_base);
+>>> +			found = true;
+>>>  			break;
+>>>  		}
+>>>  	}
+>>>  	spin_unlock(&direct_window_list_lock);
+>>>  
+>>> -	return dma_addr;
+>>> +	return found;
+>>>  }
+>>>  
+>>>  static struct direct_window *ddw_list_add(struct device_node *pdn,
+>>> @@ -1131,15 +1132,15 @@ static void reset_dma_window(struct pci_dev *dev, struct device_node *par_dn)
+>>>   * pdn: the parent pe node with the ibm,dma_window property
+>>>   * Future: also check if we can remap the base window for our base page size
+>>>   *
+>>> - * returns the dma offset for use by the direct mapped DMA code.
+>>> + * returns true if can map all pages (direct mapping), false otherwise..
+>>>   */
+>>> -static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>> +static bool enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>  {
+>>>  	int len, ret;
+>>>  	struct ddw_query_response query;
+>>>  	struct ddw_create_response create;
+>>>  	int page_shift;
+>>> -	u64 dma_addr, max_addr;
+>>> +	u64 max_addr;
+>>>  	struct device_node *dn;
+>>>  	u32 ddw_avail[DDW_APPLICABLE_SIZE];
+>>>  	struct direct_window *window;
+>>> @@ -1150,8 +1151,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>  
+>>>  	mutex_lock(&direct_window_init_mutex);
+>>>  
+>>> -	dma_addr = find_existing_ddw(pdn);
+>>> -	if (dma_addr != 0)
+>>> +	if (find_existing_ddw(pdn, &dev->dev.archdata.dma_offset))
+>>>  		goto out_unlock;
+>>>  
+>>>  	/*
+>>> @@ -1292,7 +1292,7 @@ static u64 enable_ddw(struct pci_dev *dev, struct device_node *pdn)
+>>>  		goto out_free_window;
+>>>  	}
+>>>  
+>>> -	dma_addr = be64_to_cpu(ddwprop->dma_base);
+>>> +	dev->dev.archdata.dma_offset = be64_to_cpu(ddwprop->dma_base);
+>>
+>> Do not you need the same chunk in the find_existing_ddw() case above as
+>> well? Thanks,
+> 
+> The new signature of find_existing_ddw() is 
+> static bool find_existing_ddw(struct device_node *pdn, u64 *dma_addr)
+> 
+> And on enable_ddw(), we call 
+> find_existing_ddw(pdn, &dev->dev.archdata.dma_offset)
+> 
+> And inside the function we do:
+> *dma_addr = be64_to_cpu(direct64->dma_base);
+> 
+> I think it's the same as the chunk before.
+> Am I missing something?
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 6f370e020..bc62537c4 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -1010,6 +1010,8 @@
- #define USB_DEVICE_ID_SAITEK_RAT9	0x0cfa
- #define USB_DEVICE_ID_SAITEK_MMO7	0x0cd0
- #define USB_DEVICE_ID_SAITEK_X52	0x075c
-+#define USB_DEVICE_ID_SAITEK_X52_2	0x0255
-+#define USB_DEVICE_ID_SAITEK_X52_PRO	0x0762
- 
- #define USB_VENDOR_ID_SAMSUNG		0x0419
- #define USB_DEVICE_ID_SAMSUNG_IR_REMOTE	0x0001
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 934fc0a79..6b82eda26 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -147,6 +147,8 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_RETROUSB, USB_DEVICE_ID_RETROUSB_SNES_RETROPORT), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_RUMBLEPAD), HID_QUIRK_BADPAD },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_2), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_SAITEK, USB_DEVICE_ID_SAITEK_X52_PRO), HID_QUIRK_INCREMENT_USAGE_ON_DUPLICATE },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD2), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SEMICO, USB_DEVICE_ID_SEMICO_USB_KEYKOARD), HID_QUIRK_NO_INIT_REPORTS },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_SENNHEISER, USB_DEVICE_ID_SENNHEISER_BTD500USB), HID_QUIRK_NOGET },
+ah no, sorry, you are not missing anything.
+
+
+Reviewed-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+
+
+
+
 -- 
-2.25.1
-
+Alexey
