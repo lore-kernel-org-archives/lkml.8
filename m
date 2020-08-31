@@ -2,115 +2,77 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE8BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B938C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 00C0E20866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s8V6n0xA"
+	by mail.kernel.org (Postfix) with ESMTP id 46443207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598888310;
+	bh=dRR9aUt1NjPXzfH/fGTX+Nj32yowbXOxYq5Ror+CR0s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=QjI8ReyNxVw+/bMgqjagu1A1iqkrtj9yFIjGyF7kdsBnJiPjUTspd2mYhpKh76a25
+	 58eWa5j0L/MdWaAjgQtGaeZcanUwM/HD2yQmwLv3LQHH9bK6MyI8RjZsDSbpOpcFTm
+	 eAepUl/M8ITd64KXPUu/eo0kLy7qlL5lEzfytJF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729374AbgHaPiX (ORCPT
+        id S1729383AbgHaPi2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56456 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728885AbgHaPhz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:37:55 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69A48C061573;
-        Mon, 31 Aug 2020 08:37:53 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id g13so6372009ioo.9;
-        Mon, 31 Aug 2020 08:37:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eKhPg2peu0bzgNag4eCqNzrqsBROFucfPoSefuXeaw4=;
-        b=s8V6n0xALCLBzggML/oL2yBo0b4sDJ8Fn3DqT0kDfs/UOSNjzu72iqpAcc/jOJMKfr
-         A/X2ov0QZLPmxbLfzmr20VzbN4QpLVcB8/ifn3Hnv709YWR2nhhjTxPG24HCRl5kcDT/
-         vk5JoQYRHzNAmuWsYm7HmliEhq5ubgdI3t/2C8Ogm/yL+V7S3MJLBZ323Oq5Vt2/D3DB
-         OKh8Y2eauBBIl0MR/puj5LHTeekB602eHpsIHDKNxTijC2Ktrupnf9uOB+L0aFc+bCT8
-         3JIMkJ1d0l9l6M/R9X1Keodws4gRxelxxxJlBKkosrBYvuZneLQIHkRn4f6Sx1K7ePq5
-         lAzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eKhPg2peu0bzgNag4eCqNzrqsBROFucfPoSefuXeaw4=;
-        b=n1hODbegBkoUw54XoTSBBzD8QeRjRpSzlSTgUW38Mf6oZqjwMEJ74kw1fIxS7vsUmx
-         vP8XWMBisTR6kulnH6kj7xaQUEep2NHs3OI8PM008MxWbPpmuaXt44LfafJ8ycHQhWCW
-         JMUOR1yWkJ29ewRsiEHNJbY16UnsRBuOHefZXMW1MGnfsJQo4U+zcGGTeKnNJwrCQDI+
-         ajKoqwkV+mplbVqKxFZkhveLjcneOwhVaiSqMO7JWvfilR4XH/D3xa2G7usQmlKtRagx
-         LqXkEsfivxDP4L6/UcJovCMZQgmtLumXt5kKaVmWomixFhDV/Z1YfG1d39XYwF1Q/HGV
-         747A==
-X-Gm-Message-State: AOAM531kkzl5xMwZTiz4q7MrG5DST0qLn5gcdRhvMGz/FcFeLAxMBmvy
-        ziI5isq7HNOOO9E5nn9vqApOOTkD08i+BzmH3vM=
-X-Google-Smtp-Source: ABdhPJwNBcqnCmmfCXu/qtgS8DcU6uT+FMOssh+c39rLoFbOIo6hVA6Vu3hW/p2ti6dlo5FyhXDcPgG1rpZIIDrEP2o=
-X-Received: by 2002:a5d:80c6:: with SMTP id h6mr1735767ior.2.1598888272759;
- Mon, 31 Aug 2020 08:37:52 -0700 (PDT)
+        Mon, 31 Aug 2020 11:38:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50772 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728915AbgHaPiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:38:21 -0400
+Received: from C02WT3WMHTD6 (unknown [199.255.45.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 587BC207EA;
+        Mon, 31 Aug 2020 15:38:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598888301;
+        bh=dRR9aUt1NjPXzfH/fGTX+Nj32yowbXOxYq5Ror+CR0s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CC7d46o+Pm+CkvVrOB6UW6BBM9rmOkPiQmp8VCMBWRsaDgBozGt3RQ+vaCsJaINAQ
+         vmjiHw+dZnpdKROSf2KSQFxMBL4ATQpUvXS0jVcvdSpzcMPrHlrRZ1iLDicQUA6cjr
+         tB91n7rcJZzyDW8n+usl9/e12mMS/7m/AaPHoiuU=
+Date:   Mon, 31 Aug 2020 09:38:18 -0600
+From:   Keith Busch <kbusch@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        linux-nvme@lists.infradead.org
+Subject: Re: [PATCH AUTOSEL 5.8 11/42] nvme: skip noiob for zoned devices
+Message-ID: <20200831153818.GA83475@C02WT3WMHTD6>
+References: <20200831152934.1023912-1-sashal@kernel.org>
+ <20200831152934.1023912-11-sashal@kernel.org>
 MIME-Version: 1.0
-References: <cover.1593243079.git.syednwaris@gmail.com> <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
-In-Reply-To: <CACRpkdYyCNEUSOtCJMTm7t1z15oK7nH3KcTe5LreJAzZ0KtQuw@mail.gmail.com>
-From:   Syed Nayyar Waris <syednwaris@gmail.com>
-Date:   Mon, 31 Aug 2020 21:07:41 +0530
-Message-ID: <CACG_h5oW1o9JTngqUi7X2u4mrfjcjA5D9Kz-r6TmBw3orRQ63A@mail.gmail.com>
-Subject: Re: [PATCH v9 0/4] Introduce the for_each_set_clump macro
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Robert Richter <rrichter@marvell.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux PM list <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831152934.1023912-11-sashal@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jul 16, 2020 at 6:19 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> Hi Syed,
->
-> sorry for taking so long. I was on vacation and a bit snowed
-> under by work.
->
-> On Sat, Jun 27, 2020 at 10:10 AM Syed Nayyar Waris <syednwaris@gmail.com> wrote:
->
-> > Since this patchset primarily affects GPIO drivers, would you like
-> > to pick it up through your GPIO tree?
->
-> I have applied the patches to an immutable branch and pushed
-> to kernelorg for testing (autobuilders will play with it I hope).
->
-> If all works fine I will merge this into my devel branch for v5.9.
->
-> It would be desirable if Andrew gave his explicit ACK on it too.
->
-> Yours,
-> Linus Walleij
+On Mon, Aug 31, 2020 at 11:29:03AM -0400, Sasha Levin wrote:
+> From: Keith Busch <kbusch@kernel.org>
+> 
+> [ Upstream commit c41ad98bebb8f4f0335b3c50dbb7583a6149dce4 ]
+> 
+> Zoned block devices reuse the chunk_sectors queue limit to define zone
+> boundaries. If a such a device happens to also report an optimal
+> boundary, do not use that to define the chunk_sectors as that may
+> intermittently interfere with io splitting and zone size queries.
+> 
+> Signed-off-by: Keith Busch <kbusch@kernel.org>
+> Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+> Signed-off-by: Jens Axboe <axboe@kernel.dk>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-Hi Linus,
-
-As a reminder, I would like to point out about the
-'for_each_set_clump' patchset. If it's alright and if anything is
-needed to take it further so that it is finally accepted.
-
-Regards
-Syed Nayyar Waris
+You can safely drop this from stable: nvme zoned devices were only introduced
+to linux in 5.9.
