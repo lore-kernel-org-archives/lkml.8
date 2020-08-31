@@ -2,132 +2,287 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F9CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E63C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:32:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4DDF206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:31:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598866280;
-	bh=ySH1+6Jh9ju1pBcBa/0k0ga+JwPla8k1WrClPUf5np8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HO3C3vrdBbZXnvmxrQYQgh0sC0/sSQLhH1fkAZWfFQQHgieV1ebBBdcD/zAsI6Uvp
-	 SwaZ2RDWNOD12vU3CXq5U1VlPbwGTCczZebTEh+td9DdGbEo/9kyrGbc+5ZKPrx/pS
-	 Wb7tPZqsawJeA1OvrM4QU0X1TNa2tqYKOX5yISTE=
+	by mail.kernel.org (Postfix) with ESMTP id D94C3206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:32:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s3DPMpUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726334AbgHaJbT (ORCPT
+        id S1726411AbgHaJcf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:31:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725960AbgHaJbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:31:16 -0400
-Received: from localhost (p5486cebe.dip0.t-ipconnect.de [84.134.206.190])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0D5F206F0;
-        Mon, 31 Aug 2020 09:31:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598866275;
-        bh=ySH1+6Jh9ju1pBcBa/0k0ga+JwPla8k1WrClPUf5np8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vHClRnfo9ityhzCccYkxwWCz2GkVHT13yIVpkskiFJXqqRZUoN/1f1oR40GHaOavL
-         0LdkkH6jRdCutfHdxwZg/pwLStkt4MOXuJhtlXimuNAJcxRdwavi2cKmFDAVEUAzaR
-         3lGnw5cgeF6a82A2U+Ru/NAkeUYboJR4IrakiQzE=
-Date:   Mon, 31 Aug 2020 11:31:09 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     linux-i2c@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-Subject: Re: [PATCH v6 1/6] i2c: Allow an ACPI driver to manage the device's
- power state during probe
-Message-ID: <20200831093109.GA4632@kunai>
-Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-i2c@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-acpi@vger.kernel.org, Bingbu Cao <bingbu.cao@intel.com>,
-        linux-media@vger.kernel.org,
-        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
-        Hyungwoo Yang <hyungwoo.yang@intel.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
-        "Qiu, Tian Shu" <tian.shu.qiu@intel.com>
-References: <20200826115432.6103-1-sakari.ailus@linux.intel.com>
- <20200826115432.6103-2-sakari.ailus@linux.intel.com>
- <20200828083832.GE1343@ninjato>
- <20200831082305.GD31019@paasikivi.fi.intel.com>
+        Mon, 31 Aug 2020 05:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725915AbgHaJcc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:32:32 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88ACFC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:32:30 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id e16so5233146wrm.2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:32:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=iVYbH9pq5ON75kceYMv0ldXRcI8Va5OUTJxQ40DJfbw=;
+        b=s3DPMpUnlBRCpr7AuJx3CTYtb0SatpC56SyQGWzvJh/NWXOJuKL7poG62fhUtUhGXW
+         1WduYjNLVTWz0THZ+thbkV+Jl2/AXZaog6O8f1139vJe+NYR96j5twvSej7tqRODIkhq
+         kniIeoTgfYlYHL3Mgx8pEQNFf6jK/BKna8/uVSv/1zerP/Z5YIZ0CCyfZU9YmGfUtlAP
+         Mny7O27bR7/dqk/brPWYa9IJ1Y7uGLgiDZwmmK5vl46KpiZNGN9ayVCg2FixQXqkdXsQ
+         8NBDrmFzZ+at5nmoqiZhua3IAxD3xgWatK0Vv2I5IBUc4/GBNFvR3JzPiCIZ7k492595
+         0Jcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=iVYbH9pq5ON75kceYMv0ldXRcI8Va5OUTJxQ40DJfbw=;
+        b=f8m3mHDTPLfPU+J9iVXxIhKZxhqJLoaFO6O7h7vcwfaphjDrtdcZZ7SVf3ddMoI9Nr
+         8imHhHKlceL/NbsXn+6Gehm+c2xckIyyrWuQ2avRPzUQ9qn6xbCXyU/uULlSZV6jlkTD
+         RoC8nifHj44DZnkYCXnU7HOLwAKTcQiMGZYU1tMJsq2Y5b1fJPyi/tZpnRRHfKBhbyCx
+         icuB2f2qt3zj5pUbkSaRE3byP1eDzi4r6l/Ymva7FjeTUYk4QNuyUgJNvKm4GJKbjHHP
+         nc15istXvOZluxJLdW58fLxvtyhiZFH/VA+b5bR0veJrF99S9ov5FR6u0chxEmJhKWKW
+         Jy3A==
+X-Gm-Message-State: AOAM530a3VB7s82/ATPYEI3XV6jLJleIoq7hnmFPmGggj9UhMog0KzNT
+        iQBr79XuFCTIeAAFIXQYOWLIjVTUBJU=
+X-Google-Smtp-Source: ABdhPJxTvECBM8RTxX8g3+utmkDt/KjKwqU5iywA22yPS+/iKuXCqUpd/LnjDn4d+tdSFn9KKYWUAQ==
+X-Received: by 2002:adf:ef45:: with SMTP id c5mr759476wrp.37.1598866349178;
+        Mon, 31 Aug 2020 02:32:29 -0700 (PDT)
+Received: from a-VirtualBox ([103.120.71.253])
+        by smtp.gmail.com with ESMTPSA id t203sm10231507wmg.43.2020.08.31.02.32.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 02:32:28 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 14:32:23 +0500
+From:   Bilal Wasim <bwasim.lkml@gmail.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
+        laurent.pinchart@ideasonboard.com, sam@ravnborg.org,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v3 1/1] drm/bridge: ps8640: Rework power state handling
+Message-ID: <20200831143223.1a775ba6@a-VirtualBox>
+In-Reply-To: <20200827085911.944899-2-enric.balletbo@collabora.com>
+References: <20200827085911.944899-1-enric.balletbo@collabora.com>
+        <20200827085911.944899-2-enric.balletbo@collabora.com>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
-Content-Disposition: inline
-In-Reply-To: <20200831082305.GD31019@paasikivi.fi.intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Enric,
 
+On Thu, 27 Aug 2020 10:59:11 +0200
+Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
 
-> This patchset is really about changing the default of ACPI powering up I=
-=C2=B2C
-> devices. On OF the drivers are indeed responsible for that.
+> The get_edid() callback can be triggered anytime by an ioctl, i.e
+> 
+>   drm_mode_getconnector (ioctl)
+>     -> drm_helper_probe_single_connector_modes
+>        -> drm_bridge_connector_get_modes
+>           -> ps8640_bridge_get_edid  
+> 
+> Actually if the bridge pre_enable() function was not called before
+> get_edid(), the driver will not be able to get the EDID properly and
+> display will not work until a second get_edid() call is issued and if
+> pre_enable() is called before. The side effect of this, for example,
+> is that you see anything when `Frecon` starts, neither the splash
+> screen, until the graphical session manager starts.
+> 
+> To fix this we need to make sure that all we need is enabled before
+> reading the EDID. This means the following:
+> 
+> 1. If get_edid() is called before having the device powered we need to
+>    power on the device. In such case, the driver will power off again
+> the device.
+> 
+> 2. If get_edid() is called after having the device powered, all should
+>    just work. We added a powered flag in order to avoid recurrent
+> calls to ps8640_bridge_poweron() and unneeded delays.
+> 
+> 3. This seems to be specific for this device, but we need to make sure
+>    the panel is powered on before do a power on cycle on this device.
+>    Otherwise the device fails to retrieve the EDID.
+> 
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> ---
+> 
+> Changes in v3:
+> - Make poweron/poweroff and pre_enable/post_disable reverse one to
+> each other (Sam Ravnborg)
+> 
+> Changes in v2:
+> - Use drm_bridge_chain_pre_enable/post_disable() helpers (Sam
+> Ravnborg)
+> 
+>  drivers/gpu/drm/bridge/parade-ps8640.c | 68
+> ++++++++++++++++++++++---- 1 file changed, 58 insertions(+), 10
+> deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c
+> b/drivers/gpu/drm/bridge/parade-ps8640.c index
+> 9f7b7a9c53c5..7bd0affa057a 100644 ---
+> a/drivers/gpu/drm/bridge/parade-ps8640.c +++
+> b/drivers/gpu/drm/bridge/parade-ps8640.c @@ -65,6 +65,7 @@ struct
+> ps8640 { struct regulator_bulk_data supplies[2];
+>  	struct gpio_desc *gpio_reset;
+>  	struct gpio_desc *gpio_powerdown;
+> +	bool powered;
+>  };
+>  
+>  static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
+> @@ -91,13 +92,15 @@ static int ps8640_bridge_vdo_control(struct
+> ps8640 *ps_bridge, return 0;
+>  }
+>  
+> -static void ps8640_pre_enable(struct drm_bridge *bridge)
+> +static void ps8640_bridge_poweron(struct ps8640 *ps_bridge)
+>  {
+> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+>  	struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
+>  	unsigned long timeout;
+>  	int ret, status;
+>  
+> +	if (ps_bridge->powered)
+> +		return;
+> +
+>  	ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
+>  				    ps_bridge->supplies);
+>  	if (ret < 0) {
+> @@ -152,10 +155,6 @@ static void ps8640_pre_enable(struct drm_bridge
+> *bridge) goto err_regulators_disable;
+>  	}
+>  
+> -	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
+> -	if (ret)
+> -		goto err_regulators_disable;
+> -
+>  	/* Switch access edp panel's edid through i2c */
+>  	ret = i2c_smbus_write_byte_data(client, PAGE2_I2C_BYPASS,
+>  					I2C_BYPASS_EN);
+> @@ -164,6 +163,8 @@ static void ps8640_pre_enable(struct drm_bridge
+> *bridge) goto err_regulators_disable;
+>  	}
+>  
+> +	ps_bridge->powered = true;
+> +
+>  	return;
+>  
+>  err_regulators_disable:
+> @@ -171,12 +172,12 @@ static void ps8640_pre_enable(struct drm_bridge
+> *bridge) ps_bridge->supplies);
+>  }
+>  
+> -static void ps8640_post_disable(struct drm_bridge *bridge)
+> +static void ps8640_bridge_poweroff(struct ps8640 *ps_bridge)
+>  {
+> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+>  	int ret;
+>  
+> -	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
+> +	if (!ps_bridge->powered)
+> +		return;
+>  
+>  	gpiod_set_value(ps_bridge->gpio_reset, 1);
+>  	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
+> @@ -184,6 +185,28 @@ static void ps8640_post_disable(struct
+> drm_bridge *bridge) ps_bridge->supplies);
+>  	if (ret < 0)
+>  		DRM_ERROR("cannot disable regulators %d\n", ret);
+> +
+> +	ps_bridge->powered = false;
+> +}
+> +
+> +static void ps8640_pre_enable(struct drm_bridge *bridge)
+> +{
+> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +	int ret;
+> +
+> +	ps8640_bridge_poweron(ps_bridge);
+> +
+> +	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
+> +	if (ret < 0)
+> +		ps8640_bridge_poweroff(ps_bridge);
+> +}
+> +
+> +static void ps8640_post_disable(struct drm_bridge *bridge)
+> +{
+> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +
+> +	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
+> +	ps8640_bridge_poweroff(ps_bridge);
+>  }
+>  
+>  static int ps8640_bridge_attach(struct drm_bridge *bridge,
+> @@ -249,9 +272,34 @@ static struct edid
+> *ps8640_bridge_get_edid(struct drm_bridge *bridge, struct
+> drm_connector *connector) {
+>  	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
+> +	bool poweroff = !ps_bridge->powered;
+> +	struct edid *edid;
+> +
+> +	/*
+> +	 * When we end calling get_edid() triggered by an ioctl, i.e
+> +	 *
+> +	 *   drm_mode_getconnector (ioctl)
+> +	 *     -> drm_helper_probe_single_connector_modes
+> +	 *        -> drm_bridge_connector_get_modes
+> +	 *           -> ps8640_bridge_get_edid
+> +	 *
+> +	 * We need to make sure that what we need is enabled before
+> reading
+> +	 * EDID, for this chip, we need to do a full poweron,
+> otherwise it will
+> +	 * fail.
+> +	 */
+> +	drm_bridge_chain_pre_enable(bridge);
 
-So, maybe it makes sense then to move from 'device_property_present()'
-to 'acpi_dev_get_property()' or something alike? To clearly tell this
-binding is expected to be used with ACPI only. Then, we can skip this
-discussion now and postpone it to when someone wants to use it with DT.
-Which is hopefully never. Or does this approach have drawbacks?
+Are we sure that pre_enable is always good enough to get the EDID? I
+know that we only have support for ps8640 on the MT8173 SoC which works
+only with pre_enable, but I think a more scalable solution would be to
+call drm_bridge_chain_pre_enable / drm_bridge_chain_enable here, and
+drm_bridge_chain_post_disable / drm_bridge_chain_disable when disabling
+the chain. If this is not a concern and we are sure that pre_enable
+will always work (especially on newer boards), then please ignore my
+comment. 
 
-> My original series had a field in struct device_driver for this purpose b=
-ut
-> Greg K-H suggested moving it to I=C2=B2C instead:
->=20
-> <URL:https://lore.kernel.org/linux-acpi/20190826084343.GA1095@kroah.com/>
+Other than this, everything looks fine.
 
-Ok, we can still factor it out in the unlikely case it needs to be done
-again.
+>  
+> -	return drm_get_edid(connector,
+> +	edid = drm_get_edid(connector,
+>  			    ps_bridge->page[PAGE0_DP_CNTL]->adapter);
+> +
+> +	/*
+> +	 * If we call the get_edid() function without having enabled
+> the chip
+> +	 * before, return the chip to its original power state.
+> +	 */
+> +	if (poweroff)
+> +		drm_bridge_chain_post_disable(bridge);
+> +
+> +	return edid;
+>  }
+>  
+>  static const struct drm_bridge_funcs ps8640_bridge_funcs = {
 
-I still have the question via which tree this should go upstream?
-It is probably more I2C than ACPI?
-
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9Mw1kACgkQFA3kzBSg
-KbbvUg//ZGzzxNAg3XIfseLb3DTZeNc9KriLfOkTeI5xVft/KknFffM2O7EKtywl
-W/QFoIAt2CeNwlc3Xn7Gr4H2//L0FFa4UZv9pjpIUSCo4h6PQpre24LpGSaj104h
-IK4qLm2+1GqeA7OUQiXdjz9To98pw//VcJ0crCL3s+ymNiC2oTr/nwRAiRILmzrZ
-lDYPrtjoeL1NPHw/SCMh6Ga3bOFTsG7pkiNeXgdAigf79hE5GqpDVZ+VxOAGb3Xv
-WH0FKsHA47zBQGa8Hp+tf9FrCwtLN75GF1VuqqXrRxmHeFHOn/lHbg94d7NXkhZh
-RrL9TTRa1SMRnxJjc3Gn8usXw3W/xIa+CMLjyC6oxqzMMRr20qrfxQLPMqmxlMnK
-4+CC5cslBZNQm1xSeI3eqF92sTkViVxCFudNAfQwl1FlTGYciW5j57wRQT7qqGl9
-aAvrPBc1IyK87N95Mse7Cw8B/sIlws36nPqG+xPdf8sSZv3RRgpB3XZ8t7jId5bl
-IzEXhVmZo63xc/4TV5Wl85FVAbWjkJBNZN7C0rVfTDJ/Cvn9Mlzt7FPuOyMwPddf
-zuWpnRFjUolq26i/kMQn2mUs9dhzFxvU4HZT+JdYmg1YaLWPHxd0m7QmhFcS1Ksc
-Pp9XiT6UQd/LlOLMgO8gxhTiLUlf4Ssa2+Rcs6dFgMzIEG/FFqA=
-=uxY3
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+-Bilal
