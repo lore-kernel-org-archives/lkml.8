@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BA7C2BC11
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:40:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78EE7C2BC0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:40:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9402B2078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:40:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512A7206EB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:40:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KW9zZ/Tw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="baActThM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgHaEkq (ORCPT
+        id S1726604AbgHaEkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 00:40:46 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1155 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725446AbgHaEkk (ORCPT
+        Mon, 31 Aug 2020 00:40:52 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:9147 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbgHaEko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 00:40:40 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4c7ec80000>; Sun, 30 Aug 2020 21:38:33 -0700
+        Mon, 31 Aug 2020 00:40:44 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4c7f3d0001>; Sun, 30 Aug 2020 21:40:29 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sun, 30 Aug 2020 21:40:38 -0700
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Sun, 30 Aug 2020 21:40:43 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sun, 30 Aug 2020 21:40:38 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
- 2020 04:40:34 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Mon, 31 Aug 2020 04:40:34 +0000
+        by hqpgpgate101.nvidia.com on Sun, 30 Aug 2020 21:40:43 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 04:40:41 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 31 Aug 2020 04:40:41 +0000
 Received: from jckuo-lt.nvidia.com (Not Verified[10.19.101.4]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4c7f400001>; Sun, 30 Aug 2020 21:40:33 -0700
+        id <B5f4c7f470000>; Sun, 30 Aug 2020 21:40:40 -0700
 From:   JC Kuo <jckuo@nvidia.com>
 To:     <gregkh@linuxfoundation.org>, <thierry.reding@gmail.com>,
         <robh@kernel.org>, <jonathanh@nvidia.com>, <kishon@ti.com>
 CC:     <linux-tegra@vger.kernel.org>, <linux-usb@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <nkristam@nvidia.com>, JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH v2 01/12] clk: tegra: Add PLLE HW power sequencer control
-Date:   Mon, 31 Aug 2020 12:40:32 +0800
-Message-ID: <20200831044043.1561074-2-jckuo@nvidia.com>
+Subject: [PATCH v2 04/12] phy: tegra: xusb: t210: add lane_iddq operations
+Date:   Mon, 31 Aug 2020 12:40:35 +0800
+Message-ID: <20200831044043.1561074-5-jckuo@nvidia.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831044043.1561074-1-jckuo@nvidia.com>
 References: <20200831044043.1561074-1-jckuo@nvidia.com>
@@ -55,135 +55,232 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598848713; bh=z9aKw1vyHrzjJiun8JEcoFXSJ50fQe9EfkdaKJIYd9U=;
+        t=1598848829; bh=F4URxIm7hAp3xls6554zWF/g3WCHX59U8xOrhdagm6U=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=KW9zZ/Twrtu0tbtiMZVDQNGbVdAGJ1jmLJi/h8GcR0QJR+UXm3jR9500X5KNY1Ksm
-         0wIY9Dj50fr00INqviIcTng7mjqmga3jvmX/081ou2uM7Lg60OA76VuwqPeAezUElJ
-         tawclycg0PyTOdjD7HmKBHVJYx0l47iZViJtd+VrUiuUd28EMru6ehxteMGzXV0Prg
-         bYlsLot5zIyl76NoAOVGezA0g/A6y0lE2xm2BgwPncBaQOsEaDxwLroUZ6e5J3H1gX
-         JLglAobbgSwNQSN07SJdMM0IKkRikJSZTusilROahGOpc/ZS3ONeAhwMGogUn3pxMP
-         3xR5vFLk6wIhg==
+        b=baActThMj/eSSESsXm2dBNTO9iUvrPTiDbK/j+8F72YbmTiTspChpfYDtLGCxSNjb
+         7Sf4KEnE298/4yAdnpt1pT46T0ltnxggrTH4ONC+A2B5pjzSFMUbl4mFwser4J3To9
+         WHxa5A1ze5DhWSvVDbzp5jZfx8dKP6gDhHXitkf9VCWA24g9LeI5sp7a5O1tLbEmGh
+         QfPkuS23VBXPb0oW2RUCOSUJzftUsZCE9GpaXOAzXraVapKFzeWCuNL1vMy2r60aCH
+         Zus520YGUxxOO+7+gN5vVLiGZzhntOgQz8AjRdvSxInbIumFz15JcZEIVio6HNC6OZ
+         4XuA/92S80+Bg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PLLE has a hardware power sequencer logic which is a state machine
-that can power on/off PLLE without any software intervention. The
-sequencer has two inputs, one from XUSB UPHY PLL and the other from
-SATA UPHY PLL. PLLE provides reference clock to XUSB and SATA UPHY
-PLLs. When both of the downstream PLLs are powered-off, PLLE hardware
-power sequencer will automatically power off PLLE for power saving.
-
-XUSB and SATA UPHY PLLs also have their own hardware power sequencer
-logic. XUSB UPHY PLL is shared between XUSB SuperSpeed ports and PCIE
-controllers. The XUSB UPHY PLL hardware power sequencer has inputs
-from XUSB and PCIE. When all of the XUSB SuperSpeed ports and PCIE
-controllers are in low power state, XUSB UPHY PLL hardware power
-sequencer automatically power off PLL and flags idle to PLLE hardware
-power sequencer. Similar applies to SATA UPHY PLL.
-
-PLLE hardware power sequencer has to be enabled after both downstream
-sequencers are enabled.
-
-This commit adds two helper functions:
-1. tegra210_plle_hw_sequence_start() for XUSB PADCTL driver to enable
-   PLLE hardware sequencer at proper time.
-
-2. tegra210_plle_hw_sequence_is_enabled() for XUSB PADCTL driver to
-   check whether PLLE hardware sequencer has been enabled or not.
+As per Tegra210 TRM, before changing lane assignments, driver should
+keep lanes in IDDQ and sleep state; after changing lane assignments,
+driver should bring lanes out of IDDQ.
+This commit implements the required operations.
 
 Signed-off-by: JC Kuo <jckuo@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra210.c | 51 ++++++++++++++++++++++++++++++++
- include/linux/clk/tegra.h        |  2 ++
- 2 files changed, 53 insertions(+)
+ drivers/phy/tegra/xusb-tegra210.c | 94 +++++++++++++++++++++++++++++++
+ drivers/phy/tegra/xusb.c          |  6 ++
+ drivers/phy/tegra/xusb.h          |  4 +-
+ 3 files changed, 103 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra210.c b/drivers/clk/tegra/clk-tegra=
-210.c
-index 68cbb98af567..255de6c23c67 100644
---- a/drivers/clk/tegra/clk-tegra210.c
-+++ b/drivers/clk/tegra/clk-tegra210.c
-@@ -403,6 +403,14 @@ static unsigned long tegra210_input_freq[] =3D {
- #define PLLRE_BASE_DEFAULT_MASK		0x1c000000
- #define PLLRE_MISC0_WRITE_MASK		0x67ffffff
+diff --git a/drivers/phy/tegra/xusb-tegra210.c b/drivers/phy/tegra/xusb-teg=
+ra210.c
+index 3a2d9797fb9f..fe1ab440424d 100644
+--- a/drivers/phy/tegra/xusb-tegra210.c
++++ b/drivers/phy/tegra/xusb-tegra210.c
+@@ -198,6 +198,18 @@
+ #define XUSB_PADCTL_UPHY_MISC_PAD_CTL1_AUX_RX_TERM_EN BIT(18)
+ #define XUSB_PADCTL_UPHY_MISC_PAD_CTL1_AUX_RX_MODE_OVRD BIT(13)
 =20
-+/* PLLE */
-+#define PLLE_MISC_IDDQ_SW_CTRL		(1 << 14)
-+#define PLLE_AUX_USE_LOCKDET		(1 << 3)
-+#define PLLE_AUX_SS_SEQ_INCLUDE		(1 << 31)
-+#define PLLE_AUX_ENABLE_SWCTL		(1 << 4)
-+#define PLLE_AUX_SS_SWCTL		(1 << 6)
-+#define PLLE_AUX_SEQ_ENABLE		(1 << 24)
++#define XUSB_PADCTL_UPHY_MISC_PAD_PX_CTL2(x) (0x464 + (x) * 0x40)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ BIT(0)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ_OVRD BIT(1)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_MASK (0x3 << 4)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_VAL (0x3 << 4)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_PWR_OVRD BIT(24)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ BIT(8)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ_OVRD BIT(9)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_MASK (0x3 << 12)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_VAL (0x3 << 12)
++#define XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_PWR_OVRD BIT(25)
 +
- /* PLLX */
- #define PLLX_USE_DYN_RAMP		1
- #define PLLX_BASE_LOCK			(1 << 27)
-@@ -489,6 +497,49 @@ static unsigned long tegra210_input_freq[] =3D {
- #define PLLU_MISC0_WRITE_MASK		0xbfffffff
- #define PLLU_MISC1_WRITE_MASK		0x00000007
+ #define XUSB_PADCTL_UPHY_PLL_S0_CTL1 0x860
 =20
-+bool tegra210_plle_hw_sequence_is_enabled(void)
+ #define XUSB_PADCTL_UPHY_PLL_S0_CTL2 0x864
+@@ -209,6 +221,7 @@
+ #define XUSB_PADCTL_UPHY_PLL_S0_CTL8 0x87c
+=20
+ #define XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL1 0x960
++#define XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL2 0x964
+=20
+ #define XUSB_PADCTL_UPHY_USB3_PADX_ECTL1(x) (0xa60 + (x) * 0x40)
+ #define XUSB_PADCTL_UPHY_USB3_PAD_ECTL1_TX_TERM_CTRL_SHIFT 16
+@@ -1636,6 +1649,63 @@ static const struct tegra_xusb_pad_soc tegra210_hsic=
+_pad =3D {
+ 	.ops =3D &tegra210_hsic_ops,
+ };
+=20
++static void
++tegra210_uphy_lane_iddq_enable(struct tegra_xusb_padctl *padctl, unsigned =
+lane)
 +{
-+	u32 val;
++	u32 val, offset;
 +
-+	val =3D readl_relaxed(clk_base + PLLE_AUX);
-+	if (val & PLLE_AUX_SEQ_ENABLE)
-+		return true;
++	if (lane <=3D 6)
++		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_PX_CTL2(lane);
++	else if (lane =3D=3D 7)
++		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL2;
++	else {
++		WARN(true, "invalid lane %u\n", lane);
++		return;
++	}
 +
-+	return false;
++	val =3D padctl_readl(padctl, offset);
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ_OVRD;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ_OVRD;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_PWR_OVRD;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_PWR_OVRD;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ;
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_MASK;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_VAL;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ;
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_MASK;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_VAL;
++	padctl_writel(padctl, val, offset);
 +}
-+EXPORT_SYMBOL_GPL(tegra210_plle_hw_sequence_is_enabled);
 +
-+int tegra210_plle_hw_sequence_start(void)
++static void
++tegra210_uphy_lane_iddq_disable(struct tegra_xusb_padctl *padctl, unsigned=
+ lane)
 +{
-+	u32 val;
++	u32 val, offset;
 +
-+	if (tegra210_plle_hw_sequence_is_enabled())
-+		return 0;
++	if (lane <=3D 6)
++		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_PX_CTL2(lane);
++	else if (lane =3D=3D 7)
++		offset =3D XUSB_PADCTL_UPHY_MISC_PAD_S0_CTL2;
++	else {
++		WARN(true, "invalid lane %d\n", lane);
++		return;
++	}
 +
-+	/* skip if PLLE is not enabled yet */
-+	val =3D readl_relaxed(clk_base + PLLE_MISC0);
-+	if (!(val & PLLE_MISC_LOCK))
-+		return -EIO;
-+
-+	val &=3D ~PLLE_MISC_IDDQ_SW_CTRL;
-+	writel_relaxed(val, clk_base + PLLE_MISC0);
-+
-+	val =3D readl_relaxed(clk_base + PLLE_AUX);
-+	val |=3D (PLLE_AUX_USE_LOCKDET | PLLE_AUX_SS_SEQ_INCLUDE);
-+	val &=3D ~(PLLE_AUX_ENABLE_SWCTL | PLLE_AUX_SS_SWCTL);
-+	writel_relaxed(val, clk_base + PLLE_AUX);
-+
-+	fence_udelay(1, clk_base);
-+
-+	val |=3D PLLE_AUX_SEQ_ENABLE;
-+	writel_relaxed(val, clk_base + PLLE_AUX);
-+
-+	fence_udelay(1, clk_base);
-+
-+	return 0;
++	val =3D padctl_readl(padctl, offset);
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ_OVRD;
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ_OVRD;
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_PWR_OVRD;
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_PWR_OVRD;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_IDDQ;
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_MASK;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_TX_SLEEP_VAL;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_IDDQ;
++	val &=3D ~XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_MASK;
++	val |=3D XUSB_PADCTL_UPHY_MISC_PAD_CTL2_RX_SLEEP_VAL;
++	padctl_writel(padctl, val, offset);
 +}
-+EXPORT_SYMBOL_GPL(tegra210_plle_hw_sequence_start);
 +
- void tegra210_xusb_pll_hw_control_enable(void)
- {
- 	u32 val;
-diff --git a/include/linux/clk/tegra.h b/include/linux/clk/tegra.h
-index 3f01d43f0598..7a6b29ca3040 100644
---- a/include/linux/clk/tegra.h
-+++ b/include/linux/clk/tegra.h
-@@ -123,6 +123,8 @@ static inline void tegra_cpu_clock_resume(void)
++
+ static const char *tegra210_pcie_functions[] =3D {
+ 	"pcie-x1",
+ 	"usb3-ss",
+@@ -1808,9 +1878,21 @@ static void tegra210_pcie_lane_remove(struct tegra_x=
+usb_lane *lane)
+ 	kfree(pcie);
  }
- #endif
 =20
-+extern int tegra210_plle_hw_sequence_start(void);
-+extern bool tegra210_plle_hw_sequence_is_enabled(void);
- extern void tegra210_xusb_pll_hw_control_enable(void);
- extern void tegra210_xusb_pll_hw_sequence_start(void);
- extern void tegra210_sata_pll_hw_control_enable(void);
++static void tegra210_pcie_lane_iddq_enable(struct tegra_xusb_lane *lane)
++{
++	tegra210_uphy_lane_iddq_enable(lane->pad->padctl, lane->index);
++}
++
++static void tegra210_pcie_lane_iddq_disable(struct tegra_xusb_lane *lane)
++{
++	tegra210_uphy_lane_iddq_disable(lane->pad->padctl, lane->index);
++}
++
+ static const struct tegra_xusb_lane_ops tegra210_pcie_lane_ops =3D {
+ 	.probe =3D tegra210_pcie_lane_probe,
+ 	.remove =3D tegra210_pcie_lane_remove,
++	.iddq_enable =3D tegra210_pcie_lane_iddq_enable,
++	.iddq_disable =3D tegra210_pcie_lane_iddq_disable,
+ };
+=20
+ static int tegra210_pcie_phy_init(struct phy *phy)
+@@ -1971,9 +2053,21 @@ static void tegra210_sata_lane_remove(struct tegra_x=
+usb_lane *lane)
+ 	kfree(sata);
+ }
+=20
++static void tegra210_sata_lane_iddq_enable(struct tegra_xusb_lane *lane)
++{
++	tegra210_uphy_lane_iddq_enable(lane->pad->padctl, lane->index + 7);
++}
++
++static void tegra210_sata_lane_iddq_disable(struct tegra_xusb_lane *lane)
++{
++	tegra210_uphy_lane_iddq_disable(lane->pad->padctl, lane->index + 7);
++}
++
+ static const struct tegra_xusb_lane_ops tegra210_sata_lane_ops =3D {
+ 	.probe =3D tegra210_sata_lane_probe,
+ 	.remove =3D tegra210_sata_lane_remove,
++	.iddq_enable =3D tegra210_sata_lane_iddq_enable,
++	.iddq_disable =3D tegra210_sata_lane_iddq_disable,
+ };
+=20
+ static int tegra210_sata_phy_init(struct phy *phy)
+diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
+index b48b590aa0c1..74abd67e3a31 100644
+--- a/drivers/phy/tegra/xusb.c
++++ b/drivers/phy/tegra/xusb.c
+@@ -321,11 +321,17 @@ static void tegra_xusb_lane_program(struct tegra_xusb=
+_lane *lane)
+ 	if (soc->num_funcs < 2)
+ 		return;
+=20
++	if (lane->pad->ops->iddq_enable && lane->pad->ops->iddq_disable)
++		lane->pad->ops->iddq_enable(lane);
++
+ 	/* choose function */
+ 	value =3D padctl_readl(padctl, soc->offset);
+ 	value &=3D ~(soc->mask << soc->shift);
+ 	value |=3D lane->function << soc->shift;
+ 	padctl_writel(padctl, value, soc->offset);
++
++	if (lane->pad->ops->iddq_enable && lane->pad->ops->iddq_disable)
++		lane->pad->ops->iddq_disable(lane);
+ }
+=20
+ static void tegra_xusb_pad_program(struct tegra_xusb_pad *pad)
+diff --git a/drivers/phy/tegra/xusb.h b/drivers/phy/tegra/xusb.h
+index 0c828694cf2d..485b692a3b15 100644
+--- a/drivers/phy/tegra/xusb.h
++++ b/drivers/phy/tegra/xusb.h
+@@ -22,6 +22,7 @@ struct phy;
+ struct phy_provider;
+ struct platform_device;
+ struct regulator;
++struct tegra_xusb_padctl;
+=20
+ /*
+  * lanes
+@@ -126,6 +127,8 @@ struct tegra_xusb_lane_ops {
+ 					 struct device_node *np,
+ 					 unsigned int index);
+ 	void (*remove)(struct tegra_xusb_lane *lane);
++	void (*iddq_enable)(struct tegra_xusb_lane *lane);
++	void (*iddq_disable)(struct tegra_xusb_lane *lane);
+ };
+=20
+ bool tegra_xusb_lane_check(struct tegra_xusb_lane *lane, const char *funct=
+ion);
+@@ -134,7 +137,6 @@ bool tegra_xusb_lane_check(struct tegra_xusb_lane *lane=
+, const char *function);
+  * pads
+  */
+ struct tegra_xusb_pad_soc;
+-struct tegra_xusb_padctl;
+=20
+ struct tegra_xusb_pad_ops {
+ 	struct tegra_xusb_pad *(*probe)(struct tegra_xusb_padctl *padctl,
 --=20
 2.25.1
 
