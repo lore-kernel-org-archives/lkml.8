@@ -2,260 +2,162 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579B3C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FFDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D23120767
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598889720;
-	bh=iUR8IYgzp/6akmwOXmAd+HX6cW9xEtvKjxHO8rwb4gg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EDzsrDqEDykZAEEo0XNymZhe+yB4yvyfswxwk0l4t0HUrmxYOl2zmUnBA0S41Qf00
-	 /XyIvEyISL/IElsHsb7Rlo/A50atg/f621vjSZPh8XMidtD1GkICAsWosVMVaQfNxP
-	 DWPG1BCyJcuCdOqJAyRTGJg2QylkVFtLUPbcZZTo=
+	by mail.kernel.org (Postfix) with ESMTP id 8077F20767
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:02:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NuUGQOHx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgHaQB6 (ORCPT
+        id S1728267AbgHaQCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:01:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56146 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726946AbgHaQB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:01:58 -0400
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FA2C2145D
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:01:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598889717;
-        bh=iUR8IYgzp/6akmwOXmAd+HX6cW9xEtvKjxHO8rwb4gg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QgTQxhab31aK5spObMDeQRm0++fmXdWGSLBqGPRYsrl+A44Hs5RUzVJdKGzyoJpIC
-         +L5oN2QF/CQ1HC6ogvMfm6hRkVp1bNWGc+1tAoycznjR2HPx+cXyZ0tZiRdzQ6Q5i6
-         JC8F3z511YS4tU5GwhJIASJJl7DI5dFEGecS8uoc=
-Received: by mail-ej1-f54.google.com with SMTP id i26so8868755ejb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:01:57 -0700 (PDT)
-X-Gm-Message-State: AOAM531SuMzx+9wStZIr/71nO8aM62TV/tR4umFQdgPC569xHB+CgFkH
-        mSGdi6sSS9KVN66cf0MLO+4UE4mbe8CeLmeKVQ==
-X-Google-Smtp-Source: ABdhPJzJNO5A2mjJEp7v7G3h9ZfxVuiBb0Bqcn+T3k8lEdhP6GrZzueU5tpm/gV8/nLYYaAth6caXxEIfGgQ0YrhwOE=
-X-Received: by 2002:a17:906:a141:: with SMTP id bu1mr1690401ejb.303.1598889715909;
- Mon, 31 Aug 2020 09:01:55 -0700 (PDT)
+        Mon, 31 Aug 2020 12:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60216 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728165AbgHaQCE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 12:02:04 -0400
+Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3326EC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:02:04 -0700 (PDT)
+Received: by mail-qt1-x843.google.com with SMTP id t20so5081115qtr.8
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:02:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=szyBZmXmGTfhNbvEwHNrOEoyR6ZVqLq4aSXH4RxuP/w=;
+        b=NuUGQOHxyfqfMJUN82zrksWb8lPBil57bkrhwOwi9HrnrM305tAW7ZTvinRCmW8ntx
+         GDwP698CZW7qroPU3cIlSkjc0xqDq/mYioEzHXYWx1q68VaVBgpKJ4T+1CnZXhGa9Kqe
+         jSq2fj5vtbnRlsp1bKweEpUH3we26uOqQm4JhXtxt3HVM9bhoUcLdfKYlQPrYJWQe2DO
+         3puXqUK9qh1zQNZDKGIvz9Q6FBu2ypq5LCNxHhn/NZQjW5Bq8i30dP1uKSQtEqub3gcr
+         7qw/ly98IFJafxtRe3kU1V4dS2ww1hCzbFJtsNqOrHO8AarB1BA7BYm3VYBuZU9COGH6
+         ZuYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=szyBZmXmGTfhNbvEwHNrOEoyR6ZVqLq4aSXH4RxuP/w=;
+        b=mC/rs6SSgDiNRSavFzAp2qjL2TqciFV8TrKrMajPUU6xdCQ4Q1Hiu11jxH4r/UwJgi
+         50tZYsU2HrzcSpw5+nkslWKgD+HmNLe0yamcUimaPEAtq8DFkPKCrEcxKKCkm18V7zMV
+         uPUcLwifDiREJGsDZEfHkVnvGNlZFAlB0s+1X1ouQLwsQzujWJPfVBMb9Zl4lTVKv9tT
+         FslW//AqdNwDssKLps8yL40hdJOJraedqWBw5+Qi70yJdlMysVV5rOKScCdePJvC9Tbo
+         53xIsfSgetSJqpnf+/uWWeZJMiR0Jc1MHJp1oapXuTPNJg4qhH5r/sRIEkmS6qo76G+m
+         K+zA==
+X-Gm-Message-State: AOAM533mos8RRnqo/vCTl3lJunSlndYfmudTmyu/TnuPmxkWfleOsquu
+        Z3/3Tiffda8QoJ6TLRYxy0GWFg==
+X-Google-Smtp-Source: ABdhPJwgW/w1RFlFAb2nTVP6gOrwqGGnH7eA7HzonF2C/qJlWUVmcq0S9YcX8jXnTG3mrmSkcfE+Zw==
+X-Received: by 2002:ac8:142:: with SMTP id f2mr1918414qtg.191.1598889723060;
+        Mon, 31 Aug 2020 09:02:03 -0700 (PDT)
+Received: from lca.pw (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id g64sm7050652qkf.71.2020.08.31.09.02.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 09:02:01 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 12:01:55 -0400
+From:   Qian Cai <cai@lca.pw>
+To:     Eric Sandeen <sandeen@sandeen.net>
+Cc:     darrick.wong@oracle.com, hch@infradead.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] iomap: Fix WARN_ON_ONCE() from unprivileged users
+Message-ID: <20200831160154.GA4080@lca.pw>
+References: <20200831014511.17174-1-cai@lca.pw>
+ <d34753a2-57bf-8013-015a-adeb3fe9447c@sandeen.net>
 MIME-Version: 1.0
-References: <20200823014830.15962-1-chunkuang.hu@kernel.org>
- <20200823014830.15962-4-chunkuang.hu@kernel.org> <CAAOTY__mJ=+Mg7PikH+bZ9kPxO8yiURhJSt0Ms_Z9=YGuBwCRg@mail.gmail.com>
- <1598838410.7054.7.camel@mhfsdcap03>
-In-Reply-To: <1598838410.7054.7.camel@mhfsdcap03>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Tue, 1 Sep 2020 00:01:44 +0800
-X-Gmail-Original-Message-ID: <CAAOTY__+oAynmN6--z4j8vYNRdGVXE+Do=YBkW7CtSROBBwU7Q@mail.gmail.com>
-Message-ID: <CAAOTY__+oAynmN6--z4j8vYNRdGVXE+Do=YBkW7CtSROBBwU7Q@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] phy: mediatek: Move mtk_hdmi_phy driver into
- drivers/phy/mediatek folder
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc:     Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>, CK Hu <ck.hu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d34753a2-57bf-8013-015a-adeb3fe9447c@sandeen.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Chunfeng:
+On Mon, Aug 31, 2020 at 10:48:59AM -0500, Eric Sandeen wrote:
+> On 8/30/20 8:45 PM, Qian Cai wrote:
+> > It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
+> > unprivileged users which would taint the kernel, or worse - panic if
+> > panic_on_warn or panic_on_taint is set. Hence, just convert it to
+> > pr_warn_ratelimited() to let users know their workloads are racing.
+> > Thanks Dave Chinner for the initial analysis of the racing reproducers.
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> > 
+> > v2: Record the path, pid and command as well.
+> > 
+> >  fs/iomap/direct-io.c | 17 ++++++++++++++++-
+> >  1 file changed, 16 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> > index c1aafb2ab990..66a4502ef675 100644
+> > --- a/fs/iomap/direct-io.c
+> > +++ b/fs/iomap/direct-io.c
+> > @@ -374,6 +374,7 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+> >  		void *data, struct iomap *iomap, struct iomap *srcmap)
+> >  {
+> >  	struct iomap_dio *dio = data;
+> > +	char pathname[128], *path;
+> >  
+> >  	switch (iomap->type) {
+> >  	case IOMAP_HOLE:
+> > @@ -389,7 +390,21 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+> >  	case IOMAP_INLINE:
+> >  		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+> >  	default:
+> > -		WARN_ON_ONCE(1);
+> 
+> It seems like we should explicitly catch IOMAP_DELALLOC for this case, and leave the
+> default: as a WARN_ON that is not user-triggerable? i.e.
+> 
+> case IOMAP_DELALLOC:
+> 	<all the fancy warnings>
+> 	return -EIO;
+> default:
+> 	WARN_ON_ONCE(1);
+> 	return -EIO;
+> 
+> > +		/*
+> > +		 * DIO is not serialised against mmap() access at all, and so
+> > +		 * if the page_mkwrite occurs between the writeback and the
+> > +		 * iomap_apply() call in the DIO path, then it will see the
+> > +		 * DELALLOC block that the page-mkwrite allocated.
+> > +		 */
+> > +		path = file_path(dio->iocb->ki_filp, pathname,
+> > +				 sizeof(pathname));
+> > +		if (IS_ERR(path))
+> > +			path = "(unknown)";
+> > +
+> > +		pr_warn_ratelimited("page_mkwrite() is racing with DIO read (iomap->type = %u).\n"
+> > +				    "File: %s PID: %d Comm: %.20s\n",
+> > +				    iomap->type, path, current->pid,
+> > +				    current->comm);
+> 
+> This is very specific ...
+> 
+> Do we know that mmap/page_mkwrite is (and will always be) the only way to reach this
+> point?
 
-Chunfeng Yun <chunfeng.yun@mediatek.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=883=
-1=E6=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8A=E5=8D=889:48=E5=AF=AB=E9=81=93=EF=
-=BC=9A
->
-> On Mon, 2020-08-31 at 07:03 +0800, Chun-Kuang Hu wrote:
-> > Hi, Chunfeng & Kishon:
-> >
-> > How do you feel about this patch?
-> It's fine to me,
->
-> Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
->
+I don't know, so this could indeed be a bit misleading.
 
-Could you give an 'Acked-by' tag on this patch? So I could apply the
-whole series into my tree.
+> 
+> It seems to me that this message won't be very useful for the admin; "pg_mkwrite" may
+> mean something to us, but doubtful for the general public.  And "type = 1" won't mean
+> much to the reader, either.
+> 
+> Maybe something like:
+> 
+> "DIO encountered delayed allocation block, racing buffered+direct? File: %s Comm: %.20s\n"
+> 
+> It just seems that a user-facing warning should be something the admin has a chance of
+> acting on without needing to file a bug for analysis by the developers.
+> 
+> (though TBH "delayed allocation" probably doesn't mean much to the admin, either)
 
-Regards,
-Chun-Kuang.
-
-> Thanks a lot
->
-> >
-> > Regards,
-> > Chun-Kuang.
-> >
-> > Chun-Kuang Hu <chunkuang.hu@kernel.org> =E6=96=BC 2020=E5=B9=B48=E6=9C=
-=8823=E6=97=A5 =E9=80=B1=E6=97=A5 =E4=B8=8A=E5=8D=889:48=E5=AF=AB=E9=81=93=
-=EF=BC=9A
-> > >
-> > > From: CK Hu <ck.hu@mediatek.com>
-> > >
-> > > mtk_hdmi_phy is currently placed inside mediatek drm driver, but it's
-> > > more suitable to place a phy driver into phy driver folder, so move
-> > > mtk_hdmi_phy driver into phy driver folder.
-> > >
-> > > Signed-off-by: CK Hu <ck.hu@mediatek.com>
-> > > Signed-off-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
-> > > ---
-> > >  drivers/gpu/drm/mediatek/Kconfig                           | 7 -----=
---
-> > >  drivers/gpu/drm/mediatek/Makefile                          | 6 -----=
--
-> > >  drivers/phy/mediatek/Kconfig                               | 7 +++++=
-++
-> > >  drivers/phy/mediatek/Makefile                              | 5 +++++
-> > >  .../mediatek/phy-mtk-hdmi-mt2701.c}                        | 2 +-
-> > >  .../mediatek/phy-mtk-hdmi-mt8173.c}                        | 2 +-
-> > >  .../mtk_hdmi_phy.c =3D> phy/mediatek/phy-mtk-hdmi.c}         | 2 +-
-> > >  .../mtk_hdmi_phy.h =3D> phy/mediatek/phy-mtk-hdmi.h}         | 0
-> > >  8 files changed, 15 insertions(+), 16 deletions(-)
-> > >  rename drivers/{gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c =3D> phy/medi=
-atek/phy-mtk-hdmi-mt2701.c} (99%)
-> > >  rename drivers/{gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c =3D> phy/medi=
-atek/phy-mtk-hdmi-mt8173.c} (99%)
-> > >  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.c =3D> phy/mediatek/ph=
-y-mtk-hdmi.c} (99%)
-> > >  rename drivers/{gpu/drm/mediatek/mtk_hdmi_phy.h =3D> phy/mediatek/ph=
-y-mtk-hdmi.h} (100%)
-> > >
-> > > diff --git a/drivers/gpu/drm/mediatek/Kconfig b/drivers/gpu/drm/media=
-tek/Kconfig
-> > > index 6363f2c1cdbc..65cd03a4be29 100644
-> > > --- a/drivers/gpu/drm/mediatek/Kconfig
-> > > +++ b/drivers/gpu/drm/mediatek/Kconfig
-> > > @@ -27,10 +27,3 @@ config DRM_MEDIATEK_HDMI
-> > >         select PHY_MTK_HDMI
-> > >         help
-> > >           DRM/KMS HDMI driver for Mediatek SoCs
-> > > -
-> > > -config PHY_MTK_HDMI
-> > > -       tristate "MediaTek HDMI-PHY Driver"
-> > > -       depends on ARCH_MEDIATEK && OF
-> > > -       select GENERIC_PHY
-> > > -       help
-> > > -         Support HDMI PHY for Mediatek SoCs.
-> > > diff --git a/drivers/gpu/drm/mediatek/Makefile b/drivers/gpu/drm/medi=
-atek/Makefile
-> > > index fcbef23aa6ce..77b0fd86063d 100644
-> > > --- a/drivers/gpu/drm/mediatek/Makefile
-> > > +++ b/drivers/gpu/drm/mediatek/Makefile
-> > > @@ -22,9 +22,3 @@ mediatek-drm-hdmi-objs :=3D mtk_cec.o \
-> > >                           mtk_hdmi_ddc.o
-> > >
-> > >  obj-$(CONFIG_DRM_MEDIATEK_HDMI) +=3D mediatek-drm-hdmi.o
-> > > -
-> > > -phy-mtk-hdmi-drv-objs :=3D mtk_hdmi_phy.o \
-> > > -                        mtk_mt2701_hdmi_phy.o \
-> > > -                        mtk_mt8173_hdmi_phy.o
-> > > -
-> > > -obj-$(CONFIG_PHY_MTK_HDMI) +=3D phy-mtk-hdmi-drv.o
-> > > diff --git a/drivers/phy/mediatek/Kconfig b/drivers/phy/mediatek/Kcon=
-fig
-> > > index dee757c957f2..50c5e9306e19 100644
-> > > --- a/drivers/phy/mediatek/Kconfig
-> > > +++ b/drivers/phy/mediatek/Kconfig
-> > > @@ -35,3 +35,10 @@ config PHY_MTK_XSPHY
-> > >           Enable this to support the SuperSpeedPlus XS-PHY transceive=
-r for
-> > >           USB3.1 GEN2 controllers on MediaTek chips. The driver suppo=
-rts
-> > >           multiple USB2.0, USB3.1 GEN2 ports.
-> > > +
-> > > +config PHY_MTK_HDMI
-> > > +       tristate "MediaTek HDMI-PHY Driver"
-> > > +       depends on ARCH_MEDIATEK && OF
-> > > +       select GENERIC_PHY
-> > > +       help
-> > > +         Support HDMI PHY for Mediatek SoCs.
-> > > diff --git a/drivers/phy/mediatek/Makefile b/drivers/phy/mediatek/Mak=
-efile
-> > > index 08a8e6a97b1e..6325e38709ed 100644
-> > > --- a/drivers/phy/mediatek/Makefile
-> > > +++ b/drivers/phy/mediatek/Makefile
-> > > @@ -6,3 +6,8 @@
-> > >  obj-$(CONFIG_PHY_MTK_TPHY)             +=3D phy-mtk-tphy.o
-> > >  obj-$(CONFIG_PHY_MTK_UFS)              +=3D phy-mtk-ufs.o
-> > >  obj-$(CONFIG_PHY_MTK_XSPHY)            +=3D phy-mtk-xsphy.o
-> > > +
-> > > +phy-mtk-hdmi-drv-y                     :=3D phy-mtk-hdmi.o
-> > > +phy-mtk-hdmi-drv-y                     +=3D phy-mtk-hdmi-mt2701.o
-> > > +phy-mtk-hdmi-drv-y                     +=3D phy-mtk-hdmi-mt8173.o
-> > > +obj-$(CONFIG_PHY_MTK_HDMI)             +=3D phy-mtk-hdmi-drv.o
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers=
-/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> > > similarity index 99%
-> > > rename from drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> > > rename to drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> > > index 99fe05cd3598..a6cb1dea3d0c 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> > > +++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt2701.c
-> > > @@ -4,7 +4,7 @@
-> > >   * Author: Chunhui Dai <chunhui.dai@mediatek.com>
-> > >   */
-> > >
-> > > -#include "mtk_hdmi_phy.h"
-> > > +#include "phy-mtk-hdmi.h"
-> > >
-> > >  #define HDMI_CON0      0x00
-> > >  #define RG_HDMITX_DRV_IBIAS            0
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c b/drivers=
-/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> > > similarity index 99%
-> > > rename from drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> > > rename to drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> > > index 827b93786fac..6cdfdf5a698a 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_mt8173_hdmi_phy.c
-> > > +++ b/drivers/phy/mediatek/phy-mtk-hdmi-mt8173.c
-> > > @@ -4,7 +4,7 @@
-> > >   * Author: Jie Qiu <jie.qiu@mediatek.com>
-> > >   */
-> > >
-> > > -#include "mtk_hdmi_phy.h"
-> > > +#include "phy-mtk-hdmi.h"
-> > >
-> > >  #define HDMI_CON0              0x00
-> > >  #define RG_HDMITX_PLL_EN               BIT(31)
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/phy/me=
-diatek/phy-mtk-hdmi.c
-> > > similarity index 99%
-> > > rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> > > rename to drivers/phy/mediatek/phy-mtk-hdmi.c
-> > > index fe022acddbef..8fc83f01a720 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> > > +++ b/drivers/phy/mediatek/phy-mtk-hdmi.c
-> > > @@ -4,7 +4,7 @@
-> > >   * Author: Jie Qiu <jie.qiu@mediatek.com>
-> > >   */
-> > >
-> > > -#include "mtk_hdmi_phy.h"
-> > > +#include "phy-mtk-hdmi.h"
-> > >
-> > >  static int mtk_hdmi_phy_power_on(struct phy *phy);
-> > >  static int mtk_hdmi_phy_power_off(struct phy *phy);
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/phy/me=
-diatek/phy-mtk-hdmi.h
-> > > similarity index 100%
-> > > rename from drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> > > rename to drivers/phy/mediatek/phy-mtk-hdmi.h
-> > > --
-> > > 2.17.1
-> > >
->
+I agree with your suggestions. I'll submit a new version.
