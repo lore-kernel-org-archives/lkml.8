@@ -2,161 +2,146 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4720BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:16:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EA77214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8377207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:16:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Psk8WFid"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHaMQS (ORCPT
+        id S1727824AbgHaMQf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:16:18 -0400
-Received: from mail-il1-f199.google.com ([209.85.166.199]:57115 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726384AbgHaMQQ (ORCPT
+        Mon, 31 Aug 2020 08:16:35 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:60261 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbgHaMQT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:16:16 -0400
-Received: by mail-il1-f199.google.com with SMTP id w82so4842946ila.23
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:16:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=xqAEW0uxhAt/9jyozVgi195mAb05+fCsu31ZuwuP3RE=;
-        b=U0opPNxzJPA6Jwz8cuHbOlyJXprmT+LTXY5xJVbCIi3C+azO5FOrcaQmQNWmEKbRwu
-         7WSzIEimDDy2MOBU3w1piPmjRpSFow5ah69tQcKEFOMRYQkaayZtbM67N2zBv+effWN5
-         GNVyt7c8GjAWW67+dmZMsL6X4yfpwgWlZOv/VeJE/Q2ILq6V7RJDWgDHh+eg0erAHAlX
-         0Bq6kVGiP4Nr0B+hTNJRMPQT9krgjjG5YtTJ+MikgyooYjdZ2aPYzHOoN3I95+nmsu0Y
-         5kfYr2zKWJ66F8NHDbfeF3v/6T3MXGc0eqYosFEzno/pPIivu7QAGQ6ll8s+Xkr+zRCV
-         OeNQ==
-X-Gm-Message-State: AOAM531ugZMhu5zSb98bCGdH0oLNtEhA95hMBSVAgsExeFDZfzlXJ6fG
-        AswnE7umyEwcaLVmuxOTwTy9+hz798Ff/ZHMR40M/8v79USA
-X-Google-Smtp-Source: ABdhPJxsCP4vmGpKdDdCv2nN17m84UVhtF2m7pbehTjiWasZlC4m83UnxuB/Qmcq/+OhJByyGuMeL9nNhNcFo4gsWoj5DAJA4BfT
+        Mon, 31 Aug 2020 08:16:19 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200831121618euoutp026966f1f5df150ee8974d8476868ee86e~wWWnHGnCf1317213172euoutp02d
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:16:18 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200831121618euoutp026966f1f5df150ee8974d8476868ee86e~wWWnHGnCf1317213172euoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598876178;
+        bh=jzK2O7j1tAxVD4f3hxVXieUj6ygt7FZk+nJr28x8OgM=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Psk8WFidk80zGn2N2vU4Kd0T4qyZQqm6Wb1noYtH4TxhUEgTzuWtlvXUgLTGxzT/m
+         daqlFxx6Tf1qjPJwmozU9kuPgvBV8RPsKv+rj7mWqM7EEXchQSaCTolUp4bbD5oPeL
+         9eQNyB/Mcqgd79TXmVt2UHoT+47yXqoadA3u3bws=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200831121618eucas1p11f39129b20cd089e0f8d380f2aee51ac~wWWmt8QNb2624926249eucas1p1L;
+        Mon, 31 Aug 2020 12:16:18 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 48.0F.06456.21AEC4F5; Mon, 31
+        Aug 2020 13:16:18 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200831121617eucas1p1c52b700d989b217ff8246b170d10ec31~wWWmL1w-k2992729927eucas1p11;
+        Mon, 31 Aug 2020 12:16:17 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200831121617eusmtrp1a1882a07d195a184a1f3547f942a942a~wWWmK2i8M2741427414eusmtrp1B;
+        Mon, 31 Aug 2020 12:16:17 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-38-5f4cea125cd9
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 34.8F.06017.11AEC4F5; Mon, 31
+        Aug 2020 13:16:17 +0100 (BST)
+Received: from [106.210.123.115] (unknown [106.210.123.115]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200831121615eusmtip176ec4cc4ea5ef8720e192bd3e9f5545a~wWWkXgosX2307423074eusmtip1f;
+        Mon, 31 Aug 2020 12:16:15 +0000 (GMT)
+Subject: Re: [PATCH 03/10] dt-bindings: timer: exynos4210-mct: Use
+ unevaluatedProperties
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        alsa-devel@alsa-project.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <07d720dc-39d1-e749-f8d3-cf5d67f807d6@samsung.com>
+Date:   Mon, 31 Aug 2020 14:16:15 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.11.0
 MIME-Version: 1.0
-X-Received: by 2002:a92:a302:: with SMTP id a2mr1071597ili.116.1598876175225;
- Mon, 31 Aug 2020 05:16:15 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 05:16:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000076d7e105ae2b5ec4@google.com>
-Subject: general protection fault in line6_midibuf_write
-From:   syzbot <syzbot+b333bd4e812c1d42827a@syzkaller.appspotmail.com>
-To:     alsa-devel@alsa-project.org, andreyknvl@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200829142501.31478-3-krzk@kernel.org>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTYRCG8+1udxe05KOIHRGvRkwABfHKpxjj7Xr8QBMNISpU2IAR0LTW
+        M/EABSyHgDFKQwCJiUgiR1FAPGKwtSJSRBHFaqqhYsBQDw7PiLTrwb933nkmM28yPK3IY/34
+        ncl7RU2yOlHFejK19761zlL0boiebfsiI9nWJoq0tzVSpPp8pYycfeNgybOBdzJS1D+JDNfm
+        0aTYZJWR9sEPLMm35zLkdNd7mrS2VnHEPmhGZKg9gyLGrg4ZedJQyJLzrbcpcsX0iiMnb5k4
+        0lY2QJH0tz00qTGepZeOF6r6U1jh1lAJI1w3vOIEY/kpVnjZcZMVnFYrJ9QNvZYJ9kwLJdRc
+        PCrkXC1HQr9xcsSYKM/FcWLizn2iJnRJjGfCL2foHhN94MY9OIaO03rkwQOeBwXdZsalFbgM
+        geGNtx55jugBBB/z73NS0Y+gpcD0b8KS84iRGpcQlKY6/1CfEDz/2YNclA+OgrqUNJmrMQ7b
+        GBjQV7kpGtsQfH3/gXNRLA6DbHOOe0KOl8Bl6znKpRkcABUV3e6rfPF2uGZ5SkmMNzQVONy+
+        B54PXac63LM0VsILRzEl6SlQ11f459aHPPwcWiXpldCX+TeDD/RarnKS9ofmM1nuPIBTEWTd
+        sHFSkYvAbilBEhUOL63fWT3iRzYEQmVDqGQvg5RUM+WyAXvB8z5v6QYvyK89R0u2HDLSFBI9
+        HX6USxEB+0GmY5jJRSrDqGSGUWkMo9IY/u8tQUw5Uoo6bVK8qA1LFveHaNVJWl1yfEjs7iQj
+        GnnU5l+Wz/Vo8PGORoR5pBor/2peH62QqfdpDyY1IuBp1Tj58pbm7Qp5nPrgIVGzO1qjSxS1
+        jWgiz6iU8rmlPdsUOF69V9wlintEzd8uxXv4HUMBC5S6Q/ERq8sqrFmdT3b42aNwhY9/YHam
+        rXOR/4w7J7pj1hbF5uXPXDhYHY7WeRgXcj5rv2zaYpiRPWYqf0KXXn8hYmNh+BpnCz58dPOR
+        23MiH1SPd34PDs5ra4pLn0bXx9R0LvJKm+D7Gd4lbH10/WRDJBNckrFCGdgddJcb9h2rYrQJ
+        6rAgWqNV/wbV0wNrpAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMKsWRmVeSWpSXmKPExsVy+t/xu7qCr3ziDXrWyVn0njvJZHHl4iEm
+        i40z1rNaTH34hM3i+pfnrBbzPsta/N82kdli/pFzrBZXvr5ns5h0fwKLRf/j18wW589vYLe4
+        //Uoo8W3Kx1MFpseX2O1uLxrDpvFjPP7mCzWHrnLbtG69wi7xcUVX5gs2p++ZLbYvGkqs4OY
+        x4bPTWwee78tYPHYOesuu8emVZ1sHneu7WHzeHfuHLvH9m8PWD3udx9n8ti8pN6jb8sqRo/P
+        m+QCuKP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0
+        Mv690y84wlyx+5hEA2MjcxcjJ4eEgInE8b4LLF2MXBxCAksZJd507GfqYuQASkhJzG9RgqgR
+        lvhzrYsNouY9o0T/7ENsIAlhgSiJ7U1trCAJEYHbLBIvbj4Dm8oscJdR4ux8KYiOzYwSbW3z
+        GEESbAKGEr1H+8BsXgE7iZXnpjOB2CwCqhLr1j1jAbFFBeIkHvf+Z4aoEZQ4OfMJWJxTwFTi
+        cec1RogF6hJ/5l2CWiYucevJfCYIW15i+9s5zBMYhWYhaZ+FpGUWkpZZSFoWMLKsYhRJLS3O
+        Tc8tNtIrTswtLs1L10vOz93ECEwg24793LKDsetd8CFGAQ5GJR7eH0e944VYE8uKK3MPMUpw
+        MCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6LmJzFKiyfnA5JZXEm9oamhuYWlobmxubGah
+        JM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFxUvxTCa0+npCmHtc9n8U0Yw49nL6dhXWJx/6C
+        yw/EbCrUzB+e6fjM+inOJMP04au1L8xC3l3/0y3mek35QIB58fb8A8vLD6nIV6/fGl/B3/PO
+        Jj0iUGnh1ujssx/OcNpbuzW5N390fXP7xw4pBdfO+L9WPXr7dC45vT2wtUx4g6drzuzlTHeV
+        WIozEg21mIuKEwEc9OZONgMAAA==
+X-CMS-MailID: 20200831121617eucas1p1c52b700d989b217ff8246b170d10ec31
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200829142531eucas1p27936c00d9ec8fe5baa12972df7641d47
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200829142531eucas1p27936c00d9ec8fe5baa12972df7641d47
+References: <20200829142501.31478-1-krzk@kernel.org>
+        <CGME20200829142531eucas1p27936c00d9ec8fe5baa12972df7641d47@eucas1p2.samsung.com>
+        <20200829142501.31478-3-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 29.08.2020 16:24, Krzysztof Kozlowski wrote:
+> Additional properties actually might appear (e.g. clocks) so use
+> unevaluatedProperties to fix dtbs_check warnings like:
+> 
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: timer@101c0000:
+>     'clock-names', 'clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-syzbot found the following issue on:
-
-HEAD commit:    3ed8e1c2 usb: typec: tcpm: Migrate workqueue to RT priorit..
-git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
-console output: https://syzkaller.appspot.com/x/log.txt?x=137be056900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=ccafc70ac3d5f49c
-dashboard link: https://syzkaller.appspot.com/bug?extid=b333bd4e812c1d42827a
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+b333bd4e812c1d42827a@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0000000019: 0000 [#1] SMP KASAN
-KASAN: null-ptr-deref in range [0x00000000000000c8-0x00000000000000cf]
-CPU: 1 PID: 21 Comm: kworker/1:1 Not tainted 5.9.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-RIP: 0010:midibuf_is_full sound/usb/line6/midibuf.c:44 [inline]
-RIP: 0010:line6_midibuf_write+0x30/0x3f0 sound/usb/line6/midibuf.c:91
-Code: 49 89 f5 41 54 55 89 d5 53 48 89 fb 4c 8d 7b 18 48 83 ec 28 e8 11 68 5f fc 4c 89 fa 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 0a 03 00 00 44 8b 63 18 31 ff
-RSP: 0018:ffff8881db3099d8 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 00000000000000b0 RCX: ffffc900006a8000
-RDX: 0000000000000019 RSI: ffffffff84e098af RDI: 00000000000000b0
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff8734d643
-R10: 0000000000000000 R11: 000000000004e017 R12: 00000000000000b0
-R13: ffff8881d40aec80 R14: ffff8881d4464984 R15: 00000000000000c8
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005629deed5130 CR3: 00000001d2254000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- line6_data_received+0x281/0x520 sound/usb/line6/driver.c:296
- __usb_hcd_giveback_urb+0x32d/0x560 drivers/usb/core/hcd.c:1650
- usb_hcd_giveback_urb+0x367/0x410 drivers/usb/core/hcd.c:1716
- dummy_timer+0x11f2/0x3240 drivers/usb/gadget/udc/dummy_hcd.c:1967
- call_timer_fn+0x1ac/0x6e0 kernel/time/timer.c:1413
- expire_timers kernel/time/timer.c:1458 [inline]
- __run_timers.part.0+0x67c/0xa60 kernel/time/timer.c:1755
- __run_timers kernel/time/timer.c:1736 [inline]
- run_timer_softirq+0x80/0x120 kernel/time/timer.c:1768
- __do_softirq+0x1af/0x91c kernel/softirq.c:298
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:706
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x73/0x90 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:393 [inline]
- __irq_exit_rcu kernel/softirq.c:423 [inline]
- irq_exit_rcu+0x107/0x1a0 kernel/softirq.c:435
- sysvec_apic_timer_interrupt+0x43/0x90 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/irqflags.h:85 [inline]
-RIP: 0010:console_unlock+0xa99/0xcd0 kernel/printk/printk.c:2509
-Code: 00 89 ee 48 c7 c7 a0 0a 35 87 e8 12 b9 03 00 65 ff 0d 3b 48 d8 7e e9 87 f9 ff ff e8 f1 59 16 00 e8 dc f2 1b 00 ff 74 24 30 9d <e9> 20 fe ff ff e8 dd 59 16 00 48 8d 7d 08 48 89 f8 48 c1 e8 03 42
-RSP: 0018:ffff8881da34f5e0 EFLAGS: 00000212
-RAX: 00000000000d56ed RBX: 0000000000000200 RCX: 0000000000000006
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff8129a6d4
-RBP: 0000000000000000 R08: 0000000000000001 R09: ffffffff895c65e7
-R10: fffffbfff12b8cbc R11: 0000000000003254 R12: ffffffff82b3d6f0
-R13: ffffffff876fa450 R14: 0000000000000054 R15: dffffc0000000000
- vprintk_emit+0x1b2/0x460 kernel/printk/printk.c:2029
- dev_vprintk_emit+0x3eb/0x436 drivers/base/core.c:4133
- dev_printk_emit+0xba/0xf1 drivers/base/core.c:4144
- __dev_printk+0xcf/0xf5 drivers/base/core.c:4156
- _dev_info+0xd7/0x109 drivers/base/core.c:4202
- hub_port_init.cold+0x264/0x32f drivers/usb/core/hub.c:4628
- hub_port_connect drivers/usb/core/hub.c:5140 [inline]
- hub_port_connect_change drivers/usb/core/hub.c:5348 [inline]
- port_event drivers/usb/core/hub.c:5494 [inline]
- hub_event+0x2191/0x4390 drivers/usb/core/hub.c:5576
- process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
- process_scheduled_works kernel/workqueue.c:2331 [inline]
- worker_thread+0x82b/0x1120 kernel/workqueue.c:2417
- kthread+0x392/0x470 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Modules linked in:
----[ end trace 3dff073ad8b565c9 ]---
-RIP: 0010:midibuf_is_full sound/usb/line6/midibuf.c:44 [inline]
-RIP: 0010:line6_midibuf_write+0x30/0x3f0 sound/usb/line6/midibuf.c:91
-Code: 49 89 f5 41 54 55 89 d5 53 48 89 fb 4c 8d 7b 18 48 83 ec 28 e8 11 68 5f fc 4c 89 fa 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 0a 03 00 00 44 8b 63 18 31 ff
-RSP: 0018:ffff8881db3099d8 EFLAGS: 00010002
-RAX: dffffc0000000000 RBX: 00000000000000b0 RCX: ffffc900006a8000
-RDX: 0000000000000019 RSI: ffffffff84e098af RDI: 00000000000000b0
-RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff8734d643
-R10: 0000000000000000 R11: 000000000004e017 R12: 00000000000000b0
-R13: ffff8881d40aec80 R14: ffff8881d4464984 R15: 00000000000000c8
-FS:  0000000000000000(0000) GS:ffff8881db300000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005629deed5130 CR3: 00000001d2254000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
