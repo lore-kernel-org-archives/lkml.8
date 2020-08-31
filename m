@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE5BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13ED5C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51BB921556
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3C3B214D8
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:32:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887942;
-	bh=r5LdmNC2g7FIRe6CwrmHuVuU4fXEV1nY9Ab8Ln9jqTU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=Mct7nRGTTXZ19ikMSzBaCGsA7G/maa+gZfB8Qc7o7t9PfggmoEPjENV9R0YB+OwC6
-	 dxU3nXXMDEIDCdJ5dwousHoMTzZfsA/8t8UfsQSju+7nNkUg7gI8EM3droB2kZYFkc
-	 R8bSKY8fPMBk7AoaWW2qT5Igj+Nde6goxoZ25neU=
+	s=default; t=1598887946;
+	bh=Rd1MFRgUDEkTx/wiIJII+ZUZaJaafXMLUlnBw2t2XPs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WIeS7Yg4Uh7sb0yneNPpSv9SNj5p7fDQxKDsml0rHMqzZ6JVT1MzY/B/dquwApOcf
+	 zZgpZjpIRZcxqagWFenneNF62qla3czlIcLFH7Ao1NfLX12R9Y5oDYGMJvmKoripww
+	 v2mdj26bncRCBq2G+I3YLf3dIMYZrZxHdwGg5hJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbgHaPcV (ORCPT
+        id S1729129AbgHaPcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:32:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43134 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729007AbgHaPbx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:53 -0400
+        id S1729005AbgHaPb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:31:59 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9217721556;
-        Mon, 31 Aug 2020 15:31:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B295021556;
+        Mon, 31 Aug 2020 15:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887913;
-        bh=r5LdmNC2g7FIRe6CwrmHuVuU4fXEV1nY9Ab8Ln9jqTU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=YzDN2y9VVlKHBL+T8cE6N+Sg/zXX7+5Mujc4hmC0uT2QDulYyWHWr4BUBC3jDnJYE
-         gq7Kdenyf5thSEQl/Wc66Gd6yYPLVYnG4vvywJjIHb4xl2VrxjnrL2WjUN0+eg+yZM
-         DEukMLFpVFMJjSrmw3e9VwWIkA0XQeWCA+bNaH4A=
+        s=default; t=1598887918;
+        bh=Rd1MFRgUDEkTx/wiIJII+ZUZaJaafXMLUlnBw2t2XPs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yO35Jj6JTKRBtcmuAmo+Oiw4ErknciAdO/UhITbWmlRdUb7V+D44FgoLKorRQDhmN
+         IlC3sfccao4KHeydHBY+3d8LUkqAjugrsZwSqxy6/RK0Ngtr8u+It+05Nhydal+51b
+         bEUDJadUwL0ndmeEgJjhUC7ZfwXLgvQIDB1rHQMw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
-        syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 1/6] HID: hiddev: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
-Date:   Mon, 31 Aug 2020 11:31:44 -0400
-Message-Id: <20200831153150.1024799-1-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 5/6] s390: don't trace preemption in percpu macros
+Date:   Mon, 31 Aug 2020 11:31:48 -0400
+Message-Id: <20200831153150.1024799-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200831153150.1024799-1-sashal@kernel.org>
+References: <20200831153150.1024799-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,43 +59,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peilin Ye <yepeilin.cs@gmail.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit 25a097f5204675550afb879ee18238ca917cba7a ]
+[ Upstream commit 1196f12a2c960951d02262af25af0bb1775ebcc2 ]
 
-`uref->usage_index` is not always being properly checked, causing
-hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
+Since commit a21ee6055c30 ("lockdep: Change hardirq{s_enabled,_context}
+to per-cpu variables") the lockdep code itself uses percpu variables. This
+leads to recursions because the percpu macros are calling preempt_enable()
+which might call trace_preempt_on().
 
-Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
-Link: https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hiddev.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/s390/include/asm/percpu.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index dbdd265075daf..7bce23a43907e 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -554,12 +554,16 @@ static noinline int hiddev_ioctl_usage(struct hiddev *hiddev, unsigned int cmd,
+diff --git a/arch/s390/include/asm/percpu.h b/arch/s390/include/asm/percpu.h
+index 90240dfef76a1..5889c1ed84c46 100644
+--- a/arch/s390/include/asm/percpu.h
++++ b/arch/s390/include/asm/percpu.h
+@@ -28,7 +28,7 @@
+ 	typedef typeof(pcp) pcp_op_T__;					\
+ 	pcp_op_T__ old__, new__, prev__;				\
+ 	pcp_op_T__ *ptr__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	prev__ = *ptr__;						\
+ 	do {								\
+@@ -36,7 +36,7 @@
+ 		new__ = old__ op (val);					\
+ 		prev__ = cmpxchg(ptr__, old__, new__);			\
+ 	} while (prev__ != old__);					\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	new__;								\
+ })
  
- 		switch (cmd) {
- 		case HIDIOCGUSAGE:
-+			if (uref->usage_index >= field->report_count)
-+				goto inval;
- 			uref->value = field->value[uref->usage_index];
- 			if (copy_to_user(user_arg, uref, sizeof(*uref)))
- 				goto fault;
- 			goto goodreturn;
+@@ -67,7 +67,7 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp)); 				\
+ 	if (__builtin_constant_p(val__) &&				\
+ 	    ((szcast)val__ > -129) && ((szcast)val__ < 128)) {		\
+@@ -83,7 +83,7 @@
+ 			: [val__] "d" (val__)				\
+ 			: "cc");					\
+ 	}								\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ }
  
- 		case HIDIOCSUSAGE:
-+			if (uref->usage_index >= field->report_count)
-+				goto inval;
- 			field->value[uref->usage_index] = uref->value;
- 			goto goodreturn;
+ #define this_cpu_add_4(pcp, val) arch_this_cpu_add(pcp, val, "laa", "asi", int)
+@@ -94,14 +94,14 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
+ 	asm volatile(							\
+ 		op "    %[old__],%[val__],%[ptr__]\n"			\
+ 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
+ 		: [val__] "d" (val__)					\
+ 		: "cc");						\
+-	preempt_enable();						\
++	preempt_enable_notrace();						\
+ 	old__ + val__;							\
+ })
+ 
+@@ -113,14 +113,14 @@
+ 	typedef typeof(pcp) pcp_op_T__; 				\
+ 	pcp_op_T__ val__ = (val);					\
+ 	pcp_op_T__ old__, *ptr__;					\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));	 				\
+ 	asm volatile(							\
+ 		op "    %[old__],%[val__],%[ptr__]\n"			\
+ 		: [old__] "=d" (old__), [ptr__] "+Q" (*ptr__)		\
+ 		: [val__] "d" (val__)					\
+ 		: "cc");						\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ }
+ 
+ #define this_cpu_and_4(pcp, val)	arch_this_cpu_to_op(pcp, val, "lan")
+@@ -135,10 +135,10 @@
+ 	typedef typeof(pcp) pcp_op_T__;					\
+ 	pcp_op_T__ ret__;						\
+ 	pcp_op_T__ *ptr__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	ret__ = cmpxchg(ptr__, oval, nval);				\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
+ 
+@@ -151,10 +151,10 @@
+ ({									\
+ 	typeof(pcp) *ptr__;						\
+ 	typeof(pcp) ret__;						\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	ptr__ = raw_cpu_ptr(&(pcp));					\
+ 	ret__ = xchg(ptr__, nval);					\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
+ 
+@@ -170,11 +170,11 @@
+ 	typeof(pcp1) *p1__;						\
+ 	typeof(pcp2) *p2__;						\
+ 	int ret__;							\
+-	preempt_disable();						\
++	preempt_disable_notrace();					\
+ 	p1__ = raw_cpu_ptr(&(pcp1));					\
+ 	p2__ = raw_cpu_ptr(&(pcp2));					\
+ 	ret__ = __cmpxchg_double(p1__, p2__, o1__, o2__, n1__, n2__);	\
+-	preempt_enable();						\
++	preempt_enable_notrace();					\
+ 	ret__;								\
+ })
  
 -- 
 2.25.1
