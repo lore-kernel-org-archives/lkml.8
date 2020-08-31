@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBF2C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:23:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D76C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 41FD22083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:23:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA8F2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:23:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TQSm3orK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="moS0Xsln"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbgHaUXg (ORCPT
+        id S1730017AbgHaUXl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:23:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44752 "EHLO
+        Mon, 31 Aug 2020 16:23:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44760 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729976AbgHaUX3 (ORCPT
+        with ESMTP id S1729991AbgHaUXe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:23:29 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 571B6C061575;
-        Mon, 31 Aug 2020 13:23:29 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id z25so1102795lfj.9;
-        Mon, 31 Aug 2020 13:23:29 -0700 (PDT)
+        Mon, 31 Aug 2020 16:23:34 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC69AC061573;
+        Mon, 31 Aug 2020 13:23:33 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y17so4240424lfa.8;
+        Mon, 31 Aug 2020 13:23:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=FRnx45u7/i2kry58qh4geYUb8/TK/AjF/UDJOIFPEeg=;
-        b=TQSm3orKZFtx48PL9rXWPF+QicyZywM+5js65DonZeTjkZfqJDGS4rnAS1d5hv6MDV
-         rFm3PgpGOjmuqKbqYE9N/grYw2dHI6n33ljM76xM2yu/0bBF7C5aFN+OI4CGbK8GX36p
-         aZgmT1K/5D2HAOnVT77RZ1wLuftRqLNBb4jygAcMzWn5DWnO9QBT5sLUtzNOEDzaAlwd
-         FXF30aK8TTP2qhegf9cNTdbt2hqhh/RMkA5A026tbRUMb0z8R+oVwQhJJHyyztG6MP4/
-         gJcrb2UroEGGdzjTkkhCD6TQer2rnZrNbE3tY0d0zFfHbPXUxhC3cXZS4WorFSJj9+hy
-         4Yew==
+        bh=fLWAd459e53PrxCTbDW1N5SV9Ygjm3TESfTNB8/GCRE=;
+        b=moS0Xsln368Ql3Iml8OegwXxXr099iGmNzylaB7uyzTZrMMQJ1RkVXm4Ymryer/kTs
+         k8uxyPKgHCX9HU84dELgdlgk1Veb6iGGS1VsYm6d7m10CSfJ6/vXPOGiKltT5PoR6fH1
+         JL3X8BRqlf2LnGlUDs8XxfMn+9T/KSA1LOHZNa4pPJ19XI5rMFMXCRj5AE7NHB8GpsUx
+         yi8psP5WHQ9q2jVdGGxA/9FEHYESTQ45Kzp+qG13FABDHEfpdGViOwY0qkzSd52rmFQ7
+         iTQFS7ilDerXbULeTSctmVTYJx/xgCm5W5rfOjumQu9S5VDOHkbq2O6P+7DplQWWe02x
+         7bQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=FRnx45u7/i2kry58qh4geYUb8/TK/AjF/UDJOIFPEeg=;
-        b=poK6vXQgcOS87VMQMH8ccPsTkBGHsKpPx3OtEQ9s7cqpTv3UjZV9cnmVMP/cEB6moD
-         IVgk1wm4t1PACtbO4BmyZ3nSU53L5HB7iJmwzT350zfBqFlJTF2IRAsGRcepPwyXJ2FR
-         AJt3XZkv3HgSgR1gJFXwwX2zOxvIPLkMaDKXu6BRcCuODoZ9BDnZOrPKXT+9CjzUY91C
-         4Ym81It0ZiNgM1fsPA1PBwYhjyxgMcxxt37CBhohx2bQEgXxByuoaqp1h8kph+Zu1bka
-         Uji4YDeUoyxMQpqPjR8QphNKs+9Qa7BQE/SwaqFVsEs9LNevKMXG2Otr0NkRMoe9s0kL
-         pBSg==
-X-Gm-Message-State: AOAM530YvLm9UkyCwqZjKcCOIUz0aadBNHGfoBReaJWP9iVaacdv7AiC
-        cZhC2N3VVEDpRwxWcFhY3feqHsq35Jc=
-X-Google-Smtp-Source: ABdhPJz3PRoABhtWRAaEJeBE6ftdtg0VDdHNNymnzHMEgS8i06hSaZNuqdqbf5qJP6c0lT/ylt8YIw==
-X-Received: by 2002:a19:ef13:: with SMTP id n19mr1446589lfh.1.1598905407773;
-        Mon, 31 Aug 2020 13:23:27 -0700 (PDT)
+        bh=fLWAd459e53PrxCTbDW1N5SV9Ygjm3TESfTNB8/GCRE=;
+        b=o1GDHNm1c6udbCdtPeZ9JNDkq+YvuIsldTT/5hZFhHn0AGLJk7rG6eBqKA8KGJ8nqy
+         ethXQQieLK1Bop9J1mYqhsClEUmrx1fXKQLGxdjBYU+n8jMH0jmxQufm1keRZyOG7bML
+         kXu8H2VEVJ9GLMKy1fCpwf8gQDbzosKQ8Pu41OJ0uaZaX8115KVrnyYo4tOLQLnbAYst
+         CWwZK8BMMICtiBLCyuYP3HPsGsZKk3t/iLleCKEzrbwaQWpJcN+tTHX9LPBcPnfUDLN7
+         axUsWLUK4Fz+w3WwNaIjO9QUBRQDVC07+ceUCtjTpvwaZEovpOU9MPB25CEEiVWQ4ax3
+         GT8w==
+X-Gm-Message-State: AOAM531ILjVmhq4EFULC7+zTOYVN64ldtOTPwwhlCb1Dc8U7/zOUJBtj
+        lp/WEqkgP39QpN4z6oFmS2w=
+X-Google-Smtp-Source: ABdhPJxhhieFe/dZDTLvTfMsdNHfbjiADWLaVrIlGUcg6xkDNBCWnG7J4dwDH3Crrb21HcREJf/aLw==
+X-Received: by 2002:a05:6512:6c1:: with SMTP id u1mr1472042lff.28.1598905412237;
+        Mon, 31 Aug 2020 13:23:32 -0700 (PDT)
 Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id z20sm1769054ljk.97.2020.08.31.13.23.26
+        by smtp.gmail.com with ESMTPSA id z20sm1769054ljk.97.2020.08.31.13.23.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:23:27 -0700 (PDT)
+        Mon, 31 Aug 2020 13:23:31 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -67,9 +67,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Wolfram Sang <wsa@the-dreams.de>
 Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v1 02/12] i2c: tegra: Add missing newline before returns
-Date:   Mon, 31 Aug 2020 23:22:53 +0300
-Message-Id: <20200831202303.15391-3-digetx@gmail.com>
+Subject: [PATCH v1 07/12] i2c: tegra: Use dev_err_probe()
+Date:   Mon, 31 Aug 2020 23:22:58 +0300
+Message-Id: <20200831202303.15391-8-digetx@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200831202303.15391-1-digetx@gmail.com>
 References: <20200831202303.15391-1-digetx@gmail.com>
@@ -80,67 +80,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some places in the code are missing a newline before return, making
-code more difficult to read and creating inconsistency of the code.
-This patch adds the missing newlines.
+Use dev_err_probe() to replace the manual -EPROBE_DEFER handling, making
+code cleaner.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/i2c/busses/i2c-tegra.c | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index aab58395fb71..9bd91b6f32f4 100644
+index 2c00f2e39514..525a757bdc66 100644
 --- a/drivers/i2c/busses/i2c-tegra.c
 +++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -317,6 +317,7 @@ static unsigned long tegra_i2c_reg_addr(struct tegra_i2c_dev *i2c_dev,
- 		reg += (reg >= I2C_TX_FIFO) ? 0x10 : 0x40;
- 	else if (i2c_dev->is_vi)
- 		reg = 0xc00 + (reg << 2);
-+
- 	return reg;
- }
+@@ -1646,8 +1646,8 @@ MODULE_DEVICE_TABLE(of, tegra_i2c_of_match);
  
-@@ -392,6 +393,7 @@ static int tegra_i2c_dma_submit(struct tegra_i2c_dev *i2c_dev, size_t len)
- 	dma_desc->callback_param = i2c_dev;
- 	dmaengine_submit(dma_desc);
- 	dma_async_issue_pending(chan);
-+
- 	return 0;
- }
+ static int tegra_i2c_probe(struct platform_device *pdev)
+ {
++	struct clk *div_clk, *fast_clk, *slow_clk;
+ 	struct device *dev = &pdev->dev;
+-	struct clk *div_clk, *fast_clk;
+ 	struct tegra_i2c_dev *i2c_dev;
+ 	phys_addr_t base_phys;
+ 	struct resource *res;
+@@ -1668,12 +1668,9 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	irq = res->start;
  
-@@ -500,6 +502,7 @@ static int tegra_i2c_flush_fifos(struct tegra_i2c_dev *i2c_dev)
+ 	div_clk = devm_clk_get(&pdev->dev, "div-clk");
+-	if (IS_ERR(div_clk)) {
+-		if (PTR_ERR(div_clk) != -EPROBE_DEFER)
+-			dev_err(&pdev->dev, "missing controller clock\n");
+-
+-		return PTR_ERR(div_clk);
+-	}
++	if (IS_ERR(div_clk))
++		return dev_err_probe(&pdev->dev, PTR_ERR(div_clk),
++				     "failed to get div-clk\n");
  
- 		ktime = ktime_get();
+ 	i2c_dev = devm_kzalloc(&pdev->dev, sizeof(*i2c_dev), GFP_KERNEL);
+ 	if (!i2c_dev)
+@@ -1712,24 +1709,20 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 
+ 	if (!i2c_dev->hw->has_single_clk_source) {
+ 		fast_clk = devm_clk_get(&pdev->dev, "fast-clk");
+-		if (IS_ERR(fast_clk)) {
+-			dev_err(dev, "failed to get fast clock\n: %ld\n",
+-				PTR_ERR(fast_clk));
++		if (IS_ERR(fast_clk))
++			return dev_err_probe(&pdev->dev, PTR_ERR(fast_clk),
++					     "failed to get fast clock\n");
+ 
+-			return PTR_ERR(fast_clk);
+-		}
+ 		i2c_dev->fast_clk = fast_clk;
  	}
-+
- 	return 0;
  
- err_timeout:
-@@ -707,6 +710,7 @@ static int __maybe_unused tegra_i2c_runtime_resume(struct device *dev)
- 	clk_disable(i2c_dev->slow_clk);
- disable_fast_clk:
- 	clk_disable(i2c_dev->fast_clk);
-+
- 	return ret;
- }
+ 	if (i2c_dev->is_vi) {
+-		i2c_dev->slow_clk = devm_clk_get(dev, "slow");
+-		if (IS_ERR(i2c_dev->slow_clk)) {
+-			if (PTR_ERR(i2c_dev->slow_clk) != -EPROBE_DEFER)
+-				dev_err(dev, "failed to get slow clock: %ld\n",
+-					PTR_ERR(i2c_dev->slow_clk));
++		slow_clk = devm_clk_get(dev, "slow");
++		if (IS_ERR(slow_clk))
++			return dev_err_probe(&pdev->dev, PTR_ERR(slow_clk),
++					     "failed to get slow clock\n");
  
-@@ -1421,6 +1425,7 @@ static u32 tegra_i2c_func(struct i2c_adapter *adap)
+-			return PTR_ERR(i2c_dev->slow_clk);
+-		}
++		i2c_dev->slow_clk = slow_clk;
+ 	}
  
- 	if (i2c_dev->hw->has_continue_xfer_support)
- 		ret |= I2C_FUNC_NOSTART;
-+
- 	return ret;
- }
- 
-@@ -1888,6 +1893,7 @@ static int tegra_i2c_remove(struct platform_device *pdev)
- 	clk_unprepare(i2c_dev->fast_clk);
- 
- 	tegra_i2c_release_dma(i2c_dev);
-+
- 	return 0;
- }
- 
+ 	platform_set_drvdata(pdev, i2c_dev);
 -- 
 2.27.0
 
