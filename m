@@ -2,68 +2,126 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75510C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A23BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51850208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A3120707
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:00:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="d6yPCmXw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbgHaQ7V (ORCPT
+        id S1728912AbgHaRAR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:59:21 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57784 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727989AbgHaQ7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:59:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 5F07EAFB1;
-        Mon, 31 Aug 2020 16:59:19 +0000 (UTC)
-From:   Michal Suchanek <msuchanek@suse.de>
-To:     Amit Shah <amit@kernel.org>,
-        virtualization@lists.linux-foundation.org
-Cc:     Michal Suchanek <msuchanek@suse.de>, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] char: virtio: Select VIRTIO from VIRTIO_CONSOLE.
-Date:   Mon, 31 Aug 2020 18:58:50 +0200
-Message-Id: <20200831165850.26163-1-msuchanek@suse.de>
-X-Mailer: git-send-email 2.28.0
+        Mon, 31 Aug 2020 13:00:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40996 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726249AbgHaRAQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 13:00:16 -0400
+Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F770C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:00:16 -0700 (PDT)
+Received: by mail-io1-xd42.google.com with SMTP id d18so6692218iop.13
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 10:00:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CbLQBk0R133e+MDPFjATDQhfT0igK9JozJHO4u3nHJo=;
+        b=d6yPCmXwt5FGLBwV/ZES7tOSYRtK+dFvQ84oneE8FbPOudw/F9obCuKcExCTBv2xU8
+         Yg996gv/t6gB840GiJnWYqFvOlQbbhiPaC9QyN1rSntI/TR1342W1ahmMs1v0GDB5AN8
+         VclqhtTHnuoIn9qbMRJ0nLn2oA6IH5tQA1Yh6ll6g+1HTTL0Xdc1137nJ+EEriUp1og1
+         P+ZhkDyU4cHTgR8MZrBIBpwOYSaDR2Aa2FrPxVpBRB+PKdsjMFKmcN2G2Uwvup82KqmL
+         P8yT1CrB0r1MCMPwiIMBF5Q263Wju3zsIYIRK+ypfXpdc2eDd+FHJx8Xi+L5g2YJmBs4
+         AEsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CbLQBk0R133e+MDPFjATDQhfT0igK9JozJHO4u3nHJo=;
+        b=YXwKiuko498U2uyk1BWdqUT9TE0ydmHptof5BWbqwkh5aqEWAeQkw239+KRNdQ1evn
+         J0mn1nPxq0RJjobuV05zUWDitA9JkyOjWM9n4tWod2+GoRXffP5Wd2lB4uPhvhgQX6Hr
+         gbs6G1cFs1LVX9/QEcP0Dwmq9JO+5H9Gv0Gjn7TvEi04/1t6d5lPtNtkF8N1lJyW08wh
+         l5hneFHT0eO+YfXfArMgNC3ZXJRETYYjaoIftLM5sxbZ1hcVY+I6k/ePuHYfxOBRJGGi
+         CixRF20j5PgAPjoosWX0uDe/6Oouamfg1PNIkOQS4e84eHnKGzQGa+fKTey9yjOLqzeu
+         iXYQ==
+X-Gm-Message-State: AOAM530/rUXNqmPpi7V5f3EcZx7Y1Rj/EBlEsEPEo5rTNQZwcnBTY67u
+        k5NY5gV6yZcJD79kq/ARei9quA==
+X-Google-Smtp-Source: ABdhPJxzb5DTSBTQVD3ikr0ZEmGMgtzC7QQMSyiCzXtsEvB/wqKU4g2wBcNM+8CrB276HcibCBhgYQ==
+X-Received: by 2002:a05:6638:d95:: with SMTP id l21mr2024838jaj.98.1598893215413;
+        Mon, 31 Aug 2020 10:00:15 -0700 (PDT)
+Received: from [192.168.1.58] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c12sm1144003ilm.17.2020.08.31.10.00.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 10:00:14 -0700 (PDT)
+Subject: Re: [PATCH] fat: Avoid oops when bdi->io_pages==0
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fsdevel <linux-fsdevel@vger.kernel.org>
+References: <87ft85osn6.fsf@mail.parknet.co.jp>
+ <b4e1f741-989c-6c9d-b559-4c1ada88c499@kernel.dk>
+ <87o8mq6aao.fsf@mail.parknet.co.jp>
+ <4010690f-20ad-f7ba-b595-2e07b0fa2d94@kernel.dk>
+ <20200831165659.GH14765@casper.infradead.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <33eb2820-894e-a42f-61a5-c25bc52345d5@kernel.dk>
+Date:   Mon, 31 Aug 2020 11:00:14 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200831165659.GH14765@casper.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make it possible to have virtio console built-in when
-other virtio drivers are modular.
+On 8/31/20 10:56 AM, Matthew Wilcox wrote:
+> On Mon, Aug 31, 2020 at 10:39:26AM -0600, Jens Axboe wrote:
+>> We really should ensure that ->io_pages is always set, imho, instead of
+>> having to work-around it in other spots.
+> 
+> Interestingly, there are only three places in the entire kernel which
+> _use_ bdi->io_pages.  FAT, Verity and the pagecache readahead code.
+> 
+> Verity:
+>                         unsigned long num_ra_pages =
+>                                 min_t(unsigned long, num_blocks_to_hash - i,
+>                                       inode->i_sb->s_bdi->io_pages);
+> 
+> FAT:
+>         if (ra_pages > sb->s_bdi->io_pages)
+>                 ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
+> 
+> Pagecache:
+>         max_pages = max_t(unsigned long, bdi->io_pages, ra->ra_pages);
+> and
+>         if (req_size > max_pages && bdi->io_pages > max_pages)
+>                 max_pages = min(req_size, bdi->io_pages);
+> 
+> The funny thing is that all three are using it differently.  Verity is
+> taking io_pages to be the maximum amount to readahead.  FAT is using
+> it as the unit of readahead (round down to the previous multiple) and
+> the pagecache uses it to limit reads that exceed the current per-file
+> readahead limit (but allows per-file readahead to exceed io_pages,
+> in which case it has no effect).
+> 
+> So how should it be used?  My inclination is to say that the pagecache
+> is right, by virtue of being the most-used.
 
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- drivers/char/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+When I added ->io_pages, it was for the page cache use case. The others
+grew after that...
 
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index 3a144c000a38..9bd9917ca9af 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -93,8 +93,9 @@ config PPDEV
- 
- config VIRTIO_CONSOLE
- 	tristate "Virtio console"
--	depends on VIRTIO && TTY
-+	depends on TTY
- 	select HVC_DRIVER
-+	select VIRTIO
- 	help
- 	  Virtio console for use with hypervisors.
- 
 -- 
-2.28.0
+Jens Axboe
 
