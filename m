@@ -2,137 +2,289 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6012FC43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 005ACC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F137207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888112;
-	bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cZSoIP/cEw2Ja/yhseIx0emY+6illbsKpV4dpDS70ItmeC8VQTmTMyIeBAzQUAJ06
-	 QTT4XS81lADvZQK6ZsyYBxCr6SI8QQUsq3+3EpVN6LzZ3iyXS7IoqjQjjeRCmaZYMH
-	 OgCYcTcMh1/aWnwNRQxpw7UQ7YUbG3QMyj4xAOm0=
+	by mail.kernel.org (Postfix) with ESMTP id CEC1821556
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="NcchU9d9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729243AbgHaPfK (ORCPT
+        id S1729259AbgHaPfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:35:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41904 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728830AbgHaPbR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:31:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 832A321707;
-        Mon, 31 Aug 2020 15:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887876;
-        bh=ZjKWjBFa8jx2a1LkBVVi50zo2hxUJAg7OKt/hGAhRLg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PuoAeAil8Y4zzuBODnsoaCqvLj2gf+B/QIn9aHT765aodtkdI4qsPZCYzNpS/CLIK
-         XwnwJQfhFlj8fmad0Ezh/ndlrX89SQrU9WHbvrixP6Y1jUCp0eWA+BdwMEOmDNjnxq
-         ubB40tarI7PmgTCzXQzb+UYVHt4ctZOeYYrb2hJ4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linuxppc-dev@lists.ozlabs.org,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 23/23] fsldma: fix very broken 32-bit ppc ioread64 functionality
-Date:   Mon, 31 Aug 2020 11:30:39 -0400
-Message-Id: <20200831153039.1024302-23-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
-References: <20200831153039.1024302-1-sashal@kernel.org>
+        Mon, 31 Aug 2020 11:35:11 -0400
+Received: from mail.efficios.com ([167.114.26.124]:45058 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729022AbgHaPfB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:35:01 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 562C21CD4BA;
+        Mon, 31 Aug 2020 11:34:59 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id Vx6_xCq9ojVR; Mon, 31 Aug 2020 11:34:58 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D8B431CD270;
+        Mon, 31 Aug 2020 11:34:58 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com D8B431CD270
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1598888098;
+        bh=2Mam6DCLSCuSURMpjNaNaU52T6GrKrgXhYodBd4J1GU=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=NcchU9d9SZZg7LMgNSKDxZ+MXG8ran11AWQhGfpbNbuQUFEqRu5baTOurx+zAnFjt
+         SfhOx3VEBdOBnEi8jku4lBY3tfZqUlQokmdIY/HyTMZy1OeFe3IvCcH5k9R+gBSJyR
+         0KR51a6Z1JGaI0OZ97LuY2AMRjWE/teYijeOmDfYkdTU5QK799v21GJP4mU+s6AWnv
+         JZcth9mfbgCZ84eNVoZl80E0jZqTjeD3RCvLbYRPuNl3NDo+970q0u0+KqD8fTmqwa
+         kzACbCdIZ7994FzDDCaBfCGXH6NZSys3uwt0lCw6cox4M4F7nzwt0FBC1Ipx+K7hc4
+         AZcU4pbmFu+5g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id Xw98-Ow0WDcx; Mon, 31 Aug 2020 11:34:58 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id BDF5E1CD0DE;
+        Mon, 31 Aug 2020 11:34:58 -0400 (EDT)
+Date:   Mon, 31 Aug 2020 11:34:58 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Peter Oskolkov <posk@google.com>
+Cc:     paulmck <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>,
+        Peter Oskolkov <posk@posk.io>
+Message-ID: <2086453141.23738.1598888098693.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200826230225.3782486-1-posk@google.com>
+References: <20200826230225.3782486-1-posk@google.com>
+Subject: Re: [PATCH 1/2 v5] rseq/membarrier: add
+ MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3959 (ZimbraWebClient - FF80 (Linux)/8.8.15_GA_3953)
+Thread-Topic: rseq/membarrier: add MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+Thread-Index: r7ar8Clu9Qv76aXZZzDu5muK3/7YYw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
 
-[ Upstream commit 0a4c56c80f90797e9b9f8426c6aae4c0cf1c9785 ]
 
-Commit ef91bb196b0d ("kernel.h: Silence sparse warning in
-lower_32_bits") caused new warnings to show in the fsldma driver, but
-that commit was not to blame: it only exposed some very incorrect code
-that tried to take the low 32 bits of an address.
+----- On Aug 26, 2020, at 7:02 PM, Peter Oskolkov posk@google.com wrote:
+[...]
+> 
+> static void ipi_mb(void *info)
+> {
+> +#ifdef CONFIG_RSEQ
+> +	int *flags = info;
+> +
+> +	if (flags && (*flags == MEMBARRIER_FLAG_RSEQ))
+> +		rseq_preempt(current);
+> +#endif
 
-That made no sense for multiple reasons, the most notable one being that
-that code was intentionally limited to only 32-bit ppc builds, so "only
-low 32 bits of an address" was completely nonsensical.  There were no
-high bits to mask off to begin with.
+Please lift this into a new ipi_rseq(), which will be defined as an empty function
+if RSEQ is not defined.
 
-But even more importantly fropm a correctness standpoint, turning the
-address into an integer then caused the subsequent address arithmetic to
-be completely wrong too, and the "+1" actually incremented the address
-by one, rather than by four.
 
-Which again was incorrect, since the code was reading two 32-bit values
-and trying to make a 64-bit end result of it all.  Surprisingly, the
-iowrite64() did not suffer from the same odd and incorrect model.
+> 	smp_mb();	/* IPIs should be serializing but paranoid. */
+> }
+> 
+> @@ -129,19 +143,26 @@ static int membarrier_global_expedited(void)
+> 	return 0;
+> }
+> 
+> -static int membarrier_private_expedited(int flags)
+> +static int membarrier_private_expedited(int flags, int cpu_id)
+> {
+> 	int cpu;
+> 	cpumask_var_t tmpmask;
+> 	struct mm_struct *mm = current->mm;
+> 
+> -	if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
+> +	if (flags == MEMBARRIER_FLAG_SYNC_CORE) {
 
-This code has never worked, but it's questionable whether anybody cared:
-of the two users that actually read the 64-bit value (by way of some C
-preprocessor hackery and eventually the 'get_cdar()' inline function),
-one of them explicitly ignored the value, and the other one might just
-happen to work despite the incorrect value being read.
+I'm not sure why we need to change the behavior from a mask on flags to
+an equality, which means this behaves more like a list of items rather
+than flags.
 
-This patch at least makes it not fail the build any more, and makes the
-logic superficially sane.  Whether it makes any difference to the code
-_working_ or not shall remain a mystery.
+It's one thing to disallow combining things like SYNC_CORE and RSEQ in the
+ABI, but I wonder why we need to change the flags behavior to an equality
+for the internal flags.
 
-Compile-tested-by: Guenter Roeck <linux@roeck-us.net>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/dma/fsldma.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+> 		if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
+> 			return -EINVAL;
+> 		if (!(atomic_read(&mm->membarrier_state) &
+> 		      MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY))
+> 			return -EPERM;
+> +	} else if (flags == MEMBARRIER_FLAG_RSEQ) {
+> +		if (!IS_ENABLED(CONFIG_RSEQ))
+> +			return -EINVAL;
+> +		if (!(atomic_read(&mm->membarrier_state) &
+> +		      MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ_READY))
+> +			return -EPERM;
+> 	} else {
+> +		BUG_ON(flags != 0);
+> 		if (!(atomic_read(&mm->membarrier_state) &
+> 		      MEMBARRIER_STATE_PRIVATE_EXPEDITED_READY))
+> 			return -EPERM;
+> @@ -174,6 +195,8 @@ static int membarrier_private_expedited(int flags)
+> 		 */
+> 		if (cpu == raw_smp_processor_id())
+> 			continue;
+> +		if (cpu_id >= 0 && cpu != cpu_id)
+> +			continue;
 
-diff --git a/drivers/dma/fsldma.h b/drivers/dma/fsldma.h
-index 56f18ae992332..308bed0a560ac 100644
---- a/drivers/dma/fsldma.h
-+++ b/drivers/dma/fsldma.h
-@@ -205,10 +205,10 @@ struct fsldma_chan {
- #else
- static u64 fsl_ioread64(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
--	u64 fsl_addr_hi = (u64)in_le32((u32 *)(fsl_addr + 1)) << 32;
-+	u32 val_lo = in_le32((u32 __iomem *)addr);
-+	u32 val_hi = in_le32((u32 __iomem *)addr + 1);
- 
--	return fsl_addr_hi | in_le32((u32 *)fsl_addr);
-+	return ((u64)val_hi << 32) + val_lo;
- }
- 
- static void fsl_iowrite64(u64 val, u64 __iomem *addr)
-@@ -219,10 +219,10 @@ static void fsl_iowrite64(u64 val, u64 __iomem *addr)
- 
- static u64 fsl_ioread64be(const u64 __iomem *addr)
- {
--	u32 fsl_addr = lower_32_bits(addr);
--	u64 fsl_addr_hi = (u64)in_be32((u32 *)fsl_addr) << 32;
-+	u32 val_hi = in_be32((u32 __iomem *)addr);
-+	u32 val_lo = in_be32((u32 __iomem *)addr + 1);
- 
--	return fsl_addr_hi | in_be32((u32 *)(fsl_addr + 1));
-+	return ((u64)val_hi << 32) + val_lo;
- }
- 
- static void fsl_iowrite64be(u64 val, u64 __iomem *addr)
+When the cpu is specified, it seems rather inefficient to iterate on all
+cpus to skip all but the one we are looking for. I suspect we don't want
+to go through the loop in that case.
+
+> 		p = rcu_dereference(cpu_rq(cpu)->curr);
+> 		if (p && p->mm == mm)
+> 			__cpumask_set_cpu(cpu, tmpmask);
+> @@ -181,7 +204,7 @@ static int membarrier_private_expedited(int flags)
+> 	rcu_read_unlock();
+> 
+> 	preempt_disable();
+> -	smp_call_function_many(tmpmask, ipi_mb, NULL, 1);
+> +	smp_call_function_many(tmpmask, ipi_mb, &flags, 1);
+> 	preempt_enable();
+> 
+> 	free_cpumask_var(tmpmask);
+> @@ -283,11 +306,18 @@ static int membarrier_register_private_expedited(int
+> flags)
+> 	    set_state = MEMBARRIER_STATE_PRIVATE_EXPEDITED,
+> 	    ret;
+> 
+> -	if (flags & MEMBARRIER_FLAG_SYNC_CORE) {
+> +	if (flags == MEMBARRIER_FLAG_SYNC_CORE) {
+
+Same comment about changing this internal flags behavior from mask to equality.
+
+> 		if (!IS_ENABLED(CONFIG_ARCH_HAS_MEMBARRIER_SYNC_CORE))
+> 			return -EINVAL;
+> 		ready_state =
+> 			MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE_READY;
+> +	} else if (flags == MEMBARRIER_FLAG_RSEQ) {
+> +		if (!IS_ENABLED(CONFIG_RSEQ))
+> +			return -EINVAL;
+> +		ready_state =
+> +			MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ_READY;
+> +	} else {
+> +		BUG_ON(flags != 0);
+> 	}
+> 
+> 	/*
+> @@ -299,6 +329,8 @@ static int membarrier_register_private_expedited(int flags)
+> 		return 0;
+> 	if (flags & MEMBARRIER_FLAG_SYNC_CORE)
+> 		set_state |= MEMBARRIER_STATE_PRIVATE_EXPEDITED_SYNC_CORE;
+> +	if (flags & MEMBARRIER_FLAG_RSEQ)
+> +		set_state |= MEMBARRIER_STATE_PRIVATE_EXPEDITED_RSEQ;
+
+This one still behaves like a mask, so there is a discrepancy between registration
+and action functions.
+
+> 	atomic_or(set_state, &mm->membarrier_state);
+> 	ret = sync_runqueues_membarrier_state(mm);
+> 	if (ret)
+> @@ -310,8 +342,15 @@ static int membarrier_register_private_expedited(int flags)
+> 
+> /**
+>  * sys_membarrier - issue memory barriers on a set of threads
+> - * @cmd:   Takes command values defined in enum membarrier_cmd.
+> - * @flags: Currently needs to be 0. For future extensions.
+> + * @cmd:    Takes command values defined in enum membarrier_cmd.
+> + * @flags:  Currently needs to be 0 for all commands other than
+> + *          MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ: in the latter
+> + *          case it can be MEMBARRIER_CMD_FLAG_CPU, indicating that @cpu_id
+> + *          contains the CPU on which to interrupt (= restart)
+> + *          the RSEQ critical section.
+> + * @cpu_id: if @flags == MEMBARRIER_CMD_FLAG_CPU, indicates the cpu on which
+> + *          RSEQ CS should be interrupted (@cmd must be
+> + *          MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ).
+>  *
+>  * If this system call is not implemented, -ENOSYS is returned. If the
+>  * command specified does not exist, not available on the running
+> @@ -337,9 +376,9 @@ static int membarrier_register_private_expedited(int flags)
+>  *        smp_mb()           X           O            O
+>  *        sys_membarrier()   O           O            O
+>  */
+> -SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
+> +SYSCALL_DEFINE3(membarrier, int, cmd, int, flags, int, cpu_id)
+> {
+> -	if (unlikely(flags))
+> +	if (unlikely(flags) && cmd != MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ)
+
+I would prefer that we deal with flags and cpu_id entirely here rather than
+half here, half below, with e.g.:
+
+switch (cmd) {
+case MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ:
+    if (unlikely(flags && flags != MEMBARRIER_CMD_FLAG_CPU))
+        return -EINVAL;
+    break;
+default:
+    if (unlikely(flags))
+        return -EINVAL;
+}
+
+if (!(flags & MEMBARRIER_CMD_FLAG_CPU))
+    cpu_id = -1;
+
+> 		return -EINVAL;
+> 	switch (cmd) {
+> 	case MEMBARRIER_CMD_QUERY:
+> @@ -362,13 +401,21 @@ SYSCALL_DEFINE2(membarrier, int, cmd, int, flags)
+> 	case MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED:
+> 		return membarrier_register_global_expedited();
+> 	case MEMBARRIER_CMD_PRIVATE_EXPEDITED:
+> -		return membarrier_private_expedited(0);
+> +		return membarrier_private_expedited(0, -1);
+
+We can then change the -1 for cpu_id here.
+
+> 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED:
+> 		return membarrier_register_private_expedited(0);
+> 	case MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE:
+> -		return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
+> +		return membarrier_private_expedited(MEMBARRIER_FLAG_SYNC_CORE, -1);
+
+And here.
+
+> 	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE:
+> 		return membarrier_register_private_expedited(MEMBARRIER_FLAG_SYNC_CORE);
+> +	case MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ:
+> +		if (flags == 0)
+> +			return membarrier_private_expedited(MEMBARRIER_FLAG_RSEQ, -1);
+> +		if (flags == MEMBARRIER_CMD_FLAG_CPU)
+> +			return membarrier_private_expedited(MEMBARRIER_FLAG_RSEQ, cpu_id);
+> +		return -EINVAL;
+
+and here we can just call:
+
+   return membarrier_private_expedited(MEMBARRIER_FLAG_RSEQ, cpu_id);
+
+Thanks,
+
+Mathieu
+
+> +	case MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ:
+> +		return membarrier_register_private_expedited(MEMBARRIER_FLAG_RSEQ);
+> 	default:
+> 		return -EINVAL;
+> 	}
+> --
+> 2.28.0.297.g1956fa8f8d-goog
+
 -- 
-2.25.1
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
