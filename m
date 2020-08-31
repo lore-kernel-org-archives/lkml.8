@@ -2,84 +2,178 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F359C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106A7C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 007A82074B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB6DD20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 04:26:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PMGr1dUj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IC5nDs49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgHaERV (ORCPT
+        id S1726072AbgHaE0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 00:17:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
+        Mon, 31 Aug 2020 00:26:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725298AbgHaERU (ORCPT
+        with ESMTP id S1725446AbgHaE0c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 00:17:20 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283C9C061573;
-        Sun, 30 Aug 2020 21:17:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=hk9MKuYTLLrbYPyororI+1P9k/AQL7zML5WUOPd+C6c=; b=PMGr1dUjzsSLLZezD3HIALlL8q
-        HqT6THcAJCmcjDT59RzuD2Of87nr/15+1XH4pvm/KedAGJNyHMlcfeoEdih24melWClTbOPxhFKF7
-        Az17djVhyAk0DWJZQU2oIT6Hld0Tyg+ElHrhba4u5eWYUL5I6hI6hJ2EbLdS1oxHLBS5nvJfkG6rn
-        yRSJ98sR65k3RQ8vxe8g36o2A8oDyzU8hQ1Hl1QalwZpY2Urgc1XUzJCZLCcT62uKrWpz7WMt4TSQ
-        IpD6mmFTYqGhZw05LuBWG/dIOmqCWBNn3seu0lN8NHs7fWa2cSzMZpfJTKlMtDHXhpYxIvlVB3LMB
-        aXLFxgCQ==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac] (helo=smtpauth.infradead.org)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCbFt-000648-LC; Mon, 31 Aug 2020 04:17:18 +0000
-From:   Randy Dunlap <rdunlap@infradead.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Gustavo Padovan <gustavo@padovan.org>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: [PATCH] dma-buf: fix kernel-doc warning in dma-fence.c
-Date:   Sun, 30 Aug 2020 21:17:13 -0700
-Message-Id: <20200831041713.12571-1-rdunlap@infradead.org>
-X-Mailer: git-send-email 2.26.2
+        Mon, 31 Aug 2020 00:26:32 -0400
+Received: from mail-yb1-xb44.google.com (mail-yb1-xb44.google.com [IPv6:2607:f8b0:4864:20::b44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7302BC061573;
+        Sun, 30 Aug 2020 21:26:32 -0700 (PDT)
+Received: by mail-yb1-xb44.google.com with SMTP id 145so2150241ybd.0;
+        Sun, 30 Aug 2020 21:26:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PX06aBk627NQ1JeMegFd6B64tEFsLtmyNkqRlailfm0=;
+        b=IC5nDs49gJJNp2v81GvqILFp/15eYtDl2QXUOSAriKrk+Im/ZtF0wapcjFhYD1Aee2
+         jvbpHrmUBKZXPH50RHisaYAu6eL3nQMi8tqIbaQ0/GVrplidaSlxi0XkF9MZl9ZISJUy
+         4R6NeoUFpvYWgz/AVuuJruEx6FpoghNJLz+43yhjUyTFi+RgQA0FMEjf7VmO0Gn4rpOp
+         K/qD0gy4DvulktUJNfw234A3UgA/n0f5FM+/q+PywIVycMRHERMlSkWhhpulpNbrvxve
+         NZ2SJEQXzdPfvLg/ZZLsNRwFLSf7nvcbLvCRacQlOO83T58wRYi8uvtv/ICk4aX+fulv
+         i55g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PX06aBk627NQ1JeMegFd6B64tEFsLtmyNkqRlailfm0=;
+        b=jrTbdNG/7rPlno8AW8yHDtug7LCwv+y6m0FR9rcFGDwrXwHklOeQN0CkteKwgbxVpY
+         MqlfmaCSCGNeKwnrndVM4aYVvUHMvxr4EGc9sHAXfTy2tzVVmgnmU894N/8ikwCI+KZ0
+         UDNBs7aPQSQQKtIZO1srBZUuo5UoxL4k7BSjw8CE1VXp9FvHr1GBkRvv4S1Am9Fi9AUz
+         sgiFnEn8hY/qqLsfKHTaNVCgzlvr2PRu8gaEqbnudzlsAQEbbkHCHkGy8BwgJKBQPrfO
+         oATnsqPFLlfYptl9zFPiaGYMa3fOvs6kBY3bzhN52Cu/kh+Kp+5KR3TS3oawJFDw/ZnS
+         gtLw==
+X-Gm-Message-State: AOAM532faJvNngQjAgMzCQhdAOXU0WIiYn3Ono+mPf+CJ7gfVE/lJwe3
+        JzU2vGf0Jl9izXD6A/kpsrAz9iSUU5rQkyr9xQ6LcCw1G+M=
+X-Google-Smtp-Source: ABdhPJy+0rEbq+GkNgtCw3GXB22ZHNHLhDwqJ7psgye+ciyrN8LcA9ntQoXdSFcOYdxLiOIsyTwz2cd2MlTJH1iqhGY=
+X-Received: by 2002:a25:c4c5:: with SMTP id u188mr16615125ybf.162.1598847990436;
+ Sun, 30 Aug 2020 21:26:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200824183253.826343-1-lyude@redhat.com> <20200824183253.826343-2-lyude@redhat.com>
+ <CACAvsv6hymdcGkEcigL3fWACZ_1POpB+aefq9d9ChnYv_dHnVg@mail.gmail.com> <76392bff28359a88fbdf0857f011e0ed9f666dc4.camel@redhat.com>
+In-Reply-To: <76392bff28359a88fbdf0857f011e0ed9f666dc4.camel@redhat.com>
+From:   Ben Skeggs <skeggsb@gmail.com>
+Date:   Mon, 31 Aug 2020 14:26:19 +1000
+Message-ID: <CACAvsv6GKeX=u4Jn0VVJk1qgnPcnPCW6exukqjvfrfmm2mwSUg@mail.gmail.com>
+Subject: Re: [Nouveau] [PATCH 1/2] drm/nouveau/kms/nv50-: Program notifier
+ offset before requesting disp caps
+To:     Lyude Paul <lyude@redhat.com>
+Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
+        Sasha Levin <sashal@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add @cookie to dma_fence_end_signalling() to prevent kernel-doc
-warning in drivers/dma-buf/dma-fence.c:
+On Wed, 26 Aug 2020 at 02:52, Lyude Paul <lyude@redhat.com> wrote:
+>
+> On Tue, 2020-08-25 at 08:28 +1000, Ben Skeggs wrote:
+> > On Tue, 25 Aug 2020 at 04:33, Lyude Paul <lyude@redhat.com> wrote:
+> > > Not entirely sure why this never came up when I originally tested this
+> > > (maybe some BIOSes already have this setup?) but the ->caps_init vfunc
+> > > appears to cause the display engine to throw an exception on driver
+> > > init, at least on my ThinkPad P72:
+> > >
+> > > nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c 0000102b
+> > >
+> > > This is magic nvidia speak for "You need to have the DMA notifier offset
+> > > programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
+> > > this by doing that, and also perform an update afterwards to prevent
+> > > racing with the GPU when reading capabilities.
+> > >
+> > > Changes since v1:
+> > > * Don't just program the DMA notifier offset, make sure to actually
+> > >   perform an update
+> > I'm not sure there's a need to send an Update() method here, I believe
+> > GetCapabilities() is an action method on its own right?
+> >
+>
+> I'm not entirely sure about this part tbh. I do know that we need to call
+> GetCapabilities() _after_ the DMA notifier offset is programmed. But, my
+> assumption was that if GetCapabilities() requires a DMA notifier offset to store
+> its results in, we'd probably want to fire an update or something to make sure
+> that we're not reading before it finishes writing capabilities?
+We definitely want to *wait* on GetCapabilities() finishing, I believe
+it should also update the notifier the same (or similar) way Update()
+does.  But I don't think we want to send an Update() here, it'll
+actually trigger a modeset (which, on earlier HW, will tear down the
+boot mode.  Not sure about current HW, it might preserve state), and
+we may not want that to happen there.
 
-../drivers/dma-buf/dma-fence.c:291: warning: Function parameter or member 'cookie' not described in 'dma_fence_end_signalling'
+Ben.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: Gustavo Padovan <gustavo@padovan.org>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
----
- drivers/dma-buf/dma-fence.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- lnx-59-rc3.orig/drivers/dma-buf/dma-fence.c
-+++ lnx-59-rc3/drivers/dma-buf/dma-fence.c
-@@ -283,6 +283,7 @@ EXPORT_SYMBOL(dma_fence_begin_signalling
- 
- /**
-  * dma_fence_end_signalling - end a critical DMA fence signalling section
-+ * @cookie: opaque cookie from dma_fence_begin_signalling()
-  *
-  * Closes a critical section annotation opened by dma_fence_begin_signalling().
-  */
+>
+> > Ben.
+> >
+> > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for DP
+> > > interlacing support")
+> > > Cc: <stable@vger.kernel.org> # v5.8+
+> > > ---
+> > >  drivers/gpu/drm/nouveau/dispnv50/core507d.c | 25 ++++++++++++++++-----
+> > >  1 file changed, 19 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > index e341f572c2696..5e86feec3b720 100644
+> > > --- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > +++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > @@ -65,13 +65,26 @@ core507d_ntfy_init(struct nouveau_bo *bo, u32 offset)
+> > >  int
+> > >  core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
+> > >  {
+> > > -       u32 *push = evo_wait(&disp->core->chan, 2);
+> > > +       struct nv50_core *core = disp->core;
+> > > +       u32 interlock[NV50_DISP_INTERLOCK__SIZE] = {0};
+> > > +       u32 *push;
+> > >
+> > > -       if (push) {
+> > > -               evo_mthd(push, 0x008c, 1);
+> > > -               evo_data(push, 0x0);
+> > > -               evo_kick(push, &disp->core->chan);
+> > > -       }
+> > > +       core->func->ntfy_init(disp->sync, NV50_DISP_CORE_NTFY);
+> > > +
+> > > +       push = evo_wait(&core->chan, 4);
+> > > +       if (!push)
+> > > +               return 0;
+> > > +
+> > > +       evo_mthd(push, 0x0084, 1);
+> > > +       evo_data(push, 0x80000000 | NV50_DISP_CORE_NTFY);
+> > > +       evo_mthd(push, 0x008c, 1);
+> > > +       evo_data(push, 0x0);
+> > > +       evo_kick(push, &core->chan);
+> > > +
+> > > +       core->func->update(core, interlock, false);
+> > > +       if (core->func->ntfy_wait_done(disp->sync, NV50_DISP_CORE_NTFY,
+> > > +                                      core->chan.base.device))
+> > > +               NV_ERROR(drm, "core notifier timeout\n");
+> > >
+> > >         return 0;
+> > >  }
+> > > --
+> > > 2.26.2
+> > >
+> > > _______________________________________________
+> > > Nouveau mailing list
+> > > Nouveau@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/nouveau
+> --
+> Sincerely,
+>       Lyude Paul (she/her)
+>       Software Engineer at Red Hat
+>
