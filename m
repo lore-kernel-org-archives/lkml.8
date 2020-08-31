@@ -2,170 +2,151 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4000BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0C1C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0302073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EpoiQoXc"
+	by mail.kernel.org (Postfix) with ESMTP id 877ED2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598866062;
+	bh=DrHloDABVgOOM+XRYJ0A+dG8Nq8q3jEeLOViCmEba4E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VaOrdPf6/k8DrfwIN8VatmGPGY7l8wbcY8OAOiL7kcfIDQreEDD1mIvNB/9iukJly
+	 BZL+MCpev82UKeQe+RXuLmOAWK9JZjpZJMam4Gz74PtmVJ3IhpHqQXuKXedctXtzmW
+	 TQndeapGsOybUUSQvaWu3+zGBTsBVqj1Vzv/IrCw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbgHaJ1S (ORCPT
+        id S1726384AbgHaJ1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:27:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54856 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725964AbgHaJ1O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:27:14 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1BCC061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:27:14 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id mm21so323902pjb.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:27:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zU+ye3DFPZbAV6pQiN8wFPJa6aARNezf++/kyW/uVuI=;
-        b=EpoiQoXcv7ag2BZboESNDV8ueXVg7gPRhJwh0HJmK0jjxVOplU9RU+KzVm9W9WqBC9
-         JHHOX0WWO9bODH9Di16FMFHq8OzWErkqnpA9HXxWGtiN+LyEjiMmfESPZ+kv+Do6OqVX
-         ifi6XiPNhiW9ZYjFRCo6WupZEH13dMoZ4x4+Y4VBrmhcq/1SAN4c6raMNNuV0n8rqLrR
-         RPONK2LGjM13mM60e+GgF6Vl5vCeZJw5JbuMxChUkW5ixwPuVph9G2oEQpUYvLEuxAKh
-         W7GxKOLwkKM/AuTgHjiG0ZocABjLNggfN5OauAJ0iUnqFcmhtB7mGUUisQm65OcULL5R
-         qhCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zU+ye3DFPZbAV6pQiN8wFPJa6aARNezf++/kyW/uVuI=;
-        b=CuTL+KqdIx9zljqmwZkXqZydBg8tyxoG+TGWv3LwQdzTJ3S2YWjYG9IrP1hGsTOAVD
-         ruFwDRJZi+8hqprebnOiUQr4tlbXqsrT4arjfCtOrHwOXcdVK8az7hVxPc7EdVTWzMSC
-         +G3lhr3UGvDKfsJ/gfnMXDjWwc19XLZYsBkudFVXALQkdowCEnYwzse4QX8mf+TSCo9f
-         eI2H4Vn95QhAwR4LCODxpmINMtKI4LUfPVU8tcyNLjh8/iMcaaWjC4I8U1UYrht8g8aR
-         pAWkreMGTeyJMWkibcM4cK9fe9/6wnoVMYYPaCfGEN6jgI7WzUn7bOFP+izc0jHM5kZE
-         EPRA==
-X-Gm-Message-State: AOAM5312k22v3DL0SK3aN8KS3jvwcUZ+uuYpFpJ5Ap1v5c07T3hbGjx0
-        3ix78Q2udg1P67rJBNpxBZKsFA==
-X-Google-Smtp-Source: ABdhPJwMKSI/DxgWWVduGT7bfBgazAzmC0cUQbGNmOrklC5B/CSMw6tk2YWg7AIdKXeKpPRtr5YA9Q==
-X-Received: by 2002:a17:902:8a93:: with SMTP id p19mr426722plo.320.1598866033880;
-        Mon, 31 Aug 2020 02:27:13 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id h5sm7865081pfk.0.2020.08.31.02.27.12
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 02:27:13 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] opp: Don't drop reference for an OPP table that was never parsed
-Date:   Mon, 31 Aug 2020 14:56:56 +0530
-Message-Id: <922ff0759a16299e24cacfc981ac07914d8f1826.1598865786.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.25.0.rc1.19.g042ed3e048af
+        Mon, 31 Aug 2020 05:27:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60076 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725964AbgHaJ1j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:27:39 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E17E42073A;
+        Mon, 31 Aug 2020 09:27:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598866059;
+        bh=DrHloDABVgOOM+XRYJ0A+dG8Nq8q3jEeLOViCmEba4E=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GFv0wLhg+Ji+EwB14dxJs3wxpxWs9OKGcAAxx5CdUCWXp0AfxeoqtPvm6ef9aZFda
+         r/Xsy86vEda6tAmFqBo2w/uel7m3Ru0tEAmofvst5C3ur5KQu76ILp9GDGSg6k/bJu
+         IO8iQjjqiNjhBip7SUav8DmJaiN8h2hvHOYN7n/o=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1kCg6D-007yrR-BW; Mon, 31 Aug 2020 10:27:37 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 31 Aug 2020 10:27:37 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Samuel Dionne-Riel <samuel@dionne-riel.com>,
+        Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: Boot failure on gru-scarlet-inx with 5.9-rc2
+In-Reply-To: <20200831031838.2d6d76d9@DUFFMAN>
+References: <20200829164920.7d28e01a@DUFFMAN>
+ <65d88bdd0888a69849327501a2aad186@kernel.org>
+ <20200831031838.2d6d76d9@DUFFMAN>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <90731ebb54fe03003dce03bc7ec4872e@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: samuel@dionne-riel.com, robh@kernel.org, devicetree@vger.kernel.org, frowand.list@gmail.com, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dev_pm_opp_remove_table() should drop a reference to the OPP table only
-if the DT OPP table was parsed earlier with a call to
-dev_pm_opp_of_add_table() earlier. Else it may end up dropping the
-reference to the OPP table, which was added as a result of other calls
-like dev_pm_opp_set_clkname(). And would hence result in undesirable
-behavior later on when caller would try to free the resource again.
+On 2020-08-31 08:18, Samuel Dionne-Riel wrote:
+> On Sun, 30 Aug 2020 10:41:42 +0100
+> Marc Zyngier <maz@kernel.org> wrote:
+> 
+> Hi,
+> 
+>> 
+>> Could you try replacing the problematic patch with [1], and let me
+>> know whether this changes anything on your end? This patch probably
+>> isn't the right approach, but it would certainly help pointing me
+>> in the right direction.
+>> 
+>> [1]
+>> https://lore.kernel.org/lkml/20200815125112.462652-2-maz@kernel.org/
+> 
+> Following through a bisect session to figure out why the Wi-Fi broke
+> between 5.8 and 5.9-rc1, I figured out something that you might have in
+> mind already.
+> 
+> It seems that anything that makes of_bus_pci_match return true will
+> cause this to happen. This is why your initial fix also fails.
+> 
+> I believe my understanding is right since applying the following on top
+> of 5.9-rc1 also produces the same result.
+> 
+> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+> @@ -227,6 +227,7 @@ dmac_peri: dma-controller@ff6e0000 {
+>         };
+> 
+>         pcie0: pcie@f8000000 {
+> +               device_type = "pci";
+>                 compatible = "rockchip,rk3399-pcie";
+>                 reg = <0x0 0xf8000000 0x0 0x2000000>,
+>                       <0x0 0xfd000000 0x0 0x1000000>;
+> 
+> 
+> This was found out since the Wi-Fi pci-based ath10k Wi-Fi broke, with
+> 2f96593ecc37e98bf99525f0629128080533867f, which changes stuff around
+> pci bus... things...
+> 
+> Am I understanding right that your fix(es) were related to the change
+> set where the commit is found?
+> 
+> My intuition is that the commit causing the boot issue could be related
+> to changes with PCI or PCIe subsystems, and that your fix for
+> of_bus_pci_match is a red herring, that only surfaced the existing
+> issue.
+> 
+> This is backed by applying the previous dts patch on top of 2f96593e,
+> and having Wi-Fi work. I would assume that between that commit and
+> 5.9-rc1 there is a commit that causes the complete failure to boot,
+> which is unrelated to the first identified commit on 5.9-rc2.
 
-Fixes: 03758d60265c ("opp: Replace list_kref with a local counter")
-Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Reported-by: Anders Roxell <anders.roxell@linaro.org>
-Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- drivers/opp/core.c | 22 ++++++++++++++++------
- drivers/opp/opp.h  |  2 +-
- 2 files changed, 17 insertions(+), 7 deletions(-)
+Ah, so actually anything that *enables pcie* kills your system.
+Great investigative work!
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 9d7fb45b1786..31ce5d19ee9e 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -1291,13 +1291,19 @@ void dev_pm_opp_remove(struct device *dev, unsigned long freq)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_remove);
- 
--void _opp_remove_all_static(struct opp_table *opp_table)
-+bool _opp_remove_all_static(struct opp_table *opp_table)
- {
- 	struct dev_pm_opp *opp, *tmp;
-+	bool ret = true;
- 
- 	mutex_lock(&opp_table->lock);
- 
--	if (!opp_table->parsed_static_opps || --opp_table->parsed_static_opps)
-+	if (!opp_table->parsed_static_opps) {
-+		ret = false;
-+		goto unlock;
-+	}
-+
-+	if (--opp_table->parsed_static_opps)
- 		goto unlock;
- 
- 	list_for_each_entry_safe(opp, tmp, &opp_table->opp_list, node) {
-@@ -1307,6 +1313,8 @@ void _opp_remove_all_static(struct opp_table *opp_table)
- 
- unlock:
- 	mutex_unlock(&opp_table->lock);
-+
-+	return ret;
- }
- 
- /**
-@@ -2409,13 +2417,15 @@ void _dev_pm_opp_find_and_remove_table(struct device *dev)
- 		return;
- 	}
- 
--	_opp_remove_all_static(opp_table);
-+	/*
-+	 * Drop the extra reference only if the OPP table was successfully added
-+	 * with dev_pm_opp_of_add_table() earlier.
-+	 **/
-+	if (_opp_remove_all_static(opp_table))
-+		dev_pm_opp_put_opp_table(opp_table);
- 
- 	/* Drop reference taken by _find_opp_table() */
- 	dev_pm_opp_put_opp_table(opp_table);
--
--	/* Drop reference taken while the OPP table was added */
--	dev_pm_opp_put_opp_table(opp_table);
- }
- 
- /**
-diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
-index e51646ff279e..c3fcd571e446 100644
---- a/drivers/opp/opp.h
-+++ b/drivers/opp/opp.h
-@@ -212,7 +212,7 @@ struct opp_table {
- 
- /* Routines internal to opp core */
- void dev_pm_opp_get(struct dev_pm_opp *opp);
--void _opp_remove_all_static(struct opp_table *opp_table);
-+bool _opp_remove_all_static(struct opp_table *opp_table);
- void _get_opp_table_kref(struct opp_table *opp_table);
- int _get_opp_count(struct opp_table *opp_table);
- struct opp_table *_find_opp_table(struct device *dev);
+> 
+> And backed by a further bisection with this that points to
+> d84c572de1a360501d2e439ac632126f5facf59d being the actual change that
+> causes the tablet to fail to boot, as long as the pcie0 node is
+> identified as pci properly.
+> 
+> I am unsure if I should add as a Cc everyone involved in that change
+> set, though the author (coincidentally) is already in the original list
+> of recipients.
+
+I've deliberately moved Rob from Cc to To... ;-)
+
+> Any additional thoughts from this additional information?
+
+What you could do is to start looking at which of the pci_is_root_bus()
+changes breaks PCIe on this system.  The fact that it breaks on your
+system and not on mine is a bit puzzling.
+
+Thanks,
+
+         M.
 -- 
-2.25.0.rc1.19.g042ed3e048af
-
+Jazz is not dead. It just smells funny...
