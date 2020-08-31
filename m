@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5067FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8FDC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2979F2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4934120720
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="GOAghqLp";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W3HRXU80"
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="LiyCbH3Y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c5uHtCGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgHaDtg (ORCPT
+        id S1727957AbgHaDtf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:49:36 -0400
-Received: from new1-smtp.messagingengine.com ([66.111.4.221]:54811 "EHLO
+        Sun, 30 Aug 2020 23:49:35 -0400
+Received: from new1-smtp.messagingengine.com ([66.111.4.221]:33809 "EHLO
         new1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727116AbgHaDtA (ORCPT
+        by vger.kernel.org with ESMTP id S1727111AbgHaDtA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 30 Aug 2020 23:49:00 -0400
 Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 31C31580561;
-        Sun, 30 Aug 2020 23:48:58 -0400 (EDT)
+        by mailnew.nyi.internal (Postfix) with ESMTP id B55BD58055D;
+        Sun, 30 Aug 2020 23:48:57 -0400 (EDT)
 Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Sun, 30 Aug 2020 23:48:58 -0400
+  by compute3.internal (MEProxy); Sun, 30 Aug 2020 23:48:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
         from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm3; bh=PQrBkezYLt6Fy
-        +c/uvjYlgs8mBO389cR4ftCESf2x2w=; b=GOAghqLpYvqRBtj+22uIKS1yiT2Zq
-        iN1BaVVzITn8OsPxZZiLtSAZv3U58dFoTOXCVhDdgYVu8amWGGChbmLxEP9Yjpjg
-        uwvpewclR/+gAtwzfBzBRjYIKd0GT4enBzsF/VB46pV77Ft95QyuwIr2cZeYIvLt
-        ebcCvu5SgZbnUsz7rK2EF8/wsqTR2mzLyfqjSLKPAMl2i9JhkNGcj1hBZdww//oa
-        oO5k0/0cn1rdOvHRDXRaWYdUm8nmB6jTXbZboAbGWEsnjo4FYH2nQfcoQT5Npkb5
-        SzTETC24HanYxFWXFzDk+N+s7h+pzvlWEuRBG5U/sUSEEa5NiHk9ZtMcQ==
+        :mime-version:content-transfer-encoding; s=fm3; bh=IZc2IStvr+AnR
+        7eauS4CeBaKA3UMEQWja2HUN/Gwnuk=; b=LiyCbH3YYEvxEnMZgbuR9NAgF1dq7
+        f4ZxGdQ6McOGgY/irALiEv7N9OAw+6zgCI5zr4b/xtOs6vBReFk+jOGFHl4+Fo7f
+        B2TpXN7pFpRP48/r3bHXaXrwJUyFTXWA6/JaDVbaXJdd9MbDKpC3KqclPXJ84O5G
+        ypY3M6Rrwzjlzs+P2xe0NzCR9UOeMzc+DhBUM1yn6toz+BqMBxWmq0ZxxxIvKl/5
+        EhqsaFBDEQZ9dafSEMVMpUO/vZc1NgJ1cXZRZArYRoJD/4GW13kJaCDA5+idltOQ
+        5z6dfZ6nkYaqMl1ZS3x77bQ7NhdW79UQc3hXdr/AoAtE93s6EVV6QMBLQ==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
         messagingengine.com; h=cc:content-transfer-encoding:date:from
         :in-reply-to:message-id:mime-version:references:subject:to
         :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; bh=PQrBkezYLt6Fy+c/uvjYlgs8mBO389cR4ftCESf2x2w=; b=W3HRXU80
-        Qc+lFonH+f++2P25QSzXSmxBgpoPZ/g/3YHu8HppAOjIY6WNWAwtuFMrIwBSGOEp
-        glqRr7cuVaGfHpD5/vOs5cLOYJWx2aTUXH6raIucM8aa9Yb9Bu91vuT3/QAR02BC
-        sc2ZpPtOiynB2nal2f+S+FS09430fwxNiWVWUouFRNea1aCPIbMN0LCvasuPEI9e
-        V/dRDN1gvz/wLNpDzAHP7QYPcYdwC4ZWInY5/W7FHe/N+ZqYmZKlXrujAiOGb5Zz
-        J5ZGn8S3dTOctJC2N8lfhwROAuLV0tm/ROODWXqu8q78eQ1BldlQrvx/X9ltITvJ
-        phJ8Pdr/Cek8zQ==
-X-ME-Sender: <xms:KnNMX-j5DadaiJK1KFZSL4ZXDLO1zmQBY50SW6CkXfkxwCABnnHtaQ>
+        fm3; bh=IZc2IStvr+AnR7eauS4CeBaKA3UMEQWja2HUN/Gwnuk=; b=c5uHtCGS
+        rnLqnXnjwuA766oPIi3d/Nu8GNOW2PW6O+lpkcu4IiNGRTGWFbBcf+TqKRTHWgbh
+        Ey+hrpZARrOJUwGez4SkkHFSyxdvKg1PXlitRPgffcXL0+rxVxKv14ydgAB64+az
+        k0g8Xj9CCGYcXDKTUkNu0mn7tVynCHYuvIANr0FRFMIlVXUbSj1RCJymTi8xZtCW
+        OhuP1hkVqDuuRS+7HYn1FMD9zCWaqrTUODRf2qWEWdgaoucahXKZuzwBo0J4VXyr
+        zSbwpU00nUwynyWEBnpNha1mnVaDnuO9aCERLL30O2Lu0iNb5hx3HXhK7DyBGPyf
+        LF3t4ZzqOLaTUw==
+X-ME-Sender: <xms:KXNMX2QhieCG8GV0bOl8O_qm72Y1-_KrNpnozTCyQO1rv0cwLQ80wQ>
 X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgedgjeehucetufdoteggodetrfdotf
     fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
     uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
@@ -59,12 +59,12 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefgedgjeehucetufdoteggod
     gfejheeuieenucfkphepjedtrddufeehrddugeekrdduhedunecuvehluhhsthgvrhfuih
     iivgepudenucfrrghrrghmpehmrghilhhfrhhomhepshgrmhhuvghlsehshhholhhlrghn
     ugdrohhrgh
-X-ME-Proxy: <xmx:KnNMX_DzT4nfumGn_ZuJ80EkL5E6zVNIQ3ZeD2mWMzihCB-2QxsXmQ>
-    <xmx:KnNMX2HV1EQq5kCbjEX57GeNveR_BynfUphz5lBCqn7iw-knheWkfQ>
-    <xmx:KnNMX3Rso55QwepAJr4O4qBJ8o1NlC9joF-MBUp5ujSejF_7v3iR8w>
-    <xmx:KnNMXyxaXvizF7OA9mH4uSBMIVwacKb5VCPSrBcgykDV5alHSktyag>
+X-ME-Proxy: <xmx:KXNMX7wriZbvv7elfYlTelNYz7CmFF82LbcSFdogI3XkZuFIviIq5Q>
+    <xmx:KXNMXz3fYqZyyrb6wYSvgXCBnyX8S99MUsR_EAfXg-LcbNkCnT9slg>
+    <xmx:KXNMXyBHyaO_OsmrCJlKCX1kR3wzUNnbvyDn_SzBBqRVvjZbGlZOAw>
+    <xmx:KXNMX_gcxY5kO-R8RYkKaiSNMguX43Deesgw7Tnb2VlB_IGRrz56_g>
 Received: from titanium.stl.sholland.net (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 964263280060;
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2601C328005D;
         Sun, 30 Aug 2020 23:48:57 -0400 (EDT)
 From:   Samuel Holland <samuel@sholland.org>
 To:     Mark Brown <broonie@kernel.org>,
@@ -75,9 +75,9 @@ To:     Mark Brown <broonie@kernel.org>,
 Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Samuel Holland <samuel@sholland.org>
-Subject: [PATCH 8/9] ASoC: sun8i-codec: Attach the bus clock to the regmap
-Date:   Sun, 30 Aug 2020 22:48:51 -0500
-Message-Id: <20200831034852.18841-9-samuel@sholland.org>
+Subject: [PATCH 7/9] ASoC: sun8i-codec: Sort masks in a consistent order
+Date:   Sun, 30 Aug 2020 22:48:50 -0500
+Message-Id: <20200831034852.18841-8-samuel@sholland.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200831034852.18841-1-samuel@sholland.org>
 References: <20200831034852.18841-1-samuel@sholland.org>
@@ -88,81 +88,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When attached to the regmap, the bus clock is automatically enabled as
-needed to access device registers. This avoids needing code to manage it
-separately in the driver.
+All other definitions are sorted from largest to smallest bit number.
+This makes the AIF1CLK_CTRL mask constants consistent with them.
 
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 Signed-off-by: Samuel Holland <samuel@sholland.org>
 ---
- sound/soc/sunxi/sun8i-codec.c | 21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
+ sound/soc/sunxi/sun8i-codec.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/sound/soc/sunxi/sun8i-codec.c b/sound/soc/sunxi/sun8i-codec.c
-index c25cdd3f3057..8a7f98910347 100644
+index 62d4b1b44e76..c25cdd3f3057 100644
 --- a/sound/soc/sunxi/sun8i-codec.c
 +++ b/sound/soc/sunxi/sun8i-codec.c
-@@ -94,7 +94,6 @@ struct sun8i_codec_quirks {
- struct sun8i_codec {
- 	struct regmap			*regmap;
- 	struct clk			*clk_module;
--	struct clk			*clk_bus;
- 	const struct sun8i_codec_quirks	*quirks;
- };
+@@ -81,10 +81,10 @@
  
-@@ -109,12 +108,6 @@ static int sun8i_codec_runtime_resume(struct device *dev)
- 		return ret;
- 	}
+ #define SUN8I_SYS_SR_CTRL_AIF1_FS_MASK		GENMASK(15, 12)
+ #define SUN8I_SYS_SR_CTRL_AIF2_FS_MASK		GENMASK(11, 8)
+-#define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK	GENMASK(3, 2)
+-#define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_MASK	GENMASK(5, 4)
+-#define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_MASK	GENMASK(8, 6)
+ #define SUN8I_AIF1CLK_CTRL_AIF1_BCLK_DIV_MASK	GENMASK(12, 9)
++#define SUN8I_AIF1CLK_CTRL_AIF1_LRCK_DIV_MASK	GENMASK(8, 6)
++#define SUN8I_AIF1CLK_CTRL_AIF1_WORD_SIZ_MASK	GENMASK(5, 4)
++#define SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT_MASK	GENMASK(3, 2)
  
--	ret = clk_prepare_enable(scodec->clk_bus);
--	if (ret) {
--		dev_err(dev, "Failed to enable the bus clock\n");
--		goto err_disable_modclk;
--	}
--
- 	regcache_cache_only(scodec->regmap, false);
- 
- 	ret = regcache_sync(scodec->regmap);
-@@ -126,9 +119,6 @@ static int sun8i_codec_runtime_resume(struct device *dev)
- 	return 0;
- 
- err_disable_clk:
--	clk_disable_unprepare(scodec->clk_bus);
--
--err_disable_modclk:
- 	clk_disable_unprepare(scodec->clk_module);
- 
- 	return ret;
-@@ -142,7 +132,6 @@ static int sun8i_codec_runtime_suspend(struct device *dev)
- 	regcache_mark_dirty(scodec->regmap);
- 
- 	clk_disable_unprepare(scodec->clk_module);
--	clk_disable_unprepare(scodec->clk_bus);
- 
- 	return 0;
- }
-@@ -612,20 +601,14 @@ static int sun8i_codec_probe(struct platform_device *pdev)
- 		return PTR_ERR(scodec->clk_module);
- 	}
- 
--	scodec->clk_bus = devm_clk_get(&pdev->dev, "bus");
--	if (IS_ERR(scodec->clk_bus)) {
--		dev_err(&pdev->dev, "Failed to get the bus clock\n");
--		return PTR_ERR(scodec->clk_bus);
--	}
--
- 	base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(base)) {
- 		dev_err(&pdev->dev, "Failed to map the registers\n");
- 		return PTR_ERR(base);
- 	}
- 
--	scodec->regmap = devm_regmap_init_mmio(&pdev->dev, base,
--					       &sun8i_codec_regmap_config);
-+	scodec->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "bus", base,
-+						   &sun8i_codec_regmap_config);
- 	if (IS_ERR(scodec->regmap)) {
- 		dev_err(&pdev->dev, "Failed to create our regmap\n");
- 		return PTR_ERR(scodec->regmap);
+ struct sun8i_codec_quirks {
+ 	bool legacy_widgets	: 1;
 -- 
 2.26.2
 
