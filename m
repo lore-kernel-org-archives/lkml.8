@@ -2,76 +2,95 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BB1C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA01C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 860162073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:19:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598865583;
-	bh=VbOMNr9+mlKhviNnhhuAnntR0pqtI1g4GOH3sYhR2rk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M7UYnYEpjXJ+YyekbtQDKnCMoFPlqawTKaSDX2pWcxZec7YVTEjX0UXAA3v2h3ySB
-	 YUqYyypxrNQ6DMPmRHCtVTwAVXoLQNFk5o07/I52uwkeDzSbSd9z5TjwKEJe5sBfL0
-	 ZPs6QZkh0wdWsOWPOb01hn3LnIIWwhEEs97BjGTE=
+	by mail.kernel.org (Postfix) with ESMTP id 0B2CF2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgHaJTm (ORCPT
+        id S1728379AbgHaJUT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55198 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 05:20:19 -0400
+Received: from mail.thorsis.com ([92.198.35.195]:49826 "EHLO mail.thorsis.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728103AbgHaJTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:19:41 -0400
-Received: from localhost (unknown [122.171.38.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC4DF2073A;
-        Mon, 31 Aug 2020 09:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598865580;
-        bh=VbOMNr9+mlKhviNnhhuAnntR0pqtI1g4GOH3sYhR2rk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pYmVfXeYXprV+l9Ii2m95YRdQE1u0CZ2sGQXb89oayh7pHNcWGejr4Z+IsUA9+9o8
-         DJ+rSfKQV0Zk2gL8HEQWveffbA6/CRSnIme71+fXGJLN9FxTehkzrb5iq6Dns5vWI+
-         Xj6gWxTR94UlPEHvT+JFXM+Dff1NwyZZbSGRC6ik=
-Date:   Mon, 31 Aug 2020 14:49:36 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     kishon@ti.com, robh+dt@kernel.org, andriy.shevchenko@intel.com,
-        eswara.kota@linux.intel.com,
-        vadivel.muruganx.ramuthevar@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v7 3/3] phy: intel: Add Keem Bay eMMC PHY support
-Message-ID: <20200831091936.GM2639@vkoul-mobl>
-References: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200821113747.2912-4-wan.ahmad.zainie.wan.mohamad@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200821113747.2912-4-wan.ahmad.zainie.wan.mohamad@intel.com>
+        id S1725829AbgHaJUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 05:20:18 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.thorsis.com (Postfix) with ESMTP id 7B580324E;
+        Mon, 31 Aug 2020 11:20:16 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at mail.thorsis.com
+Received: from mail.thorsis.com ([127.0.0.1])
+        by localhost (mail.thorsis.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id V1NgYPgywrN7; Mon, 31 Aug 2020 11:20:16 +0200 (CEST)
+Received: by mail.thorsis.com (Postfix, from userid 109)
+        id 4936B3614; Mon, 31 Aug 2020 11:20:16 +0200 (CEST)
+From:   Alexander Dahl <ada@thorsis.com>
+To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc:     linux-leds@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Dan Murphy <dmurphy@ti.com>, linux-kernel@vger.kernel.org,
+        Alexander Dahl <post@lespocky.de>
+Subject: Re: [PATCH] leds: pwm: Allow automatic labels for DT based devices
+Date:   Mon, 31 Aug 2020 11:20:09 +0200
+Message-ID: <1837645.vzTIdMnA0P@ada>
+In-Reply-To: <eff509d5-a5f7-0d5d-b39c-aac364e53aca@gmail.com>
+References: <20200826093737.29008-1-ada@thorsis.com> <7920560.iacgkFlgr8@ada> <eff509d5-a5f7-0d5d-b39c-aac364e53aca@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21-08-20, 19:37, Wan Ahmad Zainie wrote:
+Hello Jacek,
 
-> +/* From ACS_eMMC51_16nFFC_RO1100_Userguide_v1p0.pdf p17 */
-> +#define FREQSEL_200M_170M	0x0
-> +#define FREQSEL_170M_140M	0x1
-> +#define FREQSEL_140M_110M	0x2
-> +#define FREQSEL_110M_80M	0x3
-> +#define FREQSEL_80M_50M		0x4
-> +
-> +#define maskval(mask, val)	(((val) << (ffs(mask) - 1)) & mask)
+Am Freitag, 28. August 2020, 22:43:02 CEST schrieb Jacek Anaszewski:
+> On 8/28/20 9:00 AM, Alexander Dahl wrote:
+> > Am Donnerstag, 27. August 2020, 23:28:45 CEST schrieb Jacek Anaszewski:
+> >> This part looks good, but corresponding update of
+> >> Documentation/devicetree/bindings/leds/leds-pwm.txt is needed as well.
+> >=20
+> > I'm not sure, what needs updating. The properties 'function' and 'color'
+> > are already documented in
+> > Documentation/devicetree/bindings/leds/common.yaml =E2=80=A6 the only t=
+hing I can
+> > think of here is updating the examples? That would be nice, as would be
+> > updating to yaml, but I don't see the strong relation, yet.
+> It is necessary to tell the user that given driver is capable of
+> utilizing a property. I thought of something like in commit [0].
+>=20
+> >> It would be good to switch to yaml by this occassion.
+> >=20
+> > Is there some guidance on that in general?
+>=20
+> I am not aware of, but surely sooner or later all bindings will
+> need to be unified. Touching the file is always a good opportunity
+> to address that. It's up to you, though.
 
-Kernel has a macro do this for you, please use FIELD_PREP instead of
+This update from txt to yaml is a manual task and after reading [1] and som=
+e=20
+other examples, I tried to come up with something.  I pushed the WIP to my=
+=20
+GitHub tree and will run the checks recommended by [1] later in the evening=
+=2E =20
+If that goes well, I'll send a v2 series.
 
-your own macro
--- 
-~Vinod
+> [0]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/Do
+> cumentation/devicetree/bindings/leds/leds-lm3692x.txt?id=3D4dcbc8f8c59f4b=
+618d6
+> 51f5ba884ee5bf562c8de
+
+Well okay, that was for the old format, but I see what you mean.
+
+Greets
+Alex
+
+[1] https://www.kernel.org/doc/html/latest/devicetree/writing-schema.html
+
+
+
