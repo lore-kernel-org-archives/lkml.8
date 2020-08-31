@@ -4,247 +4,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A5FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7986FC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3664D2068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D15A206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:20:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726121AbgHaLTa (ORCPT
+        id S1726968AbgHaLUe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:19:30 -0400
-Received: from foss.arm.com ([217.140.110.172]:56612 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgHaLFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:05:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C1AD11B3;
-        Mon, 31 Aug 2020 04:05:23 -0700 (PDT)
-Received: from e124572.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 412293F71F;
-        Mon, 31 Aug 2020 04:05:21 -0700 (PDT)
-From:   Boyan Karatotev <boyan.karatotev@arm.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     vincenzo.frascino@arm.com, amit.kachhap@arm.com,
-        boian4o1@gmail.com, Boyan Karatotev <boyan.karatotev@arm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH v2 2/4] kselftests/arm64: add nop checks for PAuth tests
-Date:   Mon, 31 Aug 2020 12:04:48 +0100
-Message-Id: <20200831110450.30188-3-boyan.karatotev@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200831110450.30188-1-boyan.karatotev@arm.com>
-References: <20200831110450.30188-1-boyan.karatotev@arm.com>
+        Mon, 31 Aug 2020 07:20:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42226 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726411AbgHaLIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:08:10 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4209FC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:07:34 -0700 (PDT)
+Received: from [2a0a:edc0:0:1101:1d::39] (helo=dude03.red.stw.pengutronix.de)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1kChei-0007tZ-1h; Mon, 31 Aug 2020 13:07:20 +0200
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
+        patchwork-lst@pengutronix.de
+Date:   Mon, 31 Aug 2020 13:07:19 +0200
+Message-Id: <20200831110719.2126930-1-l.stach@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::39
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+Subject: [PATCH] sched/deadline: Fix stale throttling on de-/boosted tasks
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on metis.ext.pengutronix.de)
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PAuth adds sign/verify controls to enable and disable groups of
-instructions in hardware for compatibility with libraries that do not
-implement PAuth. The kernel always enables them if it detects PAuth.
+When a boosted task gets throttled, what normally happens is that it's
+immediately enqueued again with ENQUEUE_REPLENISH, which replenishes the
+runtime and clears the dl_throttled flag. There is a special case however:
+if the throttling happened on sched-out and the task has been deboosted in
+the meantime, the replenish is skipped as the task will return to its
+normal scheduling class. This leaves the task with the dl_throttled flag
+set.
 
-Add a test that checks that each group of instructions is enabled, if the
-kernel reports PAuth as detected.
+Now if the task gets boosted up to the deadline scheduling class again
+while it is sleeping, it's still in the throttled state. The normal wakeup
+however will enqueue the task with ENQUEUE_REPLENISH not set, so we don't
+actually place it on the rq. Thus we end up with a task that is runnable,
+but not actually on the rq and neither a immediate replenishment happens,
+nor is the replenishment timer set up, so the task is stuck in
+forever-throttled limbo.
 
-Note: For groups, for the purpose of this patch, we intend instructions
-that use a certain key.
+Clear the dl_throttled flag before dropping back to the normal scheduling
+class to fix this issue.
 
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
-Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
 ---
- .../testing/selftests/arm64/pauth/.gitignore  |  1 +
- tools/testing/selftests/arm64/pauth/Makefile  |  7 ++-
- tools/testing/selftests/arm64/pauth/helper.c  | 40 +++++++++++++++
- tools/testing/selftests/arm64/pauth/helper.h  | 10 ++++
- tools/testing/selftests/arm64/pauth/pac.c     | 51 +++++++++++++++++++
- 5 files changed, 107 insertions(+), 2 deletions(-)
- create mode 100644 tools/testing/selftests/arm64/pauth/helper.c
+This is the root cause and fix of the issue described at [1]. After working
+on other stuff for the last few months, I finally was able to circle back
+to this issue and gather the required data to pinpoint the failure mode.
 
-diff --git a/tools/testing/selftests/arm64/pauth/.gitignore b/tools/testing/selftests/arm64/pauth/.gitignore
-index b557c916720a..155137d92722 100644
---- a/tools/testing/selftests/arm64/pauth/.gitignore
-+++ b/tools/testing/selftests/arm64/pauth/.gitignore
-@@ -1 +1,2 @@
-+exec_target
- pac
-diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
-index 01d35aaa610a..5c0dd129562f 100644
---- a/tools/testing/selftests/arm64/pauth/Makefile
-+++ b/tools/testing/selftests/arm64/pauth/Makefile
-@@ -12,7 +12,7 @@ pauth_cc_support := $(shell if ($(CC) $(CFLAGS) -march=armv8.3-a -E -x c /dev/nu
- 
- ifeq ($(pauth_cc_support),1)
- TEST_GEN_PROGS := pac
--TEST_GEN_FILES := pac_corruptor.o
-+TEST_GEN_FILES := pac_corruptor.o helper.o
- endif
- 
- include ../../lib.mk
-@@ -23,10 +23,13 @@ ifeq ($(pauth_cc_support),1)
- $(OUTPUT)/pac_corruptor.o: pac_corruptor.S
- 	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
- 
-+$(OUTPUT)/helper.o: helper.c
-+	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
-+
- # when -mbranch-protection is enabled and the target architecture is ARMv8.3 or
- # greater, gcc emits pac* instructions which are not in HINT NOP space,
- # preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
- # run on earlier targets and print a meaningful error messages
--$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o
-+$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o $(OUTPUT)/helper.o
- 	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
- endif
-diff --git a/tools/testing/selftests/arm64/pauth/helper.c b/tools/testing/selftests/arm64/pauth/helper.c
-new file mode 100644
-index 000000000000..a5d205fffe6f
---- /dev/null
-+++ b/tools/testing/selftests/arm64/pauth/helper.c
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2020 ARM Limited
-+
-+#include "helper.h"
-+
-+
-+size_t keyia_sign(size_t ptr)
-+{
-+	asm volatile("paciza %0" : "+r" (ptr));
-+	return ptr;
-+}
-+
-+size_t keyib_sign(size_t ptr)
-+{
-+	asm volatile("pacizb %0" : "+r" (ptr));
-+	return ptr;
-+}
-+
-+size_t keyda_sign(size_t ptr)
-+{
-+	asm volatile("pacdza %0" : "+r" (ptr));
-+	return ptr;
-+}
-+
-+size_t keydb_sign(size_t ptr)
-+{
-+	asm volatile("pacdzb %0" : "+r" (ptr));
-+	return ptr;
-+}
-+
-+size_t keyg_sign(size_t ptr)
-+{
-+	/* output is encoded in the upper 32 bits */
-+	size_t dest = 0;
-+	size_t modifier = 0;
-+
-+	asm volatile("pacga %0, %1, %2" : "=r" (dest) : "r" (ptr), "r" (modifier));
-+
-+	return dest;
-+}
-diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
-index 3e0a2a404bf4..e2ed910c9863 100644
---- a/tools/testing/selftests/arm64/pauth/helper.h
-+++ b/tools/testing/selftests/arm64/pauth/helper.h
-@@ -4,6 +4,16 @@
- #ifndef _HELPER_H_
- #define _HELPER_H_
- 
-+#include <stdlib.h>
-+
-+
- void pac_corruptor(void);
- 
-+/* PAuth sign a value with key ia and modifier value 0 */
-+size_t keyia_sign(size_t val);
-+size_t keyib_sign(size_t val);
-+size_t keyda_sign(size_t val);
-+size_t keydb_sign(size_t val);
-+size_t keyg_sign(size_t val);
-+
- #endif
-diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
-index 7fc02b02dede..035fdd6aae9b 100644
---- a/tools/testing/selftests/arm64/pauth/pac.c
-+++ b/tools/testing/selftests/arm64/pauth/pac.c
-@@ -12,12 +12,25 @@
-  * future version of the arm architecture
-  */
- 
-+#define PAC_COLLISION_ATTEMPTS 10
-+/*
-+ * The kernel sets TBID by default. So bits 55 and above should remain
-+ * untouched no matter what.
-+ * The VA space size is 48 bits. Bigger is opt-in.
-+ */
-+#define PAC_MASK (~0xff80ffffffffffff)
- #define ASSERT_PAUTH_ENABLED() \
- do { \
- 	unsigned long hwcaps = getauxval(AT_HWCAP); \
- 	/* data key instructions are not in NOP space. This prevents a SIGILL */ \
- 	ASSERT_NE(0, hwcaps & HWCAP_PACA) TH_LOG("PAUTH not enabled"); \
- } while (0)
-+#define ASSERT_GENERIC_PAUTH_ENABLED() \
-+do { \
-+	unsigned long hwcaps = getauxval(AT_HWCAP); \
-+	/* generic key instructions are not in NOP space. This prevents a SIGILL */ \
-+	ASSERT_NE(0, hwcaps & HWCAP_PACG) TH_LOG("Generic PAUTH not enabled"); \
-+} while (0)
- 
- 
- /* check that a corrupted PAC results in SIGSEGV */
-@@ -28,4 +41,42 @@ TEST_SIGNAL(corrupt_pac, SIGSEGV)
- 	pac_corruptor();
- }
- 
-+/*
-+ * There are no separate pac* and aut* controls so checking only the pac*
-+ * instructions is sufficient
-+ */
-+TEST(pac_instructions_not_nop)
-+{
-+	size_t keyia = 0;
-+	size_t keyib = 0;
-+	size_t keyda = 0;
-+	size_t keydb = 0;
-+
-+	ASSERT_PAUTH_ENABLED();
-+
-+	for (int i = 0; i < PAC_COLLISION_ATTEMPTS; i++) {
-+		keyia |= keyia_sign(i) & PAC_MASK;
-+		keyib |= keyib_sign(i) & PAC_MASK;
-+		keyda |= keyda_sign(i) & PAC_MASK;
-+		keydb |= keydb_sign(i) & PAC_MASK;
-+	}
-+
-+	ASSERT_NE(0, keyia) TH_LOG("keyia instructions did nothing");
-+	ASSERT_NE(0, keyib) TH_LOG("keyib instructions did nothing");
-+	ASSERT_NE(0, keyda) TH_LOG("keyda instructions did nothing");
-+	ASSERT_NE(0, keydb) TH_LOG("keydb instructions did nothing");
-+}
-+
-+TEST(pac_instructions_not_nop_generic)
-+{
-+	size_t keyg = 0;
-+
-+	ASSERT_GENERIC_PAUTH_ENABLED();
-+
-+	for (int i = 0; i < PAC_COLLISION_ATTEMPTS; i++)
-+		keyg |= keyg_sign(i) & PAC_MASK;
-+
-+	ASSERT_NE(0, keyg)  TH_LOG("keyg instructions did nothing");
-+}
-+
- TEST_HARNESS_MAIN
+[1] https://lkml.org/lkml/2020/3/20/765
+---
+ kernel/sched/deadline.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 3862a28cd05d..c19c1883d695 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -1527,12 +1527,15 @@ static void enqueue_task_dl(struct rq *rq, struct task_struct *p, int flags)
+ 		pi_se = &pi_task->dl;
+ 	} else if (!dl_prio(p->normal_prio)) {
+ 		/*
+-		 * Special case in which we have a !SCHED_DEADLINE task
+-		 * that is going to be deboosted, but exceeds its
+-		 * runtime while doing so. No point in replenishing
+-		 * it, as it's going to return back to its original
+-		 * scheduling class after this.
++		 * Special case in which we have a !SCHED_DEADLINE task that is going
++		 * to be deboosted, but exceeds its runtime while doing so. No point in
++		 * replenishing it, as it's going to return back to its original
++		 * scheduling class after this. If it has been throttled, we need to
++		 * clear the flag, otherwise the task may wake up as throttled after
++		 * being boosted again with no means to replenish the runtime and clear
++		 * the throttle.
+ 		 */
++		p->dl.dl_throttled = 0;
+ 		BUG_ON(!p->dl.dl_boosted || flags != ENQUEUE_REPLENISH);
+ 		return;
+ 	}
 -- 
-2.17.1
+2.20.1
 
