@@ -5,45 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D3CFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C02C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 473F32068F
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E61D206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:50:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="JeJyRUy/"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="vasZcCXI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgHaKun (ORCPT
+        id S1727021AbgHaKul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:50:43 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:60178 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgHaKu1 (ORCPT
+        Mon, 31 Aug 2020 06:50:41 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:41162 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726224AbgHaKuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:50:27 -0400
+        Mon, 31 Aug 2020 06:50:13 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
   d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598871026; x=1630407026;
+  t=1598871013; x=1630407013;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=kg6Pid/S3uyECtsR9/ZQNoRBSFk6tXHhc71xqlOp1H8=;
-  b=JeJyRUy/pvC6OqcelFYbIutWq32kst6p67ZYSct1AMSqrbrTBopRcgH2
-   ODI/WBs/kQhMeEBiBLRhZbWO6IIvbxYZaO2ISA2F+n06LpOnHREp8Cd9n
-   UyQgcwuiWJzXqEM+WQuKGB9u35GaX/gsEBrjTv78SvL6a6XgbNNg9K7jh
-   8=;
+  bh=7XLAfjNDxAGlOXL+oVVQMgpD8ljZ3iheJ5Jq9ck8vb8=;
+  b=vasZcCXIPYk3rI5o8AkvNBTlOMtuZ5fBlP21WZMi+8WdprsFUKEcfNmV
+   tdsMA+fd96Nrtj85aA2ZWz5j/xJ5o3k5zLQCmbCPa7lYKEE/6qIwEEnyt
+   2IBrn9xXXkkFV+GbJ5fcW//SaO5XFM+bru27KqsBQISzymyQTNDG1DDmK
+   k=;
 X-IronPort-AV: E=Sophos;i="5.76,375,1592870400"; 
-   d="scan'208";a="71144314"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 31 Aug 2020 10:50:25 +0000
+   d="scan'208";a="50991505"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-53356bf6.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 31 Aug 2020 10:50:09 +0000
 Received: from EX13D31EUB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-a7fdc47a.us-west-2.amazon.com (Postfix) with ESMTPS id 33366C06C5;
-        Mon, 31 Aug 2020 10:50:23 +0000 (UTC)
+        by email-inbound-relay-2a-53356bf6.us-west-2.amazon.com (Postfix) with ESMTPS id 1AF37A1EAD;
+        Mon, 31 Aug 2020 10:50:06 +0000 (UTC)
 Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.100) by
  EX13D31EUB001.ant.amazon.com (10.43.166.210) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 31 Aug 2020 10:50:05 +0000
+ id 15.0.1497.2; Mon, 31 Aug 2020 10:49:48 +0000
 From:   SeongJae Park <sjpark@amazon.com>
 To:     <akpm@linux-foundation.org>
 CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
@@ -65,9 +64,9 @@ CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
         <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
         <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [RFC v8 08/10] tools/damon/record: Support physical memory monitoring
-Date:   Mon, 31 Aug 2020 12:47:28 +0200
-Message-ID: <20200831104730.28970-9-sjpark@amazon.com>
+Subject: [RFC v8 07/10] mm/damon/debugfs: Support physical memory monitoring
+Date:   Mon, 31 Aug 2020 12:47:27 +0200
+Message-ID: <20200831104730.28970-8-sjpark@amazon.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200831104730.28970-1-sjpark@amazon.com>
 References: <20200831104730.28970-1-sjpark@amazon.com>
@@ -83,78 +82,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: SeongJae Park <sjpark@amazon.de>
 
-This commit allows users to record the data accesses on physical memory
-address space by passing 'paddr' as target to 'damo-record'.  If the
-init regions are given, the regions will be monitored.  Else, it will
-monitor biggest conitguous 'System RAM' region in '/proc/iomem' and
-monitor the region.
+This commit makes the debugfs interface to support the physical memory
+monitoring, in addition to the virtual memory monitoring.
+
+Users can do the physical memory monitoring by writing a special
+keyword, 'paddr\n' to the 'pids' debugfs file.  Then, DAMON will check
+the special keyword and configure the callbacks of the monitoring
+context for the debugfs user for physical memory.  This will internally
+add one fake monitoring target process, which has pid as -1.
+
+Unlike the virtual memory monitoring, DAMON debugfs will not
+automatically set the monitoring target region.  Therefore, users should
+also set the monitoring target address region using the 'init_regions'
+debugfs file.  While doing this, the 'pid' in the input should be '-1'.
+
+Finally, the physical memory monitoring will not automatically
+terminated because it has fake monitoring target process.  The user
+should explicitly turn off the monitoring by writing 'off' to the
+'monitor_on' debugfs file.
 
 Signed-off-by: SeongJae Park <sjpark@amazon.de>
 ---
- tools/damon/_damon.py |  2 ++
- tools/damon/record.py | 29 ++++++++++++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
+ mm/damon.c | 26 +++++++++++++++++++++++---
+ 1 file changed, 23 insertions(+), 3 deletions(-)
 
-diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
-index a22ec3777c16..6ff278117e84 100644
---- a/tools/damon/_damon.py
-+++ b/tools/damon/_damon.py
-@@ -27,6 +27,8 @@ def set_target(tid, init_regions=[]):
-     if not os.path.exists(debugfs_init_regions):
-         return 0
+diff --git a/mm/damon.c b/mm/damon.c
+index 464209039bf8..98f52580bd5d 100644
+--- a/mm/damon.c
++++ b/mm/damon.c
+@@ -2127,9 +2127,29 @@ static ssize_t debugfs_target_ids_write(struct file *file,
+ 		return PTR_ERR(kbuf);
  
-+    if tid == 'paddr':
-+        tid = 42
-     string = ' '.join(['%s %d %d' % (tid, r[0], r[1]) for r in init_regions])
-     return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
-             shell=True, executable='/bin/bash')
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-index 11fd54001472..6fd0b59c73e0 100644
---- a/tools/damon/record.py
-+++ b/tools/damon/record.py
-@@ -101,6 +101,29 @@ def set_argparser(parser):
-     parser.add_argument('-o', '--out', metavar='<file path>', type=str,
-             default='damon.data', help='output file path')
- 
-+def default_paddr_region():
-+    "Largest System RAM region becomes the default"
-+    ret = []
-+    with open('/proc/iomem', 'r') as f:
-+        # example of the line: '100000000-42b201fff : System RAM'
-+        for line in f:
-+            fields = line.split(':')
-+            if len(fields) != 2:
-+                continue
-+            name = fields[1].strip()
-+            if name != 'System RAM':
-+                continue
-+            addrs = fields[0].split('-')
-+            if len(addrs) != 2:
-+                continue
-+            start = int(addrs[0], 16)
-+            end = int(addrs[1], 16)
+ 	nrs = kbuf;
+-	if (!strncmp(kbuf, "pidfd ", 6)) {
+-		received_pidfds = true;
+-		nrs = &kbuf[6];
++	if (!strncmp(kbuf, "paddr\n", count)) {
++		/* Configure the context for physical memory monitoring */
++		ctx->init_target_regions = kdamond_init_phys_regions;
++		ctx->update_target_regions = kdamond_update_phys_regions;
++		ctx->prepare_access_checks = kdamond_prepare_phys_access_checks;
++		ctx->check_accesses = kdamond_check_phys_accesses;
++		ctx->target_valid = NULL;
++		ctx->cleanup = NULL;
 +
-+            sz_region = end - start
-+            if not ret or sz_region > (ret[1] - ret[0]):
-+                ret = [start, end]
-+    return ret
-+
- def main(args=None):
-     global orig_attrs
-     if not args:
-@@ -122,7 +145,11 @@ def main(args=None):
-     target = args.target
++		/* target id is meaningless here, but we set it just for fun */
++		snprintf(kbuf, count, "42    ");
++	} else {
++		/* Configure the context for virtual memory monitoring */
++		ctx->init_target_regions = kdamond_init_vm_regions;
++		ctx->update_target_regions = kdamond_update_vm_regions;
++		ctx->prepare_access_checks = kdamond_prepare_vm_access_checks;
++		ctx->check_accesses = kdamond_check_vm_accesses;
++		ctx->target_valid = kdamond_vm_target_valid;
++		ctx->cleanup = kdamond_vm_cleanup;
++		if (!strncmp(kbuf, "pidfd ", 6)) {
++			received_pidfds = true;
++			nrs = &kbuf[6];
++		}
+ 	}
  
-     target_fields = target.split()
--    if not subprocess.call('which %s &> /dev/null' % target_fields[0],
-+    if target == 'paddr':   # physical memory address space
-+        if not init_regions:
-+            init_regions = [default_paddr_region()]
-+        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
-+    elif not subprocess.call('which %s &> /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
-         do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
-     else:
+ 	targets = str_to_target_ids(nrs, ret, &nr_targets);
 -- 
 2.17.1
 
