@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD7EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69982C43461
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2CD232145D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42DC420866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897280;
-	bh=V/5+zAPAGDsJaUfpmyYkRjpFiQYBfOLDuFgsWNBLRcw=;
+	s=default; t=1598897283;
+	bh=XG3jWVOIYHjwWZSiiTWlyu/bevtJTbO3eo5mHlAXsaA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EElZWGBwBLsyoQgQJH+jNS1xRFxoNo0LLciIYJrFtYhEJrPSdkUUoOpoArYbFH4A0
-	 HdvooXgknTBRH2UI0QQhuQJyk0myupR9pgOQHy75qESwAIVc3q2HK+PMd9zqe475lC
-	 iKG8sJ5/T4gH0N5e+zrKY5L4DiqgQtxmNhS+XuPU=
+	b=ansi+5G5XaVu+s15h+1aSPWIS8wnS8n0NSTcsoaqGCzJMaB06+ebOzbK69jOJdBdM
+	 RLC31sCiGi4HlCnK2RgscvEsCxKIUjmlZ+jcZXTW49gfeGQhX2KmVtAucXpr7syINJ
+	 wtWYrUtFociYVfik2hJcupX/gysyZ5eAidyIeoa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgHaSH6 (ORCPT
+        id S1729352AbgHaSIB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55306 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:08:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728400AbgHaSHw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:07:52 -0400
+        id S1729234AbgHaSHx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:07:53 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37F720EDD;
-        Mon, 31 Aug 2020 18:07:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A99CC21532;
+        Mon, 31 Aug 2020 18:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598897272;
-        bh=V/5+zAPAGDsJaUfpmyYkRjpFiQYBfOLDuFgsWNBLRcw=;
+        bh=XG3jWVOIYHjwWZSiiTWlyu/bevtJTbO3eo5mHlAXsaA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hafV8f0yx1s6B7gMHhP4zJ5PAWffnGj+5c4b/DJtfkE33xscwL9Tr57aUfroeEaC0
-         SMe2yhBrWRJjxtwD8hvYQ15q9/WqRq6v+ybM/GhKFQvI08vuqccRDdhRij/Rm0nYs+
-         JgMazBprxLNjATeUmMoH0j9Vz9EjsmIQBEacPMwM=
+        b=yMf3lsA8nPiKgVqR1b5jO90o9OwkPAol9ofL23gcc92J+lPZFp1XzRaRbZg2Oqdh0
+         +MNZY63zdaJoKGNJMn0r7PiR+IRXMkagb5q53puVUR0HuKcSW6IuCncuCl6SnSWQFl
+         6rINmRSUD9o+PTgXSf7cVSvR2Q1SesxqXk6Yhwxs=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 02/19] torture: Declare parse-console.sh independence from rcutorture
-Date:   Mon, 31 Aug 2020 11:07:32 -0700
-Message-Id: <20200831180749.843-2-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 05/19] tick-sched: Clarify "NOHZ: local_softirq_pending" warning
+Date:   Mon, 31 Aug 2020 11:07:35 -0700
+Message-Id: <20200831180749.843-5-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180731.GA582@paulmck-ThinkPad-P72>
 References: <20200831180731.GA582@paulmck-ThinkPad-P72>
@@ -61,47 +61,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Currently, parse-torture.sh looks at the fifth field of torture-test
-console output for the version number.  This works fine for rcutorture,
-but not for scftorture, which lacks the pointer field.  This commit
-therefore adjusts matching lines so that the parse-console.sh awk script
-always sees the version number as the first field in the lines passed
-to it.
+Currently, can_stop_idle_tick() prints "NOHZ: local_softirq_pending HH"
+(where "HH" is the hexadecimal softirq vector number) when one or more
+non-RCU softirq handlers are still enabled when checking to stop the
+scheduler-tick interrupt.  This message is not as enlightening as one
+might hope, so this commit changes it to "NOHZ tick-stop error: Non-RCU
+local softirq work is pending, handler #HH".
 
+Reported-by: Andy Lutomirski <luto@kernel.org>
+Cc: Frederic Weisbecker <fweisbec@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- tools/testing/selftests/rcutorture/bin/parse-console.sh | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/time/tick-sched.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/rcutorture/bin/parse-console.sh b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-index 71a9f43..4e081a2 100755
---- a/tools/testing/selftests/rcutorture/bin/parse-console.sh
-+++ b/tools/testing/selftests/rcutorture/bin/parse-console.sh
-@@ -67,6 +67,7 @@ then
- 	grep --binary-files=text 'torture:.*ver:' $file |
- 	egrep --binary-files=text -v '\(null\)|rtc: 000000000* ' |
- 	sed -e 's/^(initramfs)[^]]*] //' -e 's/^\[[^]]*] //' |
-+	sed -e 's/^.*ver: //' |
- 	awk '
- 	BEGIN	{
- 		ver = 0;
-@@ -74,13 +75,13 @@ then
- 		}
+diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
+index f0199a4..81632cd 100644
+--- a/kernel/time/tick-sched.c
++++ b/kernel/time/tick-sched.c
+@@ -927,7 +927,7 @@ static bool can_stop_idle_tick(int cpu, struct tick_sched *ts)
  
- 		{
--		if (!badseq && ($5 + 0 != $5 || $5 <= ver)) {
-+		if (!badseq && ($1 + 0 != $1 || $1 <= ver)) {
- 			badseqno1 = ver;
--			badseqno2 = $5;
-+			badseqno2 = $1;
- 			badseqnr = NR;
- 			badseq = 1;
+ 		if (ratelimit < 10 &&
+ 		    (local_softirq_pending() & SOFTIRQ_STOP_IDLE_MASK)) {
+-			pr_warn("NOHZ: local_softirq_pending %02x\n",
++			pr_warn("NOHZ tick-stop error: Non-RCU local softirq work is pending, handler #%02x!!!\n",
+ 				(unsigned int) local_softirq_pending());
+ 			ratelimit++;
  		}
--		ver = $5
-+		ver = $1
- 		}
- 
- 	END	{
 -- 
 2.9.5
 
