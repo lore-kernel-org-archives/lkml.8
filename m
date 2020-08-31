@@ -2,146 +2,146 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-16.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCCDC206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FC2206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726714AbgHaTsQ (ORCPT
+        id S1729681AbgHaTs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 15:48:16 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:43356 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbgHaTsP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 15:48:15 -0400
-Received: by mail-io1-f71.google.com with SMTP id f19so4851465iol.10
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:48:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=cK+cTlHrBH0I8dtFbbTlN1a0PMAtRS8/eA1z+aa58yA=;
-        b=eASJKgUS0z4ZKHMoXfGhMhOnQTkmdHlOrkJlC4qC85Xo3+2cwzK7aPfQRsTsbBZ0Cd
-         0BAIkexvjVFgs1WhseSxAGdGGwyBo+pTG6JrBwLqfEHCGiV98iUUCMk2huV2G6xdzSD0
-         aaeeMsPTokow827sTqLTFjlbbX7RJCLc8tolQWC66pbExSvigjFQZUxOwbUJ6tXhF4bB
-         DmfKHUrPZpJKFQldD4IaaJwYuApoYDeOviOAOC8pfyyfxdFTIRZnD+zX2tZMRgKJmmYN
-         og+vApPJHyTPUH/4CaZRqZB9rRw1rhus1AetoKFekSoWECNtlqqWoS51+fsBykenwxSg
-         dTJQ==
-X-Gm-Message-State: AOAM531WebWctmgxKq1DqYcLwicw08vCU9U8LSagJ6tU60qIktL9HSEL
-        v3H+XTRJ38//gLYBh4C5LLZ9KnuqkT71gJW1HsDdGXxcqVMv
-X-Google-Smtp-Source: ABdhPJxsRKfEFgHCrDNCyrUbVf348EO4W3juNVBYdrE4wLSpbYKHk4dges1Kr5WL+zj+suSdPTbaWeY9UumBHULiDtvlNB3TrhHL
+        Mon, 31 Aug 2020 15:48:27 -0400
+Received: from mga17.intel.com ([192.55.52.151]:38147 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727061AbgHaTs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 15:48:26 -0400
+IronPort-SDR: CTFXXTrn4/Yoaz4qTqi8O03+bxnONrLRGn6ANWlHJBZ7NAMEwpvHjT9BRiT0Vw/0oEFxL28pdK
+ KuozdB6guxaw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="137095962"
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="137095962"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 12:48:25 -0700
+IronPort-SDR: gML8hXmqtfjjuG40dmw03exE7XYZXpDxuL5Um8aFGI0ZxnjaK5qgiAog5/r59mPovT8zPll07b
+ ASzOLImW+inQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="338320232"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by FMSMGA003.fm.intel.com with SMTP; 31 Aug 2020 12:48:21 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Mon, 31 Aug 2020 22:48:20 +0300
+Date:   Mon, 31 Aug 2020 22:48:20 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Kai Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/i915/lspcon: Limits to 8 bpc for RGB/YCbCr444
+Message-ID: <20200831194820.GB6112@intel.com>
+References: <20200826052143.17607-1-kai.heng.feng@canonical.com>
+ <20200826162458.GP6112@intel.com>
+ <6D40F1E0-AFF6-4D38-BB9B-C52B43F83266@canonical.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:d4cf:: with SMTP id o15mr2870758ilm.25.1598903293869;
- Mon, 31 Aug 2020 12:48:13 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 12:48:13 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dc862405ae31ae9b@google.com>
-Subject: general protection fault in sock_close
-From:   syzbot <syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6D40F1E0-AFF6-4D38-BB9B-C52B43F83266@canonical.com>
+X-Patchwork-Hint: comment
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Aug 27, 2020 at 01:04:54PM +0800, Kai Heng Feng wrote:
+> Hi Ville,
+> 
+> > On Aug 27, 2020, at 12:24 AM, Ville Syrjälä <ville.syrjala@linux.intel.com> wrote:
+> > 
+> > On Wed, Aug 26, 2020 at 01:21:15PM +0800, Kai-Heng Feng wrote:
+> >> LSPCON only supports 8 bpc for RGB/YCbCr444.
+> >> 
+> >> Set the correct bpp otherwise it renders blank screen.
+> > 
+> > Hmm. Does 
+> > git://github.com/vsyrjala/linux.git dp_downstream_ports_5
+> > work?
+> > 
+> > Actually better make that dp_downstream_ports_5^^^^^^^^^^^ aka.
+> > 54d846ce62a2 ("drm/i915: Do YCbCr 444->420 conversion via DP protocol
+> > converters") to avoid the experiments and hacks I have sitting on top.
+> 
+> Can you please rebase it to mainline master or drm-tip?
 
-syzbot found the following issue on:
+git://github.com/vsyrjala/linux.git dp_downstream_ports_6
 
-HEAD commit:    15bc20c6 Merge tag 'tty-5.9-rc3' of git://git.kernel.org/p..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a85669900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
-dashboard link: https://syzkaller.appspot.com/bug?extid=e24baf53dc389927a7c3
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=127d3c99900000
+I threw out the hacks/experimental stuff.
 
-The issue was bisected to:
+> 
+> I am getting errors on the branch:
+> 
+>   DESCEND  objtool
+>   CALL    scripts/atomic/check-atomics.sh
+>   CALL    scripts/checksyscalls.sh
+>   CHK     include/generated/compile.h
+>   Building modules, stage 2.
+>   MODPOST 166 modules
+>   LD      arch/x86/boot/compressed/vmlinux
+> ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+> ld: arch/x86/boot/compressed/head_64.o: warning: relocation in read-only section `.head.text'
+> ld: warning: creating DT_TEXTREL in a PIE
+> make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
+> make[1]: *** [arch/x86/boot/Makefile:113: arch/x86/boot/compressed/vmlinux] Error 2
+> make: *** [arch/x86/Makefile:284: bzImage] Error 2
+> make: *** Waiting for unfinished jobs....
+> 
+> Kai-Heng
+> 
+> > 
+> >> 
+> >> Closes: https://gitlab.freedesktop.org/drm/intel/-/issues/2195
+> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> >> ---
+> >> drivers/gpu/drm/i915/display/intel_lspcon.c | 3 ++-
+> >> 1 file changed, 2 insertions(+), 1 deletion(-)
+> >> 
+> >> diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.c b/drivers/gpu/drm/i915/display/intel_lspcon.c
+> >> index b781bf469644..c7a44fcaade8 100644
+> >> --- a/drivers/gpu/drm/i915/display/intel_lspcon.c
+> >> +++ b/drivers/gpu/drm/i915/display/intel_lspcon.c
+> >> @@ -196,7 +196,8 @@ void lspcon_ycbcr420_config(struct drm_connector *connector,
+> >> 		crtc_state->port_clock /= 2;
+> >> 		crtc_state->output_format = INTEL_OUTPUT_FORMAT_YCBCR444;
+> >> 		crtc_state->lspcon_downsampling = true;
+> >> -	}
+> >> +	} else
+> >> +		crtc_state->pipe_bpp = 24;
+> >> }
+> >> 
+> >> static bool lspcon_probe(struct intel_lspcon *lspcon)
+> >> -- 
+> >> 2.17.1
+> > 
+> > -- 
+> > Ville Syrjälä
+> > Intel
 
-commit a9ed4a6560b8562b7e2e2bed9527e88001f7b682
-Author: Marc Zyngier <maz@kernel.org>
-Date:   Wed Aug 19 16:12:17 2020 +0000
-
-    epoll: Keep a reference on files added to the check list
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1374d7c5900000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=10f4d7c5900000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1774d7c5900000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+e24baf53dc389927a7c3@syzkaller.appspotmail.com
-Fixes: a9ed4a6560b8 ("epoll: Keep a reference on files added to the check list")
-
-general protection fault, probably for non-canonical address 0xdffffc0000000002: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000010-0x0000000000000017]
-CPU: 1 PID: 10933 Comm: syz-executor.0 Not tainted 5.9.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__sock_release net/socket.c:596 [inline]
-RIP: 0010:sock_close+0xc5/0x260 net/socket.c:1277
-Code: fc ff df 41 80 3c 04 00 74 08 4c 89 ff e8 e3 cf 49 fb 49 8b 1f 48 83 c3 10 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 48 89 df e8 bd cf 49 fb 4c 89 f7 ff 13 49 8d 5e
-RSP: 0018:ffffc9000535fe10 EFLAGS: 00010202
-RAX: 0000000000000002 RBX: 0000000000000010 RCX: dffffc0000000000
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000001
-RBP: ffffffff88bbc748 R08: dffffc0000000000 R09: ffffed1010361edf
-R10: ffffed1010361edf R11: 0000000000000000 R12: 1ffff11010361eac
-R13: ffff888081b0f6e0 R14: ffff888081b0f540 R15: ffff888081b0f560
-FS:  00007fad45047700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fad45025db8 CR3: 0000000084c1d000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __fput+0x34f/0x7b0 fs/file_table.c:281
- task_work_run+0x137/0x1c0 kernel/task_work.c:141
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:140 [inline]
- exit_to_user_mode_prepare+0xfa/0x1b0 kernel/entry/common.c:167
- syscall_exit_to_user_mode+0x5e/0x1a0 kernel/entry/common.c:242
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: 5d b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 2b b4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fad45046c78 EFLAGS: 00000246 ORIG_RAX: 00000000000000e9
-RAX: 0000000000000000 RBX: 0000000000002ac0 RCX: 000000000045d5b9
-RDX: 0000000000000004 RSI: 0000000000000001 RDI: 0000000000000005
-RBP: 000000000118cf88 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000200003c0 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007ffd8c03abcf R14: 00007fad450479c0 R15: 000000000118cf4c
-Modules linked in:
----[ end trace a8eab99154db8026 ]---
-RIP: 0010:__sock_release net/socket.c:596 [inline]
-RIP: 0010:sock_close+0xc5/0x260 net/socket.c:1277
-Code: fc ff df 41 80 3c 04 00 74 08 4c 89 ff e8 e3 cf 49 fb 49 8b 1f 48 83 c3 10 48 89 d8 48 c1 e8 03 48 b9 00 00 00 00 00 fc ff df <80> 3c 08 00 74 08 48 89 df e8 bd cf 49 fb 4c 89 f7 ff 13 49 8d 5e
-RSP: 0018:ffffc9000535fe10 EFLAGS: 00010202
-RAX: 0000000000000002 RBX: 0000000000000010 RCX: dffffc0000000000
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000001
-RBP: ffffffff88bbc748 R08: dffffc0000000000 R09: ffffed1010361edf
-R10: ffffed1010361edf R11: 0000000000000000 R12: 1ffff11010361eac
-R13: ffff888081b0f6e0 R14: ffff888081b0f540 R15: ffff888081b0f560
-FS:  00007fad45047700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6e37205010 CR3: 0000000084c1d000 CR4: 00000000001506e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this issue, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+-- 
+Ville Syrjälä
+Intel
