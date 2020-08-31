@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3082C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 217CEC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8B9B207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6E3B207EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888329;
-	bh=igUA3ysCtvbQZlZxzdgP/arDzUKvL7VVNXaZw/amLFA=;
+	s=default; t=1598888339;
+	bh=d5CrpnaLe/hzDWsm51N0bFeSs/nJtCjmHu60f90JOmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OEWkjSYj7u4+/sGBFBTXFYftAyY55EXvzkWCVZjTtz32izTkk3/hjhF6DNVnbLlEY
-	 xfmCNCbG2rIUB/uaSHJR5mCW/+tIWM8/lMxAW4/J1ztFUrq1zX++FzqWhXA0+rdRW/
-	 QOTWtYQBQ5xckFPd+IxZ/wd2topB+VQEV0MZpbx8=
+	b=JhjhotNu3zf+ObCckTFo9nSP+5LBncK5/drwEMo4jkpGxajvZi4THByPi2/vhN2gp
+	 RAfqhkPnN0R7fYugvPSMlNXPxAC33cRl+awAoDXCQxRJCB4R4MijljHDDvYepYQo7Y
+	 7u6YjWfoWgaioLDDNTt51hcTk/pmtUoY2QMuXlfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgHaPaR (ORCPT
+        id S1729275AbgHaPi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:30:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38656 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:38:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728454AbgHaP3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:29:50 -0400
+        id S1728555AbgHaPaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 276F220767;
-        Mon, 31 Aug 2020 15:29:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1614207EA;
+        Mon, 31 Aug 2020 15:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887790;
-        bh=igUA3ysCtvbQZlZxzdgP/arDzUKvL7VVNXaZw/amLFA=;
+        s=default; t=1598887815;
+        bh=d5CrpnaLe/hzDWsm51N0bFeSs/nJtCjmHu60f90JOmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcUH9tXPhQYDf7AKDqKwFWhGQywl4yYnEP9UsKnJpS+ClPq64CHQ2I8+MpCr/Hs8F
-         kc8P8vHdY9ACCOHUu+h6MOEBru5cU0FD/2IZAiqW9oNjL5s4bFxHcmg/qS8j3y/Gb/
-         bJCWwyEzkgNYeqwd6Qzb/4WUAJS78PjsZJUJvN28=
+        b=fwVqPwEijAmw69jDbAngpKi0LonGj0bGRlL63ri1+6y6qxzRnF1iXfJmDp/ZElVJ5
+         i9P3pF8HEVvCfjclsW24L+FEEARvgK5k02HDakrZ54gXU/E+I2C6vcqjnQxpdOteCp
+         mrtpc9HPpacEuq7hKK0/BDtJxiO8nABFk0yFoj1k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 09/42] drm/msm: add shutdown support for display platform_driver
-Date:   Mon, 31 Aug 2020 11:29:01 -0400
-Message-Id: <20200831152934.1023912-9-sashal@kernel.org>
+Cc:     Ray Jui <ray.jui@broadcom.com>, Wolfram Sang <wsa@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.8 27/42] i2c: iproc: Fix shifting 31 bits
+Date:   Mon, 31 Aug 2020 11:29:19 -0400
+Message-Id: <20200831152934.1023912-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -60,58 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishna Manikandan <mkrishn@codeaurora.org>
+From: Ray Jui <ray.jui@broadcom.com>
 
-[ Upstream commit 9d5cbf5fe46e350715389d89d0c350d83289a102 ]
+[ Upstream commit 0204081128d582965e9e39ca83ee6e4f7d27142b ]
 
-Define shutdown callback for display drm driver,
-so as to disable all the CRTCS when shutdown
-notification is received by the driver.
+Fix undefined behaviour in the iProc I2C driver by using 'BIT' marcro.
 
-This change will turn off the timing engine so
-that no display transactions are requested
-while mmu translations are getting disabled
-during reboot sequence.
-
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-
-Changes in v2:
-	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
-	- Change commit text to reflect when this issue
-	  was uncovered (Sai Prakash Ranjan)
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reported-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Ray Jui <ray.jui@broadcom.com>
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+[wsa: in commit msg, don't say 'checkpatch' but name the issue]
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/i2c/busses/i2c-bcm-iproc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index f6ce40bf36998..b4d61af7a104e 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1328,6 +1328,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+index 688e928188214..d8295b1c379d1 100644
+--- a/drivers/i2c/busses/i2c-bcm-iproc.c
++++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+@@ -720,7 +720,7 @@ static int bcm_iproc_i2c_xfer_internal(struct bcm_iproc_i2c_dev *iproc_i2c,
  
-+static void msm_pdev_shutdown(struct platform_device *pdev)
-+{
-+	struct drm_device *drm = platform_get_drvdata(pdev);
-+
-+	drm_atomic_helper_shutdown(drm);
-+}
-+
- static const struct of_device_id dt_match[] = {
- 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
- 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
-@@ -1340,6 +1347,7 @@ MODULE_DEVICE_TABLE(of, dt_match);
- static struct platform_driver msm_platform_driver = {
- 	.probe      = msm_pdev_probe,
- 	.remove     = msm_pdev_remove,
-+	.shutdown   = msm_pdev_shutdown,
- 	.driver     = {
- 		.name   = "msm",
- 		.of_match_table = dt_match,
+ 			/* mark the last byte */
+ 			if (!process_call && (i == msg->len - 1))
+-				val |= 1 << M_TX_WR_STATUS_SHIFT;
++				val |= BIT(M_TX_WR_STATUS_SHIFT);
+ 
+ 			iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
+ 		}
+@@ -738,7 +738,7 @@ static int bcm_iproc_i2c_xfer_internal(struct bcm_iproc_i2c_dev *iproc_i2c,
+ 		 */
+ 		addr = i2c_8bit_addr_from_msg(msg);
+ 		/* mark it the last byte out */
+-		val = addr | (1 << M_TX_WR_STATUS_SHIFT);
++		val = addr | BIT(M_TX_WR_STATUS_SHIFT);
+ 		iproc_i2c_wr_reg(iproc_i2c, M_TX_OFFSET, val);
+ 	}
+ 
 -- 
 2.25.1
 
