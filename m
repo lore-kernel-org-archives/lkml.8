@@ -2,179 +2,173 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E70BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB5BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 702EC21556
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888444;
-	bh=p/VXYwFUJB/kg5jcz4g7W6vjlMbDu0lvknVGLt7O638=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mFsfl50IDIo9hWRFpqKguydPB1VcihPUnuuqvBH7KEy1GyI4hRWr//VEWTuO/4Umm
-	 mxzMgV9oOqHdSrDvOGGnIS0R3W65xOkDjFlq+b1XDCXSTXnenss5qpXue/EUcyLXre
-	 PUaHJ67LZ9a69KBz9ropfMacj9w8Znor/KJpPnnA=
+	by mail.kernel.org (Postfix) with ESMTP id 72CBA2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729443AbgHaPkm (ORCPT
+        id S1728951AbgHaPk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:40:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbgHaP3w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:29:52 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A79BD2083E;
-        Mon, 31 Aug 2020 15:29:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887791;
-        bh=p/VXYwFUJB/kg5jcz4g7W6vjlMbDu0lvknVGLt7O638=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=asB7YS/NcUF1o0uF3XRYy1mKRbLNez5wYOna2R7j1rvB6HV2YgwZ7l6NT97YxiBJY
-         APSJwz813oLjgWL4NyiCTYGLIe3IXkoq7Gu/LRlNYiwXnl6I3LIXo1QYqfwANuHN/C
-         lFtInZCDqxeuZ82XbVAJIa4v9L0GTBKKi89KGZh8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>, Henrik Rydberg <rydberg@bitmath.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Sasha Levin <sashal@kernel.org>, linux-hwmon@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.8 10/42] hwmon: (applesmc) check status earlier.
-Date:   Mon, 31 Aug 2020 11:29:02 -0400
-Message-Id: <20200831152934.1023912-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
-References: <20200831152934.1023912-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 31 Aug 2020 11:40:57 -0400
+Received: from vms1-real.sfasu.edu ([144.96.128.33]:19075 "EHLO
+        vms1-real.sfasu.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbgHaPkv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:40:51 -0400
+Received: from CONVERSION-DAEMON.SFAVMS.SFASU.EDU by SFAVMS.SFASU.EDU
+ (PMDF V6.7-x04 #1799) id <01RP342BG5U88X2C4R@SFAVMS.SFASU.EDU>; Mon,
+ 31 Aug 2020 09:19:15 -0500 (CDT)
+Received: from exchgrouting.sfasu.edu ([144.96.206.206])
+ by SFAVMS.SFASU.EDU (PMDF V6.7-x04 #1799)
+ with ESMTPS id <01RP342BAQ228XEVLE@SFAVMS.SFASU.EDU>; Mon,
+ 31 Aug 2020 09:19:15 -0500 (CDT)
+Received: from TECHMB.sfasu.nac (2002:9060:cece::9060:cece)
+ by TECHMB.sfasu.nac (2002:9060:cece::9060:cece) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Mon, 31 Aug 2020 09:19:15 -0500
+Received: from TECHMB.sfasu.nac ([fe80::982c:d7b7:9491:6094])
+ by TECHMB.sfasu.nac ([fe80::982c:d7b7:9491:6094%15])
+ with mapi id 15.00.1497.006; Mon, 31 Aug 2020 09:19:15 -0500
+Date:   Mon, 31 Aug 2020 14:19:15 +0000
+From:   Robert Judy <rjudy@sfasu.edu>
+Subject: RE: [RFC PATCH] selinux: Add denied trace with permssion filter
+In-reply-to: <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
+X-Originating-IP: [144.96.210.77]
+To:     Paul Moore <paul@paul-moore.com>,
+        peter enderborg <peter.enderborg@sony.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Message-id: <f0e287f6b7dd4764a5091b90cf31b02e@TECHMB.sfasu.nac>
+MIME-version: 1.0
+Content-type: text/plain; charset=utf-8
+Content-language: en-US
+Content-transfer-encoding: base64
+Thread-Topic: [RFC PATCH] selinux: Add denied trace with permssion filter
+Thread-Index: AQHWehnLeH0ZXs0eIUe8rW1dyDj2J6lHkvQAgAMqQwCAAA5OAIAAAz+AgAAFuICAAXd7gIAACZYAgAZMrAD//6x+MA==
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+ <20200824132252.31261-1-peter.enderborg@sony.com>
+ <20200824132252.31261-2-peter.enderborg@sony.com>
+ <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
+ <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com>
+ <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+ <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com>
+ <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
+ <abaccc15-85a8-24d2-4481-8303e3a42362@sony.com>
+ <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
-
-[ Upstream commit cecf7560f00a8419396a2ed0f6e5d245ccb4feac ]
-
-clang static analysis reports this representative problem
-
-applesmc.c:758:10: warning: 1st function call argument is an
-  uninitialized value
-        left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
-               ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-buffer is filled by the earlier call
-
-	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, ...
-
-This problem is reported because a goto skips the status check.
-Other similar problems use data from applesmc_read_key before checking
-the status.  So move the checks to before the use.
-
-Signed-off-by: Tom Rix <trix@redhat.com>
-Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
-Link: https://lore.kernel.org/r/20200820131932.10590-1-trix@redhat.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hwmon/applesmc.c | 31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/hwmon/applesmc.c b/drivers/hwmon/applesmc.c
-index 3166184093157..a18887990f4a2 100644
---- a/drivers/hwmon/applesmc.c
-+++ b/drivers/hwmon/applesmc.c
-@@ -753,15 +753,18 @@ static ssize_t applesmc_light_show(struct device *dev,
- 	}
- 
- 	ret = applesmc_read_key(LIGHT_SENSOR_LEFT_KEY, buffer, data_length);
-+	if (ret)
-+		goto out;
- 	/* newer macbooks report a single 10-bit bigendian value */
- 	if (data_length == 10) {
- 		left = be16_to_cpu(*(__be16 *)(buffer + 6)) >> 2;
- 		goto out;
- 	}
- 	left = buffer[2];
-+
-+	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	if (ret)
- 		goto out;
--	ret = applesmc_read_key(LIGHT_SENSOR_RIGHT_KEY, buffer, data_length);
- 	right = buffer[2];
- 
- out:
-@@ -810,12 +813,11 @@ static ssize_t applesmc_show_fan_speed(struct device *dev,
- 		  to_index(attr));
- 
- 	ret = applesmc_read_key(newkey, buffer, 2);
--	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
-+
-+	speed = ((buffer[0] << 8 | buffer[1]) >> 2);
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%u\n", speed);
- }
- 
- static ssize_t applesmc_store_fan_speed(struct device *dev,
-@@ -851,12 +853,11 @@ static ssize_t applesmc_show_fan_manual(struct device *dev,
- 	u8 buffer[2];
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
-+
-+	manual = ((buffer[0] << 8 | buffer[1]) >> to_index(attr)) & 0x01;
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", manual);
- }
- 
- static ssize_t applesmc_store_fan_manual(struct device *dev,
-@@ -872,10 +873,11 @@ static ssize_t applesmc_store_fan_manual(struct device *dev,
- 		return -EINVAL;
- 
- 	ret = applesmc_read_key(FANS_MANUAL, buffer, 2);
--	val = (buffer[0] << 8 | buffer[1]);
- 	if (ret)
- 		goto out;
- 
-+	val = (buffer[0] << 8 | buffer[1]);
-+
- 	if (input)
- 		val = val | (0x01 << to_index(attr));
- 	else
-@@ -951,13 +953,12 @@ static ssize_t applesmc_key_count_show(struct device *dev,
- 	u32 count;
- 
- 	ret = applesmc_read_key(KEY_COUNT_KEY, buffer, 4);
--	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
--						((u32)buffer[2]<<8) + buffer[3];
--
- 	if (ret)
- 		return ret;
--	else
--		return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
-+
-+	count = ((u32)buffer[0]<<24) + ((u32)buffer[1]<<16) +
-+						((u32)buffer[2]<<8) + buffer[3];
-+	return snprintf(sysfsbuf, PAGE_SIZE, "%d\n", count);
- }
- 
- static ssize_t applesmc_key_at_index_read_show(struct device *dev,
--- 
-2.25.1
-
+SSB3b3VsZCBsaWtlIHRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBncm91cC4gSSBoYXZlIHNlbnQg
+InVuc3Vic2NyaWJlIiByZXF1ZXN0cyB0byBzZWxpbnV4LW93bmVyQHZnZXIua2VybmVsLm9yZyBh
+cyBzdWJqZWN0IGFuZCBpbiB0aGUgYm9keSBvZiB0aGUgZS1tYWlsIGJ1dCB0aGF0IGhhcyBub3Qg
+d29ya2VkLiBQbGVhc2UgYWR2aXNlIG1lIGhvdyB0byB1bnN1YnNjcmliZS4NCg0KVGhhbmsgeW91
+IGFuZCByZXNwZWN0ZnVsbHksDQoNCnJtag0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0K
+RnJvbTogc2VsaW51eC1vd25lckB2Z2VyLmtlcm5lbC5vcmcgPHNlbGludXgtb3duZXJAdmdlci5r
+ZXJuZWwub3JnPiBPbiBCZWhhbGYgT2YgUGF1bCBNb29yZQ0KU2VudDogTW9uZGF5LCBBdWd1c3Qg
+MzEsIDIwMjAgOToxNiBBTQ0KVG86IHBldGVyIGVuZGVyYm9yZyA8cGV0ZXIuZW5kZXJib3JnQHNv
+bnkuY29tPg0KQ2M6IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IFNFbGludXggbGlzdCA8
+c2VsaW51eEB2Z2VyLmtlcm5lbC5vcmc+OyBTdGV2ZW4gUm9zdGVkdCA8cm9zdGVkdEBnb29kbWlz
+Lm9yZz47IFN0ZXBoZW4gU21hbGxleSA8c3RlcGhlbi5zbWFsbGV5LndvcmtAZ21haWwuY29tPg0K
+U3ViamVjdDogUmU6IFtSRkMgUEFUQ0hdIHNlbGludXg6IEFkZCBkZW5pZWQgdHJhY2Ugd2l0aCBw
+ZXJtc3Npb24gZmlsdGVyDQoNCk9uIFRodSwgQXVnIDI3LCAyMDIwIGF0IDEwOjA0IEFNIHBldGVy
+IGVuZGVyYm9yZyA8cGV0ZXIuZW5kZXJib3JnQHNvbnkuY29tPiB3cm90ZToNCj4NCj4gT24gOC8y
+Ny8yMCAzOjMwIFBNLCBQYXVsIE1vb3JlIHdyb3RlOg0KPiA+IE9uIFdlZCwgQXVnIDI2LCAyMDIw
+IGF0IDExOjA2IEFNIHBldGVyIGVuZGVyYm9yZyANCj4gPiA8cGV0ZXIuZW5kZXJib3JnQHNvbnku
+Y29tPiB3cm90ZToNCj4gPj4gT24gOC8yNi8yMCA0OjQ1IFBNLCBQYXVsIE1vb3JlIHdyb3RlOg0K
+PiA+Pj4gT24gV2VkLCBBdWcgMjYsIDIwMjAgYXQgMTA6MzQgQU0gcGV0ZXIgZW5kZXJib3JnIA0K
+PiA+Pj4gPHBldGVyLmVuZGVyYm9yZ0Bzb255LmNvbT4gd3JvdGU6DQo+ID4+Pj4gT24gOC8yNi8y
+MCAzOjQyIFBNLCBQYXVsIE1vb3JlIHdyb3RlOg0KPiA+Pj4+PiBPbiBNb24sIEF1ZyAyNCwgMjAy
+MCBhdCA5OjIzIEFNIFBldGVyIEVuZGVyYm9yZyANCj4gPj4+Pj4gPHBldGVyLmVuZGVyYm9yZ0Bz
+b255LmNvbT4gd3JvdGU6DQo+ID4+Pj4+PiBUaGlzIGFkZHMgdHJhY2luZyBvZiBhbGwgZGVuaWVz
+LiBUaGV5IGFyZSBncm91cGVkIHdpdGggDQo+ID4+Pj4+PiB0cmFjZV9zZXEgZm9yIGVhY2ggYXVk
+aXQuDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gQSBmaWx0ZXIgY2FuIGJlIGluc2VydGVkIHdpdGggYSB3
+cml0ZSB0byBpdCdzIGZpbHRlciBzZWN0aW9uLg0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IGVjaG8gInBl
+cm1pc3Npb249PVwiZW50cnlwb2ludFwiIiA+IA0KPiA+Pj4+Pj4gZXZlbnRzL2F2Yy9zZWxpbnV4
+X2RlbmllZC9maWx0ZXINCj4gPj4+Pj4+DQo+ID4+Pj4+PiBBIG91dHB1dCB3aWxsIGJlIGxpa2U6
+DQo+ID4+Pj4+PiAgICAgICAgICAgcnVuY29uLTEwNDYgIFswMDJdIC5OLi4gICAxNTYuMzUxNzM4
+OiBzZWxpbnV4X2RlbmllZDoNCj4gPj4+Pj4+ICAgICAgICAgICB0cmFjZV9zZXE9MiByZXN1bHQ9
+LTEzDQo+ID4+Pj4+PiAgICAgICAgICAgc2NvbnRleHQ9c3lzdGVtX3U6c3lzdGVtX3I6Y3Vwc2Rf
+dDpzMC1zMDpjMC4NCj4gPj4+Pj4+ICAgICAgICAgICBjMTAyMyB0Y29udGV4dD1zeXN0ZW1fdTpv
+YmplY3RfcjpiaW5fdDpzMA0KPiA+Pj4+Pj4gICAgICAgICAgIHRjbGFzcz1maWxlIHBlcm1pc3Np
+b249ZW50cnlwb2ludA0KPiA+Pj4+Pj4NCj4gPj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFBldGVyIEVu
+ZGVyYm9yZyA8cGV0ZXIuZW5kZXJib3JnQHNvbnkuY29tPg0KPiA+Pj4+Pj4gLS0tDQo+ID4+Pj4+
+PiAgaW5jbHVkZS90cmFjZS9ldmVudHMvYXZjLmggfCAzNyArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrDQo+ID4+Pj4+PiAgc2VjdXJpdHkvc2VsaW51eC9hdmMuYyAgICAgfCAy
+NyArKysrKysrKysrKysrKysrKysrKysrKysrLS0NCj4gPj4+Pj4+ICAyIGZpbGVzIGNoYW5nZWQs
+IDYyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ID4+Pj4+IE15IG1vc3Qgc2lnbmlm
+aWNhbnQgY29tbWVudCBpcyB0aGF0IEkgZG9uJ3QgdGhpbmsgd2Ugd2FudCwgb3IgDQo+ID4+Pj4+
+IG5lZWQsIHR3byB0cmFjZSBwb2ludHMgaW4gdGhlIGF2Y19hdWRpdF9wb3N0X2NhbGxiYWNrKCkg
+DQo+ID4+Pj4+IGZ1bmN0aW9uLiAgWWVzLCBJIHVuZGVyc3RhbmQgdGhleSBhcmUgdHJpZ2dlcmVk
+IHNsaWdodGx5IA0KPiA+Pj4+PiBkaWZmZXJlbnRseSwgYnV0IGZyb20gbXkgcGVyc3BlY3RpdmUg
+dGhlcmUgaXNuJ3QgZW5vdWdoIA0KPiA+Pj4+PiBkaWZmZXJlbmNlIGJldHdlZW4gdGhlIHR3byB0
+cmFjZXBvaW50cyB0byB3YXJyYW50IGluY2x1ZGluZyANCj4gPj4+Pj4gYm90aC4gIEhvd2V2ZXIs
+IHdoaWxlIHRoZSB0cmFjZXBvaW50cyBtYXkgYmUNCj4gPj4+PiBXZSB0cmllZCB0aGF0IGJ1dCB0
+aGF0IHdhcyBwcm9ibGVtYXRpYyB0b28uDQo+ID4+PiBNeSBhcG9sb2dpZXMgaWYgSSB3YXMgb24g
+dGhhdCB0aHJlYWQsIGJ1dCBjYW4geW91IHJlbWluZCBtZSB3aHkgaXQgDQo+ID4+PiB3YXMgYSBw
+cm9ibGVtPyAgV2h5IGNhbid0IHdlIHVzZSBhIHNpbmdsZSB0cmFjZXBvaW50IHRvIGNhcHR1cmUg
+DQo+ID4+PiB0aGUgQVZDIGluZm9ybWF0aW9uPw0KPiA+PiBUaGUgcHJvYmxlbSBpcyBwYXJzaW5n
+IHRoZSBldmVudC4NCj4gPj4NCj4gPj4gaHR0cHM6Ly91cmxkZWZlbnNlLnByb29mcG9pbnQuY29t
+L3YyL3VybD91PWh0dHBzLTNBX19sa21sLm9yZ19sa21sXw0KPiA+PiAyMDIwXzhfMThfODQyJmQ9
+RHdJQmFRJmM9ZlA0dGYtLTFkUzBiaUNGbEIwc2F6MEkwa2pPNXY3LUdMUHR2U2hBbzRjDQo+ID4+
+IGMmcj1vTzVIdUdFR3h6bkEyRjNkamlpWXhteHhXUW9udzBoNlNrcy1CRW9CNHlzJm09cW1pMlJP
+V3NMQ18wbUxMaEgNCj4gPj4ga3BiNzFqMVlvaWN5ZExoLTdsNGNPc0xZY1kmcz1pUzNlWnIzVEZy
+TjVJN0JibnZQRllPS2Q2RGZXMUZIVEZjd0k3ag0KPiA+PiBvU19mayZlPQ0KPiA+Pg0KPiA+PiBo
+dHRwczovL3VybGRlZmVuc2UucHJvb2Zwb2ludC5jb20vdjIvdXJsP3U9aHR0cHMtM0FfX2xrbWwu
+b3JnX2xrbWxfDQo+ID4+IDIwMjBfOF8yMV81MjYmZD1Ed0lCYVEmYz1mUDR0Zi0tMWRTMGJpQ0Zs
+QjBzYXowSTBrak81djctR0xQdHZTaEFvNGMNCj4gPj4gYyZyPW9PNUh1R0VHeHpuQTJGM2RqaWlZ
+eG14eFdRb253MGg2U2tzLUJFb0I0eXMmbT1xbWkyUk9Xc0xDXzBtTExoSA0KPiA+PiBrcGI3MWox
+WW9pY3lkTGgtN2w0Y09zTFljWSZzPTlPc0xOMFk1bVVXeEVBQXFVRTZLNFBTNTdQbjFYeVp6N0dY
+YWs2DQo+ID4+IHVjX0xzJmU9DQo+ID4+DQo+ID4+IGFuZCB0aGUgInNpbmdsZSBsaXN0IiB2ZXJz
+aW9uDQo+ID4+DQo+ID4+IGh0dHBzOi8vdXJsZGVmZW5zZS5wcm9vZnBvaW50LmNvbS92Mi91cmw/
+dT1odHRwcy0zQV9fbGttbC5vcmdfbGttbF8NCj4gPj4gMjAyMF84XzE3XzEzNDYmZD1Ed0lCYVEm
+Yz1mUDR0Zi0tMWRTMGJpQ0ZsQjBzYXowSTBrak81djctR0xQdHZTaEFvNA0KPiA+PiBjYyZyPW9P
+NUh1R0VHeHpuQTJGM2RqaWlZeG14eFdRb253MGg2U2tzLUJFb0I0eXMmbT1xbWkyUk9Xc0xDXzBt
+TExoDQo+ID4+IEhrcGI3MWoxWW9pY3lkTGgtN2w0Y09zTFljWSZzPXRXU1kycnkySVQ2UmNUNUJJ
+VXdNdXFCTF95UE9iREUxVmxqYkwNCj4gPj4gcUkxenJBJmU9DQo+ID4+DQo+ID4+IFdpdGggdGhp
+cyBwYXRjaCB3ZSBmb2xsb3cgc3RhbmRhcmQgbWVzc2FnZSBmb3JtYXQgc28gbm8gcGx1Z2luIHNo
+b3VsZCBiZSBuZWVkZWQuDQo+ID4gSSdtIGV2aWRlbnRseSBtaXNzaW5nIHNvbWV0aGluZyB2ZXJ5
+IGZ1bmRhbWVudGFsIChsaWtlbHkpLCBhbmQvb3IgDQo+ID4gSSdtIGp1c3Qgbm90IGNvbW11bmlj
+YXRpbmcgdmVyeSBjbGVhcmx5IChhbHNvIGxpa2VseSksIGJlY2F1c2UgdGhlIA0KPiA+IGFib3Zl
+IGxpbmtzIGRvbid0IGFwcGVhciB0byBtYWtlIGFueSBzZW5zZSB3aXRoIHJlc3BlY3QgdG8gbXkg
+cXVlc3Rpb24uDQo+ID4NCj4gPiBMZXQgbWUgdHJ5IGEgcmVzZXQgLi4uIFdoeSBjYW4ndCB3ZSBi
+YXNpY2FsbHkgdGFrZSB0aGUgDQo+ID4gInNlbGludXhfZGVuaWVkIiBUUkFDRV9FVkVOVCBpbXBs
+ZW1lbnRhdGlvbiBpbiB5b3VyIHBhdGNoIGFuZCB1c2UgaXQgDQo+ID4gdG8gcmVwbGFjZSB0aGUg
+InNlbGludXhfYXVkaXRlZCIgVFJBQ0VfRVZFTlQgaW4gdGhlIHNlbGludXgvbmV4dCANCj4gPiB0
+cmVlIChvZiBjb3Vyc2Ugd2l0aCB0aGUgbmVjZXNzYXJ5IGNoYW5nZXMgdG8gdGhlIEFWQyBjYWxs
+YmFjayBjb2RlKT8NCj4gPg0KPiA+IElmIHRoZSAic2VsaW51eF9kZW5pZWQiIGltcGxlbWVudGF0
+aW9uIGlzIHZhbGlkIGZyb20gYSB0cmFjaW5nIHBvaW50IA0KPiA+IG9mIHZpZXcsIHdoeSBjYW4g
+d2Ugbm90IGRvIHRoaXM/ICBPZiBjb3Vyc2UgaWYgdGhlICJzZWxpbnV4X2RlbmllZCINCj4gPiBp
+bXBsZW1lbnRhdGlvbiBpcyBub3QgYSB2YWxpZCBUUkFDRV9FVkVOVCB0aGVuIEknbSBub3Qgc3Vy
+ZSB3aHkgdGhpcyANCj4gPiB3YXMgc3VnZ2VzdGVkIGZvciBTRUxpbnV4IDopDQo+DQo+IEltIGhh
+cHBseSBmaW5lIHdpdGggcmVwbGFjaW5nIHRoZSBzZWxpbnV4X2F1ZGl0ZWQgd2l0aCBzZWxpbnV4
+X2RlbmllZC4gIEhvd2V2ZXIgaXQgaXMgdGhlIGNhc2Ugd2hlcmUgdGhlcmUgYXJlIG1vcmUgdGhh
+biBvbmUgZGVuaWFsIGF0IHRoZSBzYW1lIHRpbWUuIEltIG5vdCBzdXJlIGhvdyBhbmQgd2hlbiBp
+dCBtaWdodCBoYXBwZW4uDQoNCk9uZSB0aGluZyBJIHdvbmRlcmVkIGFib3V0IHdhcyB3aHkgbm90
+IGJ1aWxkIHVwIGEgc2luZ2xlIHN0cmluZyB3aXRoIGFsbCBvZiB0aGUgcGVybWlzc2lvbnMgaW5z
+dGVhZCBvZiBnZW5lcmF0aW5nIG11bHRpcGxlIHRyYWNlIGV2ZW50cz8NCkluIHRoZSBwcmV2aW91
+cyBkaXNjdXNzaW9uIGl0IHdhcyBpbXBsaWVkIHRoYXQgdGhpcyB3YXMgZHVlIHRvIGxpbWl0YXRp
+b25zIGluIHRoZSB0cmFjaW5nIHN1YnN5c3RlbSdzIGZpbHRlcmluZywgYW5kIGJhc2VkIG9uIHRo
+ZSBkaXNjdXNzaW9uIHRodXMgZmFyIEknbSBndWVzc2luZyB0aGVyZSBpcyBsaXR0bGUgZGVzaXJl
+IGZvciB0aGlzIGluZm9ybWF0aW9uIGlmIGl0IGNhbid0IGJlIGZpbHRlcmVkIG9uPw0KDQpJZiB0
+aGF0J3MgdGhlIGNhc2UgdGhlbiBJIHRoaW5rIHdlIGFyZSBzdHVjayB3aXRoIHRoZSB0cmFjaW5n
+IGNvZGUgdGhhdCBjdXJyZW50bHkgbGl2ZXMgaW4gc2VsaW51eC9uZXh0LCBhcyBJIGN1cnJlbnRs
+eSBoYXZlIGxpdHRsZSBkZXNpcmUgdG8gYWRkIG1vcmUgdGhhbiBvbmUgdHJhY2Vwb2ludCBpbiB0
+aGUgU0VMaW51eCBwZXJtaXNzaW9uIGNoZWNraW5nIGNvZGVwYXRoLg0KDQo+IFdoZW4gdGhhdCBo
+YXBwZW4gd2UgZ290IG1vcmUgdGhhbiBvbmUgZXZlbnQuIEkgaGF2ZSBubyBwcm9ibGVtcyB3aXRo
+IHRoYXQsIGJ1dCBpbSBub3Qgc3VyZSBpZiB0aGUgZGVidWcgdG9vbHMgYW5kIHBlcmYgY2FuIG1h
+a2Ugc2Vuc2Ugb2YgdGhhdC4NCj4NCj4gQSBvdGhlciBmZWF0dXJlIHdpdGggdGhlIHNlbGludXhf
+YXVkaXRlZCBldmVudCBpdCBtaWdodCBiZSBpbnNlcnRlZCBvbiBvdGhlciBwbGFjZXMgaW4gdGhl
+IGNvZGUgdG9vLiAgQSBkZW5pYWwgaXMgc29ydCBvZiBmaW5hbC4NCg0KLS0NCnBhdWwgbW9vcmUN
+Cnd3dy5wYXVsLW1vb3JlLmNvbQ0K
