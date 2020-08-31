@@ -2,391 +2,123 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF7BC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25B4C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F4A820719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C09C920E65
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="tRXjVguP"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IZsks4VG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727088AbgHaW6V (ORCPT
+        id S1727794AbgHaW61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 18:58:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgHaW6T (ORCPT
+        Mon, 31 Aug 2020 18:58:27 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19977 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgHaW6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 18:58:19 -0400
-Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5460C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:58:18 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id f11so7151569qtj.10
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:58:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:in-reply-to:message-id:mime-version:references:subject
-         :from:to:cc;
-        bh=9yuYFakFBDmKFfvJnGS4AcNS4TiR3gyGoZApMAjwP/g=;
-        b=tRXjVguP0hrNNlY2FXaEb1ncVqIOktfql+pU/HwAEdK+4kSPlpZE1MKTtxTGF6KDoo
-         S+zJ0//saAPEC6mG3VwEGN07sx9LywYeX0ofFwq3NDPgPupaVFQpGzb+kESB42gtTJdw
-         fL8VAou+PGOLBuJLg0mD+t7aItpwUFe0FULssYjxWuwkXtXz/6j4cKj2u5zFAaq7WpcS
-         wG9fsWwuIsvGjnErKZyxNERknqZM1ZewRhdt1ZtAzy/CwUh4fs/enEOTW586JW5IoMG8
-         mTxq4si+xO8QtBRnI4YZYj5ZorxJKQuXN+QSyMoHemixNWz2a5svDeGOMXmODsoHu+mb
-         DrPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=9yuYFakFBDmKFfvJnGS4AcNS4TiR3gyGoZApMAjwP/g=;
-        b=Huktbsh5mZ9JYU8L8r2w3+WBz0yTF+KZcGO1RyGapaErw+4WkzDVFT364/XZKUzaOp
-         V4IljccdYvDSmmD8+a5OBqWj8eyxCXieUcZWZ7b/3W7FYuuZVqYMuNxsOfIrF0eNlanb
-         TOCAdlA3Ef7XZdhdcHo3w/1Ylw1gnbU3j6HEHHE9B2gTR37W82l6vYTehMRJpHJ/u0m0
-         BNB9K2gYe7U4EHU5jwmh+z4BoAuvBEo4yQkF9e6dW9fc7GOSJzTNmavOSM50j6qwgt20
-         azVCsxz9zald2fLsbd1C3F6DFsKZNEC1fYvN5XnvtzzE4LHqWuBE+vGjyYttDkQLMnfq
-         T2GA==
-X-Gm-Message-State: AOAM532xVnYwP0bkSTR5xgiet3u8nOKDFhx8WJM9wqEF8y71m6zy70xD
-        G33CTRbtEtxoSCkWZtd0h3dVeTJh
-X-Google-Smtp-Source: ABdhPJyxc9Jd08nIQ5k/+Y8tlOotxj7HurPDJvQJF/J+MMmzQUbsdJAXpUP5o3NPSLMCEm4fZrpyWzka
-X-Received: from posk.svl.corp.google.com ([2620:15c:2cd:202:7220:84ff:fe09:7598])
- (user=posk job=sendgmr) by 2002:a0c:b626:: with SMTP id f38mr605906qve.0.1598914697381;
- Mon, 31 Aug 2020 15:58:17 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 15:58:10 -0700
-In-Reply-To: <20200831225810.2287294-1-posk@google.com>
-Message-Id: <20200831225810.2287294-2-posk@google.com>
-Mime-Version: 1.0
-References: <20200831225810.2287294-1-posk@google.com>
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH 2/2 v6] rseq/selftests: test MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
-From:   Peter Oskolkov <posk@google.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Paul Turner <pjt@google.com>,
-        Chris Kennelly <ckennelly@google.com>,
-        Peter Oskolkov <posk@posk.io>, Peter Oskolkov <posk@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 31 Aug 2020 18:58:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4d80100002>; Mon, 31 Aug 2020 15:56:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 31 Aug 2020 15:58:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 31 Aug 2020 15:58:22 -0700
+Received: from [10.2.61.194] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 22:58:19 +0000
+Subject: Re: [linux-next PATCH v3] drivers/virt/fsl_hypervisor: Fix error
+ handling path
+To:     Souptick Joarder <jrdr.linux@gmail.com>,
+        <akpm@linux-foundation.org>
+CC:     <jgg@ziepe.ca>, <dan.j.williams@intel.com>,
+        <gregkh@linuxfoundation.org>, <arnd@arndb.de>,
+        <timur@freescale.com>, <galak@kernel.crashing.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1598911668-6178-1-git-send-email-jrdr.linux@gmail.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <82329783-739b-a315-8957-2c49a3ab1350@nvidia.com>
+Date:   Mon, 31 Aug 2020 15:58:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <1598911668-6178-1-git-send-email-jrdr.linux@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598914576; bh=TGbcOgWMBQrR6HoM9TqhW7DLJxby0yalp8RA7tyq11I=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=IZsks4VG2MbZ+4dX+lLjarLc9qeUz+mXVNRwhF+IivrMtmHZ4TJtDQG5e5FSeZj8S
+         WLu3Cub+0Z/SDyXKc4kSfZCtXdXf5r1XSrMQGgl1ps+3QrX20/E6mSqyaMvfl+7Hpq
+         7W015RHgK+pYBI7OUifKE7d0kjiUE3TNqM8SnMysDSFOXYWlteRc9tQ82osoLk2A/D
+         UDyPvq6/y6DQZbDVlXDP5kXmMsRsfBOLBVlOr08fVB+iGIQIlExvwYl0FYr+c3i0nU
+         cdx01Wwx1kOwds82D9pqoJeXMCL7JM1muKdVb2dDUxmekMh/Z2EFVaQVf+JMalaAjB
+         Tn5xAhMXqqM9A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on Google-internal RSEQ work done by
-Paul Turner and Andrew Hunter.
+On 8/31/20 3:07 PM, Souptick Joarder wrote:
+> First, when memory allocation for sg_list_unaligned failed, there
+> is a bug of calling put_pages() as we haven't pinned any pages.
 
-This patch adds a selftest for MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ.
-The test quite often fails without the previous patch in this patchset,
-but consistently passes with it.
+"we should unpin"
 
-v3: added rseq_offset_deref_addv() to x86_64 to make the test
-    more explicit; on other architectures I kept using existing
-    rseq_cmpeqv_cmpeqv_storev() as I have no easy way to test
-    there.  Added a comment explaining why the test works this way.
-v4: skipped the test if rseq_offset_deref_addv() is not present
-    (that is, on all architectures other than x86_64).
+...
+>   
+> @@ -250,7 +250,7 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+>   		num_pages, param.source != -1 ? FOLL_WRITE : 0, pages);
+>   
+>   	if (num_pinned != num_pages) {
+> -		/* get_user_pages() failed */
+> +		/* get_user_pages_fast() failed */
 
-Signed-off-by: Peter Oskolkov <posk@google.com>
----
- .../selftests/rseq/basic_percpu_ops_test.c    | 187 ++++++++++++++++++
- tools/testing/selftests/rseq/rseq-x86.h       |  57 ++++++
- 2 files changed, 244 insertions(+)
+Let's please just delete that particular comment entirely. It's of
+questionable accuracy (partial success is allowed with this API), and it
+is echoing the code too closely to be worth the line that it consumes.
 
-diff --git a/tools/testing/selftests/rseq/basic_percpu_ops_test.c b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-index eb3f6db36d36..e6e10ba4b9ed 100644
---- a/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-+++ b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
-@@ -3,16 +3,24 @@
- #include <assert.h>
- #include <pthread.h>
- #include <sched.h>
-+#include <stdatomic.h>
- #include <stdint.h>
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
- #include <stddef.h>
-+#include <syscall.h>
-+#include <unistd.h>
- 
- #include "rseq.h"
- 
- #define ARRAY_SIZE(arr)	(sizeof(arr) / sizeof((arr)[0]))
- 
-+/* The local <linux/membarrier.h> may not contain the commands below. */
-+#define MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ	(1<<7)
-+#define MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ	(1<<8)
-+#define MEMBARRIER_CMD_FLAG_CPU		(1<<0)
-+
- struct percpu_lock_entry {
- 	intptr_t v;
- } __attribute__((aligned(128)));
-@@ -289,6 +297,183 @@ void test_percpu_list(void)
- 	assert(sum == expected_sum);
- }
- 
-+struct test_membarrier_thread_args {
-+	int stop;
-+	intptr_t percpu_list_ptr;
-+};
-+
-+/* Worker threads modify data in their "active" percpu lists. */
-+void *test_membarrier_worker_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	const int iters = 10 * 1000 * 1000;
-+	int i;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	/* Wait for initialization. */
-+	while (!atomic_load(&args->percpu_list_ptr)) {}
-+
-+	for (i = 0; i < iters; ++i) {
-+		int ret;
-+
-+		do {
-+			int cpu = rseq_cpu_start();
-+
-+			ret = rseq_offset_deref_addv(&args->percpu_list_ptr,
-+							128 * cpu, 1, cpu);
-+		} while (rseq_unlikely(ret));
-+	}
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+void test_membarrier_init_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	memset(list, 0, sizeof(*list));
-+	for (i = 0; i < CPU_SETSIZE; i++) {
-+		struct percpu_list_node *node;
-+
-+		node = malloc(sizeof(*node));
-+		assert(node);
-+		node->data = 0;
-+		node->next = NULL;
-+		list->c[i].head = node;
-+	}
-+}
-+
-+void test_membarrier_free_percpu_list(struct percpu_list *list)
-+{
-+	int i;
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		free(list->c[i].head);
-+}
-+
-+static int sys_membarrier(int cmd, int flags, int cpu_id)
-+{
-+	return syscall(__NR_membarrier, cmd, flags, cpu_id);
-+}
-+
-+/*
-+ * The manager thread swaps per-cpu lists that worker threads see,
-+ * and validates that there are no unexpected modifications.
-+ */
-+void *test_membarrier_manager_thread(void *arg)
-+{
-+	struct test_membarrier_thread_args *args =
-+		(struct test_membarrier_thread_args *)arg;
-+	struct percpu_list list_a, list_b;
-+	intptr_t expect_a = 0, expect_b = 0;
-+	int cpu_a = 0, cpu_b = 0;
-+
-+	if (rseq_register_current_thread()) {
-+		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+
-+	/* Init lists. */
-+	test_membarrier_init_percpu_list(&list_a);
-+	test_membarrier_init_percpu_list(&list_b);
-+
-+	atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+
-+	while (!atomic_load(&args->stop)) {
-+		/* list_a is "active". */
-+		cpu_a = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_b is "inactive", we should never see changes
-+		 * to list_b.
-+		 */
-+		if (expect_b != atomic_load(&list_b.c[cpu_b].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_b "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_b);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
-+			       MEMBARRIER_CMD_FLAG_CPU, cpu_a);
-+		/*
-+		 * Cpu A should now only modify list_b, so we values
-+		 * in list_a should be stable.
-+		 */
-+		expect_a = atomic_load(&list_a.c[cpu_a].head->data);
-+
-+		cpu_b = rand() % CPU_SETSIZE;
-+		/*
-+		 * As list_a is "inactive", we should never see changes
-+		 * to list_a.
-+		 */
-+		if (expect_a != atomic_load(&list_a.c[cpu_a].head->data)) {
-+			fprintf(stderr, "Membarrier test failed\n");
-+			abort();
-+		}
-+
-+		/* Make list_a "active". */
-+		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
-+		sys_membarrier(MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
-+			       MEMBARRIER_CMD_FLAG_CPU, cpu_b);
-+		/* Remember a value from list_b. */
-+		expect_b = atomic_load(&list_b.c[cpu_b].head->data);
-+	}
-+
-+	test_membarrier_free_percpu_list(&list_a);
-+	test_membarrier_free_percpu_list(&list_b);
-+
-+	if (rseq_unregister_current_thread()) {
-+		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
-+			errno, strerror(errno));
-+		abort();
-+	}
-+	return NULL;
-+}
-+
-+/* Test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU membarrier command. */
-+void test_membarrier(void)
-+{
-+#ifndef RSEQ_ARCH_HAS_OFFSET_DEREF_ADDV
-+	fprintf(stderr, "rseq_offset_deref_addv is not implemented on this architecture. "
-+			"Skipping membarrier test.\n");
-+	return;
-+#else
-+	struct test_membarrier_thread_args thread_args;
-+	pthread_t worker_threads[CPU_SETSIZE];
-+	pthread_t manager_thread;
-+	int i;
-+
-+	sys_membarrier(MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ, 0, 0);
-+
-+	thread_args.stop = 0;
-+	thread_args.percpu_list_ptr = 0;
-+	pthread_create(&manager_thread, NULL,
-+		       test_membarrier_manager_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_create(&worker_threads[i], NULL,
-+		       test_membarrier_worker_thread, &thread_args);
-+
-+	for (i = 0; i < CPU_SETSIZE; i++)
-+		pthread_join(worker_threads[i], NULL);
-+
-+	atomic_store(&thread_args.stop, 1);
-+	pthread_join(manager_thread, NULL);
-+#endif
-+}
-+
- int main(int argc, char **argv)
- {
- 	if (rseq_register_current_thread()) {
-@@ -300,6 +485,8 @@ int main(int argc, char **argv)
- 	test_percpu_spinlock();
- 	printf("percpu_list\n");
- 	test_percpu_list();
-+	printf("membarrier\n");
-+	test_membarrier();
- 	if (rseq_unregister_current_thread()) {
- 		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
- 			errno, strerror(errno));
-diff --git a/tools/testing/selftests/rseq/rseq-x86.h b/tools/testing/selftests/rseq/rseq-x86.h
-index b2da6004fe30..640411518e46 100644
---- a/tools/testing/selftests/rseq/rseq-x86.h
-+++ b/tools/testing/selftests/rseq/rseq-x86.h
-@@ -279,6 +279,63 @@ int rseq_addv(intptr_t *v, intptr_t count, int cpu)
- #endif
- }
- 
-+#define RSEQ_ARCH_HAS_OFFSET_DEREF_ADDV
-+
-+/*
-+ *   pval = *(ptr+off)
-+ *  *pval += inc;
-+ */
-+static inline __attribute__((always_inline))
-+int rseq_offset_deref_addv(intptr_t *ptr, off_t off, intptr_t inc, int cpu)
-+{
-+	RSEQ_INJECT_C(9)
-+
-+	__asm__ __volatile__ goto (
-+		RSEQ_ASM_DEFINE_TABLE(3, 1f, 2f, 4f) /* start, commit, abort */
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
-+#endif
-+		/* Start rseq by storing table entry pointer into rseq_cs. */
-+		RSEQ_ASM_STORE_RSEQ_CS(1, 3b, RSEQ_CS_OFFSET(%[rseq_abi]))
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), 4f)
-+		RSEQ_INJECT_ASM(3)
-+#ifdef RSEQ_COMPARE_TWICE
-+		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), %l[error1])
-+#endif
-+		/* get p+v */
-+		"movq %[ptr], %%rbx\n\t"
-+		"addq %[off], %%rbx\n\t"
-+		/* get pv */
-+		"movq (%%rbx), %%rcx\n\t"
-+		/* *pv += inc */
-+		"addq %[inc], (%%rcx)\n\t"
-+		"2:\n\t"
-+		RSEQ_INJECT_ASM(4)
-+		RSEQ_ASM_DEFINE_ABORT(4, "", abort)
-+		: /* gcc asm goto does not allow outputs */
-+		: [cpu_id]		"r" (cpu),
-+		  [rseq_abi]		"r" (&__rseq_abi),
-+		  /* final store input */
-+		  [ptr]			"m" (*ptr),
-+		  [off]			"er" (off),
-+		  [inc]			"er" (inc)
-+		: "memory", "cc", "rax", "rbx", "rcx"
-+		  RSEQ_INJECT_CLOBBER
-+		: abort
-+#ifdef RSEQ_COMPARE_TWICE
-+		  , error1
-+#endif
-+	);
-+	return 0;
-+abort:
-+	RSEQ_INJECT_FAILED
-+	return -1;
-+#ifdef RSEQ_COMPARE_TWICE
-+error1:
-+	rseq_bug("cpu_id comparison failed");
-+#endif
-+}
-+
- static inline __attribute__((always_inline))
- int rseq_cmpeqv_trystorev_storev(intptr_t *v, intptr_t expect,
- 				 intptr_t *v2, intptr_t newv2,
+More importantly, though, we need to split up the cases of gup_fast
+returning a negative value, and a zero or positive value. Either here,
+or at "exit:", the negative return case should just skip any attempt to
+do any put_page() calls at all. Because it's a maintenance hazard to
+leave in a loop that depends on looping from zero, to -ERRNO, and *not*
+doing any loops--especially in the signed/unsigned soupy mess around gup
+calls.
+
+
+>   		pr_debug("fsl-hv: could not lock source buffer\n");
+>   		ret = (num_pinned < 0) ? num_pinned : -EFAULT;
+>   		goto exit;
+> @@ -293,12 +293,12 @@ static long ioctl_memcpy(struct fsl_hv_ioctl_memcpy __user *p)
+>   
+>   exit:
+>   	if (pages) {
+> -		for (i = 0; i < num_pages; i++)
+> -			if (pages[i])
+> -				put_page(pages[i]);
+> +		for (i = 0; i < num_pinned; i++)
+> +			put_page(pages[i]);
+
+Looks correct. I sometimes wonder why more callers don't use
+release_pages() in situations like this, but that's beyond the scope of
+your work here.
+
+
+thanks,
 -- 
-2.28.0.402.g5ffc5be6b7-goog
-
+John Hubbard
+NVIDIA
