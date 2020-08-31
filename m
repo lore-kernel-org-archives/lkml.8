@@ -2,72 +2,155 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C08C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAA4C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ED82206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 065CB206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 03:21:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aTI7a2AU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgHaDVg (ORCPT
+        id S1727845AbgHaDVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 23:21:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54678 "EHLO
+        Sun, 30 Aug 2020 23:21:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbgHaDVd (ORCPT
+        with ESMTP id S1726838AbgHaDVi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 23:21:33 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16326C061573;
-        Sun, 30 Aug 2020 20:21:32 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCaNr-007qZv-1n; Mon, 31 Aug 2020 03:21:27 +0000
-Date:   Mon, 31 Aug 2020 04:21:27 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yuqi Jin <jinyuqi@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>
-Subject: Re: [NAK] Re: [PATCH] fs: Optimized fget to improve performance
-Message-ID: <20200831032127.GW1236603@ZenIV.linux.org.uk>
-References: <1598523584-25601-1-git-send-email-zhangshaokun@hisilicon.com>
- <20200827142848.GZ1236603@ZenIV.linux.org.uk>
- <dfa0ec1a-87fc-b17b-4d4a-c2d5c44e6dde@hisilicon.com>
+        Sun, 30 Aug 2020 23:21:38 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2937C061573;
+        Sun, 30 Aug 2020 20:21:37 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id c142so3726129pfb.7;
+        Sun, 30 Aug 2020 20:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=RcaJJxPUWfTCsa1mpxbpca/AYe7cJ1n1R+MIiQxItQI=;
+        b=aTI7a2AU4hxZdi+i7/z9kbwoB9GJNpqWiuKDO7BeND95OxdHew4eUuOlqpacA7Ol1E
+         4K9+mnRroycBM2xnBlGXu35ltuY4K0nh8+G8L56a56SfUfdvFv2U8YRZ2iQT9ZRF2I+4
+         69N/EdEGMc6yGWzdZAGnci9ASNMM3iNuq5EGEKrq9YDtuk6jN/mDGjw43tWfGaCJySHH
+         RPFUyZAM3D4o1LH+eLBMSvpN6bNpFXhJDLXsYB4Dw0YbtR1vpxkOgog2L7F3TnBnfikp
+         MfCPRSOPyGuaZL9+egRF9uxak365/EAwPIr/IFkyDtnFWpxS7s7RT6rGF+EiJC030umk
+         kYCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=RcaJJxPUWfTCsa1mpxbpca/AYe7cJ1n1R+MIiQxItQI=;
+        b=JPDROGSRm1Saa438RnXAmeWQzphOzhZ+d8j0VxOFW+jZSePpDrPkUNaPkNePObiG2o
+         ZcIyEEgdLPY5E/1HTd28/pO+2xsqCvxWShFnzoxTZ4hCAKjH0yESQKU9Vgg/3drCsdir
+         ZGBdNu098S3n2qSfP1mVPOm37cxrDZ7qkzScxe4++YnTU5BThY/u9oakt0QhFGGjMww9
+         GM3Afmz/r+zq3o9cYCAKwFjOLXbP59JJQ+ou+1xXL6NodaawDd6hdILchUeC6W7/8gRY
+         Lv/vHONs+egUqgg9Y8nfecdnk/8eNqp4YoIahSSsSr5+4zv+fWTplrcHuhBgnEEpCcVI
+         Y8YQ==
+X-Gm-Message-State: AOAM5332agqIWZORhv2050xINEmfyePqljQyrUomTenLeTkw3IToEkQU
+        8gLECswHajKeA4mMLDlJYYKXI8Zv2j0=
+X-Google-Smtp-Source: ABdhPJxRxXAM762RhzXObR884gp0m6R5ZtMso8+dFTBuFlzmQ3bvCQ4dUYoeNua7zJPQDXx5yOgo1w==
+X-Received: by 2002:a63:6c0a:: with SMTP id h10mr6864869pgc.11.1598844096832;
+        Sun, 30 Aug 2020 20:21:36 -0700 (PDT)
+Received: from sol.lan (106-69-184-100.dyn.iinet.net.au. [106.69.184.100])
+        by smtp.gmail.com with ESMTPSA id z17sm6095733pfq.38.2020.08.30.20.21.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 20:21:36 -0700 (PDT)
+From:   Kent Gibson <warthog618@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bgolaszewski@baylibre.com, linus.walleij@linaro.org
+Cc:     Kent Gibson <warthog618@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH v6 02/20] gpiolib: cdev: replace strncpy with strscpy
+Date:   Mon, 31 Aug 2020 11:19:48 +0800
+Message-Id: <20200831032006.1019978-3-warthog618@gmail.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200831032006.1019978-1-warthog618@gmail.com>
+References: <20200831032006.1019978-1-warthog618@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dfa0ec1a-87fc-b17b-4d4a-c2d5c44e6dde@hisilicon.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 09:43:31AM +0800, Shaokun Zhang wrote:
+Replace usage of strncpy with strscpy to remove -Wstringop-truncation
+warnings.
 
-> How about this? We try to replace atomic_cmpxchg with atomic_add to improve
-> performance. The atomic_add does not check the current f_count value.
-> Therefore, the number of online CPUs is reserved to prevent multi-core
-> competition.
+The structs being populated are zeroed, to prevent stack leakage as
+they are returned to userspace, so strscpy performs the equivalent
+function without the warnings.
 
-No.  Really, really - no.  Not unless you can guarantee that process on another
-CPU won't lose its timeslice, ending up with more than one increment happening on
-the same CPU - done by different processes scheduled there, one after another.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-If you have some change of atomic_long_add_unless(), do it there.  And get it
-past the arm64 folks.  get_file_rcu() is nothing special in that respect *AND*
-it has to cope with any architecture out there.
+The memset in gpio_desc_to_lineinfo(), in conjunction with the strscpy,
+is necessary as strncpy zero pads the remainder of the destination.
+It also guarantees that the info cannot leak kernel stack to userspace.
+This is useful here, but is even more important for the v2 info, that
+this function is changed to generate in a subsequent patch, as that
+struct contains padding and attribute arrays that also need to be
+initialised.
 
-BTW, keep in mind that there's such thing as a KVM - race windows are much
-wider there, since a thread representing a guest CPU might lose its timeslice
-whenever the host feels like that.  At which point you get a single instruction
-on a guest CPU taking longer than many thousands of instructions on another
-CPU of the same guest.
+ drivers/gpio/gpiolib-cdev.c | 23 +++++++----------------
+ 1 file changed, 7 insertions(+), 16 deletions(-)
 
-AFAIK, arm64 does support KVM with SMP guests.
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index e95e3eab9867..8b012879fe3f 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -752,6 +752,7 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 	bool ok_for_pinctrl;
+ 	unsigned long flags;
+ 
++	memset(info, 0, sizeof(*info));
+ 	info->line_offset = gpio_chip_hwgpio(desc);
+ 	/*
+ 	 * This function takes a mutex so we must check this before taking
+@@ -765,19 +766,11 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 
+ 	spin_lock_irqsave(&gpio_lock, flags);
+ 
+-	if (desc->name) {
+-		strncpy(info->name, desc->name, sizeof(info->name));
+-		info->name[sizeof(info->name) - 1] = '\0';
+-	} else {
+-		info->name[0] = '\0';
+-	}
++	if (desc->name)
++		strscpy(info->name, desc->name, sizeof(info->name));
+ 
+-	if (desc->label) {
+-		strncpy(info->consumer, desc->label, sizeof(info->consumer));
+-		info->consumer[sizeof(info->consumer) - 1] = '\0';
+-	} else {
+-		info->consumer[0] = '\0';
+-	}
++	if (desc->label)
++		strscpy(info->consumer, desc->label, sizeof(info->consumer));
+ 
+ 	/*
+ 	 * Userspace only need to know that the kernel is using this GPIO so
+@@ -841,12 +834,10 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 
+ 		memset(&chipinfo, 0, sizeof(chipinfo));
+ 
+-		strncpy(chipinfo.name, dev_name(&gdev->dev),
++		strscpy(chipinfo.name, dev_name(&gdev->dev),
+ 			sizeof(chipinfo.name));
+-		chipinfo.name[sizeof(chipinfo.name)-1] = '\0';
+-		strncpy(chipinfo.label, gdev->label,
++		strscpy(chipinfo.label, gdev->label,
+ 			sizeof(chipinfo.label));
+-		chipinfo.label[sizeof(chipinfo.label)-1] = '\0';
+ 		chipinfo.lines = gdev->ngpio;
+ 		if (copy_to_user(ip, &chipinfo, sizeof(chipinfo)))
+ 			return -EFAULT;
+-- 
+2.28.0
+
