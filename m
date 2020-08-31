@@ -2,193 +2,116 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C8EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E33ECC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01A3C207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:11:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="czB/82J2"
+	by mail.kernel.org (Postfix) with ESMTP id B8DFF2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:12:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbgHaPLu (ORCPT
+        id S1728468AbgHaPMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:11:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52064 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgHaPJ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:09:56 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3279C06123F
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:09:53 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id v12so7090123ljc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:09:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LEzfLtgpOaMr9BZOKDE9VwILcSfLxB9dYWDMk9PYE6E=;
-        b=czB/82J21rLAadLkXAeNcKBWQ7ZVAdU/qLJIc590zSwb5Wbj/jIPEMJIGYo8cHSqXA
-         rPCEBEbFDgbMQ3HaWcrdvQCjRyNEnND9ZXsA1SOTUV9yn58PeugbFwt/mMIAVCp7DVzV
-         8PqC4bKuJUy5r7dFTBLyBMc3v3moQlW2OZeeOSOLZlpHUM2nMD8Xd+6LVW3jnK/JQBVD
-         fYphWZita9M9VanLRKdz0wtrBKeKHGpdp/6uqlDma4XpweDqotcyKCOXJ6vGU1T9Yd+I
-         GDbs//O97c0OvXoNG1y9TVsOc05Az5KAEhnea5UEZ34BBsUeQUCKXgYdXQGPDJCPRQf7
-         fUTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LEzfLtgpOaMr9BZOKDE9VwILcSfLxB9dYWDMk9PYE6E=;
-        b=KmfPL3xlr6MLIlDtpKnl2Trucv1YKfvJTqJDTlzPuvWxaGhNF9h6lrBcO+0YmPOfSh
-         cxQUldzxoR2QhXlrj+Vdfk0oQnrE1y7GsJ9b4WLhIS56lhx6d0ZlL2q++oTVsKtF853M
-         1QJ9zHGvvdfsrMHC6h4h3+w0u7HzMQYbLqpvWtATKOalvAvu1i9nM6VE9/+bOc/fqldO
-         r0CogBojiMiwWdMNPJ3vk/fVLq9CT7IcPMZgcemgJkZy0pp8sL1e9t+UrRWEWz74Ashd
-         ikteFh3Us2MdcbkkW8tiokh22pArb3IRJGW60ZIrEDzGljDoAc5fpwrG5vEMB/2GKSkl
-         Hw8w==
-X-Gm-Message-State: AOAM532JwUstIfYdWlZ11GK3ZvgtrLfpZdkdU+PqNkgt3JMww1OvRTfh
-        YcJ3R8x8FdecHkRHHOhflXquOg==
-X-Google-Smtp-Source: ABdhPJyIdzJ8dow4XZ5A+0IxIt5Lg+V1WTcIDhXXSuS4zMiKQBlev1qPslEB4nSon/nwsg7NFADG2A==
-X-Received: by 2002:a2e:8612:: with SMTP id a18mr886839lji.149.1598886592206;
-        Mon, 31 Aug 2020 08:09:52 -0700 (PDT)
-Received: from gilgamesh.semihalf.com (193-106-246-138.noc.fibertech.net.pl. [193.106.246.138])
-        by smtp.gmail.com with ESMTPSA id w6sm2034388lfn.73.2020.08.31.08.09.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 08:09:51 -0700 (PDT)
-From:   Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org,
-        s-anna@ti.com
-Cc:     grzegorz.jaszczyk@linaro.org, robh+dt@kernel.org,
-        lee.jones@linaro.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, david@lechnology.com,
-        praneeth@ti.com
-Subject: [RESEND PATCH v5 3/5] irqchip/irq-pruss-intc: Add logic for handling reserved interrupts
-Date:   Mon, 31 Aug 2020 17:09:16 +0200
-Message-Id: <1598886558-16546-4-git-send-email-grzegorz.jaszczyk@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598886558-16546-1-git-send-email-grzegorz.jaszczyk@linaro.org>
-References: <1598886558-16546-1-git-send-email-grzegorz.jaszczyk@linaro.org>
+        Mon, 31 Aug 2020 11:12:19 -0400
+Received: from mga11.intel.com ([192.55.52.93]:60079 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728150AbgHaPMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:12:13 -0400
+IronPort-SDR: U7+C17HVFByB6Euuc0SBdvXp3o47SMB60HOO10m4VkXS9slgenepXVdv2li2HlWp6FvthLa9Ms
+ N+8RWN0sdhFw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="154514628"
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="154514628"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 08:12:11 -0700
+IronPort-SDR: W2JTNx3hI1AVbQtJmUolyOm5HWXco2Bnn/FosS7i9xHr7AwwAdVR8Ta4SJaiRdxTSqkdd6aiE4
+ FlbHmIAICbtw==
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="501375147"
+Received: from jaeikcho-mobl.amr.corp.intel.com (HELO [10.213.165.6]) ([10.213.165.6])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 08:12:09 -0700
+Subject: Re: [PATCH v3 0/3] ASoC: soundwire: fix port_ready[] dynamic
+ allocation
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>,
+        alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, tiwai@suse.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        mengdong.lin@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200830132742.20404-1-yung-chuan.liao@linux.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <dd947a84-87cb-7eed-9ac2-fe3de42dfc31@linux.intel.com>
+Date:   Mon, 31 Aug 2020 10:12:08 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200830132742.20404-1-yung-chuan.liao@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suman Anna <s-anna@ti.com>
 
-The PRUSS INTC has a fixed number of output interrupt lines that are
-connected to a number of processors or other PRUSS instances or other
-devices (like DMA) on the SoC. The output interrupt lines 2 through 9
-are usually connected to the main Arm host processor and are referred
-to as host interrupts 0 through 7 from ARM/MPU perspective.
 
-All of these 8 host interrupts are not always exclusively connected
-to the Arm interrupt controller. Some SoCs have some interrupt lines
-not connected to the Arm interrupt controller at all, while a few others
-have the interrupt lines connected to multiple processors in which they
-need to be partitioned as per SoC integration needs. For example, AM437x
-and 66AK2G SoCs have 2 PRUSS instances each and have the host interrupt 5
-connected to the other PRUSS, while AM335x has host interrupt 0 shared
-between MPU and TSC_ADC and host interrupts 6 & 7 shared between MPU and
-a DMA controller.
+On 8/30/20 8:27 AM, Bard Liao wrote:
+> The existing code allocates memory for the total number of ports.
+> This only works if the ports are contiguous, but will break if e.g. a
+> Devices uses port0, 1, and 14. The port_ready[] array would contain 3
+> elements, which would lead to an out-of-bounds access. Conversely in
+> other cases, the wrong port index would be used leading to timeouts on
+> prepare.
+> 
+> This can be fixed by allocating for the worst-case of 15
+> ports (DP0..DP14). In addition since the number is now fixed, we can
+> use an array instead of a dynamic allocation.
 
-Add logic to the PRUSS INTC driver to ignore both these shared and
-invalid interrupts.
+Bard, the order of patches will break git bisect, no? I tried on my side 
+and get the following error after applying patch1
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
-Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
----
-v4->v5:
-- Rename: s/invalid_intr/irqs_reserved/
-v3->v4:
-- Due to changes in DT bindings which converts irqs-reserved
-  property from uint8-array to bitmask requested by Rob introduce
-  relevant changes in the driver.
-- Merge the irqs-reserved and irqs-shared to one property since they
-  can be handled by one logic (relevant change was introduced to DT
-  binding).
-- Update commit message.
-v2->v3:
-- Extra checks for (intc->irqs[i]) in error/remove path was moved from
-  "irqchip/irq-pruss-intc: Add a PRUSS irqchip driver for PRUSS
-  interrupts" to this patch
-v1->v2:
-- https://patchwork.kernel.org/patch/11069757/
----
- drivers/irqchip/irq-pruss-intc.c | 29 ++++++++++++++++++++++++-----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+sound/soc/codecs/max98373-sdw.c:337:20: error: assignment to expression 
+with array type
+   337 |  slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
+       |
 
-diff --git a/drivers/irqchip/irq-pruss-intc.c b/drivers/irqchip/irq-pruss-intc.c
-index 461e81e..1a72591 100644
---- a/drivers/irqchip/irq-pruss-intc.c
-+++ b/drivers/irqchip/irq-pruss-intc.c
-@@ -477,7 +477,7 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 	struct pruss_intc *intc;
- 	struct pruss_host_irq_data *host_data[MAX_NUM_HOST_IRQS] = { NULL };
- 	int i, irq, ret;
--	u8 max_system_events;
-+	u8 max_system_events, irqs_reserved = 0;
- 
- 	data = of_device_get_match_data(dev);
- 	if (!data)
-@@ -497,6 +497,16 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 	if (IS_ERR(intc->base))
- 		return PTR_ERR(intc->base);
- 
-+	ret = of_property_read_u8(dev->of_node, "ti,irqs-reserved",
-+				  &irqs_reserved);
-+
-+	/*
-+	 * The irqs-reserved is used only for some SoC's therefore not having
-+	 * this property is still valid
-+	 */
-+	if (ret < 0 && ret != -EINVAL)
-+		return ret;
-+
- 	pruss_intc_init(intc);
- 
- 	mutex_init(&intc->lock);
-@@ -507,6 +517,9 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
-+		if (irqs_reserved & BIT(i))
-+			continue;
-+
- 		irq = platform_get_irq_byname(pdev, irq_names[i]);
- 		if (irq <= 0) {
- 			ret = (irq == 0) ? -EINVAL : irq;
-@@ -532,8 +545,11 @@ static int pruss_intc_probe(struct platform_device *pdev)
- 	return 0;
- 
- fail_irq:
--	while (--i >= 0)
--		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-+	while (--i >= 0) {
-+		if (intc->irqs[i])
-+			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
-+							 NULL);
-+	}
- 
- 	irq_domain_remove(intc->domain);
- 
-@@ -547,8 +563,11 @@ static int pruss_intc_remove(struct platform_device *pdev)
- 	unsigned int hwirq;
- 	int i;
- 
--	for (i = 0; i < MAX_NUM_HOST_IRQS; i++)
--		irq_set_chained_handler_and_data(intc->irqs[i], NULL, NULL);
-+	for (i = 0; i < MAX_NUM_HOST_IRQS; i++) {
-+		if (intc->irqs[i])
-+			irq_set_chained_handler_and_data(intc->irqs[i], NULL,
-+							 NULL);
-+	}
- 
- 	for (hwirq = 0; hwirq < max_system_events; hwirq++)
- 		irq_dispose_mapping(irq_find_mapping(intc->domain, hwirq));
--- 
-2.7.4
+the order should be
 
+ASoC: codecs: soundwire: remove port_ready[] usage from codecs.
+soundwire: add definition for maximum number of ports
+soundwire: fix port_ready[] dynamic allocation in mipi_disco
+
+> Changes in v3:
+> - Add ASoC tag in the cover letter title.
+> - Edit the title and commit message of the third patch for better
+>    understanding.
+> 
+> Changes in v2:
+> - Split patches into sdw and asoc patches. Please note that "soundwire:
+>    fix port_ready[] dynamic allocation in mipi_disco" and "ASoC: codecs:
+>    fix port_ready[] dynamic allocation in ASoC codecs" should be merged
+>    at the same time.
+> 
+> Pierre-Louis Bossart (3):
+>    soundwire: add definition for maximum number of ports
+>    soundwire: fix port_ready[] dynamic allocation in mipi_disco
+>    ASoC: codecs: soundwire: remove port_ready[] usage from codecs.
+> 
+>   drivers/soundwire/mipi_disco.c  | 18 +-----------------
+>   drivers/soundwire/slave.c       |  4 ++++
+>   include/linux/soundwire/sdw.h   |  5 +++--
+>   sound/soc/codecs/max98373-sdw.c | 15 +--------------
+>   sound/soc/codecs/rt1308-sdw.c   | 14 +-------------
+>   sound/soc/codecs/rt5682-sdw.c   | 15 +--------------
+>   sound/soc/codecs/rt700-sdw.c    | 15 +--------------
+>   sound/soc/codecs/rt711-sdw.c    | 15 +--------------
+>   sound/soc/codecs/rt715-sdw.c    | 33 +--------------------------------
+>   9 files changed, 14 insertions(+), 120 deletions(-)
+> 
