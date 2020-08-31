@@ -2,113 +2,111 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BBEC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A5AC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5C6C2071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:38:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="e0Zo8/yJ"
+	by mail.kernel.org (Postfix) with ESMTP id 86C2720678
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 17:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728012AbgHaRi5 (ORCPT
+        id S1728082AbgHaRj0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 13:38:57 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:36702 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726130AbgHaRi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 13:38:56 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598895536; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=tLMc2AoC+KjzdShJAZhh/7JBmG+icFLxMYh/8L1monU=;
- b=e0Zo8/yJ9Jk67cPdhBJmVOhoVssb8mkaH03RCufgDXcWNhqaxKnce67FRotlP3v+QIwL0065
- pHIGy9aZqtx5UzEhc3co1RJ+KpDLiLWpFNYA2bKCFOEzFtiYqUMMr8Y2Ayz6j0+cXP7TOegO
- W9yC6qlp2SWjpPJRYInLTI4m/eM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f4d35af9bdf68cc03bc79b7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 17:38:55
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 35EE5C43391; Mon, 31 Aug 2020 17:38:55 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: nguyenb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8CA93C433CA;
-        Mon, 31 Aug 2020 17:38:54 +0000 (UTC)
+        Mon, 31 Aug 2020 13:39:26 -0400
+Received: from mail.parknet.co.jp ([210.171.160.6]:33976 "EHLO
+        mail.parknet.co.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726117AbgHaRjW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 13:39:22 -0400
+Received: from ibmpc.myhome.or.jp (server.parknet.ne.jp [210.171.168.39])
+        by mail.parknet.co.jp (Postfix) with ESMTPSA id 1A9151B44DF;
+        Tue,  1 Sep 2020 02:39:21 +0900 (JST)
+Received: from devron.myhome.or.jp (foobar@devron.myhome.or.jp [192.168.0.3])
+        by ibmpc.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07VHdJa6366555
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 1 Sep 2020 02:39:20 +0900
+Received: from devron.myhome.or.jp (foobar@localhost [127.0.0.1])
+        by devron.myhome.or.jp (8.15.2/8.15.2/Debian-20) with ESMTPS id 07VHdJ753466384
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+        Tue, 1 Sep 2020 02:39:19 +0900
+Received: (from hirofumi@localhost)
+        by devron.myhome.or.jp (8.15.2/8.15.2/Submit) id 07VHdIdG3466383;
+        Tue, 1 Sep 2020 02:39:18 +0900
+From:   OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH] fat: Avoid oops when bdi->io_pages==0
+References: <87ft85osn6.fsf@mail.parknet.co.jp>
+        <b4e1f741-989c-6c9d-b559-4c1ada88c499@kernel.dk>
+        <87o8mq6aao.fsf@mail.parknet.co.jp>
+        <4010690f-20ad-f7ba-b595-2e07b0fa2d94@kernel.dk>
+        <20200831165659.GH14765@casper.infradead.org>
+        <33eb2820-894e-a42f-61a5-c25bc52345d5@kernel.dk>
+Date:   Tue, 01 Sep 2020 02:39:18 +0900
+In-Reply-To: <33eb2820-894e-a42f-61a5-c25bc52345d5@kernel.dk> (Jens Axboe's
+        message of "Mon, 31 Aug 2020 11:00:14 -0600")
+Message-ID: <87d03667g9.fsf@mail.parknet.co.jp>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.0.50 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 31 Aug 2020 10:38:54 -0700
-From:   nguyenb@codeaurora.org
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     cang@codeaurora.org, asutoshd@codeaurora.org,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Nitin Rawat <nitirawa@codeaurora.org>,
-        Bean Huo <beanhuo@micron.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
- Auto-Hibernate Timer
-In-Reply-To: <56c8bde3-2457-402f-0ad2-94fc1fe12cd5@acm.org>
-References: <b141cfcd7998b8933635828b56fbb64f8ad4d175.1598661071.git.nguyenb@codeaurora.org>
- <56c8bde3-2457-402f-0ad2-94fc1fe12cd5@acm.org>
-Message-ID: <0914db1a7aaa8b3b528f2298eb213b3c@codeaurora.org>
-X-Sender: nguyenb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-28 20:13, Bart Van Assche wrote:
-> On 2020-08-28 18:05, Bao D. Nguyen wrote:
->>  static ssize_t auto_hibern8_show(struct device *dev,
->>  				 struct device_attribute *attr, char *buf)
->>  {
->> +	u32 ahit;
->>  	struct ufs_hba *hba = dev_get_drvdata(dev);
-> 
-> Although not strictly required for SCSI code, how about following the 
-> "reverse
-> christmas tree" convention and adding "u32 ahit" below the "hba" 
-> declaration?
-Thanks for your comment. I will change it.
->>  	if (!ufshcd_is_auto_hibern8_supported(hba))
->>  		return -EOPNOTSUPP;
+Jens Axboe <axboe@kernel.dk> writes:
+
+> On 8/31/20 10:56 AM, Matthew Wilcox wrote:
+>> On Mon, Aug 31, 2020 at 10:39:26AM -0600, Jens Axboe wrote:
+>>> We really should ensure that ->io_pages is always set, imho, instead of
+>>> having to work-around it in other spots.
 >> 
->> -	return snprintf(buf, PAGE_SIZE, "%d\n", 
->> ufshcd_ahit_to_us(hba->ahit));
->> +	pm_runtime_get_sync(hba->dev);
->> +	ufshcd_hold(hba, false);
->> +	ahit = ufshcd_readl(hba, REG_AUTO_HIBERNATE_IDLE_TIMER);
->> +	ufshcd_release(hba);
->> +	pm_runtime_put_sync(hba->dev);
->> +
->> +	return scnprintf(buf, PAGE_SIZE, "%d\n", ufshcd_ahit_to_us(ahit));
->>  }
-> 
-> Why the pm_runtime_get_sync()/pm_runtime_put_sync() and
-> ufshcd_hold()/ufshcd_release() calls? I don't think these are necessary 
-> here.
-We may try to access the hardware register during runtime suspend or UFS 
-clock is gated.
-UFS clock gating can happen even during runtime resume. Here we are 
-trying to prevent NoC error
-due to unclocked access.
-> Thanks,
-> 
-> Bart.
+>> Interestingly, there are only three places in the entire kernel which
+>> _use_ bdi->io_pages.  FAT, Verity and the pagecache readahead code.
+>> 
+>> Verity:
+>>                         unsigned long num_ra_pages =
+>>                                 min_t(unsigned long, num_blocks_to_hash - i,
+>>                                       inode->i_sb->s_bdi->io_pages);
+>> 
+>> FAT:
+>>         if (ra_pages > sb->s_bdi->io_pages)
+>>                 ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
+>> 
+>> Pagecache:
+>>         max_pages = max_t(unsigned long, bdi->io_pages, ra->ra_pages);
+>> and
+>>         if (req_size > max_pages && bdi->io_pages > max_pages)
+>>                 max_pages = min(req_size, bdi->io_pages);
+>> 
+>> The funny thing is that all three are using it differently.  Verity is
+>> taking io_pages to be the maximum amount to readahead.  FAT is using
+>> it as the unit of readahead (round down to the previous multiple) and
+>> the pagecache uses it to limit reads that exceed the current per-file
+>> readahead limit (but allows per-file readahead to exceed io_pages,
+>> in which case it has no effect).
+>> 
+>> So how should it be used?  My inclination is to say that the pagecache
+>> is right, by virtue of being the most-used.
+>
+> When I added ->io_pages, it was for the page cache use case. The others
+> grew after that...
+
+FAT and pagecache usage would be similar or same purpose. The both is
+using io_pages as optimal IO size.
+
+In pagecache case, it uses io_pages if one request size is exceeding
+io_pages. In FAT case, there is perfect knowledge about future/total
+request size. So FAT divides request by io_pages, and adjust ra_pages
+with knowledge.
+
+I don't know about verity.
+
+Thanks.
+-- 
+OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
