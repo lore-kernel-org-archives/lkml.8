@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E65C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DB0C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31BE72073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF31B2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:44:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgHaPol (ORCPT
+        id S1727842AbgHaPor (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:44:41 -0400
-Received: from out28-124.mail.aliyun.com ([115.124.28.124]:60803 "EHLO
-        out28-124.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728397AbgHaPok (ORCPT
+        Mon, 31 Aug 2020 11:44:47 -0400
+Received: from out28-101.mail.aliyun.com ([115.124.28.101]:48240 "EHLO
+        out28-101.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbgHaPom (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:44:40 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.487979-9.28007e-05-0.511928;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03301;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.IQnAArN_1598888641;
+        Mon, 31 Aug 2020 11:44:42 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_system_inform|0.638439-0.000183839-0.361377;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03267;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=10;RT=10;SR=0;TI=SMTPD_---.IQnAArN_1598888641;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.IQnAArN_1598888641)
           by smtp.aliyun-inc.com(10.147.41.143);
-          Mon, 31 Aug 2020 23:44:14 +0800
+          Mon, 31 Aug 2020 23:44:16 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linus.walleij@linaro.org, paul@crapouillou.net
@@ -32,9 +32,9 @@ Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
         aric.pzqi@ingenic.com, dongsheng.qiu@ingenic.com,
         rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v2 1/3] pinctrl: Ingenic: Add SSI pins support for JZ4770 and JZ4780.
-Date:   Mon, 31 Aug 2020 23:43:22 +0800
-Message-Id: <20200831154324.64951-2-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v2 3/3] pinctrl: Ingenic: Add I2S pins support for Ingenic SoCs.
+Date:   Mon, 31 Aug 2020 23:43:24 +0800
+Message-Id: <20200831154324.64951-4-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
 References: <20200831154324.64951-1-zhouyanjie@wanyeetech.com>
@@ -46,360 +46,235 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add SSI pins support for the JZ4770 SoC and the
-JZ4780 SoC from Ingenic.
+1.Add I2S pins support for the JZ4780 SoC.
+2.Add I2S pins support for the X1000 SoC.
+3.Add I2S pins support for the X1500 SoC.
+4.Add I2S pins support for the X1830 SoC.
 
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
 
 Notes:
-    v1->v2:
-    Rebase on top of kernel 5.9-rc3.
+    v2:
+    New patch.
 
- drivers/pinctrl/pinctrl-ingenic.c | 267 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 267 insertions(+)
+ drivers/pinctrl/pinctrl-ingenic.c | 70 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 70 insertions(+)
 
 diff --git a/drivers/pinctrl/pinctrl-ingenic.c b/drivers/pinctrl/pinctrl-ingenic.c
-index a8d1b53ec4c1..00f29fd684fa 100644
+index ae7b8876d3b4..72898c427b83 100644
 --- a/drivers/pinctrl/pinctrl-ingenic.c
 +++ b/drivers/pinctrl/pinctrl-ingenic.c
-@@ -633,6 +633,46 @@ static int jz4770_uart2_data_pins[] = { 0x5c, 0x5e, };
- static int jz4770_uart2_hwflow_pins[] = { 0x5d, 0x5f, };
- static int jz4770_uart3_data_pins[] = { 0x6c, 0x85, };
- static int jz4770_uart3_hwflow_pins[] = { 0x88, 0x89, };
-+static int jz4770_ssi0_dt_a_pins[] = { 0x15, };
-+static int jz4770_ssi0_dt_b_pins[] = { 0x35, };
-+static int jz4770_ssi0_dt_d_pins[] = { 0x55, };
-+static int jz4770_ssi0_dt_e_pins[] = { 0x71, };
-+static int jz4770_ssi0_dr_a_pins[] = { 0x14, };
-+static int jz4770_ssi0_dr_b_pins[] = { 0x34, };
-+static int jz4770_ssi0_dr_d_pins[] = { 0x54, };
-+static int jz4770_ssi0_dr_e_pins[] = { 0x6e, };
-+static int jz4770_ssi0_clk_a_pins[] = { 0x12, };
-+static int jz4770_ssi0_clk_b_pins[] = { 0x3c, };
-+static int jz4770_ssi0_clk_d_pins[] = { 0x58, };
-+static int jz4770_ssi0_clk_e_pins[] = { 0x6f, };
-+static int jz4770_ssi0_gpc_b_pins[] = { 0x3e, };
-+static int jz4770_ssi0_gpc_d_pins[] = { 0x56, };
-+static int jz4770_ssi0_gpc_e_pins[] = { 0x73, };
-+static int jz4770_ssi0_ce0_a_pins[] = { 0x13, };
-+static int jz4770_ssi0_ce0_b_pins[] = { 0x3d, };
-+static int jz4770_ssi0_ce0_d_pins[] = { 0x59, };
-+static int jz4770_ssi0_ce0_e_pins[] = { 0x70, };
-+static int jz4770_ssi0_ce1_b_pins[] = { 0x3f, };
-+static int jz4770_ssi0_ce1_d_pins[] = { 0x57, };
-+static int jz4770_ssi0_ce1_e_pins[] = { 0x72, };
-+static int jz4770_ssi1_dt_b_pins[] = { 0x35, };
-+static int jz4770_ssi1_dt_d_pins[] = { 0x55, };
-+static int jz4770_ssi1_dt_e_pins[] = { 0x71, };
-+static int jz4770_ssi1_dr_b_pins[] = { 0x34, };
-+static int jz4770_ssi1_dr_d_pins[] = { 0x54, };
-+static int jz4770_ssi1_dr_e_pins[] = { 0x6e, };
-+static int jz4770_ssi1_clk_b_pins[] = { 0x3c, };
-+static int jz4770_ssi1_clk_d_pins[] = { 0x58, };
-+static int jz4770_ssi1_clk_e_pins[] = { 0x6f, };
-+static int jz4770_ssi1_gpc_b_pins[] = { 0x3e, };
-+static int jz4770_ssi1_gpc_d_pins[] = { 0x56, };
-+static int jz4770_ssi1_gpc_e_pins[] = { 0x73, };
-+static int jz4770_ssi1_ce0_b_pins[] = { 0x3d, };
-+static int jz4770_ssi1_ce0_d_pins[] = { 0x59, };
-+static int jz4770_ssi1_ce0_e_pins[] = { 0x70, };
-+static int jz4770_ssi1_ce1_b_pins[] = { 0x3f, };
-+static int jz4770_ssi1_ce1_d_pins[] = { 0x57, };
-+static int jz4770_ssi1_ce1_e_pins[] = { 0x72, };
- static int jz4770_mmc0_1bit_a_pins[] = { 0x12, 0x13, 0x14, };
- static int jz4770_mmc0_4bit_a_pins[] = { 0x15, 0x16, 0x17, };
- static int jz4770_mmc0_1bit_e_pins[] = { 0x9c, 0x9d, 0x94, };
-@@ -703,6 +743,46 @@ static int jz4770_uart2_data_funcs[] = { 0, 0, };
- static int jz4770_uart2_hwflow_funcs[] = { 0, 0, };
- static int jz4770_uart3_data_funcs[] = { 0, 1, };
- static int jz4770_uart3_hwflow_funcs[] = { 0, 0, };
-+static int jz4770_ssi0_dt_a_funcs[] = { 2, };
-+static int jz4770_ssi0_dt_b_funcs[] = { 1, };
-+static int jz4770_ssi0_dt_d_funcs[] = { 1, };
-+static int jz4770_ssi0_dt_e_funcs[] = { 0, };
-+static int jz4770_ssi0_dr_a_funcs[] = { 1, };
-+static int jz4770_ssi0_dr_b_funcs[] = { 1, };
-+static int jz4770_ssi0_dr_d_funcs[] = { 1, };
-+static int jz4770_ssi0_dr_e_funcs[] = { 0, };
-+static int jz4770_ssi0_clk_a_funcs[] = { 2, };
-+static int jz4770_ssi0_clk_b_funcs[] = { 1, };
-+static int jz4770_ssi0_clk_d_funcs[] = { 1, };
-+static int jz4770_ssi0_clk_e_funcs[] = { 0, };
-+static int jz4770_ssi0_gpc_b_funcs[] = { 1, };
-+static int jz4770_ssi0_gpc_d_funcs[] = { 1, };
-+static int jz4770_ssi0_gpc_e_funcs[] = { 0, };
-+static int jz4770_ssi0_ce0_a_funcs[] = { 2, };
-+static int jz4770_ssi0_ce0_b_funcs[] = { 1, };
-+static int jz4770_ssi0_ce0_d_funcs[] = { 1, };
-+static int jz4770_ssi0_ce0_e_funcs[] = { 0, };
-+static int jz4770_ssi0_ce1_b_funcs[] = { 1, };
-+static int jz4770_ssi0_ce1_d_funcs[] = { 1, };
-+static int jz4770_ssi0_ce1_e_funcs[] = { 0, };
-+static int jz4770_ssi1_dt_b_funcs[] = { 2, };
-+static int jz4770_ssi1_dt_d_funcs[] = { 2, };
-+static int jz4770_ssi1_dt_e_funcs[] = { 1, };
-+static int jz4770_ssi1_dr_b_funcs[] = { 2, };
-+static int jz4770_ssi1_dr_d_funcs[] = { 2, };
-+static int jz4770_ssi1_dr_e_funcs[] = { 1, };
-+static int jz4770_ssi1_clk_b_funcs[] = { 2, };
-+static int jz4770_ssi1_clk_d_funcs[] = { 2, };
-+static int jz4770_ssi1_clk_e_funcs[] = { 1, };
-+static int jz4770_ssi1_gpc_b_funcs[] = { 2, };
-+static int jz4770_ssi1_gpc_d_funcs[] = { 2, };
-+static int jz4770_ssi1_gpc_e_funcs[] = { 1, };
-+static int jz4770_ssi1_ce0_b_funcs[] = { 2, };
-+static int jz4770_ssi1_ce0_d_funcs[] = { 2, };
-+static int jz4770_ssi1_ce0_e_funcs[] = { 1, };
-+static int jz4770_ssi1_ce1_b_funcs[] = { 2, };
-+static int jz4770_ssi1_ce1_d_funcs[] = { 2, };
-+static int jz4770_ssi1_ce1_e_funcs[] = { 1, };
- static int jz4770_mmc0_1bit_a_funcs[] = { 1, 1, 0, };
- static int jz4770_mmc0_4bit_a_funcs[] = { 1, 1, 1, };
- static int jz4770_mmc0_1bit_e_funcs[] = { 0, 0, 0, };
-@@ -763,6 +843,46 @@ static const struct group_desc jz4770_groups[] = {
- 	INGENIC_PIN_GROUP("uart2-hwflow", jz4770_uart2_hwflow),
- 	INGENIC_PIN_GROUP("uart3-data", jz4770_uart3_data),
- 	INGENIC_PIN_GROUP("uart3-hwflow", jz4770_uart3_hwflow),
-+	INGENIC_PIN_GROUP("ssi0-dt-a", jz4770_ssi0_dt_a),
-+	INGENIC_PIN_GROUP("ssi0-dt-b", jz4770_ssi0_dt_b),
-+	INGENIC_PIN_GROUP("ssi0-dt-d", jz4770_ssi0_dt_d),
-+	INGENIC_PIN_GROUP("ssi0-dt-e", jz4770_ssi0_dt_e),
-+	INGENIC_PIN_GROUP("ssi0-dr-a", jz4770_ssi0_dr_a),
-+	INGENIC_PIN_GROUP("ssi0-dr-b", jz4770_ssi0_dr_b),
-+	INGENIC_PIN_GROUP("ssi0-dr-d", jz4770_ssi0_dr_d),
-+	INGENIC_PIN_GROUP("ssi0-dr-e", jz4770_ssi0_dr_e),
-+	INGENIC_PIN_GROUP("ssi0-clk-a", jz4770_ssi0_clk_a),
-+	INGENIC_PIN_GROUP("ssi0-clk-b", jz4770_ssi0_clk_b),
-+	INGENIC_PIN_GROUP("ssi0-clk-d", jz4770_ssi0_clk_d),
-+	INGENIC_PIN_GROUP("ssi0-clk-e", jz4770_ssi0_clk_e),
-+	INGENIC_PIN_GROUP("ssi0-gpc-b", jz4770_ssi0_gpc_b),
-+	INGENIC_PIN_GROUP("ssi0-gpc-d", jz4770_ssi0_gpc_d),
-+	INGENIC_PIN_GROUP("ssi0-gpc-e", jz4770_ssi0_gpc_e),
-+	INGENIC_PIN_GROUP("ssi0-ce0-a", jz4770_ssi0_ce0_a),
-+	INGENIC_PIN_GROUP("ssi0-ce0-b", jz4770_ssi0_ce0_b),
-+	INGENIC_PIN_GROUP("ssi0-ce0-d", jz4770_ssi0_ce0_d),
-+	INGENIC_PIN_GROUP("ssi0-ce0-e", jz4770_ssi0_ce0_e),
-+	INGENIC_PIN_GROUP("ssi0-ce1-b", jz4770_ssi0_ce1_b),
-+	INGENIC_PIN_GROUP("ssi0-ce1-d", jz4770_ssi0_ce1_d),
-+	INGENIC_PIN_GROUP("ssi0-ce1-e", jz4770_ssi0_ce1_e),
-+	INGENIC_PIN_GROUP("ssi1-dt-b", jz4770_ssi1_dt_b),
-+	INGENIC_PIN_GROUP("ssi1-dt-d", jz4770_ssi1_dt_d),
-+	INGENIC_PIN_GROUP("ssi1-dt-e", jz4770_ssi1_dt_e),
-+	INGENIC_PIN_GROUP("ssi1-dr-b", jz4770_ssi1_dr_b),
-+	INGENIC_PIN_GROUP("ssi1-dr-d", jz4770_ssi1_dr_d),
-+	INGENIC_PIN_GROUP("ssi1-dr-e", jz4770_ssi1_dr_e),
-+	INGENIC_PIN_GROUP("ssi1-clk-b", jz4770_ssi1_clk_b),
-+	INGENIC_PIN_GROUP("ssi1-clk-d", jz4770_ssi1_clk_d),
-+	INGENIC_PIN_GROUP("ssi1-clk-e", jz4770_ssi1_clk_e),
-+	INGENIC_PIN_GROUP("ssi1-gpc-b", jz4770_ssi1_gpc_b),
-+	INGENIC_PIN_GROUP("ssi1-gpc-d", jz4770_ssi1_gpc_d),
-+	INGENIC_PIN_GROUP("ssi1-gpc-e", jz4770_ssi1_gpc_e),
-+	INGENIC_PIN_GROUP("ssi1-ce0-b", jz4770_ssi1_ce0_b),
-+	INGENIC_PIN_GROUP("ssi1-ce0-d", jz4770_ssi1_ce0_d),
-+	INGENIC_PIN_GROUP("ssi1-ce0-e", jz4770_ssi1_ce0_e),
-+	INGENIC_PIN_GROUP("ssi1-ce1-b", jz4770_ssi1_ce1_b),
-+	INGENIC_PIN_GROUP("ssi1-ce1-d", jz4770_ssi1_ce1_d),
-+	INGENIC_PIN_GROUP("ssi1-ce1-e", jz4770_ssi1_ce1_e),
- 	INGENIC_PIN_GROUP("mmc0-1bit-a", jz4770_mmc0_1bit_a),
- 	INGENIC_PIN_GROUP("mmc0-4bit-a", jz4770_mmc0_4bit_a),
- 	INGENIC_PIN_GROUP("mmc0-1bit-e", jz4770_mmc0_1bit_e),
-@@ -815,6 +935,22 @@ static const char *jz4770_uart0_groups[] = { "uart0-data", "uart0-hwflow", };
- static const char *jz4770_uart1_groups[] = { "uart1-data", "uart1-hwflow", };
- static const char *jz4770_uart2_groups[] = { "uart2-data", "uart2-hwflow", };
- static const char *jz4770_uart3_groups[] = { "uart3-data", "uart3-hwflow", };
-+static const char *jz4770_ssi0_groups[] = {
-+	"ssi0-dt-a", "ssi0-dt-b", "ssi0-dt-d", "ssi0-dt-e",
-+	"ssi0-dr-a", "ssi0-dr-b", "ssi0-dr-d", "ssi0-dr-e",
-+	"ssi0-clk-a", "ssi0-clk-b", "ssi0-clk-d", "ssi0-clk-e",
-+	"ssi0-gpc-b", "ssi0-gpc-d", "ssi0-gpc-e",
-+	"ssi0-ce0-a", "ssi0-ce0-b", "ssi0-ce0-d", "ssi0-ce0-e",
-+	"ssi0-ce1-b", "ssi0-ce1-d", "ssi0-ce1-e",
-+};
-+static const char *jz4770_ssi1_groups[] = {
-+	"ssi1-dt-b", "ssi1-dt-d", "ssi1-dt-e",
-+	"ssi1-dr-b", "ssi1-dr-d", "ssi1-dr-e",
-+	"ssi1-clk-b", "ssi1-clk-d", "ssi1-clk-e",
-+	"ssi1-gpc-b", "ssi1-gpc-d", "ssi1-gpc-e",
-+	"ssi1-ce0-b", "ssi1-ce0-d", "ssi1-ce0-e",
-+	"ssi1-ce1-b", "ssi1-ce1-d", "ssi1-ce1-e",
-+};
- static const char *jz4770_mmc0_groups[] = {
- 	"mmc0-1bit-a", "mmc0-4bit-a",
- 	"mmc0-1bit-e", "mmc0-4bit-e", "mmc0-8bit-e",
-@@ -858,6 +994,8 @@ static const struct function_desc jz4770_functions[] = {
- 	{ "uart1", jz4770_uart1_groups, ARRAY_SIZE(jz4770_uart1_groups), },
- 	{ "uart2", jz4770_uart2_groups, ARRAY_SIZE(jz4770_uart2_groups), },
- 	{ "uart3", jz4770_uart3_groups, ARRAY_SIZE(jz4770_uart3_groups), },
-+	{ "ssi0", jz4770_ssi0_groups, ARRAY_SIZE(jz4770_ssi0_groups), },
-+	{ "ssi1", jz4770_ssi1_groups, ARRAY_SIZE(jz4770_ssi1_groups), },
- 	{ "mmc0", jz4770_mmc0_groups, ARRAY_SIZE(jz4770_mmc0_groups), },
- 	{ "mmc1", jz4770_mmc1_groups, ARRAY_SIZE(jz4770_mmc1_groups), },
- 	{ "mmc2", jz4770_mmc2_groups, ARRAY_SIZE(jz4770_mmc2_groups), },
-@@ -900,6 +1038,39 @@ static const struct ingenic_chip_info jz4770_chip_info = {
- static int jz4780_uart2_data_pins[] = { 0x66, 0x67, };
- static int jz4780_uart2_hwflow_pins[] = { 0x65, 0x64, };
- static int jz4780_uart4_data_pins[] = { 0x54, 0x4a, };
-+static int jz4780_ssi0_dt_a_19_pins[] = { 0x13, };
-+static int jz4780_ssi0_dt_a_21_pins[] = { 0x15, };
-+static int jz4780_ssi0_dt_a_28_pins[] = { 0x1c, };
-+static int jz4780_ssi0_dt_b_pins[] = { 0x3d, };
-+static int jz4780_ssi0_dt_d_pins[] = { 0x59, };
-+static int jz4780_ssi0_dr_a_20_pins[] = { 0x14, };
-+static int jz4780_ssi0_dr_a_27_pins[] = { 0x1b, };
-+static int jz4780_ssi0_dr_b_pins[] = { 0x34, };
-+static int jz4780_ssi0_dr_d_pins[] = { 0x54, };
-+static int jz4780_ssi0_clk_a_pins[] = { 0x12, };
-+static int jz4780_ssi0_clk_b_5_pins[] = { 0x25, };
-+static int jz4780_ssi0_clk_b_28_pins[] = { 0x3c, };
-+static int jz4780_ssi0_clk_d_pins[] = { 0x58, };
-+static int jz4780_ssi0_gpc_b_pins[] = { 0x3e, };
-+static int jz4780_ssi0_gpc_d_pins[] = { 0x56, };
-+static int jz4780_ssi0_ce0_a_23_pins[] = { 0x17, };
-+static int jz4780_ssi0_ce0_a_25_pins[] = { 0x19, };
-+static int jz4780_ssi0_ce0_b_pins[] = { 0x3f, };
-+static int jz4780_ssi0_ce0_d_pins[] = { 0x57, };
-+static int jz4780_ssi0_ce1_b_pins[] = { 0x35, };
-+static int jz4780_ssi0_ce1_d_pins[] = { 0x55, };
-+static int jz4780_ssi1_dt_b_pins[] = { 0x3d, };
-+static int jz4780_ssi1_dt_d_pins[] = { 0x59, };
-+static int jz4780_ssi1_dr_b_pins[] = { 0x34, };
-+static int jz4780_ssi1_dr_d_pins[] = { 0x54, };
-+static int jz4780_ssi1_clk_b_pins[] = { 0x3c, };
-+static int jz4780_ssi1_clk_d_pins[] = { 0x58, };
-+static int jz4780_ssi1_gpc_b_pins[] = { 0x3e, };
-+static int jz4780_ssi1_gpc_d_pins[] = { 0x56, };
-+static int jz4780_ssi1_ce0_b_pins[] = { 0x3f, };
-+static int jz4780_ssi1_ce0_d_pins[] = { 0x57, };
-+static int jz4780_ssi1_ce1_b_pins[] = { 0x35, };
-+static int jz4780_ssi1_ce1_d_pins[] = { 0x55, };
- static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
+@@ -1083,6 +1083,11 @@ static int jz4780_mmc0_8bit_a_pins[] = { 0x04, 0x05, 0x06, 0x07, 0x18, };
  static int jz4780_i2c3_pins[] = { 0x6a, 0x6b, };
  static int jz4780_i2c4_e_pins[] = { 0x8c, 0x8d, };
-@@ -909,6 +1080,39 @@ static int jz4780_hdmi_ddc_pins[] = { 0xb9, 0xb8, };
+ static int jz4780_i2c4_f_pins[] = { 0xb9, 0xb8, };
++static int jz4780_i2s_data_tx_pins[] = { 0x87, };
++static int jz4780_i2s_data_rx_pins[] = { 0x86, };
++static int jz4780_i2s_clk_txrx_pins[] = { 0x6c, 0x6d, };
++static int jz4780_i2s_clk_rx_pins[] = { 0x88, 0x89, };
++static int jz4780_i2s_sysclk_pins[] = { 0x85, };
+ static int jz4780_hdmi_ddc_pins[] = { 0xb9, 0xb8, };
+ 
  static int jz4780_uart2_data_funcs[] = { 1, 1, };
- static int jz4780_uart2_hwflow_funcs[] = { 1, 1, };
- static int jz4780_uart4_data_funcs[] = { 2, 2, };
-+static int jz4780_ssi0_dt_a_19_funcs[] = { 2, };
-+static int jz4780_ssi0_dt_a_21_funcs[] = { 2, };
-+static int jz4780_ssi0_dt_a_28_funcs[] = { 2, };
-+static int jz4780_ssi0_dt_b_funcs[] = { 1, };
-+static int jz4780_ssi0_dt_d_funcs[] = { 1, };
-+static int jz4780_ssi0_dr_a_20_funcs[] = { 2, };
-+static int jz4780_ssi0_dr_a_27_funcs[] = { 2, };
-+static int jz4780_ssi0_dr_b_funcs[] = { 1, };
-+static int jz4780_ssi0_dr_d_funcs[] = { 1, };
-+static int jz4780_ssi0_clk_a_funcs[] = { 2, };
-+static int jz4780_ssi0_clk_b_5_funcs[] = { 1, };
-+static int jz4780_ssi0_clk_b_28_funcs[] = { 1, };
-+static int jz4780_ssi0_clk_d_funcs[] = { 1, };
-+static int jz4780_ssi0_gpc_b_funcs[] = { 1, };
-+static int jz4780_ssi0_gpc_d_funcs[] = { 1, };
-+static int jz4780_ssi0_ce0_a_23_funcs[] = { 2, };
-+static int jz4780_ssi0_ce0_a_25_funcs[] = { 2, };
-+static int jz4780_ssi0_ce0_b_funcs[] = { 1, };
-+static int jz4780_ssi0_ce0_d_funcs[] = { 1, };
-+static int jz4780_ssi0_ce1_b_funcs[] = { 1, };
-+static int jz4780_ssi0_ce1_d_funcs[] = { 1, };
-+static int jz4780_ssi1_dt_b_funcs[] = { 2, };
-+static int jz4780_ssi1_dt_d_funcs[] = { 2, };
-+static int jz4780_ssi1_dr_b_funcs[] = { 2, };
-+static int jz4780_ssi1_dr_d_funcs[] = { 2, };
-+static int jz4780_ssi1_clk_b_funcs[] = { 2, };
-+static int jz4780_ssi1_clk_d_funcs[] = { 2, };
-+static int jz4780_ssi1_gpc_b_funcs[] = { 2, };
-+static int jz4780_ssi1_gpc_d_funcs[] = { 2, };
-+static int jz4780_ssi1_ce0_b_funcs[] = { 2, };
-+static int jz4780_ssi1_ce0_d_funcs[] = { 2, };
-+static int jz4780_ssi1_ce1_b_funcs[] = { 2, };
-+static int jz4780_ssi1_ce1_d_funcs[] = { 2, };
- static int jz4780_mmc0_8bit_a_funcs[] = { 1, 1, 1, 1, 1, };
+@@ -1125,6 +1130,11 @@ static int jz4780_mmc0_8bit_a_funcs[] = { 1, 1, 1, 1, 1, };
  static int jz4780_i2c3_funcs[] = { 1, 1, };
  static int jz4780_i2c4_e_funcs[] = { 1, 1, };
-@@ -925,6 +1129,51 @@ static const struct group_desc jz4780_groups[] = {
- 	INGENIC_PIN_GROUP("uart3-data", jz4770_uart3_data),
- 	INGENIC_PIN_GROUP("uart3-hwflow", jz4770_uart3_hwflow),
- 	INGENIC_PIN_GROUP("uart4-data", jz4780_uart4_data),
-+	INGENIC_PIN_GROUP("ssi0-dt-a-19", jz4780_ssi0_dt_a_19),
-+	INGENIC_PIN_GROUP("ssi0-dt-a-21", jz4780_ssi0_dt_a_21),
-+	INGENIC_PIN_GROUP("ssi0-dt-a-28", jz4780_ssi0_dt_a_28),
-+	INGENIC_PIN_GROUP("ssi0-dt-b", jz4780_ssi0_dt_b),
-+	INGENIC_PIN_GROUP("ssi0-dt-d", jz4780_ssi0_dt_d),
-+	INGENIC_PIN_GROUP("ssi0-dt-e", jz4770_ssi0_dt_e),
-+	INGENIC_PIN_GROUP("ssi0-dr-a-20", jz4780_ssi0_dr_a_20),
-+	INGENIC_PIN_GROUP("ssi0-dr-a-27", jz4780_ssi0_dr_a_27),
-+	INGENIC_PIN_GROUP("ssi0-dr-b", jz4780_ssi0_dr_b),
-+	INGENIC_PIN_GROUP("ssi0-dr-d", jz4780_ssi0_dr_d),
-+	INGENIC_PIN_GROUP("ssi0-dr-e", jz4770_ssi0_dr_e),
-+	INGENIC_PIN_GROUP("ssi0-clk-a", jz4780_ssi0_clk_a),
-+	INGENIC_PIN_GROUP("ssi0-clk-b-5", jz4780_ssi0_clk_b_5),
-+	INGENIC_PIN_GROUP("ssi0-clk-b-28", jz4780_ssi0_clk_b_28),
-+	INGENIC_PIN_GROUP("ssi0-clk-d", jz4780_ssi0_clk_d),
-+	INGENIC_PIN_GROUP("ssi0-clk-e", jz4770_ssi0_clk_e),
-+	INGENIC_PIN_GROUP("ssi0-gpc-b", jz4780_ssi0_gpc_b),
-+	INGENIC_PIN_GROUP("ssi0-gpc-d", jz4780_ssi0_gpc_d),
-+	INGENIC_PIN_GROUP("ssi0-gpc-e", jz4770_ssi0_gpc_e),
-+	INGENIC_PIN_GROUP("ssi0-ce0-a-23", jz4780_ssi0_ce0_a_23),
-+	INGENIC_PIN_GROUP("ssi0-ce0-a-25", jz4780_ssi0_ce0_a_25),
-+	INGENIC_PIN_GROUP("ssi0-ce0-b", jz4780_ssi0_ce0_b),
-+	INGENIC_PIN_GROUP("ssi0-ce0-d", jz4780_ssi0_ce0_d),
-+	INGENIC_PIN_GROUP("ssi0-ce0-e", jz4770_ssi0_ce0_e),
-+	INGENIC_PIN_GROUP("ssi0-ce1-b", jz4780_ssi0_ce1_b),
-+	INGENIC_PIN_GROUP("ssi0-ce1-d", jz4780_ssi0_ce1_d),
-+	INGENIC_PIN_GROUP("ssi0-ce1-e", jz4770_ssi0_ce1_e),
-+	INGENIC_PIN_GROUP("ssi1-dt-b", jz4780_ssi1_dt_b),
-+	INGENIC_PIN_GROUP("ssi1-dt-d", jz4780_ssi1_dt_d),
-+	INGENIC_PIN_GROUP("ssi1-dt-e", jz4770_ssi1_dt_e),
-+	INGENIC_PIN_GROUP("ssi1-dr-b", jz4780_ssi1_dr_b),
-+	INGENIC_PIN_GROUP("ssi1-dr-d", jz4780_ssi1_dr_d),
-+	INGENIC_PIN_GROUP("ssi1-dr-e", jz4770_ssi1_dr_e),
-+	INGENIC_PIN_GROUP("ssi1-clk-b", jz4780_ssi1_clk_b),
-+	INGENIC_PIN_GROUP("ssi1-clk-d", jz4780_ssi1_clk_d),
-+	INGENIC_PIN_GROUP("ssi1-clk-e", jz4770_ssi1_clk_e),
-+	INGENIC_PIN_GROUP("ssi1-gpc-b", jz4780_ssi1_gpc_b),
-+	INGENIC_PIN_GROUP("ssi1-gpc-d", jz4780_ssi1_gpc_d),
-+	INGENIC_PIN_GROUP("ssi1-gpc-e", jz4770_ssi1_gpc_e),
-+	INGENIC_PIN_GROUP("ssi1-ce0-b", jz4780_ssi1_ce0_b),
-+	INGENIC_PIN_GROUP("ssi1-ce0-d", jz4780_ssi1_ce0_d),
-+	INGENIC_PIN_GROUP("ssi1-ce0-e", jz4770_ssi1_ce0_e),
-+	INGENIC_PIN_GROUP("ssi1-ce1-b", jz4780_ssi1_ce1_b),
-+	INGENIC_PIN_GROUP("ssi1-ce1-d", jz4780_ssi1_ce1_d),
-+	INGENIC_PIN_GROUP("ssi1-ce1-e", jz4770_ssi1_ce1_e),
- 	INGENIC_PIN_GROUP("mmc0-1bit-a", jz4770_mmc0_1bit_a),
- 	INGENIC_PIN_GROUP("mmc0-4bit-a", jz4770_mmc0_4bit_a),
- 	INGENIC_PIN_GROUP("mmc0-8bit-a", jz4780_mmc0_8bit_a),
-@@ -972,6 +1221,22 @@ static const struct group_desc jz4780_groups[] = {
+ static int jz4780_i2c4_f_funcs[] = { 1, 1, };
++static int jz4780_i2s_data_tx_funcs[] = { 0, };
++static int jz4780_i2s_data_rx_funcs[] = { 0, };
++static int jz4780_i2s_clk_txrx_funcs[] = { 1, 0, };
++static int jz4780_i2s_clk_rx_funcs[] = { 1, 1, };
++static int jz4780_i2s_sysclk_funcs[] = { 2, };
+ static int jz4780_hdmi_ddc_funcs[] = { 0, 0, };
  
- static const char *jz4780_uart2_groups[] = { "uart2-data", "uart2-hwflow", };
- static const char *jz4780_uart4_groups[] = { "uart4-data", };
-+static const char *jz4780_ssi0_groups[] = {
-+	"ssi0-dt-a-19", "ssi0-dt-a-21", "ssi0-dt-a-28", "ssi0-dt-b", "ssi0-dt-d", "ssi0-dt-e",
-+	"ssi0-dr-a-20", "ssi0-dr-a-27", "ssi0-dr-b", "ssi0-dr-d", "ssi0-dr-e",
-+	"ssi0-clk-a", "ssi0-clk-b-5", "ssi0-clk-b-28", "ssi0-clk-d", "ssi0-clk-e",
-+	"ssi0-gpc-b", "ssi0-gpc-d", "ssi0-gpc-e",
-+	"ssi0-ce0-a-23", "ssi0-ce0-a-25", "ssi0-ce0-b", "ssi0-ce0-d", "ssi0-ce0-e",
-+	"ssi0-ce1-b", "ssi0-ce1-d", "ssi0-ce1-e",
+ static const struct group_desc jz4780_groups[] = {
+@@ -1213,6 +1223,11 @@ static const struct group_desc jz4780_groups[] = {
+ 	INGENIC_PIN_GROUP("i2c3-data", jz4780_i2c3),
+ 	INGENIC_PIN_GROUP("i2c4-data-e", jz4780_i2c4_e),
+ 	INGENIC_PIN_GROUP("i2c4-data-f", jz4780_i2c4_f),
++	INGENIC_PIN_GROUP("i2s-data-tx", jz4780_i2s_data_tx),
++	INGENIC_PIN_GROUP("i2s-data-rx", jz4780_i2s_data_rx),
++	INGENIC_PIN_GROUP("i2s-clk-txrx", jz4780_i2s_clk_txrx),
++	INGENIC_PIN_GROUP("i2s-clk-rx", jz4780_i2s_clk_rx),
++	INGENIC_PIN_GROUP("i2s-sysclk", jz4780_i2s_sysclk),
+ 	INGENIC_PIN_GROUP("hdmi-ddc", jz4780_hdmi_ddc),
+ 	INGENIC_PIN_GROUP("cim-data", jz4770_cim_8bit),
+ 	INGENIC_PIN_GROUP("lcd-24bit", jz4770_lcd_24bit),
+@@ -1261,6 +1276,9 @@ static const char *jz4780_nemc_groups[] = {
+ };
+ static const char *jz4780_i2c3_groups[] = { "i2c3-data", };
+ static const char *jz4780_i2c4_groups[] = { "i2c4-data-e", "i2c4-data-f", };
++static const char *jz4780_i2s_groups[] = {
++	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
 +};
-+static const char *jz4780_ssi1_groups[] = {
-+	"ssi1-dt-b", "ssi1-dt-d", "ssi1-dt-e",
-+	"ssi1-dr-b", "ssi1-dr-d", "ssi1-dr-e",
-+	"ssi1-clk-b", "ssi1-clk-d", "ssi1-clk-e",
-+	"ssi1-gpc-b", "ssi1-gpc-d", "ssi1-gpc-e",
-+	"ssi1-ce0-b", "ssi1-ce0-d", "ssi1-ce0-e",
-+	"ssi1-ce1-b", "ssi1-ce1-d", "ssi1-ce1-e",
+ static const char *jz4780_cim_groups[] = { "cim-data", };
+ static const char *jz4780_hdmi_ddc_groups[] = { "hdmi-ddc", };
+ 
+@@ -1287,6 +1305,7 @@ static const struct function_desc jz4780_functions[] = {
+ 	{ "i2c2", jz4770_i2c2_groups, ARRAY_SIZE(jz4770_i2c2_groups), },
+ 	{ "i2c3", jz4780_i2c3_groups, ARRAY_SIZE(jz4780_i2c3_groups), },
+ 	{ "i2c4", jz4780_i2c4_groups, ARRAY_SIZE(jz4780_i2c4_groups), },
++	{ "i2s", jz4780_i2s_groups, ARRAY_SIZE(jz4780_i2s_groups), },
+ 	{ "cim", jz4780_cim_groups, ARRAY_SIZE(jz4780_cim_groups), },
+ 	{ "lcd", jz4770_lcd_groups, ARRAY_SIZE(jz4770_lcd_groups), },
+ 	{ "pwm0", jz4770_pwm0_groups, ARRAY_SIZE(jz4770_pwm0_groups), },
+@@ -1368,6 +1387,10 @@ static int x1000_i2c0_pins[] = { 0x38, 0x37, };
+ static int x1000_i2c1_a_pins[] = { 0x01, 0x00, };
+ static int x1000_i2c1_c_pins[] = { 0x5b, 0x5a, };
+ static int x1000_i2c2_pins[] = { 0x61, 0x60, };
++static int x1000_i2s_data_tx_pins[] = { 0x24, };
++static int x1000_i2s_data_rx_pins[] = { 0x23, };
++static int x1000_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
++static int x1000_i2s_sysclk_pins[] = { 0x20, };
+ static int x1000_cim_pins[] = {
+ 	0x08, 0x09, 0x0a, 0x0b,
+ 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
+@@ -1430,6 +1453,10 @@ static int x1000_i2c0_funcs[] = { 0, 0, };
+ static int x1000_i2c1_a_funcs[] = { 2, 2, };
+ static int x1000_i2c1_c_funcs[] = { 0, 0, };
+ static int x1000_i2c2_funcs[] = { 1, 1, };
++static int x1000_i2s_data_tx_funcs[] = { 1, };
++static int x1000_i2s_data_rx_funcs[] = { 1, };
++static int x1000_i2s_clk_txrx_funcs[] = { 1, 1, };
++static int x1000_i2s_sysclk_funcs[] = { 1, };
+ static int x1000_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
+ static int x1000_lcd_8bit_funcs[] = {
+ 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+@@ -1483,6 +1510,10 @@ static const struct group_desc x1000_groups[] = {
+ 	INGENIC_PIN_GROUP("i2c1-data-a", x1000_i2c1_a),
+ 	INGENIC_PIN_GROUP("i2c1-data-c", x1000_i2c1_c),
+ 	INGENIC_PIN_GROUP("i2c2-data", x1000_i2c2),
++	INGENIC_PIN_GROUP("i2s-data-tx", x1000_i2s_data_tx),
++	INGENIC_PIN_GROUP("i2s-data-rx", x1000_i2s_data_rx),
++	INGENIC_PIN_GROUP("i2s-clk-txrx", x1000_i2s_clk_txrx),
++	INGENIC_PIN_GROUP("i2s-sysclk", x1000_i2s_sysclk),
+ 	INGENIC_PIN_GROUP("cim-data", x1000_cim),
+ 	INGENIC_PIN_GROUP("lcd-8bit", x1000_lcd_8bit),
+ 	INGENIC_PIN_GROUP("lcd-16bit", x1000_lcd_16bit),
+@@ -1524,6 +1555,9 @@ static const char *x1000_cs2_groups[] = { "emc-cs2", };
+ static const char *x1000_i2c0_groups[] = { "i2c0-data", };
+ static const char *x1000_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
+ static const char *x1000_i2c2_groups[] = { "i2c2-data", };
++static const char *x1000_i2s_groups[] = {
++	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
 +};
- static const char *jz4780_mmc0_groups[] = {
- 	"mmc0-1bit-a", "mmc0-4bit-a", "mmc0-8bit-a",
- 	"mmc0-1bit-e", "mmc0-4bit-e",
-@@ -997,6 +1262,8 @@ static const struct function_desc jz4780_functions[] = {
- 	{ "uart2", jz4780_uart2_groups, ARRAY_SIZE(jz4780_uart2_groups), },
- 	{ "uart3", jz4770_uart3_groups, ARRAY_SIZE(jz4770_uart3_groups), },
- 	{ "uart4", jz4780_uart4_groups, ARRAY_SIZE(jz4780_uart4_groups), },
-+	{ "ssi0", jz4780_ssi0_groups, ARRAY_SIZE(jz4780_ssi0_groups), },
-+	{ "ssi1", jz4780_ssi1_groups, ARRAY_SIZE(jz4780_ssi1_groups), },
- 	{ "mmc0", jz4780_mmc0_groups, ARRAY_SIZE(jz4780_mmc0_groups), },
- 	{ "mmc1", jz4780_mmc1_groups, ARRAY_SIZE(jz4780_mmc1_groups), },
- 	{ "mmc2", jz4780_mmc2_groups, ARRAY_SIZE(jz4780_mmc2_groups), },
+ static const char *x1000_cim_groups[] = { "cim-data", };
+ static const char *x1000_lcd_groups[] = {
+ 	"lcd-8bit", "lcd-16bit", "lcd-no-pins",
+@@ -1549,6 +1583,7 @@ static const struct function_desc x1000_functions[] = {
+ 	{ "i2c0", x1000_i2c0_groups, ARRAY_SIZE(x1000_i2c0_groups), },
+ 	{ "i2c1", x1000_i2c1_groups, ARRAY_SIZE(x1000_i2c1_groups), },
+ 	{ "i2c2", x1000_i2c2_groups, ARRAY_SIZE(x1000_i2c2_groups), },
++	{ "i2s", x1000_i2s_groups, ARRAY_SIZE(x1000_i2s_groups), },
+ 	{ "cim", x1000_cim_groups, ARRAY_SIZE(x1000_cim_groups), },
+ 	{ "lcd", x1000_lcd_groups, ARRAY_SIZE(x1000_lcd_groups), },
+ 	{ "pwm0", x1000_pwm0_groups, ARRAY_SIZE(x1000_pwm0_groups), },
+@@ -1584,6 +1619,10 @@ static int x1500_i2c0_pins[] = { 0x38, 0x37, };
+ static int x1500_i2c1_a_pins[] = { 0x01, 0x00, };
+ static int x1500_i2c1_c_pins[] = { 0x5b, 0x5a, };
+ static int x1500_i2c2_pins[] = { 0x61, 0x60, };
++static int x1500_i2s_data_tx_pins[] = { 0x24, };
++static int x1500_i2s_data_rx_pins[] = { 0x23, };
++static int x1500_i2s_clk_txrx_pins[] = { 0x21, 0x22, };
++static int x1500_i2s_sysclk_pins[] = { 0x20, };
+ static int x1500_cim_pins[] = {
+ 	0x08, 0x09, 0x0a, 0x0b,
+ 	0x13, 0x12, 0x11, 0x10, 0x0f, 0x0e, 0x0d, 0x0c,
+@@ -1607,6 +1646,10 @@ static int x1500_i2c0_funcs[] = { 0, 0, };
+ static int x1500_i2c1_a_funcs[] = { 2, 2, };
+ static int x1500_i2c1_c_funcs[] = { 0, 0, };
+ static int x1500_i2c2_funcs[] = { 1, 1, };
++static int x1500_i2s_data_tx_funcs[] = { 1, };
++static int x1500_i2s_data_rx_funcs[] = { 1, };
++static int x1500_i2s_clk_txrx_funcs[] = { 1, 1, };
++static int x1500_i2s_sysclk_funcs[] = { 1, };
+ static int x1500_cim_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
+ static int x1500_pwm_pwm0_funcs[] = { 0, };
+ static int x1500_pwm_pwm1_funcs[] = { 1, };
+@@ -1629,6 +1672,10 @@ static const struct group_desc x1500_groups[] = {
+ 	INGENIC_PIN_GROUP("i2c1-data-a", x1500_i2c1_a),
+ 	INGENIC_PIN_GROUP("i2c1-data-c", x1500_i2c1_c),
+ 	INGENIC_PIN_GROUP("i2c2-data", x1500_i2c2),
++	INGENIC_PIN_GROUP("i2s-data-tx", x1500_i2s_data_tx),
++	INGENIC_PIN_GROUP("i2s-data-rx", x1500_i2s_data_rx),
++	INGENIC_PIN_GROUP("i2s-clk-txrx", x1500_i2s_clk_txrx),
++	INGENIC_PIN_GROUP("i2s-sysclk", x1500_i2s_sysclk),
+ 	INGENIC_PIN_GROUP("cim-data", x1500_cim),
+ 	{ "lcd-no-pins", },
+ 	INGENIC_PIN_GROUP("pwm0", x1500_pwm_pwm0),
+@@ -1647,6 +1694,9 @@ static const char *x1500_mmc_groups[] = { "mmc-1bit", "mmc-4bit", };
+ static const char *x1500_i2c0_groups[] = { "i2c0-data", };
+ static const char *x1500_i2c1_groups[] = { "i2c1-data-a", "i2c1-data-c", };
+ static const char *x1500_i2c2_groups[] = { "i2c2-data", };
++static const char *x1500_i2s_groups[] = {
++	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-sysclk",
++};
+ static const char *x1500_cim_groups[] = { "cim-data", };
+ static const char *x1500_lcd_groups[] = { "lcd-no-pins", };
+ static const char *x1500_pwm0_groups[] = { "pwm0", };
+@@ -1664,6 +1714,7 @@ static const struct function_desc x1500_functions[] = {
+ 	{ "i2c0", x1500_i2c0_groups, ARRAY_SIZE(x1500_i2c0_groups), },
+ 	{ "i2c1", x1500_i2c1_groups, ARRAY_SIZE(x1500_i2c1_groups), },
+ 	{ "i2c2", x1500_i2c2_groups, ARRAY_SIZE(x1500_i2c2_groups), },
++	{ "i2s", x1500_i2s_groups, ARRAY_SIZE(x1500_i2s_groups), },
+ 	{ "cim", x1500_cim_groups, ARRAY_SIZE(x1500_cim_groups), },
+ 	{ "lcd", x1500_lcd_groups, ARRAY_SIZE(x1500_lcd_groups), },
+ 	{ "pwm0", x1500_pwm0_groups, ARRAY_SIZE(x1500_pwm0_groups), },
+@@ -1722,6 +1773,11 @@ static int x1830_mmc1_4bit_pins[] = { 0x45, 0x46, 0x47, };
+ static int x1830_i2c0_pins[] = { 0x0c, 0x0d, };
+ static int x1830_i2c1_pins[] = { 0x39, 0x3a, };
+ static int x1830_i2c2_pins[] = { 0x5b, 0x5c, };
++static int x1830_i2s_data_tx_pins[] = { 0x53, };
++static int x1830_i2s_data_rx_pins[] = { 0x54, };
++static int x1830_i2s_clk_txrx_pins[] = { 0x58, 0x52, };
++static int x1830_i2s_clk_rx_pins[] = { 0x56, 0x55, };
++static int x1830_i2s_sysclk_pins[] = { 0x57, };
+ static int x1830_lcd_rgb_18bit_pins[] = {
+ 	0x62, 0x63, 0x64, 0x65, 0x66, 0x67,
+ 	0x68, 0x69, 0x6c, 0x6d, 0x6e, 0x6f,
+@@ -1784,6 +1840,11 @@ static int x1830_mmc1_4bit_funcs[] = { 0, 0, 0, };
+ static int x1830_i2c0_funcs[] = { 1, 1, };
+ static int x1830_i2c1_funcs[] = { 0, 0, };
+ static int x1830_i2c2_funcs[] = { 1, 1, };
++static int x1830_i2s_data_tx_funcs[] = { 0, };
++static int x1830_i2s_data_rx_funcs[] = { 0, };
++static int x1830_i2s_clk_txrx_funcs[] = { 0, 0, };
++static int x1830_i2s_clk_rx_funcs[] = { 0, 0, };
++static int x1830_i2s_sysclk_funcs[] = { 0, };
+ static int x1830_lcd_rgb_18bit_funcs[] = {
+ 	0, 0, 0, 0, 0, 0,
+ 	0, 0, 0, 0, 0, 0,
+@@ -1842,6 +1903,11 @@ static const struct group_desc x1830_groups[] = {
+ 	INGENIC_PIN_GROUP("i2c0-data", x1830_i2c0),
+ 	INGENIC_PIN_GROUP("i2c1-data", x1830_i2c1),
+ 	INGENIC_PIN_GROUP("i2c2-data", x1830_i2c2),
++	INGENIC_PIN_GROUP("i2s-data-tx", x1830_i2s_data_tx),
++	INGENIC_PIN_GROUP("i2s-data-rx", x1830_i2s_data_rx),
++	INGENIC_PIN_GROUP("i2s-clk-txrx", x1830_i2s_clk_txrx),
++	INGENIC_PIN_GROUP("i2s-clk-rx", x1830_i2s_clk_rx),
++	INGENIC_PIN_GROUP("i2s-sysclk", x1830_i2s_sysclk),
+ 	INGENIC_PIN_GROUP("lcd-rgb-18bit", x1830_lcd_rgb_18bit),
+ 	INGENIC_PIN_GROUP("lcd-slcd-8bit", x1830_lcd_slcd_8bit),
+ 	INGENIC_PIN_GROUP("lcd-slcd-16bit", x1830_lcd_slcd_16bit),
+@@ -1884,6 +1950,9 @@ static const char *x1830_mmc1_groups[] = { "mmc1-1bit", "mmc1-4bit", };
+ static const char *x1830_i2c0_groups[] = { "i2c0-data", };
+ static const char *x1830_i2c1_groups[] = { "i2c1-data", };
+ static const char *x1830_i2c2_groups[] = { "i2c2-data", };
++static const char *x1830_i2s_groups[] = {
++	"i2s-data-tx", "i2s-data-rx", "i2s-clk-txrx", "i2s-clk-rx", "i2s-sysclk",
++};
+ static const char *x1830_lcd_groups[] = {
+ 	"lcd-rgb-18bit", "lcd-slcd-8bit", "lcd-slcd-16bit", "lcd-no-pins",
+ };
+@@ -1908,6 +1977,7 @@ static const struct function_desc x1830_functions[] = {
+ 	{ "i2c0", x1830_i2c0_groups, ARRAY_SIZE(x1830_i2c0_groups), },
+ 	{ "i2c1", x1830_i2c1_groups, ARRAY_SIZE(x1830_i2c1_groups), },
+ 	{ "i2c2", x1830_i2c2_groups, ARRAY_SIZE(x1830_i2c2_groups), },
++	{ "i2s", x1830_i2s_groups, ARRAY_SIZE(x1830_i2s_groups), },
+ 	{ "lcd", x1830_lcd_groups, ARRAY_SIZE(x1830_lcd_groups), },
+ 	{ "pwm0", x1830_pwm0_groups, ARRAY_SIZE(x1830_pwm0_groups), },
+ 	{ "pwm1", x1830_pwm1_groups, ARRAY_SIZE(x1830_pwm1_groups), },
 -- 
 2.11.0
 
