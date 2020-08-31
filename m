@@ -2,129 +2,143 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B309C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB7BEC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 566802073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 824CA2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:58:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="fQpZacdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbgHaH6Z (ORCPT
+        id S1728180AbgHaH6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:58:25 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:60147 "EHLO pegase1.c-s.fr"
+        Mon, 31 Aug 2020 03:58:51 -0400
+Received: from mx1.tq-group.com ([62.157.118.193]:23825 "EHLO mx1.tq-group.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbgHaH6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:58:22 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bg2d25dfrz9v46s;
-        Mon, 31 Aug 2020 09:58:14 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id ziN4ogZZ3b0q; Mon, 31 Aug 2020 09:58:14 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bg2d24hCCz9v46r;
-        Mon, 31 Aug 2020 09:58:14 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AB3FD8B79B;
-        Mon, 31 Aug 2020 09:58:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id 3qjn3q60cyjq; Mon, 31 Aug 2020 09:58:19 +0200 (CEST)
-Received: from po17688vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.104])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 6E24C8B799;
-        Mon, 31 Aug 2020 09:58:19 +0200 (CEST)
-Received: by po17688vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id 4FCBE65D48; Mon, 31 Aug 2020 07:58:19 +0000 (UTC)
-Message-Id: <f0cb2a5477cd87d1eaadb128042e20aeb2bc2859.1598860677.git.christophe.leroy@csgroup.eu>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Subject: [PATCH] powerpc: Fix random segfault when freeing hugetlb range
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Mon, 31 Aug 2020 07:58:19 +0000 (UTC)
+        id S1725829AbgHaH6s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 03:58:48 -0400
+IronPort-SDR: aW48Qhm+twaX2qlVg3Do+gTihhJUNur1nE8Kt7Gox9N13xf9buBscX+fXgDBqQdU42JzyDm9/o
+ 2/6Zz1OgJHq8dr6yhAQ3/Tgaw1WYZW83B9gWxWTpRraLBYSDwQz8MxKlDcL24XwlHTEf1jJFun
+ PaXlZrs7az5HmYVG8wxblRua1flbKqj5rwmOWsDIhSYhG0n2T+AdEL9rOqgXslUDV9UQ2IX/Br
+ iWt3R5nQRKKlMIhhwazOPmBINS+BVFveCVkrm5WcdegVm4JY/WK22zR+yOMGybTGqGgEeW/zVM
+ Pmg=
+X-IronPort-AV: E=Sophos;i="5.76,374,1592863200"; 
+   d="scan'208";a="13658304"
+Received: from unknown (HELO tq-pgp-pr1.tq-net.de) ([192.168.6.15])
+  by mx1-pgp.tq-group.com with ESMTP; 31 Aug 2020 09:58:45 +0200
+Received: from mx1.tq-group.com ([192.168.6.7])
+  by tq-pgp-pr1.tq-net.de (PGP Universal service);
+  Mon, 31 Aug 2020 09:58:45 +0200
+X-PGP-Universal: processed;
+        by tq-pgp-pr1.tq-net.de on Mon, 31 Aug 2020 09:58:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
+  t=1598860725; x=1630396725;
+  h=message-id:subject:from:to:cc:date:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=vyCow1rPqvLNj8Yuh9CZ0tVP0KoFa72Scu/pyJZGO20=;
+  b=fQpZacdnZRyU92CerHJYvaJGJp5mNQ9h7q5s+1q1XnQnaj+jVWWWE2Gm
+   X83cSSknF0GyM/QWRaunsvSahfpXEkZn08hXfz9/geDROnBRY55OwdNvg
+   beW0ly3cJd0jjCfw/Y0XmkZ7L+0+DOV153xwC7zCG4VtFBzyK5jbAtq2s
+   ar12i/jh0m/9JFO62AgvwFYgkMEtgIBzVxmwkBxeNOBUSdId9ajk4nfqa
+   AZsZLufuJqdgCRyV6Bpw8O+7AxvQ/l6XkjTZuP0mgJPAOfN2BkqHIlQli
+   tlHA0Q8FWT4NGavXo6PPzcBc/AOUlklEJPQfGK4wkuOjxAzTjHWFtdWts
+   Q==;
+IronPort-SDR: xSrRVFkECV8huYMhm5XOtvRW4br2dXyeq8ohB6S90OWRTpVT5ggO3W1Qn7yr+EUOgVHbFgFxUi
+ bqNXXrN52QefdPgIhy/5eE18LzuZJWmIA6CJQr4ufLA2h5eJBuGUyCyfSECSuKxiRnbhgml28x
+ KO+aQXlQbP1wtZjIFLBjsrBTk5Y4AoeUQ1ibcpsho3sE23c7LlECtIOMBdMraKrSVzsK7yt/y+
+ g7qAMXBm/ysVECwCxqsgRE1R7jH6YCOIAYbYYPGLElF7/4ntC1ZAv5kfvITnRZ+9Ucrnn3KTlm
+ D4c=
+X-IronPort-AV: E=Sophos;i="5.76,374,1592863200"; 
+   d="scan'208";a="13658303"
+Received: from vtuxmail01.tq-net.de ([10.115.0.20])
+  by mx1.tq-group.com with ESMTP; 31 Aug 2020 09:58:45 +0200
+Received: from schifferm-ubuntu4.tq-net.de (schifferm-ubuntu4.tq-net.de [10.117.49.26])
+        by vtuxmail01.tq-net.de (Postfix) with ESMTPA id EDEC7280065;
+        Mon, 31 Aug 2020 09:58:44 +0200 (CEST)
+Message-ID: <4e1182d756a81e10b32b465bb36938cb62a98cdd.camel@ew.tq-group.com>
+Subject: Re: [PATCH mmc-next v3 1/2] dt-bindings: mmc: add alias example
+From:   Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Mon, 31 Aug 2020 09:58:42 +0200
+In-Reply-To: <20200828222440.GA3507259@bogus>
+References: <20200825134441.17537-1-matthias.schiffer@ew.tq-group.com>
+         <20200828222440.GA3507259@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following random segfault is observed from time to time with
-map_hugetlb selftest:
+On Fri, 2020-08-28 at 16:24 -0600, Rob Herring wrote:
+> On Tue, Aug 25, 2020 at 03:44:40PM +0200, Matthias Schiffer wrote:
+> > As for I2C and SPI, it now is possible to reserve a fixed index for
+> > mmc/mmcblk devices.
+> > 
+> > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
+> > >
+> > ---
+> > 
+> > v3: new patch
+> > 
+> >  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 8
+> > ++++++++
+> >  1 file changed, 8 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/mmc-
+> > controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-
+> > controller.yaml
+> > index b96da0c7f819..22ed4a36c65d 100644
+> > --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> > +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> > @@ -367,6 +367,14 @@ examples:
+> >      };
+> >  
+> >    - |
+> > +    /*
+> > +     * Optionally define an alias to reserve a fixed index for the
+> > +     * mmc and mmcblk devices
+> > +     */
+> > +    aliases {
+> > +        mmc0 = &mmc3;
+> > +    };
+> 
+> This will break if we improve schemas because this node is actually 
+> /example-1/aliases.
+> 
+> So please drop. If you want, I'd really like to have a defined set
+> (i.e. 
+> a schema) of alias names. This would require deleting a bunch on
+> some 
+> platforms that just made up a bunch of them.
 
-root@localhost:~# ./map_hugetlb 1 19
-524288 kB hugepages
-Mapping 1 Mbytes
-Segmentation fault
+Ulf suggested that I add some kind of documentation about the new mmc
+alias support to the binding docs.
 
-[   31.219972] map_hugetlb[365]: segfault (11) at 117 nip 77974f8c lr 779a6834 code 1 in ld-2.23.so[77966000+21000]
-[   31.220192] map_hugetlb[365]: code: 9421ffc0 480318d1 93410028 90010044 9361002c 93810030 93a10034 93c10038
-[   31.220307] map_hugetlb[365]: code: 93e1003c 93210024 8123007c 81430038 <80e90004> 814a0004 7f443a14 813a0004
-[   31.221911] BUG: Bad rss-counter state mm:(ptrval) type:MM_FILEPAGES val:33
-[   31.229362] BUG: Bad rss-counter state mm:(ptrval) type:MM_ANONPAGES val:5
+As long as we don't have a proper schema for aliases, should I just add
+an explanation to the toplevel description of
+Documentation/devicetree/bindings/mmc/mmc-controller.yaml, or maybe a
+comment?
 
-This fault is due to hugetlb_free_pgd_range() freeing page tables
-that are also used by regular pages.
 
-As explain in the comment at the beginning of
-hugetlb_free_pgd_range(), the verification done in free_pgd_range()
-on floor and ceiling is not done here, which means
-hugetlb_free_pte_range() can free outside the expected range.
-
-As the verification cannot be done in hugetlb_free_pgd_range(), it
-must be done in hugetlb_free_pte_range().
-
-Fixes: b250c8c08c79 ("powerpc/8xx: Manage 512k huge pages as standard pages.")
-Cc: stable@vger.kernel.org
-Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
----
- arch/powerpc/mm/hugetlbpage.c | 18 ++++++++++++++++--
- 1 file changed, 16 insertions(+), 2 deletions(-)
-
-diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
-index 26292544630f..e7ae2a2c4545 100644
---- a/arch/powerpc/mm/hugetlbpage.c
-+++ b/arch/powerpc/mm/hugetlbpage.c
-@@ -330,10 +330,24 @@ static void free_hugepd_range(struct mmu_gather *tlb, hugepd_t *hpdp, int pdshif
- 				 get_hugepd_cache_index(pdshift - shift));
- }
- 
--static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd, unsigned long addr)
-+static void hugetlb_free_pte_range(struct mmu_gather *tlb, pmd_t *pmd,
-+				   unsigned long addr, unsigned long end,
-+				   unsigned long floor, unsigned long ceiling)
- {
-+	unsigned long start = addr;
- 	pgtable_t token = pmd_pgtable(*pmd);
- 
-+	start &= PMD_MASK;
-+	if (start < floor)
-+		return;
-+	if (ceiling) {
-+		ceiling &= PMD_MASK;
-+		if (!ceiling)
-+			return;
-+	}
-+	if (end - 1 > ceiling - 1)
-+		return;
-+
- 	pmd_clear(pmd);
- 	pte_free_tlb(tlb, token, addr);
- 	mm_dec_nr_ptes(tlb->mm);
-@@ -363,7 +377,7 @@ static void hugetlb_free_pmd_range(struct mmu_gather *tlb, pud_t *pud,
- 			 */
- 			WARN_ON(!IS_ENABLED(CONFIG_PPC_8xx));
- 
--			hugetlb_free_pte_range(tlb, pmd, addr);
-+			hugetlb_free_pte_range(tlb, pmd, addr, end, floor, ceiling);
- 
- 			continue;
- 		}
--- 
-2.25.0
+> 
+> > +
+> >      mmc3: mmc@1c12000 {
+> >          #address-cells = <1>;
+> >          #size-cells = <0>;
+> > -- 
+> > 2.17.1
+> > 
 
