@@ -2,216 +2,200 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01311C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FE6C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:24:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D7420866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CDA320866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:24:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="pwI1A3Lf"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="Y5Av/eiJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgHaOYd (ORCPT
+        id S1727962AbgHaOY5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 10:24:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45060 "EHLO
+        Mon, 31 Aug 2020 10:24:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgHaOYa (ORCPT
+        with ESMTP id S1726515AbgHaOYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 10:24:30 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B220C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:24:30 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id y11so2744476qvl.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:24:29 -0700 (PDT)
+        Mon, 31 Aug 2020 10:24:48 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A0E8C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:24:39 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id q13so5285748ejo.9
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:24:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LC6hHsez6NgjC9+Zof4pUQRs/VHakWUcVzw4v4y8fiE=;
-        b=pwI1A3Lfye7AO1rJqR9fju6P2wl2tFiVNxEqOv3nYyJr5P/zysabyjyqM9cFxf6jfH
-         bdPhIwPKof+ALWWpuu0TmyLFrredeAk9ciHCgTSnFZo5Ym9XN1+ORfTvrjDXmXqFgxig
-         nKT8tWlbGRZoU5rKpDJtyTdqfNo2OI6Wk3+Kk=
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P+qhaUqcMvyQWC8w2lqB+uJCSfl87x/m6VAqtEEjpA4=;
+        b=Y5Av/eiJZ1lfjPOJvbN1l8iSYxHB9m9djaEEzQtgar8W/KFLz168mdNHb72hkmgW5q
+         3FvaURBMk9TKmVyGZbly1Z6ag9eNLTg3VnEmpIzpQuuWKwGL43wrG8MFPRqx0BxlMuxY
+         LaXrOJARzoPjVNT7XUPNc/8ryxZ9KiyktdkdKTjTYXCWYBBaQ1JOXD3xpLpnrQUBNBtK
+         wH+IhaieaFXEc2XZB1NPkUrrX5u1vRF7gKKWG1iLISscMrGwB4nRBGkWADqwzlXTxSV/
+         XSB5qYkjQSoKcFcbjkgsnqfRm/Y+3iBRwP1IteE8U8hDJLQhZ2/L5FgqYQAotB59gDQ8
+         ah8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LC6hHsez6NgjC9+Zof4pUQRs/VHakWUcVzw4v4y8fiE=;
-        b=rvFs6XIhjQPVxxnU28A+RxKwGXRhnXJEWZVk7kTz10RG7XxBEZ3SetSH+81oDexzjl
-         kPr9mqUy5B+XVLxhIhbpvI3JurQUnRLba8qA0PvYJnFDGAj1najqAJSwiyTlPcmnoC40
-         c8lmkQWiO5IUcCgizZd4IcUR8niDz6bQWZbUAayP0OeiuIpQ6FhUJZ8KipnTJtpc8+M5
-         JLdy0r4RzG00BgUEA9F8qMQ13JI+XurWzNGDoXUYMYcwwXUesM4hgciKUR/UwUG2FTwc
-         YbYtdSm/jIwtugkPovlKvu4GxIAV3pfygml2Wvmcv3oyv9FTYU4XUr3sApEnwPdVcGBQ
-         9nPw==
-X-Gm-Message-State: AOAM531A6frCJZxjZLxw3xMZLQpAcNyojheVulo9BApGizLrUtCVTNHf
-        p6BXjHYgZsIDr5lH3oZsMAnT8A==
-X-Google-Smtp-Source: ABdhPJwBZCUtoODRUiVLz1mkBEfdTx7bNGM2mDPJq1O4p4EKg1+gAcKBvEmmEsOmflA5Uk5MPmL1/g==
-X-Received: by 2002:a0c:fdc4:: with SMTP id g4mr1326744qvs.30.1598883869006;
-        Mon, 31 Aug 2020 07:24:29 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id x13sm10184619qts.23.2020.08.31.07.24.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 07:24:28 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 10:24:27 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     peterz@infradead.org
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
-        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>
-Subject: Re: [RFC PATCH v7 08/23] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20200831142427.GA3437943@google.com>
-References: <cover.1598643276.git.jdesfossez@digitalocean.com>
- <df3af13cc820a3c2397b85cb7de08cb6a0780e1d.1598643276.git.jdesfossez@digitalocean.com>
- <20200828205154.GB29142@worktop.programming.kicks-ass.net>
- <381e6ea5-a48c-9882-4c0d-49cfa92d21cc@linux.microsoft.com>
- <20200829074719.GJ1362448@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P+qhaUqcMvyQWC8w2lqB+uJCSfl87x/m6VAqtEEjpA4=;
+        b=FrCaxIl1UAPzrF3Ub5juo7Ayluuc9ZB4uEgx0wBn8E8TZJlUnObPPxoWmNcVZJrZ0f
+         eV7xy5RIezznuSn9rkb2v7dUgak+XOGYPVm3EigXiT0TgBiwgphsCBluj9QtFsJSMagN
+         zDEotjkxnrRpnm2+0utCc9rwEi0kYe/uMvYLoHdGa7OTw3BY0O8XiEqfjw14tjIxo050
+         kQVtyzwGOJOiIpBmkEHdhPjS1pL/EM7uHZuhtlELRE040efT5Bog/0etKjF7NHF+8h2z
+         1gVsDsqLa9ukEc7HUVcyzbyHA202aaO52f3ESCmgz0GMw+exPNbDp6T1eFuYcx48p6rr
+         t5sw==
+X-Gm-Message-State: AOAM530WQzJo5zBSKY7Ot1AmlCWWzjEwsaHSNFrOhK1eqthzt9a8d3zz
+        F9nRjpm9/ZtjDcxTY3W8jHvm74DpmrEvH/nOt5li
+X-Google-Smtp-Source: ABdhPJwmaZdXJiQhOJ9shsFsM/bqB188NWYcxB0kV+xpOTQkVMqZRzl20A+Tpgp4ecio0jQLsGlshlGclkYbPYCRCMc=
+X-Received: by 2002:a17:906:c1d8:: with SMTP id bw24mr1365855ejb.91.1598883877872;
+ Mon, 31 Aug 2020 07:24:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829074719.GJ1362448@hirez.programming.kicks-ass.net>
+References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+ <20200824132252.31261-1-peter.enderborg@sony.com> <20200824132252.31261-2-peter.enderborg@sony.com>
+ <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
+ <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com> <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+ <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com> <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
+ <abaccc15-85a8-24d2-4481-8303e3a42362@sony.com> <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
+ <f0e287f6b7dd4764a5091b90cf31b02e@TECHMB.sfasu.nac>
+In-Reply-To: <f0e287f6b7dd4764a5091b90cf31b02e@TECHMB.sfasu.nac>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 31 Aug 2020 10:24:26 -0400
+Message-ID: <CAHC9VhTBA3b2ipN08O2yX1uQkaXyFqDXs5DKNmnDFLDtx9=3Ug@mail.gmail.com>
+Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
+To:     Robert Judy <rjudy@sfasu.edu>
+Cc:     peter enderborg <peter.enderborg@sony.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        SElinux list <selinux@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On Mon, Aug 31, 2020 at 10:19 AM Robert Judy <rjudy@sfasu.edu> wrote:
+>
+> I would like to unsubscribe from this group. I have sent "unsubscribe" requests to selinux-owner@vger.kernel.org as subject and in the body of the e-mail but that has not worked. Please advise me how to unsubscribe.
+>
+> Thank you and respectfully,
 
-On Sat, Aug 29, 2020 at 09:47:19AM +0200, peterz@infradead.org wrote:
-> On Fri, Aug 28, 2020 at 06:02:25PM -0400, Vineeth Pillai wrote:
-> > On 8/28/20 4:51 PM, Peter Zijlstra wrote:
-> 
-> > > So where do things go side-ways?
-> 
-> > During hotplug stress test, we have noticed that while a sibling is in
-> > pick_next_task, another sibling can go offline or come online. What
-> > we have observed is smt_mask get updated underneath us even if
-> > we hold the lock. From reading the code, looks like we don't hold the
-> > rq lock when the mask is updated. This extra logic was to take care of that.
-> 
-> Sure, the mask is updated async, but _where_ is the actual problem with
-> that?
-> 
-> On Fri, Aug 28, 2020 at 06:23:55PM -0400, Joel Fernandes wrote:
-> > Thanks Vineeth. Peter, also the "v6+" series (which were some addons on v6)
-> > detail the individual hotplug changes squashed into this patch:
-> > https://lore.kernel.org/lkml/20200815031908.1015049-9-joel@joelfernandes.org/
-> > https://lore.kernel.org/lkml/20200815031908.1015049-11-joel@joelfernandes.org/
-> 
-> That one looks fishy, the pick is core wide, making that pick_seq per rq
-> just doesn't make sense.
+When you subscribed to the mailing list you were sent instructions on
+how to unsubscribe from the mailing list.
 
-I think Vineeth was trying to handle the case where rq->core_pick happened to
-be NULL for an offline CPU, and then schedule() is called when it came online
-but its sched_seq != core-wide pick_seq. The reason for this situation is
-because a sibling did selection for the offline CPU and ended up leaving its
-rq->core_pick as NULL as the then-offline CPU was missing from the
-cpu_smt_mask, but it incremented the core-wide pick_seq anyway.
+The SELinux developer's mailing list is managed via
+majordomo@vger.kernel.org, in order to unsubscribe you need to send an
+email to that address with "unsubscribe selinux" in the body of the
+email.
 
-Due to this, the pick_next_task() can crash after entering this if() block:
-+	if (rq->core_pick_seq == rq->core->core_task_seq &&
-+	    rq->core_pick_seq != rq->core_sched_seq) {
+> -----Original Message-----
+> From: selinux-owner@vger.kernel.org <selinux-owner@vger.kernel.org> On Behalf Of Paul Moore
+> Sent: Monday, August 31, 2020 9:16 AM
+> To: peter enderborg <peter.enderborg@sony.com>
+> Cc: linux-kernel@vger.kernel.org; SElinux list <selinux@vger.kernel.org>; Steven Rostedt <rostedt@goodmis.org>; Stephen Smalley <stephen.smalley.work@gmail.com>
+> Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
+>
+> On Thu, Aug 27, 2020 at 10:04 AM peter enderborg <peter.enderborg@sony.com> wrote:
+> >
+> > On 8/27/20 3:30 PM, Paul Moore wrote:
+> > > On Wed, Aug 26, 2020 at 11:06 AM peter enderborg
+> > > <peter.enderborg@sony.com> wrote:
+> > >> On 8/26/20 4:45 PM, Paul Moore wrote:
+> > >>> On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
+> > >>> <peter.enderborg@sony.com> wrote:
+> > >>>> On 8/26/20 3:42 PM, Paul Moore wrote:
+> > >>>>> On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
+> > >>>>> <peter.enderborg@sony.com> wrote:
+> > >>>>>> This adds tracing of all denies. They are grouped with
+> > >>>>>> trace_seq for each audit.
+> > >>>>>>
+> > >>>>>> A filter can be inserted with a write to it's filter section.
+> > >>>>>>
+> > >>>>>> echo "permission==\"entrypoint\"" >
+> > >>>>>> events/avc/selinux_denied/filter
+> > >>>>>>
+> > >>>>>> A output will be like:
+> > >>>>>>           runcon-1046  [002] .N..   156.351738: selinux_denied:
+> > >>>>>>           trace_seq=2 result=-13
+> > >>>>>>           scontext=system_u:system_r:cupsd_t:s0-s0:c0.
+> > >>>>>>           c1023 tcontext=system_u:object_r:bin_t:s0
+> > >>>>>>           tclass=file permission=entrypoint
+> > >>>>>>
+> > >>>>>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+> > >>>>>> ---
+> > >>>>>>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++++++
+> > >>>>>>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
+> > >>>>>>  2 files changed, 62 insertions(+), 2 deletions(-)
+> > >>>>> My most significant comment is that I don't think we want, or
+> > >>>>> need, two trace points in the avc_audit_post_callback()
+> > >>>>> function.  Yes, I understand they are triggered slightly
+> > >>>>> differently, but from my perspective there isn't enough
+> > >>>>> difference between the two tracepoints to warrant including
+> > >>>>> both.  However, while the tracepoints may be
+> > >>>> We tried that but that was problematic too.
+> > >>> My apologies if I was on that thread, but can you remind me why it
+> > >>> was a problem?  Why can't we use a single tracepoint to capture
+> > >>> the AVC information?
+> > >> The problem is parsing the event.
+> > >>
+> > >> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_
+> > >> 2020_8_18_842&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4c
+> > >> c&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhH
+> > >> kpb71j1YoicydLh-7l4cOsLYcY&s=iS3eZr3TFrN5I7BbnvPFYOKd6DfW1FHTFcwI7j
+> > >> oS_fk&e=
+> > >>
+> > >> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_
+> > >> 2020_8_21_526&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4c
+> > >> c&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLhH
+> > >> kpb71j1YoicydLh-7l4cOsLYcY&s=9OsLN0Y5mUWxEAAqUE6K4PS57Pn1XyZz7GXak6
+> > >> uc_Ls&e=
+> > >>
+> > >> and the "single list" version
+> > >>
+> > >> https://urldefense.proofpoint.com/v2/url?u=https-3A__lkml.org_lkml_
+> > >> 2020_8_17_1346&d=DwIBaQ&c=fP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4
+> > >> cc&r=oO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=qmi2ROWsLC_0mLLh
+> > >> Hkpb71j1YoicydLh-7l4cOsLYcY&s=tWSY2ry2IT6RcT5BIUwMuqBL_yPObDE1VljbL
+> > >> qI1zrA&e=
+> > >>
+> > >> With this patch we follow standard message format so no plugin should be needed.
+> > > I'm evidently missing something very fundamental (likely), and/or
+> > > I'm just not communicating very clearly (also likely), because the
+> > > above links don't appear to make any sense with respect to my question.
+> > >
+> > > Let me try a reset ... Why can't we basically take the
+> > > "selinux_denied" TRACE_EVENT implementation in your patch and use it
+> > > to replace the "selinux_audited" TRACE_EVENT in the selinux/next
+> > > tree (of course with the necessary changes to the AVC callback code)?
+> > >
+> > > If the "selinux_denied" implementation is valid from a tracing point
+> > > of view, why can we not do this?  Of course if the "selinux_denied"
+> > > implementation is not a valid TRACE_EVENT then I'm not sure why this
+> > > was suggested for SELinux :)
+> >
+> > Im happly fine with replacing the selinux_audited with selinux_denied.  However it is the case where there are more than one denial at the same time. Im not sure how and when it might happen.
+>
+> One thing I wondered about was why not build up a single string with all of the permissions instead of generating multiple trace events?
+> In the previous discussion it was implied that this was due to limitations in the tracing subsystem's filtering, and based on the discussion thus far I'm guessing there is little desire for this information if it can't be filtered on?
+>
+> If that's the case then I think we are stuck with the tracing code that currently lives in selinux/next, as I currently have little desire to add more than one tracepoint in the SELinux permission checking codepath.
+>
+> > When that happen we got more than one event. I have no problems with that, but im not sure if the debug tools and perf can make sense of that.
+> >
+> > A other feature with the selinux_audited event it might be inserted on other places in the code too.  A denial is sort of final.
+>
+> --
+> paul moore
+> www.paul-moore.com
 
-How would you suggest to fix it? Maybe we can just assign rq->core_sched_seq
-== rq->core_pick_seq for an offline CPU (or any CPU where rq->core_pick ==
-NULL), so it does not end up using rq->core_pick and does a full core-wide
-selcetion again when it comes online?
 
-Or easier, check for rq->core_pick == NULL and skip this fast-path if() block
-completely.
 
-> > https://lore.kernel.org/lkml/20200815031908.1015049-12-joel@joelfernandes.org/
-> 
-> This one reads like tinkering, there is no description of the actual
-> problem just some code that makes a symptom go away.
-> 
-> Sure, on hotplug the smt mask can change, but only for a CPU that isn't
-> actually scheduling, so who cares.
-> 
-> /me re-reads the hotplug code...
-> 
-> ..ooOO is the problem that we clear the cpumasks on take_cpu_down()
-> instead of play_dead() ?! That should be fixable.
-
-I think Vineeth explained this in his email, there is logic across the loops
-in the pick_next_task() that depend on the cpu_smt_mask not change. I am not
-sure if play_dead() will fix it, the issue is seen in the code doing the
-selection and the cpu_smt_mask changing under it due to possibly other CPUs
-going offline.
-
-Example, you have a splat and null pointer dereference possibilities in the
-below loop if rq_i ->core_pick == NULL, because a sibling CPU came online but
-a task was not selected for it in the for loops prior to this for loop:
-
-        /*
-         * Reschedule siblings
-         *
-         * NOTE: L1TF -- at this point we're no longer running the old task and
-         * sending an IPI (below) ensures the sibling will no longer be running
-         * their task. This ensures there is no inter-sibling overlap between
-         * non-matching user state.
-         */
-        for_each_cpu(i, smt_mask) {
-                struct rq *rq_i = cpu_rq(i);
-
-                WARN_ON_ONCE(!rq_i->core_pick);
-
-                if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
-                        rq_i->core_forceidle = true;
-
-                rq_i->core_pick->core_occupation = occ;
-
-Probably the code can be rearchitected to not depend on cpu_smt_mask
-changing.  What I did in my old tree is I made a copy of the cpu_smt_mask in
-the beginning of this function, and that makes all the problems go away. But
-I was afraid of overhead of that copying.
-
-(btw, I would not complain one bit if this function was nuked and rewritten
-to be simpler).
-
-> > https://lore.kernel.org/lkml/20200815031908.1015049-13-joel@joelfernandes.org/
-> 
-> This is the only one that makes some sense, it makes rq->core consistent
-> over hotplug.
-
-Cool at least we got one thing right ;)
-
-> > Agreed we can split the patches for the next series, however for final
-> > upstream merge, I suggest we fix hotplug issues in this patch itself so that
-> > we don't break bisectability.
-> 
-> Meh, who sodding cares about hotplug :-). Also you can 'fix' such things
-> by making sure you can't actually enable core-sched until after
-> everything is in place.
-
-Fair enough :)
-
-thanks,
-
- - Joel
-
+-- 
+paul moore
+www.paul-moore.com
