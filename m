@@ -2,121 +2,152 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8328C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFB29C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 955122078B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 906512078B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 23:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WLmlKkEz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C6FtQVjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbgHaXZj (ORCPT
+        id S1726310AbgHaX0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 19:25:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45878 "EHLO
+        Mon, 31 Aug 2020 19:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbgHaXZi (ORCPT
+        with ESMTP id S1725886AbgHaX0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 19:25:38 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 279F8C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:25:38 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so1580311pfh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 16:25:38 -0700 (PDT)
+        Mon, 31 Aug 2020 19:26:16 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A61ADC061573;
+        Mon, 31 Aug 2020 16:26:16 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id n3so671606pjq.1;
+        Mon, 31 Aug 2020 16:26:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ryNxh31n4GLtr4wiLiu+HxZgOdeShQwzv0bbbDwyQqU=;
-        b=WLmlKkEzXowd/E5iK8eqKrx/dsSzW1FdD3sz3nvMzEwWFyIYOl+Z3WEHAy8pOJUZDT
-         BV+BFsZ63xjAX+7omPTfFQk+eN1bn8P+S+ZHad1snvOZUOxQ/SpVPcgvldI3hi+CpFgu
-         FAbWUGEEYtqRX1NKbEa3rGa57dEwXGTBla5/c=
+         :content-disposition:in-reply-to:user-agent;
+        bh=dVqPUed6NYAwD+JrLth2cd5hFPQoV0967E1Zso4MptU=;
+        b=C6FtQVjb+tO6vCWuzysuTcPpSGLKdJk7gkia3YFeAH23aoinfa3/PIuD4LDboFBjnH
+         JfPIXMT9AR3TcRuKpjhxHl2DBEzjUPOsl0OQHQzfWvEebntMDgmAuU+D/QAHs6r1Tvtq
+         Of46KsU+GKkJrtN2rJEfsf7HIDIr23qcIg4E6wQPr5cIeW1KUlRYp/MakFRAKVRqVn1Y
+         xPSf3g6GVRUW7dYFviCXzjhdVl867ysOH7yVbuKCjcO9+QMxtk0rTR5yFxEdnA8a1IyP
+         TYpn+fkJYoKYbgTI8TTNOAeXJiqr88qjCxtqY2ITftwLGtsTp6XRwpGkcvsOaRthfp4e
+         9tRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ryNxh31n4GLtr4wiLiu+HxZgOdeShQwzv0bbbDwyQqU=;
-        b=aKqKHK46zevad6Tv5J3bODiQtKapMEqaJo7+zVZYXOtr+9BUBCLpWXAxafaFESct13
-         z3M0ULXMbVBbpt389BzcAUCZyFRMreIrBlS8USQFdrohr/8Hnrn3BFXf70Cy/YOdJ+7C
-         k4muYQBicUjA9QEHOqhQtjEA4CqmgNRwV9yPEt01YbiG/qiAk7QZ4cCq7nugXHeEST/h
-         6CusWO22XlYrfZfz0sGccRdzhtCRCDkdpGGCI1aQ9KUIwdZsk4FI6TjVlKF0cs9u7Cvj
-         feDLdYVk1s16/8HLNVc94e6Mx5SZ/sapZ+TI6+w8JOpllea99dmXjmxAbJKweUJoU4DD
-         huiQ==
-X-Gm-Message-State: AOAM530Wdh0xJVCuvySUsLsF+CuTJSOC/hYkryhPsAA91o1pW8jP7ibg
-        v1gk3ywetJmZ9WJbTaKF0LkegQ==
-X-Google-Smtp-Source: ABdhPJxntmuzYlZmik+s//Jh+Y4ebRFhEs/9XwXQOMZCaG4JBbiXbJRRn+u11CA5ZaTbtYnnJSv17g==
-X-Received: by 2002:aa7:924b:: with SMTP id 11mr3189196pfp.185.1598916337542;
-        Mon, 31 Aug 2020 16:25:37 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id v11sm8477459pgs.22.2020.08.31.16.25.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 16:25:36 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 16:25:35 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Tycho Andersen <tycho@tycho.ws>,
-        Christian Brauner <christian@brauner.io>
-Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net,
-        syzbot <syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com, wad@chromium.org
-Subject: Re: memory leak in do_seccomp
-Message-ID: <202008311620.AC4A7047D@keescook>
-References: <000000000000e5ea9e05ac9d16c1@google.com>
- <000000000000df80ae05ae244c2b@google.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dVqPUed6NYAwD+JrLth2cd5hFPQoV0967E1Zso4MptU=;
+        b=gZCJZiytyN/cJVRatcIieByJVXhuVWfAmLeM6x2zgsCe+2o/k+JyFyXN+jKjxhEaS9
+         hmTYPIIVcZP4+4HsmPL8NuVl2G2fxQrk5/ROaFgXLl9h5JOprp2zqhStKN5HMkEVsO4q
+         YdkARKczsxIHOGGZO7xlB3M8MIAQ3f+VHaIj54JXlvagpYVFe9xHKfSjW8mGsQFKQBBt
+         FYRvVSD0lFPBqUKuR4eQ19zRumEyKecoMMKnkgFkle8NOJ0kmnh85N5s4chyqVqhQUl5
+         Atw8eifFMf2zgU4XFQP8zNf8de8VJEDeXGnBn+j+rf6PuNFI+oh1nzG879FhLvIvHcAI
+         572w==
+X-Gm-Message-State: AOAM5318cqN3WOR3Rw7uNJMSbtiQW/iFgpEcP9xBFZ65tS6+iDv0c83I
+        tNANxOQbT2nvW69UoQOy3Dk=
+X-Google-Smtp-Source: ABdhPJzJ6saM8zCmqhQnS70tKIwx+Bdr92ksZutTZ/A/cd+o9UimIAZzUJXkzj/t9etnpxk3zzC10A==
+X-Received: by 2002:a17:90a:5609:: with SMTP id r9mr1520433pjf.194.1598916376023;
+        Mon, 31 Aug 2020 16:26:16 -0700 (PDT)
+Received: from taoren-ubuntu-R90MNF91 (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
+        by smtp.gmail.com with ESMTPSA id w16sm686816pjd.50.2020.08.31.16.26.14
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 31 Aug 2020 16:26:15 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 16:26:08 -0700
+From:   Tao Ren <rentao.bupt@gmail.com>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org, taoren@fb.com
+Subject: Re: [PATCH] usb: gadget: aspeed: fixup vhub port irq handling
+Message-ID: <20200831232607.GA4015@taoren-ubuntu-R90MNF91>
+References: <20200528011154.30355-1-rentao.bupt@gmail.com>
+ <875z9hz8k3.fsf@kernel.org>
+ <20200817225603.GA21228@taoren-ubuntu-R90MNF91>
+ <87y2lv9m32.fsf@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <000000000000df80ae05ae244c2b@google.com>
+In-Reply-To: <87y2lv9m32.fsf@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 08:50:15PM -0700, syzbot wrote:
-> syzbot has found a reproducer for the following issue on:
+On Mon, Aug 31, 2020 at 12:54:57PM +0300, Felipe Balbi wrote:
 > 
-> HEAD commit:    dcc5c6f0 Merge tag 'x86-urgent-2020-08-30' of git://git.ke..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10b297d5900000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=903b9fecc3c6d231
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3ad9614a12f80994c32e
-> compiler:       gcc (GCC) 10.1.0-syz 20200507
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14649561900000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118aacc1900000
+> Hi,
 > 
-> IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
+> Tao Ren <rentao.bupt@gmail.com> writes:
+> > On Mon, Aug 17, 2020 at 04:49:32PM +0300, Felipe Balbi wrote:
+> >> 
+> >> Hi,
+> >> 
+> >> rentao.bupt@gmail.com writes:
+> >> > From: Tao Ren <rentao.bupt@gmail.com>
+> >> >
+> >> > This is a follow-on patch for commit a23be4ed8f48 ("usb: gadget: aspeed:
+> >> > improve vhub port irq handling"): for_each_set_bit() is replaced with
+> >> > simple for() loop because for() loop runs faster on ASPEED BMC.
+> >> >
+> >> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> >> > ---
+> >> >  drivers/usb/gadget/udc/aspeed-vhub/core.c | 10 +++-------
+> >> >  drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  3 +++
+> >> >  2 files changed, 6 insertions(+), 7 deletions(-)
+> >> >
+> >> > diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> >> > index cdf96911e4b1..be7bb64e3594 100644
+> >> > --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> >> > +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+> >> > @@ -135,13 +135,9 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
+> >> >  
+> >> >  	/* Handle device interrupts */
+> >> >  	if (istat & vhub->port_irq_mask) {
+> >> > -		unsigned long bitmap = istat;
+> >> > -		int offset = VHUB_IRQ_DEV1_BIT;
+> >> > -		int size = VHUB_IRQ_DEV1_BIT + vhub->max_ports;
+> >> > -
+> >> > -		for_each_set_bit_from(offset, &bitmap, size) {
+> >> > -			i = offset - VHUB_IRQ_DEV1_BIT;
+> >> > -			ast_vhub_dev_irq(&vhub->ports[i].dev);
+> >> > +		for (i = 0; i < vhub->max_ports; i++) {
+> >> > +			if (istat & VHUB_DEV_IRQ(i))
+> >> > +				ast_vhub_dev_irq(&vhub->ports[i].dev);
+> >> 
+> >> how have you measured your statement above? for_each_set_bit() does
+> >> exactly what you did. Unless your architecture has an instruction which
+> >> helps finds the next set bit (like cls on ARM), which, then, makes it
+> >> much faster.
+> >
+> > I did some testing and result shows for() loop runs faster than
+> > for_each_set_bit() loop. Please refer to details below (discussion with
+> > Benjamin in the original patch) and kindly let me know your suggestions.
 > 
-> executing program
-> executing program
-> executing program
-> executing program
-> executing program
-> BUG: memory leak
-> unreferenced object 0xffff88811ba93600 (size 64):
->   comm "syz-executor680", pid 6503, jiffies 4294951104 (age 21.940s)
->   hex dump (first 32 bytes):
->     00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
->     08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
->   backtrace:
->     [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
->     [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
->     [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
->     [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
->     [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
->     [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
->     [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> no strong feelings, just surprised that you're already worried about
+> 20~40 cycles of cpu time ;-)
+> 
+> Patch applied for next merge window
 
-I haven't narrowed this down yet (and it *might* be a false positive),
-but it looks like this is filter->notif. The only way that's possible is
-if seccomp_notify_release() was never called *and* seccomp_filter_free()
-got called... which would imply a reference counting problem. The way
-there doesn't jump out at me yet, but I haven't yet decoded the C
-reproducer into the actual seccomp arguments, etc.
+Thanks Felipe. Ben had some concerns about interrupt handling cost on
+AST2400 BMC (ARM9), hence we did the comparison and noticed the small
+difference :)
 
--- 
-Kees Cook
+
+Cheers,
+
+Tao
