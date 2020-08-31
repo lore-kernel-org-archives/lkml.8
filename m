@@ -2,97 +2,108 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B243BC43461
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF0CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80AEB207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:39:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598863148;
-	bh=/mTBwH0H2XS7YSaOFVh9wZUjDwDeG33keE7ZBUOqWL8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=kbFyf1IfS0OTFYwQ6TiJmqcNsa+sSKNYpP48zHqTHuNnXwYRuHSwodVhVihaUb1Ek
-	 wtxjjfu+3J9ZC9onZa12kUK6Ik9YcBYR6nEmzZHDiqVD6z8c71r0V4anoGS7TxcYX5
-	 WiCTrLg2bUpVC3l25f46i7e1ODBB35oLVTPLefLY=
+	by mail.kernel.org (Postfix) with ESMTP id 5027C2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 08:39:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dYldlu5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgHaIjH (ORCPT
+        id S1728252AbgHaIjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 04:39:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725978AbgHaIjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 04:39:06 -0400
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 31 Aug 2020 04:39:14 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:47425 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725978AbgHaIjN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 04:39:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598863151;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=avRjm611h0EKFc/MNTXSAgeSYlfF4ysYrjX8e+z/BRg=;
+        b=dYldlu5/WQ0Sj/ow+Kw1NKjvd8FOFtTqnjlWB0DY0HJT9CCbht4vIZeeeqc0xA6OogM86d
+        K0K1m+KKcpBhjLBCnmqeckx3HXRe74rfRL+hbUJvkRtsTbjRsi6mmNzyy0tJMMlRG7w3SN
+        x+bVO/oYd+3iajhyELVKFJJZk6+9NYM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-471-N0n83FllNkSj5RFaVoTyEA-1; Mon, 31 Aug 2020 04:39:09 -0400
+X-MC-Unique: N0n83FllNkSj5RFaVoTyEA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63E822137B;
-        Mon, 31 Aug 2020 08:39:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598863145;
-        bh=/mTBwH0H2XS7YSaOFVh9wZUjDwDeG33keE7ZBUOqWL8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=0DNDIqwVYE/LHMPUqsSOdHXnx3H56mMT3qGKhC9s3QEwOGKmmxQnu97kkJhw1RJaq
-         2GHqCupyOkmXsanizUsBDchdhqQPHXVlqMjtCKuydcx0+o6XIFHrHSKhUpFtyvlrsx
-         xWZNqcvQMZs05rusutSFTe7ho3t4z/XQZbUThdD4=
-Received: by mail-ej1-f42.google.com with SMTP id b17so7346564ejq.8;
-        Mon, 31 Aug 2020 01:39:05 -0700 (PDT)
-X-Gm-Message-State: AOAM532BFfH7Zek1BT1BKrmCo5g3F6qew6CzevyUkF9QOcPVoFh7gDpm
-        FBb6jEWOnAmO0x70xHbVDP4LDVsuaksKehvnhhY=
-X-Google-Smtp-Source: ABdhPJyowpEQH5t1dzDoER28m99xK7ss6Z0pLGH7Bkoqwr+INsBLkRiqyVs2tsVykl3vYYCRQYzfp7ZyLf/kAhBS5HA=
-X-Received: by 2002:a17:906:8401:: with SMTP id n1mr111095ejx.215.1598863144013;
- Mon, 31 Aug 2020 01:39:04 -0700 (PDT)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8104802B6C;
+        Mon, 31 Aug 2020 08:39:07 +0000 (UTC)
+Received: from [10.72.12.88] (ovpn-12-88.pek2.redhat.com [10.72.12.88])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 13B795C22B;
+        Mon, 31 Aug 2020 08:38:43 +0000 (UTC)
+Subject: Re: [PATCH V2 2/3] vhost: vdpa: report iova range
+To:     Eli Cohen <elic@nvidia.com>
+Cc:     mst@redhat.com, virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, rob.miller@broadcom.com,
+        lingshan.zhu@intel.com, eperezma@redhat.com, lulu@redhat.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com,
+        zhangweining@ruijie.com.cn, eli@mellanox.com
+References: <20200821092813.8952-1-jasowang@redhat.com>
+ <20200821092813.8952-3-jasowang@redhat.com>
+ <20200823064035.GB147797@mtl-vdi-166.wap.labs.mlnx>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <96f2367e-8b9f-9ee7-a45e-56e9162e92c6@redhat.com>
+Date:   Mon, 31 Aug 2020 16:38:40 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <20200830135200.24304-1-krzk@kernel.org> <CGME20200830135508eucas1p21ad0d4f6a2ef78f854fc74750db3fa2a@eucas1p2.samsung.com>
- <20200830135200.24304-23-krzk@kernel.org> <c9daff05-dca7-f1b1-8cfe-46b185bf60dd@samsung.com>
-In-Reply-To: <c9daff05-dca7-f1b1-8cfe-46b185bf60dd@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 31 Aug 2020 10:38:52 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfR8YVmBqCd5+8B2TdM_tXZbWobK0pLxXxxkrsDEMR-vw@mail.gmail.com>
-Message-ID: <CAJKOXPfR8YVmBqCd5+8B2TdM_tXZbWobK0pLxXxxkrsDEMR-vw@mail.gmail.com>
-Subject: Re: [PATCH 23/33] ARM: dts: exynos: Remove empty camera pinctrl
- configuration in Odroid X/U3
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis GNUtoo Carikli <GNUtoo@cyberdimension.org>,
-        Simon Shields <simon@lineageos.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200823064035.GB147797@mtl-vdi-166.wap.labs.mlnx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 31 Aug 2020 at 10:31, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
->
-> Hi Krzysztof,
->
-> On 30.08.2020 15:51, Krzysztof Kozlowski wrote:
-> > The camera's pinctrl configuration is simply empty and not effective.
-> > Remove it to fix dtbs_check warning:
-> >
-> >    arch/arm/boot/dts/exynos4412-odroidx.dt.yaml: camera: pinctrl-0: True is not of type 'array'
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->
-> I think that this was intentional to properly enable support for
-> mem-2-mem mode in Exynos4-IS (FIMC), but I'm not sure what are the
-> default values if no pinctrl properties are provided. Sylwester, could
-> you comment?
 
-Indeed it could be intentional... I see now errors:
-[   33.752203] s5p-fimc-md soc:camera: Failed to get pinctrl: -19
+On 2020/8/23 下午2:40, Eli Cohen wrote:
+>> +static void vhost_vdpa_set_iova_range(struct vhost_vdpa *v)
+>> +{
+>> +	struct vdpa_iova_range *range = &v->range;
+>> +	struct iommu_domain_geometry geo;
+>> +	struct vdpa_device *vdpa = v->vdpa;
+>> +	const struct vdpa_config_ops *ops = vdpa->config;
+>> +
+>> +	if (ops->get_iova_range) {
+>> +		*range = ops->get_iova_range(vdpa);
+>> +	} else if (v->domain &&
+>> +		   !iommu_domain_get_attr(v->domain,
+>> +		   DOMAIN_ATTR_GEOMETRY, &geo) &&
+>> +		   geo.force_aperture) {
+>> +		range->first = geo.aperture_start;
+>> +		range->last = geo.aperture_end;
+>> +	} else {
+>> +		range->first = 0;
+>> +		range->last = ULLONG_MAX;
+>> +	}
+> Shouldn't we require drivers that publish VIRTIO_F_ACCESS_PLATFORM to
+> implement get_iova_range?
 
-I wonder why getting an empty pinctrl is needed... maybe the driver
-should accept missing pinctrl?
 
-Best regards,
-Krzysztof
+Probably not, since ACCESS_PLATFORM does not exclude the device that 
+depends on the chipset IOMMU to work. So in that case, we should query 
+IOMMU driver instead of vDPA device driver.
+
+Thanks
+
+
+>
+>> +}
+
