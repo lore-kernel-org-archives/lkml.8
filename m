@@ -2,127 +2,203 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C2FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21210C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34DEC208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:59:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598882376;
-	bh=0ELgDN4DCdbC4neuwarO8uv8nWk+EoaxkCEgogyZFGE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TaN1/oEh9YVX+BghVNTiav/NM042DPVOG7AyM5Ppn/K3Z584CjlYvgG8a05wp9yGK
-	 g94w29jzR/+bzKa/c00MNXM2glO+O7z4bvfuUHeQBP42IWf0X+2tNLwbpHLjDsEL5A
-	 PUHPpxXKskGTcBKwJBWP7JYoT8VQJ6vbbZGg7y/o=
+	by mail.kernel.org (Postfix) with ESMTP id CC5622083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:02:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="cGNZNqun"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgHaN7c (ORCPT
+        id S1727799AbgHaOCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:59:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48266 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726326AbgHaN7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:59:21 -0400
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD84420936;
-        Mon, 31 Aug 2020 13:59:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598882361;
-        bh=0ELgDN4DCdbC4neuwarO8uv8nWk+EoaxkCEgogyZFGE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Ut5tovIEHzLSBfa4ieSRCaowAFda6fVXnIF6OfQVSDnQjQqD5u3XBE9ipwjTcLPjA
-         8HyTMoS6pX0snp0m/oY5G0zGSFDaK0RFmCmcf26Dx5DV5v/vOXhZ50i8IQcxHCevvO
-         yx44Yq7XOmt5yi5Id68//MxfeE2QR2wd+C/OynSU=
-Received: by mail-ed1-f44.google.com with SMTP id w1so1906645edr.3;
-        Mon, 31 Aug 2020 06:59:20 -0700 (PDT)
-X-Gm-Message-State: AOAM532uKRsAsJ8lS8Ey37CFHZaIxYTNDdHJrcDCCsr70rOTAeBT1ajY
-        s+EEQUOBrKRaZL4UgCBCAqQ6NFZTn8+i58nuA5I=
-X-Google-Smtp-Source: ABdhPJz4mIou6NQDF9GoU0glbeGAVtu339WyqeM8YO5d2GjJ0q1vFCMgP88xGwBXgdcvmJjfHSnIr2cub9+CDPtsrSM=
-X-Received: by 2002:a50:fd0b:: with SMTP id i11mr1363872eds.298.1598882359253;
- Mon, 31 Aug 2020 06:59:19 -0700 (PDT)
+        Mon, 31 Aug 2020 10:02:10 -0400
+Received: from mail-bn8nam11on2084.outbound.protection.outlook.com ([40.107.236.84]:10720
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726326AbgHaOBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 10:01:49 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WJyO68c1sjv4Q9J+MmVe6mL9m7dLDIor2Ywyp4jD8JAxTD+EStikNF/sAU6Dd3pzIWqlcOZRv4LfSirOD2CkkK5TOdOiE8IHJB3cYoihNa87nmzSsESCaH5fUoIEEKmbFSjKveusmKRtzq5SRhszyYODITMzUR21nigdVjCbQJVjnTTxvRv5WFAK06ns3WXgAELkzkvHwg7gadkCrYFWvcXPC2+c9aIl7LRCOfPPm32LOlPIwuM196KrXzJM+GgBsd7QqpxV+DIX6porNR1BPPg9cKuDV0EsfxUHJv2TBtIlbb4WMY9/SPGuaF+qa4b+Ga6BWz5rxTjkhCLbfjAduw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U5a+M5XiGu2HpsD7xurBxB/Ke6WHm7Y266h1tWRZ4+w=;
+ b=ZdUC6k4idQRlL02fzB34XdFpPhvkWV4GlDKBw4Rl1dy2KnKxcrdekMQSpJYaojyqSoOo0pCMehFMDWQzlOFrHChPEh2ffaBR2h/XzJm2AQgISSU9cnB8Dfs2PUT4OsZKKw06nvOdh6WSVJnvFPwaYNMPWXvf075p6wJ4GFirDC5xCCsPNJey3WRSOZgJlX8oZS4+RKodhG5WZTt3Y5lcvyL8ADfOC+BPV2pRKbqs/oNXwxeEscUyfcsfYDml8XRNEpB/OILhvlmaczNxXl/L3A4vPnA4dCgc5SUOG1aCNkbQCbg/IYvfTNbwmLWrU/UuLAw351d+uA4kKoCTc3Gy/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U5a+M5XiGu2HpsD7xurBxB/Ke6WHm7Y266h1tWRZ4+w=;
+ b=cGNZNqunW6TQvfpgh+dd+hezLWLdaUibGa+DPmHNl728lVQ0E6C6iAT6p8B6THPylNuNwUFxky7IVFfu+ZmmYBzSQvuGVPcRmYjkpAnaCr/LsRzLJ4bqbfiGIMoXHOJDdYgtK6ROrKzKRqT+vj+cd4WZZ8/o0KyHT4R4RjYVPSI=
+Received: from SN2PR01CA0057.prod.exchangelabs.com (2603:10b6:800::25) by
+ BN8PR02MB5860.namprd02.prod.outlook.com (2603:10b6:408:b5::33) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.19; Mon, 31 Aug 2020 14:01:44 +0000
+Received: from SN1NAM02FT014.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:800:0:cafe::92) by SN2PR01CA0057.outlook.office365.com
+ (2603:10b6:800::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
+ Transport; Mon, 31 Aug 2020 14:01:44 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT014.mail.protection.outlook.com (10.152.72.106) with Microsoft SMTP
+ Server id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 14:01:44
+ +0000
+Received: from [149.199.38.66] (port=55215 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1kCkNR-000329-To; Mon, 31 Aug 2020 07:01:41 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1kCkNT-0005Lw-Nt; Mon, 31 Aug 2020 07:01:43 -0700
+Received: from [172.30.17.109]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1kCkNS-0005LK-18; Mon, 31 Aug 2020 07:01:42 -0700
+Subject: Re: [PATCH] microblaze: fix kbuild redundant file warning
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>
+References: <21eddfa7-2b7c-00c4-ad5b-40878036f987@infradead.org>
+From:   Michal Simek <michal.simek@xilinx.com>
+Autocrypt: addr=michals@xilinx.com; keydata=
+ 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
+ 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
+Message-ID: <f7ce291e-47be-549b-7163-0744e7ea35d5@xilinx.com>
+Date:   Mon, 31 Aug 2020 16:01:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200830135200.24304-1-krzk@kernel.org> <CGME20200830135508eucas1p21ad0d4f6a2ef78f854fc74750db3fa2a@eucas1p2.samsung.com>
- <20200830135200.24304-23-krzk@kernel.org> <c9daff05-dca7-f1b1-8cfe-46b185bf60dd@samsung.com>
- <CAJKOXPfR8YVmBqCd5+8B2TdM_tXZbWobK0pLxXxxkrsDEMR-vw@mail.gmail.com>
- <96651e85-c27f-3167-7b41-2ea051c25c65@kernel.org> <CAJKOXPdF4zzXvYrOiGQM9o=4rrWHvEr=o9aSTuR238dEaiD4cQ@mail.gmail.com>
- <01bb90db-511d-fbf5-d29a-1fba932f0abf@samsung.com>
-In-Reply-To: <01bb90db-511d-fbf5-d29a-1fba932f0abf@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 31 Aug 2020 15:59:08 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPd+067DywsEJ=5G4NLPfo9+hrun0qvkrYGAsVepCZC3Jg@mail.gmail.com>
-Message-ID: <CAJKOXPd+067DywsEJ=5G4NLPfo9+hrun0qvkrYGAsVepCZC3Jg@mail.gmail.com>
-Subject: Re: [PATCH 23/33] ARM: dts: exynos: Remove empty camera pinctrl
- configuration in Odroid X/U3
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Sylwester Nawrocki <snawrocki@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Denis GNUtoo Carikli <GNUtoo@cyberdimension.org>,
-        Simon Shields <simon@lineageos.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <21eddfa7-2b7c-00c4-ad5b-40878036f987@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9527ebae-26f4-4d68-b0c9-08d84db6649c
+X-MS-TrafficTypeDiagnostic: BN8PR02MB5860:
+X-LD-Processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+X-Microsoft-Antispam-PRVS: <BN8PR02MB58600CB1D3BB31C6032894A9C6510@BN8PR02MB5860.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 5oTL5vln8yPWAXRSzreUDqlqNsNWyuy3GmL6z7EhSXhNPoR5iLHPs85tN+sTH3tY9Q7CDFdCGBPbrL48EqytTJ+wKFRn+7sRTvMm0xeF7k8jsn5L2m6B4gU0BmzjPcj8Nxwe7m5U8To0e48trIN7X6ScvikznkfQg2NnYifpp0FYUkfgIpqf7vKnO9eXerRoDwC/P7Lue1/RgCVxbXE4kTf66hBg7QD+C9d43AvlRKJtxZpkjVb0hg9SyhuBKRCiypum25ys4yBHLvuy0Y7oOsGv7SvDTxyfoe+RSpKY1Yguz6JWeXTynrE9hc3EuEi6qiLpnYdQ6P6rCRMji00AA3lTC31m7XaHnGqG/WMw2fCSrj6xdUYORy3hO1Lt9aDBXLuBs5epm1nLDWQ0zLsEM2qNLR7+n9LxlaFTx+TSSyz3b/3uSEqc8HpMjoEZwQ1z
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(396003)(39860400002)(346002)(376002)(136003)(46966005)(70206006)(9786002)(110136005)(31686004)(6666004)(426003)(2906002)(356005)(2616005)(4326008)(336012)(82310400002)(47076004)(8936002)(81166007)(5660300002)(44832011)(4744005)(8676002)(478600001)(82740400003)(70586007)(316002)(31696002)(36756003)(83380400001)(26005)(186003)(43740500002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 14:01:44.0237
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9527ebae-26f4-4d68-b0c9-08d84db6649c
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: SN1NAM02FT014.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR02MB5860
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 31 Aug 2020 at 15:57, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> On 31.08.2020 12:42, Krzysztof Kozlowski wrote:
-> > On Mon, 31 Aug 2020 at 12:35, Sylwester Nawrocki <snawrocki@kernel.org> wrote:
-> >> On 8/31/20 10:38, Krzysztof Kozlowski wrote:
-> >>> On Mon, 31 Aug 2020 at 10:31, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
-> >>>> On 30.08.2020 15:51, Krzysztof Kozlowski wrote:
-> >>>>> The camera's pinctrl configuration is simply empty and not effective.
-> >>>>> Remove it to fix dtbs_check warning:
-> >>>>>
-> >>>>>     arch/arm/boot/dts/exynos4412-odroidx.dt.yaml: camera: pinctrl-0: True is not of type 'array'
-> >>>>>
-> >>>>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> >>>>
-> >>>> I think that this was intentional to properly enable support for
-> >>>> mem-2-mem mode in Exynos4-IS (FIMC), but I'm not sure what are the
-> >>>> default values if no pinctrl properties are provided. Sylwester, could
-> >>>> you comment?
-> >>>
-> >>> Indeed it could be intentional... I see now errors:
-> >>> [   33.752203] s5p-fimc-md soc:camera: Failed to get pinctrl: -19
-> >>>
-> >>> I wonder why getting an empty pinctrl is needed... maybe the driver
-> >>> should accept missing pinctrl?
-> >>
-> >> It might have been better to have the pinctrl properties optional, as there
-> >> might be boards without the image sensor attached and FIMC could still be
-> >> used in memory-to-memory mode, as Marek pointed out. But it seems too late
-> >> now to change that. The binding defines the pinctrl properties as required
-> >> (Documentation/devicetree/bindings/media/samsung-fimc.txt) and we need to
-> >> keep them in dtses.
-> >
-> > You can always make a required property optional and it is not a break
-> > of ABI. The other way around would be a break. Why then not changing
-> > the driver to accept optional pinctrl?
->
-> Feel free to send the patch, I would prefer to leave that as is though.
-> Is it really suddenly a problem to use an empty property? The pinctrl
-> bindings allows it.
+Hi,
 
-The bindings scream:
-arch/arm/boot/dts/exynos4412-odroidx.dt.yaml: camera: pinctrl-0: True
-is not of type 'array'
-so either we should model it differently (not as empty array), update
-the driver to make it optional or change the bindings/dtschema. I'll
-see how to fix it properly.
+On 28. 08. 20 20:35, Randy Dunlap wrote:
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix build warning since this file is already listed in
+> include/asm-generic/Kbuild.
+> 
+> ../scripts/Makefile.asm-generic:25: redundant generic-y found in arch/microblaze/include/asm/Kbuild: hw_irq.h
+> 
+> Fixes: 7e8f54cd4e26 ("microblaze: Remove empty headers")
 
-Best regards,
-Krzysztof
+The patch is fine but this commit is wrong one. At that time
+asm-generic/Kbuild didn't contain hw_irq.h as mandatory
+
+The commit 630f289b7114c0e68519cbd634e2b7ec804ca8c5 added it.
+
+Masahiro: Can you please check?
+
+Thanks,
+Michal
