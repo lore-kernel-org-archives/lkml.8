@@ -2,130 +2,205 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA8BC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB08C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:50:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFC42068E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3D022068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 12:50:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YQYTF1bm"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dSJu+R31"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727989AbgHaMs1 (ORCPT
+        id S1726586AbgHaMuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 08:48:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40917 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726384AbgHaMsT (ORCPT
+        Mon, 31 Aug 2020 08:50:37 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:47445 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726468AbgHaMu2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 08:48:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598878097;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cnx3CjRYB9hGIWsNjQqszr2co7+0ihfxtc0QgvVHV+M=;
-        b=YQYTF1bmcPeu7nl78MZ5j2qxOGfGN7YMOnni0dWZOG2ktsMpDV1X/RTaBrP+AfUNUeTq+n
-        yl9Hm7KNQBTUEXCvryxNvQbQA6K44x6dt7A5fJaOqD+uOwVPQkkj0ojc+xkEJtNtoM+RhS
-        MvfZJXvI+leo/PNxyILT8uRj5SKn7nE=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-486-gQGkwcF2Nf20csw0cyct6g-1; Mon, 31 Aug 2020 08:48:15 -0400
-X-MC-Unique: gQGkwcF2Nf20csw0cyct6g-1
-Received: by mail-wm1-f72.google.com with SMTP id f189so951064wmf.8
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 05:48:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=cnx3CjRYB9hGIWsNjQqszr2co7+0ihfxtc0QgvVHV+M=;
-        b=VbPefayYa+Z62ZUvRJJGZxSU895N1EddWx4IIhCj4Bm/d8HSW6kVE2UUgj8LMsKY0k
-         kQt1My6AUA3PQ56HPdXEQ46Hl3qEuvziRkZzzYBS1LQi/nRZfRBBuY1EJV9APZeU99f1
-         zRNzRzy52DYT2Ad3a7Nz3O2ImyYlzoIVNDMUHCyt2FQxUWjZdehVoCN0gK3C3vFgcvUn
-         cNmAjVURMwwqMr5TST1w8c7/Z34EhYilwUe55s4E1E3rBnCXeYGTnGq4Ds4ZOekMhNBz
-         o3xJmumPo19JyO3EwQVRpCKeriFatcAZOIe30P+B5DZmZCwNTYYfHYK0YH3gPFcb1Ku0
-         0L1A==
-X-Gm-Message-State: AOAM531sa7wTwLlRuQrVVeejumN61apvLoIXh2W4It+1WFg8X0Rl/Nkq
-        bx6YyoEKPZGBGhAPXQxh+U9X9fWg+lTB/0+UATVkgJP+C6IeGi8vECS1nPijY+DGTOhOqQRDY3N
-        woHN2AvlTzOmgz3z+5ag5gYN3
-X-Received: by 2002:a1c:2e17:: with SMTP id u23mr1319222wmu.73.1598878094354;
-        Mon, 31 Aug 2020 05:48:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwc3ks723eU0MJaIHVO/d8tt1FXCDACXwreTLs0dlEDnbVrsUC4Kux9ZLcT5gY6wvSD7o4bJg==
-X-Received: by 2002:a1c:2e17:: with SMTP id u23mr1319205wmu.73.1598878094196;
-        Mon, 31 Aug 2020 05:48:14 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id 62sm12384616wre.60.2020.08.31.05.48.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 05:48:13 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH] KVM: LAPIC: Reset timer_advance_ns if timer mode switch
-In-Reply-To: <1598578508-14134-1-git-send-email-wanpengli@tencent.com>
-References: <1598578508-14134-1-git-send-email-wanpengli@tencent.com>
-Date:   Mon, 31 Aug 2020 14:48:12 +0200
-Message-ID: <87a6ybx9pv.fsf@vitty.brq.redhat.com>
+        Mon, 31 Aug 2020 08:50:28 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200831125027euoutp018fc22e1a900a2d5e8b425e3f4e336e50~wW0bXgwSC1385313853euoutp01_
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 12:50:27 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200831125027euoutp018fc22e1a900a2d5e8b425e3f4e336e50~wW0bXgwSC1385313853euoutp01_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598878227;
+        bh=ir04O1LBgiamn4Vazqxm9bW0gx2zBzPUQkXJ9yzi9dk=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=dSJu+R310gcbph1FFnNuIIQoAlaWq825Kf/lKv1z5qvRwpuaDqRhuFM3gLWsml6Fq
+         PyrwJcGYwbslYqEAQ30a3EY7ojhX8/9BkF9iHgZs7ZojuXeD78QupjYNo/U3LqoBug
+         5KYxGAsgREQtlQdCQe1MDELoHqXlHmx8Vcm+Ncfk=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200831125026eucas1p28c5c8eb5d04c54f1c0f399a07ad6ba24~wW0axwOZj1885018850eucas1p2J;
+        Mon, 31 Aug 2020 12:50:26 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id D2.54.06456.212FC4F5; Mon, 31
+        Aug 2020 13:50:26 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200831125026eucas1p1c96e5c04f89ecbd3888b5b3701edb1a3~wW0aOoNzs1393813938eucas1p1u;
+        Mon, 31 Aug 2020 12:50:26 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200831125026eusmtrp1da72ff1101fc009870a8ff16cce3bb1e~wW0aNrDNm1767617676eusmtrp1H;
+        Mon, 31 Aug 2020 12:50:26 +0000 (GMT)
+X-AuditID: cbfec7f2-809ff70000001938-6e-5f4cf2124571
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E7.74.06017.212FC4F5; Mon, 31
+        Aug 2020 13:50:26 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200831125025eusmtip16c96ef0a69b98a69a6fd7c9dccd44027~wW0ZIM22t0528205282eusmtip13;
+        Mon, 31 Aug 2020 12:50:25 +0000 (GMT)
+Subject: Re: [RFT 09/10] arm64: dts: exynos: Correct port of USB-C connector
+ node on Exynos5433 TM2
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        alsa-devel@alsa-project.org
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Andrzej Hajda <a.hajda@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <4eb7d0d9-29e2-9162-4521-10e4422f9c71@samsung.com>
+Date:   Mon, 31 Aug 2020 14:50:25 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200829142501.31478-9-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+c5da3Wcxd7sBoOKgjQp4SMjKiIOFdIfQTfSZh40nBqbs+yf
+        pOs6XWaZqUtsSaANcmualVnS1IZOpzmxKM28RGiZ4aZdrZzHyv+e5/1+D8/7wseRygImjDuU
+        mi7qUjVaNRNMVT775lmpHNket+pmWwR+Veah8UVPA4HbnzsJfDffRuPcnn4Gv/C/p3GRbyH+
+        XXmZxDfqJrD20WEGX+nOprCp7wOJW1rsLO4erUd4rN1IYEdfB429VYUMzm95QuDTj+tYXPvx
+        LI2fl/oJfPbdAInLHbnkBpVg951ghMdjFkp4aO5iBYf1HCN0dlQzwiePhxXuj72lhe7zLkIo
+        v3VcuFRhRYLPsWjHjL3B6xJE7aEMURex/kBw0nWXnTl8b/bRUfvaLNQ8Q0JBHPBroNzrQxIK
+        5pR8KYLB+vesbPwIfhZ3kLLxIfCcriD+Rkq8WVNUCYISZ82UGUaQV3OTDVChvAil0u3J+Bze
+        SMPVaisdMCTvRSDVZNMBiuEjQRqSmIBW8OvhtVEiA5ril0DWuWoqoOfysfCssZeSmRBoKOif
+        1EF8FOQN9E7yJL8Y7g8VTmkVvOq/QQTKgG/loMuSw8qLbwZr4yAj61AYdFVMzReAO+cCJQdO
+        Iujx3GFlcwGB90Q+kqlo6PR8n0hzExXLwVYVIY83wrj/BxsYAz8LXg6FyEvMgiuVeaQ8VoDx
+        jFKml4LZVfav9mlrG5mN1OZpp5mnnWOedo75f68FUVakEg36lERRH5kqHgnXa1L0htTE8INp
+        KQ408WHdv1wjD9BoW7wT8RxSz1R8rd8Wp6Q1GfrMFCcCjlTPUWxqdscqFQmazGOiLi1OZ9CK
+        eieaz1FqlWJ18cB+JZ+oSReTRfGwqPv7SnBBYVnIGB237vOqg8mKnobB+L42/wK7ocvYZEuz
+        RheJZNDxKGSyjJtCdmmGc+1hYaXFlx7datxSkVxUGGqTvlyL2fcGLdd2bmTWhNe2qtK2LrMu
+        Vpm8MR8WXZfm7TZcHDHV2RJ31ifoZjfu1e04tSkns6nYa3Zzlu7xMW1Eb/rOTPceNaVP0kSu
+        IHV6zR8dJKe4rAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SbUhTYRTHe+7brtPVbVo+SKWN/JDZbL4+ms3o00UrAulLaWvlxUVuk93N
+        soxGEeqamdGLrWX2Ir6F2WZaUZFLW2bORF2RhaVGrdKgqRRE5ZyB3/7n/P+/czhwaFzcSIbR
+        +zR6TqdR5kkoIdH9x/lurfjHZsW6E9cZ9KbJRaIyVxeGBvocGLpdeYtE5z6MUejV5CcSVXmX
+        o7+tFTi60jETG5j6TqEzw6cJVD76FUe9vc0CNDzVCdD0QAmGbKNuEvXft1KosvcRhk487BCg
+        J9+KSdRXN4mh4o8eHNlt5/CNoWyz9xjFPpyuJth7lncC1tZQSrFv3Q8odsLlErBt0+9Jdvik
+        E2PtN46yp1oaAOu1rdgWuEOaqtMa9FyESsvrN0h2ylCsVJaMpLHxyVJZXFJ2SmyCJEaemsPl
+        7SvgdDHy3VLVJWczlX9n0cGp5hQj6Ak0gQAaMvGwtt8oMAEhLWZqADS9dBF+YxnsOm8k/ToY
+        /nabKH9oHMDaimvAZwQzHKwz1eM+I4Qxk/B4jXm2wJlBAIfumAk/YgdwoKsU8yEUI4Omcd+s
+        AFrEyOFQiQn3aYKJhMbSB7O7lzC74Avz57nMYth1cWy2H8AkwAuekdk8ziTCKvuHOR0O28at
+        czoUvhm7gp0GYss83DIPscxDLPOQakA0gBDOwKtz1XyslFeqeYMmV7pXq7aBmUdpffqr5S4w
+        TWQ6AEMDSZDoZ2eGQkwqC/hCtQNAGpeEiDb1dO8Si3KUhYc4nVahM+RxvAMkzBxXgYct2aud
+        eTuNXiFLkCWhZFlSXFJcIpKEikqY9iwxk6vUc/s5Lp/T/ecwOiDMCAbTtpZdGxHony9c1RYR
+        +jg6vKV8vajeuUWcfkCksnv2FB0xEkJvZOPZ7HhnRaXwiyq6J7da83cyw1Ik51+vDOq8OVm5
+        oIakq5x2Y7tmqdSemeZuym63Fuzx0KsnrELHmue9xIgyKutZVth2B/IQhzPH09MOYgeGGiyX
+        r0ZyEoJXKWVRuI5X/gO0LJ3zPgMAAA==
+X-CMS-MailID: 20200831125026eucas1p1c96e5c04f89ecbd3888b5b3701edb1a3
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200829142602eucas1p1ce457a8fddc6b1fba4bf8c08992fa0b3
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200829142602eucas1p1ce457a8fddc6b1fba4bf8c08992fa0b3
+References: <20200829142501.31478-1-krzk@kernel.org>
+        <CGME20200829142602eucas1p1ce457a8fddc6b1fba4bf8c08992fa0b3@eucas1p1.samsung.com>
+        <20200829142501.31478-9-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+Hi Krzysztof,
 
-> From: Wanpeng Li <wanpengli@tencent.com>
+On 29.08.2020 16:25, Krzysztof Kozlowski wrote:
+> The USB-C connector bindings require port@0.  Such port was already
+> described in DTS but outside of the connector itself.  Put it into
+> proper place to fix dtbs_check warnings like:
 >
-> per-vCPU timer_advance_ns should be set to 0 if timer mode is not tscdeadline 
-> otherwise we waste cpu cycles in the function lapic_timer_int_injected(), 
-
-lapic_timer_int_injected is just a test, kvm_wait_lapic_expire()
-(__kvm_wait_lapic_expire()) maybe?
-
-> especially on AMD platform which doesn't support tscdeadline mode. We can 
-> reset timer_advance_ns to the initial value if switch back to
-> tscdealine
-
-'tscdeadline'
-
-> timer mode.
+>    arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: musb_connector: ports: 'port@0' is a required property
 >
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+I'm not sure if topic should be about USB-C, I will call it simply USB 
+connector node. TM2(e) uses Samsung's 11-pin micro USB 2.0 connector, 
+which has nothing in common with USB Type-C.
+
+Anyway, this patch breaks DWC3 (tested in Device mode) driver operation, 
+so something has to be somehow adjusted or fixed. Added CC Andrzej 
+Hajda, who actually worked on this.
+
 > ---
->  arch/x86/kvm/lapic.c | 6 ++++++
->  1 file changed, 6 insertions(+)
 >
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 654649b..abc296d 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1499,10 +1499,16 @@ static void apic_update_lvtt(struct kvm_lapic *apic)
->  			kvm_lapic_set_reg(apic, APIC_TMICT, 0);
->  			apic->lapic_timer.period = 0;
->  			apic->lapic_timer.tscdeadline = 0;
-> +			if (timer_mode == APIC_LVT_TIMER_TSCDEADLINE &&
-> +				lapic_timer_advance_dynamic)
-> +				apic->lapic_timer.timer_advance_ns = LAPIC_TIMER_ADVANCE_NS_INIT;
->  		}
->  		apic->lapic_timer.timer_mode = timer_mode;
->  		limit_periodic_timer_frequency(apic);
->  	}
-> +	if (timer_mode != APIC_LVT_TIMER_TSCDEADLINE &&
-> +		lapic_timer_advance_dynamic)
-> +		apic->lapic_timer.timer_advance_ns = 0;
->  }
->  
->  /*
+> Not tested on HQ. Please kindly review and test.
+>
+> Best regards,
+> Krzysztof
+> ---
+>   .../boot/dts/exynos/exynos5433-tm2-common.dtsi    | 15 +++++++--------
+>   1 file changed, 7 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> index 6246cce2a15e..bab6c1addd5f 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+> @@ -871,6 +871,13 @@
+>   					#address-cells = <1>;
+>   					#size-cells = <0>;
+>   
+> +					port@0 {
+> +						reg = <0>;
+> +						muic_to_usb: endpoint {
+> +							remote-endpoint = <&usb_to_muic>;
+> +						};
+> +					};
+> +
+>   					port@3 {
+>   						reg = <3>;
+>   						musb_con_to_mhl: endpoint {
+> @@ -879,14 +886,6 @@
+>   					};
+>   				};
+>   			};
+> -
+> -			ports {
+> -				port {
+> -					muic_to_usb: endpoint {
+> -						remote-endpoint = <&usb_to_muic>;
+> -					};
+> -				};
+> -			};
+>   		};
+>   
+>   		regulators {
 
+Best regards
 -- 
-Vitaly
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
