@@ -2,126 +2,172 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C076C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C1BC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:30:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F37C20719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:29:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598909397;
-	bh=I1cB2l113e9LoNtljGvgAl8Zf+J20o/db7J4447z0RY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=NDsi/MKASxM51tBODRXH6m06aVfI5inH+5cmQ/ORZsdst6VzIPGA28uvtpWwgXj7F
-	 OXiloGyT8dMHEdmpGpiUTHeNWUqr+JnHuNSKfl4sUpUG/fwfT4IcmySUvJQhChqmxV
-	 p14i0iwu/WbwNNtPCNcR+3IHhg02U+8Q7R9hR3fU=
+	by mail.kernel.org (Postfix) with ESMTP id C6E022145D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 21:30:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbgHaV34 (ORCPT
+        id S1730281AbgHaVaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 17:29:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55394 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728352AbgHaV3z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 17:29:55 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF9F6C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:29:54 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id c6so2464726ilo.13
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 14:29:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ukrTRysPReBmmeihk4CoXLCpd16/lRS5smuSWOxODRo=;
-        b=QNusu1YEHzCf+rQCWjp0IkGxE8MyBmTOnXlX6mwtPYEMGKZvkRHr1g1WXp6N2MSDNp
-         hPbNsmLHOp2gtrFoLKeQ7Ra8CPbKyiAGFAs5HVjGY/Yo5y2xEsH9VgrL6tQd+8NHROMa
-         V6v2ab/reO5XdipVWf9vJGCc7jSOY1woWT89U=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ukrTRysPReBmmeihk4CoXLCpd16/lRS5smuSWOxODRo=;
-        b=SH05pYhggPgicUIrV1KVo44P9LO5XxTTgN+QmS89W3MMTd87b3i1+dD99oAhNQYC7t
-         z65eLxvPqFZ/QtTy2oIhYvo3yWkTXmy7ATqlb5vWJQJBpl/9WiusMWkjF1JkdOoyORAT
-         pFgeD5TUojIii0tHWcWtdl3NqNV8lw1g+3xWc7kc1U33Xs3nFVhytPA8/clE+hBjyeJV
-         25NCqBSaSEj2pVyve2LMVUJjQc2UcOBeaepbHAOullZz1rPqQI8sweGJ6gtkfmV5TWmh
-         2lm5HJkyf7fK6zU26xJtU/rDcok3+Bv3o7CSGaYNmFNxgbuhBENLLVXbhV6OvCOfnTFI
-         V3zA==
-X-Gm-Message-State: AOAM533bQUQYODfucd5x1PZ/8iOHr+myKXT3ZnTLYJyAFWHMVYUTdPSe
-        sq95Hn0Ncy7OtT/fTTf+X11W3g==
-X-Google-Smtp-Source: ABdhPJz7TtEbBPoFn/idxbqmirN5xvay9s5X8FVcVKuVjQ5sCkqOOsqp3wP7NjeCDn9J9tdxYgHwQg==
-X-Received: by 2002:a92:d08e:: with SMTP id h14mr3087541ilh.1.1598909394319;
-        Mon, 31 Aug 2020 14:29:54 -0700 (PDT)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id p18sm4319248iog.1.2020.08.31.14.29.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 14:29:53 -0700 (PDT)
-Subject: Re: [PATCH 2/2] kunit: ubsan integration
-To:     Uriel Guajardo <urielguajardojr@gmail.com>,
-        brendanhiggins@google.com
-Cc:     urielguajardo@google.com, akpm@linux-foundation.org,
-        keescook@chromium.org, rdunlap@infradead.org,
-        herbert@gondor.apana.org.au, christian.brauner@ubuntu.com,
-        peterz@infradead.org, ardb@kernel.og, arnd@arndb.de,
-        julien.grall@arm.com, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20200813205722.1384108-1-urielguajardojr@gmail.com>
- <20200813205722.1384108-2-urielguajardojr@gmail.com>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <5064a46f-f73f-5833-5eb9-f69a0aecea4e@linuxfoundation.org>
-Date:   Mon, 31 Aug 2020 15:29:52 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Mon, 31 Aug 2020 17:30:46 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2713 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728352AbgHaVaq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 17:30:46 -0400
+Received: from lhreml715-chm.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 3890025B913188A60635;
+        Mon, 31 Aug 2020 22:30:44 +0100 (IST)
+Received: from DESKTOP-6T4S3DQ.china.huawei.com (10.47.25.250) by
+ lhreml715-chm.china.huawei.com (10.201.108.66) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1913.5; Mon, 31 Aug 2020 22:30:43 +0100
+From:   Shiju Jose <shiju.jose@huawei.com>
+To:     <linux-acpi@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <rjw@rjwysocki.net>,
+        <helgaas@kernel.org>, <bp@alien8.de>, <james.morse@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <robh@kernel.org>, <lenb@kernel.org>,
+        <tony.luck@intel.com>, <dan.carpenter@oracle.com>,
+        <andriy.shevchenko@linux.intel.com>
+CC:     <yangyicong@hisilicon.com>, <jonathan.cameron@huawei.com>,
+        <tanxiaofei@huawei.com>, <linuxarm@huawei.com>
+Subject: [RESEND PATCH v14 0/2] ACPI / APEI: Add support to notify the vendor specific HW errors
+Date:   Mon, 31 Aug 2020 22:26:04 +0100
+Message-ID: <20200831212606.1718-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200813205722.1384108-2-urielguajardojr@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.47.25.250]
+X-ClientProxiedBy: lhreml737-chm.china.huawei.com (10.201.108.187) To
+ lhreml715-chm.china.huawei.com (10.201.108.66)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/13/20 2:57 PM, Uriel Guajardo wrote:
-> Integrates UBSAN into the KUnit testing framework. It fails KUnit tests
-> whenever it reports undefined behavior.
-> 
-> Signed-off-by: Uriel Guajardo <urielguajardo@google.com>
-> ---
->   lib/ubsan.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index cb9af3f6b77e..1460e2c828c8 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -14,6 +14,7 @@
->   #include <linux/types.h>
->   #include <linux/sched.h>
->   #include <linux/uaccess.h>
-> +#include <kunit/test.h>
->   
->   #include "ubsan.h"
->   
-> @@ -137,6 +138,7 @@ static void ubsan_prologue(struct source_location *loc, const char *reason)
->   {
->   	current->in_ubsan++;
->   
-> +	kunit_fail_current_test();
->   	pr_err("========================================"
->   		"========================================\n");
->   	pr_err("UBSAN: %s in %s:%d:%d\n", reason, loc->file_name,
-> 
+CPER records describing a firmware-first error are identified by GUID.
+The ghes driver currently logs, but ignores any unknown CPER records.
+This prevents describing errors that can't be represented by a standard
+entry, that would otherwise allow a driver to recover from an error.
+The UEFI spec calls these 'Non-standard Section Body' (N.2.3 of
+version 2.8).
 
-I applied this to linux-kselftest kunit for 5.10-rc1.
+patch set
+1. add the notifier chain for these non-standard/vendor-records
+   in the ghes driver.
 
-thanks,
--- Shuah
+2. add the driver to handle HiSilicon HIP PCIe controller's errors.
+   
+Changes:
+
+V14:
+1. Rebase to v5.9-rc3
+2. Add patch[1] posted by James to the series.
+   
+3. Following changes made for Bjorn's comments,
+3.1 Deleted stub code from ghes.h
+3.2 Made CONFIG_PCIE_HISI_ERR depend on CONFIG_ACPI_APEI_GHES.
+
+V13:
+1. Following changes in the HIP PCIe error handling driver.
+1.1 Add Bjorn's acked-by.
+1.2. Address the comments and macros order Bjorn mentioned.
+     Fix the words in the commit.
+
+V12:
+1. Changed the Signed-off-by tag to Co-developed-by tag in the patch
+   "ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records"
+
+V11:
+1. Following modifications made by James Morse in the APEI patch
+   for the vendor error record.
+   - Removed kfifo and ghes_gdata_pool. Expanded commit message.
+   
+2. Changes in the HIP PCIe error handling driver
+   for the comments by Andy Shevchenko.
+
+V10:
+1. Changes for Bjorn's comments on HIP PCIe error handler driver
+   and APEI patch.
+   
+2. Changes in the HIP PCIe error handler driver
+   for the feedbacks by Andy Shevchenko.
+   
+V9:
+1. Fixed 2 improvements suggested by the kbuild test robot. 
+1.1 Change ghes_gdata_pool_init() as static function.
+1.2. Removed using buffer to store the error data for
+     logging in the hisi_pcie_handle_error()
+
+V8:
+1. Removed reporting the standard errors through the interface
+   because of the conflict with the recent patches in the
+   memory error handling path.
+2. Fix comments by Dan Carpenter.
+   
+V7:
+1. Add changes in the APEI driver suggested by Borislav Petkov, for
+   queuing up all the non-fatal HW errors to the work queue and
+   notify the registered kernel drivers from the bottom half using
+   blocking notifier, common interface for both standard and
+   vendor-spcific errors.
+2. Fix for further feedbacks in v5 HIP PCIe error handler driver
+   by Bjorn Helgaas.
+
+V6:
+1. Fix few changes in the patch subject line suggested by Bjorn Helgaas.
+
+V5:
+1. Fix comments from James Morse.
+1.1 Changed the notification method to use the atomic_notifier_chain.
+1.2 Add the error handled status for the user space.  
+
+V4:
+1. Fix for the following smatch warning in the PCIe error driver,
+   reported by kbuild test robot<lkp@intel.com>:
+   warn: should '((((1))) << (9 + i))' be a 64 bit type?
+   if (err->val_bits & BIT(HISI_PCIE_LOCAL_VALID_ERR_MISC + i))
+	^^^ This should be BIT_ULL() because it goes up to 9 + 32.
+
+V3:
+1. Fix the comments from Bjorn Helgaas.
+
+V2:
+1. Changes in the HiSilicon PCIe controller's error handling driver
+   for the comments from Bjorn Helgaas.
+   
+2. Changes in the APEI interface to support reporting the vendor error
+   for module with multiple devices, but use the same section type.
+   In the error handler will use socket id/sub module id etc to distinguish
+   the device.
+
+V1:  
+1. Fix comments from James Morse.
+
+2. add driver to handle HiSilicon hip08 PCIe controller's errors,
+   which is an application of the above interface.
+
+Shiju Jose (1):
+  ACPI / APEI: Add a notifier chain for unknown (vendor) CPER records
+
+Yicong Yang (1):
+  PCI: hip: Add handling of HiSilicon HIP PCIe controller errors
+
+ drivers/acpi/apei/ghes.c                 |  63 +++++
+ drivers/pci/controller/Kconfig           |   8 +
+ drivers/pci/controller/Makefile          |   1 +
+ drivers/pci/controller/pcie-hisi-error.c | 327 +++++++++++++++++++++++
+ include/acpi/ghes.h                      |  18 ++
+ 5 files changed, 417 insertions(+)
+ create mode 100644 drivers/pci/controller/pcie-hisi-error.c
+
+-- 
+2.17.1
+
+
