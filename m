@@ -2,107 +2,106 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17357C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 854F2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E82C4214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:34:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dB+PP0hQ"
+	by mail.kernel.org (Postfix) with ESMTP id 63D7421531
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598888100;
+	bh=0YfuMbFx9l4rztSMus9UB0yQ2JVVa35hHbGtP153sd0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ExGquMy6IjaTLnNHeLtZLBlt5ATWc0yZZ8z2X7j5Y9W5LXwn4HELiIM4LkRbrHkey
+	 inkXpRbkSTIH/8uenau+0OiDBOUV7Yep3DwsDUMDTbEKGzqF+AQWF5mNAgO04z5NdB
+	 18CLEtF4mZio68BYOrKasPQpQJaRXJcOCPDz3mPQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbgHaPe4 (ORCPT
+        id S1728844AbgHaPbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:34:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55956 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729243AbgHaPem (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:34:42 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82095C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:34:42 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so5030142qtg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=iAMba//TxGLvi6KI3uMlOLBajkxl3K8BsmpgOVTnGqo=;
-        b=dB+PP0hQuSQ4ZE8AxL4ua78XiDhRqJG+WP1QgDTe/7c5TwCAzrVzmTcZGZSf6OldPO
-         WhDPMFpalcHqA0Qy776ZtI2GCBleXbcTKWEeg+/P7tf79mIOdsk5KvaH56H6lMdNFH1G
-         D+9ObvHehoceRDcgZ2Wet7VH/JvWFMPHflij80ZGdza/uj2fFTmVdwECA4UCfeOB/kMk
-         IhyLkwb7T+jZ0oUjKnX/7V4TaRMIT34uyoJ0eclyBj4w5xoCFv2jzuc7R6I/oryZMf8x
-         Cquly/geUjK1wp/F6ogLCRFLExLLC45L2AVHs95WZlyrIW7Cn3H8SqyD15vc9KOuN08M
-         Ca9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=iAMba//TxGLvi6KI3uMlOLBajkxl3K8BsmpgOVTnGqo=;
-        b=re7mnbpXF7inaUGwvPRcHEuAs8AOwDMEZVi1UptblJxYOQonmv2r3WtmVSGmBVDnpy
-         KkQwh6TnxOrRA390oQSc94muX4mWgIdR1CZU7dEwrmN39LngL5ZpGj8SS99xSZ2NR53s
-         Oj+1TrPKjQ2Oy+eP2anMB0gPl62dz8DJUK9Isj06iDmcPqvO5Kwnv6soJIlE2zuMgfBx
-         aM9PAI+55bYC6UANjr+1A6A9++fGdgU/FmX7bo9LwEXhY5ImZWXFJztsCY3X8WdIjxn7
-         If1+Ff6ndclIu+SOWzLB96v85cC0b5AXDFp/reOZ8UsZWacK7Pa88B4+6y1IigPCfol5
-         f8Gw==
-X-Gm-Message-State: AOAM533iZpb27kaxgQKvYAq1pr6fp0HQ1Wn66cW13XY5EOfkQmX/7KYM
-        ejeI4WTjn3cBB9AoiJnCVP9Mgw==
-X-Google-Smtp-Source: ABdhPJxUTXkZenE7cBleXw6w+N0DnPg9wNGzSw1MSkAiXkrts3H3PIrQrcMTQoG+i4ivWGAfZjhflw==
-X-Received: by 2002:ac8:72da:: with SMTP id o26mr1887711qtp.266.1598888081636;
-        Mon, 31 Aug 2020 08:34:41 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id x13sm10404428qts.23.2020.08.31.08.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 08:34:40 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kClpQ-002mCz-C7; Mon, 31 Aug 2020 12:34:40 -0300
-Date:   Mon, 31 Aug 2020 12:34:40 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] infiniband: remove unnecessary fallthrough usage
-Message-ID: <20200831153440.GA24045@ziepe.ca>
-References: <20200831153033.113952-1-cengiz@kernel.wtf>
+        Mon, 31 Aug 2020 11:31:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728771AbgHaPa7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:59 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BDD1215A4;
+        Mon, 31 Aug 2020 15:30:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598887859;
+        bh=0YfuMbFx9l4rztSMus9UB0yQ2JVVa35hHbGtP153sd0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LBy940Mb9kRYyKp8h5Per8VPjGsMkI1exngY5tFLKmi445TJRn/Lt4r6YIlxeNqGL
+         u8OcOO5lx2xFOZS0uxVKR01XegL+Drsio02hCnBqLCtr3gdjOf+NSZXNrN3lYKfpMa
+         GLnKWgex1mQKgH8MfD5R1CneljOtdgBgb3omsXuY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 12/23] drm/msm/a6xx: fix gmu start on newer firmware
+Date:   Mon, 31 Aug 2020 11:30:28 -0400
+Message-Id: <20200831153039.1024302-12-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
+References: <20200831153039.1024302-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831153033.113952-1-cengiz@kernel.wtf>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 06:30:34PM +0300, Cengiz Can wrote:
-> Since /* fallthrough */ comments are deprecated[1], they are being replaced
-> by new 'fallthrough' pseudo-keyword.
-> 
-> [1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?\
->         highlight=fallthrough#implicit-switch-case-fall-through
-> 
-> This sometimes leads to unreachable code warnings by static analyzers,
-> particularly in this case, Coverity Scanner. (CID 1466512)
-> 
-> Remove unnecessary 'fallthrough' keywords to prevent dead code
-> warnings.
-> 
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> ---
->  drivers/infiniband/hw/qib/qib_mad.c | 2 --
->  1 file changed, 2 deletions(-)
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Alex beat you to it:
+[ Upstream commit f5749d6181fa7df5ae741788e5d96f593d3a60b6 ]
 
-https://patchwork.kernel.org/patch/11736039/
+New Qualcomm firmware has changed a way it reports back the 'started'
+event. Support new register values.
 
-Thanks,
-Jason
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 9ea748667fab0..40431a09dc97c 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -199,12 +199,22 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
+ {
+ 	int ret;
+ 	u32 val;
++	u32 mask, reset_val;
++
++	val = gmu_read(gmu, REG_A6XX_GMU_CM3_DTCM_START + 0xff8);
++	if (val <= 0x20010004) {
++		mask = 0xffffffff;
++		reset_val = 0xbabeface;
++	} else {
++		mask = 0x1ff;
++		reset_val = 0x100;
++	}
+ 
+ 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
+ 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 0);
+ 
+ 	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, val,
+-		val == 0xbabeface, 100, 10000);
++		(val & mask) == reset_val, 100, 10000);
+ 
+ 	if (ret)
+ 		DRM_DEV_ERROR(gmu->dev, "GMU firmware initialization timed out\n");
+-- 
+2.25.1
+
