@@ -2,71 +2,76 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791EDC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56EE6C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54E2D207DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C444207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbgHaTCx (ORCPT
+        id S1729348AbgHaTDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 15:02:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60390 "EHLO
+        Mon, 31 Aug 2020 15:03:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727993AbgHaTCw (ORCPT
+        with ESMTP id S1727993AbgHaTDO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 15:02:52 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603C9C061573;
-        Mon, 31 Aug 2020 12:02:52 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1F6B212869E83;
-        Mon, 31 Aug 2020 11:46:05 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 12:02:50 -0700 (PDT)
-Message-Id: <20200831.120250.1316279201672077612.davem@davemloft.net>
-To:     johannes@sipsolutions.net
-Cc:     netdev@vger.kernel.org, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        johannes.berg@intel.com,
-        syzbot+353df1490da781637624@syzkaller.appspotmail.com
-Subject: Re: [PATCH] netlink: policy: correct validation type check
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200831202805.8ca5a2fe1ffb.I46f0d5bee0a774517aeec539620895a473dd2299@changeid>
-References: <000000000000ee7d1a05ae2f2720@google.com>
-        <20200831202805.8ca5a2fe1ffb.I46f0d5bee0a774517aeec539620895a473dd2299@changeid>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 31 Aug 2020 11:46:05 -0700 (PDT)
+        Mon, 31 Aug 2020 15:03:14 -0400
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB557C061573;
+        Mon, 31 Aug 2020 12:03:14 -0700 (PDT)
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id D24B72D5;
+        Mon, 31 Aug 2020 19:03:13 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 13:03:12 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Markus Heiser <markus.heiser@darmarit.de>
+Subject: Re: linux-next: build failure after upgrading sphinx
+Message-ID: <20200831130312.0a2cbd0c@lwn.net>
+In-Reply-To: <20200827145017.47c16c73@canb.auug.org.au>
+References: <20200827145017.47c16c73@canb.auug.org.au>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes@sipsolutions.net>
-Date: Mon, 31 Aug 2020 20:28:05 +0200
+On Thu, 27 Aug 2020 14:50:17 +1000
+Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 
-> From: Johannes Berg <johannes.berg@intel.com>
+> Today I upgraded ot sphinx v3.2.1 and got the following error from
+> "make htmldocs":
 > 
-> In the policy export for binary attributes I erroneously used
-> a != NLA_VALIDATE_NONE comparison instead of checking for the
-> two possible values, which meant that if a validation function
-> pointer ended up aliasing the min/max as negatives, we'd hit
-> a warning in nla_get_range_unsigned().
+> Running Sphinx v3.2.1
+> enabling CJK for LaTeX builder
 > 
-> Fix this to correctly check for only the two types that should
-> be handled here, i.e. range with or without warn-too-long.
+> Extension error:
+> Could not import extension cdomain (exception: cannot import name 'c_funcptr_sig_re' from 'sphinx.domains.c' (/usr/lib/python3/dist-packages/sphinx/domains/c.py))
 > 
-> Reported-by: syzbot+353df1490da781637624@syzkaller.appspotmail.com
-> Fixes: 8aa26c575fb3 ("netlink: make NLA_BINARY validation more flexible")
-> Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+> I have downgraded to version 2.4.3 and await suggestions/patches :-)
 
-Applied, thank you.
+[Adding Markus]
+
+Markus, this looks like an issue with the "handle function-like macros"
+code that has your name on it.  The Sphinx folks think that functionality
+can just be removed:
+
+	https://github.com/sphinx-doc/sphinx/issues/7421
+
+Do you agree?  We need to look at what they're saying about the :name:
+directive as well; somehow I missed that when it first went in.
+
+Thanks,
+
+jon
