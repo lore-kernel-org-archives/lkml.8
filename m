@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E6E9C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E11C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F4520EDD
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B1E720FC3
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598896912;
-	bh=OV4rdtDJfndd8yIlNe+o4Ki+VpzlQTxASJjsVeMAmWQ=;
+	s=default; t=1598896916;
+	bh=VfLU9LD+04vt7A1OohC/jg5ul0BHrmZJ47kzIFGG+7I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nzXvm8xkjgTe9dWwViqELPzY/Pl4DmnSDd6KV0T5avH+cG/n6Kc3FlwO/N3SlfQ3X
-	 I9B1+nHlrVr2QC42/Pxs/8zPqNnCIZTgLoZW2DDaXLRy2sMpG5m96y4mTTAkhhoXPV
-	 PiK5WXnaCP0YsFBlXVgX9G9I1gP9cjbuERwkCMdE=
+	b=qBdLvF1TIUaiPqmtGkeN9uW1g5qeUtmO7Hs/D7/4TCM5hCtRxIdvpmU+OqVWg7Zfu
+	 gSQkp4Rqz7nrz1GnJIZ43tALOyi6GFv+NH51PF6/+XfOrlvZLaqVrjRq9ezLQJ01sV
+	 jR9ULtxbCOCl2OOMybvoyLAaCFaqXgL9c2YZf5eA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbgHaSBt (ORCPT
+        id S1729070AbgHaSBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:01:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35926 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:01:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728772AbgHaSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:01:26 -0400
+        id S1728875AbgHaSB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:01:29 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7780C21707;
-        Mon, 31 Aug 2020 18:01:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 860C721897;
+        Mon, 31 Aug 2020 18:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598896886;
-        bh=OV4rdtDJfndd8yIlNe+o4Ki+VpzlQTxASJjsVeMAmWQ=;
+        s=default; t=1598896888;
+        bh=VfLU9LD+04vt7A1OohC/jg5ul0BHrmZJ47kzIFGG+7I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WBMhrXPqNrjbNozJLgrbF0I9Daiv9qPQCga4nI/foekBthdIzdIyliuhJM4c6nC74
-         k4EH+rrft/w1BsIlACxqq+Z2YsE4kZksM2aG40aLsYBh569NyPSLqL2KEkW7N7n1rb
-         bssE3AD2+5BPYW3P6rHkT2kjtbM2xUAmOUqzJDUU=
+        b=1SphRx8EQQcIeFaXcEOCbF5k7rswtq/0JO00YCuA9Xo3pO9r4EIA9hr+e2vSD1aLP
+         bye6p074QAKJSLyQ/axeYT2QjUsrXFTVofxxDjU5OsVX0lWq+EQIJIO6C9umZkKJ2Y
+         r/Lq/C2FraIDfaFqG28ccdQCJnbjJdM3FsF4v13k=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,10 +47,11 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 19/24] rcu/nocb: Add a warning for non-GP kthread running GP code
-Date:   Mon, 31 Aug 2020 11:01:11 -0700
-Message-Id: <20200831180116.32690-19-paulmck@kernel.org>
+        Zqiang <qiang.zhang@windriver.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 24/24] rcu: Shrink each possible cpu krcp
+Date:   Mon, 31 Aug 2020 11:01:16 -0700
+Message-Id: <20200831180116.32690-24-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180050.GA32590@paulmck-ThinkPad-P72>
 References: <20200831180050.GA32590@paulmck-ThinkPad-P72>
@@ -59,32 +60,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+From: Zqiang <qiang.zhang@windriver.com>
 
-This commit increases RCU's ability to defend itself by emitting a warning
-if one of the nocb CB kthreads invokes the GP kthread's wait function.
-This warning augments a similar check that is carried out at the end
-of rcutorture testing and when RCU CPU stall warnings are emitted.
-The problem with those checks is that the miscreants have long since
-departed and disposed of any and all evidence.
+CPUs can go offline shortly after kfree_call_rcu() has been invoked,
+which can leave memory stranded until those CPUs come back online.
+This commit therefore drains the kcrp of each CPU, not just the
+ones that happen to be online.
 
+Acked-by: Joel Fernandes <joel@joelfernandes.org>
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree_plugin.h | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/rcu/tree.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 4d63ee3..cb1e8c8 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -1926,6 +1926,7 @@ static void nocb_gp_wait(struct rcu_data *my_rdp)
- 	 * nearest grace period (if any) to wait for next.  The CB kthreads
- 	 * and the global grace-period kthread are awakened if needed.
- 	 */
-+	WARN_ON_ONCE(my_rdp->nocb_gp_rdp != my_rdp);
- 	for (rdp = my_rdp; rdp; rdp = rdp->nocb_next_cb_rdp) {
- 		trace_rcu_nocb_wake(rcu_state.name, rdp->cpu, TPS("Check"));
- 		rcu_nocb_lock_irqsave(rdp, flags);
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 2323622..9245064 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3450,7 +3450,7 @@ kfree_rcu_shrink_count(struct shrinker *shrink, struct shrink_control *sc)
+ 	unsigned long count = 0;
+ 
+ 	/* Snapshot count of all CPUs */
+-	for_each_online_cpu(cpu) {
++	for_each_possible_cpu(cpu) {
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+ 		count += READ_ONCE(krcp->count);
+@@ -3465,7 +3465,7 @@ kfree_rcu_shrink_scan(struct shrinker *shrink, struct shrink_control *sc)
+ 	int cpu, freed = 0;
+ 	unsigned long flags;
+ 
+-	for_each_online_cpu(cpu) {
++	for_each_possible_cpu(cpu) {
+ 		int count;
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+@@ -3498,7 +3498,7 @@ void __init kfree_rcu_scheduler_running(void)
+ 	int cpu;
+ 	unsigned long flags;
+ 
+-	for_each_online_cpu(cpu) {
++	for_each_possible_cpu(cpu) {
+ 		struct kfree_rcu_cpu *krcp = per_cpu_ptr(&krc, cpu);
+ 
+ 		raw_spin_lock_irqsave(&krcp->lock, flags);
 -- 
 2.9.5
 
