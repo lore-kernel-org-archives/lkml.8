@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C13C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 881D1C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CFF782083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E5612083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897297;
-	bh=jjAdQOb2DvCbOXuoKkbDDkv1j8pMSjYUmKzNcvABNNM=;
+	s=default; t=1598897302;
+	bh=O68wm3njlg+8X7DYUq157S0m3ytqa94CGoqfH9FWrWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQZSG7VuJ3Hy4+pnXtO3KCrqoXR4DTlcTpzEqZ11Py3zRoYhipNLl/i75kY64t77w
-	 ZNKmfcT3W/Ti3IxNKK6xcnbSnMqwvBjHc4OO1u0BifC/d4LHIzuGyGymVAux1mnZMK
-	 zWynukw8vCL87lmDWIKZBSbmPyI33qD9KlbnRbcQ=
+	b=IvOp06V8O4fOmSIj7bVdGXJ3XBrugPVio+76fTj6Zmb6Nt8t1byAhQP6Sw6VRQ7gu
+	 UekD/0YuOSDp+v2Mj8+2d5bsKuLl3OfEhP5q2ThoUxwPOUkd7XQ7e/AsU6A3PaiMzz
+	 /wlL01uhtliL1OvJ8KtiQjgPYElK0WSUq7oFQ1Cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbgHaSIO (ORCPT
+        id S1729142AbgHaSIU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56018 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:08:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbgHaSH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729305AbgHaSH6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:07:58 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 238CE2166E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F2B21707;
         Mon, 31 Aug 2020 18:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598897275;
-        bh=jjAdQOb2DvCbOXuoKkbDDkv1j8pMSjYUmKzNcvABNNM=;
+        bh=O68wm3njlg+8X7DYUq157S0m3ytqa94CGoqfH9FWrWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UjndsHj/sKgkuG7EeozZvpX8oR2zp6sxUvQ8UhjPBXK5y7/+9D2WPiWe52UXyzDV9
-         b9d9Qfue28tERO3x/9jSAUTPXSBfNJ8u37bl/QrcTZQ4Oead8o/EA3jmyBwfNye8RB
-         +z6lY3KYt01R+9z489VfmaSFN6ogTbAMflrPa7co=
+        b=dH3R9vvPgpi2t84qI1DrwIBT5r73lMnlz38DN9bCR+yKcIs2YvBRlHQsJ6PWFGK+0
+         mVPI17TRlpJomf4Ss7ju9YQm11rNWp/B3wXLyvp17Wu9Gp8+OOkv/rskRoQnwnBQMk
+         Yw68vyDngn6oNjggP0CCA9D05cEWHQa1WGj7QsPo=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 16/19] scftorture: Block scftorture_invoker() kthreads for offline CPUs
-Date:   Mon, 31 Aug 2020 11:07:46 -0700
-Message-Id: <20200831180749.843-16-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 17/19] scftorture: Adapt memory-ordering test to UP operation
+Date:   Mon, 31 Aug 2020 11:07:47 -0700
+Message-Id: <20200831180749.843-17-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180731.GA582@paulmck-ThinkPad-P72>
 References: <20200831180731.GA582@paulmck-ThinkPad-P72>
@@ -61,53 +61,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Currently, CPU-hotplug operations might result in all but two
-of (say) 100 CPUs being offline, which in turn might result in
-false-positive diagnostics due to overload.  This commit therefore
-causes scftorture_invoker() kthreads for offline CPUs to loop blocking
-for 200 milliseconds at a time, thus continuously adjusting the number
-of threads to match the number of online CPUs.
+On uniprocessor systems, smp_call_function() does nothing.  This commit
+therefore avoids complaining about the lack of handler accesses in the
+single-CPU case where there is no handler.
 
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/scftorture.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ kernel/scftorture.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/scftorture.c b/kernel/scftorture.c
-index d9c01c7..04d3a42 100644
+index 04d3a42..fc22bcc 100644
 --- a/kernel/scftorture.c
 +++ b/kernel/scftorture.c
-@@ -381,11 +381,14 @@ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_ra
- // smp_call_function() family of functions.
- static int scftorture_invoker(void *arg)
- {
-+	int cpu;
- 	DEFINE_TORTURE_RANDOM(rand);
- 	struct scf_statistics *scfp = (struct scf_statistics *)arg;
-+	bool was_offline = false;
- 
- 	VERBOSE_SCFTORTOUT("scftorture_invoker %d: task started", scfp->cpu);
--	set_cpus_allowed_ptr(current, cpumask_of(scfp->cpu % nr_cpu_ids));
-+	cpu = scfp->cpu % nr_cpu_ids;
-+	set_cpus_allowed_ptr(current, cpumask_of(cpu));
- 	set_user_nice(current, MAX_NICE);
- 	if (holdoff)
- 		schedule_timeout_interruptible(holdoff * HZ);
-@@ -408,6 +411,14 @@ static int scftorture_invoker(void *arg)
- 
- 	do {
- 		scftorture_invoke_one(scfp, &rand);
-+		while (cpu_is_offline(cpu) && !torture_must_stop()) {
-+			schedule_timeout_interruptible(HZ / 5);
-+			was_offline = true;
-+		}
-+		if (was_offline) {
-+			set_cpus_allowed_ptr(current, cpumask_of(cpu));
-+			was_offline = false;
-+		}
- 	} while (!torture_must_stop());
- 
- 	VERBOSE_SCFTORTOUT("scftorture_invoker %d ended", scfp->cpu);
+@@ -363,7 +363,8 @@ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_ra
+ 			scfcp->scfc_out = true;
+ 	}
+ 	if (scfcp && scfsp->scfs_wait) {
+-		if (WARN_ON_ONCE(!scfcp->scfc_out))
++		if (WARN_ON_ONCE((num_online_cpus() > 1 || scfsp->scfs_prim == SCF_PRIM_SINGLE) &&
++				 !scfcp->scfc_out))
+ 			atomic_inc(&n_mb_out_errs); // Leak rather than trash!
+ 		else
+ 			kfree(scfcp);
 -- 
 2.9.5
 
