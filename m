@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146AAC2BB84
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87F52C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DDE85207EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BB020EDD
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888374;
-	bh=EIDdbwiV7I3/UvfbBAlS1QNVUgyFXb53fT0NauxxnSQ=;
+	s=default; t=1598888378;
+	bh=E0S5fTo0mX+8r5130quZXaxIlSmWMKiZqSWg4n8H/MU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMCzQIw+jaHF6KO3kmG+lETJpQLqkVDpTr6kYq53LrAExIgh7OtHhv+mKCA/IXg20
-	 sBMlGymMdFoX4mwMwgL0RwL/OJqNS6TvIEt47hu1jfEHk0mxEdHssojI9Ya22eVufl
-	 HsGrZabfOuEiL9vFW2YE4OaXh5SX7ESkQNhr3v8g=
+	b=fMAckTMgyUsNi/utyVXWqd57/KhJYVO81/soiBeiZuzGFJmqaqPgo5FZbOjT/a+PP
+	 +YhLSOVqpLuJU1K3mG2cD/SF/XId92aRzE95NV2ZVPmz+mkQkiObSSV4ajZiBnKz88
+	 JmzLmHVe0e64tbe1JZEdyexSLtszqtHhpOtpA+R8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729041AbgHaPje (ORCPT
+        id S1729394AbgHaPjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39328 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:39:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgHaPaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:08 -0400
+        id S1728498AbgHaPaH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:07 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD863214D8;
-        Mon, 31 Aug 2020 15:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F760214DB;
+        Mon, 31 Aug 2020 15:30:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887807;
-        bh=EIDdbwiV7I3/UvfbBAlS1QNVUgyFXb53fT0NauxxnSQ=;
+        s=default; t=1598887806;
+        bh=E0S5fTo0mX+8r5130quZXaxIlSmWMKiZqSWg4n8H/MU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IBDVHeU58ZlK3PWD/zPuCf+acmwQ/hysdo+5U5DMhrdXThNz/6ENZLjbgSL9F+x4z
-         /7iBtytC2OqLhYz95KBXpru+dexTn29ukpWi9YMv4FEfZ4PlB7S+L6/N85L1FI1OmI
-         mpVasiW9MbBcQz50WZvwmt1P4NSpp28OnLjOAGHI=
+        b=SBdQvUHfyHBTyHOaW2nFffb4wFfwYa71b+Y8/Jq3gSLZ4B5OXmcTW0nEar37ry+6Z
+         E/jUKETzywemRvIW/SY78HU4fWd2kE0hadAeBtBFYs/dPCFaPDqVTZWZgpxUP8lXhc
+         rpFKkaBJklgI/fKfLEURQRurdMtszdP2+JXJjCOY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, cluster-devel@redhat.com
-Subject: [PATCH AUTOSEL 5.8 22/42] gfs2: add some much needed cleanup for log flushes that fail
-Date:   Mon, 31 Aug 2020 11:29:14 -0400
-Message-Id: <20200831152934.1023912-22-sashal@kernel.org>
+Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.8 21/42] drm/msm/a6xx: fix gmu start on newer firmware
+Date:   Mon, 31 Aug 2020 11:29:13 -0400
+Message-Id: <20200831152934.1023912-21-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -59,91 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit 462582b99b6079a6fbcdfc65bac49f5c2a27cfff ]
+[ Upstream commit f5749d6181fa7df5ae741788e5d96f593d3a60b6 ]
 
-When a log flush fails due to io errors, it signals the failure but does
-not clean up after itself very well. This is because buffers are added to
-the transaction tr_buf and tr_databuf queue, but the io error causes
-gfs2_log_flush to bypass the "after_commit" functions responsible for
-dequeueing the bd elements. If the bd elements are added to the ail list
-before the error, function ail_drain takes care of dequeueing them.
-But if they haven't gotten that far, the elements are forgotten and
-make the transactions unable to be freed.
+New Qualcomm firmware has changed a way it reports back the 'started'
+event. Support new register values.
 
-This patch introduces new function trans_drain which drains the bd
-elements from the transaction so they can be freed properly.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/log.c   | 31 +++++++++++++++++++++++++++++++
- fs/gfs2/trans.c |  1 +
- 2 files changed, 32 insertions(+)
+ drivers/gpu/drm/msm/adreno/a6xx_gmu.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/fs/gfs2/log.c b/fs/gfs2/log.c
-index a76e55bc28ebf..27f467a0f008e 100644
---- a/fs/gfs2/log.c
-+++ b/fs/gfs2/log.c
-@@ -901,6 +901,36 @@ static void empty_ail1_list(struct gfs2_sbd *sdp)
- 	}
- }
- 
-+/**
-+ * drain_bd - drain the buf and databuf queue for a failed transaction
-+ * @tr: the transaction to drain
-+ *
-+ * When this is called, we're taking an error exit for a log write that failed
-+ * but since we bypassed the after_commit functions, we need to remove the
-+ * items from the buf and databuf queue.
-+ */
-+static void trans_drain(struct gfs2_trans *tr)
-+{
-+	struct gfs2_bufdata *bd;
-+	struct list_head *head;
+diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+index 1d330204c465c..2dd1cf1ffbe25 100644
+--- a/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
++++ b/drivers/gpu/drm/msm/adreno/a6xx_gmu.c
+@@ -207,6 +207,16 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
+ {
+ 	int ret;
+ 	u32 val;
++	u32 mask, reset_val;
 +
-+	if (!tr)
-+		return;
-+
-+	head = &tr->tr_buf;
-+	while (!list_empty(head)) {
-+		bd = list_first_entry(head, struct gfs2_bufdata, bd_list);
-+		list_del_init(&bd->bd_list);
-+		kmem_cache_free(gfs2_bufdata_cachep, bd);
++	val = gmu_read(gmu, REG_A6XX_GMU_CM3_DTCM_START + 0xff8);
++	if (val <= 0x20010004) {
++		mask = 0xffffffff;
++		reset_val = 0xbabeface;
++	} else {
++		mask = 0x1ff;
++		reset_val = 0x100;
 +	}
-+	head = &tr->tr_databuf;
-+	while (!list_empty(head)) {
-+		bd = list_first_entry(head, struct gfs2_bufdata, bd_list);
-+		list_del_init(&bd->bd_list);
-+		kmem_cache_free(gfs2_bufdata_cachep, bd);
-+	}
-+}
-+
- /**
-  * gfs2_log_flush - flush incore transaction(s)
-  * @sdp: the filesystem
-@@ -1005,6 +1035,7 @@ void gfs2_log_flush(struct gfs2_sbd *sdp, struct gfs2_glock *gl, u32 flags)
  
- out:
- 	if (gfs2_withdrawn(sdp)) {
-+		trans_drain(tr);
- 		/**
- 		 * If the tr_list is empty, we're withdrawing during a log
- 		 * flush that targets a transaction, but the transaction was
-diff --git a/fs/gfs2/trans.c b/fs/gfs2/trans.c
-index a3dfa3aa87ad9..d897dd73c5999 100644
---- a/fs/gfs2/trans.c
-+++ b/fs/gfs2/trans.c
-@@ -52,6 +52,7 @@ int gfs2_trans_begin(struct gfs2_sbd *sdp, unsigned int blocks,
- 		tr->tr_reserved += gfs2_struct2blk(sdp, revokes);
- 	INIT_LIST_HEAD(&tr->tr_databuf);
- 	INIT_LIST_HEAD(&tr->tr_buf);
-+	INIT_LIST_HEAD(&tr->tr_list);
- 	INIT_LIST_HEAD(&tr->tr_ail1_list);
- 	INIT_LIST_HEAD(&tr->tr_ail2_list);
+ 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 1);
  
+@@ -218,7 +228,7 @@ static int a6xx_gmu_start(struct a6xx_gmu *gmu)
+ 	gmu_write(gmu, REG_A6XX_GMU_CM3_SYSRESET, 0);
+ 
+ 	ret = gmu_poll_timeout(gmu, REG_A6XX_GMU_CM3_FW_INIT_RESULT, val,
+-		val == 0xbabeface, 100, 10000);
++		(val & mask) == reset_val, 100, 10000);
+ 
+ 	if (ret)
+ 		DRM_DEV_ERROR(gmu->dev, "GMU firmware initialization timed out\n");
 -- 
 2.25.1
 
