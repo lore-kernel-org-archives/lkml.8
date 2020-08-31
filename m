@@ -2,536 +2,184 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4AAC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8777BC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0852078D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6370D20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 05:27:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xpKt0/O/"
+	dkim=pass (1024-bit key) header.d=rohmsemiconductoreurope.onmicrosoft.com header.i=@rohmsemiconductoreurope.onmicrosoft.com header.b="UyGzwzHI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgHaFYX (ORCPT
+        id S1726107AbgHaF1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 01:24:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbgHaFYQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 01:24:16 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDDCAC061755
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 22:24:15 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id np15so796206pjb.0
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 22:24:15 -0700 (PDT)
+        Mon, 31 Aug 2020 01:27:34 -0400
+Received: from mail-eopbgr70059.outbound.protection.outlook.com ([40.107.7.59]:28463
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725446AbgHaF1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 01:27:32 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J4nrW7EbEj2baYEOG/DguM1Wt1pUpzj0QjNDSt7pL4r0JtjmijylUpGLTndv/qm2NXb9y4z2E6eAQtiRMMQePfZdEtAluuo34G6wyh6GYec6zF4/flTTHRwxQfRA33n+KQV/5Zn/Y7A6lyBK0w4JXCr10e6tCIYEQgVo2bryiUGQWjybJwwz/8q8vvLO/n2zgMGDyXbyibi6+btKv1G7FEwSutjKYfdggMmmurNZb0LjsDKbxxQyl9uLyBu0Lcc5JygfHO1UMnkAcXORRpvZv+VWHCWveYfH6GPnD9OjpHrViyQLS5ATLuitkmWCOJ34ugWQCjrqcZW/gwPpP67DVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B1NjVwpG0/bqEsjr8fUZLA7UPZ25fpXOilWDBB6BSvo=;
+ b=fbfTnvt1yDs0kzyfiB8vmpdgE4ICP6B84f6wJiNMzUd1ayVtYBML1f/3nRFEQfsl8PCYrbZizLFrMJr6KwET5LjGgAXzhr0SpkRRNFfNdD8+thpQJXz0dj0wv+ZK7jTHh97KDEHgfXRADexcjWIfSwFbBhFSxyvBTUWnGOv88ef6x/+AQ2zi7pvzVXjzw+8zHwesFFyu4Gayekh7wP5ipyklrYoI+eyCpJKMU0TNvrLx7GfDT8Tpi2iQv1U1WlILMKE3RZHhNEfgUHbB6PTuPvwrUakSq2T4A1ixu0Z3ygjRjobBR6VhKdqMsOxRrwec3aljLcThhac0Z8bw6ZizBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fi.rohmeurope.com; dmarc=pass action=none
+ header.from=fi.rohmeurope.com; dkim=pass header.d=fi.rohmeurope.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=jMoCGzxggQS28J5sKgibCffSv1W6ppOY1n0LogiGFCI=;
-        b=xpKt0/O/gtgdCR9DbPdPNcIQN4SYab0ULAUE+HxJjXWkiX3iDHVncc2S34sQw9n17r
-         i/bNpRRtq0xrvbkRs5estleUUrx58Yhq3Qpn8K3flVU+hnxjMSzBHnW2V2yBOiNTk91s
-         IrcFLyKhpjreHjpbF0nja1mLFD6+wwpt8Po17BOBQeRIBVYD+tOOg5nrJ6g6Qwq0B3v5
-         d+Nx20lwT/kRfdlfWquhulpKOOXO3qBMvvswW7RYDsHvI1CplPNp8gYlAV9jAHBIW6dz
-         il08PYhS7hLItyJiMr0/+DE1mBopNaz6Si9pL5xpGxt4ETOyDXNmkPc9io2JTgiV7ZvE
-         l00Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=jMoCGzxggQS28J5sKgibCffSv1W6ppOY1n0LogiGFCI=;
-        b=SfOJqZazh21rob0XaMSyUKmJ1fYQ9Fw0iCoVOm3Q4bJDt7xdPHO8mxlpkctBnOlB5P
-         tMiLQvFMUj4ppZUZ9MHPXn1ERlTaEa/mH/Fep9zHHAMDOkgMuDA+M3m1NLm+s4o81DIl
-         jUKmhPdfxJ+DuAFwjp6UnrrEOTj7mtYGavD+XvaWtFdmkpE6gyvVM3Wg6OLRheFYkSx1
-         ldvZIPGinpbVZEJZjbqyeRkMxwCIi/jD5dHXE4qd2z0sQUXQ2pHwH/usf/FW9F0LQ7vc
-         fLubYQdNynZlYAgqbWlrf6zGC5JHs2jUkwCz7euS5qQbYJNCNBYc5ZmOXLd+raDNfOKJ
-         41hw==
-X-Gm-Message-State: AOAM530FMa6gYmOTkWzUti10n3VpYi+xwHzzYCllO/UTsHOGXkoSQRPG
-        4kqicCXTAyWezNvkoMmKqlr+rA==
-X-Google-Smtp-Source: ABdhPJzZN2DMR2DeutI1douJ1Qi7oYSVVf8SOU5vK8CNhaFPjd75p85IkEFgCqvIN7qSlQ4HgdJMwg==
-X-Received: by 2002:a17:90b:4ac7:: with SMTP id mh7mr64974pjb.99.1598851455051;
-        Sun, 30 Aug 2020 22:24:15 -0700 (PDT)
-Received: from localhost.localdomain ([2405:201:6803:69cf:9804:99c:722f:322c])
-        by smtp.gmail.com with ESMTPSA id y8sm6621851pfr.23.2020.08.30.22.24.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 30 Aug 2020 22:24:14 -0700 (PDT)
-From:   Amit Pundir <amit.pundir@linaro.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Konrad Dybcio <konradybcio@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        dt <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6] arm64: dts: qcom: Add support for Xiaomi Poco F1 (Beryllium)
-Date:   Mon, 31 Aug 2020 10:54:08 +0530
-Message-Id: <1598851448-5493-1-git-send-email-amit.pundir@linaro.org>
-X-Mailer: git-send-email 2.7.4
+ d=rohmsemiconductoreurope.onmicrosoft.com;
+ s=selector1-rohmsemiconductoreurope-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B1NjVwpG0/bqEsjr8fUZLA7UPZ25fpXOilWDBB6BSvo=;
+ b=UyGzwzHIfN1D0By819AB4qYQHzt8lf41OUwZrLDEi0tZo2phKv8ZJt27A3Lw3kSCLeL1qzmGn3U6x8eG33x6FrDTLxGHgRvDlSogJebS6M9pKxk/1ZieNysQEwcimsfdeklPBMfVlnZlU0sPrqaUOlqetORXnJlzdynGHbn2KTw=
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com (2603:10a6:7:55::20) by
+ HE1PR0301MB2171.eurprd03.prod.outlook.com (2603:10a6:3:2c::27) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.25; Mon, 31 Aug 2020 05:27:27 +0000
+Received: from HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::3d81:df5c:63de:a527]) by HE1PR03MB3162.eurprd03.prod.outlook.com
+ ([fe80::3d81:df5c:63de:a527%6]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
+ 05:27:27 +0000
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "linux-imx@nxp.com" <linux-imx@nxp.com>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "Anson.Huang@nxp.com" <Anson.Huang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "han.xu@nxp.com" <han.xu@nxp.com>
+Subject: Re: [PATCH v2 11/19] arm64: dts: imx8mn-ddr4-evk: Align regulator
+ names with schema
+Thread-Topic: [PATCH v2 11/19] arm64: dts: imx8mn-ddr4-evk: Align regulator
+ names with schema
+Thread-Index: AQHWfVtANiMBr6KdbUCGUBkJMGxrFqlRtBwA
+Date:   Mon, 31 Aug 2020 05:27:26 +0000
+Message-ID: <751b3933df6efde5ca9ad4148ddef8588459cd21.camel@fi.rohmeurope.com>
+References: <20200828164750.10377-1-krzk@kernel.org>
+         <20200828164750.10377-12-krzk@kernel.org>
+In-Reply-To: <20200828164750.10377-12-krzk@kernel.org>
+Reply-To: "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Accept-Language: fi-FI, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: bootlin.com; dkim=none (message not signed)
+ header.d=none;bootlin.com; dmarc=none action=none
+ header.from=fi.rohmeurope.com;
+x-originating-ip: [62.78.225.252]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cbe334ae-4b6b-4383-1720-08d84d6e8c8e
+x-ms-traffictypediagnostic: HE1PR0301MB2171:
+x-microsoft-antispam-prvs: <HE1PR0301MB217154150E241C7981BB7A18AD510@HE1PR0301MB2171.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ISKjuhEI4XumeqOSFYWCsT+nGf6yR3j3LEv1XWuFSGmyrRgGKrTpHkkCvBAYas+Dx45J1hpGJpRGP730UQLMVApcf+XS9bixS7S9jUWCupVBuDpjwinhuVJDWVBvswbSr9GHh1yY/jmbq5JQNVXR5508X9LNscPvdAWEhNyvuDlpWb8CwjbJ2qv+YSLia9hQ1ws+YyQaMisggL0oLsqEStd92wI/z07BOCuEi9RulTGKdzAJi5GH87K9fD6PuNKeqAyCkBKeAh35uV9jQjN1bAmyNziJOvjQHqF3ltKCxaJphl6PVppESbMIgcEg+E8huXvUjeEzIgxwa25A8+nnVszedMIvtLTm0xs3/H05UVIM9OipKevhYe1KIV9dvMr2J533BTaWqduhwiKn6PzRSQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR03MB3162.eurprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(39840400004)(136003)(366004)(346002)(86362001)(66556008)(3450700001)(66946007)(316002)(6512007)(7416002)(110136005)(64756008)(6506007)(478600001)(66476007)(2906002)(76116006)(26005)(186003)(8936002)(8676002)(83380400001)(71200400001)(6486002)(5660300002)(2616005)(66446008)(32563001)(921003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: aEzu3ZdMYj8JBzrBwcZhNCOni+CTTeIUAlJSizv4kkx4kZ3oAntBg7JMH1vsmDG9A5X/Ur1AdTjYapYmGy1hXNjvfTC1y1YwpZSlcv6Pm1BcuvNKckKVgUnqDGRDiCWSFSypsUv0LjbQV8h0+YVk6jNxp1zZVgiaO273mFZiw5w1zkvdIwkNijActosqSTDmJReDkTsfN1x+kiOe35MkGvaj0TMUstNJ4j18f3BvyLeK8y//t5u9Tmiib/72RODDsQHc7aKbHeez4izL51QgaKph8ImuangquSXlZdLO24Vnzn/mSYcM+ZvUEVHUXC7np2+Nk27PCyPm4laaVKo18WZICazju1P2lzq+kUE7u1OcraeXkcvh06jK10hu/ZojV6+Y/yqlENH6Maq7qkWcmnvyCAFrb//qCAGGVCQ2tVci0YRwR2Sou/WGcjTsxTW3sCWN1Mb+6e0GGr528k5aAjsDFM3ekHrBBqvJHGNWmyMZWHqwavDF3dVPeYYigbnPV8FZpZnW/t7yqrTH1r37xtCpa1J3khuK8LXIcgIzf4eJ7yLV0op98Al1Bg432N+pBHI7Scz2FlQcuS6IA/3d+ADqZMLdqC7CO/0FaFWZCkMEHO4/bmwEe/poDN8hGVzIMWt2aP4pdW4xNoIBsevSyw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <320CBFF8EACA6D4C8F6161629EA048B7@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: fi.rohmeurope.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: HE1PR03MB3162.eurprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cbe334ae-4b6b-4383-1720-08d84d6e8c8e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 31 Aug 2020 05:27:27.1199
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 94f2c475-a538-4112-b5dd-63f17273d67a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: xfUm+vFtlpaeRf1GYQ6duRIWoz1Wm4EvmWPeJ/0ht0jrJD6zkxrTxExefX6bkJbbKu8SVc+0A+pXc1aJwwZ2Bii6RK+FiB5EzTgJaCr8Katmi1lgHRestEQ5livpy3uQ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0301MB2171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add initial dts support for Xiaomi Poco F1 (Beryllium).
-
-This initial support is based on upstream Dragonboard 845c
-(sdm845) device. With this dts, Beryllium boots AOSP up to
-ADB shell over USB-C.
-
-Supported functionality includes UFS, USB-C (peripheral),
-microSD card and Vol+/Vol-/power keys. Bluetooth should work
-too but couldn't be verified from adb command line, it is
-verified when enabled from UI with few WIP display patches.
-
-Just like initial db845c support, initializing the SMMU is
-clearing the mapping used for the splash screen framebuffer,
-which causes the device to hang during boot and recovery
-needs a hard power reset. This can be worked around using:
-
-    fastboot oem select-display-panel none
-
-To switch ON the display back run:
-
-    fastboot oem select-display-panel
-
-But this only works on Beryllium devices running bootloader
-version BOOT.XF.2.0-00369-SDM845LZB-1 that shipped with
-Android-9 based release. Newer bootloader version do not
-support switching OFF the display panel at all.
-
-Signed-off-by: Amit Pundir <amit.pundir@linaro.org>
----
-My WIP tree with a few out-of-tree patches to support
-display, touchscreen, wifi, audio etc is here:
-https://github.com/pundiramit/linux/commits/beryllium-mainline
-
-v6: Renamed dts file to include vendor (xiaomi) name. Moved
-    reserved memory changes in the main node. Renamed model to
-    phone's pretty name. Removed the mmc drive strength comment
-    to avoid further confusion. Sorted the entries in alphabetical
-    order, but additional pinctrl entries are still defined at the
-    end to align with the upstream db845c dts.
-v5: Bumped &tz_mem size from 0x2d00000 to 0x4900000 (to include
-    downstream &removed_region), all the way up to &qseecom_mem.
-v4: Added more downstream reserved memory regions. It probably
-    need more work, but for now I see adsp/cdsp/wlan remoteprocs
-    powering up properly. Removed the regulator nodes not
-    required for the device, as suggested by Bjorn. Also added
-    couple of clocks to protected clocks, which is needed for
-    display to work.
-v3: Added a reserved-memory region from downstream kernel to fix
-    a boot regression with recent dma-pool changes in v5.8-rc6.
-v2: Updated machine compatible string for seemingly inevitable
-    future quirks.
-
- arch/arm64/boot/dts/qcom/Makefile                  |   1 +
- .../boot/dts/qcom/sdm845-xiaomi-beryllium.dts      | 383 +++++++++++++++++++++
- 2 files changed, 384 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium.dts
-
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index d8f1466e6758..9adc269252d3 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -30,6 +30,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-cheza-r3.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-db845c.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-xiaomi-beryllium.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm850-lenovo-yoga-c630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8150-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sm8250-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium.dts b/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium.dts
-new file mode 100644
-index 000000000000..cd25d5d8c0c9
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/sdm845-xiaomi-beryllium.dts
-@@ -0,0 +1,383 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-+#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-+#include "sdm845.dtsi"
-+#include "pm8998.dtsi"
-+#include "pmi8998.dtsi"
-+
-+/*
-+ * Delete following upstream (sdm845.dtsi) reserved
-+ * memory mappings which are different in this device.
-+ */
-+/delete-node/ &tz_mem;
-+/delete-node/ &adsp_mem;
-+/delete-node/ &wlan_msa_mem;
-+/delete-node/ &mpss_region;
-+/delete-node/ &venus_mem;
-+/delete-node/ &cdsp_mem;
-+/delete-node/ &mba_region;
-+/delete-node/ &slpi_mem;
-+/delete-node/ &spss_mem;
-+/delete-node/ &rmtfs_mem;
-+
-+/ {
-+	model = "Xiaomi Pocophone F1";
-+	compatible = "xiaomi,beryllium", "qcom,sdm845";
-+
-+	/* required for bootloader to select correct board */
-+	qcom,board-id = <69 0>;
-+	qcom,msm-id = <321 0x20001>;
-+
-+	aliases {
-+		hsuart0 = &uart6;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		autorepeat;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&vol_up_pin_a>;
-+
-+		vol-up {
-+			label = "Volume Up";
-+			linux,code = <KEY_VOLUMEUP>;
-+			gpios = <&pm8998_gpio 6 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	/* Reserved memory changes from downstream */
-+	reserved-memory {
-+		tz_mem: memory@86200000 {
-+			reg = <0 0x86200000 0 0x4900000>;
-+			no-map;
-+		};
-+
-+		adsp_mem: memory@8c500000 {
-+			reg = <0 0x8c500000 0 0x1e00000>;
-+			no-map;
-+		};
-+
-+		wlan_msa_mem: memory@8e300000 {
-+			reg = <0 0x8e300000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		mpss_region: memory@8e400000 {
-+			reg = <0 0x8e400000 0 0x7800000>;
-+			no-map;
-+		};
-+
-+		venus_mem: memory@95c00000 {
-+			reg = <0 0x95c00000 0 0x500000>;
-+			no-map;
-+		};
-+
-+		cdsp_mem: memory@96100000 {
-+			reg = <0 0x96100000 0 0x800000>;
-+			no-map;
-+		};
-+
-+		mba_region: memory@96900000 {
-+			reg = <0 0x96900000 0 0x200000>;
-+			no-map;
-+		};
-+
-+		slpi_mem: memory@96b00000 {
-+			reg = <0 0x96b00000 0 0x1400000>;
-+			no-map;
-+		};
-+
-+		spss_mem: memory@97f00000 {
-+			reg = <0 0x97f00000 0 0x100000>;
-+			no-map;
-+		};
-+
-+		rmtfs_mem: memory@f6301000 {
-+			compatible = "qcom,rmtfs-mem";
-+			reg = <0 0xf6301000 0 0x200000>;
-+			no-map;
-+
-+			qcom,client-id = <1>;
-+			qcom,vmid = <15>;
-+		};
-+	};
-+
-+	vreg_s4a_1p8: vreg-s4a-1p8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vreg_s4a_1p8";
-+
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+	};
-+};
-+
-+&adsp_pas {
-+	status = "okay";
-+	firmware-name = "qcom/sdm845/adsp.mdt";
-+};
-+
-+&apps_rsc {
-+	pm8998-rpmh-regulators {
-+		compatible = "qcom,pm8998-rpmh-regulators";
-+		qcom,pmic-id = "a";
-+
-+		vreg_l1a_0p875: ldo1 {
-+			regulator-min-microvolt = <880000>;
-+			regulator-max-microvolt = <880000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l5a_0p8: ldo5 {
-+			regulator-min-microvolt = <800000>;
-+			regulator-max-microvolt = <800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l7a_1p8: ldo7 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l12a_1p8: ldo12 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l13a_2p95: ldo13 {
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <2960000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l17a_1p3: ldo17 {
-+			regulator-min-microvolt = <1304000>;
-+			regulator-max-microvolt = <1304000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l20a_2p95: ldo20 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l21a_2p95: ldo21 {
-+			regulator-min-microvolt = <2960000>;
-+			regulator-max-microvolt = <2968000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l24a_3p075: ldo24 {
-+			regulator-min-microvolt = <3088000>;
-+			regulator-max-microvolt = <3088000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l25a_3p3: ldo25 {
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3312000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
-+		vreg_l26a_1p2: ldo26 {
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1200000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+	};
-+};
-+
-+&cdsp_pas {
-+	status = "okay";
-+	firmware-name = "qcom/sdm845/cdsp.mdt";
-+};
-+
-+&gcc {
-+	protected-clocks = <GCC_QSPI_CORE_CLK>,
-+			   <GCC_QSPI_CORE_CLK_SRC>,
-+			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
-+			   <GCC_LPASS_Q6_AXI_CLK>,
-+			   <GCC_LPASS_SWAY_CLK>;
-+};
-+
-+&gpu {
-+	zap-shader {
-+		memory-region = <&gpu_mem>;
-+		firmware-name = "qcom/sdm845/a630_zap.mbn";
-+	};
-+};
-+
-+&mss_pil {
-+	status = "okay";
-+	firmware-name = "qcom/sdm845/mba.mbn", "qcom/sdm845/modem.mdt";
-+};
-+
-+&pm8998_gpio {
-+	vol_up_pin_a: vol-up-active {
-+		pins = "gpio6";
-+		function = "normal";
-+		input-enable;
-+		bias-pull-up;
-+		qcom,drive-strength = <PMIC_GPIO_STRENGTH_NO>;
-+	};
-+};
-+
-+&pm8998_pon {
-+	resin {
-+		compatible = "qcom,pm8941-resin";
-+		interrupts = <0x0 0x8 1 IRQ_TYPE_EDGE_BOTH>;
-+		debounce = <15625>;
-+		bias-pull-up;
-+		linux,code = <KEY_VOLUMEDOWN>;
-+	};
-+};
-+
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
-+&sdhc_2 {
-+	status = "okay";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdc2_default_state &sdc2_card_det_n>;
-+
-+	vmmc-supply = <&vreg_l21a_2p95>;
-+	vqmmc-supply = <&vreg_l13a_2p95>;
-+
-+	bus-width = <4>;
-+	cd-gpios = <&tlmm 126 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&tlmm {
-+	gpio-reserved-ranges = <0 4>, <81 4>;
-+
-+	sdc2_default_state: sdc2-default {
-+		clk {
-+			pins = "sdc2_clk";
-+			bias-disable;
-+			drive-strength = <16>;
-+		};
-+
-+		cmd {
-+			pins = "sdc2_cmd";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+
-+		data {
-+			pins = "sdc2_data";
-+			bias-pull-up;
-+			drive-strength = <10>;
-+		};
-+	};
-+
-+	sdc2_card_det_n: sd-card-det-n {
-+		pins = "gpio126";
-+		function = "gpio";
-+		bias-pull-up;
-+	};
-+};
-+
-+&uart6 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
-+&ufs_mem_hc {
-+	status = "okay";
-+
-+	reset-gpios = <&tlmm 150 GPIO_ACTIVE_LOW>;
-+
-+	vcc-supply = <&vreg_l20a_2p95>;
-+	vcc-max-microamp = <800000>;
-+};
-+
-+&ufs_mem_phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l26a_1p2>;
-+};
-+
-+&usb_1 {
-+	status = "okay";
-+};
-+
-+&usb_1_dwc3 {
-+	dr_mode = "peripheral";
-+};
-+
-+&usb_1_hsphy {
-+	status = "okay";
-+
-+	vdd-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+
-+	qcom,imp-res-offset-value = <8>;
-+	qcom,hstx-trim-value = <QUSB2_V2_HSTX_TRIM_21_6_MA>;
-+	qcom,preemphasis-level = <QUSB2_V2_PREEMPHASIS_5_PERCENT>;
-+	qcom,preemphasis-width = <QUSB2_V2_PREEMPHASIS_WIDTH_HALF_BIT>;
-+};
-+
-+&usb_1_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l26a_1p2>;
-+	vdda-pll-supply = <&vreg_l1a_0p875>;
-+};
-+
-+&wifi {
-+	status = "okay";
-+
-+	vdd-0.8-cx-mx-supply = <&vreg_l5a_0p8>;
-+	vdd-1.8-xo-supply = <&vreg_l7a_1p8>;
-+	vdd-1.3-rfa-supply = <&vreg_l17a_1p3>;
-+	vdd-3.3-ch0-supply = <&vreg_l25a_3p3>;
-+};
-+
-+/* PINCTRL - additions to nodes defined in sdm845.dtsi */
-+
-+&qup_uart6_default {
-+	pinmux {
-+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+		function = "qup6";
-+	};
-+
-+	cts {
-+		pins = "gpio45";
-+		bias-disable;
-+	};
-+
-+	rts-tx {
-+		pins = "gpio46", "gpio47";
-+		drive-strength = <2>;
-+		bias-disable;
-+	};
-+
-+	rx {
-+		pins = "gpio48";
-+		bias-pull-up;
-+	};
-+};
--- 
-2.7.4
-
+DQpPbiBGcmksIDIwMjAtMDgtMjggYXQgMTg6NDcgKzAyMDAsIEtyenlzenRvZiBLb3psb3dza2kg
+d3JvdGU6DQo+IERldmljZSB0cmVlIHNjaGVtYSBleHBlY3RzIHJlZ3VsYXRvciBuYW1lcyB0byBi
+ZSBsb3dlcmNhc2UuICBDaGFuZ2luZw0KPiB0bw0KPiBsb3dlcmNhc2UgaGFzIG11bHRpcGxlIGVm
+ZmVjdHM6DQo+IDEuIExETzYgc3VwcGx5IGlzIG5vdyBwcm9wZXJseSBjb25maWd1cmVkLCBiZWNh
+dXNlIHJlZ3VsYXRvciBkcml2ZXINCj4gICAgbG9va3MgZm9yIHN1cHBsaWVzIGJ5IGxvd2VyY2Fz
+ZSBuYW1lLA0KPiAyLiBVc2VyLXZpc2libGUgbmFtZXMgdmlhIHN5c2ZzIG9yIGRlYnVnZnMgYXJl
+IG5vdyBsb3dlcmNhc2UsDQo+IDIuIGR0YnNfY2hlY2sgd2FybmluZ3MgYXJlIGZpeGVkOg0KPiAN
+Cj4gICAgIHBtaWNANGI6IHJlZ3VsYXRvcnM6TERPMTpyZWd1bGF0b3ItbmFtZTowOiAnTERPMScg
+ZG9lcyBub3QgbWF0Y2gNCj4gJ15sZG9bMS02XSQnDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBLcnp5
+c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+DQoNCkZXSVc6DQpBY2tlZC1CeTogTWF0
+dGkgVmFpdHRpbmVuIDxtYXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+DQoNCj4gLS0t
+DQo+ICAuLi4vYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtbi1kZHI0LWV2ay5kdHMgICAgfCAyMiAr
+KysrKysrKystLS0tLS0NCj4gLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMo
+KyksIDExIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvZnJlZXNjYWxlL2lteDhtbi1kZHI0LWV2ay5kdHMNCj4gYi9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2ZyZWVzY2FsZS9pbXg4bW4tZGRyNC1ldmsuZHRzDQo+IGluZGV4IDNhYzhmOWQzYzM3Mi4uOGY3
+MTU1NzE2Yzg0IDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
+bXg4bW4tZGRyNC1ldmsuZHRzDQo+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxl
+L2lteDhtbi1kZHI0LWV2ay5kdHMNCj4gQEAgLTYwLDcgKzYwLDcgQEANCj4gIA0KPiAgCQlyZWd1
+bGF0b3JzIHsNCj4gIAkJCWJ1Y2sxX3JlZzogQlVDSzEgew0KPiAtCQkJCXJlZ3VsYXRvci1uYW1l
+ID0gIkJVQ0sxIjsNCj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJidWNrMSI7DQo+ICAJCQkJcmVn
+dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NzAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3ItbWF4LW1p
+Y3Jvdm9sdCA9IDwxMzAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3ItYm9vdC1vbjsNCj4gQEAgLTY5
+LDcgKzY5LDcgQEANCj4gIAkJCX07DQo+ICANCj4gIAkJCWJ1Y2syX3JlZzogQlVDSzIgew0KPiAt
+CQkJCXJlZ3VsYXRvci1uYW1lID0gIkJVQ0syIjsNCj4gKwkJCQlyZWd1bGF0b3ItbmFtZSA9ICJi
+dWNrMiI7DQo+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8NzAwMDAwPjsNCj4gIAkJ
+CQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxMzAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3It
+Ym9vdC1vbjsNCj4gQEAgLTc5LDE0ICs3OSwxNCBAQA0KPiAgDQo+ICAJCQlidWNrM19yZWc6IEJV
+Q0szIHsNCj4gIAkJCQkvLyBCVUNLNSBpbiBkYXRhc2hlZXQNCj4gLQkJCQlyZWd1bGF0b3ItbmFt
+ZSA9ICJCVUNLMyI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAiYnVjazMiOw0KPiAgCQkJCXJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDcwMDAwMD47DQo+ICAJCQkJcmVndWxhdG9yLW1heC1t
+aWNyb3ZvbHQgPSA8MTM1MDAwMD47DQo+ICAJCQl9Ow0KPiAgDQo+ICAJCQlidWNrNF9yZWc6IEJV
+Q0s0IHsNCj4gIAkJCQkvLyBCVUNLNiBpbiBkYXRhc2hlZXQNCj4gLQkJCQlyZWd1bGF0b3ItbmFt
+ZSA9ICJCVUNLNCI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAiYnVjazQiOw0KPiAgCQkJCXJl
+Z3VsYXRvci1taW4tbWljcm92b2x0ID0gPDMwMDAwMDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1tYXgt
+bWljcm92b2x0ID0gPDMzMDAwMDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1ib290LW9uOw0KPiBAQCAt
+OTUsNyArOTUsNyBAQA0KPiAgDQo+ICAJCQlidWNrNV9yZWc6IEJVQ0s1IHsNCj4gIAkJCQkvLyBC
+VUNLNyBpbiBkYXRhc2hlZXQNCj4gLQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJCVUNLNSI7DQo+ICsJ
+CQkJcmVndWxhdG9yLW5hbWUgPSAiYnVjazUiOw0KPiAgCQkJCXJlZ3VsYXRvci1taW4tbWljcm92
+b2x0ID0gPDE2MDUwMDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE5OTUw
+MDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1ib290LW9uOw0KPiBAQCAtMTA0LDcgKzEwNCw3IEBADQo+
+ICANCj4gIAkJCWJ1Y2s2X3JlZzogQlVDSzYgew0KPiAgCQkJCS8vIEJVQ0s4IGluIGRhdGFzaGVl
+dA0KPiAtCQkJCXJlZ3VsYXRvci1uYW1lID0gIkJVQ0s2IjsNCj4gKwkJCQlyZWd1bGF0b3ItbmFt
+ZSA9ICJidWNrNiI7DQo+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8ODAwMDAwPjsN
+Cj4gIAkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxNDAwMDAwPjsNCj4gIAkJCQlyZWd1
+bGF0b3ItYm9vdC1vbjsNCj4gQEAgLTExMiw3ICsxMTIsNyBAQA0KPiAgCQkJfTsNCj4gIA0KPiAg
+CQkJbGRvMV9yZWc6IExETzEgew0KPiAtCQkJCXJlZ3VsYXRvci1uYW1lID0gIkxETzEiOw0KPiAr
+CQkJCXJlZ3VsYXRvci1uYW1lID0gImxkbzEiOw0KPiAgCQkJCXJlZ3VsYXRvci1taW4tbWljcm92
+b2x0ID0gPDE2MDAwMDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDMzMDAw
+MDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1ib290LW9uOw0KPiBAQCAtMTIwLDcgKzEyMCw3IEBADQo+
+ICAJCQl9Ow0KPiAgDQo+ICAJCQlsZG8yX3JlZzogTERPMiB7DQo+IC0JCQkJcmVndWxhdG9yLW5h
+bWUgPSAiTERPMiI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAibGRvMiI7DQo+ICAJCQkJcmVn
+dWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8ODAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3ItbWF4LW1p
+Y3Jvdm9sdCA9IDw5MDAwMDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1ib290LW9uOw0KPiBAQCAtMTI4
+LDcgKzEyOCw3IEBADQo+ICAJCQl9Ow0KPiAgDQo+ICAJCQlsZG8zX3JlZzogTERPMyB7DQo+IC0J
+CQkJcmVndWxhdG9yLW5hbWUgPSAiTERPMyI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAibGRv
+MyI7DQo+ICAJCQkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MTgwMDAwMD47DQo+ICAJCQkJ
+cmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47DQo+ICAJCQkJcmVndWxhdG9yLWJv
+b3Qtb247DQo+IEBAIC0xMzYsNyArMTM2LDcgQEANCj4gIAkJCX07DQo+ICANCj4gIAkJCWxkbzRf
+cmVnOiBMRE80IHsNCj4gLQkJCQlyZWd1bGF0b3ItbmFtZSA9ICJMRE80IjsNCj4gKwkJCQlyZWd1
+bGF0b3ItbmFtZSA9ICJsZG80IjsNCj4gIAkJCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw5
+MDAwMDA+Ow0KPiAgCQkJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0ID0gPDE4MDAwMDA+Ow0KPiAg
+CQkJCXJlZ3VsYXRvci1ib290LW9uOw0KPiBAQCAtMTQ0LDcgKzE0NCw3IEBADQo+ICAJCQl9Ow0K
+PiAgDQo+ICAJCQlsZG82X3JlZzogTERPNiB7DQo+IC0JCQkJcmVndWxhdG9yLW5hbWUgPSAiTERP
+NiI7DQo+ICsJCQkJcmVndWxhdG9yLW5hbWUgPSAibGRvNiI7DQo+ICAJCQkJcmVndWxhdG9yLW1p
+bi1taWNyb3ZvbHQgPSA8OTAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9
+IDwxODAwMDAwPjsNCj4gIAkJCQlyZWd1bGF0b3ItYm9vdC1vbjsNCg0K
