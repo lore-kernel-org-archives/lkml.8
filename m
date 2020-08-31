@@ -2,176 +2,138 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9FCC433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609E0C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABD72071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:23:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC9220678
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:24:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joFCO9aP"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="CPkddEgE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgHaSXH (ORCPT
+        id S1729847AbgHaSYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:23:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729767AbgHaSXF (ORCPT
+        Mon, 31 Aug 2020 14:24:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25912 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729581AbgHaSYJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:23:05 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37F6AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:23:05 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id d190so6106175iof.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:23:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xv8rGjKL3AwaVAY3DveNACmKtTJqRUUuSopt9eMG6Sg=;
-        b=joFCO9aPkwFdN3+LMX0pw3+AcTzaOnmd3vAoxDSr0miya+xkD5Q3Ww2WoPKJ8zmINc
-         8cTGbp4nwt2bPZEj55JmmAkwFKvMRTlGKZ2wi9THLyOAaRucncX4QUmxsJq6CHoavYCr
-         ughYYusRskGtr1JJVKa7xJ9rxdQs5X1H2HrmY96C0kogl8G1QyVG3PUxSuJ0C3D1Lxv9
-         KcvWSk75PWEPhekhVjcLIc+Xc1bK3OSGLmZuRKq26v0Gbz778mRaz+H37ti700WzGl2p
-         YSaMg/3FQP82QGXLiE3Gj4f/QsKJchu+0HJU9NNvgtImqPDI2djCMzHjOUK8vVO7YZGZ
-         9UCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xv8rGjKL3AwaVAY3DveNACmKtTJqRUUuSopt9eMG6Sg=;
-        b=kNU0Vb5ZAeKizByTwX0nnp7O31IDHvDv8YLbiHv2loykisUksm+sXWZ3gNUZ0QxhZa
-         Frwd2ttXBGrKfal+IxarZexYTDEenOm0mwepvOdYMCPiRroWhwoW7hLkfBnQhU1Oq42J
-         KTHfJR0QxhS6NKTt5N7gRqiWInSdQA9MbqHHUceqeZ5vOQzGPO0wQ2cjJm9fG6HUF/eh
-         j9Wd1Cf4k2UzqLxjru3Fo3JZVCYmaRsfRybXBZNS5hTnLjCYzfxONPLeesY0xxV10gq8
-         ORaIl1B4tRVCFyb9cfBXFZCCHNTL0C56l8Ih+papEmuWyc5/7eR2kbu5NLrADqNr9eP8
-         Xtzw==
-X-Gm-Message-State: AOAM530Hh1lFeIWygr+JYTjRTr3NjiSf66POvBpCE+ZtdJ1sZB5cXjqI
-        +tw+dBKsO2IVfNo5aZ62FME=
-X-Google-Smtp-Source: ABdhPJzBxffsjRS306lzQbjmhFGK2u2q6uduTo/rEalzCIBbICArYTe2nwuVweajJC+vNlOTk08vjg==
-X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr2287381ioq.41.1598898184551;
-        Mon, 31 Aug 2020 11:23:04 -0700 (PDT)
-Received: from frodo.hsd1.co.comcast.net ([2601:284:8203:5970::dc2e])
-        by smtp.googlemail.com with ESMTPSA id p18sm4129017iog.1.2020.08.31.11.23.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 11:23:04 -0700 (PDT)
-From:   Jim Cromie <jim.cromie@gmail.com>
-To:     jbaron@akamai.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v3 3/3] dyndbg: fix problem parsing format="foo bar"
-Date:   Mon, 31 Aug 2020 12:22:10 -0600
-Message-Id: <20200831182210.850852-4-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200831182210.850852-1-jim.cromie@gmail.com>
-References: <20200831182210.850852-1-jim.cromie@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 31 Aug 2020 14:24:09 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VI1k9e192199;
+        Mon, 31 Aug 2020 14:24:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=P7mHsXAaOECT9cWfKNbj36oJwWhrX5fDV7JR8XC5aM0=;
+ b=CPkddEgE29Ium4MTNJrwP5X6OWpYv1nYvTsni5xZl7PcCEzd6xQwDNtUedTBzrp0H+nc
+ v8L6HJ8SjF0brR6Ddqom78bML3RSH4UcMCriDUxhgGpxKZMIASf/m8yH1kYcJFOZcxya
+ dI8jRFK8XQzgBKIh7rX/aVO5FZ48TKHa+AQrtxnGL2vNF92pQwHcEFLAr1D6vGhKd/Pw
+ GiSJcpOba6q7dB0mM0enqkzjcXtWx1vT2Ry5SZFn2GfoXXSdk+sn7O7s9O+ZqC7yGxj5
+ XnlU8LNHayxVSNyAj9Mu53651BQcP2muK8fTEsltEuosFBcznOrST8jiMeXCJ3fA4Z9d GA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33953et7um-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 14:24:04 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07VIK7lW043560;
+        Mon, 31 Aug 2020 14:24:04 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33953et7tr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 14:24:03 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07VICxG7004273;
+        Mon, 31 Aug 2020 18:24:02 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 337e9gtew2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 31 Aug 2020 18:24:01 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07VINxPl31850954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 31 Aug 2020 18:23:59 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E2A1A4040;
+        Mon, 31 Aug 2020 18:23:59 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0F86CA4053;
+        Mon, 31 Aug 2020 18:23:56 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.2.129])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 31 Aug 2020 18:23:55 +0000 (GMT)
+Message-ID: <6c80bdad49c72fa58b5a9fb7ce2d20c8cabe1324.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 5/6] IMA: add hook to measure critical data from
+ kernel components
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
+        agk@redhat.com, snitzer@redhat.com, gmazyland@gmail.com
+Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
+        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dm-devel@redhat.com
+Date:   Mon, 31 Aug 2020 14:23:55 -0400
+In-Reply-To: <20200828015704.6629-6-tusharsu@linux.microsoft.com>
+References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
+         <20200828015704.6629-6-tusharsu@linux.microsoft.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-31_08:2020-08-31,2020-08-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 mlxscore=0 bulkscore=0 mlxlogscore=999 lowpriorityscore=0
+ malwarescore=0 adultscore=0 phishscore=0 clxscore=1015 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2008310104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 14775b049642 ("dyndbg: accept query terms like file=bar and module=foo")
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 52cbbc1f7ea2..a889bf40cb7e 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -869,6 +869,30 @@ void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
+>  	fdput(f);
+>  }
+>  
+> +/**
+> + * ima_measure_critical_data - measure critical data
+> + * @event_name: name for the given data
+> + * @event_data_source: name of the event data source
+> + * @buf: pointer to buffer containing data to measure
+> + * @buf_len: length of buffer(in bytes)
+> + * @measure_buf_hash: if set to true - will measure hash of the buf,
+> + *                    instead of buf
+> + *
+> + * Buffers can only be measured, not appraised.
+> + */
+> +int ima_measure_critical_data(const char *event_name,
+> +			      const char *event_data_source,
+> +			      const void *buf, int buf_len,
+> +			      bool measure_buf_hash)
+> +{
+> +	if (!event_name || !event_data_source || !buf || !buf_len)
+> +		return -EINVAL;
+> +
+> +	return process_buffer_measurement(NULL, buf, buf_len, event_name,
+> +					  CRITICAL_DATA, 0, event_data_source,
+> +					  measure_buf_hash);
 
-added the combined keyword=value parsing poorly; revert most of it,
-keeping the keyword & arg change.
+This is exactly what I'm concerned about.  Failure to measure data may
+be audited, but should never fail.
 
-Instead, fix the tokenizer for the new input, by terminating the
-keyword (an unquoted word) on '=' as well as space, thus letting the
-tokenizer work on the quoted argument, like it would have previously.
+Mimi
 
-Also add a few debug-prints to show more parsing context, into
-tokenizer and parse-query, and use "keyword, value" in others.
+> +}
 
-Fixes: 14775b049642 ("dyndbg: accept query terms like file=bar and module=foo")
----
--v3 commit message, checkpatch fixes
-
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- lib/dynamic_debug.c | 38 +++++++++++++++++---------------------
- 1 file changed, 17 insertions(+), 21 deletions(-)
-
-diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 08e4b057514c..04f4c80b0d16 100644
---- a/lib/dynamic_debug.c
-+++ b/lib/dynamic_debug.c
-@@ -237,6 +237,7 @@ static int ddebug_tokenize(char *buf, char *words[], int maxwords)
- {
- 	int nwords = 0;
- 
-+	vpr_info("entry, buf:'%s'\n", buf);
- 	while (*buf) {
- 		char *end;
- 
-@@ -247,6 +248,8 @@ static int ddebug_tokenize(char *buf, char *words[], int maxwords)
- 		if (*buf == '#')
- 			break;	/* token starts comment, skip rest of line */
- 
-+		vpr_info("start-of-word:%d '%s'\n", nwords, buf);
-+
- 		/* find `end' of word, whitespace separated or quoted */
- 		if (*buf == '"' || *buf == '\'') {
- 			int quote = *buf++;
-@@ -257,7 +260,9 @@ static int ddebug_tokenize(char *buf, char *words[], int maxwords)
- 				return -EINVAL;	/* unclosed quote */
- 			}
- 		} else {
--			for (end = buf; *end && !isspace(*end); end++)
-+			for (end = buf;
-+			     *end && *end != '=' && !isspace(*end);
-+			     end++)
- 				;
- 			BUG_ON(end == buf);
- 		}
-@@ -373,30 +378,21 @@ static int ddebug_parse_query(char *words[], int nwords,
- 	unsigned int i;
- 	int rc = 0;
- 	char *fline;
--	char *keyword, *arg;
- 
--	if (modname)
-+	if (nwords % 2 != 0) {
-+		pr_err("expecting pairs of match-spec <value>\n");
-+		return -EINVAL;
-+	}
-+	if (modname) {
- 		/* support $modname.dyndbg=<multiple queries> */
-+		vpr_info("module:%s queries:'%s'\n", modname);
- 		query->module = modname;
-+	}
-+	for (i = 0; i < nwords; i += 2) {
-+		char *keyword = words[i];
-+		char *arg = words[i+1];
- 
--	for (i = 0; i < nwords; i++) {
--		/* accept keyword=arg */
--		vpr_info("%d w:%s\n", i, words[i]);
--
--		keyword = words[i];
--		arg = strchr(keyword, '=');
--		if (arg) {
--			*arg++ = '\0';
--		} else {
--			i++; /* next word is arg */
--			if (!(i < nwords)) {
--				pr_err("missing arg to keyword: %s\n", keyword);
--				return -EINVAL;
--			}
--			arg = words[i];
--		}
--		vpr_info("%d key:%s arg:%s\n", i, keyword, arg);
--
-+		vpr_info("keyword:'%s' value:'%s'\n", keyword, arg);
- 		if (!strcmp(keyword, "func")) {
- 			rc = check_set(&query->function, arg, "func");
- 		} else if (!strcmp(keyword, "file")) {
--- 
-2.26.2
 
