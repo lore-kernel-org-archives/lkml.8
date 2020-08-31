@@ -2,162 +2,334 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2124C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87749C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B21E62071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:15:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hSZmsJ6x"
+	by mail.kernel.org (Postfix) with ESMTP id 631672071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598897769;
+	bh=PvgIqe8j2pWKExdulY1m2HLm5EABIIx67syr4+2mTG8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=t1IZkBwnLpC5/TiBM9EaborXLGSsrsDVLWMUGgxfixfElL/1ReeWYJLwXhgPvzJ1t
+	 8A+asHheSBw6KyMigPDQcQ9wAESfu8t10q2NMwgml+X8hLqlzqp0xvdfFPq1QKjxQJ
+	 FO25c+gsHJiP5EgDoCkyx6AdwzKMVxXpl4WhbCYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgHaSPX (ORCPT
+        id S1729348AbgHaSQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:15:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65350 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727058AbgHaSPW (ORCPT
+        Mon, 31 Aug 2020 14:16:08 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:38893 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727058AbgHaSQF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:15:22 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07VICSOM010830;
-        Mon, 31 Aug 2020 14:15:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=2Zt60Da8ydmfnwL5qNmLq+grEYSEGAAJLsSW2Aj+kEU=;
- b=hSZmsJ6x/E8w9k3QpIr9V9sDC8DIieH0tXD0gBI7boybRHgfmP1qtdgufXL59okj1eZP
- FozffYjP7L/4dL8ZPQwxtaQXfBegu/fiIBlXC44rGBXVFeNfu/FT4rvldRDeAX9qNkPd
- n7Tnd8A7ipeQVeP0eG+zM1KKXQh8iUrYFS9mmyNq2J5IbMsqV2pdP2RJTzOEjHHVi7d4
- DDNPM4JNLjGXxStGAxNElrecg/e/Mm+8Dmuvy0jCUaUj5T4+0XaeXujUgzFtWBK+r5Go
- QX2UtmgTs6lYQ4dnTdOOkeYGc5R9dZoMK9CwDQ8SLlNcMewmbzIg0w2S6hvDzBFF/Tt/ Bg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33969br22u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 14:15:15 -0400
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07VIE72u013986;
-        Mon, 31 Aug 2020 14:15:15 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33969br21a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 14:15:15 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07VICxFc004273;
-        Mon, 31 Aug 2020 18:15:13 GMT
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
-        by ppma06ams.nl.ibm.com with ESMTP id 337e9gten0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 18:15:13 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07VIFB4A15860132
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 18:15:11 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9A50A4072;
-        Mon, 31 Aug 2020 18:15:09 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 85E9EA4069;
-        Mon, 31 Aug 2020 18:15:06 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.2.129])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 31 Aug 2020 18:15:06 +0000 (GMT)
-Message-ID: <652406e1a08d855a5d9a3e3815835653a12df411.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 4/6] IMA: add policy to measure critical data from
- kernel components
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        stephen.smalley.work@gmail.com, casey@schaufler-ca.com,
-        agk@redhat.com, snitzer@redhat.com, gmazyland@gmail.com
-Cc:     tyhicks@linux.microsoft.com, sashal@kernel.org, jmorris@namei.org,
-        nramas@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dm-devel@redhat.com
-Date:   Mon, 31 Aug 2020 14:15:05 -0400
-In-Reply-To: <20200828015704.6629-5-tusharsu@linux.microsoft.com>
-References: <20200828015704.6629-1-tusharsu@linux.microsoft.com>
-         <20200828015704.6629-5-tusharsu@linux.microsoft.com>
+        Mon, 31 Aug 2020 14:16:05 -0400
+Received: by mail-ot1-f66.google.com with SMTP id y5so1557373otg.5;
+        Mon, 31 Aug 2020 11:16:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o4n5ZY7UK+Af711a+jkirN1+LhqqnwPtEvzee1EZgVQ=;
+        b=jnp6EMzvOqwqbMx5rsei2Xtbr5yfT+Mh6MVq+zMokVlLHBgijWG1rqw0Rbqex4X+LQ
+         JAffiqnCur/eM41gwne8BCTjy4sKJKjBOPQP7WurATr84WyK1zz53BzezcrCyOkW4lsm
+         sA1nYVflHWCCf2P46v5Nux83g0L9Wc9FBBK9iVPjYcRRg3dGeFPAPKzIYHZ+5UQSkoka
+         hGb2Mag1cX41jinbui2582Jd69fM5D8IeclYuRwMOo03PHw1HU2BVrGV3FUf2zVxN6MJ
+         rViUrYU4603O2Z6TWT6LjSLfCNHWl7TGWyFe3QrTC8HM6qBVyTf4kPNta91+g/h9TTR1
+         OLrQ==
+X-Gm-Message-State: AOAM530qpcdW4gLNedOINseo+MGJ1Mp3/4mHD3W9AANCiaZtgcTqfDrg
+        9HkaqZlt3ctH8J7RFXgfL/0h6ZFT4n6niws64S4=
+X-Google-Smtp-Source: ABdhPJzBJPQaRTojkCAeMdHSRkL6m9XTsC8VIs0zJxh80sleWqbwgkmE6e3Q5Lca8pSIYGlWpVPWMcb9NsPkjJpc9P8=
+X-Received: by 2002:a9d:7e99:: with SMTP id m25mr1679295otp.118.1598897764330;
+ Mon, 31 Aug 2020 11:16:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <2240881.fzTuzKk6Gz@kreacher> <1825858.9IUoltcDtD@kreacher>
+In-Reply-To: <1825858.9IUoltcDtD@kreacher>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 31 Aug 2020 20:15:52 +0200
+Message-ID: <CAJZ5v0gJciEDUYwz80cAOTyZ7+3yDdzkKtGB3X6wjEh4aUM6BQ@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] cpufreq: intel_pstate: Add ->offline and ->online callbacks
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-31_08:2020-08-31,2020-08-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
- phishscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=999 spamscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008310104
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-08-27 at 18:57 -0700, Tushar Sugandhi wrote:
-> There would be several candidate kernel components suitable for IMA
-> measurement. Not all of them would have support for IMA measurement.
-> Also, system administrators may not want to measure data for all of
-> them, even when they support IMA measurement. An IMA policy specific
-> to various kernel components is needed to measure their respective
-> critical data.
-
-The base policy rules are wide, but may be constrained by specifying
-different options.  For example the builtin policy rules cannot be
-written in terms LSM labels, which would constrain them.  A policy rule
-may measure all keyrings or may constrain which keyrings need to be
-measured.  Measuring critical data is not any different.
-
-Please rewrite the above paragraph accordingly.
-
-> 
-> Add a new IMA policy "critical_kernel_data_sources" to support measuring
-> various critical kernel components. This policy would enable the
-> system administrators to limit the measurement to the components,
-> if the components support IMA measurement.
-
-"critical_kernel_data_sources" is really wordy.   Find a better, self
-defining term for describing the type of data, one that isn't so wordy,
-and reflect it in the code.
-
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+On Thu, Aug 27, 2020 at 5:28 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>
+> Add ->offline and ->online driver callbacks to prepare for taking a
+> CPU offline and to restore its working configuration when it goes
+> back online, respectively, to avoid invoking the ->init callback on
+> every CPU online which is quite a bit of unnecessary overhead.
+>
+> Define ->offline and ->online so that they can be used in the
+> passive mode as well as in the active mode and because ->offline
+> will do the majority of ->stop_cpu work, the passive mode does
+> not need that callback any more, so drop it from there.
+>
+> Also modify the active mode ->suspend and ->resume callbacks to
+> prevent them from interfering with the new ->offline and ->online
+> ones in case the latter are invoked withing the system-wide suspend
+> and resume code flow and make the passive mode use them too.
+>
+> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 > ---
->  Documentation/ABI/testing/ima_policy |  3 +++
->  security/integrity/ima/ima_policy.c  | 29 +++++++++++++++++++++++++++-
->  2 files changed, 31 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-> index cd572912c593..7ccdc1964e29 100644
-> --- a/Documentation/ABI/testing/ima_policy
-> +++ b/Documentation/ABI/testing/ima_policy
-> @@ -48,6 +48,9 @@ Description:
->  			template:= name of a defined IMA template type
->  			(eg, ima-ng). Only valid when action is "measure".
->  			pcr:= decimal value
-> +			critical_kernel_data_sources:= list of kernel
-> +			components (eg, selinux|apparmor|dm-crypt) that
-> +			contain data critical to the security of the kernel.
+>
+> -> v2: Rearrange intel_pstate_init_cpu() to restore some of the previous
+>        behavior of it to retain the current active-mode EPP management.
+>
+> v2 -> v3:
+>    * Fold the previous [5/5] in, rework intel_pstate_resume(), add
+>      intel_pstate_suspend().
+>    * Drop intel_pstate_hwp_save_state() and drop epp_saved from struct cpudata.
+>    * Update the changelog.
+>
+> ---
+>  drivers/cpufreq/intel_pstate.c | 139 +++++++++++++++++++++------------
+>  1 file changed, 91 insertions(+), 48 deletions(-)
+>
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index b308c39b6204..a265ccbcbbd7 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -219,14 +219,13 @@ struct global_params {
+>   * @epp_policy:                Last saved policy used to set EPP/EPB
+>   * @epp_default:       Power on default HWP energy performance
+>   *                     preference/bias
+> - * @epp_saved:         Saved EPP/EPB during system suspend or CPU offline
+> - *                     operation
+>   * @epp_cached         Cached HWP energy-performance preference value
+>   * @hwp_req_cached:    Cached value of the last HWP Request MSR
+>   * @hwp_cap_cached:    Cached value of the last HWP Capabilities MSR
+>   * @last_io_update:    Last time when IO wake flag was set
+>   * @sched_flags:       Store scheduler flags for possible cross CPU update
+>   * @hwp_boost_min:     Last HWP boosted min performance
+> + * @suspended:         Whether or not the driver has been suspended.
+>   *
+>   * This structure stores per CPU instance data for all CPUs.
+>   */
+> @@ -258,13 +257,13 @@ struct cpudata {
+>         s16 epp_powersave;
+>         s16 epp_policy;
+>         s16 epp_default;
+> -       s16 epp_saved;
+>         s16 epp_cached;
+>         u64 hwp_req_cached;
+>         u64 hwp_cap_cached;
+>         u64 last_io_update;
+>         unsigned int sched_flags;
+>         u32 hwp_boost_min;
+> +       bool suspended;
+>  };
+>
+>  static struct cpudata **all_cpu_data;
+> @@ -871,12 +870,6 @@ static void intel_pstate_hwp_set(unsigned int cpu)
+>
+>         cpu_data->epp_policy = cpu_data->policy;
+>
+> -       if (cpu_data->epp_saved >= 0) {
+> -               epp = cpu_data->epp_saved;
+> -               cpu_data->epp_saved = -EINVAL;
+> -               goto update_epp;
+> -       }
+> -
+>         if (cpu_data->policy == CPUFREQ_POLICY_PERFORMANCE) {
+>                 epp = intel_pstate_get_epp(cpu_data, value);
+>                 cpu_data->epp_powersave = epp;
+> @@ -903,7 +896,6 @@ static void intel_pstate_hwp_set(unsigned int cpu)
+>
+>                 epp = cpu_data->epp_powersave;
+>         }
+> -update_epp:
+>         if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+>                 value &= ~GENMASK_ULL(31, 24);
+>                 value |= (u64)epp << 24;
+> @@ -915,14 +907,24 @@ static void intel_pstate_hwp_set(unsigned int cpu)
+>         wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
+>  }
+>
+> -static void intel_pstate_hwp_force_min_perf(int cpu)
+> +static void intel_pstate_hwp_offline(struct cpudata *cpu)
+>  {
+> -       u64 value;
+> +       u64 value = READ_ONCE(cpu->hwp_req_cached);
+>         int min_perf;
+>
+> -       value = all_cpu_data[cpu]->hwp_req_cached;
+> +       if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
+> +               /*
+> +                * In case the EPP has been set to "performance" by the
+> +                * active mode "performance" scaling algorithm, replace that
+> +                * temporary value with the cached EPP one.
+> +                */
+> +               value &= ~GENMASK_ULL(31, 24);
+> +               value |= HWP_ENERGY_PERF_PREFERENCE(cpu->epp_cached);
+> +               WRITE_ONCE(cpu->hwp_req_cached, value);
+> +       }
+> +
+>         value &= ~GENMASK_ULL(31, 0);
+> -       min_perf = HWP_LOWEST_PERF(all_cpu_data[cpu]->hwp_cap_cached);
+> +       min_perf = HWP_LOWEST_PERF(cpu->hwp_cap_cached);
+>
+>         /* Set hwp_max = hwp_min */
+>         value |= HWP_MAX_PERF(min_perf);
+> @@ -932,19 +934,7 @@ static void intel_pstate_hwp_force_min_perf(int cpu)
+>         if (boot_cpu_has(X86_FEATURE_HWP_EPP))
+>                 value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
+>
+> -       wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
+> -}
+> -
+> -static int intel_pstate_hwp_save_state(struct cpufreq_policy *policy)
+> -{
+> -       struct cpudata *cpu_data = all_cpu_data[policy->cpu];
+> -
+> -       if (!hwp_active)
+> -               return 0;
+> -
+> -       cpu_data->epp_saved = intel_pstate_get_epp(cpu_data, 0);
+> -
+> -       return 0;
+> +       wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
+>  }
+>
+>  #define POWER_CTL_EE_ENABLE    1
+> @@ -971,8 +961,22 @@ static void set_power_ctl_ee_state(bool input)
+>
+>  static void intel_pstate_hwp_enable(struct cpudata *cpudata);
+>
+> +static int intel_pstate_suspend(struct cpufreq_policy *policy)
+> +{
+> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
+> +
+> +       pr_debug("CPU %d suspending\n", cpu->cpu);
+> +
+> +       cpu->suspended = true;
+> +
+> +       return 0;
+> +}
+> +
+>  static int intel_pstate_resume(struct cpufreq_policy *policy)
+>  {
+> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
+> +
+> +       pr_debug("CPU %d resuming\n", cpu->cpu);
+>
+>         /* Only restore if the system default is changed */
+>         if (power_ctl_ee_state == POWER_CTL_EE_ENABLE)
+> @@ -980,18 +984,22 @@ static int intel_pstate_resume(struct cpufreq_policy *policy)
+>         else if (power_ctl_ee_state == POWER_CTL_EE_DISABLE)
+>                 set_power_ctl_ee_state(false);
+>
+> -       if (!hwp_active)
+> -               return 0;
+> +       if (hwp_active) {
+> +               mutex_lock(&intel_pstate_limits_lock);
+>
+> -       mutex_lock(&intel_pstate_limits_lock);
+> +               /*
+> +                * Enable for all CPUs, because the boot CPU may not be the
+> +                * first one to resume.
+> +                */
+> +               intel_pstate_hwp_enable(cpu);
+>
+> -       if (policy->cpu == 0)
+> -               intel_pstate_hwp_enable(all_cpu_data[policy->cpu]);
+> +               wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST,
+> +                             READ_ONCE(cpu->hwp_req_cached));
+>
+> -       all_cpu_data[policy->cpu]->epp_policy = 0;
+> -       intel_pstate_hwp_set(policy->cpu);
+> +               mutex_unlock(&intel_pstate_limits_lock);
+> +       }
+>
+> -       mutex_unlock(&intel_pstate_limits_lock);
+> +       cpu->suspended = false;
+>
+>         return 0;
+>  }
+> @@ -1440,7 +1448,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
+>                 wrmsrl_on_cpu(cpudata->cpu, MSR_HWP_INTERRUPT, 0x00);
+>
+>         wrmsrl_on_cpu(cpudata->cpu, MSR_PM_ENABLE, 0x1);
+> -       cpudata->epp_policy = 0;
+>         if (cpudata->epp_default == -EINVAL)
+>                 cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
+>  }
+> @@ -2111,7 +2118,6 @@ static int intel_pstate_init_cpu(unsigned int cpunum)
+>
+>                 cpu->epp_default = -EINVAL;
+>                 cpu->epp_powersave = -EINVAL;
+> -               cpu->epp_saved = -EINVAL;
+>         }
+>
+>         cpu = all_cpu_data[cpunum];
+> @@ -2122,6 +2128,7 @@ static int intel_pstate_init_cpu(unsigned int cpunum)
+>                 const struct x86_cpu_id *id;
+>
+>                 intel_pstate_hwp_enable(cpu);
+> +               cpu->epp_policy = 0;
+>
+>                 id = x86_match_cpu(intel_pstate_hwp_boost_ids);
+>                 if (id && intel_pstate_acpi_pm_profile_server())
+> @@ -2308,28 +2315,59 @@ static int intel_pstate_verify_policy(struct cpufreq_policy_data *policy)
+>         return 0;
+>  }
+>
+> -static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
+> +static int intel_pstate_cpu_offline(struct cpufreq_policy *policy)
+>  {
+> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
+> +
+> +       pr_debug("CPU %d going offline\n", cpu->cpu);
+> +
+> +       if (cpu->suspended)
+> +               return 0;
+> +
+> +       intel_pstate_exit_perf_limits(policy);
+> +
+> +       /*
+> +        * If the CPU is an SMT thread and it goes offline with the performance
+> +        * settings different from the minimum, it will prevent its sibling
+> +        * from getting to lower performance levels, so force the minimum
+> +        * performance on CPU offline to prevent that from happening.
+> +        */
+>         if (hwp_active)
+> -               intel_pstate_hwp_force_min_perf(policy->cpu);
+> +               intel_pstate_hwp_offline(cpu);
+>         else
+> -               intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
+> +               intel_pstate_set_min_pstate(cpu);
+> +
+> +       return 0;
+>  }
+>
+> -static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+> +static int intel_pstate_cpu_online(struct cpufreq_policy *policy)
+>  {
+> -       pr_debug("CPU %d exiting\n", policy->cpu);
+> +       struct cpudata *cpu = all_cpu_data[policy->cpu];
+> +
+> +       pr_debug("CPU %d going online\n", cpu->cpu);
+> +
+> +       if (cpu->suspended)
 
-This original policy definition, for the most part, is in Backus–Naur
-format.   The keyring names is an exception, because it is not limited
-to pre-defined kernel objects.  The critical data hook is measuring
-things in kernel memory.  As new calls to measure critical data are
-added, new identifiers would be added here.
+_cpu_online() needs to enable HWP if "suspended", or the MSR accesses
+in _set_policy() will trigger warnings when resuming from ACPI S3.
 
-For example, if SELinux is the first example of measuring critical
-data, then the SELinux critical data patch would include
-"critical_data:= [selinux]".  Each subsequent critical data being
-measured would extend this list.  At the same time, the list of known
-"critical data" defined in patch 6/6 would be updated.
+This has been fixed in the intel_pstate-testing branch already and I
+will send an update of the patch tomorrow.
 
-Normally a new feature and the first usage of that feature are included
-in the same patch set.  Separating them like this makes it difficult to
-write, review and upstream.
-
-Mimi
-
+Thanks!
