@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ED33C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD96C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04DBA2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85BAD2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897497;
-	bh=BrvLViBsThaXkvt7qUFESDZ3SWqAijf66Epo+FLqfRo=;
+	s=default; t=1598897499;
+	bh=NcJJDjKPbJHUqCWQSv0m7YSMWH5nrU0mAQI5DfMA5YU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2m5zulj+x5qLbWo0tJ1WuClRxOX8xDC4D35Ltc70auxNLvMfH5cI4dqmYL5vB8TQ
-	 5uxi6/1gFa0mVfQii/t1JhtqfDEHBqvLxEFqz1Socvxn9tH2f2Y7cdJtEeTeI2e3X3
-	 6jPUEFPEoNpOq3bYXRQMomN3evviIJ++StDWn8oo=
+	b=T6KM71p8pHqkDXAG9IBrjZyQu5wjh9p4tEIve/EL297GVhna/S9IKFTK1fQ7IAMRY
+	 WuJnop2hVZnsbCH4SrScZjajIf7RCqndMHdlhwzDTv8yE9qQAp5LkYkITjhTNU5mtn
+	 DxpS6usWcYN3047n1x2Kaz5b8gUX8MHCNZNe+GbM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729529AbgHaSLf (ORCPT
+        id S1729569AbgHaSLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:11:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35846 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbgHaSLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:11:23 -0400
+        id S1729198AbgHaSL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:11:26 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 968FD21527;
-        Mon, 31 Aug 2020 18:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D05A214D8;
+        Mon, 31 Aug 2020 18:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897482;
-        bh=BrvLViBsThaXkvt7qUFESDZ3SWqAijf66Epo+FLqfRo=;
+        s=default; t=1598897483;
+        bh=NcJJDjKPbJHUqCWQSv0m7YSMWH5nrU0mAQI5DfMA5YU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uRXQyfBl7ufLW4JZc5lugfOqhqVasBvOlpmFo7YnGNUucqh74XfB9spFuD8qm73kD
-         n7v45sKwgu0EVy8VhDElHXl/Dsaqifct5Z5yKk3jtAz8Z0YVrSaE+eywtF5W9SpKHn
-         jmPuUX9yN91y2wuOGP9z2g34egKFbTBR3CSQDnw8=
+        b=hzm+EwNk1Eg6HPojLgueCwlma5KIffWsm2goG97DboPk81YZLY3C+6Pq2tIlyx6DF
+         SsVfZexMjfhgBRFBfdtnqD4A93KZSQMiCNLSYWJhrHtcVu9PgMou6sp5eFrhPjwgeU
+         FU7u+96iHf9HZ9zx0FGEIMzWs3UMckRd4+HM3txU=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 04/13] rcu: Force DEFAULT_RCU_BLIMIT to 1000 for strict RCU GPs
-Date:   Mon, 31 Aug 2020 11:11:11 -0700
-Message-Id: <20200831181120.1044-4-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 08/13] rcu: IPI all CPUs at GP start for strict GPs
+Date:   Mon, 31 Aug 2020 11:11:15 -0700
+Message-Id: <20200831181120.1044-8-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831181101.GA950@paulmck-ThinkPad-P72>
 References: <20200831181101.GA950@paulmck-ThinkPad-P72>
@@ -61,49 +61,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The value of DEFAULT_RCU_BLIMIT is normally set to 10, the idea being to
-avoid needless response-time degradation due to RCU callback invocation.
-However, when CONFIG_RCU_STRICT_GRACE_PERIOD=y it is better to avoid
-throttling callback execution in order to better detect pointer
-leaks from RCU read-side critical sections.  This commit therefore
-sets the value of DEFAULT_RCU_BLIMIT to 1000 in kernels built with
+Currently, each CPU discovers the beginning of a given grace period
+on its own time, which is again good for efficiency but bad for fast
+grace periods.  This commit therefore uses on_each_cpu() to IPI each
+CPU after grace-period initialization in order to inform each CPU of
+the new grace period in a timely manner, but only in kernels build with
 CONFIG_RCU_STRICT_GRACE_PERIOD=y.
 
 Reported-by Jann Horn <jannh@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/rcu/tree.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
 diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 8551159..4436857 100644
+index 36a860c..88f4fa6 100644
 --- a/kernel/rcu/tree.c
 +++ b/kernel/rcu/tree.c
-@@ -468,17 +468,18 @@ static int rcu_is_cpu_rrupt_from_idle(void)
- 	return __this_cpu_read(rcu_data.dynticks_nesting) == 0;
+@@ -1696,6 +1696,15 @@ static void rcu_gp_torture_wait(void)
  }
  
--#define DEFAULT_RCU_BLIMIT 10     /* Maximum callbacks per rcu_do_batch ... */
--#define DEFAULT_MAX_RCU_BLIMIT 10000 /* ... even during callback flood. */
-+#define DEFAULT_RCU_BLIMIT (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD) ? 1000 : 10)
-+				// Maximum callbacks per rcu_do_batch ...
-+#define DEFAULT_MAX_RCU_BLIMIT 10000 // ... even during callback flood.
- static long blimit = DEFAULT_RCU_BLIMIT;
--#define DEFAULT_RCU_QHIMARK 10000 /* If this many pending, ignore blimit. */
-+#define DEFAULT_RCU_QHIMARK 10000 // If this many pending, ignore blimit.
- static long qhimark = DEFAULT_RCU_QHIMARK;
--#define DEFAULT_RCU_QLOMARK 100   /* Once only this many pending, use blimit. */
-+#define DEFAULT_RCU_QLOMARK 100   // Once only this many pending, use blimit.
- static long qlowmark = DEFAULT_RCU_QLOMARK;
- #define DEFAULT_RCU_QOVLD_MULT 2
- #define DEFAULT_RCU_QOVLD (DEFAULT_RCU_QOVLD_MULT * DEFAULT_RCU_QHIMARK)
--static long qovld = DEFAULT_RCU_QOVLD; /* If this many pending, hammer QS. */
--static long qovld_calc = -1;	  /* No pre-initialization lock acquisitions! */
-+static long qovld = DEFAULT_RCU_QOVLD; // If this many pending, hammer QS.
-+static long qovld_calc = -1;	  // No pre-initialization lock acquisitions!
+ /*
++ * Handler for on_each_cpu() to invoke the target CPU's RCU core
++ * processing.
++ */
++static void rcu_strict_gp_boundary(void *unused)
++{
++	invoke_rcu_core();
++}
++
++/*
+  * Initialize a new grace period.  Return false if no grace period required.
+  */
+ static bool rcu_gp_init(void)
+@@ -1823,6 +1832,10 @@ static bool rcu_gp_init(void)
+ 		WRITE_ONCE(rcu_state.gp_activity, jiffies);
+ 	}
  
- module_param(blimit, long, 0444);
- module_param(qhimark, long, 0444);
++	// If strict, make all CPUs aware of new grace period.
++	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
++		on_each_cpu(rcu_strict_gp_boundary, NULL, 0);
++
+ 	return true;
+ }
+ 
 -- 
 2.9.5
 
