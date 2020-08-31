@@ -2,146 +2,124 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653BEC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9432C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D0A2071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BFC20782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:45:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUZzE3iH"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Gb0KnAM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgHaBoq (ORCPT
+        id S1727046AbgHaBpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:44:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        Sun, 30 Aug 2020 21:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726695AbgHaBon (ORCPT
+        with ESMTP id S1726618AbgHaBp2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:44:43 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A130C061573
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:44:43 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id m22so4847067ljj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:44:43 -0700 (PDT)
+        Sun, 30 Aug 2020 21:45:28 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE8DC061236
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:45:28 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id p25so4884610qkp.2
+        for <linux-kernel@vger.kernel.org>; Sun, 30 Aug 2020 18:45:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=h706+DAmJrg5sh57Pkq1WW2thN7Yu0k83T8H0aXE904=;
-        b=JUZzE3iHuaN52Pd0n6+xd2yOBu1T7t+Krtojh8MVVgn5hNV+M5YyrmMgbfXarNee8f
-         5NM6vAkN7BU17lB403pwcNL1xv8i5k1UxzLFl5dmUwaT5gdot0sHYzp9YAKPxvQJy5Ku
-         6kjBHsDcCTuzJP0tLw14GXJdonpPAV52NFuILCqmibsfo2YnyzCct2Q2+tA1gI1uQTUv
-         +DClnu3P+YN4qgHo9+wCcg5CzW1DjwD8wh2BZzF/7p3Zr0BCYtQ5J7kNeE7sTukCB+lS
-         e3pEGqeJKetSvP0+T+FHzvAIYEbpUbyZJzP5QX9fTiD9czj1Ugc8aw2fhiP97X1xK6Yu
-         ITaw==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=QrYH2o5+zk1SiKRZEFr0mMh9hRmJ4dl12s+7gy3RUAg=;
+        b=Gb0KnAM+8MBliwaxnEo8iwH9SMoPmVjIfwHxC37VhFYBan0v5M/7DWD4DBNrTj+HwK
+         yeJVvgxnYChpyi0XANWADOOT+W2XUBoPON5Jl7XTlDk2gK8kzg5PDa03u+P2dgiZfhkP
+         Bgh4mXNU7XW7TXRhD17l7pkyliv1alW5NzI1YZtWutwPMESZkMJzCGVO8CEhxg3IgjPX
+         APVmDl9a6yVsdANx7Zh8/kBlMNjiVVLlTaOasGJyggpx3GWalCab0MA+gyZIjbx78Njk
+         kHtEXLYeBq27KRU7YBUEcf3Tp8x91a6rbYa4fS+lZvm6Ep0kUUEtCcpHlDmsqIVE+7J0
+         Ec/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=h706+DAmJrg5sh57Pkq1WW2thN7Yu0k83T8H0aXE904=;
-        b=BEhcT4bh+mdX5jIuFA08SspSvqUNhDUmveXG1VQn9aEWe82wxVoEc7ot27HDjgXea3
-         fsM3W3pfyCPnjQ+CdsXVV9M8vTXXnG2FX/pII1mH7zUbuylIBxllhCgXeHWnU2R+Wkpz
-         XARhnDPBB7sp5MzLmmgz5QkH4nsJHOGy+CqTyFNrj14fS8YJKKm5cJIw8W51HCcIKOh2
-         JWSQkxgr15KKi44hYRxqjf2KFRsxH29D4I2DcFvNwfX/6869FwPozF8dXOxyVV8xhlMT
-         qve3mGp5UvnhvIpYigOQV5lZ0xaoaKV2a2IuFec3J3oKlIwMbObOcmnMpX/WnU+3oNSq
-         7OlQ==
-X-Gm-Message-State: AOAM530dw34ZpcCBobHVQOFylemiU3siRezY37lHZmD2KyeVAIsAOrxO
-        4xu3kSxXYyiyabS5VPOpqRDw/iZqG/UEn+DAlj7TzWrWWkw=
-X-Google-Smtp-Source: ABdhPJw0xo3aAAWtR5a4/o8THBa+273iGF7tyRcdIuUIsSnOe/pt/Fm7piLxvSwaC31HiVSQkvN5x+vXVI/CeOq8q0A=
-X-Received: by 2002:a2e:3615:: with SMTP id d21mr4347179lja.333.1598838281712;
- Sun, 30 Aug 2020 18:44:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200828054629.583577-1-daeho43@gmail.com> <61996dcd-6db1-13fc-8239-7e684f3ec49e@kernel.org>
- <CACOAw_wc29AROzFhcGyC73i_vYZC1NmHP60uQfP7X-j6y6=kSA@mail.gmail.com> <bd1a8ffa-83ff-b774-9bed-ed68025d0c7a@huawei.com>
-In-Reply-To: <bd1a8ffa-83ff-b774-9bed-ed68025d0c7a@huawei.com>
-From:   Daeho Jeong <daeho43@gmail.com>
-Date:   Mon, 31 Aug 2020 10:44:30 +0900
-Message-ID: <CACOAw_y=O35_SFxdfsVER4+a+n-eE6f48NXF6CsAnj=Ms-dgkA@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH] f2fs: prevent compressed file from being
- disabled after releasing cblocks
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Chao Yu <chao@kernel.org>, Daeho Jeong <daehojeong@google.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=QrYH2o5+zk1SiKRZEFr0mMh9hRmJ4dl12s+7gy3RUAg=;
+        b=MCak7Rcgjuu8vopFt5PxoGvUxlKY07/ChaVnO7hGV53s8wY+aFtpWzH3zTVLOp9wT8
+         5C9zhZPqfZELpTwA1MX7NPgRgyRWb8WfxCeBSuv1nLh79wH4bXJKZmhB1f9Ma1jr7j2I
+         /T9pmep3mZzd37GqZxp/x5bpEFBsLaWr6dU4AReYfqUD1nKRASrCsQresqcBRG/lq91l
+         mFqfrsZ9HM8Rjiev2acsHYAVjFxc4wc7LDY507DMBj66fynIkZpv+uMBVa3+VJ3lrY93
+         zlxgQnsDEF6w+AO1Lg/BGoRbqU8EW8tOdn52sktZJJEM/LTO5JRfUCWXu2oPxHTF16FE
+         U/CQ==
+X-Gm-Message-State: AOAM533+STLmgdnhUqkB7ofEiCp0uQKA9erthJd5RugQ1XGJ50F/nCFM
+        5B8QIQcN3TYcDalSSp97E775Ww==
+X-Google-Smtp-Source: ABdhPJyglYhJj24S8A7qK0NRCN5Xu+fvhONpZgpIDu1pcxI/eYXkv9ub6eIp7mcebiX3zfPyaA0m4A==
+X-Received: by 2002:a37:8601:: with SMTP id i1mr9250267qkd.307.1598838327422;
+        Sun, 30 Aug 2020 18:45:27 -0700 (PDT)
+Received: from localhost.localdomain.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id e63sm7656466qkf.29.2020.08.30.18.45.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Aug 2020 18:45:26 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     darrick.wong@oracle.com
+Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] iomap: Fix WARN_ON_ONCE() from unprivileged users
+Date:   Sun, 30 Aug 2020 21:45:11 -0400
+Message-Id: <20200831014511.17174-1-cai@lca.pw>
+X-Mailer: git-send-email 2.18.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, I didn't get your point.
+It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
+unprivileged users which would taint the kernel, or worse - panic if
+panic_on_warn or panic_on_taint is set. Hence, just convert it to
+pr_warn_ratelimited() to let users know their workloads are racing.
+Thanks Dave Chinner for the initial analysis of the racing reproducers.
 
-So, do you think this patch is ok? And we need to consider that we
-need more immutable checks for other cases?
-Or you want to remove this immutable check from here and add the check
-to each ioctl functions?
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
 
-2020=EB=85=84 8=EC=9B=94 31=EC=9D=BC (=EC=9B=94) =EC=98=A4=EC=A0=84 10:24, =
-Chao Yu <yuchao0@huawei.com>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On 2020/8/31 7:42, Daeho Jeong wrote:
-> > Do you have any reason not to put this check here?
->
-> No, the place is okay to me. :)
->
-> > If we do this check outside of here, we definitely make a mistake
-> > sooner or later.
->
-> I just want to see whether we can cover all cases in where we missed to
-> add immutable check condition if necessary.
->
-> Thanks,
->
-> >
-> > 2020=EB=85=84 8=EC=9B=94 30=EC=9D=BC (=EC=9D=BC) =EC=98=A4=ED=9B=84 12:=
-24, Chao Yu <chao@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> >>
-> >> On 2020-8-28 13:46, Daeho Jeong wrote:
-> >>> From: Daeho Jeong <daehojeong@google.com>
-> >>>
-> >>> After releasing cblocks, the compressed file can be accidentally
-> >>> disabled in compression mode, since it has zero cblocks. As we are
-> >>> using IMMUTABLE flag to present released cblocks state, we can add
-> >>> IMMUTABLE state check when considering the compressed file disabling.
-> >>>
-> >>> Signed-off-by: Daeho Jeong <daehojeong@google.com>
-> >>> ---
-> >>>   fs/f2fs/f2fs.h | 2 ++
-> >>>   1 file changed, 2 insertions(+)
-> >>>
-> >>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> >>> index 02811ce15059..14d30740ba03 100644
-> >>> --- a/fs/f2fs/f2fs.h
-> >>> +++ b/fs/f2fs/f2fs.h
-> >>> @@ -3936,6 +3936,8 @@ static inline u64 f2fs_disable_compressed_file(=
-struct inode *inode)
-> >>>        if (!f2fs_compressed_file(inode))
-> >>>                return 0;
-> >>>        if (S_ISREG(inode->i_mode)) {
-> >>> +             if (IS_IMMUTABLE(inode))
-> >>> +                     return 1;
-> >>
-> >> It looks most of callers are from ioctl, should we add immutable check=
- in f2fs
-> >> ioctl interfaces if necessary? or I missed existed check.
-> >>
-> >> Thanks,
-> >>
-> >>>                if (get_dirty_pages(inode))
-> >>>                        return 1;
-> >>>                if (fi->i_compr_blocks)
-> >>>
-> >
-> >
-> > _______________________________________________
-> > Linux-f2fs-devel mailing list
-> > Linux-f2fs-devel@lists.sourceforge.net
-> > https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
-> >
+v2: Record the path, pid and command as well.
+
+ fs/iomap/direct-io.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
+
+diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+index c1aafb2ab990..66a4502ef675 100644
+--- a/fs/iomap/direct-io.c
++++ b/fs/iomap/direct-io.c
+@@ -374,6 +374,7 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+ 		void *data, struct iomap *iomap, struct iomap *srcmap)
+ {
+ 	struct iomap_dio *dio = data;
++	char pathname[128], *path;
+ 
+ 	switch (iomap->type) {
+ 	case IOMAP_HOLE:
+@@ -389,7 +390,21 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+ 	case IOMAP_INLINE:
+ 		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+ 	default:
+-		WARN_ON_ONCE(1);
++		/*
++		 * DIO is not serialised against mmap() access at all, and so
++		 * if the page_mkwrite occurs between the writeback and the
++		 * iomap_apply() call in the DIO path, then it will see the
++		 * DELALLOC block that the page-mkwrite allocated.
++		 */
++		path = file_path(dio->iocb->ki_filp, pathname,
++				 sizeof(pathname));
++		if (IS_ERR(path))
++			path = "(unknown)";
++
++		pr_warn_ratelimited("page_mkwrite() is racing with DIO read (iomap->type = %u).\n"
++				    "File: %s PID: %d Comm: %.20s\n",
++				    iomap->type, path, current->pid,
++				    current->comm);
+ 		return -EIO;
+ 	}
+ }
+-- 
+2.18.4
+
