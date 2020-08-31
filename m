@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 108EFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3F5C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E22412083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB7120866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897079;
-	bh=IDjZSku/tK67QHlgrC59Pps37RT68a2m1he5aAMny40=;
+	s=default; t=1598897082;
+	bh=oZ2fipO2KKQzDwNjGc/xHiYFBawa1wLLlttLJTLRG6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cmTAOgxGHPJM2aqLzUN/8NSrnUU2709ksIejAFv+0fWwFqtuvJ/Yv25C9m57FKn6V
-	 MNA9hooiyG53IMHBzw/7bBuRTBxZ9qNE4RkFubS2wfkR96HNWhfFUvYkHwK3j4hiD+
-	 bZleBN8Kkk2BLaIlIq8ydMHWuh2PCtw4hjsa8+RU=
+	b=YiHFlcgQWIGMWpjwajJio2rBkREm2DEFwTdZIqOE1BQ1SZXUsqMpU+prV1fH/1CC3
+	 Yjonze19s0cbym25VkoHQwWcqBaZmzF8qZ2XM+vsNAt5Cr+LOkUVLCrpE9pavnXqOG
+	 jAtOo0iV/njN0UFfz0+ep7h5ta9cWKyrIvWkFxBc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbgHaSEi (ORCPT
+        id S1729431AbgHaSEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44666 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:04:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbgHaSEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728957AbgHaSEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:04:12 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C682176B;
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD3D21789;
         Mon, 31 Aug 2020 18:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897052;
-        bh=IDjZSku/tK67QHlgrC59Pps37RT68a2m1he5aAMny40=;
+        s=default; t=1598897051;
+        bh=oZ2fipO2KKQzDwNjGc/xHiYFBawa1wLLlttLJTLRG6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PvL3RzoVPQfsSrGzSkMdm/vUqq6slxQbChmqnSiEXZXXLF4bO4+y7D1C0DZIOGNN0
-         jogahDGTCHL3gdw7K+K3gPpN8XLB/1GPHHmwIQbGafrLrFC5GST8mtD3OsVFN8NMgS
-         FTVWchSbyasILKeo5c+v7qf4IRn+h/7rZSKUr2Eg=
+        b=FgqIXpWfusSq0O7Y2205A0LL5ZDYdJTt9R6POLjCNxSdaQfj1VoQYq8ZTSC6BDosv
+         rCjxYBYMKtrvIlitZ/r00Ldz6Blw+N6OsCpJiZp5iUsSAr4T8tKA4z7KKIWZZFpXPv
+         T0umb9iy7VmuOXJNMdHP0+dlij3iJ4VvZ+V5CcsQ=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 13/14] rcutorture: Allow pointer leaks to test diagnostic code
-Date:   Mon, 31 Aug 2020 11:04:05 -0700
-Message-Id: <20200831180406.494-13-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 12/14] rcutorture: Hoist OOM registry up one level
+Date:   Mon, 31 Aug 2020 11:04:04 -0700
+Message-Id: <20200831180406.494-12-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180348.GA416@paulmck-ThinkPad-P72>
 References: <20200831180348.GA416@paulmck-ThinkPad-P72>
@@ -61,68 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-This commit adds an rcutorture.leakpointer module parameter that
-intentionally leaks an RCU-protected pointer out of the RCU read-side
-critical section and checks to see if the corresponding grace period
-has elapsed, emitting a WARN_ON_ONCE() if so.  This module parameter can
-be used to test facilities like CONFIG_RCU_STRICT_GRACE_PERIOD that end
-grace periods quickly.
+Currently, registering and unregistering the OOM notifier is done
+right before and after the test, respectively.  This will not work
+well for multi-threaded tests, so this commit hoists this registering
+and unregistering up into the rcu_torture_fwd_prog_init() and
+rcu_torture_fwd_prog_cleanup() functions.
 
-While in the area, also document rcutorture.irqreader, which was
-previously left out.
-
-Reported-by Jann Horn <jannh@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 12 ++++++++++++
- kernel/rcu/rcutorture.c                         |  4 ++++
- 2 files changed, 16 insertions(+)
+ kernel/rcu/rcutorture.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index bdc1f33..6d984f1 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4269,6 +4269,18 @@
- 			are zero, rcutorture acts as if is interpreted
- 			they are all non-zero.
- 
-+	rcutorture.irqreader= [KNL]
-+			Run RCU readers from irq handlers, or, more
-+			accurately, from a timer handler.  Not all RCU
-+			flavors take kindly to this sort of thing.
-+
-+	rcutorture.leakpointer= [KNL]
-+			Leak an RCU-protected pointer out of the reader.
-+			This can of course result in splats, and is
-+			intended to test the ability of things like
-+			CONFIG_RCU_STRICT_GRACE_PERIOD=y to detect
-+			such leaks.
-+
- 	rcutorture.n_barrier_cbs= [KNL]
- 			Set callbacks/threads for rcu_barrier() testing.
- 
 diff --git a/kernel/rcu/rcutorture.c b/kernel/rcu/rcutorture.c
-index 983f82f..916ea4f 100644
+index 2b3f04e..983f82f 100644
 --- a/kernel/rcu/rcutorture.c
 +++ b/kernel/rcu/rcutorture.c
-@@ -87,6 +87,7 @@ torture_param(bool, gp_normal, false,
- 	     "Use normal (non-expedited) GP wait primitives");
- torture_param(bool, gp_sync, false, "Use synchronous GP wait primitives");
- torture_param(int, irqreader, 1, "Allow RCU readers from irq handlers");
-+torture_param(int, leakpointer, 0, "Leak pointer dereferences from readers");
- torture_param(int, n_barrier_cbs, 0,
- 	     "# of callbacks/kthreads for barrier testing");
- torture_param(int, nfakewriters, 4, "Number of RCU fake writer threads");
-@@ -1401,6 +1402,9 @@ static bool rcu_torture_one_read(struct torture_random_state *trsp)
- 	preempt_enable();
- 	rcutorture_one_extend(&readstate, 0, trsp, rtrsp);
- 	WARN_ON_ONCE(readstate & RCUTORTURE_RDR_MASK);
-+	// This next splat is expected behavior if leakpointer, especially
-+	// for CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels.
-+	WARN_ON_ONCE(leakpointer && READ_ONCE(p->rtort_pipe_count) > 1);
+@@ -2110,13 +2110,11 @@ static int rcu_torture_fwd_prog(void *args)
+ 	do {
+ 		schedule_timeout_interruptible(fwd_progress_holdoff * HZ);
+ 		WRITE_ONCE(rcu_fwd_emergency_stop, false);
+-		register_oom_notifier(&rcutorture_oom_nb);
+ 		if (!IS_ENABLED(CONFIG_TINY_RCU) ||
+ 		    rcu_inkernel_boot_has_ended())
+ 			rcu_torture_fwd_prog_nr(rfp, &tested, &tested_tries);
+ 		if (rcu_inkernel_boot_has_ended())
+ 			rcu_torture_fwd_prog_cr(rfp);
+-		unregister_oom_notifier(&rcutorture_oom_nb);
  
- 	/* If error or close call, record the sequence of reader protections. */
- 	if ((pipe_count > 1 || completed > 1) && !xchg(&err_segs_recorded, 1)) {
+ 		/* Avoid slow periods, better to test when busy. */
+ 		stutter_wait("rcu_torture_fwd_prog");
+@@ -2159,6 +2157,7 @@ static int __init rcu_torture_fwd_prog_init(void)
+ 	mutex_lock(&rcu_fwd_mutex);
+ 	rcu_fwds = rfp;
+ 	mutex_unlock(&rcu_fwd_mutex);
++	register_oom_notifier(&rcutorture_oom_nb);
+ 	return torture_create_kthread(rcu_torture_fwd_prog, rfp, fwd_prog_task);
+ }
+ 
+@@ -2171,6 +2170,7 @@ static void rcu_torture_fwd_prog_cleanup(void)
+ 	mutex_lock(&rcu_fwd_mutex);
+ 	rcu_fwds = NULL;
+ 	mutex_unlock(&rcu_fwd_mutex);
++	unregister_oom_notifier(&rcutorture_oom_nb);
+ 	kfree(rfp);
+ }
+ 
 -- 
 2.9.5
 
