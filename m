@@ -2,205 +2,122 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3360DC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C854C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7F82073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE522073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZcZGI7MG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="InDaqzGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727839AbgHaNSj (ORCPT
+        id S1727843AbgHaNTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:18:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52846 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726467AbgHaNSZ (ORCPT
+        Mon, 31 Aug 2020 09:19:39 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:35243 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726249AbgHaNTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:18:25 -0400
+        Mon, 31 Aug 2020 09:19:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598879903;
+        s=mimecast20190719; t=1598879975;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Q0o6bclwuKSh0fyVGfM/hWIeUd3ILyiWt6k5DL+CCfI=;
-        b=ZcZGI7MGaGMzUn7wN6JYOudYVC6rV+dw+XUp6YZqn4JFBbwL0ghCQnpgLevDDUfOG2xlZR
-        +TI28uczRfcT4+R5R6rA7xl5YljamgdyV84iMjMgRkVofjfrQ1Vbawg2EDgRQ8ZqGfM9MY
-        6rsyIf3C4Rh67oc4IzdcbYIHW1+Vr8s=
+        bh=nw5D3n6QT07qapvmc8+NpUosdv4SxRu/zTaxzspJQIE=;
+        b=InDaqzGkyILLyKpPwTlv5i6b5tbZlAzOE+WHLByNojcoHb+OffbByAyae21n+oFFMKih9C
+        9HrlbE5tr3uJ9u8JhhPwSysHzgcTsP3dVJqwUwfoq7OALglULPleyYBSLGYyEuzDzhV8jZ
+        uSIw7+omI4/8e2455ij9R+J3zdSQJ8k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-SZorX-3YPXyNFmO4BLCvPQ-1; Mon, 31 Aug 2020 09:18:21 -0400
-X-MC-Unique: SZorX-3YPXyNFmO4BLCvPQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-124-rMJFHjiVPZ6PsuhL2o-H5A-1; Mon, 31 Aug 2020 09:19:33 -0400
+X-MC-Unique: rMJFHjiVPZ6PsuhL2o-H5A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CFE2C1074641;
-        Mon, 31 Aug 2020 13:18:19 +0000 (UTC)
-Received: from [10.40.193.137] (unknown [10.40.193.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C40B85C22D;
-        Mon, 31 Aug 2020 13:18:17 +0000 (UTC)
-Subject: Re: [PATCHv2 net-next] dropwatch: Support monitoring of dropped
- frames
-To:     izabela.bakollari@gmail.com
-Cc:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-References: <20200707171515.110818-1-izabela.bakollari@gmail.com>
- <20200804160908.46193-1-izabela.bakollari@gmail.com>
-From:   Michal Schmidt <mschmidt@redhat.com>
-Message-ID: <e971a990-4c92-9d64-8bc6-61516d874370@redhat.com>
-Date:   Mon, 31 Aug 2020 15:18:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE4F8107B276;
+        Mon, 31 Aug 2020 13:19:30 +0000 (UTC)
+Received: from krava (unknown [10.40.192.186])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 174251057FA9;
+        Mon, 31 Aug 2020 13:19:28 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 15:19:27 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/6] perf tools: Add FIFO file names as alternative
+ options to --control
+Message-ID: <20200831131927.GD406859@krava>
+References: <20200829105015.10800-1-adrian.hunter@intel.com>
+ <20200829105015.10800-5-adrian.hunter@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200804160908.46193-1-izabela.bakollari@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829105015.10800-5-adrian.hunter@intel.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne 04. 08. 20 v 18:09 izabela.bakollari@gmail.com napsala:
-> From: Izabela Bakollari <izabela.bakollari@gmail.com>
-> 
-> Dropwatch is a utility that monitors dropped frames by having userspace
-> record them over the dropwatch protocol over a file. This augument
-> allows live monitoring of dropped frames using tools like tcpdump.
-> 
-> With this feature, dropwatch allows two additional commands (start and
-> stop interface) which allows the assignment of a net_device to the
-> dropwatch protocol. When assinged, dropwatch will clone dropped frames,
-> and receive them on the assigned interface, allowing tools like tcpdump
-> to monitor for them.
-> 
-> With this feature, create a dummy ethernet interface (ip link add dev
-> dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
-> these new commands, and then monitor dropped frames in real time by
-> running tcpdump -i dummy0.
-> 
-> Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
-> ---
-> Changes in v2:
-> - protect the dummy ethernet interface from being changed by another
-> thread/cpu
-> ---
->   include/uapi/linux/net_dropmon.h |  3 ++
->   net/core/drop_monitor.c          | 84 ++++++++++++++++++++++++++++++++
->   2 files changed, 87 insertions(+)
-[...]
-> @@ -255,6 +259,21 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
->   
->   out:
->   	spin_unlock_irqrestore(&data->lock, flags);
-> +	spin_lock_irqsave(&interface_lock, flags);
-> +	if (interface && interface != skb->dev) {
-> +		skb = skb_clone(skb, GFP_ATOMIC);
+On Sat, Aug 29, 2020 at 01:50:13PM +0300, Adrian Hunter wrote:
 
-I suggest naming the cloned skb "nskb". Less potential for confusion 
-that way.
+SNIP
 
-> +		if (skb) {
-> +			skb->dev = interface;
-> +			spin_unlock_irqrestore(&interface_lock, flags);
-> +			netif_receive_skb(skb);
-> +		} else {
-> +			spin_unlock_irqrestore(&interface_lock, flags);
-> +			pr_err("dropwatch: Not enough memory to clone dropped skb\n");
-
-Maybe avoid logging the error here. In NET_DM_ALERT_MODE_PACKET mode, 
-drop monitor does not log about the skb_clone() failure either.
-We don't want to open the possibility to flood the logs in case this 
-somehow gets triggered by every packet.
-
-A coding style suggestion - can you rearrange it so that the error path 
-code is spelled out first? Then the regular path does not have to be 
-indented further:
-
-       nskb = skb_clone(skb, GFP_ATOMIC);
-       if (!nskb) {
-               spin_unlock_irqrestore(&interface_lock, flags);
-               return;
-       }
-
-       /* ... implicit else ... Proceed normally ... */
-
-> +			return;
-> +		}
-> +	} else {
-> +		spin_unlock_irqrestore(&interface_lock, flags);
+> +		*p = '\0';
+> +
+> +	/*
+> +	 * O_RDWR avoids POLLHUPs which is necessary to allow the other
+> +	 * end of a FIFO to be repeatedly opened and closed.
+> +	 */
+> +	fd = open(s, O_RDWR | O_NONBLOCK | O_CLOEXEC);
+> +	if (fd < 0) {
+> +		pr_err("Failed to open '%s'\n", s);
+> +		ret = -errno;
+> +		goto out_free;
 > +	}
->   }
->   
->   static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
-> @@ -1315,6 +1334,53 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
->   	return -EOPNOTSUPP;
->   }
->   
-> +static int net_dm_interface_start(struct net *net, const char *ifname)
-> +{
-> +	struct net_device *nd = dev_get_by_name(net, ifname);
+> +	*ctl_fd = fd;
+> +	*ctl_fd_close = true;
 > +
-> +	if (nd)
-> +		interface = nd;
-> +	else
-> +		return -ENODEV;
+> +	if (p && *++p) {
+> +		/* O_RDWR | O_NONBLOCK means the other end need not be open */
+> +		fd = open(p, O_RDWR | O_NONBLOCK | O_CLOEXEC);
+> +		if (fd < 0) {
+> +			pr_err("Failed to open '%s'\n", p);
+> +			ret = -errno;
+> +			goto out_free;
+> +		}
+> +		*ctl_fd_ack = fd;
+> +	}
 > +
-> +	return 0;
-
-Similarly here, consider:
-
-   if (!nd)
-           return -ENODEV;
-
-   interface = nd;
-   return 0;
-
-But maybe I'm nitpicking ...
-
+> +out_free:
+> +	free(s);
+> +	return ret;
 > +}
 > +
-> +static int net_dm_interface_stop(struct net *net, const char *ifname)
-> +{
-> +	dev_put(interface);
-> +	interface = NULL;
-> +
-> +	return 0;
-> +}
-> +
-> +static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
-> +{
-> +	struct net *net = sock_net(skb->sk);
-> +	char ifname[IFNAMSIZ];
-> +
-> +	if (net_dm_is_monitoring())
-> +		return -EBUSY;
-> +
-> +	memset(ifname, 0, IFNAMSIZ);
-> +	nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
-> +
-> +	switch (info->genlhdr->cmd) {
-> +	case NET_DM_CMD_START_IFC:
-> +		if (!interface)
-> +			return net_dm_interface_start(net, ifname);
-> +		else
-> +			return -EBUSY;
-> +	case NET_DM_CMD_STOP_IFC:
-> +		if (interface)
-> +			return net_dm_interface_stop(net, interface->name);
-> +		else
-> +			return -ENODEV;
+> +int evlist__parse_control(const char *str, int *ctl_fd, int *ctl_fd_ack, bool *ctl_fd_close)
+>  {
+>  	char *comma = NULL, *endptr = NULL;
+>  
+>  	if (strncmp(str, "fd:", 3))
+> -		return -EINVAL;
+> +		return evlist__parse_control_names(str, ctl_fd, ctl_fd_ack, ctl_fd_close);
 
-... and here too.
+do we want to mention somewhere that the fifo name is everything
+except for 'fd:' ?
 
-Best regards,
-Michal
+also how likely is that we will add another channel type that
+will need another keyword (likd 'fd:')? I originaly thought
+we'd use 'fifo:filename' for this ... would be great to somehow
+avoid future confusions
+
+thanks,
+jirka
 
