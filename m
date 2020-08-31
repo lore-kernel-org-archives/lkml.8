@@ -2,99 +2,135 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC5EC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7AFC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65C842083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="iq9TKWnt"
+	by mail.kernel.org (Postfix) with ESMTP id ED19820866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:07:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598897255;
+	bh=mT02m9LGUtdJx/MKBCUbSyBlurnYCmp8psFx934v7p4=;
+	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
+	b=l+CGiR287Bfwrmj0EZz9nLRJt1p4j+0d/M7yCq9otUzIutMDultObv8+bVXY01CI2
+	 RL4YlwRZhCzmyY3CUcu+R1VPqjWpCzcTgDDofCwA4TYOmpBARmtgD/KOUGo4h1j11b
+	 XqgQxtJYOGW5niyuRfNkwWnwjkStsvKvf4bmIXYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgHaSHV (ORCPT
+        id S1729214AbgHaSHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:07:21 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:40843 "EHLO m43-7.mailgun.net"
+        Mon, 31 Aug 2020 14:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54294 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgHaSHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:07:18 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598897237; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=fAEf+wFDeBUv5cYz5qkmxYUlTUgGSo7Zjv4xY6DTkC8=;
- b=iq9TKWntamSZ8d9KO0pNzcxQK2vzXfqYHmy6WQOPispGn4HnoYbI28/VrkfaCmikxxzUgNs2
- wj/9B+txHnVFVSG+kWemBPxEAzMPEdOjcvMfkDkf0N51RtGQQ26nH+tL4PBtyvlrSD3Tf3UL
- 9yp8Cl9Uw3kUQoEfHHMisMdP7+s=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f4d3c4c238e1efa37d512fd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 31 Aug 2020 18:07:08
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E6991C43395; Mon, 31 Aug 2020 18:07:06 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        id S1726226AbgHaSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:07:32 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: nguyenb)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 49534C433C6;
-        Mon, 31 Aug 2020 18:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B2602083E;
+        Mon, 31 Aug 2020 18:07:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598897252;
+        bh=mT02m9LGUtdJx/MKBCUbSyBlurnYCmp8psFx934v7p4=;
+        h=Date:From:To:Cc:Subject:Reply-To:From;
+        b=zF8T3gDWq9H4HHxIvZK47lvmNSqfROe5nq5Ndp/1i20quLpSUkkym6oKmeUMYzAJH
+         yVazf0g04b9TjiOQk1SXjE4TmzYyEGwxXIf80wRRjA09i+7wQ9O385kQGRnNoZ/Dol
+         WFl6qYqQ99KAbAWtgXI6Q3YoXtrt5O/tuUodNlKo=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id DD25D35230F1; Mon, 31 Aug 2020 11:07:31 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 11:07:31 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     rcu@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org
+Subject: [PATCH tip/core/rcu 0/19] New smp_call_function() torture test for
+ v5.10
+Message-ID: <20200831180731.GA582@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 31 Aug 2020 11:07:06 -0700
-From:   nguyenb@codeaurora.org
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     cang@codeaurora.org, asutoshd@codeaurora.org,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Nitin Rawat <nitirawa@codeaurora.org>,
-        Bean Huo <beanhuo@micron.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
- Auto-Hibernate Timer
-In-Reply-To: <BY5PR04MB6705177184FC1A0E5F7710FDFC530@BY5PR04MB6705.namprd04.prod.outlook.com>
-References: <b141cfcd7998b8933635828b56fbb64f8ad4d175.1598661071.git.nguyenb@codeaurora.org>
- <BY5PR04MB6705177184FC1A0E5F7710FDFC530@BY5PR04MB6705.namprd04.prod.outlook.com>
-Message-ID: <96e34a8d7d52dfbc47738f04d2a127c2@codeaurora.org>
-X-Sender: nguyenb@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-29 00:32, Avri Altman wrote:
->> 
->> The zero value Auto-Hibernate Timer is a valid setting, and it
->> indicates the Auto-Hibernate feature being disabled. Correctly
-> Right. So " ufshcd_auto_hibern8_enable" is no longer an appropriate 
-> name.
-> Maybe ufshcd_auto_hibern8_set instead?
-Thanks for your comment. I am ok with the name change suggestion.
-> 
-> Also, did you verified that no other platform relies on its non-zero 
-> value?
-I only tested the change on Qualcomm's platform. I do not have other 
-platforms to do the test.
-The UFS host controller spec JESD220E, Section 5.2.5 says
-"Software writes “0” to disable Auto-Hibernate Idle Timer". So the spec 
-supports this zero value.
-Some options:
-- We could add a hba->caps so that we only apply the change for 
-Qualcomm's platforms.
-This is not preferred because it is following the spec implementations.
-- Or other platforms that do not support the zero value needs a caps.
-> 
-> Thanks,
-> Avri
+Hello!
+
+This series introduces a new torture test for smp_call_function()
+and friends:
+
+1.	Add smp_call_function() torture test.
+
+2.	Declare parse-console.sh independence from rcutorture.
+
+3.	Add scftorture to the rcutorture scripting.
+
+4.	Implement weighted primitive selection.
+
+5.	tick-sched: Clarify "NOHZ: local_softirq_pending" warning.
+
+6.	Summarize per-thread statistics.
+
+7.	Add smp_call_function_single() memory-ordering checks.
+
+8.	Add smp_call_function_many() memory-ordering checks.
+
+9.	Add smp_call_function() memory-ordering checks.
+
+10.	Consolidate scftorture_invoke_one() check and kfree().
+
+11.	Consolidate scftorture_invoke_one() scf_check initialization.
+
+12.	Flag errors in torture-compatible manner.
+
+13.	Prevent compiler from reducing race probabilities.
+
+14.	Make symbol 'scf_torture_rand' static.
+
+15.	Check unexpected "switch" statement value.
+
+16.	Block scftorture_invoker() kthreads for offline CPUs.
+
+17.	Adapt memory-ordering test to UP operation.
+
+18.	Add cond_resched() to test loop.
+
+19.	Change rcuperf to rcuscale.
+
+						Thanx, Paul
+
+------------------------------------------------------------------------
+
+ b/Documentation/admin-guide/kernel-parameters.txt                       |  128 +
+ b/MAINTAINERS                                                           |    3 
+ b/kernel/Makefile                                                       |    2 
+ b/kernel/rcu/Kconfig.debug                                              |    2 
+ b/kernel/rcu/Makefile                                                   |    2 
+ b/kernel/rcu/rcuscale.c                                                 |  330 ++--
+ b/kernel/scftorture.c                                                   |  755 ++++++++--
+ b/kernel/time/tick-sched.c                                              |    2 
+ b/lib/Kconfig.debug                                                     |   10 
+ b/tools/testing/selftests/rcutorture/bin/kvm-recheck-rcuscale-ftrace.sh |    6 
+ b/tools/testing/selftests/rcutorture/bin/kvm-recheck-rcuscale.sh        |   14 
+ b/tools/testing/selftests/rcutorture/bin/kvm-recheck-scf.sh             |   38 
+ b/tools/testing/selftests/rcutorture/bin/kvm.sh                         |   10 
+ b/tools/testing/selftests/rcutorture/bin/parse-console.sh               |   11 
+ b/tools/testing/selftests/rcutorture/configs/rcuscale/CFcommon          |    2 
+ b/tools/testing/selftests/rcutorture/configs/rcuscale/ver_functions.sh  |    4 
+ b/tools/testing/selftests/rcutorture/configs/scf/CFLIST                 |    2 
+ b/tools/testing/selftests/rcutorture/configs/scf/CFcommon               |    2 
+ b/tools/testing/selftests/rcutorture/configs/scf/NOPREEMPT              |    9 
+ b/tools/testing/selftests/rcutorture/configs/scf/NOPREEMPT.boot         |    1 
+ b/tools/testing/selftests/rcutorture/configs/scf/PREEMPT                |    9 
+ b/tools/testing/selftests/rcutorture/configs/scf/ver_functions.sh       |   30 
+ tools/testing/selftests/rcutorture/configs/rcuperf/CFcommon             |    2 
+ 23 files changed, 1073 insertions(+), 301 deletions(-)
