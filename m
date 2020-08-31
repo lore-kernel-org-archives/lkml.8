@@ -2,129 +2,108 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5663FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3DC7C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 371B72071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B0E2071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:44:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nekyqlzb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726881AbgHaBnk (ORCPT
+        id S1726977AbgHaBoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:43:40 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:59108 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726454AbgHaBnk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:43:40 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3608E90A6B87991AE549;
-        Mon, 31 Aug 2020 09:43:37 +0800 (CST)
-Received: from [127.0.0.1] (10.67.76.251) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Mon, 31 Aug 2020
- 09:43:31 +0800
-Subject: Re: [NAK] Re: [PATCH] fs: Optimized fget to improve performance
-To:     Al Viro <viro@zeniv.linux.org.uk>
-CC:     <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Yuqi Jin <jinyuqi@huawei.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>
-References: <1598523584-25601-1-git-send-email-zhangshaokun@hisilicon.com>
- <20200827142848.GZ1236603@ZenIV.linux.org.uk>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <dfa0ec1a-87fc-b17b-4d4a-c2d5c44e6dde@hisilicon.com>
-Date:   Mon, 31 Aug 2020 09:43:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Sun, 30 Aug 2020 21:44:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726454AbgHaBoE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 21:44:04 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0240C061573;
+        Sun, 30 Aug 2020 18:44:03 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mw10so2165906pjb.2;
+        Sun, 30 Aug 2020 18:44:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=s5fICNS0zNIOQPt5M3FsAOhvE6sEqhTnd74/gVQE0QU=;
+        b=Nekyqlzbgpda2B5CIdl6RC6vQXhQ5y08IGWy6M4jgJnIUGEn9nuuuckxYAwXqMXjrI
+         DTxP0kyXO7qv/en3DTR5vgQH8IqoMg/HY0xB4+QXe0AyQnvJkq5DabcmYRqjm35X2U1V
+         srUn4WLSxsZ7+oV0osGjG8iEflCDYT2SHPCzSIMniaGCkE+Mni5RJ+xBIqwVr9H3ou+X
+         Syq5aPBToACIug8RaERVejosBOUZLrNOAOQGS/753yp0qTK+6TkyMXrCqen+XHBkNgfC
+         ETZ9vFoGZuCJDBjxFCIGxcNN8s5fuWMJS1BmHfrVTLUdX27Snhkk5PBxatKHGaZ7EO8L
+         YObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=s5fICNS0zNIOQPt5M3FsAOhvE6sEqhTnd74/gVQE0QU=;
+        b=t86mjmBowt7Ku8w2U1sEUd+7GuZwA7kewOncYUYatOLJwObpUwkD+YPQaQClBX8Qpn
+         ChAkahKfK0jzMydK1Y1Bhv+ByW8EoJp7Fn1jFyqRneNhKNc6mIb/i873MujG7+4ks0EY
+         QVrsesKU1nTXaD8OxCy8GsNTbAFrUzrtozjY/akKl61js3zKf3bCjn4aSWag/J0jQVNe
+         DFd4Wxoas89sG1JmXfJIDZx0bdDsM5ui1jY33PrM85AOufCPWo30uiVCwtSZKpVL3YCe
+         wJpmLWuNWSR7F9XGX6u7b1RnqrEc2BED4990OiuV73KbHVIaKsY9zFJKG+30wvoh1l5s
+         hYdg==
+X-Gm-Message-State: AOAM532sCKBO+T2A0We93btS0QhU+OLG0iYCbFIxG9ht04Ru5VAq127l
+        Qsc4P/0OxvQ1C6/wFS7RZ26V4psThxU=
+X-Google-Smtp-Source: ABdhPJzYvXWL2X8/p8anhxt5xGAB3WckC74E1GywIAHwh8uwxUQGPIUbXW7d5MXfp00qeQIOZM8lGw==
+X-Received: by 2002:a17:902:c085:: with SMTP id j5mr7000594pld.39.1598838242151;
+        Sun, 30 Aug 2020 18:44:02 -0700 (PDT)
+Received: from [172.20.20.103] ([222.151.198.97])
+        by smtp.gmail.com with ESMTPSA id l145sm6305224pfd.45.2020.08.30.18.44.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 30 Aug 2020 18:44:01 -0700 (PDT)
+Subject: Re: [PATCH] veth: fix memory leak in veth_newlink()
+To:     Rustam Kovhaev <rkovhaev@gmail.com>
+Cc:     davem@davemloft.net, kuba@kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org
+References: <20200830131336.275844-1-rkovhaev@gmail.com>
+ <32e30526-bcc9-1f2f-1250-f36687561fbb@gmail.com>
+ <20200831005133.GA3295@thinkpad>
+From:   Toshiaki Makita <toshiaki.makita1@gmail.com>
+Message-ID: <01c8fa29-8bda-ccae-b7fb-8df85992b437@gmail.com>
+Date:   Mon, 31 Aug 2020 10:43:57 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200827142848.GZ1236603@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.76.251]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200831005133.GA3295@thinkpad>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
-
-ÔÚ 2020/8/27 22:28, Al Viro Ð´µÀ:
-> On Thu, Aug 27, 2020 at 06:19:44PM +0800, Shaokun Zhang wrote:
->> From: Yuqi Jin <jinyuqi@huawei.com>
+On 2020/08/31 9:51, Rustam Kovhaev wrote:
+> On Mon, Aug 31, 2020 at 09:16:32AM +0900, Toshiaki Makita wrote:
+>> On 2020/08/30 22:13, Rustam Kovhaev wrote:
+>>> when register_netdevice(dev) fails we should check whether struct
+>>> veth_rq has been allocated via ndo_init callback and free it, because,
+>>> depending on the code path, register_netdevice() might not call
+>>> priv_destructor() callback
 >>
->> It is well known that the performance of atomic_add is better than that of
->> atomic_cmpxchg.
->> The initial value of @f_count is 1. While @f_count is increased by 1 in
->> __fget_files, it will go through three phases: > 0, < 0, and = 0. When the
->> fixed value 0 is used as the condition for terminating the increase of 1,
->> only atomic_cmpxchg can be used. When we use < 0 as the condition for
->> stopping plus 1, we can use atomic_add to obtain better performance.
+>> AFAICS, register_netdevice() always goto err_uninit and calls priv_destructor()
+>> on failure after ndo_init() succeeded.
+>> So I could not find such a code path.
+>> Would you elaborate on it?
 > 
-> Suppose another thread has just removed it from the descriptor table.
-> 
->> +static inline bool get_file_unless_negative(atomic_long_t *v, long a)
->> +{
->> +	long c = atomic_long_read(v);
->> +
->> +	if (c <= 0)
->> +		return 0;
-> 
-> Still 1.  Now the other thread has gotten to dropping the last reference,
-> decremented counter to zero and committed to freeing the struct file.
-> 
+> in net/core/dev.c:9863, where register_netdevice() calls rollback_registered(),
+> which does not call priv_destructor(), then register_netdevice() returns error
+> net/core/dev.c:9884
 
-Apologies that I missed it.
+Thank you, now I see the code path.
+But then all devices which allocate something in ndo_init() and free them in
+priv_destructor() are affected? E.g. loopback and ifb seem to do such thing.
+Why not calling priv_destructor() after invocation of rollback_registered()?
+It looks weird that only that path does not call priv_destructor().
 
->> +
->> +	return atomic_long_add_return(a, v) - 1;
-> 
-> ... and you increment that sucker back to 1.  Sure, you return 0, so the
-> caller does nothing to that struct file.  Which includes undoing the
-> changes to its refecount.
-> 
-> In the meanwhile, the third thread does fget on the same descriptor,
-> and there we end up bumping the refcount to 2 and succeeding.  Which
-> leaves the caller with reference to already doomed struct file...
-> 
-> 	IOW, NAK - this is completely broken.  The whole point of
-> atomic_long_add_unless() is that the check and conditional increment
-> are atomic.  Together.  That's what your optimization takes out.
-> 
-
-How about this? We try to replace atomic_cmpxchg with atomic_add to improve
-performance. The atomic_add does not check the current f_count value.
-Therefore, the number of online CPUs is reserved to prevent multi-core
-competition.
-
-+
-+static inline bool get_file_unless(atomic_long_t *v, long a)
-+{
-+       long cpus = num_online_cpus();
-+       long c = atomic_long_read(v);
-+       long ret;
-+
-+       if (c > cpus || c < -cpus)
-+               ret = atomic_long_add_return(a, v) - a;
-+       else
-+               ret = atomic_long_add_unless(v, a, 0);
-+
-+       return ret;
-+}
-+
- #define get_file_rcu_many(x, cnt)      \
--       atomic_long_add_unless(&(x)->f_count, (cnt), 0)
-+       get_file_unless(&(x)->f_count, (cnt))
-
-Thanks,
-Shaokun
-
-> .
-> 
-
+Toshiaki Makita
