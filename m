@@ -2,226 +2,185 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC06C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7950CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B86920866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4792420866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:16:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="Cslil3lN"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="AS5SvMiY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgHaOQT (ORCPT
+        id S1727931AbgHaOQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 10:16:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43768 "EHLO
+        Mon, 31 Aug 2020 10:16:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727037AbgHaOQJ (ORCPT
+        with ESMTP id S1727884AbgHaOQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 10:16:09 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39200C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:16:06 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id ay8so5592418edb.8
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:16:06 -0700 (PDT)
+        Mon, 31 Aug 2020 10:16:35 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 097F7C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:16:35 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id p9so2998293ejf.6
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 07:16:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MQqx7y3LNHRl2Hja22cjbswtkGc/E1FQj6IzdW9NZtg=;
-        b=Cslil3lNQuI0x+eP5rZvfAI5i06RIx9I8HVhB0ZoNY66Ro0BhD8CeBzQHrtAFBujAZ
-         8CbydJ7ByJ3tIfIZizWaxbyQwiUO0zMFdV4jaf7GoeARcd8XVpaOhZekcAnwW5IVPeaP
-         rJhPVDhm4U+MxBZemGSt45KUCawD4Hnfnu2hQF0+/CmK0l267m2GNNSO5okX7aESA3w6
-         Yr31n9WXW84yLjrWOa0xNFK2Obj2+SmmD4+RPNc34TpR7qCbrfnkCQitO5/gg85O1Snm
-         RUimj6V1T7p4BMc/xfHJhQsj6Q89Q709VapiGBXldJH1Zs26xS/4jnGJc/7JAGrLrePl
-         RC8w==
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=D+jgYWCECokgeMoKCt+yMfDkGgoonOPi28LQb80zcoc=;
+        b=AS5SvMiYtSI+CWXRGuTYCefWuAmJ0GhXJnEIwQxverbnwHsolVx/ZJLdUle6ekYccU
+         aezPLF97GJEFqFILdvEgTTXvTMFslz6HQy//DP71I52yu6xKQQJFiz1KFA3PfHyAOS3O
+         nrYdTuLFZUxQ8tydHhHNYDwPnSTAQU1e3byQXu/Oo96+i7pr2hxGrmL97/ehnXtijEFP
+         Lsk/qSQ88coc7yz+QAY1lEJzKN+9u4eha26bJ3oIetiKzomepuUDrvQvKMBauCO4DShK
+         rPJQl3yNo8WRpHPgnVVHC9T0HPNI6Qj4gy3nRCGcKRIx1p9OFs0fVfM3GrxPGkHfnPis
+         KgjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=MQqx7y3LNHRl2Hja22cjbswtkGc/E1FQj6IzdW9NZtg=;
-        b=Ow4e1U40qGMfFL7Hn2+IpQvlivu9irCxpulApxZ21NeA5zwZkHkuTuLkIfAX4DYX3E
-         UnOzr9gNvywbupFX0XIzKfS6DH/DL7aOT+eeEdlZebS5DMr++NGNnRIx3BZOTFK1oKx7
-         uXH8SaR7mkJz9zlDo5xTCTKX68Ptah6JEtcjB+MrKrZfbQdaZRbqxOuegKCVkrMY07i5
-         7UCXb8vwj21xpVD9luTJAXUQoJ9DXBpARekBJ2fUB4V3mOwC9vBO/TrJosgFqssN1sPP
-         qoq7Krn+naWpU6KFala2xKNINdu03EYIbikpI32ZCLXtMzJxDNHLX5xUv3ctsiku33HA
-         Q4jA==
-X-Gm-Message-State: AOAM531Ktvk62McgFNATRH9LiIEdFyOU6pVfcCbB9BKPSgJiOsEQoC3q
-        SKScyqCKOmigD89qnX4C2Q5tyw==
-X-Google-Smtp-Source: ABdhPJxTUW8Sk91br4Y41M5OUbetxa4fQXLu8gSFvsyEuvcPZfJuAKj129esL8jjmQiECwHFeP8Myg==
-X-Received: by 2002:a05:6402:1d97:: with SMTP id dk23mr1488478edb.350.1598883364628;
-        Mon, 31 Aug 2020 07:16:04 -0700 (PDT)
-Received: from [192.168.0.105] (nat-35.starnet.cz. [178.255.168.35])
-        by smtp.gmail.com with ESMTPSA id z21sm7780846edq.42.2020.08.31.07.15.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 07:16:02 -0700 (PDT)
-Subject: Re: [PATCH v2 10/23] microblaze: use asm-generic/mmu_context.h for
- no-op implementations
-To:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michal Simek <michal.simek@xilinx.com>
-References: <20200826145249.745432-1-npiggin@gmail.com>
- <20200826145249.745432-11-npiggin@gmail.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <4d2bdc87-f39c-3737-0aa8-b2efe7b2d93e@monstr.eu>
-Date:   Mon, 31 Aug 2020 16:15:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=D+jgYWCECokgeMoKCt+yMfDkGgoonOPi28LQb80zcoc=;
+        b=UNdm+e2z8oLyLG82n9nvscFqyiyFoSIrDYkwhg7mfe5yMO8/2y6GXJkzOtIhAoxlXq
+         G6kBiwmwhJSMwIHNXl2wGJ2d6Uhy8wtsKYCuFFhza3gc9XrSbthyno5J0rqyOqhHpp5e
+         tH1XBE+jWeb/IWPiNudeMlE4JjBUrG4OKSJIY8+hy/7lianGQ/Lri0teWwObVcatV5yM
+         si1akuxvexMiYkvwk9GN55KCdSGbOgfizoSgqRi/7zILB/k4gkcYEq0+a9xlgFA5aqbK
+         +y6qOIoCtEgrKH3+5uyeU/pg/YBUC3wjHlIA076NnMAy8S9M+PHwuXYL9V9sqwvvGbEX
+         mWMw==
+X-Gm-Message-State: AOAM530DD+7oE0lisULJPe9dYPydY4beDefojgKPBNN2GiJh5+kwMW8I
+        Zsm+WMXp3nCHrLW9uxC7nvXsJkkZ3UDPgXMDcj4f
+X-Google-Smtp-Source: ABdhPJwIso00QLAdjPOq4tzXvgc5uH2zepJ3/DauXdwi15tf2jlFLGiFg5rP7DTBTffmKAZKoGlcfC+9MqLExZY94wY=
+X-Received: by 2002:a17:906:bc52:: with SMTP id s18mr1294329ejv.398.1598883393485;
+ Mon, 31 Aug 2020 07:16:33 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200826145249.745432-11-npiggin@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <CAHC9VhRuvK55JVyHOxckThbRQ7sCwkeZsudwCaBo2f5G4g11VA@mail.gmail.com>
+ <20200824132252.31261-1-peter.enderborg@sony.com> <20200824132252.31261-2-peter.enderborg@sony.com>
+ <CAHC9VhR8PscKpA5BrgTNj8cq_eQ6svqru6UXidc=v5+Ha+PM7Q@mail.gmail.com>
+ <6cbe5d27-ebb2-70a6-bad4-31c9f310eff2@sony.com> <CAHC9VhRGaE4FwE8iXo_zeAPdimE9ryMR+r4Jcq=ZpF_2aTJxzQ@mail.gmail.com>
+ <59fa190f-37c0-79f3-ea46-8f821d820e1c@sony.com> <CAHC9VhRE94YVK5bTcqqbNYJu-EwjbcwjSFgqV8jkyLn9HD39Ag@mail.gmail.com>
+ <abaccc15-85a8-24d2-4481-8303e3a42362@sony.com>
+In-Reply-To: <abaccc15-85a8-24d2-4481-8303e3a42362@sony.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 31 Aug 2020 10:16:22 -0400
+Message-ID: <CAHC9VhRi87H2GhsKQN9iMOQeSw3g5_qwok9jpx+pfFSouQ9d5w@mail.gmail.com>
+Subject: Re: [RFC PATCH] selinux: Add denied trace with permssion filter
+To:     peter enderborg <peter.enderborg@sony.com>
+Cc:     linux-kernel@vger.kernel.org,
+        SElinux list <selinux@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Aug 27, 2020 at 10:04 AM peter enderborg
+<peter.enderborg@sony.com> wrote:
+>
+> On 8/27/20 3:30 PM, Paul Moore wrote:
+> > On Wed, Aug 26, 2020 at 11:06 AM peter enderborg
+> > <peter.enderborg@sony.com> wrote:
+> >> On 8/26/20 4:45 PM, Paul Moore wrote:
+> >>> On Wed, Aug 26, 2020 at 10:34 AM peter enderborg
+> >>> <peter.enderborg@sony.com> wrote:
+> >>>> On 8/26/20 3:42 PM, Paul Moore wrote:
+> >>>>> On Mon, Aug 24, 2020 at 9:23 AM Peter Enderborg
+> >>>>> <peter.enderborg@sony.com> wrote:
+> >>>>>> This adds tracing of all denies. They are grouped with trace_seq f=
+or
+> >>>>>> each audit.
+> >>>>>>
+> >>>>>> A filter can be inserted with a write to it's filter section.
+> >>>>>>
+> >>>>>> echo "permission=3D=3D\"entrypoint\"" > events/avc/selinux_denied/=
+filter
+> >>>>>>
+> >>>>>> A output will be like:
+> >>>>>>           runcon-1046  [002] .N..   156.351738: selinux_denied:
+> >>>>>>           trace_seq=3D2 result=3D-13
+> >>>>>>           scontext=3Dsystem_u:system_r:cupsd_t:s0-s0:c0.
+> >>>>>>           c1023 tcontext=3Dsystem_u:object_r:bin_t:s0
+> >>>>>>           tclass=3Dfile permission=3Dentrypoint
+> >>>>>>
+> >>>>>> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+> >>>>>> ---
+> >>>>>>  include/trace/events/avc.h | 37 +++++++++++++++++++++++++++++++++=
+++++
+> >>>>>>  security/selinux/avc.c     | 27 +++++++++++++++++++++++++--
+> >>>>>>  2 files changed, 62 insertions(+), 2 deletions(-)
+> >>>>> My most significant comment is that I don't think we want, or need,
+> >>>>> two trace points in the avc_audit_post_callback() function.  Yes, I
+> >>>>> understand they are triggered slightly differently, but from my
+> >>>>> perspective there isn't enough difference between the two tracepoin=
+ts
+> >>>>> to warrant including both.  However, while the tracepoints may be
+> >>>> We tried that but that was problematic too.
+> >>> My apologies if I was on that thread, but can you remind me why it wa=
+s
+> >>> a problem?  Why can't we use a single tracepoint to capture the AVC
+> >>> information?
+> >> The problem is parsing the event.
+> >>
+> >> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2=
+020_8_18_842&d=3DDwIBaQ&c=3DfP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=
+=3DoO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=3Dqmi2ROWsLC_0mLLhHkpb71j1=
+YoicydLh-7l4cOsLYcY&s=3DiS3eZr3TFrN5I7BbnvPFYOKd6DfW1FHTFcwI7joS_fk&e=3D
+> >>
+> >> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2=
+020_8_21_526&d=3DDwIBaQ&c=3DfP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=
+=3DoO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=3Dqmi2ROWsLC_0mLLhHkpb71j1=
+YoicydLh-7l4cOsLYcY&s=3D9OsLN0Y5mUWxEAAqUE6K4PS57Pn1XyZz7GXak6uc_Ls&e=3D
+> >>
+> >> and the "single list" version
+> >>
+> >> https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lkml.org_lkml_2=
+020_8_17_1346&d=3DDwIBaQ&c=3DfP4tf--1dS0biCFlB0saz0I0kjO5v7-GLPtvShAo4cc&r=
+=3DoO5HuGEGxznA2F3djiiYxmxxWQonw0h6Sks-BEoB4ys&m=3Dqmi2ROWsLC_0mLLhHkpb71j1=
+YoicydLh-7l4cOsLYcY&s=3DtWSY2ry2IT6RcT5BIUwMuqBL_yPObDE1VljbLqI1zrA&e=3D
+> >>
+> >> With this patch we follow standard message format so no plugin should =
+be needed.
+> > I'm evidently missing something very fundamental (likely), and/or I'm
+> > just not communicating very clearly (also likely), because the above
+> > links don't appear to make any sense with respect to my question.
+> >
+> > Let me try a reset ... Why can't we basically take the
+> > "selinux_denied" TRACE_EVENT implementation in your patch and use it
+> > to replace the "selinux_audited" TRACE_EVENT in the selinux/next tree
+> > (of course with the necessary changes to the AVC callback code)?
+> >
+> > If the "selinux_denied" implementation is valid from a tracing point
+> > of view, why can we not do this?  Of course if the "selinux_denied"
+> > implementation is not a valid TRACE_EVENT then I'm not sure why this
+> > was suggested for SELinux :)
+>
+> Im happly fine with replacing the selinux_audited with selinux_denied.  H=
+owever it is the case where there are more than one denial at the same time=
+. Im not sure how and when it might happen.
 
+One thing I wondered about was why not build up a single string with
+all of the permissions instead of generating multiple trace events?
+In the previous discussion it was implied that this was due to
+limitations in the tracing subsystem's filtering, and based on the
+discussion thus far I'm guessing there is little desire for this
+information if it can't be filtered on?
 
-On 26. 08. 20 16:52, Nicholas Piggin wrote:
-> Cc: Michal Simek <monstr@monstr.eu>
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
->  arch/microblaze/include/asm/mmu_context_mm.h | 8 ++++----
->  arch/microblaze/include/asm/processor.h      | 3 ---
->  2 files changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/microblaze/include/asm/mmu_context_mm.h b/arch/microblaze/include/asm/mmu_context_mm.h
-> index a1c7dd48454c..c2c77f708455 100644
-> --- a/arch/microblaze/include/asm/mmu_context_mm.h
-> +++ b/arch/microblaze/include/asm/mmu_context_mm.h
-> @@ -33,10 +33,6 @@
->     to represent all kernel pages as shared among all contexts.
->   */
->  
-> -static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
-> -{
-> -}
-> -
->  # define NO_CONTEXT	256
->  # define LAST_CONTEXT	255
->  # define FIRST_CONTEXT	1
-> @@ -105,6 +101,7 @@ static inline void get_mmu_context(struct mm_struct *mm)
->  /*
->   * We're finished using the context for an address space.
->   */
-> +#define destroy_context destroy_context
->  static inline void destroy_context(struct mm_struct *mm)
->  {
->  	if (mm->context != NO_CONTEXT) {
-> @@ -126,6 +123,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
->   * After we have set current->mm to a new value, this activates
->   * the context for the new mm so we see the new mappings.
->   */
-> +#define activate_mm activate_mm
->  static inline void activate_mm(struct mm_struct *active_mm,
->  			struct mm_struct *mm)
->  {
-> @@ -136,5 +134,7 @@ static inline void activate_mm(struct mm_struct *active_mm,
->  
->  extern void mmu_context_init(void);
->  
-> +#include <asm-generic/mmu_context.h>
-> +
->  # endif /* __KERNEL__ */
->  #endif /* _ASM_MICROBLAZE_MMU_CONTEXT_H */
-> diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze/include/asm/processor.h
-> index 1ff5a82b76b6..616211871a6e 100644
-> --- a/arch/microblaze/include/asm/processor.h
-> +++ b/arch/microblaze/include/asm/processor.h
-> @@ -122,9 +122,6 @@ unsigned long get_wchan(struct task_struct *p);
->  #  define KSTK_EIP(task)	(task_pc(task))
->  #  define KSTK_ESP(task)	(task_sp(task))
->  
-> -/* FIXME */
-> -#  define deactivate_mm(tsk, mm)	do { } while (0)
-> -
->  #  define STACK_TOP	TASK_SIZE
->  #  define STACK_TOP_MAX	STACK_TOP
->  
-> 
+If that's the case then I think we are stuck with the tracing code
+that currently lives in selinux/next, as I currently have little
+desire to add more than one tracepoint in the SELinux permission
+checking codepath.
 
-I am fine with the patch but I pretty much don't like that commit
-message is empty and there is only subject.
-With fixing that you can add my:
-Acked-by: Michal Simek <monstr@monstr.eu>
+> When that happen we got more than one event. I have no problems with that=
+, but im not sure if the debug tools and perf can make sense of that.
+>
+> A other feature with the selinux_audited event it might be inserted on ot=
+her places in the code too.  A denial is sort of final.
 
-Thanks,
-Michal
-
--- 
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
-
+--=20
+paul moore
+www.paul-moore.com
