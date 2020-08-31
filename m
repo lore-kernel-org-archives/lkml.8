@@ -2,127 +2,104 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50489C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C336FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FF43206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE1B2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:52:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="oBX7S/eh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729799AbgHaTuI (ORCPT
+        id S1729817AbgHaTwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 15:50:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56222 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729784AbgHaTuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 15:50:08 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 8E676B7F1;
-        Mon, 31 Aug 2020 19:50:06 +0000 (UTC)
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     jason.wessel@windriver.com, daniel.thompson@linaro.org,
-        dianders@chromium.org
-Cc:     oleg@redhat.com, kgdb-bugreport@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, dave@stgolabs.net,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH -next] kdb: Use newer api for tasklist scanning
-Date:   Mon, 31 Aug 2020 12:34:35 -0700
-Message-Id: <20200831193435.22141-1-dave@stgolabs.net>
-X-Mailer: git-send-email 2.26.2
+        Mon, 31 Aug 2020 15:52:50 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:2968 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728671AbgHaTwt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 15:52:49 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4d54930000>; Mon, 31 Aug 2020 12:50:43 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 31 Aug 2020 12:52:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 31 Aug 2020 12:52:49 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 19:52:49 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 31 Aug 2020 19:52:49 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.173.243]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4d55100006>; Mon, 31 Aug 2020 12:52:48 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <skomatineni@nvidia.com>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <sakari.ailus@iki.fi>,
+        <hverkuil@xs4all.nl>, <luca@lucaceresoli.net>,
+        <leonl@leopardimaging.com>, <robh+dt@kernel.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 0/4] IMX274 fixes and power on and off implementation
+Date:   Mon, 31 Aug 2020 12:52:34 -0700
+Message-ID: <1598903558-9691-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598903443; bh=ObH5yIt3OmMX+IKEdrYTYd8H5mBLzF2Tl1tY4rioIwM=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=oBX7S/ehfaOAhOMEVrpdth0Esw244gGLPDM9YzfajZiBSU3svu/ucE6yiaFt02QM+
+         KPmsVeBpxy0dHIOFNXW8//o2pgr7RzKiF22N7Oy40jM/kXVvlJm/JpALt2fXTPbMI8
+         DXek/OC2abKzdLfiOw8RO5FmgE/icYLIWsxp9LDYL+LejUvrjI79UPg6y8vvS528HP
+         5uFKfYc4AIfyp2QinWBrSyT7UCiiKes8dI/lFH0r51BOJEqx2DQjyMukeqnhnUsmbC
+         VSMf5raeLn0CAQkY6TCCDgr+JZ5Q+DUXo4hyQ3IwyFOwj3qgdjKBaJPBIPoOeuX2PI
+         1wH3guxdJ2hMw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This kills the custom kdb_do_each_thread/kdb_while_each_thread
-calls used in kdb to iterate through all tasks. It is obsolete
-and racy to use tsk->thread_group, although in this particular
-case there is no concurrency so it doesn't matter. Still, lets
-trivially replace it for the newer one, maintaining semantics,
-of course.
+This patch series includes
+- Fix for proper Y_OUT_SIZE register configuration.
+- Power on/off sequence implementation through runtime PM.
+- dt-binding doc update to move input clock and supplies as required
+  properties.
 
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
----
- kernel/debug/kdb/kdb_bt.c      | 4 ++--
- kernel/debug/kdb/kdb_main.c    | 8 ++++----
- kernel/debug/kdb/kdb_private.h | 4 ----
- 3 files changed, 6 insertions(+), 10 deletions(-)
+Delta between patch versions:
+[v4]:	Includes below v4 feedback
+	- Implemented power on/off through Runtime PM.
+	- Use regulator bulk APIs.
+	- Use lower case for supply names.
 
-diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
-index 18e03aba2cfc..1f9f0e47aeda 100644
---- a/kernel/debug/kdb/kdb_bt.c
-+++ b/kernel/debug/kdb/kdb_bt.c
-@@ -149,14 +149,14 @@ kdb_bt(int argc, const char **argv)
- 				return 0;
- 		}
- 		/* Now the inactive tasks */
--		kdb_do_each_thread(g, p) {
-+		for_each_process_thread(g, p) {
- 			if (KDB_FLAG(CMD_INTERRUPT))
- 				return 0;
- 			if (task_curr(p))
- 				continue;
- 			if (kdb_bt1(p, mask, btaprompt))
- 				return 0;
--		} kdb_while_each_thread(g, p);
-+		}
- 	} else if (strcmp(argv[0], "btp") == 0) {
- 		struct task_struct *p;
- 		unsigned long pid;
-diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-index 5c7949061671..930ac1b25ec7 100644
---- a/kernel/debug/kdb/kdb_main.c
-+++ b/kernel/debug/kdb/kdb_main.c
-@@ -2299,10 +2299,10 @@ void kdb_ps_suppressed(void)
- 		if (kdb_task_state(p, mask_I))
- 			++idle;
- 	}
--	kdb_do_each_thread(g, p) {
-+	for_each_process_thread(g, p) {
- 		if (kdb_task_state(p, mask_M))
- 			++daemon;
--	} kdb_while_each_thread(g, p);
-+	}
- 	if (idle || daemon) {
- 		if (idle)
- 			kdb_printf("%d idle process%s (state I)%s\n",
-@@ -2370,12 +2370,12 @@ static int kdb_ps(int argc, const char **argv)
- 	}
- 	kdb_printf("\n");
- 	/* Now the real tasks */
--	kdb_do_each_thread(g, p) {
-+	for_each_process_thread(g, p) {
- 		if (KDB_FLAG(CMD_INTERRUPT))
- 			return 0;
- 		if (kdb_task_state(p, mask))
- 			kdb_ps1(p);
--	} kdb_while_each_thread(g, p);
-+	}
- 
- 	return 0;
- }
-diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
-index 2e296e4a234c..a4281fb99299 100644
---- a/kernel/debug/kdb/kdb_private.h
-+++ b/kernel/debug/kdb/kdb_private.h
-@@ -230,10 +230,6 @@ extern struct task_struct *kdb_curr_task(int);
- 
- #define kdb_task_has_cpu(p) (task_curr(p))
- 
--/* Simplify coexistence with NPTL */
--#define	kdb_do_each_thread(g, p) do_each_thread(g, p)
--#define	kdb_while_each_thread(g, p) while_each_thread(g, p)
--
- #define GFP_KDB (in_interrupt() ? GFP_ATOMIC : GFP_KERNEL)
- 
- extern void *debug_kmalloc(size_t size, gfp_t flags);
+[v3]:	Includes below v2 feedback
+	- Removed explicit clk_set_rate from driver as default external
+	  input clock rate can be configured through DT.
+
+[v2]:	Includes below changes based on v1 feedback
+	- External input clock name changed from xclk to inck.
+	- implementation change for get regulators to store all in array.
+	- To keep in reset low prior to regulators power on.
+
+Sowjanya Komatineni (4):
+  media: i2c: imx274: Fix Y_OUT_SIZE register setting
+  dt-bindings: media: imx274: Use lower case for supply names
+  dt-bindings: media: imx274: Move clock and supplies to required
+    properties
+  media: i2c: imx274: Add IMX274 power on and off sequence
+
+ .../devicetree/bindings/media/i2c/imx274.txt       |  10 +-
+ drivers/media/i2c/imx274.c                         | 153 ++++++++++++++++++++-
+ 2 files changed, 154 insertions(+), 9 deletions(-)
+
 -- 
-2.26.2
+2.7.4
 
