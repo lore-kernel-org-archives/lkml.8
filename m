@@ -2,212 +2,120 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B0D8C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90DDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:55:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10EEF2087D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CED2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 19:55:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="WVXMJRV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729894AbgHaTxX (ORCPT
+        id S1729009AbgHaTzz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 15:53:23 -0400
-Received: from mga17.intel.com ([192.55.52.151]:38451 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729885AbgHaTxV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 15:53:21 -0400
-IronPort-SDR: J/+9NEiHHS//vry7bHBG9UndDUx26HxWyXGTHIZlsThRrcIZKyu3LZAjWLDPPGcah+ecjbU4n7
- obvst38Z19Tw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="137096378"
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="137096378"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 12:53:20 -0700
-IronPort-SDR: sfefiNLyiGq5iVg1AwuLny5G5TU/O5qwtlHtgIYCUy4LdeO0dLcBoN1AVzGkDQHFSH3+wA+XN8
- N3efer9xVYiw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
-   d="scan'208";a="340770469"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga007.jf.intel.com with SMTP; 31 Aug 2020 12:53:16 -0700
-Received: by stinkbox (sSMTP sendmail emulation); Mon, 31 Aug 2020 22:53:16 +0300
-Date:   Mon, 31 Aug 2020 22:53:16 +0300
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     crj <algea.cao@rock-chips.com>
-Cc:     mripard@kernel.org, tzimmermann@suse.de,
-        linux-kernel@vger.kernel.org, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
-        daniel@ffwll.ch, linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] drm: Parse Colorimetry data block from EDID
-Message-ID: <20200831195316.GC6112@intel.com>
-References: <20200826142328.131144-1-algea.cao@rock-chips.com>
- <20200827105701.GS6112@intel.com>
- <4cadf318-cfc3-92d6-6219-170166db94ce@rock-chips.com>
+        Mon, 31 Aug 2020 15:55:55 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49504 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728344AbgHaTzy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 15:55:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598903753;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=pg1EKJ08eC4msPPg4w9Q4tqRrD2nD69pzCZKjpi0eZg=;
+        b=WVXMJRV/DxCsvgUte9kAtQbc2iT4gYG3HOYBgBPgPv3Sg/c1Xq6GP4XOBtMQ7P6e6AfFkr
+        yi+MDtPvjd23+uO5K6YgyloQDVGzST3+/encwXFFiLPyVc9IOgmcGYv2Wxac5hMsp1H1lU
+        n/FrDd9Vh31XgwZPlCKciMS1lAhbEoM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-246-mFuRQQa6OYWh8gPYCP7Hqw-1; Mon, 31 Aug 2020 15:55:50 -0400
+X-MC-Unique: mFuRQQa6OYWh8gPYCP7Hqw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4DCF802B60;
+        Mon, 31 Aug 2020 19:55:49 +0000 (UTC)
+Received: from treble (ovpn-114-37.rdu2.redhat.com [10.10.114.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AA7FC5C1BB;
+        Mon, 31 Aug 2020 19:55:48 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 14:55:46 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Julien Thierry <jthierry@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, peterz@infradead.org, mbenes@suse.cz,
+        raphael.gault@arm.com, benh@kernel.crashing.org
+Subject: Re: [PATCH v2 9/9] objtool: Abstract unwind hint reading
+Message-ID: <20200831195546.gt72y5tplwuftqv7@treble>
+References: <20200730094652.28297-1-jthierry@redhat.com>
+ <20200730094652.28297-10-jthierry@redhat.com>
+ <20200730150341.udqnykbw7yfsjvin@treble>
+ <1a078563-001d-c666-d2f5-9291f0efd35a@redhat.com>
+ <20200731140441.cpzr4lrlkcrmoz2c@treble>
+ <6a314dba-4086-717b-d226-6c292240a3e9@redhat.com>
+ <20200803213506.hlbpdlitom7sjtqo@treble>
+ <8fe8199e-a2f3-513f-6cdf-c61d7936dede@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4cadf318-cfc3-92d6-6219-170166db94ce@rock-chips.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8fe8199e-a2f3-513f-6cdf-c61d7936dede@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 09:07:13AM +0800, crj wrote:
-> Hi Ville Syrjälä,
+On Tue, Aug 25, 2020 at 01:31:46PM +0100, Julien Thierry wrote:
+> > > > The call to update_cfi_state_regs() is really regs-specific, not
+> > > > sp-specific.
+> > > > 
+> > > 
+> > > I must admit I don't really understand what "regs" is and why exactly such
+> > > an exception in stack state tracking is made where only operations to SP are
+> > > taken into account.
+> > 
+> > "regs" is a special type of stack frame, usually for asm entry code,
+> > where the frame is actually an instance of 'struct pt_regs'.  So if
+> > there's a variable associated it with it, maybe it should have "regs" in
+> > the name.
+> > 
+> > Though I think non-x86 arches will also have regs frames, so would it
+> > make sense to just make the unwind hint types a global multiarch thing?
+> > They could be renamed to UNWIND_HINT_TYPE_REGS{_PARTIAL}.  Then there
+> > wouldn't really be a need for the "sp_only" thing.
+> > 
 > 
-> 在 2020/8/27 18:57, Ville Syrjälä 写道:
-> > On Wed, Aug 26, 2020 at 10:23:28PM +0800, Algea Cao wrote:
-> >> CEA 861.3 spec adds colorimetry data block for HDMI.
-> >> Parsing the block to get the colorimetry data from
-> >> panel.
-> > And what exactly do you want to do with that data?
-> 
-> 
-> We can get colorimetry data block from edid then support
-> 
-> HDMI colorimetry such as BT2020.
+> If having regs frame means having a pt_regs on the stack when procedure
+> calls/return, then yes this will probably be the case on most archs (it is
+> for arm64 at least.
 
-But what do you want to do with it? The patch does nothing
-functional.
+The regs frames aren't for function/procedure calls, but rather
+exceptions/interrupts.
 
-> 
-> >> Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-> >> ---
-> >>
-> >>   drivers/gpu/drm/drm_edid.c  | 45 +++++++++++++++++++++++++++++++++++++
-> >>   include/drm/drm_connector.h |  3 +++
-> >>   include/drm/drm_edid.h      | 14 ++++++++++++
-> >>   3 files changed, 62 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> >> index 31496b6cfc56..67e607c04492 100644
-> >> --- a/drivers/gpu/drm/drm_edid.c
-> >> +++ b/drivers/gpu/drm/drm_edid.c
-> >> @@ -3223,6 +3223,7 @@ add_detailed_modes(struct drm_connector *connector, struct edid *edid,
-> >>   #define VIDEO_BLOCK     0x02
-> >>   #define VENDOR_BLOCK    0x03
-> >>   #define SPEAKER_BLOCK	0x04
-> >> +#define COLORIMETRY_DATA_BLOCK		0x5
-> >>   #define HDR_STATIC_METADATA_BLOCK	0x6
-> >>   #define USE_EXTENDED_TAG 0x07
-> >>   #define EXT_VIDEO_CAPABILITY_BLOCK 0x00
-> >> @@ -4309,6 +4310,48 @@ static void fixup_detailed_cea_mode_clock(struct drm_display_mode *mode)
-> >>   	mode->clock = clock;
-> >>   }
-> >>   
-> >> +static bool cea_db_is_hdmi_colorimetry_data_block(const u8 *db)
-> >> +{
-> >> +	if (cea_db_tag(db) != USE_EXTENDED_TAG)
-> >> +		return false;
-> >> +
-> >> +	if (db[1] != COLORIMETRY_DATA_BLOCK)
-> >> +		return false;
-> >> +
-> >> +	if (cea_db_payload_len(db) < 2)
-> >> +		return false;
-> >> +
-> >> +	return true;
-> >> +}
-> >> +
-> >> +static void
-> >> +drm_parse_colorimetry_data_block(struct drm_connector *connector, const u8 *db)
-> >> +{
-> >> +	struct drm_hdmi_info *info = &connector->display_info.hdmi;
-> >> +
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_601)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_601;
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_709)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_709;
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_sYCC_601)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_sYCC_601;
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_ADBYCC_601)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_ADBYCC_601;
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_ADB_RGB)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_ADB_RGB;
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_CYCC)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_CYCC;
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_YCC)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_YCC;
-> >> +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_RGB)
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_RGB;
-> >> +	/* Byte 4 Bit 7: DCI-P3 */
-> >> +	if (db[3] & BIT(7))
-> >> +		info->colorimetry |= DRM_EDID_CLRMETRY_DCI_P3;
-> >> +
-> >> +	DRM_DEBUG_KMS("Supported Colorimetry 0x%x\n", info->colorimetry);
-> >> +}
-> >> +
-> >>   static bool cea_db_is_hdmi_hdr_metadata_block(const u8 *db)
-> >>   {
-> >>   	if (cea_db_tag(db) != USE_EXTENDED_TAG)
-> >> @@ -4994,6 +5037,8 @@ static void drm_parse_cea_ext(struct drm_connector *connector,
-> >>   			drm_parse_vcdb(connector, db);
-> >>   		if (cea_db_is_hdmi_hdr_metadata_block(db))
-> >>   			drm_parse_hdr_metadata_block(connector, db);
-> >> +		if (cea_db_is_hdmi_colorimetry_data_block(db))
-> >> +			drm_parse_colorimetry_data_block(connector, db);
-> >>   	}
-> >>   }
-> >>   
-> >> diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> >> index af145608b5ed..d599c3b9e881 100644
-> >> --- a/include/drm/drm_connector.h
-> >> +++ b/include/drm/drm_connector.h
-> >> @@ -207,6 +207,9 @@ struct drm_hdmi_info {
-> >>   
-> >>   	/** @y420_dc_modes: bitmap of deep color support index */
-> >>   	u8 y420_dc_modes;
-> >> +
-> >> +	/* @colorimetry: bitmap of supported colorimetry modes */
-> >> +	u16 colorimetry;
-> >>   };
-> >>   
-> >>   /**
-> >> diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-> >> index cfa4f5af49af..98fa78c2f82d 100644
-> >> --- a/include/drm/drm_edid.h
-> >> +++ b/include/drm/drm_edid.h
-> >> @@ -229,6 +229,20 @@ struct detailed_timing {
-> >>   				    DRM_EDID_YCBCR420_DC_36 | \
-> >>   				    DRM_EDID_YCBCR420_DC_30)
-> >>   
-> >> +/*
-> >> + * Supported Colorimetry from colorimetry data block
-> >> + * as per CEA 861-G spec
-> >> + */
-> >> +#define DRM_EDID_CLRMETRY_xvYCC_601   (1 << 0)
-> >> +#define DRM_EDID_CLRMETRY_xvYCC_709   (1 << 1)
-> >> +#define DRM_EDID_CLRMETRY_sYCC_601    (1 << 2)
-> >> +#define DRM_EDID_CLRMETRY_ADBYCC_601  (1 << 3)
-> >> +#define DRM_EDID_CLRMETRY_ADB_RGB     (1 << 4)
-> >> +#define DRM_EDID_CLRMETRY_BT2020_CYCC (1 << 5)
-> >> +#define DRM_EDID_CLRMETRY_BT2020_YCC  (1 << 6)
-> >> +#define DRM_EDID_CLRMETRY_BT2020_RGB  (1 << 7)
-> >> +#define DRM_EDID_CLRMETRY_DCI_P3      (1 << 15)
-> >> +
-> >>   /* ELD Header Block */
-> >>   #define DRM_ELD_HEADER_BLOCK_SIZE	4
-> >>   
-> >> -- 
-> >> 2.25.1
-> >>
-> >>
-> >>
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
+> However in that case, arm64 still builds a stack frame and sets the frame
+> pointer, so only handling SP operations doesn't make much sense for arm64.
+
+If for example arm64 were to switch to ORC, it could have regs-only
+frames in entry code just like x86.
+
+> Also, things like ORC_TYPE_REGS_IRET don't have a use for arm64 (but maybe
+> for other non-x86 arches it does?)
+
+If we called it TYPE_REGS_PARTIAL, at least the name would be generic
+enough, even if it's not used by all arches.
+
+> In the end that's why I left the unwind hint types as arch defined. It seems
+> like every arch will have their specific semantics they might want to let
+> objtool know about.
+
+Ok, I guess I'd need to look at the code to have an opinion.  If there
+turn out to be commonalities between the different arch unwind hints
+then we could always unify them later.
 
 -- 
-Ville Syrjälä
-Intel
+Josh
+
