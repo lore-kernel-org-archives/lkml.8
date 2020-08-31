@@ -2,150 +2,145 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602A7C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6FEC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:16:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387A120782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=plvision.eu header.i=@plvision.eu header.b="y4EMhONm"
+	by mail.kernel.org (Postfix) with ESMTP id 4AFE22071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgHaB4j (ORCPT
+        id S1726878AbgHaCQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:56:39 -0400
-Received: from mail-eopbgr60111.outbound.protection.outlook.com ([40.107.6.111]:41218
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726525AbgHaB4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:56:32 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A14Ih+GBtu9yfpRafVKoWLGFh0R86ZXoALLqU+QUfkJ92FGAIf4p0/eOAdtK9/RYvPkjwXxOpAwTIgdCDOBn4QHampkss1DMpIXdiuegDMqkTgKPK0e55vkB2dhmQ8Yh/KMmu9Q4osdhKAkW0JAVQJSFHmTzGgRfPMqok6r0pthGoOUigXt6tLIWMqvo/oSoBg8EHzecyO81AFV1VVkVm0pZ/ghhvnF5jXmNjDa3ux9DQfGzfzpsbAs14rivwYr6mMrKvqTF8HuYxabOueohsdsn9Nz1bmYFvINM2nk4RdQt+O6iOLy7xlUcFcApAgknxgjdcDjpiaeKrKpAKB6w3g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kj+4CzBQlEEC5JZw+s9n4i7z53k3L9dwXNwQNpYytbY=;
- b=TAEcaIlMAqDBG9Lt4Chud02qGGj4Bymf4YAl+8sJpzzg90YJE54OuPMVob1wKn8mqHRpRvFHXzuZXs0Z8URTrpZREvjqJL0ErufCxlLTvDQq/xVfW9XPheniKJJOTz68P4GF8fDGOjNqstqJhNzDmN9QpnHYPxAQlyfI/96bMVDx9VNKq8CjObkZwmWC+/I29IxtfaSPerCSbK3uFI7LN38q0Db7Ws0jCnFdJJZ+uQmX6hkEGZ6VlV3UwsPmZmn7xHyGumS0AXnvnFLemqw3plw0jJXH7GvoJ+dWtEyz7O3g2ggWGmz+SzDavLNydDHx51wG6U6ALY8YnRiFJ0tEKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=plvision.eu; dmarc=pass action=none header.from=plvision.eu;
- dkim=pass header.d=plvision.eu; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=plvision.eu;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kj+4CzBQlEEC5JZw+s9n4i7z53k3L9dwXNwQNpYytbY=;
- b=y4EMhONmoSY6L52+ilPY4vhrmhMPqlk6E8Zmbl4LzlU6viALjXG1CoKaCJnd+N8LiEWPh+EH6C/oVhZxW5sen805BPn/v1XK1MOktXraNsp4eVom9c6oASXgsu3s2YKksO7SER9B3Ft75QSbuCq9WXAeZVu82g6mm/2aaCfnE50=
-Authentication-Results: baylibre.com; dkim=none (message not signed)
- header.d=none;baylibre.com; dmarc=none action=none header.from=plvision.eu;
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:56::28) by
- HE1P190MB0364.EURP190.PROD.OUTLOOK.COM (2603:10a6:7:62::25) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.23; Mon, 31 Aug 2020 01:56:08 +0000
-Received: from HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305]) by HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- ([fe80::b1a4:e5e3:a12b:1305%6]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
- 01:56:08 +0000
-From:   Vadym Kochan <vadym.kochan@plvision.eu>
-To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Ripard <maxime.ripard@free-electrons.com>,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Vadym Kochan <vadym.kochan@plvision.eu>
-Subject: [PATCH v3 3/3] misc: eeprom: at24: register nvmem only after eeprom is ready to use
-Date:   Mon, 31 Aug 2020 04:55:39 +0300
-Message-Id: <20200831015539.26811-4-vadym.kochan@plvision.eu>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200831015539.26811-1-vadym.kochan@plvision.eu>
-References: <20200831015539.26811-1-vadym.kochan@plvision.eu>
-Content-Type: text/plain
-X-ClientProxiedBy: AM5PR0201CA0022.eurprd02.prod.outlook.com
- (2603:10a6:203:3d::32) To HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
- (2603:10a6:7:56::28)
+        Sun, 30 Aug 2020 22:16:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:33387 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbgHaCQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 22:16:41 -0400
+IronPort-SDR: MDBqxKPz+b2wY99KLyEodSMX/ctxTrkCKaUzOl4APJndxSHheWzGgKpTexWPdcK5ZZTrwcLyAD
+ MJc/taKCXdUA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="218449373"
+X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
+   d="scan'208";a="218449373"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Aug 2020 19:16:40 -0700
+IronPort-SDR: rsgjOh+SguclyBP2m+tvWyYXzyMIgJprCZTi9jFL621kEih3GW+Ormhf1X6cFqGTa/pqqF5JTt
+ TbmCzzR+f6XQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,374,1592895600"; 
+   d="scan'208";a="338093341"
+Received: from shbuild999.sh.intel.com (HELO localhost) ([10.239.146.107])
+  by FMSMGA003.fm.intel.com with ESMTP; 30 Aug 2020 19:16:38 -0700
+Date:   Mon, 31 Aug 2020 10:16:38 +0800
+From:   Feng Tang <feng.tang@intel.com>
+To:     Borislav Petkov <bp@suse.de>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        Mel Gorman <mgorman@suse.com>
+Subject: Re: [LKP] Re: [x86/mce] 1de08dccd3: will-it-scale.per_process_ops
+ -14.1% regression
+Message-ID: <20200831021638.GB65971@shbuild999.sh.intel.com>
+References: <20200425130136.GA28245@zn.tnic>
+ <20200818082943.GA65567@shbuild999.sh.intel.com>
+ <20200818200654.GA21494@agluck-desk2.amr.corp.intel.com>
+ <20200819020437.GA2605@shbuild999.sh.intel.com>
+ <20200821020259.GA90000@shbuild999.sh.intel.com>
+ <20200824151425.GF4794@zn.tnic>
+ <20200824153300.GA56944@shbuild999.sh.intel.com>
+ <20200824161238.GI4794@zn.tnic>
+ <20200825062305.GA83850@shbuild999.sh.intel.com>
+ <20200828174839.GD19448@zn.tnic>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from pc60716vkochan.x.ow.s (217.20.186.93) by AM5PR0201CA0022.eurprd02.prod.outlook.com (2603:10a6:203:3d::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.20 via Frontend Transport; Mon, 31 Aug 2020 01:56:07 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.20.186.93]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 91fb548b-d050-4e2d-50f3-08d84d510733
-X-MS-TrafficTypeDiagnostic: HE1P190MB0364:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <HE1P190MB0364692D21EF8D7B8DD8F88F95510@HE1P190MB0364.EURP190.PROD.OUTLOOK.COM>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4714;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gdxeV35EGJ7F9hNqbae7txJ4sf/rdZRuSu4E2Bxglu01XQaSPnz94S2UaUb4hympQRbkaF+P3/fAXDtamoQzsGITjSK2mowxY0L+0PUvoDS6P/kOvtPeRFAX+aKEi88BYZfsfNA0rEnZqkcqmHitH+0FCVu4BXK0YxHg/I+ED5k9iHVA+y/BoE0QwSvy9XYHMZLYaheHzrIA6rmZ9D5IQWQ93A1TkaU/yVu3ExepZR6WYk6hcQZCWH7OLNgFFbrLdw8UKlceOzCpL56b9HDofe2Ao5kEEn9P7APADKUVTbmUlJb6ZhZrZDHbLcQENog/
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1P190MB0539.EURP190.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(376002)(136003)(39830400003)(366004)(396003)(346002)(36756003)(478600001)(6486002)(5660300002)(316002)(2906002)(110136005)(8936002)(8676002)(6512007)(6666004)(66476007)(1076003)(66556008)(44832011)(66946007)(107886003)(2616005)(956004)(26005)(86362001)(4326008)(6506007)(83380400001)(16526019)(186003)(52116002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: bOYMSZBUAIt/qZPbOC8YfmOQYchkeobtJsZskKbtmNNrg5oixnS0wx0mXupy67AP6AcJUlQprqFEZbQAQnfgg3cCzK8C6/PG9DUhCGSrjk8iY9ca1CmMkHtDz+hlppW/J5NNzkq2pxF6RKrN+yz1ccfQYqzglRqCE77fWKlQqOd92bm9UmkiQjNsy0irSPZCFFJLvSkJGLcQ8i0sBs4NQ7GBXmB47wBL2fkbbVGjl0eRAs/6q1zIoS1W9PCNYs5yCsvaC5Y+g7vJoBxPp1iPs2hhF6doq6LKg3wE+GoucDXnfVt8HXdIu441S/Gd0eyv7sbQNzkFclV9OM6hBmL+4zbbW3nuvwm7o7kA3owxEJhB3SekO6LsRnirZZ2VCBIAlZaHBwPy5t/J6hZmKWbmfoIj9cU/Gesl+MH7admrQOVccIMPYVIYQrpNC/ehH+wdU7cgm07LK9LdZ5RKmOdqiAgyUEfUqn7p5oTtgb3sNFudSDEHy1XMZOp3PJUmEOwAPHNKFh9p89XIfSQiL3gpt/be9tVTHH2eG9lk7I7j6R687EVNamS2bGlw+L62ZHU8hwWp/GzoD2koaGdzwJBALLgxTsHQk/dfg4EhjJLZLv6NdwFHSwa5w0P5Vs4ph3NZeXgrl+9pae8TjckxL8srqA==
-X-OriginatorOrg: plvision.eu
-X-MS-Exchange-CrossTenant-Network-Message-Id: 91fb548b-d050-4e2d-50f3-08d84d510733
-X-MS-Exchange-CrossTenant-AuthSource: HE1P190MB0539.EURP190.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 01:56:08.4016
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 03707b74-30f3-46b6-a0e0-ff0a7438c9c4
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: Aekus+6g10rRh+Xqwpx+cQzP+ER6ikDhlVUU0GQnalvBdal8i0fB8JsXZC8nc3+MPFD6OVcg4MGFd4tMdjVsBTcUtyNIjMfgLpeMEaT0JbE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1P190MB0364
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200828174839.GD19448@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During nvmem_register() the nvmem core sends notifications when:
+On Fri, Aug 28, 2020 at 07:48:39PM +0200, Borislav Petkov wrote:
+> On Tue, Aug 25, 2020 at 02:23:05PM +0800, Feng Tang wrote:
+> > Also one good news is, we seem to identify the 2 key percpu variables
+> > out of the list mentioned in previous email:  
+> > 	'arch_freq_scale'
+> > 	'tsc_adjust'
+> > 
+> > These 2 variables are accessed in 2 hot call stacks (for this 288 CPU
+> > Xeon Phi platform):
+> > 
+> >   - arch_freq_scale is accessed in scheduler tick 
+> > 	  arch_scale_freq_tick+0xaf/0xc0
+> > 	  scheduler_tick+0x39/0x100
+> > 	  update_process_times+0x3c/0x50
+> > 	  tick_sched_handle+0x22/0x60
+> > 	  tick_sched_timer+0x37/0x70
+> > 	  __hrtimer_run_queues+0xfc/0x2a0
+> > 	  hrtimer_interrupt+0x122/0x270
+> > 	  smp_apic_timer_interrupt+0x6a/0x150
+> > 	  apic_timer_interrupt+0xf/0x20
+> > 
+> >   - tsc_adjust is accessed in idle entrance
+> > 	  tsc_verify_tsc_adjust+0xeb/0xf0
+> > 	  arch_cpu_idle_enter+0xc/0x20
+> > 	  do_idle+0x91/0x280
+> > 	  cpu_startup_entry+0x19/0x20
+> > 	  start_kernel+0x4f4/0x516
+> > 	  secondary_startup_64+0xb6/0xc0
+> > 
+> > From systemmap file, for bad kernel these 2 sit in one cache line, while
+> > for good kernel they sit in 2 separate cache lines.
+> > 
+> > It also explains why it turns from a regression to an improvement with
+> > updated gcc/kconfig, as the cache line sharing situation is reversed.
+> > 
+> > The direct patch I can think of is to make 'tsc_adjust' cache aligned
+> > to separate these 2 'hot' variables. How do you think?
+> > 
+> > --- a/arch/x86/kernel/tsc_sync.c
+> > +++ b/arch/x86/kernel/tsc_sync.c
+> > @@ -29,7 +29,7 @@ struct tsc_adjust {
+> >  	bool		warned;
+> >  };
+> >  
+> > -static DEFINE_PER_CPU(struct tsc_adjust, tsc_adjust);
+> > +static DEFINE_PER_CPU_ALIGNED(struct tsc_adjust, tsc_adjust);
+> 
+> So why don't you define both variables with DEFINE_PER_CPU_ALIGNED and
+> check if all your bad measurements go away this way?
 
-    - cell added
-    - nvmem added
+For 'arch_freq_scale', there are other percpu variables in the same
+smpboot.c: 'arch_prev_aperf' and 'arch_prev_mperf', and in hot path
+arch_scale_freq_tick(), these 3 variables are all accessed, so I didn't 
+touch it. Or maybe we can align the first of these 3 variables, so
+that they sit in one cacheline.
 
-and during these notifications some callback func may access the nvmem
-device, which will fail in case of at24 eeprom because regulator and pm
-are enabled after nvmem_register().
+> You'd also need to check whether there's no detrimental effect from
+> this change on other, i.e., !KNL platforms, and I think there won't
+> be because both variables will be in separate cachelines then and all
+> should be good.
 
-Signed-off-by: Vadym Kochan <vadym.kochan@plvision.eu>
----
-v3:
-    1) at24 driver enables regulator and pm state machine after nvmem
-       registration which does not allow to use it on handing NVMEM_PRE_ADD event.
+Yes, these kind of changes should be verified on other platforms.
 
- drivers/misc/eeprom/at24.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+One thing still puzzles me, that the 2 variables are per-cpu things, and
+there is no case of many CPU contending, why the cacheline layout matters?
+I doubt it is due to the contention of the same cache set, and am trying
+to find some way to test it.
 
-diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-index 2591c21b2b5d..26a23abc053d 100644
---- a/drivers/misc/eeprom/at24.c
-+++ b/drivers/misc/eeprom/at24.c
-@@ -692,10 +692,6 @@ static int at24_probe(struct i2c_client *client)
- 	nvmem_config.word_size = 1;
- 	nvmem_config.size = byte_len;
- 
--	at24->nvmem = devm_nvmem_register(dev, &nvmem_config);
--	if (IS_ERR(at24->nvmem))
--		return PTR_ERR(at24->nvmem);
--
- 	i2c_set_clientdata(client, at24);
- 
- 	err = regulator_enable(at24->vcc_reg);
-@@ -708,6 +704,13 @@ static int at24_probe(struct i2c_client *client)
- 	pm_runtime_set_active(dev);
- 	pm_runtime_enable(dev);
- 
-+	at24->nvmem = devm_nvmem_register(dev, &nvmem_config);
-+	if (IS_ERR(at24->nvmem)) {
-+		pm_runtime_disable(dev);
-+		regulator_disable(at24->vcc_reg);
-+		return PTR_ERR(at24->nvmem);
-+	}
-+
- 	/*
- 	 * Perform a one-byte test read to verify that the
- 	 * chip is functional.
--- 
-2.17.1
+Thanks,
+Feng
 
+> Hmm?
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> SUSE Software Solutions Germany GmbH, GF: Felix Imendörffer, HRB 36809, AG Nürnberg
