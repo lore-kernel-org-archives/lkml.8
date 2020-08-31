@@ -2,138 +2,163 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABDCC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42180C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 975732072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FD62072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 07:15:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S3mcsSWy"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kjUinpiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgHaHOy (ORCPT
+        id S1728046AbgHaHO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 03:14:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727806AbgHaHOn (ORCPT
+        Mon, 31 Aug 2020 03:14:57 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:16659 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727883AbgHaHOs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 03:14:43 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17ECBC061573;
-        Mon, 31 Aug 2020 00:14:42 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id t11so2599505plr.5;
-        Mon, 31 Aug 2020 00:14:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=VHh2Btrj1RMrE2bBjPVgrNRFQFpYqnl0GvDbuvKxlhM=;
-        b=S3mcsSWyBk2K7x6lEYbi0LBE2ybIfLvfaX9B7iMhZQwnl4Co+b53YdSainIW4Nq7eq
-         LivAwlzS8y7uyOvy9CCdeS39UDVP+oP4l+8wWjSJc+nQypK3LYAQFluxrIWBGlBksYtS
-         lnXTp51xYpws1G1UsNjVrZ8Xl3YY1mVJOmrzQkE5WpW+8rh9nsxpCYHE8Bu28jml5gMR
-         QBKrDD3jShcfFvYCtsaYEflcF+g28LD3PTLTpleT9T1d/3Tx7v2FrzLtyEyEF6jBUPY+
-         Uenapoy8EECWpjHonyHEaLDA6uDbN0mH5rTy5At5d2oE7v4LT+VxYkvM5ytg0Tyd2UD3
-         kWxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=VHh2Btrj1RMrE2bBjPVgrNRFQFpYqnl0GvDbuvKxlhM=;
-        b=a9domBBeNMSyoF/CH/vw6m7QkVjM4/Si3dTX26V9v54EElCi5zY6jrGW8Bf6A3WZFL
-         GogKvQVVqf8BSfCRjBZGZq44HaIQ0aWRp0HSSjPzzoZzfGGlrUxW/o1k5GrK09pMzoZA
-         v64X8UeKfFPLsJMeyEadQ3qy+U82oR5pEhP0Hl91AkkL1hX4hunUXz92Cflm4IGO1i7H
-         BfK1CYdkdtBhIBztwEQhVnKmGytVDVTWajci5moAnLlHmnld0eJCQQ8YEjTJiP3Qr9Jb
-         NsFKTRRTPp3V0C3jH/iLwRa2C3LU7fJSapB8sS72E+H5gz5H34LP4YRYcCWOUYdQrjPi
-         YTFQ==
-X-Gm-Message-State: AOAM530Af1/09RGdvcSrZIBnigUzxmS3ni9wmEE1xdDG8eTHVfKi4Ytb
-        XyTlro/740yXD2Bdzurk+22NurtcAq1enA==
-X-Google-Smtp-Source: ABdhPJy49Sbbd5KsXqCjjYrUmQ0P4bLeuHD9xm+Xx7zfcvXsugr04Cs+z/TJMUSjCrP4mIiQhgxF7Q==
-X-Received: by 2002:a17:90b:374b:: with SMTP id ne11mr162280pjb.21.1598858081680;
-        Mon, 31 Aug 2020 00:14:41 -0700 (PDT)
-Received: from fmin-OptiPlex-7060.nreal.work ([103.206.191.6])
-        by smtp.gmail.com with ESMTPSA id s67sm7173587pfs.117.2020.08.31.00.14.39
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 31 Aug 2020 00:14:41 -0700 (PDT)
-From:   dillon.minfei@gmail.com
-To:     linus.walleij@linaro.org, lee.jones@linaro.org,
-        bgolaszewski@baylibre.com
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dillon min <dillon.minfei@gmail.com>
-Subject: [PATCH: 2/2] gpio: tc35894: Disable Direct KBD interrupts to enable gpio irq
-Date:   Mon, 31 Aug 2020 15:14:33 +0800
-Message-Id: <1598858073-5285-3-git-send-email-dillon.minfei@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598858073-5285-1-git-send-email-dillon.minfei@gmail.com>
-References: <1598858073-5285-1-git-send-email-dillon.minfei@gmail.com>
+        Mon, 31 Aug 2020 03:14:48 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4ca2e80000>; Mon, 31 Aug 2020 00:12:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 31 Aug 2020 00:14:46 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 31 Aug 2020 00:14:46 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 07:14:46 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 31 Aug 2020 07:14:45 +0000
+Received: from sandstorm.nvidia.com (Not Verified[10.2.61.194]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f4ca3650000>; Mon, 31 Aug 2020 00:14:45 -0700
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, <linux-xfs@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-block@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v3 1/3] mm/gup: introduce pin_page()
+Date:   Mon, 31 Aug 2020 00:14:37 -0700
+Message-ID: <20200831071439.1014766-2-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200831071439.1014766-1-jhubbard@nvidia.com>
+References: <20200831071439.1014766-1-jhubbard@nvidia.com>
+MIME-Version: 1.0
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598857960; bh=g/hUeZFRhmcyiBdywMfjY5hsszErlS3vn8kKwBqUBqw=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=kjUinpiMx6nsErCxVCskj43Z3DmEoRKcD9i9ivUNEYiZZUvdAQHLzGVFbnxLz5nhr
+         gU9ZVgqVz0+ENK96+ymx5ri0Qu3f+reKGD4pt8qDZjXFXqVIl2GN2MtTQIV46VD7l0
+         vRRZcwo3jXjvLR6MZCdGCc/SD7/QCWrvHe3XFUal/qZtcgTs7Auk+30WD6C3NRO8so
+         J9oszswXn1+MED+pJTlgHtKokzefEkarkTGqOpWg6hOtomvqMdvyLTH8W5VoHDFKQu
+         zMwxsVRna0Ka+n9/VhYUUDZeT8gnPNL2ZwT/7z2QMTYjoIHFeLcUfmvIMNZpQdS46R
+         VQuBC2Om1nakw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: dillon min <dillon.minfei@gmail.com>
+pin_page() is the FOLL_PIN equivalent of get_page().
 
-On tc35894, have to disable direct keypad interrupts to make
-it as general purpose interrupts functionality work.
-if not, after chip reset, IRQST(0x91) will always 0x20,
-IRQN always low level, can't be clear.
+This was always a missing piece of the pin/unpin API calls (early
+reviewers of pin_user_pages() asked about it, in fact), but until now,
+it just wasn't needed. Finally though, now that the Direct IO pieces in
+block/bio are about to be converted to use FOLL_PIN, it turns out that
+there are some cases in which get_page() and get_user_pages_fast() were
+both used. Converting those sites requires a drop-in replacement for
+get_page(), which this patch supplies.
 
-verified on tc35894, need more test on other tc3589x.
+[1] and [2] provide some background about the overall effort to convert
+things to pin_user_page*() and unpin_user_page*().
 
-Signed-off-by: dillon min <dillon.minfei@gmail.com>
+[1] "Explicit pinning of user-space pages":
+    https://lwn.net/Articles/807108/
+
+[2] Documentation/core-api/pin_user_pages.rst
+
+Cc: Christoph Hellwig <hch@infradead.org>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- drivers/gpio/gpio-tc3589x.c | 10 ++++++++++
- include/linux/mfd/tc3589x.h |  5 +++++
- 2 files changed, 15 insertions(+)
+ include/linux/mm.h |  2 ++
+ mm/gup.c           | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index ea3f68a28fea..760e716468dc 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -334,6 +334,16 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	/* For tc35894, have to disable Direct KBD interrupts,
-+	 * else IRQST will always be 0x20, IRQN low level, can't
-+	 * clear the irq status.
-+	 * TODO: need more test on other tc3589x chip.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index ca6e6a81576b..24240cf66c44 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1154,6 +1154,8 @@ static inline void get_page(struct page *page)
+ 	page_ref_inc(page);
+ }
+=20
++void pin_page(struct page *page);
++
+ bool __must_check try_grab_page(struct page *page, unsigned int flags);
+=20
+ static inline __must_check bool try_get_page(struct page *page)
+diff --git a/mm/gup.c b/mm/gup.c
+index ae096ea7583f..a3a4bfae224a 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -123,6 +123,39 @@ static __maybe_unused struct page *try_grab_compound_h=
+ead(struct page *page,
+ 	return NULL;
+ }
+=20
++/*
++ * pin_page() - elevate the page refcount, and mark as FOLL_PIN
++ *
++ * This the FOLL_PIN equivalent of get_page(). It is intended for use when=
+ the
++ * page will be released via unpin_user_page().
++ *
++ * Unlike pin_user_page*(), pin_page() may be used on nearly any page, not=
+ just
++ * userspace-allocated pages.
++ */
++void pin_page(struct page *page)
++{
++	int refs =3D 1;
++
++	page =3D compound_head(page);
++
++	VM_BUG_ON_PAGE(page_ref_count(page) <=3D 0, page);
++
++	if (hpage_pincount_available(page))
++		hpage_pincount_add(page, 1);
++	else
++		refs =3D GUP_PIN_COUNTING_BIAS;
++
++	/*
++	 * Similar to try_grab_compound_head(): even if using the
++	 * hpage_pincount_add/_sub() routines, be sure to
++	 * *also* increment the normal page refcount field at least
++	 * once, so that the page really is pinned.
 +	 */
-+	ret = tc3589x_reg_write(tc3589x, TC3589x_DKBDMSK,
-+				TC3589x_DKBDMSK_ELINT | TC3589x_DKBDMSK_EINT);
-+	if (ret < 0)
-+		return ret;
++	page_ref_add(page, refs);
 +
- 	ret = devm_request_threaded_irq(&pdev->dev,
- 					irq, NULL, tc3589x_gpio_irq,
- 					IRQF_ONESHOT, "tc3589x-gpio",
-diff --git a/include/linux/mfd/tc3589x.h b/include/linux/mfd/tc3589x.h
-index bb2b19599761..c18fc7c3c2d6 100644
---- a/include/linux/mfd/tc3589x.h
-+++ b/include/linux/mfd/tc3589x.h
-@@ -19,6 +19,9 @@ enum tx3589x_block {
- #define TC3589x_RSTCTRL_KBDRST	(1 << 1)
- #define TC3589x_RSTCTRL_GPIRST	(1 << 0)
- 
-+#define TC3589x_DKBDMSK_ELINT	(1 << 1)
-+#define TC3589x_DKBDMSK_EINT	(1 << 0)
++	mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_ACQUIRED, 1);
++}
 +
- /* Keyboard Configuration Registers */
- #define TC3589x_KBDSETTLE_REG   0x01
- #define TC3589x_KBDBOUNCE       0x02
-@@ -101,6 +104,8 @@ enum tx3589x_block {
- #define TC3589x_GPIOODM2	0xE4
- #define TC3589x_GPIOODE2	0xE5
- 
-+#define TC3589x_DKBDMSK		0xF3
-+
- #define TC3589x_INT_GPIIRQ	0
- #define TC3589x_INT_TI0IRQ	1
- #define TC3589x_INT_TI1IRQ	2
--- 
-2.7.4
+ /**
+  * try_grab_page() - elevate a page's refcount by a flag-dependent amount
+  *
+--=20
+2.28.0
 
