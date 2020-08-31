@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907EEC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D525C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6780F2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CACF2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888174;
-	bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
+	s=default; t=1598888183;
+	bh=jMmDAQcvu1Iifj6PtLRo7v3/YownEqEklSjrnF+GTIs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CEQoE00O0+RbcbgMV689uoTRBo5rmyuzK5L9IwLDiXb04riXPUdGEFT84bwDJ8TNF
-	 qm5G266QSAjAepyiUgiZ/YWTo3II0o7REIUeN8/Qfm2Kh2piVn111RC/kV+2k98u3E
-	 Zsm2PlIeIMTjnFH/w8LSYVMEkEiPQ7cOfCbCe+L4=
+	b=qHDy182fEKKbOKJwMSSPHkfbkYpwAfJaWmNsFrloocygMKZrEKuWUgvtdzXfQhwMN
+	 xp9XgcWq3svthrVLy5YfyXHLj3cVnQqwr6iIC8coEsuv3IOs0bAe0jW3uoEYDL5m1Y
+	 s6XRHRSrLANuwAYvG85sdmYbeV5hcecDtDBP0F9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729284AbgHaPgL (ORCPT
+        id S1729293AbgHaPgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:36:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40870 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:36:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728701AbgHaPav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:51 -0400
+        id S1728720AbgHaPao (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A9E207EA;
-        Mon, 31 Aug 2020 15:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB727215A4;
+        Mon, 31 Aug 2020 15:30:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887850;
-        bh=lzqFYgyy6yoRheHZxmpz751cu+IUQsJHL+zTbnPYkUY=;
+        s=default; t=1598887844;
+        bh=jMmDAQcvu1Iifj6PtLRo7v3/YownEqEklSjrnF+GTIs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x/oDLGUhLGLdDs0WwbWxpTEozah4VA+iWT5QVJDwhb3RzQPtHKbCPtF1GzecsuJqG
-         vmtXucc4Fnkg9DgOJchB4IyDcbdbnonSVqOvfuEhzpdOrXoNgWI2oeEamjeTKM2MFk
-         QWGaXYeAfdYJx4Yyt8qxXIP6AOEnK7lhzI4y5X1k=
+        b=ctNoRzqEydDc8d31VUtj9Bn8M/tlv+hp61wJKew2DSVfqrWTm/BL6YO3H+7qNBUdV
+         Z+SaAbZmSr569r3R3o3uteiy46sx9ApDooFPUHGup+jgIYLlRT7iMltBDZ5QKivGLB
+         xNwfm3CbYXq8VrqJErSDXyS07MkZw7xzs1vqUzsE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Krishna Manikandan <mkrishn@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 06/23] drm/msm: add shutdown support for display platform_driver
-Date:   Mon, 31 Aug 2020 11:30:22 -0400
-Message-Id: <20200831153039.1024302-6-sashal@kernel.org>
+Cc:     Peilin Ye <yepeilin.cs@gmail.com>,
+        syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 02/23] HID: hiddev: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
+Date:   Mon, 31 Aug 2020 11:30:18 -0400
+Message-Id: <20200831153039.1024302-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
 References: <20200831153039.1024302-1-sashal@kernel.org>
@@ -60,58 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Krishna Manikandan <mkrishn@codeaurora.org>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-[ Upstream commit 9d5cbf5fe46e350715389d89d0c350d83289a102 ]
+[ Upstream commit 25a097f5204675550afb879ee18238ca917cba7a ]
 
-Define shutdown callback for display drm driver,
-so as to disable all the CRTCS when shutdown
-notification is received by the driver.
+`uref->usage_index` is not always being properly checked, causing
+hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
 
-This change will turn off the timing engine so
-that no display transactions are requested
-while mmu translations are getting disabled
-during reboot sequence.
-
-Signed-off-by: Krishna Manikandan <mkrishn@codeaurora.org>
-
-Changes in v2:
-	- Remove NULL check from msm_pdev_shutdown (Stephen Boyd)
-	- Change commit text to reflect when this issue
-	  was uncovered (Sai Prakash Ranjan)
-
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/hid/usbhid/hiddev.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index b73fbb65e14b2..4558d66761b3c 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -1321,6 +1321,13 @@ static int msm_pdev_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index 35b1fa6d962ec..4711fb191a072 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -519,12 +519,16 @@ static noinline int hiddev_ioctl_usage(struct hiddev *hiddev, unsigned int cmd,
  
-+static void msm_pdev_shutdown(struct platform_device *pdev)
-+{
-+	struct drm_device *drm = platform_get_drvdata(pdev);
-+
-+	drm_atomic_helper_shutdown(drm);
-+}
-+
- static const struct of_device_id dt_match[] = {
- 	{ .compatible = "qcom,mdp4", .data = (void *)KMS_MDP4 },
- 	{ .compatible = "qcom,mdss", .data = (void *)KMS_MDP5 },
-@@ -1332,6 +1339,7 @@ MODULE_DEVICE_TABLE(of, dt_match);
- static struct platform_driver msm_platform_driver = {
- 	.probe      = msm_pdev_probe,
- 	.remove     = msm_pdev_remove,
-+	.shutdown   = msm_pdev_shutdown,
- 	.driver     = {
- 		.name   = "msm",
- 		.of_match_table = dt_match,
+ 		switch (cmd) {
+ 		case HIDIOCGUSAGE:
++			if (uref->usage_index >= field->report_count)
++				goto inval;
+ 			uref->value = field->value[uref->usage_index];
+ 			if (copy_to_user(user_arg, uref, sizeof(*uref)))
+ 				goto fault;
+ 			goto goodreturn;
+ 
+ 		case HIDIOCSUSAGE:
++			if (uref->usage_index >= field->report_count)
++				goto inval;
+ 			field->value[uref->usage_index] = uref->value;
+ 			goto goodreturn;
+ 
 -- 
 2.25.1
 
