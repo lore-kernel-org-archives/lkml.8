@@ -2,132 +2,250 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F15C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F40C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66C99208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tbpDwtgB"
+	by mail.kernel.org (Postfix) with ESMTP id 0227B208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598897977;
+	bh=fQELpKvWSu8GuxhvTeoiLr/q0jaGeeTwDu9BtK/GSzg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ce4wZEkME6suKNpGvkoVqLQzHuEGYqQZtCw8sGYk2neHJu1s7OM96UIphe2A/h/Vz
+	 rTO9+m8XMGSiqvM1Faw2jcz1k4vqJbbxDaS3izM3mROemygItVVAS9lN536SWtwkJD
+	 fHiKtATrEKHiPplNqf5IzytVqHFhDQOOd6wHG2Wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbgHaSTe (ORCPT
+        id S1729747AbgHaSTf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:19:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53574 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729723AbgHaSTV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:19:21 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EB5BC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:19:21 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id h1so1547710qvo.9
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:19:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=t1/Tbd4L56MeL2p75ATvjZTyO/Tm7hkvDW3bz/swotc=;
-        b=tbpDwtgB2fMMtc4DXh027u/wFKzMbJ5Cc2upysoNYoY31SkshSdvfrxDYT0KcTGXs8
-         SdJi7cdl3ZoRuz1ubGq96Q2TCNMgbhleQUqjnDvd8ssXP9zG4sJ2imOZ4MdfaqZU21n9
-         Nzdy4NYs4tE4HoT/Qh1Z6Q3bT9/C+wOwGwrMoBMa6hmVI3L0EP0/j5jjNTPeD2upOUey
-         GOTXlbG90X/p9ebnC4jR3xIMb1eacEQv8Ablpd1UumiQpwKdi67PuHMMTk8B4eiJ67qt
-         +1nYSFsWkV+Y4G3YZLhcyJHeQrM+1v0U6SPfSwxCbVeysov157C49u18RjgaDTsooHks
-         sSrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=t1/Tbd4L56MeL2p75ATvjZTyO/Tm7hkvDW3bz/swotc=;
-        b=owsxZMT9vX90yTj3cXaJ8V17FjCP3JbVmJOsD3sUS2rL1vU+/ADR++Bsp/c5pYKu59
-         5CvOmhehza/TLxP0630tu0TvfjC7m/K/74UsEqcMPhIpe7GI3d/CK8Fik/EK+XKLugM9
-         cOAUpiy0rnmRSilW9vkXpt1Jq5E/1GQYmMhomSEczLbqnZTdUF7bimjfSkXtlawiPaOf
-         r6cm1NGKKsy8mcfyRIL4HdyQvKGlUfDYPcqplBxhduLzNQQxScn/gkeGiA80OTYDn2+S
-         hWq1Q1vfZ2rHt8aFvF/8WXmI9hBAv+076+TEsz6DEOe5GN4FvQjEvoa872uMAeyG5p23
-         eTwQ==
-X-Gm-Message-State: AOAM530WmLdEVZ70Pp1Oh9wGw3Nz///iePzWrJQfrF692tgn7uywC2pf
-        GziZxxjWo4G6U36qrtDHgWaIhw==
-X-Google-Smtp-Source: ABdhPJyuyZ+ucI3w1yI15tL5bKSeQjAjW64aQ4RSO5hao4Rhp3pGVjo+MhwR7XDy8TnVcv+62efXEQ==
-X-Received: by 2002:a05:6214:d46:: with SMTP id 6mr2364472qvr.240.1598897960345;
-        Mon, 31 Aug 2020 11:19:20 -0700 (PDT)
-Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id y73sm10600006qkb.23.2020.08.31.11.19.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 11:19:19 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 18:19:18 +0000
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     maz@kernel.org, linus.walleij@linaro.org, swboyd@chromium.org,
-        evgreen@chromium.org, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-gpio@vger.kernel.org, agross@kernel.org, tglx@linutronix.de,
-        jason@lakedaemon.net, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org
-Subject: Re: [PATCH v5 2/6] pinctrl: qcom: Use return value from
- irq_set_wake() call
-Message-ID: <20200831181918.GB468@uller>
-References: <1598113021-4149-1-git-send-email-mkshah@codeaurora.org>
- <1598113021-4149-3-git-send-email-mkshah@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1598113021-4149-3-git-send-email-mkshah@codeaurora.org>
+        Mon, 31 Aug 2020 14:19:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729003AbgHaSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:18:10 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0EDE21707;
+        Mon, 31 Aug 2020 18:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598897889;
+        bh=fQELpKvWSu8GuxhvTeoiLr/q0jaGeeTwDu9BtK/GSzg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JNSS9nUVIswCsEdXJEUfDdS1QbQSCUWvdXfxT6GhIoG084RaCAi0WeXxeJuaWHfFd
+         IEgMScbIl4CKyxLC6EEouOhck+rqKcz1wK1bVf+sZhqkXQ5DBqbva4Dc0i5Tjtcfmn
+         J6uxNXKOeuCXRUtApOJCSKfbJ770fb3CZSFUIzEk=
+From:   paulmck@kernel.org
+To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
+        kernel-team@fb.com, mingo@kernel.org
+Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: [PATCH kcsan 17/19] kcsan: Optimize debugfs stats counters
+Date:   Mon, 31 Aug 2020 11:18:03 -0700
+Message-Id: <20200831181805.1833-17-paulmck@kernel.org>
+X-Mailer: git-send-email 2.9.5
+In-Reply-To: <20200831181715.GA1530@paulmck-ThinkPad-P72>
+References: <20200831181715.GA1530@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 22 Aug 16:16 UTC 2020, Maulik Shah wrote:
+From: Marco Elver <elver@google.com>
 
-> msmgpio irqchip was not using return value of irq_set_irq_wake() callback
-> since previously GIC-v3 irqchip neither had IRQCHIP_SKIP_SET_WAKE flag nor
-> it implemented .irq_set_wake callback. This lead to irq_set_irq_wake()
-> return error -ENXIO.
-> 
-> However from 'commit 4110b5cbb014 ("irqchip/gic-v3: Allow interrupt to be
-> configured as wake-up sources")' GIC irqchip has IRQCHIP_SKIP_SET_WAKE
-> flag.
-> 
-> Use return value from irq_set_irq_wake() and irq_chip_set_wake_parent()
-> instead of always returning success.
-> 
-> Fixes: e35a6ae0eb3a ("pinctrl/msm: Setup GPIO chip in hierarchy")
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Remove kcsan_counter_inc/dec() functions, as they perform no other
+logic, and are no longer needed.
 
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+This avoids several calls in kcsan_setup_watchpoint() and
+kcsan_found_watchpoint(), as well as lets the compiler warn us about
+potential out-of-bounds accesses as the array's size is known at all
+usage sites at compile-time.
 
-> ---
->  drivers/pinctrl/qcom/pinctrl-msm.c | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-> index 1c23f5c..1df2322 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-msm.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-> @@ -1077,12 +1077,10 @@ static int msm_gpio_irq_set_wake(struct irq_data *d, unsigned int on)
->  	 * when TLMM is powered on. To allow that, enable the GPIO
->  	 * summary line to be wakeup capable at GIC.
->  	 */
-> -	if (d->parent_data)
-> -		irq_chip_set_wake_parent(d, on);
-> -
-> -	irq_set_irq_wake(pctrl->irq, on);
-> +	if (d->parent_data && test_bit(d->hwirq, pctrl->skip_wake_irqs))
-> +		return irq_chip_set_wake_parent(d, on);
->  
-> -	return 0;
-> +	return irq_set_irq_wake(pctrl->irq, on);
->  }
->  
->  static int msm_gpio_irq_reqres(struct irq_data *d)
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+---
+ kernel/kcsan/core.c    | 22 +++++++++++-----------
+ kernel/kcsan/debugfs.c | 21 +++++----------------
+ kernel/kcsan/kcsan.h   | 12 ++++++------
+ kernel/kcsan/report.c  |  2 +-
+ 4 files changed, 23 insertions(+), 34 deletions(-)
+
+diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+index b176400..8a1ff605 100644
+--- a/kernel/kcsan/core.c
++++ b/kernel/kcsan/core.c
+@@ -367,13 +367,13 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
+ 		 * already removed the watchpoint, or another thread consumed
+ 		 * the watchpoint before this thread.
+ 		 */
+-		kcsan_counter_inc(KCSAN_COUNTER_REPORT_RACES);
++		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_REPORT_RACES]);
+ 	}
+ 
+ 	if ((type & KCSAN_ACCESS_ASSERT) != 0)
+-		kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
++		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ASSERT_FAILURES]);
+ 	else
+-		kcsan_counter_inc(KCSAN_COUNTER_DATA_RACES);
++		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_DATA_RACES]);
+ 
+ 	user_access_restore(flags);
+ }
+@@ -414,7 +414,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 		goto out;
+ 
+ 	if (!check_encodable((unsigned long)ptr, size)) {
+-		kcsan_counter_inc(KCSAN_COUNTER_UNENCODABLE_ACCESSES);
++		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_UNENCODABLE_ACCESSES]);
+ 		goto out;
+ 	}
+ 
+@@ -434,12 +434,12 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 		 * with which should_watch() returns true should be tweaked so
+ 		 * that this case happens very rarely.
+ 		 */
+-		kcsan_counter_inc(KCSAN_COUNTER_NO_CAPACITY);
++		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_NO_CAPACITY]);
+ 		goto out_unlock;
+ 	}
+ 
+-	kcsan_counter_inc(KCSAN_COUNTER_SETUP_WATCHPOINTS);
+-	kcsan_counter_inc(KCSAN_COUNTER_USED_WATCHPOINTS);
++	atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_SETUP_WATCHPOINTS]);
++	atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_USED_WATCHPOINTS]);
+ 
+ 	/*
+ 	 * Read the current value, to later check and infer a race if the data
+@@ -541,16 +541,16 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 		 * increment this counter.
+ 		 */
+ 		if (is_assert && value_change == KCSAN_VALUE_CHANGE_TRUE)
+-			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
++			atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ASSERT_FAILURES]);
+ 
+ 		kcsan_report(ptr, size, type, value_change, KCSAN_REPORT_RACE_SIGNAL,
+ 			     watchpoint - watchpoints);
+ 	} else if (value_change == KCSAN_VALUE_CHANGE_TRUE) {
+ 		/* Inferring a race, since the value should not have changed. */
+ 
+-		kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
++		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN]);
+ 		if (is_assert)
+-			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
++			atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ASSERT_FAILURES]);
+ 
+ 		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN) || is_assert)
+ 			kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_TRUE,
+@@ -563,7 +563,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
+ 	 * reused after this point.
+ 	 */
+ 	remove_watchpoint(watchpoint);
+-	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
++	atomic_long_dec(&kcsan_counters[KCSAN_COUNTER_USED_WATCHPOINTS]);
+ out_unlock:
+ 	if (!kcsan_interrupt_watcher)
+ 		local_irq_restore(irq_flags);
+diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
+index 6c4914f..3c8093a 100644
+--- a/kernel/kcsan/debugfs.c
++++ b/kernel/kcsan/debugfs.c
+@@ -17,10 +17,7 @@
+ 
+ #include "kcsan.h"
+ 
+-/*
+- * Statistics counters.
+- */
+-static atomic_long_t counters[KCSAN_COUNTER_COUNT];
++atomic_long_t kcsan_counters[KCSAN_COUNTER_COUNT];
+ static const char *const counter_names[] = {
+ 	[KCSAN_COUNTER_USED_WATCHPOINTS]		= "used_watchpoints",
+ 	[KCSAN_COUNTER_SETUP_WATCHPOINTS]		= "setup_watchpoints",
+@@ -53,16 +50,6 @@ static struct {
+ };
+ static DEFINE_SPINLOCK(report_filterlist_lock);
+ 
+-void kcsan_counter_inc(enum kcsan_counter_id id)
+-{
+-	atomic_long_inc(&counters[id]);
+-}
+-
+-void kcsan_counter_dec(enum kcsan_counter_id id)
+-{
+-	atomic_long_dec(&counters[id]);
+-}
+-
+ /*
+  * The microbenchmark allows benchmarking KCSAN core runtime only. To run
+  * multiple threads, pipe 'microbench=<iters>' from multiple tasks into the
+@@ -206,8 +193,10 @@ static int show_info(struct seq_file *file, void *v)
+ 
+ 	/* show stats */
+ 	seq_printf(file, "enabled: %i\n", READ_ONCE(kcsan_enabled));
+-	for (i = 0; i < KCSAN_COUNTER_COUNT; ++i)
+-		seq_printf(file, "%s: %ld\n", counter_names[i], atomic_long_read(&counters[i]));
++	for (i = 0; i < KCSAN_COUNTER_COUNT; ++i) {
++		seq_printf(file, "%s: %ld\n", counter_names[i],
++			   atomic_long_read(&kcsan_counters[i]));
++	}
+ 
+ 	/* show filter functions, and filter type */
+ 	spin_lock_irqsave(&report_filterlist_lock, flags);
+diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
+index 2948001..8d4bf34 100644
+--- a/kernel/kcsan/kcsan.h
++++ b/kernel/kcsan/kcsan.h
+@@ -8,6 +8,7 @@
+ #ifndef _KERNEL_KCSAN_KCSAN_H
+ #define _KERNEL_KCSAN_KCSAN_H
+ 
++#include <linux/atomic.h>
+ #include <linux/kcsan.h>
+ #include <linux/sched.h>
+ 
+@@ -34,6 +35,10 @@ void kcsan_restore_irqtrace(struct task_struct *task);
+  */
+ void kcsan_debugfs_init(void);
+ 
++/*
++ * Statistics counters displayed via debugfs; should only be modified in
++ * slow-paths.
++ */
+ enum kcsan_counter_id {
+ 	/*
+ 	 * Number of watchpoints currently in use.
+@@ -86,12 +91,7 @@ enum kcsan_counter_id {
+ 
+ 	KCSAN_COUNTER_COUNT, /* number of counters */
+ };
+-
+-/*
+- * Increment/decrement counter with given id; avoid calling these in fast-path.
+- */
+-extern void kcsan_counter_inc(enum kcsan_counter_id id);
+-extern void kcsan_counter_dec(enum kcsan_counter_id id);
++extern atomic_long_t kcsan_counters[KCSAN_COUNTER_COUNT];
+ 
+ /*
+  * Returns true if data races in the function symbol that maps to func_addr
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index bf1d594..d3bf87e 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -559,7 +559,7 @@ static bool prepare_report_consumer(unsigned long *flags,
+ 		 * If the actual accesses to not match, this was a false
+ 		 * positive due to watchpoint encoding.
+ 		 */
+-		kcsan_counter_inc(KCSAN_COUNTER_ENCODING_FALSE_POSITIVES);
++		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ENCODING_FALSE_POSITIVES]);
+ 		goto discard;
+ 	}
+ 
+-- 
+2.9.5
+
