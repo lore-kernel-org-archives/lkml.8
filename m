@@ -2,288 +2,130 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25F93C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2491AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D659D2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:48:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AFGYf5Vs"
+	by mail.kernel.org (Postfix) with ESMTP id 0405B206F0
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgHaKs4 (ORCPT
+        id S1726446AbgHaKtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:48:56 -0400
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:58921 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726629AbgHaKss (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:48:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598870926; x=1630406926;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=eFQ5FjEXjCcRqP315OtcZTEl8DRR0ETd5Jfrqerv8aI=;
-  b=AFGYf5VsYcdNz+i1BHOK3eYlficxh54SZFIm4fQni9OKY0lEPoKEuW91
-   YRVkdNwzhU1yCLENXEx1A+ssDT8UsOQqcWGDC/Rvymz23KWpUsB/WLS/i
-   zSH2AZYdQLV5gLbdEjTcRa4XmU0v+eExongyeA0b6n2HT82GmwfGPPetT
-   4=;
-X-IronPort-AV: E=Sophos;i="5.76,375,1592870400"; 
-   d="scan'208";a="52524448"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 31 Aug 2020 10:48:42 +0000
-Received: from EX13D31EUB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 3672DA1E23;
-        Mon, 31 Aug 2020 10:48:39 +0000 (UTC)
-Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.100) by
- EX13D31EUB001.ant.amazon.com (10.43.166.210) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 31 Aug 2020 10:48:21 +0000
-From:   SeongJae Park <sjpark@amazon.com>
-To:     <akpm@linux-foundation.org>
-CC:     SeongJae Park <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
-        <aarcange@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
-        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
-        <brendanhiggins@google.com>, <cai@lca.pw>,
-        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
-        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
-        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
-        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
-        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
-        <peterz@infradead.org>, <rdunlap@infradead.org>,
-        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
-        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
-        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
-        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
-        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
-        <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
-        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [RFC v8 02/10] tools/damon: Support init target regions specification
-Date:   Mon, 31 Aug 2020 12:47:22 +0200
-Message-ID: <20200831104730.28970-3-sjpark@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200831104730.28970-1-sjpark@amazon.com>
-References: <20200831104730.28970-1-sjpark@amazon.com>
+        Mon, 31 Aug 2020 06:49:09 -0400
+Received: from mga03.intel.com ([134.134.136.65]:9160 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726797AbgHaKsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 06:48:54 -0400
+IronPort-SDR: mjh+pU5l3w+xP4a0wwPq7B/AVikvNUlqhG2+jRQrWcH3/SdVdkE8IlXTUcommcqFnWzkxwZ/PP
+ tc4TMfHf8FAg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="156947471"
+X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
+   d="scan'208";a="156947471"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 03:48:53 -0700
+IronPort-SDR: QtbYslM8L6VMNNukXAtrEXwVAn0uOhONeiIlE9BvQ5B9t/RaF/9VInXkE7qJwK2FRDyEZ2mAhe
+ /erudIpq4vCw==
+X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
+   d="scan'208";a="374774114"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga001-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 03:48:49 -0700
+Received: by paasikivi.fi.intel.com (Postfix, from userid 1000)
+        id AB5D3204F9; Mon, 31 Aug 2020 13:48:47 +0300 (EEST)
+Date:   Mon, 31 Aug 2020 13:48:47 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     =?iso-8859-1?Q?K=E9vin_L'h=F4pital?= <kevin.lhopital@bootlin.com>
+Cc:     linux-media@vger.kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, mripard@kernel.org, wens@csie.org,
+        yong.deng@magewell.com, mchehab+samsung@kernel.org,
+        p.zabel@pengutronix.de, hans.verkuil@cisco.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        paul.kocialkowski@bootlin.com, thomas.petazzoni@bootlin.com
+Subject: Re: [PATCH v2 2/4] media: sunxi: sun6i-csi: Move the sun6i_csi_dev
+ structure to the common header
+Message-ID: <20200831104847.GJ31019@paasikivi.fi.intel.com>
+References: <20200828131737.12483-1-kevin.lhopital@bootlin.com>
+ <20200828131737.12483-3-kevin.lhopital@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.100]
-X-ClientProxiedBy: EX13D49UWB002.ant.amazon.com (10.43.163.68) To
- EX13D31EUB001.ant.amazon.com (10.43.166.210)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200828131737.12483-3-kevin.lhopital@bootlin.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+Hi Kévin,
 
-This commit updates the damon user space tool to support the initial
-monitoring target regions specification.
+On Fri, Aug 28, 2020 at 03:17:34PM +0200, Kévin L'hôpital wrote:
+> Access to the sun6i_csi_dev structure is needed to add the
+> MIPI CSI2 support.
+> 
+> Signed-off-by: Kévin L'hôpital <kevin.lhopital@bootlin.com>
+> ---
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 12 ------------
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h | 12 ++++++++++++
+>  2 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> index 055eb0b8e396..680fa31f380a 100644
+> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> @@ -29,18 +29,6 @@
+>  
+>  #define MODULE_NAME	"sun6i-csi"
+>  
+> -struct sun6i_csi_dev {
+> -	struct sun6i_csi		csi;
+> -	struct device			*dev;
+> -
+> -	struct regmap			*regmap;
+> -	struct clk			*clk_mod;
+> -	struct clk			*clk_ram;
+> -	struct reset_control		*rstc_bus;
+> -
+> -	int				planar_offset[3];
+> -};
+> -
+>  static inline struct sun6i_csi_dev *sun6i_csi_to_dev(struct sun6i_csi *csi)
+>  {
+>  	return container_of(csi, struct sun6i_csi_dev, csi);
+> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+> index 8b83d15de0d0..c4a87bdab8c3 100644
+> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h
+> @@ -48,6 +48,18 @@ struct sun6i_csi {
+>  	struct sun6i_video		video;
+>  };
+>  
+> +struct sun6i_csi_dev {
+> +	struct sun6i_csi	csi;
+> +	struct device		*dev;
+> +	struct regmap		*regmap;
+> +	struct clk		*clk_mod;
+> +	struct clk		*clk_ram;
+> +	struct clk		*clk_mipi;
+> +	struct clk		*clk_misc;
 
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
----
- tools/damon/_damon.py  | 39 +++++++++++++++++++++++++++++++++++++++
- tools/damon/record.py  | 12 +++++++-----
- tools/damon/schemes.py | 12 +++++++-----
- 3 files changed, 53 insertions(+), 10 deletions(-)
+This patch adds two more clocks, please add them when you need them. I
+think you could also squash the patch to another one that requires the
+struct in the header.
 
-diff --git a/tools/damon/_damon.py b/tools/damon/_damon.py
-index a4f6c03c23e4..a22ec3777c16 100644
---- a/tools/damon/_damon.py
-+++ b/tools/damon/_damon.py
-@@ -12,12 +12,25 @@ debugfs_attrs = None
- debugfs_record = None
- debugfs_schemes = None
- debugfs_target_ids = None
-+debugfs_init_regions = None
- debugfs_monitor_on = None
- 
- def set_target_id(tid):
-     with open(debugfs_target_ids, 'w') as f:
-         f.write('%s\n' % tid)
- 
-+def set_target(tid, init_regions=[]):
-+    rc = set_target_id(tid)
-+    if rc:
-+        return rc
-+
-+    if not os.path.exists(debugfs_init_regions):
-+        return 0
-+
-+    string = ' '.join(['%s %d %d' % (tid, r[0], r[1]) for r in init_regions])
-+    return subprocess.call('echo "%s" > %s' % (string, debugfs_init_regions),
-+            shell=True, executable='/bin/bash')
-+
- def turn_damon(on_off):
-     return subprocess.call("echo %s > %s" % (on_off, debugfs_monitor_on),
-             shell=True, executable="/bin/bash")
-@@ -97,6 +110,7 @@ def chk_update_debugfs(debugfs):
-     global debugfs_record
-     global debugfs_schemes
-     global debugfs_target_ids
-+    global debugfs_init_regions
-     global debugfs_monitor_on
- 
-     debugfs_damon = os.path.join(debugfs, 'damon')
-@@ -104,6 +118,7 @@ def chk_update_debugfs(debugfs):
-     debugfs_record = os.path.join(debugfs_damon, 'record')
-     debugfs_schemes = os.path.join(debugfs_damon, 'schemes')
-     debugfs_target_ids = os.path.join(debugfs_damon, 'target_ids')
-+    debugfs_init_regions = os.path.join(debugfs_damon, 'init_regions')
-     debugfs_monitor_on = os.path.join(debugfs_damon, 'monitor_on')
- 
-     if not os.path.isdir(debugfs_damon):
-@@ -131,6 +146,26 @@ def cmd_args_to_attrs(args):
-     return Attrs(sample_interval, aggr_interval, regions_update_interval,
-             min_nr_regions, max_nr_regions, rbuf_len, rfile_path, schemes)
- 
-+def cmd_args_to_init_regions(args):
-+    regions = []
-+    for arg in args.regions.split():
-+        addrs = arg.split('-')
-+        try:
-+            if len(addrs) != 2:
-+                raise Exception('two addresses not given')
-+            start = int(addrs[0])
-+            end = int(addrs[1])
-+            if start >= end:
-+                raise Exception('start >= end')
-+            if regions and regions[-1][1] > start:
-+                raise Exception('regions overlap')
-+        except Exception as e:
-+            print('Wrong \'--regions\' argument (%s)' % e)
-+            exit(1)
-+
-+        regions.append([start, end])
-+    return regions
-+
- def set_attrs_argparser(parser):
-     parser.add_argument('-d', '--debugfs', metavar='<debugfs>', type=str,
-             default='/sys/kernel/debug', help='debugfs mounted path')
-@@ -144,3 +179,7 @@ def set_attrs_argparser(parser):
-             default=10, help='minimal number of regions')
-     parser.add_argument('-m', '--maxr', metavar='<# regions>', type=int,
-             default=1000, help='maximum number of regions')
-+
-+def set_init_regions_argparser(parser):
-+    parser.add_argument('-r', '--regions', metavar='"<start>-<end> ..."',
-+            type=str, default='', help='monitoring target address regions')
-diff --git a/tools/damon/record.py b/tools/damon/record.py
-index 6d1cbe593b94..11fd54001472 100644
---- a/tools/damon/record.py
-+++ b/tools/damon/record.py
-@@ -24,7 +24,7 @@ def pidfd_open(pid):
- 
-     return syscall(NR_pidfd_open, pid, 0)
- 
--def do_record(target, is_target_cmd, attrs, old_attrs, pidfd):
-+def do_record(target, is_target_cmd, init_regions, attrs, old_attrs, pidfd):
-     if os.path.isfile(attrs.rfile_path):
-         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
- 
-@@ -48,8 +48,8 @@ def do_record(target, is_target_cmd, attrs, old_attrs, pidfd):
-         # only for reference of the pidfd usage.
-         target = 'pidfd %s' % fd
- 
--    if _damon.set_target_id(target):
--        print('target id setting (%s) failed' % target)
-+    if _damon.set_target(target, init_regions):
-+        print('target setting (%s, %s) failed' % (target, init_regions))
-         cleanup_exit(old_attrs, -2)
-     if _damon.turn_damon('on'):
-         print('could not turn on damon' % target)
-@@ -91,6 +91,7 @@ def chk_permission():
- 
- def set_argparser(parser):
-     _damon.set_attrs_argparser(parser)
-+    _damon.set_init_regions_argparser(parser)
-     parser.add_argument('target', type=str, metavar='<target>',
-             help='the target command or the pid to record')
-     parser.add_argument('--pidfd', action='store_true',
-@@ -117,19 +118,20 @@ def main(args=None):
-     args.schemes = ''
-     pidfd = args.pidfd
-     new_attrs = _damon.cmd_args_to_attrs(args)
-+    init_regions = _damon.cmd_args_to_init_regions(args)
-     target = args.target
- 
-     target_fields = target.split()
-     if not subprocess.call('which %s &> /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
--        do_record(target, True, new_attrs, orig_attrs, pidfd)
-+        do_record(target, True, init_regions, new_attrs, orig_attrs, pidfd)
-     else:
-         try:
-             pid = int(target)
-         except:
-             print('target \'%s\' is neither a command, nor a pid' % target)
-             exit(1)
--        do_record(target, False, new_attrs, orig_attrs, pidfd)
-+        do_record(target, False, init_regions, new_attrs, orig_attrs, pidfd)
- 
- if __name__ == '__main__':
-     main()
-diff --git a/tools/damon/schemes.py b/tools/damon/schemes.py
-index 9095835f6133..cfec89854a08 100644
---- a/tools/damon/schemes.py
-+++ b/tools/damon/schemes.py
-@@ -14,7 +14,7 @@ import time
- import _convert_damos
- import _damon
- 
--def run_damon(target, is_target_cmd, attrs, old_attrs):
-+def run_damon(target, is_target_cmd, init_regions, attrs, old_attrs):
-     if os.path.isfile(attrs.rfile_path):
-         os.rename(attrs.rfile_path, attrs.rfile_path + '.old')
- 
-@@ -27,8 +27,8 @@ def run_damon(target, is_target_cmd, attrs, old_attrs):
-     if is_target_cmd:
-         p = subprocess.Popen(target, shell=True, executable='/bin/bash')
-         target = p.pid
--    if _damon.set_target_pid(target):
--        print('pid setting (%s) failed' % target)
-+    if _damon.set_target(target, init_regions):
-+        print('target setting (%s, %s) failed' % (target, init_regions))
-         cleanup_exit(old_attrs, -2)
-     if _damon.turn_damon('on'):
-         print('could not turn on damon' % target)
-@@ -68,6 +68,7 @@ def chk_permission():
- 
- def set_argparser(parser):
-     _damon.set_attrs_argparser(parser)
-+    _damon.set_init_regions_argparser(parser)
-     parser.add_argument('target', type=str, metavar='<target>',
-             help='the target command or the pid to record')
-     parser.add_argument('-c', '--schemes', metavar='<file>', type=str,
-@@ -92,19 +93,20 @@ def main(args=None):
-     args.out = 'null'
-     args.schemes = _convert_damos.convert(args.schemes, args.sample, args.aggr)
-     new_attrs = _damon.cmd_args_to_attrs(args)
-+    init_regions = _damon.cmd_args_to_init_regions(args)
-     target = args.target
- 
-     target_fields = target.split()
-     if not subprocess.call('which %s &> /dev/null' % target_fields[0],
-             shell=True, executable='/bin/bash'):
--        run_damon(target, True, new_attrs, orig_attrs)
-+        run_damon(target, True, init_regions, new_attrs, orig_attrs)
-     else:
-         try:
-             pid = int(target)
-         except:
-             print('target \'%s\' is neither a command, nor a pid' % target)
-             exit(1)
--        run_damon(target, False, new_attrs, orig_attrs)
-+        run_damon(target, False, init_regions, new_attrs, orig_attrs)
- 
- if __name__ == '__main__':
-     main()
+> +	struct reset_control	*rstc_bus;
+> +	int			planar_offset[3];
+> +};
+> +
+>  /**
+>   * sun6i_csi_is_format_supported() - check if the format supported by csi
+>   * @csi:	pointer to the csi
+
 -- 
-2.17.1
-
+Sakari Ailus
