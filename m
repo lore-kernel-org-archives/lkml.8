@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B307CC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE298C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97D3F2071B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F302078D
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 02:24:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727783AbgHaCYR (ORCPT
+        id S1727863AbgHaCYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 22:24:17 -0400
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:42796 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727017AbgHaCYD (ORCPT
+        Sun, 30 Aug 2020 22:24:31 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:42008 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726573AbgHaCYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 22:24:03 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R211e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U7JH4Yc_1598840638;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U7JH4Yc_1598840638)
+        Sun, 30 Aug 2020 22:24:02 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R521e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04455;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U7IVpwB_1598840640;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U7IVpwB_1598840640)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 31 Aug 2020 10:23:59 +0800
+          Mon, 31 Aug 2020 10:24:00 +0800
 From:   Wei Yang <richard.weiyang@linux.alibaba.com>
 To:     mike.kravetz@oracle.com, akpm@linux-foundation.org
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, bhe@redhat.com,
         Wei Yang <richard.weiyang@linux.alibaba.com>
-Subject: [Patch v3 3/7] mm/hugetlb: use list_splice to merge two list at once
-Date:   Mon, 31 Aug 2020 10:23:47 +0800
-Message-Id: <20200831022351.20916-4-richard.weiyang@linux.alibaba.com>
+Subject: [Patch v3 5/7] mm/hugetlb: a page from buddy is not on any list
+Date:   Mon, 31 Aug 2020 10:23:49 +0800
+Message-Id: <20200831022351.20916-6-richard.weiyang@linux.alibaba.com>
 X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 In-Reply-To: <20200831022351.20916-1-richard.weiyang@linux.alibaba.com>
 References: <20200831022351.20916-1-richard.weiyang@linux.alibaba.com>
@@ -42,37 +42,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of add allocated file_region one by one to region_cache, we
-could use list_splice to merge two list at once.
-
-Also we know the number of entries in the list, increase the number
-directly.
+The page allocated from buddy is not on any list, so just use list_add()
+is enough.
 
 Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 Reviewed-by: Baoquan He <bhe@redhat.com>
 Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 ---
- mm/hugetlb.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ mm/hugetlb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-index fbaf49bc1d26..a02bf430de6f 100644
+index 441b7f7c623e..c9b292e664c4 100644
 --- a/mm/hugetlb.c
 +++ b/mm/hugetlb.c
-@@ -443,11 +443,8 @@ static int allocate_file_region_entries(struct resv_map *resv,
- 
- 		spin_lock(&resv->lock);
- 
--		list_for_each_entry_safe(rg, trg, &allocated_regions, link) {
--			list_del(&rg->link);
--			list_add(&rg->link, &resv->region_cache);
--			resv->region_cache_count++;
--		}
-+		list_splice(&allocated_regions, &resv->region_cache);
-+		resv->region_cache_count += to_allocate;
+@@ -2405,7 +2405,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+ 			h->resv_huge_pages--;
+ 		}
+ 		spin_lock(&hugetlb_lock);
+-		list_move(&page->lru, &h->hugepage_activelist);
++		list_add(&page->lru, &h->hugepage_activelist);
+ 		/* Fall through */
  	}
- 
- 	return 0;
+ 	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page);
 -- 
 2.20.1 (Apple Git-117)
 
