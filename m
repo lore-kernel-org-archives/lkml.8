@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EB1C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5936DC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0043420866
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381EA2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897348;
-	bh=IqBPY769hzDOI/BG43saaXqPp2h4NGr/1gHwqrCupjg=;
+	s=default; t=1598897354;
+	bh=lLhLUNWMDU/FGyJuvsj8F4mXjAaTbtY5dc601D5+c44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TuSnpR41RpYAwEccFgrqm8PLdMXAwkj3ORqtoA4OLMoNXbjCGIw+UQaF8cXFlckjk
-	 xkS7JMw6IOUBGx0EMNXeQH/RK1j/YFqtD05CJKF92iDd70AD4rH/TZ5zwH3PHQpxaj
-	 m6rRdGTKuR1OcZI1/hC2KqckNWVqdNhZAd9hrD60=
+	b=e19IzcejVvsMh6Cm9CmpHvucudQP4WNCzLmcpFgX6XAb47iZHjgyxvyRmDqtOIk/V
+	 zzKnbi9F/GjlGjnDV5vmP4toSn3DYTEuvkjp8+IxqViXWgNntzZcnw5vi84NCCmc1U
+	 LejKCvNyfhMoyKb8TWtgVYUuZfCS5bdaNc0HLHJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbgHaSJF (ORCPT
+        id S1728889AbgHaSJL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:09:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55904 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:09:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729275AbgHaSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729257AbgHaSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:07:56 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A24062168B;
-        Mon, 31 Aug 2020 18:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA760215A4;
+        Mon, 31 Aug 2020 18:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897274;
-        bh=IqBPY769hzDOI/BG43saaXqPp2h4NGr/1gHwqrCupjg=;
+        s=default; t=1598897273;
+        bh=lLhLUNWMDU/FGyJuvsj8F4mXjAaTbtY5dc601D5+c44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Df+lVwCVMCkuzMXd7Y9uIrz9ce9YZ7hjMpIUJvwmg+UQEupsMuYhipaAXkxOGWjKW
-         f30Y3wPkh/JYqEjCVk2cCh0xKXxHJp+tclLABZ91V/c5p3md3b6dHnNVuO/WGuKsH4
-         8+XmJHZg92/bhHr5HC1nlo44wC7Mesilf4RhYKH0=
+        b=GxPkbmeUGD6lSFtZr9pLjxJ9aiS/ZC7i2vuC9R9rC6o41/ZVoopCBnoK7vK0YNiqe
+         MXA/LQxLQjp6YAs8FW8EnFyhJi7fm2/NvYehJyOJSrI2S6rdw+zLN624JUBm5eW6n5
+         IT5hG5wEFMUSpquIbBgmDfdvw9UDCw/BNGt8P0Ww=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -47,11 +47,10 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        Wei Yongjun <weiyongjun1@huawei.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 14/19] scftorture: Make symbol 'scf_torture_rand' static
-Date:   Mon, 31 Aug 2020 11:07:44 -0700
-Message-Id: <20200831180749.843-14-paulmck@kernel.org>
+        "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 10/19] scftorture: Consolidate scftorture_invoke_one() check and kfree()
+Date:   Mon, 31 Aug 2020 11:07:40 -0700
+Message-Id: <20200831180749.843-10-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831180731.GA582@paulmck-ThinkPad-P72>
 References: <20200831180731.GA582@paulmck-ThinkPad-P72>
@@ -60,36 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+From: "Paul E. McKenney" <paulmck@kernel.org>
 
-The sparse tool complains as follows
+This commit moves checking of the ->scfc_out field and the freeing of
+the scf_check structure down below the end of switch statement, thus
+saving a few lines of code.
 
-kernel/scftorture.c:124:1: warning:
- symbol '__pcpu_scope_scf_torture_rand' was not declared. Should it be static?
-
-And this per-CPU variable is not used outside of scftorture.c,
-so this commit marks it static.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/scftorture.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/scftorture.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
 diff --git a/kernel/scftorture.c b/kernel/scftorture.c
-index 8349681..9180de7 100644
+index 0d7299d..f220cd3 100644
 --- a/kernel/scftorture.c
 +++ b/kernel/scftorture.c
-@@ -134,7 +134,7 @@ static atomic_t n_alloc_errs;
- static bool scfdone;
- static char *bangstr = "";
+@@ -289,7 +289,7 @@ static void scf_handler_1(void *scfc_in)
+ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_random_state *trsp)
+ {
+ 	uintptr_t cpu;
+-	int ret;
++	int ret = 0;
+ 	struct scf_check *scfcp = NULL;
+ 	struct scf_selector *scfsp = scf_sel_rand(trsp);
  
--DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
-+static DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
- 
- // Print torture statistics.  Caller must ensure serialization.
- static void scf_torture_stats_print(void)
+@@ -322,11 +322,7 @@ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_ra
+ 			else
+ 				scfp->n_single_ofl++;
+ 			kfree(scfcp);
+-		} else if (scfcp && scfsp->scfs_wait) {
+-			if (WARN_ON_ONCE(!scfcp->scfc_out))
+-				atomic_inc(&n_mb_out_errs); // Leak rather than trash!
+-			else
+-				kfree(scfcp);
++			scfcp = NULL;
+ 		}
+ 		break;
+ 	case SCF_PRIM_MANY:
+@@ -341,12 +337,6 @@ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_ra
+ 			scfcp->scfc_in = true;
+ 		}
+ 		smp_call_function_many(cpu_online_mask, scf_handler, scfcp, scfsp->scfs_wait);
+-		if (scfcp) {
+-			if (WARN_ON_ONCE(!scfcp->scfc_out))
+-				atomic_inc(&n_mb_out_errs);  // Leak rather than trash!
+-			else
+-				kfree(scfcp);
+-		}
+ 		break;
+ 	case SCF_PRIM_ALL:
+ 		if (scfsp->scfs_wait)
+@@ -360,14 +350,14 @@ static void scftorture_invoke_one(struct scf_statistics *scfp, struct torture_ra
+ 			scfcp->scfc_in = true;
+ 		}
+ 		smp_call_function(scf_handler, scfcp, scfsp->scfs_wait);
+-		if (scfcp) {
+-			if (WARN_ON_ONCE(!scfcp->scfc_out))
+-				atomic_inc(&n_mb_out_errs);  // Leak rather than trash!
+-			else
+-				kfree(scfcp);
+-		}
+ 		break;
+ 	}
++	if (scfcp && scfsp->scfs_wait) {
++		if (WARN_ON_ONCE(!scfcp->scfc_out))
++			atomic_inc(&n_mb_out_errs); // Leak rather than trash!
++		else
++			kfree(scfcp);
++	}
+ 	if (use_cpus_read_lock)
+ 		cpus_read_unlock();
+ 	else
 -- 
 2.9.5
 
