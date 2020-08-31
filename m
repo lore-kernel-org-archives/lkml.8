@@ -2,90 +2,98 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F95C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D496C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652992083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EDsIHgwX"
+	by mail.kernel.org (Postfix) with ESMTP id 65F1C20EDD
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgHaQTd (ORCPT
+        id S1728647AbgHaQTY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:19:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34652 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728609AbgHaQTX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:19:23 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE03C061573;
-        Mon, 31 Aug 2020 09:19:23 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f085000329c23fffea6a903.dip0.t-ipconnect.de [IPv6:2003:ec:2f08:5000:329c:23ff:fea6:a903])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0B0CA1EC0411;
-        Mon, 31 Aug 2020 18:19:17 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1598890757;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=rfL6k8Otj4TxyClxiKln37HVfqC0ievcDAsLc0DJkWM=;
-        b=EDsIHgwX4tVHtK0n4PAPlmr/1oxSVwSpoQg7yhXnSblad9KBBMSOLccMUg7mceWT5svqDj
-        OfEhXwpzw1N94ysizfWVf40V5wdQP3Y1nhhab5b/ebZjVR5UPAskkVeP8cWoGg7vrzJpnw
-        lALWl4sL/m2Ed+Edig69RARGCN2TZ1Q=
-Date:   Mon, 31 Aug 2020 18:19:09 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 64/76] x86/sev-es: Handle #DB Events
-Message-ID: <20200831161909.GJ27517@zn.tnic>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-65-joro@8bytes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200824085511.7553-65-joro@8bytes.org>
+        Mon, 31 Aug 2020 12:19:24 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45858 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727819AbgHaQTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 12:19:21 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 7D834AC50;
+        Mon, 31 Aug 2020 16:19:19 +0000 (UTC)
+From:   Daniel Wagner <dwagner@suse.de>
+To:     linux-scsi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>,
+        Martin Wilck <mwilck@suse.com>, Daniel Wagner <dwagner@suse.de>
+Subject: [PATCH v2 0/4] qla2xxx: A couple crash fixes
+Date:   Mon, 31 Aug 2020 18:18:50 +0200
+Message-Id: <20200831161854.70879-1-dwagner@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 24, 2020 at 10:54:59AM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Handle #VC exceptions caused by #DB exceptions in the guest. Those
-> must be handled outside of instrumentation_begin()/end() so that the
-> handler will not be raised recursivly.
-			     ^^^^^^^^^^
+changes since v1:
 
-"recursively"
+ - added dummy warn function to patch#1
+ - added log entry to patch#4
+
+as suggested by Martin
+
+
+
+Initial cover letter:
+
+The first crash we observed is due memory corruption in the srb memory
+pool. Unforuntatly, I couldn't find the source of the problem but the
+workaround by resetting the cleanup callbacks 'fixes' this problem
+(patch #1). I think as intermeditate step this should be merged until
+the real cause can be identified.
+
+The second crash is due a race condition(?) in the firmware. The sts
+entries are not updated in time which leads to this crash pattern
+which several customers have reported:
+
+ #0 [c00000ffffd1bb80] scsi_dma_unmap at d00000001e4904d4 [scsi_mod]
+ #1 [c00000ffffd1bbe0] qla2x00_sp_compl at d0000000204803cc [qla2xxx]
+ #2 [c00000ffffd1bc20] qla24xx_process_response_queue at d0000000204c5810 [qla2xxx]
+ #3 [c00000ffffd1bd50] qla24xx_msix_rsp_q at d0000000204c8fd8 [qla2xxx]
+ #4 [c00000ffffd1bde0] __handle_irq_event_percpu at c000000000189510
+ #5 [c00000ffffd1bea0] handle_irq_event_percpu at c00000000018978c
+ #6 [c00000ffffd1bee0] handle_irq_event at c00000000018984c
+ #7 [c00000ffffd1bf10] handle_fasteoi_irq at c00000000018efc0
+ #8 [c00000ffffd1bf40] generic_handle_irq at c000000000187f10
+ #9 [c00000ffffd1bf60] __do_irq at c000000000018784
+ #10 [c00000ffffd1bf90] call_do_irq at c00000000002caa4
+ #11 [c00000ecca417a00] do_IRQ at c000000000018970
+ #12 [c00000ecca417a50] restore_check_irq_replay at c00000000000de98
+
+From analyzing the crash dump it was clear that
+qla24xx_mbx_iocb_entry() calls sp->done (qla2x00_sp_compl) which
+crashes because the response is not a mailbox entry, it is a status
+entry. Patch #4 changes the process logic for mailbox commands so that
+the sp is parsed before calling the correct proccess function.
+
+Thanks,
+Daniel
+
+Daniel Wagner (4):
+  qla2xxx: Warn if done() or free() are called on an already freed srb
+  qla2xxx: Simplify return value logic in qla2x00_get_sp_from_handle()
+  qla2xxx: Drop unused function argument from
+    qla2x00_get_sp_from_handle()
+  qla2xxx: Handle incorrect entry_type entries
+
+ drivers/scsi/qla2xxx/qla_gbl.h    |  3 +-
+ drivers/scsi/qla2xxx/qla_init.c   | 10 ++++++
+ drivers/scsi/qla2xxx/qla_inline.h |  5 +++
+ drivers/scsi/qla2xxx/qla_isr.c    | 74 +++++++++++++++++++++++----------------
+ drivers/scsi/qla2xxx/qla_mr.c     |  9 ++---
+ 5 files changed, 62 insertions(+), 39 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.16.4
 
-https://people.kernel.org/tglx/notes-about-netiquette
