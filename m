@@ -2,164 +2,125 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529D2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C518C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A69B2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:44:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6432083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="XqB9pDZF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QPVXhTnB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgHaKon (ORCPT
+        id S1726522AbgHaKpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 06:44:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38642 "EHLO
+        Mon, 31 Aug 2020 06:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgHaKol (ORCPT
+        with ESMTP id S1726249AbgHaKpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 06:44:41 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61077C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 03:44:41 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z4so2639053wrr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 03:44:41 -0700 (PDT)
+        Mon, 31 Aug 2020 06:45:06 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F5CAC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 03:45:06 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x18so1610954pll.6
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 03:45:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=k+EYgDY4h1YnjFAKejF6GzhKvmGlD2uTuVOl9S42RJU=;
-        b=XqB9pDZFFdbsN4WAsjqI6EX/O5KjFFP6wjsWbg9oDnQZBxcMHzwP7YSIBUJt5O0VAX
-         OJAyoBLH3V7jmSvh8XTcTRa/7UPkOSfImLuCq65zVihXa3b96Ef1YlqhHN96BiRyrjt8
-         RTNB3lCbQlbWxey2ErX645oW0ro3qstDprORVaDt1QBJAJser/0m/EPKi9yovckee5B9
-         FA/j6+zfLwp03TvPPRgHW2DyLPXKn/l4Z3kKweG8Z5yvPyvnsOc2ag7LSWwMd5wumTWj
-         o78Tmnuo5V11ZRQwk2ZMqofBq8HQwnVGCOfFw/Nntf3JUFQFnKJQJyLcFDVmQSe9rAaY
-         jejg==
+         :content-disposition:in-reply-to:user-agent;
+        bh=LTjNuf+4HDb4ylh7ga9ASwLKTNx5USoQDR62ZwnBw0Q=;
+        b=QPVXhTnBxUmkPbv3F29VXSio/tiyHbxa5KkZd80nOptWc/leJh9X9TjcMzoOjC60iP
+         VgGn4GjhV2GWkcnuf8pvbmSELvngSJ/PGInoQL2f8QAYG6K/cbDPxUdFeAoOjUwYtvCn
+         ZmTy1yyraKhtleKUrGW0nrOm55Pqr28ikFCFGmpULITULAfxe/zRECVmNWJg94UyeU7t
+         fW9aqY4F63qj7HxzzqJxM50sw6sTk581rQAczy7+JJD5LDskTedWs33i19BNUjlY7wy+
+         xkfKkaDCk6ZLsUrpHgLolyojtTZa+SNbDw4zF3RK1jbc7qX+qpSxXw57SShdFKpLxVSG
+         +WOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k+EYgDY4h1YnjFAKejF6GzhKvmGlD2uTuVOl9S42RJU=;
-        b=qd/FSwe9D/ckmbQCkIlE5eSoZX8Dlz3mSGdsnZtvouKQsVVNwi6BYRtEjZ7tCRbDsW
-         VU6VN3xfa4tNMbRb8BqT3KpGP7Pq+i0EMM+vXTRKQk0RiBUdmiENNPxEpYPVFYSTOTaE
-         ClexzhLHtXIRLQxijQ/wyxAiN2cPPAWrxdQYZbHxnR7afQ5dr+rBkEQXgn5od6Zd6I0W
-         TLdyOYlyVNq+KF1lPb+5foODrdW0/wOC8W0SKVb4DGGV8R5lLESrGXcLQlYrlhkQnDva
-         phuEMYxVub4MS3QDHZQhzGsSUWXv88HYXT0ZG6bu2ZeuHrTaoNjJb1p7SvBMU2cmovRW
-         cofA==
-X-Gm-Message-State: AOAM533vCGByho5F3lkygbiZ7/fQYW03jh3bvGsHFLOWLw/SdOTN4j95
-        FOvfYSgcqLJGpHGgIyJIQild/A==
-X-Google-Smtp-Source: ABdhPJyRFov4JuNLN5DAXSh9XQtJj9BZLjKnRtnTEzitPpCAZ1aI/EixspeKXwmvuQAztWmzQIGZzQ==
-X-Received: by 2002:adf:e58b:: with SMTP id l11mr1162050wrm.210.1598870679800;
-        Mon, 31 Aug 2020 03:44:39 -0700 (PDT)
-Received: from localhost ([86.61.181.4])
-        by smtp.gmail.com with ESMTPSA id l10sm9639574wru.59.2020.08.31.03.44.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 03:44:39 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 12:44:38 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Moshe Shemesh <moshe@mellanox.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC v3 03/14] devlink: Add reload actions
- counters to dev get
-Message-ID: <20200831104438.GA3794@nanopsycho.orion>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
- <1598801254-27764-4-git-send-email-moshe@mellanox.com>
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LTjNuf+4HDb4ylh7ga9ASwLKTNx5USoQDR62ZwnBw0Q=;
+        b=ipnh7XHrHnWhP7p9/iGLuQ9Ix5S7rjPBb0BMrDzzsbfudF93BY1QcJDLaZqqRdcGgg
+         JfIkEc9L6+wEOJPUTBokbCpIT1A3zO2kz26R0ha4slO33A1LCav+BWhQ+6UYlPPm6mKX
+         iM9wvsOh9jA0weAa/4eSjn7vqAg/iVqqgnwmCFwHbwDq6IA2agnipsFV0f6hYdAskdwQ
+         h/c8+AbO5uFQnks8YC0O7XH7onjM6DVpiLfmQ618trBu+CzxHjgdJIhRhL36Tmo+HV9G
+         dJ6R2x7atDOKXJyv6zjwCLPin0x21fy/H3JvpRMlTxmQoa8SiVcDfLRLkOhe/iAjP9Yu
+         I0AA==
+X-Gm-Message-State: AOAM5329M8URnxRvmgWYMD5wzoeU000fXaMVcpnmLf7tqH18vX8Pl/Ly
+        PP6PylJrMV4jPCGYtHAQ/Ewf4g==
+X-Google-Smtp-Source: ABdhPJygxplFkMGZQpt6GSdWy76OfK4XavrXsjjZzwVY6vR5cyeAHdXL7iFT8xF5Nap5B/MxOmM9iQ==
+X-Received: by 2002:a17:902:44f:: with SMTP id 73mr600714ple.178.1598870705884;
+        Mon, 31 Aug 2020 03:45:05 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id t20sm6747600pjg.21.2020.08.31.03.45.04
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 31 Aug 2020 03:45:04 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 16:14:53 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 4/8] mmc: sdhci-msm: Unconditionally call
+ dev_pm_opp_of_remove_table()
+Message-ID: <20200831104453.ux5fb5bpt57tj5am@vireshk-i7>
+References: <cover.1598594714.git.viresh.kumar@linaro.org>
+ <1d7c97524b9e1fbc60271d9c246c5461ca8a106c.1598594714.git.viresh.kumar@linaro.org>
+ <CAPDyKFpdZhzXQv3hpTzf3UkJDhFqBhgMXCqVfAfE6PejLCxvfg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1598801254-27764-4-git-send-email-moshe@mellanox.com>
+In-Reply-To: <CAPDyKFpdZhzXQv3hpTzf3UkJDhFqBhgMXCqVfAfE6PejLCxvfg@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sun, Aug 30, 2020 at 05:27:23PM CEST, moshe@mellanox.com wrote:
->Expose devlink reload actions counters to the user through devlink dev
->get command.
->
->Examples:
->$ devlink dev show
->pci/0000:82:00.0:
->  reload_actions_stats:
->    driver_reinit 2
->    fw_activate 1
->    fw_activate_no_reset 0
->pci/0000:82:00.1:
->  reload_actions_stats:
->    driver_reinit 1
->    fw_activate 1
->    fw_activate_no_reset 0
->
->$ devlink dev show -jp
->{
->    "dev": {
->        "pci/0000:82:00.0": {
->            "reload_actions_stats": [ {
-
-Perhaps "reload_action_stats" would be better.
-
-
->                    "driver_reinit": 2
->                },{
->                    "fw_activate": 1
->                },{
->                    "fw_activate_no_reset": 0
->                } ]
->        },
->        "pci/0000:82:00.1": {
->            "reload_actions_stats": [ {
->                    "driver_reinit": 1
->                },{
->                    "fw_activate": 1
->                },{
->                    "fw_activate_no_reset": 0
->                } ]
->        }
->    }
->}
->
->Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
->---
->v2 -> v3:
->- Add reload actions counters instead of supported reload actions
->  (reload actions counters are only for supported action so no need for
->   both)
->v1 -> v2:
->- Removed DEVLINK_ATTR_RELOAD_DEFAULT_LEVEL
->- Removed DEVLINK_ATTR_RELOAD_LEVELS_INFO
->- Have actions instead of levels
->---
-> include/uapi/linux/devlink.h |  3 +++
-> net/core/devlink.c           | 37 +++++++++++++++++++++++++++++++-----
-> 2 files changed, 35 insertions(+), 5 deletions(-)
->
->diff --git a/include/uapi/linux/devlink.h b/include/uapi/linux/devlink.h
->index 0a438135c3cf..fd7667c78417 100644
->--- a/include/uapi/linux/devlink.h
->+++ b/include/uapi/linux/devlink.h
->@@ -478,6 +478,9 @@ enum devlink_attr {
+On 28-08-20, 10:43, Ulf Hansson wrote:
+> On Fri, 28 Aug 2020 at 08:08, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >
+> > dev_pm_opp_of_remove_table() doesn't report any errors when it fails to
+> > find the OPP table with error -ENODEV (i.e. OPP table not present for
+> > the device). And we can call dev_pm_opp_of_remove_table()
+> > unconditionally here.
+> >
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > 
-> 	DEVLINK_ATTR_RELOAD_ACTION,		/* u8 */
-> 	DEVLINK_ATTR_RELOAD_ACTIONS_DONE,	/* nested */
->+	DEVLINK_ATTR_RELOAD_ACTION_CNT_VALUE,	/* u32 */
->+	DEVLINK_ATTR_RELOAD_ACTION_CNT,		/* nested */
->+	DEVLINK_ATTR_RELOAD_ACTIONS_CNTS,	/* nested */
-
-Be in-sync with the user outputs. Perhaps something like:
-	DEVLINK_ATTR_RELOAD_ACTION_STATS
-	DEVLINK_ATTR_RELOAD_ACTION_STAT
-	DEVLINK_ATTR_RELOAD_ACTION_STAT_VALUE
-?
-
+> Replaced v1 with v2 on my next branch, thanks!
 > 
-> 	/* add new attributes above here, update the policy in devlink.c */
-> 
+> Just to be sure, this patch doesn't depend on any changes for the opp
+> core that are queued for v5.10?
 
-[..]
+The recent crashes reported by Anders and Naresh were related to a OPP
+core bug, for which I have just sent the fix here:
+
+https://lore.kernel.org/lkml/922ff0759a16299e24cacfc981ac07914d8f1826.1598865786.git.viresh.kumar@linaro.org/
+
+This is already tested by Naresh now and finally everything works as
+expected.
+
+I am going to get this fix merged in 5.9-rc4, but we do have a
+dependency now with that fix.
+
+What's the best way to handle this stuff now ? The easiest IMO would
+be for me to send these patches through the OPP tree, otherwise people
+need to carry this and the OPP fix (for which I can provide the
+branch/tag).
+
+-- 
+viresh
