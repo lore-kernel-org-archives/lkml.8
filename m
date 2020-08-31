@@ -2,92 +2,177 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B6BAC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851FAC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BAD520707
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:57:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="f25rpX+h"
+	by mail.kernel.org (Postfix) with ESMTP id 6222420866
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:58:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728573AbgHaQ5E (ORCPT
+        id S1728867AbgHaQ6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:57:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40504 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbgHaQ5E (ORCPT
+        Mon, 31 Aug 2020 12:58:34 -0400
+Received: from mail-il1-f200.google.com ([209.85.166.200]:48065 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728772AbgHaQ6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:57:04 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91EC5C061573;
-        Mon, 31 Aug 2020 09:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=kEfHhU2EdJZ5RPXXYFu+fxz9H6I+sVnd5sT285hYjLU=; b=f25rpX+hOe6xkdFm727OhW/ha6
-        qgzb4JV3m+Ob73RcInKTbjTaFuxQEGRqJq3kROoHjVG+dloVMBNmsT5pqBP50iiAZ/Ftyk166jJdG
-        ZCMF3iMu/d+v4qyCi0iHr3UnRHoSFJRLhJFujRuBYSZqSIMStugGBRrjPDDhxlm9KGlKEZtdreETg
-        4mHz7yDo4fO2/SOQyUoO+T/J3S59Zx8Re7OSVZOu9vrtR1n+UBBTAikLGAGKzWutrjTeUr0Ll5xKk
-        nX3Oe3OBX/2Vp1KJLF1SwNRMD2IRn2kCRa9tVckd93u5+oFtpZARAXO9dWME8OTDB6nZF/OgyevYg
-        rEbZLc9A==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCn75-0005lV-JI; Mon, 31 Aug 2020 16:56:59 +0000
-Date:   Mon, 31 Aug 2020 17:56:59 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH] fat: Avoid oops when bdi->io_pages==0
-Message-ID: <20200831165659.GH14765@casper.infradead.org>
-References: <87ft85osn6.fsf@mail.parknet.co.jp>
- <b4e1f741-989c-6c9d-b559-4c1ada88c499@kernel.dk>
- <87o8mq6aao.fsf@mail.parknet.co.jp>
- <4010690f-20ad-f7ba-b595-2e07b0fa2d94@kernel.dk>
+        Mon, 31 Aug 2020 12:58:22 -0400
+Received: by mail-il1-f200.google.com with SMTP id z6so391422iln.14
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 09:58:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=+ZTs2n83Tkv9civzXKXQz/dyybMvLYTtTFdf222myQU=;
+        b=NLmAghc1mZuesaHt/MsbHKnI8f9Xj4XJxbIyUvhzgtawjf7SIgZLS6ikzKDTDG9JdS
+         yPwjGmUaWbzpjItmgr5shPB7bFZY5cYnDpVmX78z2pD7X7QUWItLloFDwoPLxeXyIJ+9
+         N6uNvvp6FyFVKq+ZiWihuKEJpprW4FXQyEjX7JNo1GkLUe++BZkSuOncJGAHWKdmN7D2
+         TPio+YhQSB8anvqqaYqXhy8MoxOcsDrFDloJQfS3JZcMKlm8+qiYa6ojoLEgUNmT/RDq
+         CeGIK2NF1hIK/mycc+QsbfBdtgSkk2T1gT4haNLFgCFog+YiECXZuPekts+NuWQgeKKW
+         tCLw==
+X-Gm-Message-State: AOAM533qehlrq6seSE6fUcNinRNKep6RGLw7TrmXyC9rj0CIM4fTamkq
+        kmBIEg+G9c0GMCXwn/4Hj9r+iTq8m9Xe840hXaaZ6lCdqxP7
+X-Google-Smtp-Source: ABdhPJy97nCt55gGNTuN6WXoY0AozhHr8Q2AcDXTatLhN0TANhDMJJyv6r1BNny+Gn5crQ6UsyoekIZ6uRtQE2Pe0zOgBkzYje1W
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4010690f-20ad-f7ba-b595-2e07b0fa2d94@kernel.dk>
+X-Received: by 2002:a92:1b4d:: with SMTP id b74mr2202700ilb.198.1598893101025;
+ Mon, 31 Aug 2020 09:58:21 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 09:58:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000520ffc05ae2f4fee@google.com>
+Subject: KASAN: use-after-free Read in bdev_del_partition
+From:   syzbot <syzbot+6448f3c229bc52b82f69@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, johannes.thumshirn@wdc.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 10:39:26AM -0600, Jens Axboe wrote:
-> We really should ensure that ->io_pages is always set, imho, instead of
-> having to work-around it in other spots.
+Hello,
 
-Interestingly, there are only three places in the entire kernel which
-_use_ bdi->io_pages.  FAT, Verity and the pagecache readahead code.
+syzbot found the following issue on:
 
-Verity:
-                        unsigned long num_ra_pages =
-                                min_t(unsigned long, num_blocks_to_hash - i,
-                                      inode->i_sb->s_bdi->io_pages);
+HEAD commit:    dcc5c6f0 Merge tag 'x86-urgent-2020-08-30' of git://git.ke..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11e8ca85900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=891ca5711a9f1650
+dashboard link: https://syzkaller.appspot.com/bug?extid=6448f3c229bc52b82f69
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154e2285900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16f6e915900000
 
-FAT:
-        if (ra_pages > sb->s_bdi->io_pages)
-                ra_pages = rounddown(ra_pages, sb->s_bdi->io_pages);
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6448f3c229bc52b82f69@syzkaller.appspotmail.com
 
-Pagecache:
-        max_pages = max_t(unsigned long, bdi->io_pages, ra->ra_pages);
-and
-        if (req_size > max_pages && bdi->io_pages > max_pages)
-                max_pages = min(req_size, bdi->io_pages);
+==================================================================
+BUG: KASAN: use-after-free in kobject_put+0x245/0x2c0 lib/kobject.c:748
+Read of size 1 at addr ffff8880a384e9bc by task syz-executor027/6982
 
-The funny thing is that all three are using it differently.  Verity is
-taking io_pages to be the maximum amount to readahead.  FAT is using
-it as the unit of readahead (round down to the previous multiple) and
-the pagecache uses it to limit reads that exceed the current per-file
-readahead limit (but allows per-file readahead to exceed io_pages,
-in which case it has no effect).
+CPU: 0 PID: 6982 Comm: syz-executor027 Not tainted 5.9.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1d6/0x29e lib/dump_stack.c:118
+ print_address_description+0x66/0x620 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ kobject_put+0x245/0x2c0 lib/kobject.c:748
+ delete_partition block/partitions/core.c:324 [inline]
+ bdev_del_partition+0x26a/0x380 block/partitions/core.c:549
+ blkpg_do_ioctl+0x12b/0x2e0 block/ioctl.c:33
+ blkpg_ioctl block/ioctl.c:69 [inline]
+ blkdev_ioctl+0x352/0x5d0 block/ioctl.c:589
+ block_ioctl+0xbc/0x100 fs/block_dev.c:1871
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ __do_sys_ioctl fs/ioctl.c:753 [inline]
+ __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x446959
+Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 db 06 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f4a7a555d98 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006dbc38 RCX: 0000000000446959
+RDX: 0000000020000000 RSI: 0000000000001269 RDI: 0000000000000005
+RBP: 00000000006dbc30 R08: 00007f4a7a556700 R09: 0000000000000000
+R10: 00007f4a7a556700 R11: 0000000000000246 R12: 00000000006dbc3c
+R13: 00000000000000a9 R14: 00b747111e42e3ec R15: 02ba2b7a04b8ac00
 
-So how should it be used?  My inclination is to say that the pagecache
-is right, by virtue of being the most-used.
+Allocated by task 6977:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x100/0x130 mm/kasan/common.c:461
+ kmem_cache_alloc_trace+0x1e4/0x2e0 mm/slab.c:3550
+ kmalloc include/linux/slab.h:554 [inline]
+ kzalloc include/linux/slab.h:666 [inline]
+ kobject_create lib/kobject.c:783 [inline]
+ kobject_create_and_add+0x57/0x240 lib/kobject.c:809
+ add_partition+0x884/0xcb0 block/partitions/core.c:443
+ bdev_add_partition+0x1c9/0x230 block/partitions/core.c:518
+ blkpg_do_ioctl+0x295/0x2e0 block/ioctl.c:52
+ blkpg_ioctl block/ioctl.c:69 [inline]
+ blkdev_ioctl+0x352/0x5d0 block/ioctl.c:589
+ block_ioctl+0xbc/0x100 fs/block_dev.c:1871
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ __do_sys_ioctl fs/ioctl.c:753 [inline]
+ __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
+Freed by task 6979:
+ kasan_save_stack mm/kasan/common.c:48 [inline]
+ kasan_set_track+0x3d/0x70 mm/kasan/common.c:56
+ kasan_set_free_info+0x17/0x30 mm/kasan/generic.c:355
+ __kasan_slab_free+0xdd/0x110 mm/kasan/common.c:422
+ __cache_free mm/slab.c:3418 [inline]
+ kfree+0x113/0x200 mm/slab.c:3756
+ kobject_cleanup lib/kobject.c:704 [inline]
+ kobject_release lib/kobject.c:735 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ kobject_put+0x1a0/0x2c0 lib/kobject.c:752
+ delete_partition block/partitions/core.c:324 [inline]
+ bdev_del_partition+0x26a/0x380 block/partitions/core.c:549
+ blkpg_do_ioctl+0x12b/0x2e0 block/ioctl.c:33
+ blkpg_ioctl block/ioctl.c:69 [inline]
+ blkdev_ioctl+0x352/0x5d0 block/ioctl.c:589
+ block_ioctl+0xbc/0x100 fs/block_dev.c:1871
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ __do_sys_ioctl fs/ioctl.c:753 [inline]
+ __se_sys_ioctl+0xfb/0x170 fs/ioctl.c:739
+ do_syscall_64+0x31/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff8880a384e980
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 60 bytes inside of
+ 64-byte region [ffff8880a384e980, ffff8880a384e9c0)
+The buggy address belongs to the page:
+page:00000000f601aef4 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0xa384e
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea000263b548 ffffea00029bbac8 ffff8880aa440200
+raw: 0000000000000000 ffff8880a384e000 0000000100000020 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a384e880: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff8880a384e900: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+>ffff8880a384e980: fa fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                                        ^
+ ffff8880a384ea00: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff8880a384ea80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+==================================================================
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
