@@ -2,139 +2,139 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85420C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F875C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:00:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D72D208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2A42073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 10:00:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MiCg8nGN"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zEnJsMZ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbgHaJ7T (ORCPT
+        id S1726472AbgHaKAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:59:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59768 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbgHaJ7Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:59:16 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE83DC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:59:15 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id y2so1777786lfy.10
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:59:15 -0700 (PDT)
+        Mon, 31 Aug 2020 06:00:18 -0400
+Received: from mail-dm6nam10on2050.outbound.protection.outlook.com ([40.107.93.50]:13376
+        "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725972AbgHaKAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 06:00:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PSSnEXcod2D/jr4dvMiCYC3XGn2qsiMhqEG43Bfy1PWPpOHT2uN0QxBPe8PEyEsBkWXdeICGFVZKfMavMn2RkRGPzZ8kbgj6Yy741Cml6uWRBFPRW5Sdm50kuZTnd6+kEj+7F03V0SHtIniRVvTEog2nKQARMw84Fn6g7VXIrsVw8RVr9gv9bxEJebbAjfdL5FMAbpsdO7F1cK6UdTSx8KTvYhrAZbiwIgz5+/ElqONRKlYzgpxgLZv6UuDe0hHTYqsxZpj8HbuUIVtBJ9zgM6wa25fLs36yENpX70GSz86iL0Vtvk2hzn34zxu9IS2ydH5lw1ZB0UmU8ji3eklC6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+/dXd0gLOtRGyZn+qb4Zs2D9iGzoDDXORB0Q3CjEBPo=;
+ b=cMe9TbPs4TdVxX6Nsc1w7ShkcGVK+AioLRzuWTD/w6IQi2rAb+OcIywKaGebVwGRqyomPno75lZB6/3MXFDhGZWBaT5FSgrt10M8YXkpc9ezD1+SvkdChQ0JooROC7+A8VkyllEJKJCY3kqu0huA1nMNO+foxYRFV2X9E90LTCg2bG3oAXzzE0NYDluABjq1eqgY397zwNIqxKlY/aUHvvA+h8EOTbHkdtL7WqFoLV+Tg68HKIX+/d+qs0Xs9TzCuTL+/wo22W4hYo4T1j7UFHNxepmpYFQfZ8QmLhqtJ0GGvpkgzH0T4gT6FEoq6XZDZxraDP5FDFxcsbUyiMprJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PZDyp3YFdZVXnA9zj6mRLZpFoGXWq1/L5Ulr34SDMq8=;
-        b=MiCg8nGNu+VfRhhFOU9X80Cr5JC543609Dm9tZTKSV9EPB7lbHdjYy+mZmTeKEK1Y0
-         IAJC3QAvNhIsPISdtlGUw354JQEqtc2twkuBAayVXouk+89vdhxLS1SsWVB1enKdFSlR
-         7XfL96NmruikjoIXZqzB8yUgnrypzUjwl4TCAzmZa2f87dtQR2Et2IyDuQrkVfcKEInv
-         hEpf5Kl4prHCKP+4kj+JlGSlpkG1ncz3GziIvcyAuhs4YWkLXScfhylVDFyxa9hOPGj5
-         4G0ydKIWryQ82+G02rYSXDaq7FhjTDISKfG1MMa1ILYwNXMDxEqwP610qxcRboNv9Bc/
-         s+ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PZDyp3YFdZVXnA9zj6mRLZpFoGXWq1/L5Ulr34SDMq8=;
-        b=pfqBKQqo6y2Wd4CZJe0wtD/hJ1PVLs8bMFg8aMf4L08sAoN9hIRoFTokIOji9udmvC
-         vnHCRT/gYbUNttia514+M0BL01ojSiRhs8bIeIU+wi+xCdhjrt3kY13ZlxK9WmVTBNOu
-         MoSDHkDPm/79wLq8GvmPy2/5H/1a95qY11OzK1BVgSEtCtKkE4Y8dfxnVg2P6OU5tXMH
-         A4av7FQW6XY0o4zvI3Pdb24yqihiypHg1f4rsE3aKhL8/lm6V79uRRdsIOoJl6za5arc
-         bWWU3pKHgp3chGvt1eupwANgixpdRSkT+ogvKex8zK+lJhN8ZoczUcCJ3aCv7uema0m9
-         dT+Q==
-X-Gm-Message-State: AOAM533ECM3gbBwvkIOE5HBziL0VUZ8N6NAx6ambEe4YfLoGEs4NVt2c
-        eV20e+xdyRuRj12uf6g+HRjCDphcG/n/VbdxoeQXycYAdQPmQQ==
-X-Google-Smtp-Source: ABdhPJym3Z3hy4cI8cw/qwa/lo6GDiRMgx9UkTYrxhh31+i4hUGC0KkoOCXy0vNAWH1pJhx9kxIon0J+y619jkiozbY=
-X-Received: by 2002:ac2:5298:: with SMTP id q24mr334931lfm.164.1598867953047;
- Mon, 31 Aug 2020 02:59:13 -0700 (PDT)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+/dXd0gLOtRGyZn+qb4Zs2D9iGzoDDXORB0Q3CjEBPo=;
+ b=zEnJsMZ3aouuZ1lfAF3FpDCTjKqvi+6bmibYAgbPz9U+Ocd0mvMHuEeglgEsvK1BY5zu2nF/l8wUIoiZRVvH4TJcHwkFHD8vk7QLB4MrH89Ms+HlzhvAyJE8n13QMOAthebFxg9/bUXwyu4v4iyimAHX90fqkZydzJFI+qVHqJU=
+Authentication-Results: lists.freedesktop.org; dkim=none (message not signed)
+ header.d=none;lists.freedesktop.org; dmarc=none action=none
+ header.from=amd.com;
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+ by MN2PR12MB3968.namprd12.prod.outlook.com (2603:10b6:208:16f::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.24; Mon, 31 Aug
+ 2020 10:00:11 +0000
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::f8f7:7403:1c92:3a60]) by MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::f8f7:7403:1c92:3a60%6]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
+ 10:00:11 +0000
+Subject: Re: [PATCH] dma-buf: fix kernel-doc warning in <linux/dma-buf.h>
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
+Cc:     Sumit Semwal <sumit.semwal@linaro.org>,
+        Gustavo Padovan <gustavo@padovan.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org
+References: <20200831041655.29796-1-rdunlap@infradead.org>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <b97f98ed-75b7-400c-07d3-89f49c5bb809@amd.com>
+Date:   Mon, 31 Aug 2020 12:00:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+In-Reply-To: <20200831041655.29796-1-rdunlap@infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-ClientProxiedBy: AM0PR10CA0079.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:15::32) To MN2PR12MB3775.namprd12.prod.outlook.com
+ (2603:10b6:208:159::19)
 MIME-Version: 1.0
-References: <20200827114932.3572699-1-jannh@google.com> <20200827114932.3572699-8-jannh@google.com>
- <alpine.LSU.2.11.2008302225510.1934@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2008302225510.1934@eggly.anvils>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 31 Aug 2020 11:58:47 +0200
-Message-ID: <CAG48ez15Zxbkjv0WRChZZZ6F78pFVXPTu_Bn1Pqaxx=7Gk1gUg@mail.gmail.com>
-Subject: Re: [PATCH v5 7/7] mm: Remove the now-unnecessary mmget_still_valid() hack
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Oleg Nesterov <oleg@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by AM0PR10CA0079.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:208:15::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 10:00:10 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 572eee82-1510-4d57-3f0b-08d84d94a652
+X-MS-TrafficTypeDiagnostic: MN2PR12MB3968:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB3968E90C1E318ADFA77704C583510@MN2PR12MB3968.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2733;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: K4vQla8zYPi28m/W/FONJFf+avs0Ru/TNVWnYcGCpmc977KL5XZ8E+YNljXSyFBMH55MZVIbf7ax+oJiWYfmUR21mkhToa1+KoO2ZsYxHLylSlJvjlvl097+O0DGhuAhw/wG6DKOf7jz+wSMni81A+urfK/ZpRS7mNcZtRRjY2tsY0wDEWW4+TDIHGhZp8TpuizpdzZ+OamMTGowRbmAEhZYAm00V5pBsiV1mUz1Ou31DTAu0qfx2xSt4X43FyeiHeCwzMQ5cHrspEYYkCLijfaas//g0GOnQKRan/9HSPkEbgba4g8VQmYfD8iBKS9xDRKJBpZb2LEbDcVKrg/CWgtTvPxRhJzyKmDHxX3qbmIpJsCaeu409tIFe1GyW1lg
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(39860400002)(366004)(136003)(396003)(6486002)(52116002)(66556008)(66476007)(66946007)(8676002)(6666004)(4326008)(2906002)(186003)(31696002)(66574015)(31686004)(86362001)(54906003)(83380400001)(5660300002)(478600001)(16576012)(316002)(956004)(2616005)(8936002)(36756003)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: MJdxm4X5D+Ut+BPuyYxhFngJdna2sRCCp5ABMCGtHzfLP22x7XGzUNdNF9egp2MCsmm481viGgXCAas4yPZYKsBfCz6jz02mfpRACNnIXzwUPrFkiq2iLU8GmRU3HW+7oMc5ZUdpLQouH47RlLrSylk53QD12//esvXzyLAd/UaIHSMf4tciey7G6/qUbc5xcuhz60lBzfvygNFWclt2o58NM25lMBDHMApONGRWzIiigzgc5eaTW+A/ZGbucs8FW40kU1WV/Yqb+1U2efal9pQhjP2dG772qiiCdypIyJLNm76wUmG4G/fiFdPmoJDBrHEUXLngs73uKK+sxAx0YrPOrmnF9LGI39hLCU7+/tm3GACmFs97s+73sT+UZPqpT/qPBlMUIrX/fUMkdvnNPirAXXolgEVgkIZ/Vh33Vuv1dNQYh1EQJ1v5Cra1/SSghmYHzwXMTz9INVPsTbyN3GmgSoaH4XJ24K7DayoTMb9GF1yG7H9+qoZS+yqIzeJC6FcoQrsSKElpJu9uM1BHYjjnTJA5V7UAnENF9L3I1DTHM1PbBiMac5Od87vIyWbiL2ao1wmdQO0qPI9MDGM3p3hUdqqTpIzsvEwpzr3zRSvLxCV8DyIYxSK0+OMbiZRu+evuEPrS3zocAlliX6MAM13Z7ll9eY3AtrmO7s49SjU3+VHxcg9EIz8nJR1xLvr8Hm6yPbeKfREpflrajWCV4g==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 572eee82-1510-4d57-3f0b-08d84d94a652
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 10:00:11.6460
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: RUd5kkMMidH1+YWWW4+pj3MOAbhdis+mEPfSHrgwEXHPtxHowfRsik7Tgaqg+EZK
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3968
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 8:07 AM Hugh Dickins <hughd@google.com> wrote:
-> On Thu, 27 Aug 2020, Jann Horn wrote:
+Am 31.08.20 um 06:16 schrieb Randy Dunlap:
+> Fix kernel-doc warning in <linux/dma-buf.h>:
 >
-> > The preceding patches have ensured that core dumping properly takes the
-> > mmap_lock. Thanks to that, we can now remove mmget_still_valid() and all
-> > its users.
+> ../include/linux/dma-buf.h:330: warning: Function parameter or member 'name_lock' not described in 'dma_buf'
 >
-> Hi Jann, while the only tears to be shed over losing mmget_still_valid()
-> will be tears of joy, I think you need to explain why you believe it's
-> safe to remove the instance in mm/khugepaged.c: which you'll have found
-> I moved just recently, to cover an extra case (sorry for not Cc'ing you).
->
-> > --- a/mm/khugepaged.c
-> > +++ b/mm/khugepaged.c
-> > @@ -431,7 +431,7 @@ static void insert_to_mm_slots_hash(struct mm_struct *mm,
-> >
-> >  static inline int khugepaged_test_exit(struct mm_struct *mm)
-> >  {
-> > -     return atomic_read(&mm->mm_users) == 0 || !mmget_still_valid(mm);
-> > +     return atomic_read(&mm->mm_users) == 0;
-> >  }
-> >
-> >  static bool hugepage_vma_check(struct vm_area_struct *vma,
->
-> The movement (which you have correctly followed) was in
-> bbe98f9cadff ("khugepaged: khugepaged_test_exit() check mmget_still_valid()")
-> but the "pmd .. physical page 0" issue is explained better in its parent
-> 18e77600f7a1 ("khugepaged: retract_page_tables() remember to test exit")
->
-> I think your core dumping is still reading the page tables without
-> holding mmap_lock
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> Cc: Gustavo Padovan <gustavo@padovan.org>
+> Cc: Christian König <christian.koenig@amd.com>
+> Cc: linux-media@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
 
-Where? get_dump_page() takes mmap_lock now:
-<https://lore.kernel.org/lkml/20200827114932.3572699-7-jannh@google.com/>
+Reviewed-by: Christian König <christian.koenig@amd.com>
 
-I don't think there should be any paths into __get_user_pages() left
-that don't hold the mmap_lock. Actually, we should probably try
-sticking mmap_assert_locked() in there now as a follow-up?
-
-> so still vulnerable to that extra issue.  It won't
-> be as satisfying as removing all traces of mmget_still_valid(), but
-> right now I think you should add an mm->core_state check there instead.
+> ---
+>   include/linux/dma-buf.h |    3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> (I do have a better solution in use, but it's a much larger patch, that
-> will take a lot more effort to get in: checks in pte_offset_map_lock(),
-> perhaps returning NULL when pmd is transitioning, requiring retry.)
+> --- lnx-59-rc3.orig/include/linux/dma-buf.h
+> +++ lnx-59-rc3/include/linux/dma-buf.h
+> @@ -283,6 +283,7 @@ struct dma_buf_ops {
+>    * @exp_name: name of the exporter; useful for debugging.
+>    * @name: userspace-provided name; useful for accounting and debugging,
+>    *        protected by @resv.
+> + * @name_lock: spinlock to protect name access
+>    * @owner: pointer to exporter module; used for refcounting when exporter is a
+>    *         kernel module.
+>    * @list_node: node for dma_buf accounting and debugging.
+> @@ -311,7 +312,7 @@ struct dma_buf {
+>   	void *vmap_ptr;
+>   	const char *exp_name;
+>   	const char *name;
+> -	spinlock_t name_lock; /* spinlock to protect name access */
+> +	spinlock_t name_lock;
+>   	struct module *owner;
+>   	struct list_head list_node;
+>   	void *priv;
 
-Just to clarify: This is an issue only between GUP's software page
-table walks when running without mmap_lock and concurrent page table
-modifications from hugepage code, correct? Hardware page table walks
-and get_user_pages_fast() are fine because they properly load PTEs
-atomically and are written to assume that the page tables can change
-arbitrarily under them, and the only guarantee is that disabling
-interrupts ensures that pages referenced by PTEs can't be freed,
-right?
-
-> Or maybe it's me who has missed what you're doing instead.
->
-> Hugh
