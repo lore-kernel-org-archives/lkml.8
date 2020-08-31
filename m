@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F40C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C32BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0227B208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE1B72071B
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897977;
-	bh=fQELpKvWSu8GuxhvTeoiLr/q0jaGeeTwDu9BtK/GSzg=;
+	s=default; t=1598897981;
+	bh=izEuFm0CkLqGqGuRdf3iNukr6k4QThi2QPdPfv3Qaug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ce4wZEkME6suKNpGvkoVqLQzHuEGYqQZtCw8sGYk2neHJu1s7OM96UIphe2A/h/Vz
-	 rTO9+m8XMGSiqvM1Faw2jcz1k4vqJbbxDaS3izM3mROemygItVVAS9lN536SWtwkJD
-	 fHiKtATrEKHiPplNqf5IzytVqHFhDQOOd6wHG2Wk=
+	b=GholeineNHTFN/Q8NIItZqFh7XRjqu5fYAshWhU+ZZ8RZ6bmNcbXmSNQbLD0hb4/p
+	 7R4AQrnbpVE7tekeywi5ebZxy8zIEqPhk3FmjJJCYxSvt/HmEE7nPp0G2FpicoEhHK
+	 OTHIV/DLUARh6f3oTMcuWytIzbKEQNThlN2d/vv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729747AbgHaSTf (ORCPT
+        id S1729754AbgHaSTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:19:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51898 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:19:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729003AbgHaSSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:18:10 -0400
+        id S1729531AbgHaSSJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:18:09 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0EDE21707;
+        by mail.kernel.org (Postfix) with ESMTPSA id B85A921532;
         Mon, 31 Aug 2020 18:18:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897889;
-        bh=fQELpKvWSu8GuxhvTeoiLr/q0jaGeeTwDu9BtK/GSzg=;
+        s=default; t=1598897888;
+        bh=izEuFm0CkLqGqGuRdf3iNukr6k4QThi2QPdPfv3Qaug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JNSS9nUVIswCsEdXJEUfDdS1QbQSCUWvdXfxT6GhIoG084RaCAi0WeXxeJuaWHfFd
-         IEgMScbIl4CKyxLC6EEouOhck+rqKcz1wK1bVf+sZhqkXQ5DBqbva4Dc0i5Tjtcfmn
-         J6uxNXKOeuCXRUtApOJCSKfbJ770fb3CZSFUIzEk=
+        b=CcS1arZWhZvrVD/XM0GuwQdtw/STQJh5y10qK2cSfT0vAfJY6h5qJvOnf5a602em8
+         fH79vpk5Wr0fQaPQD5CbNe+AqJGMpd433huEA0Muo4I4lYhzcl69z3/FVaYLAr1IwA
+         fO0skXu4dsnhmHH5GbiyflKZVM1Xz/heob2lMyV4=
 From:   paulmck@kernel.org
 To:     linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         kernel-team@fb.com, mingo@kernel.org
 Cc:     elver@google.com, andreyknvl@google.com, glider@google.com,
         dvyukov@google.com, cai@lca.pw, boqun.feng@gmail.com,
         "Paul E . McKenney" <paulmck@kernel.org>
-Subject: [PATCH kcsan 17/19] kcsan: Optimize debugfs stats counters
-Date:   Mon, 31 Aug 2020 11:18:03 -0700
-Message-Id: <20200831181805.1833-17-paulmck@kernel.org>
+Subject: [PATCH kcsan 16/19] kcsan: Use pr_fmt for consistency
+Date:   Mon, 31 Aug 2020 11:18:02 -0700
+Message-Id: <20200831181805.1833-16-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831181715.GA1530@paulmck-ThinkPad-P72>
 References: <20200831181715.GA1530@paulmck-ThinkPad-P72>
@@ -58,194 +58,87 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marco Elver <elver@google.com>
 
-Remove kcsan_counter_inc/dec() functions, as they perform no other
-logic, and are no longer needed.
-
-This avoids several calls in kcsan_setup_watchpoint() and
-kcsan_found_watchpoint(), as well as lets the compiler warn us about
-potential out-of-bounds accesses as the array's size is known at all
-usage sites at compile-time.
+Use the same pr_fmt throughout for consistency. [ The only exception is
+report.c, where the format must be kept precisely as-is. ]
 
 Signed-off-by: Marco Elver <elver@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/kcsan/core.c    | 22 +++++++++++-----------
- kernel/kcsan/debugfs.c | 21 +++++----------------
- kernel/kcsan/kcsan.h   | 12 ++++++------
- kernel/kcsan/report.c  |  2 +-
- 4 files changed, 23 insertions(+), 34 deletions(-)
+ kernel/kcsan/debugfs.c  | 8 +++++---
+ kernel/kcsan/selftest.c | 8 +++++---
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
-index b176400..8a1ff605 100644
---- a/kernel/kcsan/core.c
-+++ b/kernel/kcsan/core.c
-@@ -367,13 +367,13 @@ static noinline void kcsan_found_watchpoint(const volatile void *ptr,
- 		 * already removed the watchpoint, or another thread consumed
- 		 * the watchpoint before this thread.
- 		 */
--		kcsan_counter_inc(KCSAN_COUNTER_REPORT_RACES);
-+		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_REPORT_RACES]);
- 	}
- 
- 	if ((type & KCSAN_ACCESS_ASSERT) != 0)
--		kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
-+		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ASSERT_FAILURES]);
- 	else
--		kcsan_counter_inc(KCSAN_COUNTER_DATA_RACES);
-+		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_DATA_RACES]);
- 
- 	user_access_restore(flags);
- }
-@@ -414,7 +414,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		goto out;
- 
- 	if (!check_encodable((unsigned long)ptr, size)) {
--		kcsan_counter_inc(KCSAN_COUNTER_UNENCODABLE_ACCESSES);
-+		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_UNENCODABLE_ACCESSES]);
- 		goto out;
- 	}
- 
-@@ -434,12 +434,12 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		 * with which should_watch() returns true should be tweaked so
- 		 * that this case happens very rarely.
- 		 */
--		kcsan_counter_inc(KCSAN_COUNTER_NO_CAPACITY);
-+		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_NO_CAPACITY]);
- 		goto out_unlock;
- 	}
- 
--	kcsan_counter_inc(KCSAN_COUNTER_SETUP_WATCHPOINTS);
--	kcsan_counter_inc(KCSAN_COUNTER_USED_WATCHPOINTS);
-+	atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_SETUP_WATCHPOINTS]);
-+	atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_USED_WATCHPOINTS]);
- 
- 	/*
- 	 * Read the current value, to later check and infer a race if the data
-@@ -541,16 +541,16 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 		 * increment this counter.
- 		 */
- 		if (is_assert && value_change == KCSAN_VALUE_CHANGE_TRUE)
--			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
-+			atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ASSERT_FAILURES]);
- 
- 		kcsan_report(ptr, size, type, value_change, KCSAN_REPORT_RACE_SIGNAL,
- 			     watchpoint - watchpoints);
- 	} else if (value_change == KCSAN_VALUE_CHANGE_TRUE) {
- 		/* Inferring a race, since the value should not have changed. */
- 
--		kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
-+		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN]);
- 		if (is_assert)
--			kcsan_counter_inc(KCSAN_COUNTER_ASSERT_FAILURES);
-+			atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ASSERT_FAILURES]);
- 
- 		if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN) || is_assert)
- 			kcsan_report(ptr, size, type, KCSAN_VALUE_CHANGE_TRUE,
-@@ -563,7 +563,7 @@ kcsan_setup_watchpoint(const volatile void *ptr, size_t size, int type)
- 	 * reused after this point.
- 	 */
- 	remove_watchpoint(watchpoint);
--	kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
-+	atomic_long_dec(&kcsan_counters[KCSAN_COUNTER_USED_WATCHPOINTS]);
- out_unlock:
- 	if (!kcsan_interrupt_watcher)
- 		local_irq_restore(irq_flags);
 diff --git a/kernel/kcsan/debugfs.c b/kernel/kcsan/debugfs.c
-index 6c4914f..3c8093a 100644
+index de1da1b01..6c4914f 100644
 --- a/kernel/kcsan/debugfs.c
 +++ b/kernel/kcsan/debugfs.c
-@@ -17,10 +17,7 @@
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
  
- #include "kcsan.h"
++#define pr_fmt(fmt) "kcsan: " fmt
++
+ #include <linux/atomic.h>
+ #include <linux/bsearch.h>
+ #include <linux/bug.h>
+@@ -80,7 +82,7 @@ static noinline void microbenchmark(unsigned long iters)
+ 	 */
+ 	WRITE_ONCE(kcsan_enabled, false);
  
--/*
-- * Statistics counters.
-- */
--static atomic_long_t counters[KCSAN_COUNTER_COUNT];
-+atomic_long_t kcsan_counters[KCSAN_COUNTER_COUNT];
- static const char *const counter_names[] = {
- 	[KCSAN_COUNTER_USED_WATCHPOINTS]		= "used_watchpoints",
- 	[KCSAN_COUNTER_SETUP_WATCHPOINTS]		= "setup_watchpoints",
-@@ -53,16 +50,6 @@ static struct {
- };
- static DEFINE_SPINLOCK(report_filterlist_lock);
+-	pr_info("KCSAN: %s begin | iters: %lu\n", __func__, iters);
++	pr_info("%s begin | iters: %lu\n", __func__, iters);
  
--void kcsan_counter_inc(enum kcsan_counter_id id)
--{
--	atomic_long_inc(&counters[id]);
--}
--
--void kcsan_counter_dec(enum kcsan_counter_id id)
--{
--	atomic_long_dec(&counters[id]);
--}
--
- /*
-  * The microbenchmark allows benchmarking KCSAN core runtime only. To run
-  * multiple threads, pipe 'microbench=<iters>' from multiple tasks into the
-@@ -206,8 +193,10 @@ static int show_info(struct seq_file *file, void *v)
+ 	cycles = get_cycles();
+ 	while (iters--) {
+@@ -91,7 +93,7 @@ static noinline void microbenchmark(unsigned long iters)
+ 	}
+ 	cycles = get_cycles() - cycles;
  
- 	/* show stats */
- 	seq_printf(file, "enabled: %i\n", READ_ONCE(kcsan_enabled));
--	for (i = 0; i < KCSAN_COUNTER_COUNT; ++i)
--		seq_printf(file, "%s: %ld\n", counter_names[i], atomic_long_read(&counters[i]));
-+	for (i = 0; i < KCSAN_COUNTER_COUNT; ++i) {
-+		seq_printf(file, "%s: %ld\n", counter_names[i],
-+			   atomic_long_read(&kcsan_counters[i]));
-+	}
+-	pr_info("KCSAN: %s end   | cycles: %llu\n", __func__, cycles);
++	pr_info("%s end   | cycles: %llu\n", __func__, cycles);
  
- 	/* show filter functions, and filter type */
- 	spin_lock_irqsave(&report_filterlist_lock, flags);
-diff --git a/kernel/kcsan/kcsan.h b/kernel/kcsan/kcsan.h
-index 2948001..8d4bf34 100644
---- a/kernel/kcsan/kcsan.h
-+++ b/kernel/kcsan/kcsan.h
-@@ -8,6 +8,7 @@
- #ifndef _KERNEL_KCSAN_KCSAN_H
- #define _KERNEL_KCSAN_KCSAN_H
+ 	WRITE_ONCE(kcsan_enabled, was_enabled);
+ 	/* restore context */
+@@ -154,7 +156,7 @@ static ssize_t insert_report_filterlist(const char *func)
+ 	ssize_t ret = 0;
  
-+#include <linux/atomic.h>
- #include <linux/kcsan.h>
- #include <linux/sched.h>
- 
-@@ -34,6 +35,10 @@ void kcsan_restore_irqtrace(struct task_struct *task);
-  */
- void kcsan_debugfs_init(void);
- 
-+/*
-+ * Statistics counters displayed via debugfs; should only be modified in
-+ * slow-paths.
-+ */
- enum kcsan_counter_id {
- 	/*
- 	 * Number of watchpoints currently in use.
-@@ -86,12 +91,7 @@ enum kcsan_counter_id {
- 
- 	KCSAN_COUNTER_COUNT, /* number of counters */
- };
--
--/*
-- * Increment/decrement counter with given id; avoid calling these in fast-path.
-- */
--extern void kcsan_counter_inc(enum kcsan_counter_id id);
--extern void kcsan_counter_dec(enum kcsan_counter_id id);
-+extern atomic_long_t kcsan_counters[KCSAN_COUNTER_COUNT];
- 
- /*
-  * Returns true if data races in the function symbol that maps to func_addr
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index bf1d594..d3bf87e 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -559,7 +559,7 @@ static bool prepare_report_consumer(unsigned long *flags,
- 		 * If the actual accesses to not match, this was a false
- 		 * positive due to watchpoint encoding.
- 		 */
--		kcsan_counter_inc(KCSAN_COUNTER_ENCODING_FALSE_POSITIVES);
-+		atomic_long_inc(&kcsan_counters[KCSAN_COUNTER_ENCODING_FALSE_POSITIVES]);
- 		goto discard;
+ 	if (!addr) {
+-		pr_err("KCSAN: could not find function: '%s'\n", func);
++		pr_err("could not find function: '%s'\n", func);
+ 		return -ENOENT;
  	}
  
+diff --git a/kernel/kcsan/selftest.c b/kernel/kcsan/selftest.c
+index d26a052..d98bc20 100644
+--- a/kernel/kcsan/selftest.c
++++ b/kernel/kcsan/selftest.c
+@@ -1,5 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
++#define pr_fmt(fmt) "kcsan: " fmt
++
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/printk.h>
+@@ -116,16 +118,16 @@ static int __init kcsan_selftest(void)
+ 		if (do_test())                                                 \
+ 			++passed;                                              \
+ 		else                                                           \
+-			pr_err("KCSAN selftest: " #do_test " failed");         \
++			pr_err("selftest: " #do_test " failed");               \
+ 	} while (0)
+ 
+ 	RUN_TEST(test_requires);
+ 	RUN_TEST(test_encode_decode);
+ 	RUN_TEST(test_matching_access);
+ 
+-	pr_info("KCSAN selftest: %d/%d tests passed\n", passed, total);
++	pr_info("selftest: %d/%d tests passed\n", passed, total);
+ 	if (passed != total)
+-		panic("KCSAN selftests failed");
++		panic("selftests failed");
+ 	return 0;
+ }
+ postcore_initcall(kcsan_selftest);
 -- 
 2.9.5
 
