@@ -2,103 +2,115 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B726C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717DFC433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0876A2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B86D2083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:24:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="nzYqdieI"
+	dkim=pass (2048-bit key) header.d=foundries-io.20150623.gappssmtp.com header.i=@foundries-io.20150623.gappssmtp.com header.b="tHtUBwm8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbgHaPWf (ORCPT
+        id S1728352AbgHaPYJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:22:35 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:16343 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgHaPWe (ORCPT
+        Mon, 31 Aug 2020 11:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54322 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728156AbgHaPYH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:22:34 -0400
+        Mon, 31 Aug 2020 11:24:07 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A2EC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:24:05 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id a65so5766150wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 08:24:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598887354; x=1630423354;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=8LD1iy27SfR+a5xkcnYJDHeq/LsqaaSc4fApBGtzsqg=;
-  b=nzYqdieImWnpBALHub5LfumDcrRWlAeOGn36iQwMpcfa6URXdPOoG3YM
-   GceazP3QjuywmnOsPdleOo3+0bzintAelEVajoju7dImr7/rPovqb7aqD
-   xctHv6uVQbrbESUG2Ps50Y2YJHPs+ALZTmRd5U6dqVNKki7oVI6CAEKWa
-   s=;
-X-IronPort-AV: E=Sophos;i="5.76,376,1592870400"; 
-   d="scan'208";a="51220741"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2c-2225282c.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 31 Aug 2020 15:22:32 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
-        by email-inbound-relay-2c-2225282c.us-west-2.amazon.com (Postfix) with ESMTPS id 8119CA1D6F;
-        Mon, 31 Aug 2020 15:22:30 +0000 (UTC)
-Received: from EX13D31UWC002.ant.amazon.com (10.43.162.220) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 31 Aug 2020 15:22:30 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (10.43.162.135) by
- EX13D31UWC002.ant.amazon.com (10.43.162.220) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Mon, 31 Aug 2020 15:22:29 +0000
-Received: from dev-dsk-csbisa-2a-37939146.us-west-2.amazon.com (172.19.34.216)
- by mail-relay.amazon.com (10.43.162.232) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Mon, 31 Aug 2020 15:22:29 +0000
-Received: by dev-dsk-csbisa-2a-37939146.us-west-2.amazon.com (Postfix, from userid 800212)
-        id B271C263; Mon, 31 Aug 2020 15:22:29 +0000 (UTC)
-Date:   Mon, 31 Aug 2020 15:22:29 +0000
-From:   Clint Sbisa <csbisa@amazon.com>
-To:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH] arm64: Enable PCI write-combine resources under sysfs
-Message-ID: <20200831152229.vjxx3er2edznkwq3@amazon.com>
-References: <20200821155154.umharcbew46hkhuq@amazon.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200821155154.umharcbew46hkhuq@amazon.com>
+        d=foundries-io.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=dvYzGJEwlKQ4oaoHvH6x6ZwL9J6MC4fiH/79xLovz68=;
+        b=tHtUBwm8E4bgbcV6ybDffvHXUIA7ZNp7nRlJBr1IOkROnwDdqEOfA/lcXj4vJcN/hp
+         h3iqbqtZpmPRtMpbYwsh9XxBLeINWXruq8+EilFAalRX2jrUO8ERMlN8oY6sYFriOQjT
+         Mioxc290LaLX9kfWVyvZVlMS4WzqSibG6JOlKRvjdhwO+lfVOfwo9CLCSmKLd0G0pJgF
+         Ck2lcr5Su6N2dTN9O37rq5R1rhuBULGrvhZem+158d2eFtteYCClX1+oCshCoESYMOvG
+         hrJEevACtw8PYY3NK5SwFHv4KtOe4fIXzscUsd9oi94pXxNP3QpK+HFspNCZo0TYtTN+
+         24qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=dvYzGJEwlKQ4oaoHvH6x6ZwL9J6MC4fiH/79xLovz68=;
+        b=qTN/HdOg4GqiJLMNP4kYv/asHA78Paa7DT1MibMzTKn+1L3DmCB/GYxixRxmChYb/v
+         H3ftvIZDyMKOCgwZXOJMg9hzjk3woZvadSvi+2piKw2dNfq5R9XivHt5Jez64XrYWwLd
+         8ExyqHQK+AZX5A22Pns6Yp6T5hOkIqcfZh6mfhxT+vB0l0PPezUrOx/URLtglVkVDgjF
+         ltEjZIDD14eQdkQYtNiT8mIA6Mm6Z3fRKlnF2IH+8sFOHUGwLlQfqZl1OD7jyKRPcaMA
+         2db9HLTJ3F9jXGDznHZVgyloRx1nDFIhVxCokz2PVhogMIx0OkAEaeh2+uln26xqidws
+         mCIA==
+X-Gm-Message-State: AOAM531T5D5VIHEgT5g3Xi8lqfLMTLIclZ6ORgmmoR95cC9akLQnxScS
+        84PXRf1P6GfdsVcSwbwUhLM8hQ==
+X-Google-Smtp-Source: ABdhPJwuGf5Us4UjDxHn44IbwjOuU2baGp20DyJPXp8qWXqg/iwIZvy4fwgD5L08tnTEle8yrIgh+g==
+X-Received: by 2002:a1c:3584:: with SMTP id c126mr1932623wma.13.1598887443837;
+        Mon, 31 Aug 2020 08:24:03 -0700 (PDT)
+Received: from localhost.localdomain (239.red-83-34-184.dynamicip.rima-tde.net. [83.34.184.239])
+        by smtp.gmail.com with ESMTPSA id m1sm12012333wmc.28.2020.08.31.08.24.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 08:24:03 -0700 (PDT)
+From:   Jorge Ramirez-Ortiz <jorge@foundries.io>
+To:     jorge@foundries.io, jens.wiklander@linaro.org
+Cc:     sumit.garg@linaro.org, tee-dev@lists.linaro.org,
+        linux-kernel@vger.kernel.org, ricardo@foundries.io
+Subject: [PATCH] drivers: optee: fix i2c build issue
+Date:   Mon, 31 Aug 2020 17:23:59 +0200
+Message-Id: <20200831152359.9122-1-jorge@foundries.io>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 21, 2020 at 03:51:54PM +0000, Clint Sbisa wrote:
-> Using write-combine is crucial for performance of PCI devices where
-> significant amounts of transactions go over PCI BARs.
-> 
-> arm64 supports write-combine PCI mappings, so the appropriate define
-> has been added which will expose write-combine mappings under sysfs
-> for prefetchable PCI resources.
-> 
-> Signed-off-by: Clint Sbisa <csbisa@amazon.com>
-> ---
->  arch/arm64/include/asm/pci.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/include/asm/pci.h b/arch/arm64/include/asm/pci.h
-> index 70b323cf8300..b33ca260e3c9 100644
-> --- a/arch/arm64/include/asm/pci.h
-> +++ b/arch/arm64/include/asm/pci.h
-> @@ -17,6 +17,7 @@
->  #define pcibios_assign_all_busses() \
->  	(pci_has_flag(PCI_REASSIGN_ALL_BUS))
->  
-> +#define arch_can_pci_mmap_wc() 1
->  #define ARCH_GENERIC_PCI_MMAP_RESOURCE	1
->  
->  extern int isa_dma_bridge_buggy;
-> -- 
-> 2.23.3
-> 
+When the optee driver is compiled into the kernel while the i2c core
+is configured as a module, the i2c symbols are not available.
 
-Please disregard this submission, I'm resubmitting it to more appropriate
-maintainers than what was suggested by the get_maintainer script.
+This commit addresses the situation by disabling the i2c support for
+this use case while allowing it in all other scenarios:
 
-Clint
+ i2c=y, optee=y
+ i2c=m, optee=m
+ i2c=y, optee=m
+ i2c=m, optee=y (not supported)
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge@foundries.io>
+---
+
+  This patch applies on top of
+  https://git.linaro.org/people/jens.wiklander/linux-tee.git/tag/?h=optee-i2c-for-v5.10
+
+ drivers/tee/optee/rpc.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/tee/optee/rpc.c b/drivers/tee/optee/rpc.c
+index 64a206c56264..96e91d5f0a86 100644
+--- a/drivers/tee/optee/rpc.c
++++ b/drivers/tee/optee/rpc.c
+@@ -51,6 +51,7 @@ static void handle_rpc_func_cmd_get_time(struct optee_msg_arg *arg)
+ }
+ 
+ #if IS_ENABLED(CONFIG_I2C)
++#if !defined(CONFIG_I2C_MODULE) || defined(CONFIG_OPTEE_MODULE)
+ static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
+ 					     struct optee_msg_arg *arg)
+ {
+@@ -140,6 +141,7 @@ static void handle_rpc_func_cmd_i2c_transfer(struct tee_context *ctx,
+ 	arg->ret = TEEC_ERROR_NOT_SUPPORTED;
+ }
+ #endif
++#endif
+ 
+ static struct wq_entry *wq_entry_get(struct optee_wait_queue *wq, u32 key)
+ {
+-- 
+2.17.1
+
