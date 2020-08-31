@@ -4,111 +4,232 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7986FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A4E4C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D15A206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0AD42073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 11:21:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgHaLUe (ORCPT
+        id S1727046AbgHaLUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 07:20:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42226 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbgHaLIK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 07:08:10 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4209FC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 04:07:34 -0700 (PDT)
-Received: from [2a0a:edc0:0:1101:1d::39] (helo=dude03.red.stw.pengutronix.de)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1kChei-0007tZ-1h; Mon, 31 Aug 2020 13:07:20 +0200
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Cc:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de,
-        patchwork-lst@pengutronix.de
-Date:   Mon, 31 Aug 2020 13:07:19 +0200
-Message-Id: <20200831110719.2126930-1-l.stach@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:1101:1d::39
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-Subject: [PATCH] sched/deadline: Fix stale throttling on de-/boosted tasks
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on metis.ext.pengutronix.de)
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Mon, 31 Aug 2020 07:20:54 -0400
+Received: from foss.arm.com ([217.140.110.172]:56602 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726503AbgHaLFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 07:05:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D4748101E;
+        Mon, 31 Aug 2020 04:05:20 -0700 (PDT)
+Received: from e124572.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2FA233F71F;
+        Mon, 31 Aug 2020 04:05:17 -0700 (PDT)
+From:   Boyan Karatotev <boyan.karatotev@arm.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     vincenzo.frascino@arm.com, amit.kachhap@arm.com,
+        boian4o1@gmail.com, Boyan Karatotev <boyan.karatotev@arm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH v2 1/4] kselftests/arm64: add a basic Pointer Authentication test
+Date:   Mon, 31 Aug 2020 12:04:47 +0100
+Message-Id: <20200831110450.30188-2-boyan.karatotev@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200831110450.30188-1-boyan.karatotev@arm.com>
+References: <20200831110450.30188-1-boyan.karatotev@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a boosted task gets throttled, what normally happens is that it's
-immediately enqueued again with ENQUEUE_REPLENISH, which replenishes the
-runtime and clears the dl_throttled flag. There is a special case however:
-if the throttling happened on sched-out and the task has been deboosted in
-the meantime, the replenish is skipped as the task will return to its
-normal scheduling class. This leaves the task with the dl_throttled flag
-set.
+PAuth signs and verifies return addresses on the stack. It does so by
+inserting a Pointer Authentication code (PAC) into some of the unused top
+bits of an address. This is achieved by adding paciasp/autiasp instructions
+at the beginning and end of a function.
 
-Now if the task gets boosted up to the deadline scheduling class again
-while it is sleeping, it's still in the throttled state. The normal wakeup
-however will enqueue the task with ENQUEUE_REPLENISH not set, so we don't
-actually place it on the rq. Thus we end up with a task that is runnable,
-but not actually on the rq and neither a immediate replenishment happens,
-nor is the replenishment timer set up, so the task is stuck in
-forever-throttled limbo.
+This feature is partially backwards compatible with earlier versions of the
+ARM architecture. To coerce the compiler into emitting fully backwards
+compatible code the main file is compiled to target an earlier ARM version.
+This allows the tests to check for the feature and print meaningful error
+messages instead of crashing.
 
-Clear the dl_throttled flag before dropping back to the normal scheduling
-class to fix this issue.
+Add a test to verify that corrupting the return address results in a
+SIGSEGV on return.
 
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Reviewed-by: Vincenzo Frascino <Vincenzo.Frascino@arm.com>
+Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Signed-off-by: Boyan Karatotev <boyan.karatotev@arm.com>
 ---
-This is the root cause and fix of the issue described at [1]. After working
-on other stuff for the last few months, I finally was able to circle back
-to this issue and gather the required data to pinpoint the failure mode.
+ tools/testing/selftests/arm64/Makefile        |  2 +-
+ .../testing/selftests/arm64/pauth/.gitignore  |  1 +
+ tools/testing/selftests/arm64/pauth/Makefile  | 32 +++++++++++++++++
+ tools/testing/selftests/arm64/pauth/helper.h  |  9 +++++
+ tools/testing/selftests/arm64/pauth/pac.c     | 31 ++++++++++++++++
+ .../selftests/arm64/pauth/pac_corruptor.S     | 35 +++++++++++++++++++
+ 6 files changed, 109 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/arm64/pauth/.gitignore
+ create mode 100644 tools/testing/selftests/arm64/pauth/Makefile
+ create mode 100644 tools/testing/selftests/arm64/pauth/helper.h
+ create mode 100644 tools/testing/selftests/arm64/pauth/pac.c
+ create mode 100644 tools/testing/selftests/arm64/pauth/pac_corruptor.S
 
-[1] https://lkml.org/lkml/2020/3/20/765
----
- kernel/sched/deadline.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+diff --git a/tools/testing/selftests/arm64/Makefile b/tools/testing/selftests/arm64/Makefile
+index 93b567d23c8b..525506fd97b9 100644
+--- a/tools/testing/selftests/arm64/Makefile
++++ b/tools/testing/selftests/arm64/Makefile
+@@ -4,7 +4,7 @@
+ ARCH ?= $(shell uname -m 2>/dev/null || echo not)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 3862a28cd05d..c19c1883d695 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -1527,12 +1527,15 @@ static void enqueue_task_dl(struct rq *rq, struct task_struct *p, int flags)
- 		pi_se = &pi_task->dl;
- 	} else if (!dl_prio(p->normal_prio)) {
- 		/*
--		 * Special case in which we have a !SCHED_DEADLINE task
--		 * that is going to be deboosted, but exceeds its
--		 * runtime while doing so. No point in replenishing
--		 * it, as it's going to return back to its original
--		 * scheduling class after this.
-+		 * Special case in which we have a !SCHED_DEADLINE task that is going
-+		 * to be deboosted, but exceeds its runtime while doing so. No point in
-+		 * replenishing it, as it's going to return back to its original
-+		 * scheduling class after this. If it has been throttled, we need to
-+		 * clear the flag, otherwise the task may wake up as throttled after
-+		 * being boosted again with no means to replenish the runtime and clear
-+		 * the throttle.
- 		 */
-+		p->dl.dl_throttled = 0;
- 		BUG_ON(!p->dl.dl_boosted || flags != ENQUEUE_REPLENISH);
- 		return;
- 	}
--- 
-2.20.1
+ ifneq (,$(filter $(ARCH),aarch64 arm64))
+-ARM64_SUBTARGETS ?= tags signal
++ARM64_SUBTARGETS ?= tags signal pauth
+ else
+ ARM64_SUBTARGETS :=
+ endif
+diff --git a/tools/testing/selftests/arm64/pauth/.gitignore b/tools/testing/selftests/arm64/pauth/.gitignore
+new file mode 100644
+index 000000000000..b557c916720a
+--- /dev/null
++++ b/tools/testing/selftests/arm64/pauth/.gitignore
+@@ -0,0 +1 @@
++pac
+diff --git a/tools/testing/selftests/arm64/pauth/Makefile b/tools/testing/selftests/arm64/pauth/Makefile
+new file mode 100644
+index 000000000000..01d35aaa610a
+--- /dev/null
++++ b/tools/testing/selftests/arm64/pauth/Makefile
+@@ -0,0 +1,32 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2020 ARM Limited
++
++# preserve CC value from top level Makefile
++ifeq ($(CC),cc)
++CC := $(CROSS_COMPILE)gcc
++endif
++
++CFLAGS += -mbranch-protection=pac-ret
++# check if the compiler supports ARMv8.3 and branch protection with PAuth
++pauth_cc_support := $(shell if ($(CC) $(CFLAGS) -march=armv8.3-a -E -x c /dev/null -o /dev/null 2>&1) then echo "1"; fi)
++
++ifeq ($(pauth_cc_support),1)
++TEST_GEN_PROGS := pac
++TEST_GEN_FILES := pac_corruptor.o
++endif
++
++include ../../lib.mk
++
++ifeq ($(pauth_cc_support),1)
++# pac* and aut* instructions are not available on architectures berfore
++# ARMv8.3. Therefore target ARMv8.3 wherever they are used directly
++$(OUTPUT)/pac_corruptor.o: pac_corruptor.S
++	$(CC) -c $^ -o $@ $(CFLAGS) -march=armv8.3-a
++
++# when -mbranch-protection is enabled and the target architecture is ARMv8.3 or
++# greater, gcc emits pac* instructions which are not in HINT NOP space,
++# preventing the tests from occurring at all. Compile for ARMv8.2 so tests can
++# run on earlier targets and print a meaningful error messages
++$(OUTPUT)/pac: pac.c $(OUTPUT)/pac_corruptor.o
++	$(CC) $^ -o $@ $(CFLAGS) -march=armv8.2-a
++endif
+diff --git a/tools/testing/selftests/arm64/pauth/helper.h b/tools/testing/selftests/arm64/pauth/helper.h
+new file mode 100644
+index 000000000000..3e0a2a404bf4
+--- /dev/null
++++ b/tools/testing/selftests/arm64/pauth/helper.h
+@@ -0,0 +1,9 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2020 ARM Limited */
++
++#ifndef _HELPER_H_
++#define _HELPER_H_
++
++void pac_corruptor(void);
++
++#endif
+diff --git a/tools/testing/selftests/arm64/pauth/pac.c b/tools/testing/selftests/arm64/pauth/pac.c
+new file mode 100644
+index 000000000000..7fc02b02dede
+--- /dev/null
++++ b/tools/testing/selftests/arm64/pauth/pac.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0
++// Copyright (C) 2020 ARM Limited
++
++#include <sys/auxv.h>
++#include <signal.h>
++
++#include "../../kselftest_harness.h"
++#include "helper.h"
++
++/*
++ * Tests are ARMv8.3 compliant. They make no provisions for features present in
++ * future version of the arm architecture
++ */
++
++#define ASSERT_PAUTH_ENABLED() \
++do { \
++	unsigned long hwcaps = getauxval(AT_HWCAP); \
++	/* data key instructions are not in NOP space. This prevents a SIGILL */ \
++	ASSERT_NE(0, hwcaps & HWCAP_PACA) TH_LOG("PAUTH not enabled"); \
++} while (0)
++
++
++/* check that a corrupted PAC results in SIGSEGV */
++TEST_SIGNAL(corrupt_pac, SIGSEGV)
++{
++	ASSERT_PAUTH_ENABLED();
++
++	pac_corruptor();
++}
++
++TEST_HARNESS_MAIN
+diff --git a/tools/testing/selftests/arm64/pauth/pac_corruptor.S b/tools/testing/selftests/arm64/pauth/pac_corruptor.S
+new file mode 100644
+index 000000000000..0780052ac3b5
+--- /dev/null
++++ b/tools/testing/selftests/arm64/pauth/pac_corruptor.S
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2020 ARM Limited */
++
++.global pac_corruptor
++
++.text
++/*
++ * Corrupting a single bit of the PAC ensures the authentication will fail.  It
++ * also guarantees no possible collision. TCR_EL1.TBI0 is set by default so no
++ * top byte PAC is tested
++ */
++ pac_corruptor:
++	paciasp
++
++	/* make stack frame */
++	sub sp, sp, #16
++	stp x29, lr, [sp]
++	mov x29, sp
++
++	/* prepare mask for bit to be corrupted (bit 54) */
++	mov x1, xzr
++	add x1, x1, #1
++	lsl x1, x1, #54
++
++	/* get saved lr, corrupt selected bit, put it back */
++	ldr x0, [sp, #8]
++	eor x0, x0, x1
++	str x0, [sp, #8]
++
++	/* remove stack frame */
++	ldp x29, lr, [sp]
++	add sp, sp, #16
++
++	autiasp
++	ret
+--
+2.17.1
 
