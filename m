@@ -5,220 +5,388 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AFBC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFF7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBA8020719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F4A820719
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 22:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="LUekSZnL"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="tRXjVguP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgHaWtz (ORCPT
+        id S1727088AbgHaW6V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 18:49:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39814 "EHLO
+        Mon, 31 Aug 2020 18:58:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbgHaWtv (ORCPT
+        with ESMTP id S1726102AbgHaW6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 18:49:51 -0400
+        Mon, 31 Aug 2020 18:58:19 -0400
 Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91F07C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:49:50 -0700 (PDT)
-Received: by mail-qt1-x84a.google.com with SMTP id b1so7129466qto.17
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:49:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5460C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:58:18 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id f11so7151569qtj.10
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 15:58:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=lsejbdV/YJeNxRqBDrAM85EBWsJ6w6R31JBoDDcAVKw=;
-        b=LUekSZnLLaT2oDK9/2Rbz8Jd6nMzsh3bFAVy7rsATTCt3j5BD7m3SK8NzR4k8TzPg4
-         A4QruQNA71TYblk3RMNxQrbX1EyX0iEbH9KQ6Gjz1h6RvPKK3nJHba2XFy8DMSHnX3mV
-         66iLC9nQBKiCIQzJr0ctfzfUzagCWS0VQ2wASUhZnTvlZpL2hSaxUVgOl+gbFll99RBM
-         0zIqR2nkQn63dJKzdcf7WI97Ty1g33U5wrnSAaMy3T3W7vuayV6gDN1SiaoewGHzhJRA
-         I/7juz/2TsWGACUEqPTXFbh7u+AOaD41jpRBClIP3yJhvO5eknDeNS3lsrBwLXTXnaPD
-         FsFA==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=9yuYFakFBDmKFfvJnGS4AcNS4TiR3gyGoZApMAjwP/g=;
+        b=tRXjVguP0hrNNlY2FXaEb1ncVqIOktfql+pU/HwAEdK+4kSPlpZE1MKTtxTGF6KDoo
+         S+zJ0//saAPEC6mG3VwEGN07sx9LywYeX0ofFwq3NDPgPupaVFQpGzb+kESB42gtTJdw
+         fL8VAou+PGOLBuJLg0mD+t7aItpwUFe0FULssYjxWuwkXtXz/6j4cKj2u5zFAaq7WpcS
+         wG9fsWwuIsvGjnErKZyxNERknqZM1ZewRhdt1ZtAzy/CwUh4fs/enEOTW586JW5IoMG8
+         mTxq4si+xO8QtBRnI4YZYj5ZorxJKQuXN+QSyMoHemixNWz2a5svDeGOMXmODsoHu+mb
+         DrPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=lsejbdV/YJeNxRqBDrAM85EBWsJ6w6R31JBoDDcAVKw=;
-        b=aBqMgYjiG6Rht2vHWnQDxQhBaHmFpy2CzcB73eOe24VCXhFbjD/ywNGEH6DaG3q1Wb
-         a21FMSqSQBzkMBK2mGnjaI/9oe9Dy3r3Sm30nIEwv06O9VrJcx1AUGpnAmZn+GMd2tKV
-         Ht+roh1BCPcmSrYa3E1qcS8doy2S4/YJEWOlTOFHGfY0Ztwi5DaaAwNuPeYDXYWdTAEJ
-         8NNAD4Br70g3CXXBmOigJDLPoOxmIV6qSLbNZaux/jKET6QEDJui8RXtws7R75/iwyGz
-         EhYLArkMRYeoUF0UoYIW7uJRD5KpPeXE5V+Y6GAIHgFy3yoEX9Dv0/Sl0l0ECmGDoS2h
-         1FYg==
-X-Gm-Message-State: AOAM530bTqjZob82tzDNsYOoq8Qh+QjHXM6p7wuU1lHfCrP/to17Qsv3
-        W6q4p0x9lQG5YWWYxM/0TbFhm1q+
-X-Google-Smtp-Source: ABdhPJx2tAjaaQbp7takpRRLRqxo3GJGDbS49dWqYyIfWseIXB4WdFQfYMpIZlsnvs4m4RnCiQN/pefi
-X-Received: from gnomeregan.cam.corp.google.com ([2620:15c:6:14:1ea0:b8ff:fe76:1e48])
- (user=brho job=sendgmr) by 2002:a0c:ea34:: with SMTP id t20mr3387381qvp.233.1598914189559;
- Mon, 31 Aug 2020 15:49:49 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 18:49:33 -0400
-Message-Id: <20200831224933.2129891-1-brho@google.com>
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=9yuYFakFBDmKFfvJnGS4AcNS4TiR3gyGoZApMAjwP/g=;
+        b=Huktbsh5mZ9JYU8L8r2w3+WBz0yTF+KZcGO1RyGapaErw+4WkzDVFT364/XZKUzaOp
+         V4IljccdYvDSmmD8+a5OBqWj8eyxCXieUcZWZ7b/3W7FYuuZVqYMuNxsOfIrF0eNlanb
+         TOCAdlA3Ef7XZdhdcHo3w/1Ylw1gnbU3j6HEHHE9B2gTR37W82l6vYTehMRJpHJ/u0m0
+         BNB9K2gYe7U4EHU5jwmh+z4BoAuvBEo4yQkF9e6dW9fc7GOSJzTNmavOSM50j6qwgt20
+         azVCsxz9zald2fLsbd1C3F6DFsKZNEC1fYvN5XnvtzzE4LHqWuBE+vGjyYttDkQLMnfq
+         T2GA==
+X-Gm-Message-State: AOAM532xVnYwP0bkSTR5xgiet3u8nOKDFhx8WJM9wqEF8y71m6zy70xD
+        G33CTRbtEtxoSCkWZtd0h3dVeTJh
+X-Google-Smtp-Source: ABdhPJyxc9Jd08nIQ5k/+Y8tlOotxj7HurPDJvQJF/J+MMmzQUbsdJAXpUP5o3NPSLMCEm4fZrpyWzka
+X-Received: from posk.svl.corp.google.com ([2620:15c:2cd:202:7220:84ff:fe09:7598])
+ (user=posk job=sendgmr) by 2002:a0c:b626:: with SMTP id f38mr605906qve.0.1598914697381;
+ Mon, 31 Aug 2020 15:58:17 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 15:58:10 -0700
+In-Reply-To: <20200831225810.2287294-1-posk@google.com>
+Message-Id: <20200831225810.2287294-2-posk@google.com>
 Mime-Version: 1.0
+References: <20200831225810.2287294-1-posk@google.com>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [RFC PATCH] libbpf: Support setting map max_entries at runtime
-From:   Barret Rhoden <brho@google.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+Subject: [PATCH 2/2 v6] rseq/selftests: test MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ
+From:   Peter Oskolkov <posk@google.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Paul Turner <pjt@google.com>,
+        Chris Kennelly <ckennelly@google.com>,
+        Peter Oskolkov <posk@posk.io>, Peter Oskolkov <posk@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The max_entries for a BPF map may depend on runtime parameters.
-Currently, we need to know the maximum value at BPF compile time.  For
-instance, if you want an array map with NR_CPUS entries, you would hard
-code your architecture's largest value for CONFIG_NR_CPUS.  This wastes
-memory at runtime.
+Based on Google-internal RSEQ work done by
+Paul Turner and Andrew Hunter.
 
-For the NR_CPU case, one could use a PERCPU map type, but those maps are
-limited in functionality.  For instance, BPF programs can only access
-their own PERCPU part of the map, and the maps are not mmappable.
+This patch adds a selftest for MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ.
+The test quite often fails without the previous patch in this patchset,
+but consistently passes with it.
 
-This commit allows the use of sentinel values in BPF map definitions,
-which libbpf patches at runtime.
+v3: added rseq_offset_deref_addv() to x86_64 to make the test
+    more explicit; on other architectures I kept using existing
+    rseq_cmpeqv_cmpeqv_storev() as I have no easy way to test
+    there.  Added a comment explaining why the test works this way.
+v4: skipped the test if rseq_offset_deref_addv() is not present
+    (that is, on all architectures other than x86_64).
 
-For starters, we support NUM_POSSIBLE_CPUS: e.g.
-
-struct {
-        __uint(type, BPF_MAP_TYPE_ARRAY);
-        __uint(max_entries, NUM_POSSIBLE_CPUS);
-        __type(key, u32);
-        __type(value, struct cpu_data);
-} cpu_blobs SEC(".maps");
-
-This can be extended to other runtime dependent values, such as the
-maximum number of threads (/proc/sys/kernel/threads-max).
-
-Signed-off-by: Barret Rhoden <brho@google.com>
+Signed-off-by: Peter Oskolkov <posk@google.com>
 ---
- tools/lib/bpf/bpf_helpers.h |  4 ++++
- tools/lib/bpf/libbpf.c      | 40 ++++++++++++++++++++++++++++++-------
- tools/lib/bpf/libbpf.h      |  4 ++++
- 3 files changed, 41 insertions(+), 7 deletions(-)
+ .../selftests/rseq/basic_percpu_ops_test.c    | 187 ++++++++++++++++++
+ tools/testing/selftests/rseq/rseq-x86.h       |  57 ++++++
+ 2 files changed, 244 insertions(+)
 
-diff --git a/tools/lib/bpf/bpf_helpers.h b/tools/lib/bpf/bpf_helpers.h
-index f67dce2af802..38b431d85ac6 100644
---- a/tools/lib/bpf/bpf_helpers.h
-+++ b/tools/lib/bpf/bpf_helpers.h
-@@ -74,6 +74,10 @@ enum libbpf_tristate {
- 	TRI_MODULE = 2,
- };
+diff --git a/tools/testing/selftests/rseq/basic_percpu_ops_test.c b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
+index eb3f6db36d36..e6e10ba4b9ed 100644
+--- a/tools/testing/selftests/rseq/basic_percpu_ops_test.c
++++ b/tools/testing/selftests/rseq/basic_percpu_ops_test.c
+@@ -3,16 +3,24 @@
+ #include <assert.h>
+ #include <pthread.h>
+ #include <sched.h>
++#include <stdatomic.h>
+ #include <stdint.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+ #include <stddef.h>
++#include <syscall.h>
++#include <unistd.h>
  
-+enum libbpf_max_entries {
-+	NUM_POSSIBLE_CPUS = (unsigned int)-1,
-+};
+ #include "rseq.h"
+ 
+ #define ARRAY_SIZE(arr)	(sizeof(arr) / sizeof((arr)[0]))
+ 
++/* The local <linux/membarrier.h> may not contain the commands below. */
++#define MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ	(1<<7)
++#define MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ	(1<<8)
++#define MEMBARRIER_CMD_FLAG_CPU		(1<<0)
 +
- #define __kconfig __attribute__((section(".kconfig")))
- 
- #endif
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 11e4725b8b1c..7d0e9792e015 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1868,36 +1868,55 @@ resolve_func_ptr(const struct btf *btf, __u32 id, __u32 *res_id)
-  * encodes `type => BPF_MAP_TYPE_ARRAY` key/value pair completely using BTF
-  * type definition, while using only sizeof(void *) space in ELF data section.
-  */
--static bool get_map_field_int(const char *map_name, const struct btf *btf,
--			      const struct btf_member *m, __u32 *res)
-+static struct btf_array *get_map_field_arr_info(const char *map_name,
-+						const struct btf *btf,
-+						const struct btf_member *m)
- {
- 	const struct btf_type *t = skip_mods_and_typedefs(btf, m->type, NULL);
- 	const char *name = btf__name_by_offset(btf, m->name_off);
--	const struct btf_array *arr_info;
- 	const struct btf_type *arr_t;
- 
- 	if (!btf_is_ptr(t)) {
- 		pr_warn("map '%s': attr '%s': expected PTR, got %u.\n",
- 			map_name, name, btf_kind(t));
--		return false;
-+		return NULL;
- 	}
- 
- 	arr_t = btf__type_by_id(btf, t->type);
- 	if (!arr_t) {
- 		pr_warn("map '%s': attr '%s': type [%u] not found.\n",
- 			map_name, name, t->type);
--		return false;
-+		return NULL;
- 	}
- 	if (!btf_is_array(arr_t)) {
- 		pr_warn("map '%s': attr '%s': expected ARRAY, got %u.\n",
- 			map_name, name, btf_kind(arr_t));
--		return false;
-+		return NULL;
- 	}
--	arr_info = btf_array(arr_t);
-+	return btf_array(arr_t);
-+}
-+
-+static bool get_map_field_int(const char *map_name, const struct btf *btf,
-+			      const struct btf_member *m, __u32 *res)
-+{
-+	const struct btf_array *arr_info;
-+
-+	arr_info = get_map_field_arr_info(map_name, btf, m);
-+	if (arr_info == NULL)
-+		return false;
- 	*res = arr_info->nelems;
- 	return true;
+ struct percpu_lock_entry {
+ 	intptr_t v;
+ } __attribute__((aligned(128)));
+@@ -289,6 +297,183 @@ void test_percpu_list(void)
+ 	assert(sum == expected_sum);
  }
  
-+static void set_map_field_int(const char *map_name, const struct btf *btf,
-+			      const struct btf_member *m, __u32 val)
-+{
-+	struct btf_array *arr_info;
-+
-+	arr_info = get_map_field_arr_info(map_name, btf, m);
-+	arr_info->nelems = val;
-+}
-+
- static int build_map_pin_path(struct bpf_map *map, const char *path)
- {
- 	char buf[PATH_MAX];
-@@ -1951,6 +1970,13 @@ static int parse_btf_map_def(struct bpf_object *obj,
- 				return -EINVAL;
- 			pr_debug("map '%s': found max_entries = %u.\n",
- 				 map->name, map->def.max_entries);
-+			if (map->def.max_entries == NUM_POSSIBLE_CPUS) {
-+				map->def.max_entries = libbpf_num_possible_cpus();
-+				set_map_field_int(map->name, obj->btf, m,
-+						  map->def.max_entries);
-+				pr_debug("map '%s': adjusting max_entries = %u.\n",
-+					 map->name, map->def.max_entries);
-+			}
- 		} else if (strcmp(name, "map_flags") == 0) {
- 			if (!get_map_field_int(map->name, obj->btf, m,
- 					       &map->def.map_flags))
-diff --git a/tools/lib/bpf/libbpf.h b/tools/lib/bpf/libbpf.h
-index 334437af3014..42cba5bb1b04 100644
---- a/tools/lib/bpf/libbpf.h
-+++ b/tools/lib/bpf/libbpf.h
-@@ -717,6 +717,10 @@ enum libbpf_tristate {
- 	TRI_MODULE = 2,
- };
- 
-+enum libbpf_max_entries {
-+	NUM_POSSIBLE_CPUS = -1,
++struct test_membarrier_thread_args {
++	int stop;
++	intptr_t percpu_list_ptr;
 +};
 +
- #ifdef __cplusplus
- } /* extern "C" */
++/* Worker threads modify data in their "active" percpu lists. */
++void *test_membarrier_worker_thread(void *arg)
++{
++	struct test_membarrier_thread_args *args =
++		(struct test_membarrier_thread_args *)arg;
++	const int iters = 10 * 1000 * 1000;
++	int i;
++
++	if (rseq_register_current_thread()) {
++		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
++	}
++
++	/* Wait for initialization. */
++	while (!atomic_load(&args->percpu_list_ptr)) {}
++
++	for (i = 0; i < iters; ++i) {
++		int ret;
++
++		do {
++			int cpu = rseq_cpu_start();
++
++			ret = rseq_offset_deref_addv(&args->percpu_list_ptr,
++							128 * cpu, 1, cpu);
++		} while (rseq_unlikely(ret));
++	}
++
++	if (rseq_unregister_current_thread()) {
++		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
++	}
++	return NULL;
++}
++
++void test_membarrier_init_percpu_list(struct percpu_list *list)
++{
++	int i;
++
++	memset(list, 0, sizeof(*list));
++	for (i = 0; i < CPU_SETSIZE; i++) {
++		struct percpu_list_node *node;
++
++		node = malloc(sizeof(*node));
++		assert(node);
++		node->data = 0;
++		node->next = NULL;
++		list->c[i].head = node;
++	}
++}
++
++void test_membarrier_free_percpu_list(struct percpu_list *list)
++{
++	int i;
++
++	for (i = 0; i < CPU_SETSIZE; i++)
++		free(list->c[i].head);
++}
++
++static int sys_membarrier(int cmd, int flags, int cpu_id)
++{
++	return syscall(__NR_membarrier, cmd, flags, cpu_id);
++}
++
++/*
++ * The manager thread swaps per-cpu lists that worker threads see,
++ * and validates that there are no unexpected modifications.
++ */
++void *test_membarrier_manager_thread(void *arg)
++{
++	struct test_membarrier_thread_args *args =
++		(struct test_membarrier_thread_args *)arg;
++	struct percpu_list list_a, list_b;
++	intptr_t expect_a = 0, expect_b = 0;
++	int cpu_a = 0, cpu_b = 0;
++
++	if (rseq_register_current_thread()) {
++		fprintf(stderr, "Error: rseq_register_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
++	}
++
++	/* Init lists. */
++	test_membarrier_init_percpu_list(&list_a);
++	test_membarrier_init_percpu_list(&list_b);
++
++	atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
++
++	while (!atomic_load(&args->stop)) {
++		/* list_a is "active". */
++		cpu_a = rand() % CPU_SETSIZE;
++		/*
++		 * As list_b is "inactive", we should never see changes
++		 * to list_b.
++		 */
++		if (expect_b != atomic_load(&list_b.c[cpu_b].head->data)) {
++			fprintf(stderr, "Membarrier test failed\n");
++			abort();
++		}
++
++		/* Make list_b "active". */
++		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_b);
++		sys_membarrier(MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
++			       MEMBARRIER_CMD_FLAG_CPU, cpu_a);
++		/*
++		 * Cpu A should now only modify list_b, so we values
++		 * in list_a should be stable.
++		 */
++		expect_a = atomic_load(&list_a.c[cpu_a].head->data);
++
++		cpu_b = rand() % CPU_SETSIZE;
++		/*
++		 * As list_a is "inactive", we should never see changes
++		 * to list_a.
++		 */
++		if (expect_a != atomic_load(&list_a.c[cpu_a].head->data)) {
++			fprintf(stderr, "Membarrier test failed\n");
++			abort();
++		}
++
++		/* Make list_a "active". */
++		atomic_store(&args->percpu_list_ptr, (intptr_t)&list_a);
++		sys_membarrier(MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ,
++			       MEMBARRIER_CMD_FLAG_CPU, cpu_b);
++		/* Remember a value from list_b. */
++		expect_b = atomic_load(&list_b.c[cpu_b].head->data);
++	}
++
++	test_membarrier_free_percpu_list(&list_a);
++	test_membarrier_free_percpu_list(&list_b);
++
++	if (rseq_unregister_current_thread()) {
++		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
++			errno, strerror(errno));
++		abort();
++	}
++	return NULL;
++}
++
++/* Test MEMBARRIER_CMD_PRIVATE_RESTART_RSEQ_ON_CPU membarrier command. */
++void test_membarrier(void)
++{
++#ifndef RSEQ_ARCH_HAS_OFFSET_DEREF_ADDV
++	fprintf(stderr, "rseq_offset_deref_addv is not implemented on this architecture. "
++			"Skipping membarrier test.\n");
++	return;
++#else
++	struct test_membarrier_thread_args thread_args;
++	pthread_t worker_threads[CPU_SETSIZE];
++	pthread_t manager_thread;
++	int i;
++
++	sys_membarrier(MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ, 0, 0);
++
++	thread_args.stop = 0;
++	thread_args.percpu_list_ptr = 0;
++	pthread_create(&manager_thread, NULL,
++		       test_membarrier_manager_thread, &thread_args);
++
++	for (i = 0; i < CPU_SETSIZE; i++)
++		pthread_create(&worker_threads[i], NULL,
++		       test_membarrier_worker_thread, &thread_args);
++
++	for (i = 0; i < CPU_SETSIZE; i++)
++		pthread_join(worker_threads[i], NULL);
++
++	atomic_store(&thread_args.stop, 1);
++	pthread_join(manager_thread, NULL);
++#endif
++}
++
+ int main(int argc, char **argv)
+ {
+ 	if (rseq_register_current_thread()) {
+@@ -300,6 +485,8 @@ int main(int argc, char **argv)
+ 	test_percpu_spinlock();
+ 	printf("percpu_list\n");
+ 	test_percpu_list();
++	printf("membarrier\n");
++	test_membarrier();
+ 	if (rseq_unregister_current_thread()) {
+ 		fprintf(stderr, "Error: rseq_unregister_current_thread(...) failed(%d): %s\n",
+ 			errno, strerror(errno));
+diff --git a/tools/testing/selftests/rseq/rseq-x86.h b/tools/testing/selftests/rseq/rseq-x86.h
+index b2da6004fe30..640411518e46 100644
+--- a/tools/testing/selftests/rseq/rseq-x86.h
++++ b/tools/testing/selftests/rseq/rseq-x86.h
+@@ -279,6 +279,63 @@ int rseq_addv(intptr_t *v, intptr_t count, int cpu)
  #endif
+ }
+ 
++#define RSEQ_ARCH_HAS_OFFSET_DEREF_ADDV
++
++/*
++ *   pval = *(ptr+off)
++ *  *pval += inc;
++ */
++static inline __attribute__((always_inline))
++int rseq_offset_deref_addv(intptr_t *ptr, off_t off, intptr_t inc, int cpu)
++{
++	RSEQ_INJECT_C(9)
++
++	__asm__ __volatile__ goto (
++		RSEQ_ASM_DEFINE_TABLE(3, 1f, 2f, 4f) /* start, commit, abort */
++#ifdef RSEQ_COMPARE_TWICE
++		RSEQ_ASM_DEFINE_EXIT_POINT(1f, %l[error1])
++#endif
++		/* Start rseq by storing table entry pointer into rseq_cs. */
++		RSEQ_ASM_STORE_RSEQ_CS(1, 3b, RSEQ_CS_OFFSET(%[rseq_abi]))
++		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), 4f)
++		RSEQ_INJECT_ASM(3)
++#ifdef RSEQ_COMPARE_TWICE
++		RSEQ_ASM_CMP_CPU_ID(cpu_id, RSEQ_CPU_ID_OFFSET(%[rseq_abi]), %l[error1])
++#endif
++		/* get p+v */
++		"movq %[ptr], %%rbx\n\t"
++		"addq %[off], %%rbx\n\t"
++		/* get pv */
++		"movq (%%rbx), %%rcx\n\t"
++		/* *pv += inc */
++		"addq %[inc], (%%rcx)\n\t"
++		"2:\n\t"
++		RSEQ_INJECT_ASM(4)
++		RSEQ_ASM_DEFINE_ABORT(4, "", abort)
++		: /* gcc asm goto does not allow outputs */
++		: [cpu_id]		"r" (cpu),
++		  [rseq_abi]		"r" (&__rseq_abi),
++		  /* final store input */
++		  [ptr]			"m" (*ptr),
++		  [off]			"er" (off),
++		  [inc]			"er" (inc)
++		: "memory", "cc", "rax", "rbx", "rcx"
++		  RSEQ_INJECT_CLOBBER
++		: abort
++#ifdef RSEQ_COMPARE_TWICE
++		  , error1
++#endif
++	);
++	return 0;
++abort:
++	RSEQ_INJECT_FAILED
++	return -1;
++#ifdef RSEQ_COMPARE_TWICE
++error1:
++	rseq_bug("cpu_id comparison failed");
++#endif
++}
++
+ static inline __attribute__((always_inline))
+ int rseq_cmpeqv_trystorev_storev(intptr_t *v, intptr_t expect,
+ 				 intptr_t *v2, intptr_t newv2,
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
