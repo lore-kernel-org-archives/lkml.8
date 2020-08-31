@@ -2,129 +2,210 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D03C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605C4C433E7
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72E22073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:24:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598891047;
-	bh=vsrdDuWYzlRAyai5kNV5vEX7NWYYL7zK60ylR2mxyOI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ErgI2nmxC3pwzkh0lnC8qq7NBXrs+bXVNVeqCBcfZRRo2whQ3X398qHLp6OhA8mSB
-	 JtBFmvgMLzm0n2/JlQe/UKSm+OuFdoyrNBYxvjLRxDVBI7m9LStEROSq160i20yJMo
-	 sAbasVq8kqkqUFC7O/mqM1BApWsMID57io9FQ7sc=
+	by mail.kernel.org (Postfix) with ESMTP id 304672073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:25:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dpGTDal4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbgHaQYE (ORCPT
+        id S1728776AbgHaQZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:24:04 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:56248 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728491AbgHaQYA (ORCPT
+        Mon, 31 Aug 2020 12:25:27 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1678 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbgHaQZX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:24:00 -0400
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 07VGNZZ7016778;
-        Tue, 1 Sep 2020 01:23:36 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 07VGNZZ7016778
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1598891016;
-        bh=uUcsyqZDKAQ6xGbI3RAQBs3fS7e2bNwrk6S95QtzhpM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=pcUpnayMvhkZgjUY+8ns0sdwk5LzDTxIupwE5AnHDdWggN2PYDWp8ENti7+GtAKAP
-         WAEv0mnB0itqwmcwlvushikAWIre1fw1gBDOT6HLwK60PvvvRG83RajMuAUxY6Q89W
-         ppYnB9y95U95bPwWNilHW329Ib60I2M6nmbGII+5Mv8qkVu62rHCAYtezdwTlN1gHh
-         J+XTD4XZNr602qdQrd47ZOOSZQLwkiI2vwofL6FGft7QbwO8x2eadEFLK99+p6ivPr
-         CWjR+KOVt22JK78Zi9Lzi+pcK1CaXFBvOOPhx8vC6TRIqhj7zs/jeyds3QQUmtb4nz
-         GUM0qPAFxc0Wg==
-X-Nifty-SrcIP: [209.85.216.50]
-Received: by mail-pj1-f50.google.com with SMTP id ds1so59323pjb.1;
-        Mon, 31 Aug 2020 09:23:36 -0700 (PDT)
-X-Gm-Message-State: AOAM533rRduCb3QYvYq4+lTHJ6o5KGBOABuECPvZE/Ow+H3zD+sLxO0t
-        ssV19IoAolkLp90ozBQK5dn1QoA8LJ1r/akKzCU=
-X-Google-Smtp-Source: ABdhPJw/wW+HoPpD1Y0aNq5rforujMD07F9426DN8VgFqb0A2SlEH66iKtvZ23FwJAjy1Hnb08J7huAkQXXvNWjQljk=
-X-Received: by 2002:a17:902:ee0b:: with SMTP id z11mr1573839plb.268.1598891015159;
- Mon, 31 Aug 2020 09:23:35 -0700 (PDT)
+        Mon, 31 Aug 2020 12:25:23 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f4d24450003>; Mon, 31 Aug 2020 09:24:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 31 Aug 2020 09:25:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 31 Aug 2020 09:25:23 -0700
+Received: from [10.2.173.243] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 16:25:22 +0000
+Subject: Re: [PATCH v3 3/3] media: i2c: imx274: Add IMX274 power on and off
+ sequence
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <luca@lucaceresoli.net>,
+        <leonl@leopardimaging.com>, <robh+dt@kernel.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
+ <1595264494-2400-3-git-send-email-skomatineni@nvidia.com>
+ <20200731162611.GB6401@valkosipuli.retiisi.org.uk>
+ <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
+ <20200813220147.GJ840@valkosipuli.retiisi.org.uk>
+ <824ced0f-7493-9d2f-10af-5242c7997631@nvidia.com>
+Message-ID: <b4768e7a-7bde-ca39-1eea-155447d6e36d@nvidia.com>
+Date:   Mon, 31 Aug 2020 09:25:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-References: <21eddfa7-2b7c-00c4-ad5b-40878036f987@infradead.org> <f7ce291e-47be-549b-7163-0744e7ea35d5@xilinx.com>
-In-Reply-To: <f7ce291e-47be-549b-7163-0744e7ea35d5@xilinx.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 1 Sep 2020 01:22:58 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARfGY_o25mfB-QyQ5ezQW00OMPpbsN+be8LF_mojX39yA@mail.gmail.com>
-Message-ID: <CAK7LNARfGY_o25mfB-QyQ5ezQW00OMPpbsN+be8LF_mojX39yA@mail.gmail.com>
-Subject: Re: [PATCH] microblaze: fix kbuild redundant file warning
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kbuild <linux-kbuild@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <824ced0f-7493-9d2f-10af-5242c7997631@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1598891077; bh=HVhG/9k6RfZkuiazSjJbuAzH2Op2xhu+jwzeXMpO+zE=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=dpGTDal4hR8lGzCTQ4vaBw1n5kppy/FTesAFBbajLpVA8scH6iL530GaNJspcRM3I
+         mDQgGTj6gX4Sa6fIGwuMRBOtxV0qQcbqdPW6MGRzkXkfvfaE92E/J+CzD8DZ/7FyF9
+         5n9HVTXZQHWgJ1ol3hLOKYViKipm/2R7ckM9iLRRJbktT5d4UMqjJK9ykSlvzVf0eA
+         sXBixjMaxqyU5TkhX9IK2dVH0Dy38Qy3gYGqyDVZqQBuXc7+BNu6hRFEoZ8F146nWL
+         Ojqxbcv9RLnTEYGyZ+ygkt6yvweHprH61S6U6wDegFi++SBwRM4OMRN6UVkDDj9fMp
+         YcBZsBgYIQ4YA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 11:01 PM Michal Simek <michal.simek@xilinx.com> wrote:
+
+On 8/27/20 3:55 PM, Sowjanya Komatineni wrote:
 >
-> Hi,
+> On 8/13/20 3:01 PM, Sakari Ailus wrote:
+>> Hi Sowjanya,
+>>
+>> On Fri, Jul 31, 2020 at 09:34:15AM -0700, Sowjanya Komatineni wrote:
+>>> On 7/31/20 9:26 AM, Sakari Ailus wrote:
+>>>> Hi Sowjanya,
+>>>>
+>>>> Thanks for the patch.
+>>>>
+>>>> On Mon, Jul 20, 2020 at 10:01:34AM -0700, Sowjanya Komatineni wrote:
+>>>>> IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
+>>>>> and VDDL digital io 1.2V supply which are optional based on camera
+>>>>> module design.
+>>>>>
+>>>>> IMX274 also need external 24Mhz clock and is optional based on
+>>>>> camera module design.
+>>>> The sensor appears to be able to use other frequencies, too. Could you
+>>>> check in the driver the frequency is correct? This should be found=20
+>>>> in DT
+>>>> bindings, too.
+>>> External input clock is not in DT. So added it as part of this series.
+>>>
+>>> We are mostly using 24Mhz I/P with IMX274 on designs we have and=20
+>>> also on
+>>> leopard module which has onboard XTAL for 24Mhz
+>> Yes. This information still should be found in DT as the xtal isn't=20
+>> part of
+>> the sensor.
+>>
+>>>>> This patch adds support for IMX274 power on and off to enable and
+>>>>> disable these supplies and external clock.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>> =C2=A0=C2=A0 drivers/media/i2c/imx274.c | 132=20
+>>>>> +++++++++++++++++++++++++++++++++++++++++++--
+>>>>> =C2=A0=C2=A0 1 file changed, 129 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
+>>>>> index 55869ff..7157b1d 100644
+>>>>> --- a/drivers/media/i2c/imx274.c
+>>>>> +++ b/drivers/media/i2c/imx274.c
+>>>>> @@ -19,6 +19,7 @@
+>>>>> =C2=A0=C2=A0 #include <linux/module.h>
+>>>>> =C2=A0=C2=A0 #include <linux/of_gpio.h>
+>>>>> =C2=A0=C2=A0 #include <linux/regmap.h>
+>>>>> +#include <linux/regulator/consumer.h>
+>>>>> =C2=A0=C2=A0 #include <linux/slab.h>
+>>>>> =C2=A0=C2=A0 #include <linux/v4l2-mediabus.h>
+>>>>> =C2=A0=C2=A0 #include <linux/videodev2.h>
+>>>>> @@ -131,6 +132,15 @@
+>>>>> =C2=A0=C2=A0 #define IMX274_TABLE_WAIT_MS=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0
+>>>>> =C2=A0=C2=A0 #define IMX274_TABLE_END=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1
+>>>>> +/* regulator supplies */
+>>>>> +static const char * const imx274_supply_names[] =3D {
+>>>>> +=C2=A0=C2=A0=C2=A0 "VDDL",=C2=A0 /* IF (1.2V) supply */
+>>>>> +=C2=A0=C2=A0=C2=A0 "VDIG",=C2=A0 /* Digital Core (1.8V) supply */
+>>>>> +=C2=A0=C2=A0=C2=A0 "VANA",=C2=A0 /* Analog (2.8V) supply */
+>>>>> +};
+>>>>> +
+>>>>> +#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
+>>>> Please use ARRAY_SIZE() directly.
+>>>>
+>>>>> +
+>>>>> =C2=A0=C2=A0 /*
+>>>>> =C2=A0=C2=A0=C2=A0 * imx274 I2C operation related structure
+>>>>> =C2=A0=C2=A0=C2=A0 */
+>>>>> @@ -501,6 +511,8 @@ struct imx274_ctrls {
+>>>>> =C2=A0=C2=A0=C2=A0 * @frame_rate: V4L2 frame rate structure
+>>>>> =C2=A0=C2=A0=C2=A0 * @regmap: Pointer to regmap structure
+>>>>> =C2=A0=C2=A0=C2=A0 * @reset_gpio: Pointer to reset gpio
+>>>>> + * @supplies: imx274 analog and digital supplies
+>>>>> + * @inck: input clock to imx274
+>>>>> =C2=A0=C2=A0=C2=A0 * @lock: Mutex structure
+>>>>> =C2=A0=C2=A0=C2=A0 * @mode: Parameters for the selected readout mode
+>>>>> =C2=A0=C2=A0=C2=A0 */
+>>>>> @@ -514,6 +526,8 @@ struct stimx274 {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_fract frame_interval=
+;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap *regmap;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct gpio_desc *reset_gpio;
+>>>>> +=C2=A0=C2=A0=C2=A0 struct regulator *supplies[IMX274_NUM_SUPPLIES];
+>>>>> +=C2=A0=C2=A0=C2=A0 struct clk *inck;
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex lock; /* mutex lock=
+ for operations */
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct imx274_mode *mode;
+>>>>> =C2=A0=C2=A0 };
+>>>>> @@ -767,6 +781,99 @@ static void imx274_reset(struct stimx274=20
+>>>>> *priv, int rst)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 usleep_range(IMX274_RESET_DELAY1=
+, IMX274_RESET_DELAY2);
+>>>>> =C2=A0=C2=A0 }
+>>>>> +/*
+>>>>> + * imx274_power_on - Function called to power on the sensor
+>>>>> + * @imx274: Pointer to device structure
+>>>>> + */
+>>>>> +static int imx274_power_on(struct device *dev)
+>>>>> +{
+>>>>> +=C2=A0=C2=A0=C2=A0 struct i2c_client *client =3D to_i2c_client(dev);
+>>>>> +=C2=A0=C2=A0=C2=A0 struct v4l2_subdev *sd =3D i2c_get_clientdata(cli=
+ent);
+>>>>> +=C2=A0=C2=A0=C2=A0 struct stimx274 *imx274 =3D to_imx274(sd);
+>>>>> +=C2=A0=C2=A0=C2=A0 int i, ret;
+>>>>> +
+>>>>> +=C2=A0=C2=A0=C2=A0 ret =3D clk_prepare_enable(imx274->inck);
+>>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&imx274->client->=
+dev,
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "=
+Failed to enable input clock: %d\n", ret);
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>> +
+>>>> Could you use regulator_bulk_enable() instead? Same for disable.
+>>> Using regulator_bulk_enable() makes these regulators mandatory.
+>> How? regulator_bulk_enable() simply does call regulator_enable() on=20
+>> all the
+>> regulators.
+>>
+> regulator_bulk APIs uses regulator_bulk_data and so had to retrieve=20
+> regulators from DT with devm_regulator_bulk_get() which don't use=20
+> optional regulator get.
 >
-> On 28. 08. 20 20:35, Randy Dunlap wrote:
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> >
-> > Fix build warning since this file is already listed in
-> > include/asm-generic/Kbuild.
-> >
-> > ../scripts/Makefile.asm-generic:25: redundant generic-y found in arch/microblaze/include/asm/Kbuild: hw_irq.h
-> >
-> > Fixes: 7e8f54cd4e26 ("microblaze: Remove empty headers")
->
-> The patch is fine but this commit is wrong one. At that time
-> asm-generic/Kbuild didn't contain hw_irq.h as mandatory
->
-> The commit 630f289b7114c0e68519cbd634e2b7ec804ca8c5 added it.
->
-> Masahiro: Can you please check?
->
-> Thanks,
-> Michal
-
-
-
-Michal, you are right.
-
-$ git merge-base 7e8f54cd  630f289
-7e8f54cd4e2628fada942fe9ba1fc46e99e94218
-
-
-630f289 has 7e8f54cd
-as an ancestor.
-
-
-You did not do anything wrong.
-Me neither.
-Both sides submitted correct patches.
-
-
-One unfortunate thing occurred
-when 630f289 got in via akpm tree.
-
-Andrew Morton manages patches by
-quilt instead of git.
-
-He rebases patches before sending them to
-Linus in the MW, but does not check the
-rebased result.
-
-
-You can replace the tag with:
-
-Fixes: 630f289b7114 ("asm-generic: make more kernel-space headers mandatory")
-
-
--- 
-Best Regards
-Masahiro Yamada
+Sorry, please ignore my above comment. Yes, will fix in v4 to use=20
+bulk_enable()
