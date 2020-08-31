@@ -2,117 +2,132 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-16.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD282C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09602C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8B12083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897328;
-	bh=AoFABMNuUMuKavziJ+CJ7gaWS+Jxe+OMPXmajLA1ulY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HU4YKlGcpisWIrX9pZFRuU4K/usZcd7F45Yy9ypJSJvpwNcdyM0ZMsEZrEXqToQZ3
-	 Fss23C0tGQygM9hBDBV1qGcbC2hpicTj1hRwUow8W5pznfxTgrC6dA0pRnHJoQUqDZ
-	 7om9mAPWycUfcvJifqidhl/aNwry4cuLsO1qVmPQ=
+	by mail.kernel.org (Postfix) with ESMTP id D3DB02083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:08:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DTYm1SPd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729487AbgHaSI0 (ORCPT
+        id S1729334AbgHaSI5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729276AbgHaSH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 14:07:56 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 311DE2158C;
-        Mon, 31 Aug 2020 18:07:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598897274;
-        bh=AoFABMNuUMuKavziJ+CJ7gaWS+Jxe+OMPXmajLA1ulY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WXZrD7ndmQd7jEa4Ce6Z2C8dgcrrsnJZ/8Ajjbep7/Y5JVhqiVyorp+uowTqTc2Ni
-         QJlZyWGXqeh6mNk2rvB75UhdP35qtaTJQBpgmNz73q1hc4k9kunGutctxr48p+mq2r
-         3r7TdB5WRMJ2y4NafeNFLVuCunFQ8G8gON3Zz/2k=
-From:   paulmck@kernel.org
-To:     rcu@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 12/19] scftorture: Flag errors in torture-compatible manner
-Date:   Mon, 31 Aug 2020 11:07:42 -0700
-Message-Id: <20200831180749.843-12-paulmck@kernel.org>
-X-Mailer: git-send-email 2.9.5
-In-Reply-To: <20200831180731.GA582@paulmck-ThinkPad-P72>
-References: <20200831180731.GA582@paulmck-ThinkPad-P72>
+        Mon, 31 Aug 2020 14:08:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729118AbgHaSIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 14:08:55 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6D3DC061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:08:52 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a65so365743wme.5
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 11:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=PZdD3YkccjOVfF0atuAqD6nWNa6V5XxvIiUqs3VdtEk=;
+        b=DTYm1SPdGKG/SQtAldlYoFxpYjZpsl532qhv6HisDz50C8zjjFhEV6VYZYr/ZbT+YP
+         2dXuN0EArHJmyGH6Jkl1c2ql7cfM6UVizHL24w3vkUBubm2HJ1ct3QMJd4kMU+UAVlHj
+         rzaGTYp0oZXldmNTj8Xb7CpfnTFyYvOqXZwRhFpuLeLTYyTVHZ+rW4/+UFwZOpE7hyS+
+         31QOuY6UA00D7IURmMft9i+6WOx45GT/92Dl5UWgoNNppyhJ5XehPXy1wPMLE35Nh8wK
+         oiaMu8ZQSo01pCgeXrJAF+WAOxurJw9Tn+Vk7feQaXuBsocQYSjm60tLNh0K/bP3rKhW
+         MxOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=PZdD3YkccjOVfF0atuAqD6nWNa6V5XxvIiUqs3VdtEk=;
+        b=VrOrYD3Biqnj02R7SLcy3AgzdwiZ82AJGR21AHCZjhBDoYVsjO6jwKcqEtNgqCZPPy
+         M3MK8+6xxEL2d9SH7rUd+0SrixS7wlIxEPI0keOVMrqhHSNHYBLKYxPetxlpkTdxXIVi
+         m3qq1BPUe8rm80hSy24/is+kTZIkGvd7qXWzGfhEi1GmVwXyuXQfUtJWtAIycfhWx7aH
+         Ga+vVAXeOz9JlucxjyvvMsrq/yo+8n8rRbbChDvLxv/b4IjraRzE3btUnelB0/rV5D6J
+         DhNu6CsDOfVFaE/hRGp6P6s0bhoZiUwrHb0a/cU1cH5y08+Qo3lqZDHsFyBYbDU8FJbb
+         wSvQ==
+X-Gm-Message-State: AOAM5323PxhAme0hBf7MXJHYCnqYO4XVy3+uX8pYPQ20tzZdOoMr3WMk
+        FHGCV4wlZKcT5PQrbXBORE1B9w==
+X-Google-Smtp-Source: ABdhPJwSbeYkTbQaVd/c43rNwMacSmdUE9+ZmFXhzkNUOh+371xDIG9v6A+/BYEq63PSZ7ILqtj4Gw==
+X-Received: by 2002:a05:600c:22d6:: with SMTP id 22mr501445wmg.120.1598897331339;
+        Mon, 31 Aug 2020 11:08:51 -0700 (PDT)
+Received: from elver.google.com ([100.105.32.75])
+        by smtp.gmail.com with ESMTPSA id e18sm12975638wrx.50.2020.08.31.11.08.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 11:08:50 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 20:08:44 +0200
+From:   Marco Elver <elver@google.com>
+To:     SeongJae Park <sjpark@amazon.com>
+Cc:     akpm@linux-foundation.org, SeongJae Park <sjpark@amazon.de>,
+        Jonathan.Cameron@Huawei.com, aarcange@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, amit@kernel.org,
+        benh@kernel.crashing.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, david@redhat.com, dwmw@amazon.com,
+        fan.du@intel.com, foersleo@amazon.de, gthelen@google.com,
+        irogers@google.com, jolsa@redhat.com, kirill@shutemov.name,
+        mark.rutland@arm.com, mgorman@suse.de, minchan@kernel.org,
+        mingo@redhat.com, namhyung@kernel.org, peterz@infradead.org,
+        rdunlap@infradead.org, riel@surriel.com, rientjes@google.com,
+        rostedt@goodmis.org, rppt@kernel.org, sblbir@amazon.com,
+        shakeelb@google.com, shuah@kernel.org, sj38.park@gmail.com,
+        snu@amazon.de, vbabka@suse.cz, vdavydov.dev@gmail.com,
+        yang.shi@linux.alibaba.com, ying.huang@intel.com,
+        zgf574564920@gmail.com, linux-damon@amazon.com, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC v8 01/10] mm/damon/debugfs: Allow users to set initial
+ monitoring target regions
+Message-ID: <20200831180844.GA3992970@elver.google.com>
+References: <20200831104730.28970-1-sjpark@amazon.com>
+ <20200831104730.28970-2-sjpark@amazon.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831104730.28970-2-sjpark@amazon.com>
+User-Agent: Mutt/1.14.4 (2020-06-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Paul E. McKenney" <paulmck@kernel.org>
+On Mon, Aug 31, 2020 at 12:47PM +0200, SeongJae Park wrote:
+[...]
+> diff --git a/mm/damon.c b/mm/damon.c
+> index 7e3c8c82a010..9815d22fc4de 100644
+> --- a/mm/damon.c
+> +++ b/mm/damon.c
+> @@ -2001,6 +2001,147 @@ static ssize_t debugfs_record_write(struct file *file,
+>  	return ret;
+>  }
+>  
+> +static ssize_t sprint_init_regions(struct damon_ctx *c, char *buf, ssize_t len)
+> +{
+> +	struct damon_target *t;
+> +	struct damon_region *r;
+> +	int written = 0;
+> +	int rc;
+> +
+> +	damon_for_each_target(t, c) {
+> +		damon_for_each_region(r, t) {
+> +			rc = snprintf(&buf[written], len - written,
+> +					"%lu %lu %lu\n",
+> +					t->id, r->ar.start, r->ar.end);
 
-This commit prints error counts on the statistics line and also adds a
-"!!!" if any of the counters are non-zero.  Allocation failures are
-(somewhat) forgiven, but all other errors result in a "FAILURE" print
-at the end of the test.
+This most likely will not work as intended, because snprintf() returns
+"[...] the number of characters which would be generated for the given
+input, excluding the trailing null [...]". Would scnprintf() -- which
+returns "[...] the number of characters written into @buf not including
+the trailing '\0' [...]" -- do what you intended?
 
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
----
- kernel/scftorture.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/scftorture.c b/kernel/scftorture.c
-index 8ab72e5..880c2ce 100644
---- a/kernel/scftorture.c
-+++ b/kernel/scftorture.c
-@@ -132,6 +132,7 @@ static atomic_t n_mb_in_errs;
- static atomic_t n_mb_out_errs;
- static atomic_t n_alloc_errs;
- static bool scfdone;
-+static char *bangstr = "";
- 
- DEFINE_TORTURE_RANDOM_PERCPU(scf_torture_rand);
- 
-@@ -156,12 +157,17 @@ static void scf_torture_stats_print(void)
- 		scfs.n_all += scf_stats_p[i].n_all;
- 		scfs.n_all_wait += scf_stats_p[i].n_all_wait;
- 	}
--	pr_alert("%s scf_invoked_count %s: %lld single: %lld/%lld single_ofl: %lld/%lld many: %lld/%lld all: %lld/%lld ",
--		 SCFTORT_FLAG, isdone ? "VER" : "ver", invoked_count,
-+	if (atomic_read(&n_errs) || atomic_read(&n_mb_in_errs) ||
-+	    atomic_read(&n_mb_out_errs) || atomic_read(&n_alloc_errs))
-+		bangstr = "!!! ";
-+	pr_alert("%s %sscf_invoked_count %s: %lld single: %lld/%lld single_ofl: %lld/%lld many: %lld/%lld all: %lld/%lld ",
-+		 SCFTORT_FLAG, bangstr, isdone ? "VER" : "ver", invoked_count,
- 		 scfs.n_single, scfs.n_single_wait, scfs.n_single_ofl, scfs.n_single_wait_ofl,
- 		 scfs.n_many, scfs.n_many_wait, scfs.n_all, scfs.n_all_wait);
- 	torture_onoff_stats();
--	pr_cont("\n");
-+	pr_cont("ste: %d stnmie: %d stnmoe: %d staf: %d\n", atomic_read(&n_errs),
-+		atomic_read(&n_mb_in_errs), atomic_read(&n_mb_out_errs),
-+		atomic_read(&n_alloc_errs));
- }
- 
- // Periodically prints torture statistics, if periodic statistics printing
-@@ -431,7 +437,7 @@ static void scf_torture_cleanup(void)
- 	kfree(scf_stats_p);  // -After- the last stats print has completed!
- 	scf_stats_p = NULL;
- 
--	if (atomic_read(&n_errs))
-+	if (atomic_read(&n_errs) || atomic_read(&n_mb_in_errs) || atomic_read(&n_mb_out_errs))
- 		scftorture_print_module_parms("End of test: FAILURE");
- 	else if (torture_onoff_failures())
- 		scftorture_print_module_parms("End of test: LOCK_HOTPLUG");
--- 
-2.9.5
-
+> +			if (!rc)
+> +				return -ENOMEM;
+> +			written += rc;
+> +		}
+> +	}
+> +	return written;
+> +}
+[...]
