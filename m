@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39000C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C77EDC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023972064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C93A20EDD
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598888215;
-	bh=r5cRSKBQIhNHoIQhIfZua12ERWVZevFIYQnYN1GlsEs=;
+	s=default; t=1598888219;
+	bh=eDLK48bT73nERhUd4Rq9S2uiOR78bsJN6ZeA5PmgfgU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xtdl46vTqGhPXz3GFiCkxLwAHZNQdhRzyobek3HspFxIUwpqmqrZUsk1ieWNu6Mxr
-	 xWROBvNFpdTtTd5X4nvi6taTOnAvnmtR/mfVMaBYEOO6s/M0Wom3xWrtaejnMt57lf
-	 DM/BplI2X6J+6S0xcWJhbZIS1bJL7ME3JV/AUZ4k=
+	b=YYVz61kofVXki9RSM54d9Q4ov1TJFyLgLIvA0MB3doVpQQChTkIj1wDetDCuaL7mG
+	 7e5exDc5AV2pqb4SakRky/eujkMTn5V+2sziHTyp0d3xAidOZYTB3Clu0znkTO25Hf
+	 3lQr6vVXjU+iI0nVgF1zigq/t83PxNTHieGJP9z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbgHaPgv (ORCPT
+        id S1729146AbgHaPg4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:36:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40244 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:36:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbgHaPaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:35 -0400
+        id S1728666AbgHaPad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 030DB206F0;
-        Mon, 31 Aug 2020 15:30:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 801CB21527;
+        Mon, 31 Aug 2020 15:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887834;
-        bh=r5cRSKBQIhNHoIQhIfZua12ERWVZevFIYQnYN1GlsEs=;
+        s=default; t=1598887833;
+        bh=eDLK48bT73nERhUd4Rq9S2uiOR78bsJN6ZeA5PmgfgU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HphBn4hErUKQFq02FjwnJjW2Eg0WOJ3NhHcZS3EVKv/brHqAuKWo46FPtArk1BXmI
-         pXVWpxqnokQfeD6SkVL7VDdDPDNnvDpWhxwEaIOHJdRTBOiy+k/fTtZJH8fFyD2qvg
-         IAru+w4Bk5l5IDqbnVY5YIoAmNEskl72B9cIRdUU=
+        b=HmgoYRkPwwYRAvvTUCCwnUhZaBj2mRFLJOJqSL8Q5veK/IPo3xgnEliuIhutcOxMC
+         dh9WtKd8tmgWOtAylDCmrQ97KKB5+dwpIaVbEPsx4IyTQ+y+qxjrb2nMHPz5iJB96U
+         1fU+8LBd17VN5rmnp+BQDtebKOTzP+yUTZvXJ8pE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+Cc:     Wayne Lin <Wayne.Lin@amd.com>, Hersen Wu <hersenxs.wu@amd.com>,
+        Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>, amd-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.8 40/42] drm/amd/display: Fix memleak in amdgpu_dm_mode_config_init
-Date:   Mon, 31 Aug 2020 11:29:32 -0400
-Message-Id: <20200831152934.1023912-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.8 39/42] drm/amd/display: Retry AUX write when fail occurs
+Date:   Mon, 31 Aug 2020 11:29:31 -0400
+Message-Id: <20200831152934.1023912-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831152934.1023912-1-sashal@kernel.org>
 References: <20200831152934.1023912-1-sashal@kernel.org>
@@ -60,46 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Wayne Lin <Wayne.Lin@amd.com>
 
-[ Upstream commit b67a468a4ccef593cd8df6a02ba3d167b77f0c81 ]
+[ Upstream commit ef67d792a2fc578319399f605fbec2f99ecc06ea ]
 
-When amdgpu_display_modeset_create_props() fails, state and
-state->context should be freed to prevent memleak. It's the
-same when amdgpu_dm_audio_init() fails.
+[Why]
+In dm_dp_aux_transfer() now, we forget to handle AUX_WR fail cases. We
+suppose every write wil get done successfully and hence some AUX
+commands might not sent out indeed.
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+[How]
+Check if AUX_WR success. If not, retry it.
+
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+Reviewed-by: Hersen Wu <hersenxs.wu@amd.com>
+Acked-by: Rodrigo Siqueira <Rodrigo.Siqueira@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 0682fd363cb50..580c17c95a1d8 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -2822,12 +2822,18 @@ static int amdgpu_dm_mode_config_init(struct amdgpu_device *adev)
- 				    &dm_atomic_state_funcs);
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+index e5ecc5affa1eb..5098fc98cc255 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_mst_types.c
+@@ -67,7 +67,7 @@ static ssize_t dm_dp_aux_transfer(struct drm_dp_aux *aux,
+ 	result = dc_link_aux_transfer_raw(TO_DM_AUX(aux)->ddc_service, &payload,
+ 				      &operation_result);
  
- 	r = amdgpu_display_modeset_create_props(adev);
--	if (r)
-+	if (r) {
-+		dc_release_state(state->context);
-+		kfree(state);
- 		return r;
-+	}
+-	if (payload.write)
++	if (payload.write && result >= 0)
+ 		result = msg->size;
  
- 	r = amdgpu_dm_audio_init(adev);
--	if (r)
-+	if (r) {
-+		dc_release_state(state->context);
-+		kfree(state);
- 		return r;
-+	}
- 
- 	return 0;
- }
+ 	if (result < 0)
 -- 
 2.25.1
 
