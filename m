@@ -2,210 +2,154 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605C4C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:25:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8704BC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 304672073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D382073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:25:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dpGTDal4"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="McAx5p3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgHaQZ1 (ORCPT
+        id S1728797AbgHaQZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:25:27 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1678 "EHLO
+        Mon, 31 Aug 2020 12:25:33 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1688 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbgHaQZX (ORCPT
+        with ESMTP id S1728491AbgHaQZ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:25:23 -0400
+        Mon, 31 Aug 2020 12:25:26 -0400
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4d24450003>; Mon, 31 Aug 2020 09:24:37 -0700
+        id <B5f4d24480000>; Mon, 31 Aug 2020 09:24:40 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 31 Aug 2020 09:25:23 -0700
+  Mon, 31 Aug 2020 09:25:25 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 31 Aug 2020 09:25:23 -0700
-Received: from [10.2.173.243] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
- 2020 16:25:22 +0000
-Subject: Re: [PATCH v3 3/3] media: i2c: imx274: Add IMX274 power on and off
- sequence
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <frankc@nvidia.com>, <hverkuil@xs4all.nl>, <luca@lucaceresoli.net>,
-        <leonl@leopardimaging.com>, <robh+dt@kernel.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1595264494-2400-1-git-send-email-skomatineni@nvidia.com>
- <1595264494-2400-3-git-send-email-skomatineni@nvidia.com>
- <20200731162611.GB6401@valkosipuli.retiisi.org.uk>
- <b8819080-6585-c953-e7ad-9b0a10f1d821@nvidia.com>
- <20200813220147.GJ840@valkosipuli.retiisi.org.uk>
- <824ced0f-7493-9d2f-10af-5242c7997631@nvidia.com>
-Message-ID: <b4768e7a-7bde-ca39-1eea-155447d6e36d@nvidia.com>
-Date:   Mon, 31 Aug 2020 09:25:14 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        by hqpgpgate102.nvidia.com on Mon, 31 Aug 2020 09:25:25 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
+ 2020 16:25:25 +0000
+Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.103)
+ by HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Mon, 31 Aug 2020 16:25:24 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YWNm90OD8VjGJK5mpgFirZMP99hnLzlccwDptBPEx3MybOv0ono5YOPAnf2MHZdFqpQw4VrYHsUTyIEArZ30EADEMK4bDbWr1rxO1/rKWNNHEMwI1q1iQ2SQfxlPdOmU1iQwCIhb2uwWT97hPUm0qXaU6YdKXCdjSzAtpgSorFPDU2n9YpvMFn6ZhittsLhVPHEr+9EtkyBw7Z8wUkR+L52+b9nb1DW2DblWy5htm5im0VoiRNIyWMiBcnxCAPAzksFpmDqT1DKuQvNEEYymOJ43j62qxKjkE/lrLNkxZnIW0jJhw/JGBGR+kfoAPEWBifjNSUXieJm7PDegAwHVjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=g1Ha6ITHgz4BaolEOmTqqjKgSAklaA/IZ01/Sj54t0I=;
+ b=BHnlWvNJSaO2tNNstrMi+BMQc5W6W07l+qwH5rY+1mheIWWSbIb1pXrYRY0gaairK/Fj1l0f0SM6rvPIAXV1JMeOBkMwUIzZZEHToM/4vR/CL+0Kk/JI1UCLt/dkZJ6XBzv6VAOpKDs31PD30FAP9e/6q4yA2RbpQXCWQ6JY3mponmbROzh8UegHwLQoZoYjW6YeHiclXmdWMQsu+yYcIXrPYa7afKnDj97C3QbVXWgJqQUvwfx6Jrw+U8bpoB/CtBLCrbhOmwZ1DU/HgMsB6Sauv/rVmkFLUs/IAJTyMqfMGRcwFBpjis7iOFj3QhAFDJS6XSmCE6G4B2OAA9rVVg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
+ by DM6PR12MB3212.namprd12.prod.outlook.com (2603:10b6:5:186::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Mon, 31 Aug
+ 2020 16:25:23 +0000
+Received: from DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76]) by DM6PR12MB3834.namprd12.prod.outlook.com
+ ([fe80::2d79:7f96:6406:6c76%3]) with mapi id 15.20.3326.025; Mon, 31 Aug 2020
+ 16:25:23 +0000
+Date:   Mon, 31 Aug 2020 13:25:21 -0300
+From:   Jason Gunthorpe <jgg@nvidia.com>
+To:     Alex Dewar <alex.dewar90@gmail.com>
+CC:     <dennis.dalessandro@intel.com>, <dledford@redhat.com>,
+        <gustavo@embeddedor.com>, <joe@perches.com>,
+        <linux-kernel@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <mike.marciniszyn@intel.com>, <roland@purestorage.com>
+Subject: Re: [PATCH v2 1/2] IB/qib: remove superfluous fallthrough statements
+Message-ID: <20200831162521.GA673345@nvidia.com>
+References: <64d7e1c9-9c6a-93f3-ce0a-c24b1c236071@gmail.com>
+ <20200825171242.448447-1-alex.dewar90@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200825171242.448447-1-alex.dewar90@gmail.com>
+X-ClientProxiedBy: BL0PR0102CA0021.prod.exchangelabs.com
+ (2603:10b6:207:18::34) To DM6PR12MB3834.namprd12.prod.outlook.com
+ (2603:10b6:5:14a::12)
 MIME-Version: 1.0
-In-Reply-To: <824ced0f-7493-9d2f-10af-5242c7997631@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by BL0PR0102CA0021.prod.exchangelabs.com (2603:10b6:207:18::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Mon, 31 Aug 2020 16:25:22 +0000
+Received: from jgg by mlx with local (Exim 4.94)        (envelope-from <jgg@nvidia.com>)        id 1kCmcT-002pCg-6z; Mon, 31 Aug 2020 13:25:21 -0300
+X-Originating-IP: [156.34.48.30]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 69153022-af03-4b8a-9d3f-08d84dca75c7
+X-MS-TrafficTypeDiagnostic: DM6PR12MB3212:
+X-Microsoft-Antispam-PRVS: <DM6PR12MB3212D5621BBD181CD577E9DEC2510@DM6PR12MB3212.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:612;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: O9Sb5+4miueYde2vWYurMAxI74owX+q00wGtD/8x7edH3w8+Uznjs00btzmWhrcQWvzFsqJLBgO6RPEaAoIAZzHJhr+znj9aN41YJjjY3BFUFYvqctRygatdijv1/js+KUX/t05xEJP1Yb6sB9sSowwJHar9v9m45LG63FYOMuK8k6fwyqC8SYO9rrEYLCO6+VV7LvolD1Y3fQr50nsW7VZz98TEkQxp64l6GrS1N9qLwmqVbrXdwr2DdU1NWGFou0jMqnoAuvPLcDiUp7YEB9f/c8u7difjh/YD6ik83yoLPluFryefbu56mh3Jnm/8XKpHty6JKRZQXfMXY8aaXButrPENOSKYc59R6009uTPtbZjYQt6DgJvT4NnXsP+B
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(346002)(136003)(39860400002)(366004)(6916009)(478600001)(1076003)(66476007)(2616005)(66946007)(4744005)(4326008)(86362001)(8676002)(9746002)(9786002)(186003)(316002)(33656002)(66556008)(26005)(426003)(5660300002)(83380400001)(8936002)(36756003)(2906002)(27376004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 3LqkSFV8nIoBzBun0g7S/h1RUFxY81WUWHZyrUDwLMBaSS1N4dQzH1TMDkfjIMiL3UkQLyzJr0pdaJp6ziFZkMq8VLf46lWkfn2it9ukQQjMPBx9PZBxTXLtPX8SV5UyEHcXPHRDFSnae/6qcPGHyZpla5Ltls9lIv4CrBPl7fIOeuAe7n+Ucfe7PO6t9hKV1eQSbOVwQ3HTPduEXpmWsLzhjIa64Qsk4qzxMTQkFFEamGtY2lZxZaVikF0F0jLyoYq+P5MTnPQdOf2Sd6bvwxsEKbb0+3/bmwJPOh8QJj7Xa5+H0kg81F5kMRUVAszeGnRdRoQnVYoQyp9VbNRaX2ILFQu2rMXli4vjz3riLuoU5/IhvQbtT3Q8v2bZf2fiydOAW/zVfjYGfcon8cosof3Sv+EladaH/Kq7/m4J8f5cTgAXhxqRe/APdijL5+qxQkcCmBMcUkfxtyAeRNzylhtkE/SarmtS2+M/tKEyRiYbmqWq3RnkGnrAA5v4Ic2qi1a4QKeQ2gz084Z9jVufL/uPahJUYEI8dGjgGL28X3CYqfKVHPkKNolEycQq95oq8+eeByKWHs6iHi+dhXKCnIMccYDWeQEuwWWhsWzop5IYs1ImCKkxZuMYHt8zu4FD7E9hhrk7qZdnP+OBgxhrWA==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69153022-af03-4b8a-9d3f-08d84dca75c7
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Aug 2020 16:25:23.2031
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ZTh1bT7KEHESAFlXCpmw6h7sLOeoGjnK6gefIlgPrWlPT/xHqfppVv7692xNseYd
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3212
+X-OriginatorOrg: Nvidia.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598891077; bh=HVhG/9k6RfZkuiazSjJbuAzH2Op2xhu+jwzeXMpO+zE=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=dpGTDal4hR8lGzCTQ4vaBw1n5kppy/FTesAFBbajLpVA8scH6iL530GaNJspcRM3I
-         mDQgGTj6gX4Sa6fIGwuMRBOtxV0qQcbqdPW6MGRzkXkfvfaE92E/J+CzD8DZ/7FyF9
-         5n9HVTXZQHWgJ1ol3hLOKYViKipm/2R7ckM9iLRRJbktT5d4UMqjJK9ykSlvzVf0eA
-         sXBixjMaxqyU5TkhX9IK2dVH0Dy38Qy3gYGqyDVZqQBuXc7+BNu6hRFEoZ8F146nWL
-         Ojqxbcv9RLnTEYGyZ+ygkt6yvweHprH61S6U6wDegFi++SBwRM4OMRN6UVkDDj9fMp
-         YcBZsBgYIQ4YA==
+        t=1598891080; bh=g1Ha6ITHgz4BaolEOmTqqjKgSAklaA/IZ01/Sj54t0I=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
+         Subject:Message-ID:References:Content-Type:Content-Disposition:
+         In-Reply-To:X-ClientProxiedBy:MIME-Version:
+         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
+         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
+         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
+         X-MS-Oob-TLC-OOBClassifiers:X-MS-Exchange-SenderADCheck:
+         X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+         X-Forefront-Antispam-Report:X-MS-Exchange-AntiSpam-MessageData:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+         X-MS-Exchange-CrossTenant-FromEntityHeader:
+         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+         X-MS-Exchange-CrossTenant-UserPrincipalName:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
+        b=McAx5p3Uvgqvvbc4HY4ZOJmqZvu6p9tSyZU9OVjWjHtNaMHx/UgpE3Ilp0LDaEEV+
+         GkNDq+2tG8Gxz8kOX191mCwkocpbJ7fHvWASBN00qtSyv+SbuF4ZKv9mZZXz70bSih
+         6Tl3IWxpoCjc0zqIZrLLnrfuo8UImdAuiT8odYngObWMAnYTSpE3i+Hbnyz2oLwHwq
+         thq9Mj8QyTPi2J0I5Yg1D9S298BIRv/peJjTygNQBoKGp4gRu35rm1vbuCbxHrKTRN
+         mabduf1bb3XKwCnnzt6E428pLliDoHUA6TuMKjvP/zQZxt+RToizaPlsVqngtrl8jo
+         bJ8RlG2r44RxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 25, 2020 at 06:12:42PM +0100, Alex Dewar wrote:
+> Commit 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+> erroneously marked a couple of switch cases as /* FALLTHROUGH */, which
+> were later converted to fallthrough statements by commit df561f6688fe
+> ("treewide: Use fallthrough pseudo-keyword"). This triggered a Coverity
+> warning about unreachable code.
+> 
+> Remove the fallthrough statements.
+> 
+> Addresses-Coverity: ("Unreachable code")
+> Fixes: 36a8f01cd24b ("IB/qib: Add congestion control agent implementation")
+> Signed-off-by: Alex Dewar <alex.dewar90@gmail.com>
+> Reviewed-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+> ---
+> v2: Do refactoring in a separate patch (Gustavo)
+> ---
+>  drivers/infiniband/hw/qib/qib_mad.c | 2 --
+>  1 file changed, 2 deletions(-)
 
-On 8/27/20 3:55 PM, Sowjanya Komatineni wrote:
->
-> On 8/13/20 3:01 PM, Sakari Ailus wrote:
->> Hi Sowjanya,
->>
->> On Fri, Jul 31, 2020 at 09:34:15AM -0700, Sowjanya Komatineni wrote:
->>> On 7/31/20 9:26 AM, Sakari Ailus wrote:
->>>> Hi Sowjanya,
->>>>
->>>> Thanks for the patch.
->>>>
->>>> On Mon, Jul 20, 2020 at 10:01:34AM -0700, Sowjanya Komatineni wrote:
->>>>> IMX274 has VANA analog 2.8V supply, VDIG digital core 1.8V supply,
->>>>> and VDDL digital io 1.2V supply which are optional based on camera
->>>>> module design.
->>>>>
->>>>> IMX274 also need external 24Mhz clock and is optional based on
->>>>> camera module design.
->>>> The sensor appears to be able to use other frequencies, too. Could you
->>>> check in the driver the frequency is correct? This should be found=20
->>>> in DT
->>>> bindings, too.
->>> External input clock is not in DT. So added it as part of this series.
->>>
->>> We are mostly using 24Mhz I/P with IMX274 on designs we have and=20
->>> also on
->>> leopard module which has onboard XTAL for 24Mhz
->> Yes. This information still should be found in DT as the xtal isn't=20
->> part of
->> the sensor.
->>
->>>>> This patch adds support for IMX274 power on and off to enable and
->>>>> disable these supplies and external clock.
->>>>>
->>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>> ---
->>>>> =C2=A0=C2=A0 drivers/media/i2c/imx274.c | 132=20
->>>>> +++++++++++++++++++++++++++++++++++++++++++--
->>>>> =C2=A0=C2=A0 1 file changed, 129 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/drivers/media/i2c/imx274.c b/drivers/media/i2c/imx274.c
->>>>> index 55869ff..7157b1d 100644
->>>>> --- a/drivers/media/i2c/imx274.c
->>>>> +++ b/drivers/media/i2c/imx274.c
->>>>> @@ -19,6 +19,7 @@
->>>>> =C2=A0=C2=A0 #include <linux/module.h>
->>>>> =C2=A0=C2=A0 #include <linux/of_gpio.h>
->>>>> =C2=A0=C2=A0 #include <linux/regmap.h>
->>>>> +#include <linux/regulator/consumer.h>
->>>>> =C2=A0=C2=A0 #include <linux/slab.h>
->>>>> =C2=A0=C2=A0 #include <linux/v4l2-mediabus.h>
->>>>> =C2=A0=C2=A0 #include <linux/videodev2.h>
->>>>> @@ -131,6 +132,15 @@
->>>>> =C2=A0=C2=A0 #define IMX274_TABLE_WAIT_MS=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0
->>>>> =C2=A0=C2=A0 #define IMX274_TABLE_END=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1
->>>>> +/* regulator supplies */
->>>>> +static const char * const imx274_supply_names[] =3D {
->>>>> +=C2=A0=C2=A0=C2=A0 "VDDL",=C2=A0 /* IF (1.2V) supply */
->>>>> +=C2=A0=C2=A0=C2=A0 "VDIG",=C2=A0 /* Digital Core (1.8V) supply */
->>>>> +=C2=A0=C2=A0=C2=A0 "VANA",=C2=A0 /* Analog (2.8V) supply */
->>>>> +};
->>>>> +
->>>>> +#define IMX274_NUM_SUPPLIES ARRAY_SIZE(imx274_supply_names)
->>>> Please use ARRAY_SIZE() directly.
->>>>
->>>>> +
->>>>> =C2=A0=C2=A0 /*
->>>>> =C2=A0=C2=A0=C2=A0 * imx274 I2C operation related structure
->>>>> =C2=A0=C2=A0=C2=A0 */
->>>>> @@ -501,6 +511,8 @@ struct imx274_ctrls {
->>>>> =C2=A0=C2=A0=C2=A0 * @frame_rate: V4L2 frame rate structure
->>>>> =C2=A0=C2=A0=C2=A0 * @regmap: Pointer to regmap structure
->>>>> =C2=A0=C2=A0=C2=A0 * @reset_gpio: Pointer to reset gpio
->>>>> + * @supplies: imx274 analog and digital supplies
->>>>> + * @inck: input clock to imx274
->>>>> =C2=A0=C2=A0=C2=A0 * @lock: Mutex structure
->>>>> =C2=A0=C2=A0=C2=A0 * @mode: Parameters for the selected readout mode
->>>>> =C2=A0=C2=A0=C2=A0 */
->>>>> @@ -514,6 +526,8 @@ struct stimx274 {
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct v4l2_fract frame_interval=
-;
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct regmap *regmap;
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct gpio_desc *reset_gpio;
->>>>> +=C2=A0=C2=A0=C2=A0 struct regulator *supplies[IMX274_NUM_SUPPLIES];
->>>>> +=C2=A0=C2=A0=C2=A0 struct clk *inck;
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct mutex lock; /* mutex lock=
- for operations */
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const struct imx274_mode *mode;
->>>>> =C2=A0=C2=A0 };
->>>>> @@ -767,6 +781,99 @@ static void imx274_reset(struct stimx274=20
->>>>> *priv, int rst)
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 usleep_range(IMX274_RESET_DELAY1=
-, IMX274_RESET_DELAY2);
->>>>> =C2=A0=C2=A0 }
->>>>> +/*
->>>>> + * imx274_power_on - Function called to power on the sensor
->>>>> + * @imx274: Pointer to device structure
->>>>> + */
->>>>> +static int imx274_power_on(struct device *dev)
->>>>> +{
->>>>> +=C2=A0=C2=A0=C2=A0 struct i2c_client *client =3D to_i2c_client(dev);
->>>>> +=C2=A0=C2=A0=C2=A0 struct v4l2_subdev *sd =3D i2c_get_clientdata(cli=
-ent);
->>>>> +=C2=A0=C2=A0=C2=A0 struct stimx274 *imx274 =3D to_imx274(sd);
->>>>> +=C2=A0=C2=A0=C2=A0 int i, ret;
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 ret =3D clk_prepare_enable(imx274->inck);
->>>>> +=C2=A0=C2=A0=C2=A0 if (ret) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_err(&imx274->client->=
-dev,
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "=
-Failed to enable input clock: %d\n", ret);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>> Could you use regulator_bulk_enable() instead? Same for disable.
->>> Using regulator_bulk_enable() makes these regulators mandatory.
->> How? regulator_bulk_enable() simply does call regulator_enable() on=20
->> all the
->> regulators.
->>
-> regulator_bulk APIs uses regulator_bulk_data and so had to retrieve=20
-> regulators from DT with devm_regulator_bulk_get() which don't use=20
-> optional regulator get.
->
-Sorry, please ignore my above comment. Yes, will fix in v4 to use=20
-bulk_enable()
+Both applied to for-next, thanks
+
+Jason
