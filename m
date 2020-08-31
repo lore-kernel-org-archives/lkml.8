@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17902C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6873AC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E94C2214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 393FD214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 15:31:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598887866;
-	bh=7kggAtYaeM4k5CsWqpNQSPTgP1ACBAj2QxNoizFutYg=;
+	s=default; t=1598887869;
+	bh=6ABlp9+wcVdx81zzzjvzeQsU7AAr4YpLoxK1KXLo8P0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xk8UpxyxMTPkZGyp8JEJ1CrNlepyC3pIPXm2IP2U2EJ3TYWCPd5wzBt9q+zyktvfr
-	 1zjcV3hl8w7nKhInZ+yNnqSGXQ+CnSpJwfY2R1H6AYrltjiutcaN7asEn8ze5HVbZO
-	 Uw7NUWN8LBYipAVsQjGG606kqiNt2LWEYZQPIOKA=
+	b=Hcm3Ov++m+eZhmtjE4kpJB2wIMHVgg4weJ3MBdGD2mjbVqpwTicuabwtzLylijq1t
+	 A1Id5+0ayRpi2/j56iVa8RQxwsPNoXurPTXggsx3fGJ3laf6/EneylrrAvjUotaXHn
+	 61WjT3t6GWrF3F2mPM3eCjegwiyRecrIh9/lkFck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728258AbgHaPbE (ORCPT
+        id S1728802AbgHaPbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 11:31:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40788 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 11:31:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbgHaPau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 11:30:50 -0400
+        id S1728758AbgHaPa5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 11:30:57 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 842E221548;
-        Mon, 31 Aug 2020 15:30:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A78E20FC3;
+        Mon, 31 Aug 2020 15:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598887849;
-        bh=7kggAtYaeM4k5CsWqpNQSPTgP1ACBAj2QxNoizFutYg=;
+        s=default; t=1598887856;
+        bh=6ABlp9+wcVdx81zzzjvzeQsU7AAr4YpLoxK1KXLo8P0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmyKNEdT74oBM4bnTy7DeYA6EVFn+quwt7Alhve7wwSvqKEIvSAK3Uu7aeJbRXUiW
-         6cvWovftHzx897qDJTbBPGsv51/p9k7TB2bWyk6uEje9dwlAyeD5ddmqevfQVr7erD
-         KHeJIjx3k30nHGUdLulx6xKXfVpHiZxjCQlWxJGI=
+        b=r6/0r0HxVyKxvwoD7ex3yuXngBIDL3JTwxzGW9ryXLB7EZn8kW2k0osKLGQfbmYEx
+         lRJ7fAGGup8g6jDI997pxzirtE8qgnLMAL4G8f9HOLgwefS9IvocP1/OP2wpybU5fO
+         eDcUrevpg2+FEmX/9bwWmZ5/qx/enSUEbJ/tTqQs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Saravana Kannan <saravanak@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Ofir Bitton <obitton@habana.ai>,
+        Oded Gabbay <oded.gabbay@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 05/23] tty: serial: qcom_geni_serial: Drop __init from qcom_geni_console_setup
-Date:   Mon, 31 Aug 2020 11:30:21 -0400
-Message-Id: <20200831153039.1024302-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 10/23] habanalabs: validate FW file size
+Date:   Mon, 31 Aug 2020 11:30:26 -0400
+Message-Id: <20200831153039.1024302-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200831153039.1024302-1-sashal@kernel.org>
 References: <20200831153039.1024302-1-sashal@kernel.org>
@@ -66,111 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+From: Ofir Bitton <obitton@habana.ai>
 
-[ Upstream commit 975efc66d4e654207c17f939eb737ac591ac38fe ]
+[ Upstream commit bce382a8bb080ed5f2f3a06754526dc58b91cca2 ]
 
-When booting with heavily modularized config, the serial console
-may not be able to load until after init when modules that
-satisfy needed dependencies have time to load.
+We must validate FW size in order not to corrupt memory in case
+a malicious FW file will be present in system.
 
-Unfortunately, as qcom_geni_console_setup is marked as __init,
-the function may have been freed before we get to run it,
-causing boot time crashes such as:
-
-[    6.469057] Unable to handle kernel paging request at virtual address ffffffe645d4e6cc
-[    6.481623] Mem abort info:
-[    6.484466]   ESR = 0x86000007
-[    6.487557]   EC = 0x21: IABT (current EL), IL = 32 bits
-[    6.492929]   SET = 0, FnV = 0g
-[    6.496016]   EA = 0, S1PTW = 0
-[    6.499202] swapper pgtable: 4k pages, 39-bit VAs, pgdp=000000008151e000
-[    6.501286] ufshcd-qcom 1d84000.ufshc: ufshcd_print_pwr_info:[RX, TX]: gear=[3, 3], lane[2, 2], pwr[FAST MODE, FAST MODE], rate = 2
-[    6.505977] [ffffffe645d4e6cc] pgd=000000017df9f003, p4d=000000017df9f003, pud=000000017df9f003, pmd=000000017df9c003, pte=0000000000000000
-[    6.505990] Internal error: Oops: 86000007 [#1] PREEMPT SMP
-[    6.505995] Modules linked in: zl10353 zl10039 zl10036 zd1301_demod xc5000 xc4000 ves1x93 ves1820 tuner_xc2028 tuner_simple tuner_types tua9001 tua6100 1
-[    6.506152]  isl6405
-[    6.518104] ufshcd-qcom 1d84000.ufshc: ufshcd_find_max_sup_active_icc_level: Regulator capability was not set, actvIccLevel=0
-[    6.530549]  horus3a helene fc2580 fc0013 fc0012 fc0011 ec100 e4000 dvb_pll ds3000 drxk drxd drx39xyj dib9000 dib8000 dib7000p dib7000m dib3000mc dibx003
-[    6.624271] CPU: 7 PID: 148 Comm: kworker/7:2 Tainted: G        W       5.8.0-mainline-12021-g6defd37ba1cd #3455
-[    6.624273] Hardware name: Thundercomm Dragonboard 845c (DT)
-[    6.624290] Workqueue: events deferred_probe_work_func
-[    6.624296] pstate: 40c00005 (nZcv daif +PAN +UAO BTYPE=--)
-[    6.624307] pc : qcom_geni_console_setup+0x0/0x110
-[    6.624316] lr : try_enable_new_console+0xa0/0x140
-[    6.624318] sp : ffffffc010843a30
-[    6.624320] x29: ffffffc010843a30 x28: ffffffe645c3e7d0
-[    6.624325] x27: ffffff80f8022180 x26: ffffffc010843b28
-[    6.637937] x25: 0000000000000000 x24: ffffffe6462a2000
-[    6.637941] x23: ffffffe646398000 x22: 0000000000000000
-[    6.637945] x21: 0000000000000000 x20: ffffffe6462a5ce8
-[    6.637952] x19: ffffffe646398e38 x18: ffffffffffffffff
-[    6.680296] x17: 0000000000000000 x16: ffffffe64492b900
-[    6.680300] x15: ffffffe6461e9d08 x14: 69202930203d2064
-[    6.680305] x13: 7561625f65736162 x12: 202c363331203d20
-[    6.696434] x11: 0000000000000030 x10: 0101010101010101
-[    6.696438] x9 : 4d4d20746120304d x8 : 7f7f7f7f7f7f7f7f
-[    6.707249] x7 : feff4c524c787373 x6 : 0000000000008080
-[    6.707253] x5 : 0000000000000000 x4 : 8080000000000000
-[    6.707257] x3 : 0000000000000000 x2 : ffffffe645d4e6cc
-[    6.744223] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-[    6.744966] x1 : fffffffefe74e174 x0 : ffffffe6462a5ce8
-[    6.753580] qcom_geni_serial 898000.serial: dev_pm_opp_set_rate: failed to find OPP for freq 102400000 (-34)
-[    6.761634] Call trace:
-[    6.761639]  qcom_geni_console_setup+0x0/0x110
-[    6.761645]  register_console+0x29c/0x2f8
-[    6.767981] Bluetooth: hci0: Frame reassembly failed (-84)
-[    6.775252]  uart_add_one_port+0x438/0x500
-[    6.775258]  qcom_geni_serial_probe+0x2c4/0x4a8
-[    6.775266]  platform_drv_probe+0x58/0xa8
-[    6.855359]  really_probe+0xec/0x398
-[    6.855362]  driver_probe_device+0x5c/0xb8
-[    6.855367]  __device_attach_driver+0x98/0xb8
-[    7.184945]  bus_for_each_drv+0x74/0xd8
-[    7.188825]  __device_attach+0xec/0x148
-[    7.192705]  device_initial_probe+0x24/0x30
-[    7.196937]  bus_probe_device+0x9c/0xa8
-[    7.200816]  deferred_probe_work_func+0x7c/0xb8
-[    7.205398]  process_one_work+0x20c/0x4b0
-[    7.209456]  worker_thread+0x48/0x460
-[    7.213157]  kthread+0x14c/0x158
-[    7.216432]  ret_from_fork+0x10/0x18
-[    7.220049] Code: bad PC value
-[    7.223139] ---[ end trace 73f3b21e251d5a70 ]---
-
-Thus this patch removes the __init avoiding crash in such
-configs.
-
-Cc: Andy Gross <agross@kernel.org>
-Cc: Jiri Slaby <jirislaby@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-serial@vger.kernel.org
-Suggested-by: Saravana Kannan <saravanak@google.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Link: https://lore.kernel.org/r/20200811025044.70626-1-john.stultz@linaro.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ofir Bitton <obitton@habana.ai>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/qcom_geni_serial.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/habanalabs/firmware_if.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
-index f98a79172ad23..0b184256034fb 100644
---- a/drivers/tty/serial/qcom_geni_serial.c
-+++ b/drivers/tty/serial/qcom_geni_serial.c
-@@ -1063,7 +1063,7 @@ static unsigned int qcom_geni_serial_tx_empty(struct uart_port *uport)
- }
+diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
+index ea2ca67fbfbfa..153858475abc1 100644
+--- a/drivers/misc/habanalabs/firmware_if.c
++++ b/drivers/misc/habanalabs/firmware_if.c
+@@ -11,6 +11,7 @@
+ #include <linux/genalloc.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
  
- #ifdef CONFIG_SERIAL_QCOM_GENI_CONSOLE
--static int __init qcom_geni_console_setup(struct console *co, char *options)
-+static int qcom_geni_console_setup(struct console *co, char *options)
- {
- 	struct uart_port *uport;
- 	struct qcom_geni_serial_port *port;
++#define FW_FILE_MAX_SIZE	0x1400000 /* maximum size of 20MB */
+ /**
+  * hl_fw_push_fw_to_device() - Push FW code to device.
+  * @hdev: pointer to hl_device structure.
+@@ -43,6 +44,14 @@ int hl_fw_push_fw_to_device(struct hl_device *hdev, const char *fw_name,
+ 
+ 	dev_dbg(hdev->dev, "%s firmware size == %zu\n", fw_name, fw_size);
+ 
++	if (fw_size > FW_FILE_MAX_SIZE) {
++		dev_err(hdev->dev,
++			"FW file size %zu exceeds maximum of %u bytes\n",
++			fw_size, FW_FILE_MAX_SIZE);
++		rc = -EINVAL;
++		goto out;
++	}
++
+ 	fw_data = (const u64 *) fw->data;
+ 
+ 	memcpy_toio(dst, fw_data, fw_size);
 -- 
 2.25.1
 
