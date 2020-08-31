@@ -8,21 +8,21 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=BAYES_00,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9221EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A927AC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2A120782
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D1920782
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:11:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="S4hEnlQL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L3EE61tX"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kYK6WQus";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jLKj6mdU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727034AbgHaBL2 (ORCPT
+        id S1727002AbgHaBLY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:11:28 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:57824 "EHLO
+        Sun, 30 Aug 2020 21:11:24 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:57844 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgHaBLF (ORCPT
+        with ESMTP id S1726695AbgHaBLF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 30 Aug 2020 21:11:05 -0400
 From:   John Ogness <john.ogness@linutronix.de>
@@ -32,21 +32,21 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8CyQ36olm1OV0ZzLx2j1lTX3Kj6oeTfR0IqC4W8J5eo=;
-        b=S4hEnlQLBxmdovC6aS1ROgbm1/LuwM9fwPCDvNnaXBaBr46eKFgRhL2VkTYiZG36rsPJhU
-        A9bXG0LUa0dCNj3d8bsyQ/i4jHyQ0Qzi5atPGuIGA7HOIbSWVu0ctwNa5ERpfKTgZxR5MJ
-        v0o4Kz1Mxton10xaDF7BW26MLJQ2N4g9MUw7cTeQqgrIOKUmWxm5cIoI+z6vn5TMDOWvKi
-        +dqwFiZKWNQtHf3idr3kTgVF0UE2sEuPgifPsUK6vSf6pzw68veiNhbeVv96kmdFd5Paqo
-        OAU3wqSPnz+Nwc2qxuYbhsMPo14hWVnTJGweJJDtHElgRZ5BnFgMSkz6wtc7+g==
+        bh=neNIyeqixbmc4iI91QgdbnxFUzdVIo+Wg/5VPzEIeg8=;
+        b=kYK6WQus7uHm57T37PVN4qJIJUJxXPMOVh2u/9uzhAEw+3JCsOf+GvaSFDiT7UCsqpID+T
+        Ml9gVr4LpTlxwpKZqj2rfZLd2HP3wyVNxJQScX5UtSgM/5gCt6LWyB/0AdNU/L5o+oC4Rh
+        zOx1SgmDV6pcL0x6uIkpcgSl1qo9UzuR1tC28AVokLQSx1RsDk8+a8B/hcV9sT05t8g00u
+        FUwfDpXqMsjnaxUZ+/jKngELzSv+5kmr0AjtlktQNw39J5GDe1gtNUdOQZqDXjtYpo0d40
+        KgDtFXdT3Q9bOEZ1htLkuA+9gggx9UP6ibIGFaiSJjN4EUCnKQ2OLiQLZtxElg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
         s=2020e; t=1598836263;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=8CyQ36olm1OV0ZzLx2j1lTX3Kj6oeTfR0IqC4W8J5eo=;
-        b=L3EE61tXi9S9x07bBTdpMi5moXglvrn8FeOf28PbPXja0ESmgYHSHTvRgGiX8UEz8KYKqh
-        vKOQOMlG9TjmexBg==
+        bh=neNIyeqixbmc4iI91QgdbnxFUzdVIo+Wg/5VPzEIeg8=;
+        b=jLKj6mdU1rDQMbXwaTcxOxgj9MOHyqHnVRE5fC/arnvV6W+0XfmC3ZUGK/ZPYEYwq5ImbF
+        duE//Ly0SKvl3OBg==
 To:     Petr Mladek <pmladek@suse.com>
 Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
@@ -58,9 +58,9 @@ Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Andrea Parri <parri.andrea@gmail.com>,
         Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH next v3 7/8] printk: reimplement log_cont using record extension
-Date:   Mon, 31 Aug 2020 03:16:57 +0206
-Message-Id: <20200831011058.6286-8-john.ogness@linutronix.de>
+Subject: [PATCH next v3 8/8] scripts/gdb: support printk finalized records
+Date:   Mon, 31 Aug 2020 03:16:58 +0206
+Message-Id: <20200831011058.6286-9-john.ogness@linutronix.de>
 In-Reply-To: <20200831011058.6286-1-john.ogness@linutronix.de>
 References: <20200831011058.6286-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -70,143 +70,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the record extending feature of the ringbuffer to implement
-continuous messages. This preserves the existing continuous message
-behavior.
+With commit ("printk: ringbuffer: add finalization/extension support")
+a new state bit for finalized records was added. This not only changed
+the bit representation of committed records, but also reduced the size
+for record IDs.
+
+Update the gdb scripts to correctly interpret the state variable.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/printk.c | 98 +++++++++---------------------------------
- 1 file changed, 20 insertions(+), 78 deletions(-)
+ Documentation/admin-guide/kdump/gdbmacros.txt | 10 +++++++---
+ scripts/gdb/linux/dmesg.py                    | 10 ++++++----
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 7e7d596c8878..d0b2bea1fd81 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -535,7 +535,10 @@ static int log_store(u32 caller_id, int facility, int level,
- 	r.info->caller_id = caller_id;
+diff --git a/Documentation/admin-guide/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
+index 7adece30237e..bcb78368b381 100644
+--- a/Documentation/admin-guide/kdump/gdbmacros.txt
++++ b/Documentation/admin-guide/kdump/gdbmacros.txt
+@@ -295,8 +295,11 @@ document dump_record
+ end
  
- 	/* insert message */
--	prb_commit(&e);
-+	if ((flags & LOG_CONT) || !(flags & LOG_NEWLINE))
-+		prb_commit(&e);
-+	else
-+		prb_final_commit(&e);
+ define dmesg
+-	set var $desc_committed = 1UL << ((sizeof(long) * 8) - 1)
+-	set var $flags_mask = 3UL << ((sizeof(long) * 8) - 2)
++	# definitions from kernel/printk/printk_ringbuffer.h
++	set var $desc_commit = 1UL << ((sizeof(long) * 8) - 1)
++	set var $desc_final = 1UL << ((sizeof(long) * 8) - 2)
++	set var $desc_reuse = 1UL << ((sizeof(long) * 8) - 3)
++	set var $flags_mask = $desc_commit | $desc_final | $desc_reuse
+ 	set var $id_mask = ~$flags_mask
  
- 	return (text_len + trunc_msg_len);
- }
-@@ -1093,7 +1096,7 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
- 	dest_r.info->ts_nsec = r->info->ts_nsec;
- 	dest_r.info->caller_id = r->info->caller_id;
+ 	set var $desc_count = 1U << prb->desc_ring.count_bits
+@@ -309,7 +312,8 @@ define dmesg
+ 		set var $desc = &prb->desc_ring.descs[$id % $desc_count]
  
--	prb_commit(&e);
-+	prb_final_commit(&e);
+ 		# skip non-committed record
+-		if (($desc->state_var.counter & $flags_mask) == $desc_committed)
++		# (note that commit+!final records will be displayed)
++		if (($desc->state_var.counter & $desc_commit) == $desc_commit)
+ 			dump_record $desc $prev_flags
+ 			set var $prev_flags = $desc->info.flags
+ 		end
+diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
+index 6c6022012ea8..367523c5c270 100644
+--- a/scripts/gdb/linux/dmesg.py
++++ b/scripts/gdb/linux/dmesg.py
+@@ -79,9 +79,10 @@ class LxDmesg(gdb.Command):
  
- 	return prb_record_text_space(&e);
- }
-@@ -1893,87 +1896,26 @@ static inline u32 printk_caller_id(void)
- 		0x80000000 + raw_smp_processor_id();
- }
+         # definitions from kernel/printk/printk_ringbuffer.h
+         desc_sv_bits = utils.get_long_type().sizeof * 8
+-        desc_committed_mask = 1 << (desc_sv_bits - 1)
+-        desc_reuse_mask = 1 << (desc_sv_bits - 2)
+-        desc_flags_mask = desc_committed_mask | desc_reuse_mask
++        desc_commit_mask = 1 << (desc_sv_bits - 1)
++        desc_final_mask = 1 << (desc_sv_bits - 2)
++        desc_reuse_mask = 1 << (desc_sv_bits - 3)
++        desc_flags_mask = desc_commit_mask | desc_final_mask | desc_reuse_mask
+         desc_id_mask = ~desc_flags_mask
  
--/*
-- * Continuation lines are buffered, and not committed to the record buffer
-- * until the line is complete, or a race forces it. The line fragments
-- * though, are printed immediately to the consoles to ensure everything has
-- * reached the console in case of a kernel crash.
-- */
--static struct cont {
--	char buf[LOG_LINE_MAX];
--	size_t len;			/* length == 0 means unused buffer */
--	u32 caller_id;			/* printk_caller_id() of first print */
--	u64 ts_nsec;			/* time of first print */
--	u8 level;			/* log level of first message */
--	u8 facility;			/* log facility of first message */
--	enum log_flags flags;		/* prefix, newline flags */
--} cont;
--
--static void cont_flush(void)
--{
--	if (cont.len == 0)
--		return;
--
--	log_store(cont.caller_id, cont.facility, cont.level, cont.flags,
--		  cont.ts_nsec, NULL, 0, cont.buf, cont.len);
--	cont.len = 0;
--}
--
--static bool cont_add(u32 caller_id, int facility, int level,
--		     enum log_flags flags, const char *text, size_t len)
--{
--	/* If the line gets too long, split it up in separate records. */
--	if (cont.len + len > sizeof(cont.buf)) {
--		cont_flush();
--		return false;
--	}
--
--	if (!cont.len) {
--		cont.facility = facility;
--		cont.level = level;
--		cont.caller_id = caller_id;
--		cont.ts_nsec = local_clock();
--		cont.flags = flags;
--	}
--
--	memcpy(cont.buf + cont.len, text, len);
--	cont.len += len;
--
--	// The original flags come from the first line,
--	// but later continuations can add a newline.
--	if (flags & LOG_NEWLINE) {
--		cont.flags |= LOG_NEWLINE;
--		cont_flush();
--	}
--
--	return true;
--}
--
- static size_t log_output(int facility, int level, enum log_flags lflags, const char *dict, size_t dictlen, char *text, size_t text_len)
- {
- 	const u32 caller_id = printk_caller_id();
+         # read in tail and head descriptor ids
+@@ -96,8 +97,9 @@ class LxDmesg(gdb.Command):
+             desc_off = desc_sz * ind
  
--	/*
--	 * If an earlier line was buffered, and we're a continuation
--	 * write from the same context, try to add it to the buffer.
--	 */
--	if (cont.len) {
--		if (cont.caller_id == caller_id && (lflags & LOG_CONT)) {
--			if (cont_add(caller_id, facility, level, lflags, text, text_len))
--				return text_len;
--		}
--		/* Otherwise, make sure it's flushed */
--		cont_flush();
--	}
--
--	/* Skip empty continuation lines that couldn't be added - they just flush */
--	if (!text_len && (lflags & LOG_CONT))
--		return 0;
--
--	/* If it doesn't end in a newline, try to buffer the current line */
--	if (!(lflags & LOG_NEWLINE)) {
--		if (cont_add(caller_id, facility, level, lflags, text, text_len))
-+	if (lflags & LOG_CONT) {
-+		struct prb_reserved_entry e;
-+		struct printk_record r;
-+
-+		prb_rec_init_wr(&r, text_len, 0);
-+		if (prb_reserve_in_last(&e, prb, &r, caller_id)) {
-+			memcpy(&r.text_buf[r.info->text_len], text, text_len);
-+			r.info->text_len += text_len;
-+			if (lflags & LOG_NEWLINE) {
-+				r.info->flags |= LOG_NEWLINE;
-+				prb_final_commit(&e);
-+			} else {
-+				prb_commit(&e);
-+			}
- 			return text_len;
-+		}
- 	}
- 
- 	/* Store it in the record log */
+             # skip non-committed record
++            # (note that commit+!final records will be displayed)
+             state = utils.read_u64(descs, desc_off + sv_off + counter_off) & desc_flags_mask
+-            if state != desc_committed_mask:
++            if state & desc_commit_mask != desc_commit_mask:
+                 if did == head_id:
+                     break
+                 did = (did + 1) & desc_id_mask
 -- 
 2.20.1
 
