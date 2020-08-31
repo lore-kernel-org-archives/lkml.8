@@ -2,165 +2,178 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614FAC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F068FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3244A206E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C113C20707
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 13:16:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bc/XIaUM"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="dTwUQ/Jk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgHaNNe (ORCPT
+        id S1726946AbgHaNQm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 09:13:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726515AbgHaNNS (ORCPT
+        Mon, 31 Aug 2020 09:16:42 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:56582 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726359AbgHaNQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 09:13:18 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93693C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 06:12:58 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c15so3474629lfi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 06:12:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2ciTA6uMUrkdw0DiQy92AHLmokEL0/SHTSQBqrxd/0g=;
-        b=bc/XIaUM/sXaX5cfvs4s9Q8j4AY3FCdVMGe0yfwu4jyocWRsUrPnOr8YRY6H2PofBb
-         MpIF9at/ZHXTwvisoewlZHrWr61kpcZGDTrNETb8dUSeJiZEHa1V4gyykMkAadWvYiei
-         sHs16F7KZ+zj9mA9N1GN25okbhoWmUgAGAE/bszczun5GNlcFBvzCVVo0nFiP7b9pmq8
-         pEDq7UjQKpeHw3dAo9MXLdnDebsSIUAcRQ5Qre38y6XYbev+uQKJd1SwcmVgNJP9bIEi
-         HpJVCIsPZfmpERBwWeeMJnjJA5AULicS3THvs9SF6BJnHJ+dyRCdUX68ub379lMnYA0r
-         /EEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2ciTA6uMUrkdw0DiQy92AHLmokEL0/SHTSQBqrxd/0g=;
-        b=FPN2Giov5U68ATOQ1v0bCzBo4sr6GIzEDOoBC0OcbWTHBaZUeqd3I8MfzYgtukxqCw
-         07EX8mBiyToNdFXryJLqmTBpVlFNH90Myoi1O5tEMd0CDmn0fsaDm1BcIiRCJ5e0jfyF
-         lJAwz/zQiPx4wQgnJnsF2vc6KtI+bcqcPPNqkhJgY2E4EL7tMDWFEyvOIkXGizMk2O5/
-         R5cExrQBrdj8wzvrz1q+hXX1KMwuTN47RmV7U0tTEtcw1ueMNaSTANfPT4m2Xbhg5R+4
-         2QMehKNXKLrCzs/TCar37R8com0ChN2MFNlN45lMJzK3HCttfD0+swlfl5ApsiIlX9BM
-         bZFA==
-X-Gm-Message-State: AOAM532/ooT3iB2fyTwu2pUF/ta7+BKftFmVsMcibxaX9ZonCvnjsEMn
-        JsYn2lZ8gh5xCzvqB+Mh303+IzBCr6wD4X1MXEVRMA==
-X-Google-Smtp-Source: ABdhPJwQLPzRtTyVRsFoweIHejouO+iz7to7m7sfFDsxCjZBXKeuIUGjeJFjaS/3sM2Xc7BznVK8Z5SRDOzAe2q3dfA=
-X-Received: by 2002:a19:418a:: with SMTP id o132mr691360lfa.63.1598879576685;
- Mon, 31 Aug 2020 06:12:56 -0700 (PDT)
+        Mon, 31 Aug 2020 09:16:32 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200831131628euoutp02a673f9578fae151056d42a0f29b39d1b~wXLJedtc_2105821058euoutp020
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200831131628euoutp02a673f9578fae151056d42a0f29b39d1b~wXLJedtc_2105821058euoutp020
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1598879788;
+        bh=5VQ0Ar29Dvuafq8sMDFtn4rGRbW1P19RvUszVW2Ec1A=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=dTwUQ/JkRXBxHOFulehLhcgMXUVy0RGP8+byRuH5t6A9wSUl8bRgO4R4i55EN2fb6
+         KqsDn+qCaH7pEyEyojszZHXvCY0zZ7R6vOu5Ts+8wk+xMqvtjtnNUdHyzuU+Mcp+aW
+         3b1pnxdbmIyobj6DEJE6KeiU+b9V9DcGLhp6Npyo=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200831131628eucas1p277df1c0fea3c0b4fdf6e106475f96a73~wXLJN9vsB0220302203eucas1p2B;
+        Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 11.EF.06318.C28FC4F5; Mon, 31
+        Aug 2020 14:16:28 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200831131628eucas1p2dbece80673d9a44929084210e658cec8~wXLIuj0Yd0809408094eucas1p22;
+        Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200831131628eusmtrp2f70555b54e2d2b57096f50034829b142~wXLItwQz43092430924eusmtrp2M;
+        Mon, 31 Aug 2020 13:16:28 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-3b-5f4cf82c7f32
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5B.55.06314.B28FC4F5; Mon, 31
+        Aug 2020 14:16:28 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200831131627eusmtip2e48c554bfffbc613fc4269af62a5878a~wXLH77e450534905349eusmtip2p;
+        Mon, 31 Aug 2020 13:16:27 +0000 (GMT)
+Subject: Re: [RFT 3/4] nfc: s3fwrn5: Remove wrong vendor prefix from GPIOs
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Opasiak <k.opasiak@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nfc@lists.01.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <b97ec4e0-fd78-d605-a22b-310426803429@samsung.com>
+Date:   Mon, 31 Aug 2020 15:16:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200829020002.GC3265@brightrain.aerifal.cx> <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
- <20200830163657.GD3265@brightrain.aerifal.cx> <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
- <20200830184334.GE3265@brightrain.aerifal.cx> <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
- <20200830200029.GF3265@brightrain.aerifal.cx> <CAG48ez2tOBAKLaX-siRZPCLiiy-s65w2mFGDGr4q2S7WFxpK1A@mail.gmail.com>
- <20200831014633.GJ3265@brightrain.aerifal.cx> <CAG48ez0aKz8wedhNsW0CWk70-tUu8tmnOE4Yi4Cv5=uLghestA@mail.gmail.com>
- <20200831125707.GM3265@brightrain.aerifal.cx>
-In-Reply-To: <20200831125707.GM3265@brightrain.aerifal.cx>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 31 Aug 2020 15:12:30 +0200
-Message-ID: <CAG48ez2wO-SeF+xydymGtuaBq9a4-cZkNucXSbkOvyYPUfE2gQ@mail.gmail.com>
-Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-To:     Rich Felker <dalias@libc.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200829142948.32365-3-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTYRzl27279261cd1Sf5QUjRKKmoUGN3pH0JQFEYUQpS29U8tZ7Kpl
+        //Swh62XWZSulUsKH5CP65wPdKDIRprOXFia0UOXqY0KtYdpj3m1/O+c3/edc37n46MwRY94
+        PpWUksoaU3TJKkKK250/2leu+K6NXeV6tpipyC0TM89HB8SMxX0WZ/Kb28VMzutsnHl5/RbB
+        XOsbxhi3u5xkOuxXxQzf1yVmPHUWgrGUV5JMrtshYpzWIOZcQzPJXPAOYptpja24W6ThSy4S
+        mkt3fuGaygcnNVdtJUgzwi/cSeyVro9nk5PSWWPYxgPSxJY8B3G0UX78Su1P8hT6MceEKAro
+        CHiRpTAhKaWgixBcOe3DBTKKoJmvwQQygiC/q0tkQpIpRX2LhxAOChH8buhBAvmE4N4bm8jv
+        q6SjgH8i8c/n0XcxsGXbMb8ao0sRZPLRfkzQq8HkMxF+LKM3Qof95VQCTi+FpzeGpnAgHQPO
+        lne4cCcAHuf1T2EJvQZeVxWRguciqPZZpv2Doac/X+QPBnqShHoXTwprb4OBsVdIwEoYctmm
+        5yHwu3ZGkIngbfsjUiCXEXjO5E4r1kFv+zjhr4bRy6CsLkx4vS1wv26BAOXwwhcg7CCHHPtt
+        TBjLIOu8QvAIBbOr9F9qY0cnlo1U5lnNzLPamGe1Mf+PtSK8BAWzaZwhgeXCU9hjak5n4NJS
+        EtRxRww8+vvjWn+5xmqQY+JgE6IppJorK/qqjVWIdelchqEJAYWp5sm2trXGKGTxuowTrPFI
+        rDEtmeWa0AIKVwXLwgsG9yvoBF0qe5hlj7LGmVMRJZl/CkXqt5/uZsOViXtalOota5Vy146x
+        xwMLy6yfhjM8edXuzPfRWl/O57UR3d3l/c47uzN6P1jA6vRE9AVG7oquqljSOuYZybp5sSrE
+        q43iQ+MKAvVq776aL+dH9MWTiakhG9Q3Td64j/ri3tFCXjL+hXMEtT3clIAiD32f6JT3f1Ph
+        XKJu9XLMyOn+AEssu9htAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrHIsWRmVeSWpSXmKPExsVy+t/xe7o6P3ziDR4+ZrTYOGM9q8X1L89Z
+        Leacb2GxmH/kHKvFpPsTWCxuT5zGZtH/+DWzxfnzG9gtLmzrY7XY9Pgaq8XlXXPYLOZs2Mxu
+        MeP8PiaLYwvELFr3HmG3aH/6ktlBwGPLyptMHptWdbJ5dM/+x+KxeUm9R9+WVYwenzfJBbBF
+        6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GWcmrmP
+        reAgX0Xvzt/sDYw/ubsYOTkkBEwk9py6zNbFyMUhJLCUUeLfkjlsEAkZiZPTGlghbGGJP9e6
+        oIreMkocuHULyOHgEBbwkth0hhOkRkRgPrPEgcOKIDXMAusYJV5vbmKFaNjMKNG//CYzSBWb
+        gKFE19susA28AnYSF7bdZgKxWQRUJS5OfgVmiwrESZzpeQFVIyhxcuYTFhCbU8BU4v7WFewg
+        NrOAmcS8zQ+ZIWx5ie1v50DZ4hK3nsxnmsAoNAtJ+ywkLbOQtMxC0rKAkWUVo0hqaXFuem6x
+        oV5xYm5xaV66XnJ+7iZGYFxvO/Zz8w7GSxuDDzEKcDAq8fAGfPGJF2JNLCuuzD3EKMHBrCTC
+        63T2dJwQb0piZVVqUX58UWlOavEhRlOg5yYyS4km5wNTTl5JvKGpobmFpaG5sbmxmYWSOG+H
+        wMEYIYH0xJLU7NTUgtQimD4mDk6pBsY46Vu3prk0Hylwe5RUuV/xj8oWt42TJ8SZ/J708nlf
+        fGv3Yfnq87/8f9nvUPL+dC2PJT4tdD7nJNd7HoLHau8v0t3UXtqgZxSQqX++qn3pRS6bObkG
+        RWu4GOZ9rjW6dfpvyWPnEtVwfmOn528DjsUlp61YHPlvv6lTjsaHhdpfORbO2WUSVa7EUpyR
+        aKjFXFScCAARjbxVAQMAAA==
+X-CMS-MailID: 20200831131628eucas1p2dbece80673d9a44929084210e658cec8
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200829143008eucas1p11c924e666bcd7561c787755ea0a0ccb0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200829143008eucas1p11c924e666bcd7561c787755ea0a0ccb0
+References: <20200829142948.32365-1-krzk@kernel.org>
+        <CGME20200829143008eucas1p11c924e666bcd7561c787755ea0a0ccb0@eucas1p1.samsung.com>
+        <20200829142948.32365-3-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 2:57 PM Rich Felker <dalias@libc.org> wrote:
-> On Mon, Aug 31, 2020 at 11:15:57AM +0200, Jann Horn wrote:
-> > On Mon, Aug 31, 2020 at 3:46 AM Rich Felker <dalias@libc.org> wrote:
-> > > On Mon, Aug 31, 2020 at 03:15:04AM +0200, Jann Horn wrote:
-> > > > On Sun, Aug 30, 2020 at 10:00 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > On Sun, Aug 30, 2020 at 09:02:31PM +0200, Jann Horn wrote:
-> > > > > > On Sun, Aug 30, 2020 at 8:43 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > > > On Sun, Aug 30, 2020 at 08:31:36PM +0200, Jann Horn wrote:
-> > > > > > > > On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > > > > > So just checking IS_APPEND in the code paths used by
-> > > > > > > > > pwritev2 (and erroring out rather than silently writing output at the
-> > > > > > > > > wrong place) should suffice to preserve all existing security
-> > > > > > > > > invariants.
-> > > > > > > >
-> > > > > > > > Makes sense.
-> > > > > > >
-> > > > > > > There are 3 places where kiocb_set_rw_flags is called with flags that
-> > > > > > > seem to be controlled by userspace: aio.c, io_uring.c, and
-> > > > > > > read_write.c. Presumably each needs to EPERM out on RWF_NOAPPEND if
-> > > > > > > the underlying inode is S_APPEND. To avoid repeating the same logic in
-> > > > > > > an error-prone way, should kiocb_set_rw_flags's signature be updated
-> > > > > > > to take the filp so that it can obtain the inode and check IS_APPEND
-> > > > > > > before accepting RWF_NOAPPEND? It's inline so this should avoid
-> > > > > > > actually loading anything except in the codepath where
-> > > > > > > flags&RWF_NOAPPEND is nonzero.
-> > > > > >
-> > > > > > You can get the file pointer from ki->ki_filp. See the RWF_NOWAIT
-> > > > > > branch of kiocb_set_rw_flags().
-> > > > >
-> > > > > Thanks. I should have looked for that. OK, so a fixup like this on top
-> > > > > of the existing patch?
-> > > > >
-> > > > > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > > > > index 473289bff4c6..674131e8d139 100644
-> > > > > --- a/include/linux/fs.h
-> > > > > +++ b/include/linux/fs.h
-> > > > > @@ -3457,8 +3457,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
-> > > > >                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
-> > > > >         if (flags & RWF_APPEND)
-> > > > >                 ki->ki_flags |= IOCB_APPEND;
-> > > > > -       if (flags & RWF_NOAPPEND)
-> > > > > +       if (flags & RWF_NOAPPEND) {
-> > > > > +               if (IS_APPEND(file_inode(ki->ki_filp)))
-> > > > > +                       return -EPERM;
-> > > > >                 ki->ki_flags &= ~IOCB_APPEND;
-> > > > > +       }
-> > > > >         return 0;
-> > > > >  }
-> > > > >
-> > > > > If this is good I'll submit a v2 as the above squashed with the
-> > > > > original patch.
-> > > >
-> > > > Looks good to me.
-> > >
-> > > Actually it's not quite. I think it should be:
-> > >
-> > >         if ((flags & RWF_NOAPPEND) & (ki->ki_flags & IOCB_APPEND)) {
-> > >                 if (IS_APPEND(file_inode(ki->ki_filp)))
-> > >                         return -EPERM;
-> > >                 ki->ki_flags &= ~IOCB_APPEND;
-> > >         }
-> > >
-> > > i.e. don't refuse RWF_NOAPPEND on a file that was already successfully
-> > > opened without O_APPEND that only subsequently got chattr +a. The
-> > > permission check should only be done if it's overriding the default
-> > > action for how the file is open.
-> > >
-> > > This is actually related to the fcntl corner case mentioned before.
-[...]
-> While reparing this I rebased against Linus's tree, and found
-> conflicts with 1752f0adea98ef85 which were easy to resolve.
-> Unfortunately the same improvement made in that commit does not work
-> for the new RWF_NOAPPEND, since it needs to inspect and mask bits off
-> the original ki_flags, not the local set of added flags, but the
-> penalty should be isolated to this branch. I'm not opposed to adding
-> unlikely() around it if you think that would help codegen for the
-> common cases.
->
-> Alternatively, kiocb_flags could be initialized to ki->ki_flags, with
-> assignment-back in place of |= at the end of the function. This might
-> be more elegant but I'm not sure if the emitted code would improve.
 
-Presumably RWF_NOAPPEND would be somewhat rare, and a simple
-comparison and not-taken branch should be really cheap? I'm not really
-concerned about it. I guess you can CC the author of that patch on
-your v2.
+On 29.08.2020 16:29, Krzysztof Kozlowski wrote:
+> The device tree property prefix describes the vendor, which in case of
+> S3FWRN5 chip is Samsung.  Therefore the "s3fwrn5" prefix for "en-gpios"
+> and "fw-gpios" is not correct and should be deprecated.  Introduce
+> properly named properties for these GPIOs but still support deprecated
+> ones.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>   drivers/nfc/s3fwrn5/i2c.c | 20 ++++++++++++++------
+>   1 file changed, 14 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/nfc/s3fwrn5/i2c.c b/drivers/nfc/s3fwrn5/i2c.c
+> index b4eb926d220a..557279492503 100644
+> --- a/drivers/nfc/s3fwrn5/i2c.c
+> +++ b/drivers/nfc/s3fwrn5/i2c.c
+> @@ -200,13 +200,21 @@ static int s3fwrn5_i2c_parse_dt(struct i2c_client *client)
+>   	if (!np)
+>   		return -ENODEV;
+>   
+> -	phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
+> -	if (!gpio_is_valid(phy->gpio_en))
+> -		return -ENODEV;
+> +	phy->gpio_en = of_get_named_gpio(np, "en-gpios", 0);
+> +	if (!gpio_is_valid(phy->gpio_en)) {
+> +		/* Support also deprecated property */
+> +		phy->gpio_en = of_get_named_gpio(np, "s3fwrn5,en-gpios", 0);
+> +		if (!gpio_is_valid(phy->gpio_en))
+> +			return -ENODEV;
+> +	}
+>   
+> -	phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
+> -	if (!gpio_is_valid(phy->gpio_fw_wake))
+> -		return -ENODEV;
+> +	phy->gpio_fw_wake = of_get_named_gpio(np, "wake-gpios", 0);
+> +	if (!gpio_is_valid(phy->gpio_fw_wake)) {
+> +		/* Support also deprecated property */
+> +		phy->gpio_fw_wake = of_get_named_gpio(np, "s3fwrn5,fw-gpios", 0);
+> +		if (!gpio_is_valid(phy->gpio_fw_wake))
+> +			return -ENODEV;
+> +	}
+>   
+>   	return 0;
+>   }
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
