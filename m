@@ -2,122 +2,94 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B46E7C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E02C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85522208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1315208A9
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 20:38:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WojcGWlL"
+	dkim=pass (2048-bit key) header.d=me.com header.i=@me.com header.b="O4LFdDLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728697AbgHaUhe (ORCPT
+        id S1728752AbgHaUiJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 16:37:34 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:19271 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbgHaUhd (ORCPT
+        Mon, 31 Aug 2020 16:38:09 -0400
+Received: from st43p00im-ztfb10063301.me.com ([17.58.63.179]:36528 "EHLO
+        st43p00im-ztfb10063301.me.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726167AbgHaUiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 16:37:33 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4d5f7e0005>; Mon, 31 Aug 2020 13:37:18 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 31 Aug 2020 13:37:32 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 31 Aug 2020 13:37:32 -0700
-Received: from [10.2.173.243] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 31 Aug
- 2020 20:37:31 +0000
-Subject: Re: [PATCH v4 3/4] dt-bindings: media: imx274: Move clock and
- supplies to required properties
-To:     Sakari Ailus <sakari.ailus@iki.fi>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <hverkuil@xs4all.nl>, <luca@lucaceresoli.net>,
-        <leonl@leopardimaging.com>, <robh+dt@kernel.org>,
-        <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1598903558-9691-1-git-send-email-skomatineni@nvidia.com>
- <1598903558-9691-4-git-send-email-skomatineni@nvidia.com>
- <20200831201757.GC844@valkosipuli.retiisi.org.uk>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <5c341ed9-6077-e935-de50-ff9f5f17edcf@nvidia.com>
-Date:   Mon, 31 Aug 2020 13:37:21 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200831201757.GC844@valkosipuli.retiisi.org.uk>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598906238; bh=H1WH+m4HtI2EGHXBWwRjqqQ+z0hMsWiIPo2ajT3gcbE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=WojcGWlL0gJPIaerKq14GWOlTI6hEKPE7hOSVI16rTPCBz853XZLSJwbodlvTOyAA
-         B4JUVKeLKd1elrlCvVGI1NpAtQoUOAAbdLzwLkf39tjSQHWhdhtDjTFsKOttS2tGeF
-         dTjKUyD9UCLCrSWZush3W6vcN/bncG+JMPYJQW0Z0/+ZRdavBw6LIdhEGARwpL0kap
-         R/Pd6M5ZOdIAnnu9gop7tDgiwwAKNPSserDMrrI0UNJntMIp+ZEtbhGOtBQC4DynWp
-         JPdP/Nf/NuhjI/4oXgLPrW0I1YQL8skv/3AkeU/cGdE3QecHfAYZ18HiRlSLZZJ51d
-         JkGZM8HDE25IA==
+        Mon, 31 Aug 2020 16:38:08 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=me.com; s=1a1hai;
+        t=1598906286; bh=XxL3oI7OiD9bAadRpAo7Tb0keHieFRkDTCWwJZ6GaXk=;
+        h=From:To:Subject:Date:Message-Id;
+        b=O4LFdDLKXb3JAY1a1/RMuFGJ+jU08k95AsR8Mj3CxnUzA9oFzBLgt7eMt5bA2RuyJ
+         U2dh/4KNT4ZWCwVNV27GfChZmrkOS9kQGwD8ThYIdxDk/F/t8wJ/RMH7szYZ0A4b2I
+         58sWtm4BVEkapTCFJrn0QKfFdGWPAVdGQZuVbBa7sHMNW2HjmaCtdXT9DynNZo+il8
+         acEHIRl+r8y5HXBvbxjb3I2VMX/vvA+LK3+bAi+K4G6cGtWLbWSAFm8GwTQPdw9Zq6
+         6pR7uAAq0j8/ZiaOYMiF4+Aczjw2BTe1OIDcB+qJKPAHKNj18mtCRRzqJgNo2crrVR
+         EU4I16AiibBtw==
+Received: from localhost (101.220.150.77.rev.sfr.net [77.150.220.101])
+        by st43p00im-ztfb10063301.me.com (Postfix) with ESMTPSA id 78BFCA4040C;
+        Mon, 31 Aug 2020 20:38:06 +0000 (UTC)
+From:   Alain Volmat <avolmat@me.com>
+To:     Patrice Chotard <patrice.chotard@st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     avolmat@me.com
+Subject: [PATCH] reset: sti: reset-syscfg: fix struct description warnings
+Date:   Mon, 31 Aug 2020 22:38:04 +0200
+Message-Id: <20200831203804.6568-1-avolmat@me.com>
+X-Mailer: git-send-email 2.17.1
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-08-31_09:2020-08-31,2020-08-31 signatures=0
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 mlxscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-2006250000 definitions=main-2008310120
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Fix formating of struct description to avoid warning highlighted
+by W=1 compilation.
 
-On 8/31/20 1:17 PM, Sakari Ailus wrote:
-> Hi Sowjanya,
->
-> On Mon, Aug 31, 2020 at 12:52:37PM -0700, Sowjanya Komatineni wrote:
->> Clock and supplies are external to IMX274 sensor and are dependent
->> on camera module design.
->>
->> So, this patch moves them to required properties.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>   Documentation/devicetree/bindings/media/i2c/imx274.txt | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/imx274.txt b/Documentation/devicetree/bindings/media/i2c/imx274.txt
->> index d0a5c899..b43bed6 100644
->> --- a/Documentation/devicetree/bindings/media/i2c/imx274.txt
->> +++ b/Documentation/devicetree/bindings/media/i2c/imx274.txt
->> @@ -10,15 +10,15 @@ at 1440 Mbps.
->>   Required Properties:
->>   - compatible: value should be "sony,imx274" for imx274 sensor
->>   - reg: I2C bus address of the device
->> -
->> -Optional Properties:
->> -- reset-gpios: Sensor reset GPIO
->>   - clocks: Reference to the input clock.
->>   - clock-names: Should be "inck".
->>   - vana-supply: Sensor 2.8v analog supply.
->>   - vdig-supply: Sensor 1.8v digital core supply.
->>   - vddl-supply: Sensor digital IO 1.2v supply.
-> If these have been optional in the past I don't think we can start
-> requiring them now.
->
-> The framework will just give the driver a dummy regulator if one isn't
-> found.
-These were added recently with my patches. So I hope should be ok to 
-make them required as they are external to sensor
->
->>   
->> +Optional Properties:
->> +- reset-gpios: Sensor reset GPIO
->> +
->>   The imx274 device node should contain one 'port' child node with
->>   an 'endpoint' subnode. For further reading on port node refer to
->>   Documentation/devicetree/bindings/media/video-interfaces.txt.
+Fixes: e5d76075d930 ("drivers: reset: STi SoC system configuration reset controller support")
+Signed-off-by: Alain Volmat <avolmat@me.com>
+---
+ drivers/reset/sti/reset-syscfg.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/reset/sti/reset-syscfg.c b/drivers/reset/sti/reset-syscfg.c
+index 91215bb88f62..99b63035fe72 100644
+--- a/drivers/reset/sti/reset-syscfg.c
++++ b/drivers/reset/sti/reset-syscfg.c
+@@ -17,7 +17,7 @@
+ #include "reset-syscfg.h"
+ 
+ /**
+- * Reset channel regmap configuration
++ * struct syscfg_reset_channel - Reset channel regmap configuration
+  *
+  * @reset: regmap field for the channel's reset bit.
+  * @ack: regmap field for the channel's ack bit (optional).
+@@ -28,8 +28,9 @@ struct syscfg_reset_channel {
+ };
+ 
+ /**
+- * A reset controller which groups together a set of related reset bits, which
+- * may be located in different system configuration registers.
++ * struct syscfg_reset_controller - A reset controller which groups together
++ * a set of related reset bits, which may be located in different system
++ * configuration registers.
+  *
+  * @rst: base reset controller structure.
+  * @active_low: are the resets in this controller active low, i.e. clearing
+-- 
+2.17.1
+
