@@ -2,299 +2,93 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC4FC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816ABC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7742C20936
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563AE2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 16:22:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="r0z/QkjZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728714AbgHaQTx (ORCPT
+        id S1728715AbgHaQW0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 12:19:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45890 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728404AbgHaQTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 12:19:22 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 85518AEA5;
-        Mon, 31 Aug 2020 16:19:19 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Nilesh Javali <njavali@marvell.com>,
-        Martin Wilck <mwilck@suse.com>, Daniel Wagner <dwagner@suse.de>
-Subject: [PATCH v2 3/4] qla2xxx: Drop unused function argument from qla2x00_get_sp_from_handle()
-Date:   Mon, 31 Aug 2020 18:18:53 +0200
-Message-Id: <20200831161854.70879-4-dwagner@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200831161854.70879-1-dwagner@suse.de>
-References: <20200831161854.70879-1-dwagner@suse.de>
+        Mon, 31 Aug 2020 12:22:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35046 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727991AbgHaQWU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 12:22:20 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5359EC061755;
+        Mon, 31 Aug 2020 09:22:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=nXWPA5uglIyw8NOR1fui+EZFOlSP7Ta11J/zRDiIoHQ=; b=r0z/QkjZivPkrJCb7f+L9zwh5f
+        4IIa7un7mz+f/CQjuSWhwrAdcZMXXoHqcR6Phcf/CP76ypP+QG9wiTuVUfQXopIFdiGp0jtGoZt8/
+        6m2Eh9A1MvSTxBCbsCqMHE741aRCdqNxiwjIaDorsX+5hViH7DeqxTsiYWT4JaNomcOSEZWXQ7j8X
+        fS3G/Rtd5dxtEV3Yv8oPU1A5fSI46Ku4JIcQsV4Kmg77QypKwMh7Ah2sYYPQcZZsj7gFXewTa3auv
+        Ci0WctbP67UG57shPTjLezNWGZGM5IpgDY6d+ybCtPfiNBMMaiHYppvaqS0WXOJzdf3JKL5UO87pN
+        N8it1++w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCmZ6-0006jC-IA; Mon, 31 Aug 2020 16:21:52 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 97F91300F7A;
+        Mon, 31 Aug 2020 18:21:50 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 81A8B203A64B1; Mon, 31 Aug 2020 18:21:50 +0200 (CEST)
+Date:   Mon, 31 Aug 2020 18:21:50 +0200
+From:   peterz@infradead.org
+To:     albert.linde@gmail.com
+Cc:     akpm@linux-foundation.org, bp@alien8.de, mingo@redhat.com,
+        corbet@lwn.net, tglx@linutronix.de, arnd@arndb.de,
+        akinobu.mita@gmail.com, hpa@zytor.com, viro@zeniv.linux.org.uk,
+        glider@google.com, andreyknvl@google.com, dvyukov@google.com,
+        elver@google.com, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, Albert van der Linde <alinde@google.com>
+Subject: Re: [PATCH v2 2/3] lib, uaccess: add failure injection to usercopy
+ functions
+Message-ID: <20200831162150.GR1362448@hirez.programming.kicks-ass.net>
+References: <20200828141344.2277088-1-alinde@google.com>
+ <20200828141344.2277088-3-alinde@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828141344.2277088-3-alinde@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7c3df1320e5e ("[SCSI] qla2xxx: Code changes to support new
-dynamic logging infrastructure.") removed the use of the func
-argument.
+On Fri, Aug 28, 2020 at 02:13:43PM +0000, albert.linde@gmail.com wrote:
+> @@ -82,6 +83,8 @@ __copy_from_user_inatomic(void *to, const void __user *from, unsigned long n)
+>  static __always_inline __must_check unsigned long
+>  __copy_from_user(void *to, const void __user *from, unsigned long n)
+>  {
+> +	if (should_fail_usercopy())
+> +		return n;
+>  	might_fault();
+>  	instrument_copy_from_user(to, from, n);
+>  	check_object_size(to, n, false);
 
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
- drivers/scsi/qla2xxx/qla_gbl.h |  3 +--
- drivers/scsi/qla2xxx/qla_isr.c | 36 ++++++++++++------------------------
- drivers/scsi/qla2xxx/qla_mr.c  |  9 +++------
- 3 files changed, 16 insertions(+), 32 deletions(-)
+> @@ -124,7 +131,7 @@ _copy_from_user(void *to, const void __user *from, unsigned long n)
+>  {
+>  	unsigned long res = n;
+>  	might_fault();
+> -	if (likely(access_ok(from, n))) {
+> +	if (!should_fail_usercopy() && likely(access_ok(from, n))) {
+>  		instrument_copy_from_user(to, from, n);
+>  		res = raw_copy_from_user(to, from, n);
+>  	}
 
-diff --git a/drivers/scsi/qla2xxx/qla_gbl.h b/drivers/scsi/qla2xxx/qla_gbl.h
-index 0ced18f3104e..bbe3dca6d0ab 100644
---- a/drivers/scsi/qla2xxx/qla_gbl.h
-+++ b/drivers/scsi/qla2xxx/qla_gbl.h
-@@ -561,8 +561,7 @@ extern void qla2x00_free_irqs(scsi_qla_host_t *);
- extern int qla2x00_get_data_rate(scsi_qla_host_t *);
- extern const char *qla2x00_get_link_speed_str(struct qla_hw_data *, uint16_t);
- extern srb_t *
--qla2x00_get_sp_from_handle(scsi_qla_host_t *, const char *, struct req_que *,
--	void *);
-+qla2x00_get_sp_from_handle(scsi_qla_host_t *, struct req_que *, void *);
- extern void
- qla2x00_process_completed_request(struct scsi_qla_host *, struct req_que *,
- 	uint32_t);
-diff --git a/drivers/scsi/qla2xxx/qla_isr.c b/drivers/scsi/qla2xxx/qla_isr.c
-index 5d278155e4e7..b787643f5031 100644
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1711,8 +1711,7 @@ qla2x00_process_completed_request(struct scsi_qla_host *vha,
- }
- 
- srb_t *
--qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, const char *func,
--    struct req_que *req, void *iocb)
-+qla2x00_get_sp_from_handle(scsi_qla_host_t *vha, struct req_que *req, void *iocb)
- {
- 	struct qla_hw_data *ha = vha->hw;
- 	sts_entry_t *pkt = iocb;
-@@ -1750,7 +1749,6 @@ static void
- qla2x00_mbx_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct mbx_entry *mbx)
- {
--	const char func[] = "MBX-IOCB";
- 	const char *type;
- 	fc_port_t *fcport;
- 	srb_t *sp;
-@@ -1758,7 +1756,7 @@ qla2x00_mbx_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	uint16_t *data;
- 	uint16_t status;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, mbx);
-+	sp = qla2x00_get_sp_from_handle(vha, req, mbx);
- 	if (!sp)
- 		return;
- 
-@@ -1836,13 +1834,12 @@ static void
- qla24xx_mbx_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct mbx_24xx_entry *pkt)
- {
--	const char func[] = "MBX-IOCB2";
- 	srb_t *sp;
- 	struct srb_iocb *si;
- 	u16 sz, i;
- 	int res;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -1861,11 +1858,10 @@ static void
- qla24xxx_nack_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct nack_to_isp *pkt)
- {
--	const char func[] = "nack";
- 	srb_t *sp;
- 	int res = 0;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -1879,7 +1875,6 @@ static void
- qla2x00_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
-     sts_entry_t *pkt, int iocb_type)
- {
--	const char func[] = "CT_IOCB";
- 	const char *type;
- 	srb_t *sp;
- 	struct bsg_job *bsg_job;
-@@ -1887,7 +1882,7 @@ qla2x00_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	uint16_t comp_status;
- 	int res = 0;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -1952,7 +1947,6 @@ qla24xx_els_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct sts_entry_24xx *pkt, int iocb_type)
- {
- 	struct els_sts_entry_24xx *ese = (struct els_sts_entry_24xx *)pkt;
--	const char func[] = "ELS_CT_IOCB";
- 	const char *type;
- 	srb_t *sp;
- 	struct bsg_job *bsg_job;
-@@ -1962,7 +1956,7 @@ qla24xx_els_ct_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	int res;
- 	struct srb_iocb *els;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -2077,7 +2071,6 @@ static void
- qla24xx_logio_entry(scsi_qla_host_t *vha, struct req_que *req,
-     struct logio_entry_24xx *logio)
- {
--	const char func[] = "LOGIO-IOCB";
- 	const char *type;
- 	fc_port_t *fcport;
- 	srb_t *sp;
-@@ -2085,7 +2078,7 @@ qla24xx_logio_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	uint16_t *data;
- 	uint32_t iop[2];
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, logio);
-+	sp = qla2x00_get_sp_from_handle(vha, req, logio);
- 	if (!sp)
- 		return;
- 
-@@ -2206,14 +2199,13 @@ qla24xx_logio_entry(scsi_qla_host_t *vha, struct req_que *req,
- static void
- qla24xx_tm_iocb_entry(scsi_qla_host_t *vha, struct req_que *req, void *tsk)
- {
--	const char func[] = "TMF-IOCB";
- 	const char *type;
- 	fc_port_t *fcport;
- 	srb_t *sp;
- 	struct srb_iocb *iocb;
- 	struct sts_entry_24xx *sts = (struct sts_entry_24xx *)tsk;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, tsk);
-+	sp = qla2x00_get_sp_from_handle(vha, req, tsk);
- 	if (!sp)
- 		return;
- 
-@@ -2385,11 +2377,10 @@ static void qla24xx_nvme_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- static void qla_ctrlvp_completed(scsi_qla_host_t *vha, struct req_que *req,
-     struct vp_ctrl_entry_24xx *vce)
- {
--	const char func[] = "CTRLVP-IOCB";
- 	srb_t *sp;
- 	int rval = QLA_SUCCESS;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, vce);
-+	sp = qla2x00_get_sp_from_handle(vha, req, vce);
- 	if (!sp)
- 		return;
- 
-@@ -3287,7 +3278,6 @@ qla2x00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp, sts_entry_t *pkt)
- {
- 	srb_t *sp;
- 	struct qla_hw_data *ha = vha->hw;
--	const char func[] = "ERROR-IOCB";
- 	uint16_t que = MSW(pkt->handle);
- 	struct req_que *req = NULL;
- 	int res = DID_ERROR << 16;
-@@ -3317,7 +3307,7 @@ qla2x00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp, sts_entry_t *pkt)
- 	case ABORT_IOCB_TYPE:
- 	case MBX_IOCB_TYPE:
- 	default:
--		sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+		sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 		if (sp) {
- 			sp->done(sp, res);
- 			return 0;
-@@ -3376,11 +3366,10 @@ static void
- qla24xx_abort_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	struct abort_entry_24xx *pkt)
- {
--	const char func[] = "ABT_IOCB";
- 	srb_t *sp;
- 	struct srb_iocb *abt;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -3393,10 +3382,9 @@ void qla24xx_nvme_ls4_iocb(struct scsi_qla_host *vha,
-     struct pt_ls4_request *pkt, struct req_que *req)
- {
- 	srb_t *sp;
--	const char func[] = "LS4_IOCB";
- 	uint16_t comp_status;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-diff --git a/drivers/scsi/qla2xxx/qla_mr.c b/drivers/scsi/qla2xxx/qla_mr.c
-index a8fe4f725fa0..ba41c78d063c 100644
---- a/drivers/scsi/qla2xxx/qla_mr.c
-+++ b/drivers/scsi/qla2xxx/qla_mr.c
-@@ -2187,11 +2187,10 @@ static void
- qlafx00_abort_iocb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 			 struct abort_iocb_entry_fx00 *pkt)
- {
--	const char func[] = "ABT_IOCB";
- 	srb_t *sp;
- 	struct srb_iocb *abt;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -2204,7 +2203,6 @@ static void
- qlafx00_ioctl_iosb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 			 struct ioctl_iocb_entry_fx00 *pkt)
- {
--	const char func[] = "IOSB_IOCB";
- 	srb_t *sp;
- 	struct bsg_job *bsg_job;
- 	struct fc_bsg_reply *bsg_reply;
-@@ -2213,7 +2211,7 @@ qlafx00_ioctl_iosb_entry(scsi_qla_host_t *vha, struct req_que *req,
- 	struct qla_mt_iocb_rsp_fx00 fstatus;
- 	uint8_t	*fw_sts_ptr;
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (!sp)
- 		return;
- 
-@@ -2687,14 +2685,13 @@ qlafx00_error_entry(scsi_qla_host_t *vha, struct rsp_que *rsp,
- {
- 	srb_t *sp;
- 	struct qla_hw_data *ha = vha->hw;
--	const char func[] = "ERROR-IOCB";
- 	uint16_t que = 0;
- 	struct req_que *req = NULL;
- 	int res = DID_ERROR << 16;
- 
- 	req = ha->req_q_map[que];
- 
--	sp = qla2x00_get_sp_from_handle(vha, func, req, pkt);
-+	sp = qla2x00_get_sp_from_handle(vha, req, pkt);
- 	if (sp) {
- 		sp->done(sp, res);
- 		return;
--- 
-2.16.4
-
+You're inconsistent with your order against might_fault() throughout the
+patch. After is the right place.
