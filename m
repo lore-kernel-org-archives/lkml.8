@@ -2,120 +2,196 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E802C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B87C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59ABB2076D
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B995C207DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 01:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgHaB0p (ORCPT
+        id S1727093AbgHaB3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 30 Aug 2020 21:26:45 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:19864 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726454AbgHaB0n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 30 Aug 2020 21:26:43 -0400
-Received: from fsav105.sakura.ne.jp (fsav105.sakura.ne.jp [27.133.134.232])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 07V1QYMQ016064;
-        Mon, 31 Aug 2020 10:26:34 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav105.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp);
- Mon, 31 Aug 2020 10:26:34 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav105.sakura.ne.jp)
-Received: from [192.168.1.2] (80.57.232.153.ap.dti.ne.jp [153.232.57.80])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 07V1QYSl016061
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 31 Aug 2020 10:26:34 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH v2] arm64: dts: rockchip: enable HDMI sound nodes for
- rk3328-rock64
-To:     Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200802154231.2639186-1-katsuhiro@katsuster.net>
- <7880329.2VsnZ9RgxX@phil>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <0e1c3467-0ba0-6b82-4227-40959f0c4b0e@katsuster.net>
-Date:   Mon, 31 Aug 2020 10:26:34 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Sun, 30 Aug 2020 21:29:03 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10734 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726878AbgHaB3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 30 Aug 2020 21:29:00 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id F13BD67F86C3C6F2056F;
+        Mon, 31 Aug 2020 09:28:57 +0800 (CST)
+Received: from [127.0.0.1] (10.74.185.4) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Mon, 31 Aug 2020
+ 09:28:48 +0800
+Subject: Re: [PATCH v2] ACPI / APEI: do memory failure on the physical address
+ reported by ARM processor error section
+To:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <rjw@rjwysocki.net>, <lenb@kernel.org>, <james.morse@arm.com>,
+        <tony.luck@intel.com>, <bp@alien8.de>
+References: <1596618731-37623-1-git-send-email-tanxiaofei@huawei.com>
+CC:     <linuxarm@huawei.com>, <shiju.jose@huawei.com>,
+        <jonathan.cameron@huawei.com>
+From:   Xiaofei Tan <tanxiaofei@huawei.com>
+Message-ID: <5F4C5250.7000200@huawei.com>
+Date:   Mon, 31 Aug 2020 09:28:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-In-Reply-To: <7880329.2VsnZ9RgxX@phil>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <1596618731-37623-1-git-send-email-tanxiaofei@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.185.4]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/08/31 4:16, Heiko Stuebner wrote:
-> Hi,
+
+ping...
+
+On 2020/8/5 17:12, Xiaofei Tan wrote:
+> After the commit 8fcc4ae6faf8 ("arm64: acpi: Make apei_claim_sea()
+> synchronise with APEI's irq work") applied, user-mode SEA is
+> preferentially processed by APEI. Do memory failure to recover.
 > 
-> Am Sonntag, 2. August 2020, 17:42:31 CEST schrieb Katsuhiro Suzuki:
->> This patch enables HDMI sound (I2S0) and Analog sound (I2S1) which
->> are defined in rk3328.dtsi, and replace SPDIF nodes.
->>
->> We can use SPDIF pass-through with suitable ALSA settings and on
->> mpv or other media players.
->>    - Settings: https://github.com/LibreELEC/LibreELEC.tv/blob/master/projects/Rockchip/filesystem/usr/share/alsa/cards/SPDIF.conf
->>    - Ex.: mpv foo.ac3 --audio-spdif=ac3 --audio-device='alsa/SPDIF.pcm.iec958.0:SPDIF'
->>
->> [Why use simple-audio-card for SPDIF?]
->>
->> For newly adding nodes, ASoC guys recommend to use audio-graph-card.
->> But all other sound nodes for rk3328 have already been defined by
->> simple-audio-card. In this time, I chose for consistent sound nodes.
->>
->> [DMA allocation problem]
->>
->> After this patch is applied, UART2 will fail to allocate DMA resources
->> but UART driver can work fine without DMA.
->>
->> This error is related to the DMAC of rk3328 (pl330 or compatible).
->> DMAC connected to 16 DMA sources. Each sources have ID number that is
->> called 'Req number' in rk3328 TRM. After this patch is applied total 7
->> of DMA sources will be activated as follows:
->>
->> | Req number | Source | Required  |
->> |            |        | channels  |
->> |------------+--------+-----------|
->> |  8,  9     | SPI0   | 2ch       |
->> | 11, 12     | I2S0   | 2ch       |
->> | 14, 15     | I2S1   | 2ch       |
->> |     10     | SPDIF  | 1ch       |
->> |------------+--------+-----------|
->> |            | Total  | 7ch       |
->> |------------+--------+-----------|
->> |  6,  7     | UART2  | 2ch       | -> cannot get DMA channels
->>
->> Due to rk3328 DMAC specification we can use max 8 channels at same
->> time. If SPI0/I2S0/I2S1/SPDIF will be activated by this patch,
->> required DMAC channels reach to 7. So the last two channels (for
->> UART2) cannot get DMA resources.
+> But there are some problems:
+> 1) The function apei_claim_sea() has processed an CPER, does not
+> mean that memory failure handling has done. Because the firmware-first
+> RAS error is reported by both producer and consumer. Mostly SEA uses
+> ARM processor error section to report as a consumer. (The producer could
+> be DDRC and cache, and use memory error section and other error section
+> to report). But memory failure handling for ARM processor error section
+> has not been supported. This patch will add it.
 > 
-> Wouldn't the dma allocation depend on the probe ordering?
-> Or is this predetermined, so that always uart2 looses its dmas?
+> 2) Some hardware platforms can't record physical address each time. But
+> they could always have reported a firmware-first RAS error using ARM
+> processor error section. Such platform should update firmware. Don't
+> report the RAS error in SEA processing flow when physical address is
+> not recorded.
+> 
+> Signed-off-by: Xiaofei Tan <tanxiaofei@huawei.com>
+> ---
+>  drivers/acpi/apei/ghes.c | 70 ++++++++++++++++++++++++++++++++++++------------
+>  1 file changed, 53 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/acpi/apei/ghes.c b/drivers/acpi/apei/ghes.c
+> index 81bf71b..aee7787 100644
+> --- a/drivers/acpi/apei/ghes.c
+> +++ b/drivers/acpi/apei/ghes.c
+> @@ -429,28 +429,35 @@ static void ghes_kick_task_work(struct callback_head *head)
+>  	gen_pool_free(ghes_estatus_pool, (unsigned long)estatus_node, node_len);
+>  }
+>  
+> -static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
+> -				       int sev)
+> +static bool ghes_do_memory_failure(u64 physical_addr, int flags)
+>  {
+>  	unsigned long pfn;
+> -	int flags = -1;
+> -	int sec_sev = ghes_severity(gdata->error_severity);
+> -	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
+>  
+>  	if (!IS_ENABLED(CONFIG_ACPI_APEI_MEMORY_FAILURE))
+>  		return false;
+>  
+> -	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
+> -		return false;
+> -
+> -	pfn = mem_err->physical_addr >> PAGE_SHIFT;
+> +	pfn = PHYS_PFN(physical_addr);
+>  	if (!pfn_valid(pfn)) {
+>  		pr_warn_ratelimited(FW_WARN GHES_PFX
+>  		"Invalid address in generic error data: %#llx\n",
+> -		mem_err->physical_addr);
+> +		physical_addr);
+>  		return false;
+>  	}
+>  
+> +	memory_failure_queue(pfn, flags);
+> +	return true;
+> +}
+> +
+> +static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
+> +				       int sev)
+> +{
+> +	int flags = -1;
+> +	int sec_sev = ghes_severity(gdata->error_severity);
+> +	struct cper_sec_mem_err *mem_err = acpi_hest_get_payload(gdata);
+> +
+> +	if (!(mem_err->validation_bits & CPER_MEM_VALID_PA))
+> +		return false;
+> +
+>  	/* iff following two events can be handled properly by now */
+>  	if (sec_sev == GHES_SEV_CORRECTED &&
+>  	    (gdata->flags & CPER_SEC_ERROR_THRESHOLD_EXCEEDED))
+> @@ -458,14 +465,45 @@ static bool ghes_handle_memory_failure(struct acpi_hest_generic_data *gdata,
+>  	if (sev == GHES_SEV_RECOVERABLE && sec_sev == GHES_SEV_RECOVERABLE)
+>  		flags = 0;
+>  
+> -	if (flags != -1) {
+> -		memory_failure_queue(pfn, flags);
+> -		return true;
+> -	}
+> +	if (flags != -1)
+> +		return ghes_do_memory_failure(mem_err->physical_addr, flags);
+>  
+>  	return false;
+>  }
+>  
+> +static bool ghes_handle_arm_hw_error(struct acpi_hest_generic_data *gdata, int sev)
+> +{
+> +	struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
+> +	struct cper_arm_err_info *err_info;
+> +	bool queued = false;
+> +	int sec_sev, i;
+> +
+> +	log_arm_hw_error(err);
+> +
+> +	sec_sev = ghes_severity(gdata->error_severity);
+> +	if (sev != GHES_SEV_RECOVERABLE || sec_sev != GHES_SEV_RECOVERABLE)
+> +		return false;
+> +
+> +	err_info = (struct cper_arm_err_info *) (err + 1);
+> +	for (i = 0; i < err->err_info_num; i++, err_info++) {
+> +		if (!(err_info->validation_bits & CPER_ARM_INFO_VALID_PHYSICAL_ADDR))
+> +			continue;
+> +
+> +		if (err_info->type != CPER_ARM_CACHE_ERROR) {
+> +			pr_warn_ratelimited(FW_WARN GHES_PFX
+> +			"Physical address should be invalid for %s\n",
+> +			err_info->type < ARRAY_SIZE(cper_proc_error_type_strs) ?
+> +			cper_proc_error_type_strs[err_info->type] : "unknown error type");
+> +			continue;
+> +		}
+> +
+> +		if (ghes_do_memory_failure(err_info->physical_fault_addr, 0))
+> +			queued = true;
+> +	}
+> +
+> +	return queued;
+> +}
+> +
+>  /*
+>   * PCIe AER errors need to be sent to the AER driver for reporting and
+>   * recovery. The GHES severities map to the following AER severities and
+> @@ -543,9 +581,7 @@ static bool ghes_do_proc(struct ghes *ghes,
+>  			ghes_handle_aer(gdata);
+>  		}
+>  		else if (guid_equal(sec_type, &CPER_SEC_PROC_ARM)) {
+> -			struct cper_sec_proc_arm *err = acpi_hest_get_payload(gdata);
+> -
+> -			log_arm_hw_error(err);
+> +			queued = ghes_handle_arm_hw_error(gdata, sev);
+>  		} else {
+>  			void *err = acpi_hest_get_payload(gdata);
+>  
 > 
 
-Ah, it's depends on probe ordering when users use kernel modules...
+-- 
+ thanks
+tanxiaofei
 
-It's better to disable DMA channels for UART2 for avoiding problem.
-I'll fix and resend patch.
-
-
-> Heiko
-> 
-> 
-> 
-
-Best Regards,
-Katsuhiro Suzuki
