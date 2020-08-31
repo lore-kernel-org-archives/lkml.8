@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD4C2C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E16C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA7A2083E
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:12:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F4FD2068E
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 18:12:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598897539;
-	bh=Rv0QZkvfDdaY44ySjZ0q9xWVE/nXdfi0BEhRe/LkNJI=;
+	s=default; t=1598897542;
+	bh=JPhOFaXNuKxBeq1z0EEh771x1j7YacPxMTU9qs63w4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t4kHlxOcUFpBJaC50MNd63BK7RzCwo4VpFpnXn1fgT/teZQ7RjutmJlwdditAXQ5N
-	 yWOyKuCkAjQXSARjNFARC7KDh9Oo66LewsAKqNlfwnVn3VyTakoi6lESAgI4id82J/
-	 qU/IxeymGtJL0HnUbN8v0+aEP6TXayzfbOciw8p0=
+	b=FSaacZXlChu3BVeYhY/zS64xCGlfn3mq0ApCnA4kIcx2LXh4Kb5FR4FALMlBehFsW
+	 DKOO+qSpgarDuvMDKpJLeqLSzf9KmjTq24obww8d3decUxLtGGy7Us8x6oQlAtQeNn
+	 FwaC3RlZDRRGEPFgixo65OITebpdU9VVoQyPJaSs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbgHaSMP (ORCPT
+        id S1729607AbgHaSMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 14:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36202 "EHLO mail.kernel.org"
+        Mon, 31 Aug 2020 14:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729214AbgHaSL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728945AbgHaSL0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 31 Aug 2020 14:11:26 -0400
 Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D5021582;
-        Mon, 31 Aug 2020 18:11:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0057D21531;
+        Mon, 31 Aug 2020 18:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598897483;
-        bh=Rv0QZkvfDdaY44ySjZ0q9xWVE/nXdfi0BEhRe/LkNJI=;
+        bh=JPhOFaXNuKxBeq1z0EEh771x1j7YacPxMTU9qs63w4w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F//kdZpK/us8mF8Zv8ksYtCpbBUxKNMMifuPBJnt9UsxtRgquv3eedgLk+a+ETbCr
-         HgIYRfnGP7+bbtscWsgElFzmgvyH9K0/Vw/7/SdIpERs0aNkbObVRGYvWgJivaATIm
-         TzCVKWMwZFTP/ocDD12LzQcyFATKbRszLvjcHAkE=
+        b=1Pbj02rJFCA4dBG+P908O2Qv+Z8LXySPmAQcVNQjiifaI8KOOjDLN7cNlVsrBOgrY
+         zKx4NFqgBlKs//jQodT1BcNV8NX2caMrynOmfLQjjTLJyGiHDG75AdwvweaPomrkUa
+         T5C20DAJsMAAEcscRw0MHhgo7JphdoLBICwjPNDQ=
 From:   paulmck@kernel.org
 To:     rcu@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
@@ -48,9 +48,9 @@ Cc:     linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
         rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
         fweisbec@gmail.com, oleg@redhat.com, joel@joelfernandes.org,
         "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH tip/core/rcu 09/13] rcu: IPI all CPUs at GP end for strict GPs
-Date:   Mon, 31 Aug 2020 11:11:16 -0700
-Message-Id: <20200831181120.1044-9-paulmck@kernel.org>
+Subject: [PATCH tip/core/rcu 06/13] rcu: Do full report for .need_qs for strict GPs
+Date:   Mon, 31 Aug 2020 11:11:13 -0700
+Message-Id: <20200831181120.1044-6-paulmck@kernel.org>
 X-Mailer: git-send-email 2.9.5
 In-Reply-To: <20200831181101.GA950@paulmck-ThinkPad-P72>
 References: <20200831181101.GA950@paulmck-ThinkPad-P72>
@@ -61,36 +61,52 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Paul E. McKenney" <paulmck@kernel.org>
 
-Currently, each CPU discovers the end of a given grace period on its
-own time, which is again good for efficiency but bad for fast grace
-periods, given that it is things like kfree() within the RCU callbacks
-that will cause trouble for pointers leaked from RCU read-side critical
-sections.  This commit therefore uses on_each_cpu() to IPI each CPU
-after grace-period cleanup in order to inform each CPU of the end of
-the old grace period in a timely manner, but only in kernels build with
-CONFIG_RCU_STRICT_GRACE_PERIOD=y.
+The rcu_preempt_deferred_qs_irqrestore() function is invoked at
+the end of an RCU read-side critical section (for example, directly
+from rcu_read_unlock()) and, if .need_qs is set, invokes rcu_qs() to
+report the new quiescent state.  This works, except that rcu_qs() only
+updates per-CPU state, leaving reporting of the actual quiescent state
+to a later call to rcu_report_qs_rdp(), for example from within a later
+RCU_SOFTIRQ instance.  Although this approach is exactly what you want if
+you are more concerned about efficiency than about short grace periods,
+in CONFIG_RCU_STRICT_GRACE_PERIOD=y kernels, short grace periods are
+the name of the game.
+
+This commit therefore makes rcu_preempt_deferred_qs_irqrestore() directly
+invoke rcu_report_qs_rdp() in CONFIG_RCU_STRICT_GRACE_PERIOD=y, thus
+shortening grace periods.
+
+Historical note:  To the best of my knowledge, causing rcu_read_unlock()
+to directly report a quiescent state first appeared in Jim Houston's
+and Joe Korty's JRCU.  This is the second instance of a Linux-kernel RCU
+feature being inspired by JRCU, the first being RCU callback offloading
+(as in the RCU_NOCB_CPU Kconfig option).
 
 Reported-by Jann Horn <jannh@google.com>
 Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/rcu/tree.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ kernel/rcu/tree_plugin.h | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index 88f4fa6..4bbedfc 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -2052,6 +2052,10 @@ static void rcu_gp_cleanup(void)
- 			   rcu_state.gp_flags & RCU_GP_FLAG_INIT);
+diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+index 668bbd2..dfdb902 100644
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -459,8 +459,12 @@ rcu_preempt_deferred_qs_irqrestore(struct task_struct *t, unsigned long flags)
+ 		return;
  	}
- 	raw_spin_unlock_irq_rcu_node(rnp);
-+
-+	// If strict, make all CPUs aware of the end of the old grace period.
-+	if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
-+		on_each_cpu(rcu_strict_gp_boundary, NULL, 0);
- }
+ 	t->rcu_read_unlock_special.s = 0;
+-	if (special.b.need_qs)
+-		rcu_qs();
++	if (special.b.need_qs) {
++		if (IS_ENABLED(CONFIG_RCU_STRICT_GRACE_PERIOD))
++			rcu_report_qs_rdp(rdp->cpu, rdp);
++		else
++			rcu_qs();
++	}
  
- /*
+ 	/*
+ 	 * Respond to a request by an expedited grace period for a
 -- 
 2.9.5
 
