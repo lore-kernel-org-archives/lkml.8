@@ -2,287 +2,235 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E63C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F093C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D94C3206F0
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCCA62068F
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s3DPMpUn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BkWe+B6D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgHaJcf (ORCPT
+        id S1726131AbgHaJfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:32:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55660 "EHLO
+        Mon, 31 Aug 2020 05:35:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725915AbgHaJcc (ORCPT
+        with ESMTP id S1725915AbgHaJfu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:32:32 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88ACFC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:32:30 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id e16so5233146wrm.2
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:32:30 -0700 (PDT)
+        Mon, 31 Aug 2020 05:35:50 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 146D8C061573;
+        Mon, 31 Aug 2020 02:35:49 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id w20so5191297iom.1;
+        Mon, 31 Aug 2020 02:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iVYbH9pq5ON75kceYMv0ldXRcI8Va5OUTJxQ40DJfbw=;
-        b=s3DPMpUnlBRCpr7AuJx3CTYtb0SatpC56SyQGWzvJh/NWXOJuKL7poG62fhUtUhGXW
-         1WduYjNLVTWz0THZ+thbkV+Jl2/AXZaog6O8f1139vJe+NYR96j5twvSej7tqRODIkhq
-         kniIeoTgfYlYHL3Mgx8pEQNFf6jK/BKna8/uVSv/1zerP/Z5YIZ0CCyfZU9YmGfUtlAP
-         Mny7O27bR7/dqk/brPWYa9IJ1Y7uGLgiDZwmmK5vl46KpiZNGN9ayVCg2FixQXqkdXsQ
-         8NBDrmFzZ+at5nmoqiZhua3IAxD3xgWatK0Vv2I5IBUc4/GBNFvR3JzPiCIZ7k492595
-         0Jcw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HsNtRpi0XGja6Sj9lSJWoznoixc15RWCQVmmU4+oCGQ=;
+        b=BkWe+B6D3lN045gds9IoFYUQ+o2juq6u/5mtP4qMWEZgN4V72MQv52x13zt+0Vagcw
+         PiplKpJDZIg1gJ/K+PqleXk0+ms/PIwH4m04bUTXOP6LZe4mc4lUMCnaFMAZ1Nf7OH5R
+         +TO1BAV2uJm4VdeFkABkZgYtRWdSxBF7MObhl58VcQjVfHSqlwYCoTT8LWmc7Hg5H7zn
+         rFVALNyy0QNyyM9EWLw6uOxE4Uiqo6MEltvqGfVltYm+Lsi1MNLu6dooosPYw/1NDhKj
+         0s2nGoPPTS/ePGpaVVkCc9/P0ug7/BLTlsgu0GElkFNNztt3JlZyxdTPXMRhtYmxlaLF
+         /55A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iVYbH9pq5ON75kceYMv0ldXRcI8Va5OUTJxQ40DJfbw=;
-        b=f8m3mHDTPLfPU+J9iVXxIhKZxhqJLoaFO6O7h7vcwfaphjDrtdcZZ7SVf3ddMoI9Nr
-         8imHhHKlceL/NbsXn+6Gehm+c2xckIyyrWuQ2avRPzUQ9qn6xbCXyU/uULlSZV6jlkTD
-         RoC8nifHj44DZnkYCXnU7HOLwAKTcQiMGZYU1tMJsq2Y5b1fJPyi/tZpnRRHfKBhbyCx
-         icuB2f2qt3zj5pUbkSaRE3byP1eDzi4r6l/Ymva7FjeTUYk4QNuyUgJNvKm4GJKbjHHP
-         nc15istXvOZluxJLdW58fLxvtyhiZFH/VA+b5bR0veJrF99S9ov5FR6u0chxEmJhKWKW
-         Jy3A==
-X-Gm-Message-State: AOAM530a3VB7s82/ATPYEI3XV6jLJleIoq7hnmFPmGggj9UhMog0KzNT
-        iQBr79XuFCTIeAAFIXQYOWLIjVTUBJU=
-X-Google-Smtp-Source: ABdhPJxTvECBM8RTxX8g3+utmkDt/KjKwqU5iywA22yPS+/iKuXCqUpd/LnjDn4d+tdSFn9KKYWUAQ==
-X-Received: by 2002:adf:ef45:: with SMTP id c5mr759476wrp.37.1598866349178;
-        Mon, 31 Aug 2020 02:32:29 -0700 (PDT)
-Received: from a-VirtualBox ([103.120.71.253])
-        by smtp.gmail.com with ESMTPSA id t203sm10231507wmg.43.2020.08.31.02.32.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 02:32:28 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 14:32:23 +0500
-From:   Bilal Wasim <bwasim.lkml@gmail.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        matthias.bgg@gmail.com, drinkcat@chromium.org, hsinyi@chromium.org,
-        laurent.pinchart@ideasonboard.com, sam@ravnborg.org,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH v3 1/1] drm/bridge: ps8640: Rework power state handling
-Message-ID: <20200831143223.1a775ba6@a-VirtualBox>
-In-Reply-To: <20200827085911.944899-2-enric.balletbo@collabora.com>
-References: <20200827085911.944899-1-enric.balletbo@collabora.com>
-        <20200827085911.944899-2-enric.balletbo@collabora.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HsNtRpi0XGja6Sj9lSJWoznoixc15RWCQVmmU4+oCGQ=;
+        b=o00SnCss4AugIwNW/hj2acmI4UGAsFIP1R/7tCNXhfk2Z4R4T8hYJBtZgIp2ZMHFml
+         l21CmAnU3YF00Vma3Qbqy7GZDD6xtvdUngeM7dSDatJ6J1fbPtE7DOMcYL1P9RzetKo4
+         flN4N9ey1jWfK/qdrkOG59RXKi/SIwr73QjSILxWRQ0tzjshDw/SjhEOgsKGMQkTCHcH
+         R6dX3XSttvLFWNfJB8vI19yyp/7dib12KVBfH6VNSDzmvBGwtliT3cNh0dokQ7erwncs
+         949/oMHciN5bBSih2E7QeulOCDGkh+ZcZqX6DjXlrMz2ADVqbxFk2blfRFFhmQOpqVsh
+         c5kQ==
+X-Gm-Message-State: AOAM5336UvPqccJ7xOJ+pzb0vMYkCm2IqhZtENgC++nZ0CDm0oAEQGxc
+        IKARigSPQRlWLlbMSfdyK9k4xtBZjk3ujquZbO8=
+X-Google-Smtp-Source: ABdhPJww8t42sUm+jGq9r4vVjstNF9Iiu7OItpZmQeVdogqBS81K4nUxuzik3G0XU545fyNmeFJRfcVCeSn7YUqh2/o=
+X-Received: by 2002:a6b:b513:: with SMTP id e19mr547960iof.167.1598866548037;
+ Mon, 31 Aug 2020 02:35:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200821103431.13481-1-david@redhat.com> <20200821103431.13481-3-david@redhat.com>
+In-Reply-To: <20200821103431.13481-3-david@redhat.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Mon, 31 Aug 2020 11:35:36 +0200
+Message-ID: <CAM9Jb+hJ8YSB6XZi6CB3jU-LSdVhKGZw=6NESzFhY7bbU9uOSQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/5] kernel/resource: merge_system_ram_resources() to
+ merge resources after hotplug
+To:     David Hildenbrand <david@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux MM <linux-mm@kvack.org>, linux-hyperv@vger.kernel.org,
+        xen-devel@lists.xenproject.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Kees Cook <keescook@chromium.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        =?UTF-8?Q?Roger_Pau_Monn=C3=A9?= <roger.pau@citrix.com>,
+        Julien Grall <julien@xen.org>, Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Enric,
-
-On Thu, 27 Aug 2020 10:59:11 +0200
-Enric Balletbo i Serra <enric.balletbo@collabora.com> wrote:
-
-> The get_edid() callback can be triggered anytime by an ioctl, i.e
-> 
->   drm_mode_getconnector (ioctl)
->     -> drm_helper_probe_single_connector_modes
->        -> drm_bridge_connector_get_modes
->           -> ps8640_bridge_get_edid  
-> 
-> Actually if the bridge pre_enable() function was not called before
-> get_edid(), the driver will not be able to get the EDID properly and
-> display will not work until a second get_edid() call is issued and if
-> pre_enable() is called before. The side effect of this, for example,
-> is that you see anything when `Frecon` starts, neither the splash
-> screen, until the graphical session manager starts.
-> 
-> To fix this we need to make sure that all we need is enabled before
-> reading the EDID. This means the following:
-> 
-> 1. If get_edid() is called before having the device powered we need to
->    power on the device. In such case, the driver will power off again
-> the device.
-> 
-> 2. If get_edid() is called after having the device powered, all should
->    just work. We added a powered flag in order to avoid recurrent
-> calls to ps8640_bridge_poweron() and unneeded delays.
-> 
-> 3. This seems to be specific for this device, but we need to make sure
->    the panel is powered on before do a power on cycle on this device.
->    Otherwise the device fails to retrieve the EDID.
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Some add_memory*() users add memory in small, contiguous memory blocks.
+> Examples include virtio-mem, hyper-v balloon, and the XEN balloon.
+>
+> This can quickly result in a lot of memory resources, whereby the actual
+> resource boundaries are not of interest (e.g., it might be relevant for
+> DIMMs, exposed via /proc/iomem to user space). We really want to merge
+> added resources in this scenario where possible.
+>
+> Let's provide an interface to trigger merging of applicable child
+> resources. It will be, for example, used by virtio-mem to trigger
+> merging of system ram resources it added to its resource container, but
+> also by XEN and Hyper-V to trigger merging of system ram resources in
+> iomem_resource.
+>
+> Note: We really want to merge after the whole operation succeeded, not
+> directly when adding a resource to the resource tree (it would break
+> add_memory_resource() and require splitting resources again when the
+> operation failed - e.g., due to -ENOMEM).
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: "K. Y. Srinivasan" <kys@microsoft.com>
+> Cc: Haiyang Zhang <haiyangz@microsoft.com>
+> Cc: Stephen Hemminger <sthemmin@microsoft.com>
+> Cc: Wei Liu <wei.liu@kernel.org>
+> Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: Stefano Stabellini <sstabellini@kernel.org>
+> Cc: Roger Pau Monn=C3=A9 <roger.pau@citrix.com>
+> Cc: Julien Grall <julien@xen.org>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Wei Yang <richardw.yang@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
-> 
-> Changes in v3:
-> - Make poweron/poweroff and pre_enable/post_disable reverse one to
-> each other (Sam Ravnborg)
-> 
-> Changes in v2:
-> - Use drm_bridge_chain_pre_enable/post_disable() helpers (Sam
-> Ravnborg)
-> 
->  drivers/gpu/drm/bridge/parade-ps8640.c | 68
-> ++++++++++++++++++++++---- 1 file changed, 58 insertions(+), 10
-> deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/parade-ps8640.c
-> b/drivers/gpu/drm/bridge/parade-ps8640.c index
-> 9f7b7a9c53c5..7bd0affa057a 100644 ---
-> a/drivers/gpu/drm/bridge/parade-ps8640.c +++
-> b/drivers/gpu/drm/bridge/parade-ps8640.c @@ -65,6 +65,7 @@ struct
-> ps8640 { struct regulator_bulk_data supplies[2];
->  	struct gpio_desc *gpio_reset;
->  	struct gpio_desc *gpio_powerdown;
-> +	bool powered;
->  };
->  
->  static inline struct ps8640 *bridge_to_ps8640(struct drm_bridge *e)
-> @@ -91,13 +92,15 @@ static int ps8640_bridge_vdo_control(struct
-> ps8640 *ps_bridge, return 0;
+>  include/linux/ioport.h |  3 +++
+>  kernel/resource.c      | 52 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 55 insertions(+)
+>
+> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+> index 52a91f5fa1a36..3bb0020cd6ddc 100644
+> --- a/include/linux/ioport.h
+> +++ b/include/linux/ioport.h
+> @@ -251,6 +251,9 @@ extern void __release_region(struct resource *, resou=
+rce_size_t,
+>  extern void release_mem_region_adjustable(struct resource *, resource_si=
+ze_t,
+>                                           resource_size_t);
+>  #endif
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +extern void merge_system_ram_resources(struct resource *res);
+> +#endif
+>
+>  /* Wrappers for managed devices */
+>  struct device;
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 1dcef5d53d76e..b4e0963edadd2 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -1360,6 +1360,58 @@ void release_mem_region_adjustable(struct resource=
+ *parent,
 >  }
->  
-> -static void ps8640_pre_enable(struct drm_bridge *bridge)
-> +static void ps8640_bridge_poweron(struct ps8640 *ps_bridge)
->  {
-> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
->  	struct i2c_client *client = ps_bridge->page[PAGE2_TOP_CNTL];
->  	unsigned long timeout;
->  	int ret, status;
->  
-> +	if (ps_bridge->powered)
-> +		return;
-> +
->  	ret = regulator_bulk_enable(ARRAY_SIZE(ps_bridge->supplies),
->  				    ps_bridge->supplies);
->  	if (ret < 0) {
-> @@ -152,10 +155,6 @@ static void ps8640_pre_enable(struct drm_bridge
-> *bridge) goto err_regulators_disable;
->  	}
->  
-> -	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
-> -	if (ret)
-> -		goto err_regulators_disable;
-> -
->  	/* Switch access edp panel's edid through i2c */
->  	ret = i2c_smbus_write_byte_data(client, PAGE2_I2C_BYPASS,
->  					I2C_BYPASS_EN);
-> @@ -164,6 +163,8 @@ static void ps8640_pre_enable(struct drm_bridge
-> *bridge) goto err_regulators_disable;
->  	}
->  
-> +	ps_bridge->powered = true;
-> +
->  	return;
->  
->  err_regulators_disable:
-> @@ -171,12 +172,12 @@ static void ps8640_pre_enable(struct drm_bridge
-> *bridge) ps_bridge->supplies);
->  }
->  
-> -static void ps8640_post_disable(struct drm_bridge *bridge)
-> +static void ps8640_bridge_poweroff(struct ps8640 *ps_bridge)
->  {
-> -	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
->  	int ret;
->  
-> -	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> +	if (!ps_bridge->powered)
-> +		return;
->  
->  	gpiod_set_value(ps_bridge->gpio_reset, 1);
->  	gpiod_set_value(ps_bridge->gpio_powerdown, 1);
-> @@ -184,6 +185,28 @@ static void ps8640_post_disable(struct
-> drm_bridge *bridge) ps_bridge->supplies);
->  	if (ret < 0)
->  		DRM_ERROR("cannot disable regulators %d\n", ret);
-> +
-> +	ps_bridge->powered = false;
+>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+>
+> +#ifdef CONFIG_MEMORY_HOTPLUG
+> +static bool system_ram_resources_mergeable(struct resource *r1,
+> +                                          struct resource *r2)
+> +{
+> +       return r1->flags =3D=3D r2->flags && r1->end + 1 =3D=3D r2->start=
+ &&
+> +              r1->name =3D=3D r2->name && r1->desc =3D=3D r2->desc &&
+> +              !r1->child && !r2->child;
 > +}
 > +
-> +static void ps8640_pre_enable(struct drm_bridge *bridge)
+> +/*
+> + * merge_system_ram_resources - try to merge contiguous system ram resou=
+rces
+> + * @parent: parent resource descriptor
+> + *
+> + * This interface is intended for memory hotplug, whereby lots of contig=
+uous
+> + * system ram resources are added (e.g., via add_memory*()) by a driver,=
+ and
+> + * the actual resource boundaries are not of interest (e.g., it might be
+> + * relevant for DIMMs). Only immediate child resources that are busy and
+> + * don't have any children are considered. All applicable child resource=
+s
+> + * must be immutable during the request.
+> + *
+> + * Note:
+> + * - The caller has to make sure that no pointers to resources that migh=
+t
+> + *   get merged are held anymore. Callers should only trigger merging of=
+ child
+> + *   resources when they are the only one adding system ram resources to=
+ the
+> + *   parent (besides during boot).
+> + * - release_mem_region_adjustable() will split on demand on memory hotu=
+nplug
+> + */
+> +void merge_system_ram_resources(struct resource *parent)
 > +{
-> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> +	int ret;
+> +       const unsigned long flags =3D IORESOURCE_SYSTEM_RAM | IORESOURCE_=
+BUSY;
+> +       struct resource *cur, *next;
 > +
-> +	ps8640_bridge_poweron(ps_bridge);
+> +       write_lock(&resource_lock);
 > +
-> +	ret = ps8640_bridge_vdo_control(ps_bridge, ENABLE);
-> +	if (ret < 0)
-> +		ps8640_bridge_poweroff(ps_bridge);
+> +       cur =3D parent->child;
+> +       while (cur && cur->sibling) {
+> +               next =3D cur->sibling;
+> +               if ((cur->flags & flags) =3D=3D flags &&
+
+Maybe this can be changed to:
+!(cur->flags & ~flags)
+
+> +                   system_ram_resources_mergeable(cur, next)) {
+> +                       cur->end =3D next->end;
+> +                       cur->sibling =3D next->sibling;
+> +                       free_resource(next);
+> +                       next =3D cur->sibling;
+> +               }
+> +               cur =3D next;
+> +       }
+> +
+> +       write_unlock(&resource_lock);
 > +}
+> +EXPORT_SYMBOL(merge_system_ram_resources);
+> +#endif /* CONFIG_MEMORY_HOTPLUG */
 > +
-> +static void ps8640_post_disable(struct drm_bridge *bridge)
-> +{
-> +	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> +
-> +	ps8640_bridge_vdo_control(ps_bridge, DISABLE);
-> +	ps8640_bridge_poweroff(ps_bridge);
->  }
->  
->  static int ps8640_bridge_attach(struct drm_bridge *bridge,
-> @@ -249,9 +272,34 @@ static struct edid
-> *ps8640_bridge_get_edid(struct drm_bridge *bridge, struct
-> drm_connector *connector) {
->  	struct ps8640 *ps_bridge = bridge_to_ps8640(bridge);
-> +	bool poweroff = !ps_bridge->powered;
-> +	struct edid *edid;
-> +
-> +	/*
-> +	 * When we end calling get_edid() triggered by an ioctl, i.e
-> +	 *
-> +	 *   drm_mode_getconnector (ioctl)
-> +	 *     -> drm_helper_probe_single_connector_modes
-> +	 *        -> drm_bridge_connector_get_modes
-> +	 *           -> ps8640_bridge_get_edid
-> +	 *
-> +	 * We need to make sure that what we need is enabled before
-> reading
-> +	 * EDID, for this chip, we need to do a full poweron,
-> otherwise it will
-> +	 * fail.
-> +	 */
-> +	drm_bridge_chain_pre_enable(bridge);
-
-Are we sure that pre_enable is always good enough to get the EDID? I
-know that we only have support for ps8640 on the MT8173 SoC which works
-only with pre_enable, but I think a more scalable solution would be to
-call drm_bridge_chain_pre_enable / drm_bridge_chain_enable here, and
-drm_bridge_chain_post_disable / drm_bridge_chain_disable when disabling
-the chain. If this is not a concern and we are sure that pre_enable
-will always work (especially on newer boards), then please ignore my
-comment. 
-
-Other than this, everything looks fine.
-
->  
-> -	return drm_get_edid(connector,
-> +	edid = drm_get_edid(connector,
->  			    ps_bridge->page[PAGE0_DP_CNTL]->adapter);
-> +
-> +	/*
-> +	 * If we call the get_edid() function without having enabled
-> the chip
-> +	 * before, return the chip to its original power state.
-> +	 */
-> +	if (poweroff)
-> +		drm_bridge_chain_post_disable(bridge);
-> +
-> +	return edid;
->  }
->  
->  static const struct drm_bridge_funcs ps8640_bridge_funcs = {
-
--Bilal
+>  /*
+>   * Managed region resource
+>   */
+> --
+> 2.26.2
+>
