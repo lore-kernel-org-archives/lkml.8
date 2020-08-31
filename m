@@ -4,49 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842CFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0825FC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 607D420719
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB76420693
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 14:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgHaOMf (ORCPT
+        id S1727819AbgHaOPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 10:12:35 -0400
-Received: from mga14.intel.com ([192.55.52.115]:5894 "EHLO mga14.intel.com"
+        Mon, 31 Aug 2020 10:15:43 -0400
+Received: from mga06.intel.com ([134.134.136.31]:49705 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgHaOMc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 10:12:32 -0400
-IronPort-SDR: 8UntdQLScuNyLFKNGMBtfe3NV0cZ0ZqqFyjnckZbU5KkaD+S2MpyWz9dlK85EnynrB7QmqFZQR
- UHnqjLnxtsag==
-X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="156230018"
+        id S1726292AbgHaOP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 10:15:29 -0400
+IronPort-SDR: wpvc6XIWW4JxprpMeUgxW4LbsI1aR2CA/vgaEHXx6P2O6JjKGIJyr/foLgxfReygSSlMgeDtte
+ Fx7sge4ut78w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9729"; a="218521023"
 X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="156230018"
+   d="scan'208";a="218521023"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 07:12:31 -0700
-IronPort-SDR: mXpLa4BRUA8wo1zDpwvJXond5em8FPLQB7G7icZGH+/kZVQwbcbjdK30HqEUdS/mtKFiJULbUX
- 27zhVKmbZrsg==
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 07:15:27 -0700
+IronPort-SDR: PHl/gAhoCZLGvQ8+jRfi1Aj7+9i3q7M8IlbUE6c6MGOsXf8YdgSSQS8VT8xlUL2vnRKbTQDnCE
+ n5nxMA683F+Q==
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,375,1592895600"; 
-   d="scan'208";a="296939746"
-Received: from jgu-mobl2.amr.corp.intel.com (HELO [10.209.129.34]) ([10.209.129.34])
-  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 07:12:30 -0700
-Subject: Re: [PATCH] regmap: soundwire: remove unsed header mod_devicetable.h
-To:     Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20200829103939.4007097-1-vkoul@kernel.org>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <d329c295-b2d1-68d9-79bf-278f7af4bb58@linux.intel.com>
-Date:   Mon, 31 Aug 2020 09:12:29 -0500
+   d="scan'208";a="281656222"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.73]) ([10.237.72.73])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Aug 2020 07:15:22 -0700
+Subject: Re: [PATCH] mmc: sdhci-msm: Add retries when all tuning phases are
+ found valid
+To:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     vbadigan@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Chris Ball <chris@printf.net>,
+        Georgi Djakov <gdjakov@mm-sol.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mmc@vger.kernel.org
+References: <20200827075809.1.If179abf5ecb67c963494db79c3bc4247d987419b@changeid>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <a3d42c1a-1ff3-29d9-9094-a41d37721ba5@intel.com>
+Date:   Mon, 31 Aug 2020 17:14:45 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200829103939.4007097-1-vkoul@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200827075809.1.If179abf5ecb67c963494db79c3bc4247d987419b@changeid>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -54,27 +66,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-typo in commit message?
+On 27/08/20 5:58 pm, Douglas Anderson wrote:
+> As the comments in this patch say, if we tune and find all phases are
+> valid it's _almost_ as bad as no phases being found valid.  Probably
+> all phases are not really reliable but we didn't detect where the
+> unreliable place is.  That means we'll essentially be guessing and
+> hoping we get a good phase.
+> 
+> This is not just a problem in theory.  It was causing real problems on
+> a real board.  On that board, most often phase 10 is found as the only
+> invalid phase, though sometimes 10 and 11 are invalid and sometimes
+> just 11.  Some percentage of the time, however, all phases are found
+> to be valid.  When this happens, the current logic will decide to use
+> phase 11.  Since phase 11 is sometimes found to be invalid, this is a
+> bad choice.  Sure enough, when phase 11 is picked we often get mmc
+> errors later in boot.
+> 
+> I have seen cases where all phases were found to be valid 3 times in a
+> row, so increase the retry count to 10 just to be extra sure.
+> 
+> Fixes: 415b5a75da43 ("mmc: sdhci-msm: Add platform_execute_tuning implementation")
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-On 8/29/20 5:39 AM, Vinod Koul wrote:
-> mod_devicetable.h does not seem to be required for this file, so
-> remove it.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
 > ---
->   drivers/base/regmap/regmap-sdw.c | 1 -
->   1 file changed, 1 deletion(-)
 > 
-> diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
-> index 50a66382d87d..c92d614b4943 100644
-> --- a/drivers/base/regmap/regmap-sdw.c
-> +++ b/drivers/base/regmap/regmap-sdw.c
-> @@ -2,7 +2,6 @@
->   // Copyright(c) 2015-17 Intel Corporation.
->   
->   #include <linux/device.h>
-> -#include <linux/mod_devicetable.h>
->   #include <linux/module.h>
->   #include <linux/soundwire/sdw.h>
->   #include "internal.h"
+>  drivers/mmc/host/sdhci-msm.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 > 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index b7e47107a31a..1b78106681e0 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -1165,7 +1165,7 @@ static void sdhci_msm_set_cdr(struct sdhci_host *host, bool enable)
+>  static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  {
+>  	struct sdhci_host *host = mmc_priv(mmc);
+> -	int tuning_seq_cnt = 3;
+> +	int tuning_seq_cnt = 10;
+>  	u8 phase, tuned_phases[16], tuned_phase_cnt = 0;
+>  	int rc;
+>  	struct mmc_ios ios = host->mmc->ios;
+> @@ -1221,6 +1221,22 @@ static int sdhci_msm_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>  	} while (++phase < ARRAY_SIZE(tuned_phases));
+>  
+>  	if (tuned_phase_cnt) {
+> +		if (tuned_phase_cnt == ARRAY_SIZE(tuned_phases)) {
+> +			/*
+> +			 * All phases valid is _almost_ as bad as no phases
+> +			 * valid.  Probably all phases are not really reliable
+> +			 * but we didn't detect where the unreliable place is.
+> +			 * That means we'll essentially be guessing and hoping
+> +			 * we get a good phase.  Better to try a few times.
+> +			 */
+> +			dev_dbg(mmc_dev(mmc), "%s: All phases valid; try again\n",
+> +				mmc_hostname(mmc));
+> +			if (--tuning_seq_cnt) {
+> +				tuned_phase_cnt = 0;
+> +				goto retry;
+> +			}
+> +		}
+> +
+>  		rc = msm_find_most_appropriate_phase(host, tuned_phases,
+>  						     tuned_phase_cnt);
+>  		if (rc < 0)
+> 
+
