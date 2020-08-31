@@ -2,151 +2,149 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA066C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E5CC433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950E12073A
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5D6F2073A
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:17:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KKEMb3kJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tlDQNkLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgHaJQ3 (ORCPT
+        id S1728372AbgHaJR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:16:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53134 "EHLO
+        Mon, 31 Aug 2020 05:17:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53274 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgHaJQZ (ORCPT
+        with ESMTP id S1726800AbgHaJRT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:16:25 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB58C061575
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:16:25 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id r13so5841078ljm.0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:16:25 -0700 (PDT)
+        Mon, 31 Aug 2020 05:17:19 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02227C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:17:19 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id o2so1136133vke.13
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 02:17:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=55/Zf9rAIVF2kUG8rDto+YwWXVLRuy+wKA6jaN7DLOk=;
-        b=KKEMb3kJI7ez9Bm/BEEpsM198peCQW4f1a3IsIAl2Lt2wbuOMOQZYCfSJDLVCXz6P+
-         V0iUyL+GbuGezGr9WLBou0/q1pVbB+vqgqyK3EJy45jAl/yyc1HV/bDS23AxJp4eMPDw
-         CBrN3UbdEZAjNqM02K5vz+pHnRfkN+wHESXNfLoVFTkdcsyspNAWtH42wK5uqt/oJ4WY
-         OzWMF/RrSocJMkuPCsIl7PmaG9ayIg/M7qOI49GsODBFzvxbmMWiQFKS3ymSk5Av7uvx
-         xdrY28cz0dFqBRGEZXc13cVlQ9TCfrs6mRl3ewUNj+Wq2NugiNi6jupJipnCT+8CplY1
-         SsSg==
+        bh=xPGNmRsw3clREJxbIhujJ9BVleZMZH++KW5cFLsU7tw=;
+        b=tlDQNkLZggK8U/Lk6uMqpZ+lGjfqbCJSCUZb57Ym4MFnvUK/CBUKF7Yzan7RV9BUpc
+         EsrsLsKnikuoGLXzZp42UGJBfBCoSSP3uIQVOZXVUsxVuukagyoL7alSoxX/5MxoWOv2
+         FmcSbibxh9YvDoggCu3yQIEN6SN8Z/y9YnB4gSyt7VT7X7TAv3omICQpIrXxZ84m4fBp
+         MJfGoSV5OjZk5Yx94DT2bGUoRR1yVCvvBUGfoN30eTkq9mgHfxmOqKzJeemfncdMkqrs
+         /SUqInD/1dB7B1DfN/RJiWdEjpKMlgIPlUot1sCZ2bJ3kdOxhn1lSX8r4iAQm6okgw/s
+         nVWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=55/Zf9rAIVF2kUG8rDto+YwWXVLRuy+wKA6jaN7DLOk=;
-        b=CnmBYdF1dbjRbM3+ySxagsvwCkt5yVuDuMD0onSxasatkGpePL6DVTipbObiRHiruu
-         rEa037aV2C2nxNfh3GA9vwwVrA+4AmL8btIdwQt8obeA5aLhsnpTjHVYY8pHmYTzuFG3
-         HCHdngV+7YVb11T5Icbcm3qnxgRHfxLqXQDPkBfDC9993p+JZC30Q/zOiR0ul/RKcHEU
-         cUM5Z3FEEYgaCMQTrGOtc9yzwy/m/iKTEkc/2lOlNb1F5fPZLnd58wMqDKRQymdUy+se
-         Buw2N//Mz3qciMQY2qeUXOoMgK57zr57MfhJYHcfsfE6L4wJPOFmkmvbRIDcYPbojNl8
-         0h1A==
-X-Gm-Message-State: AOAM530rZBpYM82nxwmZGXqHmsCGXJqy2a42Mqz8S6SkfgrW7hA9HBpa
-        C8C5pE7tTFkqzd8fOzjND6M+i1RAFz4v7q43uisR3g==
-X-Google-Smtp-Source: ABdhPJwRqpxTn+QBkx32vO8E+P0yBSG9XSLYl5oBgIcl9jEXu/3HnpJk0F40jQz1JdOX0PwsGBbcM9sl+9qWKefNaPo=
-X-Received: by 2002:a2e:9617:: with SMTP id v23mr219049ljh.365.1598865383349;
- Mon, 31 Aug 2020 02:16:23 -0700 (PDT)
+        bh=xPGNmRsw3clREJxbIhujJ9BVleZMZH++KW5cFLsU7tw=;
+        b=TG5pnQ4z1U0B0CsAVse+7EJ56fBK0feu49CGIY0CDaG76VvEdQdNZ+Vcst422Esd8S
+         rb+yk1ivRw1gFhvvKrDia56W/m1y76lSMJUION4U8Cg05EsIXx9Pu5QA+ncbvSz9RPx2
+         Bu/8uxE+QD92bbwqVE/Wzulmyi7ShMgPIesbUke2IuB5y1GoMy0SahQ+m4JO4aVwUzN9
+         hLWeeAjeH6KAW3ZUKKipN5D/0OIMfNzViwVUCFUaZePxXARXFG9sq65Z7fiPElRWk7Zq
+         bEmQwz6eM6MwbNbd7fxe9KcZKdRgyLlWNJ4qxLelE6ZjdX95pxO1VhsF1kt7BOatq0tA
+         dHlw==
+X-Gm-Message-State: AOAM531J63lVmF1JBbgyV44ZV7cd3RMSPyvG08tswBXhtD2lvPG/prgf
+        G4ZPK1XPgrh3WCkk4xAoQPMg3OWZVvonZk9Bdtrw4Q==
+X-Google-Smtp-Source: ABdhPJzS4H9cHKY3ezPrXkM8N+l+LltSj93sbk0pC64SOfwKVa7oGmMl3imZuK0I39yExSwEfnQ+mytHRmSIzO5o9X8=
+X-Received: by 2002:a1f:c151:: with SMTP id r78mr238648vkf.44.1598865437983;
+ Mon, 31 Aug 2020 02:17:17 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200829020002.GC3265@brightrain.aerifal.cx> <CAG48ez1BExw7DdCEeRD1hG5ZpRObpGDodnizW2xD5tC0saTDqg@mail.gmail.com>
- <20200830163657.GD3265@brightrain.aerifal.cx> <CAG48ez00caDqMomv+PF4dntJkWx7rNYf3E+8gufswis6UFSszw@mail.gmail.com>
- <20200830184334.GE3265@brightrain.aerifal.cx> <CAG48ez3LvbWLBsJ+Edc9qCjXDYV0TRjVRrANhiR2im1aRUQ6gQ@mail.gmail.com>
- <20200830200029.GF3265@brightrain.aerifal.cx> <CAG48ez2tOBAKLaX-siRZPCLiiy-s65w2mFGDGr4q2S7WFxpK1A@mail.gmail.com>
- <20200831014633.GJ3265@brightrain.aerifal.cx>
-In-Reply-To: <20200831014633.GJ3265@brightrain.aerifal.cx>
-From:   Jann Horn <jannh@google.com>
-Date:   Mon, 31 Aug 2020 11:15:57 +0200
-Message-ID: <CAG48ez0aKz8wedhNsW0CWk70-tUu8tmnOE4Yi4Cv5=uLghestA@mail.gmail.com>
-Subject: Re: [RESEND PATCH] vfs: add RWF_NOAPPEND flag for pwritev2
-To:     Rich Felker <dalias@libc.org>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>
+References: <20200825134441.17537-1-matthias.schiffer@ew.tq-group.com>
+ <20200828222440.GA3507259@bogus> <4e1182d756a81e10b32b465bb36938cb62a98cdd.camel@ew.tq-group.com>
+In-Reply-To: <4e1182d756a81e10b32b465bb36938cb62a98cdd.camel@ew.tq-group.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 31 Aug 2020 11:16:41 +0200
+Message-ID: <CAPDyKFqH43VDvezTN_UPZvGNhfO=k69axF0nD4juFgdbAMNmpA@mail.gmail.com>
+Subject: Re: [PATCH mmc-next v3 1/2] dt-bindings: mmc: add alias example
+To:     Matthias Schiffer <matthias.schiffer@ew.tq-group.com>
+Cc:     Rob Herring <robh@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 3:46 AM Rich Felker <dalias@libc.org> wrote:
-> On Mon, Aug 31, 2020 at 03:15:04AM +0200, Jann Horn wrote:
-> > On Sun, Aug 30, 2020 at 10:00 PM Rich Felker <dalias@libc.org> wrote:
-> > > On Sun, Aug 30, 2020 at 09:02:31PM +0200, Jann Horn wrote:
-> > > > On Sun, Aug 30, 2020 at 8:43 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > On Sun, Aug 30, 2020 at 08:31:36PM +0200, Jann Horn wrote:
-> > > > > > On Sun, Aug 30, 2020 at 6:36 PM Rich Felker <dalias@libc.org> wrote:
-> > > > > > > So just checking IS_APPEND in the code paths used by
-> > > > > > > pwritev2 (and erroring out rather than silently writing output at the
-> > > > > > > wrong place) should suffice to preserve all existing security
-> > > > > > > invariants.
-> > > > > >
-> > > > > > Makes sense.
-> > > > >
-> > > > > There are 3 places where kiocb_set_rw_flags is called with flags that
-> > > > > seem to be controlled by userspace: aio.c, io_uring.c, and
-> > > > > read_write.c. Presumably each needs to EPERM out on RWF_NOAPPEND if
-> > > > > the underlying inode is S_APPEND. To avoid repeating the same logic in
-> > > > > an error-prone way, should kiocb_set_rw_flags's signature be updated
-> > > > > to take the filp so that it can obtain the inode and check IS_APPEND
-> > > > > before accepting RWF_NOAPPEND? It's inline so this should avoid
-> > > > > actually loading anything except in the codepath where
-> > > > > flags&RWF_NOAPPEND is nonzero.
+On Mon, 31 Aug 2020 at 09:58, Matthias Schiffer
+<matthias.schiffer@ew.tq-group.com> wrote:
+>
+> On Fri, 2020-08-28 at 16:24 -0600, Rob Herring wrote:
+> > On Tue, Aug 25, 2020 at 03:44:40PM +0200, Matthias Schiffer wrote:
+> > > As for I2C and SPI, it now is possible to reserve a fixed index for
+> > > mmc/mmcblk devices.
+> > >
+> > > Signed-off-by: Matthias Schiffer <matthias.schiffer@ew.tq-group.com
 > > > >
-> > > > You can get the file pointer from ki->ki_filp. See the RWF_NOWAIT
-> > > > branch of kiocb_set_rw_flags().
+> > > ---
 > > >
-> > > Thanks. I should have looked for that. OK, so a fixup like this on top
-> > > of the existing patch?
+> > > v3: new patch
 > > >
-> > > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > > index 473289bff4c6..674131e8d139 100644
-> > > --- a/include/linux/fs.h
-> > > +++ b/include/linux/fs.h
-> > > @@ -3457,8 +3457,11 @@ static inline int kiocb_set_rw_flags(struct kiocb *ki, rwf_t flags)
-> > >                 ki->ki_flags |= (IOCB_DSYNC | IOCB_SYNC);
-> > >         if (flags & RWF_APPEND)
-> > >                 ki->ki_flags |= IOCB_APPEND;
-> > > -       if (flags & RWF_NOAPPEND)
-> > > +       if (flags & RWF_NOAPPEND) {
-> > > +               if (IS_APPEND(file_inode(ki->ki_filp)))
-> > > +                       return -EPERM;
-> > >                 ki->ki_flags &= ~IOCB_APPEND;
-> > > +       }
-> > >         return 0;
-> > >  }
+> > >  Documentation/devicetree/bindings/mmc/mmc-controller.yaml | 8
+> > > ++++++++
+> > >  1 file changed, 8 insertions(+)
 > > >
-> > > If this is good I'll submit a v2 as the above squashed with the
-> > > original patch.
+> > > diff --git a/Documentation/devicetree/bindings/mmc/mmc-
+> > > controller.yaml b/Documentation/devicetree/bindings/mmc/mmc-
+> > > controller.yaml
+> > > index b96da0c7f819..22ed4a36c65d 100644
+> > > --- a/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> > > +++ b/Documentation/devicetree/bindings/mmc/mmc-controller.yaml
+> > > @@ -367,6 +367,14 @@ examples:
+> > >      };
+> > >
+> > >    - |
+> > > +    /*
+> > > +     * Optionally define an alias to reserve a fixed index for the
+> > > +     * mmc and mmcblk devices
+> > > +     */
+> > > +    aliases {
+> > > +        mmc0 = &mmc3;
+> > > +    };
 > >
-> > Looks good to me.
+> > This will break if we improve schemas because this node is actually
+> > /example-1/aliases.
+> >
+> > So please drop. If you want, I'd really like to have a defined set
+> > (i.e.
+> > a schema) of alias names. This would require deleting a bunch on
+> > some
+> > platforms that just made up a bunch of them.
 >
-> Actually it's not quite. I think it should be:
+> Ulf suggested that I add some kind of documentation about the new mmc
+> alias support to the binding docs.
 >
->         if ((flags & RWF_NOAPPEND) & (ki->ki_flags & IOCB_APPEND)) {
->                 if (IS_APPEND(file_inode(ki->ki_filp)))
->                         return -EPERM;
->                 ki->ki_flags &= ~IOCB_APPEND;
->         }
->
-> i.e. don't refuse RWF_NOAPPEND on a file that was already successfully
-> opened without O_APPEND that only subsequently got chattr +a. The
-> permission check should only be done if it's overriding the default
-> action for how the file is open.
->
-> This is actually related to the fcntl corner case mentioned before.
->
-> Are you ok with this change? If so I'll go ahead and prepare a v2.
+> As long as we don't have a proper schema for aliases, should I just add
+> an explanation to the toplevel description of
+> Documentation/devicetree/bindings/mmc/mmc-controller.yaml, or maybe a
+> comment?
 
-Ah, yeah, I guess that makes sense to keep things more consistent.
+I would prefer to add an explanation in the toplevel description,
+although I have no strong opinion.
 
-(You'll have to write that as "(flags & RWF_NOAPPEND) && (ki->ki_flags
-& IOCB_APPEND)" though (logical AND, not bitwise AND).)
+This is similar to what we already do for serial devices, see
+Documentation/devicetree/bindings/serial/serial.yaml.
+
+>
+>
+> >
+> > > +
+> > >      mmc3: mmc@1c12000 {
+> > >          #address-cells = <1>;
+> > >          #size-cells = <0>;
+> > > --
+> > > 2.17.1
+> > >
+>
+
+Kind regards
+Uffe
