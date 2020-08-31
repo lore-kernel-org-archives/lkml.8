@@ -2,177 +2,111 @@ Return-Path: <SRS0=8grS=CJ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1BA4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 148B7C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A369C208CA
-	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D237D208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 31 Aug 2020 09:11:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="SwTH0qPN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PgZ+VlN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728464AbgHaJKo (ORCPT
+        id S1728392AbgHaJL0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 05:10:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28722 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728184AbgHaJKG (ORCPT
+        Mon, 31 Aug 2020 05:11:26 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:43439 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728216AbgHaJLY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 05:10:06 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 07V92ZlD084013;
-        Mon, 31 Aug 2020 05:09:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references; s=pp1;
- bh=wBf/tROChMDuYAXkup8kbfwmTRrmdskmvoEJM16OTSE=;
- b=SwTH0qPNYMUaqOL1A6WqlJGQ1JwVnQkzNxAYYU0GfakZnMCH6kUM0j7PMXjaH+4pDr/E
- asXp5aqFeKGIMQ5GETvibGxTriiSjaOQB9/feRJB0VqQgo+zBxnycYRdMRy2SiXo0QLT
- yUWavtco6MkItv3NlpDlQ1Y+F2iz7bPg2VMDORsFSzcJfAhK2QXReAK7HWmivfaRiTBB
- esVm9EWP1xln+UKMe/7idJ9QrppGytQZOEwN3qH8FKXIUz0zvxhrOtRv/T7K6JZEvsQm
- pEOnt0+ObuhwfQQsLIDFqbZFO8Xf5PtSgdKe7P6pvCQp5zKilfclnENlajKiwm9i8xsL Qw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 338wgj1akm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 05:09:54 -0400
-Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 07V92pkN085113;
-        Mon, 31 Aug 2020 05:09:53 -0400
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 338wgj1ak3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 05:09:53 -0400
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 07V8TI6l007338;
-        Mon, 31 Aug 2020 09:09:51 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-        by ppma06ams.nl.ibm.com with ESMTP id 337e9gt05a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 09:09:51 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 07V99nfL28115204
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 31 Aug 2020 09:09:49 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E42F5AE055;
-        Mon, 31 Aug 2020 09:09:48 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 36C47AE045;
-        Mon, 31 Aug 2020 09:09:48 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.40.55])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 31 Aug 2020 09:09:48 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     pasic@linux.ibm.com, borntraeger@de.ibm.com, frankja@linux.ibm.com,
-        mst@redhat.com, jasowang@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com
-Subject: [PATCH v10 1/2] virtio: let arch advertise guest's memory access restrictions
-Date:   Mon, 31 Aug 2020 11:09:45 +0200
-Message-Id: <1598864986-13875-2-git-send-email-pmorel@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1598864986-13875-1-git-send-email-pmorel@linux.ibm.com>
-References: <1598864986-13875-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-31_01:2020-08-28,2020-08-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=1
- spamscore=0 clxscore=1015 mlxscore=0 phishscore=0 bulkscore=0
- priorityscore=1501 adultscore=0 lowpriorityscore=0 mlxlogscore=999
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008310051
+        Mon, 31 Aug 2020 05:11:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598865083;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+JqshhNpPVNnhGHJKO6L4g90YtK9/JkTr418DUGXswM=;
+        b=PgZ+VlN1bkvSz1DRl3vbms8MNThwSMGgasiBkfYvA0dK/3IFFqorTOYRUZCUX+ftFUQkuR
+        GGCVN4DIG/FTA4eroGGeTN6ltJZQ8kNpdxKq9aIXIqeWJFiDSmSUvefutCtk5U1Iebw8a1
+        VmqFUPnH+XaAMzOPwfK5GzZ41fSvOso=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-529-jGeupWj7PIWkIUWKuBAZlA-1; Mon, 31 Aug 2020 05:11:18 -0400
+X-MC-Unique: jGeupWj7PIWkIUWKuBAZlA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D97341006701;
+        Mon, 31 Aug 2020 09:11:16 +0000 (UTC)
+Received: from krava (unknown [10.40.193.236])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C21707EB6D;
+        Mon, 31 Aug 2020 09:11:13 +0000 (UTC)
+Date:   Mon, 31 Aug 2020 11:11:13 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Raphael Gault <raphael.gault@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Ian Rogers <irogers@google.com>, honnappa.nagarahalli@arm.com
+Subject: Re: [PATCH v2 9/9] perf: Remove x86 specific rdpmc test
+Message-ID: <20200831091113.GA406859@krava>
+References: <20200828205614.3391252-1-robh@kernel.org>
+ <20200828205614.3391252-10-robh@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828205614.3391252-10-robh@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An architecture may restrict host access to guest memory,
-e.g. IBM s390 Secure Execution or AMD SEV.
+On Fri, Aug 28, 2020 at 02:56:14PM -0600, Rob Herring wrote:
+> Now that we have a common libperf based userspace counter read test
+> with the same functionality as the x86 specific rdpmc test, let's remove
+> it.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+> This one is optional. On the plus side, it eliminates a copy of the read
+> loop. The main downside I see is loosing the ability to test in 'perf test'.
+> 
+> 
+>  tools/perf/arch/x86/include/arch-tests.h |   1 -
+>  tools/perf/arch/x86/tests/Build          |   1 -
+>  tools/perf/arch/x86/tests/arch-tests.c   |   4 -
+>  tools/perf/arch/x86/tests/rdpmc.c        | 182 -----------------------
+>  4 files changed, 188 deletions(-)
+>  delete mode 100644 tools/perf/arch/x86/tests/rdpmc.c
+> 
+> diff --git a/tools/perf/arch/x86/include/arch-tests.h b/tools/perf/arch/x86/include/arch-tests.h
+> index c41c5affe4be..d9c32ba0cdac 100644
+> --- a/tools/perf/arch/x86/include/arch-tests.h
+> +++ b/tools/perf/arch/x86/include/arch-tests.h
+> @@ -6,7 +6,6 @@
+>  struct test;
+> 
+>  /* Tests */
+> -int test__rdpmc(struct test *test __maybe_unused, int subtest);
 
-Provide a new Kconfig entry the architecture can select,
-CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS, when it provides
-the arch_has_restricted_virtio_memory_access callback to advertise
-to VIRTIO common code when the architecture restricts memory access
-from the host.
+we don't currently run libperf tests as part of perf test suite,
+so before we do that, I rather not remove the tests..
 
-The common code can then fail the probe for any device where
-VIRTIO_F_IOMMU_PLATFORM is required, but not set.
+feel free to add the code that runs libperf tests within 'perf test'
+command ;-)
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
----
- drivers/virtio/Kconfig        |  6 ++++++
- drivers/virtio/virtio.c       | 15 +++++++++++++++
- include/linux/virtio_config.h |  9 +++++++++
- 3 files changed, 30 insertions(+)
-
-diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-index 5809e5f5b157..9cd1c267c143 100644
---- a/drivers/virtio/Kconfig
-+++ b/drivers/virtio/Kconfig
-@@ -6,6 +6,12 @@ config VIRTIO
- 	  bus, such as CONFIG_VIRTIO_PCI, CONFIG_VIRTIO_MMIO, CONFIG_RPMSG
- 	  or CONFIG_S390_GUEST.
- 
-+config ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-+	bool
-+	help
-+	  This option is selected if the architecture may need to enforce
-+	  VIRTIO_F_IOMMU_PLATFORM.
-+
- menuconfig VIRTIO_MENU
- 	bool "Virtio drivers"
- 	default y
-diff --git a/drivers/virtio/virtio.c b/drivers/virtio/virtio.c
-index a977e32a88f2..57ca41d77b09 100644
---- a/drivers/virtio/virtio.c
-+++ b/drivers/virtio/virtio.c
-@@ -176,6 +176,21 @@ int virtio_finalize_features(struct virtio_device *dev)
- 	if (ret)
- 		return ret;
- 
-+	ret = arch_has_restricted_virtio_memory_access();
-+	if (ret) {
-+		if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1)) {
-+			dev_warn(&dev->dev,
-+				 "device must provide VIRTIO_F_VERSION_1\n");
-+			return -ENODEV;
-+		}
-+
-+		if (!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-+			dev_warn(&dev->dev,
-+				 "device must provide VIRTIO_F_IOMMU_PLATFORM\n");
-+			return -ENODEV;
-+		}
-+	}
-+
- 	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
- 		return 0;
- 
-diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.h
-index bb4cc4910750..e380664642b4 100644
---- a/include/linux/virtio_config.h
-+++ b/include/linux/virtio_config.h
-@@ -459,4 +459,13 @@ static inline void virtio_cwrite64(struct virtio_device *vdev,
- 		_r;							\
- 	})
- 
-+#ifdef CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
-+int arch_has_restricted_virtio_memory_access(void);
-+#else
-+static inline int arch_has_restricted_virtio_memory_access(void)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS */
-+
- #endif /* _LINUX_VIRTIO_CONFIG_H */
--- 
-2.25.1
+thanks,
+jirka
 
