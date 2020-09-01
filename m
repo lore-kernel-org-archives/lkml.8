@@ -2,124 +2,148 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CB0C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE7E6C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 113762083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BBE12078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="p683/8Oh"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Zh9tUDJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgIAEQs (ORCPT
+        id S1726212AbgIAETT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 00:16:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgIAEQq (ORCPT
+        Tue, 1 Sep 2020 00:19:19 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54568 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725987AbgIAETT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 00:16:46 -0400
-Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C05DC0612FF
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:08:22 -0700 (PDT)
-Received: by mail-oo1-xc42.google.com with SMTP id h9so2014753ooo.10
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:08:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=NaKIw5SZ2snUDIQdGMqi00rq2nlthzOV/iWfbjX5FMQ=;
-        b=p683/8OhcapwMB7X8q7CDgEHBEZLk8MTO0hDyyoM9IeA9kE1jRIaauqXjx3fBJ+pC6
-         bkI2qgc07N5yqXOBl2V6BHdGu20yzZnoZg+TwOa1qIGxyqJdwsYDs0hMfw3/KtjwkQGG
-         vnsJfnchUVEzc4BNmmdaQMjVBRx5yG/F5JNq9shKPsS9o9qcIYg1yXTFUfSHzJfH6hMv
-         4ghhrA1hsdXgGfMgZpx0cN6KtjCPhEImmwpOZ9Mppn739Hk2q9YlD9Kb/+t1IJ4r0u77
-         3tcZL+iewBUiyY+hWvxeYuAtH55WI5k52AudlT0oISRlRNItf5ty88bkLWccj4dytFLr
-         4AOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=NaKIw5SZ2snUDIQdGMqi00rq2nlthzOV/iWfbjX5FMQ=;
-        b=S7O7L3ScOyrGOFtAk82usfoQMtdLjK32+jAF2KPMhs8BHxBSoeRkss6EeyFlG6PaAH
-         x78fEqdqIVYl71Kyh+Qjmpwm2qir9M+S0cm751CM+Mf2TaMSoFA5+De3tdYiUCeJYB0T
-         NhiuSgwBamuTofOuTLVj9AS69ohRa+Gzh1x3jW0tSXcL7vYOxkT+U/+OuMyl8uX/eq7M
-         fushf+1VqnbQ4pWubfWUN32Hq516EKWf2leTzVipRmUL3ZTjWhZnUoTi7YJj/6FQxOhf
-         NCO5ybpb/UQC+llsewEAwz53N7JUigY90iu7oqAOHfRfx4XWKik1UXA0+yEJ2oLoBaHD
-         DLig==
-X-Gm-Message-State: AOAM5336fnkvcvYnIN7r5I5dJsP4/E733eEnPIb4RmBhzmk0tbVyk1Hf
-        UEIP29s9vigsQo4cSfHFZkDPkw==
-X-Google-Smtp-Source: ABdhPJzkFt5m7gLJkldd0ofDPLe6KYcRsEykTxbgdct/rik9AN7M4HTPmS3L9AsIy9mB81WhPqPoyg==
-X-Received: by 2002:a4a:dc03:: with SMTP id p3mr2986296oov.63.1598933301355;
-        Mon, 31 Aug 2020 21:08:21 -0700 (PDT)
-Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
-        by smtp.gmail.com with ESMTPSA id i23sm2070866oii.53.2020.08.31.21.08.19
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Mon, 31 Aug 2020 21:08:20 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 21:08:18 -0700 (PDT)
-From:   Hugh Dickins <hughd@google.com>
-X-X-Sender: hugh@eggly.anvils
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-cc:     Hugh Dickins <hughd@google.com>,
+        Tue, 1 Sep 2020 00:19:19 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 081431xk119262;
+        Tue, 1 Sep 2020 00:19:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=pp1; bh=Q246u/fQhcgO/yq7KHhZm2ekFkfZRubkGRPgvvC7blU=;
+ b=Zh9tUDJHTPb3QXMbh0l4b4TkPFCUsEas+cI5gzTV8VvqwuSi5tP3LsjjY7ok+kbmt50p
+ hRJMmcH/fotuOYBVHufFTgSZyDAbiNKBEUc6GPsonV9+hgz8u3A3CGBtI6s3yWmlXbmd
+ hoJ8lcw+k0Z9NxXjXL9WKeiF05C2pe7Qkg592CcY+h8z25QdDaiw89VF/KNyOt7wEQT4
+ ndH78U6AgAphmKJ5QjaVm+bT9NMkWIodMOWH9aTbmtTlmVVGT64w94j8NFTwNDymMmmR
+ WhlUIcvVFSoM9HowyKitjpJMgqnLGOFYoQy3d1ZTHkH8m9td0TBNNyuvch2gX23BgpUx 0Q== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339eg9gvk6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 00:19:10 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08143QPN121201;
+        Tue, 1 Sep 2020 00:19:10 -0400
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339eg9gvjn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 00:19:10 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0814HJEp028925;
+        Tue, 1 Sep 2020 04:19:08 GMT
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
+        by ppma06ams.nl.ibm.com with ESMTP id 337e9gty7c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 04:19:07 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0814J5o328049904
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Sep 2020 04:19:05 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A7172AE053;
+        Tue,  1 Sep 2020 04:19:05 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B524AE04D;
+        Tue,  1 Sep 2020 04:19:04 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.145.157.5])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  1 Sep 2020 04:19:04 +0000 (GMT)
+Date:   Tue, 1 Sep 2020 07:19:02 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Tony Luck <tony.luck@intel.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>, linux-mm@kvack.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 0/5] mm: fixes to past from future testing
-In-Reply-To: <9fa34576-92ec-37db-0b9c-b29d28aa8775@linux.alibaba.com>
-Message-ID: <alpine.LSU.2.11.2008312059480.1019@eggly.anvils>
-References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils> <9fa34576-92ec-37db-0b9c-b29d28aa8775@linux.alibaba.com>
-User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
+        David Rientjes <rientjes@google.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org
+Subject: Re: [PATCH] ia64: fix min_low_pfn/max_low_pfn build errors
+Message-ID: <20200901041902.GC424181@linux.ibm.com>
+References: <20200829000126.2463-1-rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Type: MULTIPART/MIXED; BOUNDARY="0-1105281253-1598933300=:1019"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829000126.2463-1-rdunlap@infradead.org>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-01_01:2020-08-31,2020-09-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 clxscore=1015 priorityscore=1501 adultscore=0 spamscore=0
+ phishscore=0 impostorscore=0 bulkscore=0 mlxscore=0 mlxlogscore=812
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Tony,
 
---0-1105281253-1598933300=:1019
-Content-Type: TEXT/PLAIN; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+I can take it via the memblock tree, would appreciate an Ack.
 
-On Tue, 1 Sep 2020, Alex Shi wrote:
-> =E5=9C=A8 2020/8/31 =E4=B8=8A=E5=8D=884:57, Hugh Dickins =E5=86=99=E9=81=
-=93:
-> > Here's a set of independent fixes against 5.9-rc2: prompted by
-> > testing Alex Shi's "warning on !memcg" and lru_lock series, but
-> > I think fit for 5.9 - though maybe only the first for stable.
-> >=20
-> > [PATCH 1/5] ksm: reinstate memcg charge on copied pages
-> > [PATCH 2/5] mm: migration of hugetlbfs page skip memcg
-> > [PATCH 3/5] shmem: shmem_writepage() split unlikely i915 THP
-> > [PATCH 4/5] mm: fix check_move_unevictable_pages() on THP
-> > [PATCH 5/5] mlock: fix unevictable_pgs event counts on THP
->=20
-> Hi Hugh,
->=20
-> Thanks a lot for reporting and fix! All fixed looks fine for me.
+On Fri, Aug 28, 2020 at 05:01:26PM -0700, Randy Dunlap wrote:
+> Fix min_low_pfn/max_low_pfn build errors for arch/ia64/: (e.g.)
+> 
+>  ERROR: "max_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
+>  ERROR: "min_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
+>  ERROR: "min_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu.ko] undefined!
+>  ERROR: "max_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu.ko] undefined!
+>  ERROR: "min_low_pfn" [drivers/crypto/cavium/nitrox/n5pf.ko] undefined!
+>  ERROR: "max_low_pfn" [drivers/crypto/cavium/nitrox/n5pf.ko] undefined!
+>  ERROR: "max_low_pfn" [drivers/md/dm-integrity.ko] undefined!
+>  ERROR: "min_low_pfn" [drivers/md/dm-integrity.ko] undefined!
+>  ERROR: "max_low_pfn" [crypto/tcrypt.ko] undefined!
+>  ERROR: "min_low_pfn" [crypto/tcrypt.ko] undefined!
+>  ERROR: "min_low_pfn" [security/keys/encrypted-keys/encrypted-keys.ko] undefined!
+>  ERROR: "max_low_pfn" [security/keys/encrypted-keys/encrypted-keys.ko] undefined!
+>  ERROR: "min_low_pfn" [arch/ia64/kernel/mca_recovery.ko] undefined!
+>  ERROR: "max_low_pfn" [arch/ia64/kernel/mca_recovery.ko] undefined!
+> 
+> David suggested just exporting min_low_pfn & max_low_pfn in
+> mm/memblock.c:
+> https://lore.kernel.org/lkml/alpine.DEB.2.22.394.2006291911220.1118534@chino.kir.corp.google.com/
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: linux-mm@kvack.org
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: linux-ia64@vger.kernel.org
+> ---
+>  arch/ia64/kernel/ia64_ksyms.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-next-20200825.orig/arch/ia64/kernel/ia64_ksyms.c
+> +++ linux-next-20200825/arch/ia64/kernel/ia64_ksyms.c
+> @@ -3,7 +3,7 @@
+>   * Architecture-specific kernel symbols
+>   */
+>  
+> -#ifdef CONFIG_VIRTUAL_MEM_MAP
+> +#if defined(CONFIG_VIRTUAL_MEM_MAP) || defined(CONFIG_DISCONTIGMEM)
+>  #include <linux/compiler.h>
+>  #include <linux/export.h>
+>  #include <linux/memblock.h>
 
-Thanks for checking.
-
->=20
-> BTW,
-> I assume you already rebased lru_lock patchset on this. So I don't=20
-> need to redo rebase again, do I? :)
-
-That's right, no need for another posting: the only ones of yours
-which don't apply cleanly on top of mine are 20/32 and 21/32,
-touching check_move_unevictable_pages(); and they're easy enough
-to resolve.
-
-With my 5 fixes in, I'll advance to commenting on yours (but not today).
-
-Hugh
---0-1105281253-1598933300=:1019--
+-- 
+Sincerely yours,
+Mike.
