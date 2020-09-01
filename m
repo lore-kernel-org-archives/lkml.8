@@ -2,123 +2,101 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1657C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9422C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCA6E2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:23:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u/8xKySa"
+	by mail.kernel.org (Postfix) with ESMTP id A4C9E214F1
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598941628;
+	bh=t7ox/qrbbbkL2ZtqqsEYnR1uZk9hfzbSyMJhMHAqzQ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=slCMMh01yRFrJxWf33LO3AXbz+AXVZ744uLztMhr8mg8HsEcBnwS85iXD0Dm1tWpu
+	 Cw2O7rg1Uee1GIxPEWE269G7LcL8ZhQkg8HR738InleGPJinZzRP2V6kZ5Ut+Vmr1r
+	 fontona6+7qg8t8c4p75+2VqxsUke+PlhdT2LLXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726939AbgIAGXy (ORCPT
+        id S1726226AbgIAG1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:23:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726657AbgIAGXu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:23:50 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AAEB8C0612AC;
-        Mon, 31 Aug 2020 23:23:49 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id v15so147430pgh.6;
-        Mon, 31 Aug 2020 23:23:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=RVGLHamJzIsi2NPjK9hiUaVNhWfKazmqgrgVWvgKEHQ=;
-        b=u/8xKySagQqUxNK94lZKIgRUUzmd+kNZBlVT095jfGRKwLcRzmv2xy2s+ZfLwXqtgQ
-         P7hlJKRJaerCDkgROptY+FHAS8AJhu0ygp1h2yGBnXYlud/cuxQRKHiONIKBwsLFM+og
-         FlWBsXuxhVqT+jGhz8HXYTIVtbh0IEYyZbkk7Tn/mjqdwrM5vMaWWmsyXBcrTbQ7TRaN
-         LX9pjncHTcPhjUV4VmcHBgASGhV1vXfJTLeu9w3CnuUpS9NMv8/Ao6IdQz/USBEnasNM
-         28MPFs47TCVMKdHti+xFDxzFU7yereCiyF8rZamDfG2RvFpYv+QRsdItbsMHgjFkf//P
-         +BBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=RVGLHamJzIsi2NPjK9hiUaVNhWfKazmqgrgVWvgKEHQ=;
-        b=IpUg/uLdYfnot/ADiWVPu/Ftm/E9ReEcnV4PcgdXqunkl4rSqOFpNkujPagtD+4IlD
-         uPQvFh92tg0opzGakiAAEGZm4a3e4+wjQVIsvlD2Bq6q8himPAJvMmMTaF8wJ32fYTAt
-         3fdSbVe77BhF2tfNQtVUtP2dLlkONjN1w/edNMf8YEECgyR6E5Oty8mCtntDPSFxMWBz
-         HvpkE7I9lDgGutVrHFigT3wN1ATouG6wX/iSWLgbLH/a/QOTjRzwt6LDfdwWRp5xwNqb
-         bc/5sdhk+WixHe+AhDvFfjF1oqUDOZF0hbdmzJqhJL1L+zOzxXga8JcN8KphL06l/PZI
-         SvWg==
-X-Gm-Message-State: AOAM531tK/owfL+hbH1NzSRuNVbdPnNsHuE/bKJg8GdN25qVpdU3r2HU
-        FZ3xdOwLVH7ks9l2Ww6BKbU=
-X-Google-Smtp-Source: ABdhPJxcnRzndGcAWpqS1MuYZXOgZ414SHNOTOUHPUuMitSjLhvCnI030JLXSMoPjWtiVx2ujhJTUw==
-X-Received: by 2002:aa7:8c0f:: with SMTP id c15mr432295pfd.284.1598941429288;
-        Mon, 31 Aug 2020 23:23:49 -0700 (PDT)
-Received: from localhost ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id w203sm358260pfc.97.2020.08.31.23.23.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 23:23:48 -0700 (PDT)
-Date:   Tue, 01 Sep 2020 16:23:43 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 09/23] m68k: use asm-generic/mmu_context.h for no-op
- implementations
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux MM <linux-mm@kvack.org>
-References: <20200826145249.745432-1-npiggin@gmail.com>
-        <20200826145249.745432-10-npiggin@gmail.com>
-        <CAMuHMdX5qo+2XpEm5QNbuwWRn508Ewee9rHYtmCBadj0x=3VnA@mail.gmail.com>
-In-Reply-To: <CAMuHMdX5qo+2XpEm5QNbuwWRn508Ewee9rHYtmCBadj0x=3VnA@mail.gmail.com>
-MIME-Version: 1.0
-Message-Id: <1598941313.t5y1w43jgl.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Tue, 1 Sep 2020 02:27:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42084 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgIAG1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:27:06 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1A692071B;
+        Tue,  1 Sep 2020 06:27:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598941625;
+        bh=t7ox/qrbbbkL2ZtqqsEYnR1uZk9hfzbSyMJhMHAqzQ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OJqNmTYapOpO2MDGn5WrVTXLtNQIoF4NdyT4gOwfLhJufZdWwqHDTjvmCAxOGvenH
+         tyg8oe0E43OHauo5AaCXhZ0DRizwxeH7vuArLk/hT4Umnr5oNUQtCz+m2UNhV6tdQr
+         fGtc2ca23M6v8clXdGQzZSUhrwFPHTltbw+vPsw8=
+Date:   Tue, 1 Sep 2020 15:27:01 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     kernel test robot <lkp@intel.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, kbuild-all@lists.01.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/6] kprobes: tracing/kprobes: Fix to kill kprobes on
+ initmem after boot
+Message-Id: <20200901152701.bd1899670b00388313b4b7e2@kernel.org>
+In-Reply-To: <202009010046.S8OcDNX5%lkp@intel.com>
+References: <159887793377.1330989.1807362919167072561.stgit@devnote2>
+        <202009010046.S8OcDNX5%lkp@intel.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Geert Uytterhoeven's message of August 27, 2020 7:33 pm:
-> On Wed, Aug 26, 2020 at 4:53 PM Nicholas Piggin <npiggin@gmail.com> wrote=
-:
->> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
->> Cc: linux-m68k@lists.linux-m68k.org
->> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
->=20
-> With the below fixed:
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
->=20
->> --- a/arch/m68k/include/asm/mmu_context.h
->> +++ b/arch/m68k/include/asm/mmu_context.h
->> @@ -79,19 +76,6 @@ static inline void switch_mm(struct mm_struct *prev, =
-struct mm_struct *next,
->>         set_context(tsk->mm->context, next->pgd);
->>  }
->>
->> -/*
->> - * After we have set current->mm to a new value, this activates
->> - * the context for the new mm so we see the new mappings.
->> - */
->> -static inline void activate_mm(struct mm_struct *active_mm,
->> -       struct mm_struct *mm)
->> -{
->> -       get_mmu_context(mm);
->> -       set_context(mm->context, mm->pgd);
->> -}
->=20
-> Assumed switch_mm() in [PATCH v2 01/23] is revived with the above body.
+On Tue, 1 Sep 2020 00:25:58 +0800
+kernel test robot <lkp@intel.com> wrote:
 
-I'm not sure what you mean here. We can remove this because it's a copy
-of switch_mm above, and that's what the new header defaults to if you
-don't provide an active_mm.
+> Hi Masami,
+> 
+> I love your patch! Yet something to improve:
+> 
+> [auto build test ERROR on tip/perf/core]
+> [also build test ERROR on trace/for-next lwn/docs-next linus/master v5.9-rc3 next-20200828]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Masami-Hiramatsu/tracing-boot-Add-new-options-for-tracing-specific-period/20200831-204738
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 2cb5383b30d47c446ec7d884cd80f93ffcc31817
+> config: arc-defconfig (attached as .config)
+> compiler: arc-elf-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arc 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    arc-elf-ld: init/main.o: in function `kernel_init':
+> >> main.c:(.ref.text+0xa6): undefined reference to `kprobe_free_init_mem'
+> >> arc-elf-ld: main.c:(.ref.text+0xa6): undefined reference to `kprobe_free_init_mem'
 
-Patch 1 should not have changed that, it should only affect the nommu
-architectures (and actually didn't touch m68k because it was not using
-the asm-generic/mmu_context.h header).
+OK, I missed to put the kprobe_free_init_mem() in the code
+depends on CONFIG_DEBUG_FS. I'll move this out.
 
-Thanks,
-Nick
+Thank you,
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
