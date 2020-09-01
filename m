@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D82C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 506C4C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C27B2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D22208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976899;
-	bh=px4bCdgldJNN2SrLtBSSsGhmQR2maebJ4rb7YVyyUBE=;
+	s=default; t=1598976904;
+	bh=RJLp00XD7TP+whWdfvsvIJ+pYOGSXaR2waw3YKDqRMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gRoc8lSNVWhB+pMZkj2rgqxsdjbUwtgJ2RRjd3jao7mb3dBQR/EhUcLD86S3YHOqK
-	 wtowxLYTmV0tpv9a5NMe9OXBsyH5Wja+9/W3n3aIQbkts03eEuE831a38zLvPuANjv
-	 P325L7OTDQA8mUvPuLKK3LLRjmUzV1jnvgWNZ350=
+	b=L2m32hc3n0i/3z8zeDriR8gdVIrHuhqjbPsjPXqOR7JXZx9q4nqGpk8uFVLreT6Q+
+	 2HRtBo5PM7CQZA7OEv+Ze7UvHA2yL5Z044IHBkRFlfROcXXsyTlCLZnA8oI2SJm1tC
+	 DV9HywP2gCbbMJ0oqqJuQNHruw11EpCSGxN6NLww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgIAPfL (ORCPT
+        id S1730625AbgIAPfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:35:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38902 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbgIAPeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:10 -0400
+        id S1728016AbgIAPeI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:08 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7897920866;
-        Tue,  1 Sep 2020 15:34:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF0D2158C;
+        Tue,  1 Sep 2020 15:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974450;
-        bh=px4bCdgldJNN2SrLtBSSsGhmQR2maebJ4rb7YVyyUBE=;
+        s=default; t=1598974447;
+        bh=RJLp00XD7TP+whWdfvsvIJ+pYOGSXaR2waw3YKDqRMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wmo/OI2T35qDvnuqmDXzr/izyY/TbE71ht5yvcUmtmIu4/dxcEopcXzwp/ceUoBS1
-         dRbGpyVZ07W+yomO8NQiC1Ky5W+rfMLQkXatY5lmh7mQrqPJwLy9g+HN+SlfwoUaG1
-         SHGxbbSlXR/wavRm2o5zt3O/JCLpWCZffkrkL0e8=
+        b=nI2ARVuuOiNXvOuAPb7SmoDoUhUrPHYec3WhvWFMjToOHjnNItlb7n1IZzDCcZdE2
+         WsoUmiRfLHLGSWUaQx9ENXYDEFu0FgGSkGGrftMBlEx0dE0E4lP7l5mtAcegXBA0jR
+         0UZMPCwur117NPr0Yz9d8MEwFg16aTMpAXS3zV/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, qiuguorui1 <qiuguorui1@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 180/214] irqchip/stm32-exti: Avoid losing interrupts due to clearing pending bits by mistake
-Date:   Tue,  1 Sep 2020 17:11:00 +0200
-Message-Id: <20200901151001.587033153@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 179/214] genirq/matrix: Deal with the sillyness of for_each_cpu() on UP
+Date:   Tue,  1 Sep 2020 17:10:59 +0200
+Message-Id: <20200901151001.542835424@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,72 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: qiuguorui1 <qiuguorui1@huawei.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit e579076ac0a3bebb440fab101aef3c42c9f4c709 upstream.
+commit 784a0830377d0761834e385975bc46861fea9fa0 upstream.
 
-In the current code, when the eoi callback of the exti clears the pending
-bit of the current interrupt, it will first read the values of fpr and
-rpr, then logically OR the corresponding bit of the interrupt number,
-and finally write back to fpr and rpr.
+Most of the CPU mask operations behave the same way, but for_each_cpu() and
+it's variants ignore the cpumask argument and claim that CPU0 is always in
+the mask. This is historical, inconsistent and annoying behaviour.
 
-We found through experiments that if two exti interrupts,
-we call them int1/int2, arrive almost at the same time. in our scenario,
-the time difference is 30 microseconds, assuming int1 is triggered first.
+The matrix allocator uses for_each_cpu() and can be called on UP with an
+empty cpumask. The calling code does not expect that this succeeds but
+until commit e027fffff799 ("x86/irq: Unbreak interrupt affinity setting")
+this went unnoticed. That commit added a WARN_ON() to catch cases which
+move an interrupt from one vector to another on the same CPU. The warning
+triggers on UP.
 
-there will be an extreme scenario: both int's pending bit are set to 1,
-the irq handle of int1 is executed first, and eoi handle is then executed,
-at this moment, all pending bits are cleared, but the int 2 has not
-finally been reported to the cpu yet, which eventually lost int2.
+Add a check for the cpumask being empty to prevent this.
 
-According to stm32's TRM description about rpr and fpr: Writing a 1 to this
-bit will trigger a rising edge event on event x, Writing 0 has no
-effect.
-
-Therefore, when clearing the pending bit, we only need to clear the
-pending bit of the irq.
-
-Fixes: 927abfc4461e7 ("irqchip/stm32: Add stm32mp1 support with hierarchy domain")
-Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org # v4.18+
-Link: https://lore.kernel.org/r/20200820031629.15582-1-qiuguorui1@huawei.com
+Fixes: 2f75d9e1c905 ("genirq: Implement bitmap matrix allocator")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-stm32-exti.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ kernel/irq/matrix.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -431,6 +431,16 @@ static void stm32_irq_ack(struct irq_dat
- 	irq_gc_unlock(gc);
- }
+--- a/kernel/irq/matrix.c
++++ b/kernel/irq/matrix.c
+@@ -380,6 +380,13 @@ int irq_matrix_alloc(struct irq_matrix *
+ 	unsigned int cpu, bit;
+ 	struct cpumap *cm;
  
-+/* directly set the target bit without reading first. */
-+static inline void stm32_exti_write_bit(struct irq_data *d, u32 reg)
-+{
-+	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-+	void __iomem *base = chip_data->host_data->base;
-+	u32 val = BIT(d->hwirq % IRQS_PER_BANK);
++	/*
++	 * Not required in theory, but matrix_find_best_cpu() uses
++	 * for_each_cpu() which ignores the cpumask on UP .
++	 */
++	if (cpumask_empty(msk))
++		return -EINVAL;
 +
-+	writel_relaxed(val, base + reg);
-+}
-+
- static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
- {
- 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-@@ -464,9 +474,9 @@ static void stm32_exti_h_eoi(struct irq_
- 
- 	raw_spin_lock(&chip_data->rlock);
- 
--	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
-+	stm32_exti_write_bit(d, stm32_bank->rpr_ofst);
- 	if (stm32_bank->fpr_ofst != UNDEF_REG)
--		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
-+		stm32_exti_write_bit(d, stm32_bank->fpr_ofst);
- 
- 	raw_spin_unlock(&chip_data->rlock);
- 
+ 	cpu = matrix_find_best_cpu(m, msk);
+ 	if (cpu == UINT_MAX)
+ 		return -ENOSPC;
 
 
