@@ -5,60 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1680CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCC5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E38E821D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6A2206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VlVvTAPL";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u/qewu0b"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="u7zu40ZA";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="InbigVta"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgIAOuV (ORCPT
+        id S1728676AbgIAOu0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:50:21 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39610 "EHLO
+        Tue, 1 Sep 2020 10:50:26 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39528 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727842AbgIALs1 (ORCPT
+        with ESMTP id S1727824AbgIALs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 07:48:27 -0400
-Date:   Tue, 01 Sep 2020 11:48:01 -0000
+Date:   Tue, 01 Sep 2020 11:47:57 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598960881;
+        s=2020; t=1598960878;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=I57UAO7P51ZgEM8V4T+HRPcJdptqpQjfQLS6YRa1cI4=;
-        b=VlVvTAPLi7Nw0Yu4X9ZXsuM4K+FFQiNyLuczRHjtBSXnrkYbcRswTaNooiiZaisX8wUvlU
-        fEuvuhOVzGIts7P9jRDIO6NiRcF/tIgwsaWOyGejdAYqDWoiQ9fZI9aMr+E8ckDY/MIX3G
-        VENVsJw7NBD+f8P+BJDDA9ch50uDzA+Aj9WjpzIiyERMG3l9ZpFZMQPHlAzbI2I6s9tX8Y
-        sAGs864SiP2we2KCaSIDmNKEXMDHpuBGWJoWhxeXS7PMC8OV+clVB7pJQ7UbrajOkGIZJP
-        nRQqIhYpyE5Zxnnsoq+hTFcg0kbsn8T2H7NHKSA+JhjP1lBe91W4v6SqVGWyAQ==
+        bh=agpKXEn4IiVG0idalDrSysa9oc+oy3SJpMth1in+B6A=;
+        b=u7zu40ZA/e6dXI/wSYWJzFGW1T4yvb9cBm+oFRIA8GyNVVGCL5SX7YzsIjAu5ATQse++o4
+        i+cLn9gliA0uVcXbCVeI4U+qeRC+u9a6x/H95C7Dk9KYOefQ/6M5tJPKXuLWNck+bWQ+PX
+        H+kS1sdgQ+KW+pnzZFcLAAadh5ylRq2WieUxYFDz7snPy7dxl6NObLgpCNbgybcPj/WMov
+        9KfotLKknteM+GddCWACmNIw5lcAfDEBirNdUtPv7Npvl1vcasaSQj799cY6ooGydzSLHF
+        OkH+rvMtLNCoA+FhaVjCDjS40FiwAI0nhczFVGSHK3xSt21ruQ43eUh31UuHYQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598960881;
+        s=2020e; t=1598960878;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=I57UAO7P51ZgEM8V4T+HRPcJdptqpQjfQLS6YRa1cI4=;
-        b=u/qewu0bFU1EFGP/qYZhZlt5wkAOHemY4DIxlSXTZvEHEoGpyRX/xW04S+jsa3MMiIqIJ9
-        WqMV5PlwCQgCu1Cw==
+        bh=agpKXEn4IiVG0idalDrSysa9oc+oy3SJpMth1in+B6A=;
+        b=InbigVtayoX2HWBQhqXki/dlnb2XS1q7Ld8luRmPJLEL8ZKR3uMCoL6tbgEP15pmJQzg6u
+        muv4I2RaWzJM1xBg==
 From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/build] vmlinux.lds.h: Add .gnu.version* to COMMON_DISCARDS
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        Fangrui Song <maskray@google.com>, linux-arch@vger.kernel.org,
+Subject: [tip: core/build] arm64/build: Remove .eh_frame* sections due to
+ unwind tables
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
         x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200821194310.3089815-3-keescook@chromium.org>
-References: <20200821194310.3089815-3-keescook@chromium.org>
+In-Reply-To: <20200821194310.3089815-11-keescook@chromium.org>
+References: <20200821194310.3089815-11-keescook@chromium.org>
 MIME-Version: 1.0
-Message-ID: <159896088111.20229.8673241506137481803.tip-bot2@tip-bot2>
+Message-ID: <159896087788.20229.17729780848112883247.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -70,46 +72,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the core/build branch of tip:
 
-Commit-ID:     dfbe69689b4dee19021d8c315a5137b4790b5634
-Gitweb:        https://git.kernel.org/tip/dfbe69689b4dee19021d8c315a5137b4790b5634
+Commit-ID:     6e0a66d10c5b629369afa47b753d0ec46fa812dd
+Gitweb:        https://git.kernel.org/tip/6e0a66d10c5b629369afa47b753d0ec46fa812dd
 Author:        Kees Cook <keescook@chromium.org>
-AuthorDate:    Fri, 21 Aug 2020 12:42:43 -07:00
+AuthorDate:    Fri, 21 Aug 2020 12:42:51 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Sep 2020 09:50:35 +02:00
+CommitterDate: Tue, 01 Sep 2020 09:50:36 +02:00
 
-vmlinux.lds.h: Add .gnu.version* to COMMON_DISCARDS
+arm64/build: Remove .eh_frame* sections due to unwind tables
 
-For vmlinux linking, no architecture uses the .gnu.version* sections,
-so remove it via the COMMON_DISCARDS macro in preparation for adding
---orphan-handling=warn more widely. This is a work-around for what
-appears to be a bug[1] in ld.bfd which warns for this synthetic section
-even when none is found in input objects, and even when no section is
-emitted for an output object[2].
+Avoid .eh_frame* section generation by making sure both CFLAGS and AFLAGS
+contain -fno-asychronous-unwind-tables and -fno-unwind-tables.
 
-[1] https://sourceware.org/bugzilla/show_bug.cgi?id=26153
-[2] https://lore.kernel.org/lkml/202006221524.CEB86E036B@keescook/
+With all sources of .eh_frame now removed from the build, drop this
+DISCARD so we can be alerted in the future if it returns unexpectedly
+once orphan section warnings have been enabled.
 
+Suggested-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Fangrui Song <maskray@google.com>
-Cc: linux-arch@vger.kernel.org
-Link: https://lore.kernel.org/r/20200821194310.3089815-3-keescook@chromium.org
+Acked-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200821194310.3089815-11-keescook@chromium.org
 ---
- include/asm-generic/vmlinux.lds.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/arm64/Makefile             | 5 ++++-
+ arch/arm64/kernel/vmlinux.lds.S | 1 -
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 184b23d..f1f02a2 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -957,7 +957,9 @@
- #define COMMON_DISCARDS							\
- 	*(.discard)							\
- 	*(.discard.*)							\
--	*(.modinfo)
-+	*(.modinfo)							\
-+	/* ld.bfd warns about .gnu.version* even when not emitted */	\
-+	*(.gnu.version*)						\
+diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
+index 55bc854..6de7f55 100644
+--- a/arch/arm64/Makefile
++++ b/arch/arm64/Makefile
+@@ -47,13 +47,16 @@ endif
  
- #define DISCARDS							\
- 	/DISCARD/ : {							\
+ KBUILD_CFLAGS	+= -mgeneral-regs-only	\
+ 		   $(compat_vdso) $(cc_has_k_constraint)
+-KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables
+ KBUILD_CFLAGS	+= $(call cc-disable-warning, psabi)
+ KBUILD_AFLAGS	+= $(compat_vdso)
+ 
+ KBUILD_CFLAGS	+= $(call cc-option,-mabi=lp64)
+ KBUILD_AFLAGS	+= $(call cc-option,-mabi=lp64)
+ 
++# Avoid generating .eh_frame* sections.
++KBUILD_CFLAGS	+= -fno-asynchronous-unwind-tables -fno-unwind-tables
++KBUILD_AFLAGS	+= -fno-asynchronous-unwind-tables -fno-unwind-tables
++
+ ifeq ($(CONFIG_STACKPROTECTOR_PER_TASK),y)
+ prepare: stack_protector_prepare
+ stack_protector_prepare: prepare0
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 13fc2ec..c2b8426 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -94,7 +94,6 @@ SECTIONS
+ 		*(.discard.*)
+ 		*(.interp .dynamic)
+ 		*(.dynsym .dynstr .hash .gnu.hash)
+-		*(.eh_frame)
+ 	}
+ 
+ 	. = KIMAGE_VADDR + TEXT_OFFSET;
