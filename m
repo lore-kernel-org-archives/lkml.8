@@ -2,109 +2,60 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A528C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AD7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 154412067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976411;
-	bh=AOQDhAs5sbYZs2BMhmI2uixw2SfSCbf3ZGUMKVmE1Xg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AoghqKQeYINdiGlKCaxULNcM/9leB9X1Gg3rXX3ycrzPBoCxI/J11pkqZsQtUEFPR
-	 JvJam+jEKEuoLgyTGMIsdLFQ8AITaD5b7M5PMZo2jFk+2hEDmHRacSfs4SpL0bYekj
-	 wIIhTV4XFbWYP96XR1WWsCGMpAUcxBK8fI7FUzoc=
+	by mail.kernel.org (Postfix) with ESMTP id BDA2E20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbgIAPkn (ORCPT
+        id S1731549AbgIAQGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:40:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48254 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:06:52 -0400
+Received: from verein.lst.de ([213.95.11.211]:53903 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728241AbgIAPiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:38:54 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FB0C20866;
-        Tue,  1 Sep 2020 15:38:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974734;
-        bh=AOQDhAs5sbYZs2BMhmI2uixw2SfSCbf3ZGUMKVmE1Xg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iHz31zlvnTqu6NxItKMPxgIA6I5yvuGNLjvbLF6/edWkX65I5vF6Me3Eo+sUFghLE
-         Uv42XAQxX4db1VjGYz6Zs48ksEW70EU46gg4vvzyA0Je15WrzAF3weBdQgmdrI7uMA
-         NnX/0Q/E6vhr6zUK0cCCnuYpg6qCHZYNlM7y0AS0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 073/255] brcmfmac: Set timeout value when configuring power save
-Date:   Tue,  1 Sep 2020 17:08:49 +0200
-Message-Id: <20200901151004.230421914@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731513AbgIAPkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:40:53 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 12DF268B05; Tue,  1 Sep 2020 17:40:50 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 17:40:49 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Rich Felker <dalias@libc.org>, Mark Brown <broonie@kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when
+ CONFIG_HAS_DMA is unset
+Message-ID: <20200901154049.GA376@lst.de>
+References: <20200901150438.228887-1-ulf.hansson@linaro.org> <20200901150654.GB30034@lst.de> <CAPDyKFqZXdtVokrDQvJAh-NzN0T2ayPD6MepemLEaDt1TRPduw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFqZXdtVokrDQvJAh-NzN0T2ayPD6MepemLEaDt1TRPduw@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+On Tue, Sep 01, 2020 at 05:36:17PM +0200, Ulf Hansson wrote:
+> > I still don't think this makes sense, as the dma_mask should always
+> > be non-NULL here.
+> 
+> If that is the case, I wonder how the driver could even have worked without DMA.
+> 
+> Because in the existing code, host->dma_dev gets assigned to
+> spi->master->dev.parent->dma_mask - which seems to turn on the DMA
+> usage in the driver.
+> 
+> What am I missing?
 
-[ Upstream commit 3dc05ffb04436020f63138186dbc4f37bd938552 ]
-
-Set the timeout value as per cfg80211's set_power_mgmt() request. If the
-requested value value is left undefined we set it to 2 seconds, the
-maximum supported value.
-
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200721112302.22718-1-nsaenzjulienne@suse.de
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c   | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-index a757abd7a5999..f4db818cccae7 100644
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
-@@ -84,6 +84,8 @@
- 
- #define BRCMF_ND_INFO_TIMEOUT		msecs_to_jiffies(2000)
- 
-+#define BRCMF_PS_MAX_TIMEOUT_MS		2000
-+
- #define BRCMF_ASSOC_PARAMS_FIXED_SIZE \
- 	(sizeof(struct brcmf_assoc_params_le) - sizeof(u16))
- 
-@@ -2941,6 +2943,12 @@ brcmf_cfg80211_set_power_mgmt(struct wiphy *wiphy, struct net_device *ndev,
- 		else
- 			bphy_err(drvr, "error (%d)\n", err);
- 	}
-+
-+	err = brcmf_fil_iovar_int_set(ifp, "pm2_sleep_ret",
-+				min_t(u32, timeout, BRCMF_PS_MAX_TIMEOUT_MS));
-+	if (err)
-+		bphy_err(drvr, "Unable to set pm timeout, (%d)\n", err);
-+
- done:
- 	brcmf_dbg(TRACE, "Exit\n");
- 	return err;
--- 
-2.25.1
-
-
-
+Do you know of other non-DMA users?  For SH nommu it probably worked
+because SH nommu used to provide a DMA implementation that worked
+fine for streaming maps, but was completely broken for coherent
+allocation.  And this driver appears to only use the former.
