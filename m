@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE845C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07989C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C55E42078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C661A206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976264;
-	bh=yHyrhqyRzo37n6XS5S+rgv5s3Y3LcuonABG1xHhiZc0=;
+	s=default; t=1598976272;
+	bh=PGfxuD/0CedvscxTZBFLO4uNZzYGlM5Fygon8FtRPoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hTce50PH1csQlBIMbHp+TcoajCMfQhamOm9qKadZrteZnXrJrFUlhzGX3kFKRntZT
-	 FC15VmTS8+9qqTra/ObVm3px71102Y2Qv2F3QxyrNLaCL0HvIHBCWy3JowEnIPdyzN
-	 BNgnztm1dW+s566XSBt+L+h+2OhdZUQF3yAZRIWQ=
+	b=KcB2diAFxCTSL1s73m5E3y/6JWrNFMWudbcPm2zOZytTMd/CdwTndopTS22wB0ct8
+	 EsKv+P9X79ZpWLRFNhiXUq6C+hKZ1KWlVo+20/1lQiRcR+vSJsE1tjG6AxSQBGJzeF
+	 /VzcYJp1ed45jIcjVFhe+aNhbx74aUKq3BTuuP4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgIAQET (ORCPT
+        id S1730023AbgIAQEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:04:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54880 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:04:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731252AbgIAPmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:42:13 -0400
+        id S1728084AbgIAPmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:42:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 391762064B;
-        Tue,  1 Sep 2020 15:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DFDE206EB;
+        Tue,  1 Sep 2020 15:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974932;
-        bh=yHyrhqyRzo37n6XS5S+rgv5s3Y3LcuonABG1xHhiZc0=;
+        s=default; t=1598974930;
+        bh=PGfxuD/0CedvscxTZBFLO4uNZzYGlM5Fygon8FtRPoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ixpzo2XL8ji44SZl6wlvYXne2s/VxYxf5VgW5xCEMS8eYKKoZMsW/0EWinhyJqM9A
-         chFOkdY8+LzEz/tgD9KR+hWPkEl+Y4Atb0u8kNJjdtjGQNtH+dY80ELgqVaqBqQhrF
-         ky1KkO3mAwDFwE8Y+a4U9oaQDvTFvQcyASO/s0o4=
+        b=YHO2C1EPlUTDawFTVp7IOnNkIOivNfBgJeHTdICFsiWYmsYVVZwB62lsZ79P0p+El
+         s+kN7D2RDvTPqercINZQ/DlyA/juHpypY0xmuMKQwcROH9FLmF8e88wuuqtAsbJAfQ
+         glfnZobgwk/Iqyfg+aRety3dScdEgUwx2HqQKZRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Antonio Borneo <antonio.borneo@st.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 118/255] spi: stm32h7: fix race condition at end of transfer
-Date:   Tue,  1 Sep 2020 17:09:34 +0200
-Message-Id: <20200901151006.382895121@linuxfoundation.org>
+Subject: [PATCH 5.8 144/255] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+Date:   Tue,  1 Sep 2020 17:10:00 +0200
+Message-Id: <20200901151007.602712332@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,42 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Antonio Borneo <antonio.borneo@st.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 135dd873d3c76d812ae64c668adef3f2c59ed27f ]
+[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
 
-The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
-is waiting for us to call spi_finalize_current_transfer() and will
-eventually schedule a new transfer, if available.
-We should guarantee that the spi controller is really available
-before calling spi_finalize_current_transfer().
+In ufshcd_suspend(), after clk-gating is suspended and link is set
+as Hibern8 state, ufshcd_hold() is still possibly invoked before
+ufshcd_suspend() returns. For example, MediaTek's suspend vops may
+issue UIC commands which would call ufshcd_hold() during the command
+issuing flow.
 
-Move the call to spi_finalize_current_transfer() _after_ the call
-to stm32_spi_disable().
+Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
+then ufshcd_hold() may enter infinite loops because there is no
+clk-ungating work scheduled or pending. In this case, ufshcd_hold()
+shall just bypass, and keep the link as Hibern8 state.
 
-Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Link: https://lore.kernel.org/r/1597043558-29668-2-git-send-email-alain.volmat@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Co-developed-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 13f3d959759fb..fce679635829c 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -972,8 +972,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
- 	spin_unlock_irqrestore(&spi->lock, flags);
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 136b863bc1d45..2b5acdfb17820 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -1566,6 +1566,7 @@ unblock_reqs:
+ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ {
+ 	int rc = 0;
++	bool flush_result;
+ 	unsigned long flags;
  
- 	if (end) {
--		spi_finalize_current_transfer(master);
- 		stm32h7_spi_disable(spi);
-+		spi_finalize_current_transfer(master);
- 	}
- 
- 	return IRQ_HANDLED;
+ 	if (!ufshcd_is_clkgating_allowed(hba))
+@@ -1597,7 +1598,9 @@ start:
+ 				break;
+ 			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+-			flush_work(&hba->clk_gating.ungate_work);
++			flush_result = flush_work(&hba->clk_gating.ungate_work);
++			if (hba->clk_gating.is_suspended && !flush_result)
++				goto out;
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
+ 			goto start;
+ 		}
 -- 
 2.25.1
 
