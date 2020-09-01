@@ -2,158 +2,253 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4414C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBE3C2BC0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78EBF20FC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598972813;
-	bh=LCDLVU8qJ08+iGKXvR5r+dlBm0nlk/9Y29X+1wE/JVY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x1SHg52beUj4C0cbi6Mfh2SOxgKAnQwS3xCI05iyc4mmqmcC0ROjXq9AITZyGUdVj
-	 549bMc1Vs2iHpl7rrU22qulU8SUuuEHrY67LK7eTBWlYIVY7yrePKMdSZG1XZu0Xzy
-	 7+T7Zat48DPtpMIpvOkJStCZ0s8o+h7PkRtXhsOc=
+	by mail.kernel.org (Postfix) with ESMTP id D3FC1214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="x1YIiGWP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728705AbgIAPGw (ORCPT
+        id S1728609AbgIAPGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:06:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728660AbgIAPGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:06:34 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8E80A20BED;
-        Tue,  1 Sep 2020 15:06:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598972792;
-        bh=LCDLVU8qJ08+iGKXvR5r+dlBm0nlk/9Y29X+1wE/JVY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wLK8Ef5foZZY9WpTlt3nC2+tsUSLEyQxiyf5H/RBoWYmwEO2QoYZ/eHVD2muJFJpg
-         5WOKgM/vWtbB3NNEhXL/iQWnZVLCKyIAz1/MGSqIRO2Nv5dNEuM0cxu4VgqNBsowle
-         Lvl53dXC9yzmzRRa6ukDJ4+J8VHvveL/geeqQAcQ=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id A4AB540D3D; Tue,  1 Sep 2020 12:06:30 -0300 (-03)
-Date:   Tue, 1 Sep 2020 12:06:30 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Al Grant <al.grant@foss.arm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: correct SNOOPX field offset
-Message-ID: <20200901150630.GB1424523@kernel.org>
-References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
- <20200825174043.GQ1509399@tassilo.jf.intel.com>
- <20200826142631.GA5351@redhat.com>
- <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
- <20200901150225.GA1424523@kernel.org>
+        Tue, 1 Sep 2020 11:06:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50468 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728337AbgIAPGM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:06:12 -0400
+Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 807F1C061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:06:11 -0700 (PDT)
+Received: by mail-qv1-xf43.google.com with SMTP id ef16so656949qvb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:06:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=G3wQ4lF+yQjVw3eGTbnf5wDvMhK9ag2us5aK+XcBt7c=;
+        b=x1YIiGWPzcFFOWHI9EgzlEIMXSNC5NZ8HBnrQI8JLoXCNsGWciffXn8aXJsVV7Grz5
+         /ifSTQEPQPsLKGBUnGIg/XduEGdE3bP9RyQFtN4JfTh/JBRLJh339UJgmN4FS/AIU/Ec
+         Lu7fOG9O8x+dOBQFs2/EmXWrRGaU2YSzPDd1M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=G3wQ4lF+yQjVw3eGTbnf5wDvMhK9ag2us5aK+XcBt7c=;
+        b=HSd07BGLVQLQOZou1tj/x7JAeRExH4h/dJlbR+mR/AU+mwlgzm1pYZIvQPllKXCWUN
+         CrFKCGpCWFP461JLx6aIlvqDqZkqB9WvNFtD1s6oZe6Qeb2ECaklHVt2fFZUFsdrykuN
+         +26hxLNKpWe6zuSQUorxcq/Gdu7cEFrFaUrSySw+Bwvece93GP79v3fZvNkBIKxAwh+T
+         CfaV77H9ok83FS4vnQAhFtXpcvQfmdn10g3nJOhSmm4imJojZBpsOpmCgyhmOFpWycOS
+         Nrs8+2rwP0oKsLnM1+tLyimsrDC3oN1PDAoyiKLr9XhVXlpifsGcvHp4seZBkCrOZ9kt
+         HoOA==
+X-Gm-Message-State: AOAM532edp7hbfR1Q3nESG0nFyfg2Yg392j+emwjMMPwMaHtG/6reO5g
+        U5oZOG8AymAi5plkGC7Tz43O4Q==
+X-Google-Smtp-Source: ABdhPJwA9/HKRCH9Li6CXShU/h6qZiCq0jQ9WujUEL69odw2A4N56bpsQ2bIZZduaM37C+xJuDf8cQ==
+X-Received: by 2002:a05:6214:2a:: with SMTP id b10mr2532081qvr.0.1598972770573;
+        Tue, 01 Sep 2020 08:06:10 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
+        by smtp.gmail.com with ESMTPSA id e9sm1924377qkb.8.2020.09.01.08.06.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 08:06:09 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 11:06:09 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, boqun.feng@gmail.com,
+        dave@stgolabs.net, Ingo Molnar <mingo@redhat.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        neeraj.iitr10@gmail.com, rcu@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>, vineethrp@gmail.com
+Subject: Re: [PATCH v4 -rcu 1/4] rcu/segcblist: Do not depend on rcl->len to
+ store the segcb len during merge
+Message-ID: <20200901150609.GA1506230@google.com>
+References: <20200825024842.3408659-1-joel@joelfernandes.org>
+ <20200825024842.3408659-2-joel@joelfernandes.org>
+ <20200825200809.GW2855@paulmck-ThinkPad-P72>
+ <20200825224723.GB579506@google.com>
+ <20200826142028.GN2855@paulmck-ThinkPad-P72>
+ <20200827225518.GB3821640@google.com>
+ <20200828141855.GO2855@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901150225.GA1424523@kernel.org>
-X-Url:  http://acmel.wordpress.com
+In-Reply-To: <20200828141855.GO2855@paulmck-ThinkPad-P72>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Sep 01, 2020 at 12:02:25PM -0300, Arnaldo Carvalho de Melo escreveu:
-> Em Wed, Aug 26, 2020 at 03:33:35PM +0100, Al Grant escreveu:
-> > On 26/08/2020 15:26, Arnaldo Carvalho de Melo wrote:
-> > > Em Tue, Aug 25, 2020 at 10:40:43AM -0700, Andi Kleen escreveu:
-> > > > On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
-> > > > > perf_event.h has macros that define the field offsets in the
-> > > > > data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-> > > > > were both 37. These are distinct fields, and the bitfield layout
-> > > > > in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+Hi,
+Resuming regular activities here, post-LPC :)
+
+On Fri, Aug 28, 2020 at 07:18:55AM -0700, Paul E. McKenney wrote:
+> On Thu, Aug 27, 2020 at 06:55:18PM -0400, Joel Fernandes wrote:
+> > On Wed, Aug 26, 2020 at 07:20:28AM -0700, Paul E. McKenney wrote:
+> > [...]
+> > > > > Or better yet, please see below, which should allow getting rid of both
+> > > > > of them.
+> > > > > 
+> > > > > >  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
+> > > > > >  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
+> > > > > > -	rcu_segcblist_insert_count(dst_rsclp, &donecbs);
+> > > > > > +
+> > > > > > +	rcu_segcblist_add_len(dst_rsclp, src_len);
+> > > > > >  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
+> > > > > >  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
+> > > > > 
+> > > > > Rather than adding the blank lines, why not have the rcu_cblist structures
+> > > > > carry the lengths?  You are already adjusting one of the two call sites
+> > > > > that care (rcu_do_batch()), and the other is srcu_invoke_callbacks().
+> > > > > That should shorten this function a bit more.  And make callback handling
+> > > > > much more approachable, I suspect.
 > > > > 
-> > > > Looks good.
+> > > > Sorry, I did not understand. The rcu_cblist structure already has a length
+> > > > field. I do modify rcu_segcblist_extract_done_cbs() and
+> > > > rcu_segcblist_extract_pend_cbs() to carry the length already, in a later
+> > > > patch.
 > > > > 
-> > > > Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> > > > 
-> > > > Probably should have a Fixes: header
+> > > > Just to emphasize, this patch is just a small refactor to avoid an issue in
+> > > > later patches. It aims to keep current functionality unchanged.
 > > > 
-> > > Please do so, find the patch that introduced the error, add the Fixes
-> > > tag, will help me not having to do it myself :-)
+> > > True enough.  I am just suggesting that an equally small refactor in
+> > > a slightly different direction should get to a better place.  The key
+> > > point enabling this slightly different direction is that this code is
+> > > an exception to the "preserve ->cblist.len" rule because it is invoked
+> > > only from the CPU hotplug code.
+> > > 
+> > > So you could use the rcu_cblist .len field to update the ->cblist.len
+> > > field, thus combining the _cbs and _count updates.  One thing that helps
+> > > is that setting th e rcu_cblist .len field doesn't hurt the other use
+> > > cases that require careful handling of ->cblist.len.
 > > 
-> > Fixes: 52839e653b562 ("perf tools: Add support for printing new mem_info
-> > encodings")
+> > Thank you for the ideas. I am trying something like this on top of this
+> > series based on the ideas. One thing I concerned a bit is if getting rid of
+> > the rcu_segcblist_xchg_len() function (which has memory barriers in them)
+> > causes issues in the hotplug path. I am now directly updating the length
+> > without additional memory barriers. I will test it more and try to reason
+> > more about it as well.
 > 
-> Ok, I'll add that, thanks.
+> In this particular case, the CPU-hotplug locks prevent rcu_barrier()
+> from running concurrently, so it should be OK.  Is there an easy way
+> to make lockdep help us check this?  Does lockdep_assert_cpus_held()
+> suffice, or is it too easily satisfied?
+
+Just to clarify, the race you mention is rcu_barrier() should not run
+concurrently with CPU hotplug operation.
+
+The reason is:
+rcu_barrier() checks whether the segmented list's length is 0 before sending
+IPIs for entraining a callback onto the destination CPU. But if it
+misunderstands the length's value due to a lack of memory barriers, it may
+not missing sending an IPI causing the barrier to fail. Please correct me if
+I'm wrong though.
+
+Due to CPU hotplug locking, such race is impossible because both
+rcu_barrier() and the CPU migrating the callbacks holds it.
+
+I think the lockdep_assert_cpus_held() may suffice. I can add it to the
+rcu_segcblist_merge() function.
+
+BTW, I think we can simplify rcu_barrier() a bit and combine the tracepoint
+and rid one outer if clause (diff at end of email).
+
+> >  }
+> >  
+> >  /*
+> > @@ -448,6 +419,7 @@ void rcu_segcblist_insert_done_cbs(struct rcu_segcblist *rsclp,
+> >  			break;
+> >  	rclp->head = NULL;
+> >  	rclp->tail = &rclp->head;
+> > +	rcu_segcblist_add_len(rsclp, rclp->len);
 > 
-> But you forgot to add your Signed-off-by:, can you please provide it?
+> Does there need to be a compensating action in rcu_do_batch(), or is
+> this the point of the "rcu_segcblist_add_len(rsclp, -(rclp->len));"
+> added to rcu_segcblist_extract_done_cbs() above?
 > 
-> There was also a minor problem in the patch, there was no separation of
-> --- from the patch comment section to the patch itself, I'll fix that as
-> well.
+> If so, a comment would be good.
 
-Also you mixed up tools/ with include/ things, the perf part of the
-kernel is maintained by Ingo, PeterZ.
+I think external compensation by rcu_do_batch is not needed, its best to
+handle all cblist.len modifications internally in the segcblist API
+where possible.
 
-Peter, the patch is the one below, I'll collect the
-tools/include/uapi/linux/perf_event.h bit as it fixes the tooling,
-please consider taking the kernel part.
+> >  /*
+> > @@ -463,6 +435,7 @@ void rcu_segcblist_insert_pend_cbs(struct rcu_segcblist *rsclp,
+> >  	rcu_segcblist_add_seglen(rsclp, RCU_NEXT_TAIL, rclp->len);
+> >  	WRITE_ONCE(*rsclp->tails[RCU_NEXT_TAIL], rclp->head);
+> >  	WRITE_ONCE(rsclp->tails[RCU_NEXT_TAIL], rclp->tail);
+> > +	rcu_segcblist_add_len(rsclp, rclp->len);
+> >  }
+> >  
+> >  /*
+> > @@ -601,16 +574,13 @@ void rcu_segcblist_merge(struct rcu_segcblist *dst_rsclp,
+> >  {
+> >  	struct rcu_cblist donecbs;
+> >  	struct rcu_cblist pendcbs;
+> > -	long src_len;
+> >  
+> >  	rcu_cblist_init(&donecbs);
+> >  	rcu_cblist_init(&pendcbs);
+> >  
+> > -	src_len = rcu_segcblist_xchg_len(src_rsclp, 0);
+> >  	rcu_segcblist_extract_done_cbs(src_rsclp, &donecbs);
+> >  	rcu_segcblist_extract_pend_cbs(src_rsclp, &pendcbs);
+> >  
+> > -	rcu_segcblist_add_len(dst_rsclp, src_len);
+> >  	rcu_segcblist_insert_done_cbs(dst_rsclp, &donecbs);
+> >  	rcu_segcblist_insert_pend_cbs(dst_rsclp, &pendcbs);
+> 
+> Can we now pair the corresponding _extract_ and _insert_ calls, thus
+> requiring only one rcu_cblist structure?  This would drop two more lines
+> of code.  Or would that break something?
 
-Thanks,
+That could work as well, yes. But may not be worth adding another function to
+combine extract/insert operation, since the extract and insert operations are
+needed by rcutree and srcutree as well (other than hotplug).
 
-- Arnaldo
+thanks,
 
----
+ - Joel
 
-From:   Al Grant <al.grant@foss.arm.com>
-Subject: [PATCH] perf: correct SNOOPX field offset
-Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
-Date:   Mon, 24 Aug 2020 10:28:34 +0100
+---8<-----------------------
 
-perf_event.h has macros that define the field offsets in the
-data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-were both 37. These are distinct fields, and the bitfield layout
-in perf_mem_data_src confirms that SNOOPX should be at offset 38.
-
-Signed-off-by: Al Grant <al.grant@arm.com>
-
----
-
-  include/uapi/linux/perf_event.h       | 2 +-
-  tools/include/uapi/linux/perf_event.h | 2 +-
-  2 files changed, 2 insertions(+), 2 deletions(-)
-
----
-
-diff --git a/include/uapi/linux/perf_event.h 
-b/include/uapi/linux/perf_event.h
-index 077e7ee69e3d..3e5dcdd48a49 100644
---- a/include/uapi/linux/perf_event.h
-+++ b/include/uapi/linux/perf_event.h
-@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-
-  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
-  /* 1 free */
--#define PERF_MEM_SNOOPX_SHIFT  37
-+#define PERF_MEM_SNOOPX_SHIFT  38
-
-  /* locked instruction */
-  #define PERF_MEM_LOCK_NA       0x01 /* not available */
-diff --git a/tools/include/uapi/linux/perf_event.h 
-b/tools/include/uapi/linux/perf_event.h
-index 077e7ee69e3d..3e5dcdd48a49 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-
-  #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
-  /* 1 free */
--#define PERF_MEM_SNOOPX_SHIFT  37
-+#define PERF_MEM_SNOOPX_SHIFT  38
-
-  /* locked instruction */
-  #define PERF_MEM_LOCK_NA       0x01 /* not available */
+diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+index 16ad99a9ebba..274a1845ad38 100644
+--- a/kernel/rcu/tree.c
++++ b/kernel/rcu/tree.c
+@@ -3856,17 +3856,16 @@ void rcu_barrier(void)
+ 		if (cpu_is_offline(cpu) &&
+ 		    !rcu_segcblist_is_offloaded(&rdp->cblist))
+ 			continue;
+-		if (rcu_segcblist_n_cbs(&rdp->cblist) && cpu_online(cpu)) {
+-			rcu_barrier_trace(TPS("OnlineQ"), cpu,
+-					  rcu_state.barrier_sequence);
+-			smp_call_function_single(cpu, rcu_barrier_func, (void *)cpu, 1);
+-		} else if (rcu_segcblist_n_cbs(&rdp->cblist) &&
+-			   cpu_is_offline(cpu)) {
+-			rcu_barrier_trace(TPS("OfflineNoCBQ"), cpu,
+-					  rcu_state.barrier_sequence);
+-			local_irq_disable();
+-			rcu_barrier_func((void *)cpu);
+-			local_irq_enable();
++		if (rcu_segcblist_n_cbs(&rdp->cblist)) {
++			rcu_barrier_trace(cpu_online(cpu) ? TPS("OnlineQ") : TPS("OfflineNoCBQ"),
++					  cpu, rcu_state.barrier_sequence);
++			if (cpu_online(cpu)) {
++				smp_call_function_single(cpu, rcu_barrier_func, (void *)cpu, 1);
++			} else {
++				local_irq_disable();
++				rcu_barrier_func((void *)cpu);
++				local_irq_enable();
++			}
+ 		} else if (cpu_is_offline(cpu)) {
+ 			rcu_barrier_trace(TPS("OfflineNoCBNoQ"), cpu,
+ 					  rcu_state.barrier_sequence);
