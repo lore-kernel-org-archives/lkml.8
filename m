@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 004EBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E919EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3B952078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B762720767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979484;
-	bh=CdsX10OOX4aiQ4PMa0R+6rZknsSIDJsbXagb4me3NZk=;
+	s=default; t=1598979486;
+	bh=k0rWLmZwDfjD4ftltvqsxTxBu0HTcoclSTPOtjMPq7w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UcTJ08SiEsZDcvWnkVXFV6n/hQbhTq6v/RGPDiIW9oB3zBpP/cjs6e8CUIF8LTa+p
-	 P68DNZQF8Any0Ifw8NMSlDUNMYFVqatFbhmjGXFU98qqkgLYov5VPENt+tcNME0xCq
-	 ySSp40gVB/5Tx7HSD19SxGucjZGjF2tTGIJRB+28=
+	b=p/D7U0VdasJsElk4j75larbji6kBwMTTMYtKOZb+1ZxSOCtErcMETBzWneniwPf1g
+	 cxBo1axAqxAFDzSuhBeK+WzRklIJfDmVjRSJcPsB/W9EZDLQk+QPqjf3dX/ykPLDCj
+	 ix5iJW3oID0psKBhyW69y5CiQEyH6/C1HmjX/4ds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732331AbgIAQ6D (ORCPT
+        id S1732430AbgIAQ6E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:58:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44798 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:58:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729378AbgIAPWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:22:45 -0400
+        id S1729692AbgIAPWs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:22:48 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8171206FA;
-        Tue,  1 Sep 2020 15:22:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 247712100A;
+        Tue,  1 Sep 2020 15:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973765;
-        bh=CdsX10OOX4aiQ4PMa0R+6rZknsSIDJsbXagb4me3NZk=;
+        s=default; t=1598973767;
+        bh=k0rWLmZwDfjD4ftltvqsxTxBu0HTcoclSTPOtjMPq7w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KysTG/2L+HE8fMe3QaPVx3StYy9vLSawos81erT6wfbWycMZU4r8G2Yw4Tz/wcqTh
-         rAdZIW7uT73Ijbfd0xEkkWWipjH0Q1iGJnuYI6gq68SOOMt67zsZrioFRujXWJqxcA
-         MoejoklV/ZKjLYZFjzcH5c+2DIBvhFQf0m1DrFYo=
+        b=gGqUg83CHc20YXhwUCr+uOzYNWHoV3lINm2j781b8BOI8mvFxY0AeDZHcBuiMgPsU
+         TkVyBPhG7ZQcO1HsIuK2uC+yu2H1FaE8YcCEJoAEUouGOUcTw2CdiU5K11ODnziXAu
+         XAbpnPgtSD71XUel7sBF5TnoBRMkcveK1v0qYdz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
         Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/125] drm/nouveau/drm/noveau: fix reference count leak in nouveau_fbcon_open
-Date:   Tue,  1 Sep 2020 17:09:53 +0200
-Message-Id: <20200901150936.430244325@linuxfoundation.org>
+Subject: [PATCH 4.19 039/125] drm/nouveau: fix reference count leak in nv50_disp_atomic_commit
+Date:   Tue,  1 Sep 2020 17:09:54 +0200
+Message-Id: <20200901150936.481822809@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -62,9 +62,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit bfad51c7633325b5d4b32444efe04329d53297b2 ]
+[ Upstream commit a2cdf39536b0d21fb06113f5e16692513d7bcb9c ]
 
-nouveau_fbcon_open() calls calls pm_runtime_get_sync() that
+nv50_disp_atomic_commit() calls calls pm_runtime_get_sync and in turn
 increments the reference count. In case of failure, decrement the
 ref count before returning the error.
 
@@ -72,25 +72,25 @@ Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_fbcon.c | 4 +++-
+ drivers/gpu/drm/nouveau/dispnv50/disp.c | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_fbcon.c b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-index 406cb99af7f21..d4fe52ec4c966 100644
---- a/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_fbcon.c
-@@ -189,8 +189,10 @@ nouveau_fbcon_open(struct fb_info *info, int user)
- 	struct nouveau_fbdev *fbcon = info->par;
- 	struct nouveau_drm *drm = nouveau_drm(fbcon->helper.dev);
- 	int ret = pm_runtime_get_sync(drm->dev->dev);
+diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+index 10107e551fac3..e06ea8c8184cb 100644
+--- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
++++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
+@@ -1920,8 +1920,10 @@ nv50_disp_atomic_commit(struct drm_device *dev,
+ 	int ret, i;
+ 
+ 	ret = pm_runtime_get_sync(dev->dev);
 -	if (ret < 0 && ret != -EACCES)
 +	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put(drm->dev->dev);
++		pm_runtime_put_autosuspend(dev->dev);
  		return ret;
 +	}
- 	return 0;
- }
  
+ 	ret = drm_atomic_helper_setup_commit(state, nonblock);
+ 	if (ret)
 -- 
 2.25.1
 
