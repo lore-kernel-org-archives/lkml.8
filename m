@@ -2,198 +2,95 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C13C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EF4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 377EA2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IERvtppr"
+	by mail.kernel.org (Postfix) with ESMTP id B4C442067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598972202;
+	bh=sCpI4sCnV3VGw7tpt2uhRXxYsas+I7NB/Odw+Dl23IY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=FTo5IDwxCsslGfKlvXiDh5LZVa2UlOl76M1l7Sl7UwyF543K3eD+Xrd9Ehk6goXUd
+	 YO3Hi0dbWK4OGl1Nw9sdpu7Z6jWmPl9Kcg/ihD+SjIZ6Kip5OOfTDLaBmkiXXgcyrq
+	 usSI4ZfzZNmB9qWvtMdJqAi3ESKmOC5Ene5RvfKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728832AbgIAO4c (ORCPT
+        id S1728685AbgIAO4l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:56:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgIALbA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:56:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726800AbgIALbA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 07:31:00 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504A6C061247;
-        Tue,  1 Sep 2020 04:29:57 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id d27so550478qtg.4;
-        Tue, 01 Sep 2020 04:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
-        b=IERvtpprRpsI2hed0dHnnYBJc2bTsfXDoVwNNjG0Ec1Sz8CRuOUarz+Porf5yRfHFu
-         30cRoDkuZP41QRrigZa6y9lS/Q9+jFle0rPTgtwQN4bp84V8ocprAVuzMQ9FqTehBEzY
-         4MDJIPAYpDQqg5MZ+6ZUTXTmOnuGZXEK8IgCV4orCkGUrRtsYcj/Ywc1ICPwnctC/GyI
-         dJzhbEYwl61cZTl24h34xARkW2Zaqa/kOmK3OayGekDtkeFds1gFNQRmSyQ/QvyDfdw+
-         OEnwNuiuobwmd/AEPMOV6cmL4S085Ju8J83/4o3yZA4u2o3mkHjbyG61560pFu+G2c5p
-         TvfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
-        b=G71dvjwIu488zUUjmMoWDTLeZ/wY1GVSDhux2sTucSujqYmKot2Nq0A7QY/g/nSguk
-         /2MnBBotSaK6dVANc/725/FqCJ76wRfpBHGaoIQpdxZboGa8QSBikS/eS7DotIMV2Lpx
-         pEokqnWf1EyBjlovce/6LFBQ3llUYbjDuc5giQkAmfxyAggVnhdEsMWUvidyqlE3Fd3y
-         UDfTeqfiWixrCUALqrS1wMQOuD08ftGEfcq+JpnG/SM6w/3+Oj7sYZNQ6HLBn6eheGwt
-         AYPQFxmmu6mwzEpbar+V42Lj/Trs6OQ6qurh7R/AmS/xm1yJIBrnGIKCFrSGA6j5jkSv
-         RqYw==
-X-Gm-Message-State: AOAM533xxmhHTiJ3mQLWUvys/hzohLIhit6UpntJGSYOiftYuztVxs46
-        oApsWFtjQW14glwe6JoEiU9T3HzlHpIhxU9GPEArsfF1lf43xA==
-X-Google-Smtp-Source: ABdhPJwVT407rq1wSU6XLfBx35x7TqzLfOV0jdufGiWqhxHXDja0Uvn0+tpPRWaGd0lmv1UnRMyszboqVwIOVOloAYU=
-X-Received: by 2002:ac8:7741:: with SMTP id g1mr1183471qtu.28.1598959796622;
- Tue, 01 Sep 2020 04:29:56 -0700 (PDT)
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A09206EF;
+        Tue,  1 Sep 2020 11:04:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598958269;
+        bh=sCpI4sCnV3VGw7tpt2uhRXxYsas+I7NB/Odw+Dl23IY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FDd3LEddcQgT0dEr51HuI/Fty7nNad3vVXzB/Minh19fwULeTvHYJBVc55s4eLpbi
+         Ezharmx8LU+LlA4FUvouooc2+VAvv/clRrm1h0zLWfMr02QvnX/a0TPzJTnB2FUQJz
+         OGJ6uDai7gdiYK0TaEVL7t8ylfh+2c7WS7AXdI2g=
+Date:   Tue, 1 Sep 2020 12:03:49 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] dt-bindings: sound: midas-audio: Correct parsing
+ sound-dai phandles
+Message-ID: <20200901110349.GC6262@sirena.org.uk>
+References: <20200830112633.6732-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200831182239.480317-1-masahiroy@kernel.org>
-In-Reply-To: <20200831182239.480317-1-masahiroy@kernel.org>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Tue, 1 Sep 2020 19:29:19 +0800
-Message-ID: <CAEbi=3cqogHs=p_y=_jfcC+D5a9e5=Nic=ECr_YvJ9p-DZEAJQ@mail.gmail.com>
-Subject: Re: [PATCH] arch: vdso: add vdso linker script to 'targets' instead
- of extra-y
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nick Hu <nickhu@andestech.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
+Content-Disposition: inline
+In-Reply-To: <20200830112633.6732-1-krzk@kernel.org>
+X-Cookie: Equal bytes for women.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <masahiroy@kernel.org> =E6=96=BC 2020=E5=B9=B49=E6=9C=881=
-=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:23=E5=AF=AB=E9=81=93=EF=BC=
-=9A
->
-> The vdso linker script is preprocessed on demand.
-> Adding it to 'targets' is enough to include the .cmd file.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  arch/arm64/kernel/vdso/Makefile     | 2 +-
->  arch/arm64/kernel/vdso32/Makefile   | 2 +-
->  arch/nds32/kernel/vdso/Makefile     | 2 +-
->  arch/powerpc/kernel/vdso32/Makefile | 2 +-
->  arch/powerpc/kernel/vdso64/Makefile | 2 +-
->  arch/s390/kernel/vdso64/Makefile    | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Mak=
-efile
-> index 45d5cfe46429..7cd8aafbe96e 100644
-> --- a/arch/arm64/kernel/vdso/Makefile
-> +++ b/arch/arm64/kernel/vdso/Makefile
-> @@ -54,7 +54,7 @@ endif
->  GCOV_PROFILE :=3D n
->
->  obj-y +=3D vdso.o
-> -extra-y +=3D vdso.lds
-> +targets +=3D vdso.lds
->  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32=
-/Makefile
-> index d6adb4677c25..572475b7b7ed 100644
-> --- a/arch/arm64/kernel/vdso32/Makefile
-> +++ b/arch/arm64/kernel/vdso32/Makefile
-> @@ -155,7 +155,7 @@ asm-obj-vdso :=3D $(addprefix $(obj)/, $(asm-obj-vdso=
-))
->  obj-vdso :=3D $(c-obj-vdso) $(c-obj-vdso-gettimeofday) $(asm-obj-vdso)
->
->  obj-y +=3D vdso.o
-> -extra-y +=3D vdso.lds
-> +targets +=3D vdso.lds
->  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency (vdso.s includes vdso.so through incbin)
-> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Mak=
-efile
-> index 7c3c1ccb196e..55df25ef0057 100644
-> --- a/arch/nds32/kernel/vdso/Makefile
-> +++ b/arch/nds32/kernel/vdso/Makefile
-> @@ -20,7 +20,7 @@ GCOV_PROFILE :=3D n
->
->
->  obj-y +=3D vdso.o
-> -extra-y +=3D vdso.lds
-> +targets +=3D vdso.lds
->  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency
-> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vd=
-so32/Makefile
-> index 87ab1152d5ce..fd5072a4c73c 100644
-> --- a/arch/powerpc/kernel/vdso32/Makefile
-> +++ b/arch/powerpc/kernel/vdso32/Makefile
-> @@ -29,7 +29,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
-ib \
->  asflags-y :=3D -D__VDSO32__ -s
->
->  obj-y +=3D vdso32_wrapper.o
-> -extra-y +=3D vdso32.lds
-> +targets +=3D vdso32.lds
->  CPPFLAGS_vdso32.lds +=3D -P -C -Upowerpc
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vd=
-so64/Makefile
-> index 38c317f25141..c737b3ea3207 100644
-> --- a/arch/powerpc/kernel/vdso64/Makefile
-> +++ b/arch/powerpc/kernel/vdso64/Makefile
-> @@ -17,7 +17,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
-ib \
->  asflags-y :=3D -D__VDSO64__ -s
->
->  obj-y +=3D vdso64_wrapper.o
-> -extra-y +=3D vdso64.lds
-> +targets +=3D vdso64.lds
->  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
->
->  # Force dependency (incbin is bad)
-> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/M=
-akefile
-> index 4a66a1cb919b..d0d406cfffa9 100644
-> --- a/arch/s390/kernel/vdso64/Makefile
-> +++ b/arch/s390/kernel/vdso64/Makefile
-> @@ -25,7 +25,7 @@ $(targets:%=3D$(obj)/%.dbg): KBUILD_CFLAGS =3D $(KBUILD=
-_CFLAGS_64)
->  $(targets:%=3D$(obj)/%.dbg): KBUILD_AFLAGS =3D $(KBUILD_AFLAGS_64)
->
->  obj-y +=3D vdso64_wrapper.o
-> -extra-y +=3D vdso64.lds
-> +targets +=3D vdso64.lds
->  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
->
->  # Disable gcov profiling, ubsan and kasan for VDSO code
 
-For nds32:
+--zCKi3GIZzVBPywwA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Greentime Hu <green.hu@gmail.com>
+On Sun, Aug 30, 2020 at 01:26:32PM +0200, Krzysztof Kozlowski wrote:
+> The "sound-dai" property has cells therefore phandle-array should be
+> used, even if it is just one phandle.  This fixes dtbs_check warnings
+> like:
+
+Please submit patches using subject lines reflecting the style for the
+subsystem, this makes it easier for people to identify relevant patches.
+Look at what existing commits in the area you're changing are doing and
+make sure your subject lines visually resemble what they're doing.
+There's no need to resubmit to fix this alone.
+
+--zCKi3GIZzVBPywwA
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl9OKpQACgkQJNaLcl1U
+h9DsLwgAhvsY22laZUsm46wBuYEqas5QBnB4KMgxezBwkPaRr5NrJsVQMp2S9QI1
+gZzZ5eFVZZYB6Ij8hFNZKlgGp5W+D1negXAJ8WhH8zFXsgg1F+SZmFFD9/6reT5M
+1gab7+yPGHs6FLLJ1VbQnyv0xEcV6RnNgTKC3KuUH4Y2LHSDj6qzwYMZWl29Xu8t
+p9VZtWTg5g/upxDxbsW8vLVddkjb6KcdhbVsZQ+qb0QxibK8nX+8XbTWyH6T3OeS
+4FtJYdEsaHXhkrSDJtf1XpnXVG9RfBgNReqwmHTxdP2PSLDpFR7sCB6FLtNrJfAI
+fpab8x1a5104UrbblCQD6ny1IGwvQg==
+=Emty
+-----END PGP SIGNATURE-----
+
+--zCKi3GIZzVBPywwA--
