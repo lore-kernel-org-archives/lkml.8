@@ -2,59 +2,62 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C28C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE6BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5EB5320FC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B73A7206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973280;
-	bh=Y38FgM6FIMzwLyhy++yolAWrK7vhSWYLo5N1TXIn1mk=;
+	s=default; t=1598973292;
+	bh=GJJPdSkny/5XoFP8yqKRzTNzBrHdn7FiGouB1ZnnFas=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IKRc5QCivmTC7yLGiqaOvUKj+7CP3H86mI0B62bqu2PdaJM+2swwIPWzCuaFhflx3
-	 naGOwhgcTGX2/WrrMuHdOm40wEbrdRC1nnub7u3puFIgqWjEMSML0cy0N1LcKR/jxI
-	 lgIRNR3sWFXu4rfuFKcj5d0UIgykFZEeSlqCs0R4=
+	b=nCY/W7QwwOlwQDR+7At1kVR7nxAxseBjnYskhbCnp8mLwZ58FYc/Yy/EILxTCJESp
+	 TCTwQnR7NPvLb5cPi9RLb8zs4F7JdP9xSB8++wpClTkBjM5NDXEWwjRtPTXLStWQyh
+	 fQqiOkpwaR3hH0eh4KhWXTD17sQBbxjgmEoN239Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729066AbgIAPOh (ORCPT
+        id S1729129AbgIAPOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:14:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57144 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:14:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728964AbgIAPNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:47 -0400
+        id S1729031AbgIAPOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 682E9206EB;
-        Tue,  1 Sep 2020 15:13:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C35206FA;
+        Tue,  1 Sep 2020 15:14:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973226;
-        bh=Y38FgM6FIMzwLyhy++yolAWrK7vhSWYLo5N1TXIn1mk=;
+        s=default; t=1598973261;
+        bh=GJJPdSkny/5XoFP8yqKRzTNzBrHdn7FiGouB1ZnnFas=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1XmZT8Hs84+ORIukfI7uGLenC6d/Ko0e7WzIoFXqHNaDqtF8keTxu5u9oXYe/jU2C
-         8qm99dqZJiSdA/2Xk+7CHLynBeg2NDA5pS75sqSGEnJ7n9vGjhmSOeDsP/C3EMgwHB
-         ieifLcWEdvA9wXzj3wRwZlJKFs+kSuZGMqSauV8M=
+        b=XdCpnnisWAQ5ELQfKBj2r+MXSJwulZPXb4eKbENxcYsh4L23PFL2QizBpA1FNIU8I
+         ecLBXW74DtX2666potWFe446S6ZdZWsQOiM8h/ojZI1UdF8EQ+ihQvRYqIioORxyEG
+         +d9DTQCkQ8ifmF9TpdCeD6YZ7lR2N9M7CJL/ne6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 28/62] EDAC/ie31200: Fallback if host bridge device is already initialized
-Date:   Tue,  1 Sep 2020 17:10:11 +0200
-Message-Id: <20200901150922.134155406@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        Andy Gospodarek <andy@greyhouse.net>,
+        Jay Vosburgh <j.vosburgh@gmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 01/78] bonding: fix a potential double-unregister
+Date:   Tue,  1 Sep 2020 17:09:37 +0200
+Message-Id: <20200901150924.768910776@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
-References: <20200901150920.697676718@linuxfoundation.org>
+In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
+References: <20200901150924.680106554@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,127 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
+[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
 
-The Intel uncore driver may claim some of the pci ids from ie31200 which
-means that the ie31200 edac driver will not initialize them as part of
-pci_register_driver().
+When we tear down a network namespace, we unregister all
+the netdevices within it. So we may queue a slave device
+and a bonding device together in the same unregister queue.
 
-Let's add a fallback for this case to 'pci_get_device()' to get a
-reference on the device such that it can still be configured. This is
-similar in approach to other edac drivers.
+If the only slave device is non-ethernet, it would
+automatically unregister the bonding device as well. Thus,
+we may end up unregistering the bonding device twice.
 
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Workaround this special case by checking reg_state.
+
+Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
+Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: Andy Gospodarek <andy@greyhouse.net>
+Cc: Jay Vosburgh <j.vosburgh@gmail.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 47 insertions(+), 3 deletions(-)
+ drivers/net/bonding/bond_main.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index 18d77ace4813c..30f83fb6b145a 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -131,6 +131,8 @@
- #define IE31200_PAGES(n)		(n << (28 - PAGE_SHIFT))
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -1985,7 +1985,8 @@ static int  bond_release_and_destroy(str
+ 	int ret;
  
- static int nr_channels;
-+static struct pci_dev *mci_pdev;
-+static int ie31200_registered = 1;
- 
- struct ie31200_priv {
- 	void __iomem *window;
-@@ -456,12 +458,16 @@ fail_free:
- static int ie31200_init_one(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
--	edac_dbg(0, "MC:\n");
-+	int rc;
- 
-+	edac_dbg(0, "MC:\n");
- 	if (pci_enable_device(pdev) < 0)
- 		return -EIO;
-+	rc = ie31200_probe1(pdev, ent->driver_data);
-+	if (rc == 0 && !mci_pdev)
-+		mci_pdev = pci_dev_get(pdev);
- 
--	return ie31200_probe1(pdev, ent->driver_data);
-+	return rc;
- }
- 
- static void ie31200_remove_one(struct pci_dev *pdev)
-@@ -470,6 +476,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
- 	struct ie31200_priv *priv;
- 
- 	edac_dbg(0, "\n");
-+	pci_dev_put(mci_pdev);
-+	mci_pdev = NULL;
- 	mci = edac_mc_del_mc(&pdev->dev);
- 	if (!mci)
- 		return;
-@@ -515,17 +523,53 @@ static struct pci_driver ie31200_driver = {
- 
- static int __init ie31200_init(void)
- {
-+	int pci_rc, i;
-+
- 	edac_dbg(3, "MC:\n");
- 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
- 	opstate_init();
- 
--	return pci_register_driver(&ie31200_driver);
-+	pci_rc = pci_register_driver(&ie31200_driver);
-+	if (pci_rc < 0)
-+		goto fail0;
-+
-+	if (!mci_pdev) {
-+		ie31200_registered = 0;
-+		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
-+			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
-+						  ie31200_pci_tbl[i].device,
-+						  NULL);
-+			if (mci_pdev)
-+				break;
-+		}
-+		if (!mci_pdev) {
-+			edac_dbg(0, "ie31200 pci_get_device fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
-+		if (pci_rc < 0) {
-+			edac_dbg(0, "ie31200 init fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+	}
-+	return 0;
-+
-+fail1:
-+	pci_unregister_driver(&ie31200_driver);
-+fail0:
-+	pci_dev_put(mci_pdev);
-+
-+	return pci_rc;
- }
- 
- static void __exit ie31200_exit(void)
- {
- 	edac_dbg(3, "MC:\n");
- 	pci_unregister_driver(&ie31200_driver);
-+	if (!ie31200_registered)
-+		ie31200_remove_one(mci_pdev);
- }
- 
- module_init(ie31200_init);
--- 
-2.25.1
-
+ 	ret = bond_release(bond_dev, slave_dev);
+-	if (ret == 0 && !bond_has_slaves(bond)) {
++	if (ret == 0 && !bond_has_slaves(bond) &&
++	    bond_dev->reg_state != NETREG_UNREGISTERING) {
+ 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
+ 		netdev_info(bond_dev, "Destroying bond %s\n",
+ 			    bond_dev->name);
 
 
