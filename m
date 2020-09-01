@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEE6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 435CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:13:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9D092078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C09204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:13:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976778;
-	bh=HoRWHVr2nxkcyHpWx7uSIErrJ+zEm+ycisSWs6Uvf6c=;
+	s=default; t=1598976792;
+	bh=qkbayOhul6ZDiX7nJzww7+opTelW8enBcp/ww1ef7Ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vxFgY5kB62VTHeOOPgJb7TiR6rnNi7dGdlb8usisJeSE+lIlPXFTJqqpmSxkpbrYb
-	 pAOznFHeyGJsJuZetvNuCmnaNb2reiC5IZOw3XaPxMC1ORix5a1SVpCPAZVnvVEsoo
-	 YECPu9y9Su+NzWsV9KzCfuNIDBKiV/2riD9u5aPo=
+	b=o4z4hGCqQY9HXhu1XWAw7brX9j893EkimrZPcvOFp7z/DGG+xifIPb5VhVq+y1SFl
+	 AFN8GKNtxiCeSD6K2ezyTbqVRMcreQPClb9+zH/gV39VYRe4DNrRVOmb0DfLtRHndP
+	 fFeTGx/FRhjnBSgISeW5pcDyQKL3bG3xGl6n3ZuQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgIAQM5 (ORCPT
+        id S1731842AbgIAQNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:12:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43742 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:13:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727978AbgIAPgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:36:35 -0400
+        id S1731277AbgIAPga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:36:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C323120E65;
-        Tue,  1 Sep 2020 15:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65F112166E;
+        Tue,  1 Sep 2020 15:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974595;
-        bh=HoRWHVr2nxkcyHpWx7uSIErrJ+zEm+ycisSWs6Uvf6c=;
+        s=default; t=1598974590;
+        bh=qkbayOhul6ZDiX7nJzww7+opTelW8enBcp/ww1ef7Ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uuNg3msSAd5rDQel260QP5UnSeCV5gO/WYS8rLTHERAxnQ4+k/BzeH4RrkKB/FQXN
-         HeTSwsB5LWR7lFTZZZLvG5R194anm9Wfl0bJcuS8nOJbwdfv5VJ3qxFVQKNUvl1hkl
-         bM9ubZStr0WVSQgM78vfeaEscHqPuToIPesNyPX0=
+        b=kEJKIvvKa7G1fxUDq7GXYcmuYLhCp+Ol6WobU3ehhffORVO9/1u/jW38zWChQv0+t
+         +RJBq558QDEJ/rQYX1f7fWMOFkHU3a+1mxRsscGeeEVE1AOW0ELGG0OLmSkU9egkgy
+         qgisBlRWH0KjngAdPihsG9SN316XqPJhvNLhhIJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhenzhong Duan <zhenzhong.duan@gmail.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 008/255] EDAC/mc: Call edac_inc_ue_error() before panic
-Date:   Tue,  1 Sep 2020 17:07:44 +0200
-Message-Id: <20200901151001.208409831@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 006/255] ALSA: hda/hdmi: Use force connectivity quirk on another HP desktop
+Date:   Tue,  1 Sep 2020 17:07:42 +0200
+Message-Id: <20200901151001.112638428@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,43 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhenzhong Duan <zhenzhong.duan@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit e9ff6636d3f97a764487999754c0bfee9d2c231e ]
+[ Upstream commit d96f27c80b65437a7b572647ecb4717ec9a50c98 ]
 
-By calling edac_inc_ue_error() before panic, we get a correct UE error
-count for core dump analysis.
+There's another HP desktop has buggy BIOS which flags the Port
+Connectivity bit as no connection.
 
-Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/20200610065846.3626-2-zhenzhong.duan@gmail.com
+Apply force connectivity quirk to enable DP/HDMI audio.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20200811095336.32396-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/edac_mc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/pci/hda/patch_hdmi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
-index 5813e931f2f00..01ff71f7b6456 100644
---- a/drivers/edac/edac_mc.c
-+++ b/drivers/edac/edac_mc.c
-@@ -950,6 +950,8 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
- 			e->other_detail);
- 	}
- 
-+	edac_inc_ue_error(e);
-+
- 	if (edac_mc_get_panic_on_ue()) {
- 		panic("UE %s%son %s (%s page:0x%lx offset:0x%lx grain:%ld%s%s)\n",
- 			e->msg,
-@@ -959,8 +961,6 @@ static void edac_ue_error(struct edac_raw_error_desc *e)
- 			*e->other_detail ? " - " : "",
- 			e->other_detail);
- 	}
--
--	edac_inc_ue_error(e);
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index b62cd3abb8273..f0c6d2907e396 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -1806,6 +1806,7 @@ static int hdmi_add_cvt(struct hda_codec *codec, hda_nid_t cvt_nid)
  }
  
- static void edac_inc_csrow(struct edac_raw_error_desc *e, int row, int chan)
+ static const struct snd_pci_quirk force_connect_list[] = {
++	SND_PCI_QUIRK(0x103c, 0x870f, "HP", 1),
+ 	SND_PCI_QUIRK(0x103c, 0x871a, "HP", 1),
+ 	{}
+ };
 -- 
 2.25.1
 
