@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F7EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1299C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C9321582
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9757920E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974612;
-	bh=kJroAU+bPWmuBWwjyzwkJDmAEwa1hWHKBm6/zt7PGJo=;
+	s=default; t=1598974620;
+	bh=ZtBz4H4zHKmKdeBV2j6B7ls2H3PJ6PDwFiAz16xd6zc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kjbC+iOIIzDMrvAPO07VU5E0KAr99+EKsV6MaIEiADwE7BrzrQD0voma4UNfWu0C7
-	 FpN3orIojrFxd5/ZUoC4Jb0mmvzojdSHBtzn20w/gi96Ya3bgQXlaGr7c9GOJ1b/AQ
-	 uUMPyDRZ7tR6l8DCjCZ+Nlo5QZOmYIpQ6linybdo=
+	b=vCunYsj8UHQWtYnqrqYfw8SwPtqnIGknN0dd8+VJoRtDoUTTE3sVdVwNRfz2r8oFz
+	 +fpIp4tj3B15ClG9qJSOQZxv9SdpstPfQ4+vNNWqekngcPFKGUNB5WurewY9hs6pQ7
+	 QDYEIx4/0cPnZgNV8rJKyPBfxnDbhs5Ae6mDOD3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731299AbgIAPgt (ORCPT
+        id S1731307AbgIAPgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:36:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41470 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:36:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727903AbgIAPff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:35 -0400
+        id S1731161AbgIAPfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:35:40 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39D2C20866;
-        Tue,  1 Sep 2020 15:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47E7A21534;
+        Tue,  1 Sep 2020 15:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974534;
-        bh=kJroAU+bPWmuBWwjyzwkJDmAEwa1hWHKBm6/zt7PGJo=;
+        s=default; t=1598974540;
+        bh=ZtBz4H4zHKmKdeBV2j6B7ls2H3PJ6PDwFiAz16xd6zc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c2uDSOYMntUbW67lLDKrvSaBEvRWMxjKlzrGLQjSxwltBDugcXwAqbtbFPuzolq53
-         n/9gDUMmQItaFoNnpPK8/RhVnq8mProO++NviXE/U2Z/qesheoPL9nCs9Pb//zP5tW
-         m+NAighaVziHWmxUDoJDuFZtK82zOVoEHcYDTOnU=
+        b=jcG1eAF90iosU/QfsmnhvX+rM5hSsf51O/VPlfO0/pRVRO2dRA4/JDkLTJQB4Dk2J
+         TrivLwdeWhMl//Emc3f+0kGDyhX+Id9CD9eJbzRupcR/h8B7A7gjE89i43yoA6zkSN
+         e6P8DjZJPpwTJ4+rR2aTFFHx01Pq5nzOnIYqa8Vs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.4 213/214] libbpf: Fix build on ppc64le architecture
-Date:   Tue,  1 Sep 2020 17:11:33 +0200
-Message-Id: <20200901151003.130906588@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
+        Tang Bin <tangbin@cmss.chinamobile.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 5.4 194/214] usb: host: ohci-exynos: Fix error handling in exynos_ohci_probe()
+Date:   Tue,  1 Sep 2020 17:11:14 +0200
+Message-Id: <20200901151002.244766167@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,44 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Tang Bin <tangbin@cmss.chinamobile.com>
 
-commit 3fb1a96a91120877488071a167d26d76be4be977 upstream.
+commit 1d4169834628d18b2392a2da92b7fbf5e8e2ce89 upstream.
 
-On ppc64le we get the following warning:
+If the function platform_get_irq() failed, the negative value
+returned will not be detected here. So fix error handling in
+exynos_ohci_probe(). And when get irq failed, the function
+platform_get_irq() logs an error message, so remove redundant
+message here.
 
-  In file included from btf_dump.c:16:0:
-  btf_dump.c: In function ‘btf_dump_emit_struct_def’:
-  ../include/linux/kernel.h:20:17: error: comparison of distinct pointer types lacks a cast [-Werror]
-    (void) (&_max1 == &_max2);  \
-                   ^
-  btf_dump.c:882:11: note: in expansion of macro ‘max’
-      m_sz = max(0LL, btf__resolve_size(d->btf, m->type));
-             ^~~
-
-Fix by explicitly casting to __s64, which is a return type from
-btf__resolve_size().
-
-Fixes: 702eddc77a90 ("libbpf: Handle GCC built-in types for Arm NEON")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200818164456.1181661-1-andriin@fb.com
+Fixes: 62194244cf87 ("USB: Add Samsung Exynos OHCI diver")
+Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Link: https://lore.kernel.org/r/20200826144931.1828-1-tangbin@cmss.chinamobile.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/lib/bpf/btf_dump.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/ohci-exynos.c |    5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -906,7 +906,7 @@ static void btf_dump_emit_struct_def(str
- 			btf_dump_printf(d, ": %d", m_sz);
- 			off = m_off + m_sz;
- 		} else {
--			m_sz = max(0LL, btf__resolve_size(d->btf, m->type));
-+			m_sz = max((__s64)0, btf__resolve_size(d->btf, m->type));
- 			off = m_off + m_sz * 8;
- 		}
- 		btf_dump_printf(d, ";");
+--- a/drivers/usb/host/ohci-exynos.c
++++ b/drivers/usb/host/ohci-exynos.c
+@@ -171,9 +171,8 @@ static int exynos_ohci_probe(struct plat
+ 	hcd->rsrc_len = resource_size(res);
+ 
+ 	irq = platform_get_irq(pdev, 0);
+-	if (!irq) {
+-		dev_err(&pdev->dev, "Failed to get IRQ\n");
+-		err = -ENODEV;
++	if (irq < 0) {
++		err = irq;
+ 		goto fail_io;
+ 	}
+ 
 
 
