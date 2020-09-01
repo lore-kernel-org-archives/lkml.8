@@ -2,57 +2,98 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8823C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD27C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB2BA20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E85720767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598978198;
+	bh=G7hxTffaqe+Bxa7p5NVLTRKMskTbwn8S9WqqzMk2v74=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TO4UVQAtC5/KtMRa1rZrW5wm1/ABYdxu7azeRrSgtQPkb6rEWxgDHhhH/V6ch4FEr
+	 0WF3fBnLqBu5ZRBDqEPjrR0VuhmZ6EDdKKIi+D2VGYD/43F/vlgbhEl/Yn+7/ZyVWV
+	 dLzkQcRhQBITtw9l6yZgvDyviHmeDqxRBq+mHaaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732056AbgIAQgT (ORCPT
+        id S1730815AbgIAQgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:36:19 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:59193 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1731658AbgIAQgD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:36:03 -0400
-Received: (qmail 592735 invoked by uid 1000); 1 Sep 2020 12:36:02 -0400
-Date:   Tue, 1 Sep 2020 12:36:02 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     gregkh@linuxfoundation.org, erkka.talvitie@vincit.fi,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low
- speed devices
-Message-ID: <20200901163602.GG587030@rowland.harvard.edu>
-References: <cover.1598887346.git.khalid@gonehiking.org>
- <20200901023117.GD571008@rowland.harvard.edu>
- <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
+        Tue, 1 Sep 2020 12:36:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729301AbgIAP3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:35 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 66AF620FC3;
+        Tue,  1 Sep 2020 15:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974174;
+        bh=G7hxTffaqe+Bxa7p5NVLTRKMskTbwn8S9WqqzMk2v74=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hzbcmso30S81fRjHMhZWGK6wgJQSMi+ZOh5rSR9P38IReUGnMdkCU4LH60PiSa4OW
+         KkpLljlWMoWdm1L/yFgv/RXRjEOiVcB9oiU4DwFQBShPwML8585DD+gbhXRrjTrIbP
+         HWVb3ClD2DJFkoTIvO23txBeP8Zf8+SWybmCETwc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 074/214] drm/xen: fix passing zero to PTR_ERR warning
+Date:   Tue,  1 Sep 2020 17:09:14 +0200
+Message-Id: <20200901150956.517513806@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 09:15:46AM -0700, Khalid Aziz wrote:
-> On 8/31/20 8:31 PM, Alan Stern wrote:
-> > Can you collect a usbmon trace showing an example of this problem?
-> > 
-> 
-> I have attached usbmon traces for when USB hub with keyboards and mouse
-> is plugged into USB 2.0 port and when it is plugged into the NEC USB 3.0
-> port.
+From: Ding Xiang <dingxiang@cmss.chinamobile.com>
 
-The usbmon traces show lots of errors, but no Clear-TT events.  The 
-large number of errors suggests that you've got a hardware problem; 
-either a bad hub or bad USB connections.
+[ Upstream commit 4c1cb04e0e7ac4ba1ef5457929ef9b5671d9eed3 ]
 
-Alan Stern
+Fix a static code checker warning:
+    drivers/gpu/drm/xen/xen_drm_front.c:404 xen_drm_drv_dumb_create()
+    warn: passing zero to 'PTR_ERR'
+
+Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
+Reviewed-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Link: https://patchwork.freedesktop.org/patch/msgid/1585562347-30214-1-git-send-email-dingxiang@cmss.chinamobile.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/xen/xen_drm_front.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
+index 4be49c1aef518..374142018171c 100644
+--- a/drivers/gpu/drm/xen/xen_drm_front.c
++++ b/drivers/gpu/drm/xen/xen_drm_front.c
+@@ -401,7 +401,7 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
+ 
+ 	obj = xen_drm_front_gem_create(dev, args->size);
+ 	if (IS_ERR_OR_NULL(obj)) {
+-		ret = PTR_ERR(obj);
++		ret = PTR_ERR_OR_ZERO(obj);
+ 		goto fail;
+ 	}
+ 
+-- 
+2.25.1
+
+
+
