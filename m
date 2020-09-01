@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF76BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFCEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 845432098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6B62206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977800;
-	bh=TajFQRDmtSBDvAbjV8hFef1jraq1/CpRJs8Ui/LFgC8=;
+	s=default; t=1598977803;
+	bh=wqiPS/njTifRp78ETs4+N3VbYQwZ1mRSJAWeWRnEt0A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uHz3usQ8uVCTsr10ggssDZ/MMoZXkIdozauK2GjQEoDwI3hip4JguWP4yj9/XyGZ5
-	 qaJiOlojFredxkHzWcQvQ/LFKLehC276FatpVTBz7QBCXsYg07KBddH5l4MEAiStya
-	 oDf7rTxXyWK8iqfs3fPRyCIOiiiCXdbYc5Ouah+g=
+	b=dTv8KQQ32d+m2Vzjmyaifc/ujBjDyDW27QycvFvaLpHlLUtt3gF2HmtGr2b2vTmvY
+	 gDsggZVrTB61s18k/7hTajoPaGfHZKDIa24CzjFK4hWwKStChGxO5oJto5mJLxyqjw
+	 zwktHZO3fE+Aedr06ndk7TtsTKLGpO8Owvluy6FA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgIAPb4 (ORCPT
+        id S1730879AbgIAQaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58546 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730528AbgIAP3U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:20 -0400
+        id S1730803AbgIAPbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:31:55 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 315CE20684;
-        Tue,  1 Sep 2020 15:29:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6DD820866;
+        Tue,  1 Sep 2020 15:31:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974159;
-        bh=TajFQRDmtSBDvAbjV8hFef1jraq1/CpRJs8Ui/LFgC8=;
+        s=default; t=1598974315;
+        bh=wqiPS/njTifRp78ETs4+N3VbYQwZ1mRSJAWeWRnEt0A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wx3c4lUei1wNmSeCbQomEKGX2XUzQt0oB0oTZhcxBeLUaPxVaZ+utKXZe7Y4zDixo
-         rIwjw1iHc2Q61/CQh0MEsfr1Za00/mUoH0FpICgRpOHZDxO3SoyeDgiw2DzPLx0p3A
-         yrm/92DTNs3vzEMeJ4TWpbaWIKP2GbWpjZ5z+Jn8=
+        b=e8dfLBFd/q+VzDGIpRkFZcKQP1POg+m7Pll+vxEMEkypLIjrgBqueNaOI02EA5j5h
+         Hr6qfsITFUC8Mq9SQ6iFbiB78hSSN3rmp/EAK8ejvK64S17ivsFk+m30UHj97w/Cdn
+         5u13QuiOn28K1pduQ90ZUzBjI80xQK3/8HLblcuc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        stable@vger.kernel.org, Sean Young <sean@mess.org>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 060/214] media: davinci: vpif_capture: fix potential double free
-Date:   Tue,  1 Sep 2020 17:09:00 +0200
-Message-Id: <20200901150955.858876664@linuxfoundation.org>
+Subject: [PATCH 5.4 098/214] media: gpio-ir-tx: improve precision of transmitted signal due to scheduling
+Date:   Tue,  1 Sep 2020 17:09:38 +0200
+Message-Id: <20200901150957.692445334@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,38 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Sean Young <sean@mess.org>
 
-[ Upstream commit 602649eadaa0c977e362e641f51ec306bc1d365d ]
+[ Upstream commit ea8912b788f8144e7d32ee61e5ccba45424bef83 ]
 
-In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
-and unregisters the V4L2 device. But then this is done again by
-vpif_probe() itself. The patch removes the cleaning from
-vpif_probe_complete().
+usleep_range() may take longer than the max argument due to scheduling,
+especially under load. This is causing random errors in the transmitted
+IR. Remove the usleep_range() in favour of busy-looping with udelay().
 
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sean Young <sean@mess.org>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/davinci/vpif_capture.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/media/rc/gpio-ir-tx.c | 7 +------
+ 1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
-index 71f4fe882d138..74f68ac3c9a75 100644
---- a/drivers/media/platform/davinci/vpif_capture.c
-+++ b/drivers/media/platform/davinci/vpif_capture.c
-@@ -1482,8 +1482,6 @@ probe_out:
- 		/* Unregister video device */
- 		video_unregister_device(&ch->video_dev);
- 	}
--	kfree(vpif_obj.sd);
--	v4l2_device_unregister(&vpif_obj.v4l2_dev);
- 
- 	return err;
- }
+diff --git a/drivers/media/rc/gpio-ir-tx.c b/drivers/media/rc/gpio-ir-tx.c
+index 18ca12d78314c..66703989ae185 100644
+--- a/drivers/media/rc/gpio-ir-tx.c
++++ b/drivers/media/rc/gpio-ir-tx.c
+@@ -79,13 +79,8 @@ static int gpio_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
+ 			// space
+ 			edge = ktime_add_us(edge, txbuf[i]);
+ 			delta = ktime_us_delta(edge, ktime_get());
+-			if (delta > 10) {
+-				spin_unlock_irqrestore(&gpio_ir->lock, flags);
+-				usleep_range(delta, delta + 10);
+-				spin_lock_irqsave(&gpio_ir->lock, flags);
+-			} else if (delta > 0) {
++			if (delta > 0)
+ 				udelay(delta);
+-			}
+ 		} else {
+ 			// pulse
+ 			ktime_t last = ktime_add_us(edge, txbuf[i]);
 -- 
 2.25.1
 
