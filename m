@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40439C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:17:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61FB6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:17:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D3CB2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:17:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F4C12078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980646;
-	bh=KZR/Ez5I0vI5NACVotVlfYFD1yU907tuWKBtUQ3nkUw=;
+	s=default; t=1598980651;
+	bh=wN4KY1qg3cQik7H5ypiI1VD28XtHr6V8gypaqdtn2Y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qf0ic6KJxqPqVnMoXvd8z2knhl9YjBMevbws8xII5p9DCvhaJS3P7K+RoQCtp3tpx
-	 qvQCEHjd2dHeZSsjvOWpoprsoCLUg0RxtunoKa1ZaT9SMULjtTVCjDS/+qM6cl0qqu
-	 nHoiF4jPyVaS7pLTuz0uNKrxiuZlEPcVCFkNpgLY=
+	b=1c9UNgqz9OPldNPGd0NP0wC0I5ig5ElDHYhUUvRzB7aGvo+JGO4i/cO2DBrzTWAZU
+	 fgJbnI+EaT0CKk710MOSJ3LdfD4/SiNK9REa3K8T9tH6nrdC4VFT1sjryaU8w1Ud/W
+	 epn/80NrvcRV6p2Hd/cp6Mti+cIZrysCHJq3TuVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732624AbgIARRY (ORCPT
+        id S1732617AbgIARRT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:17:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57660 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:17:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729014AbgIAPOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:07 -0400
+        id S1728971AbgIAPOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9BDA32078B;
-        Tue,  1 Sep 2020 15:14:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D32420BED;
+        Tue,  1 Sep 2020 15:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973247;
-        bh=KZR/Ez5I0vI5NACVotVlfYFD1yU907tuWKBtUQ3nkUw=;
+        s=default; t=1598973249;
+        bh=wN4KY1qg3cQik7H5ypiI1VD28XtHr6V8gypaqdtn2Y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tra0Pqy5/CmRFntPMmisO83/0FFluhLvNTv4qw4K1IVKd3cPH9vHINO/ZYdXXGEVN
-         3qkvifeVXXSds2hEvZVSf7UxNL8pLHG8Gq53vK/qlcelfEbHNElFvG7iuQBtXfOTwm
-         RbwBImEDSNNMBofO9AK0R92Z2nOkCh7TTY0/tzI0=
+        b=gVuxc/Nybaj8P1uIpWZl9BizczKUsZkNj9iWHly1YKG1WaF3zeGwOaa2UA0jKa3w9
+         XuIfwe3LF2LTSdVhO0nVKHrsmaGNYWozXmuMKtFGESMuaq6r7cjRJxSoxIhQiu1Q3c
+         HYCud720bFFl7kiQTzuQDzAsAQU0MwL9vGH+hoE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.4 58/62] usb: host: ohci-exynos: Fix error handling in exynos_ohci_probe()
-Date:   Tue,  1 Sep 2020 17:10:41 +0200
-Message-Id: <20200901150923.656117905@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?q?Till=20D=C3=B6rges?= <doerges@pre-sense.de>
+Subject: [PATCH 4.4 59/62] usb: storage: Add unusual_uas entry for Sony PSZ drives
+Date:   Tue,  1 Sep 2020 17:10:42 +0200
+Message-Id: <20200901150923.705656162@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -61,41 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 1d4169834628d18b2392a2da92b7fbf5e8e2ce89 upstream.
+commit 20934c0de13b49a072fb1e0ca79fe0fe0e40eae5 upstream.
 
-If the function platform_get_irq() failed, the negative value
-returned will not be detected here. So fix error handling in
-exynos_ohci_probe(). And when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+The PSZ-HA* family of USB disk drives from Sony can't handle the
+REPORT OPCODES command when using the UAS protocol.  This patch adds
+an appropriate quirks entry.
 
-Fixes: 62194244cf87 ("USB: Add Samsung Exynos OHCI diver")
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20200826144931.1828-1-tangbin@cmss.chinamobile.com
+Reported-and-tested-by: Till Dörges <doerges@pre-sense.de>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200826143229.GB400430@rowland.harvard.edu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/ohci-exynos.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -166,9 +166,8 @@ skip_phy:
- 	hcd->rsrc_len = resource_size(res);
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -40,6 +40,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
  
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "Failed to get IRQ\n");
--		err = -ENODEV;
-+	if (irq < 0) {
-+		err = irq;
- 		goto fail_io;
- 	}
- 
++/* Reported-by: Till Dörges <doerges@pre-sense.de> */
++UNUSUAL_DEV(0x054c, 0x087d, 0x0000, 0x9999,
++		"Sony",
++		"PSZ-HA*",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
++
+ /* Reported-by: Julian Groß <julian.g@posteo.de> */
+ UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
+ 		"LaCie",
 
 
