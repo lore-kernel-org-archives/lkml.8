@@ -5,49 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B54C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931E0C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F037A20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 649082065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977288;
-	bh=2Mvp88UjQddlB8u06dLtNxt1+sjYDAKsbNoZDsLDV6Q=;
+	s=default; t=1598977295;
+	bh=XTwCmukE+36TgVDYmQHn+PdO33AZBPMzUjZ4uNRa8YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zB0xlH3EMUgbCENJDFK1isrkXu7uOeD/IZaQnjih/HDZnxOWnDKMN5AySOMl6vYTw
-	 EHoXvyrSlyu9KVtXqjxpP0uxfu20fabRGvarYWGLc4LxWdMDIlKSsTYGJ0cFKjZeLO
-	 BZiDIaGFUI+0Dr87fi/tONiBEXVLCKRJ5dqbiw/A=
+	b=FuHxaNxM5ceia5+JN2oGSCC2ejtK+79zbCo02UvRO0+b59VUoF+ngjEMemR3dUi/x
+	 S0PWSo4051ufU4ZATRWhDnhT39Ur03fn9Uz0g6/lW7aguNZnJcVDVgdWPhTRdZJmP5
+	 b0hPa8PmEGXCkfKOas1c3XVFr+HtNYx8O0H1/guU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbgIAPc1 (ORCPT
+        id S1731389AbgIAQVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34424 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:21:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730367AbgIAPbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:31:25 -0400
+        id S1731063AbgIAPc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BBD520E65;
-        Tue,  1 Sep 2020 15:31:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ADA9205F4;
+        Tue,  1 Sep 2020 15:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974283;
-        bh=2Mvp88UjQddlB8u06dLtNxt1+sjYDAKsbNoZDsLDV6Q=;
+        s=default; t=1598974346;
+        bh=XTwCmukE+36TgVDYmQHn+PdO33AZBPMzUjZ4uNRa8YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fpOGJzrIvfMWKBA7MioiOZjMAC7JLshHVidk0auPFfL16zJ2Bhm9rVVXsL4c/bU9q
-         ejlFLamBq09YA0TMt0FJte/qKX+BXb/lON+9dyHImR4/i3oJXm6H4UrNoVXeatqnTo
-         hdqXXpT9tkto6rDwXYVcLaz1xd/VWoS0lKlMZGyU=
+        b=zN55f1Ag5bEauGtS57psjmEp9DCi9Ezd/lX2nssi01qvTvgqX7WqY5Sy//FrEUc48
+         f5T9VDKLawZ7EhOV3G0hU2GrsTFr+6R1w5HUiPG56QmgG9gzInY9oDj+PvZudXeEIA
+         GjWZwc/4AdjzgoGqaDyyTKGpIH39HodRN1EutkSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Andreas Dilger <adilger@dilger.ca>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 116/214] ext4: handle read only external journal device
-Date:   Tue,  1 Sep 2020 17:09:56 +0200
-Message-Id: <20200901150958.543471021@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 141/214] scsi: qla2xxx: Check if FW supports MQ before enabling
+Date:   Tue,  1 Sep 2020 17:10:21 +0200
+Message-Id: <20200901150959.737805014@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,181 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Saurav Kashyap <skashyap@marvell.com>
 
-[ Upstream commit 273108fa5015eeffc4bacfa5ce272af3434b96e4 ]
+[ Upstream commit dffa11453313a115157b19021cc2e27ea98e624c ]
 
-Ext4 uses blkdev_get_by_dev() to get the block_device for journal device
-which does check to see if the read-only block device was opened
-read-only.
+OS boot during Boot from SAN was stuck at dracut emergency shell after
+enabling NVMe driver parameter. For non-MQ support the driver was enabling
+MQ. Add a check to confirm if FW supports MQ.
 
-As a result ext4 will hapily proceed mounting the file system with
-external journal on read-only device. This is bad as we would not be
-able to use the journal leading to errors later on.
-
-Instead of simply failing to mount file system in this case, treat it in
-a similar way we treat internal journal on read-only device. Allow to
-mount with -o noload in read-only mode.
-
-This can be reproduced easily like this:
-
-mke2fs -F -O journal_dev $JOURNAL_DEV 100M
-mkfs.$FSTYPE -F -J device=$JOURNAL_DEV $FS_DEV
-blockdev --setro $JOURNAL_DEV
-mount $FS_DEV $MNT
-touch $MNT/file
-umount $MNT
-
-leading to error like this
-
-[ 1307.318713] ------------[ cut here ]------------
-[ 1307.323362] generic_make_request: Trying to write to read-only block-device dm-2 (partno 0)
-[ 1307.331741] WARNING: CPU: 36 PID: 3224 at block/blk-core.c:855 generic_make_request_checks+0x2c3/0x580
-[ 1307.341041] Modules linked in: ext4 mbcache jbd2 rfkill intel_rapl_msr intel_rapl_common isst_if_commd
-[ 1307.419445] CPU: 36 PID: 3224 Comm: jbd2/dm-2 Tainted: G        W I       5.8.0-rc5 #2
-[ 1307.427359] Hardware name: Dell Inc. PowerEdge R740/01KPX8, BIOS 2.3.10 08/15/2019
-[ 1307.434932] RIP: 0010:generic_make_request_checks+0x2c3/0x580
-[ 1307.440676] Code: 94 03 00 00 48 89 df 48 8d 74 24 08 c6 05 cf 2b 18 01 01 e8 7f a4 ff ff 48 c7 c7 50e
-[ 1307.459420] RSP: 0018:ffffc0d70eb5fb48 EFLAGS: 00010286
-[ 1307.464646] RAX: 0000000000000000 RBX: ffff9b33b2978300 RCX: 0000000000000000
-[ 1307.471780] RDX: ffff9b33e12a81e0 RSI: ffff9b33e1298000 RDI: ffff9b33e1298000
-[ 1307.478913] RBP: ffff9b7b9679e0c0 R08: 0000000000000837 R09: 0000000000000024
-[ 1307.486044] R10: 0000000000000000 R11: ffffc0d70eb5f9f0 R12: 0000000000000400
-[ 1307.493177] R13: 0000000000000000 R14: 0000000000000001 R15: 0000000000000000
-[ 1307.500308] FS:  0000000000000000(0000) GS:ffff9b33e1280000(0000) knlGS:0000000000000000
-[ 1307.508396] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1307.514142] CR2: 000055eaf4109000 CR3: 0000003dee40a006 CR4: 00000000007606e0
-[ 1307.521273] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1307.528407] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1307.535538] PKRU: 55555554
-[ 1307.538250] Call Trace:
-[ 1307.540708]  generic_make_request+0x30/0x340
-[ 1307.544985]  submit_bio+0x43/0x190
-[ 1307.548393]  ? bio_add_page+0x62/0x90
-[ 1307.552068]  submit_bh_wbc+0x16a/0x190
-[ 1307.555833]  jbd2_write_superblock+0xec/0x200 [jbd2]
-[ 1307.560803]  jbd2_journal_update_sb_log_tail+0x65/0xc0 [jbd2]
-[ 1307.566557]  jbd2_journal_commit_transaction+0x2ae/0x1860 [jbd2]
-[ 1307.572566]  ? check_preempt_curr+0x7a/0x90
-[ 1307.576756]  ? update_curr+0xe1/0x1d0
-[ 1307.580421]  ? account_entity_dequeue+0x7b/0xb0
-[ 1307.584955]  ? newidle_balance+0x231/0x3d0
-[ 1307.589056]  ? __switch_to_asm+0x42/0x70
-[ 1307.592986]  ? __switch_to_asm+0x36/0x70
-[ 1307.596918]  ? lock_timer_base+0x67/0x80
-[ 1307.600851]  kjournald2+0xbd/0x270 [jbd2]
-[ 1307.604873]  ? finish_wait+0x80/0x80
-[ 1307.608460]  ? commit_timeout+0x10/0x10 [jbd2]
-[ 1307.612915]  kthread+0x114/0x130
-[ 1307.616152]  ? kthread_park+0x80/0x80
-[ 1307.619816]  ret_from_fork+0x22/0x30
-[ 1307.623400] ---[ end trace 27490236265b1630 ]---
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Andreas Dilger <adilger@dilger.ca>
-Link: https://lore.kernel.org/r/20200717090605.2612-1-lczerner@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20200806111014.28434-9-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 51 ++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 18 deletions(-)
+ drivers/scsi/qla2xxx/qla_os.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index bd4feafcff294..76c5529394395 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4943,6 +4943,7 @@ static int ext4_load_journal(struct super_block *sb,
- 	dev_t journal_dev;
- 	int err = 0;
- 	int really_read_only;
-+	int journal_dev_ro;
- 
- 	if (WARN_ON_ONCE(!ext4_has_feature_journal(sb)))
- 		return -EFSCORRUPTED;
-@@ -4955,7 +4956,31 @@ static int ext4_load_journal(struct super_block *sb,
- 	} else
- 		journal_dev = new_decode_dev(le32_to_cpu(es->s_journal_dev));
- 
--	really_read_only = bdev_read_only(sb->s_bdev);
-+	if (journal_inum && journal_dev) {
-+		ext4_msg(sb, KERN_ERR,
-+			 "filesystem has both journal inode and journal device!");
-+		return -EINVAL;
-+	}
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index d91c95d9981ac..67b1e74fcd1e6 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -1993,6 +1993,11 @@ skip_pio:
+ 	/* Determine queue resources */
+ 	ha->max_req_queues = ha->max_rsp_queues = 1;
+ 	ha->msix_count = QLA_BASE_VECTORS;
 +
-+	if (journal_inum) {
-+		journal = ext4_get_journal(sb, journal_inum);
-+		if (!journal)
-+			return -EINVAL;
-+	} else {
-+		journal = ext4_get_dev_journal(sb, journal_dev);
-+		if (!journal)
-+			return -EINVAL;
-+	}
++	/* Check if FW supports MQ or not */
++	if (!(ha->fw_attributes & BIT_6))
++		goto mqiobase_exit;
 +
-+	journal_dev_ro = bdev_read_only(journal->j_dev);
-+	really_read_only = bdev_read_only(sb->s_bdev) | journal_dev_ro;
-+
-+	if (journal_dev_ro && !sb_rdonly(sb)) {
-+		ext4_msg(sb, KERN_ERR,
-+			 "journal device read-only, try mounting with '-o ro'");
-+		err = -EROFS;
-+		goto err_out;
-+	}
- 
- 	/*
- 	 * Are we loading a blank journal or performing recovery after a
-@@ -4970,27 +4995,14 @@ static int ext4_load_journal(struct super_block *sb,
- 				ext4_msg(sb, KERN_ERR, "write access "
- 					"unavailable, cannot proceed "
- 					"(try mounting with noload)");
--				return -EROFS;
-+				err = -EROFS;
-+				goto err_out;
- 			}
- 			ext4_msg(sb, KERN_INFO, "write access will "
- 			       "be enabled during recovery");
- 		}
- 	}
- 
--	if (journal_inum && journal_dev) {
--		ext4_msg(sb, KERN_ERR, "filesystem has both journal "
--		       "and inode journals!");
--		return -EINVAL;
--	}
--
--	if (journal_inum) {
--		if (!(journal = ext4_get_journal(sb, journal_inum)))
--			return -EINVAL;
--	} else {
--		if (!(journal = ext4_get_dev_journal(sb, journal_dev)))
--			return -EINVAL;
--	}
--
- 	if (!(journal->j_flags & JBD2_BARRIER))
- 		ext4_msg(sb, KERN_INFO, "barriers disabled");
- 
-@@ -5010,8 +5022,7 @@ static int ext4_load_journal(struct super_block *sb,
- 
- 	if (err) {
- 		ext4_msg(sb, KERN_ERR, "error loading journal");
--		jbd2_journal_destroy(journal);
--		return err;
-+		goto err_out;
- 	}
- 
- 	EXT4_SB(sb)->s_journal = journal;
-@@ -5031,6 +5042,10 @@ static int ext4_load_journal(struct super_block *sb,
- 	}
- 
- 	return 0;
-+
-+err_out:
-+	jbd2_journal_destroy(journal);
-+	return err;
- }
- 
- static int ext4_commit_super(struct super_block *sb, int sync)
+ 	if (!ql2xmqsupport || !ql2xnvmeenable ||
+ 	    (!IS_QLA25XX(ha) && !IS_QLA81XX(ha)))
+ 		goto mqiobase_exit;
 -- 
 2.25.1
 
