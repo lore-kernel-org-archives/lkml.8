@@ -2,185 +2,301 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3789C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 878D3C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83C22208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sm65qofP"
+	by mail.kernel.org (Postfix) with ESMTP id 6704F208DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:10:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726212AbgIAGHH (ORCPT
+        id S1726102AbgIAGKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:07:07 -0400
-Received: from mail-db8eur05on2072.outbound.protection.outlook.com ([40.107.20.72]:2496
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725987AbgIAGHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:07:06 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LlE9N/XWyp/SLlOeOubUByir6BWz5MQYwR2WoP0UzSBJtpaLM+k5nSDRRynqoh6pvE2hxl8oWFChXL7oxgJj/NF0mkGLKXEc43jPk0fFGrJJnlNjuk1MHJqpNMMSRFl3vg645v4jMHCz9vbig/79p8bAPdgLOXUExHGqQ6wHOlUFyix5+3Q3/4MRG9TwLfDlvuERRJtpX4Z2meWgglNu7gyeqajKTHqbEhvLI7Ry3xUDCO2nRDpyniIBwD66GSncOzo4+uloM5v5Y9rF7cauiMrk65y1osyUnG3y1vesA/6o9sfnnj+N8bVQE3LVTiY1f3PFten9iPeB54oQMld7Mw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNK78HNMAGyhZn/Iq0wFC7F4sYMkqLoXQjSfe8WeJOw=;
- b=Ux/7TEkwTdNSR2Nr43PejFxMl/649qCpNkKIP4c+uPasS6kex1+MtmZfJozE5a4VeqBG+TwtwMj9kTxWlk9/rNLPX6Gxg97rsvj3hCOPBfcLZIzWOvGds4RVjFJg7l5KUT5pQzO6ukCl75JyGasL9/xyOo7+ymLin5XoKvgUpFXDYjLRldX281Iud4YYBuL39VBOxzG6kPVbruMrcdu/+hiWRj6LxMC9PoZBb+VdhImdfTM7TxztC0VJP3roFgxzyUwLabVn619ZB07Yk8CWy5rFtbYK7G5O797MjcOB/acQY1i0clCBSLSbUmxtpJ6e1OimtEZJe/T5ckqNnwNALQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NNK78HNMAGyhZn/Iq0wFC7F4sYMkqLoXQjSfe8WeJOw=;
- b=sm65qofPR8U/Ad3dYFf71E+Ag5cZtbSS815XKfAKPDgLNS+/LSoPKxCjb++qcM44/Sn+nzcRvCCyyyXeV1WV38/M5I/WMIg2zfMuouuns2NR59ArMlSjm5Zf2qD2mmFFgy+AKrO69p4UUik+5pRzPSIpXjU9WPdHfqNwdRx9yyQ=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB7PR04MB5996.eurprd04.prod.outlook.com (2603:10a6:10:84::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Tue, 1 Sep
- 2020 06:07:01 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::24d0:f783:3c7d:e232%12]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
- 06:07:01 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Saravana Kannan <saravanak@google.com>,
-        Dong Aisheng <dongas86@gmail.com>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: RE: Lockdep warning caused by "driver core: Fix sleeping in invalid
- context during device link deletion"
-Thread-Topic: Lockdep warning caused by "driver core: Fix sleeping in invalid
- context during device link deletion"
-Thread-Index: AQHWd25DMUiRIq7S7EyPspLtfmrMiKlLc8sAgAdlsYCAAIN2YA==
-Date:   Tue, 1 Sep 2020 06:07:01 +0000
-Message-ID: <DB6PR0402MB2760752E2666D486B40104B3882E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <CAA+hA=S4eAreb7vo69LAXSk2t5=DEKNxHaiY1wSpk4xTp9urLg@mail.gmail.com>
- <CAGETcx8Ums+mkD54BCkCvBtU1qx13VZH=DOPqepyiQz62REfCw@mail.gmail.com>
- <CAGETcx_=Da7hVUCfOFd13Q6YAGPC65VSJD7BiCK_fCegYMCJbQ@mail.gmail.com>
-In-Reply-To: <CAGETcx_=Da7hVUCfOFd13Q6YAGPC65VSJD7BiCK_fCegYMCJbQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 9603f58d-2b10-4c12-6268-08d84e3d3e43
-x-ms-traffictypediagnostic: DB7PR04MB5996:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB7PR04MB5996AB7705ADE3A9BABCC231882E0@DB7PR04MB5996.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:580;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WBDiWilSWz2kGHDZHq4u2eZkg1PN0zQpURwHJ4wnJDWYDQsZyyW0wra/zpo/fsQNizn+0ggRMiSczymTHeBNCdRYvf2PYLc3SUAEpfeWZ79kaYRLjqETwOhGnmbcG9czAO6H8u8Zl6O/s0SsB8Y8PiLcu5w92LVXgxgx22wzlUQS4IuPBmGMZHsB7QoVJIX1gNXD8fL1dqjmvFUSca9a79y8/C+Nrmamt9M+howN5Xir+GmX1g2y9wgJ/cEL7Q0ab+8JjeYYwVH5UdVBSnRAsuQSZR6Pj5p/wvZE/CA5+U0b/Wm/WfmE1BOw0m8rRg4V3E9grJdozyPBwxpsGL4WQA3wW247koywARO/A/Wu8q4=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(136003)(376002)(366004)(346002)(39860400002)(7696005)(478600001)(54906003)(6506007)(4326008)(53546011)(966005)(44832011)(110136005)(86362001)(26005)(186003)(2906002)(316002)(8936002)(64756008)(66476007)(45080400002)(83380400001)(66946007)(52536014)(7416002)(8676002)(66556008)(9686003)(5660300002)(66446008)(55016002)(76116006)(33656002)(71200400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: EO9Fwo16oAXUBybmEaihfRXx0acewwzBMAAq8krw/Q/S6SOkv7sWFco0JSTxMzUVOXzexJJBiLS8rNah2hbi+OexMFtsmSoSC5SgIJVkPDkzZ1yUXTeaYQqYyJvT0rYzxptf93zMAvRIgepzD5uDPU2OykL0Hjets7uscww3I76W1QGxnZ+MvvZqM0rhTYLtIOWfjll+dyTEVV37dQdklfLZlpK7W6VpRgyEyuyqtnPpTa3L1hk3n0M2rGKd7whcdJ/lXD7YFcOVzXQz8vtzkuNZ8F4mp43uEWxl2tgEnCOo6Zlpeu/nmU8t4QYNIKsCokaVJLGuR7HFj9amjbQqr2wP0dYUw7eFAwCFWyc1x773RGKL6oSAIh9jIYU7Blz8YuqA+l0ZOuWazhPk/FuchCSl8lkrcL1ESqX06msB7PC9ZQ2VmCOTum9zWJ1xPs4JRxKFKxrELkHR13gI1WL01alGCe2yF5YaNluPdCC+CCcJmBML3dJ3vhqmrYRtbLL0n5whK47jTHxmySY9TgquyMpVO8nTdeNp3mJXfRsRdj+Ab12nGC0a7xYboc5KfYl5RTmlg4vSF7I6D1EGC7YP1UGpPAkaZ2cwFW13UNJhg8TmX5C0FoUQRs5cTRdZ0YHYgcJGE/5DsNq6LFQekbVgNw==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 1 Sep 2020 02:10:53 -0400
+Received: from mga09.intel.com ([134.134.136.24]:13570 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbgIAGKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:10:52 -0400
+IronPort-SDR: L3/9t1zFNr4oUDsNKq5z/47fZG/iwBC6GOO8g4hqmROmo0iM50XbExFP09DvhQ/dM6AObleb3H
+ FSbQVejcLBrw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="158116489"
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="158116489"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 23:10:50 -0700
+IronPort-SDR: FmcIXz8KDqJa+lRqZeMn+zJ4VBOfgY2gS9DC5i5ZFAmAxolZDDOYIA4j2letRcia0tulrbzp2i
+ QM0dKg78dxag==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="325217549"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Aug 2020 23:10:47 -0700
+Cc:     baolu.lu@linux.intel.com, CobeChen-oc@zhaoxin.com,
+        RaymondPang-oc@zhaoxin.com, TonyWWang-oc@zhaoxin.com
+Subject: Re: [PATCH v3 1/2] iommu/vt-d:Add support for detecting ACPI device
+ in RMRR
+To:     FelixCuioc <FelixCui-oc@zhaoxin.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, kbuild@lists.01.org
+References: <20200827100217.21324-1-FelixCui-oc@zhaoxin.com>
+ <20200827100217.21324-2-FelixCui-oc@zhaoxin.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <a7492142-2fbf-781c-8ec7-e85d5ce3f1d5@linux.intel.com>
+Date:   Tue, 1 Sep 2020 14:05:10 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9603f58d-2b10-4c12-6268-08d84e3d3e43
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2020 06:07:01.5910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: S9RVk79in0/hCNbKC3dYSdRHb/eH1W7ofdQQmQ83bfx2JKpFHjRfy3T+9nnZ77lMU4ihpw3Nu1kmwZKZzXwGhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB5996
+In-Reply-To: <20200827100217.21324-2-FelixCui-oc@zhaoxin.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogTG9ja2RlcCB3YXJuaW5nIGNhdXNlZCBieSAiZHJpdmVyIGNvcmU6IEZp
-eCBzbGVlcGluZyBpbiBpbnZhbGlkDQo+IGNvbnRleHQgZHVyaW5nIGRldmljZSBsaW5rIGRlbGV0
-aW9uIg0KPiANCj4gT24gV2VkLCBBdWcgMjYsIDIwMjAgYXQgMTA6MTcgUE0gU2FyYXZhbmEgS2Fu
-bmFuDQo+IDxzYXJhdmFuYWtAZ29vZ2xlLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBPbiBUaHUsIEF1
-ZyAyMCwgMjAyMCBhdCA4OjUwIFBNIERvbmcgQWlzaGVuZyA8ZG9uZ2FzODZAZ21haWwuY29tPg0K
-PiB3cm90ZToNCj4gPiA+DQo+ID4gPiBIaSBBTEwsDQo+ID4gPg0KPiA+ID4gV2UgbWV0IHRoZSBi
-ZWxvdyBXQVJOSU5HIGR1cmluZyBzeXN0ZW0gc3VzcGVuZCBvbiBhbiBpTVg2USBTREINCj4gYm9h
-cmQNCj4gPiA+IHdpdGggdGhlIGxhdGVzdCBsaW51cy9tYXN0ZXIgYnJhbmNoICh2NS45LXJjMSsp
-IGFuZCBuZXh0LTIwMjAwODIwLg0KPiA+ID4gdjUuOCBrZXJuZWwgaXMgb2suIFNvIGkgZGlkIGJp
-c2VjdCBhbmQgZmluYWxseSBmb3VuZCBpdCdzIGNhdXNlZCBieQ0KPiA+ID4gdGhlIHBhdGNoIGJl
-bG93Lg0KPiA+ID4gUmV2ZXJ0aW5nIGl0IGNhbiBnZXQgcmlkIG9mIHRoZSB3YXJuaW5nLCBidXQg
-SSB3b25kZXIgaWYgdGhlcmUgbWF5DQo+ID4gPiBiZSBvdGhlciBwb3RlbnRpYWwgaXNzdWVzLg0K
-PiA+ID4gQW55IGlkZWFzPw0KPiA+ID4NCj4gPiA+IERlZmNvbmZpZyB1c2VkIGlzOiBpbXhfdjZf
-djdfZGVmY29uZmlnDQo+ID4gPg0KPiA+DQo+ID4gLS0tLS0gODwgLS0tLS0gU25pcHBlZCB0ZXh0
-IHRoYXQgd2FzIGEgYml0IG1pc2xlYWRpbmcNCj4gPg0KPiA+ID4NCj4gPiA+IEVycm9yIGxvZzoN
-Cj4gPiA+ICMgZWNobyBtZW0gPiAvc3lzL3Bvd2VyL3N0YXRlDQo+ID4gPiBbICAgMzkuMTExODY1
-XSBQTTogc3VzcGVuZCBlbnRyeSAoZGVlcCkNCj4gPiA+IFsgICAzOS4xNDg2NTBdIEZpbGVzeXN0
-ZW1zIHN5bmM6IDAuMDMyIHNlY29uZHMNCj4gPiA+IFsgICAzOS4xNTQwMzRdDQo+ID4gPiBbICAg
-MzkuMTU1NTM3XQ0KPiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT0NCj4gPiA+IFsgICAzOS4xNjE3MjNdIFdBUk5JTkc6IHBvc3NpYmxlIGNpcmN1
-bGFyIGxvY2tpbmcgZGVwZW5kZW5jeSBkZXRlY3RlZA0KPiA+ID4gWyAgIDM5LjE2NzkxMV0gNS45
-LjAtcmMxLTAwMTAzLWc3ZWFjNjZkMDQ1NmYgIzM3IE5vdCB0YWludGVkDQo+ID4gPiBbICAgMzku
-MTczMzE1XSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0NCj4gPiA+IFsgICAzOS4xNzk1MDBdIHNoLzY0NyBpcyB0cnlpbmcgdG8gYWNxdWlyZSBs
-b2NrOg0KPiA+ID4gWyAgIDM5LjE4Mzg2Ml0gYzE1YTMxMGMgKGRwbV9saXN0X210eCl7Ky4rLn0t
-ezM6M30sIGF0Og0KPiA+ID4gZHBtX2Zvcl9lYWNoX2RldisweDIwLzB4NWMNCj4gPiA+IFsgICAz
-OS4xOTEyMDBdDQo+ID4gPiBbICAgMzkuMTkxMjAwXSBidXQgdGFzayBpcyBhbHJlYWR5IGhvbGRp
-bmcgbG9jazoNCj4gPiA+IFsgICAzOS4xOTcwMzZdIGMxNWEzN2U0IChmd19sb2NrKXsrLisufS17
-MzozfSwgYXQ6DQo+IGZ3X3BtX25vdGlmeSsweDkwLzB4ZDQNCj4gPiA+IFsgICAzOS4yMDM1ODJd
-DQo+ID4gPiBbICAgMzkuMjAzNTgyXSB3aGljaCBsb2NrIGFscmVhZHkgZGVwZW5kcyBvbiB0aGUg
-bmV3IGxvY2suDQo+ID4gPiBbICAgMzkuMjAzNTgyXQ0KPiA+ID4gWyAgIDM5LjIxMTc2M10NCj4g
-PiA+IFsgICAzOS4yMTE3NjNdIHRoZSBleGlzdGluZyBkZXBlbmRlbmN5IGNoYWluIChpbiByZXZl
-cnNlIG9yZGVyKSBpczoNCj4gPiA+IFsgICAzOS4yMTkyNDldDQo+ID4gPiBbICAgMzkuMjE5MjQ5
-XSAtPiAjMiAoZndfbG9jayl7Ky4rLn0tezM6M306DQo+ID4gPiBbICAgMzkuMjI0NjczXSAgICAg
-ICAgbXV0ZXhfbG9ja19uZXN0ZWQrMHgxYy8weDI0DQo+ID4gPiBbICAgMzkuMjI5MTI2XSAgICAg
-ICAgZmlybXdhcmVfdWV2ZW50KzB4MTgvMHhhMA0KPiA+ID4gWyAgIDM5LjIzMzQxMV0gICAgICAg
-IGRldl91ZXZlbnQrMHhjNC8weDFmOA0KPiA+ID4gWyAgIDM5LjIzNzM0M10gICAgICAgIHVldmVu
-dF9zaG93KzB4OTgvMHgxMTQNCj4gPiA+IFsgICAzOS4yNDEzNjJdICAgICAgICBkZXZfYXR0cl9z
-aG93KzB4MTgvMHg0OA0KPiA+ID4gWyAgIDM5LjI0NTQ3Ml0gICAgICAgIHN5c2ZzX2tmX3NlcV9z
-aG93KzB4ODQvMHhlYw0KPiA+ID4gWyAgIDM5LjI0OTkyN10gICAgICAgIHNlcV9yZWFkKzB4MTM4
-LzB4NTUwDQo+ID4gPiBbICAgMzkuMjUzNzc0XSAgICAgICAgdmZzX3JlYWQrMHg5NC8weDE2NA0K
-PiA+ID4gWyAgIDM5LjI1NzUyOV0gICAgICAgIGtzeXNfcmVhZCsweDYwLzB4ZTgNCj4gPiA+IFsg
-ICAzOS4yNjEyODhdICAgICAgICByZXRfZmFzdF9zeXNjYWxsKzB4MC8weDI4DQo+ID4gPiBbICAg
-MzkuMjY1NTY0XSAgICAgICAgMHhiZWQ3YzgwOA0KPiA+ID4gWyAgIDM5LjI2ODUzOF0NCj4gPiA+
-IFsgICAzOS4yNjg1MzhdIC0+ICMxIChrbi0+YWN0aXZlIzMpeysrKyt9LXswOjB9Og0KPiA+ID4g
-WyAgIDM5LjI3NDM5MV0gICAgICAgIGtlcm5mc19yZW1vdmVfYnlfbmFtZV9ucysweDQwLzB4OTQN
-Cj4gPiA+IFsgICAzOS4yNzk0NTBdICAgICAgICBkZXZpY2VfZGVsKzB4MTQ0LzB4M2ZjDQo+ID4N
-Cj4gPiBSYWZhZWwvR3JlZywNCj4gPg0KPiA+IEknbSBub3QgdmVyeSBmYW1pbGlhciB3aXRoIHRo
-ZSAjMCBhbmQgIzIgY2FsbHMgc3RhY2tzLiBCdXQgcG9raW5nDQo+ID4gYXJvdW5kIGEgYml0LCB0
-aGV5IGFyZSBOT1QgZHVlIHRvIHRoZSBkZXZpY2UtbGluay1kZXZpY2UuIEJ1dCB0aGUgbmV3DQo+
-ID4gc3R1ZmYgaXMgdGhlIGFib3ZlIHR3byBsaW5lcyB0aGF0IGFyZSBkZWxldGluZyB0aGUgZGV2
-aWNlLWxpbmstZGV2aWNlDQo+ID4gKHRoYXQncyB1c2VkIHRvIGV4cG9zZSBkZXZpY2UgbGluayBk
-ZXRhaWxzIGluIHN5c2ZzKSB3aGVuIHRoZSBkZXZpY2UNCj4gPiBsaW5rIGlzIGRlbGV0ZWQuDQo+
-ID4NCj4gPiBLaWNraW5nIG9mZiBhIHdvcmtxdWV1ZSB0byBicmVhayB0aGlzIGN5Y2xlIGlzIGVh
-c3ksIGJ1dCB0aGUgcHJvYmxlbQ0KPiA+IGlzIHRoYXQgaWYgSSBxdWV1ZSBhIHdvcmsgdG8gZGVs
-ZXRlIHRoZSBkZXZpY2UsIHRoZW4gdGhlIHN5c2ZzIGZvbGRlcg0KPiA+IHdvbid0IGdldCByZW1v
-dmVkIGltbWVkaWF0ZWx5LiBBbmQgaWYgdGhlIHNhbWUgbGluayBpcyBjcmVhdGVkIGFnYWluDQo+
-ID4gYmVmb3JlIHRoZSB3b3JrIGlzIGNvbXBsZXRlZCwgdGhlbiB0aGVyZSdsbCBiZSBhIHN5c2Zz
-IG5hbWUgY29sbGlzaW9uDQo+ID4gYW5kIHdhcm5pbmcuDQo+ID4NCj4gPiBTbywgSSdtIGtpbmRh
-IHN0dWNrIGhlcmUuIE9wZW4gdG8gc3VnZ2VzdGlvbnMuIEhvcGluZyB5b3UnbGwgaGF2ZQ0KPiA+
-IGJldHRlciBpZGVhcyBmb3IgYnJlYWtpbmcgdGhlIGN5Y2xlLiBPciBwb2ludCBvdXQgaG93IEkn
-bQ0KPiA+IG1pc3VuZGVyc3RhbmRpbmcgdGhlIGN5Y2xlIGhlcmUuDQo+ID4NCj4gDQo+IEFpc2hl
-bmcsDQo+IA0KPiBTZW50IG91dCBhIGZpeCB0aGF0IEkgdGhpbmsgc2hvdWxkIHdvcmsuDQo+IGh0
-dHBzOi8vZXVyMDEuc2FmZWxpbmtzLnByb3RlY3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUz
-QSUyRiUyRmxvcmUua2UNCj4gcm5lbC5vcmclMkZsa21sJTJGMjAyMDA4MzEyMjEwMDcuMTUwNjQ0
-MS0xLXNhcmF2YW5hayU0MGdvb2dsZS5jb20lDQo+IDJGVCUyRiUyM3UmYW1wO2RhdGE9MDIlN0Mw
-MSU3Q3BlbmcuZmFuJTQwbnhwLmNvbSU3QzMyNTQ2MDRkNw0KPiA0MWI0ZDFjZTczYjA4ZDg0ZGZi
-NjVhZiU3QzY4NmVhMWQzYmMyYjRjNmZhOTJjZDk5YzVjMzAxNjM1JTdDMA0KPiAlN0MwJTdDNjM3
-MzQ1MDg5NDI4MDc3NjA5JmFtcDtzZGF0YT01bGg4V08lMkJZTWg0QzFzQm41OEZzbQ0KPiBYc2px
-alBqJTJCJTJGQjcxJTJGRU5mTUdEdFRrJTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KPiBJIHdhc24n
-dCBhYmxlIHRvIHJlcHJvZHVjZSBpdCBpbiBteSBoYXJkd2FyZS4gU28sIGlmIHlvdSBjYW4gdGVz
-dCB0aGF0IHBhdGNoDQo+IChhbmQgcmVzcG9uZCB0byB0aGF0IHRocmVhZCksIHRoYXQnZCBiZSBn
-cmVhdC4NCg0KSSBub3QgZm91bmQgeW91ciBwYXRjaCBpbiBteSBtYWlsYm94LCBidXQgYW55d2F5
-IEkgdGVzdGVkIGl0Lg0KDQpUZXN0ZWQtYnk6IFBlbmcgRmFuIDxwZW5nLmZhbkBueHAuY29tPiAo
-aS5NWDdVTFAgRVZLKQ0KDQpSZWdhcmRzLA0KUGVuZy4NCg0KPiANCj4gLVNhcmF2YW5hDQo=
+Hi Felix,
+
+On 8/27/20 6:02 PM, FelixCuioc wrote:
+> Some ACPI devices need to issue dma requests to access
+> the reserved memory area.BIOS uses the device scope type
+> ACPI_NAMESPACE_DEVICE in RMRR to report these ACPI devices.
+> This patch add support for detecting ACPI devices in RMRR.
+> 
+> Signed-off-by: FelixCuioc <FelixCui-oc@zhaoxin.com>
+> ---
+>   drivers/iommu/intel/dmar.c  | 76 +++++++++++++++++++++----------------
+>   drivers/iommu/intel/iommu.c | 23 ++++++++++-
+>   include/linux/dmar.h        | 12 +++++-
+>   3 files changed, 76 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel/dmar.c b/drivers/iommu/intel/dmar.c
+> index 93e6345f3414..f6691c36bd3f 100644
+> --- a/drivers/iommu/intel/dmar.c
+> +++ b/drivers/iommu/intel/dmar.c
+> @@ -215,7 +215,7 @@ static bool dmar_match_pci_path(struct dmar_pci_notify_info *info, int bus,
+>   }
+>   
+>   /* Return: > 0 if match found, 0 if no match found, < 0 if error happens */
+> -int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
+> +int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
+>   			  void *start, void*end, u16 segment,
+>   			  struct dmar_dev_scope *devices,
+>   			  int devices_cnt)
+> @@ -304,7 +304,7 @@ static int dmar_pci_bus_add_dev(struct dmar_pci_notify_info *info)
+>   
+>   		drhd = container_of(dmaru->hdr,
+>   				    struct acpi_dmar_hardware_unit, header);
+> -		ret = dmar_insert_dev_scope(info, (void *)(drhd + 1),
+> +		ret = dmar_pci_insert_dev_scope(info, (void *)(drhd + 1),
+>   				((void *)drhd) + drhd->header.length,
+>   				dmaru->segment,
+>   				dmaru->devices, dmaru->devices_cnt);
+> @@ -697,47 +697,59 @@ dmar_find_matched_drhd_unit(struct pci_dev *dev)
+>   	return dmaru;
+>   }
+>   
+> -static void __init dmar_acpi_insert_dev_scope(u8 device_number,
+> -					      struct acpi_device *adev)
+> +/* Return: > 0 if match found, 0 if no match found */
+> +bool dmar_acpi_insert_dev_scope(u8 device_number,
+> +				struct acpi_device *adev,
+> +				void *start, void *end,
+> +				struct dmar_dev_scope *devices,
+> +				int devices_cnt)
+>   {
+> -	struct dmar_drhd_unit *dmaru;
+> -	struct acpi_dmar_hardware_unit *drhd;
+>   	struct acpi_dmar_device_scope *scope;
+>   	struct device *tmp;
+>   	int i;
+>   	struct acpi_dmar_pci_path *path;
+>   
+> +	for (; start < end; start += scope->length) {
+> +		scope = start;
+> +		if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
+> +			continue;
+> +		if (scope->enumeration_id != device_number)
+> +			continue;
+> +		path = (void *)(scope + 1);
+> +		for_each_dev_scope(devices, devices_cnt, i, tmp)
+> +			if (tmp == NULL) {
+> +				devices[i].bus = scope->bus;
+> +				devices[i].devfn = PCI_DEVFN(path->device, path->function);
+> +				rcu_assign_pointer(devices[i].dev,
+> +						   get_device(&adev->dev));
+> +				return true;
+> +			}
+> +		WARN_ON(i >= devices_cnt);
+> +	}
+> +	return false;
+> +}
+> +
+> +static int dmar_acpi_bus_add_dev(u8 device_number, struct acpi_device *adev)
+> +{
+> +	struct dmar_drhd_unit *dmaru;
+> +	struct acpi_dmar_hardware_unit *drhd;
+> +	int ret;
+> +
+>   	for_each_drhd_unit(dmaru) {
+>   		drhd = container_of(dmaru->hdr,
+>   				    struct acpi_dmar_hardware_unit,
+>   				    header);
+> +		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(drhd+1),
+> +						((void *)drhd)+drhd->header.length,
+> +						dmaru->devices, dmaru->devices_cnt);
+> +		if (ret)
+> +			break;
+> +	}
+> +	if (ret > 0)
+> +		ret = dmar_rmrr_add_acpi_dev(device_number, adev);
+>   
+> -		for (scope = (void *)(drhd + 1);
+> -		     (unsigned long)scope < ((unsigned long)drhd) + drhd->header.length;
+> -		     scope = ((void *)scope) + scope->length) {
+> -			if (scope->entry_type != ACPI_DMAR_SCOPE_TYPE_NAMESPACE)
+> -				continue;
+> -			if (scope->enumeration_id != device_number)
+> -				continue;
+> +	return ret;
+>   
+> -			path = (void *)(scope + 1);
+> -			pr_info("ACPI device \"%s\" under DMAR at %llx as %02x:%02x.%d\n",
+> -				dev_name(&adev->dev), dmaru->reg_base_addr,
+> -				scope->bus, path->device, path->function);
+
+Please keep such information. People are used to use them as a method to
+know the hardware configuration.
+
+> -			for_each_dev_scope(dmaru->devices, dmaru->devices_cnt, i, tmp)
+> -				if (tmp == NULL) {
+> -					dmaru->devices[i].bus = scope->bus;
+> -					dmaru->devices[i].devfn = PCI_DEVFN(path->device,
+> -									    path->function);
+> -					rcu_assign_pointer(dmaru->devices[i].dev,
+> -							   get_device(&adev->dev));
+> -					return;
+> -				}
+> -			BUG_ON(i >= dmaru->devices_cnt);
+> -		}
+> -	}
+> -	pr_warn("No IOMMU scope found for ANDD enumeration ID %d (%s)\n",
+> -		device_number, dev_name(&adev->dev));
+
+Ditto.
+
+>   }
+>   
+>   static int __init dmar_acpi_dev_scope_init(void)
+> @@ -766,7 +778,7 @@ static int __init dmar_acpi_dev_scope_init(void)
+>   				       andd->device_name);
+>   				continue;
+>   			}
+> -			dmar_acpi_insert_dev_scope(andd->device_number, adev);
+> +			dmar_acpi_bus_add_dev(andd->device_number, adev);
+>   		}
+>   	}
+>   	return 0;
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index ca557d351518..208a91605288 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -4508,6 +4508,25 @@ int dmar_find_matched_atsr_unit(struct pci_dev *dev)
+>   	return ret;
+>   }
+>   
+> +int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
+> +{
+> +	int ret;
+> +	struct dmar_rmrr_unit *rmrru;
+> +	struct acpi_dmar_reserved_memory *rmrr;
+> +
+> +	list_for_each_entry(rmrru, &dmar_rmrr_units, list) {
+> +		rmrr = container_of(rmrru->hdr,
+> +				struct acpi_dmar_reserved_memory,
+> +				header);
+> +		ret = dmar_acpi_insert_dev_scope(device_number, adev, (void *)(rmrr + 1),
+> +						((void *)rmrr) + rmrr->header.length,
+> +						rmrru->devices, rmrru->devices_cnt);
+> +		if (ret)
+> +			break;
+> +	}
+> +	return 0;
+> +}
+
+This is only used in dmar.c. Why do you want to define it here and use
+it in another file?
+
+> +
+>   int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   {
+>   	int ret;
+> @@ -4523,7 +4542,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   		rmrr = container_of(rmrru->hdr,
+>   				    struct acpi_dmar_reserved_memory, header);
+>   		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
+> -			ret = dmar_insert_dev_scope(info, (void *)(rmrr + 1),
+> +			ret = dmar_pci_insert_dev_scope(info, (void *)(rmrr + 1),
+>   				((void *)rmrr) + rmrr->header.length,
+>   				rmrr->segment, rmrru->devices,
+>   				rmrru->devices_cnt);
+> @@ -4541,7 +4560,7 @@ int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   
+>   		atsr = container_of(atsru->hdr, struct acpi_dmar_atsr, header);
+>   		if (info->event == BUS_NOTIFY_ADD_DEVICE) {
+> -			ret = dmar_insert_dev_scope(info, (void *)(atsr + 1),
+> +			ret = dmar_pci_insert_dev_scope(info, (void *)(atsr + 1),
+>   					(void *)atsr + atsr->header.length,
+>   					atsr->segment, atsru->devices,
+>   					atsru->devices_cnt);
+> diff --git a/include/linux/dmar.h b/include/linux/dmar.h
+> index 65565820328a..d0981d35d3c9 100644
+> --- a/include/linux/dmar.h
+> +++ b/include/linux/dmar.h
+> @@ -113,10 +113,14 @@ extern int dmar_parse_dev_scope(void *start, void *end, int *cnt,
+>   				struct dmar_dev_scope **devices, u16 segment);
+>   extern void *dmar_alloc_dev_scope(void *start, void *end, int *cnt);
+>   extern void dmar_free_dev_scope(struct dmar_dev_scope **devices, int *cnt);
+> -extern int dmar_insert_dev_scope(struct dmar_pci_notify_info *info,
+> +extern int dmar_pci_insert_dev_scope(struct dmar_pci_notify_info *info,
+>   				 void *start, void*end, u16 segment,
+>   				 struct dmar_dev_scope *devices,
+>   				 int devices_cnt);
+> +extern bool dmar_acpi_insert_dev_scope(u8 device_number,
+> +				struct acpi_device *adev, void *start, void *end,
+> +				struct dmar_dev_scope *devices, int devices_cnt);
+> +
+>   extern int dmar_remove_dev_scope(struct dmar_pci_notify_info *info,
+>   				 u16 segment, struct dmar_dev_scope *devices,
+>   				 int count);
+> @@ -140,6 +144,7 @@ extern int dmar_parse_one_atsr(struct acpi_dmar_header *header, void *arg);
+>   extern int dmar_check_one_atsr(struct acpi_dmar_header *hdr, void *arg);
+>   extern int dmar_release_one_atsr(struct acpi_dmar_header *hdr, void *arg);
+>   extern int dmar_iommu_hotplug(struct dmar_drhd_unit *dmaru, bool insert);
+> +extern int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev);
+>   extern int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info);
+>   #else /* !CONFIG_INTEL_IOMMU: */
+>   static inline int intel_iommu_init(void) { return -ENODEV; }
+> @@ -150,6 +155,11 @@ static inline void intel_iommu_shutdown(void) { }
+>   #define	dmar_check_one_atsr		dmar_res_noop
+>   #define	dmar_release_one_atsr		dmar_res_noop
+>   
+> +static inline int dmar_rmrr_add_acpi_dev(u8 device_number, struct acpi_device *adev)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline int dmar_iommu_notify_scope_dev(struct dmar_pci_notify_info *info)
+>   {
+>   	return 0;
+> 
+
+Best regards,
+baolu
