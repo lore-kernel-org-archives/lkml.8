@@ -2,96 +2,122 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 861D9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55A9CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58859206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 345C5207BC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:57:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="cUZYoXMl"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Awx3HtL3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgIAMxs (ORCPT
+        id S1727041AbgIAM5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:53:48 -0400
-Received: from smtp1.axis.com ([195.60.68.17]:41044 "EHLO smtp1.axis.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728116AbgIAMvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:51:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=axis.com; l=995; q=dns/txt; s=axis-central1;
-  t=1598964699; x=1630500699;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=bZ/H5Fs/QMbb9e+PlCCs4RRk8UF5csgy4VmwPELJui4=;
-  b=cUZYoXMlxm6lDiWHdVC1l96lWCtLOKDF2RsOeMIa4q9SF4L0/7A4Xaoa
-   UjZSfQnfSGcRoxjCBWSSe3hW1605qK0+d67VIGgJK4Dt9ql/eSlIfQO0E
-   XyqwllIcX4oXYtHBAbcSVZOWW/cGoP2TdL1c4RpPsKi5wAN10gDcJo4RR
-   4VGSbVmOUxWi23T48EEnFZjifzvo8n6XXRMHme65JFek9yHX63paURQqn
-   PRIGrk4RBNp7LS1SjUbDnqkY3Tw9O0lQETfwVDLTkNC2GzRsqC10bTEej
-   MI2Uwr0n/WBf8rIxZsTzdyQr2eSN++w66UOZzcJF+Lx2TTK06RuIt1qH+
-   A==;
-IronPort-SDR: gzHzlcmCoOgPoBKEljhCVaeIS9elkzWwIBKSsDR/9WI5kwrKUMgd6HhCVlab82xpz/0rYuKNbt
- XpylXJpQ0UDBcx2N2o8ygWoWviWgQzyYD5NvaN7qgWri1aWcDPHNf9Gx0W1VtUoRRtNR7F7QUw
- YGgbkjXETCHMybezzxJ13U8h3l5j8cr5HfaQTNapkBL9E1DDR9o9cmB6B/otRSellwxM4ijL3b
- R3MNdr8kYCBAvyzqsg7hVLf3FBFge2rULdnuSpzxYNDeDi/aQwHCxRHbee1NriFWVqTOy4rldP
- K7A=
-X-IronPort-AV: E=Sophos;i="5.76,379,1592863200"; 
-   d="scan'208";a="12434794"
-From:   Camel Guo <camel.guo@axis.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <dmurphy@ti.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@axis.com>, Camel Guo <camelg@axis.com>,
-        Camel Guo <camel.guo@axis.com>
-Subject: [PATCH v2] ASoC: tlv320adcx140: Fix accessing uninitialized adcx140->dev
-Date:   Tue, 1 Sep 2020 14:51:22 +0200
-Message-ID: <20200901125123.25886-1-camel.guo@axis.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+        Tue, 1 Sep 2020 08:57:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728149AbgIAMz2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 08:55:28 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 081CWkTs003994;
+        Tue, 1 Sep 2020 08:55:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=EsE9aMLgZ5oLOJJb71EKETx/jtQMeuycu+5EYM7apeA=;
+ b=Awx3HtL3wnJvpEXKKGxHBBkQC1BvC5v1p65zGwvdUj5KWwh9FMM/PM9OXL3HdP7WkE5w
+ oMMmrL+sSxBdDv8i3FJz7XDh6+nR3zEGXUZ3LJVOH/Y4gKnWgf+DK/JBVf2QXJEYyPv1
+ +xQLAfMioFA6SZbhMMkSvQxwHqRMAotmZynvZfjEGuf1Z2O4FhJyN9+37Ow44eqW30l4
+ YYpa+3i27GcM4h4cFWsvN27LWJVso1z7xjIRpdiNvPWMWmBqabnG1yDkX8wmEelZGVc3
+ hzs+yzPKiQtA8cKrWNn39jEcFbUpbjoAD/ft7RoPYwkR0kE/d7ev/FQFl5tbPaXFWOOB PA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339pd48nku-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 08:55:16 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 081CWm3F004493;
+        Tue, 1 Sep 2020 08:55:16 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339pd48njp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 08:55:16 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 081CrGUG022720;
+        Tue, 1 Sep 2020 12:55:14 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma03ams.nl.ibm.com with ESMTP id 337en8bdxk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 12:55:13 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 081CtB8651118462
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Sep 2020 12:55:11 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B4BE611C05C;
+        Tue,  1 Sep 2020 12:55:11 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F100B11C052;
+        Tue,  1 Sep 2020 12:55:09 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.77.139])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Sep 2020 12:55:09 +0000 (GMT)
+Message-ID: <910f7fe3864925d1052f5f35785dd19ed1505fe6.camel@linux.ibm.com>
+Subject: Re: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
+ EVM_ALLOW_METADATA_WRITES is set
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "mjg59@google.com" <mjg59@google.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Tue, 01 Sep 2020 08:55:09 -0400
+In-Reply-To: <7f3dd815639a44ba9b0fb532c217bd21@huawei.com>
+References: <20200618160329.1263-2-roberto.sassu@huawei.com>
+         <20200618160458.1579-7-roberto.sassu@huawei.com>
+         <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
+         <a5e6a5acf2274a6d844b275dacfbabb8@huawei.com>
+         <ae06c113ec91442e293f2466cae3dd1b81f241eb.camel@linux.ibm.com>
+         <7f3dd815639a44ba9b0fb532c217bd21@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-01_08:2020-09-01,2020-09-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
+ mlxscore=0 malwarescore=0 adultscore=0 spamscore=0 priorityscore=1501
+ suspectscore=0 bulkscore=0 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Camel Guo <camelg@axis.com>
+> > > I think it is better to set a flag, maybe a new one, directly in EVM, to notify
+> > > the integrity subsystem that iint->evm_status is no longer valid.
+> > >
+> > > If the EVM flag is set, IMA would reset the appraisal flags, as it uses
+> > > iint->evm_status for appraisal. We can consider to reset also the measure
+> > > flags when we have a template that includes file metadata.
+> > 
+> > When would IMA read the EVM flag?   Who would reset the flag?  At what
+> > point would it be reset?   Just as EVM shouldn't be resetting the IMA
+> > flag, IMA shouldn't be resetting the EVM flag.
+> 
+> IMA would read the flag in process_measurement() and behave similarly
+> to when it processes IMA_CHANGE_ATTR. The flag would be reset by
+> evm_verify_hmac().
 
-In adcx140_i2c_probe, adcx140->dev is accessed before its
-initialization. This commit fixes this bug.
+Sounds good.
 
-Signed-off-by: Camel Guo <camel.guo@axis.com>
----
- sound/soc/codecs/tlv320adcx140.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
-index 5cd50d841177..7ae6ec374be3 100644
---- a/sound/soc/codecs/tlv320adcx140.c
-+++ b/sound/soc/codecs/tlv320adcx140.c
-@@ -980,6 +980,8 @@ static int adcx140_i2c_probe(struct i2c_client *i2c,
- 	if (!adcx140)
- 		return -ENOMEM;
- 
-+	adcx140->dev = &i2c->dev;
-+
- 	adcx140->gpio_reset = devm_gpiod_get_optional(adcx140->dev,
- 						      "reset", GPIOD_OUT_LOW);
- 	if (IS_ERR(adcx140->gpio_reset))
-@@ -1007,7 +1009,7 @@ static int adcx140_i2c_probe(struct i2c_client *i2c,
- 			ret);
- 		return ret;
- 	}
--	adcx140->dev = &i2c->dev;
-+
- 	i2c_set_clientdata(i2c, adcx140);
- 
- 	return devm_snd_soc_register_component(&i2c->dev,
--- 
-2.20.1
+Mimi
 
