@@ -2,51 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A38C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF8FC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB9CC206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D86BC2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975211;
-	bh=Pq7Rp7diZuREN6AIJZX1rfHwnop0pd6ShYCnutIsfbs=;
+	s=default; t=1598975240;
+	bh=cwUEubYXyozIkblDt/dZaV/h5IXzRFqz50ycpPTAa74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NR2yLGti/GSeBPjDmHAd3lhqzdpA6pWN1aoJFfGvIglq69eMr5io4e8ve11p5oMVW
-	 9ab5BbvgPDcbpNFzICm6pJtECS+VG9m+Ns7SaCUFK7HMqNNtM2p7hHSVy/I8sJ6vB5
-	 /YrYoHHsH442Y5v9Li4N/c64rRj1z1kh5kl4GlOc=
+	b=xVkgwklnZz67PmhR0xJUfN0qQs8mRG1e5iGCPw1v02FF/kpYEiIfK2lnDqealzMpI
+	 FcqzXkiNNkrGaURq/P90bIMFSCpT8ayh1WxDHiS+Jenk666ERK8AUza4nEgBKFTigy
+	 KOZM+cNA2d1IPIxVtv5++9CLurZVrNX6juEreoS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgIAPqs (ORCPT
+        id S1726244AbgIAPrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:46:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57828 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:47:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731669AbgIAPng (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:43:36 -0400
+        id S1731676AbgIAPnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:43:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099D42064B;
-        Tue,  1 Sep 2020 15:43:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 851D3206EF;
+        Tue,  1 Sep 2020 15:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975015;
-        bh=Pq7Rp7diZuREN6AIJZX1rfHwnop0pd6ShYCnutIsfbs=;
+        s=default; t=1598975018;
+        bh=cwUEubYXyozIkblDt/dZaV/h5IXzRFqz50ycpPTAa74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gkYkG9oBoo5RglC+K2+UzJKKNJrrvPtQ7VsTYd+F9hBjvtXVD4HmdUtM+wKN9oPIZ
-         ADgyRSTI1O4xD59sXE267eF0WwEUAI3Yj7bdu1u4nFuj+PE/kFOpAyZgqFdIEEKm5k
-         mZv4uOUcFYXY/C8noKG5suFQ1olMsK6fuYjRyRIA=
+        b=wrmb+oGSsbkIYQHvLk3sxdSN+OHm36Dw3H6dBHTKpXsHuzi07QYsR5goS6dsoXdAW
+         C+EnujL+Gpa/rYV1h7OumfcZ94ova8tU0bmSyvmsDX2eitkjdcT46qkKFLjNJxXh10
+         Piu9m76NxiMl9SMj5OY8a5JqyHhjRGnzisGQNuGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
-        syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
-Subject: [PATCH 5.8 176/255] fbcon: prevent user font height or width change from causing potential out-of-bounds access
-Date:   Tue,  1 Sep 2020 17:10:32 +0200
-Message-Id: <20200901151009.122008546@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 150/255] scsi: qla2xxx: Indicate correct supported speeds for Mezz card
+Date:   Tue,  1 Sep 2020 17:10:06 +0200
+Message-Id: <20200901151007.874909682@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,79 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Kennedy <george.kennedy@oracle.com>
+From: Quinn Tran <qutran@marvell.com>
 
-commit 39b3cffb8cf3111738ea993e2757ab382253d86a upstream.
+[ Upstream commit 4709272f6327cc4a8ee1dc55771bcf9718346980 ]
 
-Add a check to fbcon_resize() to ensure that a possible change to user font
-height or user font width will not allow a font data out-of-bounds access.
-NOTE: must use original charcount in calculation as font charcount can
-change and cannot be used to determine the font data allocated size.
+Correct the supported speeds for 16G Mezz card.
 
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/1596213192-6635-1-git-send-email-george.kennedy@oracle.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Link: https://lore.kernel.org/r/20200806111014.28434-4-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbcon.c |   25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_gs.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -2191,6 +2191,9 @@ static void updatescrollmode(struct fbco
- 	}
- }
- 
-+#define PITCH(w) (((w) + 7) >> 3)
-+#define CALC_FONTSZ(h, p, c) ((h) * (p) * (c)) /* size = height * pitch * charcount */
-+
- static int fbcon_resize(struct vc_data *vc, unsigned int width, 
- 			unsigned int height, unsigned int user)
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index 7074073446701..3bfb5678f6515 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -1505,11 +1505,11 @@ qla2x00_prep_ct_fdmi_req(struct ct_sns_pkt *p, uint16_t cmd,
+ static uint
+ qla25xx_fdmi_port_speed_capability(struct qla_hw_data *ha)
  {
-@@ -2200,6 +2203,24 @@ static int fbcon_resize(struct vc_data *
- 	struct fb_var_screeninfo var = info->var;
- 	int x_diff, y_diff, virt_w, virt_h, virt_fw, virt_fh;
- 
-+	if (ops->p && ops->p->userfont && FNTSIZE(vc->vc_font.data)) {
-+		int size;
-+		int pitch = PITCH(vc->vc_font.width);
++	uint speeds = 0;
 +
-+		/*
-+		 * If user font, ensure that a possible change to user font
-+		 * height or width will not allow a font data out-of-bounds access.
-+		 * NOTE: must use original charcount in calculation as font
-+		 * charcount can change and cannot be used to determine the
-+		 * font data allocated size.
-+		 */
-+		if (pitch <= 0)
-+			return -EINVAL;
-+		size = CALC_FONTSZ(vc->vc_font.height, pitch, FNTCHARCNT(vc->vc_font.data));
-+		if (size > FNTSIZE(vc->vc_font.data))
-+			return -EINVAL;
+ 	if (IS_CNA_CAPABLE(ha))
+ 		return FDMI_PORT_SPEED_10GB;
+ 	if (IS_QLA28XX(ha) || IS_QLA27XX(ha)) {
+-		uint speeds = 0;
+-
+ 		if (ha->max_supported_speed == 2) {
+ 			if (ha->min_supported_speed <= 6)
+ 				speeds |= FDMI_PORT_SPEED_64GB;
+@@ -1536,9 +1536,16 @@ qla25xx_fdmi_port_speed_capability(struct qla_hw_data *ha)
+ 		}
+ 		return speeds;
+ 	}
+-	if (IS_QLA2031(ha))
+-		return FDMI_PORT_SPEED_16GB|FDMI_PORT_SPEED_8GB|
+-			FDMI_PORT_SPEED_4GB;
++	if (IS_QLA2031(ha)) {
++		if ((ha->pdev->subsystem_vendor == 0x103C) &&
++		    (ha->pdev->subsystem_device == 0x8002)) {
++			speeds = FDMI_PORT_SPEED_16GB;
++		} else {
++			speeds = FDMI_PORT_SPEED_16GB|FDMI_PORT_SPEED_8GB|
++				FDMI_PORT_SPEED_4GB;
++		}
++		return speeds;
 +	}
-+
- 	virt_w = FBCON_SWAP(ops->rotate, width, height);
- 	virt_h = FBCON_SWAP(ops->rotate, height, width);
- 	virt_fw = FBCON_SWAP(ops->rotate, vc->vc_font.width,
-@@ -2652,7 +2673,7 @@ static int fbcon_set_font(struct vc_data
- 	int size;
- 	int i, csum;
- 	u8 *new_data, *data = font->data;
--	int pitch = (font->width+7) >> 3;
-+	int pitch = PITCH(font->width);
- 
- 	/* Is there a reason why fbconsole couldn't handle any charcount >256?
- 	 * If not this check should be changed to charcount < 256 */
-@@ -2668,7 +2689,7 @@ static int fbcon_set_font(struct vc_data
- 	if (fbcon_invalid_charcount(info, charcount))
- 		return -EINVAL;
- 
--	size = h * pitch * charcount;
-+	size = CALC_FONTSZ(h, pitch, charcount);
- 
- 	new_data = kmalloc(FONT_EXTRA_WORDS * sizeof(int) + size, GFP_USER);
- 
+ 	if (IS_QLA25XX(ha))
+ 		return FDMI_PORT_SPEED_8GB|FDMI_PORT_SPEED_4GB|
+ 			FDMI_PORT_SPEED_2GB|FDMI_PORT_SPEED_1GB;
+-- 
+2.25.1
+
 
 
