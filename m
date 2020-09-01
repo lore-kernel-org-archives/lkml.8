@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE6FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4623FC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED7FF206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6A0206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976215;
-	bh=raewuoMFNE7kx+5yn2JFZxyUHqYNFqxdXjV56LuMEc0=;
+	s=default; t=1598976221;
+	bh=YBMxGta17FoLOSD5i5I0H4LnKtfJC+vSUhoXYq4gL3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0jnBQY1KW5jF7jefHspwGeuUukcT6RFuTHgIbjxPR4V9OCP5CtREMIQ2sp5Kyxbf
-	 6i8yKSaGgcYrEFa5b2p5Q3RAXVZBHW38ZO8pzLLRhIRIEwkTnEGo2lI/9VFxVoXwS5
-	 ZBeNSxlwBHmInrj73vEhFfz6MBk1hQOdHWUjyWI4=
+	b=v7HSzV4yjTNITqUoQVFhBmy2LrCpjw1DiKlUcWxhoJ6LI+OYqSeZG0vaNeluYwXnH
+	 zWSMyL77HWKEW/lJIHfxeFVHZ43VROynZvQWqlNUcqnHNjoK6yjyI/uRvCwOc9D6eu
+	 75pxuDGcWPhj5GJ5vPWn8FbBkCrVAgKEUyxXQNXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731585AbgIAPml (ORCPT
+        id S1729150AbgIAQDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:42:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51080 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:03:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728986AbgIAPkM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:40:12 -0400
+        id S1731587AbgIAPmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:42:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11647205F4;
-        Tue,  1 Sep 2020 15:40:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28AF320866;
+        Tue,  1 Sep 2020 15:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974811;
-        bh=raewuoMFNE7kx+5yn2JFZxyUHqYNFqxdXjV56LuMEc0=;
+        s=default; t=1598974962;
+        bh=YBMxGta17FoLOSD5i5I0H4LnKtfJC+vSUhoXYq4gL3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZDo+zrkmBYChKmpq3vmzhA5NZMmJP1JaTVIAoLWONFPT5hGB4/zlUTqln+f9V3jS/
-         UgOH9A5HyGaOfuo9W2N7H9qsoog9ruX/1RoXFj6yM19+ti5CCxmqYZTcoBZGR17bgE
-         Lodx33WA8rzPWrJQYkEWeXPXlcVE4NtY2JtTPNoU=
+        b=2F3rG+Z+ApMKl/NAnfgDEdCPWC/Y4hJ3w5sBWd2ZS1+n81y/3Q/7dfB63nuKmBp2O
+         p7I3yddfpe7ZwwryrwY0igGkE1cZ0exCwA3FMY5R/xzs0X5t5GafeZS7v9WigbF7PZ
+         xU4wfsxHwIut73MDtmXCTCY/hGMK0gpb2oJYbZYg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 100/255] i2c: core: Dont fail PRP0001 enumeration when no ID table exist
-Date:   Tue,  1 Sep 2020 17:09:16 +0200
-Message-Id: <20200901151005.506490372@linuxfoundation.org>
+        stable@vger.kernel.org, Guchun Chen <guchun.chen@amd.com>,
+        Tao Zhou <tao.zhou1@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 157/255] drm/amdgpu: fix NULL pointer access issue when unloading driver
+Date:   Tue,  1 Sep 2020 17:10:13 +0200
+Message-Id: <20200901151008.213401409@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,42 +61,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Guchun Chen <guchun.chen@amd.com>
 
-[ Upstream commit e3cb82c6d6f6c27ab754e13ae29bdd6b949982e2 ]
+[ Upstream commit 1a68d96f81b8e7eb2a121fbf9abf9e5974e58832 ]
 
-When commit c64ffff7a9d1 ("i2c: core: Allow empty id_table in ACPI case
-as well") fixed the enumeration of I²C devices on ACPI enabled platforms
-when driver has no ID table, it missed the PRP0001 support.
+When unloading driver by "modprobe -r amdgpu", one NULL pointer
+dereference bug occurs in ras debugfs releasing. The cause is the
+duplicated debugfs_remove, as drm debugfs_root dir has been cleaned
+up already by drm_minor_unregister.
 
-i2c_device_match() and i2c_acpi_match_device() differently match
-driver against given device. Use acpi_driver_match_device(), that is used
-in the former, in i2c_device_probe() and don't fail PRP0001 enumeration
-when no ID table exist.
+BUG: kernel NULL pointer dereference, address: 00000000000000a0
+PGD 0 P4D 0
+Oops: 0002 [#1] SMP PTI
+CPU: 11 PID: 1526 Comm: modprobe Tainted: G           OE     5.6.0-guchchen #1
+Hardware name: System manufacturer System Product Name/TUF Z370-PLUS GAMING II, BIOS 0411 09/21/2018
+RIP: 0010:down_write+0x15/0x40
+Code: eb de e8 7e 17 72 ff cc cc cc cc cc cc cc cc cc cc cc cc cc cc 0f 1f 44 00 00 53 48 89 fb e8 92
+d8 ff ff 31 c0 ba 01 00 00 00 <f0> 48 0f b1 13 75 0f 65 48 8b 04 25 c0 8b 01 00 48 89 43 08 5b c3
+RSP: 0018:ffffb1590386fcd0 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 00000000000000a0 RCX: 0000000000000000
+RDX: 0000000000000001 RSI: ffffffff85b2fcc2 RDI: 00000000000000a0
+RBP: ffffb1590386fd30 R08: ffffffff85b2fcc2 R09: 000000000002b3c0
+R10: ffff97a330618c40 R11: 00000000000005f6 R12: ffff97a3481beb40
+R13: 00000000000000a0 R14: ffff97a3481beb40 R15: 0000000000000000
+FS:  00007fb11a717540(0000) GS:ffff97a376cc0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000000000a0 CR3: 00000004066d6006 CR4: 00000000003606e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ simple_recursive_removal+0x63/0x370
+ ? debugfs_remove+0x60/0x60
+ debugfs_remove+0x40/0x60
+ amdgpu_ras_fini+0x82/0x230 [amdgpu]
+ ? __kernfs_remove.part.17+0x101/0x1f0
+ ? kernfs_name_hash+0x12/0x80
+ amdgpu_device_fini+0x1c0/0x580 [amdgpu]
+ amdgpu_driver_unload_kms+0x3e/0x70 [amdgpu]
+ amdgpu_pci_remove+0x36/0x60 [amdgpu]
+ pci_device_remove+0x3b/0xb0
+ device_release_driver_internal+0xe5/0x1c0
+ driver_detach+0x46/0x90
+ bus_remove_driver+0x58/0xd0
+ pci_unregister_driver+0x29/0x90
+ amdgpu_exit+0x11/0x25 [amdgpu]
+ __x64_sys_delete_module+0x13d/0x210
+ do_syscall_64+0x5f/0x250
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: c64ffff7a9d1 ("i2c: core: Allow empty id_table in ACPI case as well")
-BugLink: https://stackoverflow.com/q/63519678/2511795
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Guchun Chen <guchun.chen@amd.com>
+Reviewed-by: Tao Zhou <tao.zhou1@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-core-base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index 26f03a14a4781..4f09d4c318287 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -354,7 +354,7 @@ static int i2c_device_probe(struct device *dev)
- 	 * or ACPI ID table is supplied for the probing device.
- 	 */
- 	if (!driver->id_table &&
--	    !i2c_acpi_match_device(dev->driver->acpi_match_table, client) &&
-+	    !acpi_driver_match_device(dev, dev->driver) &&
- 	    !i2c_of_match_device(dev->driver->of_match_table, client)) {
- 		status = -ENODEV;
- 		goto put_sync_adapter;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+index 20a7d75b2eb88..3f47f35eedff1 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_ras.c
+@@ -1240,7 +1240,6 @@ void amdgpu_ras_debugfs_remove(struct amdgpu_device *adev,
+ 	if (!obj || !obj->ent)
+ 		return;
+ 
+-	debugfs_remove(obj->ent);
+ 	obj->ent = NULL;
+ 	put_obj(obj);
+ }
+@@ -1254,7 +1253,6 @@ static void amdgpu_ras_debugfs_remove_all(struct amdgpu_device *adev)
+ 		amdgpu_ras_debugfs_remove(adev, &obj->head);
+ 	}
+ 
+-	debugfs_remove_recursive(con->dir);
+ 	con->dir = NULL;
+ }
+ /* debugfs end */
 -- 
 2.25.1
 
