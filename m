@@ -2,221 +2,120 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D761CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32793C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A149F2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32212067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:09:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="liAKRa+R"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hwBRc/XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgIANHm (ORCPT
+        id S1728053AbgIANJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:07:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbgIANFQ (ORCPT
+        Tue, 1 Sep 2020 09:09:08 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:31809 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727796AbgIANHB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:05:16 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 923D8C061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 06:04:50 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id a15so1430972ljk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 06:04:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WTcj+wa4y57JaNrJlYMrHlaBIBb/iNOmqo6BATfC9sg=;
-        b=liAKRa+REiDeMjzfTE1zQL4EYPj1FCh3Vu1AlT48XpHOj6bbVSg0mZmlGZR8jstUBS
-         HoWlsHwjjpfwQYy9t2UX4P59Cy1XeQOqiqSwoi2ryEsGdS3A+eFJ53wep1tbZYsqdzf+
-         C+TBKPvUm1SfoIWH/vdUgOQogx3PY6fgaouFQsvV+WAttz2l5PHNN7oQJHlhjXBIqukb
-         X9NvEfGtNHUQ9g/aCsYeleknOeJsQzZWf7ewUeR1YSX3pZmyOyoX3X1ufQz9ZW2pUJjP
-         IgA9AMHqlYlykN+9puTQbOs2iW1thM6fFGeGlSzZuyT9CORWQ7UgOc/GI8r1DVXieIZF
-         Wpfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WTcj+wa4y57JaNrJlYMrHlaBIBb/iNOmqo6BATfC9sg=;
-        b=sdZykAf6Ui16ROaxmwuh9f14fzRlBVfmrvXO8aUtZ9kwgFzIR2cVnysj7wm4NrIAm3
-         t6A7BNlcoTOM54tN7b+k833vfcQXJK4nC6sOJBoBqeZvmp4/OCssmWrlO8Q0mwC4laTP
-         dFoN8u5h6alMY3F975ytkYHkr6iLMhXYqUXONZezzMXt5m6jbsWfMrSVbUI9LzSYtt2q
-         Cb7BTBDfOAh+NwA99k1wmnKfzZcz3za1OJwv/V99QwR7AHbY13Us1EhvNb1WA9rno1PR
-         xfnvp1NuViK4y0cAHRMboQ2lwlhe3ZI0MxCSuIC8ZdiaodGYNrFo04KEuV5axhiXja+y
-         fnUA==
-X-Gm-Message-State: AOAM533sMSWvnt1iqEYy65Vc8TFmFV4OB3V99zF5WFFYbTQuc2U0LtXs
-        Z3VC/BIsx1I5hAl8hT1HFJyrC42YRO7U/s0kL+C8bA==
-X-Google-Smtp-Source: ABdhPJziCz/TmZc2bRvVdNUOr7hpnLxFIgH2l1HM1bwJL5j9RBC9bW2/QB/Mx5pndc64On9txvdHEuolgfBTBBZDUfI=
-X-Received: by 2002:a2e:81d7:: with SMTP id s23mr579639ljg.69.1598965488779;
- Tue, 01 Sep 2020 06:04:48 -0700 (PDT)
+        Tue, 1 Sep 2020 09:07:01 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598965565; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=cSrZbk7e/jeZSp8Bprl3QgOkG7poAuCV3fNdztHsFvY=;
+ b=hwBRc/XJayLFYw9CoqnENmwDe+nrXyC2FwjovfNbn0HuNSTPuzzGGiJXVJM1hKT+ogWov4q2
+ v6z7T/etzhWhm4RCLczP8qnTGVtGx27W6K2WqkXsmQ9aZ5QqwemmI+eiz9+BfEQ/tcE+uQlP
+ wvfhkXfPE6SRs8BE1gatR61C6gY=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
+ 5f4e4739238e1efa37926920 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 13:06:01
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 10DFBC43395; Tue,  1 Sep 2020 13:06:01 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2DC04C433CA;
+        Tue,  1 Sep 2020 13:05:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2DC04C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200820120025.74460-1-benbjiang@tencent.com> <CAKfTPtABCbEuYf3uup5ZODyPXpUqBjgM8A5gBQqM0cQGxWk5zw@mail.gmail.com>
- <20200820125829.GT2674@hirez.programming.kicks-ass.net> <CAKfTPtBuZOb9-W5sS=DqxcuMFa8Lw=7XqMJ_YrXEgd5zvufYjA@mail.gmail.com>
- <20200820134341.GW2674@hirez.programming.kicks-ass.net> <CAKfTPtC203mVB6QB1APbZ5igavdcwbJsCQH_8K__rhGxi+KXoQ@mail.gmail.com>
- <CAPJCdBmbTULFE=tS0-VM9aqKmC0b0PFfny6=UiuVZB=hVW996Q@mail.gmail.com>
- <CAKfTPtCTd5eihtcg=B0Gu3RUydbSgjurD1uHD3rEvbTV61nf6Q@mail.gmail.com> <CAPJCdBmzcmomLaxNyN=VJiOCxrqrYdeJ=N8YksJ8mVY-BGHASA@mail.gmail.com>
-In-Reply-To: <CAPJCdBmzcmomLaxNyN=VJiOCxrqrYdeJ=N8YksJ8mVY-BGHASA@mail.gmail.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 1 Sep 2020 15:04:37 +0200
-Message-ID: <CAKfTPtBerqpbay-=2ws85K6hRJNXfsexaNpUyesz4OtZrZVRWQ@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: avoid vruntime compensation for SCHED_IDLE task
-To:     Jiang Biao <benbjiang@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jiang Biao <benbjiang@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Subject: Re: [01/30] mwifiex: pcie: Move tables to the only place they're used
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200826093401.1458456-2-lee.jones@linaro.org>
+References: <20200826093401.1458456-2-lee.jones@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200901130601.10DFBC43395@smtp.codeaurora.org>
+Date:   Tue,  1 Sep 2020 13:06:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 12:15, Jiang Biao <benbjiang@gmail.com> wrote:
->
-> Hi, Vincent
->
-> Sorry for the late reply.:)
->
-> On Fri, 28 Aug 2020 at 20:55, Vincent Guittot
-> <vincent.guittot@linaro.org> wrote:
-> >
-> > On Sun, 23 Aug 2020 at 09:33, Jiang Biao <benbjiang@gmail.com> wrote:
-> > >
-> > > Hi, Vincent and Peter
-> > >
-> > > On Thu, 20 Aug 2020 at 22:09, Vincent Guittot
-> > > <vincent.guittot@linaro.org> wrote:
-> > > >
-> > > > On Thu, 20 Aug 2020 at 15:44, <peterz@infradead.org> wrote:
-> > > > >
-> > > > > > That's been said, not compensating the vruntime for a sched_idle task
-> > > > > > makes sense for me. Even if that will only help for others task in the
-> > > > > > same cfs_rq
-> > > > >
-> > > > > Yeah, but it is worth the extra pointer chasing and branches?
-> > > >
-> > > > For that I let Jiang provides figures to show the worthful
-> > > Using the following configuration for rt-app,
-> > > {
-> > >         "tasks" : {
-> > >                 "task_other" : {
-> > >                         "instance" : 1, //only 1 instance to be easy to observe
-> > >                         "cpus" : [2],
-> > >                         "loop" : 2000,
-> > >                         "policy" : "SCHED_OTHER",
-> > >                         "run" : -1,  //make normal task 100% running
-> > >                         "priority" : 0,
-> > >                         "sleep" : 0
-> > >                 },
-> > >                 "task_idle" : {
-> > >                         "instance" : 1,
-> > >                         "cpus" : [2],
-> > >                         "loop" : 2000,
-> > >                         "policy" : "SCHED_IDLE",
-> > >                         "run" : 1, //only run 1us to avoid
-> > > blocking(always waiting for running), making check_preempt_wakeup
-> > > work(S->R switching)
-> > >                         "timer" : { "ref" : "unique2" , "period" :
-> > > 16000, "mode" : "absolute" }
-> > >                 }
-> > >         },
-> > >         "global" : {
-> > >                 "calibration" : "CPU0",
-> > >                 "default_policy" : "SCHED_OTHER",
-> > >                 "duration" : -1
-> > >         }
-> > > }
-> > > without the patch,
-> > >           <...>-39771 [002] d.h. 42478.177771: sched_wakeup:
-> > > comm=task_idle-1 pid=39772 prio=120 target_cpu=002
-> > >            <...>-39771 [002] d... 42478.190437: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=39772 next_prio=120
-> > >            <...>-39771 [002] d.h. 42478.193771: sched_wakeup:
-> > > comm=task_idle-1 pid=39772 prio=120 target_cpu=002
-> > >            <...>-39771 [002] d... 42478.206438: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=39772 next_prio=120
-> > >            <...>-39771 [002] d.h. 42478.209771: sched_wakeup:
-> > > comm=task_idle-1 pid=39772 prio=120 target_cpu=002
-> > >            <...>-39771 [002] d... 42478.222438: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=39772 next_prio=120
-> > >            <...>-39771 [002] d.h. 42478.225771: sched_wakeup:
-> > > comm=task_idle-1 pid=39772 prio=120 target_cpu=002
-> > >            <...>-39771 [002] d... 42478.238438: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=39771 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=39772 next_prio=120
-> > > *task_idle*  preempts every 12ms because of the compensation.
-> > >
-> > > with the patch,
-> > >    task_other-0-27670 [002] d.h. 136785.278059: sched_wakeup:
-> > > comm=task_idle-1 pid=27671 prio=120 target_cpu=002
-> > >     task_other-0-27670 [002] d... 136785.293623: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=27671 next_prio=120
-> > >     task_other-0-27670 [002] d.h. 136785.294059: sched_wakeup:
-> > > comm=task_idle-1 pid=27671 prio=120 target_cpu=002
-> > >     task_other-0-27670 [002] d... 136785.317624: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=27671 next_prio=120
-> > >     task_other-0-27670 [002] d.h. 136785.326059: sched_wakeup:
-> > > comm=task_idle-1 pid=27671 prio=120 target_cpu=002
-> > >     task_other-0-27670 [002] d... 136785.341622: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=27671 next_prio=120
-> > >     task_other-0-27670 [002] d.h. 136785.342059: sched_wakeup:
-> > > comm=task_idle-1 pid=27671 prio=120 target_cpu=002
-> > >     task_other-0-27670 [002] d... 136785.365623: sched_switch:
-> > > prev_comm=task_other-0 prev_pid=27670 prev_prio=120 prev_state=R ==>
-> > > next_comm=task_idle-1 next_pid=27671 next_prio=120
-> > > *task_idle* preempts every 24 or 16 ms.
-> > >
-> > > This patch could reduce the preempting frequency of task_idle, and
-> > > reduce the interference from SCHED_IDLE task.
-> >
-> > For this use case, the preemption is only 1us long. Is it a realistic
-> > problem use case ? your normal threads might be more impacted by tick,
-> Nop.
-> 1us is just to make the logic in place_entity() work. If the preemption is
-> longer, the IDLE task could not finish its work before being preempted back
-> by normal task, and the IDLE task would be always in RUNNING status from
-> then on. In that case place_entity() would never be reached because of the
-> RUNNING status.
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Yeah, I agree that the setup is the right one to check the worst
-wakeup pre emption period but it doesn't sound like a realistic
-problem
+> Saves on 10's of complains about 'defined but not used' variables.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  In file included from drivers/net/wireless/marvell/mwifiex/main.h:57,
+>  from drivers/net/wireless/marvell/mwifiex/main.c:22:
+>  drivers/net/wireless/marvell/mwifiex/pcie.h:310:41: warning: ‘mwifiex_pcie8997’ defined but not used [-Wunused-const-variable=]
+>  310 | static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
+>  | ^~~~~~~~~~~~~~~~
+>  drivers/net/wireless/marvell/mwifiex/pcie.h:300:41: warning: ‘mwifiex_pcie8897’ defined but not used [-Wunused-const-variable=]
+>  300 | static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
+>  | ^~~~~~~~~~~~~~~~
+>  drivers/net/wireless/marvell/mwifiex/pcie.h:292:41: warning: ‘mwifiex_pcie8766’ defined but not used [-Wunused-const-variable=]
+>  292 | static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
+>  | ^~~~~~~~~~~~~~~~
+> 
+>  NB: Repeats 10's of times - snipped for brevity.
+> 
+> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+> Cc: Xinming Hu <huxinming820@gmail.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Have you tried this with your system and does it improve anything ?
-Otherwise, I agree with Peter that it doesn't worth having an
-additional test in the wakeup path if it doesn't help any cases
+10 patches applied to wireless-drivers-next.git, thanks.
 
->
-> > interrupt, timer and others things than this 1us idle thread every
-> > 16ms. I mean, the patch moves the impact from 1us every 12ms (0.01%)
-> > to 1us every 24ms (0.005%). Then, If the idle thread starts to run a
-> > bit longer, the period before preempting the normal thread quickly
-> > increases
-> Exactly.
->
-> >
-> > What is the improvement for an idle thread trying to run 1ms every
-> > 16ms as an example ?
-> If to run 1ms, the IDLE task would be always RUNNING status  as said
-> above. In that case, place_entity() would not work, and the preemption
-> would happen every 340ms as always.
->
-> Thx.
-> Regards,
-> Jiang
+77dacc8fc64c mwifiex: pcie: Move tables to the only place they're used
+f5c3bf15f34c brcmsmac: ampdu: Remove a couple set but unused variables
+dd13d6dcc24d iwlegacy: 3945-mac: Remove all non-conformant kernel-doc headers
+305fd82aee87 iwlegacy: 3945-rs: Remove all non-conformant kernel-doc headers
+a60e33af4e28 iwlegacy: 3945: Remove all non-conformant kernel-doc headers
+78211e026bd0 brcmfmac: p2p: Fix a couple of function headers
+ef8308d34a93 orinoco_usb: Downgrade non-conforming kernel-doc headers
+1d2389b53c85 brcmsmac: phy_cmn: Remove a unused variables 'vbat' and 'temp'
+2fae7bf8e379 zd1211rw: zd_chip: Fix formatting
+f3242a5ba91d zd1211rw: zd_mac: Add missing or incorrect function documentation
+
+-- 
+https://patchwork.kernel.org/patch/11737755/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
