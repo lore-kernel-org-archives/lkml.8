@@ -2,119 +2,145 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2359C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 396F5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E221206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d9f5Gtt7"
+	by mail.kernel.org (Postfix) with ESMTP id 0BBC6206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598980083;
+	bh=DJoz7hEuLH4KSUPlB0Pz1whDMhaU6YO7qiXnioDukxE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sEN9PzlgH6yb19M9ykCl9BGdxQ7bA1a0s6xqv/VzjzyUGo+L97LIN0IZ87pYVe71z
+	 xD9lVzjNj9cja4L5Je8Dq55CVrFatYmsNRNv1ctpad6qEUzZlMkjJcdgwzTNTMRg4i
+	 nI5APDrQ9Md9CaXTBT7BS1CPsERlQAPRJr3vzJEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730065AbgIARH5 (ORCPT
+        id S1730081AbgIARH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41122 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728610AbgIARHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:07:48 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271B8C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 10:07:48 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id v196so487933pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:07:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=1VyEi1l0lOpd52Y7IvNbMVag3NVkD7N6u6BLF7rZqxQ=;
-        b=d9f5Gtt7VQ7McMueG9lou77FPV3UfkIMWyZ2e+cscKXv6JkNF7PYpBaZHD3b7ZYsex
-         +7mpAQ0Nm5GaK5MhZX5peVPJlFGn/h6VzYKhrTSx7tnfjy3q9jOGABY+AQfWOR1tgA8e
-         MMWy3ABq++u/Y4ttPLGF4zk4/yOXTntKxIh2o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1VyEi1l0lOpd52Y7IvNbMVag3NVkD7N6u6BLF7rZqxQ=;
-        b=bWmeEmyUOhxvX1Fb7sIM7vdGzgY7k9qgcxLXfWOzQkOulQB0FD/zz+6SsHeZOoPQWB
-         hGWeKrb6jCk8QeHdBQ9Zy7gh/vnPeapRhMSdQz8/aFAOLwcyT025aQhAEXQJ9xtoFxXl
-         B+o1IB/0f6UupG7R9HB81pNUhA8GDcgm74y9YTmAfR6YvwdT7fwaLWlurXms7ded5UZt
-         RdX1o3opRpZiZ4Vma3MSeQ3l/Bc1hqDa92i9r0Mu/7ekWc1K1fhrtpkTeZTZSvS7cTuC
-         18BSPvw39qZRkGP12Ypk1BJVMQVYfNDwpGo2H4q9nWiVtzBO0pqPsYIjZLISqC0S45bZ
-         268g==
-X-Gm-Message-State: AOAM532rQ5kqxe6/xDhcPq0iFXPaMTmQef2C0rttO4CR8vpihw14CNB8
-        JtBpDaKzUIpy7MMJb2M1RbjMiA==
-X-Google-Smtp-Source: ABdhPJy/J9QTlV1QLz55vVOu3QT4SNaPomEwKXsQSSS5USZRon8dmLop0heEKjD6Ih3bJYQHimqowQ==
-X-Received: by 2002:a62:1a91:: with SMTP id a139mr2676443pfa.75.1598980067698;
-        Tue, 01 Sep 2020 10:07:47 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id a5sm2818723pgb.23.2020.09.01.10.07.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 10:07:47 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 10:07:45 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org,
-        Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for
- CPU thermal zones
-Message-ID: <20200901170745.GA3419728@google.com>
-References: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
+        Tue, 1 Sep 2020 13:07:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36360 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729470AbgIAPSP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:15 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C44320BED;
+        Tue,  1 Sep 2020 15:18:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973495;
+        bh=DJoz7hEuLH4KSUPlB0Pz1whDMhaU6YO7qiXnioDukxE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H83izqXCJNm6ffChiFwiF8Lv0Q2FIhpGn0sC6jjAKEwqkwsAviTYExvvnj6HdVXMI
+         pfqRkajgpz+yDf+EAIoXVgySiiSi8avmwQZF6mnkkVEUwBY2Ku2z1s+kvwDB1QsOtG
+         EWXWLBU4MLmbFkWvul5+fqdP8ukLsou4FBjHuckI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 21/91] scsi: lpfc: Fix shost refcount mismatch when deleting vport
+Date:   Tue,  1 Sep 2020 17:09:55 +0200
+Message-Id: <20200901150929.206534823@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
+References: <20200901150928.096174795@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 11:30:33AM -0700, Matthias Kaehlcke wrote:
-> The 'sustainable_power' attribute provides an estimate of the sustained
-> power that can be dissipated at the desired control temperature. One
-> could argue that this value is not necessarily the same for all devices
-> with the same SoC, which may have different form factors or thermal
-> designs. However there are reasons to specify a (default) value at SoC
-> level for SC7180: most importantly, if no value is specified at all the
-> power_allocator thermal governor (aka 'IPA') estimates a value, using the
-> minimum power of all cooling devices of the zone, which can result in
-> overly aggressive thermal throttling. For most devices an approximate
-> conservative value should be more useful than the minimum guesstimate
-> of power_allocator. Devices that need a different value can overwrite
-> it in their <device>.dts. Also the thermal zones for SC7180 have a high
-> level of granularity (essentially one for each function block), which
-> makes it more likely that the default value just works for many devices.
-> 
-> The values correspond to 1901 MHz for the big cores, and 1804 MHz for
-> the small cores. The values were determined by limiting the CPU
-> frequencies to different max values and launching a bunch of processes
-> that cause high CPU load ('while true; do true; done &' is simple and
-> does a good job). A frequency is deemed sustainable if the CPU
-> temperatures don't rise (consistently) above the second trip point
-> ('control temperature', 95 degC in this case). Once the highest
-> sustainable frequency is found, the sustainable power can be calculated
-> by multiplying the energy consumption per core at this frequency (which
-> can be found in /sys/kernel/debug/energy_model/) with the number of
-> cores that are specified as cooling devices.
-> 
-> The sustainable frequencies were determined at room temperature
-> on a device without heat sink or other passive cooling elements.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
-> If maintainers think 'sustainable_power' should be specified at
-> device level (with which I conceptually agree) I'm fine with
-> doing that, just seemed it could be useful to have a reasonable
-> 'default' at SoC level in this case.
+From: Dick Kennedy <dick.kennedy@broadcom.com>
 
-Any comments on this?
+[ Upstream commit 03dbfe0668e6692917ac278883e0586cd7f7d753 ]
+
+When vports are deleted, it is observed that there is memory/kthread
+leakage as the vport isn't fully being released.
+
+There is a shost reference taken in scsi_add_host_dma that is not released
+during scsi_remove_host. It was noticed that other drivers resolve this by
+doing a scsi_host_put after calling scsi_remove_host.
+
+The vport_delete routine is taking two references one that corresponds to
+an access to the scsi_host in the vport_delete routine and another that is
+released after the adapter mailbox command completes that destroys the VPI
+that corresponds to the vport.
+
+Remove one of the references taken such that the second reference that is
+put will complete the missing scsi_add_host_dma reference and the shost
+will be terminated.
+
+Link: https://lore.kernel.org/r/20200630215001.70793-8-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/lpfc/lpfc_vport.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
+
+diff --git a/drivers/scsi/lpfc/lpfc_vport.c b/drivers/scsi/lpfc/lpfc_vport.c
+index c714482bf4c55..9c738e201f462 100644
+--- a/drivers/scsi/lpfc/lpfc_vport.c
++++ b/drivers/scsi/lpfc/lpfc_vport.c
+@@ -644,27 +644,16 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
+ 		    vport->port_state < LPFC_VPORT_READY)
+ 			return -EAGAIN;
+ 	}
++
+ 	/*
+-	 * This is a bit of a mess.  We want to ensure the shost doesn't get
+-	 * torn down until we're done with the embedded lpfc_vport structure.
+-	 *
+-	 * Beyond holding a reference for this function, we also need a
+-	 * reference for outstanding I/O requests we schedule during delete
+-	 * processing.  But once we scsi_remove_host() we can no longer obtain
+-	 * a reference through scsi_host_get().
+-	 *
+-	 * So we take two references here.  We release one reference at the
+-	 * bottom of the function -- after delinking the vport.  And we
+-	 * release the other at the completion of the unreg_vpi that get's
+-	 * initiated after we've disposed of all other resources associated
+-	 * with the port.
++	 * Take early refcount for outstanding I/O requests we schedule during
++	 * delete processing for unreg_vpi.  Always keep this before
++	 * scsi_remove_host() as we can no longer obtain a reference through
++	 * scsi_host_get() after scsi_host_remove as shost is set to SHOST_DEL.
+ 	 */
+ 	if (!scsi_host_get(shost))
+ 		return VPORT_INVAL;
+-	if (!scsi_host_get(shost)) {
+-		scsi_host_put(shost);
+-		return VPORT_INVAL;
+-	}
++
+ 	lpfc_free_sysfs_attr(vport);
+ 
+ 	lpfc_debugfs_terminate(vport);
+@@ -811,8 +800,9 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
+ 		if (!(vport->vpi_state & LPFC_VPI_REGISTERED) ||
+ 				lpfc_mbx_unreg_vpi(vport))
+ 			scsi_host_put(shost);
+-	} else
++	} else {
+ 		scsi_host_put(shost);
++	}
+ 
+ 	lpfc_free_vpi(phba, vport->vpi);
+ 	vport->work_port_events = 0;
+-- 
+2.25.1
+
+
+
