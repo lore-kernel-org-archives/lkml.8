@@ -4,59 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23081C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D50FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF7C22065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63D4620767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978155;
-	bh=vmVs7s+zVn4sfC9M7I4r7u/oNgRtmgIaQa3zAc5OEXQ=;
+	s=default; t=1598978166;
+	bh=dGGmsSgV6M2q3nLgYYLdCHhSTJycpB/dZrb2O4mga+0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fdb/4QOrLz3VOPkDcidagzxsItI2e60/1TwW0hAcDg2zFbPENrequM5bDm4cdQ9BK
-	 B3r4Xq5GmltnWAyR22z9n5ST1bmXJX27dpMtwGhTzk4EyOtgt5YGK7I5T2cPlLnwjs
-	 37F+mf9O73Th9b6p/cSbX+OPM9gixycKfiDAfxXg=
+	b=caQtfDeNCqPsbpV+al4DrUpsqpvQby/Ax/i1k115fORHeyKadtESqtvBGxAkqKaUz
+	 1XTjZ+RI6Sp2QsNg0X4EeKM0imIZWI4D9+dWtXO9nhbIcChAU/KNdHRlhAXlWtWNKI
+	 KhZaviHIHdY4by+qHDeV6rgkqqdwmpBcSHXgeRcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731445AbgIAQfx (ORCPT
+        id S1731768AbgIAQgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:35:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59640 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730566AbgIAP3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:53 -0400
+        id S1730549AbgIAP3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C760120BED;
-        Tue,  1 Sep 2020 15:29:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB9DD206C0;
+        Tue,  1 Sep 2020 15:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974192;
-        bh=vmVs7s+zVn4sfC9M7I4r7u/oNgRtmgIaQa3zAc5OEXQ=;
+        s=default; t=1598974182;
+        bh=dGGmsSgV6M2q3nLgYYLdCHhSTJycpB/dZrb2O4mga+0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xqZm86lQxX/fI4uO8VV2WsdFy7w/X0tAcfFN/KyPzUX6a5UHvjg8Aa3HBxVxCFKJK
-         lvXn//dZNVHbSHL80KG/OSrpLGYuzoALerqM+khbE2ISzWCUVX6lhtYhu3Bf31ZD6U
-         Z7JG3K9465b9rgjUjNAMMoYsBVq0Y4tfFGi1k/aE=
+        b=dcOfdTCZA3oP5NxU5zzzpPVLPnGYdq15QFEjCHeW5tqNcXPN+WYlYhJU8VLVlfTTI
+         T5uZXOUoveY/QkQK4xzOtj6UsbtLlVbfwHxAljmf/+CPMXTNXjyuJbSKqxqEdqltnJ
+         j0avwUS/oIaG+uil1Q6Bj7gQH7yG8IZRoitu0pqo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Huang Ying <ying.huang@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/214] mm/shuffle: dont move pages between zones and dont read garbage memmaps
-Date:   Tue,  1 Sep 2020 17:09:20 +0200
-Message-Id: <20200901150956.820425188@linuxfoundation.org>
+Subject: [PATCH 5.4 077/214] btrfs: factor out inode items copy loop from btrfs_log_inode()
+Date:   Tue,  1 Sep 2020 17:09:17 +0200
+Message-Id: <20200901150956.666592982@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -69,104 +61,325 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 4a93025cbe4a0b19d1a25a2d763a3d2018bad0d9 ]
+[ Upstream commit da447009a25609327309f695b244710f12794471 ]
 
-Especially with memory hotplug, we can have offline sections (with a
-garbage memmap) and overlapping zones.  We have to make sure to only touch
-initialized memmaps (online sections managed by the buddy) and that the
-zone matches, to not move pages between zones.
+The function btrfs_log_inode() is quite large and so is its loop which
+iterates the inode items from the fs/subvolume tree and copies them into
+a log tree. Because this is a large loop inside a very large function
+and because an upcoming patch in this series needs to add some more logic
+inside that loop, move the loop into a helper function to make it a bit
+more manageable.
 
-To test if this can actually happen, I added a simple
-
-	BUG_ON(page_zone(page_i) != page_zone(page_j));
-
-right before the swap.  When hotplugging a 256M DIMM to a 4G x86-64 VM and
-onlining the first memory block "online_movable" and the second memory
-block "online_kernel", it will trigger the BUG, as both zones (NORMAL and
-MOVABLE) overlap.
-
-This might result in all kinds of weird situations (e.g., double
-allocations, list corruptions, unmovable allocations ending up in the
-movable zone).
-
-Fixes: e900a918b098 ("mm: shuffle initial free memory to improve memory-side-cache utilization")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Reviewed-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Dan Williams <dan.j.williams@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Huang Ying <ying.huang@intel.com>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>	[5.2+]
-Link: http://lkml.kernel.org/r/20200624094741.9918-2-david@redhat.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/shuffle.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ fs/btrfs/tree-log.c | 274 ++++++++++++++++++++++----------------------
+ 1 file changed, 138 insertions(+), 136 deletions(-)
 
-diff --git a/mm/shuffle.c b/mm/shuffle.c
-index b3fe97fd66541..56958ffa5a3a9 100644
---- a/mm/shuffle.c
-+++ b/mm/shuffle.c
-@@ -58,25 +58,25 @@ module_param_call(shuffle, shuffle_store, shuffle_show, &shuffle_param, 0400);
-  * For two pages to be swapped in the shuffle, they must be free (on a
-  * 'free_area' lru), have the same order, and have the same migratetype.
-  */
--static struct page * __meminit shuffle_valid_page(unsigned long pfn, int order)
-+static struct page * __meminit shuffle_valid_page(struct zone *zone,
-+						  unsigned long pfn, int order)
- {
--	struct page *page;
-+	struct page *page = pfn_to_online_page(pfn);
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 3c090549ed07d..cc407c68d356f 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4994,6 +4994,138 @@ static int log_conflicting_inodes(struct btrfs_trans_handle *trans,
+ 	return ret;
+ }
  
- 	/*
- 	 * Given we're dealing with randomly selected pfns in a zone we
- 	 * need to ask questions like...
- 	 */
++static int copy_inode_items_to_log(struct btrfs_trans_handle *trans,
++				   struct btrfs_inode *inode,
++				   struct btrfs_key *min_key,
++				   const struct btrfs_key *max_key,
++				   struct btrfs_path *path,
++				   struct btrfs_path *dst_path,
++				   const u64 logged_isize,
++				   const bool recursive_logging,
++				   const int inode_only,
++				   struct btrfs_log_ctx *ctx,
++				   bool *need_log_inode_item)
++{
++	struct btrfs_root *root = inode->root;
++	int ins_start_slot = 0;
++	int ins_nr = 0;
++	int ret;
++
++	while (1) {
++		ret = btrfs_search_forward(root, min_key, path, trans->transid);
++		if (ret < 0)
++			return ret;
++		if (ret > 0) {
++			ret = 0;
++			break;
++		}
++again:
++		/* Note, ins_nr might be > 0 here, cleanup outside the loop */
++		if (min_key->objectid != max_key->objectid)
++			break;
++		if (min_key->type > max_key->type)
++			break;
++
++		if (min_key->type == BTRFS_INODE_ITEM_KEY)
++			*need_log_inode_item = false;
++
++		if ((min_key->type == BTRFS_INODE_REF_KEY ||
++		     min_key->type == BTRFS_INODE_EXTREF_KEY) &&
++		    inode->generation == trans->transid &&
++		    !recursive_logging) {
++			u64 other_ino = 0;
++			u64 other_parent = 0;
++
++			ret = btrfs_check_ref_name_override(path->nodes[0],
++					path->slots[0], min_key, inode,
++					&other_ino, &other_parent);
++			if (ret < 0) {
++				return ret;
++			} else if (ret > 0 && ctx &&
++				   other_ino != btrfs_ino(BTRFS_I(ctx->inode))) {
++				if (ins_nr > 0) {
++					ins_nr++;
++				} else {
++					ins_nr = 1;
++					ins_start_slot = path->slots[0];
++				}
++				ret = copy_items(trans, inode, dst_path, path,
++						 ins_start_slot, ins_nr,
++						 inode_only, logged_isize);
++				if (ret < 0)
++					return ret;
++				ins_nr = 0;
++
++				ret = log_conflicting_inodes(trans, root, path,
++						ctx, other_ino, other_parent);
++				if (ret)
++					return ret;
++				btrfs_release_path(path);
++				goto next_key;
++			}
++		}
++
++		/* Skip xattrs, we log them later with btrfs_log_all_xattrs() */
++		if (min_key->type == BTRFS_XATTR_ITEM_KEY) {
++			if (ins_nr == 0)
++				goto next_slot;
++			ret = copy_items(trans, inode, dst_path, path,
++					 ins_start_slot,
++					 ins_nr, inode_only, logged_isize);
++			if (ret < 0)
++				return ret;
++			ins_nr = 0;
++			goto next_slot;
++		}
++
++		if (ins_nr && ins_start_slot + ins_nr == path->slots[0]) {
++			ins_nr++;
++			goto next_slot;
++		} else if (!ins_nr) {
++			ins_start_slot = path->slots[0];
++			ins_nr = 1;
++			goto next_slot;
++		}
++
++		ret = copy_items(trans, inode, dst_path, path, ins_start_slot,
++				 ins_nr, inode_only, logged_isize);
++		if (ret < 0)
++			return ret;
++		ins_nr = 1;
++		ins_start_slot = path->slots[0];
++next_slot:
++		path->slots[0]++;
++		if (path->slots[0] < btrfs_header_nritems(path->nodes[0])) {
++			btrfs_item_key_to_cpu(path->nodes[0], min_key,
++					      path->slots[0]);
++			goto again;
++		}
++		if (ins_nr) {
++			ret = copy_items(trans, inode, dst_path, path,
++					 ins_start_slot, ins_nr, inode_only,
++					 logged_isize);
++			if (ret < 0)
++				return ret;
++			ins_nr = 0;
++		}
++		btrfs_release_path(path);
++next_key:
++		if (min_key->offset < (u64)-1) {
++			min_key->offset++;
++		} else if (min_key->type < max_key->type) {
++			min_key->type++;
++			min_key->offset = 0;
++		} else {
++			break;
++		}
++	}
++	if (ins_nr)
++		ret = copy_items(trans, inode, dst_path, path, ins_start_slot,
++				 ins_nr, inode_only, logged_isize);
++
++	return ret;
++}
++
+ /* log a single inode in the tree log.
+  * At least one parent directory for this inode must exist in the tree
+  * or be logged already.
+@@ -5023,9 +5155,6 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
+ 	struct btrfs_root *log = root->log_root;
+ 	int err = 0;
+ 	int ret;
+-	int nritems;
+-	int ins_start_slot = 0;
+-	int ins_nr;
+ 	bool fast_search = false;
+ 	u64 ino = btrfs_ino(inode);
+ 	struct extent_map_tree *em_tree = &inode->extent_tree;
+@@ -5156,139 +5285,12 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
+ 		goto out_unlock;
+ 	}
  
--	/* ...is the pfn even in the memmap? */
--	if (!pfn_valid_within(pfn))
-+	/* ... is the page managed by the buddy? */
-+	if (!page)
- 		return NULL;
+-	while (1) {
+-		ins_nr = 0;
+-		ret = btrfs_search_forward(root, &min_key,
+-					   path, trans->transid);
+-		if (ret < 0) {
+-			err = ret;
+-			goto out_unlock;
+-		}
+-		if (ret != 0)
+-			break;
+-again:
+-		/* note, ins_nr might be > 0 here, cleanup outside the loop */
+-		if (min_key.objectid != ino)
+-			break;
+-		if (min_key.type > max_key.type)
+-			break;
+-
+-		if (min_key.type == BTRFS_INODE_ITEM_KEY)
+-			need_log_inode_item = false;
+-
+-		if ((min_key.type == BTRFS_INODE_REF_KEY ||
+-		     min_key.type == BTRFS_INODE_EXTREF_KEY) &&
+-		    inode->generation == trans->transid &&
+-		    !recursive_logging) {
+-			u64 other_ino = 0;
+-			u64 other_parent = 0;
+-
+-			ret = btrfs_check_ref_name_override(path->nodes[0],
+-					path->slots[0], &min_key, inode,
+-					&other_ino, &other_parent);
+-			if (ret < 0) {
+-				err = ret;
+-				goto out_unlock;
+-			} else if (ret > 0 && ctx &&
+-				   other_ino != btrfs_ino(BTRFS_I(ctx->inode))) {
+-				if (ins_nr > 0) {
+-					ins_nr++;
+-				} else {
+-					ins_nr = 1;
+-					ins_start_slot = path->slots[0];
+-				}
+-				ret = copy_items(trans, inode, dst_path, path,
+-						 ins_start_slot,
+-						 ins_nr, inode_only,
+-						 logged_isize);
+-				if (ret < 0) {
+-					err = ret;
+-					goto out_unlock;
+-				}
+-				ins_nr = 0;
+-
+-				err = log_conflicting_inodes(trans, root, path,
+-						ctx, other_ino, other_parent);
+-				if (err)
+-					goto out_unlock;
+-				btrfs_release_path(path);
+-				goto next_key;
+-			}
+-		}
+-
+-		/* Skip xattrs, we log them later with btrfs_log_all_xattrs() */
+-		if (min_key.type == BTRFS_XATTR_ITEM_KEY) {
+-			if (ins_nr == 0)
+-				goto next_slot;
+-			ret = copy_items(trans, inode, dst_path, path,
+-					 ins_start_slot,
+-					 ins_nr, inode_only, logged_isize);
+-			if (ret < 0) {
+-				err = ret;
+-				goto out_unlock;
+-			}
+-			ins_nr = 0;
+-			goto next_slot;
+-		}
+-
+-		if (ins_nr && ins_start_slot + ins_nr == path->slots[0]) {
+-			ins_nr++;
+-			goto next_slot;
+-		} else if (!ins_nr) {
+-			ins_start_slot = path->slots[0];
+-			ins_nr = 1;
+-			goto next_slot;
+-		}
+-
+-		ret = copy_items(trans, inode, dst_path, path,
+-				 ins_start_slot, ins_nr, inode_only,
+-				 logged_isize);
+-		if (ret < 0) {
+-			err = ret;
+-			goto out_unlock;
+-		}
+-		ins_nr = 1;
+-		ins_start_slot = path->slots[0];
+-next_slot:
+-
+-		nritems = btrfs_header_nritems(path->nodes[0]);
+-		path->slots[0]++;
+-		if (path->slots[0] < nritems) {
+-			btrfs_item_key_to_cpu(path->nodes[0], &min_key,
+-					      path->slots[0]);
+-			goto again;
+-		}
+-		if (ins_nr) {
+-			ret = copy_items(trans, inode, dst_path, path,
+-					 ins_start_slot,
+-					 ins_nr, inode_only, logged_isize);
+-			if (ret < 0) {
+-				err = ret;
+-				goto out_unlock;
+-			}
+-			ins_nr = 0;
+-		}
+-		btrfs_release_path(path);
+-next_key:
+-		if (min_key.offset < (u64)-1) {
+-			min_key.offset++;
+-		} else if (min_key.type < max_key.type) {
+-			min_key.type++;
+-			min_key.offset = 0;
+-		} else {
+-			break;
+-		}
+-	}
+-	if (ins_nr) {
+-		ret = copy_items(trans, inode, dst_path, path,
+-				 ins_start_slot, ins_nr, inode_only,
+-				 logged_isize);
+-		if (ret < 0) {
+-			err = ret;
+-			goto out_unlock;
+-		}
+-		ins_nr = 0;
+-	}
++	err = copy_inode_items_to_log(trans, inode, &min_key, &max_key,
++				      path, dst_path, logged_isize,
++				      recursive_logging, inode_only, ctx,
++				      &need_log_inode_item);
++	if (err)
++		goto out_unlock;
  
--	/* ...is the pfn in a present section or a hole? */
--	if (!pfn_present(pfn))
-+	/* ... is the page assigned to the same zone? */
-+	if (page_zone(page) != zone)
- 		return NULL;
- 
- 	/* ...is the page free and currently on a free_area list? */
--	page = pfn_to_page(pfn);
- 	if (!PageBuddy(page))
- 		return NULL;
- 
-@@ -123,7 +123,7 @@ void __meminit __shuffle_zone(struct zone *z)
- 		 * page_j randomly selected in the span @zone_start_pfn to
- 		 * @spanned_pages.
- 		 */
--		page_i = shuffle_valid_page(i, order);
-+		page_i = shuffle_valid_page(z, i, order);
- 		if (!page_i)
- 			continue;
- 
-@@ -137,7 +137,7 @@ void __meminit __shuffle_zone(struct zone *z)
- 			j = z->zone_start_pfn +
- 				ALIGN_DOWN(get_random_long() % z->spanned_pages,
- 						order_pages);
--			page_j = shuffle_valid_page(j, order);
-+			page_j = shuffle_valid_page(z, j, order);
- 			if (page_j && page_j != page_i)
- 				break;
- 		}
+ 	btrfs_release_path(path);
+ 	btrfs_release_path(dst_path);
 -- 
 2.25.1
 
