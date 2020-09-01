@@ -2,212 +2,185 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D44EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CD4C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D467620767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DMJZzRBu"
+	by mail.kernel.org (Postfix) with ESMTP id 1B3A12065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:16:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976965;
+	bh=aGgHT+5YW0rya1YT6guN5gDHONKVDiEyMzGTbVdyBKE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CacC1/Oy83W/M6Ht571s2s2jRpR/U/Z4YKS9kzjOENiqOqJ/y6zqj6kATy7VrC66g
+	 FZeNPbFnvkkv+BJbSfb0QnLhiMeQeNP9qSCsmBoeiw2Mx3+D85NEQK6QlMHcTv85JO
+	 CDOWZyNDFut67dJ3tX7X40dQdI5IsaSt7hjky+K0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731347AbgIAQPr (ORCPT
+        id S1731365AbgIAQQC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33006 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731944AbgIAQPj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:15:39 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34931C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 09:15:39 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id u20so1079162pfn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 09:15:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=U1h0WFxrmlZti/5PdriJmCxO8e4BuJ9nFjihIY3qycs=;
-        b=DMJZzRBurdYUN4x8gReiESvjIjB6WMHksdeGaRDN41WunAsqZ5Yvt1bO5dntkRFy3t
-         8wwhIkp4rgfa2J7aKnYStujtMWjfHwnF6BkSHyc7XPqxl15S8Wx58seJIlrKeXoJmuGj
-         MQaukCMelikiVQ/1Wm711W7exb+6DNt43lv72RbxdW6K74pL+q9Y56zYnklCSiMeeL35
-         pRebHGva3Zi2MmJ3dxDLMqa5QnCLLLYiGadJKrLiaLGeasmp+w0PpyFwxsv0zQw8Or3z
-         1eho9mmEcHG7AK6OcGSov1ce9KH+R9Js6Mtep8s4aW9yT+PGaaaWQiXvT8tY8YznovIj
-         7SWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=U1h0WFxrmlZti/5PdriJmCxO8e4BuJ9nFjihIY3qycs=;
-        b=S6wjgjAokvWbx4TlUtzCFI7yzkqey3uLWZNbN2ykwU/ac/5tN5PBADTzmIDFdmhnxB
-         wYoPmVkFwa5dk9hDju80+cDH1BqsrSiBZ9MSRF0++pu9i0ZRjYuAvEIL7/xPsdobF1y5
-         NopOjpxqztVC01PCDNEIv/r3apMjfG4E58Sm2L2noQblZxZd60/kKeLwtImaWGt6hvnE
-         ugMdPY0uFsTqms4KXNowpzFYCOVaCjLN1d24m103AvTom7q4z2wFgwFu+7wVPgA3McY8
-         2+GZLcgcGojuVNmUgbeoaviyQ0YsA/nwiTbz6wa/bCUw36HYbFLHruyqSTP/hGfhGvhv
-         E1uQ==
-X-Gm-Message-State: AOAM531D9TWmtMwjb2jrutl39B4mhewWvjqqftCvAAWTxYPpMYrIc5Nx
-        WHQzh/y0jIskvkNPZMT1TZov1Q==
-X-Google-Smtp-Source: ABdhPJzWV89RR/QWyu3dI160WKOjSKjBNJugNB1VuwvaljQHlhcb659AvPrOk3k8yapRkjnyxkRAeg==
-X-Received: by 2002:a63:1b42:: with SMTP id b2mr1968103pgm.397.1598976938667;
-        Tue, 01 Sep 2020 09:15:38 -0700 (PDT)
-Received: from nagraj.lan ([175.100.146.50])
-        by smtp.gmail.com with ESMTPSA id d77sm2553169pfd.121.2020.09.01.09.15.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 09:15:37 -0700 (PDT)
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Colin Cross <ccross@google.com>,
-        Alexey Gladkov <gladkov.alexey@gmail.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Michel Lespinasse <walken@google.com>,
-        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-        Song Liu <songliubraving@fb.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        chenqiwu <chenqiwu@xiaomi.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Mike Christie <mchristi@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Adrian Reber <areber@redhat.com>,
-        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org,
-        John Stultz <john.stultz@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>
-Subject: [PATCH v7 2/3] mm: memory: Add access_remote_vm_locked variant
-Date:   Tue,  1 Sep 2020 21:44:58 +0530
-Message-Id: <20200901161459.11772-3-sumit.semwal@linaro.org>
+        Tue, 1 Sep 2020 12:16:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39614 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729480AbgIAPeg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:36 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E637215A4;
+        Tue,  1 Sep 2020 15:34:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974472;
+        bh=aGgHT+5YW0rya1YT6guN5gDHONKVDiEyMzGTbVdyBKE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=D3pzhAE2H6TFEfroBrCnzr02dTHZSXtYgoP8FYz6+q+1tUYcpRhSSKe47VFZRToW1
+         ieS6+muYyQZ75wqhtcT2IYOFur22JTp5ndCKvBr08bsd24JrArhxpQTW3I1MK33ogM
+         5p4x6G6IAGz2rgBanlZ1YOL+AtYBp7uz6NEa89a0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Kenneth Feng <kenneth.feng@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 188/214] drm/amd/pm: correct the thermal alert temperature limit settings
+Date:   Tue,  1 Sep 2020 17:11:08 +0200
+Message-Id: <20200901151001.955321614@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901161459.11772-1-sumit.semwal@linaro.org>
-References: <20200901161459.11772-1-sumit.semwal@linaro.org>
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows accessing a remote vm while the mmap_lock is already
-held by the caller.
+From: Evan Quan <evan.quan@amd.com>
 
-While adding support for anonymous vma naming, show_map_vma()
-needs to access the remote vm to get the name of the anonymous vma.
-Since show_map_vma() already holds the mmap_lock, so this _locked
-variant was required.
+commit 28e628645333b7e581c4a7b04d958e4804ea10fe upstream.
 
-Signed-off-by: Sumit Semwal <sumit.semwal@linaro.org>
+Do the maths in celsius degree. This can fix the issues caused
+by the changes below:
+
+drm/amd/pm: correct Vega20 swctf limit setting
+drm/amd/pm: correct Vega12 swctf limit setting
+drm/amd/pm: correct Vega10 swctf limit setting
+
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Kenneth Feng <kenneth.feng@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/mm.h |  2 ++
- mm/memory.c        | 49 ++++++++++++++++++++++++++++++++++++++++------
- 2 files changed, 45 insertions(+), 6 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega10_thermal.c |   15 +++++++--------
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega12_thermal.c |   15 +++++++--------
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega20_thermal.c |   15 +++++++--------
+ 3 files changed, 21 insertions(+), 24 deletions(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ca6e6a81576b..e9212c0bb5ac 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1708,6 +1708,8 @@ extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
- 		void *buf, int len, unsigned int gup_flags);
- extern int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
- 		unsigned long addr, void *buf, int len, unsigned int gup_flags);
-+extern int access_remote_vm_locked(struct mm_struct *mm, unsigned long addr,
-+				   void *buf, int len, unsigned int gup_flags);
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_thermal.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_thermal.c
+@@ -368,14 +368,13 @@ static int vega10_thermal_set_temperatur
+ 		(struct phm_ppt_v2_information *)(hwmgr->pptable);
+ 	struct phm_tdp_table *tdp_table = pp_table_info->tdp_table;
+ 	struct amdgpu_device *adev = hwmgr->adev;
+-	int low = VEGA10_THERMAL_MINIMUM_ALERT_TEMP *
+-			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+-	int high = VEGA10_THERMAL_MAXIMUM_ALERT_TEMP *
+-			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
++	int low = VEGA10_THERMAL_MINIMUM_ALERT_TEMP;
++	int high = VEGA10_THERMAL_MAXIMUM_ALERT_TEMP;
+ 	uint32_t val;
  
- long get_user_pages_remote(struct mm_struct *mm,
- 			    unsigned long start, unsigned long nr_pages,
-diff --git a/mm/memory.c b/mm/memory.c
-index 602f4283122f..207be99390e9 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4726,17 +4726,17 @@ EXPORT_SYMBOL_GPL(generic_access_phys);
- /*
-  * Access another process' address space as given in mm.  If non-NULL, use the
-  * given task for page fault accounting.
-+ * This variant assumes that the mmap_lock is already held by the caller, so
-+ * doesn't take the mmap_lock.
-  */
--int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
--		unsigned long addr, void *buf, int len, unsigned int gup_flags)
-+int __access_remote_vm_locked(struct task_struct *tsk, struct mm_struct *mm,
-+			      unsigned long addr, void *buf, int len,
-+			      unsigned int gup_flags)
- {
- 	struct vm_area_struct *vma;
- 	void *old_buf = buf;
- 	int write = gup_flags & FOLL_WRITE;
+-	if (low < range->min)
+-		low = range->min;
++	/* compare them in unit celsius degree */
++	if (low < range->min / PP_TEMPERATURE_UNITS_PER_CENTIGRADES)
++		low = range->min / PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+ 	if (high > tdp_table->usSoftwareShutdownTemp)
+ 		high = tdp_table->usSoftwareShutdownTemp;
  
--	if (mmap_read_lock_killable(mm))
--		return 0;
--
- 	/* ignore errors, just check how much was successfully transferred */
- 	while (len) {
- 		int bytes, ret, offset;
-@@ -4785,9 +4785,46 @@ int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
- 		buf += bytes;
- 		addr += bytes;
- 	}
-+	return buf - old_buf;
-+}
-+
-+/*
-+ * Access another process' address space as given in mm.  If non-NULL, use the
-+ * given task for page fault accounting.
-+ */
-+int __access_remote_vm(struct task_struct *tsk, struct mm_struct *mm,
-+		       unsigned long addr, void *buf, int len, unsigned int gup_flags)
-+{
-+	int ret;
-+
-+	if (mmap_read_lock_killable(mm))
-+		return 0;
-+
-+	ret = __access_remote_vm_locked(tsk, mm, addr, buf, len, gup_flags);
- 	mmap_read_unlock(mm);
+@@ -386,8 +385,8 @@ static int vega10_thermal_set_temperatur
  
--	return buf - old_buf;
-+	return ret;
-+}
-+
-+/**
-+ * access_remote_vm_locked - access another process' address space, without
-+ * taking the mmap_lock. This allows nested calls from callers that already have
-+ * taken the lock.
-+ *
-+ * @mm:		the mm_struct of the target address space
-+ * @addr:	start address to access
-+ * @buf:	source or destination buffer
-+ * @len:	number of bytes to transfer
-+ * @gup_flags:	flags modifying lookup behaviour
-+ *
-+ * The caller must hold a reference on @mm, as well as hold the mmap_lock
-+ *
-+ * Return: number of bytes copied from source to destination.
-+ */
-+int access_remote_vm_locked(struct mm_struct *mm, unsigned long addr, void *buf,
-+			    int len, unsigned int gup_flags)
-+{
-+	return __access_remote_vm_locked(NULL, mm, addr, buf, len, gup_flags);
- }
+ 	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, MAX_IH_CREDIT, 5);
+ 	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, THERM_IH_HW_ENA, 1);
+-	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTH, (high / PP_TEMPERATURE_UNITS_PER_CENTIGRADES));
+-	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTL, (low / PP_TEMPERATURE_UNITS_PER_CENTIGRADES));
++	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTH, high);
++	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTL, low);
+ 	val &= (~THM_THERMAL_INT_CTRL__THERM_TRIGGER_MASK_MASK) &
+ 			(~THM_THERMAL_INT_CTRL__THERM_INTH_MASK_MASK) &
+ 			(~THM_THERMAL_INT_CTRL__THERM_INTL_MASK_MASK);
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_thermal.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_thermal.c
+@@ -173,14 +173,13 @@ static int vega12_thermal_set_temperatur
+ 	struct phm_ppt_v3_information *pptable_information =
+ 		(struct phm_ppt_v3_information *)hwmgr->pptable;
+ 	struct amdgpu_device *adev = hwmgr->adev;
+-	int low = VEGA12_THERMAL_MINIMUM_ALERT_TEMP *
+-			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+-	int high = VEGA12_THERMAL_MAXIMUM_ALERT_TEMP *
+-			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
++	int low = VEGA12_THERMAL_MINIMUM_ALERT_TEMP;
++	int high = VEGA12_THERMAL_MAXIMUM_ALERT_TEMP;
+ 	uint32_t val;
  
- /**
--- 
-2.28.0
+-	if (low < range->min)
+-		low = range->min;
++	/* compare them in unit celsius degree */
++	if (low < range->min / PP_TEMPERATURE_UNITS_PER_CENTIGRADES)
++		low = range->min / PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+ 	if (high > pptable_information->us_software_shutdown_temp)
+ 		high = pptable_information->us_software_shutdown_temp;
+ 
+@@ -191,8 +190,8 @@ static int vega12_thermal_set_temperatur
+ 
+ 	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, MAX_IH_CREDIT, 5);
+ 	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, THERM_IH_HW_ENA, 1);
+-	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTH, (high / PP_TEMPERATURE_UNITS_PER_CENTIGRADES));
+-	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTL, (low / PP_TEMPERATURE_UNITS_PER_CENTIGRADES));
++	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTH, high);
++	val = REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTL, low);
+ 	val = val & (~THM_THERMAL_INT_CTRL__THERM_TRIGGER_MASK_MASK);
+ 
+ 	WREG32_SOC15(THM, 0, mmTHM_THERMAL_INT_CTRL, val);
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_thermal.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_thermal.c
+@@ -243,14 +243,13 @@ static int vega20_thermal_set_temperatur
+ 	struct phm_ppt_v3_information *pptable_information =
+ 		(struct phm_ppt_v3_information *)hwmgr->pptable;
+ 	struct amdgpu_device *adev = hwmgr->adev;
+-	int low = VEGA20_THERMAL_MINIMUM_ALERT_TEMP *
+-			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+-	int high = VEGA20_THERMAL_MAXIMUM_ALERT_TEMP *
+-			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
++	int low = VEGA20_THERMAL_MINIMUM_ALERT_TEMP;
++	int high = VEGA20_THERMAL_MAXIMUM_ALERT_TEMP;
+ 	uint32_t val;
+ 
+-	if (low < range->min)
+-		low = range->min;
++	/* compare them in unit celsius degree */
++	if (low < range->min / PP_TEMPERATURE_UNITS_PER_CENTIGRADES)
++		low = range->min / PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+ 	if (high > pptable_information->us_software_shutdown_temp)
+ 		high = pptable_information->us_software_shutdown_temp;
+ 
+@@ -261,8 +260,8 @@ static int vega20_thermal_set_temperatur
+ 
+ 	val = CGS_REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, MAX_IH_CREDIT, 5);
+ 	val = CGS_REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, THERM_IH_HW_ENA, 1);
+-	val = CGS_REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTH, (high / PP_TEMPERATURE_UNITS_PER_CENTIGRADES));
+-	val = CGS_REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTL, (low / PP_TEMPERATURE_UNITS_PER_CENTIGRADES));
++	val = CGS_REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTH, high);
++	val = CGS_REG_SET_FIELD(val, THM_THERMAL_INT_CTRL, DIG_THERM_INTL, low);
+ 	val = val & (~THM_THERMAL_INT_CTRL__THERM_TRIGGER_MASK_MASK);
+ 
+ 	WREG32_SOC15(THM, 0, mmTHM_THERMAL_INT_CTRL, val);
+
 
