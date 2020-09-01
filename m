@@ -2,51 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFAE3C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4680CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDAB5206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D41206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979786;
-	bh=QmmpE2GPTXOu1uJzoaP3xWXQJeJasre7GwtoeB4XUew=;
+	s=default; t=1598979797;
+	bh=x7OVgJvlaRrLCQacPk05iX576FtirOsPaf9wehDa5GQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J7Ztb+aCt/gZNFkdwVDWRyDxWqH7Ij5W0Ul9VhuDswFbbRp4qKKCWOVe0YzVQRUrL
-	 k0blIB8S9vHviQ1IrwwEi3LWKN0OQNCi9GZJPd9yZ52ZAwKsWflEZhv95TJQDHLjPq
-	 Dc8Ux8rfyuDZwJpKF4RFo4XaZ2jMTmmnvvUFf1YM=
+	b=lglFN/igqRjOkyVMR1P6tWCuP2E2+e6kGv2YufnKobdFpiNWFDSwzAdgWc2tFlSmk
+	 /dVYoqp7ro0D4B6Xcm81UJmNPH1eVTt6rB/KPeidTHgel27X0KkPYlVbsbiYEA90A9
+	 ZOOCCJY52e+q8w5ytnh5HpTRy4JLW0+rkO3kRM7w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729555AbgIARDF (ORCPT
+        id S1730373AbgIARDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:03:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40078 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:03:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728680AbgIAPUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:17 -0400
+        id S1727081AbgIAPUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:12 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CDB8206EB;
-        Tue,  1 Sep 2020 15:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77762137B;
+        Tue,  1 Sep 2020 15:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973617;
-        bh=QmmpE2GPTXOu1uJzoaP3xWXQJeJasre7GwtoeB4XUew=;
+        s=default; t=1598973612;
+        bh=x7OVgJvlaRrLCQacPk05iX576FtirOsPaf9wehDa5GQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vx5+qfaORcdbLIuAiKCmul63at660GDxudaCxDTHlEQ3OXnPLChklpimbiO+XFrCM
-         EEPz3C+ArKnWJAkcs5JdcD9dPAZ+FajFNwktYKQNMJF8MA0wefzP4y4gqSbn3L8shN
-         boSRMLqJ+lMVGj21St69aTKo7OlVLnQHPtf+zQis=
+        b=U5hFaoDRL7TEbW3s9ht3diyv4+ViXetCgyVxCb0k1Wb5VivHT32H9IPufE+aw7172
+         3NfraqLLk9WodR8b6uqM359G09/0ivjVsxYwxggKGr0s3jjOJh9l3trsaE6VWHQV92
+         sh/Jt4dB3di7DusqwAg8w93s3mbQFM4hakeDdljM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 71/91] writeback: Fix sync livelock due to b_dirty_time processing
-Date:   Tue,  1 Sep 2020 17:10:45 +0200
-Message-Id: <20200901150931.715393507@linuxfoundation.org>
+        stable@vger.kernel.org, Li Guifu <bluce.liguifu@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 28/91] f2fs: fix use-after-free issue
+Date:   Tue,  1 Sep 2020 17:10:02 +0200
+Message-Id: <20200901150929.555103200@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -59,193 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Li Guifu <bluce.liguifu@huawei.com>
 
-commit f9cae926f35e8230330f28c7b743ad088611a8de upstream.
+[ Upstream commit 99c787cfd2bd04926f1f553b30bd7dcea2caaba1 ]
 
-When we are processing writeback for sync(2), move_expired_inodes()
-didn't set any inode expiry value (older_than_this). This can result in
-writeback never completing if there's steady stream of inodes added to
-b_dirty_time list as writeback rechecks dirty lists after each writeback
-round whether there's more work to be done. Fix the problem by using
-sync(2) start time is inode expiry value when processing b_dirty_time
-list similarly as for ordinarily dirtied inodes. This requires some
-refactoring of older_than_this handling which simplifies the code
-noticeably as a bonus.
+During umount, f2fs_put_super() unregisters procfs entries after
+f2fs_destroy_segment_manager(), it may cause use-after-free
+issue when umount races with procfs accessing, fix it by relocating
+f2fs_unregister_sysfs().
 
-Fixes: 0ae45f63d4ef ("vfs: add support for a lazytime mount option")
-CC: stable@vger.kernel.org
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[Chao Yu: change commit title/message a bit]
 
+Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs-writeback.c                |   44 +++++++++++++++------------------------
- include/trace/events/writeback.h |   13 +++++------
- 2 files changed, 23 insertions(+), 34 deletions(-)
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -45,7 +45,6 @@ struct wb_completion {
- struct wb_writeback_work {
- 	long nr_pages;
- 	struct super_block *sb;
--	unsigned long *older_than_this;
- 	enum writeback_sync_modes sync_mode;
- 	unsigned int tagged_writepages:1;
- 	unsigned int for_kupdate:1;
-@@ -1150,16 +1149,13 @@ static bool inode_dirtied_after(struct i
- #define EXPIRE_DIRTY_ATIME 0x0001
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 89319c3524061..990339c538b0a 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -782,6 +782,9 @@ static void f2fs_put_super(struct super_block *sb)
+ 	struct f2fs_sb_info *sbi = F2FS_SB(sb);
+ 	int i;
  
- /*
-- * Move expired (dirtied before work->older_than_this) dirty inodes from
-+ * Move expired (dirtied before dirtied_before) dirty inodes from
-  * @delaying_queue to @dispatch_queue.
-  */
- static int move_expired_inodes(struct list_head *delaying_queue,
- 			       struct list_head *dispatch_queue,
--			       int flags,
--			       struct wb_writeback_work *work)
-+			       int flags, unsigned long dirtied_before)
- {
--	unsigned long *older_than_this = NULL;
--	unsigned long expire_time;
- 	LIST_HEAD(tmp);
- 	struct list_head *pos, *node;
- 	struct super_block *sb = NULL;
-@@ -1167,16 +1163,9 @@ static int move_expired_inodes(struct li
- 	int do_sb_sort = 0;
- 	int moved = 0;
++	/* unregister procfs/sysfs entries in advance to avoid race case */
++	f2fs_unregister_sysfs(sbi);
++
+ 	f2fs_quota_off_umount(sb);
  
--	if ((flags & EXPIRE_DIRTY_ATIME) == 0)
--		older_than_this = work->older_than_this;
--	else if (!work->for_sync) {
--		expire_time = jiffies - (dirtytime_expire_interval * HZ);
--		older_than_this = &expire_time;
--	}
- 	while (!list_empty(delaying_queue)) {
- 		inode = wb_inode(delaying_queue->prev);
--		if (older_than_this &&
--		    inode_dirtied_after(inode, *older_than_this))
-+		if (inode_dirtied_after(inode, dirtied_before))
- 			break;
- 		list_move(&inode->i_io_list, &tmp);
- 		moved++;
-@@ -1222,18 +1211,22 @@ out:
-  *                                           |
-  *                                           +--> dequeue for IO
-  */
--static void queue_io(struct bdi_writeback *wb, struct wb_writeback_work *work)
-+static void queue_io(struct bdi_writeback *wb, struct wb_writeback_work *work,
-+		     unsigned long dirtied_before)
- {
- 	int moved;
-+	unsigned long time_expire_jif = dirtied_before;
+ 	/* prevent remaining shrinker jobs */
+@@ -834,8 +837,6 @@ static void f2fs_put_super(struct super_block *sb)
  
- 	assert_spin_locked(&wb->list_lock);
- 	list_splice_init(&wb->b_more_io, &wb->b_io);
--	moved = move_expired_inodes(&wb->b_dirty, &wb->b_io, 0, work);
-+	moved = move_expired_inodes(&wb->b_dirty, &wb->b_io, 0, dirtied_before);
-+	if (!work->for_sync)
-+		time_expire_jif = jiffies - dirtytime_expire_interval * HZ;
- 	moved += move_expired_inodes(&wb->b_dirty_time, &wb->b_io,
--				     EXPIRE_DIRTY_ATIME, work);
-+				     EXPIRE_DIRTY_ATIME, time_expire_jif);
- 	if (moved)
- 		wb_io_lists_populated(wb);
--	trace_writeback_queue_io(wb, work, moved);
-+	trace_writeback_queue_io(wb, work, dirtied_before, moved);
- }
+ 	kfree(sbi->ckpt);
  
- static int write_inode(struct inode *inode, struct writeback_control *wbc)
-@@ -1745,7 +1738,7 @@ static long writeback_inodes_wb(struct b
- 	blk_start_plug(&plug);
- 	spin_lock(&wb->list_lock);
- 	if (list_empty(&wb->b_io))
--		queue_io(wb, &work);
-+		queue_io(wb, &work, jiffies);
- 	__writeback_inodes_wb(wb, &work);
- 	spin_unlock(&wb->list_lock);
- 	blk_finish_plug(&plug);
-@@ -1765,7 +1758,7 @@ static long writeback_inodes_wb(struct b
-  * takes longer than a dirty_writeback_interval interval, then leave a
-  * one-second gap.
-  *
-- * older_than_this takes precedence over nr_to_write.  So we'll only write back
-+ * dirtied_before takes precedence over nr_to_write.  So we'll only write back
-  * all dirty pages if they are all attached to "old" mappings.
-  */
- static long wb_writeback(struct bdi_writeback *wb,
-@@ -1773,14 +1766,11 @@ static long wb_writeback(struct bdi_writ
- {
- 	unsigned long wb_start = jiffies;
- 	long nr_pages = work->nr_pages;
--	unsigned long oldest_jif;
-+	unsigned long dirtied_before = jiffies;
- 	struct inode *inode;
- 	long progress;
- 	struct blk_plug plug;
- 
--	oldest_jif = jiffies;
--	work->older_than_this = &oldest_jif;
+-	f2fs_unregister_sysfs(sbi);
 -
- 	blk_start_plug(&plug);
- 	spin_lock(&wb->list_lock);
- 	for (;;) {
-@@ -1814,14 +1804,14 @@ static long wb_writeback(struct bdi_writ
- 		 * safe.
- 		 */
- 		if (work->for_kupdate) {
--			oldest_jif = jiffies -
-+			dirtied_before = jiffies -
- 				msecs_to_jiffies(dirty_expire_interval * 10);
- 		} else if (work->for_background)
--			oldest_jif = jiffies;
-+			dirtied_before = jiffies;
- 
- 		trace_writeback_start(wb, work);
- 		if (list_empty(&wb->b_io))
--			queue_io(wb, work);
-+			queue_io(wb, work, dirtied_before);
- 		if (work->sb)
- 			progress = writeback_sb_inodes(work->sb, wb, work);
- 		else
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -361,8 +361,9 @@ DEFINE_WBC_EVENT(wbc_writepage);
- TRACE_EVENT(writeback_queue_io,
- 	TP_PROTO(struct bdi_writeback *wb,
- 		 struct wb_writeback_work *work,
-+		 unsigned long dirtied_before,
- 		 int moved),
--	TP_ARGS(wb, work, moved),
-+	TP_ARGS(wb, work, dirtied_before, moved),
- 	TP_STRUCT__entry(
- 		__array(char,		name, 32)
- 		__field(unsigned long,	older)
-@@ -372,19 +373,17 @@ TRACE_EVENT(writeback_queue_io,
- 		__field(unsigned int,	cgroup_ino)
- 	),
- 	TP_fast_assign(
--		unsigned long *older_than_this = work->older_than_this;
- 		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
--		__entry->older	= older_than_this ?  *older_than_this : 0;
--		__entry->age	= older_than_this ?
--				  (jiffies - *older_than_this) * 1000 / HZ : -1;
-+		__entry->older	= dirtied_before;
-+		__entry->age	= (jiffies - dirtied_before) * 1000 / HZ;
- 		__entry->moved	= moved;
- 		__entry->reason	= work->reason;
- 		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
- 	),
- 	TP_printk("bdi %s: older=%lu age=%ld enqueue=%d reason=%s cgroup_ino=%u",
- 		__entry->name,
--		__entry->older,	/* older_than_this in jiffies */
--		__entry->age,	/* older_than_this in relative milliseconds */
-+		__entry->older,	/* dirtied_before in jiffies */
-+		__entry->age,	/* dirtied_before in relative milliseconds */
- 		__entry->moved,
- 		__print_symbolic(__entry->reason, WB_WORK_REASON),
- 		__entry->cgroup_ino
+ 	sb->s_fs_info = NULL;
+ 	if (sbi->s_chksum_driver)
+ 		crypto_free_shash(sbi->s_chksum_driver);
+-- 
+2.25.1
+
 
 
