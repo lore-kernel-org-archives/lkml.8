@@ -2,55 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A93C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41069C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 007C22078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F452078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978462;
-	bh=DkAnR+iaMjM5GOBkP+c9xavILewYbraf9p+EsXs1328=;
+	s=default; t=1598978471;
+	bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5a/ideCOjz+DJC9OBos5ef3XX88RdmC8OUdZUE7iNQsaAAiW4DsyJvQWYDvbcnlj
-	 xKPbkI8c02SHCvr9P0HiBPLmqcqgYRIWf+Cb0Wuyuwy09sVJdk+QzH7ip9wwxRixnG
-	 eDVk7wb7TOpjhbBx9f1BblD0ZqE3nnteSWOL7aTM=
+	b=vqM0m0qnXgh/o1wEXrUAkW84RoyRVCkVHv4LtyUuuNWt54Dp4AvIr4lFBB13TZDZz
+	 G0V76qWrkj3qIIC48v6sXxl21rRYziFs5M9UZDE8BSAE1e4dDRMSSan1qCI6lhx3Ja
+	 wBTZKjRm1+yBpxAMZejmg44WFUGmO07hUtbVtnh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732186AbgIAQk7 (ORCPT
+        id S1730350AbgIAP2K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:40:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:28:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730395AbgIAP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:45 -0400
+        id S1729993AbgIAPZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:25:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DE1206C0;
-        Tue,  1 Sep 2020 15:28:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3FFC20FC3;
+        Tue,  1 Sep 2020 15:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974122;
-        bh=DkAnR+iaMjM5GOBkP+c9xavILewYbraf9p+EsXs1328=;
+        s=default; t=1598973902;
+        bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OPqtDOOVue/XLTg9lX5yte6fsyhkMHqHUiwEEFcYEl1OF8LbfiNg78euoGMuKYYWz
-         QVysBL52zl4Z3LmAXOYnKWh1f0AWNeMphRR1y3arAVUNXy8Dq1WdZMu6/FQNWD7dTo
-         peVkEE8+oI5sr7wpY5xmAlZCsv81LVhbgIVNw2RU=
+        b=2K4IOHwZuYsQj8iJ6Zrvud8iiT4kavBQUAo0pHTHv/lpjXLCVesI1J3uWj9lepiIx
+         536lZDw5mNK5SYREl3eWtPJG5lu754v9a1nu9sDGMKF6r1fAJeyOEpJdM/HMf4SDhf
+         w144s6Tjtzua0JDC0MYsgdIyj8maaumudh2jPH+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/214] btrfs: file: reserve qgroup space after the hole punch range is locked
-Date:   Tue,  1 Sep 2020 17:08:52 +0200
-Message-Id: <20200901150955.473793414@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH 4.19 091/125] serial: pl011: Dont leak amba_ports entry on driver register error
+Date:   Tue,  1 Sep 2020 17:10:46 +0200
+Message-Id: <20200901150939.045905828@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,60 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qu Wenruo <wqu@suse.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit a7f8b1c2ac21bf081b41264c9cfd6260dffa6246 ]
+commit 89efbe70b27dd325d8a8c177743a26b885f7faec upstream.
 
-The incoming qgroup reserved space timing will move the data reservation
-to ordered extent completely.
+pl011_probe() calls pl011_setup_port() to reserve an amba_ports[] entry,
+then calls pl011_register_port() to register the uart driver with the
+tty layer.
 
-However in btrfs_punch_hole_lock_range() will call
-btrfs_invalidate_page(), which will clear QGROUP_RESERVED bit for the
-range.
+If registration of the uart driver fails, the amba_ports[] entry is not
+released.  If this happens 14 times (value of UART_NR macro), then all
+amba_ports[] entries will have been leaked and driver probing is no
+longer possible.  (To be fair, that can only happen if the DeviceTree
+doesn't contain alias IDs since they cause the same entry to be used for
+a given port.)   Fix it.
 
-In current stage it's OK, but if we're making ordered extents handle the
-reserved space, then btrfs_punch_hole_lock_range() can clear the
-QGROUP_RESERVED bit before we submit ordered extent, leading to qgroup
-reserved space leakage.
+Fixes: ef2889f7ffee ("serial: pl011: Move uart_register_driver call to device")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.15+
+Cc: Tushar Behera <tushar.behera@linaro.org>
+Link: https://lore.kernel.org/r/138f8c15afb2f184d8102583f8301575566064a6.1597316167.git.lukas@wunner.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-So here change the timing to make reserve data space after
-btrfs_punch_hole_lock_range().
-The new timing is fine for either current code or the new code.
-
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Qu Wenruo <wqu@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/file.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/tty/serial/amba-pl011.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index 3cfbccacef7fd..a02c44b6a2be5 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -3130,14 +3130,14 @@ reserve_space:
- 		if (ret < 0)
- 			goto out;
- 		space_reserved = true;
--		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
--						alloc_start, bytes_to_reserve);
--		if (ret)
--			goto out;
- 		ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
- 						  &cached_state);
- 		if (ret)
- 			goto out;
-+		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
-+						alloc_start, bytes_to_reserve);
-+		if (ret)
-+			goto out;
- 		ret = btrfs_prealloc_file_range(inode, mode, alloc_start,
- 						alloc_end - alloc_start,
- 						i_blocksize(inode),
--- 
-2.25.1
-
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2593,7 +2593,7 @@ static int pl011_setup_port(struct devic
+ 
+ static int pl011_register_port(struct uart_amba_port *uap)
+ {
+-	int ret;
++	int ret, i;
+ 
+ 	/* Ensure interrupts from this UART are masked and cleared */
+ 	pl011_write(0, uap, REG_IMSC);
+@@ -2604,6 +2604,9 @@ static int pl011_register_port(struct ua
+ 		if (ret < 0) {
+ 			dev_err(uap->port.dev,
+ 				"Failed to register AMBA-PL011 driver\n");
++			for (i = 0; i < ARRAY_SIZE(amba_ports); i++)
++				if (amba_ports[i] == uap)
++					amba_ports[i] = NULL;
+ 			return ret;
+ 		}
+ 	}
 
 
