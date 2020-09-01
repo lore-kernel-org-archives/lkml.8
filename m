@@ -2,145 +2,95 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD18CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47CDC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B757320767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 765DB20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978262;
-	bh=G92AkfBE4688u2QAr02mcYBloUEsmi/UG84Jv7duEF0=;
+	s=default; t=1598978271;
+	bh=dmuzdEMkWpJ2XunLy5TWSr/ChN5Y2eJJuRVReEFs1o8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kNdZveJue7zaL4VqLOKMJOzSTNv2mQ4BA+DefZWDyCM7aUt+5VNU9SnuzVQPEX/l2
-	 y3DNNcs0NGqkbmXVTw+mfr6WwrksmCWF9Cgjy1DI7zAcE1mrThKuIYRQLogUpRENIQ
-	 /FOOb9ScNqLjKRYD0ISfYR1sU9aYZ4xE68VnMGGA=
+	b=iw7oKwmZAkAT0RjoynUVndkbwGG1+FpBYvZhHOcTiNBBDMMUenVbPkzNwizafLP9c
+	 CdStva9EagOTLDg/AydwlIXquFgNKtVQqVtPCAyf+baYsw6EMPXZSsgB6d4zChRym1
+	 L5fNUU/IIiGID2eQqUDpedDClBxXeR11X1GjCb7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbgIAQhl (ORCPT
+        id S1730507AbgIAP3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:29:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730132AbgIAP3N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:13 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730078AbgIAP0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:26:04 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD6892078B;
-        Tue,  1 Sep 2020 15:29:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC482151B;
+        Tue,  1 Sep 2020 15:25:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974152;
-        bh=G92AkfBE4688u2QAr02mcYBloUEsmi/UG84Jv7duEF0=;
+        s=default; t=1598973963;
+        bh=dmuzdEMkWpJ2XunLy5TWSr/ChN5Y2eJJuRVReEFs1o8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0pZFupL/40vQfcs1C7ltV85gIE8lsudPqLMNWLjcmKt3UUl83M4PwKfZ65wkqUS4Z
-         y8q7z9ML77JXcQZk5AZjkcwMzK2v/377O9Z+qDJ+oGsYjN1Y3E4SW2/tDSzDSI4E0k
-         oPkQbPlhXDEcj+8eAhIVZlllYpLt2tgT+skB4IGI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 034/214] scsi: lpfc: Fix shost refcount mismatch when deleting vport
-Date:   Tue,  1 Sep 2020 17:08:34 +0200
-Message-Id: <20200901150954.598778786@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=Y7+IM86krsVpZqXeWOsl7Hl53BXun2lQDzl3t/nJFFL0zhoFU5iuqUywOQoFtdv+v
+         AsGipIUi3I8al3evi43iyzt7mwxwg4hkociDaHxNk2OmDtv/9kL2rJ9dDmknQ5gl+8
+         vdQY/uMsVqSh1hpyvIzJ4WMdYp1phgli4sq3w7jA=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kyungmin Park <kyungmin.park@samsung.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Han Xu <han.xu@nxp.com>, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 2/6] mtd: rawnand: atmel: Simplify with dev_err_probe()
+Date:   Tue,  1 Sep 2020 16:25:31 +0200
+Message-Id: <20200901142535.12819-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901142535.12819-1-krzk@kernel.org>
+References: <20200901142535.12819-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dick Kennedy <dick.kennedy@broadcom.com>
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-[ Upstream commit 03dbfe0668e6692917ac278883e0586cd7f7d753 ]
-
-When vports are deleted, it is observed that there is memory/kthread
-leakage as the vport isn't fully being released.
-
-There is a shost reference taken in scsi_add_host_dma that is not released
-during scsi_remove_host. It was noticed that other drivers resolve this by
-doing a scsi_host_put after calling scsi_remove_host.
-
-The vport_delete routine is taking two references one that corresponds to
-an access to the scsi_host in the vport_delete routine and another that is
-released after the adapter mailbox command completes that destroys the VPI
-that corresponds to the vport.
-
-Remove one of the references taken such that the second reference that is
-put will complete the missing scsi_add_host_dma reference and the shost
-will be terminated.
-
-Link: https://lore.kernel.org/r/20200630215001.70793-8-jsmart2021@gmail.com
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_vport.c | 26 ++++++++------------------
- 1 file changed, 8 insertions(+), 18 deletions(-)
+ drivers/mtd/nand/raw/atmel/nand-controller.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_vport.c b/drivers/scsi/lpfc/lpfc_vport.c
-index b766463579800..d0296f7cf45fc 100644
---- a/drivers/scsi/lpfc/lpfc_vport.c
-+++ b/drivers/scsi/lpfc/lpfc_vport.c
-@@ -642,27 +642,16 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
- 		    vport->port_state < LPFC_VPORT_READY)
- 			return -EAGAIN;
- 	}
-+
- 	/*
--	 * This is a bit of a mess.  We want to ensure the shost doesn't get
--	 * torn down until we're done with the embedded lpfc_vport structure.
--	 *
--	 * Beyond holding a reference for this function, we also need a
--	 * reference for outstanding I/O requests we schedule during delete
--	 * processing.  But once we scsi_remove_host() we can no longer obtain
--	 * a reference through scsi_host_get().
--	 *
--	 * So we take two references here.  We release one reference at the
--	 * bottom of the function -- after delinking the vport.  And we
--	 * release the other at the completion of the unreg_vpi that get's
--	 * initiated after we've disposed of all other resources associated
--	 * with the port.
-+	 * Take early refcount for outstanding I/O requests we schedule during
-+	 * delete processing for unreg_vpi.  Always keep this before
-+	 * scsi_remove_host() as we can no longer obtain a reference through
-+	 * scsi_host_get() after scsi_host_remove as shost is set to SHOST_DEL.
- 	 */
- 	if (!scsi_host_get(shost))
- 		return VPORT_INVAL;
--	if (!scsi_host_get(shost)) {
--		scsi_host_put(shost);
--		return VPORT_INVAL;
+diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
+index c9818f548d07..71e2b83485d7 100644
+--- a/drivers/mtd/nand/raw/atmel/nand-controller.c
++++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
+@@ -1976,13 +1976,9 @@ static int atmel_nand_controller_init(struct atmel_nand_controller *nc,
+ 	platform_set_drvdata(pdev, nc);
+ 
+ 	nc->pmecc = devm_atmel_pmecc_get(dev);
+-	if (IS_ERR(nc->pmecc)) {
+-		ret = PTR_ERR(nc->pmecc);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "Could not get PMECC object (err = %d)\n",
+-				ret);
+-		return ret;
 -	}
-+
- 	lpfc_free_sysfs_attr(vport);
++	if (IS_ERR(nc->pmecc))
++		return dev_err_probe(dev, PTR_ERR(nc->pmecc),
++				     "Could not get PMECC object\n");
  
- 	lpfc_debugfs_terminate(vport);
-@@ -809,8 +798,9 @@ skip_logo:
- 		if (!(vport->vpi_state & LPFC_VPI_REGISTERED) ||
- 				lpfc_mbx_unreg_vpi(vport))
- 			scsi_host_put(shost);
--	} else
-+	} else {
- 		scsi_host_put(shost);
-+	}
- 
- 	lpfc_free_vpi(phba, vport->vpi);
- 	vport->work_port_events = 0;
+ 	if (nc->caps->has_dma && !atmel_nand_avoid_dma) {
+ 		dma_cap_mask_t mask;
 -- 
-2.25.1
-
-
+2.17.1
 
