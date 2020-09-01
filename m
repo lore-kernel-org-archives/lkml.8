@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CF5C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688C9C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A0E420767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4130920767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978409;
-	bh=SzdQ5UM/VjXFBBCT5u3KqWdfzCRrN+x5JpHCAPpSp2g=;
+	s=default; t=1598978412;
+	bh=TOh96QfmfrBkrpD0r09P51xvbFtNbbhZKZs8Xh54sJU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zoNOdWZU09tavgxGGnY7dNAUdRSloiRsnA13VvFHADaYmB98vdzeAbhGQVXtP1F0c
-	 vFgYOueB+UwbWM+n6wxd2Yr3K3/NZsODoVYlqEDVqBXNyBE9BTYs52qMEgNzd0AUoC
-	 p9+BYNgkEj0U2StLUeTkcTb96MszL7zXt3JxQWds=
+	b=UlDALLy/uTXFwwRQKw4tgJdrcGPdI0SSAugOhA13JSl+bKGWSMR22S4fCKUOTeMnr
+	 VfTV1s2bnq199ZUiIEN+J/RrmM9hEMKx7r2aIOOuMB7iYOul8UoTgHBlSOD1pbwhd/
+	 FjImz+M7CIAlG7Gc0u3Iq0kXmeCez9xp+RPYyCrI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732200AbgIAQkH (ORCPT
+        id S1732206AbgIAQkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:40:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56860 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:40:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730385AbgIAP21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:27 -0400
+        id S1728905AbgIAP2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 629B0206FA;
-        Tue,  1 Sep 2020 15:28:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC4EF2100A;
+        Tue,  1 Sep 2020 15:28:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974106;
-        bh=SzdQ5UM/VjXFBBCT5u3KqWdfzCRrN+x5JpHCAPpSp2g=;
+        s=default; t=1598974104;
+        bh=TOh96QfmfrBkrpD0r09P51xvbFtNbbhZKZs8Xh54sJU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y/xTPWhAtfnxYrB6BG5y/AwCjw0iYNPlDyo2c3kDl3vvOjW6M7yYwN10ehJu8YgVA
-         ziDhHYU3fZ6knfzzS79vy99NoDnvtIiHirouO01dwxwi3iClh+XqY5x7tMnoqMwRZd
-         +5vv0fyP00H75ySZ+jY2xBfHG+0adraw4eE1KswY=
+        b=lGGosytx4VzK4CWJjDrng3WU4ZORvwY/Q+8cFGynvt8VQqQVhK80dhRpdzQ3hVoQe
+         M4A1EvUj7rfgR4x5x1y6rrwfo9K5tyJLX01pZww7F3y1QVRSAEKMzGXmcaDIWzE53v
+         s3bmmTthJ0qimtJBjyepYlkm48aR8vlfHotB/1iU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 046/214] HID: quirks: add NOGET quirk for Logitech GROUP
-Date:   Tue,  1 Sep 2020 17:08:46 +0200
-Message-Id: <20200901150955.182976330@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 028/214] drm/amdkfd: Fix reference count leaks.
+Date:   Tue,  1 Sep 2020 17:08:28 +0200
+Message-Id: <20200901150954.311135298@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,50 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ikjoon Jang <ikjn@chromium.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
+[ Upstream commit 20eca0123a35305e38b344d571cf32768854168c ]
 
-Add HID_QUIRK_NOGET for Logitech GROUP device.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-Logitech GROUP is a compound with camera and audio.
-When the HID interface in an audio device is requested to get
-specific report id, all following control transfers are stalled
-and never be restored back.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 73e4590ea9c94..09df5ecc2c79b 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -771,6 +771,7 @@
- #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
- #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
- #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
-+#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
- #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
- #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
- #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index a49fa2b047cba..b3dd60897ffda 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+index 7551761f2aa97..a49e2ab071d68 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+@@ -612,8 +612,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
  
- 	{ 0 }
- };
+ 	ret = kobject_init_and_add(dev->kobj_node, &node_type,
+ 			sys_props.kobj_nodes, "%d", id);
+-	if (ret < 0)
++	if (ret < 0) {
++		kobject_put(dev->kobj_node);
+ 		return ret;
++	}
+ 
+ 	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
+ 	if (!dev->kobj_mem)
+@@ -660,8 +662,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(mem->kobj, &mem_type,
+ 				dev->kobj_mem, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(mem->kobj);
+ 			return ret;
++		}
+ 
+ 		mem->attr.name = "properties";
+ 		mem->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -679,8 +683,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(cache->kobj, &cache_type,
+ 				dev->kobj_cache, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(cache->kobj);
+ 			return ret;
++		}
+ 
+ 		cache->attr.name = "properties";
+ 		cache->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -698,8 +704,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
+ 				dev->kobj_iolink, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(iolink->kobj);
+ 			return ret;
++		}
+ 
+ 		iolink->attr.name = "properties";
+ 		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -779,8 +787,10 @@ static int kfd_topology_update_sysfs(void)
+ 		ret = kobject_init_and_add(sys_props.kobj_topology,
+ 				&sysprops_type,  &kfd_device->kobj,
+ 				"topology");
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(sys_props.kobj_topology);
+ 			return ret;
++		}
+ 
+ 		sys_props.kobj_nodes = kobject_create_and_add("nodes",
+ 				sys_props.kobj_topology);
 -- 
 2.25.1
 
