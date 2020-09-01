@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F7AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CD9C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FF492078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A94032078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980755;
-	bh=x9qmWIb7ii94WAkjC2xfg9tVw85RQyIp0sudVBq6X5c=;
+	s=default; t=1598980763;
+	bh=mXVF9uRqoTaQC0cctmJegqY31LEmnQYv/Pi506+XALI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0pWc/xNgl43MGixlPMOcCnmAz94QgCzQnManYFQ8VkcDPb3/mZrV9rGIEOLTzYHVf
-	 E5ETUPkEtoZXcOTMTnECyxK7g45RBSEHceiCRaGzNGM3bfQL87LPWaLIzgS97V9c6A
-	 Zt2/wcV4C94MYVN5au9C168EmejftZQ7uEae1N+E=
+	b=pofiUME0EJtA0si2tctN/fBEJhNe/Vf/jFAGd7kjokiBrvO72S+jF5cSgTpah/u5f
+	 jTaJp2VQFXSB7w2Ogg0fPQgVYZM5yHmtHSLCHTsLgSUNFzAsSLG6Zwx40j7YuZ2lnm
+	 xLweCFyjDiZSGuZK/RX8XfovhhXAlZDZH49ke/D0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732700AbgIARTL (ORCPT
+        id S1728994AbgIARTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:19:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57244 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:19:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgIAPNw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:52 -0400
+        id S1728965AbgIAPNt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:13:49 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E8B206FA;
-        Tue,  1 Sep 2020 15:13:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D90E9206EB;
+        Tue,  1 Sep 2020 15:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973231;
-        bh=x9qmWIb7ii94WAkjC2xfg9tVw85RQyIp0sudVBq6X5c=;
+        s=default; t=1598973229;
+        bh=mXVF9uRqoTaQC0cctmJegqY31LEmnQYv/Pi506+XALI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CbctLP8mMvtm2d2e1K9Ajg+50/sEX05tQX6dFFqXI/bcX3R7NrvnvHcuwLS3Al17b
-         d9psbkyLl3gc0OUFIbIE2b6cFM0hkS9GoshPzS5racbuvUaIITgb0Wco+Fnm2BYLx5
-         394CPg8mFKv8yfTf8fysUiIq9Tjhr84rY2hUZXVQ=
+        b=SNUf/ONAgxmFMtMM3JjkxuqvJr5w7ErBK0/Mge32d4eJ1ZxS4gBXiIEJ1op+EWvUV
+         NFBA+gm/lhAjtn2mtTdTKLiA/GhiRmGkzMBnipnPnuSL+KngFOwhjzop9XEfzT5U7J
+         ZsI+3yh+DsaFlzo+/YdZ8mpxJsZ85EEszOwOAyGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jeremy Kerr <jk@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 30/62] powerpc/spufs: add CONFIG_COREDUMP dependency
-Date:   Tue,  1 Sep 2020 17:10:13 +0200
-Message-Id: <20200901150922.233961954@linuxfoundation.org>
+Subject: [PATCH 4.4 29/62] media: davinci: vpif_capture: fix potential double free
+Date:   Tue,  1 Sep 2020 17:10:12 +0200
+Message-Id: <20200901150922.185436441@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -61,45 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit b648a5132ca3237a0f1ce5d871fff342b0efcf8a ]
+[ Upstream commit 602649eadaa0c977e362e641f51ec306bc1d365d ]
 
-The kernel test robot pointed out a slightly different error message
-after recent commit 5456ffdee666 ("powerpc/spufs: simplify spufs core
-dumping") to spufs for a configuration that never worked:
+In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
+and unregisters the V4L2 device. But then this is done again by
+vpif_probe() itself. The patch removes the cleaning from
+vpif_probe_complete().
 
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_proxydma_info_dump':
->> file.c:(.text+0x4c68): undefined reference to `.dump_emit'
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_dma_info_dump':
-   file.c:(.text+0x4d70): undefined reference to `.dump_emit'
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_wbox_info_dump':
-   file.c:(.text+0x4df4): undefined reference to `.dump_emit'
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Add a Kconfig dependency to prevent this from happening again.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200706132302.3885935-1-arnd@arndb.de
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/cell/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/platform/davinci/vpif_capture.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/cell/Kconfig b/arch/powerpc/platforms/cell/Kconfig
-index 429fc59d2a476..9acca9c79ef62 100644
---- a/arch/powerpc/platforms/cell/Kconfig
-+++ b/arch/powerpc/platforms/cell/Kconfig
-@@ -50,6 +50,7 @@ config SPU_FS
- 	tristate "SPU file system"
- 	default m
- 	depends on PPC_CELL
-+	depends on COREDUMP
- 	select SPU_BASE
- 	select MEMORY_HOTPLUG
- 	help
+diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/media/platform/davinci/vpif_capture.c
+index c1e573b7cc6fb..50122ac2ac028 100644
+--- a/drivers/media/platform/davinci/vpif_capture.c
++++ b/drivers/media/platform/davinci/vpif_capture.c
+@@ -1417,8 +1417,6 @@ probe_out:
+ 		/* Unregister video device */
+ 		video_unregister_device(&ch->video_dev);
+ 	}
+-	kfree(vpif_obj.sd);
+-	v4l2_device_unregister(&vpif_obj.v4l2_dev);
+ 
+ 	return err;
+ }
 -- 
 2.25.1
 
