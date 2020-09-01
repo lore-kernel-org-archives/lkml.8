@@ -2,91 +2,118 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DE2C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1199C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0A7C207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:50:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598982600;
-	bh=e7h+oZFFyLcbR6/8OfDuGn4bDyd8dwXNm8Vvh+oVvls=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mwrlcJBd/z5D1PPxzUW52wFchETtXm0EjiXyPsgq1ft0mzd9/OgugvxgrQsCN0B8B
-	 Y/Q81t+98VvdhgJkl6Ejb3Q0d2nxRX/zq5hnGzW39Wk/Kd0a901rcYkINanrvWvhuj
-	 GwED+okCW22lCEum6aRdl1/hefRDSwWeYGSoxDXE=
+	by mail.kernel.org (Postfix) with ESMTP id 853F0208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:50:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MgHej4kt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbgIARt7 (ORCPT
+        id S1729713AbgIARu5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:49:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728079AbgIARt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:49:57 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 1 Sep 2020 13:50:57 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:24788 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728053AbgIARu5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:50:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598982655;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=LJQ9qbxmQlGXiLqbEYSaeGjkLOhWAWXWbiUsuRzUZMg=;
+        b=MgHej4kt+seujZyGpQvoqPG2yWC1yv4Wd0gGDcSRt+HQdV62ICZRBtpp9Pvzs/LFj16+k0
+        /INhxhldAuOXice/vTQBLekX6yvMEiO2NY8+hHetr/nGr0OTMkPLdusmmJde378JW9uY1z
+        Jwo+QJU80rXubNaNFgf7csJ/n+ogi1Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-356-0uJb2eE_NhiqiYY54UEPVA-1; Tue, 01 Sep 2020 13:50:51 -0400
+X-MC-Unique: 0uJb2eE_NhiqiYY54UEPVA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 308B7207D3;
-        Tue,  1 Sep 2020 17:49:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598982596;
-        bh=e7h+oZFFyLcbR6/8OfDuGn4bDyd8dwXNm8Vvh+oVvls=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oyM4rKR9JWi/zFbeC2kbK6rApHD6EBiMupoOzPyI+LP1Xao6kNMM4PP0d/nVX68HK
-         nCVg43w11DOGTq0lZ8oqtZsQQmhHVFbbf0W219Ce5KFDZlOQ9GUIJjn09epL8FJ4eS
-         /qgiAs8SXUQJ36C8gGYE+J7TJ9e680bJAir4noVo=
-Date:   Tue, 1 Sep 2020 19:50:24 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Antoni Przybylik <antoni.przybylik@wp.pl>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gdm724x: gdm_tty: replaced macro with a function
-Message-ID: <20200901175024.GA1509755@kroah.com>
-References: <20200901161846.111486-1-antoni.przybylik@wp.pl>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 02495802B7E;
+        Tue,  1 Sep 2020 17:50:48 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-113-228.ams2.redhat.com [10.36.113.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6923B5C1BB;
+        Tue,  1 Sep 2020 17:50:34 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+        <20200825002540.3351-26-yu-cheng.yu@intel.com>
+        <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+        <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+        <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+        <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+        <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+        <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+        <20200826164604.GW6642@arm.com>
+        <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+        <20200826170841.GX6642@arm.com>
+        <87tuwow7kg.fsf@oldenburg2.str.redhat.com>
+        <CAMe9rOrhjLSaMNABnzd=Kp5UeVot1Qkx0_PnMng=sT+wd9Xubw@mail.gmail.com>
+        <873648w6qr.fsf@oldenburg2.str.redhat.com>
+        <CAMe9rOqpLyWR+Ek7aBiRY+Kr6sRxkSHAo2Sc6h0YCv3X3-3TuQ@mail.gmail.com>
+        <CAMe9rOpuwZesJqY_2wYhdRXMhd7g0a+MRqPtXKh7wX5B5-OSbA@mail.gmail.com>
+        <3c12b6ee-7c93-dcf4-fbf7-2698003386dd@intel.com>
+Date:   Tue, 01 Sep 2020 19:50:32 +0200
+In-Reply-To: <3c12b6ee-7c93-dcf4-fbf7-2698003386dd@intel.com> (Yu-cheng Yu's
+        message of "Tue, 1 Sep 2020 10:49:01 -0700")
+Message-ID: <87o8mpqtcn.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901161846.111486-1-antoni.przybylik@wp.pl>
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 06:18:46PM +0200, Antoni Przybylik wrote:
-> This approach is more elegant and prevents some problems related to
-> macros such as operator precedence in expanded expression.
-> 
-> Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
-> ---
->  drivers/staging/gdm724x/gdm_tty.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
-> index 6e813693a766..a7db0672e81d 100644
-> --- a/drivers/staging/gdm724x/gdm_tty.c
-> +++ b/drivers/staging/gdm724x/gdm_tty.c
-> @@ -27,8 +27,6 @@
->  
->  #define MUX_TX_MAX_SIZE 2048
->  
-> -#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
-> -
->  static struct tty_driver *gdm_driver[TTY_MAX_COUNT];
->  static struct gdm *gdm_table[TTY_MAX_COUNT][GDM_TTY_MINOR];
->  static DEFINE_MUTEX(gdm_table_lock);
-> @@ -36,6 +34,11 @@ static DEFINE_MUTEX(gdm_table_lock);
->  static const char *DRIVER_STRING[TTY_MAX_COUNT] = {"GCTATC", "GCTDM"};
->  static char *DEVICE_STRING[TTY_MAX_COUNT] = {"GCT-ATC", "GCT-DM"};
->  
-> +static int gdm_tty_ready(gdm *gdm)
-> +{
-> +	return (gdm && gdm->tty_dev && gdm->port.count);
-> +}
+* Yu-cheng Yu:
 
-You obviously did not even build this patch, which is a bit rude, don't
-you think?
+> Like other arch_prctl()'s, this parameter was 'unsigned long'
+> earlier. The idea was, since this arch_prctl is only implemented for
+> the 64-bit kernel, we wanted it to look as 64-bit only.  I will change
+> it back to 'unsigned long'.
 
-:(
+What about x32?  In general, long is rather problematic for x32.
+
+Thanks,
+Florian
+
