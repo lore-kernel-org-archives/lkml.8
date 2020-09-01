@@ -2,59 +2,148 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581E6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A68F2222B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318CC21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:47:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb4ZX3as"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbgIAOq5 (ORCPT
+        id S1728338AbgIAOrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:46:57 -0400
-Received: from verein.lst.de ([213.95.11.211]:53625 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728294AbgIAOqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:46:46 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D024068B05; Tue,  1 Sep 2020 16:46:41 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 16:46:41 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200901144641.GA28580@lst.de>
-References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com> <20200901140208.GA95447@C02TD0UTHF1T.local>
+        Tue, 1 Sep 2020 10:47:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgIAOQF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:16:05 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7801C06125C;
+        Tue,  1 Sep 2020 07:16:04 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id a8so606131plm.2;
+        Tue, 01 Sep 2020 07:16:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cqrgjgkwQOLPKBKvSr9gJrTOHEBDRQ8iqEq+YmYLPME=;
+        b=Rb4ZX3asfwOJg4osK9f8BVD5bqX4bXtB9PhlYShZ/rsHMNJrSi7aW2zu7V3aeOSrJm
+         L2LbvTedaoP87o2rocKNCt0/zGqCSl8eyW69u7bu2hDSiC9BpP5v7sW099OXDjyBdWWo
+         3Dg8HtuVdHhv4tO9TNdQ9p7FPLbxF6eKt5KtLUEe04377yijdLe6uEt3jFztB5iQJPK4
+         PJPMg87eK/AzEN4h8pHk8gZr/ac06hwgAeEbRZnmntpetDHiMSbEIcMeq5Hkn+vjZ4Lw
+         qOoGZEdbd+2uUXFX4RlrE4zjEFdoITSaRAxqiXKYn3VD6kqvA2fIF/XqYX5/ac3wnZzd
+         7oQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cqrgjgkwQOLPKBKvSr9gJrTOHEBDRQ8iqEq+YmYLPME=;
+        b=gU4esBd6ad5V8fT4AuiKkVXfQ9zI2uXfCeaa8urY+N4xtQGroKdE/StBu6weviKiHX
+         dHnUvByPRUXhxWRWROv+dJU0fFGcHNr6ZB7WZDvNl1L1jltLtuvEZ84YiVwL45+NN6aP
+         2KVTUcHPLC0cGdojXkC4a32aiaZ+C+QYMTuP0hYtj4ydv1flkKpYGFncwk8tYFGeyMdP
+         HGbeFECaA8yArFUKECtlj2pl95SNp5jRzOQn0lkX3CEcRVu0+m49Wcnr+AwikJhuI2If
+         lx3Triay7XUI8oJukPYei3lcmh7csRBRteL4cnAFoevrRrtF+nvvNuSJctsT0PmeZ1Ux
+         K7mg==
+X-Gm-Message-State: AOAM530vtV3Fj86zMPmZymrQAVlQQ/IspcKmLr5mTVDJHBDOKlOdz6Fd
+        1Gmg0JJ0iQ0XGYRqCuadbRS67MC4D+A=
+X-Google-Smtp-Source: ABdhPJzlSzEv9CsAxwBinDg5rdhmsaopGLA6RpgIsGSWM/G1oTk+NhLtBCJS2/eCVKKOb3FB1mzI9A==
+X-Received: by 2002:a17:90a:4e42:: with SMTP id t2mr1758800pjl.121.1598969763778;
+        Tue, 01 Sep 2020 07:16:03 -0700 (PDT)
+Received: from bobo.ibm.com ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 07:16:03 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v3 04/23] arm: use asm-generic/mmu_context.h for no-op implementations
+Date:   Wed,  2 Sep 2020 00:15:20 +1000
+Message-Id: <20200901141539.1757549-5-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
+References: <20200901141539.1757549-1-npiggin@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901140208.GA95447@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 03:02:08PM +0100, Mark Rutland wrote:
-> One thing to consider is whether you need a speculation barrier after
-> set_fs(). Otherwise for code like:
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
 
-FYI, at least for x86 and powerpc I have a pending series to kill
-set_fs().  I'd love to see someone help with the arm/arm64 side, otherwise
-I'll try to get to it eventually.
+Please ack or nack if you object to this being mered via
+Arnd's tree.
+
+ arch/arm/include/asm/mmu_context.h | 26 +++-----------------------
+ 1 file changed, 3 insertions(+), 23 deletions(-)
+
+diff --git a/arch/arm/include/asm/mmu_context.h b/arch/arm/include/asm/mmu_context.h
+index f99ed524fe41..84e58956fcab 100644
+--- a/arch/arm/include/asm/mmu_context.h
++++ b/arch/arm/include/asm/mmu_context.h
+@@ -26,6 +26,8 @@ void __check_vmalloc_seq(struct mm_struct *mm);
+ #ifdef CONFIG_CPU_HAS_ASID
+ 
+ void check_and_switch_context(struct mm_struct *mm, struct task_struct *tsk);
++
++#define init_new_context init_new_context
+ static inline int
+ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ {
+@@ -92,32 +94,10 @@ static inline void finish_arch_post_lock_switch(void)
+ 
+ #endif	/* CONFIG_MMU */
+ 
+-static inline int
+-init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+-{
+-	return 0;
+-}
+-
+-
+ #endif	/* CONFIG_CPU_HAS_ASID */
+ 
+-#define destroy_context(mm)		do { } while(0)
+ #define activate_mm(prev,next)		switch_mm(prev, next, NULL)
+ 
+-/*
+- * This is called when "tsk" is about to enter lazy TLB mode.
+- *
+- * mm:  describes the currently active mm context
+- * tsk: task which is entering lazy tlb
+- * cpu: cpu number which is entering lazy tlb
+- *
+- * tsk->mm will be NULL
+- */
+-static inline void
+-enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
+-
+ /*
+  * This is the actual mm switch as far as the scheduler
+  * is concerned.  No registers are touched.  We avoid
+@@ -149,6 +129,6 @@ switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ #endif
+ }
+ 
+-#define deactivate_mm(tsk,mm)	do { } while (0)
++#include <asm-generic/mmu_context.h>
+ 
+ #endif
+-- 
+2.23.0
+
