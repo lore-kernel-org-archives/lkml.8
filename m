@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7554C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F4BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78684205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83FE020E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974498;
-	bh=NkA8PEf4GzDYWrPWLhgilQx3bxTCKVY7CDrjO5GtJRI=;
+	s=default; t=1598974531;
+	bh=DZveWCP/S5NghbgnM0iimMiVKVfDLqRuyg/VHFJHzzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XEZh1azPjabkMKWeJCeb52OGlCu+Dpaqk0/fZ/u8zI6iykQ/jbyhB6l9I4N++H+8Q
-	 tcRlrF44Xz0KsLNA+zT6BSEPCRMX+0/Nj97X3iyiAapPWovNoYjbZ0J/ZKzuOFUI7A
-	 AsQS+xDfB1D4DSJyZ9V8PA9C38PQ2FN63VU9e3cw=
+	b=JhRVi+wOljD3phSn1PEcGZKj/3OLnsyY2NRLmX4xGGrtOqFeDEsGBSN+w/JSniRXG
+	 OTB6rkNwgQWHJ2jH2cNVe/c3B8wsr+6NNfC8L3HxnGMsoblH7P/jOEPZyNC3olT/10
+	 WMTeieRigefvWE64ao6oIoopZEzVAaLloCKf2YEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbgIAPex (ORCPT
+        id S1728644AbgIAPf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:34:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38742 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:35:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730713AbgIAPeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:05 -0400
+        id S1728674AbgIAPeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1095C21582;
-        Tue,  1 Sep 2020 15:34:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B69020866;
+        Tue,  1 Sep 2020 15:34:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974444;
-        bh=NkA8PEf4GzDYWrPWLhgilQx3bxTCKVY7CDrjO5GtJRI=;
+        s=default; t=1598974465;
+        bh=DZveWCP/S5NghbgnM0iimMiVKVfDLqRuyg/VHFJHzzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0a1L+vjszs6/LFnFDkbp1sspCXZiwxSMrYrAI8iJhq+gBzRrprAaCi8sI7GOAvkpn
-         qPyv4kh7b5ZV7TWAHwwhMO5TFLewQAg/HgJfx+h4Rm8zinC6Hx/KvOcQLvPGLvBHm1
-         J9jW/hqReyrS1OEd1zWoSWCDXBA4QJDIuIC1sk4Q=
+        b=FgD5XtydrSKbaUUT1I7fbZ9thrfYb8+Nhz+UWL2bfOdJlejnHyyNgxvSWghG0xg3n
+         dHHCSFDC+Ju3vpTvdxLGz+cSi/kEJjf6BGgVfvpCnjngRuQNsr1Yix8riGrIjQf0UN
+         3/1kIwrGDSvVXr2YAAzfXeRCAcFdF9qPigdc4zmg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Caleb Jorden <caljorden@hotmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 178/214] crypto: af_alg - Work around empty control messages without MSG_MORE
-Date:   Tue,  1 Sep 2020 17:10:58 +0200
-Message-Id: <20200901151001.502942541@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.4 186/214] drm/amd/pm: correct Vega12 swctf limit setting
+Date:   Tue,  1 Sep 2020 17:11:06 +0200
+Message-Id: <20200901151001.857183465@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,64 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Evan Quan <evan.quan@amd.com>
 
-commit c195d66a8a75c60515819b101975f38b7ec6577f upstream.
+commit e0ffd340249699ad27a6c91abdfa3e89f7823941 upstream.
 
-The iwd daemon uses libell which sets up the skcipher operation with
-two separate control messages.  As the first control message is sent
-without MSG_MORE, it is interpreted as an empty request.
+Correct the Vega12 thermal swctf limit.
 
-While libell should be fixed to use MSG_MORE where appropriate, this
-patch works around the bug in the kernel so that existing binaries
-continue to work.
-
-We will print a warning however.
-
-A separate issue is that the new kernel code no longer allows the
-control message to be sent twice within the same request.  This
-restriction is obviously incompatible with what iwd was doing (first
-setting an IV and then sending the real control message).  This
-patch changes the kernel so that this is explicitly allowed.
-
-Reported-by: Caleb Jorden <caljorden@hotmail.com>
-Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/af_alg.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega12_thermal.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/crypto/af_alg.c
-+++ b/crypto/af_alg.c
-@@ -16,6 +16,7 @@
- #include <linux/module.h>
- #include <linux/net.h>
- #include <linux/rwsem.h>
-+#include <linux/sched.h>
- #include <linux/sched/signal.h>
- #include <linux/security.h>
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_thermal.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega12_thermal.c
+@@ -170,6 +170,8 @@ int vega12_thermal_get_temperature(struc
+ static int vega12_thermal_set_temperature_range(struct pp_hwmgr *hwmgr,
+ 		struct PP_TemperatureRange *range)
+ {
++	struct phm_ppt_v3_information *pptable_information =
++		(struct phm_ppt_v3_information *)hwmgr->pptable;
+ 	struct amdgpu_device *adev = hwmgr->adev;
+ 	int low = VEGA12_THERMAL_MINIMUM_ALERT_TEMP *
+ 			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+@@ -179,8 +181,8 @@ static int vega12_thermal_set_temperatur
  
-@@ -847,9 +848,15 @@ int af_alg_sendmsg(struct socket *sock,
- 	}
+ 	if (low < range->min)
+ 		low = range->min;
+-	if (high > range->max)
+-		high = range->max;
++	if (high > pptable_information->us_software_shutdown_temp)
++		high = pptable_information->us_software_shutdown_temp;
  
- 	lock_sock(sk);
--	if (ctx->init && (init || !ctx->more)) {
--		err = -EINVAL;
--		goto unlock;
-+	if (ctx->init && !ctx->more) {
-+		if (ctx->used) {
-+			err = -EINVAL;
-+			goto unlock;
-+		}
-+
-+		pr_info_once(
-+			"%s sent an empty control message without MSG_MORE.\n",
-+			current->comm);
- 	}
- 	ctx->init = true;
- 
+ 	if (low > high)
+ 		return -EINVAL;
 
 
