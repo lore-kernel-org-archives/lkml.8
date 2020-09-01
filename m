@@ -2,237 +2,117 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE92FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B98C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD04C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QU4v2jGg"
+	by mail.kernel.org (Postfix) with ESMTP id CD5E52067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:49:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598978958;
+	bh=Zr0rNtHcW9RuHn2tfuAXqac+LKY+ORnkgNnF0ZsMDDw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=aCJIpEpyG4bI/bvs6dXLkldiBhgYyouEIBw/mVHDXFFHCwkPA+2HAjvKkkDtrwOJ+
+	 s1d2A+z07LDkuePpN8GosHvPwOxzuFa7f/bX0vY/8Gm0shPc2tKZnlDAQ75x19HITe
+	 MwidVOUPH1ACrxgtDHq+eqbkpg4YNM1jghSDRYjU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732369AbgIAQtH (ORCPT
+        id S1732377AbgIAQtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:49:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37862 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732246AbgIAQq7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:46:59 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9BAC061244;
-        Tue,  1 Sep 2020 09:46:59 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id u128so1114327pfb.6;
-        Tue, 01 Sep 2020 09:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=srEmGnrmxwaGCReCBnM1pPe/YxdooxBc+Wa1kzshwzQ=;
-        b=QU4v2jGgzV9ckG0OCbywoUxnC5waLQgRQRT4H3Bb8Wt3k0SAmLvkC7waLKazY3WVjP
-         458XRRSQXaVavpTDU8fh9pnzbne2+846Q8iTz5Db74j2aSorIrHgGFmQ72nQt3c5fnkK
-         3vITDwpgVApyVv7ytuNnr5pbyWzVx+LZWO9CX2EWiSx02OHMSDNFqzjZsBrTzGcmZM/r
-         Z7hxWOYCB8dDg972IeYcTGTLoYTC5W4vax1qWZcxczmVEDcpILJzKJdhOcnFS5iz2rsK
-         /czjWIxhjYhjoqiZyFADg/tGMM8AEym9TWVSKhoM4yDmM2EUzONhN8Zbbpu+YORerV9I
-         uSFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=srEmGnrmxwaGCReCBnM1pPe/YxdooxBc+Wa1kzshwzQ=;
-        b=nVnZ54TAkEXHghVHnr6Rzfi3N6BYxbmA32/abxFgjLsZUuYQUbarONQu31USbHb4XR
-         z5uik3Y1R2lSH5n7I41dQSEu0z/vkmyyR7hnhpBtWNGEoqI30gyEK+Ne8M0DSRH956DO
-         bsHhkMliJ6te39O8SxXohCaYnG83kO0fKIxiL6t2udUFtautp79pi8OqfmSfnxj+2tPH
-         CEmW3pKQA8CVMhlFMLfnXTySG6+b1ckmUxSXoGna9uz70/zKyj++WeIDiSkBDFLZ0xx7
-         PB2UdTdPR2mjp//nTdxJ2X0hsjHcj1dvAxcK2VPuiyMRZA91hVYZPlBg2g5EObIYE7ln
-         aKZw==
-X-Gm-Message-State: AOAM530jKz4MFj4SKPxCK4q3Wue1H4sr+ZQDuLcpAlBSlszgnGmtiT1h
-        AwVbppQ29N90os06WGBjlwM=
-X-Google-Smtp-Source: ABdhPJzVKI4T3VZ397dwbaQE0tU4GBpaAB3NSWyGfnoMKiZ68kdpK/TiKXmMyVlYdT8nnZ1WwtIKag==
-X-Received: by 2002:a63:4746:: with SMTP id w6mr2263937pgk.412.1598978816565;
-        Tue, 01 Sep 2020 09:46:56 -0700 (PDT)
-Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id e66sm2386338pfa.130.2020.09.01.09.46.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 09:46:55 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Eric Anholt <eric@anholt.net>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v16 10/20] drm/msm/a6xx: Add support for per-instance pagetables
-Date:   Tue,  1 Sep 2020 09:46:27 -0700
-Message-Id: <20200901164707.2645413-11-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200901164707.2645413-1-robdclark@gmail.com>
-References: <20200901164707.2645413-1-robdclark@gmail.com>
+        Tue, 1 Sep 2020 12:49:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53982 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729677AbgIAP1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:15 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62A4520684;
+        Tue,  1 Sep 2020 15:27:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974034;
+        bh=Zr0rNtHcW9RuHn2tfuAXqac+LKY+ORnkgNnF0ZsMDDw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xlY0obK+NrKWQCSJS21DdLB2vFqiaDKmSZ6Cgl7G3P7YM/w4Wn73UvAvKxxF2OCeV
+         EOGn9jJvRJaqbnAREZHP6586NA5xDyw8PVgTTyuE+dZo+SrdvbT0PwRZEZWRPBXZFQ
+         JCExtKx5euLzXdshHY/gdH4Se7tMQ9k1EIuf66x0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 019/214] ASoC: tegra: Fix reference count leaks.
+Date:   Tue,  1 Sep 2020 17:08:19 +0200
+Message-Id: <20200901150953.887819585@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-Add support for using per-instance pagetables if all the dependencies are
-available.
+[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Akhil P Oommen <akhilpo@codeaurora.org>
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 63 +++++++++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h |  1 +
- drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
- 3 files changed, 65 insertions(+)
+ sound/soc/tegra/tegra30_ahub.c | 4 +++-
+ sound/soc/tegra/tegra30_i2s.c  | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index 5eabb0109577..d7ad6c78d787 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -81,6 +81,49 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
- 	OUT_RING(ring, upper_32_bits(iova));
- }
+diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
+index 635eacbd28d47..156e3b9d613c6 100644
+--- a/sound/soc/tegra/tegra30_ahub.c
++++ b/sound/soc/tegra/tegra30_ahub.c
+@@ -643,8 +643,10 @@ static int tegra30_ahub_resume(struct device *dev)
+ 	int ret;
  
-+static void a6xx_set_pagetable(struct a6xx_gpu *a6xx_gpu,
-+		struct msm_ringbuffer *ring, struct msm_file_private *ctx)
-+{
-+	phys_addr_t ttbr;
-+	u32 asid;
-+	u64 memptr = rbmemptr(ring, ttbr0);
-+
-+	if (ctx == a6xx_gpu->cur_ctx)
-+		return;
-+
-+	if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
-+		return;
-+
-+	/* Execute the table update */
-+	OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_0_TTBR0_LO(lower_32_bits(ttbr)));
-+
-+	OUT_RING(ring,
-+		CP_SMMU_TABLE_UPDATE_1_TTBR0_HI(upper_32_bits(ttbr)) |
-+		CP_SMMU_TABLE_UPDATE_1_ASID(asid));
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_2_CONTEXTIDR(0));
-+	OUT_RING(ring, CP_SMMU_TABLE_UPDATE_3_CONTEXTBANK(0));
-+
-+	/*
-+	 * Write the new TTBR0 to the memstore. This is good for debugging.
-+	 */
-+	OUT_PKT7(ring, CP_MEM_WRITE, 4);
-+	OUT_RING(ring, CP_MEM_WRITE_0_ADDR_LO(lower_32_bits(memptr)));
-+	OUT_RING(ring, CP_MEM_WRITE_1_ADDR_HI(upper_32_bits(memptr)));
-+	OUT_RING(ring, lower_32_bits(ttbr));
-+	OUT_RING(ring, (asid << 16) | upper_32_bits(ttbr));
-+
-+	/*
-+	 * And finally, trigger a uche flush to be sure there isn't anything
-+	 * lingering in that part of the GPU
-+	 */
-+
-+	OUT_PKT7(ring, CP_EVENT_WRITE, 1);
-+	OUT_RING(ring, 0x31);
-+
-+	a6xx_gpu->cur_ctx = ctx;
-+}
-+
- static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
-@@ -90,6 +133,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- 	struct msm_ringbuffer *ring = submit->ring;
- 	unsigned int i;
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(ahub->regmap_ahub);
+ 	ret |= regcache_sync(ahub->regmap_apbif);
+ 	pm_runtime_put(dev);
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index e6d548fa980b6..8894b7c16a01a 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -538,8 +538,10 @@ static int tegra30_i2s_resume(struct device *dev)
+ 	int ret;
  
-+	a6xx_set_pagetable(a6xx_gpu, ring, submit->queue->ctx);
-+
- 	get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
- 		rbmemptr_stats(ring, index, cpcycles_start));
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(i2s->regmap);
+ 	pm_runtime_put(dev);
  
-@@ -696,6 +741,8 @@ static int a6xx_hw_init(struct msm_gpu *gpu)
- 	/* Always come up on rb 0 */
- 	a6xx_gpu->cur_ring = gpu->rb[0];
- 
-+	a6xx_gpu->cur_ctx = NULL;
-+
- 	/* Enable the SQE_to start the CP engine */
- 	gpu_write(gpu, REG_A6XX_CP_SQE_CNTL, 1);
- 
-@@ -1008,6 +1055,21 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
- 	return (unsigned long)busy_time;
- }
- 
-+static struct msm_gem_address_space *
-+a6xx_create_private_address_space(struct msm_gpu *gpu)
-+{
-+	struct msm_gem_address_space *aspace = NULL;
-+	struct msm_mmu *mmu;
-+
-+	mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
-+
-+	if (!IS_ERR(mmu))
-+		aspace = msm_gem_address_space_create(mmu,
-+			"gpu", 0x100000000ULL, 0x1ffffffffULL);
-+
-+	return aspace;
-+}
-+
- static const struct adreno_gpu_funcs funcs = {
- 	.base = {
- 		.get_param = adreno_get_param,
-@@ -1031,6 +1093,7 @@ static const struct adreno_gpu_funcs funcs = {
- 		.gpu_state_put = a6xx_gpu_state_put,
- #endif
- 		.create_address_space = adreno_iommu_create_address_space,
-+		.create_private_address_space = a6xx_create_private_address_space,
- 	},
- 	.get_timestamp = a6xx_get_timestamp,
- };
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-index 03ba60d5b07f..da22d7549d9b 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.h
-@@ -19,6 +19,7 @@ struct a6xx_gpu {
- 	uint64_t sqe_iova;
- 
- 	struct msm_ringbuffer *cur_ring;
-+	struct msm_file_private *cur_ctx;
- 
- 	struct a6xx_gmu gmu;
- };
-diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
-index 7764373d0ed2..0987d6bf848c 100644
---- a/drivers/gpu/drm/msm/msm_ringbuffer.h
-+++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
-@@ -31,6 +31,7 @@ struct msm_rbmemptrs {
- 	volatile uint32_t fence;
- 
- 	volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
-+	volatile u64 ttbr0;
- };
- 
- struct msm_ringbuffer {
 -- 
-2.26.2
+2.25.1
+
+
 
