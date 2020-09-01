@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24AFC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC25EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DA26214F1
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 918B320FC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973298;
-	bh=EC0gZpwbVWyRCJJFNNRf8jvNqjXRs7By//WD6ow1/qg=;
+	s=default; t=1598973303;
+	bh=/99HfNvZQT+pdnlQDcg8nOPTiYMoLV8LgYWzXg1CdMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B34W1Cf3uJFtZ2GjzoKmwLT8REh5BzL6F8frsLTttJILboAIzF+3bUodNU3zdE0pf
-	 oYtfVRTxm4IUnY8W/HTDapKWUzn1JXNCbNnkVXgMcvpCfjuL9pwJJj1xU9pAj9H3Ux
-	 t0LVT0QYZU6dZQINlkSrZcWeoO0P8I90A9hxrw8s=
+	b=I5kERdBvfW7SZ+lMefx/Y6kO7zxgX4zdcqH0c81SOn7F0J5S2Pb1eSe4QfjexBL+M
+	 ovSz/vmHFU7mnvzKdp5KTqsofrdtpGFqVZ2lW5B8t1sT46cIZkoHKCScTMtGHbKzXF
+	 FVFArAZm3RvR3m/X6gbjgp5sTZibcVqG2dsvnLcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728717AbgIAPOy (ORCPT
+        id S1729161AbgIAPO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:14:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:14:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729045AbgIAPO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:29 -0400
+        id S1729077AbgIAPOj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A2D1D20BED;
-        Tue,  1 Sep 2020 15:14:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93B8C20FC3;
+        Tue,  1 Sep 2020 15:14:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973269;
-        bh=EC0gZpwbVWyRCJJFNNRf8jvNqjXRs7By//WD6ow1/qg=;
+        s=default; t=1598973279;
+        bh=/99HfNvZQT+pdnlQDcg8nOPTiYMoLV8LgYWzXg1CdMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dglZEr2Bg9rS4++EUO2G5DR8S/6cttEJn95LDDk82yabPqfkhBFjKekHsgf9FavKM
-         nBS/7abMgWAx/fuCM6H9/+oJ+nhy9D6g60M8H4BKvCayFpEq+G1B5oHMU2ZN567Akx
-         zo1blnkkKppLq0nOBOH0qm2oND1Rhxiqzqi79Opw=
+        b=n/Aazr5SAHKKX4O+ypHhEJkYswn18drvnfhAUsz9RulbdWq71D34EE7t6rRO/HYOK
+         PM1BBrndwCz7gDqRhmGs5TepL6Xk5uJJKOxI0YjGSyIo9MmS64joZcrUKQcf/nxVPa
+         ExLdkJV0PGDCAXnZWRiiKeyWzbDbXYxCBDuWAd68=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prakash Gupta <guptap@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 12/78] iommu/iova: Dont BUG on invalid PFNs
-Date:   Tue,  1 Sep 2020 17:09:48 +0200
-Message-Id: <20200901150925.346875694@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 16/78] drm/amd/display: fix ref count leak in amdgpu_drm_ioctl
+Date:   Tue,  1 Sep 2020 17:09:52 +0200
+Message-Id: <20200901150925.550501788@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -60,48 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
+[ Upstream commit 5509ac65f2fe5aa3c0003237ec629ca55024307c ]
 
-Unlike the other instances which represent a complete loss of
-consistency within the rcache mechanism itself, or a fundamental
-and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
-iova_magazine_free_pfns() can be provoked at more or less any time
-in a "spooky action-at-a-distance" manner by any old device driver
-passing nonsense to dma_unmap_*() which then propagates through to
-queue_iova().
+in amdgpu_drm_ioctl the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
-Not only is this well outside the IOVA layer's control, it's also
-nowhere near fatal enough to justify panicking anyway - all that
-really achieves is to make debugging the offending driver more
-difficult. Let's simply WARN and otherwise ignore bogus PFNs.
-
-Reported-by: Prakash Gupta <guptap@codeaurora.org>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
-Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/iova.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index f106fd9782bfb..99c36a5438a75 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -676,7 +676,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
- 	for (i = 0 ; i < mag->size; ++i) {
- 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index e0890deccb2fe..7cae10fec78de 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -633,11 +633,12 @@ long amdgpu_drm_ioctl(struct file *filp,
+ 	dev = file_priv->minor->dev;
+ 	ret = pm_runtime_get_sync(dev->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto out;
  
--		BUG_ON(!iova);
-+		if (WARN_ON(!iova))
-+			continue;
-+
- 		private_free_iova(iovad, iova);
- 	}
+ 	ret = drm_ioctl(filp, cmd, arg);
  
+ 	pm_runtime_mark_last_busy(dev->dev);
++out:
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 	return ret;
+ }
 -- 
 2.25.1
 
