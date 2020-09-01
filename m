@@ -2,108 +2,167 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C171C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42106C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:55:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EDE93205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BD11205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:55:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FABgGNgV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UvpjWhd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbgIAIvq (ORCPT
+        id S1726947AbgIAIzM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
+        Tue, 1 Sep 2020 04:55:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727915AbgIAIvI (ORCPT
+        with ESMTP id S1726020AbgIAIzI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:51:08 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C259CC061244;
-        Tue,  1 Sep 2020 01:51:06 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id t11so209647plr.5;
-        Tue, 01 Sep 2020 01:51:06 -0700 (PDT)
+        Tue, 1 Sep 2020 04:55:08 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 787E9C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 01:55:08 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id y2so511867ilp.7
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xD7AOhYrDQ8kkfdgEvt/y0u2Xdwvh6fCgyljU9EIUyY=;
-        b=FABgGNgVrC2WMjW6y8hwbXiuAPDyunDXT3GaLiIjvPsfYjB44e4eMEph/2pKD0Pe4e
-         1zRS2pRn35ajG+jI42hIvtEIluvLJiQMOHOWoiC7kujTDm2kf8YDCEWgTWt2Zrs8u/Th
-         U9PyZ7uvDi9Lxl5FaWgekWxmvgjMgizz65UUcQJKH3i0PLeAeFhwqtbVu8sf49nSoEsQ
-         t5bi3wmPefDBB2LVUII2CdAZ0BoV0Mnn/eNj1/9kMLdPduaK3KCUUCQrYsgU3TdtWRsk
-         2ceFG9pCOeScNIN3YOiD+eCb11t8KEBYvz5q1gpxvAXLGfvNxX6d3JQ71gMiSd2OQyzx
-         g5AA==
+         :cc:content-transfer-encoding;
+        bh=d8u+bBUivnnRT/2GGOxyKpzT/GBIGvxJ27fiHGNX228=;
+        b=UvpjWhd8G2kPgF5D5eQHLAN6JpOZhfKgykyurIFmDoV5ERgF9W0Ckwc3WYHkEKzYSQ
+         vkCVslyOGmN71UBW9T4z16Ci5K1Vw0zdUpw1LLx8r5VFk1jwLvDiYSEORzkqIghaDEzo
+         mKYNXmdw3bfEDX4ohV74UZavc3L1fAiDefptKicpEtAhJaMUfSjppTikmIgXNUk4Ymw9
+         JG5JL9Zss7KqLUc4dzuyblarmK9DDR7m3DmC8m8mWncTWlXfUiXe7RRAuWRjfWWH2DJ+
+         Va+YzOioYSc6Bu3sNbAJQmYTMI3GjnxUwr2tNYdYkIjbEqt9DEC8T2NxxoJU5o6H2zxP
+         dlcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xD7AOhYrDQ8kkfdgEvt/y0u2Xdwvh6fCgyljU9EIUyY=;
-        b=To0Sy0YPX5KYwi/KVrsjPWVB0BPBNGgjH2811aDw9N0TmoO1FK1vYzytTeHI1awF6y
-         zf9XElZX+/NbYa3ZUJ13mBTyv78auMK8iBVqMZpGJZzoWtNG72cB7KLl2GWgFL45HIfg
-         tSHR/LKHoeEKsETxMc9s+WlXaUAaDgMEr/Xv5/ZldI3wpMlaDNSrSkKWarFl2OGfVoJ6
-         dP+T3gySc5k8k4ZtcOsQCMoIvlOYyvWO/FyWU/RiABRIWgfVq5wUB268rLF/Y9+BP5s9
-         fUUYDWSGvs71TxBI9N7hoBlqwGELq8vMMSc3lN0N0On0TnZV/SI2YzwcFoOyg43HwqdR
-         vDig==
-X-Gm-Message-State: AOAM531QBsqZ20ZW4bIVPn2b6wEH3NUI7XbOqWOo8DRFd0wPPvQmdjWR
-        lmq16ucL8Xv83TC8eRs3Kd0ln241IMUtObjn1V8=
-X-Google-Smtp-Source: ABdhPJyksbW8OmcVYhvI14Fj54C4ihpatgb1J0h7uGF9RmYSFYWKfDks9WtvUKyN5qid4RP56VPjpQK04UwFSUAGBaM=
-X-Received: by 2002:a17:902:bc85:: with SMTP id bb5mr481240plb.303.1598950265536;
- Tue, 01 Sep 2020 01:51:05 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=d8u+bBUivnnRT/2GGOxyKpzT/GBIGvxJ27fiHGNX228=;
+        b=awC6R9HMqfxSkGWzFy1j4ZvrerncWwmAg7qLX077uD9AfiTKsQcBWcgBB/x1eVUgk/
+         CwadPf9hcsY12IbTf7/rfV5TfB5U2GBLukh0J1d+G2Oqxbe0GCEqd37QEXEyRXKoYpHo
+         4o8NoswfEk6P3pDqVUM+mS/OiXy41x0H/KgySVaQvrVRiXF/Kk7m9YAzpGIM507Q9scZ
+         zuBNY3bK2kYC+1FirkbtGNtPYu0muJc3I21KEVTlV8G0EWzzoLHt4vn9T6gK+tmnsOTc
+         Gkkj6PswSzVu7sB3JNdY6d4LmtG1FW0KIJ9kBbjny99xngEJkVNoq3xcZi7USkJfNcvW
+         dXSg==
+X-Gm-Message-State: AOAM5305upeagzoCBp7yB7SCu9A3EtEeQnvzf9prqimoljb4UV+cLtmL
+        K70gEWfwADq+9Bq00tTes8RrNGBOZ4OeJsEnEi0=
+X-Google-Smtp-Source: ABdhPJwp0CAa160ULiz0kc7ScfoUoQdYdKQDFLFkpfbxOti5zA88kx8eDPHqu5jG5O/5yyV9mb4YsNBcg7CWHvoBz2Q=
+X-Received: by 2002:a92:444c:: with SMTP id a12mr419956ilm.143.1598950507394;
+ Tue, 01 Sep 2020 01:55:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
- <20200901082046.GO1891694@smile.fi.intel.com> <20200901084619.GA897@ninjato>
-In-Reply-To: <20200901084619.GA897@ninjato>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Tue, 1 Sep 2020 11:50:48 +0300
-Message-ID: <CAHp75VdGkHqr_bJ5f2hf0yfk5rTAdpNkBUzcM=JGHKgnhyo-=Q@mail.gmail.com>
-Subject: Re: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
-To:     Wolfram Sang <wsa@kernel.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>,
-        Jean Delvare <jdelvare@suse.de>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200901083326.21264-1-roger.pau@citrix.com> <20200901083326.21264-3-roger.pau@citrix.com>
+In-Reply-To: <20200901083326.21264-3-roger.pau@citrix.com>
+From:   Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date:   Tue, 1 Sep 2020 10:54:56 +0200
+Message-ID: <CAM9Jb+g3=CbEC1QqdZj6ZqXZ78JsnrjPPV6+ATw7ewSCfa3b4w@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] memremap: rename MEMORY_DEVICE_DEVDAX to MEMORY_DEVICE_GENERIC
+To:     Roger Pau Monne <roger.pau@citrix.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Dave Jiang <dave.jiang@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>, Johannes Thumshirn
+        <jthumshirn@suse.de>, Logan Gunthorpe" <logang@deltatee.com>,
+        Juergen Gross <jgross@suse.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        xen-devel@lists.xenproject.org, Linux MM <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 11:48 AM Wolfram Sang <wsa@kernel.org> wrote:
-> > > +/**
-> > > + * struct i2c_bus_settings - The configured i2c bus settings
-> > > + * @mode: Configured i2c bus mode (PCA9665)
-> > > + * @tlow: Configured SCL LOW period (PCA9665)
-> > > + * @thi: Configured SCL HIGH period (PCA9665)
-> > > + * @clock_freq: The configured clock frequency (PCA9564)
-> > > + */
-> > > +struct i2c_bus_settings {
-> > > +   int mode;
-> > > +   int tlow;
-> > > +   int thi;
-> > > +   int clock_freq;
-> > > +};
-> >
-> > This is a good candidate to have it in generic header for sake of the
-> > unification. Possible users:
-> >
-> > struct tegra_i2c_hw_feature
-> > struct cci_data::struct hw_params
+> This is in preparation for the logic behind MEMORY_DEVICE_DEVDAX also
+> being used by non DAX devices.
 >
-> Could be evaluated, but outside the scope of this patch, I think. This
-> is a bugfix, so a self-contained patch makes backporting a lot easier.
+> No functional change intended.
+>
+> Signed-off-by: Roger Pau Monn=C3=A9 <roger.pau@citrix.com>
+> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> Acked-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Vishal Verma <vishal.l.verma@intel.com>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> Cc: Johannes Thumshirn <jthumshirn@suse.de>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Juergen Gross <jgross@suse.com>
+> Cc: linux-nvdimm@lists.01.org
+> Cc: xen-devel@lists.xenproject.org
+> Cc: linux-mm@kvack.org
+> ---
+>  drivers/dax/device.c     | 2 +-
+>  include/linux/memremap.h | 9 ++++-----
+>  mm/memremap.c            | 2 +-
+>  3 files changed, 6 insertions(+), 7 deletions(-)
+>
+> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
+> index 4c0af2eb7e19..1e89513f3c59 100644
+> --- a/drivers/dax/device.c
+> +++ b/drivers/dax/device.c
+> @@ -429,7 +429,7 @@ int dev_dax_probe(struct device *dev)
+>                 return -EBUSY;
+>         }
+>
+> -       dev_dax->pgmap.type =3D MEMORY_DEVICE_DEVDAX;
+> +       dev_dax->pgmap.type =3D MEMORY_DEVICE_GENERIC;
+>         addr =3D devm_memremap_pages(dev, &dev_dax->pgmap);
+>         if (IS_ERR(addr))
+>                 return PTR_ERR(addr);
+> diff --git a/include/linux/memremap.h b/include/linux/memremap.h
+> index 5f5b2df06e61..e5862746751b 100644
+> --- a/include/linux/memremap.h
+> +++ b/include/linux/memremap.h
+> @@ -46,11 +46,10 @@ struct vmem_altmap {
+>   * wakeup is used to coordinate physical address space management (ex:
+>   * fs truncate/hole punch) vs pinned pages (ex: device dma).
+>   *
+> - * MEMORY_DEVICE_DEVDAX:
+> + * MEMORY_DEVICE_GENERIC:
+>   * Host memory that has similar access semantics as System RAM i.e. DMA
+> - * coherent and supports page pinning. In contrast to
+> - * MEMORY_DEVICE_FS_DAX, this memory is access via a device-dax
+> - * character device.
+> + * coherent and supports page pinning. This is for example used by DAX d=
+evices
+> + * that expose memory using a character device.
+>   *
+>   * MEMORY_DEVICE_PCI_P2PDMA:
+>   * Device memory residing in a PCI BAR intended for use with Peer-to-Pee=
+r
+> @@ -60,7 +59,7 @@ enum memory_type {
+>         /* 0 is reserved to catch uninitialized type fields */
+>         MEMORY_DEVICE_PRIVATE =3D 1,
+>         MEMORY_DEVICE_FS_DAX,
+> -       MEMORY_DEVICE_DEVDAX,
+> +       MEMORY_DEVICE_GENERIC,
+>         MEMORY_DEVICE_PCI_P2PDMA,
+>  };
+>
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 03e38b7a38f1..006dace60b1a 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -216,7 +216,7 @@ void *memremap_pages(struct dev_pagemap *pgmap, int n=
+id)
+>                         return ERR_PTR(-EINVAL);
+>                 }
+>                 break;
+> -       case MEMORY_DEVICE_DEVDAX:
+> +       case MEMORY_DEVICE_GENERIC:
+>                 need_devmap_managed =3D false;
+>                 break;
+>         case MEMORY_DEVICE_PCI_P2PDMA:
 
-True, my point here is to think if we were beneficial of this
-definition in the i2c.h.
-
--- 
-With Best Regards,
-Andy Shevchenko
+Reviewed-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
