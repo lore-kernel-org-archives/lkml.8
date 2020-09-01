@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2C7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D030C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5337120767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15B5E20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980586;
-	bh=xAEgqohY3FdYqYTTjlQYaSeUB4UNZYS7CDwMTrmHEbM=;
+	s=default; t=1598980590;
+	bh=NZVOiuzSBZakKmTHz5OjTIZ8cTQyyV3gE5QGmIXA1B4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nkBPMeyOJCxvsqRU0mz0UcepAEhKlerz9urgH3F9RdAXDrJFE9WmSgOcGb+EHeMWe
-	 TphEUvlsLhrVDhoraKxL+8R+3qLINr7TsTWjWRS3Xv32yjB0K7D6P21uowC/WqkHPP
-	 /VEjA4zlpU6MWnJva7hT8PiYchpyDxTVnUVf1rDM=
+	b=Ib6Iyy2eynlJ7iQJ+C4QPrNLFe/OHxH0bhCebn+UcOKSV+uYPMQ6ts3Tx0im6RJC0
+	 eJDoUqxxtOPkpZgtR/RS/NCX1GNJe9SZy4klWoN3ZLzqaoKIvthVcPHi6/akCHInNE
+	 UhHPG5QIik7DtG0SRoM26SLFMrbu2IaP7kpR4et8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731616AbgIARQY (ORCPT
+        id S1732543AbgIARQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:16:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58168 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:16:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729036AbgIAPO1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:27 -0400
+        id S1729049AbgIAPOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:31 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 182D0206FA;
-        Tue,  1 Sep 2020 15:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29F02214D8;
+        Tue,  1 Sep 2020 15:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973266;
-        bh=xAEgqohY3FdYqYTTjlQYaSeUB4UNZYS7CDwMTrmHEbM=;
+        s=default; t=1598973271;
+        bh=NZVOiuzSBZakKmTHz5OjTIZ8cTQyyV3gE5QGmIXA1B4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WoLm+cPtEYTShMdOTgAGcuwNvmeDBk6QjIvn69SK2hPSZPCy2pMaVq//sP76poYYR
-         nqAYDUBSuGXXw9r3NSZFUollfguVY2vD2QWDI/AD/kxQW6hGyqQ+vo9tKGBYsmjyMi
-         VvDnKELq7v7+6LCqeFfM1V5PakY5Cdz7qk2/kr1M=
+        b=oE9L+S8aX3eZVrfsebOZkh1c2F9S3wNdHbKnW8dKdT6uqGSdYrcmJrZG0vLVkXeGk
+         Bwmk/XwJq4rQGcZ09JbCdIQAl4grjW51sYMv1d7PLcIuOkhxOL/BpfDcshPs1jhK3V
+         QBJ5u+fnzVLVk+SB5zsDnOWubVsLGdLWSIpCu4kM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 11/78] scsi: target: tcmu: Fix crash on ARM during cmd completion
-Date:   Tue,  1 Sep 2020 17:09:47 +0200
-Message-Id: <20200901150925.297380646@linuxfoundation.org>
+Subject: [PATCH 4.9 13/78] drm/amdkfd: Fix reference count leaks.
+Date:   Tue,  1 Sep 2020 17:09:49 +0200
+Message-Id: <20200901150925.397951237@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -62,55 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
+[ Upstream commit 20eca0123a35305e38b344d571cf32768854168c ]
 
-If tcmu_handle_completions() has to process a padding shorter than
-sizeof(struct tcmu_cmd_entry), the current call to
-tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
-param is wrong and causes crashes on e.g. ARM, because
-tcmu_flush_dcache_range() in this case calls
-flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
-address above the end of the vmalloc'ed area.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-The fix is to use the minimum of remaining ring space and sizeof(struct
-tcmu_cmd_entry) as the length param.
-
-The patch was tested on kernel 4.19.118.
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
-
-Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
-Tested-by: JiangYu <lnsyyj@hotmail.com>
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index 1a83456a65a00..693fbb2858404 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -666,7 +666,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
- 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
- 		struct tcmu_cmd *cmd;
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+index 8c6e47c5507fb..74221e096855d 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+@@ -841,8 +841,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
  
--		tcmu_flush_dcache_range(entry, sizeof(*entry));
-+		/*
-+		 * Flush max. up to end of cmd ring since current entry might
-+		 * be a padding that is shorter than sizeof(*entry)
-+		 */
-+		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
-+					       udev->cmdr_size);
-+		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
-+					ring_left : sizeof(*entry));
+ 	ret = kobject_init_and_add(dev->kobj_node, &node_type,
+ 			sys_props.kobj_nodes, "%d", id);
+-	if (ret < 0)
++	if (ret < 0) {
++		kobject_put(dev->kobj_node);
+ 		return ret;
++	}
  
- 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
- 			UPDATE_HEAD(udev->cmdr_last_cleaned,
+ 	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
+ 	if (!dev->kobj_mem)
+@@ -885,8 +887,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(mem->kobj, &mem_type,
+ 				dev->kobj_mem, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(mem->kobj);
+ 			return ret;
++		}
+ 
+ 		mem->attr.name = "properties";
+ 		mem->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -904,8 +908,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(cache->kobj, &cache_type,
+ 				dev->kobj_cache, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(cache->kobj);
+ 			return ret;
++		}
+ 
+ 		cache->attr.name = "properties";
+ 		cache->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -923,8 +929,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
+ 				dev->kobj_iolink, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(iolink->kobj);
+ 			return ret;
++		}
+ 
+ 		iolink->attr.name = "properties";
+ 		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -976,8 +984,10 @@ static int kfd_topology_update_sysfs(void)
+ 		ret = kobject_init_and_add(sys_props.kobj_topology,
+ 				&sysprops_type,  &kfd_device->kobj,
+ 				"topology");
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(sys_props.kobj_topology);
+ 			return ret;
++		}
+ 
+ 		sys_props.kobj_nodes = kobject_create_and_add("nodes",
+ 				sys_props.kobj_topology);
 -- 
 2.25.1
 
