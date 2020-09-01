@@ -2,85 +2,97 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 124FEC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB4C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5620204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:05:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BDfhEuri"
+	by mail.kernel.org (Postfix) with ESMTP id C5853204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:08:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgIAHFz (ORCPT
+        id S1726174AbgIAHIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:05:55 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:31494 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726044AbgIAHFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:05:54 -0400
-X-UUID: cbe7ac62e7e548e1b23fc4688f1e3c67-20200901
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=VRgBNvTtVHr8xsM0oGrT8CR3Lw13vv4ccslbq+kluY8=;
-        b=BDfhEuriDBR8vybYGb20smjGwe7mGiufoD6fde/Afax25sZ8CF2i3EUUVCr6DlEiDpyg5vJMk9AW7rDh1rG7NwJjJhZx5sRZ7UEjXO19esrtaCw3QYBjLq9YkVXeCYVWNh49MoAk5WKBzMHzqOknquN++oUjpaIy7/YVJ5PZlkk=;
-X-UUID: cbe7ac62e7e548e1b23fc4688f1e3c67-20200901
-Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
-        (envelope-from <claude.yen@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1165505367; Tue, 01 Sep 2020 15:05:50 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Tue, 1 Sep 2020 15:05:47 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 1 Sep 2020 15:05:47 +0800
-From:   Claude Yen <claude.yen@mediatek.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH] PM: s2idle: Introduce syscore callbacks in s2idle flow
-Date:   Tue, 1 Sep 2020 15:04:18 +0800
-Message-ID: <1598943859-21857-1-git-send-email-claude.yen@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Tue, 1 Sep 2020 03:08:34 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10744 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726006AbgIAHIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:08:32 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 20D41AA7CFA4EA010863;
+        Tue,  1 Sep 2020 15:08:30 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
+ 15:08:23 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] memory: omap-gpmc: Fix -Wunused-function warnings
+Date:   Tue, 1 Sep 2020 15:07:53 +0800
+Message-ID: <20200901070753.24328-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200901035642.22772-1-yuehaibing@huawei.com>
+References: <20200901035642.22772-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VGhpcyBzZXJpZXMgYmFzZWQgb24gNS45LXJjMQ0KVGhpcyBwYXRjaCBtYWtlcyBzMmlkbGUgY2Fs
-bCBleGlzdGluZyBzeXNjb3JlIGNhbGxiYWNrcy4gQ3VycmVudGx5LA0Kd2hlbiBzMmlkbGUgaXMg
-c2VsZWN0ZWQgYXMgc3lzdGVtIHN1c3BlbmQgbWV0aG9kLCBjYWxsYmFja3MgaG9va2VkDQpieSBy
-ZWdpc3Rlcl9zeXNjb3JlX29wcygpIHdpbGwgbm90IGJlIHRyaWdnZXJlZC4gVGhpcyBtYXkgaW5k
-dWNlDQp1bmV4cGVjdGVkIHJlc3VsdHMuIA0KDQpGb3IgZXhhbXBsZSwgc2NoZWRfY2xvY2tfc3Vz
-cGVuZCgpIHdhcyBhZGRlZCB0byBzMmlkbGUgZmxvdyBpbg0KY29tbWl0IDNmMjU1MmY3ZTljNSAo
-InRpbWVycy9zY2hlZF9jbG9jazogUHJldmVudCBnZW5lcmljIHNjaGVkX2Nsb2NrDQp3cmFwIGNh
-dXNlZCBieSB0aWNrX2ZyZWV6ZSgpIikgdG8gZml4IGNsb2NrIHdyYXAgcHJvYmxlbS4gSG93ZXZl
-ciwNCnNjaGVkX2Nsb2NrX3N1c3BlbmQoKSBpcyBvcmlnaW5hbGx5IHJlZ2lzdGVyZWQgaW4gc3lz
-Y29yZSBjYWxsYmFjay4NCldpdGggdGhpcyBwYXRjaCwgaWYgYW5vdGhlciBzeXNjb3JlIGNhbGxi
-YWNrIGlzIG5lZWRlZCBpbiBzMmlkbGUsDQphZGRpdGlvbmFsIG1pZ3JhdGlvbiBlZmZvcnQgY291
-bGQgYmUgc2F2ZWQuDQoNCg0KDQoqKiogQkxVUkIgSEVSRSAqKioNCg0KY2xhdWRlLnllbiAoMSk6
-DQogIFBNOiBzMmlkbGU6IEludHJvZHVjZSBzeXNjb3JlIGNhbGxiYWNrcyBpbiBzMmlkbGUgZmxv
-dw0KDQogZHJpdmVycy9jcHVpZGxlL2NwdWlkbGUuYyB8ICAgMzYgKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKystLS0tDQoga2VybmVsL2NwdV9wbS5jICAgICAgICAgICB8ICAgMTcgKysr
-KysrKysrKysrKysrKysNCiBrZXJuZWwvdGltZS90aWNrLWNvbW1vbi5jIHwgICAxNyArKy0tLS0t
-LS0tLS0tLS0tLQ0KIDMgZmlsZXMgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRp
-b25zKC0pDQoNCi0tDQoxLjcuOS41
+drivers/memory/omap-gpmc.c:987:12: warning: ‘gpmc_cs_remap’ defined but not used [-Wunused-function]
+ static int gpmc_cs_remap(int cs, u32 base)
+            ^~~~~~~~~~~~~
+drivers/memory/omap-gpmc.c:926:20: warning: ‘gpmc_cs_get_name’ defined but not used [-Wunused-function]
+ static const char *gpmc_cs_get_name(int cs)
+                    ^~~~~~~~~~~~~~~~
+drivers/memory/omap-gpmc.c:919:13: warning: ‘gpmc_cs_set_name’ defined but not used [-Wunused-function]
+ static void gpmc_cs_set_name(int cs, const char *name)
+             ^~~~~~~~~~~~~~~~
+Make them as  __maybe_unused to fix this.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/memory/omap-gpmc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index ac0f577a51a1..24372254986e 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -916,14 +916,14 @@ static bool gpmc_cs_reserved(int cs)
+ 	return gpmc->flags & GPMC_CS_RESERVED;
+ }
+ 
+-static void gpmc_cs_set_name(int cs, const char *name)
++static void __maybe_unused gpmc_cs_set_name(int cs, const char *name)
+ {
+ 	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+ 
+ 	gpmc->name = name;
+ }
+ 
+-static const char *gpmc_cs_get_name(int cs)
++static const __maybe_unused char *gpmc_cs_get_name(int cs)
+ {
+ 	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+ 
+@@ -984,7 +984,7 @@ static int gpmc_cs_delete_mem(int cs)
+  * "base". Returns 0 on success and appropriate negative error code
+  * on failure.
+  */
+-static int gpmc_cs_remap(int cs, u32 base)
++static int __maybe_unused gpmc_cs_remap(int cs, u32 base)
+ {
+ 	int ret;
+ 	u32 old_base, size;
+-- 
+2.17.1
+
 
