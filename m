@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87957C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810ADC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E70A206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CBEA2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974948;
-	bh=IiwTl1Btd+XDJ0J7xpyly+d18it5VD3jAe9Iu+uzDv8=;
+	s=default; t=1598974956;
+	bh=+E4hKw1KlotMgdPsh85OOc8gIiNZmD4sgzl+PG/oqFc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=reyv5isGwvuqpy2k44reKtM+YxER3R2z31pdR5xluFCuEDJnwi6M0/iXLlGE/lZGt
-	 K5QArPeaDAFfM5ERVYvGdFcklo7qO/egXJhdO257n5FgkSPwuz16xIINO7UHSINeOx
-	 2gIfEP8ZGJWNCZMH+qQKHqJC83wpmHYBEGiNbUUk=
+	b=VbfNprw+ip6rpBhV7bpmxgbs+dkXLqpwF1s0YxeQrgBMls7i6hUUbap87jrbpVqM5
+	 +jiYWyqEi2dvuT61tU79UC0XPYl90XyvFtU6ch14J2OMug8Hm2h3ioH2fwEEwENfqK
+	 lGaY2lTSEmzoFLQ3SxGH01nF/BDAzJ3Lk3yRkQ9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731558AbgIAPm0 (ORCPT
+        id S1731485AbgIAPme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:42:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50344 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:42:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731481AbgIAPjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:39:53 -0400
+        id S1731487AbgIAPkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:40:01 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05413205F4;
-        Tue,  1 Sep 2020 15:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4319A20866;
+        Tue,  1 Sep 2020 15:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974792;
-        bh=IiwTl1Btd+XDJ0J7xpyly+d18it5VD3jAe9Iu+uzDv8=;
+        s=default; t=1598974800;
+        bh=+E4hKw1KlotMgdPsh85OOc8gIiNZmD4sgzl+PG/oqFc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JMV+jahDEchKvvh9EpzG+k4jvC0fI3PK+Gs+5KfNzgQ2LjG0xBtm945AAGzRG2mm6
-         YQO20aFM1w2rnC59J81B4mibbxwEwGo9Fyj42CsI/SI1CxUjxBOqM5f9b8z4sOe7Aa
-         Ryuu/gHcFpqRFZwdzjSnkZyo4lDa5aM6YnrtIf90=
+        b=V4u+3MTYg6wedwKdcSm9CF0F6OXBk3Db3+uryC/z8STcnQtv0njHaCS4hympOe094
+         oVdXqE8pFggSR+GCv/7gX8R43e7DQ8v8/3F+511zZcAKwtlefcFGNxknKHqkXPNbA+
+         73gCiqTw/V5Nlu/MJZXDZ8v819brzMpbWeTbwO9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yufen Yu <yuyufen@huawei.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 093/255] blkcg: fix memleak for iolatency
-Date:   Tue,  1 Sep 2020 17:09:09 +0200
-Message-Id: <20200901151005.181284538@linuxfoundation.org>
+        stable@vger.kernel.org, Martin Wilck <mwilck@suse.com>,
+        Martin George <marting@netapp.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 096/255] nvme: multipath: round-robin: fix single non-optimized path case
+Date:   Tue,  1 Sep 2020 17:09:12 +0200
+Message-Id: <20200901151005.324359109@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,46 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yufen Yu <yuyufen@huawei.com>
+From: Martin Wilck <mwilck@suse.com>
 
-[ Upstream commit 27029b4b18aa5d3b060f0bf2c26dae254132cfce ]
+[ Upstream commit 93eb0381e13d249a18ed4aae203291ff977e7ffb ]
 
-Normally, blkcg_iolatency_exit() will free related memory in iolatency
-when cleanup queue. But if blk_throtl_init() return error and queue init
-fail, blkcg_iolatency_exit() will not do that for us. Then it cause
-memory leak.
+If there's only one usable, non-optimized path, nvme_round_robin_path()
+returns NULL, which is wrong. Fix it by falling back to "old", like in
+the single optimized path case. Also, if the active path isn't changed,
+there's no need to re-assign the pointer.
 
-Fixes: d70675121546 ("block: introduce blk-iolatency io controller")
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+Fixes: 3f6e3246db0e ("nvme-multipath: fix logic for non-optimized paths")
+Signed-off-by: Martin Wilck <mwilck@suse.com>
+Signed-off-by: Martin George <marting@netapp.com>
+Reviewed-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-cgroup.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/nvme/host/multipath.c | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 0ecc897b225c9..6e8f5e60b0982 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -1056,13 +1056,15 @@ int blkcg_init_queue(struct request_queue *q)
- 	if (preloaded)
- 		radix_tree_preload_end();
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 2672953233434..041a755f936a6 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -255,12 +255,17 @@ static struct nvme_ns *nvme_round_robin_path(struct nvme_ns_head *head,
+ 			fallback = ns;
+ 	}
  
--	ret = blk_iolatency_init(q);
-+	ret = blk_throtl_init(q);
- 	if (ret)
- 		goto err_destroy_all;
- 
--	ret = blk_throtl_init(q);
--	if (ret)
-+	ret = blk_iolatency_init(q);
-+	if (ret) {
-+		blk_throtl_exit(q);
- 		goto err_destroy_all;
-+	}
- 	return 0;
- 
- err_destroy_all:
+-	/* No optimized path found, re-check the current path */
++	/*
++	 * The loop above skips the current path for round-robin semantics.
++	 * Fall back to the current path if either:
++	 *  - no other optimized path found and current is optimized,
++	 *  - no other usable path found and current is usable.
++	 */
+ 	if (!nvme_path_is_disabled(old) &&
+-	    old->ana_state == NVME_ANA_OPTIMIZED) {
+-		found = old;
+-		goto out;
+-	}
++	    (old->ana_state == NVME_ANA_OPTIMIZED ||
++	     (!fallback && old->ana_state == NVME_ANA_NONOPTIMIZED)))
++		return old;
++
+ 	if (!fallback)
+ 		return NULL;
+ 	found = fallback;
 -- 
 2.25.1
 
