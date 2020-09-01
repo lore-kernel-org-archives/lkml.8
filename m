@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DA7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5A7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A663A2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CB9520E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978557;
-	bh=wljQwHlpf9bp/QI7uHx7YkLy4gyPMzPnNX2OUYwUAy8=;
+	s=default; t=1598978562;
+	bh=VZu/xCLM/zvS86LzuuApCHR8B0eir2DgfJaLNqhOAVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SXExH/9u0mo1dvgaOJ6J2j4jgwgpNXEV7noDBMFM+dShd0HdkcVZwdA84Y8i6EV9v
-	 nb9gknfXUfpwMjjjwh8IGfn3SLDv0YzKvJyU28Jau9XXHpva93GPynVkCgid3a1+I/
-	 oW6mbO1tOTazpsgX+l2PuGZRpTLmqEqXzdn7+tpo=
+	b=D7unwlqBopgYli052mgFms7kqOL7qDURlDyt7gHlg5WupHECWAy6Ziv86W8nffJrX
+	 apv0gyh6mYBbWrGsGgouYE2KPCD3KZUeuJGH17l2wPelaRDt1tlEhmIJEepzYuOY28
+	 6BIQiq7Fy9BGH/TyWTyigq2b7JWK3d9rQHwld+WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732167AbgIAQmf (ORCPT
+        id S1732254AbgIAQmk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:42:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:42:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730317AbgIAP2A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:00 -0400
+        id S1729832AbgIAP16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A5DE2078B;
-        Tue,  1 Sep 2020 15:27:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80379206FA;
+        Tue,  1 Sep 2020 15:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974078;
-        bh=wljQwHlpf9bp/QI7uHx7YkLy4gyPMzPnNX2OUYwUAy8=;
+        s=default; t=1598974076;
+        bh=VZu/xCLM/zvS86LzuuApCHR8B0eir2DgfJaLNqhOAVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e1y+KAD+QK5HywZzhwAEOAvBlk23VlfUIGIvK/dKKZe1TVdllqf4y1ZuhwhX3F2XW
-         eNVmdzc4DEcH+s8M0cjr30p3ClIafYs8l4DRvugTogBpdzJf23kVOpNUZm1gwf6Jhu
-         9jIxM8n/x7JbOCbrcFU2MHlE2PuEBRa/4+kkBc+I=
+        b=jnm3ZA+0qy8M2lo7zftZN5LHupWH/dvMCKMBvfi5JXL1o7mpDxoz3Wb576/861hHK
+         uawOe8UkKTSF6lQ5u8ggznSXrOYfjvQ0jHwLEKRYYx4ux6Yox3f/KkNhV2nvq0fGnd
+         GvKpf6SAhyffXKjj+wz/WVyfQfx1wz9inQzkYHLM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 036/214] scsi: target: Fix xcopy sess release leak
-Date:   Tue,  1 Sep 2020 17:08:36 +0200
-Message-Id: <20200901150954.695194395@linuxfoundation.org>
+        stable@vger.kernel.org, Prakash Gupta <guptap@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 027/214] iommu/iova: Dont BUG on invalid PFNs
+Date:   Tue,  1 Sep 2020 17:08:27 +0200
+Message-Id: <20200901150954.270613348@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,96 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <michael.christie@oracle.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 3c006c7d23aac928279f7cbe83bbac4361255d53 ]
+[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
 
-transport_init_session can allocate memory via percpu_ref_init, and
-target_xcopy_release_pt never frees it. This adds a
-transport_uninit_session function to handle cleanup of resources allocated
-in the init function.
+Unlike the other instances which represent a complete loss of
+consistency within the rcache mechanism itself, or a fundamental
+and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
+iova_magazine_free_pfns() can be provoked at more or less any time
+in a "spooky action-at-a-distance" manner by any old device driver
+passing nonsense to dma_unmap_*() which then propagates through to
+queue_iova().
 
-Link: https://lore.kernel.org/r/1593654203-12442-3-git-send-email-michael.christie@oracle.com
-Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Not only is this well outside the IOVA layer's control, it's also
+nowhere near fatal enough to justify panicking anyway - all that
+really achieves is to make debugging the offending driver more
+difficult. Let's simply WARN and otherwise ignore bogus PFNs.
+
+Reported-by: Prakash Gupta <guptap@codeaurora.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
+Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_internal.h  |  1 +
- drivers/target/target_core_transport.c |  7 ++++++-
- drivers/target/target_core_xcopy.c     | 11 +++++++++--
- 3 files changed, 16 insertions(+), 3 deletions(-)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/target/target_core_internal.h b/drivers/target/target_core_internal.h
-index 8533444159635..e7b3c6e5d5744 100644
---- a/drivers/target/target_core_internal.h
-+++ b/drivers/target/target_core_internal.h
-@@ -138,6 +138,7 @@ int	init_se_kmem_caches(void);
- void	release_se_kmem_caches(void);
- u32	scsi_get_new_index(scsi_index_t);
- void	transport_subsystem_check_init(void);
-+void	transport_uninit_session(struct se_session *);
- unsigned char *transport_dump_cmd_direction(struct se_cmd *);
- void	transport_dump_dev_state(struct se_device *, char *, int *);
- void	transport_dump_dev_info(struct se_device *, struct se_lun *,
-diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
-index 7c78a5d02c083..b1f4be055f838 100644
---- a/drivers/target/target_core_transport.c
-+++ b/drivers/target/target_core_transport.c
-@@ -236,6 +236,11 @@ int transport_init_session(struct se_session *se_sess)
- }
- EXPORT_SYMBOL(transport_init_session);
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 0e6a9536eca62..612cbf668adf8 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -811,7 +811,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
+ 	for (i = 0 ; i < mag->size; ++i) {
+ 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
  
-+void transport_uninit_session(struct se_session *se_sess)
-+{
-+	percpu_ref_exit(&se_sess->cmd_count);
-+}
+-		BUG_ON(!iova);
++		if (WARN_ON(!iova))
++			continue;
 +
- /**
-  * transport_alloc_session - allocate a session object and initialize it
-  * @sup_prot_ops: bitmask that defines which T10-PI modes are supported.
-@@ -579,7 +584,7 @@ void transport_free_session(struct se_session *se_sess)
- 		sbitmap_queue_free(&se_sess->sess_tag_pool);
- 		kvfree(se_sess->sess_cmd_map);
+ 		private_free_iova(iovad, iova);
  	}
--	percpu_ref_exit(&se_sess->cmd_count);
-+	transport_uninit_session(se_sess);
- 	kmem_cache_free(se_sess_cache, se_sess);
- }
- EXPORT_SYMBOL(transport_free_session);
-diff --git a/drivers/target/target_core_xcopy.c b/drivers/target/target_core_xcopy.c
-index b9b1e92c6f8db..9d24e85b08631 100644
---- a/drivers/target/target_core_xcopy.c
-+++ b/drivers/target/target_core_xcopy.c
-@@ -479,7 +479,7 @@ int target_xcopy_setup_pt(void)
- 	memset(&xcopy_pt_sess, 0, sizeof(struct se_session));
- 	ret = transport_init_session(&xcopy_pt_sess);
- 	if (ret < 0)
--		return ret;
-+		goto destroy_wq;
  
- 	xcopy_pt_nacl.se_tpg = &xcopy_pt_tpg;
- 	xcopy_pt_nacl.nacl_sess = &xcopy_pt_sess;
-@@ -488,12 +488,19 @@ int target_xcopy_setup_pt(void)
- 	xcopy_pt_sess.se_node_acl = &xcopy_pt_nacl;
- 
- 	return 0;
-+
-+destroy_wq:
-+	destroy_workqueue(xcopy_wq);
-+	xcopy_wq = NULL;
-+	return ret;
- }
- 
- void target_xcopy_release_pt(void)
- {
--	if (xcopy_wq)
-+	if (xcopy_wq) {
- 		destroy_workqueue(xcopy_wq);
-+		transport_uninit_session(&xcopy_pt_sess);
-+	}
- }
- 
- /*
 -- 
 2.25.1
 
