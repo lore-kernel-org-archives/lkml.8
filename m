@@ -2,68 +2,94 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D91E0C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AEFBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B9A7204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z6sUr62W"
+	by mail.kernel.org (Postfix) with ESMTP id D9C24204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976566;
+	bh=cLkCh0TQ3r1z5Bof6eBuZFAV4BBLrF+5jl34LRuXq4A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BNPowl8uAUYRaIi0nSkkD6KZWd0FJhuYS1C/vsZ2IrmR+eCE7T9x+VD0FNhxwQcCq
+	 QavVw8+aOqVLeaeU/dUTbcbHoipeMFUTxUeP/L7x8EkW7B6De5q2MHIJ6EFzeb0iMX
+	 dxrlP+T7tULNTygsM+P82LDUw4PUX/R6EsNptONE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731270AbgIAQJR (ORCPT
+        id S1731452AbgIAPix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:09:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60238 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731703AbgIAQJL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:09:11 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F36C061244;
-        Tue,  1 Sep 2020 09:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=oBkq3glCAHtvOG8UIAGHt/0r5y1zdNiyvtDIVrqUvHM=; b=Z6sUr62WUfxGIitZ30fveIfF6A
-        sXIe5ryrpygTcH3h/5Hsf2cIPUx68XYgdr1wFENvDfHzFtag1rQ0MY/9ppQfHdCl8y/BnIDYcp5wI
-        RBC6+NlQ5XYuEQVFUoGTXVDfdA2zGcLyuEZs5S5Y3wWjtH1ONvJtNJcVwH3XQrX22wULSvWOcg/HB
-        chXB6vq1s8wF5ObT20ymr0uIGz5ZWmNYQSDj3SD50dKASxH6mw0ml+hP3OLN1pTxK1EIy1rIek2rp
-        Lu6zdD0DyOOZ9FBHCWKbrKagsxKLP/8ttJeZFgWGI5Iv23cfUhpYZGlSHi/dIDrVGtSKFUIzujpGX
-        bkWsYFYA==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD8qH-0005hT-H0; Tue, 01 Sep 2020 16:09:05 +0000
-Date:   Tue, 1 Sep 2020 17:09:05 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Miaohe Lin <linmiaohe@huawei.com>
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] block: Fix potential page reference leak in
- __bio_iov_iter_get_pages()
-Message-ID: <20200901160905.GA21372@infradead.org>
-References: <20200901120006.9545-1-linmiaohe@huawei.com>
+        Tue, 1 Sep 2020 11:38:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731287AbgIAPhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:37:12 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAAA620E65;
+        Tue,  1 Sep 2020 15:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974632;
+        bh=cLkCh0TQ3r1z5Bof6eBuZFAV4BBLrF+5jl34LRuXq4A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o1IG8XRpAYxW5xG1q73L2Wpi8WAqTb9asQqCXBOUVPbz2tiyysuMy0xc/CsEBZaNn
+         OVvTSWydoeIhW8t5YRl6ek2fP8D1nMvQM/oNzr8cDR9ZyM7DLug1MLgUdwHXi5XTTr
+         OGv97K85aM+6wKod3Qrh6wx01hU5cK9wlsBWV8Rg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 018/255] staging: rts5208: fix memleaks on error handling paths in probe
+Date:   Tue,  1 Sep 2020 17:07:54 +0200
+Message-Id: <20200901151001.652486270@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901120006.9545-1-linmiaohe@huawei.com>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 08:00:06AM -0400, Miaohe Lin wrote:
-> When bio is full, __bio_iov_iter_get_pages() would return error directly
-> while left page reference still held in pages. Release these references.
-> Also advance the iov_iter according to what we have done successfully.
-> 
-> Fixes: 576ed9135489 ("block: use bio_add_page in bio_iov_iter_get_pages")
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-The WARN_ON means something is fundamentally wrong here.  I think a few
-leaked pages are the least of our problems in this case.
+[ Upstream commit 11507bf9a8832741db69efd32bf09a2ab26426bf ]
+
+rtsx_probe() allocates host, but does not free it on error handling
+paths. The patch adds missed scsi_host_put().
+
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Link: https://lore.kernel.org/r/20200623141230.7258-1-novikov@ispras.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/staging/rts5208/rtsx.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/staging/rts5208/rtsx.c b/drivers/staging/rts5208/rtsx.c
+index be0053c795b7a..937f4e732a75c 100644
+--- a/drivers/staging/rts5208/rtsx.c
++++ b/drivers/staging/rts5208/rtsx.c
+@@ -972,6 +972,7 @@ ioremap_fail:
+ 	kfree(dev->chip);
+ chip_alloc_fail:
+ 	dev_err(&pci->dev, "%s failed\n", __func__);
++	scsi_host_put(host);
+ scsi_host_alloc_fail:
+ 	pci_release_regions(pci);
+ 	return err;
+-- 
+2.25.1
+
+
+
