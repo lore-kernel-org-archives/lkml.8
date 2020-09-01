@@ -2,177 +2,90 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEB0C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF97C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08014207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1CF2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978098;
-	bh=yZynU3zfyRJAG4UVgBtS9yJCPb3PM3naSAOUOJSP4tI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DAlL1Xslzz3WBQye1lL/U/CdlRhJzdreJpWT+qKhnybSOth/zf6BGTWjlz3TUh4p8
-	 Y/XcASVJC2blERtntjyVOS6AVogkoVYRVd4U2o5lAPJSKtDtDn3KH5me4BOuQLv6Is
-	 rUx0UBoNcZk1IwulWFnK5xYV3MUy47bwF6dpek94=
+	s=default; t=1598978106;
+	bh=HBkRRvQE+GiQk8IOw0FoaBIHoluBbUBv6L4fFWhsE5A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WRw010ipAtXb5uumjbaZDvJZ/4QM/PzFKsiUnisaCW+xxFGsuCcYtiqOk1veLm8cx
+	 WPOMkq2G9gw9m0Q/LxeyucQD7ZOZ4pkDrGNXzmko7Fsig6cukdn7+lNVT/zNWJDTQT
+	 UV09WPc4S2wzp+d2aYWK+ALnbPWorBQl0MaKZGf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbgIAPa6 (ORCPT
+        id S1730952AbgIAQfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53402 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:35:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730168AbgIAP1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:02 -0400
+        id S1730758AbgIAQe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:34:56 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0EF5420684;
-        Tue,  1 Sep 2020 15:27:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EA5E2065F;
+        Tue,  1 Sep 2020 16:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974021;
-        bh=yZynU3zfyRJAG4UVgBtS9yJCPb3PM3naSAOUOJSP4tI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bVeZJhh8xFNTRDdip56HRDay9hr8G9BTowGFMwN/tqyjM/HqoEXM4PtJ7a2ZrtRkJ
-         ZykOQfLDghp0ODfBrBv329EfjwvxAJKntd9hs6BRWZZYN7PdGymxp5L9z3oKr2yRGV
-         /ZXE0ytTXiG9tDksFWbdkh/2vnl+FivZO2NLO9rU=
+        s=default; t=1598978095;
+        bh=HBkRRvQE+GiQk8IOw0FoaBIHoluBbUBv6L4fFWhsE5A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=L/iEuxCO+KfmZi287JoZ65Tq12nYlzvVrD+ML3ClX0nNGPTK2N2lPuulBIkC9QUl/
+         8rBiVmFR7U3ypc52pchwlRwqrwzLOUdwfvGIFFl1E7tbGDO8whMdDje1Zheb5V1Qpm
+         2NqKXJIiQXGMoOp5C+4Zd6y6OxtYfiJmivTRVmiM=
+Date:   Tue, 1 Sep 2020 18:35:23 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 014/214] ALSA: pci: delete repeated words in comments
-Date:   Tue,  1 Sep 2020 17:08:14 +0200
-Message-Id: <20200901150953.652375650@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+To:     Sean Young <sean@mess.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 016/125] media: pci: ttpci: av7110: fix possible
+ buffer overflow caused by bad DMA value in debiirq()
+Message-ID: <20200901163523.GA1458104@kroah.com>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150935.368387062@linuxfoundation.org>
+ <20200901162512.GA30837@gofer.mess.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901162512.GA30837@gofer.mess.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Tue, Sep 01, 2020 at 05:25:12PM +0100, Sean Young wrote:
+> Greg,
+> 
+> On Tue, Sep 01, 2020 at 05:09:31PM +0200, Greg Kroah-Hartman wrote:
+> > From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+> > 
+> > [ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+> > 
+> > The value av7110->debi_virt is stored in DMA memory, and it is assigned
+> > to data, and thus data[0] can be modified at any time by malicious
+> > hardware. In this case, "if (data[0] < 2)" can be passed, but then
+> > data[0] can be changed into a large number, which may cause buffer
+> > overflow when the code "av7110->ci_slot[data[0]]" is used.
+> > 
+> > To fix this possible bug, data[0] is assigned to a local variable, which
+> > replaces the use of data[0].
+> 
+> See the discussion here:
+> 
+> https://lkml.org/lkml/2020/8/31/479
+> 
+> It does not seem worthwhile merging to the stable trees.
 
-[ Upstream commit c7fabbc51352f50cc58242a6dc3b9c1a3599849b ]
+It doesn't hurt either :)
 
-Drop duplicated words in sound/pci/.
-{and, the, at}
+thanks,
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20200806021926.32418-1-rdunlap@infradead.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/cs46xx/cs46xx_lib.c       | 2 +-
- sound/pci/cs46xx/dsp_spos_scb_lib.c | 2 +-
- sound/pci/hda/hda_codec.c           | 2 +-
- sound/pci/hda/hda_generic.c         | 2 +-
- sound/pci/hda/patch_sigmatel.c      | 2 +-
- sound/pci/ice1712/prodigy192.c      | 2 +-
- sound/pci/oxygen/xonar_dg.c         | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/sound/pci/cs46xx/cs46xx_lib.c b/sound/pci/cs46xx/cs46xx_lib.c
-index 5b888b795f7ee..c07a9e735733a 100644
---- a/sound/pci/cs46xx/cs46xx_lib.c
-+++ b/sound/pci/cs46xx/cs46xx_lib.c
-@@ -766,7 +766,7 @@ static void snd_cs46xx_set_capture_sample_rate(struct snd_cs46xx *chip, unsigned
- 		rate = 48000 / 9;
- 
- 	/*
--	 *  We can not capture at at rate greater than the Input Rate (48000).
-+	 *  We can not capture at a rate greater than the Input Rate (48000).
- 	 *  Return an error if an attempt is made to stray outside that limit.
- 	 */
- 	if (rate > 48000)
-diff --git a/sound/pci/cs46xx/dsp_spos_scb_lib.c b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-index 715ead59613da..0bef823c5f61f 100644
---- a/sound/pci/cs46xx/dsp_spos_scb_lib.c
-+++ b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-@@ -1716,7 +1716,7 @@ int cs46xx_iec958_pre_open (struct snd_cs46xx *chip)
- 	struct dsp_spos_instance * ins = chip->dsp_spos_instance;
- 
- 	if ( ins->spdif_status_out & DSP_SPDIF_STATUS_OUTPUT_ENABLED ) {
--		/* remove AsynchFGTxSCB and and PCMSerialInput_II */
-+		/* remove AsynchFGTxSCB and PCMSerialInput_II */
- 		cs46xx_dsp_disable_spdif_out (chip);
- 
- 		/* save state */
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 801abf0fc98b3..103011e7285a3 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -3420,7 +3420,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save);
-  * @nid: NID to check / update
-  *
-  * Check whether the given NID is in the amp list.  If it's in the list,
-- * check the current AMP status, and update the the power-status according
-+ * check the current AMP status, and update the power-status according
-  * to the mute status.
-  *
-  * This function is supposed to be set or called from the check_power_status
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 6815f9dc8545d..e1750bdbe51f6 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -813,7 +813,7 @@ static void activate_amp_in(struct hda_codec *codec, struct nid_path *path,
- 	}
- }
- 
--/* sync power of each widget in the the given path */
-+/* sync power of each widget in the given path */
- static hda_nid_t path_power_update(struct hda_codec *codec,
- 				   struct nid_path *path,
- 				   bool allow_powerdown)
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index 4b9300babc7d0..bfd3fe5eff31c 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -832,7 +832,7 @@ static int stac_auto_create_beep_ctls(struct hda_codec *codec,
- 	static struct snd_kcontrol_new beep_vol_ctl =
- 		HDA_CODEC_VOLUME(NULL, 0, 0, 0);
- 
--	/* check for mute support for the the amp */
-+	/* check for mute support for the amp */
- 	if ((caps & AC_AMPCAP_MUTE) >> AC_AMPCAP_MUTE_SHIFT) {
- 		const struct snd_kcontrol_new *temp;
- 		if (spec->anabeep_nid == nid)
-diff --git a/sound/pci/ice1712/prodigy192.c b/sound/pci/ice1712/prodigy192.c
-index 98f8ac6587962..243f757da3edb 100644
---- a/sound/pci/ice1712/prodigy192.c
-+++ b/sound/pci/ice1712/prodigy192.c
-@@ -32,7 +32,7 @@
-  *		  Experimentally I found out that only a combination of
-  *		  OCKS0=1, OCKS1=1 (128fs, 64fs output) and ice1724 -
-  *		  VT1724_MT_I2S_MCLK_128X=0 (256fs input) yields correct
-- *		  sampling rate. That means the the FPGA doubles the
-+ *		  sampling rate. That means that the FPGA doubles the
-  *		  MCK01 rate.
-  *
-  *	Copyright (c) 2003 Takashi Iwai <tiwai@suse.de>
-diff --git a/sound/pci/oxygen/xonar_dg.c b/sound/pci/oxygen/xonar_dg.c
-index c3f8721624cd4..b90421a1d909a 100644
---- a/sound/pci/oxygen/xonar_dg.c
-+++ b/sound/pci/oxygen/xonar_dg.c
-@@ -29,7 +29,7 @@
-  *   GPIO 4 <- headphone detect
-  *   GPIO 5 -> enable ADC analog circuit for the left channel
-  *   GPIO 6 -> enable ADC analog circuit for the right channel
-- *   GPIO 7 -> switch green rear output jack between CS4245 and and the first
-+ *   GPIO 7 -> switch green rear output jack between CS4245 and the first
-  *             channel of CS4361 (mechanical relay)
-  *   GPIO 8 -> enable output to speakers
-  *
--- 
-2.25.1
-
-
-
+greg k-h
