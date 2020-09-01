@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D66C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97D4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 580DD2151B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F441207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973392;
-	bh=M9KTQ49n/EGr/CjzyvIbaZ+u+m0NyH0Ia9wgRoHbziQ=;
+	s=default; t=1598973396;
+	bh=y7+3mb3F1IV1P7eyHp4J62UIqOIDN8ka/C+d2ylHIHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQP+v83uCzcZqWxzDt9BQNvnXVpq9F0AfZdhtucpYAq7EaRjVMI8oCUj7qAGnTPht
-	 Ck68q+Pzj/imeybUKevzxqMGMn+y5uYd5eLzCaMmMcPQEPNyOa3InLi0kidKwS01QZ
-	 49s5Bwa9VeOLpfTf8eMbafnMXbRnek2W68hzexmI=
+	b=bRQsw9+ecEzAVkkQIgCb6BVHyPrB4zoECJpqIVxFUlZ5RUPstMlZhs7g2vJh2NyyL
+	 S/XdOoWd4kSoYKIht3iOSUkfmCdPi8lZXzT07hTLxf5knBjH91BVZrrEDg/pwX/xR7
+	 uGYy8zrLzzIUMHrcP7r2ByCCoE0ogDop31P7vTNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgIAPQa (ORCPT
+        id S1729324AbgIAPQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60004 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:16:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729210AbgIAPPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729208AbgIAPPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:15:36 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF07D2100A;
-        Tue,  1 Sep 2020 15:15:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 258E3206FA;
+        Tue,  1 Sep 2020 15:15:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973336;
-        bh=M9KTQ49n/EGr/CjzyvIbaZ+u+m0NyH0Ia9wgRoHbziQ=;
+        s=default; t=1598973328;
+        bh=y7+3mb3F1IV1P7eyHp4J62UIqOIDN8ka/C+d2ylHIHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rz7fsj18Qpuq9uE8MOtaNx10wVPMuiz03wnUtctLNRo/G8mfokoIsYIg73qqlASAi
-         3domUIWBHcuBfyrF6Nbe7vUgIb4FdKBQrcP5YoEKnqforyJEH3bFYLmG4Ulp8luSE+
-         3fzqIG39k1jcvUVt1mad4qNjq4H1dwfyNqpmIQYY=
+        b=tP2al5vRdw06hXPz/obVU2eXQxNB7iQ7Tr1Xt0vAiUCORoVsW4Nazh+hG1UADNpAz
+         llRzxpBt+rrIEN9Tj8MMxLcsoPtBgH7pFV4bJgk5L8YIFNenhZNLhWFysli0tQctie
+         8yX1xm5eYMl7QYylnCsA4eQD8Qx8y9sTfOSoDeH8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 39/78] i2c: rcar: in slave mode, clear NACK earlier
-Date:   Tue,  1 Sep 2020 17:10:15 +0200
-Message-Id: <20200901150926.687570369@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 28/78] locking/lockdep: Fix overflow in presentation of average lock-time
+Date:   Tue,  1 Sep 2020 17:10:04 +0200
+Message-Id: <20200901150926.151655527@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -60,36 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 914a7b3563b8fb92f976619bbd0fa3a4a708baae ]
+[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
 
-Currently, a NACK in slave mode is set/cleared when SCL is held low by
-the IP core right before the bit is about to be pushed out. This is too
-late for clearing and then a NACK from the previous byte is still used
-for the current one. Now, let's clear the NACK right after we detected
-the STOP condition following the NACK.
+Though the number of lock-acquisitions is tracked as unsigned long, this
+is passed as the divisor to div_s64() which interprets it as a s32,
+giving nonsense values with more than 2 billion acquisitons. E.g.
 
-Fixes: de20d1857dd6 ("i2c: rcar: add slave support")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+  -------------------------------------------------------------------------
+    2350439395           0.07         353.38   649647067.36          0.-32
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-rcar.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/locking/lockdep_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-rcar.c b/drivers/i2c/busses/i2c-rcar.c
-index 4231673435e7b..6be02da2ccc46 100644
---- a/drivers/i2c/busses/i2c-rcar.c
-+++ b/drivers/i2c/busses/i2c-rcar.c
-@@ -534,6 +534,7 @@ static bool rcar_i2c_slave_irq(struct rcar_i2c_priv *priv)
- 	/* master sent stop */
- 	if (ssr_filtered & SSR) {
- 		i2c_slave_event(priv->slave, I2C_SLAVE_STOP, &value);
-+		rcar_i2c_write(priv, ICSCR, SIE | SDBS); /* clear our NACK */
- 		rcar_i2c_write(priv, ICSIER, SAR);
- 		rcar_i2c_write(priv, ICSSR, ~SSR & 0xff);
- 	}
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 75d80809c48c9..09bad6cbb95cf 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -425,7 +425,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
+ 	seq_time(m, lt->min);
+ 	seq_time(m, lt->max);
+ 	seq_time(m, lt->total);
+-	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
++	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
+ }
+ 
+ static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
 -- 
 2.25.1
 
