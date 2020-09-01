@@ -2,144 +2,107 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263D7C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8A3C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF1AA21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD84321D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:48:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4A+W2yS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uRdV/UBP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="WqXjuHhH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgIAOro (ORCPT
+        id S1728531AbgIAOsr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42674 "EHLO
+        Tue, 1 Sep 2020 10:48:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728173AbgIAOQC (ORCPT
+        with ESMTP id S1727784AbgIALt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:16:02 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE740C061260;
-        Tue,  1 Sep 2020 07:16:00 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u20so880080pfn.0;
-        Tue, 01 Sep 2020 07:16:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=xhdYKbDeI//C8isyTeQG6V0bhJKWBijBvpr1V+gnGEs=;
-        b=T4A+W2yS6M5KQnbIW9fn7O3Z6p924HgMcAZBjnTcSLjeYEM2j7i/Q+gVdvgLlbx/Wr
-         4YVEKAwqatc9fn619WYBKrZzsiY/FPP3CKmmOSV6pRdWWoXCJqKVxKsnY1e3ZdiLnhMu
-         K2WcQ9fh7POdOAW80IZXpBXTDJlaBHagPqVvbCYzlx+yMxtyzKwvl1fNG5rMazAdAfO5
-         orQ6MJDdjLIpPRrMM/mwdJM1HYWX1aB6rVs/OupzKnoQzBYUTb78Lfv4vWvQdSVPg3f0
-         jrpCAVBdpVqD+xODHrRTY2EC9Wh1ISt4tbvBbfVfBCy6QRabIU+JXYWatUpMvsW6kJbZ
-         Ws7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xhdYKbDeI//C8isyTeQG6V0bhJKWBijBvpr1V+gnGEs=;
-        b=sx5RxI3wi77sgNMzx1chgl/gdtcDDLPxWBSCL4Ne5Y2NCajbbZ2QHZJYPZw/kOcsRD
-         l24KR2kH5FzXhsCLwJJ4D7Hkxb0QFZMy9SGwxCZDrLORGozpMU0daaFaPV7yfyJPcKXi
-         h0FFBd6EGC4ooRBlIYShzzb+8mx6ACd5K1TCWiaBimv7LjUH/wAAupwlmbEBOK+X4f1Y
-         yP8xRBXjt+odPKA9YVBgzS7eY2/WyEXI7FM2HMWdLLr8zQikj/rgdTIBi6Q8WIIMqOzJ
-         YrIbAhWsaSCx3u4+zRq5e7od1mG5HmUU2deS2YaeKen0ftgtC1kMHWtnEc50zYoMuUYd
-         dCFw==
-X-Gm-Message-State: AOAM531KVpc/Dck7d6Y0gyQhcEWnZrbgRgBwNnu19SltcVK5Hla1DaXU
-        hbHXMxCkBRlQNYZLXD2l749EQHQ3i2g=
-X-Google-Smtp-Source: ABdhPJyKaGdo4eiu4sBDOVDt2zOUFHP2Y2dgCjCgoPnDlnvF1oh4LLAgz1Slfa92Cw8toERGdtmjmQ==
-X-Received: by 2002:a63:4923:: with SMTP id w35mr1641283pga.368.1598969760130;
-        Tue, 01 Sep 2020 07:16:00 -0700 (PDT)
-Received: from bobo.ibm.com ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.15.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 07:15:59 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH v3 03/23] arc: use asm-generic/mmu_context.h for no-op implementations
-Date:   Wed,  2 Sep 2020 00:15:19 +1000
-Message-Id: <20200901141539.1757549-4-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
-References: <20200901141539.1757549-1-npiggin@gmail.com>
+        Tue, 1 Sep 2020 07:49:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10DD8C06124F;
+        Tue,  1 Sep 2020 04:48:01 -0700 (PDT)
+Date:   Tue, 01 Sep 2020 11:47:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598960877;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=myRZRXiTxqmppGavutiVaUzFQVSNFcXw9iYSyu81/9A=;
+        b=uRdV/UBP4tSlTC6ipSPxaPhtmEvcSKHu0W7wxcmXyV3fI+m9b+Z3Ys1j67u/uy1+CdCrl0
+        0qsOd7E0FeafX4O9Ck/rAGrpeQVVRjx8uCjSLMzDw/MWKwrx8ee2wQ2YpLA+AcB0wNufp1
+        odCRuVfRy3CIoUas/1ozNmlJbONfzKTY6hBrTcveZ046km5gBhbamsxRU3fel92/qO0uRX
+        IF+rDP0/nzAZdwSLnnfk6xrWKyD+jzL+kE8A4ypS4ZvkREYeUEn9lwmlA0cHMDc96O0Rb7
+        +IFCpyn+5GKoSOH0tTsIEl3sxjFIJFsu/8H+cjkvBCZN3immNSm2gDpSmzJQTQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598960877;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=myRZRXiTxqmppGavutiVaUzFQVSNFcXw9iYSyu81/9A=;
+        b=WqXjuHhHg+ic1EjNb5BStncKChH/lVDgzczWf2g9IpC0GE/46S8zHK7kmuk405S3FVmYZe
+        pR/77B262JU33pBQ==
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/build] arm64/build: Add missing DWARF sections
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200821194310.3089815-13-keescook@chromium.org>
+References: <20200821194310.3089815-13-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <159896087708.20229.15233789093075454936.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Vineet Gupta <vgupta@synopsys.com>
-Cc: linux-snps-arc@lists.infradead.org
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+The following commit has been merged into the core/build branch of tip:
+
+Commit-ID:     578d7f0fd6a5ec8a369a4537c664eb2c8374c134
+Gitweb:        https://git.kernel.org/tip/578d7f0fd6a5ec8a369a4537c664eb2c8374c134
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Fri, 21 Aug 2020 12:42:53 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 01 Sep 2020 09:50:36 +02:00
+
+arm64/build: Add missing DWARF sections
+
+Explicitly include DWARF sections when they're present in the build.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200821194310.3089815-13-keescook@chromium.org
 ---
+ arch/arm64/kernel/vmlinux.lds.S | 1 +
+ 1 file changed, 1 insertion(+)
 
-Please ack or nack if you object to this being mered via
-Arnd's tree.
-
- arch/arc/include/asm/mmu_context.h | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arc/include/asm/mmu_context.h b/arch/arc/include/asm/mmu_context.h
-index 3a5e6a5b9ed6..df164066e172 100644
---- a/arch/arc/include/asm/mmu_context.h
-+++ b/arch/arc/include/asm/mmu_context.h
-@@ -102,6 +102,7 @@ static inline void get_new_mmu_context(struct mm_struct *mm)
-  * Initialize the context related info for a new mm_struct
-  * instance.
-  */
-+#define init_new_context init_new_context
- static inline int
- init_new_context(struct task_struct *tsk, struct mm_struct *mm)
- {
-@@ -113,6 +114,7 @@ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
- 	return 0;
- }
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 082e9ef..16eb2ef 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -239,6 +239,7 @@ SECTIONS
+ 	_end = .;
  
-+#define destroy_context destroy_context
- static inline void destroy_context(struct mm_struct *mm)
- {
- 	unsigned long flags;
-@@ -153,13 +155,13 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
- }
+ 	STABS_DEBUG
++	DWARF_DEBUG
+ 	ELF_DETAILS
  
- /*
-- * Called at the time of execve() to get a new ASID
-- * Note the subtlety here: get_new_mmu_context() behaves differently here
-- * vs. in switch_mm(). Here it always returns a new ASID, because mm has
-- * an unallocated "initial" value, while in latter, it moves to a new ASID,
-- * only if it was unallocated
-+ * activate_mm defaults (in asm-generic) to switch_mm and is called at the
-+ * time of execve() to get a new ASID Note the subtlety here:
-+ * get_new_mmu_context() behaves differently here vs. in switch_mm(). Here
-+ * it always returns a new ASID, because mm has an unallocated "initial"
-+ * value, while in latter, it moves to a new ASID, only if it was
-+ * unallocated
-  */
--#define activate_mm(prev, next)		switch_mm(prev, next, NULL)
- 
- /* it seemed that deactivate_mm( ) is a reasonable place to do book-keeping
-  * for retiring-mm. However destroy_context( ) still needs to do that because
-@@ -168,8 +170,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
-  * there is a good chance that task gets sched-out/in, making it's ASID valid
-  * again (this teased me for a whole day).
-  */
--#define deactivate_mm(tsk, mm)   do { } while (0)
- 
--#define enter_lazy_tlb(mm, tsk)
-+#include <asm-generic/mmu_context.h>
- 
- #endif /* __ASM_ARC_MMU_CONTEXT_H */
--- 
-2.23.0
-
+ 	HEAD_SYMBOLS
