@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C34C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E267C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1C2A2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574ED2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979681;
-	bh=7dZlHiryte/d82dOhmD/hic5KLYyt09ebentkTUUlpg=;
+	s=default; t=1598979691;
+	bh=wazT/9IIkJ50ML2rFPGOTcCpCIa4KWEe2P46bpAZUe8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DNDquBhPKRr++gY/p3PBMThOiCqOViJK9NWa4BUgQxOPlT9TXC4OEJFMbY3HIFnkq
-	 /u2ErbSBRRZefYkqStYyKuXO8i8stQ+8iyh6ILu0snFwaouYmxLjKLAw1PP2nruoLl
-	 rF/pJ9X8wWt+GqmgV/SoMTqellQic/q4WSX6WdDQ=
+	b=VZPVJtWL3JVkyZ22rgtvb4Od9izriBbg2Hfrh54+7C1P0cwavjV6kqCRjWoOL/5cr
+	 we05rEdAlB/eg79+N4Vkqet/2FVSfs40TEx5FCjjxMuNs+P2xX9qnXCqPwcD8DJEpX
+	 SACYxK2i3zdIlyv9JfVHC8VTPNZapNdxlOwIrsks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729645AbgIAPVD (ORCPT
+        id S1729509AbgIARBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:21:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:01:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729510AbgIAPSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:48 -0400
+        id S1729653AbgIAPVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:21:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAE4920767;
-        Tue,  1 Sep 2020 15:18:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6670B2078B;
+        Tue,  1 Sep 2020 15:21:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973527;
-        bh=7dZlHiryte/d82dOhmD/hic5KLYyt09ebentkTUUlpg=;
+        s=default; t=1598973661;
+        bh=wazT/9IIkJ50ML2rFPGOTcCpCIa4KWEe2P46bpAZUe8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0oqia/tpCVEiHNQ0BVMUB53vFvxicNQh4UYop3szOnnLR9fzx7SPS3VFHoK//1EJ
-         lShA8BQGpEE4ubJSO5fX4LEVhVXL/rPYy8QlGqp3/Y244IcdXWlm8AvcJh3s6MU4NY
-         6aE8RYJj/4J/G0Mkvb6uIOHmosniDLiH5x6U+LwA=
+        b=2R5s2ab9UUDT2jE5AhCtsw4QOlpDEsqU2o+vPAxSSwea6QAIBSk2BMdb/qTHELVwv
+         ysBwZBUh1MhuVB9dFHv2mG/yIII7+eFHXw6a6xjXxP5VGeV+ImPax+Mjq3PiFqNZxM
+         p9ok4o3jUI8ovvgblMlr0kBhxX97VkGQilrZgPgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 09/91] arm64: dts: qcom: msm8916: Pull down PDM GPIOs during sleep
-Date:   Tue,  1 Sep 2020 17:09:43 +0200
-Message-Id: <20200901150928.571239256@linuxfoundation.org>
+Subject: [PATCH 4.14 88/91] btrfs: check the right error variable in btrfs_del_dir_entries_in_log
+Date:   Tue,  1 Sep 2020 17:11:02 +0200
+Message-Id: <20200901150932.539565456@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -62,42 +61,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Josef Bacik <josef@toxicpanda.com>
 
-[ Upstream commit e2ee9edc282961783d519c760bbaa20fed4dec38 ]
+[ Upstream commit fb2fecbad50964b9f27a3b182e74e437b40753ef ]
 
-The original qcom kernel changed the PDM GPIOs to be pull-down
-during sleep at some point. Reportedly this was done because
-there was some "leakage at PDM outputs during sleep":
+With my new locking code dbench is so much faster that I tripped over a
+transaction abort from ENOSPC.  This turned out to be because
+btrfs_del_dir_entries_in_log was checking for ret == -ENOSPC, but this
+function sets err on error, and returns err.  So instead of properly
+marking the inode as needing a full commit, we were returning -ENOSPC
+and aborting in __btrfs_unlink_inode.  Fix this by checking the proper
+variable so that we return the correct thing in the case of ENOSPC.
 
-  https://source.codeaurora.org/quic/la/kernel/msm-3.10/commit/?id=0f87e08c1cd3e6484a6f7fb3e74e37340bdcdee0
+The ENOENT needs to be checked, because btrfs_lookup_dir_item_index()
+can return -ENOENT if the dir item isn't in the tree log (which would
+happen if we hadn't fsync'ed this guy).  We actually handle that case in
+__btrfs_unlink_inode, so it's an expected error to get back.
 
-I cannot say how effective this is, but everything seems to work
-fine with this change so let's apply the same to mainline just
-to be sure.
-
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200605185916.318494-3-stephan@gerhold.net
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 4a500fd178c8 ("Btrfs: Metadata ENOSPC handling for tree log")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add note and comment about ENOENT ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/tree-log.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 69ba1d79bcd5d..b24493ad44b0f 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -555,7 +555,7 @@
- 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
- 				       "gpio67", "gpio68";
- 				drive-strength = <2>;
--				bias-disable;
-+				bias-pull-down;
- 			};
- 		};
- 	};
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 3d30bf90d59ec..ec8706a6e9c66 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -3311,11 +3311,13 @@ int btrfs_del_dir_entries_in_log(struct btrfs_trans_handle *trans,
+ 	btrfs_free_path(path);
+ out_unlock:
+ 	mutex_unlock(&dir->log_mutex);
+-	if (ret == -ENOSPC) {
++	if (err == -ENOSPC) {
+ 		btrfs_set_log_full_commit(root->fs_info, trans);
+-		ret = 0;
+-	} else if (ret < 0)
+-		btrfs_abort_transaction(trans, ret);
++		err = 0;
++	} else if (err < 0 && err != -ENOENT) {
++		/* ENOENT can be returned if the entry hasn't been fsynced yet */
++		btrfs_abort_transaction(trans, err);
++	}
+ 
+ 	btrfs_end_log_trans(root);
+ 
 -- 
 2.25.1
 
