@@ -2,122 +2,89 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F59C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9DC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9BE8206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA34206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HMHDBqi/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DRtqDkGz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726144AbgIAJDt (ORCPT
+        id S1726226AbgIAJEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:03:49 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:35919 "EHLO m43-7.mailgun.net"
+        Tue, 1 Sep 2020 05:04:00 -0400
+Received: from ozlabs.org ([203.11.71.1]:49879 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgIAJDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:03:47 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598951026; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=Oe/mAJbGLEYEvHBdYOsb7AGn7B8PA1zzDH2N9F8Jb30=;
- b=HMHDBqi/WnJOGHfNDC/4kxAR1uZLdkJ8ZojctNA+bvzYhJzFyy1g09vBJ5vMMDPa88d9rKmZ
- ad+FLiLowIhoT7OZHOCD48A2h3rZjBKiz8ZrXKdUy/161C30wnlnK6Lcbs421/c7/qhVuCPz
- ZQJckzcm0kmKVXuFVOqUu8h27zg=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f4e0e57947f606f7e523e3a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:03:19
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3F875C433CA; Tue,  1 Sep 2020 09:03:18 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725989AbgIAJD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:03:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA470C433C6;
-        Tue,  1 Sep 2020 09:03:15 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA470C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bgh2M5xvBz9sTS;
+        Tue,  1 Sep 2020 19:03:55 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598951036;
+        bh=EBqFZ+7gjT+GJqGJ9xRTYbNv77jFG4C4i0OaQps+hKw=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DRtqDkGz/O9/EtHDHqYh4dDvQO1WObwKsOOuA+GB9C8EiLL5zn2gWmp9H4mZJwqBs
+         WElOdqdc5TLhJUzEGKt2A7t4Mm433+SHdd/URaLoSaRqZuht/jsk2Vb9DcMtJSh2py
+         eM0TdGokCsYbvvkMPVw7OUWRUIqa0px19o8TYgsWy5WpcO0UszukSnTF2AzUQIw0pS
+         PdYQP7F/YKJBfgUHTy4VprLUopG4bIvNuZnkunmQJB2CXjme/XKLo3JlKByMoprwQJ
+         o00APKU/RJ6pryfpdOeKs4b4KMIbZVzdQF4rSnkWxbzCIwKiNdXrqKnjIZwTjeaC5p
+         IhD2dE9NWBFCQ==
+Date:   Tue, 1 Sep 2020 19:03:54 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Julia Lawall <Julia.Lawall@inria.fr>
+Subject: linux-next: Signed-off-by missing for commits in the v4l-dvb tree
+Message-ID: <20200901190354.38b0d16c@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [01/28] hostap: Mark 'freq_list' as __maybe_unused
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200819072402.3085022-2-lee.jones@linaro.org>
-References: <20200819072402.3085022-2-lee.jones@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>, Jouni Malinen <j@w1.fi>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901090318.3F875C433CA@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 09:03:18 +0000 (UTC)
+Content-Type: multipart/signed; boundary="Sig_/POKICJpTD8GfIrtLag1qN0H";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> wrote:
+--Sig_/POKICJpTD8GfIrtLag1qN0H
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> 'freq_list' is used in some source files which include hostap.h, but
-> not all.  The compiler complains about the times it's not used.  Mark
-> it as __maybe_used to tell the compiler that this is not only okay,
-> it's expected.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  In file included from drivers/net/wireless/intersil/hostap/hostap_80211_tx.c:9:
->  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
->  In file included from drivers/net/wireless/intersil/hostap/hostap_main.c:31:
->  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
->  In file included from drivers/net/wireless/intersil/hostap/hostap_proc.c:10:
->  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
->  In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
->  from drivers/net/wireless/intersil/hostap/hostap_cs.c:196:
->  At top level:
->  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
->  In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
->  from drivers/net/wireless/intersil/hostap/hostap_pci.c:221:
->  At top level:
->  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
->  In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
->  from drivers/net/wireless/intersil/hostap/hostap_plx.c:264:
->  At top level:
->  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
-> 
-> Cc: Jouni Malinen <j@w1.fi>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Hi all,
 
-10 patches applied to wireless-drivers-next.git, thanks.
+Commits
 
-34537d4924ba hostap: Mark 'freq_list' as __maybe_unused
-470d48c1c4c6 rsi: Fix some kernel-doc issues
-2fc4c9ff1606 rsi: File header should not be kernel-doc
-9833f5034597 libertas_tf: Demote non-conformant kernel-doc headers
-25ced81e288d wlcore: cmd: Fix some parameter description disparities
-9554663b8c57 libertas_tf: Fix a bunch of function doc formatting issues
-6182abd858f7 iwlegacy: debug: Demote seemingly unintentional kerneldoc header
-debdbb0c1b20 hostap: hostap_ap: Mark 'txt' as __always_unused
-e2eb189e7660 cw1200: wsm: Remove 'dummy' variables
-f696d724358c libertas: Fix 'timer_list' stored private data related dot-rot
+  063a27cb9820 ("media: tm6000: drop unnecessary list_empty")
+  1c047c859965 ("media: saa7134: drop unnecessary list_empty")
+  3fdcea7c763a ("media: cx231xx: drop unnecessary list_empty")
 
--- 
-https://patchwork.kernel.org/patch/11723193/
+are missing a Signed-off-by from their author.
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+--=20
+Cheers,
+Stephen Rothwell
 
+--Sig_/POKICJpTD8GfIrtLag1qN0H
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ODnoACgkQAVBC80lX
+0GxOOwf/SZ1MgrrSp2n7ghJmNc88l33v3luuTzZZ5jSLNyQPHW9sLFhmw9pRrf8i
+GN+nWKkQVWp8HnajUfzqgUShyY9yzVOgGlcdZgytGaVEv4pu6nQGVoravvxt7UW6
+kec4wnX36m+5XRnNgnvjJl1Lpx7YmyrBPR3bRbkQpU8lxvIFnzuRV9IWvWspLOC4
+KZ3ewUo7mZNGVwBkNG91uhPe08a9LEFhDiprj2jt7ayJsPSkYI5JurkfA6jCIZBu
++sofWD7ZI7W/7O9L+SGANY9109rI3467Jk2uWBuKgfZNqR/ZbfYa8TuuoJPfuB4J
+cm3yJLWsM05ql+6iZoRJF+RkebXuBQ==
+=G8lv
+-----END PGP SIGNATURE-----
+
+--Sig_/POKICJpTD8GfIrtLag1qN0H--
