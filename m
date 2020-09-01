@@ -2,103 +2,103 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A864FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6D00C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7264E206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y5+Z1RtC"
+	by mail.kernel.org (Postfix) with ESMTP id 8DB72206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:12:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598955176;
+	bh=MGKnqLB1Ou22tvMwPIOerrs+OgaBk6N/30NyXTiKcuY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dtr3VTWwRE67artimDo2su0NKTemCdEBNHIq4g8TBcIHEO15ZQj/fEdzYoopA4JY5
+	 XV6r90t1tL3rfUdHWm9l/1I7aqNIOx/8pw+uJMABqpSRaLoVY/OFpGNCvjLI8JAd5R
+	 6VL30cEzzLo8w9TaVItQQlqVKPu2sznz0pxx3zuo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgIAKMe (ORCPT
+        id S1726512AbgIAKMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 06:12:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726064AbgIAKMa (ORCPT
+        Tue, 1 Sep 2020 06:12:55 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:45004 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgIAKMx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 06:12:30 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23F3AC061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 03:12:30 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so289662plb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 03:12:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XWSSHaVX/snKumnbKNEvkol80PJsTwWkmNhhl1k4Kjk=;
-        b=Y5+Z1RtCpQ3yTrjyZD966M4fhioduGWH3doPN6534EUeP89bz3sc1Ca908N9RFKv0b
-         djpvWLQdqe/lFNpUq2bbQmgpF6BcE9DxFTadnoE0Tdxx1f7Oy/bzQ01L3i2Qwh39gaQq
-         KW24AUw/zh+FOMPqzhI0BDC0uzvB2+toudrXo0SAKUkwBFkioSMpJ8UfLKHfW058UIwp
-         R0fFCFr/bfL+GoU0aEmpL7mGruvSBDU0PthQ2LlbWxOh5MokuJvFAV/QckTXUmQQoIut
-         OxOZIqjHQiKzVCeCxbxX9Qhg1xVWmPl40I9uxw2FiQamywtSrZ8NkE4MjkxBvODIQOl+
-         Z9OQ==
+        Tue, 1 Sep 2020 06:12:53 -0400
+Received: by mail-wr1-f67.google.com with SMTP id c15so839547wrs.11;
+        Tue, 01 Sep 2020 03:12:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XWSSHaVX/snKumnbKNEvkol80PJsTwWkmNhhl1k4Kjk=;
-        b=Ix1YVQs+s6eck+WLPo07A4wGTFDkUIC4CwBfjZpIvh8LRuyz3HiwuWbCCf0sR9LkcV
-         ZhIjn0UjrgnxtpK2+deiRm3kviulQMLW16YTSubI37C49d7hrF2YTbf9IM/cphrofu9g
-         dw4RbrZ+sAJAZhAQFu0RZxlfLtqfTyC7cWIYJZnST0XuJy916OQ2euKWT2KNi9J7nd79
-         RTqE40/VmILzUFt4zpIRP0XlXPuauHrHhWxOMuFErBxMtpnWQAkBfN5EHYGNown74cjT
-         qZxFgR4/lkKgRFdj0QieEjci7p+aTKT4a89MQpxSD4KboKmorWsuLFmSEUitvC+zJ4oY
-         szuQ==
-X-Gm-Message-State: AOAM530HJ5v6kN66Khtp5vwnQLqSa1CfvO7hCVW9Uiepafr00x3e+6YR
-        Rg7anobSjbfQiVjOOWH5zLzpXQ==
-X-Google-Smtp-Source: ABdhPJyK0PoihFW7RTF2RV8HvlSOdVmlcwoNy9qQhrwRkZuUAJdzDjDrDhwjS6SOqL9t7C0crwi//g==
-X-Received: by 2002:a17:902:8e8c:b029:cf:85ab:8d4f with SMTP id bg12-20020a1709028e8cb02900cf85ab8d4fmr1133058plb.2.1598955149584;
-        Tue, 01 Sep 2020 03:12:29 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id u2sm1038048pjj.57.2020.09.01.03.12.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Sep 2020 03:12:28 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 15:42:21 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     ulf.hansson@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        bh=giRtIzkTWnj/UGp/V4sDByGnQWeXY4LNtuNjTm7i638=;
+        b=tIF3akDDi9JlIxSblDTP2OIbFpuVer05B1L0aL+123HXdzYZ88MJZb8obhD6xuZDYB
+         Aiwtyo+bG3rz76xhSrZDxaGBhCmcg9TPuW0U1Qq8ZyJ6HjjlobU/t5KhaTTf9yK07SgV
+         ZGb+WKKUqoBxpqvTd8kkFfdnGxfM/y+FW5zqjuZXvHtgM1eLM5oue6ihzONhq7wec/0g
+         57MemXZUAtu+MrVHB12TRhEfBouA6KOo+OQq+mX/TGNRlLgtqdCb+pK2OKJJ9Bs91u2R
+         5Af9fhJ9fLGipeG7xD+U3ER9V0wV9FxxxxQP2qFqhvU6SsvIWwsxYuWrIhWoHhLU1fZS
+         4nqw==
+X-Gm-Message-State: AOAM533ZWgaJUSNHKBx2gRVp1opVz23WtcX6SNB00R6UbHXDCMOghFwx
+        vsa2z6A4gtkee4QB09w47Oo=
+X-Google-Smtp-Source: ABdhPJwK8OxvCf+LETTT3Ik4h2RI46o1x9bZbn8w3PgBgHR26b8+DSaVMTksnsrFbuik4iajwXifkA==
+X-Received: by 2002:adf:9ed1:: with SMTP id b17mr1049306wrf.227.1598955170218;
+        Tue, 01 Sep 2020 03:12:50 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.106])
+        by smtp.googlemail.com with ESMTPSA id h5sm2534234wrc.45.2020.09.01.03.12.47
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 01 Sep 2020 03:12:49 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 12:12:46 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        nks@flawful.org, georgi.djakov@linaro.org,
-        Stephan Gerhold <stephan@gerhold.net>,
-        linux-kernel@vger.kernel.org,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH V2 2/2] cpufreq: dt: Refactor initialization to handle
- probe deferral properly
-Message-ID: <20200901101221.fmjjrmbbzrnqdgos@vireshk-i7>
-References: <24ff92dd1b0ee1b802b45698520f2937418f8094.1598260050.git.viresh.kumar@linaro.org>
- <f75c61f193f396608d592ae2a9938264d582c038.1598260050.git.viresh.kumar@linaro.org>
- <CGME20200901085708eucas1p231ccacd7b41685ece92ee21e3b726f28@eucas1p2.samsung.com>
- <00a87bad-f750-b08c-4ccb-545b90dd87fc@samsung.com>
- <20200901094508.4sgyfv3yj575wlzp@vireshk-i7>
- <383b7a8b-4cbf-d156-d9f0-4990cdde8d43@samsung.com>
+        Mark Brown <broonie@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        alsa-devel@alsa-project.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 07/10] arm64: dts: exynos: Replace deprecated "gpios"
+ i2c-gpio property in Exynos5433
+Message-ID: <20200901101246.GC23793@kozik-lap>
+References: <20200829142501.31478-1-krzk@kernel.org>
+ <20200829142501.31478-7-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <383b7a8b-4cbf-d156-d9f0-4990cdde8d43@samsung.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20200829142501.31478-7-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-09-20, 12:05, Marek Szyprowski wrote:
-> Indeed, this patch seems to fix/hide that warning. Feel free to add:
+On Sat, Aug 29, 2020 at 04:24:58PM +0200, Krzysztof Kozlowski wrote:
+> "gpios" property is deprecated.  Update the Exynos5433 DTS to fix
+> dtbs_checks warnings like:
+> 
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: i2c-gpio-0: 'sda-gpios' is a required property
+>   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: i2c-gpio-0: 'scl-gpios' is a required property
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 4 ++--
 
-s/hide/really-fix/ :)
+Applied.
 
-I assumed that this problem is going to be there, when I applied the
-other patch and so was trying to write a fix but somehow skipped doing
-that :(
+Best regards,
+Krzysztof
 
--- 
-viresh
