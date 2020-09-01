@@ -2,244 +2,134 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D938EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF19C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABABB206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 387B6207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="ilzWpzh4"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="2Hpp2pGP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgIADip (ORCPT
+        id S1726406AbgIADjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 23:38:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
+        Mon, 31 Aug 2020 23:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgIADip (ORCPT
+        with ESMTP id S1726226AbgIADjD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 23:38:45 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D61DBC0612FE
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:38:44 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id w186so8316508qkd.1
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:38:44 -0700 (PDT)
+        Mon, 31 Aug 2020 23:39:03 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE21C061290
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:39:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id b124so1934pfg.13
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:39:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mw8NlkFfB6GU4gKSMkvhDkhv6Y/J4c2nMmzLpuW7yWY=;
-        b=ilzWpzh4bZFtnraPpKilbu4YrEPSZ4dvqt8xPdnx0o/LkVTT7Jk/CYCjvFu5Czd2bH
-         AnZaZhO9rzp+/CymQWy6PTKPj7P0I9PR4uYYSbsEA9E4gVbqAKnFq4nGe1n4oDK9mNNp
-         sgcevFw+5kakaTVgWMm1JeVuJ9pWAfE4HqCUY=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=CmWImjbfkai8w8IYrzWttSFE/ShThoXbvLekJzQkDNE=;
+        b=2Hpp2pGPGoM76EKftl74jbI1jE6i7BkynyJ4YEmKkncEDpi7syFP4I6+fZ40aXoMWP
+         4jHntOowSoOmVOmt3/HKPrWZeu0hPu4w4Xw5l/nPcBhXe8mpT+ekpd6/nvfhlPBvka35
+         bVdb4MsJL2T012kuCrdQLPBK9FQWt2jc38W+VKcfMdwe4fcc1ydnRfEXtPvTTdqB0uz1
+         Roak8DeVTXNH9SdCwuhtN4cW48ZXgHlA4qR1GtjrQO9Zv5qm1FSCvQvlqfL50Xsdkfpp
+         aL6oEfHl4LCfAP/k+ddBM2K88gUh0fwJoqJpZLv8o8PMGJlB2cvgsmslGDup+j6jdPxL
+         mlKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mw8NlkFfB6GU4gKSMkvhDkhv6Y/J4c2nMmzLpuW7yWY=;
-        b=jgiV4mVTl8gMpcaedH2hGfIvKLVFOmUZUfrhtxG7LFNftuvcz5+o5MYKx8X1v+FEXR
-         e6BycgC8alEBGgTRpzDnbAVE6J4xJNbuMMgQ1ieVXQyVKl9H4rd0dnhxAFuRvpUO+AIk
-         yB/uZlpfOynhi6x96QUymDdJJJgU2WpzsER2PS5NVYpaCDwOLKROZwQfC/97tnZGXzbw
-         C6IS6Xuq7WIR3AEy6jMLd2BwepHYLptjFliPQy38vNmNq9mMmUgnHQbCJS6WDn8gy+Vi
-         9sa85Hq2fuP3xGpA0+AnuwBRhpETkpCHcHvMU8sufwPKWcU2uws557sXj9EKoDCfrDQA
-         2PWA==
-X-Gm-Message-State: AOAM531TwB7kiZ6/NbZbrFsgMI2tMoY1f1yUTO8emO9WP+x/hHTneBWp
-        DAUzekivxZ0mi4hou6TyHPPt4g==
-X-Google-Smtp-Source: ABdhPJyWIwd9FS1NRsKkdziSQAYLyU3RsWDmA9/IlWgozQip9E446eMAihRu7HDQUxHTcSwPDTlGjg==
-X-Received: by 2002:a05:620a:22ea:: with SMTP id p10mr4866228qki.408.1598931523988;
-        Mon, 31 Aug 2020 20:38:43 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:cad3:ffff:feb3:bd59])
-        by smtp.gmail.com with ESMTPSA id y24sm12250338qtv.71.2020.08.31.20.38.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 20:38:43 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 23:38:42 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     peterz@infradead.org
-Cc:     Vineeth Pillai <viremana@linux.microsoft.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        mingo@kernel.org, tglx@linutronix.de, pjt@google.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
-        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>
-Subject: Re: [RFC PATCH v7 08/23] sched: Add core wide task selection and
- scheduling.
-Message-ID: <20200901033842.GA1952605@google.com>
-References: <cover.1598643276.git.jdesfossez@digitalocean.com>
- <df3af13cc820a3c2397b85cb7de08cb6a0780e1d.1598643276.git.jdesfossez@digitalocean.com>
- <20200828205154.GB29142@worktop.programming.kicks-ass.net>
- <381e6ea5-a48c-9882-4c0d-49cfa92d21cc@linux.microsoft.com>
- <20200829074719.GJ1362448@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CmWImjbfkai8w8IYrzWttSFE/ShThoXbvLekJzQkDNE=;
+        b=X3EucK/c0umqnKH0U8FBcPtpII9QqIi12E/Pt8bHX/5IsB8A7RvYmP5XjOInq8Rnf/
+         2YeblJ68Zm+NU1LTKZtw2X8quEDzq924zuSWT2XgxXQNBVs+H95zEW9kl5fUjqbt1bS0
+         MO/jKu4bVAlHqTxa7jz6XXoZGMmTaNelqUb0KIUf0jRM5lq5eYeSlYdnrNB4Gye57cr8
+         AzCKZ+1HZ9diNrFS2LFsIuIgq+MLj3foALVHnMFj/XdfQKVfeLvRXMP5yOL5fZ3VYckI
+         oYmhGoxYX9cvfMcvvfZxnRRotNBZtNijgxDVXlY02QkUWAyhD2ADLvS4gPMVafcOJA1N
+         t0mA==
+X-Gm-Message-State: AOAM530tS6r+YnDrc0NsGobiYdLbar9HmBmBaqE+TTiDpNr+fSCkxHKF
+        yeHapkVMVJ/HHxP8TYm3ToJrB0WCrnGv9CVd
+X-Google-Smtp-Source: ABdhPJxwc59YPWeeBw2UNybtTAbxjkWeEOLQHBC6jojvyuHuUAYP7kos/LMRkBGs5mEgIM5IdCOWkw==
+X-Received: by 2002:aa7:8657:: with SMTP id a23mr3953845pfo.169.1598931542218;
+        Mon, 31 Aug 2020 20:39:02 -0700 (PDT)
+Received: from [192.168.1.187] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id o192sm9966704pfg.81.2020.08.31.20.39.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 20:39:01 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in
+ io_sq_wq_submit_work()
+To:     Xin Yin <yinxin_1989@aliyun.com>, viro@zeniv.linux.org.uk
+Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200901015442.44831-1-yinxin_1989@aliyun.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <ae9f3887-5205-8aa8-afa7-4e01d03921bc@kernel.dk>
+Date:   Mon, 31 Aug 2020 21:38:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829074719.GJ1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200901015442.44831-1-yinxin_1989@aliyun.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 09:47:19AM +0200, peterz@infradead.org wrote:
-> On Fri, Aug 28, 2020 at 06:02:25PM -0400, Vineeth Pillai wrote:
-> > On 8/28/20 4:51 PM, Peter Zijlstra wrote:
-> 
-> > > So where do things go side-ways?
-> 
-> > During hotplug stress test, we have noticed that while a sibling is in
-> > pick_next_task, another sibling can go offline or come online. What
-> > we have observed is smt_mask get updated underneath us even if
-> > we hold the lock. From reading the code, looks like we don't hold the
-> > rq lock when the mask is updated. This extra logic was to take care of that.
-> 
-> Sure, the mask is updated async, but _where_ is the actual problem with
-> that?
-> 
-> On Fri, Aug 28, 2020 at 06:23:55PM -0400, Joel Fernandes wrote:
-> > Thanks Vineeth. Peter, also the "v6+" series (which were some addons on v6)
-> > detail the individual hotplug changes squashed into this patch:
-> > https://lore.kernel.org/lkml/20200815031908.1015049-9-joel@joelfernandes.org/
-> > https://lore.kernel.org/lkml/20200815031908.1015049-11-joel@joelfernandes.org/
-> 
-> That one looks fishy, the pick is core wide, making that pick_seq per rq
-> just doesn't make sense.
-> 
-> > https://lore.kernel.org/lkml/20200815031908.1015049-12-joel@joelfernandes.org/
-> 
-> This one reads like tinkering, there is no description of the actual
-> problem just some code that makes a symptom go away.
-> 
-> Sure, on hotplug the smt mask can change, but only for a CPU that isn't
-> actually scheduling, so who cares.
-> 
-> /me re-reads the hotplug code...
-> 
-> ..ooOO is the problem that we clear the cpumasks on take_cpu_down()
-> instead of play_dead() ?! That should be fixable.
+On 8/31/20 7:54 PM, Xin Yin wrote:
+> the commit <1c4404efcf2c0> ("<io_uring: make sure async workqueue
+> is canceled on exit>") caused a crash in io_sq_wq_submit_work().
+> when io_ring-wq get a req form async_list, which may not have been
+> added to task_list. Then try to delete the req from task_list will caused
+> a "NULL pointer dereference".
 
-That is indeed the problem.
+Hmm, do you have a reproducer for this?
 
-I was wondering, is there any harm in just selecting idle task if the CPU
-calling schedule() is missing from cpu_smt_mask? Does it need to do a
-core-wide selection?
+> @@ -2356,9 +2358,11 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+>   * running. We currently only allow this if the new request is sequential
+>   * to the previous one we punted.
+>   */
+> -static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
+> +static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req,
+> +							struct io_ring_ctx *ctx)
+>  {
+>  	bool ret;
+> +	unsigned long flags;
+>  
+>  	if (!list)
+>  		return false;
+> @@ -2378,6 +2382,13 @@ static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
+>  		list_del_init(&req->list);
+>  		ret = false;
+>  	}
+> +
+> +	if (ret) {
+> +		spin_lock_irqsave(&ctx->task_lock, flags);
+> +		list_add(&req->task_list, &ctx->task_list);
+> +		req->work_task = NULL;
+> +		spin_unlock_irqrestore(&ctx->task_lock, flags);
+> +	}
+>  	spin_unlock(&list->lock);
+>  	return ret;
+>  }
+> @@ -2454,7 +2465,7 @@ static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+>  			s->sqe = sqe_copy;
+>  			memcpy(&req->submit, s, sizeof(*s));
+>  			list = io_async_list_from_req(ctx, req);
+> -			if (!io_add_to_prev_work(list, req)) {
+> +			if (!io_add_to_prev_work(list, req, ctx)) {
+>  				if (list)
+>  					atomic_inc(&list->cnt);
+>  				INIT_WORK(&req->work, io_sq_wq_submit_work);
+> 
 
-That would be best, and avoid any unnecessary surgery of the already
-complicated function. This is sort of what Tim was doing in v4 and v5.
+ctx == req->ctx, so you should not need that change.
 
-Also what do we do if cpu_smt_mask changing while this function is running? I
-tried something like the following and it solves the issues but the overhead
-probably really sucks. I was thinking of doing a variation of the below that
-just stored the cpu_smt_mask's rq pointers in an array of size SMTS_PER_CORE
-on the stack, instead of a cpumask but I am not sure if that will keep the
-code clean while still having similar storage overhead.
-
----8<-----------------------
-
-From 5e905e7e620177075a9bcf78fb0dc89a136434bb Mon Sep 17 00:00:00 2001
-From: Joel Fernandes <joelaf@google.com>
-Date: Tue, 30 Jun 2020 19:39:45 -0400
-Subject: [PATCH] Fix CPU hotplug causing crashes in task selection logic
-
-Signed-off-by: Joel Fernandes <joelaf@google.com>
----
- kernel/sched/core.c | 34 ++++++++++++++++++++++++++++------
- 1 file changed, 28 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 0362102fa3d2..47a21013ba0d 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -4464,7 +4464,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- {
- 	struct task_struct *next, *max = NULL;
- 	const struct sched_class *class;
--	const struct cpumask *smt_mask;
-+	struct cpumask select_mask;
- 	int i, j, cpu, occ = 0;
- 	bool need_sync;
- 
-@@ -4499,7 +4499,13 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	finish_prev_task(rq, prev, rf);
- 
- 	cpu = cpu_of(rq);
--	smt_mask = cpu_smt_mask(cpu);
-+	cpumask_copy(&select_mask, cpu_smt_mask(cpu));
-+
-+	/*
-+	 * Always make sure current CPU is added to smt_mask so that below
-+	 * selection logic runs on it.
-+	 */
-+	cpumask_set_cpu(cpu, &select_mask);
- 
- 	/*
- 	 * core->core_task_seq, core->core_pick_seq, rq->core_sched_seq
-@@ -4516,7 +4522,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 
- 	/* reset state */
- 	rq->core->core_cookie = 0UL;
--	for_each_cpu(i, smt_mask) {
-+	for_each_cpu(i, &select_mask) {
- 		struct rq *rq_i = cpu_rq(i);
- 
- 		rq_i->core_pick = NULL;
-@@ -4536,7 +4542,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 	 */
- 	for_each_class(class) {
- again:
--		for_each_cpu_wrap(i, smt_mask, cpu) {
-+		for_each_cpu_wrap(i, &select_mask, cpu) {
- 			struct rq *rq_i = cpu_rq(i);
- 			struct task_struct *p;
- 
-@@ -4600,7 +4608,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
- 				trace_printk("max: %s/%d %lx\n", max->comm, max->pid, max->core_cookie);
- 
- 				if (old_max) {
--					for_each_cpu(j, smt_mask) {
-+					for_each_cpu(j, &select_mask) {
- 						if (j == i)
- 							continue;
- 
-@@ -4625,6 +4633,10 @@ next_class:;
- 
- 	rq->core->core_pick_seq = rq->core->core_task_seq;
- 	next = rq->core_pick;
-+
-+	/* Something should have been selected for current CPU*/
-+	WARN_ON_ONCE(!next);
-+
- 	rq->core_sched_seq = rq->core->core_pick_seq;
- 	trace_printk("picked: %s/%d %lx\n", next->comm, next->pid, next->core_cookie);
- 
-@@ -4636,7 +4648,7 @@ next_class:;
- 	 * their task. This ensures there is no inter-sibling overlap between
- 	 * non-matching user state.
- 	 */
--	for_each_cpu(i, smt_mask) {
-+	for_each_cpu(i, &select_mask) {
- 		struct rq *rq_i = cpu_rq(i);
- 
- 		WARN_ON_ONCE(!rq_i->core_pick);
 -- 
-2.28.0.402.g5ffc5be6b7-goog
+Jens Axboe
 
