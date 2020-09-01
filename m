@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE43C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:12:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99890C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09EE021582
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:12:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710682078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:12:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973147;
-	bh=hHUvp922SWc2IPNph8CU63+DEsuuCprdRe5rKrlA2u8=;
+	s=default; t=1598973156;
+	bh=iN2d1YDRbUxP7JTdhoAffJserCjLl0RYqy9SP0O0Vdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dRCYQaH05LGa89G7LKYjVoIhKudB2YTrEG/wyUi+N1I6hdjgfxjV8+rvJ7opLC2rs
-	 z06k7rDXLUJnk8e4COL0lUq85/gdu0PoALJJvaMdmwyA7KMmaI3CHwLK7hCcibPl11
-	 UAqDtH0NwwDZEENJy5n2bYGUwFnQLNrPMn+n22Rc=
+	b=GPvHJjWC5dHm5cNg+quT0WKu+YomT3lXq9J8XJN5lrJNVZ5IBaclLVoBfw7hY4bul
+	 wevx6Rdcno4r2rb5G/3K3oy69hh7IBgard9G7CvwttNx62Lt3uMLc/6jRZeAL+T33L
+	 aoRFCAYbMOiboEsg3cqDbYXmXqHp/LKpZtaX0eQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbgIAPM0 (ORCPT
+        id S1728751AbgIAPM3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54522 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:12:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728621AbgIAPMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:15 -0400
+        id S1728184AbgIAPM0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14065208CA;
-        Tue,  1 Sep 2020 15:12:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 279992100A;
+        Tue,  1 Sep 2020 15:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973135;
-        bh=hHUvp922SWc2IPNph8CU63+DEsuuCprdRe5rKrlA2u8=;
+        s=default; t=1598973145;
+        bh=iN2d1YDRbUxP7JTdhoAffJserCjLl0RYqy9SP0O0Vdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=idr0BT666SRqbLk6Qc+QhokYEMZO4BmeXDB6Z4eK2oglNTEtXB4InSYTMvBpWESHv
-         dDgFc6hQpIRy1C7v/gkM4UzBqvH2VRQ2dtighPg5EEq57g08XZ2IA1mTWfTm8CU2xq
-         KPDFon2Mp3kIYps3ipKmHkWujWTZkl6JXOv8V/RA=
+        b=AwwpqSWaeMfrwGnoM70hEuCn4HAqEwwyzpStjtGeF0wQBmFUKHxLqmvtFp2VFQu9L
+         MleWNxZzRGoCh0c04QWuujzOt7Uizfu1lc7A0NmUlwnabXo5luoYaafGZwQX9AY6Kr
+         IKO+y4d4Bu/yA5gIeRbqxax0mfGbga6Rk/BZJj5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Reto Schneider <code@reto-schneider.ch>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 20/62] rtlwifi: rtl8192cu: Prevent leaking urb
-Date:   Tue,  1 Sep 2020 17:10:03 +0200
-Message-Id: <20200901150921.748318082@linuxfoundation.org>
+Subject: [PATCH 4.4 06/62] powerpc/pseries: Do not initiate shutdown when system is running on UPS
+Date:   Tue,  1 Sep 2020 17:09:49 +0200
+Message-Id: <20200901150921.033669215@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -60,38 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reto Schneider <code@reto-schneider.ch>
+From: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
 
-[ Upstream commit 03128643eb5453a798db5770952c73dc64fcaf00 ]
+commit 90a9b102eddf6a3f987d15f4454e26a2532c1c98 upstream.
 
-If usb_submit_urb fails the allocated urb should be unanchored and
-released.
+As per PAPR we have to look for both EPOW sensor value and event
+modifier to identify the type of event and take appropriate action.
 
-Signed-off-by: Reto Schneider <code@reto-schneider.ch>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200622132113.14508-3-code@reto-schneider.ch
+In LoPAPR v1.1 section 10.2.2 includes table 136 "EPOW Action Codes":
+
+  SYSTEM_SHUTDOWN 3
+
+  The system must be shut down. An EPOW-aware OS logs the EPOW error
+  log information, then schedules the system to be shut down to begin
+  after an OS defined delay internal (default is 10 minutes.)
+
+Then in section 10.3.2.2.8 there is table 146 "Platform Event Log
+Format, Version 6, EPOW Section", which includes the "EPOW Event
+Modifier":
+
+  For EPOW sensor value = 3
+  0x01 = Normal system shutdown with no additional delay
+  0x02 = Loss of utility power, system is running on UPS/Battery
+  0x03 = Loss of system critical functions, system should be shutdown
+  0x04 = Ambient temperature too high
+  All other values = reserved
+
+We have a user space tool (rtas_errd) on LPAR to monitor for
+EPOW_SHUTDOWN_ON_UPS. Once it gets an event it initiates shutdown
+after predefined time. It also starts monitoring for any new EPOW
+events. If it receives "Power restored" event before predefined time
+it will cancel the shutdown. Otherwise after predefined time it will
+shutdown the system.
+
+Commit 79872e35469b ("powerpc/pseries: All events of
+EPOW_SYSTEM_SHUTDOWN must initiate shutdown") changed our handling of
+the "on UPS/Battery" case, to immediately shutdown the system. This
+breaks existing setups that rely on the userspace tool to delay
+shutdown and let the system run on the UPS.
+
+Fixes: 79872e35469b ("powerpc/pseries: All events of EPOW_SYSTEM_SHUTDOWN must initiate shutdown")
+Cc: stable@vger.kernel.org # v4.0+
+Signed-off-by: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
+[mpe: Massage change log and add PAPR references]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200820061844.306460-1-hegdevasant@linux.vnet.ibm.com
+Signed-off-by: Vasant Hegde <hegdevasant@linux.vnet.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/ras.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 9408c1f8e3977..f01ef8ecfaf39 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -755,8 +755,11 @@ static int _rtl_usb_receive(struct ieee80211_hw *hw)
+diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+index 9e817c1b78087..1fa8e492ce27d 100644
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -90,7 +90,6 @@ static void handle_system_shutdown(char event_modifier)
+ 		pr_emerg("Loss of power reported by firmware, system is "
+ 			"running on UPS/battery");
+ 		pr_emerg("Check RTAS error log for details");
+-		orderly_poweroff(true);
+ 		break;
  
- 		usb_anchor_urb(urb, &rtlusb->rx_submitted);
- 		err = usb_submit_urb(urb, GFP_KERNEL);
--		if (err)
-+		if (err) {
-+			usb_unanchor_urb(urb);
-+			usb_free_urb(urb);
- 			goto err_out;
-+		}
- 		usb_free_urb(urb);
- 	}
- 	return 0;
+ 	case EPOW_SHUTDOWN_LOSS_OF_CRITICAL_FUNCTIONS:
 -- 
 2.25.1
 
