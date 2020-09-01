@@ -2,148 +2,119 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FD6C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB898C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70EB9206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 881DD206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598948215;
-	bh=nq//5mbCIbFadVRxS0ddgBioz/GjnGJSQmJETqu5qRg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=G+E/Jq10pR/4p6rlrR0EraMU0jBdkDn6LzSO6YcjVyl8i82TH2/ttfey/bxS61pce
-	 Zzrv2vgpUuXgEXPnw0B0E9DFbyCaOUicSIIotX467IiiZ8lYiG9WDsG14/P6Ed8We3
-	 og9Aul05Z1ugK7DroscJaMOMpI6F8zobBQD4HIPY=
+	s=default; t=1598948267;
+	bh=rdISuijoV73lvWE9OMZrJ/NR+PxcP29W+Ynjt7uSUDY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=M9Ir3YxY/KLL0tHjJOvviOsW+ar9AO/5tcqoTzkFwwc1RwCBKCqV1I8mrjPr9TKtN
+	 BkxGWi9Eee+QZ5d+V3mDigJzcWPVW3qBYn6GebU3U1HT2+5vCViW3HNpVseyiSpAqB
+	 wY+7KiIm3FN925qRnGG3T+s/888sJFYwwBQ4T99Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbgIAIQx (ORCPT
+        id S1726512AbgIAIRq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:16:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgIAIQw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:16:52 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017F8C061244;
-        Tue,  1 Sep 2020 01:16:51 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c8so574692edv.5;
-        Tue, 01 Sep 2020 01:16:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=swNovB3+fcrt09IBXHVDolTV6/eIXMyoTVYnepRz3fU=;
-        b=pABpQ7tZu55e1f7KIWPfqDj7rsSVuHqj7SJd/BNyJtUBlGl3fCXeatZv2VT0Jd7GMy
-         CRWI47ko52llmTPN8DSc/qdPwBoeMA0kOw7DyMGgCxAkIFd6Da80nZoAGw17JUz/x6MT
-         gEp/23jWYkPvQGV8ouufw/AZF9MYGxg1UBsX0uZImngKkWcDopJtQJ31oT+y2oO6bhsM
-         EPbyUx3Go/apQcYolTzEse8P/AnQM2q8YWBROfWcWpGuuRT0kncwn2ORUu1OGGaK4IfZ
-         0Ky33sQw/xRKFZjyGNb4ePn/yWz/Digj/WlMevz33aRyx4Q+lqjX4Qx8xt6C+V+qE7Jw
-         0azg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=swNovB3+fcrt09IBXHVDolTV6/eIXMyoTVYnepRz3fU=;
-        b=EQ96BH/ZVLgRZBmrq7fNXQXDkZ5z75NrzuXy2a3gSuztAPdj7/G+9QXowatIN7jK28
-         i6EvRaSr7CLFOfmbnj8Xzck8fV5J4OpkGyWACTsCTwRHrelijOvAdNGxpnKaaFrtreck
-         1O/GH2An3CR2vpVstjdNE39ZKobura9V5A9/IbKIyx6JJmd/IXU7ZTSmQ61uW/0HjA+V
-         vhalr5sF8BuQoq6APoAiKmYjxdxwyl3jYGDeFG59relYgxfQqKWOVuYXJyfaAkd9OTIY
-         A/w6MlIBSb9Qc2Q5KNPXeblipftCPg8jNIwQ7SiINcLRIEoAX63EO6dc+7ESOtGduESA
-         mM1A==
-X-Gm-Message-State: AOAM530Y2jFYXBkbg5e0XitaxR5oIXGOtDvNggJkm2N3Zw82qDAy7iMI
-        h7FptDurSsMzuIn4Rd/Fpvc=
-X-Google-Smtp-Source: ABdhPJx2ptuL7kkygWDLtZF4JRxA4A4z1gr2neF5/3bsbYzIVwapfuJUGyH19AxYNzkhui1xtmfaiw==
-X-Received: by 2002:a50:d942:: with SMTP id u2mr802309edj.0.1598948210504;
-        Tue, 01 Sep 2020 01:16:50 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id k10sm507731ejj.108.2020.09.01.01.16.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 01:16:49 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 10:16:47 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/29] Warn on orphan section placement
-Message-ID: <20200901081647.GB3602433@gmail.com>
-References: <20200821194310.3089815-1-keescook@chromium.org>
- <202008311240.9F94A39@keescook>
- <20200901071133.GA3577996@gmail.com>
- <20200901075937.GA3602433@gmail.com>
+        Tue, 1 Sep 2020 04:17:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725949AbgIAIRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:17:43 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9A8E206CD;
+        Tue,  1 Sep 2020 08:17:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598948263;
+        bh=rdISuijoV73lvWE9OMZrJ/NR+PxcP29W+Ynjt7uSUDY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fdDxtMmbaV42htBPIYMNGIp0bvMTvIcIg71AcO6nFg2Jay3ZIka/yM0pa7Bz2PEkx
+         YBcLGE6KsHctQnEWAPdnP20aUFWmbIeqorKsyTvOt02pUrCiMzt3YQqg5ODbc7EgJZ
+         rJGsunFDmnFCYYD8EL3m0BIJ2bxt+eIv3v6TD0IY=
+Received: by mail-ej1-f50.google.com with SMTP id z22so384400ejl.7;
+        Tue, 01 Sep 2020 01:17:42 -0700 (PDT)
+X-Gm-Message-State: AOAM533GVnVAt4DWvTF8oOUccLv5EID+hu5LvDEMiXBnp650CZWd/MqJ
+        +Wv/Ge7jnBG1rjRoqZpr0vzZ8x73Xf6nU3AjmVU=
+X-Google-Smtp-Source: ABdhPJyzrmg/Kw1aCmZCJ4oQuuaPApfCpNq6koAmkTtNb2EOzNn5NbjqUfBMBNbWpRwdhvxDjmQgZvkdwnlWEh3r6MY=
+X-Received: by 2002:a17:906:8401:: with SMTP id n1mr431626ejx.215.1598948261432;
+ Tue, 01 Sep 2020 01:17:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901075937.GA3602433@gmail.com>
+References: <20200901075417.22481-1-krzk@kernel.org> <CGME20200901075518eucas1p252ef2b85cf5e1a83d88f8de2dd4a8196@eucas1p2.samsung.com>
+ <20200901075417.22481-12-krzk@kernel.org> <800d8fa8-7fd4-6221-f8be-ef422e5642d9@samsung.com>
+In-Reply-To: <800d8fa8-7fd4-6221-f8be-ef422e5642d9@samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 1 Sep 2020 10:17:30 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPd+Mr0c7ype1KTseBc2=qx0NNKKj5Ku0w0HBOgjEsGvKg@mail.gmail.com>
+Message-ID: <CAJKOXPd+Mr0c7ype1KTseBc2=qx0NNKKj5Ku0w0HBOgjEsGvKg@mail.gmail.com>
+Subject: Re: [PATCH 11/13] ARM: dts: exynos: Silence SATA PHY warning in
+ Exynos5250 Arndale
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 1 Sep 2020 at 10:13, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+>
+> Hi Krzysztof,
+>
+> On 01.09.2020 09:54, Krzysztof Kozlowski wrote:
+> > The SATA PHY in Exynos5250 SoCs has two interfaces and two device nodes:
+> > 1. sata-phy@12170000
+> > 2. i2c-9/i2c@38
+> >
+> > The first node represents the actual SATA PHY device with phy-cells.
+> > The second represents additional I2C interface, needed by the driver
+> > to communicate with the SATA PHY device.  It is not a PHY-provider in
+> > the terms of dtschema so rename it to silence dtbs_check warning:
+> >
+> >    arch/arm/boot/dts/exynos5250-arndale.dt.yaml: sata-phy@38: '#phy-cells' is a required property
+> >      From schema: lib/python3.6/site-packages/dtschema/schemas/phy/phy-provider.yaml
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >   arch/arm/boot/dts/exynos5250-arndale.dts | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+> > index f2bcce167b2d..3c401c82905c 100644
+> > --- a/arch/arm/boot/dts/exynos5250-arndale.dts
+> > +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+> > @@ -544,7 +544,7 @@
+> >       samsung,i2c-max-bus-freq = <40000>;
+> >       samsung,i2c-slave-addr = <0x38>;
+> >
+> > -     sata_phy_i2c: sata-phy@38 {
+> > +     sata_phy_i2c: sata-phy-i2c@38 {
+> >               compatible = "samsung,exynos-sataphy-i2c";
+> >               reg = <0x38>;
+> >       };
+>
+> I'm not against the rename, but frankly, the above node and all i2c
+> parameters should be moved to exynos5250.dtsi. This is a SoC internal
+> things (the same way as hdmiphy in exynos4.dtsi), so the board dts
+> should only contain information like status = "enabled" for i2c_8 and
+> hdmi_i2c_phy nodes. No need to duplicate it here and in smdk5250.dts.
 
-* Ingo Molnar <mingo@kernel.org> wrote:
+Good point, the I2C bus used here is an internal part of SoC.
 
-> 
-> * Ingo Molnar <mingo@kernel.org> wrote:
-> 
-> > 
-> > * Kees Cook <keescook@chromium.org> wrote:
-> > 
-> > > On Fri, Aug 21, 2020 at 12:42:41PM -0700, Kees Cook wrote:
-> > > > Hi Ingo,
-> > > > 
-> > > > Based on my testing, this is ready to go. I've reviewed the feedback on
-> > > > v5 and made a few small changes, noted below.
-> > > 
-> > > If no one objects, I'll pop this into my tree for -next. I'd prefer it
-> > > go via -tip though! :)
-> > > 
-> > > Thanks!
-> > 
-> > I'll pick it up today, it all looks very good now!
-> 
-> One thing I found in testing is that it doesn't handler older LD 
-> versions well enough:
-> 
->   ld: unrecognized option '--orphan-handling=warn'
-> 
-> Could we just detect the availability of this flag, and emit a warning 
-> if it doesn't exist but otherwise not abort the build?
-> 
-> This is with:
-> 
->   GNU ld version 2.25-17.fc23
+I will squash these two changes into a new one. Thanks for the review!
 
-I've resolved this for now by not applying the 5 patches that add the 
-actual orphan section warnings:
-
-  arm64/build: Warn on orphan section placement
-  arm/build: Warn on orphan section placement
-  arm/boot: Warn on orphan section placement
-  x86/build: Warn on orphan section placement
-  x86/boot/compressed: Warn on orphan section placement
-
-The new asserts plus the actual fixes/enhancements are enough changes 
-to test for now in any case. :-)
-
-Thanks,
-
-	Ingo
+Best regards,
+Krzysztof
