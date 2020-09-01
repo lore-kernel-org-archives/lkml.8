@@ -2,64 +2,68 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,
+	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A50C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C1CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAD72145D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5DD120E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="rVVSYY3/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="vXbvBt0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgIAAXd (ORCPT
+        id S1726386AbgIAAXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 20:23:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55446 "EHLO
+        Mon, 31 Aug 2020 20:23:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55460 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgIAAXc (ORCPT
+        with ESMTP id S1726192AbgIAAXg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 20:23:32 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7587CC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:32 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id o16so179967ybe.8
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:32 -0700 (PDT)
+        Mon, 31 Aug 2020 20:23:36 -0400
+Received: from mail-qt1-x84a.google.com (mail-qt1-x84a.google.com [IPv6:2607:f8b0:4864:20::84a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEF8C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:36 -0700 (PDT)
+Received: by mail-qt1-x84a.google.com with SMTP id w1so7332740qto.4
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=NEi5SY5avnbdRDKWM6EkMbB9CYf2qgLLnorTM1MWHus=;
-        b=rVVSYY3/7bGkSisltWS7LTEuDoxZTUtYDTG6fiC1A2JdGxyVJcz25weD53cbc7nbhw
-         COqtL/ji6xKg+PjkWLuv2xh+LODFH2E4Q6oMlPn7I3ebDC3xVw7+rtqfV4WhK7aAekxx
-         OpN2iroTjKwbjk/7Eopfs8qqP/fSPd22wCzsUYRNN8BjGdWFTxRG5Ge3b3qJ2mbWTKwn
-         c2prJuXrfHRZP0f5v+N8WkC0rEw+0wAvh2n6M/HEYJdqVQd4noDC0yyMENwDVg1miLPU
-         YoEZWfqeykUK9//6AIRnoHLp2rak/P0mrVNYC4pFDP+ASatFXQiFIoigTQNlgodHlWPK
-         QGZg==
+        h=sender:date:in-reply-to:message-id:mime-version:references:subject
+         :from:to:cc;
+        bh=OpCRtcsPpFRLic5hvjC2zaEKYM15+afAD1UpP9e19yY=;
+        b=vXbvBt0ydWJpSbrePzJiwyZF3yTIoFQqhrG+f71LvHy1hBFePv6+9A0LM2YOL/J1pH
+         UenXtaEO3Swyb6owdtq+v60ovlxyeuGW63KCw9s7UshgzIGFDweCmb93nVehvu09zoj7
+         9vW+O4MLF9sHxq/G2EHutXhyTN9ARP4A1dhnm1cOT+wCb9VixqmN9Te8L17J8QGj3WzY
+         Ts1u9PaCBq8evxOj696mLzImp6zv3GN9xylZzOpLnZ1ZekH9W+BcOIR9j6CNCoWeNXfW
+         sd4E11kGHUHuZUqqYUPuRcsfXDD4sf6fwa/58oTH9CaY0OppljOHfSny2ohj0+7kbKb4
+         jruQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=NEi5SY5avnbdRDKWM6EkMbB9CYf2qgLLnorTM1MWHus=;
-        b=REm5JiHplpIkZONjSl1hsMnmDWYMCUuD8+kzl5kvPrMjoFaIrZIO8bLhEHRnJzCCIe
-         BfPMauew6y8ruxpIumY/S9CPZhQdonxj6obntUKpKEGo3BwVcp7FaraxQk9G5moHBLB9
-         eRhCdy3SJN2hLzWov75yOBEqn+DpSXA8FGNgbijIU7ownwnk8FHz7Gm0ESY3+Ccd/BDF
-         20AaULxVgkVbAuYqPSEVYdR1Eavayu7K2e0B4kxkuPc5bjRlaF1s5R3tjvIp0f621zJ7
-         A40U4jSfFAKvRYIr1RaChdCBYmqjVaHSkHMa9XGZ04X9/uCY7vYT2oQH/0cMAzQZwBAx
-         aaUw==
-X-Gm-Message-State: AOAM533UjMcFMFPpnRr9ObuRKCXD9kriETsT4cYgN1umQ0pEfvqzY2Ee
-        11iRMVgjtkq9ZIyFsxbIZ3/KlMwiFNEDPzGSJXc=
-X-Google-Smtp-Source: ABdhPJw5hScYOdiK6tdHyX+jSfRjvP8SrGOXGcVVoZitQU5liu210XuiGzC84PRxVEmbKYHp0iot1a0E52po9gC5FCI=
+        h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=OpCRtcsPpFRLic5hvjC2zaEKYM15+afAD1UpP9e19yY=;
+        b=oX7IX737XI39DfctHwEX8Rvxatwhlny8kWjN7kKirr6FF98GWpLpd85YvR3kbUjQj1
+         3JUgAmqsrSEWCm1I+SX5186crzXoFUDKbc8AbMhYIP4qStN9qtMVTsy6Mn9ZoW++Gwn2
+         Z/JiBNQjznGFmnsTvC1exSfRF5h1N5ZiDBjckrUIX1Mk1y99EpM1B33XwYlc1L5HYSVn
+         CrW9RvTlbG21oqGNswvoTrYUbq0Bu70A3vB1kCSqTzUZEHfIhEjFPGj+Q3e6VnSLRk8e
+         VTMbHjshmY3Q/+YbLlac6bW391uoytH60ArTtKqFosvMMgyRNVTtJFuPFmuW+DCrpIiz
+         BYgg==
+X-Gm-Message-State: AOAM5314DlREynmZxpkYRuxLw4SET/mzKPtyFPmHDP7dCM5Mpgou37lp
+        CQO2qudeLSqSRLWze/eQxJdqLwGgaT8eiblWLb8=
+X-Google-Smtp-Source: ABdhPJzmB9zUGYUYDfr5ruRvfjynhXPf5vtI696h1nnKit+Ix1PRIw2niAYqN5275XDAgcB2xOsAo/RhfHQwLmqkv+A=
 X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a25:32c7:: with SMTP id
- y190mr6412975yby.441.1598919811518; Mon, 31 Aug 2020 17:23:31 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 17:23:19 -0700
-Message-Id: <20200901002326.1137289-1-ndesaulniers@google.com>
+ (user=ndesaulniers job=sendgmr) by 2002:a0c:a789:: with SMTP id
+ v9mr923919qva.2.1598919815516; Mon, 31 Aug 2020 17:23:35 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 17:23:21 -0700
+In-Reply-To: <20200901002326.1137289-1-ndesaulniers@google.com>
+Message-Id: <20200901002326.1137289-3-ndesaulniers@google.com>
 Mime-Version: 1.0
+References: <20200901002326.1137289-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH v2 0/7] set clang minimum version to 10.0.1
+Subject: [PATCH v2 2/7] Revert "kbuild: disable clang's default use of -fmerge-all-constants"
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -82,40 +86,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adds a compile time #error to compiler-clang.h setting the effective
-minimum supported version to clang 10.0.1. A separate patch has already
-been picked up into the Documentation/ tree also confirming the version.
+This reverts commit 87e0d4f0f37fb0c8c4aeeac46fff5e957738df79.
 
-Next are a series of reverts. One for 32b arm is a partial revert.
+This was fixed in clang-6; the minimum supported version of clang in the
+kernel is clang-10 (10.0.1).
 
-Then Marco suggested fixes to KASAN docs.
+Link: https://reviews.llvm.org/rL329300.
+Link: https://github.com/ClangBuiltLinux/linux/issues/9
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ Makefile | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-Finally, improve the warning for GCC too as per Kees.
-
-Patches after 001 are new for v2.
-
-Marco Elver (1):
-  kasan: Remove mentions of unsupported Clang versions
-
-Nick Desaulniers (6):
-  compiler-clang: add build check for clang 10.0.1
-  Revert "kbuild: disable clang's default use of -fmerge-all-constants"
-  Revert "arm64: bti: Require clang >= 10.0.1 for in-kernel BTI support"
-  Revert "arm64: vdso: Fix compilation with clang older than 8"
-  Partial revert "ARM: 8905/1: Emit __gnu_mcount_nc when using Clang
-    10.0.0 or newer"
-  compiler-gcc: improve version warning
-
- Documentation/dev-tools/kasan.rst | 4 ++--
- Makefile                          | 9 ---------
- arch/arm/Kconfig                  | 2 +-
- arch/arm64/Kconfig                | 2 --
- arch/arm64/kernel/vdso/Makefile   | 7 -------
- include/linux/compiler-clang.h    | 8 ++++++++
- include/linux/compiler-gcc.h      | 2 +-
- lib/Kconfig.kasan                 | 9 ++++-----
- 8 files changed, 16 insertions(+), 27 deletions(-)
-
+diff --git a/Makefile b/Makefile
+index 37739ee53f27..144ac6a073ff 100644
+--- a/Makefile
++++ b/Makefile
+@@ -932,15 +932,6 @@ KBUILD_CFLAGS += $(call cc-disable-warning, maybe-uninitialized)
+ # disable invalid "can't wrap" optimizations for signed / pointers
+ KBUILD_CFLAGS	+= $(call cc-option,-fno-strict-overflow)
+ 
+-# clang sets -fmerge-all-constants by default as optimization, but this
+-# is non-conforming behavior for C and in fact breaks the kernel, so we
+-# need to disable it here generally.
+-KBUILD_CFLAGS	+= $(call cc-option,-fno-merge-all-constants)
+-
+-# for gcc -fno-merge-all-constants disables everything, but it is fine
+-# to have actual conforming behavior enabled.
+-KBUILD_CFLAGS	+= $(call cc-option,-fmerge-constants)
+-
+ # Make sure -fstack-check isn't enabled (like gentoo apparently did)
+ KBUILD_CFLAGS  += $(call cc-option,-fno-stack-check,)
+ 
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
