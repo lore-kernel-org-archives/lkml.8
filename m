@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9957AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FB1C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 660172087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E5F2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978240;
-	bh=R0XxSbfrLVwICHrnsH7Xar5Vs4cETwab++Aw5zZAgJM=;
+	s=default; t=1598978245;
+	bh=mOU3NR/dQoWacFNw89Jy8hh0E8aprv9aZa+5xdqmEYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+NZOW+yf+OJ56KoFZEIXS0Qx8PbCldiFIX5sXEwDZ3Xrwh8zKzizjoxpuCLH+yNg
-	 zPS3kydPKm8Ba9uzEjcCNX64+q6ukdxRsV/BlB7mXajjyfcjLGzdwFSLi+SWcGR7Ov
-	 6AXfXgxeUZuuejOogUBFOJxMePEOBaOtBodAyyG4=
+	b=ytTB1Oss2FdLYPsTekRDINdtxM/VDBnIUw8I8Xh1H1DmR5g3/nHtamSmgsMk349Pu
+	 OkhjX7gc/WzdJ5SAyoHu38N611cquTSvmPMBDqkSlLH/Y/tg/yI3XJNFM3LyK6Rlkm
+	 /R3N2RoNmOJNeyseO9aRKJYABxOGDQAaBMsbpXQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732124AbgIAQhR (ORCPT
+        id S1732142AbgIAQhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:37:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:37:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730529AbgIAP3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:23 -0400
+        id S1730070AbgIAP3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:17 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CC952078B;
-        Tue,  1 Sep 2020 15:29:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CC231207D3;
+        Tue,  1 Sep 2020 15:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974162;
-        bh=R0XxSbfrLVwICHrnsH7Xar5Vs4cETwab++Aw5zZAgJM=;
+        s=default; t=1598974157;
+        bh=mOU3NR/dQoWacFNw89Jy8hh0E8aprv9aZa+5xdqmEYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pi9QFiI3k73Q8kcAIw3SGQs6c+igEu/AaPnbYg8GsfAh6VzxqB1ZE6zlSTUzOoPZ7
-         Mpx1MvrJmlo+XZoYHY611Nd47WUodtH0mwreGA4e0DX4CBdZ/pfCvgcgJIPBEN/rui
-         /9tXKBPp1mlKDJ4uyNAB9ZNb7UBG6XGORaR7j+sE=
+        b=B1JO5s2/o7NlagWp1FNAS9P9m/S9H8ByNdkcXMwM8pJJtowkcnVkJsW7b5G457hFI
+         vhXC7Tt0aJXFRRO9hrjstP8eCvUjNcdMwgbTub9+8xGRKJMh45Hr19fIjN9tE6HPYH
+         SZonCmp+0aI78Idq8GwdbATePiZdUM0XxfHcV2YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qais Yousef <qais.yousef@arm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        stable@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 069/214] sched/uclamp: Fix a deadlock when enabling uclamp static key
-Date:   Tue,  1 Sep 2020 17:09:09 +0200
-Message-Id: <20200901150956.280896723@linuxfoundation.org>
+Subject: [PATCH 5.4 026/214] mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
+Date:   Tue,  1 Sep 2020 17:08:26 +0200
+Message-Id: <20200901150954.222820518@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,60 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit e65855a52b479f98674998cb23b21ef5a8144b04 ]
+[ Upstream commit bb7fcad48d3804d814b97c785514e2d1657e157f ]
 
-The following splat was caught when setting uclamp value of a task:
+Intel Tiger Lake PCH-H has the same LPSS than Intel Broxton.
+Add the new IDs to the list of supported devices.
 
-  BUG: sleeping function called from invalid context at ./include/linux/percpu-rwsem.h:49
-
-   cpus_read_lock+0x68/0x130
-   static_key_enable+0x1c/0x38
-   __sched_setscheduler+0x900/0xad8
-
-Fix by ensuring we enable the key outside of the critical section in
-__sched_setscheduler()
-
-Fixes: 46609ce22703 ("sched/uclamp: Protect uclamp fast path code with static key")
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20200716110347.19553-4-qais.yousef@arm.com
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/mfd/intel-lpss-pci.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index a8ab68aa189a9..352239c411a44 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1249,6 +1249,15 @@ static int uclamp_validate(struct task_struct *p,
- 	if (upper_bound > SCHED_CAPACITY_SCALE)
- 		return -EINVAL;
- 
-+	/*
-+	 * We have valid uclamp attributes; make sure uclamp is enabled.
-+	 *
-+	 * We need to do that here, because enabling static branches is a
-+	 * blocking operation which obviously cannot be done while holding
-+	 * scheduler locks.
-+	 */
-+	static_branch_enable(&sched_uclamp_used);
-+
- 	return 0;
- }
- 
-@@ -1279,8 +1288,6 @@ static void __setscheduler_uclamp(struct task_struct *p,
- 	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
- 		return;
- 
--	static_branch_enable(&sched_uclamp_used);
--
- 	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
- 		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
- 			      attr->sched_util_min, true);
+diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
+index bc0f3c22021b7..da91965b8f7b2 100644
+--- a/drivers/mfd/intel-lpss-pci.c
++++ b/drivers/mfd/intel-lpss-pci.c
+@@ -228,6 +228,22 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
+ 	{ PCI_VDEVICE(INTEL, 0x34ea), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x34eb), (kernel_ulong_t)&bxt_i2c_info },
+ 	{ PCI_VDEVICE(INTEL, 0x34fb), (kernel_ulong_t)&spt_info },
++	/* TGL-H */
++	{ PCI_VDEVICE(INTEL, 0x43a7), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43a8), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43a9), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43aa), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43ab), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43ad), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43ae), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43d8), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43da), (kernel_ulong_t)&bxt_uart_info },
++	{ PCI_VDEVICE(INTEL, 0x43e8), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43e9), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43ea), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43eb), (kernel_ulong_t)&bxt_i2c_info },
++	{ PCI_VDEVICE(INTEL, 0x43fb), (kernel_ulong_t)&bxt_info },
++	{ PCI_VDEVICE(INTEL, 0x43fd), (kernel_ulong_t)&bxt_info },
+ 	/* EHL */
+ 	{ PCI_VDEVICE(INTEL, 0x4b28), (kernel_ulong_t)&bxt_uart_info },
+ 	{ PCI_VDEVICE(INTEL, 0x4b29), (kernel_ulong_t)&bxt_uart_info },
 -- 
 2.25.1
 
