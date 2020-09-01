@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F85C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C34C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 826BC206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C2A2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979677;
-	bh=2297YQ72wvSHkelr4UDDIjRp6NGKDdCCeUUwzrLGmA4=;
+	s=default; t=1598979681;
+	bh=7dZlHiryte/d82dOhmD/hic5KLYyt09ebentkTUUlpg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e2NOC1adHlxb4Az7iTlcVOOS1GE4y/TJfaAdtMj+dgeUMu6SxphHEBpPYGw/TxIIA
-	 CVpG55AZvHB08NWW2TCANrhod0xQnmbZeCIjuMdAzI8zGYnIxiwZeiFT43hnGNa6WA
-	 pDZXCSJHWXpLPs92bZW/H2EpA8TtWhNG3sJFTk70=
+	b=DNDquBhPKRr++gY/p3PBMThOiCqOViJK9NWa4BUgQxOPlT9TXC4OEJFMbY3HIFnkq
+	 /u2ErbSBRRZefYkqStYyKuXO8i8stQ+8iyh6ILu0snFwaouYmxLjKLAw1PP2nruoLl
+	 rF/pJ9X8wWt+GqmgV/SoMTqellQic/q4WSX6WdDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732426AbgIARBN (ORCPT
+        id S1729645AbgIAPVD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:01:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41536 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:21:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbgIAPVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:21:05 -0400
+        id S1729510AbgIAPSs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:48 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D60A8207D3;
-        Tue,  1 Sep 2020 15:21:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAE4920767;
+        Tue,  1 Sep 2020 15:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973664;
-        bh=2297YQ72wvSHkelr4UDDIjRp6NGKDdCCeUUwzrLGmA4=;
+        s=default; t=1598973527;
+        bh=7dZlHiryte/d82dOhmD/hic5KLYyt09ebentkTUUlpg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v6PsFihDt8h6j5lFrwp4+OEQVpc84X2YeZgD5hWFJl62FzBXHuC08QrByoTH7dJra
-         LDQyTE7SD/caLO8kgobKxxklMS2U7bCtoG/CF92h2xD6MnkUq50E5tZLKh5oFIeNh3
-         ssWjXIBuLbwjROSd/R4mE8/mhuQPUJLCyQmu+0no=
+        b=Y0oqia/tpCVEiHNQ0BVMUB53vFvxicNQh4UYop3szOnnLR9fzx7SPS3VFHoK//1EJ
+         lShA8BQGpEE4ubJSO5fX4LEVhVXL/rPYy8QlGqp3/Y244IcdXWlm8AvcJh3s6MU4NY
+         6aE8RYJj/4J/G0Mkvb6uIOHmosniDLiH5x6U+LwA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Berger <stefanb@linux.ibm.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        stable@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 89/91] tpm: Unify the mismatching TPM space buffer sizes
-Date:   Tue,  1 Sep 2020 17:11:03 +0200
-Message-Id: <20200901150932.595852342@linuxfoundation.org>
+Subject: [PATCH 4.14 09/91] arm64: dts: qcom: msm8916: Pull down PDM GPIOs during sleep
+Date:   Tue,  1 Sep 2020 17:09:43 +0200
+Message-Id: <20200901150928.571239256@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,170 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit 6c4e79d99e6f42b79040f1a33cd4018f5425030b ]
+[ Upstream commit e2ee9edc282961783d519c760bbaa20fed4dec38 ]
 
-The size of the buffers for storing context's and sessions can vary from
-arch to arch as PAGE_SIZE can be anything between 4 kB and 256 kB (the
-maximum for PPC64). Define a fixed buffer size set to 16 kB. This should be
-enough for most use with three handles (that is how many we allow at the
-moment). Parametrize the buffer size while doing this, so that it is easier
-to revisit this later on if required.
+The original qcom kernel changed the PDM GPIOs to be pull-down
+during sleep at some point. Reportedly this was done because
+there was some "leakage at PDM outputs during sleep":
 
-Cc: stable@vger.kernel.org
-Reported-by: Stefan Berger <stefanb@linux.ibm.com>
-Fixes: 745b361e989a ("tpm: infrastructure for TPM spaces")
-Reviewed-by: Jerry Snitselaar <jsnitsel@redhat.com>
-Tested-by: Stefan Berger <stefanb@linux.ibm.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+  https://source.codeaurora.org/quic/la/kernel/msm-3.10/commit/?id=0f87e08c1cd3e6484a6f7fb3e74e37340bdcdee0
+
+I cannot say how effective this is, but everything seems to work
+fine with this change so let's apply the same to mainline just
+to be sure.
+
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Link: https://lore.kernel.org/r/20200605185916.318494-3-stephan@gerhold.net
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/tpm/tpm-chip.c   |  9 ++-------
- drivers/char/tpm/tpm.h        |  6 +++++-
- drivers/char/tpm/tpm2-space.c | 26 ++++++++++++++++----------
- drivers/char/tpm/tpmrm-dev.c  |  2 +-
- 4 files changed, 24 insertions(+), 19 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
-index dcf5bb1534955..11ec5c2715a9e 100644
---- a/drivers/char/tpm/tpm-chip.c
-+++ b/drivers/char/tpm/tpm-chip.c
-@@ -247,13 +247,8 @@ struct tpm_chip *tpm_chip_alloc(struct device *pdev,
- 	chip->cdev.owner = THIS_MODULE;
- 	chip->cdevs.owner = THIS_MODULE;
- 
--	chip->work_space.context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!chip->work_space.context_buf) {
--		rc = -ENOMEM;
--		goto out;
--	}
--	chip->work_space.session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
--	if (!chip->work_space.session_buf) {
-+	rc = tpm2_init_space(&chip->work_space, TPM2_SPACE_BUFFER_SIZE);
-+	if (rc) {
- 		rc = -ENOMEM;
- 		goto out;
- 	}
-diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
-index d53d12f3df6d6..019fe80fedd83 100644
---- a/drivers/char/tpm/tpm.h
-+++ b/drivers/char/tpm/tpm.h
-@@ -174,6 +174,7 @@ struct tpm_space {
- 	u8 *context_buf;
- 	u32 session_tbl[3];
- 	u8 *session_buf;
-+	u32 buf_size;
- };
- 
- enum tpm_chip_flags {
-@@ -261,6 +262,9 @@ struct tpm_output_header {
- 
- #define TPM_TAG_RQU_COMMAND 193
- 
-+/* TPM2 specific constants. */
-+#define TPM2_SPACE_BUFFER_SIZE		16384 /* 16 kB */
-+
- struct	stclear_flags_t {
- 	__be16	tag;
- 	u8	deactivated;
-@@ -583,7 +587,7 @@ void tpm2_shutdown(struct tpm_chip *chip, u16 shutdown_type);
- unsigned long tpm2_calc_ordinal_duration(struct tpm_chip *chip, u32 ordinal);
- int tpm2_probe(struct tpm_chip *chip);
- int tpm2_find_cc(struct tpm_chip *chip, u32 cc);
--int tpm2_init_space(struct tpm_space *space);
-+int tpm2_init_space(struct tpm_space *space, unsigned int buf_size);
- void tpm2_del_space(struct tpm_chip *chip, struct tpm_space *space);
- int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u32 cc,
- 		       u8 *cmd);
-diff --git a/drivers/char/tpm/tpm2-space.c b/drivers/char/tpm/tpm2-space.c
-index dabb2ae4e779a..115f0fb32179f 100644
---- a/drivers/char/tpm/tpm2-space.c
-+++ b/drivers/char/tpm/tpm2-space.c
-@@ -44,18 +44,21 @@ static void tpm2_flush_sessions(struct tpm_chip *chip, struct tpm_space *space)
- 	}
- }
- 
--int tpm2_init_space(struct tpm_space *space)
-+int tpm2_init_space(struct tpm_space *space, unsigned int buf_size)
- {
--	space->context_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->context_buf = kzalloc(buf_size, GFP_KERNEL);
- 	if (!space->context_buf)
- 		return -ENOMEM;
- 
--	space->session_buf = kzalloc(PAGE_SIZE, GFP_KERNEL);
-+	space->session_buf = kzalloc(buf_size, GFP_KERNEL);
- 	if (space->session_buf == NULL) {
- 		kfree(space->context_buf);
-+		/* Prevent caller getting a dangling pointer. */
-+		space->context_buf = NULL;
- 		return -ENOMEM;
- 	}
- 
-+	space->buf_size = buf_size;
- 	return 0;
- }
- 
-@@ -278,8 +281,10 @@ int tpm2_prepare_space(struct tpm_chip *chip, struct tpm_space *space, u32 cc,
- 	       sizeof(space->context_tbl));
- 	memcpy(&chip->work_space.session_tbl, &space->session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(chip->work_space.context_buf, space->context_buf, PAGE_SIZE);
--	memcpy(chip->work_space.session_buf, space->session_buf, PAGE_SIZE);
-+	memcpy(chip->work_space.context_buf, space->context_buf,
-+	       space->buf_size);
-+	memcpy(chip->work_space.session_buf, space->session_buf,
-+	       space->buf_size);
- 
- 	rc = tpm2_load_space(chip);
- 	if (rc) {
-@@ -459,7 +464,7 @@ static int tpm2_save_space(struct tpm_chip *chip)
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->context_tbl[i],
--				       space->context_buf, PAGE_SIZE,
-+				       space->context_buf, space->buf_size,
- 				       &offset);
- 		if (rc == -ENOENT) {
- 			space->context_tbl[i] = 0;
-@@ -478,9 +483,8 @@ static int tpm2_save_space(struct tpm_chip *chip)
- 			continue;
- 
- 		rc = tpm2_save_context(chip, space->session_tbl[i],
--				       space->session_buf, PAGE_SIZE,
-+				       space->session_buf, space->buf_size,
- 				       &offset);
--
- 		if (rc == -ENOENT) {
- 			/* handle error saving session, just forget it */
- 			space->session_tbl[i] = 0;
-@@ -526,8 +530,10 @@ int tpm2_commit_space(struct tpm_chip *chip, struct tpm_space *space,
- 	       sizeof(space->context_tbl));
- 	memcpy(&space->session_tbl, &chip->work_space.session_tbl,
- 	       sizeof(space->session_tbl));
--	memcpy(space->context_buf, chip->work_space.context_buf, PAGE_SIZE);
--	memcpy(space->session_buf, chip->work_space.session_buf, PAGE_SIZE);
-+	memcpy(space->context_buf, chip->work_space.context_buf,
-+	       space->buf_size);
-+	memcpy(space->session_buf, chip->work_space.session_buf,
-+	       space->buf_size);
- 
- 	return 0;
- }
-diff --git a/drivers/char/tpm/tpmrm-dev.c b/drivers/char/tpm/tpmrm-dev.c
-index 1a0e97a5da5a4..162fb16243d03 100644
---- a/drivers/char/tpm/tpmrm-dev.c
-+++ b/drivers/char/tpm/tpmrm-dev.c
-@@ -22,7 +22,7 @@ static int tpmrm_open(struct inode *inode, struct file *file)
- 	if (priv == NULL)
- 		return -ENOMEM;
- 
--	rc = tpm2_init_space(&priv->space);
-+	rc = tpm2_init_space(&priv->space, TPM2_SPACE_BUFFER_SIZE);
- 	if (rc) {
- 		kfree(priv);
- 		return -ENOMEM;
+diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+index 69ba1d79bcd5d..b24493ad44b0f 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
+@@ -555,7 +555,7 @@
+ 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
+ 				       "gpio67", "gpio68";
+ 				drive-strength = <2>;
+-				bias-disable;
++				bias-pull-down;
+ 			};
+ 		};
+ 	};
 -- 
 2.25.1
 
