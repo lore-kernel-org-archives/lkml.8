@@ -2,159 +2,85 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A189AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 124FEC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74F212071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5620204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:05:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="BDfhEuri"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727052AbgIAHEN (ORCPT
+        id S1726355AbgIAHFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:04:13 -0400
-Received: from mga01.intel.com ([192.55.52.88]:31873 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgIAHEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:04:11 -0400
-IronPort-SDR: ZMtPtc26BJ17MpnKYf/1RKl5SyDtCW7td/N0GiokmpGeugIH+tkfknZ12NYQH0KwceYhh5F1jY
- uc2kbXMt+Kig==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175163124"
-X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="175163124"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 00:04:09 -0700
-IronPort-SDR: efF1CteDSvGUjeuCqyhMEUNm9cFV4TnP7lq8jUVXOjIXznGnws6g1EdUdV4PMWcoPSQL7jVqCX
- 5ZCmFbREJVsw==
-X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="502140536"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 00:04:06 -0700
-Subject: Re: [LKP] Re: [rcuperf] 4e88ec4a9e:
- UBSAN:division-overflow_in_arch/x86/include/asm/div64.h
-To:     paulmck@kernel.org, kernel test robot <lkp@intel.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
-References: <20200831120122.GH4299@shao2-debian>
- <20200831155037.GZ2855@paulmck-ThinkPad-P72>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <649fd850-602f-7f0d-d286-73a8dd88ad6d@intel.com>
-Date:   Tue, 1 Sep 2020 15:03:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 1 Sep 2020 03:05:55 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:31494 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726044AbgIAHFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:05:54 -0400
+X-UUID: cbe7ac62e7e548e1b23fc4688f1e3c67-20200901
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=VRgBNvTtVHr8xsM0oGrT8CR3Lw13vv4ccslbq+kluY8=;
+        b=BDfhEuriDBR8vybYGb20smjGwe7mGiufoD6fde/Afax25sZ8CF2i3EUUVCr6DlEiDpyg5vJMk9AW7rDh1rG7NwJjJhZx5sRZ7UEjXO19esrtaCw3QYBjLq9YkVXeCYVWNh49MoAk5WKBzMHzqOknquN++oUjpaIy7/YVJ5PZlkk=;
+X-UUID: cbe7ac62e7e548e1b23fc4688f1e3c67-20200901
+Received: from mtkcas11.mediatek.inc [(172.21.101.40)] by mailgw01.mediatek.com
+        (envelope-from <claude.yen@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1165505367; Tue, 01 Sep 2020 15:05:50 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 1 Sep 2020 15:05:47 +0800
+Received: from mtkswgap22.mediatek.inc (172.21.77.33) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 1 Sep 2020 15:05:47 +0800
+From:   Claude Yen <claude.yen@mediatek.com>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
+Subject: [PATCH] PM: s2idle: Introduce syscore callbacks in s2idle flow
+Date:   Tue, 1 Sep 2020 15:04:18 +0800
+Message-ID: <1598943859-21857-1-git-send-email-claude.yen@mediatek.com>
+X-Mailer: git-send-email 1.7.9.5
 MIME-Version: 1.0
-In-Reply-To: <20200831155037.GZ2855@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 8/31/20 11:50 PM, Paul E. McKenney wrote:
-> On Mon, Aug 31, 2020 at 08:01:22PM +0800, kernel test robot wrote:
->> Greeting,
->>
->> FYI, we noticed the following commit (built with gcc-9):
->>
->> commit: 4e88ec4a9eb17527e640b063f79e5b875733eb53 ("rcuperf: Change rcuperf to rcuscale")
->> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
->>
->>
->> in testcase: trinity
->> with following parameters:
->>
->> 	runtime: 300s
->>
->> test-description: Trinity is a linux system call fuzz tester.
->> test-url: http://codemonkey.org.uk/projects/trinity/
->>
->>
->> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
->>
->> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
->>
->>
->> +---------------------------------------------------------+------------+------------+
->> |                                                         | 65bd77f554 | 4e88ec4a9e |
->> +---------------------------------------------------------+------------+------------+
->> | boot_successes                                          | 13         | 0          |
->> | boot_failures                                           | 0          | 14         |
->> | UBSAN:division-overflow_in_arch/x86/include/asm/div64.h | 0          | 14         |
->> | error:#[##]                                             | 0          | 14         |
->> | EIP:main_func.cold                                      | 0          | 14         |
->> | Kernel_panic-not_syncing:Fatal_exception                | 0          | 14         |
->> +---------------------------------------------------------+------------+------------+
->>
->>
->> If you fix the issue, kindly add following tag
->> Reported-by: kernel test robot <lkp@intel.com>
-> Does the patch below fix this for you?
-
-Yes, this patch can fix the issue, and nreaders was adjusted to 1:
-
-[    5.953645] The force parameter has not been set to 1. The Iris 
-poweroff handler will not be installed.
-[   12.546587] rcu-ref-scale: --- Start of test:  verbose=0 shutdown=1 
-holdoff=10 loops=10000 nreaders=-1 nruns=30 readdelay=0
-[   12.561495] ------------[ cut here ]------------
-[   12.562016] ref_scale_init: nreaders = 0, adjusted to 1
-[   12.562601] WARNING: CPU: 0 PID: 1 at kernel/rcu/refscale.c:684 
-ref_scale_init+0x653/0x80
-
-Best Regards,
-Rong Chen
-
->
-> 							Thanx, Paul
->
-> ------------------------------------------------------------------------
->
-> commit d301e320e952e2e604d83d9540e52510b0eb3d94
-> Author: Paul E. McKenney <paulmck@kernel.org>
-> Date:   Thu Aug 27 09:58:19 2020 -0700
->
->      refscale: Bounds-check module parameters
->      
->      The default value for refscale.nreaders is -1, which results in the code
->      setting the value to three-quarters of the number of CPUs.  On single-CPU
->      systems, this results in three-quarters of the value one, which the C
->      language's integer arithmetic rounds to zero.  This in turn results in
->      a divide-by-zero error.
->      
->      This commit therefore adds bounds checking to the refscale module
->      parameters, so that if they are less than one, they are set to the
->      value one.
->      
->      Reported-by: kernel test robot <lkp@intel.com>
->      Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
->
-> diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
-> index 952595c..fb5f20d 100644
-> --- a/kernel/rcu/refscale.c
-> +++ b/kernel/rcu/refscale.c
-> @@ -681,6 +681,12 @@ ref_scale_init(void)
->   	// Reader tasks (default to ~75% of online CPUs).
->   	if (nreaders < 0)
->   		nreaders = (num_online_cpus() >> 1) + (num_online_cpus() >> 2);
-> +	if (WARN_ONCE(loops <= 0, "%s: loops = %ld, adjusted to 1\n", __func__, loops))
-> +		loops = 1;
-> +	if (WARN_ONCE(nreaders <= 0, "%s: nreaders = %d, adjusted to 1\n", __func__, nreaders))
-> +		nreaders = 1;
-> +	if (WARN_ONCE(nruns <= 0, "%s: nruns = %d, adjusted to 1\n", __func__, nruns))
-> +		nruns = 1;
->   	reader_tasks = kcalloc(nreaders, sizeof(reader_tasks[0]),
->   			       GFP_KERNEL);
->   	if (!reader_tasks) {
-> _______________________________________________
-> LKP mailing list -- lkp@lists.01.org
-> To unsubscribe send an email to lkp-leave@lists.01.org
+VGhpcyBzZXJpZXMgYmFzZWQgb24gNS45LXJjMQ0KVGhpcyBwYXRjaCBtYWtlcyBzMmlkbGUgY2Fs
+bCBleGlzdGluZyBzeXNjb3JlIGNhbGxiYWNrcy4gQ3VycmVudGx5LA0Kd2hlbiBzMmlkbGUgaXMg
+c2VsZWN0ZWQgYXMgc3lzdGVtIHN1c3BlbmQgbWV0aG9kLCBjYWxsYmFja3MgaG9va2VkDQpieSBy
+ZWdpc3Rlcl9zeXNjb3JlX29wcygpIHdpbGwgbm90IGJlIHRyaWdnZXJlZC4gVGhpcyBtYXkgaW5k
+dWNlDQp1bmV4cGVjdGVkIHJlc3VsdHMuIA0KDQpGb3IgZXhhbXBsZSwgc2NoZWRfY2xvY2tfc3Vz
+cGVuZCgpIHdhcyBhZGRlZCB0byBzMmlkbGUgZmxvdyBpbg0KY29tbWl0IDNmMjU1MmY3ZTljNSAo
+InRpbWVycy9zY2hlZF9jbG9jazogUHJldmVudCBnZW5lcmljIHNjaGVkX2Nsb2NrDQp3cmFwIGNh
+dXNlZCBieSB0aWNrX2ZyZWV6ZSgpIikgdG8gZml4IGNsb2NrIHdyYXAgcHJvYmxlbS4gSG93ZXZl
+ciwNCnNjaGVkX2Nsb2NrX3N1c3BlbmQoKSBpcyBvcmlnaW5hbGx5IHJlZ2lzdGVyZWQgaW4gc3lz
+Y29yZSBjYWxsYmFjay4NCldpdGggdGhpcyBwYXRjaCwgaWYgYW5vdGhlciBzeXNjb3JlIGNhbGxi
+YWNrIGlzIG5lZWRlZCBpbiBzMmlkbGUsDQphZGRpdGlvbmFsIG1pZ3JhdGlvbiBlZmZvcnQgY291
+bGQgYmUgc2F2ZWQuDQoNCg0KDQoqKiogQkxVUkIgSEVSRSAqKioNCg0KY2xhdWRlLnllbiAoMSk6
+DQogIFBNOiBzMmlkbGU6IEludHJvZHVjZSBzeXNjb3JlIGNhbGxiYWNrcyBpbiBzMmlkbGUgZmxv
+dw0KDQogZHJpdmVycy9jcHVpZGxlL2NwdWlkbGUuYyB8ICAgMzYgKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKystLS0tDQoga2VybmVsL2NwdV9wbS5jICAgICAgICAgICB8ICAgMTcgKysr
+KysrKysrKysrKysrKysNCiBrZXJuZWwvdGltZS90aWNrLWNvbW1vbi5jIHwgICAxNyArKy0tLS0t
+LS0tLS0tLS0tLQ0KIDMgZmlsZXMgY2hhbmdlZCwgNTEgaW5zZXJ0aW9ucygrKSwgMTkgZGVsZXRp
+b25zKC0pDQoNCi0tDQoxLjcuOS41
 
