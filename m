@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43278C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E14B3C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D82E2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E702067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976641;
-	bh=f8pxtx+OyrES5Ep2lPtPO/PT39Gfc/bkyv0MwzHa3LY=;
+	s=default; t=1598976648;
+	bh=oTjC9jfaLqaZgNMzxkpn5Xgk4LZV2PW+EeOGjegi/zA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gyasq7dMsexCitO+7TrqAefCA1TYtviBjtG2Vj/yiXDNbPSpFpeW7VvgCsGck1Ixv
-	 KE26x9h5fOFiwnM6RPVHcZoIb7GD/hWTE3adVmfWU7Jtr3U3s/NzWdgjZDTOlSRkRK
-	 rws2YP8GagDjqjEEXG5LHb12Imu1oghXHzqhSZ+8=
+	b=IJsdNQAMnl7Opwli3nhwTTa6XjE3agv7f1Yc3PRdg/KGanu7tkBit0LjI5fBmeQZu
+	 MqC/Id3AskuhaByiX6ZahS9NgHx/1harwFYJc6wfnpqiMIxwmgLlwFs3fPTn8AbSP4
+	 m6dfOTZmWm7hf8gu3IRcsV1H6Xp+WfTly0j0crl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728047AbgIAQKT (ORCPT
+        id S1731578AbgIAQKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:10:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbgIAPia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:38:30 -0400
+        id S1731391AbgIAPiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F4A421534;
-        Tue,  1 Sep 2020 15:38:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E42220E65;
+        Tue,  1 Sep 2020 15:38:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974710;
-        bh=f8pxtx+OyrES5Ep2lPtPO/PT39Gfc/bkyv0MwzHa3LY=;
+        s=default; t=1598974688;
+        bh=oTjC9jfaLqaZgNMzxkpn5Xgk4LZV2PW+EeOGjegi/zA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJ3A18BU7pSeHzcBgyjhurEQI3X4MxQ3qeUbKR8qXUMAk4belvyF1ommuj9+K/flW
-         +oovJnNgIsevl2ESdczRlyHgfFeh8QOB1qRHYD6y1vlTROp49CoErLN4Y/nInQ0pR6
-         FT6FemsrBswkXeMAxoqZi4V+BJHt0Es0DQgA8feg=
+        b=yl6BC8DZp1TErz3osVJr9xSHxuyTGiQKyn/2O53+D8ETQ7LwLkSHVdahnYXoANRTe
+         JA+yllBT37Jl0y1x4m8zzy+yM5l6WxxTTf2npci+5T1GTXZdSOM7fv/wSwAMTbDmLJ
+         Ywy0Hfi9wS5Lx2hrycgPWCYwgyh5nz5jjCA0eoc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andrey Konovalov <andrey.konovalov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
+        Kees Cook <keescook@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 065/255] media: i2c: imx290: fix reset GPIO pin handling
-Date:   Tue,  1 Sep 2020 17:08:41 +0200
-Message-Id: <20200901151003.842944928@linuxfoundation.org>
+Subject: [PATCH 5.8 016/255] gcc-plugins/stackleak: Dont instrument itself
+Date:   Tue,  1 Sep 2020 17:07:52 +0200
+Message-Id: <20200901151001.568883262@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -63,67 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andrey.konovalov@linaro.org>
+From: Alexander Popov <alex.popov@linux.com>
 
-[ Upstream commit 3909a92d7df622b41b9ceeeea694e641cad7667b ]
+[ Upstream commit 005e696df65d0ff90468ecf38a50aa584dc82421 ]
 
-According to https://www.kernel.org/doc/Documentation/gpio/consumer.txt,
+There is no need to try instrumenting functions in kernel/stackleak.c.
+Otherwise that can cause issues if the cleanup pass of stackleak gcc plugin
+is disabled.
 
-- all of the gpiod_set_value_xxx() functions operate with the *logical*
-value. So in imx290_power_on() the reset signal should be cleared
-(de-asserted) with gpiod_set_value_cansleep(imx290->rst_gpio, 0), and in
-imx290_power_off() the value of 1 must be used to apply/assert the reset
-to the sensor. In the device tree the reset pin is described as
-GPIO_ACTIVE_LOW, and gpiod_set_value_xxx() functions take this into
-account,
-
-- when devm_gpiod_get_optional() is called with GPIOD_ASIS, the GPIO is
-not initialized, and the direction must be set later; using a GPIO
-without setting its direction first is illegal and will result in undefined
-behavior. Fix this by using GPIOD_OUT_HIGH instead of GPIOD_ASIS (this
-asserts the reset signal to the sensor initially).
-
-Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
-Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Alexander Popov <alex.popov@linux.com>
+Link: https://lore.kernel.org/r/20200624123330.83226-2-alex.popov@linux.com
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/i2c/imx290.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
-index f7678e5a5d879..157a0ed0a8856 100644
---- a/drivers/media/i2c/imx290.c
-+++ b/drivers/media/i2c/imx290.c
-@@ -628,7 +628,7 @@ static int imx290_power_on(struct device *dev)
- 	}
+diff --git a/kernel/Makefile b/kernel/Makefile
+index f3218bc5ec69f..155b5380500ad 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -125,6 +125,7 @@ obj-$(CONFIG_WATCH_QUEUE) += watch_queue.o
  
- 	usleep_range(1, 2);
--	gpiod_set_value_cansleep(imx290->rst_gpio, 1);
-+	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
- 	usleep_range(30000, 31000);
+ obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
  
- 	return 0;
-@@ -641,7 +641,7 @@ static int imx290_power_off(struct device *dev)
- 	struct imx290 *imx290 = to_imx290(sd);
- 
- 	clk_disable_unprepare(imx290->xclk);
--	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
-+	gpiod_set_value_cansleep(imx290->rst_gpio, 1);
- 	regulator_bulk_disable(IMX290_NUM_SUPPLIES, imx290->supplies);
- 
- 	return 0;
-@@ -760,7 +760,8 @@ static int imx290_probe(struct i2c_client *client)
- 		goto free_err;
- 	}
- 
--	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
-+	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset",
-+						   GPIOD_OUT_HIGH);
- 	if (IS_ERR(imx290->rst_gpio)) {
- 		dev_err(dev, "Cannot get reset gpio\n");
- 		ret = PTR_ERR(imx290->rst_gpio);
++CFLAGS_stackleak.o += $(DISABLE_STACKLEAK_PLUGIN)
+ obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
+ KASAN_SANITIZE_stackleak.o := n
+ KCSAN_SANITIZE_stackleak.o := n
 -- 
 2.25.1
 
