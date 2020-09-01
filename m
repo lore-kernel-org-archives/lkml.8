@@ -2,213 +2,90 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B34C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B714C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9E0D206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976106;
-	bh=0qKFt4rBMJJe2mXKHEb4MCWoeQnV2O2OwSgCNEIKOr4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R2VQS+cTZuYCpFz7/mKVNGWv/NEJAxGoaSnRcxDo/AdqxT0d/lFZ/eXr514/OJrs0
-	 HxHAPI8+COywpsNPZ2DMIFndYKTGk+rPPH6GYeIM0xSZLqkNOu6FATx5jDJxEo0p9T
-	 ksZgiIoCZzXf0oYH9gptxlwrDj0j2bBa5/mKfh4w=
+	by mail.kernel.org (Postfix) with ESMTP id 1CBD52078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="LMj5tof/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731743AbgIAPn6 (ORCPT
+        id S1731744AbgIAQBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:43:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730624AbgIAPlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:31 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4539D2078B;
-        Tue,  1 Sep 2020 15:41:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974890;
-        bh=0qKFt4rBMJJe2mXKHEb4MCWoeQnV2O2OwSgCNEIKOr4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NFg+LPnjUIazpZV1o7nkvaHUwxA7ZRf6m0E4OJze87Lnhkjls5d3tZ07cX5ncULis
-         oJvF4jDdaSv3luXNTHtntEFL6r4W3ZIjGGrXCZnZPfGaGMNrVoWelxJo4SW/SHjQbs
-         WQ0QqfGsTSBsQgRjFGrAGJu1XkQOc1zbaMcnEpL0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 130/255] tools/bpftool: Fix compilation warnings in 32-bit mode
-Date:   Tue,  1 Sep 2020 17:09:46 +0200
-Message-Id: <20200901151006.946483063@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 12:01:49 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:54170 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728318AbgIAQBo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:01:44 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 081E6hQE059157;
+        Tue, 1 Sep 2020 09:06:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598969203;
+        bh=62zSyAiSYxrZr6Sq8MDkMbOm+Vi5s5UC4OzsZp7L170=;
+        h=From:To:CC:Subject:Date;
+        b=LMj5tof/ylHOp7gwI4tJ2XVui8K3HdCUDDkLCUWZqzm6zeJfOoGMkl/2ZyZJd5HXq
+         JeYrbJsGXA24i0rM7i7VbxLqCk69esuuR1uidVLCbEAxgKla+kb1dzUbeJQKYbzdxr
+         yBE/Sy+jkttyhHy92ZEStpEZs+vmsa0/AZeHLdcw=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 081E6hhZ017677
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Sep 2020 09:06:43 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Sep
+ 2020 09:06:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 1 Sep 2020 09:06:42 -0500
+Received: from a0393678-ssd.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 081E6Zlf034944;
+        Tue, 1 Sep 2020 09:06:36 -0500
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Tero Kristo <t-kristo@ti.com>, Nishanth Menon <nm@ti.com>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [RESEND PATCH 0/2] Add DT to get PCIe working in J721E SoC
+Date:   Tue, 1 Sep 2020 19:36:26 +0530
+Message-ID: <20200901140628.8800-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+Now that J721E PCIe support is merged (including the YAML bindings),
+add PCIe device tree nodes to get PCIe working in J721E SoC both in
+RC mode and EP mode.
 
-[ Upstream commit 09f44b753a7d120becc80213c3459183c8acd26b ]
+Series has been rebased to:
+git://git.kernel.org/pub/scm/linux/kernel/git/nmenon/linux ti-k3-dts-next 
 
-Fix few compilation warnings in bpftool when compiling in 32-bit mode.
-Abstract away u64 to pointer conversion into a helper function.
+No changes from the previous version sent to
+http://lore.kernel.org/r/20200724055604.31498-1-kishon@ti.com
 
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20200813204945.1020225-2-andriin@fb.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/bpf/bpftool/btf_dumper.c |  2 +-
- tools/bpf/bpftool/link.c       |  4 ++--
- tools/bpf/bpftool/main.h       | 10 +++++++++-
- tools/bpf/bpftool/prog.c       | 16 ++++++++--------
- 4 files changed, 20 insertions(+), 12 deletions(-)
+Kishon Vijay Abraham I (2):
+  arm64: dts: ti: k3-j721e-main: Add PCIe device tree nodes
+  arm64: dts: ti: k3-j721e-common-proc-board: Configure the PCIe
+    instances
 
-diff --git a/tools/bpf/bpftool/btf_dumper.c b/tools/bpf/bpftool/btf_dumper.c
-index ede162f83eea0..0e9310727281a 100644
---- a/tools/bpf/bpftool/btf_dumper.c
-+++ b/tools/bpf/bpftool/btf_dumper.c
-@@ -67,7 +67,7 @@ static int dump_prog_id_as_func_ptr(const struct btf_dumper *d,
- 	if (!info->btf_id || !info->nr_func_info ||
- 	    btf__get_from_id(info->btf_id, &prog_btf))
- 		goto print;
--	finfo = (struct bpf_func_info *)info->func_info;
-+	finfo = u64_to_ptr(info->func_info);
- 	func_type = btf__type_by_id(prog_btf, finfo->type_id);
- 	if (!func_type || !btf_is_func(func_type))
- 		goto print;
-diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-index fca57ee8fafe4..dea691c83afca 100644
---- a/tools/bpf/bpftool/link.c
-+++ b/tools/bpf/bpftool/link.c
-@@ -101,7 +101,7 @@ static int show_link_close_json(int fd, struct bpf_link_info *info)
- 	switch (info->type) {
- 	case BPF_LINK_TYPE_RAW_TRACEPOINT:
- 		jsonw_string_field(json_wtr, "tp_name",
--				   (const char *)info->raw_tracepoint.tp_name);
-+				   u64_to_ptr(info->raw_tracepoint.tp_name));
- 		break;
- 	case BPF_LINK_TYPE_TRACING:
- 		err = get_prog_info(info->prog_id, &prog_info);
-@@ -177,7 +177,7 @@ static int show_link_close_plain(int fd, struct bpf_link_info *info)
- 	switch (info->type) {
- 	case BPF_LINK_TYPE_RAW_TRACEPOINT:
- 		printf("\n\ttp '%s'  ",
--		       (const char *)info->raw_tracepoint.tp_name);
-+		       (const char *)u64_to_ptr(info->raw_tracepoint.tp_name));
- 		break;
- 	case BPF_LINK_TYPE_TRACING:
- 		err = get_prog_info(info->prog_id, &prog_info);
-diff --git a/tools/bpf/bpftool/main.h b/tools/bpf/bpftool/main.h
-index 5cdf0bc049bd9..5917484c2e027 100644
---- a/tools/bpf/bpftool/main.h
-+++ b/tools/bpf/bpftool/main.h
-@@ -21,7 +21,15 @@
- /* Make sure we do not use kernel-only integer typedefs */
- #pragma GCC poison u8 u16 u32 u64 s8 s16 s32 s64
- 
--#define ptr_to_u64(ptr)	((__u64)(unsigned long)(ptr))
-+static inline __u64 ptr_to_u64(const void *ptr)
-+{
-+	return (__u64)(unsigned long)ptr;
-+}
-+
-+static inline void *u64_to_ptr(__u64 ptr)
-+{
-+	return (void *)(unsigned long)ptr;
-+}
- 
- #define NEXT_ARG()	({ argc--; argv++; if (argc < 0) usage(); })
- #define NEXT_ARGP()	({ (*argc)--; (*argv)++; if (*argc < 0) usage(); })
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index a5eff83496f2d..2c6f7e160b248 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -537,14 +537,14 @@ prog_dump(struct bpf_prog_info *info, enum dump_mode mode,
- 			p_info("no instructions returned");
- 			return -1;
- 		}
--		buf = (unsigned char *)(info->jited_prog_insns);
-+		buf = u64_to_ptr(info->jited_prog_insns);
- 		member_len = info->jited_prog_len;
- 	} else {	/* DUMP_XLATED */
- 		if (info->xlated_prog_len == 0 || !info->xlated_prog_insns) {
- 			p_err("error retrieving insn dump: kernel.kptr_restrict set?");
- 			return -1;
- 		}
--		buf = (unsigned char *)info->xlated_prog_insns;
-+		buf = u64_to_ptr(info->xlated_prog_insns);
- 		member_len = info->xlated_prog_len;
- 	}
- 
-@@ -553,7 +553,7 @@ prog_dump(struct bpf_prog_info *info, enum dump_mode mode,
- 		return -1;
- 	}
- 
--	func_info = (void *)info->func_info;
-+	func_info = u64_to_ptr(info->func_info);
- 
- 	if (info->nr_line_info) {
- 		prog_linfo = bpf_prog_linfo__new(info);
-@@ -571,7 +571,7 @@ prog_dump(struct bpf_prog_info *info, enum dump_mode mode,
- 
- 		n = write(fd, buf, member_len);
- 		close(fd);
--		if (n != member_len) {
-+		if (n != (ssize_t)member_len) {
- 			p_err("error writing output file: %s",
- 			      n < 0 ? strerror(errno) : "short write");
- 			return -1;
-@@ -601,13 +601,13 @@ prog_dump(struct bpf_prog_info *info, enum dump_mode mode,
- 			__u32 i;
- 			if (info->nr_jited_ksyms) {
- 				kernel_syms_load(&dd);
--				ksyms = (__u64 *) info->jited_ksyms;
-+				ksyms = u64_to_ptr(info->jited_ksyms);
- 			}
- 
- 			if (json_output)
- 				jsonw_start_array(json_wtr);
- 
--			lens = (__u32 *) info->jited_func_lens;
-+			lens = u64_to_ptr(info->jited_func_lens);
- 			for (i = 0; i < info->nr_jited_func_lens; i++) {
- 				if (ksyms) {
- 					sym = kernel_syms_search(&dd, ksyms[i]);
-@@ -668,7 +668,7 @@ prog_dump(struct bpf_prog_info *info, enum dump_mode mode,
- 	} else {
- 		kernel_syms_load(&dd);
- 		dd.nr_jited_ksyms = info->nr_jited_ksyms;
--		dd.jited_ksyms = (__u64 *) info->jited_ksyms;
-+		dd.jited_ksyms = u64_to_ptr(info->jited_ksyms);
- 		dd.btf = btf;
- 		dd.func_info = func_info;
- 		dd.finfo_rec_size = info->func_info_rec_size;
-@@ -1790,7 +1790,7 @@ static char *profile_target_name(int tgt_fd)
- 		goto out;
- 	}
- 
--	func_info = (struct bpf_func_info *)(info_linear->info.func_info);
-+	func_info = u64_to_ptr(info_linear->info.func_info);
- 	t = btf__type_by_id(btf, func_info[0].type_id);
- 	if (!t) {
- 		p_err("btf %d doesn't have type %d",
+ .../dts/ti/k3-j721e-common-proc-board.dts     |  80 +++++++
+ arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 218 ++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-j721e.dtsi          |   5 +-
+ 3 files changed, 302 insertions(+), 1 deletion(-)
+
 -- 
-2.25.1
-
-
+2.17.1
 
