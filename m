@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2165C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5634BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16A52100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241B620684
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974089;
-	bh=0sF2i8X150aJR9s1ThR83KFzBqql1OUgtwul40T7+EY=;
+	s=default; t=1598974131;
+	bh=7vW9pubFJ2lXT/pAXpSXlFiiGmSmzPr2BzVU76xukgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHA1gC7yp45BNyNLMhk3pBKyOsrL2mqAmK3qAJ/TF1oKUmMoD5Tufpm9lJPQe6h8c
-	 DF2Y5yFIybR/c3RMjlFsD6XxZ/H8npb4NGolsiscFVHDHJG/yYNO94/cVxnBSdCxQm
-	 DI60ThlxUeJCndlA8hWMQ9pPJNbf61ucc8fvLNrY=
+	b=S2QJdTpKUC/uqgfOzYWE4F9S/SVuv/846ves+uruEdnb99LNdPqMh9qfhiCAuNmCJ
+	 O3YgUkaHcJusnzwtkpclyUvxYOe48yVnUfJ7RYPat8vF+tpk8mg5KrvNUq1plA067z
+	 Nbod50wEUv+8lRx2Gu6BFEQPXSaPPP/jKlyKzuIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgIAP2G (ORCPT
+        id S1730472AbgIAP2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49116 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729988AbgIAPZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:00 -0400
+        id S1729781AbgIAPZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:25:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F5D2137B;
-        Tue,  1 Sep 2020 15:24:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4851206FA;
+        Tue,  1 Sep 2020 15:25:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973899;
-        bh=0sF2i8X150aJR9s1ThR83KFzBqql1OUgtwul40T7+EY=;
+        s=default; t=1598973922;
+        bh=7vW9pubFJ2lXT/pAXpSXlFiiGmSmzPr2BzVU76xukgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ognpi+EeNs8KjRP/TGPamf7rJOoFyWckovLL+qU2C59p79jkO1bb0bLnSpvp63sgp
-         R8TW+nDzrKvJHEdlOG16rzfQXqp64AT0hyvUwkSOh2l8ocydy/7lPIDvptDUPo1V65
-         RCp/GhN2DAHmQM0uRicxBCSQ19KoY20hLLYnS3ls=
+        b=OF1GcMRcveuex0/zK3txw31U0oci/8UgEt8A+Zsx+HM+eP9AUjl2oMwxCTxZvhZTg
+         6BmOX75cNfWU8tZsdvWAAFhaeRRVPLrevE+SOHhP3nXx6KZoQv7bQrgcl09YlqnxVb
+         xYGLUKK5HhkUAtZcttgxh/9FO3LQDjtKo2HO8nlA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
+        Lee Duncan <lduncan@suse.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 064/125] ext4: handle error of ext4_setup_system_zone() on remount
-Date:   Tue,  1 Sep 2020 17:10:19 +0200
-Message-Id: <20200901150937.714785240@linuxfoundation.org>
+Subject: [PATCH 4.19 070/125] scsi: fcoe: Fix I/O path allocation
+Date:   Tue,  1 Sep 2020 17:10:25 +0200
+Message-Id: <20200901150938.006852549@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -60,37 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Mike Christie <michael.christie@oracle.com>
 
-[ Upstream commit d176b1f62f242ab259ff665a26fbac69db1aecba ]
+[ Upstream commit fa39ab5184d64563cd36f2fb5f0d3fbad83a432c ]
 
-ext4_setup_system_zone() can fail. Handle the failure in ext4_remount().
+ixgbe_fcoe_ddp_setup() can be called from the main I/O path and is called
+with a spin_lock held, so we have to use GFP_ATOMIC allocation instead of
+GFP_KERNEL.
 
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200728130437.7804-2-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/1596831813-9839-1-git-send-email-michael.christie@oracle.com
+cc: Hannes Reinecke <hare@suse.de>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 03ebb0b385467..daabd7a2cee81 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5470,7 +5470,10 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		ext4_register_li_request(sb, first_not_zeroed);
+diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
+index ccd852ad62a4b..d50c5b55da180 100644
+--- a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
++++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
+@@ -192,7 +192,7 @@ static int ixgbe_fcoe_ddp_setup(struct net_device *netdev, u16 xid,
  	}
  
--	ext4_setup_system_zone(sb);
-+	err = ext4_setup_system_zone(sb);
-+	if (err)
-+		goto restore_opts;
-+
- 	if (sbi->s_journal == NULL && !(old_sb_flags & SB_RDONLY)) {
- 		err = ext4_commit_super(sb, 1);
- 		if (err)
+ 	/* alloc the udl from per cpu ddp pool */
+-	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_KERNEL, &ddp->udp);
++	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_ATOMIC, &ddp->udp);
+ 	if (!ddp->udl) {
+ 		e_err(drv, "failed allocated ddp context\n");
+ 		goto out_noddp_unmap;
 -- 
 2.25.1
 
