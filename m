@@ -2,59 +2,116 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7790C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D628C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB319208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCDB20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598980629;
+	bh=MeIYEIZnFslF9KhtWwf+thfT2YN1HWF9AV7ptaxvHD0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b87JamsQZHgvNcu+lMe5ZoHoNMkiI5O6Bjr32x/Gb0r4WqR98R7x4uTc8uZL5wGIo
+	 5au1MjPeZ1wTNcEA6ST4rQb5PCp9A3T9GsPZSrkszNbeWsRNvb93ah5A+0vyUHVvu4
+	 jQIH5WLeGCdMHFVEmsFDi6THPGGfD0KJqSSicxqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731490AbgIARQ4 (ORCPT
+        id S1732597AbgIARRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:16:56 -0400
-Received: from verein.lst.de ([213.95.11.211]:53770 "EHLO verein.lst.de"
+        Tue, 1 Sep 2020 13:17:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57934 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728585AbgIAPOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:23 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 0183E68B05; Tue,  1 Sep 2020 17:14:21 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 17:14:20 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     hch@lst.de, viro@ZenIV.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, willy@infradead.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 1/6] proc: use vmalloc for our kernel buffer
-Message-ID: <20200901151420.GA30709@lst.de>
-References: <20200813210411.905010-1-josef@toxicpanda.com> <20200813210411.905010-2-josef@toxicpanda.com>
+        id S1728253AbgIAPOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:19 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E488120BED;
+        Tue,  1 Sep 2020 15:14:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973259;
+        bh=MeIYEIZnFslF9KhtWwf+thfT2YN1HWF9AV7ptaxvHD0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GeAv4h8t0HDJlis0014SPNeMDeO32lebcY9z9rCOkghPtOA9JajypmauZ/2LBjHIP
+         g6vN0np2yX/bQ/TSU9qZYMgsl9J8SRAl6fE6P9JHsp0epE94wrpph3WyivBMzChwRE
+         7WwOUzfpTfPONajuiLLWJH7hOhqL9tDosf+jD7e8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.4 53/62] device property: Fix the secondary firmware node handling in set_primary_fwnode()
+Date:   Tue,  1 Sep 2020 17:10:36 +0200
+Message-Id: <20200901150923.390825088@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
+References: <20200901150920.697676718@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200813210411.905010-2-josef@toxicpanda.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Aug 13, 2020 at 05:04:06PM -0400, Josef Bacik wrote:
-> Since
-> 
->   sysctl: pass kernel pointers to ->proc_handler
-> 
-> we have been pre-allocating a buffer to copy the data from the proc
-> handlers into, and then copying that to userspace.  The problem is this
-> just blind kmalloc()'s the buffer size passed in from the read, which in
-> the case of our 'cat' binary was 64kib.  Order-4 allocations are not
-> awesome, and since we can potentially allocate up to our maximum order,
-> use vmalloc for these buffers.
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-Maybe the subject should read ".. also use vmalloc" as we still default
-to kmalloc for small allocations?
+commit c15e1bdda4365a5f17cdadf22bf1c1df13884a9e upstream.
 
-Otherwise looks good:
+When the primary firmware node pointer is removed from a
+device (set to NULL) the secondary firmware node pointer,
+when it exists, is made the primary node for the device.
+However, the secondary firmware node pointer of the original
+primary firmware node is never cleared (set to NULL).
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+To avoid situation where the secondary firmware node pointer
+is pointing to a non-existing object, clearing it properly
+when the primary node is removed from a device in
+set_primary_fwnode().
+
+Fixes: 97badf873ab6 ("device property: Make it possible to use secondary firmware nodes")
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/base/core.c |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+--- a/drivers/base/core.c
++++ b/drivers/base/core.c
+@@ -2344,17 +2344,21 @@ static inline bool fwnode_is_primary(str
+  */
+ void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
+ {
+-	if (fwnode) {
+-		struct fwnode_handle *fn = dev->fwnode;
++	struct fwnode_handle *fn = dev->fwnode;
+ 
++	if (fwnode) {
+ 		if (fwnode_is_primary(fn))
+ 			fn = fn->secondary;
+ 
+ 		fwnode->secondary = fn;
+ 		dev->fwnode = fwnode;
+ 	} else {
+-		dev->fwnode = fwnode_is_primary(dev->fwnode) ?
+-			dev->fwnode->secondary : NULL;
++		if (fwnode_is_primary(fn)) {
++			dev->fwnode = fn->secondary;
++			fn->secondary = NULL;
++		} else {
++			dev->fwnode = NULL;
++		}
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(set_primary_fwnode);
+
+
