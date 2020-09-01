@@ -2,113 +2,108 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2BFC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EDAC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7921620866
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1EA218AC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974278;
-	bh=lHjVCNb+Y24qQJ+20TP7JRBp6qoTPqc/m8f2Ri154yw=;
+	s=default; t=1598974282;
+	bh=lQCnpE+h3F7ldlhOlP/LmTgLkwRbrAWwyY8D9fia1fg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A96WinAE3/1DMH7qPJoSFDFWmERjyMNiCQc3M6/Q7nUsCs9OIUcwC/3qMS9jpxWfJ
-	 vB+wPeVNDlUv6BsvCyGqerzFhcEsecjJMAM2F8NayF1ab5VpOehXBG7qFTu36anT8Z
-	 oDhjBvYqnyhdtiS8IPbKcJx/MGmj4vnwK+ptAz3I=
+	b=QYo283P9FnQZYfdly9DFHcBeUjxxIqMBqWtDCan807KQLyinNl34LprV/6L4jb3wV
+	 fqTeLek1HPpEjSyOJYTLjt+Q6nUiULddi4sDFJkukSB3ZdcQXVVVIQdE/uZJO5tprN
+	 IYF+tX4vyfgz1zp3DnLGQBSNFZFlCPaj0dO42J3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbgIAPbR (ORCPT
+        id S1730490AbgIAPbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55180 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbgIAP1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:46 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730316AbgIAP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:59 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3864720BED;
-        Tue,  1 Sep 2020 15:27:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CD7C2100A;
+        Tue,  1 Sep 2020 15:27:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974065;
-        bh=lHjVCNb+Y24qQJ+20TP7JRBp6qoTPqc/m8f2Ri154yw=;
+        s=default; t=1598974078;
+        bh=lQCnpE+h3F7ldlhOlP/LmTgLkwRbrAWwyY8D9fia1fg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BrEdmmAtcz3aZ1Z8h/++Fq4k9+LJPC8y7OsXypkE8WP9WFtn0e6WkxHM67M9kHXQh
-         05J4+V0ppOxBxBX7nfB/sOdxDtn8qvzDnV+5YNRQVSrB3ogcOfPs73QwJcSvTseTSR
-         3pocM4y3XGSq2ki04eOEaISCopgG5vy/tC7+nE0o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <david.laight@aculab.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 007/214] net: sctp: Fix negotiation of the number of data streams.
-Date:   Tue,  1 Sep 2020 17:08:07 +0200
-Message-Id: <20200901150953.307943936@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=m9ezrBcITeM03VLnUcB2yHSUbMGl07t9SG4iL8L9fX6fmWiJrm1m6eDlk21/simjC
+         0r3hzUvihtAn8zL1j8ci9rCw7Wu/SLrupJCv41/pUe0YYviRov8xg1VHyDzvQ1J2Ug
+         amglPELe1Gp4Zcjic1dsxW/C4IcJs/RIpR3/V0iQ=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 05/11] spi: cadence-quadspi: Simplify with dev_err_probe()
+Date:   Tue,  1 Sep 2020 17:27:07 +0200
+Message-Id: <20200901152713.18629-5-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901152713.18629-1-krzk@kernel.org>
+References: <20200901152713.18629-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Laight <David.Laight@ACULAB.COM>
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-[ Upstream commit ab921f3cdbec01c68705a7ade8bec628d541fc2b ]
-
-The number of output and input streams was never being reduced, eg when
-processing received INIT or INIT_ACK chunks.
-The effect is that DATA chunks can be sent with invalid stream ids
-and then discarded by the remote system.
-
-Fixes: 2075e50caf5ea ("sctp: convert to genradix")
-Signed-off-by: David Laight <david.laight@aculab.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- net/sctp/stream.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/spi/spi-cadence-quadspi.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -88,12 +88,13 @@ static int sctp_stream_alloc_out(struct
- 	int ret;
+diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
+index 508b219eabf8..cec4e89ab9b2 100644
+--- a/drivers/spi/spi-cadence-quadspi.c
++++ b/drivers/spi/spi-cadence-quadspi.c
+@@ -1117,11 +1117,8 @@ static int cqspi_request_mmap_dma(struct cqspi_st *cqspi)
+ 	cqspi->rx_chan = dma_request_chan_by_mask(&mask);
+ 	if (IS_ERR(cqspi->rx_chan)) {
+ 		int ret = PTR_ERR(cqspi->rx_chan);
+-
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
+ 		cqspi->rx_chan = NULL;
+-		return ret;
++		return dev_err_probe(&cqspi->pdev->dev, ret, "No Rx DMA available\n");
+ 	}
+ 	init_completion(&cqspi->rx_dma_complete);
  
- 	if (outcnt <= stream->outcnt)
--		return 0;
-+		goto out;
- 
- 	ret = genradix_prealloc(&stream->out, outcnt, gfp);
- 	if (ret)
- 		return ret;
- 
-+out:
- 	stream->outcnt = outcnt;
- 	return 0;
- }
-@@ -104,12 +105,13 @@ static int sctp_stream_alloc_in(struct s
- 	int ret;
- 
- 	if (incnt <= stream->incnt)
--		return 0;
-+		goto out;
- 
- 	ret = genradix_prealloc(&stream->in, incnt, gfp);
- 	if (ret)
- 		return ret;
- 
-+out:
- 	stream->incnt = incnt;
- 	return 0;
- }
-
+-- 
+2.17.1
 
