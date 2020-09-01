@@ -2,53 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C49C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D936C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A84520767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9E7204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976688;
-	bh=gWohrytgPPCufu0Y0SdUetLBz+Kc3A0G8R2gLyGeer8=;
+	s=default; t=1598976698;
+	bh=duA5OZY/skQ/JAo3h/E2BEJCdypBbG0QAcMV7CMJLRU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNMU8gI/njGNtJkzuvtGslmTtJ99uoI6FQ0B2vSoACjoeQDsmG+bqvGbdDUE79aS6
-	 jaZuUJEiS0HbM/m9baWEGX8Ng0rPVtFJKXKwYLY+kwywD6TEV7gi82qavUzL9HMA4D
-	 i3jzSIHYl9jS8BvX1bHHDEbfiGC47spDxZZiCbyw=
+	b=dfSjGH2iDrdhenjvLSrGl0M8au7X5N7BLFrgB9tEmi9WBilkgfT/M/FO41ZSU5SMq
+	 9EG+Ixi4D9xdUsAd1HYO3bseuh8iipp8F0PN1ObLVLRyj1TyfmdfIvxfj6oRfvNrQv
+	 /fHwRy/Ej7/GDkeVLPmQ/O2vC1sROuiUOg89KlGk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731331AbgIAPhq (ORCPT
+        id S1731703AbgIAQLh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:37:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42674 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:11:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728776AbgIAPgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:36:07 -0400
+        id S1728774AbgIAPhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:37:34 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E059620E65;
-        Tue,  1 Sep 2020 15:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D25A7205F4;
+        Tue,  1 Sep 2020 15:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974566;
-        bh=gWohrytgPPCufu0Y0SdUetLBz+Kc3A0G8R2gLyGeer8=;
+        s=default; t=1598974653;
+        bh=duA5OZY/skQ/JAo3h/E2BEJCdypBbG0QAcMV7CMJLRU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JpOr+lwpVUG0HWqePFe2m+/LU6yQWVfI02E8K2EHp6MABlCqYGWotQzjE+fzPpoS0
-         koZevvQDWmMVbvxKg4fxY7ZhI0uax0E3zAM7hkhiSY+mz5eINYwY1q3KmwH6XL7WX0
-         yhicBrrINHrzc+jQckHTGWVwckvbcJXtl92gZXiw=
+        b=OORzpvVxSOTREKmk+7nwe07PZ/nuX+Wq6oPs72rXGd0F5Qxj4H3ciZvPtnIpnDKBp
+         j2um7ZBva1KDpvTX1JbwQm7vx6ZWR5DHb32hVLxTSMTjjIB36x3ccuGR0vNw1f9Fw9
+         F0ucjpFh/5McHmdN8TMs42t+aN2CkK0LlCSespWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Peng Fan <fanpeng@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 011/255] ASoC: tegra: Fix reference count leaks.
-Date:   Tue,  1 Sep 2020 17:07:47 +0200
-Message-Id: <20200901151001.346659314@linuxfoundation.org>
+Subject: [PATCH 5.8 043/255] mips/vdso: Fix resource leaks in genvdso.c
+Date:   Tue,  1 Sep 2020 17:08:19 +0200
+Message-Id: <20200901151002.813862582@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,56 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Peng Fan <fanpeng@loongson.cn>
 
-[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
+[ Upstream commit a859647b4e6bfeb192284d27d24b6a0c914cae1d ]
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+Close "fd" before the return of map_vdso() and close "out_file"
+in main().
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Peng Fan <fanpeng@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/tegra/tegra30_ahub.c | 4 +++-
- sound/soc/tegra/tegra30_i2s.c  | 4 +++-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+ arch/mips/vdso/genvdso.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
-index 635eacbd28d47..156e3b9d613c6 100644
---- a/sound/soc/tegra/tegra30_ahub.c
-+++ b/sound/soc/tegra/tegra30_ahub.c
-@@ -643,8 +643,10 @@ static int tegra30_ahub_resume(struct device *dev)
- 	int ret;
+diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
+index be57b832bbe0a..ccba50ec8a40e 100644
+--- a/arch/mips/vdso/genvdso.c
++++ b/arch/mips/vdso/genvdso.c
+@@ -122,6 +122,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (fstat(fd, &stat) != 0) {
+ 		fprintf(stderr, "%s: Failed to stat '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
  
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(ahub->regmap_ahub);
- 	ret |= regcache_sync(ahub->regmap_apbif);
- 	pm_runtime_put(dev);
-diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
-index d59882ec48f16..db5a8587bfa4c 100644
---- a/sound/soc/tegra/tegra30_i2s.c
-+++ b/sound/soc/tegra/tegra30_i2s.c
-@@ -567,8 +567,10 @@ static int tegra30_i2s_resume(struct device *dev)
- 	int ret;
+@@ -130,6 +131,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (addr == MAP_FAILED) {
+ 		fprintf(stderr, "%s: Failed to map '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
  
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 	ret = regcache_sync(i2s->regmap);
- 	pm_runtime_put(dev);
+@@ -139,6 +141,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
+ 		fprintf(stderr, "%s: '%s' is not an ELF file\n", program_name,
+ 			path);
++		close(fd);
+ 		return NULL;
+ 	}
  
+@@ -150,6 +153,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF class\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -161,6 +165,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF data order\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -168,15 +173,18 @@ static void *map_vdso(const char *path, size_t *_size)
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF machine (expected EM_MIPS)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	} else if (swap_uint16(ehdr->e_type) != ET_DYN) {
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF type (expected ET_DYN)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+ 	*_size = stat.st_size;
++	close(fd);
+ 	return addr;
+ }
+ 
+@@ -293,10 +301,12 @@ int main(int argc, char **argv)
+ 	/* Calculate and write symbol offsets to <output file> */
+ 	if (!get_symbols(dbg_vdso_path, dbg_vdso)) {
+ 		unlink(out_path);
++		fclose(out_file);
+ 		return EXIT_FAILURE;
+ 	}
+ 
+ 	fprintf(out_file, "};\n");
++	fclose(out_file);
+ 
+ 	return EXIT_SUCCESS;
+ }
 -- 
 2.25.1
 
