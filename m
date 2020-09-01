@@ -2,137 +2,141 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8179DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD970C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48A472078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978210;
-	bh=wqqX+cTIgOQPbsHNJEMEc15JcoBSxZtRCl7iHHIeKic=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RRtnIBvbt0old+0TZ+NXbDP46MrSQcp2IIUFssl5j79X/NNJ/GGc8azmc7BM8Ly1s
-	 zebzfMhTi0BS9/mrR9n7UZWPKB/4Ln4G7Un3alMMtrDqvo1mwB+u8Ku6OHLwlhZXKo
-	 0MdbIzqXS57Ta5RqiO/h+GIeMj3AznzZ60SVAvFE=
+	by mail.kernel.org (Postfix) with ESMTP id 7CEA52087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICh1zf3z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732084AbgIAQgs (ORCPT
+        id S1730680AbgIAQgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:36:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58808 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730523AbgIAP3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:30 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E1CE206C0;
-        Tue,  1 Sep 2020 15:29:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974169;
-        bh=wqqX+cTIgOQPbsHNJEMEc15JcoBSxZtRCl7iHHIeKic=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qmryfeqWiN/N8/8Pq85b6JbZI/yX9J+Gje2HzkXbiPKKtrke3Qxq9LR0jEStu7I3/
-         qT96n2oIiWRmlOqej3cOlNMzsYSupEXjCgxMgrj0rTiiy5Mt1GofIiWBOiUp4tOlhB
-         jeBDnMbyTp0fRBfDrXWk/3CSenPy8H7qk6BwMaKE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 072/214] PM / devfreq: rk3399_dmc: Disable devfreq-event device when fails
-Date:   Tue,  1 Sep 2020 17:09:12 +0200
-Message-Id: <20200901150956.424222905@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 12:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36256 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729301AbgIAQgk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:36:40 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15FA5C061244;
+        Tue,  1 Sep 2020 09:36:39 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id y6so794645plk.10;
+        Tue, 01 Sep 2020 09:36:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=6LJNp3SfPZQzgGoLbBE6N8TqVacFA/OYrfyGljmiagI=;
+        b=ICh1zf3zGn7XnEwLtLXWBXdrXz03RkOwx69AHgL9W4kNO36ZTyq4x0oYmzBehu8awg
+         H4s2r0Y5X6xbC/FNLDnAb4GVLCb9yQdELSo/Q8tZoz5VxuM8t5v027lrHZfB1+jP7Fo7
+         dRkz81Zj6At5l+CA1aYdgCtRFFvWKsv0tjeGrrTSsJtP0EvC3uuvIl7/xaUtH4rcE9zV
+         HfK+Ue8YUa95CemaV+ILl9zRx3EnJ9mykPNSuoC6YwuXh0rEGidwyZdP2l8rfr8kytTk
+         nc3KvUvz21A03NC6SBXoZEdnC74IcgDh8hpd3eC1/ESEi3+YI5lYKq4kbyrz28E0LEIB
+         kLLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6LJNp3SfPZQzgGoLbBE6N8TqVacFA/OYrfyGljmiagI=;
+        b=Kt080CfEFZ4mbSheKf2P4tNa5zRn/janx73a4edNJzeGKzDPe1fcVTaAOxS7ST9cCV
+         TLEsAqNZ7+Td0FsWbhC9uiz5lSPd91o2JDVdRlgfg1eCW7zHQ9uFPSOfcINYiE2y172C
+         kSGpPQlGatHB3QMJ0TA5Wm2GyUYW9fKoW/gKB7K+qDCmpEO2GBrCkrsr9DiFF7DR8hH1
+         mboxqTJ4qALm7iHgOJXhwe6XxsmtChrRh0o7R44INS7qTDTIB8ljO5vYxzvs76656WjV
+         mWOEWHts7OqP5ZmmKnvNk0ZFnEM4aTiHlf3YtkpPvnXyzl9AMx12RPdM02l/v0UXIPex
+         twsg==
+X-Gm-Message-State: AOAM533OmNqv7bue68WcYgBmZEzae0InmlTWVL+HOwNv1a/RAbdpWwmG
+        4MP8hp2aOdVu4kz3xqYYIYs=
+X-Google-Smtp-Source: ABdhPJwjKrOK7WaCiEzd+HbASOS0a4uBs7I11ulx5TrI35FSx0o5kfHkjravTXJH/V/xrrCIgPhiAg==
+X-Received: by 2002:a17:90b:110:: with SMTP id p16mr2361655pjz.98.1598978198498;
+        Tue, 01 Sep 2020 09:36:38 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id y7sm2452654pfm.68.2020.09.01.09.36.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 09:36:37 -0700 (PDT)
+Subject: Re: RFC: backport of commit a32c1c61212d
+To:     Doug Berger <opendmb@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Michal Hocko <mhocko@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        zhaoyang <huangzhaoyang@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        David Hildenbrand <david@redhat.com>,
+        Baoquan He <bhe@redhat.com>
+References: <bd960a80-c953-ad11-cdfd-1e48ffdce443@gmail.com>
+ <20200901140018.GD397411@kroah.com>
+ <4eb51ae0-427d-5359-2439-b38dc0d3b2e5@gmail.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <98f2309c-e674-c3fc-0c13-0bf85f123f8c@gmail.com>
+Date:   Tue, 1 Sep 2020 09:36:36 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <4eb51ae0-427d-5359-2439-b38dc0d3b2e5@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 39a6e4739c19d5334e552d71ceca544ed84f4b87 ]
 
-The probe process may fail, but the devfreq event device remains
-enabled. Call devfreq_event_disable_edev on the error return path.
+On 9/1/2020 9:06 AM, Doug Berger wrote:
+> On 9/1/2020 7:00 AM, Greg Kroah-Hartman wrote:
 
-Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/devfreq/rk3399_dmc.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+[snip]
 
-diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
-index 2f1027c5b6475..24f04f78285b7 100644
---- a/drivers/devfreq/rk3399_dmc.c
-+++ b/drivers/devfreq/rk3399_dmc.c
-@@ -364,7 +364,8 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 			if (res.a0) {
- 				dev_err(dev, "Failed to set dram param: %ld\n",
- 					res.a0);
--				return -EINVAL;
-+				ret = -EINVAL;
-+				goto err_edev;
- 			}
- 		}
- 	}
-@@ -373,8 +374,10 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 	if (node) {
- 		data->regmap_pmu = syscon_node_to_regmap(node);
- 		of_node_put(node);
--		if (IS_ERR(data->regmap_pmu))
--			return PTR_ERR(data->regmap_pmu);
-+		if (IS_ERR(data->regmap_pmu)) {
-+			ret = PTR_ERR(data->regmap_pmu);
-+			goto err_edev;
-+		}
- 	}
- 
- 	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-@@ -392,7 +395,8 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 		data->odt_dis_freq = data->timing.lpddr4_odt_dis_freq;
- 		break;
- 	default:
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_edev;
- 	};
- 
- 	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
-@@ -426,7 +430,8 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 	 */
- 	if (dev_pm_opp_of_add_table(dev)) {
- 		dev_err(dev, "Invalid operating-points in device tree.\n");
--		return -EINVAL;
-+		ret = -EINVAL;
-+		goto err_edev;
- 	}
- 
- 	of_property_read_u32(np, "upthreshold",
-@@ -466,6 +471,9 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 
- err_free_opp:
- 	dev_pm_opp_of_remove_table(&pdev->dev);
-+err_edev:
-+	devfreq_event_disable_edev(data->edev);
-+
- 	return ret;
- }
- 
+> Sorry for the confusion, but thanks for the reply.
+> 
+> There is functionality that exists in Linus' tree, but it is not the
+> result of a single commit that can be easily backported. I have been
+> unable to find anything in the documentation for submitting a patch to a
+> stable branch that covers this type of submission so I have sent this as
+> an RFC about process rather than a patch.
+> 
+> The upstream commit that ultimately results in the functional change is:
+> commit a32c1c61212d ("arm: simplify detection of memory zone boundaries")
+> 
+> That commit is dependent on other commits that aren't necessary for the
+> stable branches.
+> 
+> In my downstream kernel I would apply the single line patch included in
+> my original email, but it is not appropriate to apply that patch to
+> Linus' tree since the problem does not exist there.
+> 
+> This creates the situation where a simple patch could be applied to a
+> stable branch to improve its stability, but there is not a clear
+> upstream commit to reference.
+> 
+> My best guess at this point is to submit patches to the affected stable
+> branches like the one in my RFC and reference a32c1c61212d as the
+> upstream commit. This would be confusing to anyone that tried to compare
+> the submitted patch with the upstream patch since they
+> wouldn't look at all alike, but the fixes and upstream tags would define
+> the affected range in Linus' tree.
+> 
+> I would appreciate any guidance on how best to handle this kind of
+> situation.
+
+You could submit various patches with [PATCH stable x.y] in the subject 
+to indicate they are targeting a specific stable branch, copy 
+stable@vger.kernel.org as well as all recipients in this email and see 
+if that works.
+
+Not sure if there is a more documented process than that.
 -- 
-2.25.1
-
-
-
+Florian
