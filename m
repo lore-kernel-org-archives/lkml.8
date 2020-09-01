@@ -2,51 +2,58 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F7FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91713C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4323B215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4855D20E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974645;
-	bh=nen8rbwTQ4JvbkPLYxyfVe+jS2BIf74BjMDoianqLnA=;
+	s=default; t=1598974650;
+	bh=1RGGtrnl1sk6xJJ/Ju6CQOJOtmLTB5bs8EuDe2g18QA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rcTbNqnBfFxI54kGfsBZYdVMl+jTK/asGoD5J6eEWUXp67Ka8hl8O8zlwY12ZuWpk
-	 gSitsTE+1X8VmtcubrtdrGKZttjG9nlmnjiLp8zbsuI7SQWZhfHljOP/HqK3VaS1ed
-	 KF6p/bQAspOoXLsQf5NMyu3S3ER9m4OEQ3Ts5wdY=
+	b=BHb5Qb6RQFwLV+GkSR5c4wUUpC8kzD8iRXB7JHv+UQxa4BboDu7aZmHTO7CxC8Gkr
+	 hfFmPF9LPTmF2yEV5lSjaknJlWX4MvdCK5D7ac+qRQnzUO5WDiE+wHPCBHrMSfNkBP
+	 /qDxdRUsIcszzYjfYSedHqSoROtXIVjBra+Gi/X8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731135AbgIAPhY (ORCPT
+        id S1728877AbgIAPh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:37:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42082 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:37:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729712AbgIAPfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:51 -0400
+        id S1731234AbgIAPf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:35:56 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19F0B2158C;
-        Tue,  1 Sep 2020 15:35:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 081FA2158C;
+        Tue,  1 Sep 2020 15:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974550;
-        bh=nen8rbwTQ4JvbkPLYxyfVe+jS2BIf74BjMDoianqLnA=;
+        s=default; t=1598974555;
+        bh=1RGGtrnl1sk6xJJ/Ju6CQOJOtmLTB5bs8EuDe2g18QA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pgudOl1DW/RiGO5FYSahr0Y1ium08pXA+L64a6fo6O70icjGelnbwPQ/xdqEWAZ9M
-         G1WsCuQRmsUc6IVms5kcq9bwYf/BwuWtAy+imG81rtW9xEPZPU0MxOOZUuppRXoc5V
-         onAD27HpIb6rjR40Tg0Lc6NEEpUr4KIMvSgJkODA=
+        b=QLYk3nWHlSwGbJ62yYwL+ARHSJy7eQbajIlKpvDhUAnzaVnuTxnPIZvchbyfWH0hA
+         MOLvDWAEnctFHV8UWZO+P693nYHimJPF4pMFivCy2B6vSEuHt/XxM3zOvTObA2Z76v
+         BIzJEWECW0rVk6egGq14sMtoX3K/h4a5Hz23TCoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH 5.4 198/214] USB: cdc-acm: rework notification_buffer resizing
-Date:   Tue,  1 Sep 2020 17:11:18 +0200
-Message-Id: <20200901151002.432063894@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Miroslav Benes <mbenes@suse.cz>, Takashi Iwai <tiwai@suse.de>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Jon Bloomfield <jon.bloomfield@intel.com>,
+        Chris Wilson <chris.p.wilson@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 200/214] drm/i915: Fix cmd parser desc matching with masks
+Date:   Tue,  1 Sep 2020 17:11:20 +0200
+Message-Id: <20200901151002.527351535@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,99 +66,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Mika Kuoppala <mika.kuoppala@linux.intel.com>
 
-commit f4b9d8a582f738c24ebeabce5cc15f4b8159d74e upstream.
+[ Upstream commit e5f10d6385cda083037915c12b130887c8831d2b ]
 
-Clang static analysis reports this error
+Our variety of defined gpu commands have the actual
+command id field and possibly length and flags applied.
 
-cdc-acm.c:409:3: warning: Use of memory after it is freed
-        acm_process_notification(acm, (unsigned char *)dr);
+We did start to apply the mask during initialization of
+the cmd descriptors but forgot to also apply it on comparisons.
 
-There are three problems, the first one is that dr is not reset
+Fix comparisons in order to properly deny access with
+associated commands.
 
-The variable dr is set with
+v2: fix lri with correct mask (Chris)
 
-if (acm->nb_index)
-	dr = (struct usb_cdc_notification *)acm->notification_buffer;
-
-But if the notification_buffer is too small it is resized with
-
-		if (acm->nb_size) {
-			kfree(acm->notification_buffer);
-			acm->nb_size = 0;
-		}
-		alloc_size = roundup_pow_of_two(expected_size);
-		/*
-		 * kmalloc ensures a valid notification_buffer after a
-		 * use of kfree in case the previous allocation was too
-		 * small. Final freeing is done on disconnect.
-		 */
-		acm->notification_buffer =
-			kmalloc(alloc_size, GFP_ATOMIC);
-
-dr should point to the new acm->notification_buffer.
-
-The second problem is any data in the notification_buffer is lost
-when the pointer is freed.  In the normal case, the current data
-is accumulated in the notification_buffer here.
-
-	memcpy(&acm->notification_buffer[acm->nb_index],
-	       urb->transfer_buffer, copy_size);
-
-When a resize happens, anything before
-notification_buffer[acm->nb_index] is garbage.
-
-The third problem is the acm->nb_index is not reset on a
-resizing buffer error.
-
-So switch resizing to using krealloc and reassign dr and
-reset nb_index.
-
-Fixes: ea2583529cd1 ("cdc-acm: reassemble fragmented notifications")
-Signed-off-by: Tom Rix <trix@redhat.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20200801152154.20683-1-trix@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Nicolai Stange <nstange@suse.de>
+Cc: stable@vger.kernel.org # v5.4+
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: Jon Bloomfield <jon.bloomfield@intel.com>
+Cc: Chris Wilson <chris.p.wilson@intel.com>
+Signed-off-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200817195926.12671-1-mika.kuoppala@linux.intel.com
+(cherry picked from commit 3b4efa148da36f158cce3f662e831af2834b8e0f)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/cdc-acm.c |   22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ drivers/gpu/drm/i915/i915_cmd_parser.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -378,21 +378,19 @@ static void acm_ctrl_irq(struct urb *urb
- 	if (current_size < expected_size) {
- 		/* notification is transmitted fragmented, reassemble */
- 		if (acm->nb_size < expected_size) {
--			if (acm->nb_size) {
--				kfree(acm->notification_buffer);
--				acm->nb_size = 0;
--			}
-+			u8 *new_buffer;
- 			alloc_size = roundup_pow_of_two(expected_size);
--			/*
--			 * kmalloc ensures a valid notification_buffer after a
--			 * use of kfree in case the previous allocation was too
--			 * small. Final freeing is done on disconnect.
--			 */
--			acm->notification_buffer =
--				kmalloc(alloc_size, GFP_ATOMIC);
--			if (!acm->notification_buffer)
-+			/* Final freeing is done on disconnect. */
-+			new_buffer = krealloc(acm->notification_buffer,
-+					      alloc_size, GFP_ATOMIC);
-+			if (!new_buffer) {
-+				acm->nb_index = 0;
- 				goto exit;
-+			}
+diff --git a/drivers/gpu/drm/i915/i915_cmd_parser.c b/drivers/gpu/drm/i915/i915_cmd_parser.c
+index 21417ac8e878e..a9a69760c18d0 100644
+--- a/drivers/gpu/drm/i915/i915_cmd_parser.c
++++ b/drivers/gpu/drm/i915/i915_cmd_parser.c
+@@ -1207,6 +1207,12 @@ static u32 *copy_batch(struct drm_i915_gem_object *dst_obj,
+ 	return dst;
+ }
+ 
++static inline bool cmd_desc_is(const struct drm_i915_cmd_descriptor * const desc,
++			       const u32 cmd)
++{
++	return desc->cmd.value == (cmd & desc->cmd.mask);
++}
 +
-+			acm->notification_buffer = new_buffer;
- 			acm->nb_size = alloc_size;
-+			dr = (struct usb_cdc_notification *)acm->notification_buffer;
+ static bool check_cmd(const struct intel_engine_cs *engine,
+ 		      const struct drm_i915_cmd_descriptor *desc,
+ 		      const u32 *cmd, u32 length)
+@@ -1245,19 +1251,19 @@ static bool check_cmd(const struct intel_engine_cs *engine,
+ 			 * allowed mask/value pair given in the whitelist entry.
+ 			 */
+ 			if (reg->mask) {
+-				if (desc->cmd.value == MI_LOAD_REGISTER_MEM) {
++				if (cmd_desc_is(desc, MI_LOAD_REGISTER_MEM)) {
+ 					DRM_DEBUG_DRIVER("CMD: Rejected LRM to masked register 0x%08X\n",
+ 							 reg_addr);
+ 					return false;
+ 				}
+ 
+-				if (desc->cmd.value == MI_LOAD_REGISTER_REG) {
++				if (cmd_desc_is(desc, MI_LOAD_REGISTER_REG)) {
+ 					DRM_DEBUG_DRIVER("CMD: Rejected LRR to masked register 0x%08X\n",
+ 							 reg_addr);
+ 					return false;
+ 				}
+ 
+-				if (desc->cmd.value == MI_LOAD_REGISTER_IMM(1) &&
++				if (cmd_desc_is(desc, MI_LOAD_REGISTER_IMM(1)) &&
+ 				    (offset + 2 > length ||
+ 				     (cmd[offset + 1] & reg->mask) != reg->value)) {
+ 					DRM_DEBUG_DRIVER("CMD: Rejected LRI to masked register 0x%08X\n",
+@@ -1488,7 +1494,7 @@ int intel_engine_cmd_parser(struct i915_gem_context *ctx,
+ 			goto err;
  		}
  
- 		copy_size = min(current_size,
+-		if (desc->cmd.value == MI_BATCH_BUFFER_START) {
++		if (cmd_desc_is(desc, MI_BATCH_BUFFER_START)) {
+ 			ret = check_bbstart(ctx, cmd, offset, length,
+ 					    batch_len, batch_start,
+ 					    shadow_batch_start);
+-- 
+2.25.1
+
 
 
