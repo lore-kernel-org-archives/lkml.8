@@ -2,94 +2,281 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9FBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF911C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 60D6B206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A675020767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:15:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjMzwBPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728130AbgIANNp convert rfc822-to-8bit (ORCPT
+        id S1726618AbgIANDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:13:45 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49264 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728048AbgIANK3 (ORCPT
+        Tue, 1 Sep 2020 09:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49240 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727986AbgIALzh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:10:29 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-124-RgJ3VotCP16CESXx20TH0w-1; Tue, 01 Sep 2020 14:10:19 +0100
-X-MC-Unique: RgJ3VotCP16CESXx20TH0w-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 1 Sep 2020 14:10:18 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 1 Sep 2020 14:10:18 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Willy Tarreau' <w@1wt.eu>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Sedat Dilek <sedat.dilek@gmail.com>, George Spelvin <lkml@sdf.org>,
-        "Amit Klein" <aksecurity@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "tytso@mit.edu" <tytso@mit.edu>, Florian Westphal <fw@strlen.de>,
-        Marc Plumb <lkml.mplumb@gmail.com>
-Subject: RE: [PATCH 1/2] random32: make prandom_u32() output unpredictable
-Thread-Topic: [PATCH 1/2] random32: make prandom_u32() output unpredictable
-Thread-Index: AQHWgCtYkxpri6yNnUCyYLzB8IqNYqlTwT5w
-Date:   Tue, 1 Sep 2020 13:10:18 +0000
-Message-ID: <b460c51a3fa1473b8289d6030a46abdb@AcuMS.aculab.com>
-References: <20200901064302.849-1-w@1wt.eu> <20200901064302.849-2-w@1wt.eu>
-In-Reply-To: <20200901064302.849-2-w@1wt.eu>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
-MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.002
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
+        Tue, 1 Sep 2020 07:55:37 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E194EC061245;
+        Tue,  1 Sep 2020 04:55:27 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b124so635285pfg.13;
+        Tue, 01 Sep 2020 04:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=r0QoArXlGym3eWpJEYZx+lz57ZLvZb2kHtV5tNtHzJ4=;
+        b=NjMzwBPSfFvdU2O/KMV3opnSnYvg/vZTty9uMb1o23rL9uxH4u0UZOoL+j0tkXZ4F6
+         lz3q9pGjs75qa3zXVM7dp3MmS9PSiwX7RayOXSQWftB1aDQ8Dlfin+1RxD6LCaKtxnU3
+         XFiWt3IQyvuyI2lK5A+EwjMlT7bkpJQQxHw3wnqJKmWd8/ZNYs0ETXUonKvIIDjBLow4
+         FsbgiDkWaM4yJa5kOdi3lphACsU84efVDBmxUZImyJeTFzWfEjSiNQ42WZbvce/wK/Cx
+         JTmCWptmtzSGRrWbtYcZTcHVN7u3X2ZnyUKAqXtCbM1mIcRE+gCSnixUxgPT6aGl7mXw
+         aJJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=r0QoArXlGym3eWpJEYZx+lz57ZLvZb2kHtV5tNtHzJ4=;
+        b=qcaMvx5dL/bkOwPt1lGYxBMHdESXlUMnJgyf7ZSPeLZAK4dbQ5h6SBdMCshIR/Zy1K
+         OLLNcA3LePdjuaJXpY3MUD3Gz6rT9TfbVIb6xg6TEeB/0FeRHDe6UvDZ+8MmPGarL5G6
+         pd4TjnV7uxKqfYogwm5kk4w0lPJ+Fq7mJcUg6tPzdeDM6bnT8kH048+H3kfg9SoC3gNS
+         wq4Q9FOqVIGdBS8aT+QwaI+bZmtyiC5prsc2m46co28YlJZlaJ8pW7aPZtdnOL4nTtl0
+         xNhLtPYx/IdMfo0x86DSFHEjXJJACeWKnMX7n4kyUgECmQIURGB+WLHIh6aZtQxYPc6A
+         ogRA==
+X-Gm-Message-State: AOAM53272+qA07pMbil98W4HjdXzBLf2ay/yUOwyfhuXS1M93AXP6w4B
+        e2j3ijMTynOe837pyXg7yU6kX2Uasl4=
+X-Google-Smtp-Source: ABdhPJwIfk+L03i7+RG1LZTgGssrXJ8ifRcqMziLfzmkhsyzdMfmxtCxY0Ji3Rc8Kxlro/rMjBg9Hg==
+X-Received: by 2002:a63:f909:: with SMTP id h9mr1182770pgi.250.1598961327411;
+        Tue, 01 Sep 2020 04:55:27 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.53])
+        by smtp.gmail.com with ESMTPSA id z17sm1738614pfq.38.2020.09.01.04.55.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 04:55:27 -0700 (PDT)
+From:   yulei.kernel@gmail.com
+X-Google-Original-From: yuleixzhang@tencent.com
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        junaids@google.com, bgardon@google.com, vkuznets@redhat.com,
+        xiaoguangrong.eric@gmail.com, kernellwp@gmail.com,
+        lihaiwei.kernel@gmail.com, Yulei Zhang <yulei.kernel@gmail.com>,
+        Yulei Zhang <yuleixzhang@tencent.com>
+Subject: [RFC V2 6/9] Apply the direct build EPT according to the memory slots change
+Date:   Tue,  1 Sep 2020 19:56:22 +0800
+Message-Id: <1f8000f25664b4feb97db2c72e68f6740e680e60.1598868204.git.yulei.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1598868203.git.yulei.kernel@gmail.com>
+References: <cover.1598868203.git.yulei.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Willy Tarreau
-> Sent: 01 September 2020 07:43
-...
-> +/*
-> + *	Generate some initially weak seeding values to allow
-> + *	the prandom_u32() engine to be started.
-> + */
-> +static int __init prandom_init_early(void)
-> +{
-> +	int i;
-> +	unsigned long v0, v1, v2, v3;
-> +
-> +	if (!arch_get_random_long(&v0))
-> +		v0 = jiffies;
+From: Yulei Zhang <yulei.kernel@gmail.com>
 
-Isn't jiffies likely to be zero here?
+Construct the direct build ept when guest memory slots have been
+changed, and issue mmu_reload request to update the CR3 so that
+guest could use the pre-constructed EPT without page fault.
 
-	David
+Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
+---
+ arch/mips/kvm/mips.c       | 13 +++++++++++++
+ arch/powerpc/kvm/powerpc.c | 13 +++++++++++++
+ arch/s390/kvm/kvm-s390.c   | 13 +++++++++++++
+ arch/x86/kvm/mmu/mmu.c     | 33 ++++++++++++++++++++++++++-------
+ include/linux/kvm_host.h   |  3 +++
+ virt/kvm/kvm_main.c        | 13 +++++++++++++
+ 6 files changed, 81 insertions(+), 7 deletions(-)
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+index 7de85d2253ff..05d053a53ebf 100644
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -267,6 +267,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 	}
+ }
+ 
++int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++{
++	return 0;
++}
++
++void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++{
++}
++
++void kvm_direct_tdp_release_global_root(struct kvm *kvm)
++{
++}
++
+ static inline void dump_handler(const char *symbol, void *start, void *end)
+ {
+ 	u32 *p;
+diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+index 13999123b735..c6964cbeb6da 100644
+--- a/arch/powerpc/kvm/powerpc.c
++++ b/arch/powerpc/kvm/powerpc.c
+@@ -715,6 +715,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 	kvmppc_core_commit_memory_region(kvm, mem, old, new, change);
+ }
+ 
++int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++{
++	return 0;
++}
++
++void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++{
++}
++
++void kvm_direct_tdp_release_global_root(struct kvm *kvm)
++{
++}
++
+ void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+ 				   struct kvm_memory_slot *slot)
+ {
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 6b74b92c1a58..d6f7cf1a30a3 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -5021,6 +5021,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 	return;
+ }
+ 
++int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++{
++	return 0;
++}
++
++void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++{
++}
++
++void kvm_direct_tdp_release_global_root(struct kvm *kvm)
++{
++}
++
+ static inline unsigned long nonhyp_mask(int i)
+ {
+ 	unsigned int nonhyp_fai = (sclp.hmfai << i * 2) >> 30;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index fda6c4196854..47d2a1c18f36 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -5206,13 +5206,20 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
+ {
+ 	int r;
+ 
+-	r = mmu_topup_memory_caches(vcpu, !vcpu->arch.mmu->direct_map);
+-	if (r)
+-		goto out;
+-	r = mmu_alloc_roots(vcpu);
+-	kvm_mmu_sync_roots(vcpu);
+-	if (r)
+-		goto out;
++	if (vcpu->kvm->arch.global_root_hpa) {
++		vcpu->arch.direct_build_tdp = true;
++		vcpu->arch.mmu->root_hpa = vcpu->kvm->arch.global_root_hpa;
++	}
++
++	if (!vcpu->arch.direct_build_tdp) {
++		r = mmu_topup_memory_caches(vcpu, !vcpu->arch.mmu->direct_map);
++		if (r)
++			goto out;
++		r = mmu_alloc_roots(vcpu);
++		kvm_mmu_sync_roots(vcpu);
++		if (r)
++			goto out;
++	}
+ 	kvm_mmu_load_pgd(vcpu);
+ 	kvm_x86_ops.tlb_flush_current(vcpu);
+ out:
+@@ -6464,6 +6471,17 @@ int direct_build_mapping_level(struct kvm *kvm, struct kvm_memory_slot *slot, gf
+ 	return host_level;
+ }
+ 
++static void kvm_make_direct_build_update(struct kvm *kvm)
++{
++	int i;
++	struct kvm_vcpu *vcpu;
++
++	kvm_for_each_vcpu(i, vcpu, kvm) {
++		kvm_make_request(KVM_REQ_MMU_RELOAD, vcpu);
++		kvm_vcpu_kick(vcpu);
++	}
++}
++
+ int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
+ {
+ 	gfn_t gfn;
+@@ -6498,6 +6516,7 @@ int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *
+ 		direct_build_tdp_map(kvm, slot, gfn, pfn, host_level);
+ 	}
+ 
++	kvm_make_direct_build_update(kvm);
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 8901862ba2a3..b2aa0daad6dd 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -694,6 +694,9 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				struct kvm_memory_slot *old,
+ 				const struct kvm_memory_slot *new,
+ 				enum kvm_mr_change change);
++int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot);
++void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot);
++void kvm_direct_tdp_release_global_root(struct kvm *kvm);
+ void mark_page_dirty_in_slot(struct kvm_memory_slot *memslot, gfn_t gfn);
+ /* flush all memory translations */
+ void kvm_arch_flush_shadow_all(struct kvm *kvm);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 47fc18b05c53..fd1b419f4eb4 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -876,6 +876,7 @@ static void kvm_destroy_vm(struct kvm *kvm)
+ #endif
+ 	kvm_arch_destroy_vm(kvm);
+ 	kvm_destroy_devices(kvm);
++	kvm_direct_tdp_release_global_root(kvm);
+ 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++)
+ 		kvm_free_memslots(kvm, __kvm_memslots(kvm, i));
+ 	cleanup_srcu_struct(&kvm->irq_srcu);
+@@ -1195,6 +1196,10 @@ static int kvm_set_memslot(struct kvm *kvm,
+ 		 * in the freshly allocated memslots, not in @old or @new.
+ 		 */
+ 		slot = id_to_memslot(slots, old->id);
++		/* Remove pre-constructed page table */
++		if (!as_id)
++			kvm_direct_tdp_remove_page_table(kvm, slot);
++
+ 		slot->flags |= KVM_MEMSLOT_INVALID;
+ 
+ 		/*
+@@ -1222,6 +1227,14 @@ static int kvm_set_memslot(struct kvm *kvm,
+ 	update_memslots(slots, new, change);
+ 	slots = install_new_memslots(kvm, as_id, slots);
+ 
++	if ((change == KVM_MR_CREATE) || (change == KVM_MR_MOVE)) {
++		if (!as_id) {
++			r = kvm_direct_tdp_populate_page_table(kvm, new);
++			if (r)
++				goto out_slots;
++		}
++	}
++
+ 	kvm_arch_commit_memory_region(kvm, mem, old, new, change);
+ 
+ 	kvfree(slots);
+-- 
+2.17.1
 
