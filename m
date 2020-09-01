@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D75CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9565AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 168032064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565082064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975720;
-	bh=ZtBz4H4zHKmKdeBV2j6B7ls2H3PJ6PDwFiAz16xd6zc=;
+	s=default; t=1598975725;
+	bh=oohKm4wA5PeEduUAWRlKUhWqsHa0F45uQylFxb/AJN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BSOwstntm2KqizIl4qS+MigP+FgXwALdDiWTyvKGDe7nt0oG6R1X0ItidV1TWRwLE
-	 GTY6Yvjpz8FmaYyiXFMzxDG+WrD6/ZoNJ4OJR69CSKnjbwsXJWpip7GdYKvnBoJ9o+
-	 F4dMkcHXhJxqzHlTm8WYi9lqOLK1MJXJhs5l8PB8=
+	b=aVOPSoHk52tzvU9C0r7nyfO3yh/wLSg0oqhNQR3Oc/j2Qs6n8f6lX7MjkKVj/V4wc
+	 TMi9hVfMYUhfo1wG4Fn3vciWfRJH+h7qDlBMwKD3XmEyZqMixyuR3vLRPAT5O4K91e
+	 fRAmejpjh4I7M+QRV0bYZ9SJIDP+QRsJATfDsVJw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732009AbgIAPzS (ORCPT
+        id S1726210AbgIAPzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:55:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34534 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:55:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731894AbgIAPpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:44 -0400
+        id S1731889AbgIAPpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A266206EB;
-        Tue,  1 Sep 2020 15:45:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CA38206EB;
+        Tue,  1 Sep 2020 15:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975144;
-        bh=ZtBz4H4zHKmKdeBV2j6B7ls2H3PJ6PDwFiAz16xd6zc=;
+        s=default; t=1598975138;
+        bh=oohKm4wA5PeEduUAWRlKUhWqsHa0F45uQylFxb/AJN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/yZKWglR8tAGrpgr1WBhUXjooiQfbyueKwoUqMSm/01wOLiCOCr6kKSvPxw3ebyL
-         2fup59/e7SJn58Vn38Ac09Bz4gHPGZg60CiYWVaz7nK7va3WpLQJpIPLZjL/JVQ9Oi
-         czyTBGiiixC+JxZTrPdYyQhihwKUrht+apXyiCR0=
+        b=NtTISVl5Oht43lCjANU/S+7YES5etmBVk80OFfthHqvCuGk6q9yqNKXrJjhI5QMN9
+         urXkZMNPkV7Rhf+WitAaWuuitncLTB6YITrKip8YRJmR575wGOntLJBy6xzvCvoApk
+         LfRN7cxWtIZzlxCVKvp4ewajAy7sXKguTPbjWMMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.8 227/255] usb: host: ohci-exynos: Fix error handling in exynos_ohci_probe()
-Date:   Tue,  1 Sep 2020 17:11:23 +0200
-Message-Id: <20200901151011.636914994@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Jean-Christophe Barnoud <jcbarnoud@gmail.com>
+Subject: [PATCH 5.8 225/255] USB: quirks: Ignore duplicate endpoint on Sound Devices MixPre-D
+Date:   Tue,  1 Sep 2020 17:11:21 +0200
+Message-Id: <20200901151011.538574094@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,41 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 1d4169834628d18b2392a2da92b7fbf5e8e2ce89 upstream.
+commit 068834a2773b6a12805105cfadbb3d4229fc6e0a upstream.
 
-If the function platform_get_irq() failed, the negative value
-returned will not be detected here. So fix error handling in
-exynos_ohci_probe(). And when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+The Sound Devices MixPre-D audio card suffers from the same defect
+as the Sound Devices USBPre2: an endpoint shared between a normal
+audio interface and a vendor-specific interface, in violation of the
+USB spec.  Since the USB core now treats duplicated endpoints as bugs
+and ignores them, the audio endpoint isn't available and the card
+can't be used for audio capture.
 
-Fixes: 62194244cf87 ("USB: Add Samsung Exynos OHCI diver")
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20200826144931.1828-1-tangbin@cmss.chinamobile.com
+Along the same lines as commit bdd1b147b802 ("USB: quirks: blacklist
+duplicate ep on Sound Devices USBPre2"), this patch adds a quirks
+entry saying to ignore ep5in for interface 1, leaving it available for
+use with standard audio interface 2.
+
+Reported-and-tested-by: Jean-Christophe Barnoud <jcbarnoud@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
+Link: https://lore.kernel.org/r/20200826194624.GA412633@rowland.harvard.edu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/ohci-exynos.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/core/quirks.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -171,9 +171,8 @@ static int exynos_ohci_probe(struct plat
- 	hcd->rsrc_len = resource_size(res);
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -370,6 +370,10 @@ static const struct usb_device_id usb_qu
+ 	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
+ 			USB_QUIRK_ENDPOINT_BLACKLIST },
  
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "Failed to get IRQ\n");
--		err = -ENODEV;
-+	if (irq < 0) {
-+		err = irq;
- 		goto fail_io;
- 	}
++	/* Sound Devices MixPre-D */
++	{ USB_DEVICE(0x0926, 0x0208), .driver_info =
++			USB_QUIRK_ENDPOINT_BLACKLIST },
++
+ 	/* Keytouch QWERTY Panel keyboard */
+ 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
+ 			USB_QUIRK_CONFIG_INTF_STRINGS },
+@@ -511,6 +515,7 @@ static const struct usb_device_id usb_am
+  */
+ static const struct usb_device_id usb_endpoint_blacklist[] = {
+ 	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
++	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0208, 1), .driver_info = 0x85 },
+ 	{ }
+ };
  
 
 
