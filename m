@@ -2,131 +2,106 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E259C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27731C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55D9D2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="cTMpbC4o"
+	by mail.kernel.org (Postfix) with ESMTP id E85C82098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598939976;
+	bh=BJfrClw+C5jaFYlYb2O3GY7/UQ3rsmmQs8RxMwdsSY4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DlYAwqxKVrpijiULGf5iTL1xP+xNjNfoIyXo36VFTsbX/WSjCpo0A+y4gGVTQPzdX
+	 chuKrMG0ULqt2NkHVEY9gnGxzKEHELa8tf2/bTdUVST0kvyU1NRADLGp3lR0ppt3qx
+	 /SOq66IvLY83IlM9OUtff7mCR51uHcoo7IJsc8c0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726510AbgIAF61 (ORCPT
+        id S1726543AbgIAF7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50608 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgIAF61 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:58:27 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D515CC0612A3;
-        Mon, 31 Aug 2020 22:58:26 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id c10so240243edk.6;
-        Mon, 31 Aug 2020 22:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zXS7+3EgnC5I92ixxRxNaCdg1MKz+VkNDCcOltlFbJA=;
-        b=cTMpbC4o8DudpdOFlrGnTxYKJhR5TLl9BTn35t1Vg80O5o366+KbhUnyM7rEN5o1cj
-         gLVgVdvfRy2k8csl7iDtnYcWyRBV54dXE4hV+jPTK7+YPFFOVNaJ6hiNjWPJfKqj3mE+
-         TlMOCmQ8kMybmwAZ2PzJZbHgzB3c8HMJrduJY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zXS7+3EgnC5I92ixxRxNaCdg1MKz+VkNDCcOltlFbJA=;
-        b=T+kwbbFnWw7qI+igVtvJAma6EGaVDPmC++wlW/Yc/tYTsU8f9YsiNYcuCaDdCZYNz+
-         qVqq7xGiHdQo209WUz/uNU8kWTuXOMymVLnkCAu31hTesSETGWJmoEY/p2KiRdYly+VS
-         6Bbq/01EtFsprdSDsn51P0SJJKt5u/2WzLCNS2un0ipc3NPZIC1DpCYkb+m4anwFUDlK
-         PWt3mYWvxpZ6I8bffyUD/V8BJsaRc+Pr/SOArXJX69rAhec1vzBtauAnBIk33rslXxOV
-         r2iCOzVWbPmrvc/ATKsBppBM2TWQ2hDkDh87jlaGE/HmYcowbQm8YiwnLsdnqBUE+aX1
-         nf7A==
-X-Gm-Message-State: AOAM530ecWBM/ahaRoPOj7B/KRpq0TrLAC7FAW2jh1/gXKhyz1ylfLET
-        wcv/yA4wMLt8iAgXvulgthOmYNvuoeYnDj3tRxo=
-X-Google-Smtp-Source: ABdhPJzPz7FKzhyE9tVkVgSodtZ62x5Kp312jVoxK4YoGK8nlMeYcU3Y4PKQ1ykmm4tDi9GtbIpQnd5EMQO2LKaGHEc=
-X-Received: by 2002:a50:f403:: with SMTP id r3mr342011edm.260.1598939905467;
- Mon, 31 Aug 2020 22:58:25 -0700 (PDT)
+        Tue, 1 Sep 2020 01:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46248 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgIAF7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 01:59:32 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75D9D2087D;
+        Tue,  1 Sep 2020 05:59:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598939971;
+        bh=BJfrClw+C5jaFYlYb2O3GY7/UQ3rsmmQs8RxMwdsSY4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nnLyZ5mDHRUIhha8dkmjwpA51hT6fthUo0yyY3VVOe1s7JbrSYsAlq8d6JAYO1DZN
+         MZ++Rx2ECmGTFmGWOWCdO6SdR4ExDt62LEvpZTT9hx77PaIgfnwEnTUviPThaR8lwZ
+         vX85aH1lrloWJDrbTGRVNz4jEyqkRQEM/0M5Ms7A=
+Date:   Tue, 1 Sep 2020 08:59:24 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Stafford Horne <shorne@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        openrisc@lists.librecores.org
+Subject: Re: [PATCH] openrisc: Reserve memblock for initrd
+Message-ID: <20200901055924.GC432455@kernel.org>
+References: <20200831212102.4014642-1-shorne@gmail.com>
 MIME-Version: 1.0
-References: <20200820161152.22751-1-eajames@linux.ibm.com> <20200820161152.22751-3-eajames@linux.ibm.com>
-In-Reply-To: <20200820161152.22751-3-eajames@linux.ibm.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 1 Sep 2020 05:58:12 +0000
-Message-ID: <CACPK8XdMqZv5f0X1-G2WPrYSpYMpMjJC4WxNsiKSxqtWb0M1jw@mail.gmail.com>
-Subject: Re: [PATCH 2/5] input: misc: Add IBM Operation Panel driver
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831212102.4014642-1-shorne@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
->
-> Add a driver to get the button events from the panel and provide
-> them to userspace with the input subsystem. The panel is
-> connected with I2C and controls the bus, so the driver registers
-> as an I2C slave device.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+On Tue, Sep 01, 2020 at 06:21:01AM +0900, Stafford Horne wrote:
+> Recently OpenRISC added support for external initrd images, but I found
+> some instability when using larger buildroot initrd images. It turned
+> out that I forgot to reserve the memblock space for the initrd image.
+> 
+> This patch fixes the instability issue by reserving memblock space.
+> 
+> Fixes: ff6c923dbec3 ("openrisc: Add support for external initrd images")
+> Signed-off-by: Stafford Horne <shorne@gmail.com>
 > ---
->  MAINTAINERS                    |   1 +
->  drivers/input/misc/Kconfig     |  10 ++
->  drivers/input/misc/Makefile    |   1 +
->  drivers/input/misc/ibm-panel.c | 186 +++++++++++++++++++++++++++++++++
->  4 files changed, 198 insertions(+)
->  create mode 100644 drivers/input/misc/ibm-panel.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index a9fd08e9cd54..077cc79ad7fd 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8283,6 +8283,7 @@ M:        Eddie James <eajames@linux.ibm.com>
->  L:     linux-input@vger.kernel.org
->  S:     Maintained
->  F:     Documentation/devicetree/bindings/input/ibm,op-panel.yaml
-> +F:     drivers/input/misc/ibm-panel.c
->
->  IBM Power 842 compression accelerator
->  M:     Haren Myneni <haren@us.ibm.com>
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 362e8a01980c..88fb465a18b8 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -708,6 +708,16 @@ config INPUT_ADXL34X_SPI
->           To compile this driver as a module, choose M here: the
->           module will be called adxl34x-spi.
->
-> +config INPUT_IBM_PANEL
-> +       tristate "IBM Operation Panel driver"
-> +       depends on I2C_SLAVE || COMPILE_TEST
-> +       help
-> +         Supports the IBM Operation Panel as an input device. The panel is a
-> +         controller attached to the system with some buttons and an LCD display
-> +         that allows someone with physical access to the system to perform
-> +         various administrative tasks. This driver only supports the part of
-> +         the controller that sends commands to the system.
+>  arch/openrisc/kernel/setup.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
+> index b18e775f8be3..2c8aa53cc7ba 100644
+> --- a/arch/openrisc/kernel/setup.c
+> +++ b/arch/openrisc/kernel/setup.c
+> @@ -80,6 +80,15 @@ static void __init setup_memory(void)
+>  	 */
+>  	memblock_reserve(__pa(_stext), _end - _stext);
+>  
+> +#ifdef CONFIG_BLK_DEV_INITRD
+> +	/* Then reserve the initrd, if any */
+> +	if (initrd_start && (initrd_end > initrd_start)) {
+> +		memblock_reserve(ALIGN_DOWN(__pa(initrd_start), PAGE_SIZE),
+> +			ALIGN(initrd_end, PAGE_SIZE) -
+> +			ALIGN_DOWN(initrd_start, PAGE_SIZE));
+> +	}
 
-Is this always attached via a service processor/bmc? If so, mention it
-here so people know there's no point enabling it on a host/distro
-kernel.
+The core mm takes care of reserving the entrire pages for the memory
+reserved with memblock, so it is not necessary to do it here.
 
-I assume you're implementing the protocol correctly.  If you have a
-link to a specification then include that in the file.
+> +#endif /* CONFIG_BLK_DEV_INITRD */
+> +
+>  	early_init_fdt_reserve_self();
+>  	early_init_fdt_scan_reserved_mem();
+>  
+> -- 
+> 2.26.2
+> 
 
-The code looks okay to me.
-
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+-- 
+Sincerely yours,
+Mike.
