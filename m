@@ -2,237 +2,131 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7276DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A90C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4155E2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7E8E2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbgIAVja (ORCPT
+        id S1729599AbgIAVkf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:39:30 -0400
-Received: from mga07.intel.com ([134.134.136.100]:24821 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726521AbgIAVja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:39:30 -0400
-IronPort-SDR: aa6TINlCvDwy0Isolis0BPMM9o7uRBQqMwK2MJcNhNaKXTsffDqlmFWFKIYNTKjKIVZo0krfzp
- h95GmFnZ3j7Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="221493941"
-X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
-   d="scan'208";a="221493941"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 14:39:29 -0700
-IronPort-SDR: 62N9uf0FFLJ2X55oA28Vu1+Bw9e9F0TBy/gpwG6v0oKFYrbQ/iVGnUHa6rRrXV5KzJ5aC9FyMv
- 5Omxhhiw7m8w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
-   d="scan'208";a="502395875"
-Received: from lkp-server02.sh.intel.com (HELO f796b30506bf) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 01 Sep 2020 14:39:27 -0700
-Received: from kbuild by f796b30506bf with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kDDzz-000075-4B; Tue, 01 Sep 2020 21:39:27 +0000
-Date:   Wed, 02 Sep 2020 05:39:03 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:x86/misc] BUILD SUCCESS
- ea4e3bef4c94d5b5d8e790f37b48b7641172bcf5
-Message-ID: <5f4ebf77.n7ik2gx4xDTBW+m8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 1 Sep 2020 17:40:35 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:45125 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726521AbgIAVkb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 17:40:31 -0400
+Received: by mail-oi1-f196.google.com with SMTP id d189so2487216oig.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 14:40:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HtDmdS2o4yWHgA155sIUrMDEsVQmMWq03sAjdZrfpNk=;
+        b=IsLdozd6Pw6iEzE1ovnOp6TxuS/5nVmtGPRFzgbYJey4IbW4GpI2jQqXPHsqIT+7wA
+         8/3XUsMnRe76hKcI/lzVX90yZYfIYHMN4UKIvR/bozAgCbq61seoG0WaGznw0JIM1e1g
+         sAsqRkvWUaB8uHdPNKCiazNKxnAMszmZi0Fg0lFnFOa9FE+Yi88ecTUiZTdiLj32+bdu
+         QxxwIwDe4ai8b6SX9hDyAjnCJGLXeVUvnV9SEc6WQZndBasCeVpY5Uy8bqCJKZADjj1p
+         +FGYrHX8lTTQJ0jCAU/u6otOOOLa/2OS0qxcRGBeDwIzlf9m+Au2UQQTiOIHlr3gvh7x
+         Pn2g==
+X-Gm-Message-State: AOAM532Vt62ISFHZXXoV6CcNpFHd0kfIVLyutHUDFjABNRjSHU5YOUd5
+        d+JiYCaI00f7aR0qGkcjsMADuDIxxi0=
+X-Google-Smtp-Source: ABdhPJxenpaLsQUXRnF8a77NHv63bnGTVcmJ92/owODA9gm6QU4ssuZsaMiBall4T4sqA12IXi/6Ew==
+X-Received: by 2002:aca:3d41:: with SMTP id k62mr120156oia.156.1598996430048;
+        Tue, 01 Sep 2020 14:40:30 -0700 (PDT)
+Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com. [209.85.210.41])
+        by smtp.gmail.com with ESMTPSA id 5sm398746otb.67.2020.09.01.14.40.29
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 14:40:29 -0700 (PDT)
+Received: by mail-ot1-f41.google.com with SMTP id v16so2474992otp.10
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 14:40:29 -0700 (PDT)
+X-Received: by 2002:a05:6830:12c3:: with SMTP id a3mr3039860otq.74.1598996428949;
+ Tue, 01 Sep 2020 14:40:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+References: <20200730125259.GA8948@gondor.apana.org.au> <VE1PR04MB6687FB075B9A6A0923F576978F2E0@VE1PR04MB6687.eurprd04.prod.outlook.com>
+ <20200901015630.GA9065@gondor.apana.org.au>
+In-Reply-To: <20200901015630.GA9065@gondor.apana.org.au>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 1 Sep 2020 16:40:16 -0500
+X-Gmail-Original-Message-ID: <CADRPPNTt5dCX1pRUp5OenZBuMNJcN+k8jMVmUo5qw5g0VLZ4hQ@mail.gmail.com>
+Message-ID: <CADRPPNTt5dCX1pRUp5OenZBuMNJcN+k8jMVmUo5qw5g0VLZ4hQ@mail.gmail.com>
+Subject: Re: [PATCH] soc: fsl: Remove bogus packed attributes from qman.h
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  x86/misc
-branch HEAD: ea4e3bef4c94d5b5d8e790f37b48b7641172bcf5  Documentation/x86: Add documentation for /proc/cpuinfo feature flags
+On Mon, Aug 31, 2020 at 8:57 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Tue, Sep 01, 2020 at 01:50:38AM +0000, Leo Li wrote:
+> >
+> > Sorry for the late response.  I missed this email previously.
+> >
+> > These structures are descriptors used by hardware, we cannot have _ANY_ padding from the compiler.  The compiled result might be the same with or without the __packed attribute for now, but I think keep it there probably is safer for dealing with unexpected alignment requirements from the compiler in the future.
+> >
+> > Having conflicting alignment requirements warning might means something is wrong with the structure in certain scenario.  I just tried a ARM64 build but didn't see the warnings.  Could you share the warning you got and the build setup?  Thanks.
+>
+> Just do a COMPILE_TEST build on x86-64:
+>
+> In file included from ../drivers/crypto/caam/qi.c:12:
 
-elapsed time: 724m
+Looks like the CAAM driver and dependent QBMAN driver doesn't support
+COMPILE_TEST yet.  Are you trying to add the support for it?
 
-configs tested: 163
-configs skipped: 18
+I changed the Kconfig to enable the COMPILE_TEST anyway and updated my
+toolchain to gcc-10 trying to duplicate the issue.  The issues can
+only be reproduced with "W=1".
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> ../include/soc/fsl/qman.h:259:1: warning: alignment 1 of ‘struct qm_dqrr_entry’ is less than 8 [-Wpacked-not-aligned]
+>  } __packed;
+>  ^
+> ../include/soc/fsl/qman.h:292:2: warning: alignment 1 of ‘struct <anonymous>’ is less than 8 [-Wpacked-not-aligned]
+>   } __packed ern;
+>   ^
 
-gcc tested configs:
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-nds32                            alldefconfig
-arm                       omap2plus_defconfig
-m68k                        mvme16x_defconfig
-arm                             mxs_defconfig
-sh                ecovec24-romimage_defconfig
-mips                        nlm_xlp_defconfig
-arm                     eseries_pxa_defconfig
-arm                      footbridge_defconfig
-sh                            migor_defconfig
-mips                           ip28_defconfig
-sparc64                             defconfig
-sparc                       sparc32_defconfig
-powerpc                          allmodconfig
-sh                          rsk7264_defconfig
-powerpc                      mgcoge_defconfig
-sh                          r7780mp_defconfig
-sh                           se7712_defconfig
-sparc                       sparc64_defconfig
-sh                           se7750_defconfig
-nios2                         3c120_defconfig
-ia64                      gensparse_defconfig
-mips                 decstation_r4k_defconfig
-s390                       zfcpdump_defconfig
-arm                             pxa_defconfig
-arm                          gemini_defconfig
-microblaze                    nommu_defconfig
-arm                           viper_defconfig
-mips                        vocore2_defconfig
-mips                           jazz_defconfig
-mips                malta_qemu_32r6_defconfig
-mips                      pistachio_defconfig
-c6x                        evmc6472_defconfig
-powerpc                     pq2fads_defconfig
-i386                                defconfig
-mips                      loongson3_defconfig
-mips                  maltasmvp_eva_defconfig
-mips                      bmips_stb_defconfig
-mips                        maltaup_defconfig
-arm                        vexpress_defconfig
-arm                         shannon_defconfig
-arm                         hackkit_defconfig
-arm                        mvebu_v5_defconfig
-xtensa                       common_defconfig
-m68k                        m5407c3_defconfig
-mips                         db1xxx_defconfig
-arm                          ixp4xx_defconfig
-sh                              ul2_defconfig
-sh                         ecovec24_defconfig
-arm                            lart_defconfig
-arm                      pxa255-idp_defconfig
-arm                         mv78xx0_defconfig
-arm                         s3c2410_defconfig
-arm                              alldefconfig
-s390                          debug_defconfig
-mips                         tb0219_defconfig
-sh                     sh7710voipgw_defconfig
-mips                         tb0287_defconfig
-mips                     cu1000-neo_defconfig
-mips                          malta_defconfig
-powerpc                    gamecube_defconfig
-m68k                             alldefconfig
-mips                      malta_kvm_defconfig
-m68k                       m5249evb_defconfig
-powerpc                      chrp32_defconfig
-arm                         socfpga_defconfig
-um                             i386_defconfig
-arm                         s5pv210_defconfig
-powerpc                     skiroot_defconfig
-sh                          kfr2r09_defconfig
-c6x                                 defconfig
-arm                       aspeed_g5_defconfig
-x86_64                              defconfig
-m68k                        stmark2_defconfig
-powerpc                  mpc866_ads_defconfig
-arm                         lubbock_defconfig
-sh                         microdev_defconfig
-sh                            titan_defconfig
-arm                        mvebu_v7_defconfig
-xtensa                         virt_defconfig
-arm                          moxart_defconfig
-arc                              allyesconfig
-arm                        magician_defconfig
-mips                         bigsur_defconfig
-mips                    maltaup_xpa_defconfig
-nios2                         10m50_defconfig
-x86_64                           alldefconfig
-mips                           rs90_defconfig
-um                            kunit_defconfig
-m68k                         amcore_defconfig
-powerpc                     mpc83xx_defconfig
-ia64                             allyesconfig
-riscv                    nommu_virt_defconfig
-arm                          exynos_defconfig
-arm                        neponset_defconfig
-mips                          rm200_defconfig
-arm                          prima2_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-nios2                               defconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-alpha                            allyesconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-arc                                 defconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-parisc                           allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-sparc                               defconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20200901
-x86_64               randconfig-a006-20200901
-x86_64               randconfig-a003-20200901
-x86_64               randconfig-a005-20200901
-x86_64               randconfig-a001-20200901
-x86_64               randconfig-a002-20200901
-i386                 randconfig-a004-20200901
-i386                 randconfig-a005-20200901
-i386                 randconfig-a006-20200901
-i386                 randconfig-a002-20200901
-i386                 randconfig-a001-20200901
-i386                 randconfig-a003-20200901
-i386                 randconfig-a016-20200901
-i386                 randconfig-a015-20200901
-i386                 randconfig-a011-20200901
-i386                 randconfig-a013-20200901
-i386                 randconfig-a014-20200901
-i386                 randconfig-a012-20200901
-riscv                            allyesconfig
-riscv                             allnoconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                               rhel-8.3
-x86_64                                  kexec
+I think this is a valid concern that if the parent structure doesn't
+meet certain alignment requirements, the alignment for the
+sub-structure cannot be guaranteed.  If we just remove the __packed
+attribute from the parent structure, the compiler could try to add
+padding in the parent structure to fulfill the alignment requirements
+of the sub structure which is not good.  I think the following changes
+are a better fix for the warnings:
 
-clang tested configs:
-x86_64               randconfig-a013-20200901
-x86_64               randconfig-a016-20200901
-x86_64               randconfig-a011-20200901
-x86_64               randconfig-a012-20200901
-x86_64               randconfig-a015-20200901
-x86_64               randconfig-a014-20200901
+diff --git a/include/soc/fsl/qman.h b/include/soc/fsl/qman.h
+index cfe00e08e85b..9f484113cfda 100644
+--- a/include/soc/fsl/qman.h
++++ b/include/soc/fsl/qman.h
+@@ -256,7 +256,7 @@ struct qm_dqrr_entry {
+        __be32 context_b;
+        struct qm_fd fd;
+        u8 __reserved4[32];
+-} __packed;
++} __packed __aligned(64);
+ #define QM_DQRR_VERB_VBIT              0x80
+ #define QM_DQRR_VERB_MASK              0x7f    /* where the verb contains; */
+ #define QM_DQRR_VERB_FRAME_DEQUEUE     0x60    /* "this format" */
+@@ -289,7 +289,7 @@ union qm_mr_entry {
+                __be32 tag;
+                struct qm_fd fd;
+                u8 __reserved1[32];
+-       } __packed ern;
++       } __packed __aligned(64) ern;
+        struct {
+                u8 verb;
+                u8 fqs;         /* Frame Queue Status */
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+Regards,
+Leo
