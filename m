@@ -2,134 +2,103 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB5A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B82C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC9E0206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977315;
-	bh=qkdyS7d8IfKRt0vPSqX3ghon+iMsNJgrh+HCthJqC/g=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u0FLhOBuY8aDa3ExjnA5kbnYCo2WqjtD+YUIhxnykdiiTugt/hn5jG4Va0+aH98af
-	 PFf5MeatN76khZ/avzXk5ChaEKqQag0xM+/rfhML4uFx/LxLlcLfadrY6SeO/YKft0
-	 R+9VMafK5J+gEElS2XWwwSaU4gPp16D+LvY3C8F0=
+	by mail.kernel.org (Postfix) with ESMTP id AF2722065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731068AbgIAQVu (ORCPT
+        id S1731832AbgIAQWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35930 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:22:02 -0400
+Received: from elvis.franken.de ([193.175.24.41]:45872 "EHLO elvis.franken.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731036AbgIAPcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:32:25 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 761E820866;
-        Tue,  1 Sep 2020 15:32:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974344;
-        bh=qkdyS7d8IfKRt0vPSqX3ghon+iMsNJgrh+HCthJqC/g=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C846/EAS1cEljPJiRHJZL16GLIlUZ3aDKCdrb13uth3tF51trHihonhn20Uy3+jfy
-         /3t78pvTi5aMIpV4vPtDOAlOOTuJimgGh4DL4cVJS2rSF5VEJ84OKtAIZaITYm8fMM
-         E0Q9JSHGTE7Q+PxVLhT3WyYrxZu+rTRE9Y1EAhCE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 140/214] scsi: qla2xxx: Fix login timeout
-Date:   Tue,  1 Sep 2020 17:10:20 +0200
-Message-Id: <20200901150959.688792078@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731021AbgIAPcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:24 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1kD8Gf-0002rq-00; Tue, 01 Sep 2020 17:32:17 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 92E50C0E4C; Tue,  1 Sep 2020 17:22:09 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 17:22:09 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-mm@kvack.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 22/28] sgiseeq: convert from dma_cache_sync to
+ dma_sync_single_for_device
+Message-ID: <20200901152209.GA14288@alpha.franken.de>
+References: <20200819065555.1802761-1-hch@lst.de>
+ <20200819065555.1802761-23-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819065555.1802761-23-hch@lst.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+On Wed, Aug 19, 2020 at 08:55:49AM +0200, Christoph Hellwig wrote:
+> Use the proper modern API to transfer cache ownership for incoherent DMA.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/net/ethernet/seeq/sgiseeq.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/net/ethernet/seeq/sgiseeq.c b/drivers/net/ethernet/seeq/sgiseeq.c
+> index 39599bbb5d45b6..f91dae16d69a19 100644
+> --- a/drivers/net/ethernet/seeq/sgiseeq.c
+> +++ b/drivers/net/ethernet/seeq/sgiseeq.c
+> @@ -112,14 +112,18 @@ struct sgiseeq_private {
+>  
+>  static inline void dma_sync_desc_cpu(struct net_device *dev, void *addr)
+>  {
+> -	dma_cache_sync(dev->dev.parent, addr, sizeof(struct sgiseeq_rx_desc),
+> -		       DMA_FROM_DEVICE);
+> +	struct sgiseeq_private *sp = netdev_priv(dev);
+> +
+> +	dma_sync_single_for_cpu(dev->dev.parent, VIRT_TO_DMA(sp, addr),
+> +			sizeof(struct sgiseeq_rx_desc), DMA_BIDIRECTIONAL);
+>  }
+>  
+>  static inline void dma_sync_desc_dev(struct net_device *dev, void *addr)
+>  {
+> -	dma_cache_sync(dev->dev.parent, addr, sizeof(struct sgiseeq_rx_desc),
+> -		       DMA_TO_DEVICE);
+> +	struct sgiseeq_private *sp = netdev_priv(dev);
+> +
+> +	dma_sync_single_for_device(dev->dev.parent, VIRT_TO_DMA(sp, addr),
+> +			sizeof(struct sgiseeq_rx_desc), DMA_BIDIRECTIONAL);
+>  }
 
-[ Upstream commit abb31aeaa9b20680b0620b23fea5475ea4591e31 ]
+this breaks ethernet on IP22 completely, but I haven't figured out why, yet.
 
-Multipath errors were seen during failback due to login timeout.  The
-remote device sent LOGO, the local host tore down the session and did
-relogin. The RSCN arrived indicates remote device is going through failover
-after which the relogin is in a 20s timeout phase.  At this point the
-driver is stuck in the relogin process.  Add a fix to delete the session as
-part of abort/flush the login.
+Thomas.
 
-Link: https://lore.kernel.org/r/20200806111014.28434-5-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/qla2xxx/qla_gs.c     | 18 +++++++++++++++---
- drivers/scsi/qla2xxx/qla_target.c |  2 +-
- 2 files changed, 16 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index a44de4c5dcf6c..fc6e12fb7d77b 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3673,10 +3673,22 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
- 		}
- 
- 		if (fcport->scan_state != QLA_FCPORT_FOUND) {
-+			bool do_delete = false;
-+
-+			if (fcport->scan_needed &&
-+			    fcport->disc_state == DSC_LOGIN_PEND) {
-+				/* Cable got disconnected after we sent
-+				 * a login. Do delete to prevent timeout.
-+				 */
-+				fcport->logout_on_delete = 1;
-+				do_delete = true;
-+			}
-+
- 			fcport->scan_needed = 0;
--			if ((qla_dual_mode_enabled(vha) ||
--				qla_ini_mode_enabled(vha)) &&
--			    atomic_read(&fcport->state) == FCS_ONLINE) {
-+			if (((qla_dual_mode_enabled(vha) ||
-+			      qla_ini_mode_enabled(vha)) &&
-+			    atomic_read(&fcport->state) == FCS_ONLINE) ||
-+				do_delete) {
- 				if (fcport->loop_id != FC_NO_LOOP_ID) {
- 					if (fcport->flags & FCF_FCP2_DEVICE)
- 						fcport->logout_on_delete = 0;
-diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
-index cb8a892e2d393..b75e6e4d58c06 100644
---- a/drivers/scsi/qla2xxx/qla_target.c
-+++ b/drivers/scsi/qla2xxx/qla_target.c
-@@ -1262,7 +1262,7 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
- 
- 	qla24xx_chk_fcp_state(sess);
- 
--	ql_dbg(ql_dbg_tgt, sess->vha, 0xe001,
-+	ql_dbg(ql_dbg_disc, sess->vha, 0xe001,
- 	    "Scheduling sess %p for deletion %8phC\n",
- 	    sess, sess->port_name);
- 
 -- 
-2.25.1
-
-
-
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
