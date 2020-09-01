@@ -2,187 +2,82 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83818C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0011C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 454652087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:47:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EDF7LoOd"
+	by mail.kernel.org (Postfix) with ESMTP id 7B2A62087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:47:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgIAGrf (ORCPT
+        id S1726821AbgIAGr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58152 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgIAGrb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:47:31 -0400
-Received: from mail-vk1-xa44.google.com (mail-vk1-xa44.google.com [IPv6:2607:f8b0:4864:20::a44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56B0EC0612AC
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:47:31 -0700 (PDT)
-Received: by mail-vk1-xa44.google.com with SMTP id h23so83480vkn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:47:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oifFdmXULzK6sVZQwlchaA3hM9sOOMssvlLwC1vno/Y=;
-        b=EDF7LoOdrSEdX5GMv9D+fIHt9SNaw7sL3J6OZhS+t0Ap7gtIF9JH2gsgMz2uECU3IG
-         CgM21YqTGpH9DBZViZWoE6ybiuuOOL6N+CWNuDp7hofQ9nlZCJt1Q+vTkRmZJRg42029
-         rrbvG9HRw+7hZqrbOwK6OIJhlxojzK5uvYqxkZLhkgCaliaIrF7g++Z8Hws2NbReBvcY
-         MmlGw2VzDX3Pg9oXixYwsHeLg1jCKFH4hQQFaa6STpYEioJGHp3/oakcIvls3yfiXsKW
-         wYHlcHBJMomA/4axUYBF7DMbaFXGP7grNlkl8A2Dxgbdff0V62gGPdwk8Kxva6VEZ8P7
-         QQig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oifFdmXULzK6sVZQwlchaA3hM9sOOMssvlLwC1vno/Y=;
-        b=QSaresZ9ddRAzgfcUt6FLEnC9aqqvYP1xf0LMyKsMbqJpLaBuNjHKf7RoLeGhK4qQL
-         RV/I0Dg8MDdfK/xeepfgYm7lv3RvyetjNDmU78mTjszW8sEvSgqSbEan/Y4en98Kv5Lg
-         OjNuPCw/wUoP9rImCqWl+SNgjU7vMV15+AX+je0scrBP1/LVu8XVEwGjLVY89RNnBhLH
-         YkvsltNw2JX5DLhxkVt8W9D6mFZw4upmnT1h2Mx8T1GIh13sUBcr58KNGmL3uTA30HBn
-         luWTaK8zcSmMV/Gk5MmLhT73U8FT4bmqS92jk+te3lrR2Z+cvcp+e3P8YZlrxvFMeoYj
-         pHOA==
-X-Gm-Message-State: AOAM530zWgGkGoazOV1AC6gnW1tFTaaS6XE/bMOEjnebn2ZWTjeZIrco
-        Q+TPHgjKmU7TLmIoDDfh108t7ZOYTKQKJR4u1q2paA==
-X-Google-Smtp-Source: ABdhPJzH8WKHXGEEHlB0GOP6TJgcrRYA3rqU86DQAeSkHuTHB5EJoouKep21/cuL43FNK2ok8t8nPcr30YooPDX2lk8=
-X-Received: by 2002:a1f:a286:: with SMTP id l128mr250532vke.1.1598942850433;
- Mon, 31 Aug 2020 23:47:30 -0700 (PDT)
+        Tue, 1 Sep 2020 02:47:57 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10743 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726044AbgIAGr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:47:57 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2BBC8262C5DAB748EDCA;
+        Tue,  1 Sep 2020 14:47:52 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
+ 14:47:44 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>, <ulf.hansson@linaro.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ACPI: Remove unused inline functions
+Date:   Tue, 1 Sep 2020 14:47:16 +0800
+Message-ID: <20200901064716.2444-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
- <20200831194402.GD2855@paulmck-ThinkPad-P72>
-In-Reply-To: <20200831194402.GD2855@paulmck-ThinkPad-P72>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 1 Sep 2020 08:46:54 +0200
-Message-ID: <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
-Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
- OF driver helper
-To:     paulmck@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        peterz@infrdead.org, Lina Iyer <ilina@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Saravanna, Rafael, Lina
+There is no callers in tree.
 
-On Mon, 31 Aug 2020 at 21:44, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Mon, Aug 31, 2020 at 12:02:31PM +0530, Naresh Kamboju wrote:
-> > While booting linux mainline kernel on arm64 db410c this kernel warning
-> > noticed.
-> >
-> > metadata:
-> >   git branch: master
-> >   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> >   git commit: f75aef392f869018f78cfedf3c320a6b3fcfda6b
-> >   git describe: v5.9-rc3
-> >   make_kernelversion: 5.9.0-rc3
-> >   kernel-config:
-> > http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-mainline/2965/config
-> >
-> > Boot log,
-> >
-> > [    0.000000] Booting Linux on physical CPU 0x0000000000 [0x410fd030]
-> > [    0.000000] Linux version 5.9.0-rc3 (oe-user@oe-host)
-> > (aarch64-linaro-linux-gcc (GCC) 7.3.0, GNU ld (GNU Binutils)
-> > 2.30.0.20180208) #1 SMP PREEMPT Mon Aug 31 00:23:15 UTC 2020
-> > [    0.000000] Machine model: Qualcomm Technologies, Inc. APQ 8016 SBC
-> > <>
-> > [    5.299090] sdhci: Secure Digital Host Controller Interface driver
-> > [    5.299140] sdhci: Copyright(c) Pierre Ossman
-> > [    5.304313]
-> > [    5.307771] Synopsys Designware Multimedia Card Interface Driver
-> > [    5.308588] =============================
-> > [    5.308593] WARNING: suspicious RCU usage
-> > [    5.316628] sdhci-pltfm: SDHCI platform and OF driver helper
-> > [    5.320052] 5.9.0-rc3 #1 Not tainted
-> > [    5.320057] -----------------------------
-> > [    5.320063] /usr/src/kernel/include/trace/events/lock.h:37
-> > suspicious rcu_dereference_check() usage!
-> > [    5.320068]
-> > [    5.320068] other info that might help us debug this:
-> > [    5.320068]
-> > [    5.320074]
-> > [    5.320074] rcu_scheduler_active = 2, debug_locks = 1
-> > [    5.320078] RCU used illegally from extended quiescent state!
-> > [    5.320084] no locks held by swapper/0/0.
-> > [    5.320089]
-> > [    5.320089] stack backtrace:
-> > [    5.320098] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
-> > [    5.346354] sdhci_msm 7864900.sdhci: Got CD GPIO
-> > [    5.346446] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> > [    5.346452] Call trace:
-> > [    5.346463]  dump_backtrace+0x0/0x1f8
-> > [    5.346471]  show_stack+0x2c/0x38
-> > [    5.346480]  dump_stack+0xec/0x15c
-> > [    5.346490]  lockdep_rcu_suspicious+0xd4/0xf8
-> > [    5.346499]  lock_acquire+0x3d0/0x440
-> > [    5.346510]  _raw_spin_lock_irqsave+0x80/0xb0
-> > [    5.413118]  __pm_runtime_suspend+0x34/0x1d0
-> > [    5.417457]  psci_enter_domain_idle_state+0x4c/0xb0
-> > [    5.421795]  cpuidle_enter_state+0xc8/0x610
-> > [    5.426392]  cpuidle_enter+0x3c/0x50
-> > [    5.430561]  call_cpuidle+0x44/0x80
-> > [    5.434378]  do_idle+0x240/0x2a0
->
-> RCU ignores CPUs in the idle loop, which means that you cannot use
-> rcu_read_lock() from the idle loop without use of something like
-> RCU_NONIDLE().  If this is due to event tracing, you should use the
-> _rcuidle() variant of the event trace statement.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ include/linux/acpi.h | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-In the runtime suspend path, the runtime PM core calls
-device_links_read_lock() - if the device in question has any links to
-suppliers (to allow them to be suspended too).
+diff --git a/include/linux/acpi.h b/include/linux/acpi.h
+index 17e80e182802..dd9b961628eb 100644
+--- a/include/linux/acpi.h
++++ b/include/linux/acpi.h
+@@ -979,8 +979,6 @@ int acpi_subsys_runtime_suspend(struct device *dev);
+ int acpi_subsys_runtime_resume(struct device *dev);
+ int acpi_dev_pm_attach(struct device *dev, bool power_on);
+ #else
+-static inline int acpi_dev_runtime_suspend(struct device *dev) { return 0; }
+-static inline int acpi_dev_runtime_resume(struct device *dev) { return 0; }
+ static inline int acpi_subsys_runtime_suspend(struct device *dev) { return 0; }
+ static inline int acpi_subsys_runtime_resume(struct device *dev) { return 0; }
+ static inline int acpi_dev_pm_attach(struct device *dev, bool power_on)
+@@ -1218,13 +1216,6 @@ static inline int acpi_node_prop_get(const struct fwnode_handle *fwnode,
+ 	return -ENXIO;
+ }
+ 
+-static inline int acpi_dev_prop_get(const struct acpi_device *adev,
+-				    const char *propname,
+-				    void **valptr)
+-{
+-	return -ENXIO;
+-}
+-
+ static inline int acpi_dev_prop_read_single(const struct acpi_device *adev,
+ 					    const char *propname,
+ 					    enum dev_prop_type proptype,
+-- 
+2.17.1
 
-device_links_read_lock() calls srcu_read_lock().
 
-It turns out that the device in question (the CPU device that is
-attached to genpd) didn't have any links before - but that seems to
-have changed, due to the work done by Saravana (links become created
-on a per resource basis, parsed from DT during boot).
-
->
-> Note also that Peter Zijlstra (CCed) is working to shrink the portion
-> of the idle loop that RCU ignores.  Not sure that it covers your
-> case, but it is worth checking.
-
-Thanks for letting me know. Let's see what Peter thinks about this then.
-
-Apologize for my ignorance, but from a cpuidle point of view, what
-does it mean using RCU_NONIDLE()? I guess we should avoid RCU_NONIDLE
-on bigger code paths?
-
-I could add RCU_NONIDLE for the calls to pm_runtime_put_sync_suspend()
-and pm_runtime_get_sync() in psci_enter_domain_idle_state(). Perhaps
-that's the easiest approach, at least to start with.
-
-Or do you have any other ideas?
-
-[...]
-
-Kind regards
-Uffe
