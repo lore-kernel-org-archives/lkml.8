@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D0DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA6D0C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B01D221534
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B2C20E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974599;
-	bh=bvWFV2a4Kqn7UBOT2pn4bMdej+uDUFfTkyG2Rh/G8RM=;
+	s=default; t=1598974607;
+	bh=ukc1VTBXHuV1vIGsW9+ts5BRgWWZ/dWaSHlEnAGo6ks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UOePijSpVHqHdmehRfFxceb3jT0PTuPV1htqXlJ4lZDTQc8Am6x8MRmxwkI3opuEp
-	 VnobGVFn7sMGxLTPBiQ43tJg3IEyXBBIiOY6F4m3ajHbojgkHsm34M7XtjE2AoMNMI
-	 EXIcncKZaua/yP8huZvyWSBl3fusuqNR3X7HGH6M=
+	b=vc+rLdVPKOPlTkn7heKBt0XRE7a4pc45GbkmKqqH8AOB8stYFvYXYZxK/JOo28I8q
+	 3okLxDQt6Kmb2TXGVgMMwFIrXhrCg9aSkU+cA5sYioQW9wHxUS+PDeFZe/t5iIqKs2
+	 ioRvWItLBW9+0C3QctBNpIImpvtGVzOS6ZBUC/fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgIAPgh (ORCPT
+        id S1731291AbgIAPgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:36:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41070 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:36:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41278 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731182AbgIAPfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:21 -0400
+        id S1730664AbgIAPfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:35:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAEEA20866;
-        Tue,  1 Sep 2020 15:35:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCC1E205F4;
+        Tue,  1 Sep 2020 15:35:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974521;
-        bh=bvWFV2a4Kqn7UBOT2pn4bMdej+uDUFfTkyG2Rh/G8RM=;
+        s=default; t=1598974529;
+        bh=ukc1VTBXHuV1vIGsW9+ts5BRgWWZ/dWaSHlEnAGo6ks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f0bVnkKBs/gsH08lcKSh2U2do/uqs4Z1c6zcEfK6jwAuW1Y+W+JlVnIuuMrfcUiqY
-         TBiszAR8jlEQY0p1dhdaGHaRksBVnk1H1zkX3u4ER/RwvdZDPRFDgI1V6bEHvxKDnf
-         PB0NmyNne59vqdvBTu+i3gUNFhJeJhhWwQhsbPIU=
+        b=fKXrBePnDMRTGJ+2xOPqQaQPjP5MvEMm+kGLv9V53pXfror8nn4otBqLVbzXd0+zS
+         XlysnozBv2Rta2sri8deq6+0TLWJRpInJcRMMgtaSM0MZWa7Qnif58IzicGxIvloqw
+         kAeNgbjdxjRrtsFl6JM8iAMPYLabQxPiEhXxGDHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        stable@vger.kernel.org, Denis Efremov <efremov@linux.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Masahiro Yamada <masahiroy@kernel.org>,
         Matthias Maennich <maennich@google.com>
-Subject: [PATCH 5.4 209/214] kheaders: explain why include/config/autoconf.h is excluded from md5sum
-Date:   Tue,  1 Sep 2020 17:11:29 +0200
-Message-Id: <20200901151002.938717565@linuxfoundation.org>
+Subject: [PATCH 5.4 211/214] kbuild: fix broken builds because of GZIP,BZIP2,LZOP variables
+Date:   Tue,  1 Sep 2020 17:11:31 +0200
+Message-Id: <20200901151003.033890779@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,41 +61,214 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+From: Denis Efremov <efremov@linux.com>
 
-commit f276031b4e2f4c961ed6d8a42f0f0124ccac2e09 upstream.
+commit e4a42c82e943b97ce124539fcd7a47445b43fa0d upstream.
 
-This comment block explains why include/generated/compile.h is omitted,
-but nothing about include/generated/autoconf.h, which might be more
-difficult to understand. Add more comments.
+Redefine GZIP, BZIP2, LZOP variables as KGZIP, KBZIP2, KLZOP resp.
+GZIP, BZIP2, LZOP env variables are reserved by the tools. The original
+attempt to redefine them internally doesn't work in makefiles/scripts
+intercall scenarios, e.g., "make GZIP=gzip bindeb-pkg" and results in
+broken builds. There can be other broken build commands because of this,
+so the universal solution is to use non-reserved env variables for the
+compression tools.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Matthias Maennich <maennich@google.com>
+Fixes: 8dfb61dcbace ("kbuild: add variables for compression tools")
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Cc: Matthias Maennich <maennich@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/gen_kheaders.sh |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ Makefile                          |   24 +++++-------------------
+ arch/arm/boot/deflate_xip_data.sh |    2 +-
+ arch/ia64/Makefile                |    2 +-
+ arch/m68k/Makefile                |    8 ++++----
+ arch/parisc/Makefile              |    2 +-
+ scripts/Makefile.lib              |    6 +++---
+ scripts/Makefile.package          |    6 +++---
+ scripts/package/buildtar          |    4 ++--
+ 8 files changed, 20 insertions(+), 34 deletions(-)
 
---- a/kernel/gen_kheaders.sh
-+++ b/kernel/gen_kheaders.sh
-@@ -32,8 +32,15 @@ fi
- all_dirs="$all_dirs $dir_list"
+--- a/Makefile
++++ b/Makefile
+@@ -442,27 +442,13 @@ PYTHON		= python
+ PYTHON3		= python3
+ CHECK		= sparse
+ BASH		= bash
+-GZIP		= gzip
+-BZIP2		= bzip2
+-LZOP		= lzop
++KGZIP		= gzip
++KBZIP2		= bzip2
++KLZOP		= lzop
+ LZMA		= lzma
+ LZ4		= lz4c
+ XZ		= xz
  
- # include/generated/compile.h is ignored because it is touched even when none
--# of the source files changed. This causes pointless regeneration, so let us
--# ignore them for md5 calculation.
-+# of the source files changed.
-+#
-+# When Kconfig regenerates include/generated/autoconf.h, its timestamp is
-+# updated, but the contents might be still the same. When any CONFIG option is
-+# changed, Kconfig touches the corresponding timestamp file include/config/*.h.
-+# Hence, the md5sum detects the configuration change anyway. We do not need to
-+# check include/generated/autoconf.h explicitly.
-+#
-+# Ignore them for md5 calculation to avoid pointless regeneration.
- headers_md5="$(find $all_dirs -name "*.h"			|
- 		grep -v "include/generated/compile.h"	|
- 		grep -v "include/generated/autoconf.h"	|
+-# GZIP, BZIP2, LZOP env vars are used by the tools. Support them as the command
+-# line interface, but use _GZIP, _BZIP2, _LZOP internally.
+-_GZIP          := $(GZIP)
+-_BZIP2         := $(BZIP2)
+-_LZOP          := $(LZOP)
+-
+-# Reset GZIP, BZIP2, LZOP in this Makefile
+-override GZIP=
+-override BZIP2=
+-override LZOP=
+-
+-# Reset GZIP, BZIP2, LZOP in recursive invocations
+-MAKEOVERRIDES += GZIP= BZIP2= LZOP=
+-
+ CHECKFLAGS     := -D__linux__ -Dlinux -D__STDC__ -Dunix -D__unix__ \
+ 		  -Wbitwise -Wno-return-void -Wno-unknown-attribute $(CF)
+ NOSTDINC_FLAGS :=
+@@ -510,7 +496,7 @@ CLANG_FLAGS :=
+ export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COMPILE LD CC
+ export CPP AR NM STRIP OBJCOPY OBJDUMP OBJSIZE READELF PAHOLE LEX YACC AWK INSTALLKERNEL
+ export PERL PYTHON PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+-export _GZIP _BZIP2 _LZOP LZMA LZ4 XZ
++export KGZIP KBZIP2 KLZOP LZMA LZ4 XZ
+ export KBUILD_HOSTCXXFLAGS KBUILD_HOSTLDFLAGS KBUILD_HOSTLDLIBS LDFLAGS_MODULE
+ 
+ export KBUILD_CPPFLAGS NOSTDINC_FLAGS LINUXINCLUDE OBJCOPYFLAGS KBUILD_LDFLAGS
+@@ -1018,7 +1004,7 @@ export mod_strip_cmd
+ mod_compress_cmd = true
+ ifdef CONFIG_MODULE_COMPRESS
+   ifdef CONFIG_MODULE_COMPRESS_GZIP
+-    mod_compress_cmd = $(_GZIP) -n -f
++    mod_compress_cmd = $(KGZIP) -n -f
+   endif # CONFIG_MODULE_COMPRESS_GZIP
+   ifdef CONFIG_MODULE_COMPRESS_XZ
+     mod_compress_cmd = $(XZ) -f
+--- a/arch/arm/boot/deflate_xip_data.sh
++++ b/arch/arm/boot/deflate_xip_data.sh
+@@ -56,7 +56,7 @@ trap 'rm -f "$XIPIMAGE.tmp"; exit 1' 1 2
+ # substitute the data section by a compressed version
+ $DD if="$XIPIMAGE" count=$data_start iflag=count_bytes of="$XIPIMAGE.tmp"
+ $DD if="$XIPIMAGE"  skip=$data_start iflag=skip_bytes |
+-$_GZIP -9 >> "$XIPIMAGE.tmp"
++$KGZIP -9 >> "$XIPIMAGE.tmp"
+ 
+ # replace kernel binary
+ mv -f "$XIPIMAGE.tmp" "$XIPIMAGE"
+--- a/arch/ia64/Makefile
++++ b/arch/ia64/Makefile
+@@ -40,7 +40,7 @@ $(error Sorry, you need a newer version
+ endif
+ 
+ quiet_cmd_gzip = GZIP    $@
+-cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
++cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
+ 
+ quiet_cmd_objcopy = OBJCOPY $@
+ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS) $(OBJCOPYFLAGS_$(@F)) $< $@
+--- a/arch/m68k/Makefile
++++ b/arch/m68k/Makefile
+@@ -135,10 +135,10 @@ vmlinux.gz: vmlinux
+ ifndef CONFIG_KGDB
+ 	cp vmlinux vmlinux.tmp
+ 	$(STRIP) vmlinux.tmp
+-	$(_GZIP) -9c vmlinux.tmp >vmlinux.gz
++	$(KGZIP) -9c vmlinux.tmp >vmlinux.gz
+ 	rm vmlinux.tmp
+ else
+-	$(_GZIP) -9c vmlinux >vmlinux.gz
++	$(KGZIP) -9c vmlinux >vmlinux.gz
+ endif
+ 
+ bzImage: vmlinux.bz2
+@@ -148,10 +148,10 @@ vmlinux.bz2: vmlinux
+ ifndef CONFIG_KGDB
+ 	cp vmlinux vmlinux.tmp
+ 	$(STRIP) vmlinux.tmp
+-	$(_BZIP2) -1c vmlinux.tmp >vmlinux.bz2
++	$(KBZIP2) -1c vmlinux.tmp >vmlinux.bz2
+ 	rm vmlinux.tmp
+ else
+-	$(_BZIP2) -1c vmlinux >vmlinux.bz2
++	$(KBZIP2) -1c vmlinux >vmlinux.bz2
+ endif
+ 
+ archclean:
+--- a/arch/parisc/Makefile
++++ b/arch/parisc/Makefile
+@@ -156,7 +156,7 @@ vmlinuz: bzImage
+ 	$(OBJCOPY) $(boot)/bzImage $@
+ else
+ vmlinuz: vmlinux
+-	@$(_GZIP) -cf -9 $< > $@
++	@$(KGZIP) -cf -9 $< > $@
+ endif
+ 
+ install:
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -230,7 +230,7 @@ cmd_objcopy = $(OBJCOPY) $(OBJCOPYFLAGS)
+ # ---------------------------------------------------------------------------
+ 
+ quiet_cmd_gzip = GZIP    $@
+-      cmd_gzip = cat $(real-prereqs) | $(_GZIP) -n -f -9 > $@
++      cmd_gzip = cat $(real-prereqs) | $(KGZIP) -n -f -9 > $@
+ 
+ # DTC
+ # ---------------------------------------------------------------------------
+@@ -322,7 +322,7 @@ printf "%08x\n" $$dec_size |						\
+ )
+ 
+ quiet_cmd_bzip2 = BZIP2   $@
+-      cmd_bzip2 = { cat $(real-prereqs) | $(_BZIP2) -9; $(size_append); } > $@
++      cmd_bzip2 = { cat $(real-prereqs) | $(KBZIP2) -9; $(size_append); } > $@
+ 
+ # Lzma
+ # ---------------------------------------------------------------------------
+@@ -331,7 +331,7 @@ quiet_cmd_lzma = LZMA    $@
+       cmd_lzma = { cat $(real-prereqs) | $(LZMA) -9; $(size_append); } > $@
+ 
+ quiet_cmd_lzo = LZO     $@
+-      cmd_lzo = { cat $(real-prereqs) | $(_LZOP) -9; $(size_append); } > $@
++      cmd_lzo = { cat $(real-prereqs) | $(KLZOP) -9; $(size_append); } > $@
+ 
+ quiet_cmd_lz4 = LZ4     $@
+       cmd_lz4 = { cat $(real-prereqs) | $(LZ4) -l -c1 stdin stdout; \
+--- a/scripts/Makefile.package
++++ b/scripts/Makefile.package
+@@ -45,7 +45,7 @@ if test "$(objtree)" != "$(srctree)"; th
+ 	false; \
+ fi ; \
+ $(srctree)/scripts/setlocalversion --save-scmversion; \
+-tar -I $(_GZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
++tar -I $(KGZIP) -c $(RCS_TAR_IGNORE) -f $(2).tar.gz \
+ 	--transform 's:^:$(2)/:S' $(TAR_CONTENT) $(3); \
+ rm -f $(objtree)/.scmversion
+ 
+@@ -127,8 +127,8 @@ util/PERF-VERSION-GEN $(CURDIR)/$(perf-t
+ tar rf $(perf-tar).tar $(perf-tar)/HEAD $(perf-tar)/PERF-VERSION-FILE; \
+ rm -r $(perf-tar);                                                  \
+ $(if $(findstring tar-src,$@),,                                     \
+-$(if $(findstring bz2,$@),$(_BZIP2),                                 \
+-$(if $(findstring gz,$@),$(_GZIP),                                  \
++$(if $(findstring bz2,$@),$(KBZIP2),                                 \
++$(if $(findstring gz,$@),$(KGZIP),                                  \
+ $(if $(findstring xz,$@),$(XZ),                                     \
+ $(error unknown target $@))))                                       \
+ 	-f -9 $(perf-tar).tar)
+--- a/scripts/package/buildtar
++++ b/scripts/package/buildtar
+@@ -28,11 +28,11 @@ case "${1}" in
+ 		opts=
+ 		;;
+ 	targz-pkg)
+-		opts="-I ${_GZIP}"
++		opts="-I ${KGZIP}"
+ 		tarball=${tarball}.gz
+ 		;;
+ 	tarbz2-pkg)
+-		opts="-I ${_BZIP2}"
++		opts="-I ${KBZIP2}"
+ 		tarball=${tarball}.bz2
+ 		;;
+ 	tarxz-pkg)
 
 
