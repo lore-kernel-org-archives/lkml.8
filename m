@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD2DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FFAC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBFCD206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD89206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9FXqU4P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aquQ1r2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgIAW7n (ORCPT
+        id S1727842AbgIAW74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:59:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38958 "EHLO
+        Tue, 1 Sep 2020 18:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726984AbgIAW7X (ORCPT
+        with ESMTP id S1726936AbgIAW7V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:59:23 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 103A8C061245;
-        Tue,  1 Sep 2020 15:59:23 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x18so1312672pll.6;
-        Tue, 01 Sep 2020 15:59:23 -0700 (PDT)
+        Tue, 1 Sep 2020 18:59:21 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8511EC061244;
+        Tue,  1 Sep 2020 15:59:21 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l191so1506170pgd.5;
+        Tue, 01 Sep 2020 15:59:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=f3rJB4drqUi57W2zR2kdhntilYhVPNgozy2dTXPbHcs=;
-        b=J9FXqU4PszduwFId3UoISoVbsj4bfjHCIRoQ3Xe4vyKyfM17IeciOco3HvJbneLLRY
-         yNfvkPqSyz2kBHjnNqj5HLABJYao6Zm9XbzbGqiYuXaUY/LFhRl9s426NI3PyIcFBaA3
-         xm08Z0krZ3qaXgmrJ8uEp55OGEr196A2Dip3nbrFTHpWCQ4V8/e1SCLDwx315gI9oNIb
-         I5/v59GTGU0VNRBsTvsbJ9Qeo4xaXwvvGedopn3NgQ6GZicL/HuTA73xB0EBLeL6GHQW
-         n1v8Z3Nb/z90xTLyYyeQ97rez8nY43zIBIZPbrle1uS1Emj6wytl507eA1YDqsj+QURE
-         zfCw==
+        bh=1Capl7CE1BoBl1tfXP6GUSFZ6V4y5GZrTYTnU4/p5G8=;
+        b=aquQ1r2imoAafGDgtP1uDrWFO+WZHgX6dYvKKJ0djcZzmFRt5QxyeX4mtCo2WRXp0b
+         bU8ViqrVKZq1ebCWjX0nHZnkFwEoaNoWxxW4RGQDgpx6tLuDmZaMoJ2kmTcJ8l+oFBMo
+         rOLThioRL6BSGF0lucJMc0aTyLfF8H1WiEr690ubApt0UFx1PztFF4pdtKrSAGrm58O0
+         WucJRvXnoQrw4yMDa74XOGWUfULG24wHKLMtlsHHylPUdfeAgLShUsP6+9gmI/hbMvLm
+         xWRwLGUGW8jDAyhdkPtGVkiSCsvInkHErM6bz9qjZzfXl/9GzuPuNJHmU+3jdjfblgjL
+         Nw3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=f3rJB4drqUi57W2zR2kdhntilYhVPNgozy2dTXPbHcs=;
-        b=NLNLxZiu4h03x4wfxNZ3BEnkA7Z7kK4NIA7nId1hJxhX/K5zNlGpg6j2NhQVBNtMWx
-         942Yr+kpBg/ERDYuDs43R0JtqfondAmYaS6yu0BhiIzpf5Q9MAcu3Z7M7hXHnd2liwov
-         YIOJ8bzoleAZePgqKPENrDG7Vol6gBoUEj/jddKaa1iA+nMvyRi8jvNbVwa37t5pOoW6
-         qcL0Mqz5tWc6wng3VFc2jOtqFW2vVar+8p90WRhuba/nvMaY/6k/994I70jKHLyV9cXz
-         EvGoHCI3xR1zlI7K2UUM4CudX86AMhbNQBVqMesEZtUOmVTVv8JKItIqaKfhwHBCOpAn
-         I2BA==
-X-Gm-Message-State: AOAM532bs/zuOxcv1g0O+u9CBJ6+fUksfVhyW0mJakVuOXG6P2lqMa1b
-        fpwsxWciaB4MCBV0g/ppGFQBRaFRJ4A=
-X-Google-Smtp-Source: ABdhPJwsgC2sRABGdRk4rHWd2vt07HY3fSJduie2IvJSESSzn1qMsSH4WIEiuLC6gRL/Im/AW8T1fw==
-X-Received: by 2002:a17:902:9a45:: with SMTP id x5mr3407809plv.243.1599001162102;
-        Tue, 01 Sep 2020 15:59:22 -0700 (PDT)
+        bh=1Capl7CE1BoBl1tfXP6GUSFZ6V4y5GZrTYTnU4/p5G8=;
+        b=QJsP5QLNk4SjUowoSzV+qsyEj9mHr3RReWWmCfe2iKcFEPGltOcmBv5Ov8KCLNqEEI
+         jY4zvrDjJt7CrqH53euZ+tSr7cL5/n1uTSrBuJNSHMWkodgTHH67cHYdhPRjxCqE+Hsz
+         EPnWxPfkbo6Hfgt6gvactNl6z6rKkMI2vFDuXyrCrLRDC1Qs/iyUDqNEhQhgUl2dca8H
+         ccGGUongy4dBxr297V5gCZhpsvJNULzLQqwyBb1C75+7qYeM9KA4IWOhJXw3WTA2Qo+g
+         h+gtCxnwHXR2NP2SwWPjlAvUD/CG8fU/4noWebR12Lj4Qc6/gE1Wp5PWCfCS/n0ncU+i
+         QvIw==
+X-Gm-Message-State: AOAM531SiQu8WZlg+UqRw0aPpn0L1oeEAS21ZLdogVyecpWjTA6mnsDq
+        gUXoQ2xB3byQawG3DhMjBR4y4xhnt7o=
+X-Google-Smtp-Source: ABdhPJz4esZZ5tEpXvTY8CYviED/LtDqd9scXVJgTmOmeQLElohb5s/wa3sKzo2o9GShAcpWYN/4XQ==
+X-Received: by 2002:a63:ab43:: with SMTP id k3mr3513902pgp.426.1599001160671;
+        Tue, 01 Sep 2020 15:59:20 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m188sm2952750pfm.220.2020.09.01.15.59.20
+        by smtp.gmail.com with ESMTPSA id m188sm2952750pfm.220.2020.09.01.15.59.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 15:59:21 -0700 (PDT)
+        Tue, 01 Sep 2020 15:59:19 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         Vivien Didelot <vivien.didelot@gmail.com>,
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 3/3] net: dsa: bcm_sf2: recalculate switch clock rate based on ports
-Date:   Tue,  1 Sep 2020 15:59:13 -0700
-Message-Id: <20200901225913.1587628-4-f.fainelli@gmail.com>
+Subject: [PATCH net-next 2/3] net: dsa: bcm_sf2: request and handle clocks
+Date:   Tue,  1 Sep 2020 15:59:12 -0700
+Message-Id: <20200901225913.1587628-3-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200901225913.1587628-1-f.fainelli@gmail.com>
 References: <20200901225913.1587628-1-f.fainelli@gmail.com>
@@ -82,168 +82,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Whenever a port gets enabled/disabled, recalcultate the required switch
-clock rate to make sure it always gets set to the expected rate
-targeting our switch use case. This is only done for the BCM7445 switch
-as there is no clocking profile available for BCM7278.
+Fetch the corresponding clock resource and enable/disable it during
+suspend/resume if and only if we have no ports defined for Wake-on-LAN.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/dsa/bcm_sf2.c | 68 +++++++++++++++++++++++++++++++++++++--
+ drivers/net/dsa/bcm_sf2.c | 20 ++++++++++++++++++--
  drivers/net/dsa/bcm_sf2.h |  2 ++
- 2 files changed, 68 insertions(+), 2 deletions(-)
+ 2 files changed, 20 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index b8fa0a46c5c9..1c7fbb6f0447 100644
+index bafddb35f3a9..b8fa0a46c5c9 100644
 --- a/drivers/net/dsa/bcm_sf2.c
 +++ b/drivers/net/dsa/bcm_sf2.c
-@@ -32,6 +32,49 @@
- #include "b53/b53_priv.h"
- #include "b53/b53_regs.h"
- 
-+/* Return the number of active ports, not counting the IMP (CPU) port */
-+static unsigned int bcm_sf2_num_active_ports(struct dsa_switch *ds)
-+{
-+	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
-+	unsigned int port, count = 0;
-+
-+	for (port = 0; port < ARRAY_SIZE(priv->port_sts); port++) {
-+		if (dsa_is_cpu_port(ds, port))
-+			continue;
-+		if (priv->port_sts[port].enabled)
-+			count++;
-+	}
-+
-+	return count;
-+}
-+
-+static void bcm_sf2_recalc_clock(struct dsa_switch *ds)
-+{
-+	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
-+	unsigned long new_rate;
-+	unsigned int ports_active;
-+	/* Frequenty in Mhz */
-+	const unsigned long rate_table[] = {
-+		59220000,
-+		60820000,
-+		62500000,
-+		62500000,
-+	};
-+
-+	ports_active = bcm_sf2_num_active_ports(ds);
-+	if (ports_active == 0 || !priv->clk_mdiv)
-+		return;
-+
-+	/* If we overflow our table, just use the recommended operational
-+	 * frequency
-+	 */
-+	if (ports_active > ARRAY_SIZE(rate_table))
-+		new_rate = 90000000;
-+	else
-+		new_rate = rate_table[ports_active - 1];
-+	clk_set_rate(priv->clk_mdiv, new_rate);
-+}
-+
- static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
- {
- 	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
-@@ -83,6 +126,8 @@ static void bcm_sf2_imp_setup(struct dsa_switch *ds, int port)
- 		reg &= ~(RX_DIS | TX_DIS);
- 		core_writel(priv, reg, CORE_G_PCTL_PORT(port));
+@@ -14,6 +14,7 @@
+ #include <linux/phy_fixed.h>
+ #include <linux/phylink.h>
+ #include <linux/mii.h>
++#include <linux/clk.h>
+ #include <linux/of.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_address.h>
+@@ -750,6 +751,9 @@ static int bcm_sf2_sw_suspend(struct dsa_switch *ds)
+ 			bcm_sf2_port_disable(ds, port);
  	}
+ 
++	if (!priv->wol_ports_mask)
++		clk_disable_unprepare(priv->clk);
 +
-+	priv->port_sts[port].enabled = true;
+ 	return 0;
  }
  
- static void bcm_sf2_gphy_enable_set(struct dsa_switch *ds, bool enable)
-@@ -168,6 +213,10 @@ static int bcm_sf2_port_setup(struct dsa_switch *ds, int port,
- 	if (!dsa_is_user_port(ds, port))
- 		return 0;
+@@ -758,6 +762,9 @@ static int bcm_sf2_sw_resume(struct dsa_switch *ds)
+ 	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
+ 	int ret;
  
-+	priv->port_sts[port].enabled = true;
++	if (!priv->wol_ports_mask)
++		clk_prepare_enable(priv->clk);
 +
-+	bcm_sf2_recalc_clock(ds);
-+
- 	/* Clear the memory power down */
- 	reg = core_readl(priv, CORE_MEM_PSM_VDD_CTRL);
- 	reg &= ~P_TXQ_PSM_VDD(port);
-@@ -261,6 +310,10 @@ static void bcm_sf2_port_disable(struct dsa_switch *ds, int port)
- 	reg = core_readl(priv, CORE_MEM_PSM_VDD_CTRL);
- 	reg |= P_TXQ_PSM_VDD(port);
- 	core_writel(priv, reg, CORE_MEM_PSM_VDD_CTRL);
-+
-+	priv->port_sts[port].enabled = false;
-+
-+	bcm_sf2_recalc_clock(ds);
- }
+ 	ret = bcm_sf2_sw_rst(priv);
+ 	if (ret) {
+ 		pr_err("%s: failed to software reset switch\n", __func__);
+@@ -1189,10 +1196,16 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+ 		base++;
+ 	}
  
- 
-@@ -1202,10 +1255,18 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 
- 	clk_prepare_enable(priv->clk);
- 
-+	priv->clk_mdiv = devm_clk_get_optional(&pdev->dev, "sw_switch_mdiv");
-+	if (IS_ERR(priv->clk_mdiv)) {
-+		ret = PTR_ERR(priv->clk_mdiv);
-+		goto out_clk;
-+	}
++	priv->clk = devm_clk_get_optional(&pdev->dev, "sw_switch");
++	if (IS_ERR(priv->clk))
++		return PTR_ERR(priv->clk);
 +
-+	clk_prepare_enable(priv->clk_mdiv);
++	clk_prepare_enable(priv->clk);
 +
  	ret = bcm_sf2_sw_rst(priv);
  	if (ret) {
  		pr_err("unable to software reset switch: %d\n", ret);
--		goto out_clk;
-+		goto out_clk_mdiv;
+-		return ret;
++		goto out_clk;
  	}
  
  	bcm_sf2_gphy_enable_set(priv->dev->ds, true);
-@@ -1213,7 +1274,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+@@ -1200,7 +1213,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
  	ret = bcm_sf2_mdio_register(ds);
  	if (ret) {
  		pr_err("failed to register MDIO bus\n");
--		goto out_clk;
-+		goto out_clk_mdiv;
+-		return ret;
++		goto out_clk;
  	}
  
  	bcm_sf2_gphy_enable_set(priv->dev->ds, false);
-@@ -1280,6 +1341,8 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
+@@ -1267,6 +1280,8 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
  
  out_mdio:
  	bcm_sf2_mdio_unregister(priv);
-+out_clk_mdiv:
-+	clk_disable_unprepare(priv->clk_mdiv);
- out_clk:
- 	clk_disable_unprepare(priv->clk);
++out_clk:
++	clk_disable_unprepare(priv->clk);
  	return ret;
-@@ -1295,6 +1358,7 @@ static int bcm_sf2_sw_remove(struct platform_device *pdev)
+ }
+ 
+@@ -1280,6 +1295,7 @@ static int bcm_sf2_sw_remove(struct platform_device *pdev)
  	dsa_unregister_switch(priv->dev->ds);
  	bcm_sf2_cfp_exit(priv->dev->ds);
  	bcm_sf2_mdio_unregister(priv);
-+	clk_disable_unprepare(priv->clk_mdiv);
- 	clk_disable_unprepare(priv->clk);
++	clk_disable_unprepare(priv->clk);
  	if (priv->type == BCM7278_DEVICE_ID && !IS_ERR(priv->rcdev))
  		reset_control_assert(priv->rcdev);
+ 
 diff --git a/drivers/net/dsa/bcm_sf2.h b/drivers/net/dsa/bcm_sf2.h
-index 6dd69922e3f6..1ed901a68536 100644
+index de386dd96d66..6dd69922e3f6 100644
 --- a/drivers/net/dsa/bcm_sf2.h
 +++ b/drivers/net/dsa/bcm_sf2.h
-@@ -45,6 +45,7 @@ struct bcm_sf2_hw_params {
- 
- struct bcm_sf2_port_status {
- 	unsigned int link;
-+	bool enabled;
- };
- 
- struct bcm_sf2_cfp_priv {
-@@ -94,6 +95,7 @@ struct bcm_sf2_priv {
+@@ -93,6 +93,8 @@ struct bcm_sf2_priv {
+ 	/* Mask of ports enabled for Wake-on-LAN */
  	u32				wol_ports_mask;
  
- 	struct clk			*clk;
-+	struct clk			*clk_mdiv;
- 
++	struct clk			*clk;
++
  	/* MoCA port location */
  	int				moca_port;
+ 
 -- 
 2.25.1
 
