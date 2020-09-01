@@ -2,128 +2,131 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2909C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AE9C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1B920767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6196E206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:39:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="XLzONATG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRbCB90G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728424AbgIAOi6 (ORCPT
+        id S1728383AbgIAOjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43008 "EHLO
+        Tue, 1 Sep 2020 10:39:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727845AbgIAOR6 (ORCPT
+        with ESMTP id S1727931AbgIAORs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:17:58 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 893A4C061249
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 07:17:56 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id mw10so677732pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 07:17:56 -0700 (PDT)
+        Tue, 1 Sep 2020 10:17:48 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16E44C061238;
+        Tue,  1 Sep 2020 07:17:17 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id w7so870985pfi.4;
+        Tue, 01 Sep 2020 07:17:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KeS8GKVJq4T+CUgWiidHvzznWbWtkMB2WevyIbiUS5I=;
-        b=XLzONATGaZUk6RmUTMF0GqUspbosIonDxdLp5n7lUSWgIaD9z1FySY8zCcjgDgdO9c
-         UfwDEOX20gSkEu9ogQk1AmBfwiYDZAMyTtT+OQwliywIdq0yzqV5xju1jDq8CypTR7er
-         AcudE8BiwbZkuQsOze0xqL/NtoOQdF5TsCWkedgUUBmTzuyg+2CZrBvq7hkqKwQVvtWZ
-         mhkPySDERdy15+hmLSDJMq0rV3bsG+0B+YBokrPl2XrFYDExJFQrB3umYTmJPnKTIwJp
-         15CukajAo9d9+K+gzOSNhPvM1zW6CcXg0x5QhowwfWHJR8hE1n9+0MQfFCi+HslBbPvJ
-         ysrQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LFi90LdQN/Zk1sYT6T5v1lAFBWcv/lCT8hsQFua3q/w=;
+        b=GRbCB90GdyZUi+VoPIPMsixFWPMZj2oy9F/AbKWnvm2FipfPGJ6rm1dMmzM76rSyHW
+         JoXy8WZcBi9L4LHS8bOCZneb74jcAg2PgKNesxYbnnRM5Rc/oWTEtQ+IvnHzBLFz0Kea
+         veq7Mb55DSVQMLTba9tXuO+bS1eTjmewXYheXfJbA90kC33Uqs1QRFN73OHttlpaXWAm
+         9EecoPIEZ/PbWi/A7BXMwxe3xCT7cqF8nF4WCBrrt8t/9nYioy6zQb+02nqwpuqL9ub7
+         tU5UKXd3G1H6ILcgpOPP70ReSgB9LFSoycIi2CuJhMvJIdABGd5WZ98GzniWuw5u/0fn
+         CERg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KeS8GKVJq4T+CUgWiidHvzznWbWtkMB2WevyIbiUS5I=;
-        b=l4t2O6woRMikGVOE5J38gDoa2+0po/X+VBq9laP3kdnOjdVvcj/t95PI9mif4T0ZWp
-         yTtBQ7em8CWitqkmutlKfO/xN52m4pap6hpjW5G2LE7FyyKl3jgqOwfZ0IM1OQnjaeP5
-         75OaIQGF4E2dwHPyiOf7rNEBCkXcPurcL0WSJq9NlX/cPpWCU5XiFUSBVl6ROpRn3DoO
-         VLMjqU9r/bY2zooZOe7Iz8UIxM5ONQVSC/uk6SS+aO3rrC88Q4M0PFK9EMUBXgmfBYrT
-         SpMT66HFM04SnWZ+AsiKUUw7gOjvGU2MseoLbUPDyexb/DTZO3qYOeKHZC0+2aFPDF+P
-         Td4A==
-X-Gm-Message-State: AOAM530rVw29d9Llx/O8j69M1/b46PcLgoeMw69rH6tkpH5ggyIvdyS7
-        hKan3NYfRl1wmQDK7FhbqXJU2w==
-X-Google-Smtp-Source: ABdhPJwTKTTtzYF2fDa2cowvfZektAF3tPSKAyVIQ88mb1mgNFiqoQOXUnIV/DKwOj3wmrEflZZYiA==
-X-Received: by 2002:a17:902:ff12:: with SMTP id f18mr560148plj.118.1598969875941;
-        Tue, 01 Sep 2020 07:17:55 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id c8sm2041855pfc.203.2020.09.01.07.17.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 07:17:55 -0700 (PDT)
-Subject: Re: [PATCH v2] io_wq: Make io_wqe::lock a raw_spinlock_t
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
-        io-uring@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200819123758.6v45rj2gvojddsnn@linutronix.de>
- <20200819131507.GC2674@hirez.programming.kicks-ass.net>
- <f26205ac-9da9-253e-ea43-db2417714a94@kernel.dk>
- <20200819194443.eabkhlkocvkgifyh@linutronix.de>
- <20200901084146.4ttqrom2avcoatea@linutronix.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <dd494f20-40d3-1abd-697b-f69d3edbb406@kernel.dk>
-Date:   Tue, 1 Sep 2020 08:17:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LFi90LdQN/Zk1sYT6T5v1lAFBWcv/lCT8hsQFua3q/w=;
+        b=H/2aLzArs8eErj/Az7dGFZo8t/Cik/aRpkAcItQtctuG288yAa6nXNmigk9WgVGx2c
+         k0bBcaFftrdh2MoAAvaHXise/jshxzBYpycGpACsUwv/Or6gX8i5Q/dALo8LMoFLGOmb
+         Cxi2dJYEFJiRCDbpbzMGZr5r+xO9tvBjuycWZ/efHx6G7JnWL+kfQwtInaDlbwBiXM4z
+         ty1ejGaMFxCWwb/HHwx/3TeuLj+YPSopxOoRog+67p3IeH0a8UXfFOY7N653rH4AkMHj
+         IVsiWoGnDC05qhDHdqFFEbO9GtokP6b+SJyi1dXdEjb3Vlp9NC/xfO5bMpn57P9i0ATC
+         5cjA==
+X-Gm-Message-State: AOAM530MTWqlbfeBaYagUOjJAUzvLN34ZekjBTR7aqhQbo8m0LQRxcZ6
+        qybxp8yoV+vmLy7wvt8RDA2rA05R01U=
+X-Google-Smtp-Source: ABdhPJzPQFVQko+EtVWd2JEHXsa40beM/TRyiCuAQFGgp5jdZ8vubIaNgK+HxHvBH8DRG3SBsKKPuA==
+X-Received: by 2002:aa7:9d8b:: with SMTP id f11mr2043036pfq.5.1598969836473;
+        Tue, 01 Sep 2020 07:17:16 -0700 (PDT)
+Received: from bobo.ibm.com ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.17.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 07:17:16 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH v3 22/23] x86: use asm-generic/mmu_context.h for no-op implementations
+Date:   Wed,  2 Sep 2020 00:15:38 +1000
+Message-Id: <20200901141539.1757549-23-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
+References: <20200901141539.1757549-1-npiggin@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200901084146.4ttqrom2avcoatea@linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 2:41 AM, Sebastian Andrzej Siewior wrote:
-> During a context switch the scheduler invokes wq_worker_sleeping() with
-> disabled preemption. Disabling preemption is needed because it protects
-> access to `worker->sleeping'. As an optimisation it avoids invoking
-> schedule() within the schedule path as part of possible wake up (thus
-> preempt_enable_no_resched() afterwards).
-> 
-> The io-wq has been added to the mix in the same section with disabled
-> preemption. This breaks on PREEMPT_RT because io_wq_worker_sleeping()
-> acquires a spinlock_t. Also within the schedule() the spinlock_t must be
-> acquired after tsk_is_pi_blocked() otherwise it will block on the
-> sleeping lock again while scheduling out.
-> 
-> While playing with `io_uring-bench' I didn't notice a significant
-> latency spike after converting io_wqe::lock to a raw_spinlock_t. The
-> latency was more or less the same.
-> 
-> In order to keep the spinlock_t it would have to be moved after the
-> tsk_is_pi_blocked() check which would introduce a branch instruction
-> into the hot path.
-> 
-> The lock is used to maintain the `work_list' and wakes one task up at
-> most.
-> Should io_wqe_cancel_pending_work() cause latency spikes, while
-> searching for a specific item, then it would need to drop the lock
-> during iterations.
-> revert_creds() is also invoked under the lock. According to debug
-> cred::non_rcu is 0. Otherwise it should be moved outside of the locked
-> section because put_cred_rcu()->free_uid() acquires a sleeping lock.
-> 
-> Convert io_wqe::lock to a raw_spinlock_t.c
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
+ arch/x86/include/asm/mmu_context.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Thanks, I've applied this for 5.10.
-
+diff --git a/arch/x86/include/asm/mmu_context.h b/arch/x86/include/asm/mmu_context.h
+index d98016b83755..36afcbea6a9f 100644
+--- a/arch/x86/include/asm/mmu_context.h
++++ b/arch/x86/include/asm/mmu_context.h
+@@ -91,12 +91,14 @@ static inline void switch_ldt(struct mm_struct *prev, struct mm_struct *next)
+ }
+ #endif
+ 
++#define enter_lazy_tlb enter_lazy_tlb
+ extern void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk);
+ 
+ /*
+  * Init a new mm.  Used on mm copies, like at fork()
+  * and on mm's that are brand-new, like at execve().
+  */
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 				   struct mm_struct *mm)
+ {
+@@ -116,6 +118,8 @@ static inline int init_new_context(struct task_struct *tsk,
+ 	init_new_context_ldt(mm);
+ 	return 0;
+ }
++
++#define destroy_context destroy_context
+ static inline void destroy_context(struct mm_struct *mm)
+ {
+ 	destroy_context_ldt(mm);
+@@ -214,4 +218,6 @@ static inline bool arch_vma_access_permitted(struct vm_area_struct *vma,
+ 
+ unsigned long __get_current_cr3_fast(void);
+ 
++#include <asm-generic/mmu_context.h>
++
+ #endif /* _ASM_X86_MMU_CONTEXT_H */
 -- 
-Jens Axboe
+2.23.0
 
