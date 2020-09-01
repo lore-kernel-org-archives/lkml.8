@@ -2,58 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD8BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1DD8C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E87CB206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAE232078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976169;
-	bh=QQmK0YgX6jTfA/hhW+0BDjtr3e/de+VhR6umLQnHSfs=;
+	s=default; t=1598976173;
+	bh=e7g4NunmCYbHix/BFPrdxNGzrOkjbfzrdeVG6NOHEWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bnNIYmRWWLRuWSJ2etZRkP/VWfzLdRyYLv9z6oAwtQACYvCc9iqVe1VT7bcamyAZp
-	 zzCV1FQZvRdA+KQ1cG6fxaVbezPNJs5RI8nQXV8QtX3q2kevnhXd3ovZV35Vlvc2ha
-	 RI1Qx9iAmemn3g4seEmd4aVTICc4osNQHgvjH7DI=
+	b=DAvq03twT/dN9NzhMSGcu/IShHUNF+k0mYvQa6tVyflzxSaz/RjCJVduj2khFr4gb
+	 aO91hhPIeRYXgVcbB6MzeT14YGA8jcCkulKZ/UeZL9Q7Udujad4oJLiKpkCNP8kjRb
+	 g1fQptC79wVr/F9BeADSEXGSrnrVeFc95i6xJ+dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgIAQCs (ORCPT
+        id S1731517AbgIAPnL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57192 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:43:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731465AbgIAPnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:43:17 -0400
+        id S1727918AbgIAPks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:40:48 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C67C2078B;
-        Tue,  1 Sep 2020 15:43:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CFA02064B;
+        Tue,  1 Sep 2020 15:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974996;
-        bh=QQmK0YgX6jTfA/hhW+0BDjtr3e/de+VhR6umLQnHSfs=;
+        s=default; t=1598974847;
+        bh=e7g4NunmCYbHix/BFPrdxNGzrOkjbfzrdeVG6NOHEWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJXgTS31uEwy+L833uM6hsxxg7+f4xOXWzgjUiIUnkAPeJkdnYs62afpqgi7oeZEY
-         fXMvzVFJFArfQJwbVuThCfyUS3J4Oo7G28FdLWA7FoBJedQGfpqkIDcC8dGGO1cKIg
-         yvQGmdi01NgwxeAdZwo3oGfSR5DAxNg5FyTDMxv0=
+        b=ohGH7CzpydrrPqc7W6oT757TEyrYZKtOcp6FqdwCJU5P73PPkEldb8ajHgJsfke2H
+         88DeYoFOqEVWx5+xl1mfg+ze1TSlS7Hh1iNORA7pmjfkShhmEKoTtbtuCzrVc5igRg
+         E3+P3MJOjxifc67vz3/l1aof9p8Lif1x5mtop5FE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Xiao Ni <xni@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 169/255] block: loop: set discard granularity and alignment for block device backed loop
-Date:   Tue,  1 Sep 2020 17:10:25 +0200
-Message-Id: <20200901151008.792032374@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 112/255] ext4: abort the filesystem if failed to async write metadata buffer
+Date:   Tue,  1 Sep 2020 17:09:28 +0200
+Message-Id: <20200901151006.088784465@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -66,108 +60,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-commit bcb21c8cc9947286211327d663ace69f07d37a76 upstream.
+[ Upstream commit bc71726c725767205757821df364acff87f92ac5 ]
 
-In case of block device backend, if the backend supports write zeros, the
-loop device will set queue flag of QUEUE_FLAG_DISCARD. However,
-limits.discard_granularity isn't setup, and this way is wrong,
-see the following description in Documentation/ABI/testing/sysfs-block:
+There is a risk of filesystem inconsistency if we failed to async write
+back metadata buffer in the background. Because of current buffer's end
+io procedure is handled by end_buffer_async_write() in the block layer,
+and it only clear the buffer's uptodate flag and mark the write_io_error
+flag, so ext4 cannot detect such failure immediately. In most cases of
+getting metadata buffer (e.g. ext4_read_inode_bitmap()), although the
+buffer's data is actually uptodate, it may still read data from disk
+because the buffer's uptodate flag has been cleared. Finally, it may
+lead to on-disk filesystem inconsistency if reading old data from the
+disk successfully and write them out again.
 
-	A discard_granularity of 0 means that the device does not support
-	discard functionality.
+This patch detect bdev mapping->wb_err when getting journal's write
+access and mark the filesystem error if bdev's mapping->wb_err was
+increased, this could prevent further writing and potential
+inconsistency.
 
-Especially 9b15d109a6b2 ("block: improve discard bio alignment in
-__blkdev_issue_discard()") starts to take q->limits.discard_granularity
-for computing max discard sectors. And zero discard granularity may cause
-kernel oops, or fail discard request even though the loop queue claims
-discard support via QUEUE_FLAG_DISCARD.
-
-Fix the issue by setup discard granularity and alignment.
-
-Fixes: c52abf563049 ("loop: Better discard support for block devices")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Coly Li <colyli@suse.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Xiao Ni <xni@redhat.com>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Gwendal Grignou <gwendal@chromium.org>
-Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Suggested-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200620025427.1756360-2-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c |   33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ fs/ext4/ext4.h      |  3 +++
+ fs/ext4/ext4_jbd2.c | 25 +++++++++++++++++++++++++
+ fs/ext4/super.c     | 17 +++++++++++++++++
+ 3 files changed, 45 insertions(+)
 
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -877,6 +877,7 @@ static void loop_config_discard(struct l
- 	struct file *file = lo->lo_backing_file;
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
-+	u32 granularity, max_discard_sectors;
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 42815304902b8..eec5c03534d05 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -1585,6 +1585,9 @@ struct ext4_sb_info {
+ #ifdef CONFIG_EXT4_DEBUG
+ 	unsigned long s_simulate_fail;
+ #endif
++	/* Record the errseq of the backing block device */
++	errseq_t s_bdev_wb_err;
++	spinlock_t s_bdev_wb_lock;
+ };
  
- 	/*
- 	 * If the backing device is a block device, mirror its zeroing
-@@ -889,11 +890,10 @@ static void loop_config_discard(struct l
- 		struct request_queue *backingq;
- 
- 		backingq = bdev_get_queue(inode->i_bdev);
--		blk_queue_max_discard_sectors(q,
--			backingq->limits.max_write_zeroes_sectors);
- 
--		blk_queue_max_write_zeroes_sectors(q,
--			backingq->limits.max_write_zeroes_sectors);
-+		max_discard_sectors = backingq->limits.max_write_zeroes_sectors;
-+		granularity = backingq->limits.discard_granularity ?:
-+			queue_physical_block_size(backingq);
- 
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
-@@ -902,23 +902,26 @@ static void loop_config_discard(struct l
- 	 * useful information.
- 	 */
- 	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
--		q->limits.discard_granularity = 0;
--		q->limits.discard_alignment = 0;
--		blk_queue_max_discard_sectors(q, 0);
--		blk_queue_max_write_zeroes_sectors(q, 0);
-+		max_discard_sectors = 0;
-+		granularity = 0;
- 
- 	} else {
--		q->limits.discard_granularity = inode->i_sb->s_blocksize;
--		q->limits.discard_alignment = 0;
--
--		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+		max_discard_sectors = UINT_MAX >> 9;
-+		granularity = inode->i_sb->s_blocksize;
- 	}
- 
--	if (q->limits.max_write_zeroes_sectors)
-+	if (max_discard_sectors) {
-+		q->limits.discard_granularity = granularity;
-+		blk_queue_max_discard_sectors(q, max_discard_sectors);
-+		blk_queue_max_write_zeroes_sectors(q, max_discard_sectors);
- 		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
--	else
-+	} else {
-+		q->limits.discard_granularity = 0;
-+		blk_queue_max_discard_sectors(q, 0);
-+		blk_queue_max_write_zeroes_sectors(q, 0);
- 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
-+	}
-+	q->limits.discard_alignment = 0;
+ static inline struct ext4_sb_info *EXT4_SB(struct super_block *sb)
+diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
+index 0c76cdd44d90d..760b9ee49dc00 100644
+--- a/fs/ext4/ext4_jbd2.c
++++ b/fs/ext4/ext4_jbd2.c
+@@ -195,6 +195,28 @@ static void ext4_journal_abort_handle(const char *caller, unsigned int line,
+ 	jbd2_journal_abort_handle(handle);
  }
  
- static void loop_unprepare_queue(struct loop_device *lo)
++static void ext4_check_bdev_write_error(struct super_block *sb)
++{
++	struct address_space *mapping = sb->s_bdev->bd_inode->i_mapping;
++	struct ext4_sb_info *sbi = EXT4_SB(sb);
++	int err;
++
++	/*
++	 * If the block device has write error flag, it may have failed to
++	 * async write out metadata buffers in the background. In this case,
++	 * we could read old data from disk and write it out again, which
++	 * may lead to on-disk filesystem inconsistency.
++	 */
++	if (errseq_check(&mapping->wb_err, READ_ONCE(sbi->s_bdev_wb_err))) {
++		spin_lock(&sbi->s_bdev_wb_lock);
++		err = errseq_check_and_advance(&mapping->wb_err, &sbi->s_bdev_wb_err);
++		spin_unlock(&sbi->s_bdev_wb_lock);
++		if (err)
++			ext4_error_err(sb, -err,
++				       "Error while async write back metadata");
++	}
++}
++
+ int __ext4_journal_get_write_access(const char *where, unsigned int line,
+ 				    handle_t *handle, struct buffer_head *bh)
+ {
+@@ -202,6 +224,9 @@ int __ext4_journal_get_write_access(const char *where, unsigned int line,
+ 
+ 	might_sleep();
+ 
++	if (bh->b_bdev->bd_super)
++		ext4_check_bdev_write_error(bh->b_bdev->bd_super);
++
+ 	if (ext4_handle_valid(handle)) {
+ 		err = jbd2_journal_get_write_access(handle, bh);
+ 		if (err)
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index dda967efcbc2c..c77b10257b36a 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -4765,6 +4765,15 @@ no_journal:
+ 	}
+ #endif  /* CONFIG_QUOTA */
+ 
++	/*
++	 * Save the original bdev mapping's wb_err value which could be
++	 * used to detect the metadata async write error.
++	 */
++	spin_lock_init(&sbi->s_bdev_wb_lock);
++	if (!sb_rdonly(sb))
++		errseq_check_and_advance(&sb->s_bdev->bd_inode->i_mapping->wb_err,
++					 &sbi->s_bdev_wb_err);
++	sb->s_bdev->bd_super = sb;
+ 	EXT4_SB(sb)->s_mount_state |= EXT4_ORPHAN_FS;
+ 	ext4_orphan_cleanup(sb, es);
+ 	EXT4_SB(sb)->s_mount_state &= ~EXT4_ORPHAN_FS;
+@@ -5654,6 +5663,14 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 				goto restore_opts;
+ 			}
+ 
++			/*
++			 * Update the original bdev mapping's wb_err value
++			 * which could be used to detect the metadata async
++			 * write error.
++			 */
++			errseq_check_and_advance(&sb->s_bdev->bd_inode->i_mapping->wb_err,
++						 &sbi->s_bdev_wb_err);
++
+ 			/*
+ 			 * Mounting a RDONLY partition read-write, so reread
+ 			 * and store the current valid flag.  (It may have
+-- 
+2.25.1
+
 
 
