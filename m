@@ -4,210 +4,106 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC6DCC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C5EDC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA9B720866
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E1B2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:28:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726937AbgIAJ2B (ORCPT
+        id S1726814AbgIAJ14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:28:01 -0400
-Received: from foss.arm.com ([217.140.110.172]:39170 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbgIAJ1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:27:52 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2EDD1063;
-        Tue,  1 Sep 2020 02:27:51 -0700 (PDT)
-Received: from a077416.arm.com (unknown [10.57.6.112])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1CEC53F71F;
-        Tue,  1 Sep 2020 02:27:48 -0700 (PDT)
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        linux-kselftest@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Shuah Khan <shuah@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Amit Daniel Kachhap <amit.kachhap@arm.com>
-Subject: [PATCH 5/6] kselftest/arm64: Verify KSM page merge for MTE pages
-Date:   Tue,  1 Sep 2020 14:57:18 +0530
-Message-Id: <20200901092719.9918-6-amit.kachhap@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901092719.9918-1-amit.kachhap@arm.com>
-References: <20200901092719.9918-1-amit.kachhap@arm.com>
+        Tue, 1 Sep 2020 05:27:56 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45483 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbgIAJ1t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:27:49 -0400
+Received: by mail-lj1-f196.google.com with SMTP id c2so637710ljj.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 02:27:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=bxHj9IkP2gtxX/i6bFF2tG+AqOJbAH96n0YTP0cULME=;
+        b=Cv0H7/+k/if0+aIbTp+289k5Wf2HlUZBjSkxItzbUpYHTs0RU4sYGr0kMwV8e7VbTV
+         mMX0LfPD0DmA9fp3Iqjc076VwsKg7WCIl4h2LaCOfRzCz+6qsXbDtcOgf7w2lG5rh1FB
+         Oa/V8VOpJ73cx9US9xJ3UekpU+mD459AWrDp2mAsDG3A/BIwtjiazQKQDEwkUVrcHyOM
+         zegCyN56hkPqBCsNLODm+mTsK9XUbfLu9eRUfXeEFjY7k02/2uHIjP7WV/nfrTWpqFBH
+         FF5j0RMorExuIA+tsHKxtiOHQtTIN/o0PxROwg/lwHwhYckcHbRxMwAp/Sb+NScGIaUs
+         HhBA==
+X-Gm-Message-State: AOAM533iu0dciJUtDIP00+lYKOH1O8abSGus5BjKYtZEZf77cfEu3rzq
+        SSLEv+b2lQX7Oov+eOJMhZE=
+X-Google-Smtp-Source: ABdhPJx0qGwCOTQ7CSAhelVaFobcO3DyBY2PqNQwxS+oFESnC0sGXMHSiHAzBtv++XLExhGWdojKEA==
+X-Received: by 2002:a2e:96cb:: with SMTP id d11mr98310ljj.239.1598952465687;
+        Tue, 01 Sep 2020 02:27:45 -0700 (PDT)
+Received: from localhost.localdomain (broadband-37-110-38-130.ip.moscow.rt.ru. [37.110.38.130])
+        by smtp.googlemail.com with ESMTPSA id t4sm152816ljh.122.2020.09.01.02.27.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 02:27:44 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Julia Lawall <Julia.Lawall@lip6.fr>
+Cc:     Denis Efremov <efremov@linux.com>, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] coccinelle: api: kobj_to_dev: don't warn about kobj_to_dev()
+Date:   Tue,  1 Sep 2020 12:27:29 +0300
+Message-Id: <20200901092729.427515-1-efremov@linux.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a testcase to check that KSM should not merge pages containing
-same data with same/different MTE tag values.
+Exclude kobj_to_dev() definition from warnings.
 
-This testcase has one positive tests and passes if page merging
-happens according to the above rule. It also saves and restores
-any modified ksm sysfs entries.
-
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- tools/testing/selftests/arm64/mte/.gitignore  |   1 +
- .../selftests/arm64/mte/check_ksm_options.c   | 131 ++++++++++++++++++
- 2 files changed, 132 insertions(+)
- create mode 100644 tools/testing/selftests/arm64/mte/check_ksm_options.c
+No changes in performance. This patch can be squashed to the
+original patch with kobj_to_dev.cocci script.
 
-diff --git a/tools/testing/selftests/arm64/mte/.gitignore b/tools/testing/selftests/arm64/mte/.gitignore
-index 79a215d3bbd0..44e9bfdaeca6 100644
---- a/tools/testing/selftests/arm64/mte/.gitignore
-+++ b/tools/testing/selftests/arm64/mte/.gitignore
-@@ -2,3 +2,4 @@ check_buffer_fill
- check_tags_inclusion
- check_child_memory
- check_mmap_options
-+check_ksm_options
-diff --git a/tools/testing/selftests/arm64/mte/check_ksm_options.c b/tools/testing/selftests/arm64/mte/check_ksm_options.c
-new file mode 100644
-index 000000000000..33fcf77f3501
---- /dev/null
-+++ b/tools/testing/selftests/arm64/mte/check_ksm_options.c
-@@ -0,0 +1,131 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2020 ARM Limited
+ scripts/coccinelle/api/kobj_to_dev.cocci | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/coccinelle/api/kobj_to_dev.cocci b/scripts/coccinelle/api/kobj_to_dev.cocci
+index cd5d31c6fe76..d0b3b9647c19 100644
+--- a/scripts/coccinelle/api/kobj_to_dev.cocci
++++ b/scripts/coccinelle/api/kobj_to_dev.cocci
+@@ -15,10 +15,18 @@ virtual org
+ virtual patch
+ 
+ 
++@initialize:python@
++@@
++filter = frozenset(['kobj_to_dev'])
 +
-+#define _GNU_SOURCE
++def relevant(p):
++    return not (filter & {el.current_element for el in p})
 +
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <ucontext.h>
-+#include <sys/mman.h>
 +
-+#include "kselftest.h"
-+#include "mte_common_util.h"
-+#include "mte_def.h"
-+
-+#define TEST_UNIT	10
-+#define PATH_KSM	"/sys/kernel/mm/ksm/"
-+#define MAX_LOOP	4
-+
-+static size_t page_sz;
-+static unsigned long ksm_sysfs[5];
-+
-+static void mte_ksm_setup(void)
-+{
-+	ksm_sysfs[0] = read_sysfs(PATH_KSM "merge_across_nodes");
-+	write_sysfs(PATH_KSM "merge_across_nodes", 1);
-+	ksm_sysfs[1] = read_sysfs(PATH_KSM "sleep_millisecs");
-+	write_sysfs(PATH_KSM "sleep_millisecs", 0);
-+	ksm_sysfs[2] = read_sysfs(PATH_KSM "run");
-+	write_sysfs(PATH_KSM "run", 1);
-+	ksm_sysfs[3] = read_sysfs(PATH_KSM "max_page_sharing");
-+	write_sysfs(PATH_KSM "max_page_sharing", ksm_sysfs[3] + TEST_UNIT);
-+	ksm_sysfs[4] = read_sysfs(PATH_KSM "pages_to_scan");
-+	write_sysfs(PATH_KSM "pages_to_scan", ksm_sysfs[4] + TEST_UNIT);
-+}
-+
-+static void mte_ksm_restore(void)
-+{
-+	write_sysfs(PATH_KSM "merge_across_nodes", ksm_sysfs[0]);
-+	write_sysfs(PATH_KSM "sleep_millisecs", ksm_sysfs[1]);
-+	write_sysfs(PATH_KSM "run", ksm_sysfs[2]);
-+	write_sysfs(PATH_KSM "max_page_sharing", ksm_sysfs[3]);
-+	write_sysfs(PATH_KSM "pages_to_scan", ksm_sysfs[4]);
-+}
-+
-+static void mte_ksm_scan(void)
-+{
-+	int cur_count = read_sysfs(PATH_KSM "full_scans");
-+	int scan_count = cur_count + 1;
-+	int max_loop_count = MAX_LOOP;
-+
-+	while ((cur_count < scan_count) && max_loop_count) {
-+		sleep(1);
-+		cur_count = read_sysfs(PATH_KSM "full_scans");
-+		max_loop_count--;
-+	}
-+#ifdef DEBUG
-+	ksft_print_msg("INFO: pages_shared=%lu pages_sharing=%lu\n",
-+			read_sysfs(PATH_KSM "pages_shared"),
-+			read_sysfs(PATH_KSM "pages_sharing"));
-+#endif
-+}
-+
-+static int check_madvise_options(int mem_type, int mode, int mapping)
-+{
-+	char *ptr;
-+	int err, ret;
-+
-+	err = KSFT_FAIL;
-+	if (access(PATH_KSM, F_OK) == -1) {
-+		ksft_print_msg("ERR: Kernel KSM config not enabled\n");
-+		return err;
-+	}
-+
-+	mte_switch_mode(mode, MTE_ALLOW_NON_ZERO_TAG);
-+	ptr = mte_allocate_memory(TEST_UNIT * page_sz, mem_type, mapping, true);
-+	if (check_allocated_memory(ptr, TEST_UNIT * page_sz, mem_type, false) != KSFT_PASS)
-+		return KSFT_FAIL;
-+
-+	/* Insert same data in all the pages */
-+	memset(ptr, 'A', TEST_UNIT * page_sz);
-+	ret = madvise(ptr, TEST_UNIT * page_sz, MADV_MERGEABLE);
-+	if (ret) {
-+		ksft_print_msg("ERR: madvise failed to set MADV_UNMERGEABLE\n");
-+		goto madvise_err;
-+	}
-+	mte_ksm_scan();
-+	/* Tagged pages should not merge */
-+	if ((read_sysfs(PATH_KSM "pages_shared") < 1) ||
-+	    (read_sysfs(PATH_KSM "pages_sharing") < (TEST_UNIT - 1)))
-+		err = KSFT_PASS;
-+madvise_err:
-+	mte_free_memory(ptr, TEST_UNIT * page_sz, mem_type, true);
-+	return err;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int err;
-+
-+	err = mte_default_setup();
-+	if (err)
-+		return err;
-+	page_sz = getpagesize();
-+	if (!page_sz) {
-+		ksft_print_msg("ERR: Unable to get page size\n");
-+		return KSFT_FAIL;
-+	}
-+	/* Register signal handlers */
-+	mte_register_signal(SIGBUS, mte_default_handler);
-+	mte_register_signal(SIGSEGV, mte_default_handler);
-+	/* Enable KSM */
-+	mte_ksm_setup();
-+
-+	evaluate_test(check_madvise_options(USE_MMAP, MTE_SYNC_ERR, MAP_PRIVATE),
-+		"Check KSM mte page merge for private mapping, sync mode and mmap memory\n");
-+	evaluate_test(check_madvise_options(USE_MMAP, MTE_ASYNC_ERR, MAP_PRIVATE),
-+		"Check KSM mte page merge for private mapping, async mode and mmap memory\n");
-+	evaluate_test(check_madvise_options(USE_MMAP, MTE_SYNC_ERR, MAP_SHARED),
-+		"Check KSM mte page merge for shared mapping, sync mode and mmap memory\n");
-+	evaluate_test(check_madvise_options(USE_MMAP, MTE_ASYNC_ERR, MAP_SHARED),
-+		"Check KSM mte page merge for shared mapping, async mode and mmap memory\n");
-+
-+	mte_ksm_restore();
-+	mte_restore_setup();
-+	ksft_print_cnts();
-+	return ksft_get_fail_cnt() == 0 ? KSFT_PASS : KSFT_FAIL;
-+}
+ @r depends on !patch@
+ expression ptr;
+ symbol kobj;
+-position p;
++position p : script:python() { relevant(p) };
+ @@
+ 
+ * container_of(ptr, struct device, kobj)@p
+@@ -26,9 +34,10 @@ position p;
+ 
+ @depends on patch@
+ expression ptr;
++position p : script:python() { relevant(p) };
+ @@
+ 
+-- container_of(ptr, struct device, kobj)
++- container_of(ptr, struct device, kobj)@p
+ + kobj_to_dev(ptr)
+ 
+ 
 -- 
-2.17.1
+2.26.2
 
