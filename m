@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B23FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C67C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6F14204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDADE204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976580;
-	bh=I6GAMxGs19nNEZFk2dtb6Q6gWKmT1Q9GK98PIdZDL8M=;
+	s=default; t=1598976588;
+	bh=MTEbpe8X1nLaQUbTstx4qsG5E9DJUsRyNcHpbPRnEOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tNdzJ31YWQnf6g4vveJkdSvmPW23V+IKfFSKOq2QZ/wEy4UnUV/ZGfesAt1yM8uJU
-	 TahrqHbFXVqk8P/uotRMWgopLsaWtpBuGP2iYQ2v9/L3D0rsYIvi3c7TfaMtPskCTJ
-	 GtTuPi22arZEUgrhby7Ma9nRo+RJ0WF9q8NS7tOU=
+	b=VKnlMrOsLYb1CFmYL9y5AF0UgvfQd6OTpk3Pd7vdRIoIMDnsCWVZzardXd68OjvV8
+	 OIFFIBe8XV8IK5cN3HufLTnUgkHhi1aOzund4zUmdCcT8t43oXAth/FcXnGXLQsUs6
+	 zvqlu1aB/8D3aGsBQ8ddQ/r7hulfSvEwrB1tvHsw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731411AbgIAPis (ORCPT
+        id S1731232AbgIAQJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:38:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731122AbgIAPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:36:57 -0400
+        id S1731399AbgIAPiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:46 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23AE021534;
-        Tue,  1 Sep 2020 15:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6141F20866;
+        Tue,  1 Sep 2020 15:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974616;
-        bh=I6GAMxGs19nNEZFk2dtb6Q6gWKmT1Q9GK98PIdZDL8M=;
+        s=default; t=1598974726;
+        bh=MTEbpe8X1nLaQUbTstx4qsG5E9DJUsRyNcHpbPRnEOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zowdB2H2eB4whGqAIqgjq0kSUTCJ9ODZq5lxC8Ao8B8qjeKZVWDkwwwaq7/rQcJQB
-         kdpayqCjv7MQbLfW7EJ1y8zonS4T/Wm04qn3qG4g5OU/g/knILvV8GgXuegQlquFK4
-         K0iYPvWqj/HgjdXRkxHBhrgp6edxQPmOc+ZiAC+w=
+        b=QBzPYI7CoakaHo0nG/6iFpSPMsi8c0ddaEowDDrtibYty0/5eOcFZC95G4YHHAwEc
+         fA6clXgQQ5CLJz+BcKy5+i8kwfssmEqSXwbBVNDI6M8xHRXFht2nyjR+AblJqZpIdv
+         83yJDNWbW3vdBB7eDCwRJC4Or5k5mqRzv/4zuZDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 030/255] drm/amdkfd: fix ref count leak when pm_runtime_get_sync fails
-Date:   Tue,  1 Sep 2020 17:08:06 +0200
-Message-Id: <20200901151002.218616843@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Dave Jiang <dave.jiang@intel.com>, dmaengine@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 070/255] dmaengine: idxd: fix PCI_MSI build errors
+Date:   Tue,  1 Sep 2020 17:08:46 +0200
+Message-Id: <20200901151004.086401987@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Deucher <alexander.deucher@amd.com>
+[ Upstream commit d6a7bb869dd8a516901591136a9a895fd829d6c6 ]
 
-[ Upstream commit 1c1ada37af6ee6fb9cfc8da6a56cc83208cd8d6f ]
+Fix build errors when CONFIG_PCI_MSI is not enabled by making the
+driver depend on PCI_MSI:
 
-The call to pm_runtime_get_sync increments the counter even in case of
-failure, leading to incorrect ref count.
-In case of failure, decrement the ref count before returning.
+ld: drivers/dma/idxd/device.o: in function `idxd_mask_msix_vector':
+device.c:(.text+0x26f): undefined reference to `pci_msi_mask_irq'
+ld: drivers/dma/idxd/device.o: in function `idxd_unmask_msix_vector':
+device.c:(.text+0x2af): undefined reference to `pci_msi_unmask_irq'
 
-Reviewed-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Dave Jiang <dave.jiang@intel.com>
+Cc: dmaengine@vger.kernel.org
+Cc: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/9dee3f46-70d9-ea75-10cb-5527ab297d1d@infradead.org
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_process.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/dma/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-index 0e0c42e9f6a31..6520a920cad4a 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
-@@ -1003,8 +1003,10 @@ struct kfd_process_device *kfd_bind_process_to_device(struct kfd_dev *dev,
- 	 */
- 	if (!pdd->runtime_inuse) {
- 		err = pm_runtime_get_sync(dev->ddev->dev);
--		if (err < 0)
-+		if (err < 0) {
-+			pm_runtime_put_autosuspend(dev->ddev->dev);
- 			return ERR_PTR(err);
-+		}
- 	}
- 
- 	err = kfd_iommu_bind_process_to_device(pdd);
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index de41d7928bff2..984354ca877de 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -285,6 +285,7 @@ config INTEL_IDMA64
+ config INTEL_IDXD
+ 	tristate "Intel Data Accelerators support"
+ 	depends on PCI && X86_64
++	depends on PCI_MSI
+ 	select DMA_ENGINE
+ 	select SBITMAP
+ 	help
 -- 
 2.25.1
 
