@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E218C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF5EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381852065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E999D2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978130;
-	bh=NdBB1CVnk72l6VeDYC6qxj6QBPSngtEdVgcByK/sIsc=;
+	s=default; t=1598978138;
+	bh=629+49mpM0RMi+i39YNvE37+uGnqLXIa4iJPk9vUMew=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ntlr9drXgZBfoFXIF9RtrMS6hw3dXpRT1rsWl+yl157lgE9uV4ICuz6F9eZmpKOFN
-	 QfO6ciV80b0JU3IVAJo0QUCDAqJ6EnupNruSpThwYPN0XW1qdJoJp+gbAG1v2f9Zmt
-	 StQGwOWz1RxzeYSQtHSii0HCi/Hl3Mc9NpRQHG54=
+	b=YV+qLj1QvHxgAApsIJqwQy4ZOCRagVnhd8sUHtuW9GDA8CsZMmsL8Tit4Sw6UpgF8
+	 yr571n/Hxtn8Uf7vAcD4V4gh5tjRliWsgKr75fOyODiZiUnp9nfcmNPtAojOavUl3m
+	 ANDE6FHt136LhrFgCDLH+oCe7dfK55LCvL5J3aak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730989AbgIAQf3 (ORCPT
+        id S1731011AbgIAQfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:35:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60882 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:35:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730609AbgIAPad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:33 -0400
+        id S1730597AbgIAPaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:30:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30A2C205F4;
-        Tue,  1 Sep 2020 15:30:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6333D20684;
+        Tue,  1 Sep 2020 15:30:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974232;
-        bh=NdBB1CVnk72l6VeDYC6qxj6QBPSngtEdVgcByK/sIsc=;
+        s=default; t=1598974219;
+        bh=629+49mpM0RMi+i39YNvE37+uGnqLXIa4iJPk9vUMew=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JU+Dkl5TvqSIqxlKxhJ71q6lP0OAmjPiwt8WlXYW7ey6AH0QjAFt/boYYhmn4i1PQ
-         ROuYvcTjtOStOo+XLxMvLMduJFQls0rM7hXJ8I34U6SeI9KwTPUgZvcyLHRY/xgLqa
-         0AE3YP96NcbLUu3dHOrJ349K18qoyiqwfmX23joM=
+        b=BmhQatE4cyyvSdOJsvA8aSfk4LdGlpiu/0SvebG04YvVZJQR5HuBG+oW4eoZ77STT
+         vaYkv+Kz6v4ksQaHE9FkNyd8WCVuoihbUgX9lf4hnQz+eX5BgVjrKLojF8rU8yJNCv
+         0YFrcZ8cFFqj6m8X+yBkyH/SIJeIOo/Bb3+vw1mU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/214] arm64: Fix __cpu_logical_map undefined issue
-Date:   Tue,  1 Sep 2020 17:09:06 +0200
-Message-Id: <20200901150956.142096760@linuxfoundation.org>
+Subject: [PATCH 5.4 090/214] EDAC: sb_edac: get rid of unused vars
+Date:   Tue,  1 Sep 2020 17:09:30 +0200
+Message-Id: <20200901150957.306703857@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,108 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit eaecca9e7710281be7c31d892c9f447eafd7ddd9 ]
+[ Upstream commit 323014d85d2699b2879ecb15cd06a15408e3e801 ]
 
-The __cpu_logical_map undefined issue occued when the new
-tegra194-cpufreq drvier building as a module.
+There are several vars unused on this driver, probably because
+it was a modified copy of another driver. Get rid of them.
 
-ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
+	drivers/edac/sb_edac.c: In function ‘knl_get_dimm_capacity’:
+	drivers/edac/sb_edac.c:1343:16: warning: variable ‘sad_size’ set but not used [-Wunused-but-set-variable]
+	 1343 |  u64 sad_base, sad_size, sad_limit = 0;
+	      |                ^~~~~~~~
+	drivers/edac/sb_edac.c: In function ‘sbridge_mce_output_error’:
+	drivers/edac/sb_edac.c:2955:8: warning: variable ‘type’ set but not used [-Wunused-but-set-variable]
+	 2955 |  char *type, *optype, msg[256];
+	      |        ^~~~
+	drivers/edac/sb_edac.c: In function ‘sbridge_unregister_mci’:
+	drivers/edac/sb_edac.c:3203:22: warning: variable ‘pvt’ set but not used [-Wunused-but-set-variable]
+	 3203 |  struct sbridge_pvt *pvt;
+	      |                      ^~~
+	At top level:
+	drivers/edac/sb_edac.c:266:18: warning: ‘correrrthrsld’ defined but not used [-Wunused-const-variable=]
+	  266 | static const u32 correrrthrsld[] = {
+	      |                  ^~~~~~~~~~~~~
+	drivers/edac/sb_edac.c:257:18: warning: ‘correrrcnt’ defined but not used [-Wunused-const-variable=]
+	  257 | static const u32 correrrcnt[] = {
+	      |                  ^~~~~~~~~~
 
-The driver using cpu_logical_map() macro which will expand to
-__cpu_logical_map, we can't access it in a drvier. Let's turn
-cpu_logical_map() into a C wrapper and export it to fix the
-build issue.
-
-Also create a function set_cpu_logical_map(cpu, hwid) when assign
-a value to cpu_logical_map(cpu).
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Acked-by: Borislav Petkov <bp@alien8.de>
+Acked-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/smp.h | 7 ++++++-
- arch/arm64/kernel/setup.c    | 8 +++++++-
- arch/arm64/kernel/smp.c      | 6 +++---
- 3 files changed, 16 insertions(+), 5 deletions(-)
+ drivers/edac/sb_edac.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index a0c8a0b652593..0eadbf933e359 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -46,7 +46,12 @@ DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
-  * Logical CPU mapping.
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index f743502ca9b72..a2fd39d330d67 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -254,18 +254,20 @@ static const u32 rir_offset[MAX_RIR_RANGES][MAX_RIR_WAY] = {
+  * FIXME: Implement the error count reads directly
   */
- extern u64 __cpu_logical_map[NR_CPUS];
--#define cpu_logical_map(cpu)    __cpu_logical_map[cpu]
-+extern u64 cpu_logical_map(int cpu);
+ 
+-static const u32 correrrcnt[] = {
+-	0x104, 0x108, 0x10c, 0x110,
+-};
+-
+ #define RANK_ODD_OV(reg)		GET_BITFIELD(reg, 31, 31)
+ #define RANK_ODD_ERR_CNT(reg)		GET_BITFIELD(reg, 16, 30)
+ #define RANK_EVEN_OV(reg)		GET_BITFIELD(reg, 15, 15)
+ #define RANK_EVEN_ERR_CNT(reg)		GET_BITFIELD(reg,  0, 14)
+ 
++#if 0 /* Currently unused*/
++static const u32 correrrcnt[] = {
++	0x104, 0x108, 0x10c, 0x110,
++};
 +
-+static inline void set_cpu_logical_map(int cpu, u64 hwid)
-+{
-+	__cpu_logical_map[cpu] = hwid;
-+}
+ static const u32 correrrthrsld[] = {
+ 	0x11c, 0x120, 0x124, 0x128,
+ };
++#endif
  
- struct seq_file;
- 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 56f6645617548..d98987b82874f 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -85,7 +85,7 @@ u64 __cacheline_aligned boot_args[4];
- void __init smp_setup_processor_id(void)
+ #define RANK_ODD_ERR_THRSLD(reg)	GET_BITFIELD(reg, 16, 30)
+ #define RANK_EVEN_ERR_THRSLD(reg)	GET_BITFIELD(reg,  0, 14)
+@@ -1340,7 +1342,7 @@ static void knl_show_mc_route(u32 reg, char *s)
+  */
+ static int knl_get_dimm_capacity(struct sbridge_pvt *pvt, u64 *mc_sizes)
  {
- 	u64 mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
--	cpu_logical_map(0) = mpidr;
-+	set_cpu_logical_map(0, mpidr);
+-	u64 sad_base, sad_size, sad_limit = 0;
++	u64 sad_base, sad_limit = 0;
+ 	u64 tad_base, tad_size, tad_limit, tad_deadspace, tad_livespace;
+ 	int sad_rule = 0;
+ 	int tad_rule = 0;
+@@ -1427,7 +1429,6 @@ static int knl_get_dimm_capacity(struct sbridge_pvt *pvt, u64 *mc_sizes)
+ 		edram_only = KNL_EDRAM_ONLY(dram_rule);
  
- 	/*
- 	 * clear __my_cpu_offset on boot CPU to avoid hang caused by
-@@ -276,6 +276,12 @@ arch_initcall(reserve_memblock_reserved_regions);
+ 		sad_limit = pvt->info.sad_limit(dram_rule)+1;
+-		sad_size = sad_limit - sad_base;
  
- u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
- 
-+u64 cpu_logical_map(int cpu)
-+{
-+	return __cpu_logical_map[cpu];
-+}
-+EXPORT_SYMBOL_GPL(cpu_logical_map);
-+
- void __init setup_arch(char **cmdline_p)
- {
- 	init_mm.start_code = (unsigned long) _text;
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index 993a4aedfd377..102dc3e7f2e1d 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -549,7 +549,7 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_interrupt *processor)
- 		return;
- 
- 	/* map the logical cpu id to cpu MPIDR */
--	cpu_logical_map(cpu_count) = hwid;
-+	set_cpu_logical_map(cpu_count, hwid);
- 
- 	cpu_madt_gicc[cpu_count] = *processor;
- 
-@@ -663,7 +663,7 @@ static void __init of_parse_and_init_cpus(void)
- 			goto next;
- 
- 		pr_debug("cpu logical map 0x%llx\n", hwid);
--		cpu_logical_map(cpu_count) = hwid;
-+		set_cpu_logical_map(cpu_count, hwid);
- 
- 		early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
- next:
-@@ -704,7 +704,7 @@ void __init smp_init_cpus(void)
- 	for (i = 1; i < nr_cpu_ids; i++) {
- 		if (cpu_logical_map(i) != INVALID_HWID) {
- 			if (smp_cpu_setup(i))
--				cpu_logical_map(i) = INVALID_HWID;
-+				set_cpu_logical_map(i, INVALID_HWID);
+ 		pci_read_config_dword(pvt->pci_sad0,
+ 			pvt->info.interleave_list[sad_rule], &interleave_reg);
+@@ -2952,7 +2953,7 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
+ 	struct mem_ctl_info *new_mci;
+ 	struct sbridge_pvt *pvt = mci->pvt_info;
+ 	enum hw_event_mc_err_type tp_event;
+-	char *type, *optype, msg[256];
++	char *optype, msg[256];
+ 	bool ripv = GET_BITFIELD(m->mcgstatus, 0, 0);
+ 	bool overflow = GET_BITFIELD(m->status, 62, 62);
+ 	bool uncorrected_error = GET_BITFIELD(m->status, 61, 61);
+@@ -2981,14 +2982,11 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
+ 	if (uncorrected_error) {
+ 		core_err_cnt = 1;
+ 		if (ripv) {
+-			type = "FATAL";
+ 			tp_event = HW_EVENT_ERR_FATAL;
+ 		} else {
+-			type = "NON_FATAL";
+ 			tp_event = HW_EVENT_ERR_UNCORRECTED;
  		}
+ 	} else {
+-		type = "CORRECTED";
+ 		tp_event = HW_EVENT_ERR_CORRECTED;
  	}
- }
+ 
+@@ -3200,7 +3198,6 @@ static struct notifier_block sbridge_mce_dec = {
+ static void sbridge_unregister_mci(struct sbridge_dev *sbridge_dev)
+ {
+ 	struct mem_ctl_info *mci = sbridge_dev->mci;
+-	struct sbridge_pvt *pvt;
+ 
+ 	if (unlikely(!mci || !mci->pvt_info)) {
+ 		edac_dbg(0, "MC: dev = %p\n", &sbridge_dev->pdev[0]->dev);
+@@ -3209,8 +3206,6 @@ static void sbridge_unregister_mci(struct sbridge_dev *sbridge_dev)
+ 		return;
+ 	}
+ 
+-	pvt = mci->pvt_info;
+-
+ 	edac_dbg(0, "MC: mci = %p, dev = %p\n",
+ 		 mci, &sbridge_dev->pdev[0]->dev);
+ 
 -- 
 2.25.1
 
