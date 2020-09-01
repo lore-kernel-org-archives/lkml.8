@@ -2,98 +2,155 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA4AC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D49D2C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1165620767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2400206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:57:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="xhhVgTq+"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XWfkwZDq";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="IbiWpHiu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbgIAOz5 (ORCPT
+        id S1728671AbgIAOzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:55:57 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:24688 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727058AbgIALqR (ORCPT
+        Tue, 1 Sep 2020 10:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727801AbgIALs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:46:17 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598960740; h=Content-Type: MIME-Version: Message-ID:
- In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
- bh=liKI+Th2GySsbUd2xn9K1QLhy5bhTX64G88wpmW0HAU=; b=xhhVgTq+pI3cSKpgDVH120wCn8FnDeeo63wu5PEbBgPiBfqKwj24ce/S8MOykc9HWH+5orZj
- 8341xsdFbGm+1rUweRubyeYfaugBeT2TDN64pK98rLr8vl/LboeRBTbrTpswpdqBtNqtBgtj
- bdNl0sfzTLPa46AQ6E5CoOhDu6k=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
- 5f4e34644f13e63f04d5fc8d (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 11:45:40
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 69988C433AD; Tue,  1 Sep 2020 11:45:39 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D073C433C9;
-        Tue,  1 Sep 2020 11:45:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D073C433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     "Bouganim\, Raz" <r-bouganim@ti.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "linuxarm\@huawei.com" <linuxarm@huawei.com>,
-        "mauro.chehab\@huawei.com" <mauro.chehab@huawei.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Manivannan Sadhasivam <mani@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Hahn\, Maital" <maitalm@ti.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Johannes Berg <johannes.berg@intel.com>,
-        "Fuqian Huang" <huangfq.daxian@gmail.com>,
-        "linux-wireless\@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [EXTERNAL] Re: [PATCH] Revert "wlcore: Adding suppoprt for IGTK key in wlcore driver"
-References: <f0a2cb7ea606f1a284d4c23cbf983da2954ce9b6.1598420968.git.mchehab+huawei@kernel.org>
-        <20200901093129.8A0FAC433B1@smtp.codeaurora.org>
-        <49d4cdaf6aad40f591e8b2f17e09007c@ti.com>
-Date:   Tue, 01 Sep 2020 14:45:33 +0300
-In-Reply-To: <49d4cdaf6aad40f591e8b2f17e09007c@ti.com> (Raz Bouganim's message
-        of "Tue, 1 Sep 2020 10:59:47 +0000")
-Message-ID: <87k0xd67qa.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 1 Sep 2020 07:48:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBADC061244;
+        Tue,  1 Sep 2020 04:47:56 -0700 (PDT)
+Date:   Tue, 01 Sep 2020 11:47:53 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598960873;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fnzrFDElcMIXBmmpWISTaHQffUOMdRcuKTQGE2TGxh4=;
+        b=XWfkwZDq+m2Jt+Vn7Leuxr8ybTKozfJkOJt3VdfN4cF9mR+U3miFsBkdW5eyfCiPv9WK83
+        Ig4M7P6jBYgO5ZKFfGidAEHLvtdeow5lA/PtKIe5Lfj1mlLSLDnGitGaLen76JrLr0pECn
+        aY0p8z+SP8oSK/kOFPC8hEhBhGC5wlzu7RRhfveZJxKhpq91dDbcfpkQPyWOcc5GMolNc1
+        OkCrpW8Yb+uP5IL2JI+DiOZgkjqL4elaEICNxWLIUWQqNxQ4IT9VK3w5E8wUCxrLDVdSNl
+        U5Fihzo7+76ZKkjEw2QIRRK/ClO4wdrKkXzFK3yr3zlbsaJU1ojYpZgnYEimsQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598960873;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=fnzrFDElcMIXBmmpWISTaHQffUOMdRcuKTQGE2TGxh4=;
+        b=IbiWpHiuW7sCLWhmHGv7GJ+uaKnGKdcCjZnkTbIJwVzPVz1f6CQDZZO/A+GyLcyF4nel70
+        59NVgKBfDmg79gDQ==
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/build] x86/boot/compressed: Reorganize zero-size section asserts
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200821194310.3089815-27-keescook@chromium.org>
+References: <20200821194310.3089815-27-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Message-ID: <159896087310.20229.16110579156173953333.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Bouganim, Raz" <r-bouganim@ti.com> writes:
+The following commit has been merged into the core/build branch of tip:
 
-> We are going to release a new FW version 8.9.0.0.83 that contains
-> support with the new IGTK key.
->
-> In addition, we also going to release a new patch that mandates the
-> driver to work with an 8.9.0.0.83 FW version or above.
->
-> We going to push it today/tomorrow.
+Commit-ID:     7cf891a40057f851af74e68bacb01b90bd775b5d
+Gitweb:        https://git.kernel.org/tip/7cf891a40057f851af74e68bacb01b90bd775b5d
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Fri, 21 Aug 2020 12:43:07 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 01 Sep 2020 10:03:18 +02:00
 
-You shouldn't break the support for old firmware, instead please
-implement it so that both old and new firmware are supported at the same
-time.
+x86/boot/compressed: Reorganize zero-size section asserts
 
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+For readability, move the zero-sized sections to the end after DISCARDS.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200821194310.3089815-27-keescook@chromium.org
+---
+ arch/x86/boot/compressed/vmlinux.lds.S | 44 ++++++++++++++-----------
+ 1 file changed, 26 insertions(+), 18 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 3c2ee9a..ca544a1 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -42,19 +42,6 @@ SECTIONS
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
+-	.rel.dyn : {
+-		*(.rel.*)
+-	}
+-	.rela.dyn : {
+-		*(.rela.*)
+-	}
+-	.got : {
+-		*(.got)
+-	}
+-	.got.plt : {
+-		*(.got.plt)
+-	}
+-
+ 	.data :	{
+ 		_data = . ;
+ 		*(.data)
+@@ -85,13 +72,34 @@ SECTIONS
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
+-}
+ 
+-ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
++	.got.plt (INFO) : {
++		*(.got.plt)
++	}
++	ASSERT(SIZEOF(.got.plt) == 0 ||
+ #ifdef CONFIG_X86_64
+-ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT entries detected!")
++	       SIZEOF(.got.plt) == 0x18,
+ #else
+-ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
++	       SIZEOF(.got.plt) == 0xc,
+ #endif
++	       "Unexpected GOT/PLT entries detected!")
++
++	/*
++	 * Sections that should stay zero sized, which is safer to
++	 * explicitly check instead of blindly discarding.
++	 */
++	.got : {
++		*(.got)
++	}
++	ASSERT(SIZEOF(.got) == 0, "Unexpected GOT entries detected!")
++
++	.rel.dyn : {
++		*(.rel.*)
++	}
++	ASSERT(SIZEOF(.rel.dyn) == 0, "Unexpected run-time relocations (.rel) detected!")
+ 
+-ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations detected!")
++	.rela.dyn : {
++		*(.rela.*)
++	}
++	ASSERT(SIZEOF(.rela.dyn) == 0, "Unexpected run-time relocations (.rela) detected!")
++}
