@@ -2,142 +2,171 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2BEC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C847DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5890B2083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:44:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598953472;
-	bh=ITAD1vjf8jXauxtQsmS0HJmh1F7OhKbd2+cHVtIinic=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CkI/79oRxKOvhK3cNuaPphHjcrv8EQ6LQS/Rs6cPuL+ssUmvzQO+VM7oC2M/ymgF3
-	 uxcwwhDa+kfTzxBwdQOEAfKXU+vGA49R4n05E76KgEI5JWTHunoCw84Ybhnp9PD8in
-	 wphcDpD2ewvIrwKTRV0UnVDqckkYzeYGlzRnSXB8=
+	by mail.kernel.org (Postfix) with ESMTP id 950E32083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:45:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IvR0Q+6R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgIAJob (ORCPT
+        id S1726255AbgIAJpQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:44:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43404 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgIAJoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:44:30 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D40FD2083B;
-        Tue,  1 Sep 2020 09:44:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598953470;
-        bh=ITAD1vjf8jXauxtQsmS0HJmh1F7OhKbd2+cHVtIinic=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=inm3n9ajJCZkRJTnCyHgxoO9saJyRBsBoNpFccnDOQnDlXzG2jn75ZKUwrSXs4GYP
-         y/WK5NqfVzT7LFDBxrSWMvSTlQfhDtxUyiLzCkjSKswu3t/kHuvsWY5ZPsvNtm7QNY
-         F15PSoR9NLxLO5klxTsAqs2q85MHvpt7zsizvhUs=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kD2q4-008Epc-DL; Tue, 01 Sep 2020 10:44:28 +0100
+        Tue, 1 Sep 2020 05:45:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57350 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgIAJpN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:45:13 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3010AC061246
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 02:45:13 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id k15so467822pfc.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 02:45:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=r1NoCkHudRDLJveRbNuO/HjyuaNHKWaeWYMVpiMNyLI=;
+        b=IvR0Q+6R6bFcaOGfuAMDKMmO6ZeAoUIfwg+n23hk0JrEEpQxvl0zLdpxOQ967DVww8
+         ep2XmHnFf/UnBsHnlO1c9M41B8rETWmZJPb2H6THueHtpVcJP/TJFU/a/fEBSCzSYs1L
+         KMP3BnvN+MfqLh7gEOjnz1wKAM9K/E+VR6LIa6j0+XmyNk47wkMKaLgLrxgCNq4AYApA
+         boLaV+rCCvE4iU33jx8Vq9IToQGThKVB2jAFd4wJbAw/YhsQTyEX1z5yuPjyrlVSWTmq
+         oYsl6RSOT8X81avhmYHL6QsvUN6z+7oXpHBTHeppkxokaG3gjumNx8PLLLKwPtzMD+87
+         RmjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=r1NoCkHudRDLJveRbNuO/HjyuaNHKWaeWYMVpiMNyLI=;
+        b=MWBiNVC4VvxI+8j3CchrcsEZYhNjEjOQf0cNLdxNt51LVj3WBLfBo/qYpuBFhVuz3Q
+         HNy1r2UnMB5FZwo2MEhpZAeJHKFyVCSQZS+l5pMhuH0m2fKmpS1qbalyHMTu54uBaXzm
+         kJ5Tp0C8mHN16aw4j9oCExXZEBWKSWzjOgYkhj1YJ5ZO60tBRss4/yPu/O82l6ziHZqo
+         o0O9k6od57WY1QIgpRxX6LAMe5mpxRvHqczBHSNVYVzm6AJsObh+/ZwKwE8+avA+GRkO
+         y7XmFUhqU9COu4HiRmAfbijmZeclJYT0iY2DWwPVolLpNwvidpRs0Z9SlPJKdlCTfpla
+         LLHQ==
+X-Gm-Message-State: AOAM532B2+++7F4ExZ+c71JoMAtL1zUQTbLRLbmYry+1c++rp8zm0jko
+        gLDLLGV+/PIT26xZvVK49VLTZg==
+X-Google-Smtp-Source: ABdhPJyaoSDKbwx6GB0/73NFH4JHGbgiFworG2T6RlMQNUOY1ihOxi09F8vrmeYZExwUoAfBHvxZ7w==
+X-Received: by 2002:a63:348d:: with SMTP id b135mr754836pga.89.1598953512567;
+        Tue, 01 Sep 2020 02:45:12 -0700 (PDT)
+Received: from localhost ([122.167.135.199])
+        by smtp.gmail.com with ESMTPSA id n1sm1241495pfq.123.2020.09.01.02.45.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 01 Sep 2020 02:45:11 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 15:15:08 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     ulf.hansson@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        nks@flawful.org, georgi.djakov@linaro.org,
+        Stephan Gerhold <stephan@gerhold.net>,
+        linux-kernel@vger.kernel.org,
+        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH V2 2/2] cpufreq: dt: Refactor initialization to handle
+ probe deferral properly
+Message-ID: <20200901094508.4sgyfv3yj575wlzp@vireshk-i7>
+References: <24ff92dd1b0ee1b802b45698520f2937418f8094.1598260050.git.viresh.kumar@linaro.org>
+ <f75c61f193f396608d592ae2a9938264d582c038.1598260050.git.viresh.kumar@linaro.org>
+ <CGME20200901085708eucas1p231ccacd7b41685ece92ee21e3b726f28@eucas1p2.samsung.com>
+ <00a87bad-f750-b08c-4ccb-545b90dd87fc@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 01 Sep 2020 10:44:28 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3] HID: core: Sanitize event code and type when mapping
- input
-In-Reply-To: <20200827210555.1050190-1-maz@kernel.org>
-References: <20200827210555.1050190-1-maz@kernel.org>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <cf158681545c578c760a254d558f3292@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: dmitry.torokhov@gmail.com, jikos@kernel.org, benjamin.tissoires@redhat.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00a87bad-f750-b08c-4ccb-545b90dd87fc@samsung.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-27 22:05, Marc Zyngier wrote:
-> When calling into hid_map_usage(), the passed event code is
-> blindly stored as is, even if it doesn't fit in the associated bitmap.
+On 01-09-20, 10:57, Marek Szyprowski wrote:
+> This patch landed in linux-next about a week ago. It introduces a 
+> following warning on Samsung Exnyos3250 SoC:
 > 
-> This event code can come from a variety of sources, including devices
-> masquerading as input devices, only a bit more "programmable".
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 1000000000, volt: 1150000, enabled: 1. New: freq: 1000000000, volt: 
+> 1150000, enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 900000000, volt: 1112500, enabled: 1. New: freq: 900000000, volt: 
+> 1112500, enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 800000000, volt: 1075000, enabled: 1. New: freq: 800000000, volt: 
+> 1075000, enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 700000000, volt: 1037500, enabled: 1. New: freq: 700000000, volt: 
+> 1037500, enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 600000000, volt: 1000000, enabled: 1. New: freq: 600000000, volt: 
+> 1000000, enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 500000000, volt: 962500, enabled: 1. New: freq: 500000000, volt: 962500, 
+> enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 400000000, volt: 925000, enabled: 1. New: freq: 400000000, volt: 925000, 
+> enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 300000000, volt: 887500, enabled: 1. New: freq: 300000000, volt: 887500, 
+> enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 200000000, volt: 850000, enabled: 1. New: freq: 200000000, volt: 850000, 
+> enabled: 1
+> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
+> 100000000, volt: 850000, enabled: 1. New: freq: 100000000, volt: 850000, 
+> enabled: 1
 > 
-> Instead of taking the event code at face value, check that it actually
-> fits the corresponding bitmap, and if it doesn't:
-> - spit out a warning so that we know which device is acting up
-> - NULLify the bitmap pointer so that we catch unexpected uses
-> 
-> Code paths that can make use of untrusted inputs can now check
-> that the mapping was indeed correct and bail out if not.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
-> * From v2:
->   - Don't prematurely narrow the event code so that hid_map_usage()
->     catches illegal values beyond the 16bit limit.
-> 
-> * From v1:
->   - Dropped the input.c changes, and turned hid_map_usage() into
->     the validation primitive.
->   - Handle mapping failures in hidinput_configure_usage() and
->     mt_touch_input_mapping() (on top of hid_map_usage_clear() which
->     was already handled)
-> 
->  drivers/hid/hid-input.c      |  4 ++++
->  drivers/hid/hid-multitouch.c |  2 ++
->  drivers/mfd/syscon.c         |  2 +-
->  include/linux/hid.h          | 42 +++++++++++++++++++++++++-----------
->  4 files changed, 36 insertions(+), 14 deletions(-)
-> 
+> I've checked a bit and this is related to the fact that Exynos3250 SoC 
+> use OPP-v1 table. Is this intentional? It is not a problem to convert it 
+> to OPP-v2 and mark OPP table as shared, but this is a kind of a regression.
 
-[...]
+It took me 20 minutes for me to see "where has my patch gone" :(
 
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index 7a660411c562..75859e492984 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -108,6 +108,7 @@ static struct syscon *of_syscon_register(struct
-> device_node *np, bool check_clk)
->  	syscon_config.max_register = resource_size(&res) - reg_io_width;
-> 
->  	regmap = regmap_init_mmio(NULL, base, &syscon_config);
-> +	kfree(syscon_config.name);
->  	if (IS_ERR(regmap)) {
->  		pr_err("regmap init failed\n");
->  		ret = PTR_ERR(regmap);
-> @@ -144,7 +145,6 @@ static struct syscon *of_syscon_register(struct
-> device_node *np, bool check_clk)
->  	regmap_exit(regmap);
->  err_regmap:
->  	iounmap(base);
-> -	kfree(syscon_config.name);
->  err_map:
->  	kfree(syscon);
->  	return ERR_PTR(ret);
+I wrote a small patch for that to work without any issues, but not
+sure how I missed or abandoned it. Anyway, here is the diff again and
+I will send it out again once you confirm it fixes the issue. Can you
+please also test your driver as a module with multiple insertion/removals ?
 
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index 5dac8bffd68c..e72753be7dc7 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -905,6 +905,16 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
+        const __be32 *val;
+        int nr, ret = 0;
+ 
++       mutex_lock(&opp_table->lock);
++       if (opp_table->parsed_static_opps) {
++               opp_table->parsed_static_opps++;
++               mutex_unlock(&opp_table->lock);
++               return 0;
++       }
++
++       opp_table->parsed_static_opps = 1;
++       mutex_unlock(&opp_table->lock);
++
+        prop = of_find_property(dev->of_node, "operating-points", NULL);
+        if (!prop)
+                return -ENODEV;
+@@ -921,10 +931,6 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
+                return -EINVAL;
+        }
+ 
+-       mutex_lock(&opp_table->lock);
+-       opp_table->parsed_static_opps = 1;
+-       mutex_unlock(&opp_table->lock);
+-
+        val = prop->value;
+        while (nr) {
+                unsigned long freq = be32_to_cpup(val++) * 1000;
 
-This hunk is totally unrelated, and is from another fix I was working
-on at the same time... Sorry for the nois, I'll post v4 (hopefully 
-final)
-now.
-
-         M.
 -- 
-Jazz is not dead. It just smells funny...
+viresh
