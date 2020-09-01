@@ -2,281 +2,234 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF911C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E712C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A675020767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB01820767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:16:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NjMzwBPS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hbrvoG+v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726618AbgIANDY (ORCPT
+        id S1728107AbgIANPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49240 "EHLO
+        Tue, 1 Sep 2020 09:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgIALzh (ORCPT
+        with ESMTP id S1727061AbgIANFr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:55:37 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E194EC061245;
-        Tue,  1 Sep 2020 04:55:27 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b124so635285pfg.13;
-        Tue, 01 Sep 2020 04:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=r0QoArXlGym3eWpJEYZx+lz57ZLvZb2kHtV5tNtHzJ4=;
-        b=NjMzwBPSfFvdU2O/KMV3opnSnYvg/vZTty9uMb1o23rL9uxH4u0UZOoL+j0tkXZ4F6
-         lz3q9pGjs75qa3zXVM7dp3MmS9PSiwX7RayOXSQWftB1aDQ8Dlfin+1RxD6LCaKtxnU3
-         XFiWt3IQyvuyI2lK5A+EwjMlT7bkpJQQxHw3wnqJKmWd8/ZNYs0ETXUonKvIIDjBLow4
-         FsbgiDkWaM4yJa5kOdi3lphACsU84efVDBmxUZImyJeTFzWfEjSiNQ42WZbvce/wK/Cx
-         JTmCWptmtzSGRrWbtYcZTcHVN7u3X2ZnyUKAqXtCbM1mIcRE+gCSnixUxgPT6aGl7mXw
-         aJJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=r0QoArXlGym3eWpJEYZx+lz57ZLvZb2kHtV5tNtHzJ4=;
-        b=qcaMvx5dL/bkOwPt1lGYxBMHdESXlUMnJgyf7ZSPeLZAK4dbQ5h6SBdMCshIR/Zy1K
-         OLLNcA3LePdjuaJXpY3MUD3Gz6rT9TfbVIb6xg6TEeB/0FeRHDe6UvDZ+8MmPGarL5G6
-         pd4TjnV7uxKqfYogwm5kk4w0lPJ+Fq7mJcUg6tPzdeDM6bnT8kH048+H3kfg9SoC3gNS
-         wq4Q9FOqVIGdBS8aT+QwaI+bZmtyiC5prsc2m46co28YlJZlaJ8pW7aPZtdnOL4nTtl0
-         xNhLtPYx/IdMfo0x86DSFHEjXJJACeWKnMX7n4kyUgECmQIURGB+WLHIh6aZtQxYPc6A
-         ogRA==
-X-Gm-Message-State: AOAM53272+qA07pMbil98W4HjdXzBLf2ay/yUOwyfhuXS1M93AXP6w4B
-        e2j3ijMTynOe837pyXg7yU6kX2Uasl4=
-X-Google-Smtp-Source: ABdhPJwIfk+L03i7+RG1LZTgGssrXJ8ifRcqMziLfzmkhsyzdMfmxtCxY0Ji3Rc8Kxlro/rMjBg9Hg==
-X-Received: by 2002:a63:f909:: with SMTP id h9mr1182770pgi.250.1598961327411;
-        Tue, 01 Sep 2020 04:55:27 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.53])
-        by smtp.gmail.com with ESMTPSA id z17sm1738614pfq.38.2020.09.01.04.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 04:55:27 -0700 (PDT)
-From:   yulei.kernel@gmail.com
-X-Google-Original-From: yuleixzhang@tencent.com
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        junaids@google.com, bgardon@google.com, vkuznets@redhat.com,
-        xiaoguangrong.eric@gmail.com, kernellwp@gmail.com,
-        lihaiwei.kernel@gmail.com, Yulei Zhang <yulei.kernel@gmail.com>,
-        Yulei Zhang <yuleixzhang@tencent.com>
-Subject: [RFC V2 6/9] Apply the direct build EPT according to the memory slots change
-Date:   Tue,  1 Sep 2020 19:56:22 +0800
-Message-Id: <1f8000f25664b4feb97db2c72e68f6740e680e60.1598868204.git.yulei.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1598868203.git.yulei.kernel@gmail.com>
-References: <cover.1598868203.git.yulei.kernel@gmail.com>
+        Tue, 1 Sep 2020 09:05:47 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EDE6EC061244;
+        Tue,  1 Sep 2020 06:05:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3snyZCqcx6nfDLLd1J100WLPuaRed18WUzYLSt3TcWw=; b=hbrvoG+vks0CAtQ3N78qWmX5eX
+        /NQfB0lIwhTw+JIeEG3UTUpEED73WYlkgwy+xZx68o+RkOBAMNP+7v0DFBexLsFKpbTNNJqIkP6Sd
+        H6pciRK1QoYcmLs5njnhEbPp+JKo6UVT0Z2NUYWZ0NZMse5fdbv3S2XuHDf10GHYZZybDqcLfFk/m
+        6Ff6CFmabe6TrkJZ8Igy1YjbGZv8aeXp4VPkCG8+XCmqKf9ApGKGXpb6Ta7X8f9XykbBpBWgS6fzO
+        /NVVDgQQqK3n9YAn9yxLyPSnjhSjdboM3fBHH/AaYwQ2ZCYOiPObZHa/hk33V3BnzVpg0bhQsq0h8
+        +f07oIzA==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD5yX-0000KA-In; Tue, 01 Sep 2020 13:05:25 +0000
+Date:   Tue, 1 Sep 2020 14:05:25 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 04/11] block: Add bio_for_each_thp_segment_all
+Message-ID: <20200901130525.GK14765@casper.infradead.org>
+References: <20200824151700.16097-1-willy@infradead.org>
+ <20200824151700.16097-5-willy@infradead.org>
+ <20200827084431.GA15909@infradead.org>
+ <20200831194837.GJ14765@casper.infradead.org>
+ <20200901053426.GB24560@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901053426.GB24560@infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yulei Zhang <yulei.kernel@gmail.com>
+On Tue, Sep 01, 2020 at 06:34:26AM +0100, Christoph Hellwig wrote:
+> On Mon, Aug 31, 2020 at 08:48:37PM +0100, Matthew Wilcox wrote:
+> > static void iomap_read_end_io(struct bio *bio)
+> > {
+> >         int i, error = blk_status_to_errno(bio->bi_status);
+> > 
+> >         for (i = 0; i < bio->bi_vcnt; i++) {
+> >                 struct bio_vec *bvec = &bio->bi_io_vec[i];
+> 
+> This should probably use bio_for_each_bvec_all instead of directly
+> poking into the bio.  I'd also be tempted to move the loop body into
+> a separate helper, but that's just a slight stylistic preference.
 
-Construct the direct build ept when guest memory slots have been
-changed, and issue mmu_reload request to update the CR3 so that
-guest could use the pre-constructed EPT without page fault.
+Ah, got it.
 
-Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
----
- arch/mips/kvm/mips.c       | 13 +++++++++++++
- arch/powerpc/kvm/powerpc.c | 13 +++++++++++++
- arch/s390/kvm/kvm-s390.c   | 13 +++++++++++++
- arch/x86/kvm/mmu/mmu.c     | 33 ++++++++++++++++++++++++++-------
- include/linux/kvm_host.h   |  3 +++
- virt/kvm/kvm_main.c        | 13 +++++++++++++
- 6 files changed, 81 insertions(+), 7 deletions(-)
+> >                 size_t offset = bvec->bv_offset;
+> >                 size_t length = bvec->bv_len;
+> >                 struct page *page = bvec->bv_page;
+> > 
+> >                 while (length > 0) { 
+> >                         size_t count = thp_size(page) - offset;
+> >                         
+> >                         if (count > length)
+> >                                 count = length;
+> >                         iomap_read_page_end_io(page, offset, count, error);
+> >                         page += (offset + count) / PAGE_SIZE;
+> 
+> Shouldn't the page_size here be thp_size?
 
-diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-index 7de85d2253ff..05d053a53ebf 100644
---- a/arch/mips/kvm/mips.c
-+++ b/arch/mips/kvm/mips.c
-@@ -267,6 +267,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	}
+No.  Let's suppose we have a 20kB I/O which starts on a page boundary and
+the first page is order-2.  To get from the first head page to the second
+page, we need to add 4, which is 16kB / 4kB, not 16kB / 16kB.
+
+> > Maybe I'm missing something important here, but it's significantly
+> > simpler code -- iomap_read_end_io() goes down from 816 bytes to 560 bytes
+> > (256 bytes less!) iomap_read_page_end_io is inlined into it both before
+> > and after.
+> 
+> Yes, that's exactly why I think avoiding bio_for_each_segment_all is
+> a good idea in general.
+
+I took out all the attempts to cope with insane bv_offset to compare like
+with like and I got the bio_for_each_thp_segment_all() version down to
+656 bytes:
+
+@@ -166,21 +166,15 @@ static inline void bvec_thp_advance(const struct bio_vec *
+bvec,
+                                struct bvec_iter_all *iter_all)
+ {
+        struct bio_vec *bv = &iter_all->bv;
+-       unsigned int page_size;
+ 
+        if (iter_all->done) {
+                bv->bv_page += thp_nr_pages(bv->bv_page);
+-               page_size = thp_size(bv->bv_page);
+                bv->bv_offset = 0;
+        } else {
+-               bv->bv_page = thp_head(bvec->bv_page +
+-                               (bvec->bv_offset >> PAGE_SHIFT));
+-               page_size = thp_size(bv->bv_page);
+-               bv->bv_offset = bvec->bv_offset -
+-                               (bv->bv_page - bvec->bv_page) * PAGE_SIZE;
+-               BUG_ON(bv->bv_offset >= page_size);
++               bv->bv_page = bvec->bv_page;
++               bv->bv_offset = bvec->bv_offset;
+        }
+-       bv->bv_len = min(page_size - bv->bv_offset,
++       bv->bv_len = min_t(unsigned int, thp_size(bv->bv_page) - bv->bv_offset,
+                         bvec->bv_len - iter_all->done);
+        iter_all->done += bv->bv_len;
+
+> And yes, eventually bv_page and bv_offset should be replaced with a
+> 
+> 	phys_addr_t		bv_phys;
+> 
+> and life would become simpler in many places (and the bvec would
+> shrink for most common setups as well).
+
+I'd very much like to see that.  It causes quite considerable pain for
+our virtualisation people that we need a struct page.  They'd like the
+hypervisor to not have struct pages for the guest's memory, but if they
+don't have them, they can't do I/O to them.  Perhaps I'll try getting
+one of them to work on this.
+
+I'm not entirely sure the bvec would shrink.  On 64-bit systems, it's
+currently 8 bytes for the struct page, 4 bytes for the len and 4 bytes
+for the offset.  Sure, we can get rid of the offset, but the compiler
+will just pad the struct from 12 bytes back to 16.  On 32-bit systems
+with 32-bit phys_addr_t, we go from 12 bytes down to 8, but most 32-bit
+systems have a 64-bit phys_addr_t these days, don't they?
+
+> For now I'd end up with something like:
+> 
+> static void iomap_read_end_bvec(struct page *page, size_t offset,
+> 		size_t length, int error)
+> {
+> 	while (length > 0) {
+> 		size_t page_size = thp_size(page);
+> 		size_t count = min(page_size - offset, length);
+> 
+> 		iomap_read_page_end_io(page, offset, count, error);
+> 
+> 		page += (offset + count) / page_size;
+> 		length -= count;
+> 		offset = 0;
+> 	}
+> }
+> 
+> static void iomap_read_end_io(struct bio *bio)
+> {
+> 	int i, error = blk_status_to_errno(bio->bi_status);
+> 	struct bio_vec *bvec;
+> 
+> 	bio_for_each_bvec_all(bvec, bio, i)
+> 		iomap_read_end_bvec(bvec->bv_page, bvec->bv_offset,
+> 				    bvec->bv_len, error;
+>         bio_put(bio);
+> }
+> 
+> and maybe even merge iomap_read_page_end_io into iomap_read_end_bvec.
+
+The lines start to get a bit long.  Here's what I currently have on
+the write side:
+
+@@ -1104,6 +1117,20 @@ iomap_finish_page_writeback(struct inode *inode, struct p
+age *page,
+                end_page_writeback(page);
  }
  
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
++static void iomap_finish_bvec_write(struct inode *inode, struct page *page,
++               size_t offset, size_t length, int error)
 +{
-+	return 0;
++       while (length > 0) {
++               size_t count = min(thp_size(page) - offset, length);
++
++               iomap_finish_page_writeback(inode, page, error, count);
++
++               page += (offset + count) / PAGE_SIZE;
++               offset = 0;
++               length -= count;
++       }
 +}
 +
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+}
-+
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+}
-+
- static inline void dump_handler(const char *symbol, void *start, void *end)
- {
- 	u32 *p;
-diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-index 13999123b735..c6964cbeb6da 100644
---- a/arch/powerpc/kvm/powerpc.c
-+++ b/arch/powerpc/kvm/powerpc.c
-@@ -715,6 +715,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	kvmppc_core_commit_memory_region(kvm, mem, old, new, change);
- }
+ /*
+  * We're now finished for good with this ioend structure.  Update the page
+  * state, release holds on bios, and finally free up memory.  Do not use the
+@@ -1121,7 +1148,7 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
  
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+	return 0;
-+}
-+
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+}
-+
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+}
-+
- void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
- 				   struct kvm_memory_slot *slot)
- {
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 6b74b92c1a58..d6f7cf1a30a3 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -5021,6 +5021,19 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 	return;
- }
+        for (bio = &ioend->io_inline_bio; bio; bio = next) {
+                struct bio_vec *bv;
+-               struct bvec_iter_all iter_all;
++               int i;
  
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+	return 0;
-+}
-+
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
-+{
-+}
-+
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+}
-+
- static inline unsigned long nonhyp_mask(int i)
- {
- 	unsigned int nonhyp_fai = (sclp.hmfai << i * 2) >> 30;
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index fda6c4196854..47d2a1c18f36 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -5206,13 +5206,20 @@ int kvm_mmu_load(struct kvm_vcpu *vcpu)
- {
- 	int r;
+                /*
+                 * For the last bio, bi_private points to the ioend, so we
+@@ -1133,9 +1160,9 @@ iomap_finish_ioend(struct iomap_ioend *ioend, int error)
+                        next = bio->bi_private;
  
--	r = mmu_topup_memory_caches(vcpu, !vcpu->arch.mmu->direct_map);
--	if (r)
--		goto out;
--	r = mmu_alloc_roots(vcpu);
--	kvm_mmu_sync_roots(vcpu);
--	if (r)
--		goto out;
-+	if (vcpu->kvm->arch.global_root_hpa) {
-+		vcpu->arch.direct_build_tdp = true;
-+		vcpu->arch.mmu->root_hpa = vcpu->kvm->arch.global_root_hpa;
-+	}
-+
-+	if (!vcpu->arch.direct_build_tdp) {
-+		r = mmu_topup_memory_caches(vcpu, !vcpu->arch.mmu->direct_map);
-+		if (r)
-+			goto out;
-+		r = mmu_alloc_roots(vcpu);
-+		kvm_mmu_sync_roots(vcpu);
-+		if (r)
-+			goto out;
-+	}
- 	kvm_mmu_load_pgd(vcpu);
- 	kvm_x86_ops.tlb_flush_current(vcpu);
- out:
-@@ -6464,6 +6471,17 @@ int direct_build_mapping_level(struct kvm *kvm, struct kvm_memory_slot *slot, gf
- 	return host_level;
- }
- 
-+static void kvm_make_direct_build_update(struct kvm *kvm)
-+{
-+	int i;
-+	struct kvm_vcpu *vcpu;
-+
-+	kvm_for_each_vcpu(i, vcpu, kvm) {
-+		kvm_make_request(KVM_REQ_MMU_RELOAD, vcpu);
-+		kvm_vcpu_kick(vcpu);
-+	}
-+}
-+
- int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot)
- {
- 	gfn_t gfn;
-@@ -6498,6 +6516,7 @@ int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *
- 		direct_build_tdp_map(kvm, slot, gfn, pfn, host_level);
- 	}
- 
-+	kvm_make_direct_build_update(kvm);
- 	return 0;
- }
- 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 8901862ba2a3..b2aa0daad6dd 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -694,6 +694,9 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				struct kvm_memory_slot *old,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change);
-+int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *slot);
-+void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *slot);
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm);
- void mark_page_dirty_in_slot(struct kvm_memory_slot *memslot, gfn_t gfn);
- /* flush all memory translations */
- void kvm_arch_flush_shadow_all(struct kvm *kvm);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 47fc18b05c53..fd1b419f4eb4 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -876,6 +876,7 @@ static void kvm_destroy_vm(struct kvm *kvm)
- #endif
- 	kvm_arch_destroy_vm(kvm);
- 	kvm_destroy_devices(kvm);
-+	kvm_direct_tdp_release_global_root(kvm);
- 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++)
- 		kvm_free_memslots(kvm, __kvm_memslots(kvm, i));
- 	cleanup_srcu_struct(&kvm->irq_srcu);
-@@ -1195,6 +1196,10 @@ static int kvm_set_memslot(struct kvm *kvm,
- 		 * in the freshly allocated memslots, not in @old or @new.
- 		 */
- 		slot = id_to_memslot(slots, old->id);
-+		/* Remove pre-constructed page table */
-+		if (!as_id)
-+			kvm_direct_tdp_remove_page_table(kvm, slot);
-+
- 		slot->flags |= KVM_MEMSLOT_INVALID;
- 
- 		/*
-@@ -1222,6 +1227,14 @@ static int kvm_set_memslot(struct kvm *kvm,
- 	update_memslots(slots, new, change);
- 	slots = install_new_memslots(kvm, as_id, slots);
- 
-+	if ((change == KVM_MR_CREATE) || (change == KVM_MR_MOVE)) {
-+		if (!as_id) {
-+			r = kvm_direct_tdp_populate_page_table(kvm, new);
-+			if (r)
-+				goto out_slots;
-+		}
-+	}
-+
- 	kvm_arch_commit_memory_region(kvm, mem, old, new, change);
- 
- 	kvfree(slots);
--- 
-2.17.1
+                /* walk each page on bio, ending page IO on them */
+-               bio_for_each_thp_segment_all(bv, bio, iter_all)
+-                       iomap_finish_page_writeback(inode, bv->bv_page, error,
+-                                       bv->bv_len);
++               bio_for_each_bvec_all(bv, bio, i)
++                       iomap_finish_bvec_writeback(inode, bv->bv_page,
++                                       bv->bv_offset, bv->bv_len, error);
+                bio_put(bio);
+        }
+        /* The ioend has been freed by bio_put() */
+
+That's a bit more boilerplate than I'd like, but if bio_vec is going to
+lose its bv_page then I don't see a better way.  Unless we come up with
+a different page/offset/length struct that bio_vecs are decomposed into.
 
