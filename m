@@ -2,130 +2,109 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2E4C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C0AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15732206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TcVTXNKw"
+	by mail.kernel.org (Postfix) with ESMTP id 4DF9C206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598979235;
+	bh=nMiUbtiD3nYXYSkO+Ot20R5VrvcgfqXTe/FDnXweDlg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tUOS6SIfxkR1VIORYdy63hnV33LEktLwcWIB5/WgW7SvJu5D3YcnFEqVcJlYk5htC
+	 RME5dF9Pnel5W6DKBM4ZxnFxAelotETt4ZEKPXucPPWVVvjIKzeCXSumaA01wsErxA
+	 3R8MBUpqUcbAyeQ/sX2eztceJuU0O5oHNmKCRHpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgIAQxc (ORCPT
+        id S1732352AbgIAQxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:53:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:60744 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732332AbgIAQx1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:53:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598979206;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=avbleNGUb+J89GYGqB+uFJ1WJDboHCvs4T7vUTWniQ8=;
-        b=TcVTXNKwvy8WXucWGP4mJkUQdVx4bYP9jCQpD6JqLie2KEfkHdjIij1Axa6kuUczVTSiw7
-        JJA4wrMGPnOfqMK5+sldOalIFDQAOo/Oid1/ZviL50OWQh7VkadSOnboS3AEfiWrCae+IG
-        aGuv00ZtUKwFqcO3pSWTQ66AZlYwmTw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-Aag7nKneMkuxngkgxQu7uA-1; Tue, 01 Sep 2020 12:53:22 -0400
-X-MC-Unique: Aag7nKneMkuxngkgxQu7uA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 1 Sep 2020 12:53:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48962 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729984AbgIAPYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:55 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8A8BD10ABDA7;
-        Tue,  1 Sep 2020 16:53:20 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.114])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 283C87C558;
-        Tue,  1 Sep 2020 16:53:16 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue,  1 Sep 2020 18:53:20 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 18:53:16 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian.brauner@ubuntu.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sargun Dhillon <sargun@sargun.me>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-kselftest@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Jens Axboe <axboe@kernel.dk>, linux-api@vger.kernel.org
-Subject: Re: [PATCH 1/4] pidfd: support PIDFD_NONBLOCK in pidfd_open()
-Message-ID: <20200901165315.GD4386@redhat.com>
-References: <20200831134551.1599689-1-christian.brauner@ubuntu.com>
- <20200831134551.1599689-2-christian.brauner@ubuntu.com>
- <20200901162309.GB4386@redhat.com>
- <20200901163308.mwd334y462fmml6s@wittgenstein>
+        by mail.kernel.org (Postfix) with ESMTPSA id 0996A20BED;
+        Tue,  1 Sep 2020 15:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973894;
+        bh=nMiUbtiD3nYXYSkO+Ot20R5VrvcgfqXTe/FDnXweDlg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Jqlfs1WEeJwuM6oJSXWoWEXnmtcuexdkPXckBxhMYqh17/g2M2am0c9Xm4w5fQWSa
+         PvnIvvGkMUpyzXd1CD1CbQMXmal/bY3akEiYUY5kcC1yNPeqNl+4BqFoogDftmWOff
+         s7qXEX2fiOdbFjm8CvkRCw4pJhIcd52roUcU0LRg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tamseel Shams <m.shams@samsung.com>
+Subject: [PATCH 4.19 089/125] serial: samsung: Removes the IRQ not found warning
+Date:   Tue,  1 Sep 2020 17:10:44 +0200
+Message-Id: <20200901150938.942179490@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901163308.mwd334y462fmml6s@wittgenstein>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09/01, Christian Brauner wrote:
->
-> On Tue, Sep 01, 2020 at 06:23:10PM +0200, Oleg Nesterov wrote:
-> > On 08/31, Christian Brauner wrote:
-> > >
-> > > --- /dev/null
-> > > +++ b/include/uapi/linux/pidfd.h
-> > > @@ -0,0 +1,12 @@
-> > > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> > > +
-> > > +#ifndef _UAPI_LINUX_PIDFD_H
-> > > +#define _UAPI_LINUX_PIDFD_H
-> > > +
-> > > +#include <linux/types.h>
-> > > +#include <linux/fcntl.h>
-> > > +
-> > > +/* Flags for pidfd_open().  */
-> > > +#define PIDFD_NONBLOCK O_NONBLOCK
-> > > +
-> > > +#endif /* _UAPI_LINUX_PIDFD_H */
-> >
-> > Why? Can't we simply use O_NONBLOCK ?
->
-> It's the same thing we seem to do for any other (anon inode) fds:
->
-> include/linux/eventfd.h:#define		EFD_NONBLOCK O_NONBLOCK
-> include/uapi/linux/inotify.h:#define	IN_NONBLOCK O_NONBLOCK
-> include/uapi/linux/signalfd.h:#define	SFD_NONBLOCK O_NONBLOCK
-> include/uapi/linux/timerfd.h:#define	TFD_NONBLOCK O_NONBLOCK
->
-> also for O_CLOEXEC:
->
-> include/linux/eventfd.h:#define		EFD_CLOEXEC O_CLOEXEC
-> include/linux/userfaultfd_k.h:#define	UFFD_CLOEXEC O_CLOEXEC
-> include/uapi/linux/eventpoll.h:#define	EPOLL_CLOEXEC O_CLOEXEC
-> include/uapi/linux/mount.h:#define	OPEN_TREE_CLOEXEC    O_CLOEXEC
-> include/uapi/linux/perf_event.h:#define PERF_FLAG_FD_CLOEXEC (1UL << 3) /* O_CLOEXEC */
-> include/uapi/linux/signalfd.h:#define	SFD_CLOEXEC O_CLOEXEC
-> include/uapi/linux/timerfd.h:#define	TFD_CLOEXEC O_CLOEXEC
->
-> So I think we should just do the same.
+From: Tamseel Shams <m.shams@samsung.com>
 
-Hmm, OK, then I have to agree.
+commit 8c6c378b0cbe0c9f1390986b5f8ffb5f6ff7593b upstream.
 
-> A clean flag namespace seems
-> nicer to me too tbh.
+In few older Samsung SoCs like s3c2410, s3c2412
+and s3c2440, UART IP is having 2 interrupt lines.
+However, in other SoCs like s3c6400, s5pv210,
+exynos5433, and exynos4210 UART is having only 1
+interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+call in the driver gives the following false-positive error:
+"IRQ index 1 not found" on newer SoC's.
 
-Disagree but this doesn't matter ;)
+This patch adds the condition to check for Tx interrupt
+only for the those SoC's which have 2 interrupt lines.
 
-Oleg.
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200810030021.45348-1-m.shams@samsung.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/samsung.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+--- a/drivers/tty/serial/samsung.c
++++ b/drivers/tty/serial/samsung.c
+@@ -1755,9 +1755,11 @@ static int s3c24xx_serial_init_port(stru
+ 		ourport->tx_irq = ret + 1;
+ 	}
+ 
+-	ret = platform_get_irq(platdev, 1);
+-	if (ret > 0)
+-		ourport->tx_irq = ret;
++	if (!s3c24xx_serial_has_interrupt_mask(port)) {
++		ret = platform_get_irq(platdev, 1);
++		if (ret > 0)
++			ourport->tx_irq = ret;
++	}
+ 	/*
+ 	 * DMA is currently supported only on DT platforms, if DMA properties
+ 	 * are specified.
+
 
