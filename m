@@ -2,139 +2,160 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC80AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6F2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:52:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B19EF205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:48:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794A8207EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:52:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dyaEu3K2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgIADsa (ORCPT
+        id S1726224AbgIADwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 23:48:30 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:15047 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725987AbgIADs3 (ORCPT
+        Mon, 31 Aug 2020 23:52:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59448 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgIADwU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 23:48:29 -0400
-X-IronPort-AV: E=Sophos;i="5.76,377,1592841600"; 
-   d="scan'208";a="98758136"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 01 Sep 2020 11:48:26 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id A5F2F48990DB;
-        Tue,  1 Sep 2020 11:48:23 +0800 (CST)
-Received: from [10.167.225.206] (10.167.225.206) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 1 Sep 2020 11:48:22 +0800
-Subject: Re: [PATCH] fs: Handle I_DONTCACHE in iput_final() instead of
- generic_drop_inode()
-To:     Ira Weiny <ira.weiny@intel.com>
-CC:     <viro@zeniv.linux.org.uk>, <david@fromorbit.com>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-xfs@vger.kernel.org>, <y-goto@fujitsu.com>
-References: <20200831101313.168889-1-lihao2018.fnst@cn.fujitsu.com>
- <20200831171257.GF1422350@iweiny-DESK2.sc.intel.com>
-From:   "Li, Hao" <lihao2018.fnst@cn.fujitsu.com>
-Message-ID: <db5d145a-3b63-48db-6bd2-eb1d91323697@cn.fujitsu.com>
-Date:   Tue, 1 Sep 2020 11:48:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.1.1
+        Mon, 31 Aug 2020 23:52:20 -0400
+Received: from mail-oo1-xc42.google.com (mail-oo1-xc42.google.com [IPv6:2607:f8b0:4864:20::c42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD320C0612FE
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:52:20 -0700 (PDT)
+Received: by mail-oo1-xc42.google.com with SMTP id m25so2017260oou.0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:52:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DHgd1Cn7DbLEoeK4tX+vty8BzXm7n6usmD/UeI07Mrk=;
+        b=dyaEu3K2fa7X2g3Iy4XaFmUwFb2VziG9VK8UPB8GwRUXnqKa7ib6yl+CECA0Q1vPLz
+         IjQ+mn612HdIbhc5odg6OfaT3Qb/TYbaI5T/zWIex5gVUoWgirWjKb0AvwZRDaqbzzCO
+         Y1OtNL+0UUlSJmpsQ0sd9QBKMSwBu6kJ5paH3wPa4P9agbIv6yxHgu7afTYDTEwIeYGH
+         DJZ6IsI3RU6NTWK8tqqEnwY3s/hCocMGlybV+ffvg6CgjQt6J50QWplKw+lBIr/ief3F
+         psjjzA+evsRqJDJS9fx7ldrRPcAmxLmEOhyENyNuK+ikFrDogOJS+r6DRfJGytxsSq3x
+         WDZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DHgd1Cn7DbLEoeK4tX+vty8BzXm7n6usmD/UeI07Mrk=;
+        b=GS8zFyFRTA+mN4u5y3eZi19gzIuiRZC/9NHe/KPuK2NC6Uyy0FT+1FAu2lmfl8ze+j
+         468LJSVSeK85b3fGFQv3evb5nRKS+gqWwk/yZjhGpqBpTTZJaa90qkidx/jOa8QJCY0X
+         WFmGVBalo+V//dd6hKNxCUVAut7TisC4IzWgw/OZrVNJZjaDdjo/+gBwUHcjiV6ZGLMv
+         xJZfm8kHslTyCGE/3njk/fMxaFlw8LSYJr/yspCCEU8kGmu4wqP/7KA9B8fReDEZgcU4
+         waTTqoLdQI1b/qrgHKgxFRjqu7hfR5h5Few1wXNZJ1KN65MSYtNhKwvLSjYycJWgqm4v
+         kfbg==
+X-Gm-Message-State: AOAM531rO4GJKV42fp0K5WDURHunZbUkAW+xjD8eVcPAPcIUN4uvgtGa
+        USJboFVd880HvpMI551m4c46aw==
+X-Google-Smtp-Source: ABdhPJyW82+oNd0uKsSlubviePmT2U0GHcTQ3RDx78hC9s24SzOxGZRfPqGKe1d6Eg2D6goGkTWR0w==
+X-Received: by 2002:a4a:aec3:: with SMTP id v3mr2968825oon.69.1598932339869;
+        Mon, 31 Aug 2020 20:52:19 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id u19sm2067501oic.10.2020.08.31.20.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 20:52:19 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 22:52:16 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Clark <robdclark@chromium.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 05/19] iommu: add private interface for adreno-smmu
+Message-ID: <20200901035216.GM3715@yoga>
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200814024114.1177553-6-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200831171257.GF1422350@iweiny-DESK2.sc.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.167.225.206]
-X-ClientProxiedBy: G08CNEXCHPEKD06.g08.fujitsu.local (10.167.33.205) To
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201)
-X-yoursite-MailScanner-ID: A5F2F48990DB.ADBB7
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: lihao2018.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814024114.1177553-6-robdclark@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/9/1 1:12, Ira Weiny wrote:
-> On Mon, Aug 31, 2020 at 06:13:13PM +0800, Hao Li wrote:
->> If generic_drop_inode() returns true, it means iput_final() can evict
->> this inode regardless of whether it is dirty or not. If we check
->> I_DONTCACHE in generic_drop_inode(), any inode with this bit set will be
->> evicted unconditionally. This is not the desired behavior because
->> I_DONTCACHE only means the inode shouldn't be cached on the LRU list.
->> As for whether we need to evict this inode, this is what
->> generic_drop_inode() should do. This patch corrects the usage of
->> I_DONTCACHE.
->>
->> This patch was proposed in [1].
->>
->> [1]: https://lore.kernel.org/linux-fsdevel/20200831003407.GE12096@dread.disaster.area/
->>
->> Signed-off-by: Hao Li <lihao2018.fnst@cn.fujitsu.com>
->
-> Thanks!  I think this looks good, but shouldn't we add?  It seems like this is
-> a bug right?
->
-> Fixes: dae2f8ed7992 ("fs: Lift XFS_IDONTCACHE to the VFS layer")
+On Thu 13 Aug 21:41 CDT 2020, Rob Clark wrote:
 
-Yeah, this is more meaningful.
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> This interface will be used for drm/msm to coordinate with the
+> qcom_adreno_smmu_impl to enable/disable TTBR0 translation.
+> 
+> Once TTBR0 translation is enabled, the GPU's CP (Command Processor)
+> will directly switch TTBR0 pgtables (and do the necessary TLB inv)
+> synchronized to the GPU's operation.  But help from the SMMU driver
+> is needed to initially bootstrap TTBR0 translation, which cannot be
+> done from the GPU.
+> 
+> Since this is a very special case, a private interface is used to
+> avoid adding highly driver specific things to the public iommu
+> interface.
+> 
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-I'm not sure if I need to submit a v2 patch, or this tag will be added
-by the maintainer when applying this patch. I have no experience with
-this before. Thanks!
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Regards,
-Hao Li
-
->
->
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
->
->> ---
->>  fs/inode.c         | 3 ++-
->>  include/linux/fs.h | 3 +--
->>  2 files changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/fs/inode.c b/fs/inode.c
->> index 72c4c347afb7..4e45d5ea3d0f 100644
->> --- a/fs/inode.c
->> +++ b/fs/inode.c
->> @@ -1625,7 +1625,8 @@ static void iput_final(struct inode *inode)
->>      else
->>          drop = generic_drop_inode(inode);
->>  
->> -    if (!drop && (sb->s_flags & SB_ACTIVE)) {
->> +    if (!drop && !(inode->i_state & I_DONTCACHE) &&
->> +            (sb->s_flags & SB_ACTIVE)) {
->>          inode_add_lru(inode);
->>          spin_unlock(&inode->i_lock);
->>          return;
->> diff --git a/include/linux/fs.h b/include/linux/fs.h
->> index e019ea2f1347..93caee80ce47 100644
->> --- a/include/linux/fs.h
->> +++ b/include/linux/fs.h
->> @@ -2922,8 +2922,7 @@ extern int inode_needs_sync(struct inode *inode);
->>  extern int generic_delete_inode(struct inode *inode);
->>  static inline int generic_drop_inode(struct inode *inode)
->>  {
->> -    return !inode->i_nlink || inode_unhashed(inode) ||
->> -        (inode->i_state & I_DONTCACHE);
->> +    return !inode->i_nlink || inode_unhashed(inode);
->>  }
->>  extern void d_mark_dontcache(struct inode *inode);
->>  
->> --
->> 2.28.0
->>
->>
->>
->
->
-
-
-
+> ---
+>  include/linux/adreno-smmu-priv.h | 36 ++++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 include/linux/adreno-smmu-priv.h
+> 
+> diff --git a/include/linux/adreno-smmu-priv.h b/include/linux/adreno-smmu-priv.h
+> new file mode 100644
+> index 000000000000..a889f28afb42
+> --- /dev/null
+> +++ b/include/linux/adreno-smmu-priv.h
+> @@ -0,0 +1,36 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2020 Google, Inc
+> + */
+> +
+> +#ifndef __ADRENO_SMMU_PRIV_H
+> +#define __ADRENO_SMMU_PRIV_H
+> +
+> +#include <linux/io-pgtable.h>
+> +
+> +/**
+> + * struct adreno_smmu_priv - private interface between adreno-smmu and GPU
+> + *
+> + * @cookie:        An opque token provided by adreno-smmu and passed
+> + *                 back into the callbacks
+> + * @get_ttbr1_cfg: Get the TTBR1 config for the GPUs context-bank
+> + * @set_ttbr0_cfg: Set the TTBR0 config for the GPUs context bank.  A
+> + *                 NULL config disables TTBR0 translation, otherwise
+> + *                 TTBR0 translation is enabled with the specified cfg
+> + *
+> + * The GPU driver (drm/msm) and adreno-smmu work together for controlling
+> + * the GPU's SMMU instance.  This is by necessity, as the GPU is directly
+> + * updating the SMMU for context switches, while on the other hand we do
+> + * not want to duplicate all of the initial setup logic from arm-smmu.
+> + *
+> + * This private interface is used for the two drivers to coordinate.  The
+> + * cookie and callback functions are populated when the GPU driver attaches
+> + * it's domain.
+> + */
+> +struct adreno_smmu_priv {
+> +    const void *cookie;
+> +    const struct io_pgtable_cfg *(*get_ttbr1_cfg)(const void *cookie);
+> +    int (*set_ttbr0_cfg)(const void *cookie, const struct io_pgtable_cfg *cfg);
+> +};
+> +
+> +#endif /* __ADRENO_SMMU_PRIV_H */
+> \ No newline at end of file
+> -- 
+> 2.26.2
+> 
