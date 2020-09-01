@@ -2,163 +2,114 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA648C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:36:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E89B3C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1277206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:36:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAEE1206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:36:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WSN1LTNm"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qqYoRXBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731132AbgIATgg (ORCPT
+        id S1731576AbgIATgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:36:36 -0400
-Received: from mail-mw2nam10on2066.outbound.protection.outlook.com ([40.107.94.66]:42637
-        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728117AbgIATge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:36:34 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RGrf+u/qWUFnZSed13F3TgYDajRi5qgE3P254CBF3TBHu9JfIHLn82nAIHcIxB91hZLiZEY07Gu/zuMbCedDeM+F7SeK/db8wTQCzfnQmZzIGDijSgSZB0rWgdpXPJRG1d2Q4k5JlA7oizhJ6AXhc/jRFbsM4VrSnco3ezMrjMfYQ3nf72pJ+Tk3xqYmO8i+JpNUO6ILI2LUzC8Pd3zpAjw6Bu3TKcu6YBFkKp6uPzDV7CW5XkOC1ZwF5XtVLE5PnRzozftSkdiOTaQzh/1dw9YDaW4ef/HKcU5hIZPUTau7H8afKY3NeYzaKA0szvw3TWu2vozPC68i1eCtMOe1MA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nNd19dy8/IdiwIdZO+CH46S4dujPVG65h56Y/eFMdak=;
- b=IBw28q9h8xHPNcLJdIwetEVrQ12fSMss7h98P+cJSnQqx0BS49Aej/meVP/tQ1YObvoTSBBgRGtDkjLnepaoFMF9sPrGpLWO4EO6XGz8JBeD0ZqtcOQfedJKF2GZ0eLLGoiBKDtTqtU95+Sz9ZbJoLZwqx7bN89fLl3D1NNAiBXlmqeynMtxTHO++EsYyh+HsCUpkS0A3+2frnkrCwAv1+mfj/sN1e1rDJ8BRrQv8ld8YraNv85cTWuojB114DSNU8RK1/VFThcG4OBOiKmiIfWYtSskRlG69cuzujgUsodNk1F6FlW+M80X/1FCo0di7Kc3Swg7o+Ro59SV8al28w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nNd19dy8/IdiwIdZO+CH46S4dujPVG65h56Y/eFMdak=;
- b=WSN1LTNmTZvQ+58gxgWpb8+4LFoEozzcMp5SlUBhBWWhig/lzG4CTdVuxwMKcRaVLxUNvMiO/lkp5+fa8XyEGwwzoB1ggijK+AB5gsRggHGTWezc1HpPYzwV6QwCXWLJApniCjRhavD4FCXd/x0bAE1XOZVroVaJ3EVnNKbxYVk=
-Authentication-Results: amd.com; dkim=none (message not signed)
- header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
-Received: from DM6PR12MB3116.namprd12.prod.outlook.com (2603:10b6:5:38::12) by
- DM5PR12MB1242.namprd12.prod.outlook.com (2603:10b6:3:6d::18) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.23; Tue, 1 Sep 2020 19:36:31 +0000
-Received: from DM6PR12MB3116.namprd12.prod.outlook.com
- ([fe80::d950:4d1b:55d0:9720]) by DM6PR12MB3116.namprd12.prod.outlook.com
- ([fe80::d950:4d1b:55d0:9720%5]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
- 19:36:31 +0000
-Date:   Tue, 1 Sep 2020 14:36:24 -0500
-From:   Yazen Ghannam <yazen.ghannam@amd.com>
-To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-acpi@vger.kernel.org,
-        devel@acpica.org, Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>,
-        Ard Biesheuvel <ardb@kernel.org>
-Subject: Re: [PATCH v2 1/2] cper, apei, mce: Pass x86 CPER through the MCA
- handling chain
-Message-ID: <20200901193624.GA3558296@yaz-nikka.amd.com>
-References: <20200828203332.11129-1-Smita.KoralahalliChannabasappa@amd.com>
- <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
+        Tue, 1 Sep 2020 15:36:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:32952 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbgIATgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 15:36:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081JT5oT096223;
+        Tue, 1 Sep 2020 19:36:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=eolh/l8OzywtSzarHBKcDokhJyO8s5FophmCXrNKB+c=;
+ b=qqYoRXBUS+VOQPoPkO41INo2qP8mjky2SF4R/Rwla+aAQEkMcKaLfPqmp9af/Ykrtn3/
+ kFwXC0yGzwnhZC4A20F4qkM+XD7QonIgWWaMnPcshzf0E0iLf1q1PROjL3k1Nkj4uq61
+ HhfoRokDpP1bmTH1YhkOjF/URzdy0aVls5bqoI532iCWz8HdrdK27uwsO218V3qgGum2
+ 7ncxgbov2aRNBcG5XZFr780h0Unbek6iPiW0NN8Eiy//WoeMYg9C+TpZA9ozO6w0RcvI
+ Rm1ZnIt+830clBzlS9Q+UnMdKVqurTjUWiZHASCfRayXpNpd7fKKmqYmAE5+ok4hJ9Ez Cg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 337eeqxhd2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Sep 2020 19:36:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081JYauC142889;
+        Tue, 1 Sep 2020 19:36:42 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 3380x49060-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Sep 2020 19:36:42 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 081JaZrG032164;
+        Tue, 1 Sep 2020 19:36:35 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Sep 2020 12:36:34 -0700
+Date:   Tue, 1 Sep 2020 22:36:28 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: Re: [PATCH 4.19 124/125] HID: hiddev: Fix slab-out-of-bounds write
+ in hiddev_ioctl_usage()
+Message-ID: <20200901193628.GF8321@kadam>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150940.687698839@linuxfoundation.org>
+ <20200901191209.GB5295@duo.ucw.cz>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
-X-ClientProxiedBy: DM5PR07CA0123.namprd07.prod.outlook.com
- (2603:10b6:3:13e::13) To DM6PR12MB3116.namprd12.prod.outlook.com
- (2603:10b6:5:38::12)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by DM5PR07CA0123.namprd07.prod.outlook.com (2603:10b6:3:13e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Tue, 1 Sep 2020 19:36:30 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3ec7343e-2549-4500-9ac0-08d84eae5427
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1242:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1242C8FB875BE4D60FE0DF23F82E0@DM5PR12MB1242.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: QZquAWb5osKduiKJss+Ov7P/nUFj4CUYkASj7JfFLMZRZWDHcjSoLoz5aU7SuzC35PY2hwN8efb95lEDTHj4YlkkrZGudjfdTI56wsCv5b1lNZ/qjFR7d/t2asf2gtyPqoEhzwEc6x0v2UXUdtcU25ncqWMVbVGDAZnrMcSgMaDcWCcZXii/Fxgg1gbu35jRGENXoikZFesfINHJYc6MAwXapSWeT0eTw5u/7igD2Cn4agD/luNlH//gcy4RNwC2yWodllf4toggNIJHPbwMbZpoAufdRs9f5EzFfrKRjDzm4MVEionQeGt5LPTtApyxHwTuNhvzRm3BdXkrAejx+g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3116.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(396003)(366004)(376002)(83380400001)(7416002)(6666004)(186003)(4326008)(8936002)(8676002)(33656002)(1076003)(2906002)(478600001)(6862004)(52116002)(16576012)(44832011)(5660300002)(26005)(956004)(6636002)(66476007)(6486002)(54906003)(66556008)(66946007)(86362001)(316002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: cucAVbATLQnv4CaEE4iT1ttOQZSYwWJjlfB7BOwakQVrDkjGNC2sk2mpIPUya4qvTxiF3lAwXcJ+ZrbW1j66WR1lr8SNW+PfgDRf61eenkuFL9YXgpOYRnQ/xNfOmK3rTTAI0qIK5y4TyRFxTsxV4tB2YlhyLqD2OruJoEf7n+5yY9kB8hGMR4LLNnmznSeEGH/HCHE7bn4oLOirbilNG07mvD8gqb3J1knhs4X5naH//LNi99q94RxAgVKjVbuKA8hiqlVpAxCVSii5Y57su1HV+GeQ49WspEb31KQGEDbfad8OZMC7MJHPjX5bZS6LPdMXidk315x221jxP5LNSYctt+6soJ9CHDfbcA73uTbSJVwYL9Oubc9dg+7yvp8saQWEZuwwH1SYIwgr4+kv+dk9jibLoaU4BqSToMFSGByyV39Hf5sV44rvii4JShTt/aDRNEHcn9VnirM9PGIT0KFs5JhtAjiTaPT0TO4Bf/mAw23z8jTJmwNh0e3Z+ng84ZrL47toSB/UPxD7/sZHTKiV/O/LGTmDphgGTqjuHTTLyhl3Xvkh79Sl973ReGrnxj/zAEWrGostwkVv+xXt5ku8N5Ar0+qprXSvelmN7e7jmKYYw0hhuQcfrd4gioiULjvlyeovYKR5yb0JITfVbg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3ec7343e-2549-4500-9ac0-08d84eae5427
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3116.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 19:36:31.7342
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 01AydhYxT/jyy0H3MZrR/myLBMvPEh21YGq7cXoTa0Wr29S3CDkDKqlGH7ac4j/RVPV14bNV39SyEknO58xb9w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1242
+In-Reply-To: <20200901191209.GB5295@duo.ucw.cz>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=975 adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009010165
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1011 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=966 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009010164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 03:33:31PM -0500, Smita Koralahalli wrote:
-...
-> +int apei_mce_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
-> +{
-> +	const u64 *i_mce = ((const void *) (ctx_info + 1));
-> +	unsigned int cpu;
-> +	struct mce m;
-> +
-> +	if (!boot_cpu_has(X86_FEATURE_SMCA))
-> +		return -EINVAL;
-> +
+On Tue, Sep 01, 2020 at 09:12:09PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > commit 25a097f5204675550afb879ee18238ca917cba7a upstream.
+> > 
+> > `uref->usage_index` is not always being properly checked, causing
+> > hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
+> 
+> Well, the code is quite confusig, but:
+> 
+> a) does HIDIOCGCOLLECTIONINDEX need same checking?
 
-This function is called on any context type, but it can only decode
-"MSR" types that follow the MCAX register layout used on Scalable MCA
-systems.
+It's checked in the previous switch statement.
 
-So I think there should be a couple of checks added:
-1) Context type is "MSR".
-2) Register layout follows what is expected below. There's no explict
-way to do this, since the data is implemenation-specific. But at least
-there can be a check that the starting MSR address matches the first
-expected register: Bank's MCA_STATUS in MCAX space (0xC0002XX1).
+> 
+> b) should we check this using some kind of _nospec() variant to
+> prevent speculation attacks?
 
-For example:
+I don't think so.  I wrote up an explanation earlier just because the
+code was so confusing.
 
-	(ctx_info->msr_addr & 0xC0002001) == 0xC0002001
+https://lkml.org/lkml/2020/7/20/523
 
-The raw value in the example should be defined with a name.
+regards,
+dan carpenter
 
-> +	mce_setup(&m);
-> +
-> +	m.extcpu = -1;
-> +	m.socketid = -1;
-> +
-> +	for_each_possible_cpu(cpu) {
-> +		if (cpu_data(cpu).initial_apicid == lapic_id) {
-> +			m.extcpu = cpu;
-> +			m.socketid = cpu_data(m.extcpu).phys_proc_id;
-> +			break;
-> +		}
-> +	}
-> +
-> +	m.apicid = lapic_id;
-> +	m.bank = (ctx_info->msr_addr >> 4) & 0xFF;
-> +	m.status = *i_mce;
-> +	m.addr = *(i_mce + 1);
-> +	m.misc = *(i_mce + 2);
-> +	/* Skipping MCA_CONFIG */
-> +	m.ipid = *(i_mce + 4);
-> +	m.synd = *(i_mce + 5);
-> +
-> +	mce_log(&m);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(apei_mce_report_x86_error);
-> +
-
-Thanks,
-Yazen
