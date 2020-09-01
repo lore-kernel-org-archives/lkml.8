@@ -2,142 +2,165 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73BBC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A42C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:17:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCED52065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:17:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DceVnRiq"
+	by mail.kernel.org (Postfix) with ESMTP id F0CCA2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:17:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598977060;
+	bh=VEbWXJsL5nvU8RWQzRCLenQMrZBHfB295gfdp1uzQcw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=nPG0q78y/fysBlP0mFZxXSfO+R3w5NNMUVflLkyWR0Omp8MF+ijfvG1ROiQ/Y7/io
+	 6JS17qyLGMCtH1l2QBx51T2R3sA6Z9veLAVp1/Oo3IqD6sA10fp3YNWqIc8rDka7aq
+	 VwOAeeMEOCjWb9/6oAaYlLmFl80KKd7FLJ2mqlyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbgIAPds (ORCPT
+        id S1731212AbgIAQRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731182AbgIAPdb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:33:31 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7F0AC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:33:30 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id n133so1139855qkn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:33:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vstCf+2ozyYDDsY1FDuiQNquHfG3neT8y055PmuM2O4=;
-        b=DceVnRiqW7Do8b5GQpw52IG+emIOhIDWDAfKAMJ6klO+x06NGJyGGwoGY0WUwCJqih
-         rVmOe/L2DJLdEahYJ7ImE+LSgY0JKIbi8KNV8vJ/vOY5QWgvAlrP0PtbBkEtCdUJfHg+
-         jz2hObzZMkccKAZcyiNKyw3YQ+ydrrl1QjeRFpYVN7LniPOri8ZG1mysBLLjVXIusm51
-         Xj4xzhsadjkTVUU1Xg8Gl5/RBfeinJQTmY/HrBos9SSQhPATDNms2/xdHVic/L0TsbFh
-         3sy7c/fLmvu3aYxN7ULX8nNKD2uMbHdXhZQoSuD84sHUdawNw6gE7gQTaPPvQJGhJxvq
-         YTfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vstCf+2ozyYDDsY1FDuiQNquHfG3neT8y055PmuM2O4=;
-        b=UT2ic1eU2zEOzg1LuJV4Egw3yoivB3s9poDL8z9aqHVXP5B1i6Ka2Q5tTMXVx9SL9e
-         EM2CnQcnj+jKzC81Pwz5xVE2SGIv5E70A0V8XxPwzjkcMsoZwc8fvQeJSYV63348rMqy
-         aa2Cxrql7y2DKyucYz/d3tEv1BUxq28RKFKfU42MOF+6e4Vgy30zzeNATITqL5gb32Iv
-         nw6QdlSiBCXTpmDFeWonE9Lbq1I93EMR9tFIrWroxLMBuqVwOzI7f+o08bLq93M2w/nz
-         UIWvPJ9+N/JLs2kdU9/d2uWAuglSLzESNRzqMwQQ7+e5MJocH0cQurGUiZkrdNu2Sflm
-         tVnQ==
-X-Gm-Message-State: AOAM533p8Q/9Kkk/ubJaAs5CmIqgA2zKidgIhVhRxN0TeqZpvn2Ze3ve
-        XmNcfmrwE+2/vsF7uRGNvWAqPrUw6bWvdsi+q/T9Eg==
-X-Google-Smtp-Source: ABdhPJz+PVmfEScoiPPq02gU1Gsd9Hjmvo9kyB25QFy6BvMWTuMC4+jl1qOxPtKzGj7JtIKCdIYNrfgi9EmJw2vAcT8=
-X-Received: by 2002:a05:620a:815:: with SMTP id s21mr2434910qks.0.1598974409692;
- Tue, 01 Sep 2020 08:33:29 -0700 (PDT)
+        Tue, 1 Sep 2020 12:17:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730678AbgIAPdl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:33:41 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7401521548;
+        Tue,  1 Sep 2020 15:33:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974421;
+        bh=VEbWXJsL5nvU8RWQzRCLenQMrZBHfB295gfdp1uzQcw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kh1bUKbPcpy/SP8FPVoFLtpyIoXBLYKd/Gj9vDjt98NUnljg8o4euZyUSqUdmybBV
+         zUFRXPZhpKY927tX/jmNRxndZGaMXk2uBsdB0QRVU0jxig+alpj4mPc+2AYLz+k9RD
+         /OpD952tGWsYRTCBGhIq4g+K2VR7pwJVu2pNP090=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Roman Shaposhnik <roman@zededa.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 5.4 170/214] XEN uses irqdesc::irq_data_common::handler_data to store a per interrupt XEN data pointer which contains XEN specific information.
+Date:   Tue,  1 Sep 2020 17:10:50 +0200
+Message-Id: <20200901151001.119702265@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200901065758.1141786-1-brianvv@google.com> <CANn89iKA5Ut4AcZfsZi3bVpE33_pqgO=E1RhBzePUeBDn6gznQ@mail.gmail.com>
-In-Reply-To: <CANn89iKA5Ut4AcZfsZi3bVpE33_pqgO=E1RhBzePUeBDn6gznQ@mail.gmail.com>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Tue, 1 Sep 2020 08:33:17 -0700
-Message-ID: <CAMzD94Ru9P8DQB=8OX+z2vTNVt0SwbTuXcScGzmioZ73y4zx5w@mail.gmail.com>
-Subject: Re: [PATCH] net: ipv6: fix __rt6_purge_dflt_routers when forwarding
- is not set on all ifaces
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        David Ahern <dsa@cumulusnetworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 12:56 AM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Tue, Sep 1, 2020 at 8:58 AM Brian Vazquez <brianvv@google.com> wrote:
-> >
-> > The problem is exposed when the system has multiple ifaces and
-> > forwarding is enabled on a subset of them, __rt6_purge_dflt_routers will
-> > clean the default route on all the ifaces which is not desired.
-> >
-> > This patches fixes that by cleaning only the routes where the iface has
-> > forwarding enabled.
-> >
-> > Fixes: 830218c1add1 ("net: ipv6: Fix processing of RAs in presence of VRF")
->
->
->
->
->
-> > Cc: David Ahern <dsa@cumulusnetworks.com>
-> > Signed-off-by: Brian Vazquez <brianvv@google.com>
-> > ---
-> >  net/ipv6/route.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-> > index 5e7e25e2523a..41181cd489ea 100644
-> > --- a/net/ipv6/route.c
-> > +++ b/net/ipv6/route.c
-> > @@ -4283,6 +4283,7 @@ static void __rt6_purge_dflt_routers(struct net *net,
-> >                                      struct fib6_table *table)
-> >  {
-> >         struct fib6_info *rt;
-> > +       bool deleted = false;
-> >
-> >  restart:
-> >         rcu_read_lock();
-> > @@ -4291,16 +4292,19 @@ static void __rt6_purge_dflt_routers(struct net *net,
-> >                 struct inet6_dev *idev = dev ? __in6_dev_get(dev) : NULL;
-> >
-> >                 if (rt->fib6_flags & (RTF_DEFAULT | RTF_ADDRCONF) &&
-> > -                   (!idev || idev->cnf.accept_ra != 2) &&
-> > +                   (!idev || (idev->cnf.forwarding == 1 &&
-> > +                              idev->cnf.accept_ra != 2)) &&
-> >                     fib6_info_hold_safe(rt)) {
-> >                         rcu_read_unlock();
-> >                         ip6_del_rt(net, rt, false);
-> > +                       deleted = true;
-> >                         goto restart;
-> >                 }
-> >         }
-> >         rcu_read_unlock();
-> >
-> > -       table->flags &= ~RT6_TABLE_HAS_DFLT_ROUTER;
-> > +       if (deleted)
-> > +               table->flags &= ~RT6_TABLE_HAS_DFLT_ROUTER;
->
->
-> This seems wrong : We want to keep the flag set if at least one
-> candidate route has not been deleted,
-> so that next time rt6_purge_dflt_routers() is called, we can call
-> __rt6_purge_dflt_routers() ?
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Yes, you're right. Although current implementation doesn't hurt
-because if any of those candidate routes were not deleted means that
-they have accept_ra == 2 which overrules the router behaviour so we
-won't clean the SLAAC anyway.
+commit c330fb1ddc0a922f044989492b7fcca77ee1db46 upstream.
+
+handler data is meant for interrupt handlers and not for storing irq chip
+specific information as some devices require handler data to store internal
+per interrupt information, e.g. pinctrl/GPIO chained interrupt handlers.
+
+This obviously creates a conflict of interests and crashes the machine
+because the XEN pointer is overwritten by the driver pointer.
+
+As the XEN data is not handler specific it should be stored in
+irqdesc::irq_data::chip_data instead.
+
+A simple sed s/irq_[sg]et_handler_data/irq_[sg]et_chip_data/ cures that.
+
+Cc: stable@vger.kernel.org
+Reported-by: Roman Shaposhnik <roman@zededa.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Roman Shaposhnik <roman@zededa.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Link: https://lore.kernel.org/r/87lfi2yckt.fsf@nanos.tec.linutronix.de
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/xen/events/events_base.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -155,7 +155,7 @@ int get_evtchn_to_irq(unsigned evtchn)
+ /* Get info for IRQ */
+ struct irq_info *info_for_irq(unsigned irq)
+ {
+-	return irq_get_handler_data(irq);
++	return irq_get_chip_data(irq);
+ }
+ 
+ /* Constructors for packed IRQ information. */
+@@ -376,7 +376,7 @@ static void xen_irq_init(unsigned irq)
+ 	info->type = IRQT_UNBOUND;
+ 	info->refcnt = -1;
+ 
+-	irq_set_handler_data(irq, info);
++	irq_set_chip_data(irq, info);
+ 
+ 	list_add_tail(&info->list, &xen_irq_list_head);
+ }
+@@ -425,14 +425,14 @@ static int __must_check xen_allocate_irq
+ 
+ static void xen_free_irq(unsigned irq)
+ {
+-	struct irq_info *info = irq_get_handler_data(irq);
++	struct irq_info *info = irq_get_chip_data(irq);
+ 
+ 	if (WARN_ON(!info))
+ 		return;
+ 
+ 	list_del(&info->list);
+ 
+-	irq_set_handler_data(irq, NULL);
++	irq_set_chip_data(irq, NULL);
+ 
+ 	WARN_ON(info->refcnt > 0);
+ 
+@@ -602,7 +602,7 @@ EXPORT_SYMBOL_GPL(xen_irq_from_gsi);
+ static void __unbind_from_irq(unsigned int irq)
+ {
+ 	int evtchn = evtchn_from_irq(irq);
+-	struct irq_info *info = irq_get_handler_data(irq);
++	struct irq_info *info = irq_get_chip_data(irq);
+ 
+ 	if (info->refcnt > 0) {
+ 		info->refcnt--;
+@@ -1106,7 +1106,7 @@ int bind_ipi_to_irqhandler(enum ipi_vect
+ 
+ void unbind_from_irqhandler(unsigned int irq, void *dev_id)
+ {
+-	struct irq_info *info = irq_get_handler_data(irq);
++	struct irq_info *info = irq_get_chip_data(irq);
+ 
+ 	if (WARN_ON(!info))
+ 		return;
+@@ -1140,7 +1140,7 @@ int evtchn_make_refcounted(unsigned int
+ 	if (irq == -1)
+ 		return -ENOENT;
+ 
+-	info = irq_get_handler_data(irq);
++	info = irq_get_chip_data(irq);
+ 
+ 	if (!info)
+ 		return -ENOENT;
+@@ -1168,7 +1168,7 @@ int evtchn_get(unsigned int evtchn)
+ 	if (irq == -1)
+ 		goto done;
+ 
+-	info = irq_get_handler_data(irq);
++	info = irq_get_chip_data(irq);
+ 
+ 	if (!info)
+ 		goto done;
+
+
