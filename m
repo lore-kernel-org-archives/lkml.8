@@ -2,87 +2,115 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B575CC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8779EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72C00206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Qp7cO1c6"
+	by mail.kernel.org (Postfix) with ESMTP id 655FA206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598979249;
+	bh=CvSkdwDg6PRknrGxMyqrHFPTdy7TeeZG/HZYNd6mZRQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OBbEo1vMt6fuRl2RZQQparNXT2QovsOIFYoa6y5RbIp3L4eiHkVeR8ghhEk/AMO7X
+	 syoYsi9xB6bmbmoQjlNN/Ux1RUDKplyTjb55RVCLL5CPLTeGE6blGYokjJ3OeBKg8E
+	 1fiwXSHhfZ1gAHOjJqyUamzA6amZsb8CJh95M4bc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732486AbgIAQyD (ORCPT
+        id S1732495AbgIAQyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:54:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38914 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730228AbgIAQxf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:53:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1B89C061244;
-        Tue,  1 Sep 2020 09:53:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=mr+spIm0j102sxFcc3WXz2mCLWqWkBrKAQyNQoZhMH4=; b=Qp7cO1c6obl/HbURjQhpBiYPQG
-        zMVpdHyURqSWTczQUMKFJAjOy/TiFuPuIO99chev9Opx0LZ/TLT95QaNoVyb4m6rgj02rzNms21bD
-        l/OJj+Pn3H4e3Mzua6ZOGdf7TbV7b19zK1HK8PwPz1sPjHOWtXsWoQGxS7DBoTJGYTbRtUYGJqxI7
-        8CsalzSoTglaLhiOvz2SYPVRp3wWJsHM/wtbu2DlirQcXKmjLD+1CJIvyaMBTnf2S3HPWyMsavtNt
-        3tJ7WFYYYteWuJLPBqd7P2w3N7flwqDEkXxZ8pD/Jd3z/6ksKCRHFQo9SY2r/QQ5XzKyjmUUHgPI3
-        osL/2N3Q==;
-Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD9Wy-0001ZZ-0r; Tue, 01 Sep 2020 16:53:12 +0000
-Date:   Tue, 1 Sep 2020 17:53:11 +0100
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Helge Deller <deller@gmx.de>
-Cc:     James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-mm@kvack.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 07/28] 53c700: improve non-coherent DMA handling
-Message-ID: <20200901165311.GS14765@casper.infradead.org>
-References: <20200819065555.1802761-1-hch@lst.de>
- <20200819065555.1802761-8-hch@lst.de>
- <1598971960.4238.5.camel@HansenPartnership.com>
- <20200901150554.GN14765@casper.infradead.org>
- <1598973776.4238.11.camel@HansenPartnership.com>
- <3369218e-eea4-14e9-15f1-870269e4649d@gmx.de>
- <77c9b2b6-bedc-d090-8b23-6ac664df1d1f@gmx.de>
+        Tue, 1 Sep 2020 12:54:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729070AbgIAPYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:51 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C35C920FC3;
+        Tue,  1 Sep 2020 15:24:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973889;
+        bh=CvSkdwDg6PRknrGxMyqrHFPTdy7TeeZG/HZYNd6mZRQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tKoukL++EDMwYQ1LDNIZX8HfKH3hrY9qTu4nRpIcTb9SD53rG5ZTfLLlBPDvm55m/
+         1Y/EMFpzlMfnAgbEnFf/vbQUAO83YWyp8/BV4bLOyMq2R/VRtzH+UfOXasEpvFbRs/
+         Ia+/8nJF+eGnizRbZCPXrRV6Oc6Twd8vCzV9B8Zg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH 4.19 087/125] vt: defer kfree() of vc_screenbuf in vc_do_resize()
+Date:   Tue,  1 Sep 2020 17:10:42 +0200
+Message-Id: <20200901150938.837990318@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77c9b2b6-bedc-d090-8b23-6ac664df1d1f@gmx.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 06:41:12PM +0200, Helge Deller wrote:
-> > I still have a zoo of machines running for such testing, including a
-> > 715/64 and two 730.
-> > I'm going to test this git tree on the 715/64:
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-The 715/64 is a 7100LC machine though.  I think you need to boot on
-the 730 to test the non-coherent path.
+commit f8d1653daec02315e06d30246cff4af72e76e54e upstream.
+
+syzbot is reporting UAF bug in set_origin() from vc_do_resize() [1], for
+vc_do_resize() calls kfree(vc->vc_screenbuf) before calling set_origin().
+
+Unfortunately, in set_origin(), vc->vc_sw->con_set_origin() might access
+vc->vc_pos when scroll is involved in order to manipulate cursor, but
+vc->vc_pos refers already released vc->vc_screenbuf until vc->vc_pos gets
+updated based on the result of vc->vc_sw->con_set_origin().
+
+Preserving old buffer and tolerating outdated vc members until set_origin()
+completes would be easier than preventing vc->vc_sw->con_set_origin() from
+accessing outdated vc members.
+
+[1] https://syzkaller.appspot.com/bug?id=6649da2081e2ebdc65c0642c214b27fe91099db3
+
+Reported-by: syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1596034621-4714-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/vt/vt.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -1199,7 +1199,7 @@ static int vc_do_resize(struct tty_struc
+ 	unsigned int old_rows, old_row_size, first_copied_row;
+ 	unsigned int new_cols, new_rows, new_row_size, new_screen_size;
+ 	unsigned int user;
+-	unsigned short *newscreen;
++	unsigned short *oldscreen, *newscreen;
+ 	struct uni_screen *new_uniscr = NULL;
+ 
+ 	WARN_CONSOLE_UNLOCKED();
+@@ -1297,10 +1297,11 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_scr_end > new_origin)
+ 		scr_memsetw((void *)new_origin, vc->vc_video_erase_char,
+ 			    new_scr_end - new_origin);
+-	kfree(vc->vc_screenbuf);
++	oldscreen = vc->vc_screenbuf;
+ 	vc->vc_screenbuf = newscreen;
+ 	vc->vc_screenbuf_size = new_screen_size;
+ 	set_origin(vc);
++	kfree(oldscreen);
+ 
+ 	/* do part of a reset_terminal() */
+ 	vc->vc_top = 0;
+
 
