@@ -2,150 +2,114 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A315BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67577C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF0E206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37393206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QNwyUWGq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Lqe9meLt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732484AbgIARIz (ORCPT
+        id S1729721AbgIARJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:08:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52284 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729442AbgIAPSA (ORCPT
+        Tue, 1 Sep 2020 13:09:02 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22184 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732470AbgIARIz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:00 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D43C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:17:57 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id nv17so779921pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:17:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jN9lhIYk+vgw0Ck0cVCcWxfdMAHspCt08b10OTqq50Y=;
-        b=QNwyUWGqs9owKFllSjci/t28I81jLcjvgiBtzPpNMRmB+M2e4JBvG3SftYAgE8DETw
-         A5b6HYulpcZeseDvZnxy5DImevpZ81cF8dcEq9K+/+/1l71Pmted5STlCijieeHbus5d
-         vU2UHyXJC6TyBYorxv12caOk04LJayZkpsHkE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jN9lhIYk+vgw0Ck0cVCcWxfdMAHspCt08b10OTqq50Y=;
-        b=n2/u/kX0d08hxbPa48/CPUpm/HoqypJOGRGfrOHOgJWq2V9wfkob0wSUWDLzCry97K
-         0Pu722sy2p6XHHl5JuDGRz5vj911cDxujlx37cSzWTDYwGMGz3C5qLlNxKmo7KtZpcYc
-         isDVpObXL/DqBhMbY1Mzb5ZC9CFzlGAKMHwDlyVKujNUnvKveKUcDHpjP2uDf+YgdrzF
-         K65Ub/S6ZArUnCsZk5HZKICWY9UjQEg81Z0h2LRhRDo0UN6qdSatq2RZ90Rpjk/28Kbs
-         vwAUmKGx5Acd3O2VfwyiVrSoxd00lNK/KQxOC5qzsa9DWGvPQur8V58AI1XXQxjnazkN
-         hKiw==
-X-Gm-Message-State: AOAM530CgUcJGYwpUnVq/jm3XyJ1Ic5ux1RzExoGSDJSKTLLQTZDOMI3
-        uLmgepCprZepHZ8E5aBOrDMrNg==
-X-Google-Smtp-Source: ABdhPJzj6yhyG4RDEF44EWGGFa00f7t2qp0yXpcOrOBamPDLCZ2Fwy8Mo8dB/mLaqQdQJtP1wf76Hg==
-X-Received: by 2002:a17:90a:8a0d:: with SMTP id w13mr2008556pjn.218.1598973476573;
-        Tue, 01 Sep 2020 08:17:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id a12sm2324629pfr.217.2020.09.01.08.17.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 08:17:55 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 08:17:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/29] Warn on orphan section placement
-Message-ID: <202009010816.80F4692@keescook>
-References: <20200821194310.3089815-1-keescook@chromium.org>
- <202008311240.9F94A39@keescook>
- <20200901071133.GA3577996@gmail.com>
- <20200901075937.GA3602433@gmail.com>
- <20200901081647.GB3602433@gmail.com>
+        Tue, 1 Sep 2020 13:08:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598980133;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W/K3itRNGDBjecxllh4C4p9hfEhx4LxfXXlrS6JO9Q0=;
+        b=Lqe9meLtYn98xnr0romEpt0VPzO+wU58W6MLWaas32rlMpT7UH72Z6eqBX92CWElgbSBnN
+        ttRoQ4SectMV4hVGbX24f1ljKAb765UeyOtOCd4anWwOwPYi0zISz0eUUi9ecABDmlamKg
+        lWgLz94weGZrLTL2U2M5pXYwRHNY7OA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-549-4-MR4TRsOMu058QrcOsSYQ-1; Tue, 01 Sep 2020 13:08:52 -0400
+X-MC-Unique: 4-MR4TRsOMu058QrcOsSYQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B2E7107B26B;
+        Tue,  1 Sep 2020 17:08:50 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B26EF7B931;
+        Tue,  1 Sep 2020 17:08:46 +0000 (UTC)
+Subject: Re: [PATCH v2 9/9] iommu/vt-d: Store guest PASID during bind
+To:     Jacob Pan <jacob.pan.linux@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Wu Hao <hao.wu@intel.com>
+References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1598070918-21321-10-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <60feda75-5862-c898-97b1-1f5eafdb8d8c@redhat.com>
+Date:   Tue, 1 Sep 2020 19:08:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901081647.GB3602433@gmail.com>
+In-Reply-To: <1598070918-21321-10-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 10:16:47AM +0200, Ingo Molnar wrote:
+Hi Jacob,
+On 8/22/20 6:35 AM, Jacob Pan wrote:
+> IOASID core maintains the guest-host mapping in the form of SPID and
+> IOASID. This patch assigns the guest PASID (if valid) as SPID while
+> binding guest page table with a host PASID. This mapping will be used
+> for lookup and notifications.
 > 
-> * Ingo Molnar <mingo@kernel.org> wrote:
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel/svm.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> > 
-> > * Ingo Molnar <mingo@kernel.org> wrote:
-> > 
-> > > 
-> > > * Kees Cook <keescook@chromium.org> wrote:
-> > > 
-> > > > On Fri, Aug 21, 2020 at 12:42:41PM -0700, Kees Cook wrote:
-> > > > > Hi Ingo,
-> > > > > 
-> > > > > Based on my testing, this is ready to go. I've reviewed the feedback on
-> > > > > v5 and made a few small changes, noted below.
-> > > > 
-> > > > If no one objects, I'll pop this into my tree for -next. I'd prefer it
-> > > > go via -tip though! :)
-> > > > 
-> > > > Thanks!
-> > > 
-> > > I'll pick it up today, it all looks very good now!
-> > 
-> > One thing I found in testing is that it doesn't handler older LD 
-> > versions well enough:
-> > 
-> >   ld: unrecognized option '--orphan-handling=warn'
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index d8a5efa75095..4c958b1aec4c 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -406,6 +406,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  		if (data->flags & IOMMU_SVA_GPASID_VAL) {
+>  			svm->gpasid = data->gpasid;
+>  			svm->flags |= SVM_FLAG_GUEST_PASID;
+> +			ioasid_attach_spid(data->hpasid, data->gpasid);
+don't you want to handle the returned value?
+>  		}
+>  		svm->iommu = iommu;
+>  		/*
+> @@ -517,6 +518,7 @@ int intel_svm_unbind_gpasid(struct device *dev, int pasid)
+>  				ioasid_attach_data(pasid, NULL);
+>  				ioasid_notify(pasid, IOASID_UNBIND,
+>  					IOASID_NOTIFY_SET);
+> +				ioasid_attach_spid(pasid, INVALID_IOASID);
+So this answers my previous question ;-) but won't it enter the if
+(!ioasid_data) path and fail to reset the spid?
 
-Oh! Uhm, yikes. Thanks for noticing this.
-
-> > Could we just detect the availability of this flag, and emit a warning 
-> > if it doesn't exist but otherwise not abort the build?
-
-Yeah, I'll respin those patches.
-
-> > This is with:
-> > 
-> >   GNU ld version 2.25-17.fc23
-
-(At best, this is from 2015 ... but yes, min binutils in 2.23.)
-
+Eric
+>  				kfree(svm);
+>  			}
+>  		}
 > 
-> I've resolved this for now by not applying the 5 patches that add the 
-> actual orphan section warnings:
-> 
->   arm64/build: Warn on orphan section placement
->   arm/build: Warn on orphan section placement
->   arm/boot: Warn on orphan section placement
->   x86/build: Warn on orphan section placement
->   x86/boot/compressed: Warn on orphan section placement
-> 
-> The new asserts plus the actual fixes/enhancements are enough changes 
-> to test for now in any case. :-)
 
-Yup! I'll respin the enabling patches. Thanks again!
-
--- 
-Kees Cook
