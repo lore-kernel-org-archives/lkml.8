@@ -2,128 +2,109 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLACK autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C79C2C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E63C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0F12087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pFHku2ua"
+	by mail.kernel.org (Postfix) with ESMTP id 96EFD2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598980879;
+	bh=dP9OWR2F7qWnMhX4Sx22XvrX3BkgvzRlHX2MWVWC4Gk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=i4lNgLFdps0BzGe/1rS073WQfiWRswauDwFD7KFFHtgBGrfKRMDD2ehb/V723G0lD
+	 pxE9pcRmSmXlB6MSR6F7ZApk3R9oFptZPp6SKTgUgFCDuvkCgNYTMIXJhC/yNMe4i6
+	 Z6KqPXBJAWHNwyRfa8CZhwTdOy4msQsTyHo8cp5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgIARVN (ORCPT
+        id S1732665AbgIARVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:21:13 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:40464 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728771AbgIAPMn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:21:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55282 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728693AbgIAPMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:12:43 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081F9ll8133109;
-        Tue, 1 Sep 2020 15:12:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=69XBy7Prznwop6rn97Xe1cVn6rbsvD5ZvUeBPMnuuvQ=;
- b=pFHku2uaE5OiCnbPBE6xpzZ33M2FVJwUkv41wIGr1eBRvVX/dLV2AiEu+2mcgdlcN9jz
- P19htcvLglSXz81j4njmBNFFVwP3EGTEEH8GdUB8imSUJFkq9e6dY8pmZU2IunLd2Ld7
- l7aQjD6MsPP91eC1sfisbSYM9jteII6gJ+rLjz38o3rvopgslch/ER9Jo/+uFfvzVFvA
- 7zNvfHbMnqOiL5MYHzWymPOfjC//GlihH4O9PUsTsxAmk6cLaLswsnxEHCDPgsWqzN/0
- wfsXeYLH16jc1YrAgXIPK3Or+xRD637UIpcl8+PB5ngbaO5EsGu10pApM/STlAKIDCuw BA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 339dmmudhh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 01 Sep 2020 15:12:31 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081F9uEW117432;
-        Tue, 1 Sep 2020 15:12:31 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 3380xwkduh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Sep 2020 15:12:31 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 081FCT5i023180;
-        Tue, 1 Sep 2020 15:12:29 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Sep 2020 08:12:29 -0700
-Date:   Tue, 1 Sep 2020 08:12:33 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Qian Cai <cai@lca.pw>
-Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] iomap: fix WARN_ON_ONCE() from unprivileged users
-Message-ID: <20200901151233.GC6096@magnolia>
-References: <20200831182353.14593-1-cai@lca.pw>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C9CF20BED;
+        Tue,  1 Sep 2020 15:12:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973162;
+        bh=dP9OWR2F7qWnMhX4Sx22XvrX3BkgvzRlHX2MWVWC4Gk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=cTtr0AE2RW8mNYcieRqxKo0ME2U4ywFnTzax9YdZzVRqqO+DoTEeEmKSpkwLQi/fB
+         xovCp9WdoUnDIsBdelVsV6r2L7pb0ZuIL8MwGdFkgybvBYU0i//ZslwNTKa+0ZR0O8
+         TukGHrK3tMRii1JxCzagjRGvzZCtFTCpluGrtoZ8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 32/62] Revert "ath10k: fix DMA related firmware crashes on multiple devices"
+Date:   Tue,  1 Sep 2020 17:10:15 +0200
+Message-Id: <20200901150922.332417901@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
+References: <20200901150920.697676718@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831182353.14593-1-cai@lca.pw>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
- malwarescore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=56
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009010126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=56
- spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009010126
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 02:23:53PM -0400, Qian Cai wrote:
-> It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
-> unprivileged users which would taint the kernel, or worse - panic if
-> panic_on_warn or panic_on_taint is set. Hence, just convert it to
-> pr_warn_ratelimited() to let users know their workloads are racing.
-> Thank Dave Chinner for the initial analysis of the racing reproducers.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+From: Zhi Chen <zhichen@codeaurora.org>
 
-Looks ok to me too.
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+[ Upstream commit a1769bb68a850508a492e3674ab1e5e479b11254 ]
 
---D
+This reverts commit 76d164f582150fd0259ec0fcbc485470bcd8033e.
+PCIe hung issue was observed on multiple platforms. The issue was reproduced
+when DUT was configured as AP and associated with 50+ STAs.
 
-> ---
-> v4: use %pD4.
-> v3: Keep the default case and update the message.
-> v2: Record the path, pid and command as well.
-> 
->  fs/iomap/direct-io.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
-> index c1aafb2ab990..9519113ebc35 100644
-> --- a/fs/iomap/direct-io.c
-> +++ b/fs/iomap/direct-io.c
-> @@ -388,6 +388,16 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
->  		return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
->  	case IOMAP_INLINE:
->  		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
-> +	case IOMAP_DELALLOC:
-> +		/*
-> +		 * DIO is not serialised against mmap() access at all, and so
-> +		 * if the page_mkwrite occurs between the writeback and the
-> +		 * iomap_apply() call in the DIO path, then it will see the
-> +		 * DELALLOC block that the page-mkwrite allocated.
-> +		 */
-> +		pr_warn_ratelimited("Direct I/O collision with buffered writes! File: %pD4 Comm: %.20s\n",
-> +				    dio->iocb->ki_filp, current->comm);
-> +		return -EIO;
->  	default:
->  		WARN_ON_ONCE(1);
->  		return -EIO;
-> -- 
-> 2.18.4
-> 
+For QCA9984/QCA9888, the DMA_BURST_SIZE register controls the AXI burst size
+of the RD/WR access to the HOST MEM.
+0 - No split , RAW read/write transfer size from MAC is put out on bus
+    as burst length
+1 - Split at 256 byte boundary
+2,3 - Reserved
+
+With PCIe protocol analyzer, we can see DMA Read crossing 4KB boundary when
+issue happened. It broke PCIe spec and caused PCIe stuck. So revert
+the default value from 0 to 1.
+
+Tested:  IPQ8064 + QCA9984 with firmware 10.4-3.10-00047
+         QCS404 + QCA9984 with firmware 10.4-3.9.0.2--00044
+         Synaptics AS370 + QCA9888  with firmware 10.4-3.9.0.2--00040
+
+Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/wireless/ath/ath10k/hw.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
+index 713c2bcea1782..8ec5c579d7fa8 100644
+--- a/drivers/net/wireless/ath/ath10k/hw.h
++++ b/drivers/net/wireless/ath/ath10k/hw.h
+@@ -429,7 +429,7 @@ enum ath10k_hw_rate_cck {
+ 
+ #define TARGET_10_4_TX_DBG_LOG_SIZE		1024
+ #define TARGET_10_4_NUM_WDS_ENTRIES		32
+-#define TARGET_10_4_DMA_BURST_SIZE		0
++#define TARGET_10_4_DMA_BURST_SIZE		1
+ #define TARGET_10_4_MAC_AGGR_DELIM		0
+ #define TARGET_10_4_RX_SKIP_DEFRAG_TIMEOUT_DUP_DETECTION_CHECK 1
+ #define TARGET_10_4_VOW_CONFIG			0
+-- 
+2.25.1
+
+
+
