@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EECD8C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D39C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C96942067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F3020767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9J0siRi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iK/gWhvX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbgIAQr7 (ORCPT
+        id S1732321AbgIAQsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:47:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37992 "EHLO
+        Tue, 1 Sep 2020 12:48:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730268AbgIAQrp (ORCPT
+        with ESMTP id S1728077AbgIAQri (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:47:45 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9F60C061244;
-        Tue,  1 Sep 2020 09:47:43 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g29so984280pgl.2;
-        Tue, 01 Sep 2020 09:47:43 -0700 (PDT)
+        Tue, 1 Sep 2020 12:47:38 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392B9C061244;
+        Tue,  1 Sep 2020 09:47:38 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id w186so971694pgb.8;
+        Tue, 01 Sep 2020 09:47:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eTzVI35DRVJv330Nqj3ET+6aUZCHukORN2vVqCI+diU=;
-        b=Q9J0siRiCBTUvlTt1kvK7tVe6kE41TN+kIDNXErBGCMEu1mS9WGl+7HnaY7AizAAhM
-         MGgJn5r7Rof/eu1Uou0PMSTw5hFRpugiRYy1Zicok/Tfuyw1H3V1tq3kahNYERz3c8YT
-         bXHl75p+tvjsOILMrKaZDr3cZEd5sXyOpNnNhuqDgkx3L6L6Kb3YuoljJJBZkNLHwbFo
-         soPQIChGhslKZccNHRLkXXS2dp3278kCoXtym2UYyH9+JavhTLC8/CcPIIx8CECq/6fQ
-         wY6/1CctuejLklrAEC2Nb6tplD1fgnMzEIXMROD7R3A/ASkM5gP75Pv1ZPmEFTZQnh5W
-         DuSg==
+        bh=RI73hAm8taFHglKyL+fRjHiZ9E+te2SePrFdWbpImkA=;
+        b=iK/gWhvX43nTVceqadIhYvSqK91IRCJCr5an4KZFK1DTvINxVcTZMuQyegyN/355Bw
+         JZQ7Y2NxnEyNgHakr4ZD9u87n6KRWb0TKstSl2SZ3PzPV7YLJVSPcDu6euUaGOQkNRud
+         h/4COkh5TdixQZkT8bM/oxcl04nzVQ3WdlDCo9PGw+fVjnSiUbbujl8LFIUnDWnDJ2Xd
+         Kxrsomm8Prr7eCxcP7aZHzasUFTLyJ4ODxcdLAuEMq9dv/FyYghppWV3sNUAyRmMhpzB
+         UUeqqU/WJ87+Ydrrx0WdNSh8807h1sbE0add+3495kD6sIYWodJy28OaQcodE2eH8PRw
+         XMCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eTzVI35DRVJv330Nqj3ET+6aUZCHukORN2vVqCI+diU=;
-        b=VAWZfuhfSKn0hTqZeWTT7OCeqA+NkxkNVuZJC7sDNZEigCU1Oh6hrA1J6VAljnpX0y
-         hlkbq1nE3XhhTpv28W5Ka6imnTv9Zny0YxH1Rm+91wjiqJ7YAXx/g4PaPLtdcAkHuVvK
-         jvg3iuhOqxhr28dGDMWpiXiLBok5uZ3EuuHLzybOaVEicbwC21FOb8y8kJx7niR3wGvX
-         hgRDk2Usqpniqim89Jn9hG71A0MUXdo87TqePesFKAVk3/sjqB5aaFqZJ0BEn+6FYCT7
-         a21SmhsIoopJQDj7vL/oCkyeHKKQsb/+epuFA7O3ZpcyGB8WaTN/icae22xV96v3IIXy
-         5Tmw==
-X-Gm-Message-State: AOAM531+JUxHrBAQsYVoYEzaQ3m+CXtxwZ6R6mLFcFJzVEu4fweBakpG
-        yyxiYD8VRZbcENOfcoGMHbk=
-X-Google-Smtp-Source: ABdhPJy7payz3Vghp5VrIVR/57rRNtRm4gc2iwL+b/6W66VztvW4dVIOty7fJYRx21hhgXmVGY0cFg==
-X-Received: by 2002:a62:928d:: with SMTP id o135mr2763620pfd.22.1598978863218;
-        Tue, 01 Sep 2020 09:47:43 -0700 (PDT)
+        bh=RI73hAm8taFHglKyL+fRjHiZ9E+te2SePrFdWbpImkA=;
+        b=ZdqfOy7U0CFeJVHGEmPeZ8uxIsatOO8x3/hbkhKUSktiEFhrumP8eOLv5BABjE1R12
+         GC20lYgmVskXw6W0pCJWhmvULRFmRAa0Cp/M5dTlvk6oWe0m1P7WKjuVAplM/pRIGoYk
+         domf20TWGOAZ7hB6E4gjjqoEoBsaH1K51PlK5FIz3QRu8M6whU5VyH3EU43+4/NoSXBM
+         uAjoVRg56BzWfLx29XkOy8jo6ZMPWXI0BDkRJOoI1yuA77R77HP0YcFkvGY6NlVqv0eH
+         NVwm/F8iNW7yX/BqzrxwrBUZcVjsGUXE1Hp02cRFKkwTzfZnwLGIexloMLEXp1xubnT3
+         jgnw==
+X-Gm-Message-State: AOAM532BgvmilTx5F75nxvCnT/IGxRltiU/F8eG5RArODZAGBJV9ls9i
+        la4Oym5jnJUiu0RufF5j+cs=
+X-Google-Smtp-Source: ABdhPJxqESFlReg5RGOlUO1KFXl0W8xH0asJAzoRAGy9j2bDD2ncGLx0thhLxLusFeJPcxyqh3MDbA==
+X-Received: by 2002:a63:6d4c:: with SMTP id i73mr2312150pgc.63.1598978857690;
+        Tue, 01 Sep 2020 09:47:37 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id w66sm2622381pfb.126.2020.09.01.09.47.41
+        by smtp.gmail.com with ESMTPSA id i1sm2497656pfo.212.2020.09.01.09.47.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 09:47:41 -0700 (PDT)
+        Tue, 01 Sep 2020 09:47:36 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
@@ -69,14 +69,17 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vivek Gautam <vivek.gautam@codeaurora.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Akhil P Oommen <akhilpo@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Herring <robh@kernel.org>,
         Rob Clark <robdclark@chromium.org>,
-        Andy Gross <agross@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
         Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
         devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v16 20/20] arm: dts: qcom: sc7180: Set the compatible string for the GPU SMMU
-Date:   Tue,  1 Sep 2020 09:46:37 -0700
-Message-Id: <20200901164707.2645413-21-robdclark@gmail.com>
+Subject: [PATCH v16 18/20] dt-bindings: arm-smmu: Add compatible string for Adreno GPU SMMU
+Date:   Tue,  1 Sep 2020 09:46:35 -0700
+Message-Id: <20200901164707.2645413-19-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901164707.2645413-1-robdclark@gmail.com>
 References: <20200901164707.2645413-1-robdclark@gmail.com>
@@ -87,29 +90,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
-split pagetables and per-instance pagetables for drm/msm.
+Every Qcom Adreno GPU has an embedded SMMU for its own use. These
+devices depend on unique features such as split pagetables,
+different stall/halt requirements and other settings. Identify them
+with a compatible string so that they can be identified in the
+arm-smmu implementation specific code.
 
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index d46b3833e52f..f3bef1cad889 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1937,7 +1937,7 @@ opp-180000000 {
- 		};
+diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+index 503160a7b9a0..3b63f2ae24db 100644
+--- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
++++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
+@@ -28,8 +28,6 @@ properties:
+           - enum:
+               - qcom,msm8996-smmu-v2
+               - qcom,msm8998-smmu-v2
+-              - qcom,sc7180-smmu-v2
+-              - qcom,sdm845-smmu-v2
+           - const: qcom,smmu-v2
  
- 		adreno_smmu: iommu@5040000 {
--			compatible = "qcom,sc7180-smmu-v2", "qcom,smmu-v2";
-+			compatible = "qcom,sc7180-smmu-v2", "qcom,adreno-smmu", "qcom,smmu-v2";
- 			reg = <0 0x05040000 0 0x10000>;
- 			#iommu-cells = <1>;
- 			#global-interrupts = <2>;
+       - description: Qcom SoCs implementing "arm,mmu-500"
+@@ -40,6 +38,13 @@ properties:
+               - qcom,sm8150-smmu-500
+               - qcom,sm8250-smmu-500
+           - const: arm,mmu-500
++      - description: Qcom Adreno GPUs implementing "arm,smmu-v2"
++        items:
++          - enum:
++              - qcom,sc7180-smmu-v2
++              - qcom,sdm845-smmu-v2
++          - const: qcom,adreno-smmu
++          - const: qcom,smmu-v2
+       - description: Marvell SoCs implementing "arm,mmu-500"
+         items:
+           - const: marvell,ap806-smmu-500
 -- 
 2.26.2
 
