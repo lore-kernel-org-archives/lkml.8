@@ -8,24 +8,24 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C05C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A47C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9123C206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF78820767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="MZLsAUmd"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lQ8LJymC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbgIAQZn (ORCPT
+        id S1730996AbgIAQZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:25:43 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8863 "EHLO
+        Tue, 1 Sep 2020 12:25:49 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:8869 "EHLO
         hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731358AbgIAQZY (ORCPT
+        with ESMTP id S1731920AbgIAQZY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 12:25:24 -0400
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4e75720001>; Tue, 01 Sep 2020 09:23:14 -0700
+        id <B5f4e75720003>; Tue, 01 Sep 2020 09:23:14 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
   Tue, 01 Sep 2020 09:25:21 -0700
@@ -33,12 +33,12 @@ X-PGP-Universal: processed;
         by hqpgpgate102.nvidia.com on Tue, 01 Sep 2020 09:25:21 -0700
 Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL111.nvidia.com
  (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Sep
- 2020 16:25:18 +0000
+ 2020 16:25:20 +0000
 Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL105.nvidia.com
  (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 1 Sep 2020 16:25:18 +0000
+ Transport; Tue, 1 Sep 2020 16:25:20 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.173.243]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4e75ed0000>; Tue, 01 Sep 2020 09:25:17 -0700
+        id <B5f4e75ef0001>; Tue, 01 Sep 2020 09:25:19 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
         <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
@@ -46,9 +46,9 @@ To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
 CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v2 4.19 4/7] arm64: tegra: Add missing timeout clock to Tegra210 SDMMC
-Date:   Tue, 1 Sep 2020 09:24:47 -0700
-Message-ID: <1598977490-1826-5-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH v2 4.19 6/7] arm64: tegra: Add missing timeout clock to Tegra194 SDMMC nodes
+Date:   Tue, 1 Sep 2020 09:24:49 -0700
+Message-ID: <1598977490-1826-7-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1598977490-1826-1-git-send-email-skomatineni@nvidia.com>
 References: <1598977490-1826-1-git-send-email-skomatineni@nvidia.com>
@@ -56,105 +56,80 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598977394; bh=8EhT8HA9s+b3JAvccgWQBH1ITqNJkZPBpbsJDe8BYwU=;
+        t=1598977394; bh=1uE5SDFRo/ET/OfBMf6H9PUAUO4i0NTqPx+aknVLNUk=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=MZLsAUmd/pKlupfNnOdrBylcTC3KYzQlfLDhg6/qBzupR0Si1vGql+thlJPcf8vXb
-         LQ772UnGITqFztoPjrid0mFYqLOEB1ymLUdpCUOKlD4QelRedGQrBjyIj0d1pAOP4l
-         eR39IPicMk2AMQ1jVjvYfyqKdWkJuN7sqe/rJM07ZIFSxP+MUGCWSrmm5TH9djFcPb
-         tZ7bnierzuCuB+z37o+WXt0KYAZdikK85fiaSua5gfAeXQAdr20PQ2/HHMNUXd2saL
-         bT9h4eaM6ccsMxhGMhOWX/Qc1/9jEbc/1vYOBEMyFIPRNlj7Yf4uZYPEzeZrT5+ncf
-         HtBdPzyc2Ahwg==
+        b=lQ8LJymCEWcILs6/ixwioLV86rCHhMdGn0uhr+dsLVlrDUtbDs44Gt5gfbOEuzfty
+         /4WjrxMQGbJnp8gtiDKBw6WI7t9SFbij0CHZ6EhqCxPE5g2NdlxKhcmotdQSFn2Vom
+         kj5NzslgdNYRV25ljyIhAEHUCOGCHMg0FakQCg3WgVfCBE5wvAzYAZ502Jc1c0n2JE
+         xy6Glr5niJoQuPVvKKmO1pixxsf3O2k38jOFlFT81LOCVoz9LHQkKwaE4ejsKoqk6v
+         0YJ2mdJ72X+p+i+19L6lUKmbDRRWxdnUJRtoTf1jsdqT5LkOv5JEMDj2ht/GOtHimH
+         Kuig+JnuXiiEQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra210 uses separate SDMMC_LEGACY_TM clock for data timeout and this
-clock was not enabled when Tegra210 support was added to the driver in
-commit 742af7e7a0a1 ("arm64: tegra: Add Tegra210 support") which is not
-recommended.
+Tegra194 uses separate SDMMC_LEGACY_TM clock for data timeout and this
+clock was not enabled when Tegra194 support was added to the driver in
+commit 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree") which
+is not recommended.
 
-Tegra SDMMC advertises 12Mhz as timeout clock frequency in host
+Tegra194 SDMMC advertises 12Mhz as timeout clock frequency in host
 capability register.
 
 So, this clock should be kept enabled by SDMMC driver.
 
-Fixes: 742af7e7a0a1 ("arm64: tegra: Add Tegra210 support")
+Fixes: 5425fb15d8ee ("arm64: tegra: Add Tegra194 chip device tree")
 Cc: stable <stable@vger.kernel.org> # 4.19
 Tested-by: Jon Hunter <jonathanh@nvidia.com>
 Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- arch/arm64/boot/dts/nvidia/tegra210.dtsi | 28 ++++++++++++++++------------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-index 6597c08..64a0cb5 100644
---- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-+++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
-@@ -1020,44 +1020,48 @@
- 	};
- 
- 	sdhci@700b0000 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0000 0x0 0x200>;
- 		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC1>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 14>;
- 		reset-names = "sdhci";
- 		status = "disabled";
- 	};
- 
- 	sdhci@700b0200 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0200 0x0 0x200>;
- 		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC2>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 9>;
- 		reset-names = "sdhci";
- 		status = "disabled";
- 	};
- 
- 	sdhci@700b0400 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0400 0x0 0x200>;
- 		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC3>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 69>;
- 		reset-names = "sdhci";
- 		status = "disabled";
- 	};
- 
- 	sdhci@700b0600 {
--		compatible = "nvidia,tegra210-sdhci", "nvidia,tegra124-sdhci";
-+		compatible = "nvidia,tegra210-sdhci";
- 		reg = <0x0 0x700b0600 0x0 0x200>;
- 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
--		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>;
--		clock-names = "sdhci";
-+		clocks = <&tegra_car TEGRA210_CLK_SDMMC4>,
-+			 <&tegra_car TEGRA210_CLK_SDMMC_LEGACY>;
-+		clock-names = "sdhci", "tmclk";
- 		resets = <&tegra_car 15>;
- 		reset-names = "sdhci";
- 		status = "disabled";
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 9fc14bb..8a319c2 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -213,8 +213,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03400000 0x10000>;
+ 			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC1>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC1>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
+ 			reset-names = "sdhci";
+ 			status = "disabled";
+@@ -224,8 +225,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03440000 0x10000>;
+ 			interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC3>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC3>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
+ 			reset-names = "sdhci";
+ 			status = "disabled";
+@@ -235,8 +237,9 @@
+ 			compatible = "nvidia,tegra194-sdhci", "nvidia,tegra186-sdhci";
+ 			reg = <0x03460000 0x10000>;
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&bpmp TEGRA194_CLK_SDMMC4>;
+-			clock-names = "sdhci";
++			clocks = <&bpmp TEGRA194_CLK_SDMMC4>,
++				 <&bpmp TEGRA194_CLK_SDMMC_LEGACY_TM>;
++			clock-names = "sdhci", "tmclk";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC4>;
+ 			reset-names = "sdhci";
+ 			status = "disabled";
 -- 
 2.7.4
 
