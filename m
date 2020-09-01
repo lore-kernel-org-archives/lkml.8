@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93206C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB7C5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668B72065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D7A2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977007;
-	bh=q9bZkLK6TRy5pq6ZaG5qqBVVi/g0i1JSivwPw7ASZCY=;
+	s=default; t=1598977017;
+	bh=mI2ix3jDcTd6+yitBSFLtIfCRzJi7p2SJWcUmdKPOQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGm873oj+HSOvPC10Yv0SF732GzW3/SpD+q5NqxEDb4EIpxKShSUiDMM9vyRqblMB
-	 6VcsOcB+t3Gg2CM97r33KNtluT5K33rc8dVUSYBh08i2RJwcKF9UQNtPHMrsNpjxkm
-	 9ITSt8qqsWX5+WkL3EiulNTgW+7IxLbfdsV1FqvA=
+	b=Oy4hrzlZnO47kchdXCrY27Q8bkC/C771DBnBNLxRa+rb4zeHCL0FJ3eeIGNZ/yq3c
+	 9rXLMPT9BcvsJNhmlUnqfrsShqdVmKW8G6qZVxRFZzIhr7PJ83296/HZFbaWbQ/J1g
+	 HyLxEcXWP51h7l8AzRqGlwEebTI0aj+jidcL+sz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731833AbgIAQQp (ORCPT
+        id S1731982AbgIAQQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:16:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38966 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:16:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727951AbgIAPeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:13 -0400
+        id S1728631AbgIAPeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AE25205F4;
-        Tue,  1 Sep 2020 15:34:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BCFE20866;
+        Tue,  1 Sep 2020 15:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974452;
-        bh=q9bZkLK6TRy5pq6ZaG5qqBVVi/g0i1JSivwPw7ASZCY=;
+        s=default; t=1598974441;
+        bh=mI2ix3jDcTd6+yitBSFLtIfCRzJi7p2SJWcUmdKPOQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1boBXUFdgho9lks2v6G8gtoq+xHLdBTHUTaLY3v/LFWJuz4cN1lcMzA0AJOmgdj4C
-         47ukTvph0+CbOb5739aU9232PMlQm6lcOX68ZEtFknTJgXd51SRCc5TBQ0fcq5cpc2
-         C7JChtr3Y1tQdc99i3s+S5gwxA0giSUq1Xqu87rs=
+        b=OqJRPM/b7B/y8IK4lkR1xl1JYN56iA7Newh1MJszBLwpfw/JOKWQPrZqGiaRJ0jDt
+         mjt599TZttDXYc7OyfNo/45K28Pmd7lJKbeQg6DPJoGNrK1xuF0T6T7d6Wx8ydNvDe
+         Czy9CJwEtY1SsrxZy0B/xjqRCWJFdRcOiv0Hp+wU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.4 181/214] x86/hotplug: Silence APIC only after all interrupts are migrated
-Date:   Tue,  1 Sep 2020 17:11:01 +0200
-Message-Id: <20200901151001.634780204@linuxfoundation.org>
+        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
+        syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 160/214] vt_ioctl: change VT_RESIZEX ioctl to check for error return from vc_resize()
+Date:   Tue,  1 Sep 2020 17:10:40 +0200
+Message-Id: <20200901151000.638213294@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,92 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
+From: George Kennedy <george.kennedy@oracle.com>
 
-commit 52d6b926aabc47643cd910c85edb262b7f44c168 upstream.
+commit bc5269ca765057a1b762e79a1cfd267cd7bf1c46 upstream.
 
-There is a race when taking a CPU offline. Current code looks like this:
+vc_resize() can return with an error after failure. Change VT_RESIZEX ioctl
+to save struct vc_data values that are modified and restore the original
+values in case of error.
 
-native_cpu_disable()
-{
-	...
-	apic_soft_disable();
-	/*
-	 * Any existing set bits for pending interrupt to
-	 * this CPU are preserved and will be sent via IPI
-	 * to another CPU by fixup_irqs().
-	 */
-	cpu_disable_common();
-	{
-		....
-		/*
-		 * Race window happens here. Once local APIC has been
-		 * disabled any new interrupts from the device to
-		 * the old CPU are lost
-		 */
-		fixup_irqs(); // Too late to capture anything in IRR.
-		...
-	}
-}
-
-The fix is to disable the APIC *after* cpu_disable_common().
-
-Testing was done with a USB NIC that provided a source of frequent
-interrupts. A script migrated interrupts to a specific CPU and
-then took that CPU offline.
-
-Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-Reported-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Tested-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-Link: https://lore.kernel.org/r/1598501530-45821-1-git-send-email-ashok.raj@intel.com
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/1596213192-6635-2-git-send-email-george.kennedy@oracle.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/smpboot.c |   26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ drivers/tty/vt/vt_ioctl.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1599,14 +1599,28 @@ int native_cpu_disable(void)
- 	if (ret)
- 		return ret;
- 
--	/*
--	 * Disable the local APIC. Otherwise IPI broadcasts will reach
--	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
--	 * messages.
--	 */
--	apic_soft_disable();
- 	cpu_disable_common();
- 
-+        /*
-+         * Disable the local APIC. Otherwise IPI broadcasts will reach
-+         * it. It still responds normally to INIT, NMI, SMI, and SIPI
-+         * messages.
-+         *
-+         * Disabling the APIC must happen after cpu_disable_common()
-+         * which invokes fixup_irqs().
-+         *
-+         * Disabling the APIC preserves already set bits in IRR, but
-+         * an interrupt arriving after disabling the local APIC does not
-+         * set the corresponding IRR bit.
-+         *
-+         * fixup_irqs() scans IRR for set bits so it can raise a not
-+         * yet handled interrupt on the new destination CPU via an IPI
-+         * but obviously it can't do so for IRR bits which are not set.
-+         * IOW, interrupts arriving after disabling the local APIC will
-+         * be lost.
-+         */
-+	apic_soft_disable();
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -893,12 +893,22 @@ int vt_ioctl(struct tty_struct *tty,
+ 			console_lock();
+ 			vcp = vc_cons[i].d;
+ 			if (vcp) {
++				int ret;
++				int save_scan_lines = vcp->vc_scan_lines;
++				int save_font_height = vcp->vc_font.height;
 +
- 	return 0;
- }
- 
+ 				if (v.v_vlin)
+ 					vcp->vc_scan_lines = v.v_vlin;
+ 				if (v.v_clin)
+ 					vcp->vc_font.height = v.v_clin;
+ 				vcp->vc_resize_user = 1;
+-				vc_resize(vcp, v.v_cols, v.v_rows);
++				ret = vc_resize(vcp, v.v_cols, v.v_rows);
++				if (ret) {
++					vcp->vc_scan_lines = save_scan_lines;
++					vcp->vc_font.height = save_font_height;
++					console_unlock();
++					return ret;
++				}
+ 			}
+ 			console_unlock();
+ 		}
 
 
