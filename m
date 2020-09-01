@@ -2,211 +2,104 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 987B2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613C8C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CC472087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41585205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:34:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="m4Z2M/9l"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="glYae7st"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgIAJem (ORCPT
+        id S1726567AbgIAJey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:34:42 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:26528 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725848AbgIAJel (ORCPT
+        Tue, 1 Sep 2020 05:34:54 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20365 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726183AbgIAJex (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:34:41 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598952880; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=lL/pMIkdmjUouEcq0pHJocEWmjNk1dV/T35zPSebDKo=;
- b=m4Z2M/9ljCdrkr/WXTUQYCzoAAsu7Fww4jPCKjVgDQ5jsrA8/74HG2JL1dr7ue60r3KwTH2K
- drcIa3FqviMKr/9atapXNfV5oIw3oMSQDIZwKFS1QtqRUkb90USosHlbWKjaYBrX0ZpD0XoP
- eicwfcLDeqsiFdRH1zsgbUnTuS0=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f4e15aad7b4e26913a8034c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:34:34
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D3E8DC43391; Tue,  1 Sep 2020 09:34:34 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7DB31C433C6;
-        Tue,  1 Sep 2020 09:34:32 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7DB31C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Sep 2020 05:34:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598952892;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=o5Y78x1ZbIMZDcyiKJ8JiDFugDPHcPR0uo/OCjQ9IBA=;
+        b=glYae7stfra9G25vJ5RMkfCakBoaJOV5z3Liy4BLsZsroT2HR8+6SuXIQ2uVzo5rCmv2eq
+        1bLcwy2L8IKMIkd9zq+iyK+bLQtznIvNDp1LeJBvtvy42vwksAFm4gaLMTtxKj46pm6Esq
+        DRGB0m/K2AzKkFqyVjwEsOFBVI099MY=
+Received: from mail-pf1-f199.google.com (mail-pf1-f199.google.com
+ [209.85.210.199]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-578-00ebRX0aPqi6YraJ7ZAaIA-1; Tue, 01 Sep 2020 05:34:49 -0400
+X-MC-Unique: 00ebRX0aPqi6YraJ7ZAaIA-1
+Received: by mail-pf1-f199.google.com with SMTP id b189so311517pfa.16
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 02:34:49 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=o5Y78x1ZbIMZDcyiKJ8JiDFugDPHcPR0uo/OCjQ9IBA=;
+        b=N2GHrb2dZnZF73epbiv/bbosKINHAFpLWjPOO1Kx6HdDIVZ0o6ZAPVFQkRQqfVaaa4
+         BaF6k1GvURU2Iks3DfnxjXNmtXqHqXJ2OCUaFGAAZ/hNPK2gtS9hUGjm64sNdxfBtmy/
+         GctK7c3K1Ek3At9eyqfeErXJ+sCfJLAw6A33avreCwXam1ciWoAwzWormdceeecYXuR6
+         o8IuMye5aBVhzIQ9wYJSch9HmcTQ0cRacjeOa5xx3g7Adhy6mbXtVV8fKffGB6RKM/YE
+         M5wXCrJqToti/geM8s+r88b6X0sjSLEeWQ++Vi559YAQNE1w1NjUjermosH22LPKGmMI
+         1QFQ==
+X-Gm-Message-State: AOAM532c0QgIABquCpjVwQH6x0URrRqdAZsxNYeVt61MVdliXv+KWnzE
+        1vJaSYa75zpXu9X3+evrUdn7YAkDNeyvclhCSk4PGJP6ci0jl9olk87BS6KJ/JQsvdNvFNesIOw
+        KTpWz3J6ya20LjKx63WnMD4EPHaQ8G06JmBucqjUd
+X-Received: by 2002:a63:6e01:: with SMTP id j1mr743708pgc.147.1598952888715;
+        Tue, 01 Sep 2020 02:34:48 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyWGx5gRzrr+E1Ah23gCssdxWPYkby9RSfbimJo07tkodnjtRxFh3BSEUXgTJbgP/qmIUT/Y2585CMTPSDc8ZE=
+X-Received: by 2002:a63:6e01:: with SMTP id j1mr743688pgc.147.1598952888314;
+ Tue, 01 Sep 2020 02:34:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtl818x_pci: switch from 'pci_' to 'dma_' API
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200819210852.120826-1-christophe.jaillet@wanadoo.fr>
-References: <20200819210852.120826-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     davem@davemloft.net, kuba@kernel.org, vaibhavgupta40@gmail.com,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901093434.D3E8DC43391@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 09:34:34 +0000 (UTC)
+References: <20200829112601.1060527-1-maz@kernel.org> <nycvar.YFH.7.76.2009011013400.4671@cbobk.fhfr.pm>
+In-Reply-To: <nycvar.YFH.7.76.2009011013400.4671@cbobk.fhfr.pm>
+From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Date:   Tue, 1 Sep 2020 11:34:37 +0200
+Message-ID: <CAO-hwJKa9QWxEo7PvCEjoEG3YZLS+1EKvaC8C3pga7R9Yc5_tw@mail.gmail.com>
+Subject: Re: [PATCH] HID: core: Correctly handle ReportSize being zero
+To:     Jiri Kosina <jikos@kernel.org>
+Cc:     Marc Zyngier <maz@kernel.org>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "3.8+" <stable@vger.kernel.org>, kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+On Tue, Sep 1, 2020 at 10:14 AM Jiri Kosina <jikos@kernel.org> wrote:
+>
+> On Sat, 29 Aug 2020, Marc Zyngier wrote:
+>
+> > It appears that a ReportSize value of zero is legal, even if a bit
+> > non-sensical. Most of the HID code seems to handle that gracefully,
+> > except when computing the total size in bytes. When fed as input to
+> > memset, this leads to some funky outcomes.
+> >
+> > Detect the corner case and correctly compute the size.
+> >
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Marc Zyngier <maz@kernel.org>
+>
+> Thanks Marc; Benjamin will be pushing this patch through his regression
+> testing machinery, and if all is good, I'll push it for 5.9-rc still.
 
-> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> The patch has been generated with the coccinelle script below and has been
-> hand modified to replace GFP_ with a correct flag.
-> It has been compile tested.
-> 
-> When memory is allocated in 'rtl8180_init_rx_ring()' and
-> 'rtl8180_init_tx_ring()' GFP_KERNEL can be used because both functions are
-> called from 'rtl8180_start()', which is a .start function (see struct
-> ieee80211_ops)
-> .start function can sleep, as explicitly stated in include/net/mac80211.h.
-> 
-> 
-> @@
-> @@
-> -    PCI_DMA_BIDIRECTIONAL
-> +    DMA_BIDIRECTIONAL
-> 
-> @@
-> @@
-> -    PCI_DMA_TODEVICE
-> +    DMA_TO_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_FROMDEVICE
-> +    DMA_FROM_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_NONE
-> +    DMA_NONE
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_alloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_zalloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_free_consistent(e1, e2, e3, e4)
-> +    dma_free_coherent(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_single(e1, e2, e3, e4)
-> +    dma_map_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_single(e1, e2, e3, e4)
-> +    dma_unmap_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4, e5;
-> @@
-> -    pci_map_page(e1, e2, e3, e4, e5)
-> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_page(e1, e2, e3, e4)
-> +    dma_unmap_page(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_sg(e1, e2, e3, e4)
-> +    dma_map_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_sg(e1, e2, e3, e4)
-> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_dma_mapping_error(e1, e2)
-> +    dma_mapping_error(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Test results were good. I have now pushed this patch to for-5.9/upstream-fixes
 
-Patch applied to wireless-drivers-next.git, thanks.
+Cheers,
+Benjamin
 
-f4ce4bf6687f rtl818x_pci: switch from 'pci_' to 'dma_' API
-
--- 
-https://patchwork.kernel.org/patch/11725047/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+>
+> --
+> Jiri Kosina
+> SUSE Labs
+>
 
