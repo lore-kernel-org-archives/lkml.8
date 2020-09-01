@@ -2,84 +2,143 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28AC6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:20:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED24C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DADFC20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB1C20C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:23:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dGELwvqm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNonOjx0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbgIANTt (ORCPT
+        id S1727972AbgIANXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:19:49 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:43293 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728192AbgIANSv (ORCPT
+        Tue, 1 Sep 2020 09:23:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34246 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728183AbgIANVt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:18:51 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598966331; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=AEO8pEII4HuEe78jrxrLd41P2SBMxSgl0kd3vWYrMyw=;
- b=dGELwvqmqS6Q6z7sWlRni2WCxUBE8b2JD+Fy3xXSnsb8j2p0z4JQmEK3t43gby88VZlm6Oev
- eq9hMiBSQS1Tnh4UEMHzLXyFFjz4KUPGG7c4rUtT5SyIbKOr2Kzs34wRFlIu1mmu005sKasy
- XlQm+zD8KU6BZvdXHVQCVOVHe7A=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n06.prod.us-west-2.postgun.com with SMTP id
- 5f4e4a3a4ba82a82fde8c9b3 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 13:18:50
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4A207C433CB; Tue,  1 Sep 2020 13:18:50 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1BB0CC433C6;
-        Tue,  1 Sep 2020 13:18:47 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1BB0CC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Sep 2020 09:21:49 -0400
+Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D64BAC061245;
+        Tue,  1 Sep 2020 06:21:33 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id e11so1485029ljn.6;
+        Tue, 01 Sep 2020 06:21:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=AAwGBH9Pl98e0MOBgKPdwEfXEzau8aeh454hPp/x1WM=;
+        b=hNonOjx0uNrzojH5Oetsx+QHjTKAlpn1u2xckZp/ImUX4M2eLMKEYKM/LQ1i9kfL88
+         3blZngUlF6oxiiWlvBLRlbGEW90fjo5kyoOiKoBY/WYfYPPtZbu60eXGxqAo8naxQxIW
+         oRhNB5QlIz/2rhg4Q7DnOQJpJwc3BG4ooIZJngPUpLzPgq6BduCgtK60wXchlz9UQqCD
+         ADxKMgik/rt4rL6x0QyfP7dAOBTLrqAmex+6+ZhEoIIqAn/xqM2OHNHt3NlsNmk8TX9n
+         BnLoh3FFpBOL5w35kY1tNAlqDI1MXqUGeL7fl7IEFddXjHwAv0BZ5vQfBKXoUCeXZO/5
+         uA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=AAwGBH9Pl98e0MOBgKPdwEfXEzau8aeh454hPp/x1WM=;
+        b=ijozEiVsIx8JS5SLjvborTV/OdD9iWM1IQzbjRAP83vII/O+NRJqGtTyLtKtoATcIJ
+         Fzhy/PiR64N0bz5Kocthmztd0V2My4wtB68AAb5DUmGrGwREYqWMq5dn9KBZzRnYangE
+         xYq47laF580ndsUrgqNoEWAjpdgYYVXuh8kcreygJQJIQaNaAdKf5M5K0VR6mqts3Q7+
+         vnVVvU0wy2ZJx/0pZfrYQDXblbLV7nNHEok3MTwhMw098u2w2xCFS+2h5q0yrnDliNq/
+         DzsuZvTGEN2GT4tmwI4Xx+9GA2GRbmTqBthUr8jFSd8tzY+HNxFos5lCACkmGxKUZYcZ
+         WtCA==
+X-Gm-Message-State: AOAM5313NI7VDNAxIOgXPEaTQzXrfPWNoL+9fqs9SCEU97Ov481wwvmY
+        RlrraogarXImL/WRmMSI/tC8J4vwa3s=
+X-Google-Smtp-Source: ABdhPJyLxzIU+wmLlGsYIuh2GuFRSkigyBrqYDTRhDWzCG5tIEBTHurrOVD70DACcy6C/77sL3D56g==
+X-Received: by 2002:a05:651c:106f:: with SMTP id y15mr627124ljm.170.1598966491976;
+        Tue, 01 Sep 2020 06:21:31 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id f24sm49863lja.104.2020.09.01.06.21.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 06:21:31 -0700 (PDT)
+Subject: Re: [PATCH 3/3] ARM: tegra: Pass multiple versions in
+ opp-supported-hw property
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Rafael Wysocki <rjw@rjwysocki.net>,
+        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1598442485.git.viresh.kumar@linaro.org>
+ <b13f1b112532fe0189d1f7bbb50903d9e1defb07.1598442485.git.viresh.kumar@linaro.org>
+ <b0763074-859f-fccb-dde4-03d1a50ea021@gmail.com>
+ <20200831043908.mtw4dglybcmcabjb@vireshk-i7>
+ <0da380c2-9161-d450-afd2-4b159c8cfb7d@gmail.com>
+ <20200831084111.6udzvrdonxgzju4l@vireshk-i7>
+ <cbfa012b-8f50-e460-972c-c51fa52bb858@gmail.com>
+ <20200831110408.a6lwivim4w4jtkdc@vireshk-i7>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <603071ec-6ae4-7e34-26e4-f64065b01ee0@gmail.com>
+Date:   Tue, 1 Sep 2020 16:21:30 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] libertas_tf: Remove unused macro QOS_CONTROL_LEN
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200829115924.7572-1-yuehaibing@huawei.com>
-References: <20200829115924.7572-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <davem@davemloft.net>, <kuba@kernel.org>, <yuehaibing@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901131850.4A207C433CB@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 13:18:50 +0000 (UTC)
+In-Reply-To: <20200831110408.a6lwivim4w4jtkdc@vireshk-i7>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
-
-> There is no caller in tree.
+31.08.2020 14:04, Viresh Kumar пишет:
+> On 31-08-20, 12:54, Dmitry Osipenko wrote:
+>> It's not clear to me how it could be applicable to the Tegra CPU OPP
+>> because Tegra depends on a combination of SPEEDO + PROCESS versions.
+>>
+>> It's not like all voltages are the same for all OPPs that have the same
+>> PROCESS ID, otherwise it indeed would be nice to have
+>> "opp-microvolt-process0", but unfortunately this variant is not suitable
+>> for Tegra because some freqs have different voltages using the same
+>> PROCESS ID and the same applies to the SPEEDO ID.
 > 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> How exactly do you know what voltage belongs to a particular OPP ?
 
-Patch applied to wireless-drivers-next.git, thanks.
+From these tables:
 
-2c92790b1203 libertas_tf: Remove unused macro QOS_CONTROL_LEN
+https://nv-tegra.nvidia.com/gitweb/?p=linux-2.6.git;a=blob;f=arch/arm/mach-tegra/tegra2_dvfs.c;hb=l4t/l4t-r16-r2#l157
 
--- 
-https://patchwork.kernel.org/patch/11744379/
+https://nv-tegra.nvidia.com/gitweb/?p=linux-2.6.git;a=blob;f=arch/arm/mach-tegra/tegra3_dvfs.c;hb=l4t/l4t-r16-r2#l148
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+> 		opp@216000000 {
+> 			clock-latency-ns = <400000>;
+> 			opp-supported-hw = <0x0F 0x0003>;
+> 			opp-hz = /bits/ 64 <216000000>;
+> 			opp-microvolt-fast-process0 = <750000 750000 1125000>;
+> 			opp-microvolt-slow-process0 = <750000 850000 1125000>;
+> 
+> 		};
+> 
+> 		opp@312000000 {
+> 			clock-latency-ns = <400000>;
+> 			opp-supported-hw = <0x0F 0x0003>;
+> 			opp-hz = /bits/ 64 <312000000>;
+> 			opp-microvolt-fast-process0 = <750000 750000 1125000>;
+> 			opp-microvolt-slow-process0 = <750000 850000 1125000>;
+> 		};
+> 
+> You can make any combinations of such names that come from speedo,
+> process, or something else. If you can get this done as a fixed
+> formula then it is workable.
+> 
 
+IIUC, there is no fixed formula for Tegra, at least I don't see it. For
+example, if you'll take a look at the 1300MHz OPP of Tegra30, then you
+could see that this freq has a lot of voltages each depending on
+specific combination of SPEEDO+PROCESS versions.
