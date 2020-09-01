@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D205FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C32C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D51D2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32B0E2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976707;
-	bh=I2d3MEcSO9Kgotp4Tjh60//FRQ6OJp3HSdHsGzGpsO8=;
+	s=default; t=1598976719;
+	bh=0Bpcya60q0A12JUTmhkO1fZ82j89VNCVsocOmSZltpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+gSnMQt4+8AC6ONCaH/Xu/GDqXDJf63YQeVFWKoGMwDJ3qTbf/lyWlavkdJ79RIO
-	 84J5/WeGd/XFsIUbwl7SJLDY3TF4hG9tgUhclXLcxHEF5y04DZ+8MTso2XqNxVK86C
-	 uneQrgei54NIyEAlGxynhHfEwZgbeaug/ErmYxx8=
+	b=ngCGuP98AuS6GwgXCvd5X/waGu34GIEavN6LlKZTuoJ3S7CfbpIMmaQDE3Zb2+QiE
+	 W7NWR+ZRWf+/Ts4EZZHTTXHA/JgNpMIZuXpqD3prCVS16mBYGeSdgR1RnddF4N2vFR
+	 SjlY1PNZulS7XHxOd7d0SZDYNJAp34kwnAx5Ts8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731440AbgIAQLp (ORCPT
+        id S1731696AbgIAQL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:11:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:11:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731168AbgIAPh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:37:26 -0400
+        id S1731314AbgIAPhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:37:15 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13BCD21534;
-        Tue,  1 Sep 2020 15:37:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C2BB21534;
+        Tue,  1 Sep 2020 15:37:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974645;
-        bh=I2d3MEcSO9Kgotp4Tjh60//FRQ6OJp3HSdHsGzGpsO8=;
+        s=default; t=1598974635;
+        bh=0Bpcya60q0A12JUTmhkO1fZ82j89VNCVsocOmSZltpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sWe4D5B21o9f9Rwo4hjX+eKzQDKvWDErMzqkPmIzt7qL8FYLtHFYCOZbJHpmm50ED
-         hsoaOjGVYK4AanTz9cKKac7JRJhBE1gaBrg4m7fTCBosgjW6WxKGv14DWv4Drebjmk
-         5HhSlRc3VTB4R/vl07Y08BR5/A5ptlhHGeBN+DQc=
+        b=A9GBQR0/rYQOJ1rAVyTwBBwkP5/Sp/sO4EkmLUvLaovLk0zqDSXzTyjwNfzoy+f2R
+         FIQEujiw6jDjAkTfzWHaf0IV4k7FK+7XzoN1RwJzKl3cqga892q9BTyo5ZEdN3+piK
+         joWD7LzeUk0GDjytmvf2Pism1TFSm4u3CFnSdujU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Dehe Gu <gudehe@huawei.com>,
+        Daiyue Zhang <zhangdaiyue1@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 040/255] PCI: Fix pci_create_slot() reference count leak
-Date:   Tue,  1 Sep 2020 17:08:16 +0200
-Message-Id: <20200901151002.671774167@linuxfoundation.org>
+Subject: [PATCH 5.8 036/255] f2fs: remove write attribute of main_blkaddr sysfs node
+Date:   Tue,  1 Sep 2020 17:08:12 +0200
+Message-Id: <20200901151002.503469699@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,57 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Dehe Gu <gudehe@huawei.com>
 
-[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
+[ Upstream commit ffcde4b29a5f20ddca6fe559b48f345818bf1d91 ]
 
-kobject_init_and_add() takes a reference even when it fails.  If it returns
-an error, kobject_put() must be called to clean up the memory associated
-with the object.
+Fuzzing main_blkaddr sysfs node will corrupt this field's value,
+causing kernel panic, remove its write attribute to avoid potential
+security risk.
 
-When kobject_init_and_add() fails, call kobject_put() instead of kfree().
+[Chao Yu: add description]
 
-b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject") fixed a similar problem.
-
-Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Dehe Gu <gudehe@huawei.com>
+Signed-off-by: Daiyue Zhang <zhangdaiyue1@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/slot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ fs/f2fs/sysfs.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index cc386ef2fa122..3861505741e6d 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -268,13 +268,16 @@ placeholder:
- 	slot_name = make_slot_name(name);
- 	if (!slot_name) {
- 		err = -ENOMEM;
-+		kfree(slot);
- 		goto err;
- 	}
- 
- 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
- 				   "%s", slot_name);
--	if (err)
-+	if (err) {
-+		kobject_put(&slot->kobj);
- 		goto err;
-+	}
- 
- 	INIT_LIST_HEAD(&slot->list);
- 	list_add(&slot->list, &parent->slots);
-@@ -293,7 +296,6 @@ out:
- 	mutex_unlock(&pci_slot_mutex);
- 	return slot;
- err:
--	kfree(slot);
- 	slot = ERR_PTR(err);
- 	goto out;
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index e877c59b9fdb4..c5e32ceb94827 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -223,6 +223,13 @@ static ssize_t avg_vblocks_show(struct f2fs_attr *a,
  }
+ #endif
+ 
++static ssize_t main_blkaddr_show(struct f2fs_attr *a,
++				struct f2fs_sb_info *sbi, char *buf)
++{
++	return snprintf(buf, PAGE_SIZE, "%llu\n",
++			(unsigned long long)MAIN_BLKADDR(sbi));
++}
++
+ static ssize_t f2fs_sbi_show(struct f2fs_attr *a,
+ 			struct f2fs_sb_info *sbi, char *buf)
+ {
+@@ -522,7 +529,6 @@ F2FS_RW_ATTR(GC_THREAD, f2fs_gc_kthread, gc_no_gc_sleep_time, no_gc_sleep_time);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_idle, gc_mode);
+ F2FS_RW_ATTR(F2FS_SBI, f2fs_sb_info, gc_urgent, gc_mode);
+ F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, reclaim_segments, rec_prefree_segments);
+-F2FS_RW_ATTR(SM_INFO, f2fs_sm_info, main_blkaddr, main_blkaddr);
+ F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, max_small_discards, max_discards);
+ F2FS_RW_ATTR(DCC_INFO, discard_cmd_control, discard_granularity, discard_granularity);
+ F2FS_RW_ATTR(RESERVED_BLOCKS, f2fs_sb_info, reserved_blocks, reserved_blocks);
+@@ -565,6 +571,7 @@ F2FS_GENERAL_RO_ATTR(current_reserved_blocks);
+ F2FS_GENERAL_RO_ATTR(unusable);
+ F2FS_GENERAL_RO_ATTR(encoding);
+ F2FS_GENERAL_RO_ATTR(mounted_time_sec);
++F2FS_GENERAL_RO_ATTR(main_blkaddr);
+ #ifdef CONFIG_F2FS_STAT_FS
+ F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_foreground_calls, cp_count);
+ F2FS_STAT_ATTR(STAT_INFO, f2fs_stat_info, cp_background_calls, bg_cp_count);
 -- 
 2.25.1
 
