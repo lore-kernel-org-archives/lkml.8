@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9C0C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB30C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49D95206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 295AC206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977786;
-	bh=Zn5iuplSmikrE6kXcerU2XXERhdllL1cvIoyTaS5vW8=;
+	s=default; t=1598977797;
+	bh=/GIaoVxzI6R1ZbyZoPszE9VDs9AELK8PFQDtPJS1jmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXercJ14dA0pwOhvypZ0eNvv5pKEww6jDmqzwbpU7f/onuuE5ez3f3K456SejrRjF
-	 4gb/ulzKmtELcDxpY6PgwugnTeFkTjdbhcFByv+ntuExAIeWTehAKdVjsAzmS4cvPB
-	 kW4IlxTZuALwxnkK48/q8Ldz8iDftKSIg/j868Pw=
+	b=F55fblA51aR3T7pP4a7nohQKrL9+aOfuRdFCe6qyn7DhZALrUtMIA7//ABHz6FKJk
+	 uWjKRMcCzxITK/AfLpFI6O6BV1e9+HRKoNPDzZILNBprhV94uoAY868QT+QP071NcE
+	 tNVc4hY8RFBzffg9ZQKrOalxOV5wiA02AL4VUP8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbgIAPb6 (ORCPT
+        id S1730813AbgIAPb5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58912 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:31:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730526AbgIAP3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:33 -0400
+        id S1730384AbgIAP31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:27 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9961E20684;
-        Tue,  1 Sep 2020 15:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83D2520684;
+        Tue,  1 Sep 2020 15:29:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974172;
-        bh=Zn5iuplSmikrE6kXcerU2XXERhdllL1cvIoyTaS5vW8=;
+        s=default; t=1598974167;
+        bh=/GIaoVxzI6R1ZbyZoPszE9VDs9AELK8PFQDtPJS1jmQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOhnLvxQo0+QvhUrhhc13l4QbUSyv7HBVYSdheEfN80uSDzYErBIdr7CIh9t881f4
-         R5lPquPZypIeTkyp/E3E7/Y7lo/PhOXe+s1vDtlcTlUkqp86K8otXDO784Zzv7Wl7E
-         6OTvuGMUyqhbwFxnLe2+P09Jbt4k7lI21Mv97PXk=
+        b=tdm5/aQw2Lh+/gLhcjQEFZUsAu4HbnsyXJrJsF95JqI1q4et14Mpi9TC6hvE9x7YA
+         5Cs/yak7qnlScmd7RhP1UipFV1U46C9VY5cdsKPwTt8KHyE10gNSLI7sH5Sc/dmH07
+         J2U1vyjuvY6khuCUd/K7K5dIIDTCI1vxfGJnGpEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        stable@vger.kernel.org, Yangtao Li <tiny.windzz@gmail.com>,
         Chanwoo Choi <cw00.choi@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 073/214] PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
-Date:   Tue,  1 Sep 2020 17:09:13 +0200
-Message-Id: <20200901150956.473202802@linuxfoundation.org>
+Subject: [PATCH 5.4 071/214] PM / devfreq: rk3399_dmc: Add missing of_node_put()
+Date:   Tue,  1 Sep 2020 17:09:11 +0200
+Message-Id: <20200901150956.374418546@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,99 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Yangtao Li <tiny.windzz@gmail.com>
 
-[ Upstream commit 63ef91f24f9bfc70b6446319f6cabfd094481372 ]
+[ Upstream commit 29d867e97f7d781972ed542acfca3c2c0b512603 ]
 
-Booting a recent kernel on a rk3399-based system (nanopc-t4),
-equipped with a recent u-boot and ATF results in an Oops due
-to a NULL pointer dereference.
+of_node_put() needs to be called when the device node which is got
+from of_parse_phandle has finished using.
 
-This turns out to be due to the rk3399-dmc driver looking for
-an *undocumented* property (rockchip,pmu), and happily using
-a NULL pointer when the property isn't there.
-
-Instead, make most of what was brought in with 9173c5ceb035
-("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
-to TF-A.") conditioned on finding this property in the device-tree,
-preventing the driver from exploding.
-
-Cc: stable@vger.kernel.org
-Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
 Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/rk3399_dmc.c | 42 ++++++++++++++++++++----------------
- 1 file changed, 23 insertions(+), 19 deletions(-)
+ drivers/devfreq/rk3399_dmc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
-index 24f04f78285b7..027769e39f9b8 100644
+index 2e65d7279d79e..2f1027c5b6475 100644
 --- a/drivers/devfreq/rk3399_dmc.c
 +++ b/drivers/devfreq/rk3399_dmc.c
-@@ -95,18 +95,20 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
- 
- 	mutex_lock(&dmcfreq->lock);
- 
--	if (target_rate >= dmcfreq->odt_dis_freq)
--		odt_enable = true;
--
--	/*
--	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
--	 * timings and to enable or disable the ODT (on-die termination)
--	 * resistors.
--	 */
--	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
--		      dmcfreq->odt_pd_arg1,
--		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
--		      odt_enable, 0, 0, 0, &res);
-+	if (dmcfreq->regmap_pmu) {
-+		if (target_rate >= dmcfreq->odt_dis_freq)
-+			odt_enable = true;
-+
-+		/*
-+		 * This makes a SMC call to the TF-A to set the DDR PD
-+		 * (power-down) timings and to enable or disable the
-+		 * ODT (on-die termination) resistors.
-+		 */
-+		arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
-+			      dmcfreq->odt_pd_arg1,
-+			      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
-+			      odt_enable, 0, 0, 0, &res);
-+	}
- 
- 	/*
- 	 * If frequency scaling from low to high, adjust voltage first.
-@@ -371,13 +373,14 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 	}
- 
+@@ -372,6 +372,7 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
  	node = of_parse_phandle(np, "rockchip,pmu", 0);
--	if (node) {
--		data->regmap_pmu = syscon_node_to_regmap(node);
--		of_node_put(node);
--		if (IS_ERR(data->regmap_pmu)) {
--			ret = PTR_ERR(data->regmap_pmu);
--			goto err_edev;
--		}
-+	if (!node)
-+		goto no_pmu;
-+
-+	data->regmap_pmu = syscon_node_to_regmap(node);
-+	of_node_put(node);
-+	if (IS_ERR(data->regmap_pmu)) {
-+		ret = PTR_ERR(data->regmap_pmu);
-+		goto err_edev;
+ 	if (node) {
+ 		data->regmap_pmu = syscon_node_to_regmap(node);
++		of_node_put(node);
+ 		if (IS_ERR(data->regmap_pmu))
+ 			return PTR_ERR(data->regmap_pmu);
  	}
- 
- 	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
-@@ -399,6 +402,7 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
- 		goto err_edev;
- 	};
- 
-+no_pmu:
- 	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
- 		      ROCKCHIP_SIP_CONFIG_DRAM_INIT,
- 		      0, 0, 0, 0, &res);
 -- 
 2.25.1
 
