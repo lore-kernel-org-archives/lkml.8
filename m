@@ -2,52 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 974DEC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67EDA2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F420D20BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973879;
-	bh=nk7DUPCQ4LCq491rY6FJmz0IjHemtEpYN9mthPiTfyU=;
+	s=default; t=1598973893;
+	bh=7E3ARa3gGjKsJ3XyQWjqb1t8KY5M1C2PdcSqkYpDFG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JDfrerTCEIrorv2TM4IVozGJZPsetBRKf/9+iqf5q1mtuAfik8x3CBJN+jbImjsTx
-	 XQX6lMJf399TCx6A/iqHElx6zsvTwDUEYcfYf24dTkqWX4z8kxCJXj6iK5wSZ08GU9
-	 ovGIHZ7D/uVd2cQJdfvSbHoRbO4vF/YKvPgQCBAg=
+	b=qYttIYQTvm2yAGJekhfgYWctF9ZEvezjoykcIgRtyKu9vFCBUhfI9sxRVk+JtaFjg
+	 7RBzJmfjuxKKfqIpOyLNFyR+1pL6nwrXEGXiSz4E8ezxtYqFIzNFwsJAFb+D1gbzQp
+	 XJyMokalZuAph/KdhVvUsqwBGC+AjpKb/Y8UloPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbgIAPYe (ORCPT
+        id S1728984AbgIAPYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:24:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43208 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729314AbgIAPWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:22:01 -0400
+        id S1729713AbgIAPV6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:21:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D404A2078B;
-        Tue,  1 Sep 2020 15:21:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D9492100A;
+        Tue,  1 Sep 2020 15:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973720;
-        bh=nk7DUPCQ4LCq491rY6FJmz0IjHemtEpYN9mthPiTfyU=;
+        s=default; t=1598973718;
+        bh=7E3ARa3gGjKsJ3XyQWjqb1t8KY5M1C2PdcSqkYpDFG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LblQs5iNksaa5WozbTFIlvxjOOvt+r30p3kzDd17B3f5LquH7eGhSFvcoqtozZ/oJ
-         h8yIsY2ry39n7zsSdY6LO/9NXQfYEdDIzZpS5zmJEMjyd0htNQgUCof5NiL45NF1J/
-         iaSryYzWC4jtzIkWFp3e0rmX7Y7Kin8GWI6xoOB8=
+        b=FU2B8E4qn7ixYYx/UulFlyRprh+2IKmZHOaCG6Exz5ACQ8S3dNDC+ipksuJTMFwIu
+         5Opf+ad0J7oWPFQfQfeIwG03lf9d7rhhEqfPy2LsalyhPveI+CxWLXn5k3/YAp4G+w
+         Z0MMdG54co88BuARg30CVzNPxnfcc+kKh00gHu8Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 002/125] gre6: Fix reception with IP6_TNL_F_RCV_DSCP_COPY
-Date:   Tue,  1 Sep 2020 17:09:17 +0200
-Message-Id: <20200901150934.703341200@linuxfoundation.org>
+        stable@vger.kernel.org, Prakash Gupta <guptap@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 019/125] iommu/iova: Dont BUG on invalid PFNs
+Date:   Tue,  1 Sep 2020 17:09:34 +0200
+Message-Id: <20200901150935.507225393@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -60,42 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 272502fcb7cda01ab07fc2fcff82d1d2f73d43cc ]
+[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
 
-When receiving an IPv4 packet inside an IPv6 GRE packet, and the
-IP6_TNL_F_RCV_DSCP_COPY flag is set on the tunnel, the IPv4 header would
-get corrupted. This is due to the common ip6_tnl_rcv() function assuming
-that the inner header is always IPv6. This patch checks the tunnel
-protocol for IPv4 inner packets, but still defaults to IPv6.
+Unlike the other instances which represent a complete loss of
+consistency within the rcache mechanism itself, or a fundamental
+and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
+iova_magazine_free_pfns() can be provoked at more or less any time
+in a "spooky action-at-a-distance" manner by any old device driver
+passing nonsense to dma_unmap_*() which then propagates through to
+queue_iova().
 
-Fixes: 308edfdf1563 ("gre6: Cleanup GREv6 receive path, call common GRE functions")
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Not only is this well outside the IOVA layer's control, it's also
+nowhere near fatal enough to justify panicking anyway - all that
+really achieves is to make debugging the offending driver more
+difficult. Let's simply WARN and otherwise ignore bogus PFNs.
+
+Reported-by: Prakash Gupta <guptap@codeaurora.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
+Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_tunnel.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/ip6_tunnel.c
-+++ b/net/ipv6/ip6_tunnel.c
-@@ -865,7 +865,15 @@ int ip6_tnl_rcv(struct ip6_tnl *t, struc
- 		struct metadata_dst *tun_dst,
- 		bool log_ecn_err)
- {
--	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, ip6ip6_dscp_ecn_decapsulate,
-+	int (*dscp_ecn_decapsulate)(const struct ip6_tnl *t,
-+				    const struct ipv6hdr *ipv6h,
-+				    struct sk_buff *skb);
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 34c058c24b9d2..ce5cd05253db9 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -814,7 +814,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
+ 	for (i = 0 ; i < mag->size; ++i) {
+ 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
+ 
+-		BUG_ON(!iova);
++		if (WARN_ON(!iova))
++			continue;
 +
-+	dscp_ecn_decapsulate = ip6ip6_dscp_ecn_decapsulate;
-+	if (tpi->proto == htons(ETH_P_IP))
-+		dscp_ecn_decapsulate = ip4ip6_dscp_ecn_decapsulate;
-+
-+	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, dscp_ecn_decapsulate,
- 			     log_ecn_err);
- }
- EXPORT_SYMBOL(ip6_tnl_rcv);
+ 		private_free_iova(iovad, iova);
+ 	}
+ 
+-- 
+2.25.1
+
 
 
