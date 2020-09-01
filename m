@@ -5,60 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 883FF20BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ABA1207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973689;
-	bh=WGecJdVzW2/wkgbKsP9IV/jqaXHs7s6kSRuTSIbnzuw=;
+	s=default; t=1598973709;
+	bh=Aj2i/GFWkXVTO/WsK2WQJzbadJ+weGi3Imo/eq3lzZA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWyOmFMZ5Xi9xoFl5IrUuO4R8Cons8ulEVIlWQMQKMtT6vH0nZK0QGzbE/TmP4777
-	 d+Jx/23w5QPQps9MNI3IvmMgF8p1uZ956W1HZYaxV4X38VlrRpGU6lt2QIPUhn9MJZ
-	 zD8oyHbuKWBtYH+iit1rAqBu7s8JS75xZ0CssHwo=
+	b=IfPTa5xxbQeYGm82RrDf3zyZNgFg+1QVl4D1WbIJszLHMfJQlm4V5dOyv/movj+ii
+	 BhwKplFZcN9uCsEalyq+JJ6X290oX1Gk0/z7xv6J8u1iurREr3thZul9vwl/aZmmZ1
+	 Lz1t6S7ZDmlh1IAYZjnSmF7f/epDINZz6MA6FMF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729673AbgIAPV0 (ORCPT
+        id S1729072AbgIAPVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:21:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37644 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729526AbgIAPTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:00 -0400
+        id S1728762AbgIAPTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:19:08 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40534206EB;
-        Tue,  1 Sep 2020 15:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFD08206EB;
+        Tue,  1 Sep 2020 15:19:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973539;
-        bh=WGecJdVzW2/wkgbKsP9IV/jqaXHs7s6kSRuTSIbnzuw=;
+        s=default; t=1598973547;
+        bh=Aj2i/GFWkXVTO/WsK2WQJzbadJ+weGi3Imo/eq3lzZA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12TORbobqbCZUCYG/liDev4xIJ2DetU6EuE54OQNlYAJvYOFPN8lrkNwtJR95Y80k
-         kf9a4T0f00ifvS2SAlz1ZpkPba8OSzzrts9Rt5zV16DhQkwr5PBv0cH25cBxyGeVuA
-         2L71OBweFm5d3nITgWLjVhEcgjN8M9O2E6QxkBUY=
+        b=ux10aOT888Qt/YYqs92rwQB5IrQaZDuFFvcvsh8jWO4YspHvgM7EIU76TdU/5pFae
+         Uy8R0lS71WuIXwzx5tmOQQfAip242ZR3dL86SjBQWaJfvIw7sLfe+Hlj7beApfubck
+         F8OiO+LWsim8ud0Kc6s1MuBxkFiKXvBHjNh2vQig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Marco Elver <elver@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/91] efi: provide empty efi_enter_virtual_mode implementation
-Date:   Tue,  1 Sep 2020 17:10:14 +0200
-Message-Id: <20200901150930.137256239@linuxfoundation.org>
+Subject: [PATCH 4.14 43/91] nvme-fc: Fix wrong return value in __nvme_fc_init_request()
+Date:   Tue,  1 Sep 2020 17:10:17 +0200
+Message-Id: <20200901150930.277875366@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -71,50 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
+From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-[ Upstream commit 2c547f9da0539ad1f7ef7f08c8c82036d61b011a ]
+[ Upstream commit f34448cd0dc697723fb5f4118f8431d9233b370d ]
 
-When CONFIG_EFI is not enabled, we might get an undefined reference to
-efi_enter_virtual_mode() error, if this efi_enabled() call isn't inlined
-into start_kernel().  This happens in particular, if start_kernel() is
-annodated with __no_sanitize_address.
+On an error exit path, a negative error code should be returned
+instead of a positive return value.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Elena Petrova <lenaptr@google.com>
-Cc: Marco Elver <elver@google.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Walter Wu <walter-zh.wu@mediatek.com>
-Link: http://lkml.kernel.org/r/6514652d3a32d3ed33d6eb5c91d0af63bf0d1a0c.1596544734.git.andreyknvl@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: e399441de9115 ("nvme-fabrics: Add host support for FC transport")
+Cc: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/efi.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvme/host/fc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 2dab158b74c45..598ee6ba5b18f 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -948,7 +948,11 @@ extern void *efi_get_pal_addr (void);
- extern void efi_map_pal_code (void);
- extern void efi_memmap_walk (efi_freemem_callback_t callback, void *arg);
- extern void efi_gettimeofday (struct timespec64 *ts);
-+#ifdef CONFIG_EFI
- extern void efi_enter_virtual_mode (void);	/* switch EFI to virtual mode, if possible */
-+#else
-+static inline void efi_enter_virtual_mode (void) {}
-+#endif
- #ifdef CONFIG_X86
- extern void efi_late_init(void);
- extern void efi_free_boot_services(void);
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 058d542647dd5..13c89cc9d10cf 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -1492,7 +1492,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
+ 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.cmddma)) {
+ 		dev_err(ctrl->dev,
+ 			"FCP Op failed - cmdiu dma mapping failed.\n");
+-		ret = EFAULT;
++		ret = -EFAULT;
+ 		goto out_on_error;
+ 	}
+ 
+@@ -1502,7 +1502,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
+ 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.rspdma)) {
+ 		dev_err(ctrl->dev,
+ 			"FCP Op failed - rspiu dma mapping failed.\n");
+-		ret = EFAULT;
++		ret = -EFAULT;
+ 	}
+ 
+ 	atomic_set(&op->state, FCPOP_STATE_IDLE);
 -- 
 2.25.1
 
