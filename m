@@ -2,206 +2,274 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A81C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90349C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC8F207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A8682071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:37:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IEnvCMEb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNQ0tAP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728648AbgIAUhX (ORCPT
+        id S1728745AbgIAUhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:37:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59147 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726091AbgIAUhV (ORCPT
+        Tue, 1 Sep 2020 16:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbgIAUhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:37:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598992639;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=unRPqSfplhG23lqMtqFZh65e87vTYvYCakQ35+qVUdk=;
-        b=IEnvCMEb/MDlTmy8E6Q2lSuWJ9onYZXTzQNQDe6NJbi+bNlUyFA7G4tNZT9ZDlFbWiCOIp
-        FZnyPZ5ozH5Z77czrSvm3SNWzjFYEGLmh/ValpUFVPez6Ka/RB+kr5eBP1/fdYMVGtMnH7
-        1agvxDl8turP4jXqhM+cblLiNcb76rM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-dfrIraDaMFSNsLKo5TPOew-1; Tue, 01 Sep 2020 16:37:15 -0400
-X-MC-Unique: dfrIraDaMFSNsLKo5TPOew-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0275E51B7;
-        Tue,  1 Sep 2020 20:37:11 +0000 (UTC)
-Received: from krava (unknown [10.40.193.186])
-        by smtp.corp.redhat.com (Postfix) with SMTP id BD5DD5D9CC;
-        Tue,  1 Sep 2020 20:37:07 +0000 (UTC)
-Date:   Tue, 1 Sep 2020 22:37:06 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     kajoljain <kjain@linux.ibm.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
-        john.garry@huawei.com
-Subject: Re: [PATCH v6 2/5] perf/jevents: Add new structure to pass json
- fields.
-Message-ID: <20200901203706.GB656443@krava>
-References: <20200827130958.189146-1-kjain@linux.ibm.com>
- <20200827130958.189146-3-kjain@linux.ibm.com>
- <20200831084357.GC287892@krava>
- <e0cd9e5c-2e9a-5198-108e-14998a757d62@linux.ibm.com>
+        Tue, 1 Sep 2020 16:37:48 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91DFC061244;
+        Tue,  1 Sep 2020 13:37:47 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id y4so3179404ljk.8;
+        Tue, 01 Sep 2020 13:37:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vO5riVGJIq/jxWJeztPKNQ8H6lN7SjOM4tRFMoi/sX0=;
+        b=uNQ0tAP66OlqR1Ij2+/EidCAhIAvpJ7swbdTx5QaOQ+8eT0th69s6oHoZLtVrpVjxc
+         G5m4CeKKv35gSVjiHZGGuFWJS+/FDqd1XRQzEglajIhXxHUm0C9bY2sD/85y+bONhsbW
+         RGvyhnR47/xFQpbjW/NTOt1J40swIfB+igHf32cNdCD2oHjfKSS47nbaXByPrF4yIUQN
+         CAonnmfZTCePyoBJ+tKC1/Jms8qBzYr+SheYglWg6SRR8TP2YBU2XHmeIMQ184mBrldf
+         o8gRz2CzwBM4M/F1cqZFLcr5bd/GNE0QlScob7eai/5cUdykTHZ2bGgZKsgKkwXBfXeT
+         jXRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vO5riVGJIq/jxWJeztPKNQ8H6lN7SjOM4tRFMoi/sX0=;
+        b=SWEk97EQSvk4iyzeyE11KS/Zlp3vSaupW/nCYJCzBlGbg/EjmEtf8A/NLr8g/WV1J2
+         WvglQxA2aDYDZsz3vEU2jxv81LkutC5KsIrFqRRvbQ4vpgUvvKqFHh2dY+bxqCEFpDD1
+         xl+KgBPVKg2L0Ua/njUsjULfMc+93ZJlbwh8pyWrn9kivQwiEGrDZjdAy7BXeYCgucnl
+         voOpkrdQta/V4rRjPUkbbM+7TPn5O5bHkLSMXOvjXegBdY2IR8HFO7XG0Gvzeto4l/T/
+         i0UiKp1Wb18/AJYkraZj5027GBJ0ZzYMKI0WE+U2kZ5Vw+pwxEhWDNAJawkT2/vJpQoR
+         Egyw==
+X-Gm-Message-State: AOAM532VTm9ZzSxhQMQXOStUmO4iwyHOw/jq8EbWqoMXxXObbAg2ioS0
+        ZG4Op8n5gI3c4q9460tgZd0=
+X-Google-Smtp-Source: ABdhPJw2c3CxKYGo5eYERK/6aLmsizaDqVjFuUsaVzNVwLQF8SYg4XRTbJB4FUSfPEHROcnB+Yin1A==
+X-Received: by 2002:a2e:9bc2:: with SMTP id w2mr1379211ljj.236.1598992666106;
+        Tue, 01 Sep 2020 13:37:46 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id z7sm520164lfc.59.2020.09.01.13.37.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 13:37:45 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Krishna Reddy <vdumpa@nvidia.com>
+Cc:     iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5] iommu/tegra-smmu: Add locking around mapping operations
+Date:   Tue,  1 Sep 2020 23:37:30 +0300
+Message-Id: <20200901203730.27865-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e0cd9e5c-2e9a-5198-108e-14998a757d62@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 11:32:45AM +0530, kajoljain wrote:
-> 
-> 
-> On 8/31/20 2:13 PM, Jiri Olsa wrote:
-> > On Thu, Aug 27, 2020 at 06:39:55PM +0530, Kajol Jain wrote:
-> > 
-> > SNIP
-> > 
-> >> -	if (!*field)						\
-> >> +#define TRY_FIXUP_FIELD(field) do { if (es->field && !je->field) {\
-> >> +	je->field = strdup(es->field);				\
-> >> +	if (!je->field)						\
-> >>  		return -ENOMEM;					\
-> >>  } } while (0)
-> >>  
-> >> @@ -428,11 +440,7 @@ static void free_arch_std_events(void)
-> >>  	}
-> >>  }
-> >>  
-> >> -static int save_arch_std_events(void *data, char *name, char *event,
-> >> -				char *desc, char *long_desc, char *pmu,
-> >> -				char *unit, char *perpkg, char *metric_expr,
-> >> -				char *metric_name, char *metric_group,
-> >> -				char *deprecated, char *metric_constraint)
-> >> +static int save_arch_std_events(void *data, struct json_event *je)
-> >>  {
-> >>  	struct event_struct *es;
-> >>  
-> >> @@ -486,17 +494,16 @@ static char *real_event(const char *name, char *event)
-> >>  		return NULL;
-> >>  
-> >>  	for (i = 0; fixed[i].name; i++)
-> >> -		if (!strcasecmp(name, fixed[i].name))
-> >> -			return (char *)fixed[i].event;
-> >> +		if (!strcasecmp(name, fixed[i].name)) {
-> >> +			strcpy(event, fixed[i].event);
-> > 
-> > hum what's this strcpy for in here? we're just replacing separated
-> > variables with struct members, why do you need to copy the event in
-> > here?
-> > 
-> 
-> Hi Jiri,
->     Actually, initially when events is not part of 'json_event' structure, we are not
-> assigning result of function `real_event` to event field. But as we are not passing
-> event filed separately in functions like 'save_arch_std_events', freeing event
-> memory was giving me issue as we are returning pointer from real_event function in some cases.
-> So, that's why I replace it to strcpy to make sure we free je.event memory. Or should I remove
-> free(je.event) part?
-> 
-> -		err = func(data, name, real_event(name, event), desc, long_desc,
-> -			   pmu, unit, perpkg, metric_expr, metric_name,
-> -			   metric_group, deprecated, metric_constraint);
-> +		je.event = real_event(je.name, je.event);
-> 
-> This is the part, I am referring, here we are assigning result of real_event into je.event field.
+The mapping operations of the Tegra SMMU driver are subjected to a race
+condition issues because SMMU Address Space isn't allocated and freed
+atomically, while it should be. This patch makes the mapping operations
+atomic, it fixes an accidentally released Host1x Address Space problem
+which happens while running multiple graphics tests in parallel on
+Tegra30, i.e. by having multiple threads racing with each other in the
+Host1x's submission and completion code paths, performing IOVA mappings
+and unmappings in parallel.
 
-hum, I dont't think you can strcpy like that in real_event,
-
-but how about keeping the event variable on stack and freeing
-just that one as the original code is doing.. like in change
-below, it's diff against your patch
-
-thanks,
-jirka
-
-
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index b205cd904a4f..6abd2abf62fc 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -494,10 +494,8 @@ static char *real_event(const char *name, char *event)
- 		return NULL;
+
+Changelog:
+
+v5: - Replaced GFP_NOWAIT check with __GFP_ATOMIC to fix "sleep in
+      atomic context" warnings, NOWAIT != ATOMIC.
+
+v4: - Returned to use spinlock, but now using a smarter allocation
+      logic that performs allocation in a sleeping context whenever
+      possible.
+
+    - Removed the stable tag because patch isn't portable as-is
+      since the arguments of map/unmap() callbacks changed recently.
+      Perhaps we could just ignore older kernels for now. It will be
+      possible to fix older kernels with a custom patch if will be needed.
+
+v3: - No changes. Resending for visibility.
+
+ drivers/iommu/tegra-smmu.c | 95 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 84 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+index 124c8848ab7e..4853a2f8dc7b 100644
+--- a/drivers/iommu/tegra-smmu.c
++++ b/drivers/iommu/tegra-smmu.c
+@@ -12,6 +12,7 @@
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/spinlock.h>
+ #include <linux/dma-mapping.h>
  
- 	for (i = 0; fixed[i].name; i++)
--		if (!strcasecmp(name, fixed[i].name)) {
--			strcpy(event, fixed[i].event);
-+		if (!strcasecmp(name, fixed[i].name))
- 			return event;
--		}
- 	return event;
+ #include <soc/tegra/ahb.h>
+@@ -49,6 +50,7 @@ struct tegra_smmu_as {
+ 	struct iommu_domain domain;
+ 	struct tegra_smmu *smmu;
+ 	unsigned int use_count;
++	spinlock_t lock;
+ 	u32 *count;
+ 	struct page **pts;
+ 	struct page *pd;
+@@ -308,6 +310,8 @@ static struct iommu_domain *tegra_smmu_domain_alloc(unsigned type)
+ 		return NULL;
+ 	}
+ 
++	spin_lock_init(&as->lock);
++
+ 	/* setup aperture */
+ 	as->domain.geometry.aperture_start = 0;
+ 	as->domain.geometry.aperture_end = 0xffffffff;
+@@ -569,19 +573,14 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
  }
  
-@@ -546,6 +544,7 @@ int json_events(const char *fn,
- 	EXPECT(tokens->type == JSMN_ARRAY, tokens, "expected top level array");
- 	tok = tokens + 1;
- 	for (i = 0; i < tokens->size; i++) {
-+		char *event = NULL;
- 		char *extra_desc = NULL;
- 		char *filter = NULL;
- 		struct json_event je = {};
-@@ -570,7 +569,7 @@ int json_events(const char *fn,
- 			       "Expected string value");
+ static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
+-		       dma_addr_t *dmap)
++		       dma_addr_t *dmap, struct page *page)
+ {
+ 	unsigned int pde = iova_pd_index(iova);
+ 	struct tegra_smmu *smmu = as->smmu;
  
- 			nz = !json_streq(map, val, "0");
--			if (match_field(map, field, nz, &je.event, val)) {
-+			if (match_field(map, field, nz, &event, val)) {
- 				/* ok */
- 			} else if (json_streq(map, field, "EventCode")) {
- 				char *code = NULL;
-@@ -655,15 +654,15 @@ int json_events(const char *fn,
- 						"(Precise event)", NULL);
- 		}
- 		snprintf(buf, sizeof buf, "event=%#llx", eventcode);
--		addfield(map, &je.event, ",", buf, NULL);
-+		addfield(map, &event, ",", buf, NULL);
- 		if (je.desc && extra_desc)
- 			addfield(map, &je.desc, " ", extra_desc, NULL);
- 		if (je.long_desc && extra_desc)
- 			addfield(map, &je.long_desc, " ", extra_desc, NULL);
- 		if (filter)
--			addfield(map, &je.event, ",", filter, NULL);
-+			addfield(map, &event, ",", filter, NULL);
- 		if (msr != NULL)
--			addfield(map, &je.event, ",", msr->pname, msrval);
-+			addfield(map, &event, ",", msr->pname, msrval);
- 		if (je.name)
- 			fixname(je.name);
+ 	if (!as->pts[pde]) {
+-		struct page *page;
+ 		dma_addr_t dma;
  
-@@ -676,10 +675,10 @@ int json_events(const char *fn,
- 			if (err)
- 				goto free_strings;
- 		}
--		je.event = real_event(je.name, je.event);
-+		je.event = real_event(je.name, event);
- 		err = func(data, &je);
- free_strings:
--		free(je.event);
-+		free(event);
- 		free(je.desc);
- 		free(je.name);
- 		free(je.long_desc);
+-		page = alloc_page(GFP_KERNEL | __GFP_DMA | __GFP_ZERO);
+-		if (!page)
+-			return NULL;
+-
+ 		dma = dma_map_page(smmu->dev, page, 0, SMMU_SIZE_PT,
+ 				   DMA_TO_DEVICE);
+ 		if (dma_mapping_error(smmu->dev, dma)) {
+@@ -655,15 +654,61 @@ static void tegra_smmu_set_pte(struct tegra_smmu_as *as, unsigned long iova,
+ 	smmu_flush(smmu);
+ }
+ 
+-static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
+-			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
++static struct page *as_get_pde_page(struct tegra_smmu_as *as,
++				    unsigned long iova, gfp_t gfp,
++				    unsigned long *flags)
++{
++	unsigned int pde = iova_pd_index(iova);
++	struct page *page = as->pts[pde];
++
++	/* at first check whether allocation needs to be done at all */
++	if (page)
++		return page;
++
++	/*
++	 * In order to prevent exhaustion of the atomic memory pool, we
++	 * allocate page in a sleeping context if GFP flags permit. Hence
++	 * spinlock needs to be unlocked and re-locked after allocation.
++	 */
++	if (!(gfp & __GFP_ATOMIC))
++		spin_unlock_irqrestore(&as->lock, *flags);
++
++	page = alloc_page(gfp | __GFP_DMA | __GFP_ZERO);
++
++	if (!(gfp & __GFP_ATOMIC))
++		spin_lock_irqsave(&as->lock, *flags);
++
++	/*
++	 * In a case of blocking allocation, a concurrent mapping may win
++	 * the PDE allocation. In this case the allocated page isn't needed
++	 * if allocation succeeded and the allocation failure isn't fatal.
++	 */
++	if (as->pts[pde]) {
++		if (page)
++			__free_page(page);
++
++		page = as->pts[pde];
++	}
++
++	return page;
++}
++
++static int
++__tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
++		 phys_addr_t paddr, size_t size, int prot, gfp_t gfp,
++		 unsigned long *flags)
+ {
+ 	struct tegra_smmu_as *as = to_smmu_as(domain);
+ 	dma_addr_t pte_dma;
++	struct page *page;
+ 	u32 pte_attrs;
+ 	u32 *pte;
+ 
+-	pte = as_get_pte(as, iova, &pte_dma);
++	page = as_get_pde_page(as, iova, gfp, flags);
++	if (!page)
++		return -ENOMEM;
++
++	pte = as_get_pte(as, iova, &pte_dma, page);
+ 	if (!pte)
+ 		return -ENOMEM;
+ 
+@@ -685,8 +730,9 @@ static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
+ 	return 0;
+ }
+ 
+-static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+-			       size_t size, struct iommu_iotlb_gather *gather)
++static size_t
++__tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
++		   size_t size, struct iommu_iotlb_gather *gather)
+ {
+ 	struct tegra_smmu_as *as = to_smmu_as(domain);
+ 	dma_addr_t pte_dma;
+@@ -702,6 +748,33 @@ static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
+ 	return size;
+ }
+ 
++static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
++			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
++{
++	struct tegra_smmu_as *as = to_smmu_as(domain);
++	unsigned long flags;
++	int ret;
++
++	spin_lock_irqsave(&as->lock, flags);
++	ret = __tegra_smmu_map(domain, iova, paddr, size, prot, gfp, &flags);
++	spin_unlock_irqrestore(&as->lock, flags);
++
++	return ret;
++}
++
++static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
++			       size_t size, struct iommu_iotlb_gather *gather)
++{
++	struct tegra_smmu_as *as = to_smmu_as(domain);
++	unsigned long flags;
++
++	spin_lock_irqsave(&as->lock, flags);
++	size = __tegra_smmu_unmap(domain, iova, size, gather);
++	spin_unlock_irqrestore(&as->lock, flags);
++
++	return size;
++}
++
+ static phys_addr_t tegra_smmu_iova_to_phys(struct iommu_domain *domain,
+ 					   dma_addr_t iova)
+ {
+-- 
+2.27.0
 
