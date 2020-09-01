@@ -2,124 +2,155 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C0B3C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDD4C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56EA720767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997A3206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MuQINPXd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GotAERU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbgIAP6T (ORCPT
+        id S1726268AbgIAP7F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:58:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56324 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731763AbgIAPn7 (ORCPT
+        Tue, 1 Sep 2020 11:59:05 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23392 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731348AbgIAP6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:43:59 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD70BC061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:43:58 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id j10so714427qvk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:43:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oSyU4rbRCx7oJC6Q+h2Vq9u8C2zTFP5KkB72aQOvBJ8=;
-        b=MuQINPXdDrFew7Qa+o4Y65wC8+8poRZ475eqCEsF/tyACMmEKt7Q5v4ZlrFecQMipm
-         vVDiPRVj7HRGUHkQLsqTUb4IB8G8UP8gkMK2qm8/b7i0tAGTme3VryVogvWj5mRTigYZ
-         wYgXh7ZcJTvneS+FXmHjn+1/UErf/NgIMlLBtHzW8OLg3TKv4gRu+6/CWuRHzc33vMWV
-         tWkb2f/EW/3IxM7aNuN+j56JHX3vIiMZbu/bE9hqUkImhHivX/pQBvrJ734Lkc304JLO
-         6KVhTFRHoU1cCiCKMJcV0aDWsyTHecGyYE1aqjQAVhFJNeQYDjAc9Fveve6DHr1MO30L
-         LrXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oSyU4rbRCx7oJC6Q+h2Vq9u8C2zTFP5KkB72aQOvBJ8=;
-        b=uW+6QoNqBLds2Xh7wtZv5PqzYTZ10wu/hPjEz9qAgayoJI1phS3pwswbWPBhXT/T7l
-         +89Rnkpvfy7bjeqjU4ysGK8pgxdzfQY1BaFfCPosyIuyDO394zNZ7dVBYT2VQb0U1CpC
-         3YUB4bGVG5OcPdyQiCJzVjxyGabcuD5jsB0IBYp8TyDo/GGDTd6Vn0ax3PegIyklso/2
-         gZX61tYZnU2RKndf1z4RcHhyTQgFk8LNUPDKUYoKaTdSvS82SOCMqE/moRiQry32IZ1X
-         pKfTs1UxjZo1w7Le4q0aBiBe2eyHHJylQBaeVJylxyGQki31BBfLX5j8cQaWvH6iVtg5
-         GDrQ==
-X-Gm-Message-State: AOAM5324MsiXzzK7HUmYFlzNQdyucKwCG1xI0l468ohNUIvzIZNVjShe
-        RfQ752aIeuLcZ+IJ2KcMX8jbsKXxz5TbrsiJ+/CGMUT1y0SbWprA
-X-Google-Smtp-Source: ABdhPJwgiFnNCRyjJL2gdJhEDxZjGFoJ0pKaCYS2kn20L8UThitNkhwxTJMrUqll5FICEWInU7erhnYSdFpLJ8/7sNU=
-X-Received: by 2002:a0c:de0e:: with SMTP id t14mr2468615qvk.57.1598975037745;
- Tue, 01 Sep 2020 08:43:57 -0700 (PDT)
+        Tue, 1 Sep 2020 11:58:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598975924;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=UhsKoxZOV+aMUeWUqsZWLQ4wnv3Es/RDZokZoWqv3Kk=;
+        b=GotAERU2tv3wrbqMmdqCakhiw+1suNDCVMkBamtuk3g/0TRWN56FCS7NnTZdChpbrQ2Ytd
+        GC8RfjGKFcTLZlRZ/sICNZaxS+UWReGSselqVK6KD3zt/mDCYR9c/Zc53K9m5G89cLs/+Q
+        cuCLMG/5YE39CueVoLPd7ORLXSKXSqs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-165-pdRs3gXXM0-lrlYitRpMFA-1; Tue, 01 Sep 2020 11:58:39 -0400
+X-MC-Unique: pdRs3gXXM0-lrlYitRpMFA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00120E75D;
+        Tue,  1 Sep 2020 15:58:37 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (unknown [10.3.128.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8999078B55;
+        Tue,  1 Sep 2020 15:58:37 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id D7A4520D; Tue,  1 Sep 2020 12:58:34 -0300 (BRT)
+Date:   Tue, 1 Sep 2020 12:58:34 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     peterz@infradead.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Al Grant <al.grant@foss.arm.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: correct SNOOPX field offset
+Message-ID: <20200901155834.GC10147@redhat.com>
+References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+ <20200825174043.GQ1509399@tassilo.jf.intel.com>
+ <20200826142631.GA5351@redhat.com>
+ <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
+ <20200901150225.GA1424523@kernel.org>
+ <20200901150630.GB1424523@kernel.org>
+ <20200901151204.GE2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20200901065758.1141786-1-brianvv@google.com> <CANn89iL+C5QWxbqKbxcdAa=BtDkEg-tm5dNnvrvXJrMRXQb=mg@mail.gmail.com>
-In-Reply-To: <CANn89iL+C5QWxbqKbxcdAa=BtDkEg-tm5dNnvrvXJrMRXQb=mg@mail.gmail.com>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Tue, 1 Sep 2020 08:43:45 -0700
-Message-ID: <CAMzD94TF+q5600oVTMbYNSng=ZCwNdz2RCybSgeW4O5g3nCzeg@mail.gmail.com>
-Subject: Re: [PATCH] net: ipv6: fix __rt6_purge_dflt_routers when forwarding
- is not set on all ifaces
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        David Ahern <dsa@cumulusnetworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901151204.GE2674@hirez.programming.kicks-ass.net>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 1:20 AM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Tue, Sep 1, 2020 at 8:58 AM Brian Vazquez <brianvv@google.com> wrote:
-> >
-> > The problem is exposed when the system has multiple ifaces and
-> > forwarding is enabled on a subset of them, __rt6_purge_dflt_routers will
-> > clean the default route on all the ifaces which is not desired.
->
-> What is the exact problem you want to fix ?
-Imagine you have a host with 2 interfaces. 1 is using SLAAC, the other
-one it isn't.
-On your main routing table you have the default SLAAC route for iface A
+Em Tue, Sep 01, 2020 at 05:12:04PM +0200, peterz@infradead.org escreveu:
+> On Tue, Sep 01, 2020 at 12:06:30PM -0300, Arnaldo Carvalho de Melo wrote:
+> 
+> > Also you mixed up tools/ with include/ things, the perf part of the
+> > kernel is maintained by Ingo, PeterZ.
+> 
+> Right, it helps if the right people are on Cc.
+> 
+> > Peter, the patch is the one below, I'll collect the
+> > tools/include/uapi/linux/perf_event.h bit as it fixes the tooling,
+> > please consider taking the kernel part.
+> 
+> Al, can you resend with the right people on Cc? Also see below.
+> 
+> > ---
+> > 
+> > From:   Al Grant <al.grant@foss.arm.com>
+> > Subject: [PATCH] perf: correct SNOOPX field offset
+> > Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+> > Date:   Mon, 24 Aug 2020 10:28:34 +0100
+> > 
+> > perf_event.h has macros that define the field offsets in the
+> > data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+> > were both 37. These are distinct fields, and the bitfield layout
+> > in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+> > 
+> 
+> This needs a Fixes: tag.
 
-Then you're setting a second interface B and you enable forwarding
-only on this iface:
-echo 1 > /proc/sys/net/ipv6/conf/B/forwarding. Changing the sysctl
-which call the rt6_purge_dflt_routers
-which would delete your default route on iface A, so effectively you
-will lose connection via iface A, until the default
-entry is added again which would happen because that iface has
-accept_ra = 1 and forwarding = 0, but it would take some time.
-It feels weird that modifying interface B deletes default route A
-which would be added back anyway, but you lose connection on A for
-some minutes.
+He provided it in a later message, here it goes:
 
->
-> >
-> > This patches fixes that by cleaning only the routes where the iface has
-> > forwarding enabled.
->
-> This seems like a new feature, and this might break some setups.
+    Fixes: 52839e653b5629bd ("perf tools: Add support for printing new mem_info encodings")
 
-Fair enough, the main issue here is that the behaviour of a host in a
-mixed environment is not well defined.
+Also Andi has provided this:
 
->
-> linux always had removed any IPv6 address and default route it learnt via SLAAC.
-> (this might be to conform to one RFC or known security rule).
-> It would be nice to add a nice comment giving references.
->
-> >
-> > Fixes: 830218c1add1 ("net: ipv6: Fix processing of RAs in presence of VRF")
->
-> Please provide a test, or a better commit message ?
->
-> If your patch targets the net tree, then it should only fix a bug.
->
-> Thanks.
+    Reviewed-by: Andi Kleen <ak@linux.intel.com>
+
+- Arnaldo
+
+ 
+> > Signed-off-by: Al Grant <al.grant@arm.com>
+> > 
+> > ---
+> > 
+> >   include/uapi/linux/perf_event.h       | 2 +-
+> >   tools/include/uapi/linux/perf_event.h | 2 +-
+> >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > ---
+> > 
+> > diff --git a/include/uapi/linux/perf_event.h 
+> > b/include/uapi/linux/perf_event.h
+> > index 077e7ee69e3d..3e5dcdd48a49 100644
+> > --- a/include/uapi/linux/perf_event.h
+> > +++ b/include/uapi/linux/perf_event.h
+> > @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+> > 
+> >   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+> >   /* 1 free */
+> > -#define PERF_MEM_SNOOPX_SHIFT  37
+> > +#define PERF_MEM_SNOOPX_SHIFT  38
+> > 
+> >   /* locked instruction */
+> >   #define PERF_MEM_LOCK_NA       0x01 /* not available */
+> > diff --git a/tools/include/uapi/linux/perf_event.h 
+> > b/tools/include/uapi/linux/perf_event.h
+> > index 077e7ee69e3d..3e5dcdd48a49 100644
+> > --- a/tools/include/uapi/linux/perf_event.h
+> > +++ b/tools/include/uapi/linux/perf_event.h
+> > @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+> > 
+> >   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+> >   /* 1 free */
+> > -#define PERF_MEM_SNOOPX_SHIFT  37
+> > +#define PERF_MEM_SNOOPX_SHIFT  38
+> > 
+> >   /* locked instruction */
+> >   #define PERF_MEM_LOCK_NA       0x01 /* not available */
+
