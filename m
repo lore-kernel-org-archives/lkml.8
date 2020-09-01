@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4AAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54FFC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD854207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC35206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979773;
-	bh=T5P22XqN2cUXGKO21JMlXeVoFMolKR3XzzNwJhFS/Zc=;
+	s=default; t=1598979781;
+	bh=FA1budK5XaQm58NU7RPqYGXBDEs+IHUx4xtayl9uj7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aGkFMscLheCJFd6uZOrHS+WYh8O1hRRa5ANUYPq/4Q/zvpKeC/617DnygGBEI885c
-	 1PYwzYTn20Lo6eFRAknXVfItugW0XOYOq7XeuTQCeSUq/kL8J+CHOzro6N5bLgvt6M
-	 99z64YInTLvhzxRb+Ixr26K889QKYDEhUY1tFEag=
+	b=ATmkdhdh2+teGSAu30GuCrcn8guBAlYqLAlz9IfKoKsrcQ5niWyqo4zsxqW0wuj2D
+	 j37hpTLN9Pay6Hgzoj1K7OvDbgB9hqdpqfiY407bOk7yaMHzsBi2vlA5prGWZD6x/k
+	 DAN0+bOQwKoYBS84fPAQ09r23lzlSafsFKwz86MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbgIARCw (ORCPT
+        id S1732520AbgIARC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40340 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729594AbgIAPUZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:25 -0400
+        id S1729581AbgIAPUW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4C84207D3;
-        Tue,  1 Sep 2020 15:20:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79A5E20767;
+        Tue,  1 Sep 2020 15:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973624;
-        bh=T5P22XqN2cUXGKO21JMlXeVoFMolKR3XzzNwJhFS/Zc=;
+        s=default; t=1598973622;
+        bh=FA1budK5XaQm58NU7RPqYGXBDEs+IHUx4xtayl9uj7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WI6D90abbBmRMwqv2PrFFIMgv1t8FJqoKf3BpOXCtRdyZkdWNO1wp+kunW+lVLC3j
-         HVfb3A2/IxOIecqu3ndZsu/v5OjP0wAMr2b5nlLaffRR6Zs9W9wJ/o8kwLyma0cd0n
-         rPVzBfKUYtEaH12pcbIexV/SwBW6VDPsqQzpxhuE=
+        b=DUnVKhnUzSFu4eXgelPz7lzvxFBJ3ZLGYm5uSsEPUBsfjLnNvgYMo4oS/51QtJbDq
+         UGplTAv5MqjQkzzVi5S+V4L7JgrgszmCPo0m6Z+8p6LlvwNfe4Jsudl5kQfiuigjQz
+         dNvJ5IJr7ftfCpEcZM+TNvJwXbG9mPdUxyAwk65c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Pengfei Xu <pengfei.xu@intel.com>
-Subject: [PATCH 4.14 74/91] PM: sleep: core: Fix the handling of pending runtime resume requests
-Date:   Tue,  1 Sep 2020 17:10:48 +0200
-Message-Id: <20200901150931.865919022@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.14 73/91] xhci: Do warm-reset when both CAS and XDEV_RESUME are set
+Date:   Tue,  1 Sep 2020 17:10:47 +0200
+Message-Id: <20200901150931.824947668@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -62,82 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit e3eb6e8fba65094328b8dca635d00de74ba75b45 upstream.
+commit 904df64a5f4d5ebd670801d869ca0a6d6a6e8df6 upstream.
 
-It has been reported that system-wide suspend may be aborted in the
-absence of any wakeup events due to unforseen interactions of it with
-the runtume PM framework.
+Sometimes re-plugging a USB device during system sleep renders the device
+useless:
+[  173.418345] xhci_hcd 0000:00:14.0: Get port status 2-4 read: 0x14203e2, return 0x10262
+...
+[  176.496485] usb 2-4: Waited 2000ms for CONNECT
+[  176.496781] usb usb2-port4: status 0000.0262 after resume, -19
+[  176.497103] usb 2-4: can't resume, status -19
+[  176.497438] usb usb2-port4: logical disconnect
 
-One failing scenario is when there are multiple devices sharing an
-ACPI power resource and runtime-resume needs to be carried out for
-one of them during system-wide suspend (for example, because it needs
-to be reconfigured before the whole system goes to sleep).  In that
-case, the runtime-resume of that device involves turning the ACPI
-power resource "on" which in turn causes runtime-resume requests
-to be queued up for all of the other devices sharing it.  Those
-requests go to the runtime PM workqueue which is frozen during
-system-wide suspend, so they are not actually taken care of until
-the resume of the whole system, but the pm_runtime_barrier()
-call in __device_suspend() sees them and triggers system wakeup
-events for them which then cause the system-wide suspend to be
-aborted if wakeup source objects are in active use.
+Because PLS equals to XDEV_RESUME, xHCI driver reports U3 to usbcore,
+despite of CAS bit is flagged.
 
-Of course, the logic that leads to triggering those wakeup events is
-questionable in the first place, because clearly there are cases in
-which a pending runtime resume request for a device is not connected
-to any real wakeup events in any way (like the one above).  Moreover,
-it is racy, because the device may be resuming already by the time
-the pm_runtime_barrier() runs and so if the driver doesn't take care
-of signaling the wakeup event as appropriate, it will be lost.
-However, if the driver does take care of that, the extra
-pm_wakeup_event() call in the core is redundant.
+So proritize CAS over XDEV_RESUME to let usbcore handle warm-reset for
+the port.
 
-Accordingly, drop the conditional pm_wakeup_event() call fron
-__device_suspend() and make the latter call pm_runtime_barrier()
-alone.  Also modify the comment next to that call to reflect the new
-code and extend it to mention the need to avoid unwanted interactions
-between runtime PM and system-wide device suspend callbacks.
-
-Fixes: 1e2ef05bb8cf8 ("PM: Limit race conditions between runtime PM and system sleep (v2)")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Tested-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Tested-by: Pengfei Xu <pengfei.xu@intel.com>
-Cc: All applicable <stable@vger.kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200821091549.20556-3-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/main.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/usb/host/xhci-hub.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1500,13 +1500,17 @@ static int __device_suspend(struct devic
- 	}
+--- a/drivers/usb/host/xhci-hub.c
++++ b/drivers/usb/host/xhci-hub.c
+@@ -750,15 +750,6 @@ static void xhci_hub_report_usb3_link_st
+ {
+ 	u32 pls = status_reg & PORT_PLS_MASK;
  
- 	/*
--	 * If a device configured to wake up the system from sleep states
--	 * has been suspended at run time and there's a resume request pending
--	 * for it, this is equivalent to the device signaling wakeup, so the
--	 * system suspend operation should be aborted.
-+	 * Wait for possible runtime PM transitions of the device in progress
-+	 * to complete and if there's a runtime resume request pending for it,
-+	 * resume it before proceeding with invoking the system-wide suspend
-+	 * callbacks for it.
-+	 *
-+	 * If the system-wide suspend callbacks below change the configuration
-+	 * of the device, they must disable runtime PM for it or otherwise
-+	 * ensure that its runtime-resume callbacks will not be confused by that
-+	 * change in case they are invoked going forward.
+-	/* resume state is a xHCI internal state.
+-	 * Do not report it to usb core, instead, pretend to be U3,
+-	 * thus usb core knows it's not ready for transfer
+-	 */
+-	if (pls == XDEV_RESUME) {
+-		*status |= USB_SS_PORT_LS_U3;
+-		return;
+-	}
+-
+ 	/* When the CAS bit is set then warm reset
+ 	 * should be performed on port
  	 */
--	if (pm_runtime_barrier(dev) && device_may_wakeup(dev))
--		pm_wakeup_event(dev, 0);
-+	pm_runtime_barrier(dev);
- 
- 	if (pm_wakeup_pending()) {
- 		dev->power.direct_complete = false;
+@@ -781,6 +772,16 @@ static void xhci_hub_report_usb3_link_st
+ 		pls |= USB_PORT_STAT_CONNECTION;
+ 	} else {
+ 		/*
++		 * Resume state is an xHCI internal state.  Do not report it to
++		 * usb core, instead, pretend to be U3, thus usb core knows
++		 * it's not ready for transfer.
++		 */
++		if (pls == XDEV_RESUME) {
++			*status |= USB_SS_PORT_LS_U3;
++			return;
++		}
++
++		/*
+ 		 * If CAS bit isn't set but the Port is already at
+ 		 * Compliance Mode, fake a connection so the USB core
+ 		 * notices the Compliance state and resets the port.
 
 
