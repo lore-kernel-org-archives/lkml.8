@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68CE4C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4959BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38167206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060192078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979203;
-	bh=puTEwggMCQ/ZNvIPq5kOyrFsseZIy/Dy3Ed3NaClplw=;
+	s=default; t=1598979209;
+	bh=M+nUuRe8hfsIApV9MzOHdhi6+SBq9VChMN1EMS94pPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KkytSNicQLU56tcijc0ce68vZxVtYT46v9TmvXAuue9919Yxt9zeCpG4CqZfKGkS/
-	 g2N7C9WBq7cuADIUarTENzGnsQfehvSiXeXyhV8B3NLmvGBXf37LHgd57o4+9BcjZ8
-	 ao9PtFHhRPtyDi+9z5Ythfjznx1ESPHprNojUzWs=
+	b=ac7Ia4CGSL9S2wtO/pBeNxuODfDwu41DtHeLeWafsWRGvLGadHB9jwvGj+aHiWO9O
+	 TNB7wGQIfdD/978vkq2KvKVmkHgiZl9FM6ggQiB9TT89vCzBAF8peMG7guiYUZHynn
+	 Sxww351BVHwS9Q/4n6jcVAuOtgHldb204oePo5gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732301AbgIAQxV (ORCPT
+        id S1729990AbgIAPZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49446 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:25:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730001AbgIAPZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:10 -0400
+        id S1729729AbgIAPWI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:22:08 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51FC620FC3;
-        Tue,  1 Sep 2020 15:25:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B566207D3;
+        Tue,  1 Sep 2020 15:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973909;
-        bh=puTEwggMCQ/ZNvIPq5kOyrFsseZIy/Dy3Ed3NaClplw=;
+        s=default; t=1598973728;
+        bh=M+nUuRe8hfsIApV9MzOHdhi6+SBq9VChMN1EMS94pPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETeBh4Os9qKFo7Nah74VJHa0GZZEqU9aMwV5xrowT8QcFihZKPuQB58oZNn1l9V4w
-         DriP0DyJZirIt4pqcdCdtGSMdOtDgxpJhZykj2jTlSkZtfX2Lpfrakl0v8unwPDLaJ
-         r08IFA5skxAuG/tSz+5EDzxiqztZKWNzDbBenork=
+        b=r2JG3TbcF1W5ODaBYeq98KqbJ2n4jJWe0f4aBn46ydWutCoT1dYifbNijHELDXPAd
+         2BTRxa4KnbmDJAX37iV2EkgncGUxcwyXSFkeBItW9Mdfc940RxNgDCbMKIb215nwXQ
+         yWcLxAtZDrerPmwLhGEDK5zmOCe5P55B8sooJBSc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 065/125] ext4: correctly restore system zone info when remount fails
-Date:   Tue,  1 Sep 2020 17:10:20 +0200
-Message-Id: <20200901150937.758883542@linuxfoundation.org>
+Subject: [PATCH 4.19 022/125] drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
+Date:   Tue,  1 Sep 2020 17:09:37 +0200
+Message-Id: <20200901150935.656457363@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -60,108 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 0f5bde1db174f6c471f0bd27198575719dabe3e5 ]
+[ Upstream commit 9ba8923cbbe11564dd1bf9f3602add9a9cfbb5c6 ]
 
-When remounting filesystem fails late during remount handling and
-block_validity mount option is also changed during the remount, we fail
-to restore system zone information to a state matching the mount option.
-This is mostly harmless, just the block validity checking will not match
-the situation described by the mount option. Make sure these two are always
-consistent.
+in amdgpu_driver_open_kms the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
-Reported-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200728130437.7804-7-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c |  8 --------
- fs/ext4/super.c          | 29 +++++++++++++++++++++--------
- 2 files changed, 21 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index 552164034d340..f22a89cdb4072 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -250,14 +250,6 @@ int ext4_setup_system_zone(struct super_block *sb)
- 	int flex_size = ext4_flex_bg_size(sbi);
- 	int ret;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index bb41936df0d97..2beaaf4bee687 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -835,7 +835,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
  
--	if (!test_opt(sb, BLOCK_VALIDITY)) {
--		if (sbi->system_blks)
--			ext4_release_system_zone(sb);
--		return 0;
--	}
--	if (sbi->system_blks)
--		return 0;
--
- 	system_blks = kzalloc(sizeof(*system_blks), GFP_KERNEL);
- 	if (!system_blks)
- 		return -ENOMEM;
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index daabd7a2cee81..9ac34b6ae0731 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4473,11 +4473,13 @@ no_journal:
+ 	r = pm_runtime_get_sync(dev->dev);
+ 	if (r < 0)
+-		return r;
++		goto pm_put;
  
- 	ext4_set_resv_clusters(sb);
+ 	fpriv = kzalloc(sizeof(*fpriv), GFP_KERNEL);
+ 	if (unlikely(!fpriv)) {
+@@ -883,6 +883,7 @@ error_pasid:
  
--	err = ext4_setup_system_zone(sb);
--	if (err) {
--		ext4_msg(sb, KERN_ERR, "failed to initialize system "
--			 "zone (%d)", err);
--		goto failed_mount4a;
-+	if (test_opt(sb, BLOCK_VALIDITY)) {
-+		err = ext4_setup_system_zone(sb);
-+		if (err) {
-+			ext4_msg(sb, KERN_ERR, "failed to initialize system "
-+				 "zone (%d)", err);
-+			goto failed_mount4a;
-+		}
- 	}
+ out_suspend:
+ 	pm_runtime_mark_last_busy(dev->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(dev->dev);
  
- 	ext4_ext_init(sb);
-@@ -5470,9 +5472,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		ext4_register_li_request(sb, first_not_zeroed);
- 	}
- 
--	err = ext4_setup_system_zone(sb);
--	if (err)
--		goto restore_opts;
-+	/*
-+	 * Handle creation of system zone data early because it can fail.
-+	 * Releasing of existing data is done when we are sure remount will
-+	 * succeed.
-+	 */
-+	if (test_opt(sb, BLOCK_VALIDITY) && !sbi->system_blks) {
-+		err = ext4_setup_system_zone(sb);
-+		if (err)
-+			goto restore_opts;
-+	}
- 
- 	if (sbi->s_journal == NULL && !(old_sb_flags & SB_RDONLY)) {
- 		err = ext4_commit_super(sb, 1);
-@@ -5494,6 +5503,8 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		}
- 	}
- #endif
-+	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
-+		ext4_release_system_zone(sb);
- 
- 	/*
- 	 * Some options can be enabled by ext4 and/or by VFS mount flag
-@@ -5515,6 +5526,8 @@ restore_opts:
- 	sbi->s_commit_interval = old_opts.s_commit_interval;
- 	sbi->s_min_batch_time = old_opts.s_min_batch_time;
- 	sbi->s_max_batch_time = old_opts.s_max_batch_time;
-+	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
-+		ext4_release_system_zone(sb);
- #ifdef CONFIG_QUOTA
- 	sbi->s_jquota_fmt = old_opts.s_jquota_fmt;
- 	for (i = 0; i < EXT4_MAXQUOTAS; i++) {
+ 	return r;
 -- 
 2.25.1
 
