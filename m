@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EAC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F2C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4CB6206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9A1206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980303;
-	bh=muIJpAqjN9l4sXIKn38QABc9+61+aNu4DOnpPsWhrNk=;
+	s=default; t=1598980305;
+	bh=7/WCKlMTvBR7YmWfYFwJp9dRNVnCi7LtZNSvGah06qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mirtQyBL97hG9EvQ5i2MVUdqBKXcohEAMaHMd7Yk2CJjJW8/eCLwIYXhwddolq7y6
-	 Bc1+fElIv+2UzhTLitQBndyZBXYbnTm0/jx4OLgpb50fWb+9jQNvLUp1ka22IqmG5N
-	 rOF6y6c/n0d/NjhRHLFbuE5eh8yIKOVQtLKvjcNg=
+	b=WhRmph8bQFfiTmTiK0/ZStmz77PXQ42He2mdrRj6lWRJVNczSyo4Sc2viz536FHUC
+	 TI2ktFoscV1j8VTbSqtQmoZEAi4j3h+1PlpQK32Iv7V0l+g9wKRy264GxoPE5qaFId
+	 iAt3DIeHSC/WuHVffmu8gaVz7lh+3GGPG19IwPz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729336AbgIARLk (ORCPT
+        id S1729266AbgIAPQN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:16:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729306AbgIAPQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:16:21 -0400
+        id S1729185AbgIAPPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:15:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99225206EB;
-        Tue,  1 Sep 2020 15:16:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45CC1206FA;
+        Tue,  1 Sep 2020 15:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973381;
-        bh=muIJpAqjN9l4sXIKn38QABc9+61+aNu4DOnpPsWhrNk=;
+        s=default; t=1598973308;
+        bh=7/WCKlMTvBR7YmWfYFwJp9dRNVnCi7LtZNSvGah06qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aw5hQCuZsaC3ZbwYQLo33aZCiQ+XPArJEE2IJOPck3AS3qLRuFkp4ix64FfTAZCDG
-         HloTGB/CLx9IphpU20BaJBicyHkfyYi2QvwRzRNGbXh8GXgC8RdNk7QLEydvoitb7w
-         gwc02AGcisifM7FHCjTHCdtSY/6qm/j2fZ5B1CCM=
+        b=iQtQPnYsP0rLd9WQEy+KUWrLxkEwyTAiK3QprMs07CAUCsbrNPyDbG1SW+sI+XfzT
+         lvwEyGZSnrJQ4zIqFGAtimuvLc5QlKD4rr1lDPlHAm0fI0PEkl39ywcQNHmxdPgxe0
+         xwAbM67SiH99dbLZ8das6DgR1blUNN4rrnwN/wM0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tamseel Shams <m.shams@samsung.com>
-Subject: [PATCH 4.9 55/78] serial: samsung: Removes the IRQ not found warning
-Date:   Tue,  1 Sep 2020 17:10:31 +0200
-Message-Id: <20200901150927.514317187@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 03/78] net: Fix potential wrong skb->protocol in skb_vlan_untag()
+Date:   Tue,  1 Sep 2020 17:09:39 +0200
+Message-Id: <20200901150924.884408213@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -61,50 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tamseel Shams <m.shams@samsung.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-commit 8c6c378b0cbe0c9f1390986b5f8ffb5f6ff7593b upstream.
+[ Upstream commit 55eff0eb7460c3d50716ed9eccf22257b046ca92 ]
 
-In few older Samsung SoCs like s3c2410, s3c2412
-and s3c2440, UART IP is having 2 interrupt lines.
-However, in other SoCs like s3c6400, s5pv210,
-exynos5433, and exynos4210 UART is having only 1
-interrupt line. Due to this, "platform_get_irq(platdev, 1)"
-call in the driver gives the following false-positive error:
-"IRQ index 1 not found" on newer SoC's.
+We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). So
+we should pull VLAN_HLEN + sizeof(unsigned short) in skb_vlan_untag() or
+we may access the wrong data.
 
-This patch adds the condition to check for Tx interrupt
-only for the those SoC's which have 2 interrupt lines.
-
-Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Tamseel Shams <m.shams@samsung.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200810030021.45348-1-m.shams@samsung.com
+Fixes: 0d5501c1c828 ("net: Always untag vlan-tagged traffic on input.")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/tty/serial/samsung.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ net/core/skbuff.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -1725,9 +1725,11 @@ static int s3c24xx_serial_init_port(stru
- 		ourport->tx_irq = ret + 1;
- 	}
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -4591,8 +4591,8 @@ struct sk_buff *skb_vlan_untag(struct sk
+ 	skb = skb_share_check(skb, GFP_ATOMIC);
+ 	if (unlikely(!skb))
+ 		goto err_free;
+-
+-	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN)))
++	/* We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). */
++	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN + sizeof(unsigned short))))
+ 		goto err_free;
  
--	ret = platform_get_irq(platdev, 1);
--	if (ret > 0)
--		ourport->tx_irq = ret;
-+	if (!s3c24xx_serial_has_interrupt_mask(port)) {
-+		ret = platform_get_irq(platdev, 1);
-+		if (ret > 0)
-+			ourport->tx_irq = ret;
-+	}
- 	/*
- 	 * DMA is currently supported only on DT platforms, if DMA properties
- 	 * are specified.
+ 	vhdr = (struct vlan_hdr *)skb->data;
 
 
