@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D83E4C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA17CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A33682064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0E582064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975365;
-	bh=Y5zoPBOA/xMCtTOnx3pSck5cOG0QFwVJ7NuEgCZTuPs=;
+	s=default; t=1598975375;
+	bh=YMnVnsmdYN2uNSDiEdHcqXjBuVe+97a/Z3fspDQx3U0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dCEtrB1nrzBe77B7poHyCRciGiEDn2ufQFt4BE7vY6f139dF21IyDPDZx1wWnB9uh
-	 RMB8MALexQE/J1+F3IdsoieHrIo/LCPBxE2xuj/0GCnmeXZMCO80rr7bQbR4Nl0k6X
-	 hvv1y6V4qOxIHYBordV0kS2yfYlpWk9GvwMH5pMY=
+	b=Yra7/Um8teHJ6zqCBLm1lINuPch28H2WXSUm24caeat89qN37ILDwIqqugZ4beaEz
+	 jUiVXU+PC6crEBuqXPD4VzemXDhT1z7llZJb9fpnT9V61tpH0VYNiAzJuYSfICw82O
+	 XX7/FgVx92grPwwzNnk9CE6DGDoyLdsbcRRj6D0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732111AbgIAPtX (ORCPT
+        id S1732113AbgIAPtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:49:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35064 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:49:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731911AbgIAPp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:58 -0400
+        id S1731674AbgIAPpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:55 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B86A2078B;
-        Tue,  1 Sep 2020 15:45:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2191D208CA;
+        Tue,  1 Sep 2020 15:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975157;
-        bh=Y5zoPBOA/xMCtTOnx3pSck5cOG0QFwVJ7NuEgCZTuPs=;
+        s=default; t=1598975154;
+        bh=YMnVnsmdYN2uNSDiEdHcqXjBuVe+97a/Z3fspDQx3U0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BrlkUVC6HglgmO1iwM0EX+9MM8hjJdIrmEpCMUkAXALyzzkorvi1RUzChaRAkuMvL
-         r18fm/vLxaA4czYaRRJpudfvSWGS1QYcxtdfJvaoTTVLw4WOtT1WmgJSFfRrAPWIE9
-         dUcOZjgu27xadF5cTdH+mk8+g9iNkpen/SCiOAfY=
+        b=IemJ38IRMFhxEAfmN0/pOUQFhPWRampJvxD4k13Teyp+e2hQdMEgvm6sHz/dAr1ZO
+         13e6so55LKbj2PDHNhNJlSUlaIpHXJNBeYYlFiirqdvktwAvfzxIxn8Cxd7UU290pc
+         n8fUqIb1kEdDRrDnx6JOjOHhMWPBOJyghaMe/f+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
         Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.8 232/255] usb: dwc3: gadget: Fix handling ZLP
-Date:   Tue,  1 Sep 2020 17:11:28 +0200
-Message-Id: <20200901151011.866295207@linuxfoundation.org>
+Subject: [PATCH 5.8 231/255] usb: dwc3: gadget: Dont setup more than requested
+Date:   Tue,  1 Sep 2020 17:11:27 +0200
+Message-Id: <20200901151011.818306454@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,79 +61,169 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit d2ee3ff79e6a3d4105e684021017d100524dc560 upstream.
+commit 5d187c0454ef4c5e046a81af36882d4d515922ec upstream.
 
-The usb_request->zero doesn't apply for isoc. Also, if we prepare a
-0-length (ZLP) TRB for the OUT direction, we need to prepare an extra
-TRB to pad up to the MPS alignment. Use the same bounce buffer for the
-ZLP TRB and the extra pad TRB.
+The SG list may be set up with entry size more than the requested
+length. Check the usb_request->length and make sure that we don't setup
+the TRBs to send/receive more than requested. This case may occur when
+the SG entry is allocated up to a certain minimum size, but the request
+length is less than that. It can also occur when the request is reused
+for a different request length.
 
-Cc: <stable@vger.kernel.org> # v4.5+
-Fixes: d6e5a549cc4d ("usb: dwc3: simplify ZLP handling")
-Fixes: 04c03d10e507 ("usb: dwc3: gadget: handle request->zero")
+Cc: <stable@vger.kernel.org> # v4.18+
+Fixes: a31e63b608ff ("usb: dwc3: gadget: Correct handling of scattergather lists")
 Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
 Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |   25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ drivers/usb/dwc3/gadget.c |   51 +++++++++++++++++++++++++++++++---------------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
 --- a/drivers/usb/dwc3/gadget.c
 +++ b/drivers/usb/dwc3/gadget.c
-@@ -1199,6 +1199,7 @@ static void dwc3_prepare_one_trb_linear(
- 				req->request.no_interrupt,
- 				req->request.is_last);
- 	} else if (req->request.zero && req->request.length &&
-+		   !usb_endpoint_xfer_isoc(dep->endpoint.desc) &&
- 		   (IS_ALIGNED(req->request.length, maxp))) {
- 		struct dwc3	*dwc = dep->dwc;
- 		struct dwc3_trb	*trb;
-@@ -1208,14 +1209,25 @@ static void dwc3_prepare_one_trb_linear(
- 		/* prepare normal TRB */
- 		dwc3_prepare_one_trb(dep, req, length, true, 0);
+@@ -1054,27 +1054,25 @@ static void __dwc3_prepare_one_trb(struc
+  * dwc3_prepare_one_trb - setup one TRB from one request
+  * @dep: endpoint for which this request is prepared
+  * @req: dwc3_request pointer
++ * @trb_length: buffer size of the TRB
+  * @chain: should this TRB be chained to the next?
+  * @node: only for isochronous endpoints. First TRB needs different type.
+  */
+ static void dwc3_prepare_one_trb(struct dwc3_ep *dep,
+-		struct dwc3_request *req, unsigned chain, unsigned node)
++		struct dwc3_request *req, unsigned int trb_length,
++		unsigned chain, unsigned node)
+ {
+ 	struct dwc3_trb		*trb;
+-	unsigned int		length;
+ 	dma_addr_t		dma;
+ 	unsigned		stream_id = req->request.stream_id;
+ 	unsigned		short_not_ok = req->request.short_not_ok;
+ 	unsigned		no_interrupt = req->request.no_interrupt;
+ 	unsigned		is_last = req->request.is_last;
  
--		/* Now prepare one extra TRB to handle ZLP */
-+		/* Prepare one extra TRB to handle ZLP */
- 		trb = &dep->trb_pool[dep->trb_enqueue];
- 		req->num_trbs++;
- 		__dwc3_prepare_one_trb(dep, trb, dwc->bounce_addr, 0,
--				false, 1, req->request.stream_id,
-+				!req->direction, 1, req->request.stream_id,
- 				req->request.short_not_ok,
- 				req->request.no_interrupt,
- 				req->request.is_last);
+-	if (req->request.num_sgs > 0) {
+-		length = sg_dma_len(req->start_sg);
++	if (req->request.num_sgs > 0)
+ 		dma = sg_dma_address(req->start_sg);
+-	} else {
+-		length = req->request.length;
++	else
+ 		dma = req->request.dma;
+-	}
+ 
+ 	trb = &dep->trb_pool[dep->trb_enqueue];
+ 
+@@ -1086,7 +1084,7 @@ static void dwc3_prepare_one_trb(struct
+ 
+ 	req->num_trbs++;
+ 
+-	__dwc3_prepare_one_trb(dep, trb, dma, length, chain, node,
++	__dwc3_prepare_one_trb(dep, trb, dma, trb_length, chain, node,
+ 			stream_id, short_not_ok, no_interrupt, is_last);
+ }
+ 
+@@ -1096,16 +1094,27 @@ static void dwc3_prepare_one_trb_sg(stru
+ 	struct scatterlist *sg = req->start_sg;
+ 	struct scatterlist *s;
+ 	int		i;
+-
++	unsigned int length = req->request.length;
+ 	unsigned int remaining = req->request.num_mapped_sgs
+ 		- req->num_queued_sgs;
+ 
++	/*
++	 * If we resume preparing the request, then get the remaining length of
++	 * the request and resume where we left off.
++	 */
++	for_each_sg(req->request.sg, s, req->num_queued_sgs, i)
++		length -= sg_dma_len(s);
 +
-+		/* Prepare one more TRB to handle MPS alignment for OUT */
-+		if (!req->direction) {
-+			trb = &dep->trb_pool[dep->trb_enqueue];
-+			req->num_trbs++;
-+			__dwc3_prepare_one_trb(dep, trb, dwc->bounce_addr, maxp,
-+					       false, 1, req->request.stream_id,
-+					       req->request.short_not_ok,
-+					       req->request.no_interrupt,
-+					       req->request.is_last);
+ 	for_each_sg(sg, s, remaining, i) {
+-		unsigned int length = req->request.length;
+ 		unsigned int maxp = usb_endpoint_maxp(dep->endpoint.desc);
+ 		unsigned int rem = length % maxp;
++		unsigned int trb_length;
+ 		unsigned chain = true;
+ 
++		trb_length = min_t(unsigned int, length, sg_dma_len(s));
++
++		length -= trb_length;
++
+ 		/*
+ 		 * IOMMU driver is coalescing the list of sgs which shares a
+ 		 * page boundary into one and giving it to USB driver. With
+@@ -1113,7 +1122,7 @@ static void dwc3_prepare_one_trb_sg(stru
+ 		 * sgs passed. So mark the chain bit to false if it isthe last
+ 		 * mapped sg.
+ 		 */
+-		if (i == remaining - 1)
++		if ((i == remaining - 1) || !length)
+ 			chain = false;
+ 
+ 		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
+@@ -1123,7 +1132,7 @@ static void dwc3_prepare_one_trb_sg(stru
+ 			req->needs_extra_trb = true;
+ 
+ 			/* prepare normal TRB */
+-			dwc3_prepare_one_trb(dep, req, true, i);
++			dwc3_prepare_one_trb(dep, req, trb_length, true, i);
+ 
+ 			/* Now prepare one extra TRB to align transfer size */
+ 			trb = &dep->trb_pool[dep->trb_enqueue];
+@@ -1135,7 +1144,7 @@ static void dwc3_prepare_one_trb_sg(stru
+ 					req->request.no_interrupt,
+ 					req->request.is_last);
+ 		} else {
+-			dwc3_prepare_one_trb(dep, req, chain, i);
++			dwc3_prepare_one_trb(dep, req, trb_length, chain, i);
+ 		}
+ 
+ 		/*
+@@ -1150,6 +1159,16 @@ static void dwc3_prepare_one_trb_sg(stru
+ 
+ 		req->num_queued_sgs++;
+ 
++		/*
++		 * The number of pending SG entries may not correspond to the
++		 * number of mapped SG entries. If all the data are queued, then
++		 * don't include unused SG entries.
++		 */
++		if (length == 0) {
++			req->num_pending_sgs -= req->request.num_mapped_sgs - req->num_queued_sgs;
++			break;
 +		}
- 	} else {
- 		dwc3_prepare_one_trb(dep, req, length, false, 0);
++
+ 		if (!dwc3_calc_trbs_left(dep))
+ 			break;
  	}
-@@ -2668,8 +2680,17 @@ static int dwc3_gadget_ep_cleanup_comple
- 				status);
+@@ -1169,7 +1188,7 @@ static void dwc3_prepare_one_trb_linear(
+ 		req->needs_extra_trb = true;
  
- 	if (req->needs_extra_trb) {
-+		unsigned int maxp = usb_endpoint_maxp(dep->endpoint.desc);
-+
- 		ret = dwc3_gadget_ep_reclaim_trb_linear(dep, req, event,
- 				status);
-+
-+		/* Reclaim MPS padding TRB for ZLP */
-+		if (!req->direction && req->request.zero && req->request.length &&
-+		    !usb_endpoint_xfer_isoc(dep->endpoint.desc) &&
-+		    (IS_ALIGNED(req->request.length, maxp)))
-+			ret = dwc3_gadget_ep_reclaim_trb_linear(dep, req, event, status);
-+
- 		req->needs_extra_trb = false;
+ 		/* prepare normal TRB */
+-		dwc3_prepare_one_trb(dep, req, true, 0);
++		dwc3_prepare_one_trb(dep, req, length, true, 0);
+ 
+ 		/* Now prepare one extra TRB to align transfer size */
+ 		trb = &dep->trb_pool[dep->trb_enqueue];
+@@ -1187,7 +1206,7 @@ static void dwc3_prepare_one_trb_linear(
+ 		req->needs_extra_trb = true;
+ 
+ 		/* prepare normal TRB */
+-		dwc3_prepare_one_trb(dep, req, true, 0);
++		dwc3_prepare_one_trb(dep, req, length, true, 0);
+ 
+ 		/* Now prepare one extra TRB to handle ZLP */
+ 		trb = &dep->trb_pool[dep->trb_enqueue];
+@@ -1198,7 +1217,7 @@ static void dwc3_prepare_one_trb_linear(
+ 				req->request.no_interrupt,
+ 				req->request.is_last);
+ 	} else {
+-		dwc3_prepare_one_trb(dep, req, false, 0);
++		dwc3_prepare_one_trb(dep, req, length, false, 0);
  	}
+ }
  
 
 
