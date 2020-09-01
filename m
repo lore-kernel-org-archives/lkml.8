@@ -2,191 +2,82 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFECC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 288E4206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83D90206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726679AbgIALXL (ORCPT
+        id S1726937AbgIALZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:23:11 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47604 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725949AbgIALTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:19:50 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 554C5CB1E8FE32F7B9DB;
-        Tue,  1 Sep 2020 19:17:07 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 1 Sep 2020 19:16:59 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 4/8] scsi: hisi_sas: Make phy index variable name consistent
-Date:   Tue, 1 Sep 2020 19:13:06 +0800
-Message-ID: <1598958790-232272-5-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1598958790-232272-1-git-send-email-john.garry@huawei.com>
-References: <1598958790-232272-1-git-send-email-john.garry@huawei.com>
+        Tue, 1 Sep 2020 07:25:29 -0400
+Received: from verein.lst.de ([213.95.11.211]:53056 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbgIALYH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:24:07 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 508E268B05; Tue,  1 Sep 2020 13:06:18 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 13:06:17 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Christoph Hellwig <hch@lst.de>, alsa-devel@alsa-project.org,
+        linux-ia64@vger.kernel.org,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
+        linux-mips@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+        linux-mm@kvack.org,
+        linux-samsung-soc <linux-samsung-soc@vger.kernel.org>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        linux-scsi@vger.kernel.org,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-parisc@vger.kernel.org, netdev@vger.kernel.org,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>
+Subject: Re: [PATCH 05/28] media/v4l2: remove
+ V4L2-FLAG-MEMORY-NON-CONSISTENT
+Message-ID: <20200901110617.GA13232@lst.de>
+References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-6-hch@lst.de> <CAAFQd5COLxjydDYrfx47ht8tj-aNPiaVnC+WyQA7nvpW4gs=ww@mail.gmail.com> <20200819135454.GA17098@lst.de> <CAAFQd5BuXP7t3d-Rwft85j=KTyXq7y4s24mQxLr=VoY9krEGZw@mail.gmail.com> <20200820044347.GA4533@lst.de> <20200820052004.GA5305@lst.de> <CAAFQd5CFiA2WBaaPQ9ezvMjYZfNw37c42UEy9Pk7kJyCi1mLzQ@mail.gmail.com> <20200820165407.GD12693@lst.de> <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAAFQd5D=NzgjosB51-O_cH27a8V6CPgCfaPSfHHz7nKJPbazgg@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+On Thu, Aug 20, 2020 at 07:33:48PM +0200, Tomasz Figa wrote:
+> > It wasn't meant to be too insulting, but I found this out when trying
+> > to figure out how to just disable it.  But it also ends up using
+> > the actual dma attr flags for it's own consistency checks, so just
+> > not setting the flag did not turn out to work that easily.
+> >
+> 
+> Yes, sadly the videobuf2 ended up becoming quite counterintuitive
+> after growing for the long years and that is reflected in the design
+> of this feature as well. I think we need to do something about it.
 
-We use "phy_id" to identify phy in the BIST code, but the rest of code
-always use "phy_no". So we change it for consistent coding style.
+So I'm about to respin the series and wonder how we should proceed.
+I've failed to come up with a clean patch to keep the flag and make
+it a no-op.  Can you or your team give it a spin?
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 50 +++++++++++++-------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index b7d94f2e49ae..8a5c6f5e2a7a 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -2971,42 +2971,42 @@ static void read_iost_itct_cache_v3_hw(struct hisi_hba *hisi_hba,
- static void hisi_sas_bist_test_prep_v3_hw(struct hisi_hba *hisi_hba)
- {
- 	u32 reg_val;
--	int phy_id = hisi_hba->debugfs_bist_phy_no;
-+	int phy_no = hisi_hba->debugfs_bist_phy_no;
- 
- 	/* disable PHY */
--	hisi_sas_phy_enable(hisi_hba, phy_id, 0);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 0);
- 
- 	/* disable ALOS */
--	reg_val = hisi_sas_phy_read32(hisi_hba, phy_id, SERDES_CFG);
-+	reg_val = hisi_sas_phy_read32(hisi_hba, phy_no, SERDES_CFG);
- 	reg_val |= CFG_ALOS_CHK_DISABLE_MSK;
--	hisi_sas_phy_write32(hisi_hba, phy_id, SERDES_CFG, reg_val);
-+	hisi_sas_phy_write32(hisi_hba, phy_no, SERDES_CFG, reg_val);
- }
- 
- static void hisi_sas_bist_test_restore_v3_hw(struct hisi_hba *hisi_hba)
- {
- 	u32 reg_val;
--	int phy_id = hisi_hba->debugfs_bist_phy_no;
-+	int phy_no = hisi_hba->debugfs_bist_phy_no;
- 
- 	/* disable loopback */
--	reg_val = hisi_sas_phy_read32(hisi_hba, phy_id, SAS_PHY_BIST_CTRL);
-+	reg_val = hisi_sas_phy_read32(hisi_hba, phy_no, SAS_PHY_BIST_CTRL);
- 	reg_val &= ~(CFG_RX_BIST_EN_MSK | CFG_TX_BIST_EN_MSK |
- 		     CFG_BIST_TEST_MSK);
--	hisi_sas_phy_write32(hisi_hba, phy_id, SAS_PHY_BIST_CTRL, reg_val);
-+	hisi_sas_phy_write32(hisi_hba, phy_no, SAS_PHY_BIST_CTRL, reg_val);
- 
- 	/* enable ALOS */
--	reg_val = hisi_sas_phy_read32(hisi_hba, phy_id, SERDES_CFG);
-+	reg_val = hisi_sas_phy_read32(hisi_hba, phy_no, SERDES_CFG);
- 	reg_val &= ~CFG_ALOS_CHK_DISABLE_MSK;
--	hisi_sas_phy_write32(hisi_hba, phy_id, SERDES_CFG, reg_val);
-+	hisi_sas_phy_write32(hisi_hba, phy_no, SERDES_CFG, reg_val);
- 
- 	/* restore the linkrate */
--	reg_val = hisi_sas_phy_read32(hisi_hba, phy_id, PROG_PHY_LINK_RATE);
-+	reg_val = hisi_sas_phy_read32(hisi_hba, phy_no, PROG_PHY_LINK_RATE);
- 	/* init OOB link rate as 1.5 Gbits */
- 	reg_val &= ~CFG_PROG_OOB_PHY_LINK_RATE_MSK;
- 	reg_val |= (0x8 << CFG_PROG_OOB_PHY_LINK_RATE_OFF);
--	hisi_sas_phy_write32(hisi_hba, phy_id, PROG_PHY_LINK_RATE, reg_val);
-+	hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE, reg_val);
- 
- 	/* enable PHY */
--	hisi_sas_phy_enable(hisi_hba, phy_id, 1);
-+	hisi_sas_phy_enable(hisi_hba, phy_no, 1);
- }
- 
- #define SAS_PHY_BIST_CODE_INIT	0x1
-@@ -3015,28 +3015,28 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- {
- 	u32 reg_val, mode_tmp;
- 	u32 linkrate = hisi_hba->debugfs_bist_linkrate;
--	u32 phy_id = hisi_hba->debugfs_bist_phy_no;
-+	u32 phy_no = hisi_hba->debugfs_bist_phy_no;
- 	u32 code_mode = hisi_hba->debugfs_bist_code_mode;
- 	u32 path_mode = hisi_hba->debugfs_bist_mode;
- 	struct device *dev = hisi_hba->dev;
- 
--	dev_info(dev, "BIST info:linkrate=%d phy_id=%d code_mode=%d path_mode=%d\n",
--		 linkrate, phy_id, code_mode, path_mode);
-+	dev_info(dev, "BIST info:linkrate=%d phy_no=%d code_mode=%d path_mode=%d\n",
-+		 linkrate, phy_no, code_mode, path_mode);
- 	mode_tmp = path_mode ? 2 : 1;
- 	if (enable) {
- 		/* some preparations before bist test */
- 		hisi_sas_bist_test_prep_v3_hw(hisi_hba);
- 
- 		/* set linkrate of bit test*/
--		reg_val = hisi_sas_phy_read32(hisi_hba, phy_id,
-+		reg_val = hisi_sas_phy_read32(hisi_hba, phy_no,
- 					      PROG_PHY_LINK_RATE);
- 		reg_val &= ~CFG_PROG_OOB_PHY_LINK_RATE_MSK;
- 		reg_val |= (linkrate << CFG_PROG_OOB_PHY_LINK_RATE_OFF);
--		hisi_sas_phy_write32(hisi_hba, phy_id,
--				     PROG_PHY_LINK_RATE, reg_val);
-+		hisi_sas_phy_write32(hisi_hba, phy_no, PROG_PHY_LINK_RATE,
-+				     reg_val);
- 
- 		/* set code mode of bit test */
--		reg_val = hisi_sas_phy_read32(hisi_hba, phy_id,
-+		reg_val = hisi_sas_phy_read32(hisi_hba, phy_no,
- 					      SAS_PHY_BIST_CTRL);
- 		reg_val &= ~(CFG_BIST_MODE_SEL_MSK |
- 				CFG_LOOP_TEST_MODE_MSK |
-@@ -3046,28 +3046,28 @@ static int debugfs_set_bist_v3_hw(struct hisi_hba *hisi_hba, bool enable)
- 		reg_val |= ((code_mode << CFG_BIST_MODE_SEL_OFF) |
- 			    (mode_tmp << CFG_LOOP_TEST_MODE_OFF) |
- 			    CFG_BIST_TEST_MSK);
--		hisi_sas_phy_write32(hisi_hba, phy_id,
-+		hisi_sas_phy_write32(hisi_hba, phy_no,
- 				     SAS_PHY_BIST_CTRL, reg_val);
- 
- 		/* set the bist init value */
--		hisi_sas_phy_write32(hisi_hba, phy_id,
-+		hisi_sas_phy_write32(hisi_hba, phy_no,
- 				     SAS_PHY_BIST_CODE,
- 				     SAS_PHY_BIST_CODE_INIT);
--		hisi_sas_phy_write32(hisi_hba, phy_id, SAS_PHY_BIST_CODE1,
-+		hisi_sas_phy_write32(hisi_hba, phy_no, SAS_PHY_BIST_CODE1,
- 				     SAS_PHY_BIST_CODE1_INIT);
- 
- 		mdelay(100);
- 		reg_val |= (CFG_RX_BIST_EN_MSK | CFG_TX_BIST_EN_MSK);
--		hisi_sas_phy_write32(hisi_hba, phy_id,
-+		hisi_sas_phy_write32(hisi_hba, phy_no,
- 				     SAS_PHY_BIST_CTRL, reg_val);
- 
- 		/* clear error bit */
- 		mdelay(100);
--		hisi_sas_phy_read32(hisi_hba, phy_id, SAS_BIST_ERR_CNT);
-+		hisi_sas_phy_read32(hisi_hba, phy_no, SAS_BIST_ERR_CNT);
- 	} else {
- 		/* disable bist test and recover it */
- 		hisi_hba->debugfs_bist_cnt += hisi_sas_phy_read32(hisi_hba,
--				phy_id, SAS_BIST_ERR_CNT);
-+				phy_no, SAS_BIST_ERR_CNT);
- 		hisi_sas_bist_test_restore_v3_hw(hisi_hba);
- 	}
- 
--- 
-2.26.2
-
+Also I wonder if the flag should be renamed from NON_CONSISTENT
+to NON_COHERENT - the consistent thing is a weird wart from the times
+the old PCI DMA API that is mostly gone now.
