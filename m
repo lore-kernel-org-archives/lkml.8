@@ -2,218 +2,275 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9928DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D7BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3F8206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VjpnOp9a"
+	by mail.kernel.org (Postfix) with ESMTP id 33A8F216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598975782;
+	bh=xDA2koxanMN1KkFBbKighnr/4Tm2FWuQZ2SQ1zvCW+Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PWPxgAodLBvEejY9PYPVkXSN0hXxdCH0MASFOgmOpNecQdwYF7CBrtR89kVbW9Ch7
+	 1yhrhz8o19gyIPsRjHJZO5lR53Gv/UrB/DA8bRV9qCmP1hAdrZW3iNMw0I6t0Xs7bl
+	 hQGn/ZQEiNswtSaNLWyItQl88qwPXVr4JdNa/JP0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732159AbgIAP4Q (ORCPT
+        id S1731326AbgIAP4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:56:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58210 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731364AbgIAP4K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:56:10 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCA18C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:56:09 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id h4so1781223ioe.5
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:56:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oHdmPIGc1UdLCwtabNwKXST8Nzwlla5YL4eeacWsu1I=;
-        b=VjpnOp9aiJY52BxZcXb5yoPB+72grngZXFAn26nQt3o/kKNTnIsM6KrnhoR6TBZkTg
-         vlJE0PnpGzxHNm+6P1X4lb/icYWyjWECoREVf2ZC/0K0TllbhsO+lezjS2KhTXzkTxBj
-         857RTtmyDVDVMwivWe2zJNURHoHUQw0Vzdb/2Z+uIPMNVbHd934j3CKuY29v7NnGkvQU
-         raRMjz5hUsSQxy6eW9JCyUlEP6yIlfHymMrYtOgJDEkfbGog3aEIRpL/xgwaQIbFklmA
-         cSHmoBEQ8MkaTUShsR/X6D/9XkAqzAxPr8eTFjaK9tHn5iAIkrJtMpgmRSslV85MkONp
-         OeOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oHdmPIGc1UdLCwtabNwKXST8Nzwlla5YL4eeacWsu1I=;
-        b=F94STGtRiihjYhz+XizaM4PUFjUxC1VCsMTKdDnlDeCgYsG03Hdj+XzY9XOOIn5IXs
-         6wbwYzdc2PnWYCqelvw1ea8nXfcY8jYKQrlsx1bZ50PPaJ1mGntnFcS2ZmDskrbsJZwK
-         /mN8u24sMBIrautDlssOlTqepsPzqy13iU6rca23AkNdBIhH7fz3wwcTw75JPtuMHSGX
-         u0d2pBDnL89SLmnrsxWuf8pvSdLCb0Ys+vrEnJLsqNQtRq7kNDMV1sioMgNqYjlT0vNu
-         aVc7LGEJ+mGScXci9wQA3FSX09VaUKROOFoSOwzYD0EIPOBvbGmCp6jt4FIVk58iTl3d
-         rqIw==
-X-Gm-Message-State: AOAM5307mB7jAtSWQYTvQwNu9E6t7EC+Pug9eNJDiBFJsfq7Ubng966/
-        n5r70qrfPimrceA01JkznagLUlR6nO4N13Vne5OP0A==
-X-Google-Smtp-Source: ABdhPJwOgUG5A07Ta8oCpswEaPxY7uCJEZSgebz2RNdW9MRNH9XiIPZYoLCjAPI5+e9ZqFNFFNsi+Y+yaNvyiEPwUrM=
-X-Received: by 2002:a5d:80c9:: with SMTP id h9mr1999593ior.73.1598975769024;
- Tue, 01 Sep 2020 08:56:09 -0700 (PDT)
+        Tue, 1 Sep 2020 11:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729393AbgIAPpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:16 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8599206EB;
+        Tue,  1 Sep 2020 15:45:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598975115;
+        bh=xDA2koxanMN1KkFBbKighnr/4Tm2FWuQZ2SQ1zvCW+Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oASivzXW0X6GJt4gc5kHLc/xXQZtORzmv8BZkIc6SRSX4wKg+rUYGmAw6n5WWWyNw
+         2l49KsFWC4sV1/zK8RQTzNZKNNw8Nv8jOFl2k0CKr25HOoZvGr+9dwc6sr31AWgfjz
+         bsQewJqH0qxWpgbFg2pWPdrtpgERxS3WQ9MMyHWg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Raul Rangel <rrangel@google.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.8 185/255] serial: 8250: change lock order in serial8250_do_startup()
+Date:   Tue,  1 Sep 2020 17:10:41 +0200
+Message-Id: <20200901151009.551728510@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <1597824397-29894-1-git-send-email-liuqi115@huawei.com>
- <20200831221308.GB207013@xps15> <fae22c97-489b-0312-4357-973a4969780c@huawei.com>
-In-Reply-To: <fae22c97-489b-0312-4357-973a4969780c@huawei.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Tue, 1 Sep 2020 09:55:58 -0600
-Message-ID: <CANLsYkwkUnTWzWk7RLrRc3WH3AmY3M9z9PE2Yu2tr4_U4J7=vA@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] coresight: etm4x: Modify core-commit of cpu to
- avoid the overflow of HiSilicon ETM
-To:     Qi Liu <liuqi115@huawei.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "Suzuki K. Poulose" <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxarm@huawei.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 31 Aug 2020 at 19:57, Qi Liu <liuqi115@huawei.com> wrote:
->
-> Hi Mathieu,
->
-> Thanks for your review.
->
-> On 2020/9/1 6:13, Mathieu Poirier wrote:
-> > Following Al's comment I have the following recommendations...
-> >
-> > On Wed, Aug 19, 2020 at 04:06:37PM +0800, Qi Liu wrote:
-> >> When too much trace information is generated on-chip, the ETM will
-> >> overflow, and cause data loss. This is a common phenomenon on ETM
-> >> devices.
-> >>
-> >> But sometimes we do not want to lose performance trace data, so we
-> >> suppress the speed of instructions sent from CPU core to ETM to
-> >> avoid the overflow of ETM.
-> >>
-> >> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> >> ---
-> >>
-> >> Changes since v1:
-> >> - ETM on HiSilicon Hip09 platform supports backpressure, so does
-> >> not need to modify core commit.
-> >>
-> >>  drivers/hwtracing/coresight/coresight-etm4x.c | 43 +++++++++++++++++++++++++++
-> >>  1 file changed, 43 insertions(+)
-> >>
-> >> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> >> index 7797a57..7641f89 100644
-> >> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> >> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> >> @@ -43,6 +43,10 @@ MODULE_PARM_DESC(boot_enable, "Enable tracing on boot");
-> >>  #define PARAM_PM_SAVE_NEVER   1 /* never save any state */
-> >>  #define PARAM_PM_SAVE_SELF_HOSTED 2 /* save self-hosted state only */
-> >>
-> >> +#define CORE_COMMIT_CLEAR   0x3000
-> >> +#define CORE_COMMIT_SHIFT   12
-> >> +#define HISI_ETM_AMBA_ID_V1 0x000b6d01
-> > Do you have a name for the SoC that can be added so that other HiSilicon SoC can
-> > be added?  I suggest something like:
-> >
-> > #define HISI_NAME_CORE_COMMIT_CLEAR
-> > #define HISI_NAME_CORE_COMMIT_SHIFT
-> > #define HISI_NAME_ETM_ID
-> Will fix this next version.
-> > Moreover I don't see an entry for 0x000b6d01 in the amba id table - is your
-> > devices upstream?  Needless to day that is mandatory in order to move forward
-> > with this work.
-> A patch has been applied to add this ETM id and here is the link:
-> https://lore.kernel.org/linux-arm-kernel/20200813210000.GO3393195@xps15/
->
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Ah yes - my tree was on the wrong baseline when I reviewed your patch.
-You can forget about this comment.
+commit 205d300aea75623e1ae4aa43e0d265ab9cf195fd upstream.
 
-Thanks,
-Mathieu
+We have a number of "uart.port->desc.lock vs desc.lock->uart.port"
+lockdep reports coming from 8250 driver; this causes a bit of trouble
+to people, so let's fix it.
 
-> >> +
-> >>  static int pm_save_enable = PARAM_PM_SAVE_FIRMWARE;
-> >>  module_param(pm_save_enable, int, 0444);
-> >>  MODULE_PARM_DESC(pm_save_enable,
-> >> @@ -104,11 +108,40 @@ struct etm4_enable_arg {
-> >>      int rc;
-> >>  };
-> >>
-> >> +static void etm4_cpu_actlr1_cfg(void *info)
-> >> +{
-> >> +    struct etm4_enable_arg *arg = (struct etm4_enable_arg *)info;
-> >> +    u64 val;
-> >> +
-> >> +    asm volatile("mrs %0,s3_1_c15_c2_5" : "=r"(val));
-> >> +    val &= ~CORE_COMMIT_CLEAR;
-> >> +    val |= arg->rc << CORE_COMMIT_SHIFT;
-> >> +    asm volatile("msr s3_1_c15_c2_5,%0" : : "r"(val));
-> >> +}
-> >> +
-> >> +static void etm4_config_core_commit(int cpu, int val)
-> >> +{
-> >> +    struct etm4_enable_arg arg = {0};
-> >> +
-> >> +    arg.rc = val;
-> >> +    smp_call_function_single(cpu, etm4_cpu_actlr1_cfg, &arg, 1);
-> >> +}
-> >> +
-> >>  static int etm4_enable_hw(struct etmv4_drvdata *drvdata)
-> >>  {
-> >>      int i, rc;
-> >> +    struct amba_device *adev;
-> >>      struct etmv4_config *config = &drvdata->config;
-> >>      struct device *etm_dev = &drvdata->csdev->dev;
-> >> +    struct device *dev = drvdata->csdev->dev.parent;
-> >> +
-> >> +    adev = container_of(dev, struct amba_device, dev);
-> >> +    /*
-> >> +     * If ETM device is HiSilicon ETM device, reduce the
-> >> +     * core-commit to avoid ETM overflow.
-> >> +     */
-> >> +    if (adev->periphid == HISI_ETM_AMBA_ID_V1)
-> >> +            etm4_config_core_commit(drvdata->cpu, 1);
-> > I susggest to add a function like etm4_enable_arch_specific() and do the above
-> > in there.  The same goes for the disable path.
-> >
-> > Thanks,
-> > Mathieu
-> Thanks, I'll fix this next version : )
->
-> Qi
-> >
-> >>      CS_UNLOCK(drvdata->base);
-> >>
-> >> @@ -472,10 +505,20 @@ static void etm4_disable_hw(void *info)
-> >>  {
-> >>      u32 control;
-> >>      struct etmv4_drvdata *drvdata = info;
-> >> +    struct device *dev = drvdata->csdev->dev.parent;
-> >>      struct etmv4_config *config = &drvdata->config;
-> >>      struct device *etm_dev = &drvdata->csdev->dev;
-> >> +    struct amba_device *adev;
-> >>      int i;
-> >>
-> >> +    adev = container_of(dev, struct amba_device, dev);
-> >> +    /*
-> >> +     * If ETM device is HiSilicon ETM device, resume the
-> >> +     * core-commit after ETM trace is complete.
-> >> +     */
-> >> +    if (adev->periphid == HISI_ETM_AMBA_ID_V1)
-> >> +            etm4_config_core_commit(drvdata->cpu, 0);
-> >> +
-> >>      CS_UNLOCK(drvdata->base);
-> >>
-> >>      if (!drvdata->skip_power_up) {
-> >> --
-> >> 2.8.1
-> >>
-> > .
-> >
->
->
+The problem is reverse lock order in two different call paths:
+
+chain #1:
+
+ serial8250_do_startup()
+  spin_lock_irqsave(&port->lock);
+   disable_irq_nosync(port->irq);
+    raw_spin_lock_irqsave(&desc->lock)
+
+chain #2:
+
+  __report_bad_irq()
+   raw_spin_lock_irqsave(&desc->lock)
+    for_each_action_of_desc()
+     printk()
+      spin_lock_irqsave(&port->lock);
+
+Fix this by changing the order of locks in serial8250_do_startup():
+ do disable_irq_nosync() first, which grabs desc->lock, and grab
+ uart->port after that, so that chain #1 and chain #2 have same lock
+ order.
+
+Full lockdep splat:
+
+ ======================================================
+ WARNING: possible circular locking dependency detected
+ 5.4.39 #55 Not tainted
+ ======================================================
+
+ swapper/0/0 is trying to acquire lock:
+ ffffffffab65b6c0 (console_owner){-...}, at: console_lock_spinning_enable+0x31/0x57
+
+ but task is already holding lock:
+ ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
+
+ which lock already depends on the new lock.
+
+ the existing dependency chain (in reverse order) is:
+
+ -> #2 (&irq_desc_lock_class){-.-.}:
+        _raw_spin_lock_irqsave+0x61/0x8d
+        __irq_get_desc_lock+0x65/0x89
+        __disable_irq_nosync+0x3b/0x93
+        serial8250_do_startup+0x451/0x75c
+        uart_startup+0x1b4/0x2ff
+        uart_port_activate+0x73/0xa0
+        tty_port_open+0xae/0x10a
+        uart_open+0x1b/0x26
+        tty_open+0x24d/0x3a0
+        chrdev_open+0xd5/0x1cc
+        do_dentry_open+0x299/0x3c8
+        path_openat+0x434/0x1100
+        do_filp_open+0x9b/0x10a
+        do_sys_open+0x15f/0x3d7
+        kernel_init_freeable+0x157/0x1dd
+        kernel_init+0xe/0x105
+        ret_from_fork+0x27/0x50
+
+ -> #1 (&port_lock_key){-.-.}:
+        _raw_spin_lock_irqsave+0x61/0x8d
+        serial8250_console_write+0xa7/0x2a0
+        console_unlock+0x3b7/0x528
+        vprintk_emit+0x111/0x17f
+        printk+0x59/0x73
+        register_console+0x336/0x3a4
+        uart_add_one_port+0x51b/0x5be
+        serial8250_register_8250_port+0x454/0x55e
+        dw8250_probe+0x4dc/0x5b9
+        platform_drv_probe+0x67/0x8b
+        really_probe+0x14a/0x422
+        driver_probe_device+0x66/0x130
+        device_driver_attach+0x42/0x5b
+        __driver_attach+0xca/0x139
+        bus_for_each_dev+0x97/0xc9
+        bus_add_driver+0x12b/0x228
+        driver_register+0x64/0xed
+        do_one_initcall+0x20c/0x4a6
+        do_initcall_level+0xb5/0xc5
+        do_basic_setup+0x4c/0x58
+        kernel_init_freeable+0x13f/0x1dd
+        kernel_init+0xe/0x105
+        ret_from_fork+0x27/0x50
+
+ -> #0 (console_owner){-...}:
+        __lock_acquire+0x118d/0x2714
+        lock_acquire+0x203/0x258
+        console_lock_spinning_enable+0x51/0x57
+        console_unlock+0x25d/0x528
+        vprintk_emit+0x111/0x17f
+        printk+0x59/0x73
+        __report_bad_irq+0xa3/0xba
+        note_interrupt+0x19a/0x1d6
+        handle_irq_event_percpu+0x57/0x79
+        handle_irq_event+0x36/0x55
+        handle_fasteoi_irq+0xc2/0x18a
+        do_IRQ+0xb3/0x157
+        ret_from_intr+0x0/0x1d
+        cpuidle_enter_state+0x12f/0x1fd
+        cpuidle_enter+0x2e/0x3d
+        do_idle+0x1ce/0x2ce
+        cpu_startup_entry+0x1d/0x1f
+        start_kernel+0x406/0x46a
+        secondary_startup_64+0xa4/0xb0
+
+ other info that might help us debug this:
+
+ Chain exists of:
+   console_owner --> &port_lock_key --> &irq_desc_lock_class
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(&irq_desc_lock_class);
+                                lock(&port_lock_key);
+                                lock(&irq_desc_lock_class);
+   lock(console_owner);
+
+  *** DEADLOCK ***
+
+ 2 locks held by swapper/0/0:
+  #0: ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
+  #1: ffffffffab65b5c0 (console_lock){+.+.}, at: console_trylock_spinning+0x20/0x181
+
+ stack backtrace:
+ CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.39 #55
+ Hardware name: XXXXXX
+ Call Trace:
+  <IRQ>
+  dump_stack+0xbf/0x133
+  ? print_circular_bug+0xd6/0xe9
+  check_noncircular+0x1b9/0x1c3
+  __lock_acquire+0x118d/0x2714
+  lock_acquire+0x203/0x258
+  ? console_lock_spinning_enable+0x31/0x57
+  console_lock_spinning_enable+0x51/0x57
+  ? console_lock_spinning_enable+0x31/0x57
+  console_unlock+0x25d/0x528
+  ? console_trylock+0x18/0x4e
+  vprintk_emit+0x111/0x17f
+  ? lock_acquire+0x203/0x258
+  printk+0x59/0x73
+  __report_bad_irq+0xa3/0xba
+  note_interrupt+0x19a/0x1d6
+  handle_irq_event_percpu+0x57/0x79
+  handle_irq_event+0x36/0x55
+  handle_fasteoi_irq+0xc2/0x18a
+  do_IRQ+0xb3/0x157
+  common_interrupt+0xf/0xf
+  </IRQ>
+
+Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Fixes: 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and RT kernels")
+Reported-by: Guenter Roeck <linux@roeck-us.net>
+Reported-by: Raul Rangel <rrangel@google.com>
+BugLink: https://bugs.chromium.org/p/chromium/issues/detail?id=1114800
+Link: https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Tested-by: Guenter Roeck <linux@roeck-us.net>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200817022646.1484638-1-sergey.senozhatsky@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/tty/serial/8250/8250_port.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/drivers/tty/serial/8250/8250_port.c
++++ b/drivers/tty/serial/8250/8250_port.c
+@@ -2274,6 +2274,10 @@ int serial8250_do_startup(struct uart_po
+ 
+ 	if (port->irq && !(up->port.flags & UPF_NO_THRE_TEST)) {
+ 		unsigned char iir1;
++
++		if (port->irqflags & IRQF_SHARED)
++			disable_irq_nosync(port->irq);
++
+ 		/*
+ 		 * Test for UARTs that do not reassert THRE when the
+ 		 * transmitter is idle and the interrupt has already
+@@ -2283,8 +2287,6 @@ int serial8250_do_startup(struct uart_po
+ 		 * allow register changes to become visible.
+ 		 */
+ 		spin_lock_irqsave(&port->lock, flags);
+-		if (up->port.irqflags & IRQF_SHARED)
+-			disable_irq_nosync(port->irq);
+ 
+ 		wait_for_xmitr(up, UART_LSR_THRE);
+ 		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+@@ -2296,9 +2298,10 @@ int serial8250_do_startup(struct uart_po
+ 		iir = serial_port_in(port, UART_IIR);
+ 		serial_port_out(port, UART_IER, 0);
+ 
++		spin_unlock_irqrestore(&port->lock, flags);
++
+ 		if (port->irqflags & IRQF_SHARED)
+ 			enable_irq(port->irq);
+-		spin_unlock_irqrestore(&port->lock, flags);
+ 
+ 		/*
+ 		 * If the interrupt is not reasserted, or we otherwise
+
+
