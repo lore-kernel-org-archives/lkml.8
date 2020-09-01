@@ -2,139 +2,144 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AECA8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4CCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87C8F21897
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0750C215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/SqwzUN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzUBSHiE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbgIAOm6 (ORCPT
+        id S1728580AbgIAOnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46632 "EHLO
+        Tue, 1 Sep 2020 10:43:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728242AbgIAOl2 (ORCPT
+        with ESMTP id S1727986AbgIAOQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:41:28 -0400
-Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE52BC061244;
-        Tue,  1 Sep 2020 07:41:27 -0700 (PDT)
-Received: by mail-oi1-x242.google.com with SMTP id j21so1336537oii.10;
-        Tue, 01 Sep 2020 07:41:27 -0700 (PDT)
+        Tue, 1 Sep 2020 10:16:38 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6565FC06125F;
+        Tue,  1 Sep 2020 07:16:38 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s10so149361plp.1;
+        Tue, 01 Sep 2020 07:16:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=sZhvalbA03rUwegYGv+Cay08wKnFHq0gcapj8Z9U2kk=;
-        b=Y/SqwzUN1T5jUMi6cZ2ZuDXFCwQ9pIW40bV/unURxBXPwk7DRwOLaHDwtTXPzup9gL
-         cEFKY7SCHTeJimhPAs3bFuPsn0kDmnDHqJqlzU9FZmxXnMBjVPM//99pbmwwqN6oIWte
-         cPVMbo+bJSoElNYuopQ8bm3qvB88PXV5tK4HvcEMtbO3qu1BW8WHnx9BmeYzDwOW94IC
-         ce00MEsUDYw8friyEmXWOpscVEu6BASNFxHjNF7w/Je9hjg36WLddNLUiz4ApumVkjXB
-         JCgKn4rBc2l++lCHpIQKhu6u/KNpjBU6MIMXDIe6asHbk3XQ6DA03spR28BYEr5LsOT7
-         Vn1Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=rF0Gg/FItWzC1FRYFQdU1CM/THHapJ9NmHYGWF5PYaM=;
+        b=WzUBSHiEEVYXLd5qlbZdiTvUByjDNOOf/Vsr/o61BzXL5UVg5zTZaZdPeuvbkS/Onv
+         PCxIHdjkMKd9h4n6CHNnM+ryyaQk7hrcFKcdjwpda651L51ULnlRBFAZGUDAS0lEQ9JC
+         MqiO+WgIQlS+BXH2RhGdF7iXG7+npVOWpxDv0K7xslMLxEoW1kjP6Zk4rDTzL79/ButI
+         4ao2BB6glSpr/ad775rxf48hwFYzkoC93QbS0sYI1061h63ba1DWuXWX2LQAp1/9Syy1
+         B8ESXA+bCOAbmc9fBwpbDG+OK+i0TVEhGJbT6408kUMiORSNRhdo5x8CqTo+TgkHoQGh
+         7ZAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=sZhvalbA03rUwegYGv+Cay08wKnFHq0gcapj8Z9U2kk=;
-        b=iWSNWnBFYOKBddw/tSz7QbMmjI3FiAZAfTBljY5JkN2rMNP4lzxmgnEu0fmGm51YxI
-         B5723LYRGFerK1n4bszVMYsb906SpdGa6TduhAnM/iHp7douK7d8pyDMEu1uaH6xTliY
-         tnTlk1HRTlnitzdEM9XAKHRvbl+73FEP1uZUujzXbxzvVCwJZRlU3zJDopVGGitGwKTO
-         C+oO/HDs9N/G5ybi9qyrgz/cH5vXZc/4scLBbtHhMcbPtKiDhsDE2IIcicRzvhThY+QG
-         o6o2cOCvBT7rwhxwj6k1oQFtavqgK0ImIIgiHSEmL6zkRpdmH/6bwUfCfR+KS0jnFV1w
-         lrpw==
-X-Gm-Message-State: AOAM531QHxhHXjvu7r+nYInNKQ9B3m6Z1H3FqOh/4YY/WLI/1J495FME
-        9krJuJ9kFmcPc/fvqc/VjcpoyUS/E//KCnjgBKVNg8HMbL0FtQ==
-X-Google-Smtp-Source: ABdhPJy3jGYbnV0erw5CDV78wbHykPio/a1ecP5Cmr4JMTFhJXSUqBMYPpa4dn07GhhqNIJgtM5NUmjuAwVvejaykGs=
-X-Received: by 2002:aca:d409:: with SMTP id l9mr1255941oig.70.1598971287129;
- Tue, 01 Sep 2020 07:41:27 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=rF0Gg/FItWzC1FRYFQdU1CM/THHapJ9NmHYGWF5PYaM=;
+        b=PYZQ6YtschFf8nnFiRpiwm9kKFwRxlF/SWR73wFvu0QCgiV37JLEQX6pp24XRxGkfc
+         1TtRX+L/2B1EnFw1mW0bFHnBZO9bTQpiax5LiDCAFdleBaLeqIxfyC/T9CKVTZundJmV
+         ZMmZlOmZLSxkZqlNeSBacj6oN5XKtDvdvRZngDNa0CcSA703o5MHi34Z0gJDbA2SfbUA
+         +KqY/upwDkjh4FOmZhHAV8U/Vpjs5SDq7fygNl+jr/dpmC3PZ7PzsH/sHSVPF7+/cb0V
+         VANsYSyfqW+jmBLDN6VGHcDO0JZgBhkDytpXBkDeXTfuTYPn5QvHR/bMIo8QTkxmJBnH
+         DS/Q==
+X-Gm-Message-State: AOAM532PKPTSEq2WVfXmIjkcErptyZMS0u3TxPWylBmIWMFPwEhQupta
+        D6MXREP4iDfGandr+eCg6j62WeAQurs=
+X-Google-Smtp-Source: ABdhPJxAWHVJz4qjW72EohwUKHF1cKxUaKdI5k8vecTZBIbH6qy//hJ4IaY8hwl1kx3ydSR74SPQwA==
+X-Received: by 2002:a17:90a:4541:: with SMTP id r1mr1818789pjm.88.1598969797778;
+        Tue, 01 Sep 2020 07:16:37 -0700 (PDT)
+Received: from bobo.ibm.com ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 07:16:37 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Ley Foon Tan <ley.foon.tan@intel.com>
+Subject: [PATCH v3 13/23] nios2: use asm-generic/mmu_context.h for no-op implementations
+Date:   Wed,  2 Sep 2020 00:15:29 +1000
+Message-Id: <20200901141539.1757549-14-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
+References: <20200901141539.1757549-1-npiggin@gmail.com>
 MIME-Version: 1.0
-References: <20200901064302.849-1-w@1wt.eu>
-In-Reply-To: <20200901064302.849-1-w@1wt.eu>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 1 Sep 2020 16:41:13 +0200
-Message-ID: <CA+icZUVvOArpuR=PJBg288pJmLmYxtgZxJOHnjk943e9M22WOQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] prandom_u32: make output less predictable
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        George Spelvin <lkml@sdf.org>,
-        Amit Klein <aksecurity@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
-        Florian Westphal <fw@strlen.de>,
-        Marc Plumb <lkml.mplumb@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 8:43 AM Willy Tarreau <w@1wt.eu> wrote:
->
-> This is the cleanup of the latest series of prandom_u32 experimentations
-> consisting in using SipHash instead of Tausworthe to produce the randoms
-> used by the network stack. The changes to the files were kept minimal,
-> and the controversial commit that used to take noise from the fast_pool
-> (f227e3ec3b5c) was reverted. Instead, a dedicated "net_rand_noise" per_cpu
-> variable is fed from various sources of activities (networking, scheduling)
-> to perturb the SipHash state using fast, non-trivially predictable data,
-> instead of keeping it fully deterministic. The goal is essentially to make
-> any occasional memory leakage or brute-force attempt useless.
->
-> The resulting code was verified to be very slightly faster on x86_64 than
-> what is was with the controversial commit above, though this remains barely
-> above measurement noise. It was only build-tested on arm & arm64.
->
-> George Spelvin (1):
->   random32: make prandom_u32() output unpredictable
->
-> Willy Tarreau (1):
->   random32: add noise from network and scheduling activity
->
->  drivers/char/random.c   |   1 -
->  include/linux/prandom.h |  55 ++++-
->  kernel/time/timer.c     |   9 +-
->  lib/random32.c          | 438 ++++++++++++++++++++++++----------------
->  net/core/dev.c          |   4 +
->  5 files changed, 326 insertions(+), 181 deletions(-)
->
-> Cc: George Spelvin <lkml@sdf.org>
-> Cc: Amit Klein <aksecurity@gmail.com>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: tytso@mit.edu
-> Cc: Florian Westphal <fw@strlen.de>
-> Cc: Marc Plumb <lkml.mplumb@gmail.com>
-> Cc: Sedat Dilek <sedat.dilek@gmail.com>
->
+Cc: Ley Foon Tan <ley.foon.tan@intel.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
 
-I have tested with the patchset from [1].
-( Later I saw, you dropped "WIP: tcp: reuse incoming skb hash in
-tcp_conn_request()". )
+Please ack or nack if you object to this being mered via
+Arnd's tree.
 
-- Sedat -
+ arch/nios2/include/asm/mmu_context.h | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/prandom.git/log/?h=20200901-siphash-noise
+diff --git a/arch/nios2/include/asm/mmu_context.h b/arch/nios2/include/asm/mmu_context.h
+index 78ab3dacf579..4f99ed09b5a7 100644
+--- a/arch/nios2/include/asm/mmu_context.h
++++ b/arch/nios2/include/asm/mmu_context.h
+@@ -26,16 +26,13 @@ extern unsigned long get_pid_from_context(mm_context_t *ctx);
+  */
+ extern pgd_t *pgd_current;
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
+-
+ /*
+  * Initialize the context related info for a new mm_struct instance.
+  *
+  * Set all new contexts to 0, that way the generation will never match
+  * the currently running generation when this context is switched in.
+  */
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 					struct mm_struct *mm)
+ {
+@@ -43,26 +40,16 @@ static inline int init_new_context(struct task_struct *tsk,
+ 	return 0;
+ }
+ 
+-/*
+- * Destroy context related info for an mm_struct that is about
+- * to be put to rest.
+- */
+-static inline void destroy_context(struct mm_struct *mm)
+-{
+-}
+-
+ void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 		struct task_struct *tsk);
+ 
+-static inline void deactivate_mm(struct task_struct *tsk,
+-				struct mm_struct *mm)
+-{
+-}
+-
+ /*
+  * After we have set current->mm to a new value, this activates
+  * the context for the new mm so we see the new mappings.
+  */
++#define activate_mm activate_mm
+ void activate_mm(struct mm_struct *prev, struct mm_struct *next);
+ 
++#include <asm-generic/mmu_context.h>
++
+ #endif /* _ASM_NIOS2_MMU_CONTEXT_H */
+-- 
+2.23.0
 
-
-> --
-> 2.28.0
