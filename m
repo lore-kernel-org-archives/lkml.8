@@ -2,229 +2,116 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F26EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BD01C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:33:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA6621532
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:32:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QkJFG6pK"
+	by mail.kernel.org (Postfix) with ESMTP id 308832083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:33:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726526AbgIAKcU (ORCPT
+        id S1726463AbgIAKdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 06:32:20 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51389 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725989AbgIAKcK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 06:32:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598956328;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=orjqWGMPGIbjs2BtW1dTTBT2WpkyFXIf8RMOJhYRAHc=;
-        b=QkJFG6pKAdn4uxyipDElOg31+cVJecZs4VrczWrtuCysQihsfDGGznb6wFqnNOuSciX6nA
-        dFCkCTO32teaH9TwzfHp5v+YTquT29piBtShq/pWAsQXTL/Dm71BPhe2TkDN2UY1OsbFBR
-        7OvxHxGE5q6U6/fhi9fLOhryEe1X3Vk=
-Received: from mail-pj1-f72.google.com (mail-pj1-f72.google.com
- [209.85.216.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-i7Qp4cQUOaGuufnPiyTuPg-1; Tue, 01 Sep 2020 06:32:06 -0400
-X-MC-Unique: i7Qp4cQUOaGuufnPiyTuPg-1
-Received: by mail-pj1-f72.google.com with SMTP id j1so304294pjs.6
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 03:32:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=orjqWGMPGIbjs2BtW1dTTBT2WpkyFXIf8RMOJhYRAHc=;
-        b=WQf9mqpJwzcdd+eY9GS1x3mdoh9Iv24R9GP4akzJ1mnd9bLoN5bcI/0OIr8I1J7j49
-         HaPJN5Gz3VdO52V52N/lE+H13l6TSjNjnQphaJuR6dHSQ/gtbizkx1fQ1AkNqU5EQ3oB
-         WAi9NFiW9j6MCPd4LJO6GYB3M1JhzCgcBL3dtmJXwItjMuR5iXXygCrnnqLFu76h2w9d
-         HX9+sjqyrRcHE2OIraGaDMWCslg+9w8baIB+tmaU+BvNPA4Hjnla22VPK4L53IpXXe96
-         CsP3cMGRuiDBDDDNpIUQHlFKavo5BozotK+9WGIqiWQD3mI6Qf+3i4PGrr+cNsBXWftL
-         RtHg==
-X-Gm-Message-State: AOAM5300vCpJBryJDkQnYS/xS3vw/lR33zD4RxSWLrPF9GEKKgA4+4UQ
-        n6QIu/9DdF4x01xYwZInZjkcH4aMn7qgKOh1+Y/unoGJDBSQMBl8E4gWT51BpPf2JVaOEZYivoq
-        JR0+L3Kagh+oB+AtnD5gHcjoz2FZCHFEsLYewsI8q
-X-Received: by 2002:a63:df13:: with SMTP id u19mr922834pgg.275.1598956325498;
-        Tue, 01 Sep 2020 03:32:05 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxVwFAW9GZ1QG4XY5sg1uzFq7QM+YlerG0MXjXNQpchgXwjU1ooxwkmQFnZFwmnjAmHFtXFzORi6Wi9FOJZcGg=
-X-Received: by 2002:a63:df13:: with SMTP id u19mr922814pgg.275.1598956325157;
- Tue, 01 Sep 2020 03:32:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200901095233.1069194-1-maz@kernel.org>
-In-Reply-To: <20200901095233.1069194-1-maz@kernel.org>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Tue, 1 Sep 2020 12:31:53 +0200
-Message-ID: <CAO-hwJ+L5HyamPm4DGfzJx9iUyvHJTAks8KA5bmu-Fgq2ABFHQ@mail.gmail.com>
-Subject: Re: [PATCH v4] HID: core: Sanitize event code and type when mapping input
-To:     Marc Zyngier <maz@kernel.org>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "3.8+" <stable@vger.kernel.org>, kernel-team@android.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 1 Sep 2020 06:33:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:40158 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726107AbgIAKdi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 06:33:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0CE01063;
+        Tue,  1 Sep 2020 03:33:37 -0700 (PDT)
+Received: from usa.arm.com (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1BE643F71F;
+        Tue,  1 Sep 2020 03:33:37 -0700 (PDT)
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        op-tee@lists.trustedfirmware.org
+Subject: [PATCH 1/2] tee: replace cdev_add + device_add with cdev_device_add
+Date:   Tue,  1 Sep 2020 11:33:34 +0100
+Message-Id: <20200901103335.685-1-sudeep.holla@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 11:52 AM Marc Zyngier <maz@kernel.org> wrote:
->
-> When calling into hid_map_usage(), the passed event code is
-> blindly stored as is, even if it doesn't fit in the associated bitmap.
->
-> This event code can come from a variety of sources, including devices
-> masquerading as input devices, only a bit more "programmable".
->
-> Instead of taking the event code at face value, check that it actually
-> fits the corresponding bitmap, and if it doesn't:
-> - spit out a warning so that we know which device is acting up
-> - NULLify the bitmap pointer so that we catch unexpected uses
->
-> Code paths that can make use of untrusted inputs can now check
-> that the mapping was indeed correct and bail out if not.
->
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
+Commit 233ed09d7fda ("chardev: add helper function to register char devs
+with a struct device") added a helper function 'cdev_device_add'.
 
-Pushed to for-5.9/upstream-fixes
+Make use of cdev_device_add in tee_device_register to replace cdev_add
+and device_add. Since cdev_device_add takes care of setting the
+kobj->parent, drop explicit initialisation in tee_device_alloc.
 
-Cheers,
-Benjamin
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/tee/tee_core.c | 21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
-> * From v3:
->   - Drop totally unrelated mfd/syscon change from the patch
->
-> * From v2:
->   - Don't prematurely narrow the event code so that hid_map_usage()
->     catches illegal values beyond the 16bit limit.
->
-> * From v1:
->   - Dropped the input.c changes, and turned hid_map_usage() into
->     the validation primitive.
->   - Handle mapping failures in hidinput_configure_usage() and
->     mt_touch_input_mapping() (on top of hid_map_usage_clear() which
->     was already handled)
->
->  drivers/hid/hid-input.c      |  4 ++++
->  drivers/hid/hid-multitouch.c |  2 ++
->  include/linux/hid.h          | 42 +++++++++++++++++++++++++-----------
->  3 files changed, 35 insertions(+), 13 deletions(-)
->
-> diff --git a/drivers/hid/hid-input.c b/drivers/hid/hid-input.c
-> index b8eabf206e74..88e19996427e 100644
-> --- a/drivers/hid/hid-input.c
-> +++ b/drivers/hid/hid-input.c
-> @@ -1132,6 +1132,10 @@ static void hidinput_configure_usage(struct hid_input *hidinput, struct hid_fiel
->         }
->
->  mapped:
-> +       /* Mapping failed, bail out */
-> +       if (!bit)
-> +               return;
-> +
->         if (device->driver->input_mapped &&
->             device->driver->input_mapped(device, hidinput, field, usage,
->                                          &bit, &max) < 0) {
-> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-> index 3f94b4954225..e3152155c4b8 100644
-> --- a/drivers/hid/hid-multitouch.c
-> +++ b/drivers/hid/hid-multitouch.c
-> @@ -856,6 +856,8 @@ static int mt_touch_input_mapping(struct hid_device *hdev, struct hid_input *hi,
->                         code = BTN_0  + ((usage->hid - 1) & HID_USAGE);
->
->                 hid_map_usage(hi, usage, bit, max, EV_KEY, code);
-> +               if (!*bit)
-> +                       return -1;
->                 input_set_capability(hi->input, EV_KEY, code);
->                 return 1;
->
-> diff --git a/include/linux/hid.h b/include/linux/hid.h
-> index 875f71132b14..c7044a14200e 100644
-> --- a/include/linux/hid.h
-> +++ b/include/linux/hid.h
-> @@ -959,34 +959,49 @@ static inline void hid_device_io_stop(struct hid_device *hid) {
->   * @max: maximal valid usage->code to consider later (out parameter)
->   * @type: input event type (EV_KEY, EV_REL, ...)
->   * @c: code which corresponds to this usage and type
-> + *
-> + * The value pointed to by @bit will be set to NULL if either @type is
-> + * an unhandled event type, or if @c is out of range for @type. This
-> + * can be used as an error condition.
->   */
->  static inline void hid_map_usage(struct hid_input *hidinput,
->                 struct hid_usage *usage, unsigned long **bit, int *max,
-> -               __u8 type, __u16 c)
-> +               __u8 type, unsigned int c)
->  {
->         struct input_dev *input = hidinput->input;
-> -
-> -       usage->type = type;
-> -       usage->code = c;
-> +       unsigned long *bmap = NULL;
-> +       unsigned int limit = 0;
->
->         switch (type) {
->         case EV_ABS:
-> -               *bit = input->absbit;
-> -               *max = ABS_MAX;
-> +               bmap = input->absbit;
-> +               limit = ABS_MAX;
->                 break;
->         case EV_REL:
-> -               *bit = input->relbit;
-> -               *max = REL_MAX;
-> +               bmap = input->relbit;
-> +               limit = REL_MAX;
->                 break;
->         case EV_KEY:
-> -               *bit = input->keybit;
-> -               *max = KEY_MAX;
-> +               bmap = input->keybit;
-> +               limit = KEY_MAX;
->                 break;
->         case EV_LED:
-> -               *bit = input->ledbit;
-> -               *max = LED_MAX;
-> +               bmap = input->ledbit;
-> +               limit = LED_MAX;
->                 break;
->         }
-> +
-> +       if (unlikely(c > limit || !bmap)) {
-> +               pr_warn_ratelimited("%s: Invalid code %d type %d\n",
-> +                                   input->name, c, type);
-> +               *bit = NULL;
-> +               return;
-> +       }
-> +
-> +       usage->type = type;
-> +       usage->code = c;
-> +       *max = limit;
-> +       *bit = bmap;
->  }
->
->  /**
-> @@ -1000,7 +1015,8 @@ static inline void hid_map_usage_clear(struct hid_input *hidinput,
->                 __u8 type, __u16 c)
->  {
->         hid_map_usage(hidinput, usage, bit, max, type, c);
-> -       clear_bit(c, *bit);
-> +       if (*bit)
-> +               clear_bit(usage->code, *bit);
->  }
->
->  /**
-> --
-> 2.27.0
->
+diff --git a/drivers/tee/tee_core.c b/drivers/tee/tee_core.c
+index 64637e09a095..b4a8b362d78f 100644
+--- a/drivers/tee/tee_core.c
++++ b/drivers/tee/tee_core.c
+@@ -917,7 +917,6 @@ struct tee_device *tee_device_alloc(const struct tee_desc *teedesc,
+ 
+ 	cdev_init(&teedev->cdev, &tee_fops);
+ 	teedev->cdev.owner = teedesc->owner;
+-	teedev->cdev.kobj.parent = &teedev->dev.kobj;
+ 
+ 	dev_set_drvdata(&teedev->dev, driver_data);
+ 	device_initialize(&teedev->dev);
+@@ -985,24 +984,15 @@ int tee_device_register(struct tee_device *teedev)
+ 		return -EINVAL;
+ 	}
+ 
+-	rc = cdev_add(&teedev->cdev, teedev->dev.devt, 1);
++	rc = cdev_device_add(&teedev->cdev, &teedev->dev);
+ 	if (rc) {
+ 		dev_err(&teedev->dev,
+-			"unable to cdev_add() %s, major %d, minor %d, err=%d\n",
++			"unable to cdev_device_add() %s, major %d, minor %d, err=%d\n",
+ 			teedev->name, MAJOR(teedev->dev.devt),
+ 			MINOR(teedev->dev.devt), rc);
+ 		return rc;
+ 	}
+ 
+-	rc = device_add(&teedev->dev);
+-	if (rc) {
+-		dev_err(&teedev->dev,
+-			"unable to device_add() %s, major %d, minor %d, err=%d\n",
+-			teedev->name, MAJOR(teedev->dev.devt),
+-			MINOR(teedev->dev.devt), rc);
+-		goto err_device_add;
+-	}
+-
+ 	rc = sysfs_create_group(&teedev->dev.kobj, &tee_dev_group);
+ 	if (rc) {
+ 		dev_err(&teedev->dev,
+@@ -1014,9 +1004,7 @@ int tee_device_register(struct tee_device *teedev)
+ 	return 0;
+ 
+ err_sysfs_create_group:
+-	device_del(&teedev->dev);
+-err_device_add:
+-	cdev_del(&teedev->cdev);
++	cdev_device_del(&teedev->cdev, &teedev->dev);
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(tee_device_register);
+@@ -1062,8 +1050,7 @@ void tee_device_unregister(struct tee_device *teedev)
+ 
+ 	if (teedev->flags & TEE_DEVICE_FLAG_REGISTERED) {
+ 		sysfs_remove_group(&teedev->dev.kobj, &tee_dev_group);
+-		cdev_del(&teedev->cdev);
+-		device_del(&teedev->dev);
++		cdev_device_del(&teedev->cdev, &teedev->dev);
+ 	}
+ 
+ 	tee_device_put(teedev);
+-- 
+2.17.1
 
