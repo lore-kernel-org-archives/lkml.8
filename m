@@ -2,88 +2,94 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D710C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:13:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9FBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158B620767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598966012;
-	bh=Ub1uSIZ4Qs5eDiV1KOprlSTLh6g2luT5zBCXTqED6wY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sSyFx+IYNIHIH7DP72Ln1kqLBe0m6u9jUytZY9t1Z8CyQa5Mi0EMrmnaDn+eHMb2v
-	 3OUnB/IchXCDIWvkHZEFh4Z+jpsB28HSN3mghfzTQsBftWJO7DQXbnOrSfqSPpNmOs
-	 tXrgbQQFiRkdkw/dsiIUFZlg8+odKUySDGWDb3rk=
+	by mail.kernel.org (Postfix) with ESMTP id 60D6B206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728037AbgIANNP (ORCPT
+        id S1728130AbgIANNp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727796AbgIANJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:09:36 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0CAD2067C;
-        Tue,  1 Sep 2020 13:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598965773;
-        bh=Ub1uSIZ4Qs5eDiV1KOprlSTLh6g2luT5zBCXTqED6wY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Va34zC5oVFNB9G9Eoxk6CaE+cVNkMAfgeX6VkSAOQkRgB8jhI6C1fQ7EZsqxGahXT
-         OU/RBLleinVH67cFoWR/pkAp67wncJluU1xVmtowXauY+OebH51J7VCbZLpK6Zp31b
-         DM3Jm3wE60/0oGYjU/+gun+pPFySzuypWcd3H7y8=
-Date:   Tue, 1 Sep 2020 15:10:00 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     "antoni.przybylik@wp.pl" <antoni.przybylik@wp.pl>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org
-Subject: Re: Fwd: Re: [PATCH] staging: gdm724x: gdm_tty: corrected macro by
- adding brackets
-Message-ID: <20200901131000.GA298818@kroah.com>
-References: <e11b8f5e-1b85-fe24-36d5-c8d707ce4e66@wp.pl>
- <15764d01-0602-18c6-e2b1-089b71a2061d@wp.pl>
+        Tue, 1 Sep 2020 09:13:45 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49264 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728048AbgIANK3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:10:29 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-124-RgJ3VotCP16CESXx20TH0w-1; Tue, 01 Sep 2020 14:10:19 +0100
+X-MC-Unique: RgJ3VotCP16CESXx20TH0w-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 1 Sep 2020 14:10:18 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 1 Sep 2020 14:10:18 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Willy Tarreau' <w@1wt.eu>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Sedat Dilek <sedat.dilek@gmail.com>, George Spelvin <lkml@sdf.org>,
+        "Amit Klein" <aksecurity@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "tytso@mit.edu" <tytso@mit.edu>, Florian Westphal <fw@strlen.de>,
+        Marc Plumb <lkml.mplumb@gmail.com>
+Subject: RE: [PATCH 1/2] random32: make prandom_u32() output unpredictable
+Thread-Topic: [PATCH 1/2] random32: make prandom_u32() output unpredictable
+Thread-Index: AQHWgCtYkxpri6yNnUCyYLzB8IqNYqlTwT5w
+Date:   Tue, 1 Sep 2020 13:10:18 +0000
+Message-ID: <b460c51a3fa1473b8289d6030a46abdb@AcuMS.aculab.com>
+References: <20200901064302.849-1-w@1wt.eu> <20200901064302.849-2-w@1wt.eu>
+In-Reply-To: <20200901064302.849-2-w@1wt.eu>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15764d01-0602-18c6-e2b1-089b71a2061d@wp.pl>
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.002
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 02:06:23PM +0200, antoni.przybylik@wp.pl wrote:
-> On 01.09.2020 13:08, Greg KH wrote:
-> > On Tue, Sep 01, 2020 at 12:43:11PM +0200, antoniprzybylik wrote:
-> > > Such macros are dangerous. Consider following example:
-> > > 	#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
-> > > 	GDM_TTY_READY(a + b)
-> > > This macro will be expanded in such a way:
-> > > 	(a + b && a + b->tty_dev && a + b->port.count)
-> > > And it will lead to errors.
-> > This is for a pointer, no one would ever do that :)
-> 
-> Nobody adds a pointer to a pointer, but it's common to add to it some value
-> like that:
-> 
-> GDM_TTY_READY(myptr + 0x1000)
+From: Willy Tarreau
+> Sent: 01 September 2020 07:43
+...
+> +/*
+> + *	Generate some initially weak seeding values to allow
+> + *	the prandom_u32() engine to be started.
+> + */
+> +static int __init prandom_init_early(void)
+> +{
+> +	int i;
+> +	unsigned long v0, v1, v2, v3;
+> +
+> +	if (!arch_get_random_long(&v0))
+> +		v0 = jiffies;
 
-In this driver?  And adding random numbers to a pointer should not be
-common, when those pointers are structures, right?
+Isn't jiffies likely to be zero here?
 
-> > But, if you really worry about this, turn it into an inline function,
-> > that way you get the proper typedef safety, which is what something like
-> > this should really be, not a macro.
-> 
-> How to do it? Do I need to send another patch?
+	David
 
-If you wish to fix this up, please do, I can't take this as-is.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-thanks,
-
-greg k-h
