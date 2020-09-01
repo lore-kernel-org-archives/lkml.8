@@ -2,118 +2,100 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5832BC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BBE8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34099208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 064A32098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:01:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="Yrn5M09q"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tZryzgQr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgIAGBW (ORCPT
+        id S1726771AbgIAGB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIAGBV (ORCPT
+        Tue, 1 Sep 2020 02:01:27 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:11588 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726006AbgIAGBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:01:21 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 027E4C0612A3;
-        Mon, 31 Aug 2020 23:01:21 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id z22so839539ejl.7;
-        Mon, 31 Aug 2020 23:01:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XaHfsFFvsKz8Si4WdVVOjQJsf4E9yNDaoM4FPWbSNvE=;
-        b=Yrn5M09qMo7Ev8s79fvPnWTl2NFswv8DuA0HiCrXU9QyHiKt4/Q9LiFX09QFi10GZW
-         bPayA7qZ+7h9StZJ6G8Rzq/FUGwnovc+Abo/ZKNmcTxwIiUJi2uD/uvpELc8KQojWu6s
-         OAwRQUh16hX9et97nwHOUEx6hpkcFJ+Bk9O7I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XaHfsFFvsKz8Si4WdVVOjQJsf4E9yNDaoM4FPWbSNvE=;
-        b=UKr8AJ3ofZsh/S2z2vtKquDAhNXQdlDAgRYmYK3APaWxRkV10432gizThFeLBLXskk
-         ty7BUXJ/l7no00gDqQl6QNwr6w4lzRUcB3/ig7qx14MsvzBOf1bgUEkgXe3KLxzcZXjv
-         +N/2MH6Qykw4C6Slibd3B4UXzkNlcrSIcMycARxCxEw5qcVBHKm4cChqmN7g6QVsszj1
-         KG3sEXJWXTs2Ug2XaPDLXoyx/kqfVIjO4nF/PZ+rVBgBVEjHFY/g9CRYK6NyMYVt+rZ5
-         MoVALOkjqoTB8LmgH+5sOStLhTC8jdzeBQyK4fF9gSSjt6vV20TQkqJg8quy0C1t8eS+
-         Nq5w==
-X-Gm-Message-State: AOAM533whvYH+RxA+/jSNC4iKTHhbjftJZC9lNlkuiBT0ArRGrRAWggm
-        YWdCTK8J/1O/MxRqMegG2wU90lKKEIGp8owL+RCxctp4BnY=
-X-Google-Smtp-Source: ABdhPJxqy/GN58FoQLdvnCX11Vvy8+zzlnuPo/ylntZPwFduXZjSx80mFGNsb6xczOXnJ2uuauRFvtkGNeRxJJbngzI=
-X-Received: by 2002:a17:906:4c58:: with SMTP id d24mr110959ejw.108.1598940079725;
- Mon, 31 Aug 2020 23:01:19 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200820161152.22751-1-eajames@linux.ibm.com> <20200820161152.22751-6-eajames@linux.ibm.com>
-In-Reply-To: <20200820161152.22751-6-eajames@linux.ibm.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Tue, 1 Sep 2020 06:01:07 +0000
-Message-ID: <CACPK8XcW-LfJ6FBdKntod_F1dnRoSP=4D7=TLtM5yGkhTm79Rw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] ARM: dts: Aspeed: Rainier: Add IBM Operation Panel
- I2C device
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-input@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 1 Sep 2020 02:01:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598940085; h=References: In-Reply-To: References:
+ In-Reply-To: Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=AteWpHSbFk1S1IfMSH+QeUOwe9NNI3v5yOM9S0tfHwM=; b=tZryzgQr6IVg246LpL8ys//p0ale3KeCfO07HG4asaV1esy61kL26veIdPkdckJDnrihYdJd
+ OrNnQwQ0spPvLL+/WoZUCYaOT4D+rjkNKa2mTZ3x0mR7iMDI7yYjyXFWMlEjp6wVlBUAB7A7
+ AJ0DGvMu5qJX4juj7lQRuCU+g98=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f4de39cd7b4e26913631e61 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 06:01:00
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 5C7E3C43387; Tue,  1 Sep 2020 06:01:00 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: nguyenb)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52B43C433CA;
+        Tue,  1 Sep 2020 06:00:59 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52B43C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=nguyenb@codeaurora.org
+From:   "Bao D. Nguyen" <nguyenb@codeaurora.org>
+To:     cang@codeaurora.org, asutoshd@codeaurora.org,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org
+Cc:     "Bao D. Nguyen" <nguyenb@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Avri Altman <Avri.Altman@wdc.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v1 1/2] scsi: dt-bindings: ufs: Add vcc-voltage-level for UFS
+Date:   Mon, 31 Aug 2020 23:00:47 -0700
+Message-Id: <0a9d395dc38433501f9652a9236856d0ac840b77.1598939393.git.nguyenb@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1598939393.git.nguyenb@codeaurora.org>
+References: <cover.1598939393.git.nguyenb@codeaurora.org>
+In-Reply-To: <cover.1598939393.git.nguyenb@codeaurora.org>
+References: <cover.1598939393.git.nguyenb@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
->
-> Set I2C bus 7 to multi-master mode and add the panel device that will
-> register as a slave.
->
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+UFS's specifications supports a range of Vcc operating
+voltage levels. Add documentation for the UFS's Vcc voltage
+levels setting.
 
-Same comments as for Tacoma.
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Bao D. Nguyen <nguyenb@codeaurora.org>
+---
+ Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+index 415ccdd..7257b32 100644
+--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
++++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+@@ -23,6 +23,8 @@ Optional properties:
+                           with "phys" attribute, provides phandle to UFS PHY node
+ - vdd-hba-supply        : phandle to UFS host controller supply regulator node
+ - vcc-supply            : phandle to VCC supply regulator node
++- vcc-voltage-level     : specifies voltage levels for VCC supply.
++                          Should be specified in pairs (min, max), units uV.
+ - vccq-supply           : phandle to VCCQ supply regulator node
+ - vccq2-supply          : phandle to VCCQ2 supply regulator node
+ - vcc-supply-1p8        : For embedded UFS devices, valid VCC range is 1.7-1.95V
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-> ---
->  arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> index b94421f6cbd5..f121f3c26a3a 100644
-> --- a/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> +++ b/arch/arm/boot/dts/aspeed-bmc-ibm-rainier.dts
-> @@ -698,6 +698,7 @@ eeprom@53 {
->  };
->
->  &i2c7 {
-> +       multi-master;
->         status = "okay";
->
->         si7021-a20@20 {
-> @@ -831,6 +832,11 @@ gpio@15 {
->                 };
->         };
->
-> +       ibm-panel@62 {
-> +               compatible = "ibm,op-panel";
-> +               reg = <0x40000062>;     /* I2C_OWN_SLAVE_ADDRESS */
-> +       };
-> +
->         dps: dps310@76 {
->                 compatible = "infineon,dps310";
->                 reg = <0x76>;
-> --
-> 2.26.2
->
