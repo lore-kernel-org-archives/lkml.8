@@ -2,130 +2,205 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50328C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19BDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:15:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3472078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C5E72078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:15:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="EMAd95ar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbgIAUPU (ORCPT
+        id S1729396AbgIAUPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:15:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:49554 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727103AbgIAUPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:15:14 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E2BE1063;
-        Tue,  1 Sep 2020 13:15:14 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F1043F66F;
-        Tue,  1 Sep 2020 13:15:11 -0700 (PDT)
-Subject: Re: [PATCH v9 29/32] rapidio: fix common struct sg_table related
- issues
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        Alexandre Bounine <alex.bou9@gmail.com>
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063545eucas1p22eb2c7a643a299f3e1696b4c5bae0694@eucas1p2.samsung.com>
- <20200826063316.23486-30-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <5beb988a-099b-1247-b3d5-257de44b9ab5@arm.com>
-Date:   Tue, 1 Sep 2020 21:15:10 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 16:15:36 -0400
+Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:23808 "EHLO
+        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726323AbgIAUPf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 16:15:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598991335; x=1630527335;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=3EnOz/3Rmff/sgE96/Smy7EzDfB4zcQK8Cuf3LKrUSg=;
+  b=EMAd95arIFU/VydIlwl0eQurIUojnyuFqua0ooGUbhsX1dWt8ha8W4Vf
+   s2zU4ijBu4ciTkReChgWWx0UpjwwfRr3JQAZ2ugwuo/F4jRhCGSMT0/IC
+   RYV688ky/Bx6LwQ3tI9eDGfBl9gq/z2rFQIjM6vPD7sHTKR6KZAOL/09i
+   w=;
+X-IronPort-AV: E=Sophos;i="5.76,380,1592870400"; 
+   d="scan'208";a="51310818"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-2a-22cc717f.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 01 Sep 2020 20:15:32 +0000
+Received: from EX13MTAUWC002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
+        by email-inbound-relay-2a-22cc717f.us-west-2.amazon.com (Postfix) with ESMTPS id 6E9C7A2028;
+        Tue,  1 Sep 2020 20:15:30 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 1 Sep 2020 20:15:28 +0000
+Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.229) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 1 Sep 2020 20:15:25 +0000
+From:   Alexander Graf <graf@amazon.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        "Joerg Roedel" <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        Aaron Lewis <aaronlewis@google.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 0/7] Allow user space to restrict and augment MSR emulation
+Date:   Tue, 1 Sep 2020 22:15:10 +0200
+Message-ID: <20200901201517.29086-1-graf@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20200826063316.23486-30-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.229]
+X-ClientProxiedBy: EX13D18UWC001.ant.amazon.com (10.43.162.105) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 07:33, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
-> 
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
-> 
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
+While tying to add support for the MSR_CORE_THREAD_COUNT MSR in KVM,
+I realized that we were still in a world where user space has no control
+over what happens with MSR emulation in KVM.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+That is bad for multiple reasons. In my case, I wanted to emulate the
+MSR in user space, because it's a CPU specific register that does not
+exist on older CPUs and that really only contains informational data that
+is on the package level, so it's a natural fit for user space to provide
+it.
 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->   drivers/rapidio/devices/rio_mport_cdev.c | 11 ++++-------
->   1 file changed, 4 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/rapidio/devices/rio_mport_cdev.c b/drivers/rapidio/devices/rio_mport_cdev.c
-> index a30342942e26..89eb3d212652 100644
-> --- a/drivers/rapidio/devices/rio_mport_cdev.c
-> +++ b/drivers/rapidio/devices/rio_mport_cdev.c
-> @@ -573,8 +573,7 @@ static void dma_req_free(struct kref *ref)
->   			refcount);
->   	struct mport_cdev_priv *priv = req->priv;
->   
-> -	dma_unmap_sg(req->dmach->device->dev,
-> -		     req->sgt.sgl, req->sgt.nents, req->dir);
-> +	dma_unmap_sgtable(req->dmach->device->dev, &req->sgt, req->dir, 0);
->   	sg_free_table(&req->sgt);
->   	if (req->page_list) {
->   		unpin_user_pages(req->page_list, req->nr_pages);
-> @@ -814,7 +813,6 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
->   	struct mport_dev *md = priv->md;
->   	struct dma_chan *chan;
->   	int ret;
-> -	int nents;
->   
->   	if (xfer->length == 0)
->   		return -EINVAL;
-> @@ -930,15 +928,14 @@ rio_dma_transfer(struct file *filp, u32 transfer_mode,
->   				xfer->offset, xfer->length);
->   	}
->   
-> -	nents = dma_map_sg(chan->device->dev,
-> -			   req->sgt.sgl, req->sgt.nents, dir);
-> -	if (nents == 0) {
-> +	ret = dma_map_sgtable(chan->device->dev, &req->sgt, dir, 0);
-> +	if (ret) {
->   		rmcd_error("Failed to map SG list");
->   		ret = -EFAULT;
->   		goto err_pg;
->   	}
->   
-> -	ret = do_dma_request(req, xfer, sync, nents);
-> +	ret = do_dma_request(req, xfer, sync, req->sgt.nents);
->   
->   	if (ret >= 0) {
->   		if (sync == RIO_TRANSFER_ASYNC)
-> 
+However, it is also bad on a platform compatibility level. Currrently,
+KVM has no way to expose different MSRs based on the selected target CPU
+type.
+
+This patch set introduces a way for user space to indicate to KVM which
+MSRs should be handled in kernel space. With that, we can solve part of
+the platform compatibility story. Or at least we can not handle AMD specific
+MSRs on an Intel platform and vice versa.
+
+In addition, it introduces a way for user space to get into the loop
+when an MSR access would generate a #GP fault, such as when KVM finds an
+MSR that is not handled by the in-kernel MSR emulation or when the guest
+is trying to access reserved registers.
+
+In combination with filtering, user space trapping allows us to emulate
+arbitrary MSRs in user space, paving the way for target CPU specific MSR
+implementations from user space.
+
+v1 -> v2:
+
+  - s/ETRAP_TO_USER_SPACE/ENOENT/g
+  - deflect all #GP injection events to user space, not just unknown MSRs.
+    That was we can also deflect allowlist errors later
+  - fix emulator case
+  - new patch: KVM: x86: Introduce allow list for MSR emulation
+  - new patch: KVM: selftests: Add test for user space MSR handling
+
+v2 -> v3:
+
+  - return r if r == X86EMUL_IO_NEEDED
+  - s/KVM_EXIT_RDMSR/KVM_EXIT_X86_RDMSR/g
+  - s/KVM_EXIT_WRMSR/KVM_EXIT_X86_WRMSR/g
+  - Use complete_userspace_io logic instead of reply field
+  - Simplify trapping code
+  - document flags for KVM_X86_ADD_MSR_ALLOWLIST
+  - generalize exit path, always unlock when returning
+  - s/KVM_CAP_ADD_MSR_ALLOWLIST/KVM_CAP_X86_MSR_ALLOWLIST/g
+  - Add KVM_X86_CLEAR_MSR_ALLOWLIST
+  - Add test to clear whitelist
+  - Adjust to reply-less API
+  - Fix asserts
+  - Actually trap on MSR_IA32_POWER_CTL writes
+
+v3 -> v4:
+
+  - Mention exit reasons in re-enter mandatory section of API documentation
+  - Clear padding bytes
+  - Generalize get/set deflect functions
+  - Remove redundant pending_user_msr field
+  - lock allow check and clearing
+  - free bitmaps on clear
+
+v4 -> v5:
+
+  - use srcu 
+
+v5 -> v6:
+
+  - Switch from allow list to filtering API with explicit fallback option
+  - Support and test passthrough MSR filtering
+  - Check for filter exit reason
+  - Add .gitignore
+  - send filter change notification
+  - change to atomic set_msr_filter ioctl with fallback flag
+  - use EPERM for filter blocks
+  - add bit for MSR user space deflection
+  - check for overflow of BITS_TO_LONGS (thanks Dan Carpenter!)
+  - s/int i;/u32 i;/
+  - remove overlap check
+  - Introduce exit reason mask to allow for future expansion and filtering
+  - s/emul_to_vcpu(ctxt)/vcpu/
+  - imported patch: KVM: x86: Prepare MSR bitmaps for userspace tracked MSRs
+  - new patch: KVM: x86: Add infrastructure for MSR filtering
+  - new patch: KVM: x86: SVM: Prevent MSR passthrough when MSR access is denied
+  - new patch: KVM: x86: VMX: Prevent MSR passthrough when MSR access is denied
+
+Aaron Lewis (1):
+  KVM: x86: Prepare MSR bitmaps for userspace tracked MSRs
+
+Alexander Graf (6):
+  KVM: x86: Deflect unknown MSR accesses to user space
+  KVM: x86: Add infrastructure for MSR filtering
+  KVM: x86: SVM: Prevent MSR passthrough when MSR access is denied
+  KVM: x86: VMX: Prevent MSR passthrough when MSR access is denied
+  KVM: x86: Introduce MSR filtering
+  KVM: selftests: Add test for user space MSR handling
+
+ Documentation/virt/kvm/api.rst                | 176 +++++++++-
+ arch/x86/include/asm/kvm_host.h               |  18 ++
+ arch/x86/include/uapi/asm/kvm.h               |  19 ++
+ arch/x86/kvm/emulate.c                        |  18 +-
+ arch/x86/kvm/svm/svm.c                        | 122 +++++--
+ arch/x86/kvm/svm/svm.h                        |   7 +
+ arch/x86/kvm/vmx/nested.c                     |   2 +-
+ arch/x86/kvm/vmx/vmx.c                        | 303 ++++++++++++------
+ arch/x86/kvm/vmx/vmx.h                        |   9 +-
+ arch/x86/kvm/x86.c                            | 267 ++++++++++++++-
+ arch/x86/kvm/x86.h                            |   1 +
+ include/trace/events/kvm.h                    |   2 +-
+ include/uapi/linux/kvm.h                      |  17 +
+ tools/testing/selftests/kvm/.gitignore        |   1 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../selftests/kvm/x86_64/user_msr_test.c      | 224 +++++++++++++
+ 16 files changed, 1055 insertions(+), 132 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/user_msr_test.c
+
+-- 
+2.17.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
