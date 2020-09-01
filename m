@@ -2,54 +2,58 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E2EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32514C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBBE20BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FC4207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974060;
-	bh=Bi2TjDrtDjFtbLAXRLDBpCygc5hyK9gcv7/oW6fR8js=;
+	s=default; t=1598974068;
+	bh=d8M1P+kY1TpI/qiLOR1OPxgSK5j7DCa50lpNnqH7Ueg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XLAAMamjdiV0P+4zRCtb9iTa891Tku1I7H2axJTb36b1xfASh+KZRCAFW//mEqr5t
-	 yAxbYFmQ7MiOZ2p7uuD8SwLjP6au0deZa0y45kF+kzbMJdvmgEYJM6GLLAthkERAT5
-	 sd0WziuESW5n/UvE9D9izsv0lhgaABXfSur6AsDU=
+	b=no6dfUZhI/lcnvEhKA3kMN1STalRk0oe9vpjywpK8ilKwRVi7icIskQaUxk0zkN1Z
+	 HlgXf+9k/6zPsk1p4+jwNjpaoCJYdjGOrPBVBZxeBvO6p3wF0uxNJQERk4fhsVIsv2
+	 jR6Witda+riB9VoT7QwwKMEEuU6J6A5yz2JV9sGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730240AbgIAP1j (ORCPT
+        id S1730288AbgIAP1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:27:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47574 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:27:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729934AbgIAPYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:24:03 -0400
+        id S1729959AbgIAPYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:32 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DC8E206FA;
-        Tue,  1 Sep 2020 15:24:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A06332100A;
+        Tue,  1 Sep 2020 15:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973842;
-        bh=Bi2TjDrtDjFtbLAXRLDBpCygc5hyK9gcv7/oW6fR8js=;
+        s=default; t=1598973869;
+        bh=d8M1P+kY1TpI/qiLOR1OPxgSK5j7DCa50lpNnqH7Ueg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7XfCV8qZw1W1kupNj0g7ETeJlIk4J5ON6iqTjDijJbXBpJ+JgEjMuDasF6/rWlsj
-         cHWcxnd2B0jpNCud4Q8GQo1iOrsw4mxy4m7kO3a0WOoLsjQT9uKA8WZz+BR/e9yJZr
-         0FNDtoVOgASDbgvC5RJLKTz9T1Yhmt0Hj1fNl+cY=
+        b=QB406MhsJOt23uA+NU4icWGMPUagnUVndbszKDLxF4RFNjHb0vCthJAycdR4DQdJI
+         0yO+ayW8f0nnSbtBG1YXTLIytqgq4aRPu2T53/Frq/AcaL/XgB2CaPq/PdyZYwqWE+
+         pFppqeR/gyH6I3H6iD0Tih15V6GEeNenMyRs+JIU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 028/125] selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
-Date:   Tue,  1 Sep 2020 17:09:43 +0200
-Message-Id: <20200901150935.938487971@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
+        Hannes Reinecke <hare@suse.com>, Xiao Ni <xni@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 080/125] block: loop: set discard granularity and alignment for block device backed loop
+Date:   Tue,  1 Sep 2020 17:10:35 +0200
+Message-Id: <20200901150938.494703442@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -62,204 +66,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit 3337bf41e0dd70b4064cdf60acdfcdc2d050066c ]
+commit bcb21c8cc9947286211327d663ace69f07d37a76 upstream.
 
-An extra count on ebb_state.stats.pmc_count[PMC_INDEX(pmc)] is being per-
-formed when count_pmc() is used to reset PMCs on a few selftests. This
-extra pmc_count can occasionally invalidate results, such as the ones from
-cycles_test shown hereafter. The ebb_check_count() failed with an above
-the upper limit error due to the extra value on ebb_state.stats.pmc_count.
+In case of block device backend, if the backend supports write zeros, the
+loop device will set queue flag of QUEUE_FLAG_DISCARD. However,
+limits.discard_granularity isn't setup, and this way is wrong,
+see the following description in Documentation/ABI/testing/sysfs-block:
 
-Furthermore, this extra count is also indicated by extra PMC1 trace_log on
-the output of the cycle test (as well as on pmc56_overflow_test):
+	A discard_granularity of 0 means that the device does not support
+	discard functionality.
 
-==========
-   ...
-   [21]: counter = 8
-   [22]: register SPRN_MMCR0 = 0x0000000080000080
-   [23]: register SPRN_PMC1  = 0x0000000080000004
-   [24]: counter = 9
-   [25]: register SPRN_MMCR0 = 0x0000000080000080
-   [26]: register SPRN_PMC1  = 0x0000000080000004
-   [27]: counter = 10
-   [28]: register SPRN_MMCR0 = 0x0000000080000080
-   [29]: register SPRN_PMC1  = 0x0000000080000004
->> [30]: register SPRN_PMC1  = 0x000000004000051e
-PMC1 count (0x280000546) above upper limit 0x2800003e8 (+0x15e)
-[FAIL] Test FAILED on line 52
-failure: cycles
-==========
+Especially 9b15d109a6b2 ("block: improve discard bio alignment in
+__blkdev_issue_discard()") starts to take q->limits.discard_granularity
+for computing max discard sectors. And zero discard granularity may cause
+kernel oops, or fail discard request even though the loop queue claims
+discard support via QUEUE_FLAG_DISCARD.
 
-Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200626164737.21943-1-desnesn@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix the issue by setup discard granularity and alignment.
+
+Fixes: c52abf563049 ("loop: Better discard support for block devices")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Coly Li <colyli@suse.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Xiao Ni <xni@redhat.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>
+Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- .../selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c      | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c    | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/ebb.c              | 2 --
- .../selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c  | 2 --
- .../selftests/powerpc/pmu/ebb/lost_exception_test.c        | 1 -
- .../testing/selftests/powerpc/pmu/ebb/multi_counter_test.c | 7 -------
- .../selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c       | 2 --
- .../testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c | 2 --
- .../selftests/powerpc/pmu/ebb/pmc56_overflow_test.c        | 2 --
- 11 files changed, 26 deletions(-)
+ drivers/block/loop.c |   33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-index 94110b1dcd3d8..031baa43646fb 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-@@ -91,8 +91,6 @@ int back_to_back_ebbs(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -864,6 +864,7 @@ static void loop_config_discard(struct l
+ 	struct file *file = lo->lo_backing_file;
+ 	struct inode *inode = file->f_mapping->host;
+ 	struct request_queue *q = lo->lo_queue;
++	u32 granularity, max_discard_sectors;
  
--	count_pmc(1, sample_period);
+ 	/*
+ 	 * If the backing device is a block device, mirror its zeroing
+@@ -876,11 +877,10 @@ static void loop_config_discard(struct l
+ 		struct request_queue *backingq;
+ 
+ 		backingq = bdev_get_queue(inode->i_bdev);
+-		blk_queue_max_discard_sectors(q,
+-			backingq->limits.max_write_zeroes_sectors);
+ 
+-		blk_queue_max_write_zeroes_sectors(q,
+-			backingq->limits.max_write_zeroes_sectors);
++		max_discard_sectors = backingq->limits.max_write_zeroes_sectors;
++		granularity = backingq->limits.discard_granularity ?:
++			queue_physical_block_size(backingq);
+ 
+ 	/*
+ 	 * We use punch hole to reclaim the free space used by the
+@@ -889,23 +889,26 @@ static void loop_config_discard(struct l
+ 	 * useful information.
+ 	 */
+ 	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
+-		q->limits.discard_granularity = 0;
+-		q->limits.discard_alignment = 0;
+-		blk_queue_max_discard_sectors(q, 0);
+-		blk_queue_max_write_zeroes_sectors(q, 0);
++		max_discard_sectors = 0;
++		granularity = 0;
+ 
+ 	} else {
+-		q->limits.discard_granularity = inode->i_sb->s_blocksize;
+-		q->limits.discard_alignment = 0;
 -
- 	dump_ebb_state();
+-		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
+-		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
++		max_discard_sectors = UINT_MAX >> 9;
++		granularity = inode->i_sb->s_blocksize;
+ 	}
  
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-index 7c57a8d79535d..361e0be9df9ae 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-@@ -42,8 +42,6 @@ int cycles(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
+-	if (q->limits.max_write_zeroes_sectors)
++	if (max_discard_sectors) {
++		q->limits.discard_granularity = granularity;
++		blk_queue_max_discard_sectors(q, max_discard_sectors);
++		blk_queue_max_write_zeroes_sectors(q, max_discard_sectors);
+ 		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
+-	else
++	} else {
++		q->limits.discard_granularity = 0;
++		blk_queue_max_discard_sectors(q, 0);
++		blk_queue_max_write_zeroes_sectors(q, 0);
+ 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
++	}
++	q->limits.discard_alignment = 0;
+ }
  
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-index ecf5ee3283a3e..fe7d0dc2a1a26 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-@@ -99,8 +99,6 @@ int cycles_with_freeze(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	printf("EBBs while frozen %d\n", ebbs_while_frozen);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-index c0faba520b35c..b9b30f974b5ea 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-@@ -71,8 +71,6 @@ int cycles_with_mmcr2(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-index 46681fec549b8..2694ae161a84a 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-@@ -396,8 +396,6 @@ int ebb_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-index a991d2ea8d0a1..174e4f4dae6c0 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-@@ -38,8 +38,6 @@ static int victim_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	FAIL_IF(ebb_state.stats.ebb_count == 0);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-index 2ed7ad33f7a3b..dddb95938304e 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-@@ -75,7 +75,6 @@ static int test_body(void)
- 	ebb_freeze_pmcs();
- 	ebb_global_disable();
- 
--	count_pmc(4, sample_period);
- 	mtspr(SPRN_PMC4, 0xdead);
- 
- 	dump_summary_ebb_state();
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-index 6ff8c8ff27d66..035c02273cd49 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-@@ -70,13 +70,6 @@ int multi_counter(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--	count_pmc(2, sample_period);
--	count_pmc(3, sample_period);
--	count_pmc(4, sample_period);
--	count_pmc(5, sample_period);
--	count_pmc(6, sample_period);
--
- 	dump_ebb_state();
- 
- 	for (i = 0; i < 6; i++)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-index 037cb6154f360..3e9d4ac965c85 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-@@ -61,8 +61,6 @@ static int cycles_child(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_summary_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-index c5fa64790c22e..d90891fe96a32 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-@@ -82,8 +82,6 @@ static int test_body(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	if (mmcr0_mismatch)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-index 30e1ac62e8cb4..8ca92b9ee5b01 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-@@ -76,8 +76,6 @@ int pmc56_overflow(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(2, sample_period);
--
- 	dump_ebb_state();
- 
- 	printf("PMC5/6 overflow %d\n", pmc56_overflowed);
--- 
-2.25.1
-
+ static void loop_unprepare_queue(struct loop_device *lo)
 
 
