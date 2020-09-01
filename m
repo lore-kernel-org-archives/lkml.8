@@ -2,61 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBC6C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD38BC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:41:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301BA208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:41:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UrJ6ytwn"
+	by mail.kernel.org (Postfix) with ESMTP id 92D0B208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:41:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726446AbgIAFlE (ORCPT
+        id S1726463AbgIAFln (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:41:04 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:54417 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgIAFlD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:41:03 -0400
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3280:1098:42a1:36db:233c])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0815ef9C3468657
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 31 Aug 2020 22:40:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0815ef9C3468657
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020082401; t=1598938841;
-        bh=r9YQ/fVq4Hy6bpEZQpjEOilLVaBkiI7tGTe4iXQIuqo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UrJ6ytwnWC2Ikz1ItsGmyVHRqVPX3NnYugW1Ag90+9FGPTIrL9JUps40d5Is8vc6L
-         hHRrbrNLWSdqLcPvOfnJ00r6uBtFpAlO0Ibnk1TKqxPyMnUJ8N5HJdZQJgDFL13YO3
-         p99ApHZK9C+RHe5cEOrYYZznV0tU8OznR75HjPJWzZZWTjY7X9X7esuYZDFPPBuhqr
-         HcR2Ksg/QNvlTaFo6XaK3kg36ZfRzUyzw/nfmtzDXOInBqBwc9xTiG50I1OoSmRd1y
-         gh/KDar/7u4btSJR9/YyRHsVKG33KS5R2kMt0WCoJ9IZKymX8tgCC+u0p1X0PIN4fC
-         jqFSKxQGOXZEA==
-Subject: Re: [RFC PATCH 1/2] Documentation/admin-guide: README & svga: remove
- use of "rdev"
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org
-Cc:     Karel Zak <kzak@redhat.com>,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Martin Mares <mj@ucw.cz>, linux-video@atrey.karlin.mff.cuni.cz,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-References: <20200901053822.9374-1-rdunlap@infradead.org>
- <20200901053822.9374-2-rdunlap@infradead.org>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <b0acb801-5aa5-d781-b635-705face06a2b@zytor.com>
-Date:   Mon, 31 Aug 2020 22:40:35 -0700
+        Tue, 1 Sep 2020 01:41:43 -0400
+Received: from mga14.intel.com ([192.55.52.115]:15326 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgIAFln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 01:41:43 -0400
+IronPort-SDR: n6PWLXtLQcSF8fS698tgyqk4ZdwIdFZW+A4qA+wgrLcmjcLjb+0va6Ic+HbWqCG+Cka9Fo5cE4
+ P3bXrzNvK8AQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="156368003"
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="156368003"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 22:41:42 -0700
+IronPort-SDR: vAJa7izK3M6m55eqowXVzXQaizdSNGk2Is0UH91JUpv/cUg+lwN2tlpMALQZq9hbYg1PsfgO3h
+ yjwAP6TbOnjg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="333603812"
+Received: from myalaman-mobl1.amr.corp.intel.com (HELO [10.255.229.207]) ([10.255.229.207])
+  by fmsmga002.fm.intel.com with ESMTP; 31 Aug 2020 22:41:41 -0700
+Subject: Re: [PATCH v3 1/1] PCI/ERR: Fix reset logic in pcie_do_recovery()
+ call
+To:     20200714230803.GA92891@bjorn-Precision-5520, bhelgaas@google.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com, Jay Vosburgh <jay.vosburgh@canonical.com>
+References: <cbba08a5e9ca62778c8937f44eda2192a2045da7.1595617529.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <56ad4901-725f-7b88-2117-b124b28b027f@linux.intel.com>
+Date:   Mon, 31 Aug 2020 22:41:40 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-In-Reply-To: <20200901053822.9374-2-rdunlap@infradead.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <cbba08a5e9ca62778c8937f44eda2192a2045da7.1595617529.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -64,20 +58,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-31 22:38, Randy Dunlap wrote:
->  
-> --- linux-next-20200828.orig/Documentation/admin-guide/svga.rst
-> +++ linux-next-20200828/Documentation/admin-guide/svga.rst
-> @@ -12,7 +12,7 @@ Intro
->  This small document describes the "Video Mode Selection" feature which
->  allows the use of various special video modes supported by the video BIOS. Due
->  to usage of the BIOS, the selection is limited to boot time (before the
-> -kernel decompression starts) and works only on 80X86 machines.
-> +kernel decompression starts) and works only on 32-bit 80X86 machines.
->  
+Hi Bjorn,
 
-Incorrect. What controls if this is available is whether or not the kernel is
-booted through BIOS firmware (as opposed to UEFI, kexec, etc.)
+On 7/24/20 12:07 PM, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Current pcie_do_recovery() implementation has following two issues:
+> 
+> 1. Fatal (DPC) error recovery is currently broken for non-hotplug
+> capable devices. Current fatal error recovery implementation relies
+> on PCIe hotplug (pciehp) handler for detaching and re-enumerating
+> the affected devices/drivers. pciehp handler listens for DLLSC state
+> changes and handles device/driver detachment on DLLSC_LINK_DOWN event
+> and re-enumeration on DLLSC_LINK_UP event. So when dealing with
+> non-hotplug capable devices, recovery code does not restore the state
+> of the affected devices correctly. Correct implementation should
+> restore the device state and call report_slot_reset() function after
+> resetting the link to restore the state of the device/driver.
+> 
+> You can find fatal non-hotplug related issues reported in following links:
+> 
+> https://lore.kernel.org/linux-pci/20200527083130.4137-1-Zhiqiang.Hou@nxp.com/
+> https://lore.kernel.org/linux-pci/12115.1588207324@famine/
+> https://lore.kernel.org/linux-pci/0e6f89cd6b9e4a72293cc90fafe93487d7c2d295.1585000084.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+> 
+> 2. For non-fatal errors if report_error_detected() or
+> report_mmio_enabled() functions requests PCI_ERS_RESULT_NEED_RESET then
+> current pcie_do_recovery() implementation does not do the requested
+> explicit device reset, instead just calls the report_slot_reset() on all
+> affected devices. Notifying about the reset via report_slot_reset()
+> without doing the actual device reset is incorrect.
+> 
+> To fix above issues, use PCI_ERS_RESULT_NEED_RESET as error state after
+> successful reset_link() operation. This will ensure ->slot_reset() be
+> called after reset_link() operation for fatal errors. Also call
+> pci_bus_reset() to do slot/bus reset() before triggering device specific
+> ->slot_reset() callback. Also, using pci_bus_reset() will restore the state
+> of the devices after performing the reset operation.
+> 
+> Even though using pci_bus_reset() will do redundant reset operation after
+> ->reset_link() for fatal errors, it should should affect the functional
+> behavior.
+Any comment on this patch?
+> 
+> [original patch is from jay.vosburgh@canonical.com]
+> [original patch link https://lore.kernel.org/linux-pci/12115.1588207324@famine/]
+> Fixes: 6d2c89441571 ("PCI/ERR: Update error status after reset_link()")
+> Signed-off-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+> 
+> Changes since v2:
+>   * Changed the subject of patch to "PCI/ERR: Fix reset logic in
+>     pcie_do_recovery() call". v2 patch link is,
+>     https://lore.kernel.org/linux-pci/ce417fbf81a8a46a89535f44b9224ee9fbb55a29.1591307288.git.sathyanarayanan.kuppuswamy@linux.intel.com/
+>   * Squashed "PCI/ERR: Add reset support for non fatal errors" patch.
+> 
+>   drivers/pci/pcie/err.c | 41 +++++++++++++++++++++++++++++++++++++----
+>   1 file changed, 37 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index 14bb8f54723e..b5eb6ba65be1 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -165,8 +165,29 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   	pci_dbg(dev, "broadcast error_detected message\n");
+>   	if (state == pci_channel_io_frozen) {
+>   		pci_walk_bus(bus, report_frozen_detected, &status);
+> +		/*
+> +		 * After resetting the link using reset_link() call, the
+> +		 * possible value of error status is either
+> +		 * PCI_ERS_RESULT_DISCONNECT (failure case) or
+> +		 * PCI_ERS_RESULT_NEED_RESET (success case).
+> +		 * So ignore the return value of report_error_detected()
+> +		 * call for fatal errors.
+> +		 *
+> +		 * In EDR mode, since AER and DPC Capabilities are owned by
+> +		 * firmware, reported_error_detected() will return error
+> +		 * status PCI_ERS_RESULT_NO_AER_DRIVER. Continuing
+> +		 * pcie_do_recovery() with error status as
+> +		 * PCI_ERS_RESULT_NO_AER_DRIVER will report recovery failure
+> +		 * irrespective of recovery status. But successful reset_link()
+> +		 * call usually recovers all fatal errors. So ignoring the
+> +		 * status result of report_error_detected() also helps EDR based
+> +		 * error recovery.
+> +		 */
+>   		status = reset_link(dev);
+> -		if (status != PCI_ERS_RESULT_RECOVERED) {
+> +		if (status == PCI_ERS_RESULT_RECOVERED) {
+> +			status = PCI_ERS_RESULT_NEED_RESET;
+> +		} else {
+> +			status = PCI_ERS_RESULT_DISCONNECT;
+>   			pci_warn(dev, "link reset failed\n");
+>   			goto failed;
+>   		}
+> @@ -182,10 +203,22 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+>   
+>   	if (status == PCI_ERS_RESULT_NEED_RESET) {
+>   		/*
+> -		 * TODO: Should call platform-specific
+> -		 * functions to reset slot before calling
+> -		 * drivers' slot_reset callbacks?
+> +		 * TODO: Optimize the call to pci_reset_bus()
+> +		 *
+> +		 * There are two components to pci_reset_bus().
+> +		 *
+> +		 * 1. Do platform specific slot/bus reset.
+> +		 * 2. Save/Restore all devices in the bus.
+> +		 *
+> +		 * For hotplug capable devices and fatal errors,
+> +		 * device is already in reset state due to link
+> +		 * reset. So repeating platform specific slot/bus
+> +		 * reset via pci_reset_bus() call is redundant. So
+> +		 * can optimize this logic and conditionally call
+> +		 * pci_reset_bus().
+>   		 */
+> +		pci_reset_bus(dev);
+> +
+>   		status = PCI_ERS_RESULT_RECOVERED;
+>   		pci_dbg(dev, "broadcast slot_reset message\n");
+>   		pci_walk_bus(bus, report_slot_reset, &status);
+> 
 
-	-hpa
-
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
