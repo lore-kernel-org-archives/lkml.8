@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5552C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AA2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B99FE208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652B32087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980847;
-	bh=09Wqh4L9or5jeLtdxk2mtE42QNDtQ7tzYcsmQ3nsWK4=;
+	s=default; t=1598980855;
+	bh=Y6ZBqBPEUEaXpKEt9DK8JT4fXyxAw65qwD3fk4ufWy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zXi+UoHX3HkilkSa2EyCxH38QvQW9xVG+2JTIor0zWLCi3mpB7LK725PYV7ZLb98/
-	 7CetkGXg5ec0Hrgc6TtJTajDVoiHZAarUa1GFJgp59dkLAAeZT5NGDeAjDjn6W3zRf
-	 bSSsZcrVswAwPCUwURM0sst9jY2u2OCCAHAac7VU=
+	b=UydMmG065hv4B/hiHotf6swxzY4+tyZEv+s8B0Fs8rt86x7hJSOUM5kKoG4iwdIaj
+	 7h+dpk24GlpFh2LM9OIhCL52zCiE1SP27cY6TGJYPSbA8AANTNhMVCVeoiC1yjP5bN
+	 WAHcS9outqirXArc+zA/g0Uy6qefONyCei+Of9eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732668AbgIARUp (ORCPT
+        id S1731213AbgIARUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:20:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55622 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:20:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728829AbgIAPM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:59 -0400
+        id S1728958AbgIAPNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:13:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98BB62078B;
-        Tue,  1 Sep 2020 15:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07E40214D8;
+        Tue,  1 Sep 2020 15:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973175;
-        bh=09Wqh4L9or5jeLtdxk2mtE42QNDtQ7tzYcsmQ3nsWK4=;
+        s=default; t=1598973224;
+        bh=Y6ZBqBPEUEaXpKEt9DK8JT4fXyxAw65qwD3fk4ufWy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iAdG7wquEbk40k3TERdDy9SSchkZxXSECIMXcXYQyPzjxvdVrOwgBVbzjfmLzVeBz
-         ZeoflKDFvkAiObi8dJSrRJfjMH/gHOT+Gm68x0Vll0t7P0USYTy0d7l8b/ZbBR0tnh
-         cg3Jz41Tvz97nVVQIITVouZP9Ink9uoW/wyk9Mvo=
+        b=J/jcHxLb4YgufCTIbuCnYK6qixDalUvJ22cb/Yq1f0hw07/UZThDXt7AYqfY1SvoQ
+         v2uHkVnzM4GAzasfemk/nAN4Gvh7XkvPmTMkEVyyxF+xDA1mD+B+lqfacsmwGOhqlw
+         jls2ZLpvKcXXzRXUwjajf0crABGlqhd4MmdnO/DU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
+        stable@vger.kernel.org, Girish Basrur <gbasrur@marvell.com>,
+        Santosh Vernekar <svernekar@marvell.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        Javed Hasan <jhasan@marvell.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 37/62] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-Date:   Tue,  1 Sep 2020 17:10:20 +0200
-Message-Id: <20200901150922.610356896@linuxfoundation.org>
+Subject: [PATCH 4.4 27/62] scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
+Date:   Tue,  1 Sep 2020 17:10:10 +0200
+Message-Id: <20200901150922.089105488@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -62,55 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Javed Hasan <jhasan@marvell.com>
 
-[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
+[ Upstream commit e95b4789ff4380733006836d28e554dc296b2298 ]
 
-In ufshcd_suspend(), after clk-gating is suspended and link is set
-as Hibern8 state, ufshcd_hold() is still possibly invoked before
-ufshcd_suspend() returns. For example, MediaTek's suspend vops may
-issue UIC commands which would call ufshcd_hold() during the command
-issuing flow.
+In fcoe_sysfs_fcf_del(), we first deleted the fcf from the list and then
+freed it if ctlr_dev was not NULL. This was causing a memory leak.
 
-Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
-then ufshcd_hold() may enter infinite loops because there is no
-clk-ungating work scheduled or pending. In this case, ufshcd_hold()
-shall just bypass, and keep the link as Hibern8 state.
+Free the fcf even if ctlr_dev is NULL.
 
-Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Co-developed-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Link: https://lore.kernel.org/r/20200729081824.30996-3-jhasan@marvell.com
+Reviewed-by: Girish Basrur <gbasrur@marvell.com>
+Reviewed-by: Santosh Vernekar <svernekar@marvell.com>
+Reviewed-by: Saurav Kashyap <skashyap@marvell.com>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Signed-off-by: Javed Hasan <jhasan@marvell.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/scsi/fcoe/fcoe_ctlr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index d15cd7a02f9b4..d7a0a64f64536 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -575,6 +575,7 @@ unblock_reqs:
- int ufshcd_hold(struct ufs_hba *hba, bool async)
- {
- 	int rc = 0;
-+	bool flush_result;
- 	unsigned long flags;
+diff --git a/drivers/scsi/fcoe/fcoe_ctlr.c b/drivers/scsi/fcoe/fcoe_ctlr.c
+index 3bc610d160f57..53afdbe17d71d 100644
+--- a/drivers/scsi/fcoe/fcoe_ctlr.c
++++ b/drivers/scsi/fcoe/fcoe_ctlr.c
+@@ -264,9 +264,9 @@ static void fcoe_sysfs_fcf_del(struct fcoe_fcf *new)
+ 		WARN_ON(!fcf_dev);
+ 		new->fcf_dev = NULL;
+ 		fcoe_fcf_device_delete(fcf_dev);
+-		kfree(new);
+ 		mutex_unlock(&cdev->lock);
+ 	}
++	kfree(new);
+ }
  
- 	if (!ufshcd_is_clkgating_allowed(hba))
-@@ -601,7 +602,9 @@ start:
- 				break;
- 			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
--			flush_work(&hba->clk_gating.ungate_work);
-+			flush_result = flush_work(&hba->clk_gating.ungate_work);
-+			if (hba->clk_gating.is_suspended && !flush_result)
-+				goto out;
- 			spin_lock_irqsave(hba->host->host_lock, flags);
- 			goto start;
- 		}
+ /**
 -- 
 2.25.1
 
