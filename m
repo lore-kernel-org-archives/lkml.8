@@ -2,123 +2,92 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 934FFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE05EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CB65206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:34:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="WvVYlLyu"
+	by mail.kernel.org (Postfix) with ESMTP id 8D150206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:35:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727094AbgIAHek (ORCPT
+        id S1727051AbgIAHfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:34:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37140 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgIAHeh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:34:37 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C748C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:34:37 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id f7so334348wrw.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 00:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uBet/qOZ4arKPd9HG45s6/yizvDfyghb5+cpF1ynNlk=;
-        b=WvVYlLyur5enfsW0jQmGhW/33TGWeA+s81WiSCZtZGnTGInRKT4lauH7Tv1Ncl35e2
-         MBX5Tgg7qp8H8HcEG0u+P7InO1kW6IesVw7yOSV3w6hoG7v7YNwh+0elQjnUhzR8dPSM
-         ehQdEWDPud2Aj7A0/V0iRfznqpu4qvj7PURgg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=uBet/qOZ4arKPd9HG45s6/yizvDfyghb5+cpF1ynNlk=;
-        b=c2wPLtQYQ266q35e8umQOtjhrKrTL54Ax2Zesq3e/xG+mi+wxdVkv3P2Zc+rNp/eap
-         3mM42UCN8qM6AU7stfOhmnd1CPIQMuFKmp9ZdUGoX6cbjCATFYrcDowWndMjeCqeQ1bS
-         k8hb57JZVfPnildlofIkza05xg6YcF/2WkMbYTORJxy/h1WQFFbbTZl0Y3shwKAzQphp
-         /Fwz7uirJMII14YtLnt/WcqUm9mIUR4YUrGC9pVgkBAdnjagzBGtTljH/s5tkvc/c/O5
-         ewEadu/KXlQK4IDAla52kye+gh6LKOVbPTlK1aNDND8+NX/32nb9l4ckYs3biWG+3i0x
-         i9CQ==
-X-Gm-Message-State: AOAM5328mIsWgZRSv4QjogAjXkKUYVZH+WyKhRe/7+a/hqe0Nsh1PDbp
-        Qpywoi9j5ozHGaPGwnIxZeX4sk0ygvqxwRQf
-X-Google-Smtp-Source: ABdhPJyt8crlnEcBML2lk0r4FJiVx9broYmBFybtfg7pUBuXao0ZikQLrPS8dTTtHkn7WHCj3P0hHw==
-X-Received: by 2002:adf:e2c7:: with SMTP id d7mr408449wrj.110.1598945675900;
-        Tue, 01 Sep 2020 00:34:35 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id 2sm831925wrs.64.2020.09.01.00.34.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 00:34:35 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 09:34:33 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Jiri Slaby <jirislaby@kernel.org>, David Airlie <airlied@linux.ie>,
-        1882851@bugs.launchpad.net,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH 1/2] drm/virtio: fix unblank
-Message-ID: <20200901073433.GS2352366@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        Jiri Slaby <jirislaby@kernel.org>, David Airlie <airlied@linux.ie>,
-        1882851@bugs.launchpad.net,
-        open list <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>
-References: <20200818072511.6745-1-kraxel@redhat.com>
- <20200818072511.6745-2-kraxel@redhat.com>
- <88ae71c2-c3ed-e0e4-e62c-bdf9d6534f2a@kernel.org>
- <20200828112759.rmeeh5bonrewiqte@sirius.home.kraxel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200828112759.rmeeh5bonrewiqte@sirius.home.kraxel.org>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
+        Tue, 1 Sep 2020 03:35:48 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:58485 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgIAHfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:35:48 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 4Bgf4c1wW8z9v4j1;
+        Tue,  1 Sep 2020 09:35:44 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id tsoT6NqarexK; Tue,  1 Sep 2020 09:35:44 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bgf4c0cpjz9v4hy;
+        Tue,  1 Sep 2020 09:35:44 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 0ED9F8B774;
+        Tue,  1 Sep 2020 09:35:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 3F_0v_hqa7wI; Tue,  1 Sep 2020 09:35:44 +0200 (CEST)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C6C418B75E;
+        Tue,  1 Sep 2020 09:35:44 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 95ADF65D9A; Tue,  1 Sep 2020 07:35:44 +0000 (UTC)
+Message-Id: <74472ea2a7e8698273643cde7d382bd9f31cd1dd.1598945727.git.christophe.leroy@csgroup.eu>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: [PATCH] powerpc/powermac: Fix low_sleep_handler with KUAP and KUEP
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Tue,  1 Sep 2020 07:35:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 01:27:59PM +0200, Gerd Hoffmann wrote:
-> On Mon, Aug 24, 2020 at 09:24:40AM +0200, Jiri Slaby wrote:
-> > On 18. 08. 20, 9:25, Gerd Hoffmann wrote:
-> > > When going through a disable/enable cycle without changing the
-> > > framebuffer the optimization added by commit 3954ff10e06e ("drm/virtio:
-> > > skip set_scanout if framebuffer didn't change") causes the screen stay
-> > > blank.  Add a bool to force an update to fix that.
-> > > 
-> > > v2: use drm_atomic_crtc_needs_modeset() (Daniel).
-> > > 
-> > > Cc: 1882851@bugs.launchpad.net
-> > > Fixes: 3954ff10e06e ("drm/virtio: skip set_scanout if framebuffer didn't change")
-> > > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> > 
-> > Tested-by: Jiri Slaby <jirislaby@kernel.org>
-> 
-> Ping.  Need an ack or an review to merge this.
+low_sleep_handler() has an hardcoded restore of segment registers
+that doesn't take KUAP and KUEP into account.
 
-In case you still need that, on both patches:
+Use head_32's load_segment_registers() routine instead.
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> 
-> thanks,
->   Gerd
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Signed-off-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
+Fixes: 31ed2b13c48d ("powerpc/32s: Implement Kernel Userspace Execution Prevention.")
+Cc: stable@vger.kernel.org
+---
+ arch/powerpc/platforms/powermac/sleep.S | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
+diff --git a/arch/powerpc/platforms/powermac/sleep.S b/arch/powerpc/platforms/powermac/sleep.S
+index f9a680fdd9c4..51bfdfe85058 100644
+--- a/arch/powerpc/platforms/powermac/sleep.S
++++ b/arch/powerpc/platforms/powermac/sleep.S
+@@ -294,14 +294,7 @@ grackle_wake_up:
+ 	 * we do any r1 memory access as we are not sure they
+ 	 * are in a sane state above the first 256Mb region
+ 	 */
+-	li	r0,16		/* load up segment register values */
+-	mtctr	r0		/* for context 0 */
+-	lis	r3,0x2000	/* Ku = 1, VSID = 0 */
+-	li	r4,0
+-3:	mtsrin	r3,r4
+-	addi	r3,r3,0x111	/* increment VSID */
+-	addis	r4,r4,0x1000	/* address of next segment */
+-	bdnz	3b
++	bl	load_segment_registers
+ 	sync
+ 	isync
+ 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+2.25.0
+
