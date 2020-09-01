@@ -2,50 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F6FEC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC8DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D4C2206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69274206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975875;
-	bh=U26BGF1LP6XxV91bp/jQ9jZcEPUYtMpftQQ+qc+8KOo=;
+	s=default; t=1598975882;
+	bh=r9HBhZi5uRfTCPjOUZlAFzjcdKyoVIqdk98dp7qcDAI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gccp0g4kBALFiIH2irpZN829swopDP+tHk73N2sEFOe9gwigAu+FcrDweSFHRF5b6
-	 /QMrbQ2Ujo7ccDVa8OUeJ0bY2FrFU6uW8abY3Su+PkTOhzeoS8iEmylqMjQy2yowKU
-	 HTWKZkgzZQtC5CfKoCP/Y4Ea7LDiWxXg1HTwURY0=
+	b=IoFxUTzPi6fwImX6Ag48g4hAMnJ/idWb7CjSNiisNnqgx8ec+9HCW20PIvkgqafbz
+	 v5wjbTOlnhX9ZyOij54lBtaXjb70tr/X+ircOTG/RngArdTBsIydwhBw0TPZCRb43W
+	 uJVsIsjoOuiOTtKZv2pt8gQmqQAkc3WASvpKGars=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731778AbgIAP5x (ORCPT
+        id S1731961AbgIAP6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59522 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58966 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731761AbgIAPoU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:20 -0400
+        id S1731158AbgIAPoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:44:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 95098206EB;
-        Tue,  1 Sep 2020 15:44:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5CE52064B;
+        Tue,  1 Sep 2020 15:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975057;
-        bh=U26BGF1LP6XxV91bp/jQ9jZcEPUYtMpftQQ+qc+8KOo=;
+        s=default; t=1598975044;
+        bh=r9HBhZi5uRfTCPjOUZlAFzjcdKyoVIqdk98dp7qcDAI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kzuG1gEAvZcSwQTbi1C2YpU3fQwGkFwTlQQ8JAJIvvxdY3K1p1l599AAAfWBW/8bP
-         Zg46XVbBjehcbViOjHke/3YqmoVZZ4ua8tkcDpq0H/Zc9Q3nwUbPF+e6Dnh2nj+daD
-         0AHTzLastQFDX7yRV//8ZwiUaRGEDQXnJ5WDkp84=
+        b=OAjvg+jiButgE/y/ixwrX7McM6LflBvGprTEykOf8ZGLjjSRIsXi2XkFkYkXtO2+l
+         sjYIUwVB9g54hxosfxw0Z1+fv98iAPxvEjjBAdvdavX5JeupypcOAuAEtLY6meZSZQ
+         1509X/XgBP1hn54A0wH/K0Bf0eey8+6VPt38+WUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, JC Kuo <jckuo@nvidia.com>
-Subject: [PATCH 5.8 193/255] usb: host: xhci-tegra: fix tegra_xusb_get_phy()
-Date:   Tue,  1 Sep 2020 17:10:49 +0200
-Message-Id: <20200901151009.935550326@linuxfoundation.org>
+        stable@vger.kernel.org, John Garry <john.garry@huawei.com>,
+        Lee Duncan <lduncan@suse.com>,
+        Douglas Gilbert <dgilbert@interlog.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 147/255] scsi: scsi_debug: Fix scp is NULL errors
+Date:   Tue,  1 Sep 2020 17:10:03 +0200
+Message-Id: <20200901151007.745398956@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -58,31 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: JC Kuo <jckuo@nvidia.com>
+From: Douglas Gilbert <dgilbert@interlog.com>
 
-commit d54343a87732726b04ac5af873916b5ed4f52932 upstream.
+[ Upstream commit 223f91b48079227f914657f07d2d686f7b60aa26 ]
 
-tegra_xusb_get_phy() should take input argument "name".
+John Garry reported 'sdebug_q_cmd_complete: scp is NULL' failures that were
+mainly seen on aarch64 machines (e.g. RPi 4 with four A72 CPUs). The
+problem was tracked down to a missing critical section on a "short circuit"
+path. Namely, the time to process the current command so far has already
+exceeded the requested command duration (i.e. the number of nanoseconds in
+the ndelay parameter).
 
-Signed-off-by: JC Kuo <jckuo@nvidia.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200811092553.657762-1-jckuo@nvidia.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The random=1 parameter setting was pivotal in finding this error.  The
+failure scenario involved first taking that "short circuit" path (due to a
+very short command duration) and then taking the more likely
+hrtimer_start() path (due to a longer command duration). With random=1 each
+command's duration is taken from the uniformly distributed [0..ndelay)
+interval.  The fio utility also helped by reliably generating the error
+scenario at about once per minute on a RPi 4 (64 bit OS).
 
+Link: https://lore.kernel.org/r/20200813155738.109298-1-dgilbert@interlog.com
+Reported-by: John Garry <john.garry@huawei.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Douglas Gilbert <dgilbert@interlog.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-tegra.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/scsi_debug.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/host/xhci-tegra.c
-+++ b/drivers/usb/host/xhci-tegra.c
-@@ -1136,7 +1136,7 @@ static struct phy *tegra_xusb_get_phy(st
- 	unsigned int i, phy_count = 0;
+diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
+index b0d93bf79978f..25faad7f8e617 100644
+--- a/drivers/scsi/scsi_debug.c
++++ b/drivers/scsi/scsi_debug.c
+@@ -5486,9 +5486,11 @@ static int schedule_resp(struct scsi_cmnd *cmnd, struct sdebug_dev_info *devip,
+ 				u64 d = ktime_get_boottime_ns() - ns_from_boot;
  
- 	for (i = 0; i < tegra->soc->num_types; i++) {
--		if (!strncmp(tegra->soc->phy_types[i].name, "usb2",
-+		if (!strncmp(tegra->soc->phy_types[i].name, name,
- 							    strlen(name)))
- 			return tegra->phys[phy_count+port];
- 
+ 				if (kt <= d) {	/* elapsed duration >= kt */
++					spin_lock_irqsave(&sqp->qc_lock, iflags);
+ 					sqcp->a_cmnd = NULL;
+ 					atomic_dec(&devip->num_in_q);
+ 					clear_bit(k, sqp->in_use_bm);
++					spin_unlock_irqrestore(&sqp->qc_lock, iflags);
+ 					if (new_sd_dp)
+ 						kfree(sd_dp);
+ 					/* call scsi_done() from this thread */
+-- 
+2.25.1
+
 
 
