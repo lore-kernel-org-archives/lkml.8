@@ -7,47 +7,55 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C598C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1088DC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6A7206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2C8D2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977668;
-	bh=rCyF4ksN2Ht7HesuQ4IXcJCM/op/1avwDTAnycy6+4w=;
+	s=default; t=1598977676;
+	bh=R6W6fnSTZ1QTJue7Um2IqVtxneaYMRCI+li5qnZYrcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JwPRr0b9J6I6+aw4Jn9y3lJVtoXbIQS+XBYqczgAtzoobEPA5eLpmfi4iCPmnedM/
-	 E7wIN//HtTMUMU4MCWOtx4zi7ppK3olHJ78rLxrfngdWtAHUtdOVU4gb7mtHB1s38e
-	 NBmBzWz2ZmdliSUlVxb2Dg2AMjz1332NQiQUftlY=
+	b=mCHx7MKVRynsbUx9TytS5R/+B654ZUVQiAhApHXHEtX7fyEvKYgUj+R9FzceLqZiI
+	 32rjNpshbhyNGYjeP59riw2H9XyQqEQ81VwkFOnTDGJK3nXWbwKDW836vKW21t6Ilb
+	 KFtSqRO3oQeQSjKIyHDJu2BZs+Zgvi9xXvxDM3rg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbgIAPcE (ORCPT
+        id S1730860AbgIAPcE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 1 Sep 2020 11:32:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60048 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730580AbgIAPaC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:02 -0400
+        id S1730573AbgIAP3z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:55 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF7BD206C0;
-        Tue,  1 Sep 2020 15:30:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55FAB206C0;
+        Tue,  1 Sep 2020 15:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974202;
-        bh=rCyF4ksN2Ht7HesuQ4IXcJCM/op/1avwDTAnycy6+4w=;
+        s=default; t=1598974194;
+        bh=R6W6fnSTZ1QTJue7Um2IqVtxneaYMRCI+li5qnZYrcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qHCO5GkTtJI1esPrIaxBGVV9UgXhYWC/pnRQmTBF9a7t8WNhI1vKbfWF8a5g5XBa8
-         /ut52X7hQ0iFVJUNZSdUfT62w8Au6eiYeusd9U0xJFgrImrSVFmGIrKbmmrgaPibVM
-         RRHD/pa8pMfTFT+VVi8kbUZvxO+0BN0sWt66TA60=
+        b=IQpTy3SRivpUmlq9Sh5g8djRHfKSv1C1F9lvIkUehyv0xMc7BKW3FATMmJhGOm/km
+         Gldm2wWt1vak3CUqksb1fpjg7sh93SVqPHwb3Z0kcIGUCUQzDGNIPjFVMgh5L446J0
+         k9ZnV4kWyeyNOufJU4TZx/jwHr6bSG+3TGNYFUds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
+        stable@vger.kernel.org, Andy Lutomirski <luto@amacapital.net>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Will Deacon <will@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 084/214] gpu/drm: ingenic: Use the planes src_[x,y] to configure DMA length
-Date:   Tue,  1 Sep 2020 17:09:24 +0200
-Message-Id: <20200901150957.018382104@linuxfoundation.org>
+Subject: [PATCH 5.4 081/214] mm: fix kthread_use_mm() vs TLB invalidate
+Date:   Tue,  1 Sep 2020 17:09:21 +0200
+Message-Id: <20200901150956.873446830@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,39 +68,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 52e4607dace1eeeb2e012fca291dc4e6cb449bff ]
+[ Upstream commit 38cf307c1f2011d413750c5acb725456f47d9172 ]
 
-Instead of obtaining the width/height of the framebuffer from the CRTC
-state, obtain it from the current plane state.
+For SMP systems using IPI based TLB invalidation, looking at
+current->active_mm is entirely reasonable.  This then presents the
+following race condition:
 
-v2: No change
+  CPU0			CPU1
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191210144142.33143-3-paul@crapouillou.net
-# *** extracted tags ***
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+  flush_tlb_mm(mm)	use_mm(mm)
+    <send-IPI>
+			  tsk->active_mm = mm;
+			  <IPI>
+			    if (tsk->active_mm == mm)
+			      // flush TLBs
+			  </IPI>
+			  switch_mm(old_mm,mm,tsk);
+
+Where it is possible the IPI flushed the TLBs for @old_mm, not @mm,
+because the IPI lands before we actually switched.
+
+Avoid this by disabling IRQs across changing ->active_mm and
+switch_mm().
+
+Of the (SMP) architectures that have IPI based TLB invalidate:
+
+  Alpha    - checks active_mm
+  ARC      - ASID specific
+  IA64     - checks active_mm
+  MIPS     - ASID specific flush
+  OpenRISC - shoots down world
+  PARISC   - shoots down world
+  SH       - ASID specific
+  SPARC    - ASID specific
+  x86      - N/A
+  xtensa   - checks active_mm
+
+So at the very least Alpha, IA64 and Xtensa are suspect.
+
+On top of this, for scheduler consistency we need at least preemption
+disabled across changing tsk->mm and doing switch_mm(), which is
+currently provided by task_lock(), but that's not sufficient for
+PREEMPT_RT.
+
+[akpm@linux-foundation.org: add comment]
+
+Reported-by: Andy Lutomirski <luto@amacapital.net>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Nicholas Piggin <npiggin@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: <stable@vger.kernel.org>
+Link: http://lkml.kernel.org/r/20200721154106.GE10769@hirez.programming.kicks-ass.net
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/ingenic/ingenic-drm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/mmu_context.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.c b/drivers/gpu/drm/ingenic/ingenic-drm.c
-index 376fca6ca9f47..e746b3a6f7cbc 100644
---- a/drivers/gpu/drm/ingenic/ingenic-drm.c
-+++ b/drivers/gpu/drm/ingenic/ingenic-drm.c
-@@ -375,8 +375,8 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
+diff --git a/mm/mmu_context.c b/mm/mmu_context.c
+index 3e612ae748e96..a1da47e027479 100644
+--- a/mm/mmu_context.c
++++ b/mm/mmu_context.c
+@@ -25,13 +25,16 @@ void use_mm(struct mm_struct *mm)
+ 	struct task_struct *tsk = current;
  
- 	if (state && state->fb) {
- 		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
--		width = state->crtc->state->adjusted_mode.hdisplay;
--		height = state->crtc->state->adjusted_mode.vdisplay;
-+		width = state->src_w >> 16;
-+		height = state->src_h >> 16;
- 		cpp = state->fb->format->cpp[plane->index];
+ 	task_lock(tsk);
++	/* Hold off tlb flush IPIs while switching mm's */
++	local_irq_disable();
+ 	active_mm = tsk->active_mm;
+ 	if (active_mm != mm) {
+ 		mmgrab(mm);
+ 		tsk->active_mm = mm;
+ 	}
+ 	tsk->mm = mm;
+-	switch_mm(active_mm, mm, tsk);
++	switch_mm_irqs_off(active_mm, mm, tsk);
++	local_irq_enable();
+ 	task_unlock(tsk);
+ #ifdef finish_arch_post_lock_switch
+ 	finish_arch_post_lock_switch();
+@@ -56,9 +59,11 @@ void unuse_mm(struct mm_struct *mm)
  
- 		priv->dma_hwdesc->addr = addr;
+ 	task_lock(tsk);
+ 	sync_mm_rss(mm);
++	local_irq_disable();
+ 	tsk->mm = NULL;
+ 	/* active_mm is still 'mm' */
+ 	enter_lazy_tlb(mm, tsk);
++	local_irq_enable();
+ 	task_unlock(tsk);
+ }
+ EXPORT_SYMBOL_GPL(unuse_mm);
 -- 
 2.25.1
 
