@@ -2,135 +2,157 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6CCC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0BBC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7A92098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ILDt4bQb"
+	by mail.kernel.org (Postfix) with ESMTP id 3A6B92087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598947011;
+	bh=rfxlWXkoFVg1nBhyifXGxOJ6QA+J4LqvbC5/ABiyWGI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QdW2O59GxHxCz/7labZONb32cxXDoSP8J7qLX1rp74nMM5rpPOPv/jRL6TXojfpjK
+	 HtbBua7J6w+tdoJY6fog94BC5OogyrYTUr6ow/53PIMGdoM9XCQkSPe+DSvJhTO1XW
+	 SvlhUyTctszkp7mPJ1HNKNB45JBCUX+FtXecxMyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728078AbgIAH4n (ORCPT
+        id S1728089AbgIAH4u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgIAH4l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:56:41 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6485C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:56:40 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id e14so397102ile.6
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 00:56:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TEWosj+T/FRGHSF9tH65GTqlEJ9j3rwP8Dj/lqmsNo8=;
-        b=ILDt4bQbXAm2fNXcqA27lrOZxCdF/zXdcbjLA74g0gZSpUOh8srrDHs5dzuCQ7hpe+
-         a6tLJfBYvF97GfS6EwZzZMMSavbQ1TDHuI24//IQx5nRolW+H8zunuG3uAYt51D8KTkX
-         2bWTazW6q3DUO9ehNgEb3gmWhuNS34HJDqph80nZL5JImd7vgyl4PKlYRkeQ3TRFdIs4
-         D7sAAdTh2pIFg9shiHyc4n9cjyGqjPX7nTPNt1EpQCSyKi46f3dW+0tH7Dv2ksNKwpBS
-         7fryGzuHI8VefQ7r+EwAW1hd/jEaXwbSJZ3j4vg6hHL5edpCf0nC5fw17aMwYJtv7NXT
-         Mh1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TEWosj+T/FRGHSF9tH65GTqlEJ9j3rwP8Dj/lqmsNo8=;
-        b=HOMwin+NQFdqiu2RE9MY3ShcmRuqTOLycJmayHpvKK0nK3F3qBkzlImo/zKdPYN7I5
-         WkKSUAcQFQdOdGSB1gldOY/uoI7o51H0WEj6NJVGqy2Fhew2VGlOQvarD/iYk5K/b9Fe
-         OS9/GUvzd0py9Axx5PJqpKrjFeJFux8IIh2ci+/pxpD+EMUVSAfgbJwk9dq2huorlepA
-         EQ5ug2OoBrLun1jrKfWKSPvzpJO1M+KinGF2WjhjA/Rn4jekVd0iGabxOLNs5PcA5LZ2
-         0kJGkPVE8xEy2rcdrRKj2KPo7vHtELFTsUF+mG8DgLejt5WPDscAr3/++nLDBgCeNxSG
-         gjDA==
-X-Gm-Message-State: AOAM530fy+dLy1lVO5z7wiVHsGJC/Y/ZySa/Vqcjqkv1yXwdgqWaFiCw
-        Zr6LlGztZR9lYR//drw4VyO7MM5StzpryZX5xoXgxA==
-X-Google-Smtp-Source: ABdhPJyzfgc7rPdiRryei3TV9tpT3eT551dswjAZusUJFZsBCA8Lc7j+N5wK7ANhav4txz/BTlblPGK0DUE/GbM97Wo=
-X-Received: by 2002:a92:4001:: with SMTP id n1mr310227ila.69.1598947000122;
- Tue, 01 Sep 2020 00:56:40 -0700 (PDT)
+        Tue, 1 Sep 2020 03:56:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726044AbgIAH4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:56:46 -0400
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D88D2065F;
+        Tue,  1 Sep 2020 07:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598947005;
+        bh=rfxlWXkoFVg1nBhyifXGxOJ6QA+J4LqvbC5/ABiyWGI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=u34VdFazsI0Ubsd1KqLW5mU91j4KnVgtftSHxJ4I+w1/sp8WDGAtsmwHi58zhmfE0
+         jHIwTotnvvNfeAZMTs8YTGmFujxy5EneDAZpRlEW8ZmhaWbdi3v+qTo38MjiC90SXB
+         KWVpk/lmT6WGcROR5tGdLtFv5rVtB8oFFwhDPcAM=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v2 1/6] kprobes: tracing/kprobes: Fix to kill kprobes on initmem after boot
+Date:   Tue,  1 Sep 2020 16:56:41 +0900
+Message-Id: <159894700101.1478826.3210757333571150353.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <159894698993.1478826.2813843560314595660.stgit@devnote2>
+References: <159894698993.1478826.2813843560314595660.stgit@devnote2>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <20200901065758.1141786-1-brianvv@google.com>
-In-Reply-To: <20200901065758.1141786-1-brianvv@google.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 1 Sep 2020 09:56:28 +0200
-Message-ID: <CANn89iKA5Ut4AcZfsZi3bVpE33_pqgO=E1RhBzePUeBDn6gznQ@mail.gmail.com>
-Subject: Re: [PATCH] net: ipv6: fix __rt6_purge_dflt_routers when forwarding
- is not set on all ifaces
-To:     Brian Vazquez <brianvv@google.com>
-Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        David Ahern <dsa@cumulusnetworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 8:58 AM Brian Vazquez <brianvv@google.com> wrote:
->
-> The problem is exposed when the system has multiple ifaces and
-> forwarding is enabled on a subset of them, __rt6_purge_dflt_routers will
-> clean the default route on all the ifaces which is not desired.
->
-> This patches fixes that by cleaning only the routes where the iface has
-> forwarding enabled.
->
-> Fixes: 830218c1add1 ("net: ipv6: Fix processing of RAs in presence of VRF")
+Since kprobe_event= cmdline option allows user to put kprobes on the
+functions in initmem, kprobe has to make such probes gone after boot.
+Currently the probes on the init functions in modules will be handled
+by module callback, but the kernel init text isn't handled.
+Without this, kprobes may access non-exist text area to disable or
+remove it.
 
+Fixes: 970988e19eb0 ("tracing/kprobe: Add kprobe_event= boot parameter")
+Cc: stable@vger.kernel.org
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+  Changes in v2:
+   - Fix kprobe_free_init_mem() not depending on CONFIG_DEBUG_FS.
+---
+ include/linux/kprobes.h |    5 +++++
+ init/main.c             |    2 ++
+ kernel/kprobes.c        |   22 ++++++++++++++++++++++
+ 3 files changed, 29 insertions(+)
 
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 9be1bff4f586..8aab327b5539 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -373,6 +373,8 @@ void unregister_kretprobes(struct kretprobe **rps, int num);
+ void kprobe_flush_task(struct task_struct *tk);
+ void recycle_rp_inst(struct kretprobe_instance *ri, struct hlist_head *head);
+ 
++void kprobe_free_init_mem(void);
++
+ int disable_kprobe(struct kprobe *kp);
+ int enable_kprobe(struct kprobe *kp);
+ 
+@@ -435,6 +437,9 @@ static inline void unregister_kretprobes(struct kretprobe **rps, int num)
+ static inline void kprobe_flush_task(struct task_struct *tk)
+ {
+ }
++static inline void kprobe_free_init_mem(void)
++{
++}
+ static inline int disable_kprobe(struct kprobe *kp)
+ {
+ 	return -ENOSYS;
+diff --git a/init/main.c b/init/main.c
+index ae78fb68d231..038128b2a755 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -33,6 +33,7 @@
+ #include <linux/nmi.h>
+ #include <linux/percpu.h>
+ #include <linux/kmod.h>
++#include <linux/kprobes.h>
+ #include <linux/vmalloc.h>
+ #include <linux/kernel_stat.h>
+ #include <linux/start_kernel.h>
+@@ -1402,6 +1403,7 @@ static int __ref kernel_init(void *unused)
+ 	kernel_init_freeable();
+ 	/* need to finish all async __init code before freeing the memory */
+ 	async_synchronize_full();
++	kprobe_free_init_mem();
+ 	ftrace_free_init_mem();
+ 	free_initmem();
+ 	mark_readonly();
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 287b263c9cb9..2880cdf37c47 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -2452,6 +2452,28 @@ static struct notifier_block kprobe_module_nb = {
+ extern unsigned long __start_kprobe_blacklist[];
+ extern unsigned long __stop_kprobe_blacklist[];
+ 
++void kprobe_free_init_mem(void)
++{
++	void *start = (void *)(&__init_begin);
++	void *end = (void *)(&__init_end);
++	struct hlist_head *head;
++	struct kprobe *p;
++	int i;
++
++	mutex_lock(&kprobe_mutex);
++
++	/* Kill all kprobes on initmem */
++	for (i = 0; i < KPROBE_TABLE_SIZE; i++) {
++		head = &kprobe_table[i];
++		hlist_for_each_entry(p, head, hlist) {
++			if (start <= (void *)p->addr && (void *)p->addr < end)
++				kill_kprobe(p);
++		}
++	}
++
++	mutex_unlock(&kprobe_mutex);
++}
++
+ static int __init init_kprobes(void)
+ {
+ 	int i, err = 0;
 
-
-
-> Cc: David Ahern <dsa@cumulusnetworks.com>
-> Signed-off-by: Brian Vazquez <brianvv@google.com>
-> ---
->  net/ipv6/route.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->
-> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
-> index 5e7e25e2523a..41181cd489ea 100644
-> --- a/net/ipv6/route.c
-> +++ b/net/ipv6/route.c
-> @@ -4283,6 +4283,7 @@ static void __rt6_purge_dflt_routers(struct net *net,
->                                      struct fib6_table *table)
->  {
->         struct fib6_info *rt;
-> +       bool deleted = false;
->
->  restart:
->         rcu_read_lock();
-> @@ -4291,16 +4292,19 @@ static void __rt6_purge_dflt_routers(struct net *net,
->                 struct inet6_dev *idev = dev ? __in6_dev_get(dev) : NULL;
->
->                 if (rt->fib6_flags & (RTF_DEFAULT | RTF_ADDRCONF) &&
-> -                   (!idev || idev->cnf.accept_ra != 2) &&
-> +                   (!idev || (idev->cnf.forwarding == 1 &&
-> +                              idev->cnf.accept_ra != 2)) &&
->                     fib6_info_hold_safe(rt)) {
->                         rcu_read_unlock();
->                         ip6_del_rt(net, rt, false);
-> +                       deleted = true;
->                         goto restart;
->                 }
->         }
->         rcu_read_unlock();
->
-> -       table->flags &= ~RT6_TABLE_HAS_DFLT_ROUTER;
-> +       if (deleted)
-> +               table->flags &= ~RT6_TABLE_HAS_DFLT_ROUTER;
-
-
-This seems wrong : We want to keep the flag set if at least one
-candidate route has not been deleted,
-so that next time rt6_purge_dflt_routers() is called, we can call
-__rt6_purge_dflt_routers() ?
