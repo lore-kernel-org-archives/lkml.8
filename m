@@ -2,127 +2,173 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F206C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACC8C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:46:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5BFF21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254C5221E8
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:46:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VtIsRogd"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="HCecrnuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbgIAOp7 (ORCPT
+        id S1728394AbgIAOqq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:45:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42698 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728276AbgIAOQJ (ORCPT
+        Tue, 1 Sep 2020 10:46:46 -0400
+Received: from esa4.hc3370-68.iphmx.com ([216.71.155.144]:38160 "EHLO
+        esa4.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728220AbgIAOpw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:16:09 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5CF9C061261;
-        Tue,  1 Sep 2020 07:16:08 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id z15so597681plo.7;
-        Tue, 01 Sep 2020 07:16:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=u6Dup+ArfJ1cGNtaPdNiGwIK5zxtRVAfzzcCu/uBGUo=;
-        b=VtIsRogdzz/B4ItJXOYG0iCNVWxRGKUQreNEa3CcflLUskSxARaPoPP2PSbjw18Tkb
-         9uMw5aOoeqEMnAN3muUKRO6Ufe6NtCgF9KWdYlfKVTAaJYX3WG0tVcL8VEXZBJP7e8Wx
-         Ijz5TwF8bXrHhFkR5Qm2WLFbiR7Z85F7SZhZsztZ+UQlr0YgXcPMxAvDolgs8Q/kUiqq
-         V9Z4zuaJ/2rRZ5wE1tRYEHRvc2Xb+4vU2izP65TQEQK56/rBGIFIIM1YVFkCiKR88pGM
-         T2ZAp2ajUmITAdEl2d+dZGes0KnwDskLcy5mLbYLM6tuSjEg52KFVvelL7TzEFUOvkrM
-         5ryg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=u6Dup+ArfJ1cGNtaPdNiGwIK5zxtRVAfzzcCu/uBGUo=;
-        b=dwNvJa6XKyOQQc93+aI75VlUBN1tc9X9qvuywaBqd47r+XADyz7iN9iehMLMeqh2BV
-         l/ZNabHA/Y8MkbjUMAftm6Zg2ZZnDlEiSR46Qe7OxyuHmXQVNTl2eZ3PL38YEacrUlZZ
-         +P10R5p7J5VstgNGn04BZKN64dIEoDbhmQoldqDnV8NeqdjCuDtypVvnX7DsjWXultGN
-         hrrg/H+IejWhL21dzUTXa9ENoQzr0yEA2lJc6c0TRJDiaoRo/fOEPKSDbX1GDls+OyO3
-         yDhUG3H9QQF71GM67n1s6q72T3d9l8TEl2//bD+d2wwNo48+QN4p/iRwbBYU4XGphWDL
-         9pWg==
-X-Gm-Message-State: AOAM5320yj4dRyzqpQRWHafjiVbHfzAaFRMwT0l/idws+CY7Jx1oZIhE
-        G6PddHdNV94dZXGTxUHg6EWcPjhHNnM=
-X-Google-Smtp-Source: ABdhPJyAinElz1sorI3kdkH6fqTFkR16OPVqZrPUyKnI8QoHoDqnjFXfTtMHJRA7puFOHsWIzJotcg==
-X-Received: by 2002:a17:90a:c255:: with SMTP id d21mr1859599pjx.212.1598969768315;
-        Tue, 01 Sep 2020 07:16:08 -0700 (PDT)
-Received: from bobo.ibm.com ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 07:16:07 -0700 (PDT)
-From:   Nicholas Piggin <npiggin@gmail.com>
-To:     linux-arch@vger.kernel.org
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH v3 05/23] arm64: use asm-generic/mmu_context.h for no-op implementations
-Date:   Wed,  2 Sep 2020 00:15:21 +1000
-Message-Id: <20200901141539.1757549-6-npiggin@gmail.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
-References: <20200901141539.1757549-1-npiggin@gmail.com>
+        Tue, 1 Sep 2020 10:45:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=citrix.com; s=securemail; t=1598971551;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=JdnTGG+FGAeYr/CaqX7nq47kV+5WzzeAxfnDtVerGyo=;
+  b=HCecrnuZ4z1/6sEl869RqjL9gGOdm0MHKr1EU2L1KnuoCQFMuJgglesM
+   Z7jVuxwR+McdV55WpQpnFJ8xgK1XgYu98sgBeGYZLy/IxoLfrvWo/UR8X
+   DHe0oudkybP8mdyK9zKtbhZVF2og8Z1ObI837jvVRWnD5YltVmVEmrz38
+   0=;
+Authentication-Results: esa4.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
+IronPort-SDR: Fx1CBO5kj/E1oAMz1SNj/x+W2f0hG4uH49vCOwacHjqiEVjH7W+Z6ZuJZjjum/02jE8xubVska
+ 3sIRr0yzCkV4UFYdAcAEcQc4GhV+gB8w1o75XW1D5ExaZvi5cN6ZLmCer9O+ksnWJQiP2Sgj10
+ qB4qwe6YKfcng8UZr3n0SOQ5PpIFcJuHhd74YlTayszxMAsS0OrjOzM8z+nks1IfNFppYINasU
+ Ro6lhbOIuB5NwPtFeaSBPdzODMC3WqFYJrILMML41cyYE6RwfKjxRUW9A0yz27uqJzHVG1uKB9
+ Dt4=
+X-SBRS: 2.7
+X-MesageID: 26701517
+X-Ironport-Server: esa4.hc3370-68.iphmx.com
+X-Remote-IP: 162.221.158.21
+X-Policy: $RELAYED
+X-IronPort-AV: E=Sophos;i="5.76,379,1592884800"; 
+   d="scan'208";a="26701517"
+Date:   Tue, 1 Sep 2020 16:45:39 +0200
+From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To:     <linux-kernel@vger.kernel.org>
+CC:     Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        "Stefano Stabellini" <sstabellini@kernel.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>, Wei Liu <wl@xen.org>,
+        Yan Yankovskyi <yyankovskyi@gmail.com>,
+        <dri-devel@lists.freedesktop.org>,
+        <xen-devel@lists.xenproject.org>, <linux-mm@kvack.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v5 3/3] xen: add helpers to allocate unpopulated memory
+Message-ID: <20200901144539.GI753@Air-de-Roger>
+References: <20200901083326.21264-1-roger.pau@citrix.com>
+ <20200901083326.21264-4-roger.pau@citrix.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200901083326.21264-4-roger.pau@citrix.com>
+X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
+ FTLPEX02CL06.citrite.net (10.13.108.179)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
----
- arch/arm64/include/asm/mmu_context.h | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+On Tue, Sep 01, 2020 at 10:33:26AM +0200, Roger Pau Monne wrote:
+> +static int fill_list(unsigned int nr_pages)
+> +{
+> +	struct dev_pagemap *pgmap;
+> +	void *vaddr;
+> +	unsigned int i, alloc_pages = round_up(nr_pages, PAGES_PER_SECTION);
+> +	int nid, ret;
+> +
+> +	pgmap = kzalloc(sizeof(*pgmap), GFP_KERNEL);
+> +	if (!pgmap)
+> +		return -ENOMEM;
+> +
+> +	pgmap->type = MEMORY_DEVICE_GENERIC;
+> +	pgmap->res.name = "Xen scratch";
+> +	pgmap->res.flags = IORESOURCE_MEM | IORESOURCE_BUSY;
+> +
+> +	ret = allocate_resource(&iomem_resource, &pgmap->res,
+> +				alloc_pages * PAGE_SIZE, 0, -1,
+> +				PAGES_PER_SECTION * PAGE_SIZE, NULL, NULL);
+> +	if (ret < 0) {
+> +		pr_err("Cannot allocate new IOMEM resource\n");
+> +		kfree(pgmap);
+> +		return ret;
+> +	}
+> +
+> +	nid = memory_add_physaddr_to_nid(pgmap->res.start);
 
-diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-index f2d7537d6f83..fe2862aa1dad 100644
---- a/arch/arm64/include/asm/mmu_context.h
-+++ b/arch/arm64/include/asm/mmu_context.h
-@@ -174,7 +174,6 @@ static inline void cpu_replace_ttbr1(pgd_t *pgdp)
-  * Setting a reserved TTBR0 or EPD0 would work, but it all gets ugly when you
-  * take CPU migration into account.
-  */
--#define destroy_context(mm)		do { } while(0)
- void check_and_switch_context(struct mm_struct *mm);
+I think this is not needed ...
+
+> +
+> +#ifdef CONFIG_XEN_HAVE_PVMMU
+> +        /*
+> +         * memremap will build page tables for the new memory so
+> +         * the p2m must contain invalid entries so the correct
+> +         * non-present PTEs will be written.
+> +         *
+> +         * If a failure occurs, the original (identity) p2m entries
+> +         * are not restored since this region is now known not to
+> +         * conflict with any devices.
+> +         */
+> +	if (!xen_feature(XENFEAT_auto_translated_physmap)) {
+> +		xen_pfn_t pfn = PFN_DOWN(pgmap->res.start);
+> +
+> +		for (i = 0; i < alloc_pages; i++) {
+> +			if (!set_phys_to_machine(pfn + i, INVALID_P2M_ENTRY)) {
+> +				pr_warn("set_phys_to_machine() failed, no memory added\n");
+> +				release_resource(&pgmap->res);
+> +				kfree(pgmap);
+> +				return -ENOMEM;
+> +			}
+> +                }
+> +	}
+> +#endif
+> +
+> +	vaddr = memremap_pages(pgmap, nid);
+
+... and NUMA_NO_NODE should be used here instead, as this memory is just
+fictitious space to map foreign memory, and shouldn't be related to
+any NUMA node.
+
+The following chunk should be folded in, or I can resend.
+
+Thanks, Roger.
+---8<---
+diff --git a/drivers/xen/unpopulated-alloc.c b/drivers/xen/unpopulated-alloc.c
+index 1b5d157c6977..3b98dc921426 100644
+--- a/drivers/xen/unpopulated-alloc.c
++++ b/drivers/xen/unpopulated-alloc.c
+@@ -20,7 +20,7 @@ static int fill_list(unsigned int nr_pages)
+ 	struct dev_pagemap *pgmap;
+ 	void *vaddr;
+ 	unsigned int i, alloc_pages = round_up(nr_pages, PAGES_PER_SECTION);
+-	int nid, ret;
++	int ret;
  
- #define init_new_context(tsk,mm)	({ atomic64_set(&(mm)->context.id, 0); 0; })
-@@ -202,6 +201,7 @@ static inline void update_saved_ttbr0(struct task_struct *tsk,
- }
+ 	pgmap = kzalloc(sizeof(*pgmap), GFP_KERNEL);
+ 	if (!pgmap)
+@@ -39,8 +39,6 @@ static int fill_list(unsigned int nr_pages)
+ 		return ret;
+ 	}
+ 
+-	nid = memory_add_physaddr_to_nid(pgmap->res.start);
+-
+ #ifdef CONFIG_XEN_HAVE_PVMMU
+         /*
+          * memremap will build page tables for the new memory so
+@@ -65,7 +63,7 @@ static int fill_list(unsigned int nr_pages)
+ 	}
  #endif
  
-+#define enter_lazy_tlb enter_lazy_tlb
- static inline void
- enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
- {
-@@ -242,12 +242,11 @@ switch_mm(struct mm_struct *prev, struct mm_struct *next,
- 	update_saved_ttbr0(tsk, next);
- }
- 
--#define deactivate_mm(tsk,mm)	do { } while (0)
--#define activate_mm(prev,next)	switch_mm(prev, next, current)
--
- void verify_cpu_asid_bits(void);
- void post_ttbr_update_workaround(void);
- 
-+#include <asm-generic/mmu_context.h>
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif /* !__ASM_MMU_CONTEXT_H */
--- 
-2.23.0
+-	vaddr = memremap_pages(pgmap, nid);
++	vaddr = memremap_pages(pgmap, NUMA_NO_NODE);
+ 	if (IS_ERR(vaddr)) {
+ 		pr_err("Cannot remap memory range\n");
+ 		release_resource(&pgmap->res);
 
