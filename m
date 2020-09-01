@@ -2,218 +2,125 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E5C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939D5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E638206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBqWWrSB"
+	by mail.kernel.org (Postfix) with ESMTP id 5CB63206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598975607;
+	bh=g1INWakGBIgs/nscnZh9/+Vm5t6hweU8xuekIBcxMdE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CcoaDMtmz6sy9ritbtYeGNcINYmlPk9WHEgo/VMEhDUKflnKyEvIuOZg8OnGsPzOO
+	 R9kynXVd4oWwFgsWTe+urVlJ+UeHksqIveds4G4fXhnKSRFwpNYdF5hJdSuaBO92Hp
+	 mpHoSOXumxTakaqed6X2q9Zwh6RRMl4jPXLLEuRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbgIAPxR (ORCPT
+        id S1731971AbgIAPxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728069AbgIAPxG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:53:06 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E135C061244;
-        Tue,  1 Sep 2020 08:53:05 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id m6so2129976wrn.0;
-        Tue, 01 Sep 2020 08:53:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=BY4bXKc0xSgKW8hDeDD9u95KOuc3RBx/gc2Fu/W48eQ=;
-        b=TBqWWrSB1mvUqsytHINsQUCpaD6PqLh3UsHJMRUkGwH/66biENmlSfUhshtvyFx1Jl
-         Xm0W8v8iKkFOcdwlTL6nLnBqWo29CyX2TENRlw+7jc3NGK86XiruLidBhNmVttRUPs36
-         LfzPsLKO8sOVbxnG5K3VaHG3CgZEMEConRc7AIKSnvCz2lQI2jXmSmo47D3DH2EVKIe7
-         +716NNemet7lsA6Cel/JHnqqvzqRw7d6Q0bdmZn91FGsOYklnoY9Pd5xUlgENa1Qnr3l
-         Vr9BpGca6oaWmy2J9JHDdL7RKAd04P1S/x/kgTGyfh+1EOOPBVSqethI5oTYr8bLFwhE
-         x5mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BY4bXKc0xSgKW8hDeDD9u95KOuc3RBx/gc2Fu/W48eQ=;
-        b=d3ULZkh+M833FFKHtexqLP2qO8fjVm0TM2DILjA7EGw4XLLl7TL+rTtgIwQ0fR6eqe
-         s3XP/4HhiO5SpB7KwoayWRPX6rX9RuND8FNHddCNG/U38+fkrnRVRhrIK7VZjISOuAbY
-         6RX8KJy1hfqypnwUQc85rQILwed7NLmHWe2RGZTXbXCDf14en50fh5gznf13t601mnsa
-         gVO37b0AnMTWJSGmFN20yPi9g+9GnH1OSsTlBAkmhwO97TlBPcS7Nh8nvLJkGfRMpTaO
-         4lxWWdJ/iK7J3vgNWUpGHdWgwAO+8XQCao/17JRqA1ph4qJQE4WuFLb7oJKpaLvf6agp
-         Be2A==
-X-Gm-Message-State: AOAM530qMYOzCJYnkZ4sQsMCf1/yo9buycPZU1LxsDzx9hADpgpQzM06
-        ncxq+B2a0yZU6ZgOilWFytqW/0lyeNTOBchgm3I=
-X-Google-Smtp-Source: ABdhPJzDoeC0Pb4kh7G7ViZBofzjFA7/roqtprdLHZ43CwlP1yJxepquJBwNWHIMnMPZtjY/Vti5ADETxrYodXZvEfo=
-X-Received: by 2002:adf:f382:: with SMTP id m2mr2458894wro.327.1598975584169;
- Tue, 01 Sep 2020 08:53:04 -0700 (PDT)
+        Tue, 1 Sep 2020 11:53:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37732 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731966AbgIAPrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:47:07 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B68D206EF;
+        Tue,  1 Sep 2020 15:47:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598975226;
+        bh=g1INWakGBIgs/nscnZh9/+Vm5t6hweU8xuekIBcxMdE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oq4qHNk+UPwVkNuFChRawehgpCIoYeZcF4ueJoKwnF0T3ei2+qjoVBvgdNJWrq0Ne
+         5CSlgxvfvLW+8dAFibKCPRhWvVETD8obyo4VqHBPkWA3tfGT0g248iATcJkvTE+DhX
+         Qzt9PSp3E/bZInQKlAYsiupeOMCN1rnq9YsE9eE0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Charmaine Lee <charmainel@vmware.com>,
+        Zack Rusin <zackr@vmware.com>,
+        Roland Scheidegger <sroland@vmware.com>
+Subject: [PATCH 5.8 251/255] drm/vmwgfx/sou: Use drm_mode_config_reset
+Date:   Tue,  1 Sep 2020 17:11:47 +0200
+Message-Id: <20200901151012.796233310@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-7-robdclark@gmail.com> <20200901043211.GN3715@yoga>
-In-Reply-To: <20200901043211.GN3715@yoga>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 1 Sep 2020 08:53:50 -0700
-Message-ID: <CAF6AEGthzRwUZby6XsToNpSbx0ad3hZWN2QM+qipR2zDDi-ySw@mail.gmail.com>
-Subject: Re: [PATCH 06/19] drm/msm/gpu: add dev_to_gpu() helper
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 9:32 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
->
-> On Thu 13 Aug 21:41 CDT 2020, Rob Clark wrote:
->
-> > From: Rob Clark <robdclark@chromium.org>
-> >
-> > In a later patch, the drvdata will not directly be 'struct msm_gpu *',
-> > so add a helper to reduce the churn.
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/adreno/adreno_device.c | 10 ++++------
-> >  drivers/gpu/drm/msm/msm_gpu.c              |  6 +++---
-> >  drivers/gpu/drm/msm/msm_gpu.h              |  5 +++++
-> >  3 files changed, 12 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> > index 9eeb46bf2a5d..26664e1b30c0 100644
-> > --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
-> > +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
-> > @@ -282,7 +282,7 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
-> >       int ret;
-> >
-> >       if (pdev)
-> > -             gpu = platform_get_drvdata(pdev);
-> > +             gpu = dev_to_gpu(&pdev->dev);
-> >
-> >       if (!gpu) {
-> >               dev_err_once(dev->dev, "no GPU device was found\n");
-> > @@ -425,7 +425,7 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
-> >  static void adreno_unbind(struct device *dev, struct device *master,
-> >               void *data)
-> >  {
-> > -     struct msm_gpu *gpu = dev_get_drvdata(dev);
-> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
-> >
-> >       pm_runtime_force_suspend(dev);
-> >       gpu->funcs->destroy(gpu);
-> > @@ -490,16 +490,14 @@ static const struct of_device_id dt_match[] = {
-> >  #ifdef CONFIG_PM
-> >  static int adreno_resume(struct device *dev)
-> >  {
-> > -     struct platform_device *pdev = to_platform_device(dev);
-> > -     struct msm_gpu *gpu = platform_get_drvdata(pdev);
-> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
-> >
-> >       return gpu->funcs->pm_resume(gpu);
-> >  }
-> >
-> >  static int adreno_suspend(struct device *dev)
-> >  {
-> > -     struct platform_device *pdev = to_platform_device(dev);
-> > -     struct msm_gpu *gpu = platform_get_drvdata(pdev);
-> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
-> >
-> >       return gpu->funcs->pm_suspend(gpu);
-> >  }
-> > diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> > index d5645472b25d..6aa9e04e52e7 100644
-> > --- a/drivers/gpu/drm/msm/msm_gpu.c
-> > +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> > @@ -24,7 +24,7 @@
-> >  static int msm_devfreq_target(struct device *dev, unsigned long *freq,
-> >               u32 flags)
-> >  {
-> > -     struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
-> >       struct dev_pm_opp *opp;
-> >
-> >       opp = devfreq_recommended_opp(dev, freq, flags);
-> > @@ -45,7 +45,7 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
-> >  static int msm_devfreq_get_dev_status(struct device *dev,
-> >               struct devfreq_dev_status *status)
-> >  {
-> > -     struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
-> >       ktime_t time;
-> >
-> >       if (gpu->funcs->gpu_get_freq)
-> > @@ -64,7 +64,7 @@ static int msm_devfreq_get_dev_status(struct device *dev,
-> >
-> >  static int msm_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
-> >  {
-> > -     struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
-> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
-> >
-> >       if (gpu->funcs->gpu_get_freq)
-> >               *freq = gpu->funcs->gpu_get_freq(gpu);
-> > diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> > index 0db117a7339b..8bda7beaed4b 100644
-> > --- a/drivers/gpu/drm/msm/msm_gpu.h
-> > +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> > @@ -141,6 +141,11 @@ struct msm_gpu {
-> >       struct msm_gpu_state *crashstate;
-> >  };
-> >
-> > +static inline struct msm_gpu *dev_to_gpu(struct device *dev)
->
-> That's a fairly generic name for a driver-global helper :)
+From: Roland Scheidegger <sroland@vmware.com>
 
-tbf, it is only global to the gpu part of the driver..
+commit 1338441cf166e2ef789af5915b961d4e13a4ec31 upstream.
 
-thanks for the review
+Same problem as in stdu, same fix.
 
-BR,
--R
+Fixes: 51f644b40b4b ("drm/atomic-helper: reset vblank on crtc reset")
+Acked-by: Charmaine Lee <charmainel@vmware.com>
+Reviewed-by: Zack Rusin <zackr@vmware.com>
+Signed-off-by: Roland Scheidegger <sroland@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->
-> Regards,
-> Bjorn
->
-> > +{
-> > +     return dev_get_drvdata(dev);
-> > +}
-> > +
-> >  /* It turns out that all targets use the same ringbuffer size */
-> >  #define MSM_GPU_RINGBUFFER_SZ SZ_32K
-> >  #define MSM_GPU_RINGBUFFER_BLKSIZE 32
-> > --
-> > 2.26.2
-> >
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c |    9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
+
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_scrn.c
+@@ -859,8 +859,6 @@ static int vmw_sou_init(struct vmw_priva
+ 	sou->base.is_implicit = false;
+ 
+ 	/* Initialize primary plane */
+-	vmw_du_plane_reset(primary);
+-
+ 	ret = drm_universal_plane_init(dev, &sou->base.primary,
+ 				       0, &vmw_sou_plane_funcs,
+ 				       vmw_primary_plane_formats,
+@@ -875,8 +873,6 @@ static int vmw_sou_init(struct vmw_priva
+ 	drm_plane_enable_fb_damage_clips(primary);
+ 
+ 	/* Initialize cursor plane */
+-	vmw_du_plane_reset(cursor);
+-
+ 	ret = drm_universal_plane_init(dev, &sou->base.cursor,
+ 			0, &vmw_sou_cursor_funcs,
+ 			vmw_cursor_plane_formats,
+@@ -890,7 +886,6 @@ static int vmw_sou_init(struct vmw_priva
+ 
+ 	drm_plane_helper_add(cursor, &vmw_sou_cursor_plane_helper_funcs);
+ 
+-	vmw_du_connector_reset(connector);
+ 	ret = drm_connector_init(dev, connector, &vmw_sou_connector_funcs,
+ 				 DRM_MODE_CONNECTOR_VIRTUAL);
+ 	if (ret) {
+@@ -918,8 +913,6 @@ static int vmw_sou_init(struct vmw_priva
+ 		goto err_free_encoder;
+ 	}
+ 
+-
+-	vmw_du_crtc_reset(crtc);
+ 	ret = drm_crtc_init_with_planes(dev, crtc, &sou->base.primary,
+ 					&sou->base.cursor,
+ 					&vmw_screen_object_crtc_funcs, NULL);
+@@ -973,6 +966,8 @@ int vmw_kms_sou_init_display(struct vmw_
+ 
+ 	dev_priv->active_display_unit = vmw_du_screen_object;
+ 
++	drm_mode_config_reset(dev);
++
+ 	DRM_INFO("Screen Objects Display Unit initialized\n");
+ 
+ 	return 0;
+
+
