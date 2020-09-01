@@ -4,74 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B62AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23ACC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9BA20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3A7120866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598986440;
-	bh=yGwj+8iu7furKFCekE3bhMjmZAZ6ErAbyClftPWGO7c=;
+	s=default; t=1598986458;
+	bh=g6k7w/j8gl5gt/LKvAwv6p29WWSPeCoRupmDAGmTT4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m+nHYzrnOZsvR5C7SjZSM8/FoUylvpZx6eFcp9gJP+aH9hmNiDrOszMXwvZHqge0N
-	 758H2NSqEffI/4nQLbnpsRkTRhpLp0uTZeSqiWWKrjQavNHX0pQou0qhSqBLm8yurd
-	 T826jKOdC6BgVXFqRka5125wIS+6QzwKYkAJbzuU=
+	b=XCEvfCJxo42p5pVlwzTiivkG63YXJlbyKHL4unsIUwVK4++o3WSD20PUl57m7X31C
+	 JJeOuplllY6PvV6aRiPuIkpdgOtDAj+3AV8HHgrT6W5IjDgJaYeDSjRL+kFfrGM2Ob
+	 NksSY3oRgqmSxkO7yyW6bi2cmXSeEdn1aF6E499E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731810AbgIASx6 (ORCPT
+        id S1731733AbgIASyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:53:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57464 "EHLO
+        Tue, 1 Sep 2020 14:54:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731560AbgIASxa (ORCPT
+        with ESMTP id S1731783AbgIASx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:53:30 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00DA3C061244;
-        Tue,  1 Sep 2020 11:53:30 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id v69so1992156qkb.7;
-        Tue, 01 Sep 2020 11:53:29 -0700 (PDT)
+        Tue, 1 Sep 2020 14:53:56 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B128C061245;
+        Tue,  1 Sep 2020 11:53:56 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id o64so1984224qkb.10;
+        Tue, 01 Sep 2020 11:53:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/e5PktXRLfAON/oeMdCF9GHjT7JkUKFYrJ6ekTNbMj4=;
-        b=fVMNPf9V07T3Oj0WLXkxJyr2vUryz+0eFnqMy0IfL0m9+flFyBQJkyxPkvXdbI+V5y
-         fp50Dp+/Sw0qfga/3hn/lHcdMLzu9HKS6cbiP8vssRSknZyEF9y2ct3EfuzNb8Kd9fYT
-         YpqpPe51lFRcaFG6N+Lz94nju/FMYSyauWu9TZ70urnuYUS5ZXwJGG7VsmVEajHW9LJ0
-         TQgAB3lwHPjX+rpEDclBOJ3LGs0imUwHCUXFyX3E291U0rRRwKad7A8bW4gty3YipSl7
-         n+loyCrxZg6UQnSEQEsBXo4D3F87fRblhrgP2P3+jfsgHN3ssjLyxgRXh3RHtlsLmwWg
-         At+w==
+        bh=K3TiqQ6XoBnoO+Au4OZsHz6VfSjY8XgXmAHVlPD4pKE=;
+        b=hCgv4Sg/jsBTk4NVkOay3mp7QlI5e4hqnj91u6kgsrQHPvFpsZztMVghTYelPwRF5M
+         SKPoSe57Z9aebw01UCHrdiRaLrTYYQHYly0y2IkaXrA2e+o74oNIMPvRZ14IEIVYfhKN
+         AJXwWvl6vSCWmSjGoExdW2jgNOFNZLtkIwwDi0MP9INvgODvAn++h7ugv0imeVcqhFBF
+         QB85GcjedsubivHx9fOTBPEZOSt7RPcqJlMaXn/Mmyoekcf1JavMOtkUUvNXVq/U2N6s
+         qpXizaPDXWHF7d1zvmD4yEV47vKzDEjJDVRQ1TsXF90DMIek87maIsL7issKbeiMJjbS
+         b0yA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=/e5PktXRLfAON/oeMdCF9GHjT7JkUKFYrJ6ekTNbMj4=;
-        b=hPj+hH0MG1DLxMQlvrJqj/m7IKtnpEMS5j41I9+/QEnTYWKngfCACnGR2oEeb/1hIm
-         Zhpf4/NpHArV3kX3KsTIEbcrndOS9CA+QOvhH2mR8aa6rG2AH11wnhMwvFW8UvjW3E+N
-         lPhgCHKvqd1RwsQtnY/QHjed5SLfyJtvbj3GGlYcBlVUO7wdNyLQmYdAzgULSc5Qmzog
-         AcZBFFZq0XC9IjylPcecp3rFRlEjFeuswwxzlKpgFmjjrN+TNRhjeFf+MuW5TI9V95t+
-         sb2ORE3/fuSWr0Acr62y7GU99xYiioaeU5Bk7w4WeW8IKwRj8PSm/Nc/Jj/84iu43Xi4
-         Ah5g==
-X-Gm-Message-State: AOAM531mE2IDcq85rMxN9VAbS17zbBlcpLWTAN/3VbDYiz8OvYSmVT0L
-        sBPZPPzon1MGRDGY6JaTB4c=
-X-Google-Smtp-Source: ABdhPJxAdAjHTB/nWBfK3Z41i27byRG6ZciKBOs2oe+3yS5O5HlPuyuBOcg0mbMd1VUxGcSh4HzJ4g==
-X-Received: by 2002:a37:48c7:: with SMTP id v190mr3233750qka.153.1598986409082;
-        Tue, 01 Sep 2020 11:53:29 -0700 (PDT)
+        bh=K3TiqQ6XoBnoO+Au4OZsHz6VfSjY8XgXmAHVlPD4pKE=;
+        b=UGGthMQ6kSnZ3Xrm13JA+la+IYs0JKU6YknBX8Bcxtcj/IqHS/hQRVa+SiVwPRpKZA
+         hXUV0+1xGCW5jsSjQPq3aSqTIxaTp/kgRzUVRuD++HLI0aRPFWzfqHV/F0hc0NgZLvc6
+         bwji3QHCQgrfsCocsobME5LgBXIPc1q9Dom5XrWj9gmM4eOVHAwqZLDRldE9aV/xkGGP
+         gmpVIHtK/D6joC2J0+k/3nbNfbkQ3xO2Kzf9WAwKSMRqEzpVAw6PsgHaHnEnpEcbu9+T
+         T1qSC+lRql9HQGXqSceLvDYcf+VLjGB24S1zQv8/ctNScctxz/XWLGg4VjSyjNOeUvox
+         8tmQ==
+X-Gm-Message-State: AOAM533ENK4k59C1w8y52kDkZds07deuDvykTejHS3kWOu0sytZIHTtQ
+        6jujGInumWR0o0O1mwyDAMFcrIr0lMYpYw==
+X-Google-Smtp-Source: ABdhPJy6cpjNy43giS09dLIAH39peHcF1mKQcu+OvTRGdx/KcELq3xROSt1tiA+Bqt0LzC6mhQMtJQ==
+X-Received: by 2002:a05:620a:13c9:: with SMTP id g9mr3415643qkl.436.1598986435478;
+        Tue, 01 Sep 2020 11:53:55 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id i65sm2407530qkf.126.2020.09.01.11.53.27
+        by smtp.gmail.com with ESMTPSA id n85sm2536672qkn.80.2020.09.01.11.53.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:53:28 -0700 (PDT)
+        Tue, 01 Sep 2020 11:53:54 -0700 (PDT)
 From:   Tejun Heo <tj@kernel.org>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
         Tejun Heo <tj@kernel.org>
-Subject: [PATCH 08/27] blk-iocost: s/HWEIGHT_WHOLE/WEIGHT_ONE/g
-Date:   Tue,  1 Sep 2020 14:52:38 -0400
-Message-Id: <20200901185257.645114-9-tj@kernel.org>
+Subject: [PATCH 17/27] blk-iocost: restructure surplus donation logic
+Date:   Tue,  1 Sep 2020 14:52:47 -0400
+Message-Id: <20200901185257.645114-18-tj@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
 References: <20200901185257.645114-1-tj@kernel.org>
@@ -82,96 +82,280 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We're gonna use HWEIGHT_WHOLE for regular weights too. Let's rename it to
-WEIGHT_ONE.
+The way the surplus donation logic is structured isn't great. There are two
+separate paths for starting/increasing donations and decreasing them making
+the logic harder to follow and is prone to unnecessary behavior differences.
 
-Pure rename.
+In preparation for improved donation handling, this patch restructures the
+code so that
+
+* All donors - new, increasing and decreasing - are funneled through the
+  same code path.
+
+* The target donation calculation is factored into hweight_after_donation()
+  which is called once from the same spot for all possible donors.
+
+* Actual inuse adjustment is factored into trasnfer_surpluses().
+
+This change introduces a few behavior differences - e.g. donation amount
+reduction now uses the max usage of the recent three periods just like new
+and increasing donations, and inuse now gets adjusted upwards the same way
+it gets downwards. These differences are unlikely to have severely negative
+implications and the whole logic will be revamped soon.
+
+This patch also removes two tracepoints. The existing TPs don't quite fit
+the new implementation. A later patch will update and reinstate them.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- block/blk-iocost.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ block/blk-iocost.c | 179 ++++++++++++++++++++++++++-------------------
+ 1 file changed, 103 insertions(+), 76 deletions(-)
 
 diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index b2b8dfbeee5a..5e6d56eec1c9 100644
+index a3889a8b0a33..61b008d0801f 100644
 --- a/block/blk-iocost.c
 +++ b/block/blk-iocost.c
-@@ -68,7 +68,7 @@
-  * gets 300/(100+300) or 75% share, and A0 and A1 equally splits the rest,
-  * 12.5% each.  The distribution mechanism only cares about these flattened
-  * shares.  They're called hweights (hierarchical weights) and always add
-- * upto 1 (HWEIGHT_WHOLE).
-+ * upto 1 (WEIGHT_ONE).
-  *
-  * A given cgroup's vtime runs slower in inverse proportion to its hweight.
-  * For example, with 12.5% weight, A0's time runs 8 times slower (100/12.5)
-@@ -246,7 +246,7 @@ enum {
- 	MIN_VALID_USAGES	= 2,
+@@ -494,6 +494,7 @@ struct ioc_gq {
+ 	int				hweight_gen;
+ 	u32				hweight_active;
+ 	u32				hweight_inuse;
++	u32				hweight_after_donation;
  
- 	/* 1/64k is granular enough and can easily be handled w/ u32 */
--	HWEIGHT_WHOLE		= 1 << 16,
-+	WEIGHT_ONE		= 1 << 16,
- 
- 	/*
- 	 * As vtime is used to calculate the cost of each IO, it needs to
-@@ -285,8 +285,8 @@ enum {
- 	 * donate the surplus.
- 	 */
- 	SURPLUS_SCALE_PCT	= 125,			/* * 125% */
--	SURPLUS_SCALE_ABS	= HWEIGHT_WHOLE / 50,	/* + 2% */
--	SURPLUS_MIN_ADJ_DELTA	= HWEIGHT_WHOLE / 33,	/* 3% */
-+	SURPLUS_SCALE_ABS	= WEIGHT_ONE / 50,	/* + 2% */
-+	SURPLUS_MIN_ADJ_DELTA	= WEIGHT_ONE / 33,	/* 3% */
- 
- 	/* switch iff the conditions are met for longer than this */
- 	AUTOP_CYCLE_NSEC	= 10LLU * NSEC_PER_SEC,
-@@ -491,7 +491,7 @@ struct ioc_gq {
- 	struct hrtimer			waitq_timer;
- 	struct hrtimer			delay_timer;
- 
--	/* usage is recorded as fractions of HWEIGHT_WHOLE */
-+	/* usage is recorded as fractions of WEIGHT_ONE */
- 	int				usage_idx;
- 	u32				usages[NR_USAGE_SLOTS];
- 
-@@ -658,7 +658,7 @@ static struct ioc_cgrp *blkcg_to_iocc(struct blkcg *blkcg)
-  */
- static u64 abs_cost_to_cost(u64 abs_cost, u32 hw_inuse)
- {
--	return DIV64_U64_ROUND_UP(abs_cost * HWEIGHT_WHOLE, hw_inuse);
-+	return DIV64_U64_ROUND_UP(abs_cost * WEIGHT_ONE, hw_inuse);
+ 	struct list_head		walk_list;
+ 	struct list_head		surplus_list;
+@@ -1070,6 +1071,32 @@ static void current_hweight(struct ioc_gq *iocg, u32 *hw_activep, u32 *hw_inusep
+ 		*hw_inusep = iocg->hweight_inuse;
  }
  
- /*
-@@ -666,7 +666,7 @@ static u64 abs_cost_to_cost(u64 abs_cost, u32 hw_inuse)
-  */
- static u64 cost_to_abs_cost(u64 cost, u32 hw_inuse)
++/*
++ * Calculate the hweight_inuse @iocg would get with max @inuse assuming all the
++ * other weights stay unchanged.
++ */
++static u32 current_hweight_max(struct ioc_gq *iocg)
++{
++	u32 hwm = WEIGHT_ONE;
++	u32 inuse = iocg->active;
++	u64 child_inuse_sum;
++	int lvl;
++
++	lockdep_assert_held(&iocg->ioc->lock);
++
++	for (lvl = iocg->level - 1; lvl >= 0; lvl--) {
++		struct ioc_gq *parent = iocg->ancestors[lvl];
++		struct ioc_gq *child = iocg->ancestors[lvl + 1];
++
++		child_inuse_sum = parent->child_inuse_sum + inuse - child->inuse;
++		hwm = div64_u64((u64)hwm * inuse, child_inuse_sum);
++		inuse = DIV64_U64_ROUND_UP(parent->active * child_inuse_sum,
++					   parent->child_active_sum);
++	}
++
++	return max_t(u32, hwm, 1);
++}
++
+ static void weight_updated(struct ioc_gq *iocg)
  {
--	return DIV64_U64_ROUND_UP(cost * hw_inuse, HWEIGHT_WHOLE);
-+	return DIV64_U64_ROUND_UP(cost * hw_inuse, WEIGHT_ONE);
+ 	struct ioc *ioc = iocg->ioc;
+@@ -1488,20 +1515,58 @@ static void iocg_flush_stat(struct list_head *target_iocgs, struct ioc_now *now)
+ 	}
  }
  
- static void iocg_commit_bio(struct ioc_gq *iocg, struct bio *bio, u64 cost)
-@@ -980,7 +980,7 @@ static void current_hweight(struct ioc_gq *iocg, u32 *hw_activep, u32 *hw_inusep
- 	 */
- 	smp_rmb();
+-/* returns usage with margin added if surplus is large enough */
+-static u32 surplus_adjusted_hweight_inuse(u32 usage, u32 hw_inuse)
++/*
++ * Determine what @iocg's hweight_inuse should be after donating unused
++ * capacity. @hwm is the upper bound and used to signal no donation. This
++ * function also throws away @iocg's excess budget.
++ */
++static u32 hweight_after_donation(struct ioc_gq *iocg, u32 hwm, u32 usage,
++				  struct ioc_now *now)
+ {
++	struct ioc *ioc = iocg->ioc;
++	u64 vtime = atomic64_read(&iocg->vtime);
++	s64 excess;
++
++	/* see whether minimum margin requirement is met */
++	if (waitqueue_active(&iocg->waitq) ||
++	    time_after64(vtime, now->vnow - ioc->margins.min))
++		return hwm;
++
++	/* throw away excess above max */
++	excess = now->vnow - vtime - ioc->margins.max;
++	if (excess > 0) {
++		atomic64_add(excess, &iocg->vtime);
++		atomic64_add(excess, &iocg->done_vtime);
++		vtime += excess;
++	}
++
+ 	/* add margin */
+ 	usage = DIV_ROUND_UP(usage * SURPLUS_SCALE_PCT, 100);
+ 	usage += SURPLUS_SCALE_ABS;
  
--	hwa = hwi = HWEIGHT_WHOLE;
-+	hwa = hwi = WEIGHT_ONE;
- 	for (lvl = 0; lvl <= iocg->level - 1; lvl++) {
- 		struct ioc_gq *parent = iocg->ancestors[lvl];
- 		struct ioc_gq *child = iocg->ancestors[lvl + 1];
-@@ -2088,8 +2088,8 @@ static void ioc_pd_init(struct blkg_policy_data *pd)
- 	atomic64_set(&iocg->done_vtime, now.vnow);
- 	atomic64_set(&iocg->active_period, atomic64_read(&ioc->cur_period));
- 	INIT_LIST_HEAD(&iocg->active_list);
--	iocg->hweight_active = HWEIGHT_WHOLE;
--	iocg->hweight_inuse = HWEIGHT_WHOLE;
-+	iocg->hweight_active = WEIGHT_ONE;
-+	iocg->hweight_inuse = WEIGHT_ONE;
+ 	/* don't bother if the surplus is too small */
+-	if (usage + SURPLUS_MIN_ADJ_DELTA > hw_inuse)
+-		return 0;
++	if (usage + SURPLUS_MIN_ADJ_DELTA > hwm)
++		return hwm;
  
- 	init_waitqueue_head(&iocg->waitq);
- 	hrtimer_init(&iocg->waitq_timer, CLOCK_MONOTONIC, HRTIMER_MODE_ABS);
+ 	return usage;
+ }
+ 
++static void transfer_surpluses(struct list_head *surpluses, struct ioc_now *now)
++{
++	struct ioc_gq *iocg;
++
++	list_for_each_entry(iocg, surpluses, surplus_list) {
++		u32 old_hwi, new_hwi, new_inuse;
++
++		current_hweight(iocg, NULL, &old_hwi);
++		new_hwi = iocg->hweight_after_donation;
++
++		new_inuse = DIV64_U64_ROUND_UP((u64)iocg->inuse * new_hwi,
++					       old_hwi);
++		__propagate_weights(iocg, iocg->weight, new_inuse);
++	}
++}
++
+ static void ioc_timer_fn(struct timer_list *timer)
+ {
+ 	struct ioc *ioc = container_of(timer, struct ioc, timer);
+@@ -1560,9 +1625,9 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 
+ 	/* calc usages and see whether some weights need to be moved around */
+ 	list_for_each_entry(iocg, &ioc->active_iocgs, active_list) {
+-		u64 vdone, vtime, usage_us, vmin;
++		u64 vdone, vtime, usage_us;
+ 		u32 hw_active, hw_inuse, usage;
+-		int uidx;
++		int uidx, nr_valid;
+ 
+ 		/*
+ 		 * Collect unused and wind vtime closer to vnow to prevent
+@@ -1618,92 +1683,54 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 				started_at = ioc->period_at;
+ 
+ 			dur = max_t(u64, now.now - started_at, 1);
+-			usage = clamp_t(u32,
++
++			iocg->usage_idx = uidx;
++			iocg->usages[uidx] = clamp_t(u32,
+ 				DIV64_U64_ROUND_UP(usage_us * WEIGHT_ONE, dur),
+ 				1, WEIGHT_ONE);
++		}
+ 
+-			iocg->usage_idx = uidx;
+-			iocg->usages[uidx] = usage;
+-		} else {
+-			usage = 0;
++		/* base the decision on max historical usage */
++		for (i = 0, usage = 0, nr_valid = 0; i < NR_USAGE_SLOTS; i++) {
++			if (iocg->usages[i]) {
++				usage = max(usage, iocg->usages[i]);
++				nr_valid++;
++			}
+ 		}
++		if (nr_valid < MIN_VALID_USAGES)
++			usage = WEIGHT_ONE;
+ 
+ 		/* see whether there's surplus vtime */
+-		vmin = now.vnow - ioc->margins.max;
+-
+ 		WARN_ON_ONCE(!list_empty(&iocg->surplus_list));
+-		if (!waitqueue_active(&iocg->waitq) &&
+-		    time_before64(vtime, vmin)) {
+-			u64 delta = vmin - vtime;
+-
+-			/* throw away surplus vtime */
+-			atomic64_add(delta, &iocg->vtime);
+-			atomic64_add(delta, &iocg->done_vtime);
+-			/* if usage is sufficiently low, maybe it can donate */
+-			if (surplus_adjusted_hweight_inuse(usage, hw_inuse))
+-				list_add(&iocg->surplus_list, &surpluses);
+-		} else if (hw_inuse < hw_active) {
+-			u32 new_hwi, new_inuse;
++		if (hw_inuse < hw_active ||
++		    (!waitqueue_active(&iocg->waitq) &&
++		     time_before64(vtime, now.vnow - ioc->margins.max))) {
++			u32 hwm, new_hwi;
+ 
+-			/* was donating but might need to take back some */
+-			if (waitqueue_active(&iocg->waitq)) {
+-				new_hwi = hw_active;
++			/*
++			 * Already donating or accumulated enough to start.
++			 * Determine the donation amount.
++			 */
++			hwm = current_hweight_max(iocg);
++			new_hwi = hweight_after_donation(iocg, hwm, usage,
++							 &now);
++			if (new_hwi < hwm) {
++				iocg->hweight_after_donation = new_hwi;
++				list_add(&iocg->surplus_list, &surpluses);
+ 			} else {
+-				new_hwi = max(hw_inuse,
+-					      usage * SURPLUS_SCALE_PCT / 100 +
+-					      SURPLUS_SCALE_ABS);
+-			}
+-
+-			new_inuse = div64_u64((u64)iocg->inuse * new_hwi,
+-					      hw_inuse);
+-			new_inuse = clamp_t(u32, new_inuse, 1, iocg->active);
+-
+-			if (new_inuse > iocg->inuse) {
+-				TRACE_IOCG_PATH(inuse_takeback, iocg, &now,
+-						iocg->inuse, new_inuse,
+-						hw_inuse, new_hwi);
+-				__propagate_weights(iocg, iocg->weight,
+-						    new_inuse);
++				__propagate_weights(iocg, iocg->active,
++						    iocg->active);
++				nr_shortages++;
+ 			}
+ 		} else {
+-			/* genuninely out of vtime */
++			/* genuinely short on vtime */
+ 			nr_shortages++;
+ 		}
+ 	}
+ 
+-	if (!nr_shortages || list_empty(&surpluses))
+-		goto skip_surplus_transfers;
++	if (!list_empty(&surpluses) && nr_shortages)
++		transfer_surpluses(&surpluses, &now);
+ 
+-	/* there are both shortages and surpluses, transfer surpluses */
+-	list_for_each_entry(iocg, &surpluses, surplus_list) {
+-		u32 usage, hw_active, hw_inuse, new_hwi, new_inuse;
+-		int nr_valid = 0;
+-
+-		/* base the decision on max historical usage */
+-		for (i = 0, usage = 0; i < NR_USAGE_SLOTS; i++) {
+-			if (iocg->usages[i]) {
+-				usage = max(usage, iocg->usages[i]);
+-				nr_valid++;
+-			}
+-		}
+-		if (nr_valid < MIN_VALID_USAGES)
+-			continue;
+-
+-		current_hweight(iocg, &hw_active, &hw_inuse);
+-		new_hwi = surplus_adjusted_hweight_inuse(usage, hw_inuse);
+-		if (!new_hwi)
+-			continue;
+-
+-		new_inuse = DIV64_U64_ROUND_UP((u64)iocg->inuse * new_hwi,
+-					       hw_inuse);
+-		if (new_inuse < iocg->inuse) {
+-			TRACE_IOCG_PATH(inuse_giveaway, iocg, &now,
+-					iocg->inuse, new_inuse,
+-					hw_inuse, new_hwi);
+-			__propagate_weights(iocg, iocg->weight, new_inuse);
+-		}
+-	}
+-skip_surplus_transfers:
+ 	commit_weights(ioc);
+ 
+ 	/* surplus list should be dissolved after use */
 -- 
 2.26.2
 
