@@ -2,194 +2,177 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47732C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46709C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17BB6206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DKvWNEH3"
+	by mail.kernel.org (Postfix) with ESMTP id 208BF206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976324;
+	bh=AJ5GY7sStFFpN4d2wp55vrmNmGGsqU3GnYKHqvcwtPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pFqxyBY6VYBLolmuphH93pnqeu9MVj0HxPH509Oe8U5J+NsvhplWHum1CndW/9Iit
+	 X1NcXReZFh1J/3wyVCMMElpxtMfzQ/iUN4JGvBkrjzgqOdiYd13vOWDOGC6k3v2BGj
+	 xGr0hi1r5oEkYh2zpCzgTYyd8Wv9YoZFyd8W6X5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbgIAQFT (ORCPT
+        id S1731461AbgIAQFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:05:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55920 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730560AbgIAPlZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:25 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 338E3C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:41:24 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id i26so2284245ejb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mRRv/JWr8lefJK8mOV5+SVMKnyOKM6jC1YlJAAQDR3k=;
-        b=DKvWNEH3Gj78jemdv3xdYpWry18IwiJrX2WSmxBD9QiFUMXZk7WJJK1Ckv3j2MsKvd
-         JkZDL3Cspa3ZWauj6niFf3qa3/wvuCOvJQCPlQCDK/7DrAmMohx4s35NZd60qn7rEaRf
-         eD0Zh6lsBKI35S5bYfaD2ggRIZUIMTVnWUaWahiuKMTXQ2XYMYyedsSkPvMaM+qP04AN
-         qLGyply6M6Uz0B5UiUDHj9ORJSfdI1J5B0ah9ay62g6TRX0DPYuDY3NbHcVlR2zj5cxC
-         aHz1xeWR/XNN9xLbd7VSng/wpbh5+TAU8986gqSMno0rABJJjgxBSzNRsg2RzbDPmgOO
-         eT4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mRRv/JWr8lefJK8mOV5+SVMKnyOKM6jC1YlJAAQDR3k=;
-        b=uUhWSknU1rZogW4MtABMWOnipRb9psLoKUA5zfSaNDGJTKRqSyoxrfYHZk6ZOdx6Fv
-         UAhfrRupKSPTjyB0vAFJJmPEKtGq7ELr8B1jF+0sEWVGNZpFAkGvV0Lc9bnbZD1jFY0b
-         306WNLwKEkohpYziFN9lU8Hu9fbo3k6bINkxEbwkAz4OTtZ0Qu8fcqxYIHelfsXWgbdA
-         O8ob/BIPMxgpyvKjmTV83I/oKFvF0bZ3yYBsZZ5Y73Sy6YkpySmS1ZrAU3uZLsOEyYF9
-         nXklef6ccAKJsq/hM4Qn4mfjcGuyPQ2KihjM9txfZ4FJZAVdV1Tt5EnW5pWGMSvkyFA7
-         bEgg==
-X-Gm-Message-State: AOAM5339vE5DnHbNTLU1/riRLb+nuK6rTaIIXg0wXtEa+jKxKN7g8iH6
-        sCoIZEVBiG2nayZrviv1+mKWKcd/dry4jsG6sxY=
-X-Google-Smtp-Source: ABdhPJwSI7Ww+Iu3sIIm2sM4dYRhO7So9wRLA8acL04LZKVkQWQTxScqvQ4zcYZurITt0TyiquVJi606SSSQXpe6bs0=
-X-Received: by 2002:a17:906:edd6:: with SMTP id sb22mr1852146ejb.499.1598974882857;
- Tue, 01 Sep 2020 08:41:22 -0700 (PDT)
+        Tue, 1 Sep 2020 12:05:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53556 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728161AbgIAPl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:41:26 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3F4C2064B;
+        Tue,  1 Sep 2020 15:41:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974885;
+        bh=AJ5GY7sStFFpN4d2wp55vrmNmGGsqU3GnYKHqvcwtPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PMssXZBqm7X/axKEqkfT3OS+jQSQ37rKNVUoWuKQRYdDaUu5tEFvQkIBl8+9KrQuD
+         ieJVD3LTDo3bzr2fi3UTtqudtjYrM/phQo9kmcacxMopy5QnwUlxC4RXNdO8GMEe9K
+         oHKIYHcDK4VVA5SPVajAsksZAVHXy/mX1ACzXAjg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 128/255] netfilter: avoid ipv6 -> nf_defrag_ipv6 module dependency
+Date:   Tue,  1 Sep 2020 17:09:44 +0200
+Message-Id: <20200901151006.851536741@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils> <alpine.LSU.2.11.2008301408230.5954@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2008301408230.5954@eggly.anvils>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Tue, 1 Sep 2020 08:41:11 -0700
-Message-ID: <CAHbLzkpdW5hLVP0wUcwrrEnnHpqnrHRWZnMWtiGnhezNaEDyzA@mail.gmail.com>
-Subject: Re: [PATCH 5/5] mlock: fix unevictable_pgs event counts on THP
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 2:09 PM Hugh Dickins <hughd@google.com> wrote:
->
-> 5.8 commit 5d91f31faf8e ("mm: swap: fix vmstats for huge page") has
-> established that vm_events should count every subpage of a THP,
-> including unevictable_pgs_culled and unevictable_pgs_rescued; but
-> lru_cache_add_inactive_or_unevictable() was not doing so for
-> unevictable_pgs_mlocked, and mm/mlock.c was not doing so for
-> unevictable_pgs mlocked, munlocked, cleared and stranded.
->
-> Fix them; but THPs don't go the pagevec way in mlock.c,
-> so no fixes needed on that path.
->
-> Fixes: 5d91f31faf8e ("mm: swap: fix vmstats for huge page")
-> Signed-off-by: Hugh Dickins <hughd@google.com>
+From: Florian Westphal <fw@strlen.de>
 
-Acked-by: Yang Shi <shy828301@gmail.com>
+[ Upstream commit 2404b73c3f1a5f15726c6ecd226b56f6f992767f ]
 
-> ---
-> I've only checked UNEVICTABLEs: there may be more inconsistencies left.
-> The check_move_unevictable_pages() patch brought me to this one, but
-> this is more important because mlock works on all THPs, without needing
-> special testing "force".  But, it's still just monotonically increasing
-> event counts, so not all that important.
->
->  mm/mlock.c |   24 +++++++++++++++---------
->  mm/swap.c  |    6 +++---
->  2 files changed, 18 insertions(+), 12 deletions(-)
->
-> --- 5.9-rc2/mm/mlock.c  2020-08-16 17:32:50.665507048 -0700
-> +++ linux/mm/mlock.c    2020-08-28 17:42:07.975278411 -0700
-> @@ -58,11 +58,14 @@ EXPORT_SYMBOL(can_do_mlock);
->   */
->  void clear_page_mlock(struct page *page)
->  {
-> +       int nr_pages;
-> +
->         if (!TestClearPageMlocked(page))
->                 return;
->
-> -       mod_zone_page_state(page_zone(page), NR_MLOCK, -thp_nr_pages(page));
-> -       count_vm_event(UNEVICTABLE_PGCLEARED);
-> +       nr_pages = thp_nr_pages(page);
-> +       mod_zone_page_state(page_zone(page), NR_MLOCK, -nr_pages);
-> +       count_vm_events(UNEVICTABLE_PGCLEARED, nr_pages);
->         /*
->          * The previous TestClearPageMlocked() corresponds to the smp_mb()
->          * in __pagevec_lru_add_fn().
-> @@ -76,7 +79,7 @@ void clear_page_mlock(struct page *page)
->                  * We lost the race. the page already moved to evictable list.
->                  */
->                 if (PageUnevictable(page))
-> -                       count_vm_event(UNEVICTABLE_PGSTRANDED);
-> +                       count_vm_events(UNEVICTABLE_PGSTRANDED, nr_pages);
->         }
->  }
->
-> @@ -93,9 +96,10 @@ void mlock_vma_page(struct page *page)
->         VM_BUG_ON_PAGE(PageCompound(page) && PageDoubleMap(page), page);
->
->         if (!TestSetPageMlocked(page)) {
-> -               mod_zone_page_state(page_zone(page), NR_MLOCK,
-> -                                   thp_nr_pages(page));
-> -               count_vm_event(UNEVICTABLE_PGMLOCKED);
-> +               int nr_pages = thp_nr_pages(page);
-> +
-> +               mod_zone_page_state(page_zone(page), NR_MLOCK, nr_pages);
-> +               count_vm_events(UNEVICTABLE_PGMLOCKED, nr_pages);
->                 if (!isolate_lru_page(page))
->                         putback_lru_page(page);
->         }
-> @@ -138,7 +142,7 @@ static void __munlock_isolated_page(stru
->
->         /* Did try_to_unlock() succeed or punt? */
->         if (!PageMlocked(page))
-> -               count_vm_event(UNEVICTABLE_PGMUNLOCKED);
-> +               count_vm_events(UNEVICTABLE_PGMUNLOCKED, thp_nr_pages(page));
->
->         putback_lru_page(page);
->  }
-> @@ -154,10 +158,12 @@ static void __munlock_isolated_page(stru
->   */
->  static void __munlock_isolation_failed(struct page *page)
->  {
-> +       int nr_pages = thp_nr_pages(page);
-> +
->         if (PageUnevictable(page))
-> -               __count_vm_event(UNEVICTABLE_PGSTRANDED);
-> +               __count_vm_events(UNEVICTABLE_PGSTRANDED, nr_pages);
->         else
-> -               __count_vm_event(UNEVICTABLE_PGMUNLOCKED);
-> +               __count_vm_events(UNEVICTABLE_PGMUNLOCKED, nr_pages);
->  }
->
->  /**
-> --- 5.9-rc2/mm/swap.c   2020-08-16 17:32:50.709507284 -0700
-> +++ linux/mm/swap.c     2020-08-28 17:42:07.975278411 -0700
-> @@ -494,14 +494,14 @@ void lru_cache_add_inactive_or_unevictab
->
->         unevictable = (vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) == VM_LOCKED;
->         if (unlikely(unevictable) && !TestSetPageMlocked(page)) {
-> +               int nr_pages = thp_nr_pages(page);
->                 /*
->                  * We use the irq-unsafe __mod_zone_page_stat because this
->                  * counter is not modified from interrupt context, and the pte
->                  * lock is held(spinlock), which implies preemption disabled.
->                  */
-> -               __mod_zone_page_state(page_zone(page), NR_MLOCK,
-> -                                   thp_nr_pages(page));
-> -               count_vm_event(UNEVICTABLE_PGMLOCKED);
-> +               __mod_zone_page_state(page_zone(page), NR_MLOCK, nr_pages);
-> +               count_vm_events(UNEVICTABLE_PGMLOCKED, nr_pages);
->         }
->         lru_cache_add(page);
->  }
->
+nf_ct_frag6_gather is part of nf_defrag_ipv6.ko, not ipv6 core.
+
+The current use of the netfilter ipv6 stub indirections  causes a module
+dependency between ipv6 and nf_defrag_ipv6.
+
+This prevents nf_defrag_ipv6 module from being removed because ipv6 can't
+be unloaded.
+
+Remove the indirection and always use a direct call.  This creates a
+depency from nf_conntrack_bridge to nf_defrag_ipv6 instead:
+
+modinfo nf_conntrack
+depends:        nf_conntrack,nf_defrag_ipv6,bridge
+
+.. and nf_conntrack already depends on nf_defrag_ipv6 anyway.
+
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/netfilter_ipv6.h             | 18 ------------------
+ net/bridge/netfilter/nf_conntrack_bridge.c |  8 ++++++--
+ net/ipv6/netfilter.c                       |  3 ---
+ 3 files changed, 6 insertions(+), 23 deletions(-)
+
+diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
+index aac42c28fe62d..9b67394471e1c 100644
+--- a/include/linux/netfilter_ipv6.h
++++ b/include/linux/netfilter_ipv6.h
+@@ -58,7 +58,6 @@ struct nf_ipv6_ops {
+ 			int (*output)(struct net *, struct sock *, struct sk_buff *));
+ 	int (*reroute)(struct sk_buff *skb, const struct nf_queue_entry *entry);
+ #if IS_MODULE(CONFIG_IPV6)
+-	int (*br_defrag)(struct net *net, struct sk_buff *skb, u32 user);
+ 	int (*br_fragment)(struct net *net, struct sock *sk,
+ 			   struct sk_buff *skb,
+ 			   struct nf_bridge_frag_data *data,
+@@ -117,23 +116,6 @@ static inline int nf_ip6_route(struct net *net, struct dst_entry **dst,
+ 
+ #include <net/netfilter/ipv6/nf_defrag_ipv6.h>
+ 
+-static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
+-				    u32 user)
+-{
+-#if IS_MODULE(CONFIG_IPV6)
+-	const struct nf_ipv6_ops *v6_ops = nf_get_ipv6_ops();
+-
+-	if (!v6_ops)
+-		return 1;
+-
+-	return v6_ops->br_defrag(net, skb, user);
+-#elif IS_BUILTIN(CONFIG_IPV6)
+-	return nf_ct_frag6_gather(net, skb, user);
+-#else
+-	return 1;
+-#endif
+-}
+-
+ int br_ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 		    struct nf_bridge_frag_data *data,
+ 		    int (*output)(struct net *, struct sock *sk,
+diff --git a/net/bridge/netfilter/nf_conntrack_bridge.c b/net/bridge/netfilter/nf_conntrack_bridge.c
+index 8096732223828..8d033a75a766e 100644
+--- a/net/bridge/netfilter/nf_conntrack_bridge.c
++++ b/net/bridge/netfilter/nf_conntrack_bridge.c
+@@ -168,6 +168,7 @@ static unsigned int nf_ct_br_defrag4(struct sk_buff *skb,
+ static unsigned int nf_ct_br_defrag6(struct sk_buff *skb,
+ 				     const struct nf_hook_state *state)
+ {
++#if IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+ 	u16 zone_id = NF_CT_DEFAULT_ZONE_ID;
+ 	enum ip_conntrack_info ctinfo;
+ 	struct br_input_skb_cb cb;
+@@ -180,14 +181,17 @@ static unsigned int nf_ct_br_defrag6(struct sk_buff *skb,
+ 
+ 	br_skb_cb_save(skb, &cb, sizeof(struct inet6_skb_parm));
+ 
+-	err = nf_ipv6_br_defrag(state->net, skb,
+-				IP_DEFRAG_CONNTRACK_BRIDGE_IN + zone_id);
++	err = nf_ct_frag6_gather(state->net, skb,
++				 IP_DEFRAG_CONNTRACK_BRIDGE_IN + zone_id);
+ 	/* queued */
+ 	if (err == -EINPROGRESS)
+ 		return NF_STOLEN;
+ 
+ 	br_skb_cb_restore(skb, &cb, IP6CB(skb)->frag_max_size);
+ 	return err == 0 ? NF_ACCEPT : NF_DROP;
++#else
++	return NF_ACCEPT;
++#endif
+ }
+ 
+ static int nf_ct_br_ip_check(const struct sk_buff *skb)
+diff --git a/net/ipv6/netfilter.c b/net/ipv6/netfilter.c
+index 409e79b84a830..6d0e942d082d4 100644
+--- a/net/ipv6/netfilter.c
++++ b/net/ipv6/netfilter.c
+@@ -245,9 +245,6 @@ static const struct nf_ipv6_ops ipv6ops = {
+ 	.route_input		= ip6_route_input,
+ 	.fragment		= ip6_fragment,
+ 	.reroute		= nf_ip6_reroute,
+-#if IS_MODULE(CONFIG_IPV6) && IS_ENABLED(CONFIG_NF_DEFRAG_IPV6)
+-	.br_defrag		= nf_ct_frag6_gather,
+-#endif
+ #if IS_MODULE(CONFIG_IPV6)
+ 	.br_fragment		= br_ip6_fragment,
+ #endif
+-- 
+2.25.1
+
+
+
