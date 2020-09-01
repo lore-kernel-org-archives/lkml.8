@@ -5,60 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE45EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C32AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7F822210
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716CC2220B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="DDJX8Seb";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6xPLa8gs"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="MZkOHEZz";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SFZyZRLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728520AbgIAOtZ (ORCPT
+        id S1728565AbgIAOt3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:49:25 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39570 "EHLO
+        Tue, 1 Sep 2020 10:49:29 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39618 "EHLO
         galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727833AbgIALs3 (ORCPT
+        with ESMTP id S1727852AbgIALs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 07:48:29 -0400
-Date:   Tue, 01 Sep 2020 11:48:00 -0000
+Date:   Tue, 01 Sep 2020 11:48:02 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598960881;
+        s=2020; t=1598960883;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yGQgNakCykbqR5aPhtVukkHBWUotXW7VbswnwWIXeio=;
-        b=DDJX8SebSyClB0MpoEFGdnsl+zVfIduGOZElDS2rBCbm6A6tvkXwzm29n6+Seza6f6dtkb
-        ZWPLYbD6ADtoIh143qOUrXT2b6qgubDmM0/s6/ISS/kTQ3D8rXp9eous0K5mSxyNjHO90+
-        t6quL5WRhdh/qNaCBlvGtdL6kpxifx28eCPu1MnF1H9gCTN++nhIEEI4zQKx+ijNHQ7F/t
-        0/9CjCFIsiqqukwFtXr4nccg1/dXkWziCilhZmQO+4oMfnfYFRPtD6HOJ6Y+qT6vTqALBp
-        F9j9oTUrul+NhYVojAb3sPLYWGAMGLDE9KPL9jdMm4U7Ai+2H3OE9bU9MnUJ3A==
+        bh=z7agiW4QyJ/KwxkgyxmE/KuLGl4OhPxpu3gpLz1BoIY=;
+        b=MZkOHEZzQNDCf58BRRdAf2ICd30/zCDUVPbzTWy2a19zbNCaz9ZWa9PtCYbXUfKXfDH+Ds
+        QtNlST16BFzyV0vl283P6W6/lskQXeYUL4Mq7jRz0gPvIk0pvJa8TqOGbUKSbKkWZwKSq2
+        j4qL+S4zcIovMEWbg1ExAM/8qQ6h3WQP2fjH2mEDugF/x2+2lneIuwlApE9mJszeOzMbes
+        qWIhvKMKJMI/P4vXsaX9DQF9tpOm4GWpFk90+VavxPNBeQZPUsU7eRd3e9H+83SqA+8AA8
+        eurvyvaOtLujbAi7phUz7AcRIu4tuYrTq05fD2vwa1U85gL9XS5Amn0z4ChhYA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598960881;
+        s=2020e; t=1598960883;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=yGQgNakCykbqR5aPhtVukkHBWUotXW7VbswnwWIXeio=;
-        b=6xPLa8gssvCSpZnkFvGBk7HuccNdlJsqBCsFcRlZPELf3morVnQie1FDmp7mDJvoqup0fu
-        gQ+oDuRfGe0yN6DA==
-From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+        bh=z7agiW4QyJ/KwxkgyxmE/KuLGl4OhPxpu3gpLz1BoIY=;
+        b=SFZyZRLAxBezvWumwK2Gu/vUnAAVXw4zrfZqP7VVWxlR2yhL59omwop5CAi3E4pr4UeWl/
+        CyY/Qx/2ekuC23Bg==
+From:   "tip-bot2 for Peter Zijlstra" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/build] vmlinux.lds.h: Split ELF_DETAILS from STABS_DEBUG
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        linux-arch@vger.kernel.org, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200821194310.3089815-5-keescook@chromium.org>
-References: <20200821194310.3089815-5-keescook@chromium.org>
+Subject: [tip: core/static_call] static_call: Allow early init
+Cc:     "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200818135805.220737930@infradead.org>
+References: <20200818135805.220737930@infradead.org>
 MIME-Version: 1.0
-Message-ID: <159896088033.20229.13958957773143436150.tip-bot2@tip-bot2>
+Message-ID: <159896088285.20229.7006009162500635991.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -68,363 +69,250 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/build branch of tip:
+The following commit has been merged into the core/static_call branch of tip:
 
-Commit-ID:     c604abc3f6e3030f3a3022b184ed7d3780c34d30
-Gitweb:        https://git.kernel.org/tip/c604abc3f6e3030f3a3022b184ed7d3780c34d30
-Author:        Kees Cook <keescook@chromium.org>
-AuthorDate:    Fri, 21 Aug 2020 12:42:45 -07:00
+Commit-ID:     a945c8345ec0decb2f1a7f19a8c5e60bcb1dd1eb
+Gitweb:        https://git.kernel.org/tip/a945c8345ec0decb2f1a7f19a8c5e60bcb1dd1eb
+Author:        Peter Zijlstra <peterz@infradead.org>
+AuthorDate:    Tue, 18 Aug 2020 15:57:51 +02:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Sep 2020 09:50:35 +02:00
+CommitterDate: Tue, 01 Sep 2020 09:58:06 +02:00
 
-vmlinux.lds.h: Split ELF_DETAILS from STABS_DEBUG
+static_call: Allow early init
 
-The .comment section doesn't belong in STABS_DEBUG. Split it out into a
-new macro named ELF_DETAILS. This will gain other non-debug sections
-that need to be accounted for when linking with --orphan-handling=warn.
+In order to use static_call() to wire up x86_pmu, we need to
+initialize earlier, specifically before memory allocation works; copy
+some of the tricks from jump_label to enable this.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Primarily we overload key->next to store a sites pointer when there
+are no modules, this avoids having to use kmalloc() to initialize the
+sites and allows us to run much earlier.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: linux-arch@vger.kernel.org
-Link: https://lore.kernel.org/r/20200821194310.3089815-5-keescook@chromium.org
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lore.kernel.org/r/20200818135805.220737930@infradead.org
 ---
- arch/alpha/kernel/vmlinux.lds.S           | 1 +
- arch/arc/kernel/vmlinux.lds.S             | 1 +
- arch/arm/kernel/vmlinux-xip.lds.S         | 1 +
- arch/arm/kernel/vmlinux.lds.S             | 1 +
- arch/arm64/kernel/vmlinux.lds.S           | 1 +
- arch/csky/kernel/vmlinux.lds.S            | 1 +
- arch/hexagon/kernel/vmlinux.lds.S         | 1 +
- arch/ia64/kernel/vmlinux.lds.S            | 1 +
- arch/mips/kernel/vmlinux.lds.S            | 1 +
- arch/nds32/kernel/vmlinux.lds.S           | 1 +
- arch/nios2/kernel/vmlinux.lds.S           | 1 +
- arch/openrisc/kernel/vmlinux.lds.S        | 1 +
- arch/parisc/boot/compressed/vmlinux.lds.S | 1 +
- arch/parisc/kernel/vmlinux.lds.S          | 1 +
- arch/powerpc/kernel/vmlinux.lds.S         | 2 +-
- arch/riscv/kernel/vmlinux.lds.S           | 1 +
- arch/s390/kernel/vmlinux.lds.S            | 1 +
- arch/sh/kernel/vmlinux.lds.S              | 1 +
- arch/sparc/kernel/vmlinux.lds.S           | 1 +
- arch/um/kernel/dyn.lds.S                  | 2 +-
- arch/um/kernel/uml.lds.S                  | 2 +-
- arch/x86/boot/compressed/vmlinux.lds.S    | 2 ++
- arch/x86/kernel/vmlinux.lds.S             | 1 +
- include/asm-generic/vmlinux.lds.h         | 8 ++++++--
- 24 files changed, 30 insertions(+), 5 deletions(-)
+ arch/x86/kernel/setup.c       |  2 +-
+ arch/x86/kernel/static_call.c |  5 +-
+ include/linux/static_call.h   | 15 ++++++-
+ kernel/static_call.c          | 70 ++++++++++++++++++++++++++++++++--
+ 4 files changed, 85 insertions(+), 7 deletions(-)
 
-diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
-index bc6f727..5b78d64 100644
---- a/arch/alpha/kernel/vmlinux.lds.S
-+++ b/arch/alpha/kernel/vmlinux.lds.S
-@@ -72,6 +72,7 @@ SECTIONS
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3511736..799a6de 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -19,6 +19,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/tboot.h>
+ #include <linux/usb/xhci-dbgp.h>
++#include <linux/static_call.h>
  
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
+ #include <uapi/linux/mount.h>
  
- 	DISCARDS
- }
-diff --git a/arch/arc/kernel/vmlinux.lds.S b/arch/arc/kernel/vmlinux.lds.S
-index 54139a6..33ce59d 100644
---- a/arch/arc/kernel/vmlinux.lds.S
-+++ b/arch/arc/kernel/vmlinux.lds.S
-@@ -122,6 +122,7 @@ SECTIONS
- 	_end = . ;
+@@ -849,6 +850,7 @@ void __init setup_arch(char **cmdline_p)
+ 	early_cpu_init();
+ 	arch_init_ideal_nops();
+ 	jump_label_init();
++	static_call_init();
+ 	early_ioremap_init();
  
- 	STABS_DEBUG
-+	ELF_DETAILS
- 	DISCARDS
+ 	setup_olpc_ofw_pgd();
+diff --git a/arch/x86/kernel/static_call.c b/arch/x86/kernel/static_call.c
+index 55140d8..ca9a380 100644
+--- a/arch/x86/kernel/static_call.c
++++ b/arch/x86/kernel/static_call.c
+@@ -11,7 +11,7 @@ enum insn_type {
+ 	RET = 3,  /* tramp / site cond-tail-call */
+ };
  
- 	.arcextmap 0 : {
-diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
-index 6d2be99..3d4e88f 100644
---- a/arch/arm/kernel/vmlinux-xip.lds.S
-+++ b/arch/arm/kernel/vmlinux-xip.lds.S
-@@ -152,6 +152,7 @@ SECTIONS
- 	_end = .;
+-static void __static_call_transform(void *insn, enum insn_type type, void *func)
++static void __ref __static_call_transform(void *insn, enum insn_type type, void *func)
+ {
+ 	int size = CALL_INSN_SIZE;
+ 	const void *code;
+@@ -38,6 +38,9 @@ static void __static_call_transform(void *insn, enum insn_type type, void *func)
+ 	if (memcmp(insn, code, size) == 0)
+ 		return;
  
- 	STABS_DEBUG
-+	ELF_DETAILS
- }
- 
- /*
-diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
-index 7f24bc0..5592f14 100644
---- a/arch/arm/kernel/vmlinux.lds.S
-+++ b/arch/arm/kernel/vmlinux.lds.S
-@@ -151,6 +151,7 @@ SECTIONS
- 	_end = .;
- 
- 	STABS_DEBUG
-+	ELF_DETAILS
++	if (unlikely(system_state == SYSTEM_BOOTING))
++		return text_poke_early(insn, code, size);
++
+ 	text_poke_bp(insn, code, size, NULL);
  }
  
- #ifdef CONFIG_STRICT_KERNEL_RWX
-diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-index ec8e894..13fc2ec 100644
---- a/arch/arm64/kernel/vmlinux.lds.S
-+++ b/arch/arm64/kernel/vmlinux.lds.S
-@@ -241,6 +241,7 @@ SECTIONS
- 	_end = .;
+diff --git a/include/linux/static_call.h b/include/linux/static_call.h
+index 519bd66..bfa2ba3 100644
+--- a/include/linux/static_call.h
++++ b/include/linux/static_call.h
+@@ -136,6 +136,8 @@ extern void arch_static_call_transform(void *site, void *tramp, void *func, bool
  
- 	STABS_DEBUG
-+	ELF_DETAILS
+ #ifdef CONFIG_HAVE_STATIC_CALL_INLINE
  
- 	HEAD_SYMBOLS
++extern void __init static_call_init(void);
++
+ struct static_call_mod {
+ 	struct static_call_mod *next;
+ 	struct module *mod; /* for vmlinux, mod == NULL */
+@@ -144,7 +146,12 @@ struct static_call_mod {
+ 
+ struct static_call_key {
+ 	void *func;
+-	struct static_call_mod *mods;
++	union {
++		/* bit 0: 0 = mods, 1 = sites */
++		unsigned long type;
++		struct static_call_mod *mods;
++		struct static_call_site *sites;
++	};
+ };
+ 
+ extern void __static_call_update(struct static_call_key *key, void *tramp, void *func);
+@@ -155,7 +162,7 @@ extern int static_call_text_reserved(void *start, void *end);
+ 	DECLARE_STATIC_CALL(name, _func);				\
+ 	struct static_call_key STATIC_CALL_KEY(name) = {		\
+ 		.func = _func,						\
+-		.mods = NULL,						\
++		.type = 1,						\
+ 	};								\
+ 	ARCH_DEFINE_STATIC_CALL_TRAMP(name, _func)
+ 
+@@ -180,6 +187,8 @@ extern int static_call_text_reserved(void *start, void *end);
+ 
+ #elif defined(CONFIG_HAVE_STATIC_CALL)
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+@@ -225,6 +234,8 @@ static inline int static_call_text_reserved(void *start, void *end)
+ 
+ #else /* Generic implementation */
+ 
++static inline void static_call_init(void) { }
++
+ struct static_call_key {
+ 	void *func;
+ };
+diff --git a/kernel/static_call.c b/kernel/static_call.c
+index d98e0e4..f8362b3 100644
+--- a/kernel/static_call.c
++++ b/kernel/static_call.c
+@@ -94,10 +94,31 @@ static inline void static_call_sort_entries(struct static_call_site *start,
+ 	     static_call_site_cmp, static_call_site_swap);
  }
-diff --git a/arch/csky/kernel/vmlinux.lds.S b/arch/csky/kernel/vmlinux.lds.S
-index f05b413..f03033e 100644
---- a/arch/csky/kernel/vmlinux.lds.S
-+++ b/arch/csky/kernel/vmlinux.lds.S
-@@ -109,6 +109,7 @@ SECTIONS
  
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
++static inline bool static_call_key_has_mods(struct static_call_key *key)
++{
++	return !(key->type & 1);
++}
++
++static inline struct static_call_mod *static_call_key_next(struct static_call_key *key)
++{
++	if (!static_call_key_has_mods(key))
++		return NULL;
++
++	return key->mods;
++}
++
++static inline struct static_call_site *static_call_key_sites(struct static_call_key *key)
++{
++	if (static_call_key_has_mods(key))
++		return NULL;
++
++	return (struct static_call_site *)(key->type & ~1);
++}
++
+ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ {
+ 	struct static_call_site *site, *stop;
+-	struct static_call_mod *site_mod;
++	struct static_call_mod *site_mod, first;
  
- 	DISCARDS
- }
-diff --git a/arch/hexagon/kernel/vmlinux.lds.S b/arch/hexagon/kernel/vmlinux.lds.S
-index 0ca2471..35b18e5 100644
---- a/arch/hexagon/kernel/vmlinux.lds.S
-+++ b/arch/hexagon/kernel/vmlinux.lds.S
-@@ -67,5 +67,6 @@ SECTIONS
+ 	cpus_read_lock();
+ 	static_call_lock();
+@@ -116,13 +137,22 @@ void __static_call_update(struct static_call_key *key, void *tramp, void *func)
+ 	if (WARN_ON_ONCE(!static_call_initialized))
+ 		goto done;
  
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
+-	for (site_mod = key->mods; site_mod; site_mod = site_mod->next) {
++	first = (struct static_call_mod){
++		.next = static_call_key_next(key),
++		.mod = NULL,
++		.sites = static_call_key_sites(key),
++	};
++
++	for (site_mod = &first; site_mod; site_mod = site_mod->next) {
+ 		struct module *mod = site_mod->mod;
  
- }
-diff --git a/arch/ia64/kernel/vmlinux.lds.S b/arch/ia64/kernel/vmlinux.lds.S
-index d259690..9b26578 100644
---- a/arch/ia64/kernel/vmlinux.lds.S
-+++ b/arch/ia64/kernel/vmlinux.lds.S
-@@ -218,6 +218,7 @@ SECTIONS {
+ 		if (!site_mod->sites) {
+ 			/*
+ 			 * This can happen if the static call key is defined in
+ 			 * a module which doesn't use it.
++			 *
++			 * It also happens in the has_mods case, where the
++			 * 'first' entry has no sites associated with it.
+ 			 */
+ 			continue;
+ 		}
+@@ -192,16 +222,48 @@ static int __static_call_init(struct module *mod,
+ 		if (key != prev_key) {
+ 			prev_key = key;
  
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
++			/*
++			 * For vmlinux (!mod) avoid the allocation by storing
++			 * the sites pointer in the key itself. Also see
++			 * __static_call_update()'s @first.
++			 *
++			 * This allows architectures (eg. x86) to call
++			 * static_call_init() before memory allocation works.
++			 */
++			if (!mod) {
++				key->sites = site;
++				key->type |= 1;
++				goto do_transform;
++			}
++
+ 			site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
+ 			if (!site_mod)
+ 				return -ENOMEM;
  
- 	/* Default discards */
- 	DISCARDS
-diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
-index f185a85..5e97e9d 100644
---- a/arch/mips/kernel/vmlinux.lds.S
-+++ b/arch/mips/kernel/vmlinux.lds.S
-@@ -202,6 +202,7 @@ SECTIONS
++			/*
++			 * When the key has a direct sites pointer, extract
++			 * that into an explicit struct static_call_mod, so we
++			 * can have a list of modules.
++			 */
++			if (static_call_key_sites(key)) {
++				site_mod->mod = NULL;
++				site_mod->next = NULL;
++				site_mod->sites = static_call_key_sites(key);
++
++				key->mods = site_mod;
++
++				site_mod = kzalloc(sizeof(*site_mod), GFP_KERNEL);
++				if (!site_mod)
++					return -ENOMEM;
++			}
++
+ 			site_mod->mod = mod;
+ 			site_mod->sites = site;
+-			site_mod->next = key->mods;
++			site_mod->next = static_call_key_next(key);
+ 			key->mods = site_mod;
+ 		}
  
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	/* These must appear regardless of  .  */
- 	.gptab.sdata : {
-diff --git a/arch/nds32/kernel/vmlinux.lds.S b/arch/nds32/kernel/vmlinux.lds.S
-index 7a6c1ce..6a91b96 100644
---- a/arch/nds32/kernel/vmlinux.lds.S
-+++ b/arch/nds32/kernel/vmlinux.lds.S
-@@ -64,6 +64,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	DISCARDS
- }
-diff --git a/arch/nios2/kernel/vmlinux.lds.S b/arch/nios2/kernel/vmlinux.lds.S
-index c55a7cf..126e114 100644
---- a/arch/nios2/kernel/vmlinux.lds.S
-+++ b/arch/nios2/kernel/vmlinux.lds.S
-@@ -58,6 +58,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	DISCARDS
- }
-diff --git a/arch/openrisc/kernel/vmlinux.lds.S b/arch/openrisc/kernel/vmlinux.lds.S
-index 60449fd..d287dbb 100644
---- a/arch/openrisc/kernel/vmlinux.lds.S
-+++ b/arch/openrisc/kernel/vmlinux.lds.S
-@@ -115,6 +115,7 @@ SECTIONS
- 	/* Throw in the debugging sections */
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
-         /* Sections to be discarded -- must be last */
- 	DISCARDS
-diff --git a/arch/parisc/boot/compressed/vmlinux.lds.S b/arch/parisc/boot/compressed/vmlinux.lds.S
-index 2ac3a64..ab7b439 100644
---- a/arch/parisc/boot/compressed/vmlinux.lds.S
-+++ b/arch/parisc/boot/compressed/vmlinux.lds.S
-@@ -84,6 +84,7 @@ SECTIONS
++do_transform:
+ 		arch_static_call_transform(site_addr, NULL, key->func,
+ 				static_call_is_tail(site));
  	}
- 
- 	STABS_DEBUG
-+	ELF_DETAILS
- 	.note 0 : { *(.note) }
- 
- 	/* Sections to be discarded */
-diff --git a/arch/parisc/kernel/vmlinux.lds.S b/arch/parisc/kernel/vmlinux.lds.S
-index 53e29d8..2769eb9 100644
---- a/arch/parisc/kernel/vmlinux.lds.S
-+++ b/arch/parisc/kernel/vmlinux.lds.S
-@@ -164,6 +164,7 @@ SECTIONS
- 	_end = . ;
- 
- 	STABS_DEBUG
-+	ELF_DETAILS
- 	.note 0 : { *(.note) }
- 
- 	/* Sections to be discarded */
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index 326e113..e0548b4 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -360,8 +360,8 @@ SECTIONS
- 	PROVIDE32 (end = .);
- 
- 	STABS_DEBUG
--
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	DISCARDS
- 	/DISCARD/ : {
-diff --git a/arch/riscv/kernel/vmlinux.lds.S b/arch/riscv/kernel/vmlinux.lds.S
-index f3586e3..6f3af7b 100644
---- a/arch/riscv/kernel/vmlinux.lds.S
-+++ b/arch/riscv/kernel/vmlinux.lds.S
-@@ -97,6 +97,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	DISCARDS
- }
-diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
-index 3769549..177ccfb 100644
---- a/arch/s390/kernel/vmlinux.lds.S
-+++ b/arch/s390/kernel/vmlinux.lds.S
-@@ -181,6 +181,7 @@ SECTIONS
- 	/* Debugging sections.	*/
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	/* Sections to be discarded */
- 	DISCARDS
-diff --git a/arch/sh/kernel/vmlinux.lds.S b/arch/sh/kernel/vmlinux.lds.S
-index bde7a6c..3161b9c 100644
---- a/arch/sh/kernel/vmlinux.lds.S
-+++ b/arch/sh/kernel/vmlinux.lds.S
-@@ -76,6 +76,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	DISCARDS
- }
-diff --git a/arch/sparc/kernel/vmlinux.lds.S b/arch/sparc/kernel/vmlinux.lds.S
-index f99e99e..d55ae65 100644
---- a/arch/sparc/kernel/vmlinux.lds.S
-+++ b/arch/sparc/kernel/vmlinux.lds.S
-@@ -187,6 +187,7 @@ SECTIONS
- 
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	DISCARDS
- }
-diff --git a/arch/um/kernel/dyn.lds.S b/arch/um/kernel/dyn.lds.S
-index f500148..dacbfab 100644
---- a/arch/um/kernel/dyn.lds.S
-+++ b/arch/um/kernel/dyn.lds.S
-@@ -164,8 +164,8 @@ SECTIONS
-   PROVIDE (end = .);
- 
-   STABS_DEBUG
--
-   DWARF_DEBUG
-+  ELF_DETAILS
- 
-   DISCARDS
- }
-diff --git a/arch/um/kernel/uml.lds.S b/arch/um/kernel/uml.lds.S
-index 3b6dab3..45d957d 100644
---- a/arch/um/kernel/uml.lds.S
-+++ b/arch/um/kernel/uml.lds.S
-@@ -108,8 +108,8 @@ SECTIONS
-   PROVIDE (end = .);
- 
-   STABS_DEBUG
--
-   DWARF_DEBUG
-+  ELF_DETAILS
- 
-   DISCARDS
- }
-diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-index 29df99b..3c2ee9a 100644
---- a/arch/x86/boot/compressed/vmlinux.lds.S
-+++ b/arch/x86/boot/compressed/vmlinux.lds.S
-@@ -82,6 +82,8 @@ SECTIONS
- 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
- 	_end = .;
- 
-+	ELF_DETAILS
-+
- 	DISCARDS
+@@ -348,7 +410,7 @@ int static_call_text_reserved(void *start, void *end)
+ 	return __static_call_mod_text_reserved(start, end);
  }
  
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 9a03e5b..0cc035c 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -411,6 +411,7 @@ SECTIONS
+-static void __init static_call_init(void)
++void __init static_call_init(void)
+ {
+ 	int ret;
  
- 	STABS_DEBUG
- 	DWARF_DEBUG
-+	ELF_DETAILS
- 
- 	DISCARDS
- }
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 6b89a03..cadcbc3 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -34,6 +34,7 @@
-  *
-  *	STABS_DEBUG
-  *	DWARF_DEBUG
-+ *	ELF_DETAILS
-  *
-  *	DISCARDS		// must be the last
-  * }
-@@ -811,14 +812,17 @@
- 		.debug_macro	0 : { *(.debug_macro) }			\
- 		.debug_addr	0 : { *(.debug_addr) }
- 
--		/* Stabs debugging sections.  */
-+/* Stabs debugging sections. */
- #define STABS_DEBUG							\
- 		.stab 0 : { *(.stab) }					\
- 		.stabstr 0 : { *(.stabstr) }				\
- 		.stab.excl 0 : { *(.stab.excl) }			\
- 		.stab.exclstr 0 : { *(.stab.exclstr) }			\
- 		.stab.index 0 : { *(.stab.index) }			\
--		.stab.indexstr 0 : { *(.stab.indexstr) }		\
-+		.stab.indexstr 0 : { *(.stab.indexstr) }
-+
-+/* Required sections not related to debugging. */
-+#define ELF_DETAILS							\
- 		.comment 0 : { *(.comment) }
- 
- #ifdef CONFIG_GENERIC_BUG
