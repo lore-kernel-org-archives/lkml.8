@@ -2,127 +2,91 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B39C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 964C7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61B02206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976063;
-	bh=s0ggdQsQRTUXjPSnRMT/mKNOR2wQJ4J6Duk4z7ey7AI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2mF6V2uXYSCFNWQ9wb51eSDYb11L8ZBysevcde3f0eUAAhI4FAp44ioe1d2xtMlrH
-	 oi7mdKS4vzWqQ8N//uya0I3zyfsZ6nB4S/HK71i+VPQiUhnzAjw/fdEStTzTifkJ0n
-	 e9umrCrpWbwaE9xTJqiOD1AkfFpyzxsWbC/Arfic=
+	by mail.kernel.org (Postfix) with ESMTP id 657082078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:01:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="BHj68uZe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731808AbgIAQBA (ORCPT
+        id S1731663AbgIAQBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:01:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57636 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgIAQAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:00:30 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADAC8206A5;
-        Tue,  1 Sep 2020 16:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598976029;
-        bh=s0ggdQsQRTUXjPSnRMT/mKNOR2wQJ4J6Duk4z7ey7AI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NsvPncwcm3jI4EyLvjTW2QYsiyRTjLAqhWxlaD5W8JvYgCi+YpBHV6e2y1ScXX5Jm
-         glJwFJaqKkOAZqLBmYp47x/+Fw3dRw3DuBqG059ynwh1Rm7kzFKw2fOKLZAbhR2Fhc
-         hpbCIbUZFSpe1Z3+trSxJQYSXHZWqlsIX+5gYXBQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhu Lingshan <lingshan.zhu@intel.com>,
-        Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 103/255] vdpa: ifcvf: free config irq in ifcvf_free_irq()
-Date:   Tue,  1 Sep 2020 17:09:19 +0200
-Message-Id: <20200901151005.649123147@linuxfoundation.org>
+        Tue, 1 Sep 2020 12:01:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731388AbgIAP6D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:58:03 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F1FCC061245;
+        Tue,  1 Sep 2020 08:58:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=K5eIje+dXHxfLWtnzeoqBqIaTntBT6FnczHUHcmj9NM=; b=BHj68uZerC2AED+VGnjrkLa0Jh
+        nsJRW5vm091mrlQN4jasrWRgCM1ySYUPiKOPMQFvHehK/MlKtnHTq4wA553107TmfoWBqjYusFfYX
+        hdHxpzv+daxEQOnuXf6LklRx/LX2GKJBoWUUuYJ/y29nMBNvIIiiJqjuYtLUkOMxx5BP8xZfY/Z4A
+        CFzRy/RgRKCcS7Au+4o2s+j98ZQ2HjaNhxqv/ZtdIfcmckO7GlAMLvRgJLn00q/4ttYSbN93Dmike
+        0zdupPRWnfslW66yg0S9XJuGo14FgsCVoZ5MV+EfsKdkYr2KNA9ctgbrNlF6+GHh2s9ZqbM0SlrKW
+        GAfzhSYQ==;
+Received: from [2001:4bb8:18c:45ba:2f95:e5:ca6b:9b4a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD8fP-0004OY-KR; Tue, 01 Sep 2020 15:57:51 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        nbd@other.debian.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 1/9] Documentation/filesystems/locking.rst: remove an incorrect sentence
+Date:   Tue,  1 Sep 2020 17:57:40 +0200
+Message-Id: <20200901155748.2884-2-hch@lst.de>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+In-Reply-To: <20200901155748.2884-1-hch@lst.de>
+References: <20200901155748.2884-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Wang <jasowang@redhat.com>
+unlock_native_capacity is never called from check_disk_change(), and
+while revalidate_disk can be called from it, it can also be called
+from two other places at the moment.
 
-[ Upstream commit 2b9f28d5e8efad34f472542315911c5ee9a65b6c ]
-
-We don't free config irq in ifcvf_free_irq() which will trigger a
-BUG() in pci core since we try to free the vectors that has an
-action. Fixing this by recording the config irq in ifcvf_hw structure
-and free it in ifcvf_free_irq().
-
-Fixes: e7991f376a4d ("ifcvf: implement config interrupt in IFCVF")
-Cc: Zhu Lingshan <lingshan.zhu@intel.com>
-Signed-off-by: Jason Wang <jasowang@redhat.com>
-Link: https://lore.kernel.org/r/20200723091254.20617-2-jasowang@redhat.com
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Zhu Lingshan <lingshan.zhu@intel.com>
-Fixes: e7991f376a4d ("ifcvf: implement config interrupt in IFCVF")
-Cc: Zhu Lingshan <a class="moz-txt-link-rfc2396E" href="mailto:lingshan.zhu@intel.com">&lt;lingshan.zhu@intel.com&gt;</a>
-Signed-off-by: Jason Wang <a class="moz-txt-link-rfc2396E" href="mailto:jasowang@redhat.com">&lt;jasowang@redhat.com&gt;</a>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/vdpa/ifcvf/ifcvf_base.h | 2 +-
- drivers/vdpa/ifcvf/ifcvf_main.c | 5 +++--
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ Documentation/filesystems/locking.rst | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/vdpa/ifcvf/ifcvf_base.h b/drivers/vdpa/ifcvf/ifcvf_base.h
-index f4554412e607f..29efa75cdfce5 100644
---- a/drivers/vdpa/ifcvf/ifcvf_base.h
-+++ b/drivers/vdpa/ifcvf/ifcvf_base.h
-@@ -84,7 +84,7 @@ struct ifcvf_hw {
- 	void __iomem * const *base;
- 	char config_msix_name[256];
- 	struct vdpa_callback config_cb;
+diff --git a/Documentation/filesystems/locking.rst b/Documentation/filesystems/locking.rst
+index 64f94a18d97e75..c0f2c7586531b0 100644
+--- a/Documentation/filesystems/locking.rst
++++ b/Documentation/filesystems/locking.rst
+@@ -488,9 +488,6 @@ getgeo:			no
+ swap_slot_free_notify:	no	(see below)
+ ======================= ===================
+ 
+-unlock_native_capacity and revalidate_disk are called only from
+-check_disk_change().
 -
-+	unsigned int config_irq;
- };
+ swap_slot_free_notify is called with swap_lock and sometimes the page lock
+ held.
  
- struct ifcvf_adapter {
-diff --git a/drivers/vdpa/ifcvf/ifcvf_main.c b/drivers/vdpa/ifcvf/ifcvf_main.c
-index ae7110955a44d..7a6d899e541df 100644
---- a/drivers/vdpa/ifcvf/ifcvf_main.c
-+++ b/drivers/vdpa/ifcvf/ifcvf_main.c
-@@ -53,6 +53,7 @@ static void ifcvf_free_irq(struct ifcvf_adapter *adapter, int queues)
- 	for (i = 0; i < queues; i++)
- 		devm_free_irq(&pdev->dev, vf->vring[i].irq, &vf->vring[i]);
- 
-+	devm_free_irq(&pdev->dev, vf->config_irq, vf);
- 	ifcvf_free_irq_vectors(pdev);
- }
- 
-@@ -72,8 +73,8 @@ static int ifcvf_request_irq(struct ifcvf_adapter *adapter)
- 	snprintf(vf->config_msix_name, 256, "ifcvf[%s]-config\n",
- 		 pci_name(pdev));
- 	vector = 0;
--	irq = pci_irq_vector(pdev, vector);
--	ret = devm_request_irq(&pdev->dev, irq,
-+	vf->config_irq = pci_irq_vector(pdev, vector);
-+	ret = devm_request_irq(&pdev->dev, vf->config_irq,
- 			       ifcvf_config_changed, 0,
- 			       vf->config_msix_name, vf);
- 	if (ret) {
 -- 
-2.25.1
-
-
+2.28.0
 
