@@ -2,176 +2,101 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96470C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E477C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 745C7204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXBGg1pT"
+	by mail.kernel.org (Postfix) with ESMTP id 64263204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727038AbgIAHJd (ORCPT
+        id S1727048AbgIAHKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:09:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgIAHJb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:09:31 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEE46C0612AC;
-        Tue,  1 Sep 2020 00:09:29 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id k15so266754pfc.12;
-        Tue, 01 Sep 2020 00:09:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=jFgH868brKLfolG8ClhHF9TtNA3LHrtGgMA4zxAiKX0=;
-        b=lXBGg1pTqn6cby0WgpOe3/q47uedcKbwy1UqSIzT6KgmufWJuQxrOoKcdUDcd6c0FB
-         wxDe+BzsSkSf/ZsTcdMlFn8n0qtwjIOY1FNVQVRsuX+JX0I3QopCxJtSdXL182io0Hxv
-         snQXH27sz8ZOgxhixuD9Il92w2qq0U53YTe5i/flbm12Tqe5qieAFyEzzBNQvBSJxATc
-         CFC8owh4UiGrCzHKI4q7VFcsviOX/0TnqVMTS66tG795pMo7UKiv0Q1yPUQI0SnK1qRH
-         1fpabcG8UpprkbzupiPnCrPNP8p98/XHl2dfGHxuuPTOkJRkjndY2tsjbjnLhZfkcAid
-         7xAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=jFgH868brKLfolG8ClhHF9TtNA3LHrtGgMA4zxAiKX0=;
-        b=LAspN3VfX7gEU+FQXP3Z9NwrFgJy1HCvydxXCKDTiDnz4PvfPFWCXXpVOEESDVtf7c
-         wKeqLxsAqiWE2bFR6C4oZqSflvDXOvjOq1JT7YKBC2d/8h0NK4+jf4hC7qDMzh4Gp2Jv
-         x9lC2gVN73l13YAbLyrkiIRFTshQzaG2mEuqoYkT9j73a1NzxhD/1q73XW8/u1908swS
-         YJ6cNHe3E5ZTTN5fAyq7kt1C9gn5FhN/YDLYoQWefWiRxFmsWUbymOncaXg1ixp55Noy
-         O1cejNRA8yLHBYz9y3xcufRpMc0z0RFYZMeAfWY7syzo5m4jGBg8eIOY05b2QHk/5lLS
-         bAtA==
-X-Gm-Message-State: AOAM533eTFBCpoN6kfYcD8c0/o+9axAI0zsPwSbh4AVl0pZtmeV3nrFr
-        x0Ay7msEBfvQzLjWlDk4cWjgM1uzCHc=
-X-Google-Smtp-Source: ABdhPJw8IvUUs2LGl7PRJUTj57KcLBnaKUUSmv/YtwZ3U7UATVswK2AawtjMtjLfDcaS087AMzr53A==
-X-Received: by 2002:aa7:9685:: with SMTP id f5mr556166pfk.232.1598944169271;
-        Tue, 01 Sep 2020 00:09:29 -0700 (PDT)
-Received: from localhost ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id z26sm537750pfa.55.2020.09.01.00.09.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 00:09:28 -0700 (PDT)
-Date:   Tue, 01 Sep 2020 17:09:22 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH v2 10/23] microblaze: use asm-generic/mmu_context.h for
- no-op implementations
-To:     linux-arch@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        Michal Simek <monstr@monstr.eu>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20200826145249.745432-1-npiggin@gmail.com>
-        <20200826145249.745432-11-npiggin@gmail.com>
-        <4d2bdc87-f39c-3737-0aa8-b2efe7b2d93e@monstr.eu>
-        <1598940875.v2bbea400c.astroid@bobo.none>
-        <2daa0a52-5e48-8078-cfeb-bd8ff29cc992@xilinx.com>
-In-Reply-To: <2daa0a52-5e48-8078-cfeb-bd8ff29cc992@xilinx.com>
+        Tue, 1 Sep 2020 03:10:07 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:60368 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726006AbgIAHKC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:10:02 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3866C7C57B1C7193F6F2;
+        Tue,  1 Sep 2020 15:10:00 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
+ 15:09:52 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] memory: omap-gpmc: Fix -Wunused-function warnings
+Date:   Tue, 1 Sep 2020 15:09:45 +0800
+Message-ID: <20200901070945.23792-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200901035642.22772-1-yuehaibing@huawei.com>
+References: <20200901035642.22772-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Message-Id: <1598944138.dirzqy8hof.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Michal Simek's message of September 1, 2020 4:41 pm:
->=20
->=20
-> On 01. 09. 20 8:15, Nicholas Piggin wrote:
->> Excerpts from Michal Simek's message of September 1, 2020 12:15 am:
->>>
->>>
->>> On 26. 08. 20 16:52, Nicholas Piggin wrote:
->>>> Cc: Michal Simek <monstr@monstr.eu>
->>>> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
->>>> ---
->>>>  arch/microblaze/include/asm/mmu_context_mm.h | 8 ++++----
->>>>  arch/microblaze/include/asm/processor.h      | 3 ---
->>>>  2 files changed, 4 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/arch/microblaze/include/asm/mmu_context_mm.h b/arch/micro=
-blaze/include/asm/mmu_context_mm.h
->>>> index a1c7dd48454c..c2c77f708455 100644
->>>> --- a/arch/microblaze/include/asm/mmu_context_mm.h
->>>> +++ b/arch/microblaze/include/asm/mmu_context_mm.h
->>>> @@ -33,10 +33,6 @@
->>>>     to represent all kernel pages as shared among all contexts.
->>>>   */
->>>> =20
->>>> -static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_s=
-truct *tsk)
->>>> -{
->>>> -}
->>>> -
->>>>  # define NO_CONTEXT	256
->>>>  # define LAST_CONTEXT	255
->>>>  # define FIRST_CONTEXT	1
->>>> @@ -105,6 +101,7 @@ static inline void get_mmu_context(struct mm_struc=
-t *mm)
->>>>  /*
->>>>   * We're finished using the context for an address space.
->>>>   */
->>>> +#define destroy_context destroy_context
->>>>  static inline void destroy_context(struct mm_struct *mm)
->>>>  {
->>>>  	if (mm->context !=3D NO_CONTEXT) {
->>>> @@ -126,6 +123,7 @@ static inline void switch_mm(struct mm_struct *pre=
-v, struct mm_struct *next,
->>>>   * After we have set current->mm to a new value, this activates
->>>>   * the context for the new mm so we see the new mappings.
->>>>   */
->>>> +#define activate_mm activate_mm
->>>>  static inline void activate_mm(struct mm_struct *active_mm,
->>>>  			struct mm_struct *mm)
->>>>  {
->>>> @@ -136,5 +134,7 @@ static inline void activate_mm(struct mm_struct *a=
-ctive_mm,
->>>> =20
->>>>  extern void mmu_context_init(void);
->>>> =20
->>>> +#include <asm-generic/mmu_context.h>
->>>> +
->>>>  # endif /* __KERNEL__ */
->>>>  #endif /* _ASM_MICROBLAZE_MMU_CONTEXT_H */
->>>> diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze=
-/include/asm/processor.h
->>>> index 1ff5a82b76b6..616211871a6e 100644
->>>> --- a/arch/microblaze/include/asm/processor.h
->>>> +++ b/arch/microblaze/include/asm/processor.h
->>>> @@ -122,9 +122,6 @@ unsigned long get_wchan(struct task_struct *p);
->>>>  #  define KSTK_EIP(task)	(task_pc(task))
->>>>  #  define KSTK_ESP(task)	(task_sp(task))
->>>> =20
->>>> -/* FIXME */
->>>> -#  define deactivate_mm(tsk, mm)	do { } while (0)
->>>> -
->>>>  #  define STACK_TOP	TASK_SIZE
->>>>  #  define STACK_TOP_MAX	STACK_TOP
->>>> =20
->>>>
->>>
->>> I am fine with the patch but I pretty much don't like that commit
->>> message is empty and there is only subject.
->>> With fixing that you can add my:
->>> Acked-by: Michal Simek <monstr@monstr.eu>
->>=20
->> Thanks for the review, will do. Any suggestion for a useful commit messa=
-ge?
->=20
-> What about?
-> Wire asm-generic/mmu_context.h to provide generic empty hooks for arch
-> code simplification.
+If CONFIG_OF is not set, make W=1 warns:
 
-Sure I'll add it.
+drivers/memory/omap-gpmc.c:987:12: warning: ‘gpmc_cs_remap’ defined but not used [-Wunused-function]
+ static int gpmc_cs_remap(int cs, u32 base)
+            ^~~~~~~~~~~~~
+drivers/memory/omap-gpmc.c:926:20: warning: ‘gpmc_cs_get_name’ defined but not used [-Wunused-function]
+ static const char *gpmc_cs_get_name(int cs)
+                    ^~~~~~~~~~~~~~~~
+drivers/memory/omap-gpmc.c:919:13: warning: ‘gpmc_cs_set_name’ defined but not used [-Wunused-function]
+ static void gpmc_cs_set_name(int cs, const char *name)
+             ^~~~~~~~~~~~~~~~
+Make them as  __maybe_unused to fix this.
 
-Thanks,
-Nick
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: update commit log
+---
+ drivers/memory/omap-gpmc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index ac0f577a51a1..24372254986e 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -916,14 +916,14 @@ static bool gpmc_cs_reserved(int cs)
+ 	return gpmc->flags & GPMC_CS_RESERVED;
+ }
+ 
+-static void gpmc_cs_set_name(int cs, const char *name)
++static void __maybe_unused gpmc_cs_set_name(int cs, const char *name)
+ {
+ 	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+ 
+ 	gpmc->name = name;
+ }
+ 
+-static const char *gpmc_cs_get_name(int cs)
++static const __maybe_unused char *gpmc_cs_get_name(int cs)
+ {
+ 	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+ 
+@@ -984,7 +984,7 @@ static int gpmc_cs_delete_mem(int cs)
+  * "base". Returns 0 on success and appropriate negative error code
+  * on failure.
+  */
+-static int gpmc_cs_remap(int cs, u32 base)
++static int __maybe_unused gpmc_cs_remap(int cs, u32 base)
+ {
+ 	int ret;
+ 	u32 old_base, size;
+-- 
+2.17.1
+
+
