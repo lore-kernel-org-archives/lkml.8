@@ -2,54 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41069C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A48CDC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17F452078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0BB2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978471;
-	bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
+	s=default; t=1598978476;
+	bh=eXkRyPhcUiQGNLNWpcl4I2tLXNoV/g7UbdgnwcGdQnU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vqM0m0qnXgh/o1wEXrUAkW84RoyRVCkVHv4LtyUuuNWt54Dp4AvIr4lFBB13TZDZz
-	 G0V76qWrkj3qIIC48v6sXxl21rRYziFs5M9UZDE8BSAE1e4dDRMSSan1qCI6lhx3Ja
-	 wBTZKjRm1+yBpxAMZejmg44WFUGmO07hUtbVtnh8=
+	b=EU2T6SBDp14/yAwASdMtPtDP3Bd4GeES2gt8xHZR3WJibKd+KyU0UqNqk0AfPIlFd
+	 sY84puZhYQX0/CKpnXrEf8OSaAbb6Rhd0I59QdsqeYiVHE7eNoyLkQqX8LHlVXokbx
+	 x4ra2tqb58w7xrUsufaRhbMZnzHLTsycbtssl2Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730350AbgIAP2K (ORCPT
+        id S1732219AbgIAQlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49204 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56234 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729993AbgIAPZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:02 -0400
+        id S1730345AbgIAP2J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3FFC20FC3;
-        Tue,  1 Sep 2020 15:25:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8A324207D3;
+        Tue,  1 Sep 2020 15:28:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973902;
-        bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
+        s=default; t=1598974089;
+        bh=eXkRyPhcUiQGNLNWpcl4I2tLXNoV/g7UbdgnwcGdQnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2K4IOHwZuYsQj8iJ6Zrvud8iiT4kavBQUAo0pHTHv/lpjXLCVesI1J3uWj9lepiIx
-         536lZDw5mNK5SYREl3eWtPJG5lu754v9a1nu9sDGMKF6r1fAJeyOEpJdM/HMf4SDhf
-         w144s6Tjtzua0JDC0MYsgdIyj8maaumudh2jPH+4=
+        b=t5ieOUoyPCR6lAMQC/13kqnv+BiHgZ8Ian9dp8Xjp9mV6Zs9nzWvYCVQTEZUrVzER
+         13tcOF5aannJxSQI2ka9Hj3684oLL8Wae+XZRZEIz6MwilWj4zIRjUic8+Z5OYyz3B
+         qGbyjc5+XNF3l1zHqaMNRHHowd63Ipq+ehtIpENw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH 4.19 091/125] serial: pl011: Dont leak amba_ports entry on driver register error
-Date:   Tue,  1 Sep 2020 17:10:46 +0200
-Message-Id: <20200901150939.045905828@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 040/214] PCI: Fix pci_create_slot() reference count leak
+Date:   Tue,  1 Sep 2020 17:08:40 +0200
+Message-Id: <20200901150954.885546013@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,52 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit 89efbe70b27dd325d8a8c177743a26b885f7faec upstream.
+[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
 
-pl011_probe() calls pl011_setup_port() to reserve an amba_ports[] entry,
-then calls pl011_register_port() to register the uart driver with the
-tty layer.
+kobject_init_and_add() takes a reference even when it fails.  If it returns
+an error, kobject_put() must be called to clean up the memory associated
+with the object.
 
-If registration of the uart driver fails, the amba_ports[] entry is not
-released.  If this happens 14 times (value of UART_NR macro), then all
-amba_ports[] entries will have been leaked and driver probing is no
-longer possible.  (To be fair, that can only happen if the DeviceTree
-doesn't contain alias IDs since they cause the same entry to be used for
-a given port.)   Fix it.
+When kobject_init_and_add() fails, call kobject_put() instead of kfree().
 
-Fixes: ef2889f7ffee ("serial: pl011: Move uart_register_driver call to device")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v3.15+
-Cc: Tushar Behera <tushar.behera@linaro.org>
-Link: https://lore.kernel.org/r/138f8c15afb2f184d8102583f8301575566064a6.1597316167.git.lukas@wunner.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
 
+Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/amba-pl011.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/slot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2593,7 +2593,7 @@ static int pl011_setup_port(struct devic
- 
- static int pl011_register_port(struct uart_amba_port *uap)
- {
--	int ret;
-+	int ret, i;
- 
- 	/* Ensure interrupts from this UART are masked and cleared */
- 	pl011_write(0, uap, REG_IMSC);
-@@ -2604,6 +2604,9 @@ static int pl011_register_port(struct ua
- 		if (ret < 0) {
- 			dev_err(uap->port.dev,
- 				"Failed to register AMBA-PL011 driver\n");
-+			for (i = 0; i < ARRAY_SIZE(amba_ports); i++)
-+				if (amba_ports[i] == uap)
-+					amba_ports[i] = NULL;
- 			return ret;
- 		}
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index ae4aa0e1f2f42..1f087746b7bb0 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -304,13 +304,16 @@ placeholder:
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		kfree(slot);
+ 		goto err;
  	}
+ 
+ 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
+ 				   "%s", slot_name);
+-	if (err)
++	if (err) {
++		kobject_put(&slot->kobj);
+ 		goto err;
++	}
+ 
+ 	INIT_LIST_HEAD(&slot->list);
+ 	list_add(&slot->list, &parent->slots);
+@@ -329,7 +332,6 @@ out:
+ 	mutex_unlock(&pci_slot_mutex);
+ 	return slot;
+ err:
+-	kfree(slot);
+ 	slot = ERR_PTR(err);
+ 	goto out;
+ }
+-- 
+2.25.1
+
 
 
