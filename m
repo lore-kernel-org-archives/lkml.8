@@ -2,123 +2,104 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C643C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA066C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:52:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4CA2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:50:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b/g7HGaX"
+	by mail.kernel.org (Postfix) with ESMTP id 6DE022071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:52:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732752AbgIATuy (ORCPT
+        id S1732761AbgIATwD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:50:54 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:47474 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732542AbgIATuh (ORCPT
+        Tue, 1 Sep 2020 15:52:03 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:37225 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728711AbgIATwB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:50:37 -0400
-Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9FA6620B36E7;
-        Tue,  1 Sep 2020 12:50:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9FA6620B36E7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1598989837;
-        bh=uk5tkZtfuu9874FjBZVS0ALgWIcN65kyJsAQnFGmePg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b/g7HGaXNgg9Bx5QXv8e3+AfjI6jycWPi9gou9LgiIp0OQnt0GV02313bthzWybpG
-         e1/KbWyW2VYR/aoxo0YdWglmTiLTs25/k6bRn7GipJh6pG+T5oRuzhASUbIua1FC0k
-         CX2gsiG5WWsu5Z0oATEAu8zWMKMSaVAX6NDWM718=
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-To:     zohar@linux.ibm.com, bauerman@linux.ibm.com, robh@kernel.org,
-        gregkh@linuxfoundation.org, james.morse@arm.com,
-        catalin.marinas@arm.com, sashal@kernel.org, will@kernel.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        robh+dt@kernel.org, frowand.list@gmail.com,
-        vincenzo.frascino@arm.com, mark.rutland@arm.com,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        pasha.tatashin@soleen.com, allison@lohutok.net,
-        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
-        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
-        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
-        christophe.leroy@c-s.fr
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, prsriva@linux.microsoft.com,
-        balajib@linux.microsoft.com
-Subject: [PATCH v5 3/3] arm64: Add IMA kexec buffer to DTB
-Date:   Tue,  1 Sep 2020 12:50:29 -0700
-Message-Id: <20200901195029.30039-4-nramas@linux.microsoft.com>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901195029.30039-1-nramas@linux.microsoft.com>
-References: <20200901195029.30039-1-nramas@linux.microsoft.com>
+        Tue, 1 Sep 2020 15:52:01 -0400
+Received: (qmail 599608 invoked by uid 1000); 1 Sep 2020 15:51:59 -0400
+Date:   Tue, 1 Sep 2020 15:51:59 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     gregkh@linuxfoundation.org, erkka.talvitie@vincit.fi,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low
+ speed devices
+Message-ID: <20200901195159.GA599114@rowland.harvard.edu>
+References: <cover.1598887346.git.khalid@gonehiking.org>
+ <20200901023117.GD571008@rowland.harvard.edu>
+ <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
+ <20200901163602.GG587030@rowland.harvard.edu>
+ <4d1ab90a-ec55-85e8-d646-cfa58f08d449@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4d1ab90a-ec55-85e8-d646-cfa58f08d449@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The address and size of the current kernel's IMA measurement log
-need to be added to the device tree's IMA kexec buffer node for
-the log to be carried over to the next kernel on the kexec call.
+On Tue, Sep 01, 2020 at 11:00:16AM -0600, Khalid Aziz wrote:
+> On 9/1/20 10:36 AM, Alan Stern wrote:
+> > On Tue, Sep 01, 2020 at 09:15:46AM -0700, Khalid Aziz wrote:
+> >> On 8/31/20 8:31 PM, Alan Stern wrote:
+> >>> Can you collect a usbmon trace showing an example of this problem?
+> >>>
+> >>
+> >> I have attached usbmon traces for when USB hub with keyboards and mouse
+> >> is plugged into USB 2.0 port and when it is plugged into the NEC USB 3.0
+> >> port.
+> > 
+> > The usbmon traces show lots of errors, but no Clear-TT events.  The 
+> > large number of errors suggests that you've got a hardware problem; 
+> > either a bad hub or bad USB connections.
+> 
+> That is what I thought initially which is why I got additional hubs and
+> a USB 2.0 PCI card to test. I am seeing errors across 3 USB controllers,
+> 4 USB hubs and 4 slow/full speed devices. All of the hubs and slow/full
+> devices work with zero errors on my laptop. My keyboard/mouse devices
+> and 2 of my USB hubs predate motherboard update and they all worked
+> flawlessly before the motherboard upgrade. Some combinations of these
+> also works with no errors on my desktop with new motherboard that I had
+> listed in my original email:
 
-Add the IMA measurement log buffer properties to the device tree for
-ARM64 and reserve the memory for storing the IMA log.
-Update CONFIG_KEXEC_FILE to select CONFIG_HAVE_IMA_KEXEC to
-indicate that the IMA measurement log information is present in
-the device tree.
+It's a very puzzling situation.
 
-Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
-Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
----
- arch/arm64/Kconfig                     |  1 +
- arch/arm64/kernel/machine_kexec_file.c | 15 +++++++++++++++
- 2 files changed, 16 insertions(+)
+One thing which probably would work well, surprisingly, would be to buy 
+an old USB-1.1 hub and plug it into the PCI card.  That combination is 
+likely to be similar to what you see when plugging the devices directly 
+into the PCI card.  It might even work okay with the USB-3 controllers.
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6d232837cbee..9f03c8245e5b 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1077,6 +1077,7 @@ config KEXEC
- config KEXEC_FILE
- 	bool "kexec file based system call"
- 	select KEXEC_CORE
-+	select HAVE_IMA_KEXEC
- 	help
- 	  This is new version of kexec system call. This system call is
- 	  file based and takes file descriptors as system call argument
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 361a1143e09e..0fe3d629eefe 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -136,6 +136,21 @@ static int setup_dtb(struct kimage *image,
- 				FDT_PROP_KASLR_SEED);
- 	}
- 
-+	/* add ima-kexec-buffer */
-+	if (image->arch.ima_buffer_size > 0) {
-+		ret = fdt_appendprop_addrrange(dtb, 0, off,
-+				FDT_PROP_IMA_KEXEC_BUFFER,
-+				image->arch.ima_buffer_addr,
-+				image->arch.ima_buffer_size);
-+		if (ret)
-+			return (ret == -FDT_ERR_NOSPACE ? -ENOMEM : -EINVAL);
-+
-+		ret = fdt_add_mem_rsv(dtb, image->arch.ima_buffer_addr,
-+				      image->arch.ima_buffer_size);
-+		if (ret)
-+			goto out;
-+	}
-+
- 	/* add rng-seed */
- 	if (rng_is_initialized()) {
- 		void *rng_seed;
--- 
-2.28.0
+> 2. USB 2.0 controller - WORKS
+> 5. USB 3.0/3.1 controller -> Bus powered USB 2.0 hub - WORKS
+> 
+> I am not seeing a common failure here that would point to any specific
+> hardware being bad. Besides, that one code change (which I still can't
+> say is the right code change) in ehci-q.c makes USB 2.0 controller work
+> reliably with all my devices.
 
+The USB and EHCI designs are flawed in that under the circumstances 
+you're seeing, they don't have any way to tell the difference between a 
+STALL and a host timing error.  The current code treats these situations 
+as timing/transmission errors (resulting in device resets); your change 
+causes them to be treated as STALLs.  However, there are known, common 
+situations in which those same symptoms really are caused by 
+transmission errors, so we don't want to start treating them as STALLs.
+
+Besides, I suspect that your code change does _not_ make the USB-2 
+controller work reliably with your devices.  You should collect a usbmon 
+trace under those conditions; I predict it will be full of STALLs.  And 
+furthermore, I believe these STALLs will not show up in a usbmon trace 
+made with the devices plugged directly into the PCI card.  If I'm right 
+about these things, the errors are still present even with your patch; 
+all it does is hide them.
+
+Short of a USB bus analyzer, however, there's no way to tell what's 
+really going on.
+
+Alan Stern
