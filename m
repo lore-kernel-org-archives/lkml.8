@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105B0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 295DBC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAAE7206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0522F2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980383;
-	bh=jJ9s4BRQTppGhHlywkzlUypq+zFkvImt/Sm5IUwmriI=;
+	s=default; t=1598980389;
+	bh=nNjZuNxAwYhI9YeRuEvRVj1xlp9+plyHUyMkqn0vztA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVb5cKhTlq5gHIIP1Zui1zxdvKgBtCxMAG+h7xDYQa2yQPSQWO2r34wVPhJZf5Igt
-	 GjmUvpJekswNpVLUBHhe3rRa3GTCnU8HxUdflWkR57PVkk3Xcr0N8VItpOd/vejr5m
-	 AAIl200kifW9c+tKl77/AYgWPS4R0ndF5fdTKqdw=
+	b=v34i7srcFoK1ZCZaGgeETa7TKOdHzYcrnS0vQuPN7IklYmFKqZi1rijNQAfi06481
+	 VtnjOx1wExM2YetvPdTwdXbd+fhp+pUIT9KKXmQppTRmHjdR9R7Myx7NCUd5164coh
+	 cSEW5QSHwz1B3fE8NLp/NFfg8tmrbm7cN+n/9naw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732434AbgIARNC (ORCPT
+        id S1728609AbgIARNG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:13:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59866 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:13:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59954 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgIAPPj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:15:39 -0400
+        id S1729217AbgIAPPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:15:36 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8565920767;
-        Tue,  1 Sep 2020 15:15:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DC73207D3;
+        Tue,  1 Sep 2020 15:15:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973339;
-        bh=jJ9s4BRQTppGhHlywkzlUypq+zFkvImt/Sm5IUwmriI=;
+        s=default; t=1598973333;
+        bh=nNjZuNxAwYhI9YeRuEvRVj1xlp9+plyHUyMkqn0vztA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1ckGz+uiaFWYMRJQIGIMVmvtkv8KCsEHhPjo3HrHIcoX5qFRnxf8TNdzlO8hl37/x
-         lD9eRbB/o9DdRdOSza2dcxDlqFnUIdTO+vYs9Z53ZJAVUp2d18+cFKyDb/1o4TvUDz
-         zsSfraY8jSUula6qRMDZekSMJIvR9H4cFleaDV+Q=
+        b=ahfoBGEhbL0ehir/d6/kphZxoJHnrvzpnaffBiza/lwpYyOA3Ebk+ZVPbhwirUAKO
+         Lw9oHL0Ns7UsjQxx5IGOCV08VpvOy0YrhLcxxv+qJrN2yvNBU0TfB8OXlq0c7AQHrW
+         BWMQASXW1BF4w3wCOzUAB+OQF63Gpp923JVElMEw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Felipe Balbi <balbi@kernel.org>,
+        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 40/78] usb: gadget: f_tcm: Fix some resource leaks in some error paths
-Date:   Tue,  1 Sep 2020 17:10:16 +0200
-Message-Id: <20200901150926.740293283@linuxfoundation.org>
+Subject: [PATCH 4.9 38/78] Revert "ath10k: fix DMA related firmware crashes on multiple devices"
+Date:   Tue,  1 Sep 2020 17:10:14 +0200
+Message-Id: <20200901150926.637120965@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -61,44 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Zhi Chen <zhichen@codeaurora.org>
 
-[ Upstream commit 07c8434150f4eb0b65cae288721c8af1080fde17 ]
+[ Upstream commit a1769bb68a850508a492e3674ab1e5e479b11254 ]
 
-If a memory allocation fails within a 'usb_ep_alloc_request()' call, the
-already allocated memory must be released.
+This reverts commit 76d164f582150fd0259ec0fcbc485470bcd8033e.
+PCIe hung issue was observed on multiple platforms. The issue was reproduced
+when DUT was configured as AP and associated with 50+ STAs.
 
-Fix a mix-up in the code and free the correct requests.
+For QCA9984/QCA9888, the DMA_BURST_SIZE register controls the AXI burst size
+of the RD/WR access to the HOST MEM.
+0 - No split , RAW read/write transfer size from MAC is put out on bus
+    as burst length
+1 - Split at 256 byte boundary
+2,3 - Reserved
 
-Fixes: c52661d60f63 ("usb-gadget: Initial merge of target module for UASP + BOT")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+With PCIe protocol analyzer, we can see DMA Read crossing 4KB boundary when
+issue happened. It broke PCIe spec and caused PCIe stuck. So revert
+the default value from 0 to 1.
+
+Tested:  IPQ8064 + QCA9984 with firmware 10.4-3.10-00047
+         QCS404 + QCA9984 with firmware 10.4-3.9.0.2--00044
+         Synaptics AS370 + QCA9888  with firmware 10.4-3.9.0.2--00040
+
+Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_tcm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/ath/ath10k/hw.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_tcm.c b/drivers/usb/gadget/function/f_tcm.c
-index d2351139342f6..7e8e262b36297 100644
---- a/drivers/usb/gadget/function/f_tcm.c
-+++ b/drivers/usb/gadget/function/f_tcm.c
-@@ -751,12 +751,13 @@ static int uasp_alloc_stream_res(struct f_uas *fu, struct uas_stream *stream)
- 		goto err_sts;
+diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
+index 6038b7486f1db..e04e0260035ad 100644
+--- a/drivers/net/wireless/ath/ath10k/hw.h
++++ b/drivers/net/wireless/ath/ath10k/hw.h
+@@ -558,7 +558,7 @@ ath10k_rx_desc_get_l3_pad_bytes(struct ath10k_hw_params *hw,
  
- 	return 0;
-+
- err_sts:
--	usb_ep_free_request(fu->ep_status, stream->req_status);
--	stream->req_status = NULL;
--err_out:
- 	usb_ep_free_request(fu->ep_out, stream->req_out);
- 	stream->req_out = NULL;
-+err_out:
-+	usb_ep_free_request(fu->ep_in, stream->req_in);
-+	stream->req_in = NULL;
- out:
- 	return -ENOMEM;
- }
+ #define TARGET_10_4_TX_DBG_LOG_SIZE		1024
+ #define TARGET_10_4_NUM_WDS_ENTRIES		32
+-#define TARGET_10_4_DMA_BURST_SIZE		0
++#define TARGET_10_4_DMA_BURST_SIZE		1
+ #define TARGET_10_4_MAC_AGGR_DELIM		0
+ #define TARGET_10_4_RX_SKIP_DEFRAG_TIMEOUT_DUP_DETECTION_CHECK 1
+ #define TARGET_10_4_VOW_CONFIG			0
 -- 
 2.25.1
 
