@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B36C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52C252065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA950207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978122;
-	bh=dUnRKN63euXMnnE/TPo9Pk5s7qNIZV5FF+T1lo9FPVQ=;
+	s=default; t=1598978124;
+	bh=ZYFJL4b0C17ow2YomGesAH+ttcqwfDDVJAWxLjptZEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HT7iKS1biW+N6JVk3SIC0szDedB24fGUsvPHJxmp36tRhr7kEuKXGDEssdejbsfWy
-	 qfgxDPtfU/Yb3OgOEoh1x/RldO9745y6vATIe3gK9reLdsAbuCc/UmQenLVcYDA5CW
-	 wuEF3C7L9LyxysyhrBIhtgLGp4/jo1YX591jqNBI=
+	b=Pmwqcy+icqLVHay+R61MwepUG0qKnwgSGoSjrvCZ/1SJwry+3jLclRz9i/yocn2zi
+	 Gsu0Bo3KRsSf+w1fgspgg1jSleJv1LthNj7+v7nc7HhEOSXNgdiLG/W7+ld68tiQvi
+	 r51hl3MNs1AN/kHOQ4sk8Kex/0+2aYH+uzLcizHE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbgIAQfV (ORCPT
+        id S1730954AbgIAQfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:35:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32936 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:35:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730621AbgIAPam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:42 -0400
+        id S1730629AbgIAPau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:30:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05117205F4;
-        Tue,  1 Sep 2020 15:30:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65A842137B;
+        Tue,  1 Sep 2020 15:30:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974242;
-        bh=dUnRKN63euXMnnE/TPo9Pk5s7qNIZV5FF+T1lo9FPVQ=;
+        s=default; t=1598974249;
+        bh=ZYFJL4b0C17ow2YomGesAH+ttcqwfDDVJAWxLjptZEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q6KJ78C3zZ+Wn+GXEWOOO0N+ZPWoAsJ+Vu0zj8e3gE5cOytkloGaAZ9z7AIrCeNos
-         zR/J7/vPImiC3vErh0hmNbAugjzQpvd0gDrTBTcD8+Oc4YSJAWJAMZpcWzgxje+ueG
-         JGsnLcB35udI52y7drLxPVJXcG6ojaFGe6bJWGLc=
+        b=cFMTspqO6NEXGdJVo7Q3Wt8vdXUeHGSWA7l/CzCyvNIudaXHzyHGqCen3if68t76O
+         x7Tgj+SAeNCYWOpHvaKDpzRu0yuTh3m6EIjItaX3oVMmzCwKEaCurLOseqchCwn4MH
+         PnuW4eVeJJfWWUl+jkFa3GsirQMXRsTQJDGPZ4iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sham Muthayyan <smuthayy@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
+        Guenter Roeck <linux@roeck-us.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 093/214] PCI: qcom: Add missing ipq806x clocks in PCIe driver
-Date:   Tue,  1 Sep 2020 17:09:33 +0200
-Message-Id: <20200901150957.444681609@linuxfoundation.org>
+Subject: [PATCH 5.4 104/214] hwmon: (nct7904) Correct divide by 0
+Date:   Tue,  1 Sep 2020 17:09:44 +0200
+Message-Id: <20200901150957.977814932@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -63,111 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ansuel Smith <ansuelsmth@gmail.com>
+From: Jason Baron <jbaron@akamai.com>
 
-[ Upstream commit 8b6f0330b5f9a7543356bfa9e76d580f03aa2c1e ]
+[ Upstream commit 8aebbbb2d573d0b4afc08b90ac7d73dba2d9da97 ]
 
-Aux and Ref clk are missing in PCIe qcom driver. Add support for this
-optional clks for ipq8064/apq8064 SoC.
+We hit a kernel panic due to a divide by 0 in nct7904_read_fan() for
+the hwmon_fan_min case. Extend the check to hwmon_fan_input case as well
+for safety.
 
-Link: https://lore.kernel.org/r/20200615210608.21469-2-ansuelsmth@gmail.com
-Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
-Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+[ 1656.545650] divide error: 0000 [#1] SMP PTI
+[ 1656.545779] CPU: 12 PID: 18010 Comm: sensors Not tainted 5.4.47 #1
+[ 1656.546065] RIP: 0010:nct7904_read+0x1e9/0x510 [nct7904]
+...
+[ 1656.546549] RAX: 0000000000149970 RBX: ffffbd6b86bcbe08 RCX: 0000000000000000
+...
+[ 1656.547548] Call Trace:
+[ 1656.547665]  hwmon_attr_show+0x32/0xd0 [hwmon]
+[ 1656.547783]  dev_attr_show+0x18/0x50
+[ 1656.547898]  sysfs_kf_seq_show+0x99/0x120
+[ 1656.548013]  seq_read+0xd8/0x3e0
+[ 1656.548127]  vfs_read+0x89/0x130
+[ 1656.548234]  ksys_read+0x7d/0xb0
+[ 1656.548342]  do_syscall_64+0x48/0x110
+[ 1656.548451]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: d65a5102a99f5 ("hwmon: (nct7904) Convert to use new hwmon registration API")
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Link: https://lore.kernel.org/r/1598026814-2604-1-git-send-email-jbaron@akamai.com
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 5 deletions(-)
+ drivers/hwmon/nct7904.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 270d502b8cd50..380a77a914fa0 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -103,6 +103,8 @@ struct qcom_pcie_resources_2_1_0 {
- 	struct clk *iface_clk;
- 	struct clk *core_clk;
- 	struct clk *phy_clk;
-+	struct clk *aux_clk;
-+	struct clk *ref_clk;
- 	struct reset_control *pci_reset;
- 	struct reset_control *axi_reset;
- 	struct reset_control *ahb_reset;
-@@ -253,6 +255,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
- 	if (IS_ERR(res->phy_clk))
- 		return PTR_ERR(res->phy_clk);
- 
-+	res->aux_clk = devm_clk_get_optional(dev, "aux");
-+	if (IS_ERR(res->aux_clk))
-+		return PTR_ERR(res->aux_clk);
-+
-+	res->ref_clk = devm_clk_get_optional(dev, "ref");
-+	if (IS_ERR(res->ref_clk))
-+		return PTR_ERR(res->ref_clk);
-+
- 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
- 	if (IS_ERR(res->pci_reset))
- 		return PTR_ERR(res->pci_reset);
-@@ -285,6 +295,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
- 	clk_disable_unprepare(res->phy_clk);
-+	clk_disable_unprepare(res->aux_clk);
-+	clk_disable_unprepare(res->ref_clk);
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
- }
- 
-@@ -315,16 +327,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		goto err_assert_ahb;
- 	}
- 
-+	ret = clk_prepare_enable(res->core_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable core clock\n");
-+		goto err_clk_core;
-+	}
-+
- 	ret = clk_prepare_enable(res->phy_clk);
- 	if (ret) {
- 		dev_err(dev, "cannot prepare/enable phy clock\n");
- 		goto err_clk_phy;
- 	}
- 
--	ret = clk_prepare_enable(res->core_clk);
-+	ret = clk_prepare_enable(res->aux_clk);
- 	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_core;
-+		dev_err(dev, "cannot prepare/enable aux clock\n");
-+		goto err_clk_aux;
-+	}
-+
-+	ret = clk_prepare_enable(res->ref_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable ref clock\n");
-+		goto err_clk_ref;
- 	}
- 
- 	ret = reset_control_deassert(res->ahb_reset);
-@@ -400,10 +424,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 	return 0;
- 
- err_deassert_ahb:
--	clk_disable_unprepare(res->core_clk);
--err_clk_core:
-+	clk_disable_unprepare(res->ref_clk);
-+err_clk_ref:
-+	clk_disable_unprepare(res->aux_clk);
-+err_clk_aux:
- 	clk_disable_unprepare(res->phy_clk);
- err_clk_phy:
-+	clk_disable_unprepare(res->core_clk);
-+err_clk_core:
- 	clk_disable_unprepare(res->iface_clk);
- err_assert_ahb:
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+index dfb122b5e1b76..b812b199e5e5b 100644
+--- a/drivers/hwmon/nct7904.c
++++ b/drivers/hwmon/nct7904.c
+@@ -197,7 +197,7 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
+ 		if (ret < 0)
+ 			return ret;
+ 		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
+-		if (cnt == 0x1fff)
++		if (cnt == 0 || cnt == 0x1fff)
+ 			rpm = 0;
+ 		else
+ 			rpm = 1350000 / cnt;
+@@ -209,7 +209,7 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
+ 		if (ret < 0)
+ 			return ret;
+ 		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
+-		if (cnt == 0x1fff)
++		if (cnt == 0 || cnt == 0x1fff)
+ 			rpm = 0;
+ 		else
+ 			rpm = 1350000 / cnt;
 -- 
 2.25.1
 
