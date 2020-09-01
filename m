@@ -2,53 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58475C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:19:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA123C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A645215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:19:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A7C220767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973573;
-	bh=MPM8xQu0kMXTrgKqN6pug1ACKJ2u56+BVhn4erh7HLU=;
+	s=default; t=1598973584;
+	bh=tE9xsYHjcyP1RgE3aKIgru7GwEiC8ipKwroxXBMxFY4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LSRyULsyq70tWe4RUJvcUZVU4KDjKfPsBN902SHpz3i+IHBJ/ZzxgXHao3bzF5iez
-	 HGqxA9t6M/TE+XxNdJTA17oG9DAHSFft4dL4w1Ad059NNfbOiuzeKruliBzKg/1MGN
-	 RJr9hXcjRuM524sXPxn6saKRgN6MF+Wi4m85Dhcc=
+	b=G45yY4f4igKh/9YXjikfsn7fWDxf/dfUqV9fVAUaKrTNbzirgTvHMWqrZPC0KLtRC
+	 dD0vVCLI30f3H7NKPR13It77bT8HuBDkdp0e9y8WmAiaaZRHQuHeEBI5qpRahxZ531
+	 b3u1LxuEHUeJvs2Z56MmRnbYkKxKvUcJ963edMqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbgIAPT1 (ORCPT
+        id S1729551AbgIAPTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:19:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35062 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:19:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgIAPRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:17:33 -0400
+        id S1729437AbgIAPRz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:17:55 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41705206FA;
-        Tue,  1 Sep 2020 15:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7412137B;
+        Tue,  1 Sep 2020 15:17:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973452;
-        bh=MPM8xQu0kMXTrgKqN6pug1ACKJ2u56+BVhn4erh7HLU=;
+        s=default; t=1598973475;
+        bh=tE9xsYHjcyP1RgE3aKIgru7GwEiC8ipKwroxXBMxFY4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VFEGZq8rb5Z+K2gavdKotUydkVS7lZmDxp2lDCsjC7fCBDEc5+JChWMlEAmJ7h0PO
-         akF/JsdHSNFRD941DmNQ/vM6bDR/qlsa4sfsRyR58OZ+4EWjm64mXl+vG/YgE8oIoN
-         38jMRhof8Jn3ROhuEDcgi8qiWytp1gjiubw1w7BY=
+        b=YYdBc/xEYE9OfycVrAUBxsVzIoXwqOvnco1ZlRJKFZtGy2/iU70IIMPSzNt+As2ky
+         TYMqFBNmHF4IT0g4arHz+PbkFqeZDQ00lpBfQ4P/ZpDecKDhLaLEyZOi4Q3V881XFQ
+         XXuUkQxHMK5icZtlXzH+A/SN28FE50PW2xhZj26M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>
-Subject: [PATCH 4.9 67/78] usb: uas: Add quirk for PNY Pro Elite
-Date:   Tue,  1 Sep 2020 17:10:43 +0200
-Message-Id: <20200901150928.132315862@linuxfoundation.org>
+        stable@vger.kernel.org, Prakash Gupta <guptap@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 14/91] iommu/iova: Dont BUG on invalid PFNs
+Date:   Tue,  1 Sep 2020 17:09:48 +0200
+Message-Id: <20200901150928.820696329@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
-References: <20200901150924.680106554@linuxfoundation.org>
+In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
+References: <20200901150928.096174795@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,39 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-commit 9a469bc9f32dd33c7aac5744669d21a023a719cd upstream.
+[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
 
-PNY Pro Elite USB 3.1 Gen 2 device (SSD) doesn't respond to ATA_12
-pass-through command (i.e. it just hangs). If it doesn't support this
-command, it should respond properly to the host. Let's just add a quirk
-to be able to move forward with other operations.
+Unlike the other instances which represent a complete loss of
+consistency within the rcache mechanism itself, or a fundamental
+and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
+iova_magazine_free_pfns() can be provoked at more or less any time
+in a "spooky action-at-a-distance" manner by any old device driver
+passing nonsense to dma_unmap_*() which then propagates through to
+queue_iova().
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Link: https://lore.kernel.org/r/2b0585228b003eedcc82db84697b31477df152e0.1597803605.git.thinhn@synopsys.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Not only is this well outside the IOVA layer's control, it's also
+nowhere near fatal enough to justify panicking anyway - all that
+really achieves is to make debugging the offending driver more
+difficult. Let's simply WARN and otherwise ignore bogus PFNs.
 
+Reported-by: Prakash Gupta <guptap@codeaurora.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
+Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -156,6 +156,13 @@ UNUSUAL_DEV(0x152d, 0x0578, 0x0000, 0x99
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_BROKEN_FUA),
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index 4edf65dbbcab5..2c97d2552c5bd 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -845,7 +845,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
+ 	for (i = 0 ; i < mag->size; ++i) {
+ 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
  
-+/* Reported-by: Thinh Nguyen <thinhn@synopsys.com> */
-+UNUSUAL_DEV(0x154b, 0xf00d, 0x0000, 0x9999,
-+		"PNY",
-+		"Pro Elite SSD",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_ATA_1X),
+-		BUG_ON(!iova);
++		if (WARN_ON(!iova))
++			continue;
 +
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x2109, 0x0711, 0x0000, 0x9999,
- 		"VIA",
+ 		private_free_iova(iovad, iova);
+ 	}
+ 
+-- 
+2.25.1
+
 
 
