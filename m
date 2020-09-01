@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E252AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9F6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8B0E206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6771E206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973235;
-	bh=/n3LStJnKPhmQsWi2OERGM1VspQY3skebgmnoMp75Gs=;
+	s=default; t=1598973236;
+	bh=uPUjYNP/EIWjnr1nSwyT00Tk2mxoP7sNVLkNPFhY0eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FU8QmfW9lrs+L3z2RrhVVtWJviakJdTtwF73zqm/Iuas2ocMWDlMWQY8m7lTA9wbK
-	 ufJq2kiAv0HmSM7hAUhO5RbV/tcvoCol0/Ii6U02wxuzK0iw7QDE4c+BkhT84xPfeP
-	 xoFRzx/6B0Q4IbBPLD6ouprTMbjqi0xq7aKC5dBo=
+	b=MSZ2Wth2g4BWtUOEiiVCkrSKwmukCWO35t55x+R4lw1awy+2GX7hLOxhxECkJPgxU
+	 0wQPMF+UZCZ4/pk1Dw6B68Db2a7tu2nska09SyQ7RDp/7h9LXiGhEEqbrJEuXfUaHt
+	 lWx4SI5ZZEMXSqc98O5/IPUR4Wn38cU33/fblTB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgIAPNx (ORCPT
+        id S1729002AbgIAPNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:13:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56238 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:13:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728875AbgIAPNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:17 -0400
+        id S1728388AbgIAPN2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:13:28 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD4A206FA;
-        Tue,  1 Sep 2020 15:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFD7B2078B;
+        Tue,  1 Sep 2020 15:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973197;
-        bh=/n3LStJnKPhmQsWi2OERGM1VspQY3skebgmnoMp75Gs=;
+        s=default; t=1598973207;
+        bh=uPUjYNP/EIWjnr1nSwyT00Tk2mxoP7sNVLkNPFhY0eM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ptbUoSuAgAVmtakUTsyM20sMK6owQMeBtK47Y83dYus9eB6ahS9gSa36PcmbRpFGI
-         /YmuKUpTUU73UaXZtDKKFuhnOuJHpVrrrA3M6/zXncwCQ8VBO3KyegjSKdT/KkeRw0
-         wU9kbZq/MI4+JRCcnCb5GQhabbx4VVWt1h/9Owq4=
+        b=i6NL6XZRPStSa5CdlqOWmk0S/1oi+4u6Aze9gLOfV7hM8Rr4SjhGX1sijGRyR+Ty7
+         mukMi4Fv7xcsThdwRG/vWAsRPud+sY34TQl5eHcZWNfDyurEqkdvT29cdvXMdMbiZm
+         y183d99U/berpSjxBilzRhdFVrm0qknrTO0tnqgY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH 4.4 45/62] serial: pl011: Dont leak amba_ports entry on driver register error
-Date:   Tue,  1 Sep 2020 17:10:28 +0200
-Message-Id: <20200901150923.002698347@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.4 49/62] writeback: Fix sync livelock due to b_dirty_time processing
+Date:   Tue,  1 Sep 2020 17:10:32 +0200
+Message-Id: <20200901150923.194885340@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -59,52 +59,193 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Jan Kara <jack@suse.cz>
 
-commit 89efbe70b27dd325d8a8c177743a26b885f7faec upstream.
+commit f9cae926f35e8230330f28c7b743ad088611a8de upstream.
 
-pl011_probe() calls pl011_setup_port() to reserve an amba_ports[] entry,
-then calls pl011_register_port() to register the uart driver with the
-tty layer.
+When we are processing writeback for sync(2), move_expired_inodes()
+didn't set any inode expiry value (older_than_this). This can result in
+writeback never completing if there's steady stream of inodes added to
+b_dirty_time list as writeback rechecks dirty lists after each writeback
+round whether there's more work to be done. Fix the problem by using
+sync(2) start time is inode expiry value when processing b_dirty_time
+list similarly as for ordinarily dirtied inodes. This requires some
+refactoring of older_than_this handling which simplifies the code
+noticeably as a bonus.
 
-If registration of the uart driver fails, the amba_ports[] entry is not
-released.  If this happens 14 times (value of UART_NR macro), then all
-amba_ports[] entries will have been leaked and driver probing is no
-longer possible.  (To be fair, that can only happen if the DeviceTree
-doesn't contain alias IDs since they cause the same entry to be used for
-a given port.)   Fix it.
-
-Fixes: ef2889f7ffee ("serial: pl011: Move uart_register_driver call to device")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v3.15+
-Cc: Tushar Behera <tushar.behera@linaro.org>
-Link: https://lore.kernel.org/r/138f8c15afb2f184d8102583f8301575566064a6.1597316167.git.lukas@wunner.de
+Fixes: 0ae45f63d4ef ("vfs: add support for a lazytime mount option")
+CC: stable@vger.kernel.org
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/amba-pl011.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/fs-writeback.c                |   44 +++++++++++++++------------------------
+ include/trace/events/writeback.h |   13 +++++------
+ 2 files changed, 23 insertions(+), 34 deletions(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2332,7 +2332,7 @@ static int pl011_setup_port(struct devic
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -45,7 +45,6 @@ struct wb_completion {
+ struct wb_writeback_work {
+ 	long nr_pages;
+ 	struct super_block *sb;
+-	unsigned long *older_than_this;
+ 	enum writeback_sync_modes sync_mode;
+ 	unsigned int tagged_writepages:1;
+ 	unsigned int for_kupdate:1;
+@@ -1109,16 +1108,13 @@ static bool inode_dirtied_after(struct i
+ #define EXPIRE_DIRTY_ATIME 0x0001
  
- static int pl011_register_port(struct uart_amba_port *uap)
+ /*
+- * Move expired (dirtied before work->older_than_this) dirty inodes from
++ * Move expired (dirtied before dirtied_before) dirty inodes from
+  * @delaying_queue to @dispatch_queue.
+  */
+ static int move_expired_inodes(struct list_head *delaying_queue,
+ 			       struct list_head *dispatch_queue,
+-			       int flags,
+-			       struct wb_writeback_work *work)
++			       int flags, unsigned long dirtied_before)
  {
--	int ret;
-+	int ret, i;
+-	unsigned long *older_than_this = NULL;
+-	unsigned long expire_time;
+ 	LIST_HEAD(tmp);
+ 	struct list_head *pos, *node;
+ 	struct super_block *sb = NULL;
+@@ -1126,16 +1122,9 @@ static int move_expired_inodes(struct li
+ 	int do_sb_sort = 0;
+ 	int moved = 0;
  
- 	/* Ensure interrupts from this UART are masked and cleared */
- 	writew(0, uap->port.membase + UART011_IMSC);
-@@ -2343,6 +2343,9 @@ static int pl011_register_port(struct ua
- 		if (ret < 0) {
- 			dev_err(uap->port.dev,
- 				"Failed to register AMBA-PL011 driver\n");
-+			for (i = 0; i < ARRAY_SIZE(amba_ports); i++)
-+				if (amba_ports[i] == uap)
-+					amba_ports[i] = NULL;
- 			return ret;
- 		}
- 	}
+-	if ((flags & EXPIRE_DIRTY_ATIME) == 0)
+-		older_than_this = work->older_than_this;
+-	else if (!work->for_sync) {
+-		expire_time = jiffies - (dirtytime_expire_interval * HZ);
+-		older_than_this = &expire_time;
+-	}
+ 	while (!list_empty(delaying_queue)) {
+ 		inode = wb_inode(delaying_queue->prev);
+-		if (older_than_this &&
+-		    inode_dirtied_after(inode, *older_than_this))
++		if (inode_dirtied_after(inode, dirtied_before))
+ 			break;
+ 		list_move(&inode->i_io_list, &tmp);
+ 		moved++;
+@@ -1181,18 +1170,22 @@ out:
+  *                                           |
+  *                                           +--> dequeue for IO
+  */
+-static void queue_io(struct bdi_writeback *wb, struct wb_writeback_work *work)
++static void queue_io(struct bdi_writeback *wb, struct wb_writeback_work *work,
++		     unsigned long dirtied_before)
+ {
+ 	int moved;
++	unsigned long time_expire_jif = dirtied_before;
+ 
+ 	assert_spin_locked(&wb->list_lock);
+ 	list_splice_init(&wb->b_more_io, &wb->b_io);
+-	moved = move_expired_inodes(&wb->b_dirty, &wb->b_io, 0, work);
++	moved = move_expired_inodes(&wb->b_dirty, &wb->b_io, 0, dirtied_before);
++	if (!work->for_sync)
++		time_expire_jif = jiffies - dirtytime_expire_interval * HZ;
+ 	moved += move_expired_inodes(&wb->b_dirty_time, &wb->b_io,
+-				     EXPIRE_DIRTY_ATIME, work);
++				     EXPIRE_DIRTY_ATIME, time_expire_jif);
+ 	if (moved)
+ 		wb_io_lists_populated(wb);
+-	trace_writeback_queue_io(wb, work, moved);
++	trace_writeback_queue_io(wb, work, dirtied_before, moved);
+ }
+ 
+ static int write_inode(struct inode *inode, struct writeback_control *wbc)
+@@ -1703,7 +1696,7 @@ static long writeback_inodes_wb(struct b
+ 	blk_start_plug(&plug);
+ 	spin_lock(&wb->list_lock);
+ 	if (list_empty(&wb->b_io))
+-		queue_io(wb, &work);
++		queue_io(wb, &work, jiffies);
+ 	__writeback_inodes_wb(wb, &work);
+ 	spin_unlock(&wb->list_lock);
+ 	blk_finish_plug(&plug);
+@@ -1723,7 +1716,7 @@ static long writeback_inodes_wb(struct b
+  * takes longer than a dirty_writeback_interval interval, then leave a
+  * one-second gap.
+  *
+- * older_than_this takes precedence over nr_to_write.  So we'll only write back
++ * dirtied_before takes precedence over nr_to_write.  So we'll only write back
+  * all dirty pages if they are all attached to "old" mappings.
+  */
+ static long wb_writeback(struct bdi_writeback *wb,
+@@ -1731,14 +1724,11 @@ static long wb_writeback(struct bdi_writ
+ {
+ 	unsigned long wb_start = jiffies;
+ 	long nr_pages = work->nr_pages;
+-	unsigned long oldest_jif;
++	unsigned long dirtied_before = jiffies;
+ 	struct inode *inode;
+ 	long progress;
+ 	struct blk_plug plug;
+ 
+-	oldest_jif = jiffies;
+-	work->older_than_this = &oldest_jif;
+-
+ 	blk_start_plug(&plug);
+ 	spin_lock(&wb->list_lock);
+ 	for (;;) {
+@@ -1772,14 +1762,14 @@ static long wb_writeback(struct bdi_writ
+ 		 * safe.
+ 		 */
+ 		if (work->for_kupdate) {
+-			oldest_jif = jiffies -
++			dirtied_before = jiffies -
+ 				msecs_to_jiffies(dirty_expire_interval * 10);
+ 		} else if (work->for_background)
+-			oldest_jif = jiffies;
++			dirtied_before = jiffies;
+ 
+ 		trace_writeback_start(wb, work);
+ 		if (list_empty(&wb->b_io))
+-			queue_io(wb, work);
++			queue_io(wb, work, dirtied_before);
+ 		if (work->sb)
+ 			progress = writeback_sb_inodes(work->sb, wb, work);
+ 		else
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -390,8 +390,9 @@ DEFINE_WBC_EVENT(wbc_writepage);
+ TRACE_EVENT(writeback_queue_io,
+ 	TP_PROTO(struct bdi_writeback *wb,
+ 		 struct wb_writeback_work *work,
++		 unsigned long dirtied_before,
+ 		 int moved),
+-	TP_ARGS(wb, work, moved),
++	TP_ARGS(wb, work, dirtied_before, moved),
+ 	TP_STRUCT__entry(
+ 		__array(char,		name, 32)
+ 		__field(unsigned long,	older)
+@@ -401,19 +402,17 @@ TRACE_EVENT(writeback_queue_io,
+ 		__dynamic_array(char, cgroup, __trace_wb_cgroup_size(wb))
+ 	),
+ 	TP_fast_assign(
+-		unsigned long *older_than_this = work->older_than_this;
+ 		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
+-		__entry->older	= older_than_this ?  *older_than_this : 0;
+-		__entry->age	= older_than_this ?
+-				  (jiffies - *older_than_this) * 1000 / HZ : -1;
++		__entry->older	= dirtied_before;
++		__entry->age	= (jiffies - dirtied_before) * 1000 / HZ;
+ 		__entry->moved	= moved;
+ 		__entry->reason	= work->reason;
+ 		__trace_wb_assign_cgroup(__get_str(cgroup), wb);
+ 	),
+ 	TP_printk("bdi %s: older=%lu age=%ld enqueue=%d reason=%s cgroup=%s",
+ 		__entry->name,
+-		__entry->older,	/* older_than_this in jiffies */
+-		__entry->age,	/* older_than_this in relative milliseconds */
++		__entry->older,	/* dirtied_before in jiffies */
++		__entry->age,	/* dirtied_before in relative milliseconds */
+ 		__entry->moved,
+ 		__print_symbolic(__entry->reason, WB_WORK_REASON),
+ 		__get_str(cgroup)
 
 
