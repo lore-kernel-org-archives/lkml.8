@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E29C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA16C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77C792087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14A6B2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980908;
-	bh=Qdd2t+Bq7aOgloQpyqL/JTwfqg9nGMTvB29mRmWzITk=;
+	s=default; t=1598980917;
+	bh=5GNgPTtfXVvMA6ocoAn2mDIL7i+Q7oAG+au7SI1IFGI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czeQB4RLgI0rXJJk6a4PkpecR4CrcO1C1ed5CA0oKWGdsWExTCiMD1TMzYFQD9SYG
-	 AwTSgqruogCRFpQEWiD1T7TOULSy8HM/9BSQyuGrayjwzjg27Wzf5/4KtQR+vtfgB4
-	 eW8UKBTA9R9CU+nyXsuKMiwEcbkQIa+0+WPqFzzk=
+	b=GBnmcyuCNdqM/turPNsc6vJvo6JCyOhZ8k73g/ExMBSpZdLYrnblcSnSBJExuThqZ
+	 dbmkhW0q+WwC2DvpvICvAuUW6USslmQNcYb3fwSEdHMDtjwisBq/HVHQeZwErbjKtH
+	 SOFY3dtXfA9TwLC3ZJkUW1csD8eif32eZlD4K6do=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgIARVr (ORCPT
+        id S1732703AbgIARVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54734 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:21:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728713AbgIAPMX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:23 -0400
+        id S1727997AbgIAPMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A151720BED;
-        Tue,  1 Sep 2020 15:12:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4368D2078B;
+        Tue,  1 Sep 2020 15:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973143;
-        bh=Qdd2t+Bq7aOgloQpyqL/JTwfqg9nGMTvB29mRmWzITk=;
+        s=default; t=1598973140;
+        bh=5GNgPTtfXVvMA6ocoAn2mDIL7i+Q7oAG+au7SI1IFGI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ofoR8QYqP/G+Wf0iiEDi+xa+WqKsP5JVwfnGghOnxL4UaZH0y6tDRMrUC+GXOT3nQ
-         18i/6gU7f6Ybj2gyhUCRCnQLSc8Cg+wF/SZtNzYGi0RdZKFsf605Gnw1PZWLU4MB3M
-         bvfEHwi0Y5owQunBLY/R8YJDMqU5eRP5rnvQto1w=
+        b=jQL495QJSvNoKT0ikRti2AfZT6PwI+WZJNMljvmJWWUib1X5MCncAVvxi1+v1yiQv
+         BtcOrUygYNu46Z3Np6kNCCPlYB+SYzusgngF032Rk0Ai8+Fq4owQNpIZfB0DzJUHzd
+         yLmKF71KXJ1X03XcjcxzWe8J3UpVSk3e1MLJYO9g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
+        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
+        Veaceslav Falico <vfalico@gmail.com>,
         Andy Gospodarek <andy@greyhouse.net>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 05/62] bonding: fix a potential double-unregister
-Date:   Tue,  1 Sep 2020 17:09:48 +0200
-Message-Id: <20200901150920.977690328@linuxfoundation.org>
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Jay Vosburgh <jay.vosburgh@canonical.com>,
+        Jarod Wilson <jarod@redhat.com>
+Subject: [PATCH 4.4 04/62] bonding: show saner speed for broadcast mode
+Date:   Tue,  1 Sep 2020 17:09:47 +0200
+Message-Id: <20200901150920.936373256@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -64,43 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Jarod Wilson <jarod@redhat.com>
 
-[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
+[ Upstream commit 4ca0d9ac3fd8f9f90b72a15d8da2aca3ffb58418 ]
 
-When we tear down a network namespace, we unregister all
-the netdevices within it. So we may queue a slave device
-and a bonding device together in the same unregister queue.
+Broadcast mode bonds transmit a copy of all traffic simultaneously out of
+all interfaces, so the "speed" of the bond isn't really the aggregate of
+all interfaces, but rather, the speed of the slowest active interface.
 
-If the only slave device is non-ethernet, it would
-automatically unregister the bonding device as well. Thus,
-we may end up unregistering the bonding device twice.
+Also, the type of the speed field is u32, not unsigned long, so adjust
+that accordingly, as required to make min() function here without
+complaining about mismatching types.
 
-Workaround this special case by checking reg_state.
-
-Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
+CC: Jay Vosburgh <j.vosburgh@gmail.com>
+CC: Veaceslav Falico <vfalico@gmail.com>
+CC: Andy Gospodarek <andy@greyhouse.net>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
+Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
+Signed-off-by: Jarod Wilson <jarod@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/bonding/bond_main.c |   21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
 --- a/drivers/net/bonding/bond_main.c
 +++ b/drivers/net/bonding/bond_main.c
-@@ -1940,7 +1940,8 @@ static int  bond_release_and_destroy(str
- 	int ret;
+@@ -4057,13 +4057,23 @@ static netdev_tx_t bond_start_xmit(struc
+ 	return ret;
+ }
  
- 	ret = bond_release(bond_dev, slave_dev);
--	if (ret == 0 && !bond_has_slaves(bond)) {
-+	if (ret == 0 && !bond_has_slaves(bond) &&
-+	    bond_dev->reg_state != NETREG_UNREGISTERING) {
- 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
- 		netdev_info(bond_dev, "Destroying bond %s\n",
- 			    bond_dev->name);
++static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
++{
++	if (speed == 0 || speed == SPEED_UNKNOWN)
++		speed = slave->speed;
++	else
++		speed = min(speed, slave->speed);
++
++	return speed;
++}
++
+ static int bond_ethtool_get_settings(struct net_device *bond_dev,
+ 				     struct ethtool_cmd *ecmd)
+ {
+ 	struct bonding *bond = netdev_priv(bond_dev);
+-	unsigned long speed = 0;
+ 	struct list_head *iter;
+ 	struct slave *slave;
++	u32 speed = 0;
+ 
+ 	ecmd->duplex = DUPLEX_UNKNOWN;
+ 	ecmd->port = PORT_OTHER;
+@@ -4075,8 +4085,13 @@ static int bond_ethtool_get_settings(str
+ 	 */
+ 	bond_for_each_slave(bond, slave, iter) {
+ 		if (bond_slave_can_tx(slave)) {
+-			if (slave->speed != SPEED_UNKNOWN)
+-				speed += slave->speed;
++			if (slave->speed != SPEED_UNKNOWN) {
++				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
++					speed = bond_mode_bcast_speed(slave,
++								      speed);
++				else
++					speed += slave->speed;
++			}
+ 			if (ecmd->duplex == DUPLEX_UNKNOWN &&
+ 			    slave->duplex != DUPLEX_UNKNOWN)
+ 				ecmd->duplex = slave->duplex;
 
 
