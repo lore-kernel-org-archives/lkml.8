@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ACCC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E7B4C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECC5E2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C6B6206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975261;
-	bh=RUya4KzYZ3Kazt/S7V1kovWUojhiqJnuKTJaHfXwtTo=;
+	s=default; t=1598975270;
+	bh=lAj3qZgHlA9VpgwQn7Vfkt8qFHZHHDRIsHCNYvGNVeA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VwcNNHxCfmO7/bB1Q1LmBMWwZICttlKDPM7HN4YOSrOJAfc66KKXTDkkTciodz3I+
-	 fgFhIRR0bkE6nQ1GRNkhJebUeiXoKPgHQuayid1XEHf2y6JF1p9jzFktMSWxoy6VmX
-	 bWWQ8oZSVUz0bRZQGAoid1i/SzDEIfbgo3l8CDqk=
+	b=2fsw+QUQ119SFksSDdISgUQax1ydsthwqUlAFvzd3wNuHuvNEh/cNsi/oqyHghZjF
+	 1L7SunMEgGiOaVLgeuiVCpUwO+r3H/2zLH42Q+jw9ww0yU7uyRlNYFa40A9o1NIIAY
+	 VFTZU/xzIvUMidPrU8pug3E4BHQuWJzW6HnAdG3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731982AbgIAPrj (ORCPT
+        id S1728644AbgIAPrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:47:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59062 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:47:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731770AbgIAPoH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:07 -0400
+        id S1731738AbgIAPoM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:44:12 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BDA4206EB;
-        Tue,  1 Sep 2020 15:44:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF01208CA;
+        Tue,  1 Sep 2020 15:44:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975046;
-        bh=RUya4KzYZ3Kazt/S7V1kovWUojhiqJnuKTJaHfXwtTo=;
+        s=default; t=1598975052;
+        bh=lAj3qZgHlA9VpgwQn7Vfkt8qFHZHHDRIsHCNYvGNVeA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uIzfts5eZjtdhlTVDsEZq+4RIxvwOlleSypX2nu1cuFOerI0kBJAg4qD89npEBDvW
-         BeqBkYY/wL4PLD0WJjcF5uAB0gvbMVaDcUs//LEtOGjfQp9VU0l72Ndz5wHKWARRH2
-         BNH00N5OQwU4I8pkqs/O6B9m0VJYhogcDZODCVBk=
+        b=TUUWJHHX0C9tZn4neLNFG8y4kgedE30f/GoEl4xw8Ig2AOgrD+KiWpopvvrx7zMB8
+         Qtd0pv2I7Kw4xNkHFmjfLAllRf4SkbBch3e+sERyyAN+NLTV48IkFsxQENUD6/OxZR
+         g1gNvvZ7Zsjf0W0ZhzVPR2yEl7bAalJMjzANbeVE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Aleksey Makarov <amakarov@marvell.com>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Christopher Covington <cov@codeaurora.org>
-Subject: [PATCH 5.8 181/255] serial: pl011: Fix oops on -EPROBE_DEFER
-Date:   Tue,  1 Sep 2020 17:10:37 +0200
-Message-Id: <20200901151009.358712036@linuxfoundation.org>
+        stable@vger.kernel.org, Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.8 191/255] usb: renesas-xhci: remove version check
+Date:   Tue,  1 Sep 2020 17:10:47 +0200
+Message-Id: <20200901151009.842792325@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -62,93 +58,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Vinod Koul <vkoul@kernel.org>
 
-commit 27afac93e3bd7fa89749cf11da5d86ac9cde4dba upstream.
+commit d66a57be2f9a315fc10d0f524f670fec903e0fb4 upstream.
 
-If probing of a pl011 gets deferred until after free_initmem(), an oops
-ensues because pl011_console_match() is called which has been freed.
+Some devices in wild are reporting bunch of firmware versions, so remove
+the check for versions in driver
 
-Fix by removing the __init attribute from the function and those it
-calls.
-
-Commit 10879ae5f12e ("serial: pl011: add console matching function")
-introduced pl011_console_match() not just for early consoles but
-regular preferred consoles, such as those added by acpi_parse_spcr().
-Regular consoles may be registered after free_initmem() for various
-reasons, one being deferred probing, another being dynamic enablement
-of serial ports using a DeviceTree overlay.
-
-Thus, pl011_console_match() must not be declared __init and the
-functions it calls mustn't either.
-
-Stack trace for posterity:
-
-Unable to handle kernel paging request at virtual address 80c38b58
-Internal error: Oops: 8000000d [#1] PREEMPT SMP ARM
-PC is at pl011_console_match+0x0/0xfc
-LR is at register_console+0x150/0x468
-[<80187004>] (register_console)
-[<805a8184>] (uart_add_one_port)
-[<805b2b68>] (pl011_register_port)
-[<805b3ce4>] (pl011_probe)
-[<80569214>] (amba_probe)
-[<805ca088>] (really_probe)
-[<805ca2ec>] (driver_probe_device)
-[<805ca5b0>] (__device_attach_driver)
-[<805c8060>] (bus_for_each_drv)
-[<805c9dfc>] (__device_attach)
-[<805ca630>] (device_initial_probe)
-[<805c90a8>] (bus_probe_device)
-[<805c95a8>] (deferred_probe_work_func)
-
-Fixes: 10879ae5f12e ("serial: pl011: add console matching function")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.10+
-Cc: Aleksey Makarov <amakarov@marvell.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Christopher Covington <cov@codeaurora.org>
-Link: https://lore.kernel.org/r/f827ff09da55b8c57d316a1b008a137677b58921.1597315557.git.lukas@wunner.de
+Reported by: Anastasios Vacharakis <vacharakis@gmail.com>
+Reported by: Glen Journeay <journeay@gmail.com>
+Fixes: 2478be82de44 ("usb: renesas-xhci: Add ROM loader for uPD720201")
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=208911
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200818071739.789720-1-vkoul@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/amba-pl011.c |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/usb/host/xhci-pci-renesas.c |   19 +------------------
+ 1 file changed, 1 insertion(+), 18 deletions(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2241,9 +2241,8 @@ pl011_console_write(struct console *co,
- 	clk_disable(uap->clk);
- }
+--- a/drivers/usb/host/xhci-pci-renesas.c
++++ b/drivers/usb/host/xhci-pci-renesas.c
+@@ -50,20 +50,6 @@
+ #define RENESAS_RETRY	10000
+ #define RENESAS_DELAY	10
  
--static void __init
--pl011_console_get_options(struct uart_amba_port *uap, int *baud,
--			     int *parity, int *bits)
-+static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
-+				      int *parity, int *bits)
+-#define ROM_VALID_01 0x2013
+-#define ROM_VALID_02 0x2026
+-
+-static int renesas_verify_fw_version(struct pci_dev *pdev, u32 version)
+-{
+-	switch (version) {
+-	case ROM_VALID_01:
+-	case ROM_VALID_02:
+-		return 0;
+-	}
+-	dev_err(&pdev->dev, "FW has invalid version :%d\n", version);
+-	return -EINVAL;
+-}
+-
+ static int renesas_fw_download_image(struct pci_dev *dev,
+ 				     const u32 *fw, size_t step, bool rom)
  {
- 	if (pl011_read(uap, REG_CR) & UART01x_CR_UARTEN) {
- 		unsigned int lcr_h, ibrd, fbrd;
-@@ -2276,7 +2275,7 @@ pl011_console_get_options(struct uart_am
- 	}
- }
+@@ -202,10 +188,7 @@ static int renesas_check_rom_state(struc
  
--static int __init pl011_console_setup(struct console *co, char *options)
-+static int pl011_console_setup(struct console *co, char *options)
- {
- 	struct uart_amba_port *uap;
- 	int baud = 38400;
-@@ -2344,8 +2343,8 @@ static int __init pl011_console_setup(st
-  *
-  *	Returns 0 if console matches; otherwise non-zero to use default matching
-  */
--static int __init pl011_console_match(struct console *co, char *name, int idx,
--				      char *options)
-+static int pl011_console_match(struct console *co, char *name, int idx,
-+			       char *options)
- {
- 	unsigned char iotype;
- 	resource_size_t addr;
+ 	version &= RENESAS_FW_VERSION_FIELD;
+ 	version = version >> RENESAS_FW_VERSION_OFFSET;
+-
+-	err = renesas_verify_fw_version(pdev, version);
+-	if (err)
+-		return err;
++	dev_dbg(&pdev->dev, "Found ROM version: %x\n", version);
+ 
+ 	/*
+ 	 * Test if ROM is present and loaded, if so we can skip everything
 
 
