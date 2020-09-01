@@ -2,157 +2,234 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7861C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D01C4C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8649120FC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33612065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:35:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="N0law7Zr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w9XTgjGS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgIAFeb (ORCPT
+        id S1726400AbgIAFfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:34:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46884 "EHLO
+        Tue, 1 Sep 2020 01:35:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726044AbgIAFea (ORCPT
+        with ESMTP id S1726050AbgIAFfq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:34:30 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F32C7C061290;
-        Mon, 31 Aug 2020 22:34:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=ZSo4Kk3lGyfakbzAOPf8+T3dlZFXdTrrp8cG3ND3CNc=; b=N0law7ZrT/Xc3xr2dooUsCVfPc
-        nZkvh3GnonhgfEn5o5VQ6gOZA65oAMMu5Iz9sI+Z3RWX/372JQxqtjkiXBBGTmgCuugQECYCkv1+u
-        Q7LmtbnpzGMZxpYhvM3KfSmgZwj10w1zrk/m5Njt/q2fKA5CtBErJfDWv5hINfAyY0Jjp2i5p4IIl
-        TGdGrjgtvxwY7t2CGWm+NZWgQVECHmx/gmN1L6VeSNUVJO7IK+bw8FkuDLmi9OG6NkjvXI+zGvW6s
-        ibS07B5cYF8p7v5Dx+gbtRN7Pg7NqvkVqahCgo3F6tehsPKsz9MlrCZmh7kFZ96T8vA4Rt8M1vWk4
-        5439Eg7w==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCyw6-0007KE-DH; Tue, 01 Sep 2020 05:34:26 +0000
-Date:   Tue, 1 Sep 2020 06:34:26 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Christoph Hellwig <hch@infradead.org>, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        linux-block@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 04/11] block: Add bio_for_each_thp_segment_all
-Message-ID: <20200901053426.GB24560@infradead.org>
-References: <20200824151700.16097-1-willy@infradead.org>
- <20200824151700.16097-5-willy@infradead.org>
- <20200827084431.GA15909@infradead.org>
- <20200831194837.GJ14765@casper.infradead.org>
+        Tue, 1 Sep 2020 01:35:46 -0400
+Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 195D6C0612A0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:35:45 -0700 (PDT)
+Received: by mail-oi1-x244.google.com with SMTP id x19so123952oix.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:35:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bqLgjtRNDTI/SCbsYrw9ssaBt/TftKu39O2QQtBM9Tk=;
+        b=w9XTgjGSu41nt9IFeQpEbJjO8J6dMiQcWgbPKtyAAyS9OdjINki2co+sS9dqTcXxwP
+         9a50dhJmZZ/pcAKuZZi1bZ5FG47qFmFnjFsnK34WIOJM6sawqS2BxkA+wnfFo/0NO5U7
+         T7HJ125TAyC1FH3SF7fLiQaDDx5zDeJAmOcAZKM1DVJi6UnrWGuRpUp+p8SUOQ2fh7+5
+         koAKBtid/eWHiFAWyqy49gYwFOUY404kNbsU8ifI+myNLNWaMyjPnehz8klEfrv8vU8c
+         HqtvtyCyEHdtd1ZzNRXAF5xnjwtcLtq7Ej9dmL+S5qx1xFf3gOBJIJdNRD441DwhKLQt
+         oJHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bqLgjtRNDTI/SCbsYrw9ssaBt/TftKu39O2QQtBM9Tk=;
+        b=joEcNkoNo2HFWP+RoLYwxDX2imVpC1PHwGMVHDbcgPbwHqGlnn3IZLa/2dA/ZKKbfT
+         OQhgqsLSqEsXcvxESatqyevvJxOEKsAaKj0bt2XHOCoktAMTsp/TVOSu5JHOj6G/yemi
+         mdQHZX9/S5kO/459lam0Z1zLu5Fon4Lwi0gjAHckH1E4S1zahuj5Xp91ZzKCWtRCzgSi
+         +tn+KbV1iEFBQM9nq58fit0/TmH/Ih36zC0x1gdq47lfdvVobooUQWXb1JfRWf8Zl6QB
+         9nZ4pumoUtlj6JBXkqXuicuhYAiwOw7usKIfcG7KGyQtdqWWveQ2xIxE+cgUMArQjk5A
+         KwkA==
+X-Gm-Message-State: AOAM5336v0QIm4+zbymvc7tWe3bk4FOKiDBfR4wMlKB7TFybQXWPInCT
+        3H5Sq80XWCVtkWa6h5b6t3UdN4CYuqkBRg==
+X-Google-Smtp-Source: ABdhPJxCwPxWpbx9/FQ/pHgMctBc48p1eEulQ2TAksIyKoN3KLenR9QKBzFuscBKV7AaA2Ff800Myg==
+X-Received: by 2002:aca:190a:: with SMTP id l10mr117370oii.175.1598938544802;
+        Mon, 31 Aug 2020 22:35:44 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id u28sm20035otj.13.2020.08.31.22.35.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 22:35:44 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 00:35:41 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 19/19] drm/msm: show process names in gem_describe
+Message-ID: <20200901053541.GY3715@yoga>
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200814024114.1177553-20-robdclark@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200831194837.GJ14765@casper.infradead.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20200814024114.1177553-20-robdclark@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 08:48:37PM +0100, Matthew Wilcox wrote:
-> static void iomap_read_end_io(struct bio *bio)
-> {
->         int i, error = blk_status_to_errno(bio->bi_status);
+On Thu 13 Aug 21:41 CDT 2020, Rob Clark wrote:
+
+> From: Rob Clark <robdclark@chromium.org>
 > 
->         for (i = 0; i < bio->bi_vcnt; i++) {
->                 struct bio_vec *bvec = &bio->bi_io_vec[i];
-
-This should probably use bio_for_each_bvec_all instead of directly
-poking into the bio.  I'd also be tempted to move the loop body into
-a separate helper, but that's just a slight stylistic preference.
-
->                 size_t offset = bvec->bv_offset;
->                 size_t length = bvec->bv_len;
->                 struct page *page = bvec->bv_page;
+> In $debugfs/gem we already show any vma(s) associated with an object.
+> Also show process names if the vma's address space is a per-process
+> address space.
 > 
->                 while (length > 0) { 
->                         size_t count = thp_size(page) - offset;
->                         
->                         if (count > length)
->                                 count = length;
->                         iomap_read_page_end_io(page, offset, count, error);
->                         page += (offset + count) / PAGE_SIZE;
 
-Shouldn't the page_size here be thp_size?
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-> Maybe I'm missing something important here, but it's significantly
-> simpler code -- iomap_read_end_io() goes down from 816 bytes to 560 bytes
-> (256 bytes less!) iomap_read_page_end_io is inlined into it both before
-> and after.
-
-Yes, that's exactly why I think avoiding bio_for_each_segment_all is
-a good idea in general.
-
-> There is some weirdness going on with regards to bv_offset that I don't
-> quite understand.  In the original bvec_advance:
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/msm/msm_drv.c     |  2 +-
+>  drivers/gpu/drm/msm/msm_gem.c     | 25 +++++++++++++++++++++----
+>  drivers/gpu/drm/msm/msm_gem.h     |  5 +++++
+>  drivers/gpu/drm/msm/msm_gem_vma.c |  1 +
+>  drivers/gpu/drm/msm/msm_gpu.c     |  8 +++++---
+>  drivers/gpu/drm/msm/msm_gpu.h     |  2 +-
+>  6 files changed, 34 insertions(+), 9 deletions(-)
 > 
->                 bv->bv_page = bvec->bv_page + (bvec->bv_offset >> PAGE_SHIFT);
->                 bv->bv_offset = bvec->bv_offset & ~PAGE_MASK;
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index 8e70d220bba8..8d5c4f98c332 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
+>  	kref_init(&ctx->ref);
+>  	msm_submitqueue_init(dev, ctx);
+>  
+> -	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
+> +	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu, current);
+>  	file->driver_priv = ctx;
+>  
+>  	return 0;
+> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+> index 3cb7aeb93fd3..76a6c5271e57 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.c
+> +++ b/drivers/gpu/drm/msm/msm_gem.c
+> @@ -842,11 +842,28 @@ void msm_gem_describe(struct drm_gem_object *obj, struct seq_file *m)
+>  
+>  		seq_puts(m, "      vmas:");
+>  
+> -		list_for_each_entry(vma, &msm_obj->vmas, list)
+> -			seq_printf(m, " [%s: %08llx,%s,inuse=%d]",
+> -				vma->aspace != NULL ? vma->aspace->name : NULL,
+> -				vma->iova, vma->mapped ? "mapped" : "unmapped",
+> +		list_for_each_entry(vma, &msm_obj->vmas, list) {
+> +			const char *name, *comm;
+> +			if (vma->aspace) {
+> +				struct msm_gem_address_space *aspace = vma->aspace;
+> +				struct task_struct *task =
+> +					get_pid_task(aspace->pid, PIDTYPE_PID);
+> +				if (task) {
+> +					comm = kstrdup(task->comm, GFP_KERNEL);
+> +				} else {
+> +					comm = NULL;
+> +				}
+> +				name = aspace->name;
+> +			} else {
+> +				name = comm = NULL;
+> +			}
+> +			seq_printf(m, " [%s%s%s: aspace=%p, %08llx,%s,inuse=%d]",
+> +				name, comm ? ":" : "", comm ? comm : "",
+> +				vma->aspace, vma->iova,
+> +				vma->mapped ? "mapped" : "unmapped",
+>  				vma->inuse);
+> +			kfree(comm);
+> +		}
+>  
+>  		seq_puts(m, "\n");
+>  	}
+> diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+> index 9c573c4269cb..7b1c7a5f8eef 100644
+> --- a/drivers/gpu/drm/msm/msm_gem.h
+> +++ b/drivers/gpu/drm/msm/msm_gem.h
+> @@ -24,6 +24,11 @@ struct msm_gem_address_space {
+>  	spinlock_t lock; /* Protects drm_mm node allocation/removal */
+>  	struct msm_mmu *mmu;
+>  	struct kref kref;
+> +
+> +	/* For address spaces associated with a specific process, this
+> +	 * will be non-NULL:
+> +	 */
+> +	struct pid *pid;
+>  };
+>  
+>  struct msm_gem_vma {
+> diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+> index 29cc1305cf37..80a8a266d68f 100644
+> --- a/drivers/gpu/drm/msm/msm_gem_vma.c
+> +++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+> @@ -17,6 +17,7 @@ msm_gem_address_space_destroy(struct kref *kref)
+>  	drm_mm_takedown(&aspace->mm);
+>  	if (aspace->mmu)
+>  		aspace->mmu->funcs->destroy(aspace->mmu);
+> +	put_pid(aspace->pid);
+>  	kfree(aspace);
+>  }
+>  
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> index 951850804d77..ac8961187a73 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> @@ -825,10 +825,9 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
+>  
+>  /* Return a new address space for a msm_drm_private instance */
+>  struct msm_gem_address_space *
+> -msm_gpu_create_private_address_space(struct msm_gpu *gpu)
+> +msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task)
+>  {
+>  	struct msm_gem_address_space *aspace = NULL;
+> -
+>  	if (!gpu)
+>  		return NULL;
+>  
+> @@ -836,8 +835,11 @@ msm_gpu_create_private_address_space(struct msm_gpu *gpu)
+>  	 * If the target doesn't support private address spaces then return
+>  	 * the global one
+>  	 */
+> -	if (gpu->funcs->create_private_address_space)
+> +	if (gpu->funcs->create_private_address_space) {
+>  		aspace = gpu->funcs->create_private_address_space(gpu);
+> +		if (!IS_ERR(aspace))
+> +			aspace->pid = get_pid(task_pid(task));
+> +	}
+>  
+>  	if (IS_ERR_OR_NULL(aspace))
+>  		aspace = msm_gem_address_space_get(gpu->aspace);
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index 4052a18e18c2..59f26bd0fe42 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -298,7 +298,7 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  		const char *name, struct msm_gpu_config *config);
+>  
+>  struct msm_gem_address_space *
+> -msm_gpu_create_private_address_space(struct msm_gpu *gpu);
+> +msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task);
+>  
+>  void msm_gpu_cleanup(struct msm_gpu *gpu);
+>  
+> -- 
+> 2.26.2
 > 
-> which I cargo-culted into bvec_thp_advance as:
-> 
->                 bv->bv_page = thp_head(bvec->bv_page +
->                                 (bvec->bv_offset >> PAGE_SHIFT));
->                 page_size = thp_size(bv->bv_page);
->                 bv->bv_offset = bvec->bv_offset -
->                                 (bv->bv_page - bvec->bv_page) * PAGE_SIZE;
-> 
-> Is it possible to have a bvec with an offset that is larger than the
-> size of bv_page?  That doesn't seem like a useful thing to do, but
-> if that needs to be supported, then the code up top doesn't do that.
-> We maybe gain a little bit by counting length down to 0 instead of
-> counting it up to bv_len.  I dunno; reading the code over now, it
-> doesn't seem like that much of a difference.
-
-Drivers can absolutely see a bv_offset that is larger due to bio
-splitting.  However the submitting file system should never see one
-unless it creates one, which would be stupid.
-
-And yes, eventually bv_page and bv_offset should be replaced with a
-
-	phys_addr_t		bv_phys;
-
-and life would become simpler in many places (and the bvec would
-shrink for most common setups as well).
-
-For now I'd end up with something like:
-
-static void iomap_read_end_bvec(struct page *page, size_t offset,
-		size_t length, int error)
-{
-	while (length > 0) {
-		size_t page_size = thp_size(page);
-		size_t count = min(page_size - offset, length);
-
-		iomap_read_page_end_io(page, offset, count, error);
-
-		page += (offset + count) / page_size;
-		length -= count;
-		offset = 0;
-	}
-}
-
-static void iomap_read_end_io(struct bio *bio)
-{
-	int i, error = blk_status_to_errno(bio->bi_status);
-	struct bio_vec *bvec;
-
-	bio_for_each_bvec_all(bvec, bio, i)
-		iomap_read_end_bvec(bvec->bv_page, bvec->bv_offset,
-				    bvec->bv_len, error;
-        bio_put(bio);
-}
-
-and maybe even merge iomap_read_page_end_io into iomap_read_end_bvec.
