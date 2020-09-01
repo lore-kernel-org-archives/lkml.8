@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0115C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2403C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 683E32067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8420820767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978710;
-	bh=PBjywAkB5vZAJ4hhSMwUDs22mIJkEDd3jovDCARY+7U=;
+	s=default; t=1598978712;
+	bh=Bzvll3pCe1AMYSUjL6S0uyx9RSHYFXoynJQi99sQQyc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rM7mHYLrgSQR4iG1oHlnVHB0DWoO4jBGSAqDajmbpjMr1DwhN814aHFVniHA6+ruS
-	 0XWVYB4zZpX/xBKFQhhp5EcUJ7Kb68FI0UX5ffi08XVa+mzThEhgWqXwjuqNAJFQnW
-	 ovTBoee/D83Wy7TTcBWUpmxmvjw/SvHqlDmgjvLQ=
+	b=0uMJNcH0GThyosVN8ZvJnNKol9bF3B2imV8adG1obs90468HBHGM2mZOjCiOowH1G
+	 EnZ0NT7k6lxpRl1QKbKaw89or0lytXYZLwhYNI8d4jV86zq2ZaPxXS8RUDjAvfgTCv
+	 o0d7Hk8blcYVIg5+5hwn7uDmxcUQNrYnqWIiuUhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730306AbgIAQpJ (ORCPT
+        id S1730214AbgIAP1d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730213AbgIAP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:27:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729928AbgIAPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:59 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BD752078B;
-        Tue,  1 Sep 2020 15:27:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9AB120FC3;
+        Tue,  1 Sep 2020 15:23:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974052;
-        bh=PBjywAkB5vZAJ4hhSMwUDs22mIJkEDd3jovDCARY+7U=;
+        s=default; t=1598973837;
+        bh=Bzvll3pCe1AMYSUjL6S0uyx9RSHYFXoynJQi99sQQyc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uNj3VvcL5Hi5iEpGOHv8epPFF+w2I/HLOA4sL5PTSwr2vFLWJ0oyxO6ImLqba3+yw
-         ym+oELKuBIqYpyxhdkJStgY/fR7p3PcSc9lIwgUVaDwnEfw032k+IAbypGnLrcpjA7
-         AF46ltWPvCJf5gvxAos9kLjMJqXAn8njpaMuGsZ0=
+        b=USV9xl9PdzqdK4AJQxnl78jVx7LQimd5qpv45NfCeZqRYJRUdkbdwixqzH1QmwXgm
+         6idCjmrELXoYwYjwgoKRl/j/WCKoQ4rPUgcBRIK8t2NSo9KXVOl3JqaLkC7HljFlks
+         4zfbJhNDfgFIqimtnQiD23iEArBAAsS0PfZ81vIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 025/214] scsi: target: tcmu: Fix crash on ARM during cmd completion
-Date:   Tue,  1 Sep 2020 17:08:25 +0200
-Message-Id: <20200901150954.179618374@linuxfoundation.org>
+        stable@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 036/125] HID: quirks: add NOGET quirk for Logitech GROUP
+Date:   Tue,  1 Sep 2020 17:09:51 +0200
+Message-Id: <20200901150936.336792629@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,55 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+From: Ikjoon Jang <ikjn@chromium.org>
 
-[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
+[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
 
-If tcmu_handle_completions() has to process a padding shorter than
-sizeof(struct tcmu_cmd_entry), the current call to
-tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
-param is wrong and causes crashes on e.g. ARM, because
-tcmu_flush_dcache_range() in this case calls
-flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
-address above the end of the vmalloc'ed area.
+Add HID_QUIRK_NOGET for Logitech GROUP device.
 
-The fix is to use the minimum of remaining ring space and sizeof(struct
-tcmu_cmd_entry) as the length param.
+Logitech GROUP is a compound with camera and audio.
+When the HID interface in an audio device is requested to get
+specific report id, all following control transfers are stalled
+and never be restored back.
 
-The patch was tested on kernel 4.19.118.
-
-See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
-
-Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
-Tested-by: JiangYu <lnsyyj@hotmail.com>
-Acked-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/target/target_core_user.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
-index d766fb14942b3..8888cdf3eead9 100644
---- a/drivers/target/target_core_user.c
-+++ b/drivers/target/target_core_user.c
-@@ -1220,7 +1220,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 20530d8adfbb8..2c100b73d3fc1 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -756,6 +756,7 @@
+ #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
+ #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
+ #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
++#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
+ #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
+ #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
+ #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index bdde16395b2ce..62f87f8bd9720 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
  
- 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
- 
--		tcmu_flush_dcache_range(entry, sizeof(*entry));
-+		/*
-+		 * Flush max. up to end of cmd ring since current entry might
-+		 * be a padding that is shorter than sizeof(*entry)
-+		 */
-+		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
-+					       udev->cmdr_size);
-+		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
-+					ring_left : sizeof(*entry));
- 
- 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
- 			UPDATE_HEAD(udev->cmdr_last_cleaned,
+ 	{ 0 }
+ };
 -- 
 2.25.1
 
