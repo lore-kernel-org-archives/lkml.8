@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0B9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CBFC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 53EEF2100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3293B2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973201;
-	bh=k1wBZkuFVL8dW5d4JlcUY7U1TYR+0F01BvfIZJpQIPo=;
+	s=default; t=1598973216;
+	bh=mdxoQ4ei3+fvVShYPWCRRxh5xRlB/KycAgoxaaOHUIA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VCXhuclsA275igJYySSTsw/9vKeNoZOBws9dKpngHu6Cs0XdkBkAFhvbJZgic/Tpc
-	 TSwIWtWLU6dISplL/nJ57b/1YZz47xchUIgtwVlLSqDNnoGHuKHAeqZbWz0RfsKoQa
-	 uRVbLBk5w5H7RxrhfSWtx9tg2YvkruAcFhOIMUFs=
+	b=pzL33dVAzHq9KNR7RQb4KYOkXtp84vCBOaxWNUvfmpvy/wfwXxjjKDlM680xFayDt
+	 vbUtSV3wba6yJihvn0if8wVNTcnDZAaQ9SWyHoAa1JBVdRlA0GNzSGgqRdpVI4Jzql
+	 F/bvuywbm2U54LHg0fzEP6f5rn5NDyjnyi0y0PYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728892AbgIAPNS (ORCPT
+        id S1728910AbgIAPNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:13:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55450 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:13:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbgIAPMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:51 -0400
+        id S1728830AbgIAPM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:59 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0FD8206FA;
-        Tue,  1 Sep 2020 15:12:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 101E720BED;
+        Tue,  1 Sep 2020 15:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973170;
-        bh=k1wBZkuFVL8dW5d4JlcUY7U1TYR+0F01BvfIZJpQIPo=;
+        s=default; t=1598973177;
+        bh=mdxoQ4ei3+fvVShYPWCRRxh5xRlB/KycAgoxaaOHUIA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZQh+LLSmvQF+Wo/GRw5n62khdo57OscQRdIKRCHBJYHQUDvAQQBwJVNT1Dl83FCxy
-         UDsPyFc96jS3W7BPaoFg7UAGcX6UIh09TOnQCgj8GLzQRXAgM2Aa0TAFm9+NNnSdlg
-         QAfFNi2VQCEpVHr4BVMD21vzsWuLz2yiX9wiiZk8=
+        b=nra6jwn6yIzeMApeXUfgs+wUHdF/KklH+QsCKWCwP6UZbkU+OL/TbsVBCm0Gf7/nJ
+         iPCygYvSSPoPXc6z49CZI3PD9oQs+Buf43lKuLYPL53FIimP+nzFdPnmlXf4Ca0Uxr
+         mWnuGTbcsuGGJvLTgbrhevxMZjzGC4ExOa9/rznY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 35/62] jbd2: abort journal if free a async write error metadata buffer
-Date:   Tue,  1 Sep 2020 17:10:18 +0200
-Message-Id: <20200901150922.485242933@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sumera Priyadarsini <sylphrenadin@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 38/62] net: gianfar: Add of_node_put() before goto statement
+Date:   Tue,  1 Sep 2020 17:10:21 +0200
+Message-Id: <20200901150922.656618190@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -59,64 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: zhangyi (F) <yi.zhang@huawei.com>
+From: Sumera Priyadarsini <sylphrenadin@gmail.com>
 
-[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
+[ Upstream commit 989e4da042ca4a56bbaca9223d1a93639ad11e17 ]
 
-If we free a metadata buffer which has been failed to async write out
-in the background, the jbd2 checkpoint procedure will not detect this
-failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
-inconsistency after cleanup journal tail. This patch abort the journal
-if free a buffer has write_io_error flag to prevent potential further
-inconsistency.
+Every iteration of for_each_available_child_of_node() decrements
+reference count of the previous node, however when control
+is transferred from the middle of the loop, as in the case of
+a return or break or goto, there is no decrement thus ultimately
+resulting in a memory leak.
 
-Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
-Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fix a potential memory leak in gianfar.c by inserting of_node_put()
+before the goto statement.
+
+Issue found with Coccinelle.
+
+Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/net/ethernet/freescale/gianfar.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 622610934c9ad..ce2bf9d74224c 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -2000,6 +2000,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
- {
- 	struct buffer_head *head;
- 	struct buffer_head *bh;
-+	bool has_write_io_error = false;
- 	int ret = 0;
+diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
+index 37cc1f838dd8b..96310e2ee5458 100644
+--- a/drivers/net/ethernet/freescale/gianfar.c
++++ b/drivers/net/ethernet/freescale/gianfar.c
+@@ -845,8 +845,10 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
+ 				continue;
  
- 	J_ASSERT(PageLocked(page));
-@@ -2024,11 +2025,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
- 		jbd_unlock_bh_state(bh);
- 		if (buffer_jbd(bh))
- 			goto busy;
-+
-+		/*
-+		 * If we free a metadata buffer which has been failed to
-+		 * write out, the jbd2 checkpoint procedure will not detect
-+		 * this failure and may lead to filesystem inconsistency
-+		 * after cleanup journal tail.
-+		 */
-+		if (buffer_write_io_error(bh)) {
-+			pr_err("JBD2: Error while async write back metadata bh %llu.",
-+			       (unsigned long long)bh->b_blocknr);
-+			has_write_io_error = true;
-+		}
- 	} while ((bh = bh->b_this_page) != head);
- 
- 	ret = try_to_free_buffers(page);
- 
- busy:
-+	if (has_write_io_error)
-+		jbd2_journal_abort(journal, -EIO);
-+
- 	return ret;
- }
- 
+ 			err = gfar_parse_group(child, priv, model);
+-			if (err)
++			if (err) {
++				of_node_put(child);
+ 				goto err_grp_init;
++			}
+ 		}
+ 	} else { /* SQ_SG_MODE */
+ 		err = gfar_parse_group(np, priv, model);
 -- 
 2.25.1
 
