@@ -5,49 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B09DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C378BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0C7206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930A22078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974838;
-	bh=gwf4wWC0vORa2uGQfb3OiUSJDKLfwwSQvhew2ikLsvE=;
+	s=default; t=1598974853;
+	bh=Kk3qI+Uu8rYTK9R5dVA5Wc5qfiL9u6E1/uI2nhKLEWk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bo4QERLgHCK6uAGXQ52TH4iJAYOOxZW4wZvszz0zkeJba/I9wj6XioRwgMnglHuyO
-	 4MYd9EgKzlgh+5XGLHQ2MvtxCw9myalLOqPywZj25zPd+dHuNxynMBL8PgZOxfeZGq
-	 u4uCJxsu2mRzKja3RG7cy8TVWXt2ytupHeoh5JAU=
+	b=FQjZqRl6vWAnU0F9S8MZyKQfdQDdGh2mb6Niwcwvrx0rJRTWBlvMLOqRV76YhEupI
+	 kF9zp21FxJwZCx4uYr8ti/mivkNvFq/37yTUeBvcbYKEHH7BQiAN59HRJ1US3K8ap1
+	 bygRFZ8k8MeticPtL3oM5pYm2gfUhV/1EnZbNZQU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgIAPkh (ORCPT
+        id S1731511AbgIAPku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:40:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48138 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:40:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731414AbgIAPiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:38:50 -0400
+        id S1729985AbgIAPi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:57 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C53120866;
-        Tue,  1 Sep 2020 15:38:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C25220E65;
+        Tue,  1 Sep 2020 15:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974728;
-        bh=gwf4wWC0vORa2uGQfb3OiUSJDKLfwwSQvhew2ikLsvE=;
+        s=default; t=1598974736;
+        bh=Kk3qI+Uu8rYTK9R5dVA5Wc5qfiL9u6E1/uI2nhKLEWk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rUzB/yg1X9RzeBsOM8LJ1aJU7pqbuk9dS1Xc3V8Bs9HJOZZhq7SHw0Ftna6hMYgb8
-         cWTlftY6jNxrQ/ZXSeNTm6A7L6DToFIfjJfMUvFAWDRCTVo0V+yO1/0Da3XMnE05QQ
-         nO33px790AR1GL88y4bnf0Q4jVygd0bF3Pg/YuvQ=
+        b=pGoHAsBBuSvi1Y8usEjPOYLqpHWvcufJha6vSiRWkI+KCoZe1F+phirSICLWr46W5
+         es+wINxUY/X7NU9Rcj7vSsy5GSg/qTWuWv1kt2W65IJznova2ynCMrxn3NPYdA/1Bw
+         1iN3sNAd++uJkyoOMZ8j2767Xh9Lm1pUIY+avWeI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Changming Liu <charley.ashbringer@gmail.com>,
+        stable@vger.kernel.org, Mars Cheng <mars.cheng@mediatek.com>,
+        Hanks Chen <hanks.chen@mediatek.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 071/255] USB: sisusbvga: Fix a potential UB casued by left shifting a negative value
-Date:   Tue,  1 Sep 2020 17:08:47 +0200
-Message-Id: <20200901151004.133937256@linuxfoundation.org>
+Subject: [PATCH 5.8 074/255] pinctrl: mediatek: avoid virtual gpio trying to set reg
+Date:   Tue,  1 Sep 2020 17:08:50 +0200
+Message-Id: <20200901151004.278233283@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,38 +62,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Changming Liu <charley.ashbringer@gmail.com>
+From: Hanks Chen <hanks.chen@mediatek.com>
 
-[ Upstream commit 2b53a19284f537168fb506f2f40d7fda40a01162 ]
+[ Upstream commit edd546465002621665a3a275abe908a30efdce5b ]
 
-The char buffer buf, receives data directly from user space,
-so its content might be negative and its elements are left
-shifted to form an unsigned integer.
+for virtual gpios, they should not do reg setting and
+should behave as expected for eint function.
 
-Since left shifting a negative value is undefined behavior, thus
-change the char to u8 to elimintate this UB.
-
-Signed-off-by: Changming Liu <charley.ashbringer@gmail.com>
-Link: https://lore.kernel.org/r/20200711043018.928-1-charley.ashbringer@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+Signed-off-by: Hanks Chen <hanks.chen@mediatek.com>
+Acked-by: Sean Wang <sean.wang@kernel.org>
+Link: https://lore.kernel.org/r/1595503197-15246-4-git-send-email-hanks.chen@mediatek.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/sisusbvga/sisusb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.c  | 25 +++++++++++++++++++
+ .../pinctrl/mediatek/pinctrl-mtk-common-v2.h  |  1 +
+ drivers/pinctrl/mediatek/pinctrl-paris.c      |  7 ++++++
+ 3 files changed, 33 insertions(+)
 
-diff --git a/drivers/usb/misc/sisusbvga/sisusb.c b/drivers/usb/misc/sisusbvga/sisusb.c
-index fc8a5da4a07c9..0734e6dd93862 100644
---- a/drivers/usb/misc/sisusbvga/sisusb.c
-+++ b/drivers/usb/misc/sisusbvga/sisusb.c
-@@ -761,7 +761,7 @@ static int sisusb_write_mem_bulk(struct sisusb_usb_data *sisusb, u32 addr,
- 	u8   swap8, fromkern = kernbuffer ? 1 : 0;
- 	u16  swap16;
- 	u32  swap32, flag = (length >> 28) & 1;
--	char buf[4];
-+	u8 buf[4];
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+index b77b18fe5adcf..c53e2c391e32b 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
+@@ -243,6 +243,28 @@ static int mtk_xt_find_eint_num(struct mtk_pinctrl *hw, unsigned long eint_n)
+ 	return EINT_NA;
+ }
  
- 	/* if neither kernbuffer not userbuffer are given, assume
- 	 * data in obuf
++/*
++ * Virtual GPIO only used inside SOC and not being exported to outside SOC.
++ * Some modules use virtual GPIO as eint (e.g. pmif or usb).
++ * In MTK platform, external interrupt (EINT) and GPIO is 1-1 mapping
++ * and we can set GPIO as eint.
++ * But some modules use specific eint which doesn't have real GPIO pin.
++ * So we use virtual GPIO to map it.
++ */
++
++bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
++{
++	const struct mtk_pin_desc *desc;
++	bool virt_gpio = false;
++
++	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
++
++	if (desc->funcs && !desc->funcs[desc->eint.eint_m].name)
++		virt_gpio = true;
++
++	return virt_gpio;
++}
++
+ static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
+ 			     unsigned int *gpio_n,
+ 			     struct gpio_chip **gpio_chip)
+@@ -295,6 +317,9 @@ static int mtk_xt_set_gpio_as_eint(void *data, unsigned long eint_n)
+ 	if (err)
+ 		return err;
+ 
++	if (mtk_is_virt_gpio(hw, gpio_n))
++		return 0;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio_n];
+ 
+ 	err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_MODE,
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+index 27df087363960..bd079f4fb1d6f 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
++++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
+@@ -315,4 +315,5 @@ int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
+ int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
+ 			      const struct mtk_pin_desc *desc, u32 *val);
+ 
++bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n);
+ #endif /* __PINCTRL_MTK_COMMON_V2_H */
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index 90a432bf9fedc..a23c18251965e 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -769,6 +769,13 @@ static int mtk_gpio_get_direction(struct gpio_chip *chip, unsigned int gpio)
+ 	if (gpio >= hw->soc->npins)
+ 		return -EINVAL;
+ 
++	/*
++	 * "Virtual" GPIOs are always and only used for interrupts
++	 * Since they are only used for interrupts, they are always inputs
++	 */
++	if (mtk_is_virt_gpio(hw, gpio))
++		return 1;
++
+ 	desc = (const struct mtk_pin_desc *)&hw->soc->pins[gpio];
+ 
+ 	err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DIR, &value);
 -- 
 2.25.1
 
