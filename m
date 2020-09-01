@@ -2,68 +2,110 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D62C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:13:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634B0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6B32078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:13:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E034207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgIAUN4 (ORCPT
+        id S1729326AbgIAUON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:13:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41658 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726323AbgIAUNz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:13:55 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C080FC061244;
-        Tue,  1 Sep 2020 13:13:54 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5EA0E1364C88D;
-        Tue,  1 Sep 2020 12:57:07 -0700 (PDT)
-Date:   Tue, 01 Sep 2020 13:13:53 -0700 (PDT)
-Message-Id: <20200901.131353.1215898622774184669.davem@davemloft.net>
-To:     shung-hsi.yu@suse.com
-Cc:     tariqt@nvidia.com, kuba@kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net] net: ethernet: mlx4: Fix memory allocation in
- mlx4_buddy_init()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200831143709.GA12996@syu-laptop>
-References: <20200831143709.GA12996@syu-laptop>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Tue, 1 Sep 2020 16:14:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:49510 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726323AbgIAUOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 16:14:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BBC31FB;
+        Tue,  1 Sep 2020 13:14:10 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 211D43F66F;
+        Tue,  1 Sep 2020 13:14:07 -0700 (PDT)
+Subject: Re: [PATCH v9 28/32] misc: fastrpc: fix common struct sg_table
+ related issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+ <CGME20200826063544eucas1p15980885bbdbc43e35f350f228994bee7@eucas1p1.samsung.com>
+ <20200826063316.23486-29-m.szyprowski@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <e858bd32-6ac2-e33d-e375-e2fd06c1c444@arm.com>
+Date:   Tue, 1 Sep 2020 21:14:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <20200826063316.23486-29-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Tue, 01 Sep 2020 12:57:07 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shung-Hsi Yu <shung-hsi.yu@suse.com>
-Date: Mon, 31 Aug 2020 22:37:09 +0800
+On 2020-08-26 07:33, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
+> 
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+> 
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+> 
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
 
-> On machines with much memory (> 2 TByte) and log_mtts_per_seg == 0, a
-> max_order of 31 will be passed to mlx_buddy_init(), which results in
-> s = BITS_TO_LONGS(1 << 31) becoming a negative value, leading to
-> kvmalloc_array() failure when it is converted to size_t.
-> 
->   mlx4_core 0000:b1:00.0: Failed to initialize memory region table, aborting
->   mlx4_core: probe of 0000:b1:00.0 failed with error -12
-> 
-> Fix this issue by changing the left shifting operand from a signed literal to
-> an unsigned one.
-> 
-> Fixes: 225c7b1feef1 ("IB/mlx4: Add a driver Mellanox ConnectX InfiniBand adapters")
-> Signed-off-by: Shung-Hsi Yu <shung-hsi.yu@suse.com>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Applied and queued up for -stable, thanks.
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>   drivers/misc/fastrpc.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+> index 7939c55daceb..9d6867749316 100644
+> --- a/drivers/misc/fastrpc.c
+> +++ b/drivers/misc/fastrpc.c
+> @@ -518,7 +518,7 @@ fastrpc_map_dma_buf(struct dma_buf_attachment *attachment,
+>   
+>   	table = &a->sgt;
+>   
+> -	if (!dma_map_sg(attachment->dev, table->sgl, table->nents, dir))
+> +	if (!dma_map_sgtable(attachment->dev, table, dir, 0))
+>   		return ERR_PTR(-ENOMEM);
+>   
+>   	return table;
+> @@ -528,7 +528,7 @@ static void fastrpc_unmap_dma_buf(struct dma_buf_attachment *attach,
+>   				  struct sg_table *table,
+>   				  enum dma_data_direction dir)
+>   {
+> -	dma_unmap_sg(attach->dev, table->sgl, table->nents, dir);
+> +	dma_unmap_sgtable(attach->dev, table, dir, 0);
+>   }
+>   
+>   static void fastrpc_release(struct dma_buf *dmabuf)
+> 
