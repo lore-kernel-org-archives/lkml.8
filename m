@@ -2,53 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E621C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1499C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27585206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924782071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980090;
-	bh=D/0gcnPabBSJphbOyrSVqn1GCFwmPW3WMf8lTK5aF/w=;
+	s=default; t=1598980091;
+	bh=6U3tpnVDynBvNo+gSnrFfnNkeZUzIxS3spDzXru5xkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G0bw1LIN/qWjrP6NllIvx/Okgl+e3WedJ2vuoKMsiJ9OI22o7jW1n/wmsmxpRmw7k
-	 IEPYMam/qRcnihNfgbrQpxzX0B90UWGDL8Ja1tLkL0T5Ztr3jgyEwwTvjdmXMgPHRY
-	 Os7dbPZ39oaggunGzQVWtI5/tjIUDRHIxXpz6qIc=
+	b=PlVn/zX14419U5yqzokUVIZcUTuZGCRopV/izDqBkiA/dep/GtWeK6MlDA40h7v2J
+	 aNeUAng1dRzD97XVGu1DO/Q41O12j2UoQFTdiM6R00kiRQT8TOsuEt+tbVHvL3Amw6
+	 bv7VU6BMiNA/D5KGHbylDD/mbmEcEIWYXBB+BSdk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgIARIJ (ORCPT
+        id S1730492AbgIARIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:08:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36288 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:08:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729079AbgIAPSN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:13 -0400
+        id S1728827AbgIAPSK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C697206FA;
-        Tue,  1 Sep 2020 15:18:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 907D1206EB;
+        Tue,  1 Sep 2020 15:18:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973492;
-        bh=D/0gcnPabBSJphbOyrSVqn1GCFwmPW3WMf8lTK5aF/w=;
+        s=default; t=1598973490;
+        bh=6U3tpnVDynBvNo+gSnrFfnNkeZUzIxS3spDzXru5xkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aKMyOHfQ4Ez4OxGPGEa+o2zTLJvbILRMGoscyOAUN2PgA21yXHNyIsZOL8tIaJ/cN
-         z8qggqYE0kfk5U9o5o+X6Pk2Q14lWcC9mdfY1BiyJEd33sUMm1EgjOYCCFsysX1ntL
-         6aoLIBcW5iDf1gjlV4imfxvdgSOafGP9lDAMFx0g=
+        b=fvP5HychZ4rJUsfBkxsNMZEHS6qChIRCZHqF5qGLpppkcGo5Jm8X86MnTe6JD1bnQ
+         XvbQz2Hg1baP6+mZ6QB8AQmupOVKPpoz35T170Xi1zOTUTRM6JMEUCWYxLHIXuU91J
+         3EMT4lb1sXbhDC3XP8eKBG//cK4EVsLXNb8OD3Sg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/91] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
-Date:   Tue,  1 Sep 2020 17:09:54 +0200
-Message-Id: <20200901150929.156162305@linuxfoundation.org>
+        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 02/91] net: Fix potential wrong skb->protocol in skb_vlan_untag()
+Date:   Tue,  1 Sep 2020 17:09:36 +0200
+Message-Id: <20200901150928.238578130@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,75 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
+[ Upstream commit 55eff0eb7460c3d50716ed9eccf22257b046ca92 ]
 
-The call to pm_runtime_get_sync increments the counter even in case of
-failure, leading to incorrect ref count.
-In case of failure, decrement the ref count before returning.
+We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). So
+we should pull VLAN_HLEN + sizeof(unsigned short) in skb_vlan_untag() or
+we may access the wrong data.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 0d5501c1c828 ("net: Always untag vlan-tagged traffic on input.")
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ net/core/skbuff.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-index 1eff36a875958..3992e1cbb61ca 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-@@ -734,8 +734,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -5053,8 +5053,8 @@ struct sk_buff *skb_vlan_untag(struct sk
+ 	skb = skb_share_check(skb, GFP_ATOMIC);
+ 	if (unlikely(!skb))
+ 		goto err_free;
+-
+-	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN)))
++	/* We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). */
++	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN + sizeof(unsigned short))))
+ 		goto err_free;
  
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (encoder) {
-@@ -872,8 +874,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	encoder = amdgpu_connector_best_single_encoder(connector);
-@@ -996,8 +1000,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
-@@ -1371,8 +1377,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
--- 
-2.25.1
-
+ 	vhdr = (struct vlan_hdr *)skb->data;
 
 
