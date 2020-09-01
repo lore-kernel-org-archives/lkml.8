@@ -7,64 +7,68 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C61E4C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:20:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109E1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 976E5206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:20:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8750206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IW1Rezih"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="rRRL/mlM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgIAJUz (ORCPT
+        id S1726266AbgIAJXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:20:55 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:34229 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726122AbgIAJUz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:20:55 -0400
+        Tue, 1 Sep 2020 05:23:22 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:24322 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgIAJXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:23:18 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598952054; h=Date: Message-Id: Cc: To: References:
+ s=smtp; t=1598952197; h=Date: Message-Id: Cc: To: References:
  In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=9Quw6/hpHbTQZ8x3xhgu4ubjPAER9V2kJ811puQ4tU8=;
- b=IW1RezihkNf8HZrh/dNKF7Zmh0wdD4+ZmiRXJFUpJbC1ulc6re7Nc+ejeeBzQ862K7expagX
- ukkZdxrwWO5d5XRtNDvjzEXld7ovRVOY4s8j62UJ5uJRlTcLWoWq6O7I4sAKEWFO3mhcAdA4
- 3/7/WgAsG1Teog2qE00xw4+tsdo=
-X-Mailgun-Sending-Ip: 104.130.122.29
+ Content-Type: Sender; bh=+3+hIhGFV1JUt+MIA6bQuq1ot+biRaEdMkNDAHqT4rI=;
+ b=rRRL/mlMBOBE1qNiqJas9xFJAvM4w3tMFVVozfWfmUrLDalQwD5QCVzaQJVDL6ePRVBA2pH5
+ /cfPvmMKtSc6ShWCrE0pqSxkVNFfhRTXeZP+3GwP7gpCgGZEKgy2oBQ7gkc7k+NWpM8nH9+s
+ aHPWdds41hmN425Z2z4jTaWa544=
+X-Mailgun-Sending-Ip: 69.72.43.7
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5f4e1276947f606f7e58e5fd (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:20:54
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5f4e13047f21d51b301062ad (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:23:16
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 41D20C43387; Tue,  1 Sep 2020 09:20:53 +0000 (UTC)
+        id D6178C43387; Tue,  1 Sep 2020 09:23:15 +0000 (UTC)
 Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E54F1C433C6;
-        Tue,  1 Sep 2020 09:20:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E54F1C433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85CE9C433C6;
+        Tue,  1 Sep 2020 09:23:12 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85CE9C433C6
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Subject: Re: [02/32] rsi: Add description for function param 'sta'
+Subject: Re: [16/32] brcmfmac: btcoex: Update 'brcmf_btcoex_state' and demote
+ others
 From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200821071644.109970-3-lee.jones@linaro.org>
-References: <20200821071644.109970-3-lee.jones@linaro.org>
+In-Reply-To: <20200821071644.109970-17-lee.jones@linaro.org>
+References: <20200821071644.109970-17-lee.jones@linaro.org>
 To:     Lee Jones <lee.jones@linaro.org>
 Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
         linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Siva Rebbagondla <siva8118@gmail.com>
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Wright Feng <wright.feng@cypress.com>,
+        brcm80211-dev-list.pdl@broadcom.com, brcm80211-dev-list@cypress.com
 User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901092053.41D20C43387@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 09:20:53 +0000 (UTC)
+Message-Id: <20200901092315.D6178C43387@smtp.codeaurora.org>
+Date:   Tue,  1 Sep 2020 09:23:15 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -72,33 +76,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Lee Jones <lee.jones@linaro.org> wrote:
 
+> The function headers are either very weakly documented or not at all.
+> 
 > Fixes the following W=1 kernel build warning(s):
 > 
->  drivers/net/wireless/rsi/rsi_91x_mac80211.c:1021: warning: Function parameter or member 'sta' not described in 'rsi_mac80211_set_key'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:94: warning: Function parameter or member 'reg50' not described in 'brcmf_btcoex_info'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:94: warning: Function parameter or member 'saved_regs_part2' not described in 'brcmf_btcoex_info'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:233: warning: Function parameter or member 'btci' not described in 'btcmf_btcoex_save_part1'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:253: warning: Function parameter or member 'btci' not described in 'brcmf_btcoex_restore_part1'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:273: warning: Function parameter or member 't' not described in 'brcmf_btcoex_timerfunc'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:453: warning: Function parameter or member 'vif' not described in 'brcmf_btcoex_set_mode'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:453: warning: Function parameter or member 'duration' not described in 'brcmf_btcoex_set_mode'
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/btcoex.c:453: warning: Excess function parameter 'cfg' description in 'brcmf_btcoex_set_mode'
 > 
-> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-> Cc: Siva Rebbagondla <siva8118@gmail.com>
+> Cc: Arend van Spriel <arend.vanspriel@broadcom.com>
+> Cc: Franky Lin <franky.lin@broadcom.com>
+> Cc: Hante Meuleman <hante.meuleman@broadcom.com>
+> Cc: Chi-Hsien Lin <chi-hsien.lin@cypress.com>
+> Cc: Wright Feng <wright.feng@cypress.com>
 > Cc: Kalle Valo <kvalo@codeaurora.org>
 > Cc: "David S. Miller" <davem@davemloft.net>
 > Cc: Jakub Kicinski <kuba@kernel.org>
 > Cc: linux-wireless@vger.kernel.org
+> Cc: brcm80211-dev-list.pdl@broadcom.com
+> Cc: brcm80211-dev-list@cypress.com
 > Cc: netdev@vger.kernel.org
 > Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-9 patches applied to wireless-drivers-next.git, thanks.
+7 patches applied to wireless-drivers-next.git, thanks.
 
-501c0980b752 rsi: Add description for function param 'sta'
-d7f95d9204ca brcmsmac: ampdu: Remove a bunch of unused variables
-5763605890fe brcmfmac: p2p: Fix a bunch of function docs
-a451ff855218 rsi: Add descriptions for rsi_set_vap_capabilities()'s parameters
-dceb807b2f28 brcmsmac: main: Remove a bunch of unused variables
-246fe9f15036 rsi: Source file headers do not make good kernel-doc candidates
-866cf939f252 brcmfmac: firmware: Demote seemingly unintentional kernel-doc header
-7a03124c1df5 rsi: File headers are not suitable for kernel-doc
-35b7fbfc51d6 iwlegacy: 4965-mac: Convert function headers to standard comment blocks
+9d16c3859012 brcmfmac: btcoex: Update 'brcmf_btcoex_state' and demote others
+03a7c2ea609b b43: phy_ht: Remove 9 year old TODO
+5316050efdde rsi: Source file headers are not suitable for kernel-doc
+3ecf6a3d6f62 iwlegacy: 4965-rs: Demote non kernel-doc headers to standard comment blocks
+fa5768d59c53 iwlegacy: 4965-calib: Demote seemingly accidental kernel-doc header
+a940977aaf2a brcmfmac: fwsignal: Remove unused variable 'brcmf_fws_prio2fifo'
+e9cf68ff4eff rtlwifi: rtl8192c: phy_common: Remove unused variable 'bbvalue'
 
 -- 
-https://patchwork.kernel.org/patch/11728371/
+https://patchwork.kernel.org/patch/11728347/
 
 https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
