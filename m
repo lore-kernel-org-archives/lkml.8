@@ -2,206 +2,132 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5275CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F34C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:59:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C11F2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8822065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:59:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598947184;
+	bh=xhIPGE3tId+2W3nS2hkbzS1Y2OIa+afFS63GDam/VRE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hZ+7rM7/T4ReLVOPI+U9tHigabbJeUkSYQAdP6Old9GP3w/eo7u6iVYd9hOl08Nle
+	 Iwh8ovtnc96ZKYXI6UskCPGXSj2ACDRsIfd+4ykoHBAc73wHTn7XM1lko0d3aPf+/q
+	 CZRgqhiFTRdiVGVciPDun29/1wXaF7pkUSsm5mCI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbgIAH6n (ORCPT
+        id S1727028AbgIAH7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:58:43 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37172 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgIAH6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:58:42 -0400
-IronPort-SDR: pkmDNl6OvhJ4pjACvdwq1b7zpf+uPGU+yIqxcPrYSGLn7FHYfSTzlghlzmvBIb2qFu+q5z9SQn
- BXv4T4Rza/VA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175169909"
-X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="175169909"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 00:58:40 -0700
-IronPort-SDR: KKb2s3mO6ZLmYixoYvBXgW1d7zLNiWZpGXXOZX7tOOI2cQuDY8elJwT2NLLsv2yfyv2YweR2Hp
- aWIgK8F/WBKw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="338491802"
-Received: from lkp-server01.sh.intel.com (HELO 6fed54b23e67) ([10.239.97.150])
-  by FMSMGA003.fm.intel.com with ESMTP; 01 Sep 2020 00:58:34 -0700
-Received: from kbuild by 6fed54b23e67 with local (Exim 4.92)
-        (envelope-from <lkp@intel.com>)
-        id 1kD1BZ-00000n-CO; Tue, 01 Sep 2020 07:58:33 +0000
-Date:   Tue, 01 Sep 2020 15:58:31 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.08.27a] BUILD SUCCESS
- 99d320d8d0516f631acf28014ccddfd5cd43471c
-Message-ID: <5f4dff27.DLccerAyXsryE3jT%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 1 Sep 2020 03:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41032 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgIAH7m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:59:42 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF33C061244;
+        Tue,  1 Sep 2020 00:59:42 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id q21so538352edv.1;
+        Tue, 01 Sep 2020 00:59:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1tUkMsxqX+EmvRrvz0z84bC2IgPMV2uqRkretCUGwiQ=;
+        b=qkxZLlPRV+HvJ1qB5AZTMRDPW93Z/gzTs0x18/F1NW5XRe5b7fQSGM/dUk5AQ+7TY+
+         L+3oJiEQCjjswVwRkAz8MEGaDpWxIlfKhvbV9ByS3B9z0US62lCR1AXO9dN33RXqYtLI
+         sWaSYa87lhOHVY3YpM/I8IWuhM1Wp+v18UI7NVByfcIETSsKma+jN6GunmH5vZMiq8xb
+         2XkoSC7T3ntj3r1ELFyVnvnThVv9kyg/H59v0XtjkvUao8wRKWBr/KZBYUpQ0UJHgbKJ
+         pY1xbx9gralqUwLbXi1wyERRawpucmFuYlfp/6cgHsg2xDKgiOwg9X3rzhbVckmAIHcR
+         8Z2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=1tUkMsxqX+EmvRrvz0z84bC2IgPMV2uqRkretCUGwiQ=;
+        b=BaSg72Ke5DnTW6obA0cNTSMX/z3a/m/p92s952Q2h2yFIed/ALKXxIMa9pXTpYmZGY
+         7jMd6A4GuWBTIHaRzW0lBbARHxxsy7C9pPVqhy9meAh1cWQtcQPRPLmoQR3QkK2a9Chh
+         1mIxEsQXf8p9woCdhpxLTcvpO72yc0IAFcN7Bteq9lYSN82KhRYZzGCknfdPL4O0LPTS
+         WCgvAfKT+criMdPx9sNjxtj6e46hNiujQ+DqIPAuyxZNDa/rYU/n4QbBpn6GvSp3sJ/3
+         x1AeHpLhZbMv6pIYEd2Xb5LqaGIB7wzxA1bKzxxbRPg8epHNHxYKcWNRln+tnYLgxqiz
+         YCtg==
+X-Gm-Message-State: AOAM530ty+EMbS8NMrPyvFqAlOLgw5gZ+vA/BbWVoNpvfTgJcKLbjJRE
+        lmeKbyQ3PrOaE2n+PadyhBY=
+X-Google-Smtp-Source: ABdhPJzeDWymrCPJVQGGseKzqQGGkA79Su6T6BnnuBxUsnIU8yb3Ft7Lc0UMjmZqTp7y2AROzPerXQ==
+X-Received: by 2002:a50:8881:: with SMTP id d1mr689496edd.306.1598947180775;
+        Tue, 01 Sep 2020 00:59:40 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id qu11sm511021ejb.15.2020.09.01.00.59.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 00:59:40 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 09:59:37 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 00/29] Warn on orphan section placement
+Message-ID: <20200901075937.GA3602433@gmail.com>
+References: <20200821194310.3089815-1-keescook@chromium.org>
+ <202008311240.9F94A39@keescook>
+ <20200901071133.GA3577996@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20200901071133.GA3577996@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.08.27a
-branch HEAD: 99d320d8d0516f631acf28014ccddfd5cd43471c  locktorture: Track time of last ->writeunlock()
 
-elapsed time: 720m
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-configs tested: 135
-configs skipped: 9
+> 
+> * Kees Cook <keescook@chromium.org> wrote:
+> 
+> > On Fri, Aug 21, 2020 at 12:42:41PM -0700, Kees Cook wrote:
+> > > Hi Ingo,
+> > > 
+> > > Based on my testing, this is ready to go. I've reviewed the feedback on
+> > > v5 and made a few small changes, noted below.
+> > 
+> > If no one objects, I'll pop this into my tree for -next. I'd prefer it
+> > go via -tip though! :)
+> > 
+> > Thanks!
+> 
+> I'll pick it up today, it all looks very good now!
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+One thing I found in testing is that it doesn't handler older LD 
+versions well enough:
 
-arm                                 defconfig
-arm64                            allyesconfig
-arm64                               defconfig
-arm                              allyesconfig
-arm                              allmodconfig
-arm                         hackkit_defconfig
-powerpc                     pq2fads_defconfig
-arm                           h3600_defconfig
-sh                           se7712_defconfig
-powerpc64                        alldefconfig
-openrisc                         alldefconfig
-powerpc                      pmac32_defconfig
-sh                          lboxre2_defconfig
-nds32                            alldefconfig
-arm                       omap2plus_defconfig
-m68k                        mvme16x_defconfig
-arm                             mxs_defconfig
-sh                ecovec24-romimage_defconfig
-mips                        nlm_xlp_defconfig
-xtensa                         virt_defconfig
-sh                          polaris_defconfig
-powerpc                 mpc8272_ads_defconfig
-arc                      axs103_smp_defconfig
-powerpc                     ep8248e_defconfig
-arm                            u300_defconfig
-sh                           se7751_defconfig
-arm                           u8500_defconfig
-parisc                generic-32bit_defconfig
-m68k                        mvme147_defconfig
-arm                         shannon_defconfig
-mips                     decstation_defconfig
-alpha                            allyesconfig
-sh                           se7343_defconfig
-sh                     magicpanelr2_defconfig
-arc                                 defconfig
-m68k                          sun3x_defconfig
-parisc                           allyesconfig
-mips                       capcella_defconfig
-powerpc                      ppc6xx_defconfig
-i386                                defconfig
-mips                      loongson3_defconfig
-arm                            zeus_defconfig
-m68k                          atari_defconfig
-arm                        cerfcube_defconfig
-sh                     sh7710voipgw_defconfig
-sparc                               defconfig
-sh                      rts7751r2d1_defconfig
-m68k                            q40_defconfig
-arm                           omap1_defconfig
-arm                   milbeaut_m10v_defconfig
-sh                        edosk7705_defconfig
-mips                      malta_kvm_defconfig
-sh                         microdev_defconfig
-mips                      bmips_stb_defconfig
-arm                            mps2_defconfig
-powerpc                     powernv_defconfig
-arc                            hsdk_defconfig
-nios2                               defconfig
-arm                       imx_v6_v7_defconfig
-mips                           rs90_defconfig
-nios2                         3c120_defconfig
-powerpc                    adder875_defconfig
-sh                            titan_defconfig
-m68k                            mac_defconfig
-riscv                             allnoconfig
-mips                           gcw0_defconfig
-arm                         bcm2835_defconfig
-arm                         s5pv210_defconfig
-powerpc                         wii_defconfig
-sh                        sh7757lcr_defconfig
-powerpc                      tqm8xx_defconfig
-nios2                            alldefconfig
-powerpc                      ppc64e_defconfig
-sh                               alldefconfig
-arm                           stm32_defconfig
-mips                        jmr3927_defconfig
-arc                     haps_hs_smp_defconfig
-mips                malta_qemu_32r6_defconfig
-sh                        dreamcast_defconfig
-ia64                             alldefconfig
-arm                      jornada720_defconfig
-ia64                             allmodconfig
-ia64                                defconfig
-ia64                             allyesconfig
-m68k                             allmodconfig
-m68k                                defconfig
-m68k                             allyesconfig
-arc                              allyesconfig
-nds32                             allnoconfig
-c6x                              allyesconfig
-nds32                               defconfig
-nios2                            allyesconfig
-csky                                defconfig
-alpha                               defconfig
-xtensa                           allyesconfig
-h8300                            allyesconfig
-sh                               allmodconfig
-parisc                              defconfig
-s390                             allyesconfig
-s390                                defconfig
-i386                             allyesconfig
-sparc                            allyesconfig
-mips                             allyesconfig
-mips                             allmodconfig
-powerpc                             defconfig
-powerpc                          allyesconfig
-powerpc                          allmodconfig
-powerpc                           allnoconfig
-i386                 randconfig-a001-20200831
-i386                 randconfig-a002-20200831
-i386                 randconfig-a004-20200831
-i386                 randconfig-a006-20200831
-i386                 randconfig-a005-20200831
-i386                 randconfig-a003-20200831
-x86_64               randconfig-a012-20200831
-x86_64               randconfig-a015-20200831
-x86_64               randconfig-a014-20200831
-x86_64               randconfig-a011-20200831
-x86_64               randconfig-a016-20200831
-x86_64               randconfig-a013-20200831
-i386                 randconfig-a013-20200831
-i386                 randconfig-a011-20200831
-i386                 randconfig-a012-20200831
-i386                 randconfig-a015-20200831
-i386                 randconfig-a016-20200831
-i386                 randconfig-a014-20200831
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                            allmodconfig
-x86_64                                   rhel
-x86_64                           allyesconfig
-x86_64                    rhel-7.6-kselftests
-x86_64                              defconfig
-x86_64                               rhel-8.3
-x86_64                                  kexec
+  ld: unrecognized option '--orphan-handling=warn'
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+Could we just detect the availability of this flag, and emit a warning 
+if it doesn't exist but otherwise not abort the build?
+
+This is with:
+
+  GNU ld version 2.25-17.fc23
+
+Thanks,
+
+	Ingo
