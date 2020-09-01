@@ -2,103 +2,110 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD65C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E973C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C09D02078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D93322078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980826;
-	bh=XDtrRJ4dCKFTtxrT4PYqUk/dD8gYaN6Q7gWe70dEA0o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RHd3IGc5UCPz/jrnYAtGYwwzNsj5Pg1CtiDby+srXvNeWfVC3azlhpHPh2A9nUF0z
-	 /HP+6JTFhcPPyDwMOqAhQ3KEHle94rWkDwGUpTpHCLaGj3pXSAVHlxTXt05OYPJC9C
-	 SflGVhLXayevQJYaFQmsv7vW85ebdGuvWk+6M+ig=
+	s=default; t=1598980841;
+	bh=Ddpwz/E5gUQcqcz8/r5+5asTNDcAsvUOCUgXTnJurOs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=KxwmZJaAsu2215t6na43tjBPBou8+eP9VQ/9qbiF0GG4gEO6E4B3UnWB9MAckDhgr
+	 qb4ElqC6WvXH+MAalAqXy6XnQvUTHGFIdmZgUS7YXjYFMetIj+wiWzC9GmSYQdL2ty
+	 SBwrYq7EOqA1MtSP2HHFpzP8wXIHS5LqC+SILBNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732642AbgIARUW (ORCPT
+        id S1728453AbgIARUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55740 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:20:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728833AbgIAPNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728834AbgIAPNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:13:00 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74E0D208CA;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7487F206FA;
         Tue,  1 Sep 2020 15:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973179;
-        bh=XDtrRJ4dCKFTtxrT4PYqUk/dD8gYaN6Q7gWe70dEA0o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=o7yvfEi+kBwJW2cwGcPlCFkeO3GtWq5ZTF8uxZ2YhYhAdwZkjAfurkxxXR7t2kEQS
-         BoGjUB2Za4Uhu5gyeJhhN6CWYq8kU9N1MPl8ht2PpAAwolk20Mso8ATx/fHePMI36P
-         uLtGvWBzrtlvxdSYaEM+ODIf5WxI1eJ8o9paNHmk=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4E71A40D3D; Tue,  1 Sep 2020 12:12:57 -0300 (-03)
-Date:   Tue, 1 Sep 2020 12:12:57 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ian Rogers <irogers@google.com>
-Subject: Re: [PATCH 1/2] perf tools: Disable ordered_events for report raw
- dump
-Message-ID: <20200901151257.GC1424523@kernel.org>
-References: <20200827134830.126721-1-jolsa@kernel.org>
+        s=default; t=1598973180;
+        bh=Ddpwz/E5gUQcqcz8/r5+5asTNDcAsvUOCUgXTnJurOs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uKqjqPEJ18TBa0CW6mQQkJYJIYMJ0a760seSOohV4Jt3UsL4HfX5rsUl/uH9W2me5
+         E/pstukz7iO/TKAXQcrcD56K7SC0UzRC6QRBi1dk638JZjFqvKfaL511Gk+o5wWxXH
+         LJJPJT4Acaf/7UBtoVQ4rA4+YA3f3TirYRYBiy8M=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 39/62] powerpc/perf: Fix soft lockups due to missed interrupt accounting
+Date:   Tue,  1 Sep 2020 17:10:22 +0200
+Message-Id: <20200901150922.705693094@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
+References: <20200901150920.697676718@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200827134830.126721-1-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Aug 27, 2020 at 03:48:29PM +0200, Jiri Olsa escreveu:
-> Disable ordered_events for report raw dump, because
-> for raw dump we want to see events as they are stored
-> in the perf.data file, not sorted by time.
+From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
 
-Applied to perf/urgent,
+[ Upstream commit 17899eaf88d689529b866371344c8f269ba79b5f ]
 
-Thanks,
+Performance monitor interrupt handler checks if any counter has
+overflown and calls record_and_restart() in core-book3s which invokes
+perf_event_overflow() to record the sample information. Apart from
+creating sample, perf_event_overflow() also does the interrupt and
+period checks via perf_event_account_interrupt().
 
-- Arnaldo
+Currently we record information only if the SIAR (Sampled Instruction
+Address Register) valid bit is set (using siar_valid() check) and
+hence the interrupt check.
+
+But it is possible that we do sampling for some events that are not
+generating valid SIAR, and hence there is no chance to disable the
+event if interrupts are more than max_samples_per_tick. This leads to
+soft lockup.
+
+Fix this by adding perf_event_account_interrupt() in the invalid SIAR
+code path for a sampling event. ie if SIAR is invalid, just do
+interrupt check and don't record the sample information.
+
+Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/1596717992-7321-1-git-send-email-atrajeev@linux.vnet.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/powerpc/perf/core-book3s.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -2040,6 +2040,10 @@ static void record_and_restart(struct pe
  
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/builtin-report.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-> index ece1cddfcd7c..3c74c9c0f3c3 100644
-> --- a/tools/perf/builtin-report.c
-> +++ b/tools/perf/builtin-report.c
-> @@ -1332,6 +1332,9 @@ int cmd_report(int argc, const char **argv)
->  	if (report.mmaps_mode)
->  		report.tasks_mode = true;
->  
-> +	if (dump_trace)
-> +		report.tool.ordered_events = false;
-> +
->  	if (quiet)
->  		perf_quiet_option();
->  
-> -- 
-> 2.26.2
-> 
+ 		if (perf_event_overflow(event, &data, regs))
+ 			power_pmu_stop(event, 0);
++	} else if (period) {
++		/* Account for interrupt in case of invalid SIAR */
++		if (perf_event_account_interrupt(event))
++			power_pmu_stop(event, 0);
+ 	}
+ }
+ 
 
--- 
 
-- Arnaldo
