@@ -5,69 +5,70 @@ X-Spam-Level:
 X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4CCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6492FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0750C215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3917021D7D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WzUBSHiE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EcXZ93WE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728580AbgIAOnJ (ORCPT
+        id S1728012AbgIAOnm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:43:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42786 "EHLO
+        Tue, 1 Sep 2020 10:43:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727986AbgIAOQi (ORCPT
+        with ESMTP id S1728247AbgIAOQY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:16:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6565FC06125F;
-        Tue,  1 Sep 2020 07:16:38 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s10so149361plp.1;
-        Tue, 01 Sep 2020 07:16:38 -0700 (PDT)
+        Tue, 1 Sep 2020 10:16:24 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A023C06125F;
+        Tue,  1 Sep 2020 07:16:24 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id np15so703531pjb.0;
+        Tue, 01 Sep 2020 07:16:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rF0Gg/FItWzC1FRYFQdU1CM/THHapJ9NmHYGWF5PYaM=;
-        b=WzUBSHiEEVYXLd5qlbZdiTvUByjDNOOf/Vsr/o61BzXL5UVg5zTZaZdPeuvbkS/Onv
-         PCxIHdjkMKd9h4n6CHNnM+ryyaQk7hrcFKcdjwpda651L51ULnlRBFAZGUDAS0lEQ9JC
-         MqiO+WgIQlS+BXH2RhGdF7iXG7+npVOWpxDv0K7xslMLxEoW1kjP6Zk4rDTzL79/ButI
-         4ao2BB6glSpr/ad775rxf48hwFYzkoC93QbS0sYI1061h63ba1DWuXWX2LQAp1/9Syy1
-         B8ESXA+bCOAbmc9fBwpbDG+OK+i0TVEhGJbT6408kUMiORSNRhdo5x8CqTo+TgkHoQGh
-         7ZAA==
+        bh=zvhzgkhZO1kqoSQJjNzOqYAXx9WauCb1i9WMlKWlKe8=;
+        b=EcXZ93WE2aWXzV48ZN7Escs+fQSd6CU/Wkoa2qVWkkzksQSYNoBrygJbDdbC3+0mFm
+         DOos39pn1mYuslZY1BZQjmDfM60TESM9RQgwh98KFByz9InAAzqdWYXR13ILXuM8fxne
+         BuOHcaAbNCCzX1jk1OSUa+t4A5smR68EiGTfYXbiQ5al2NSyNPSGnu1eHlPGGyqcr9Tn
+         YutzC7BU5MjT25I8KkGsYu3ibgteh5r4Bina0QoZcuJqZ8N+oET50Ai109ekvayNy3Mk
+         kr4RrCSf1K40XFImfSg/4yE+MC+pGZk9lCy2G/2ZMn57DP93xPu+ku/pZpZ1LCEZyIJr
+         W29A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rF0Gg/FItWzC1FRYFQdU1CM/THHapJ9NmHYGWF5PYaM=;
-        b=PYZQ6YtschFf8nnFiRpiwm9kKFwRxlF/SWR73wFvu0QCgiV37JLEQX6pp24XRxGkfc
-         1TtRX+L/2B1EnFw1mW0bFHnBZO9bTQpiax5LiDCAFdleBaLeqIxfyC/T9CKVTZundJmV
-         ZMmZlOmZLSxkZqlNeSBacj6oN5XKtDvdvRZngDNa0CcSA703o5MHi34Z0gJDbA2SfbUA
-         +KqY/upwDkjh4FOmZhHAV8U/Vpjs5SDq7fygNl+jr/dpmC3PZ7PzsH/sHSVPF7+/cb0V
-         VANsYSyfqW+jmBLDN6VGHcDO0JZgBhkDytpXBkDeXTfuTYPn5QvHR/bMIo8QTkxmJBnH
-         DS/Q==
-X-Gm-Message-State: AOAM532PKPTSEq2WVfXmIjkcErptyZMS0u3TxPWylBmIWMFPwEhQupta
-        D6MXREP4iDfGandr+eCg6j62WeAQurs=
-X-Google-Smtp-Source: ABdhPJxAWHVJz4qjW72EohwUKHF1cKxUaKdI5k8vecTZBIbH6qy//hJ4IaY8hwl1kx3ydSR74SPQwA==
-X-Received: by 2002:a17:90a:4541:: with SMTP id r1mr1818789pjm.88.1598969797778;
-        Tue, 01 Sep 2020 07:16:37 -0700 (PDT)
+        bh=zvhzgkhZO1kqoSQJjNzOqYAXx9WauCb1i9WMlKWlKe8=;
+        b=O6OMTWbCO01W/UqLQOjjlPeD7592K7najpsyH80SkU4xafZWRwJhx/ocXmIuAiP4sp
+         lKXWVsh6AYoH5kxRB4jrqbFj9rmyWv73U126zD9Jj3iJIccGXGRLCy+6cak3m10G4ZAL
+         0WGOfNRjRrCrfvLAactaX9e2HbcgSUt+uINMqse6zM23lgAvXSDHvIGwPM0so/c59w/t
+         ZJntDf9B40wcDdKTr4nlDqsLdaXwhGixW21mmCyRUOAM7c44C0PX+uiy4S0nhEvp19ST
+         92vjn26NAtvcRfU2t2jLqPTyJBC1ib6SD9rOVQPy4Wbp9TTniAe6puMbjrCqtxQIJk5L
+         zQgg==
+X-Gm-Message-State: AOAM530B7wLuvwv8BbeMxbdSAX3S/MNFHjlC//65UOcNc7RC644nvvqO
+        kRH0lr/47PCPTvDAxYDqYAQ+Arb91Io=
+X-Google-Smtp-Source: ABdhPJxsgG44bWbTWPiAdffudfRe3VG6mhCW8Ffx7ERK3273FVgKG+24orA/GkxdBRoUGT226R4DlQ==
+X-Received: by 2002:a17:902:b714:: with SMTP id d20mr1587452pls.103.1598969783374;
+        Tue, 01 Sep 2020 07:16:23 -0700 (PDT)
 Received: from bobo.ibm.com ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.34
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 07:16:37 -0700 (PDT)
+        Tue, 01 Sep 2020 07:16:22 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-arch@vger.kernel.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Ley Foon Tan <ley.foon.tan@intel.com>
-Subject: [PATCH v3 13/23] nios2: use asm-generic/mmu_context.h for no-op implementations
-Date:   Wed,  2 Sep 2020 00:15:29 +1000
-Message-Id: <20200901141539.1757549-14-npiggin@gmail.com>
+        linux-m68k@lists.linux-m68k.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH v3 09/23] m68k: use asm-generic/mmu_context.h for no-op implementations
+Date:   Wed,  2 Sep 2020 00:15:25 +1000
+Message-Id: <20200901141539.1757549-10-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
 References: <20200901141539.1757549-1-npiggin@gmail.com>
@@ -78,68 +79,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Ley Foon Tan <ley.foon.tan@intel.com>
+Cc: linux-m68k@lists.linux-m68k.org
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
+ arch/m68k/include/asm/mmu_context.h | 37 +++++++----------------------
+ 1 file changed, 9 insertions(+), 28 deletions(-)
 
-Please ack or nack if you object to this being mered via
-Arnd's tree.
-
- arch/nios2/include/asm/mmu_context.h | 21 ++++-----------------
- 1 file changed, 4 insertions(+), 17 deletions(-)
-
-diff --git a/arch/nios2/include/asm/mmu_context.h b/arch/nios2/include/asm/mmu_context.h
-index 78ab3dacf579..4f99ed09b5a7 100644
---- a/arch/nios2/include/asm/mmu_context.h
-+++ b/arch/nios2/include/asm/mmu_context.h
-@@ -26,16 +26,13 @@ extern unsigned long get_pid_from_context(mm_context_t *ctx);
-  */
- extern pgd_t *pgd_current;
+diff --git a/arch/m68k/include/asm/mmu_context.h b/arch/m68k/include/asm/mmu_context.h
+index 993fd7e37069..d12d8a9032f6 100644
+--- a/arch/m68k/include/asm/mmu_context.h
++++ b/arch/m68k/include/asm/mmu_context.h
+@@ -5,10 +5,6 @@
+ #include <asm-generic/mm_hooks.h>
+ #include <linux/mm_types.h>
  
 -static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
 -{
 -}
 -
+ #ifdef CONFIG_MMU
+ 
+ #if defined(CONFIG_COLDFIRE)
+@@ -58,6 +54,7 @@ static inline void get_mmu_context(struct mm_struct *mm)
  /*
-  * Initialize the context related info for a new mm_struct instance.
-  *
-  * Set all new contexts to 0, that way the generation will never match
-  * the currently running generation when this context is switched in.
+  * We're finished using the context for an address space.
   */
-+#define init_new_context init_new_context
- static inline int init_new_context(struct task_struct *tsk,
- 					struct mm_struct *mm)
++#define destroy_context destroy_context
+ static inline void destroy_context(struct mm_struct *mm)
  {
-@@ -43,26 +40,16 @@ static inline int init_new_context(struct task_struct *tsk,
- 	return 0;
- }
- 
--/*
-- * Destroy context related info for an mm_struct that is about
-- * to be put to rest.
-- */
--static inline void destroy_context(struct mm_struct *mm)
--{
--}
--
- void switch_mm(struct mm_struct *prev, struct mm_struct *next,
- 		struct task_struct *tsk);
- 
--static inline void deactivate_mm(struct task_struct *tsk,
--				struct mm_struct *mm)
--{
--}
--
- /*
+ 	if (mm->context != NO_CONTEXT) {
+@@ -83,6 +80,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
   * After we have set current->mm to a new value, this activates
   * the context for the new mm so we see the new mappings.
   */
 +#define activate_mm activate_mm
- void activate_mm(struct mm_struct *prev, struct mm_struct *next);
+ static inline void activate_mm(struct mm_struct *active_mm,
+ 	struct mm_struct *mm)
+ {
+@@ -90,8 +88,6 @@ static inline void activate_mm(struct mm_struct *active_mm,
+ 	set_context(mm->context, mm->pgd);
+ }
  
+-#define deactivate_mm(tsk, mm) do { } while (0)
+-
+ #define prepare_arch_switch(next) load_ksp_mmu(next)
+ 
+ static inline void load_ksp_mmu(struct task_struct *task)
+@@ -176,6 +172,7 @@ extern unsigned long get_free_context(struct mm_struct *mm);
+ extern void clear_context(unsigned long context);
+ 
+ /* set the context for a new task to unmapped */
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 				   struct mm_struct *mm)
+ {
+@@ -210,8 +207,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	activate_context(tsk->mm);
+ }
+ 
+-#define deactivate_mm(tsk, mm)	do { } while (0)
+-
++#define activate_mm activate_mm
+ static inline void activate_mm(struct mm_struct *prev_mm,
+ 			       struct mm_struct *next_mm)
+ {
+@@ -224,6 +220,7 @@ static inline void activate_mm(struct mm_struct *prev_mm,
+ #include <asm/page.h>
+ #include <asm/cacheflush.h>
+ 
++#define init_new_context init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 				   struct mm_struct *mm)
+ {
+@@ -231,8 +228,6 @@ static inline int init_new_context(struct task_struct *tsk,
+ 	return 0;
+ }
+ 
+-#define destroy_context(mm)		do { } while(0)
+-
+ static inline void switch_mm_0230(struct mm_struct *mm)
+ {
+ 	unsigned long crp[2] = {
+@@ -300,8 +295,7 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next, str
+ 	}
+ }
+ 
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-
++#define activate_mm activate_mm
+ static inline void activate_mm(struct mm_struct *prev_mm,
+ 			       struct mm_struct *next_mm)
+ {
+@@ -315,24 +309,11 @@ static inline void activate_mm(struct mm_struct *prev_mm,
+ 
+ #endif
+ 
+-#else /* !CONFIG_MMU */
+-
+-static inline int init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+-{
+-	return 0;
+-}
+-
+-
+-static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next, struct task_struct *tsk)
+-{
+-}
 +#include <asm-generic/mmu_context.h>
-+
- #endif /* _ASM_NIOS2_MMU_CONTEXT_H */
+ 
+-#define destroy_context(mm)	do { } while (0)
+-#define deactivate_mm(tsk,mm)	do { } while (0)
++#else /* !CONFIG_MMU */
+ 
+-static inline void activate_mm(struct mm_struct *prev_mm, struct mm_struct *next_mm)
+-{
+-}
++#include <asm-generic/nommu_context.h>
+ 
+ #endif /* CONFIG_MMU */
+ #endif /* __M68K_MMU_CONTEXT_H */
 -- 
 2.23.0
 
