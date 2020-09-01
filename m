@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EACC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77A2AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B14021D7E
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EED5206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598971480;
-	bh=kaG7HV+v6Jnj36rrvZ1NTf3ijrYzyJj4T+3p2tJeCcU=;
+	s=default; t=1598971484;
+	bh=r6OMV+k73c/v0QmL2y5Q7v1wav2v6TvKpqSSTHWVU+Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UAkt7ChgiXpNm2rOe3qOUL2W5fkbsTtPIK2Y7YVnJ+Gx0o3NWwqU5Q+15WXyFJZsV
-	 1plbnCBqKUfS11s6OOzZYQSQJ36fCKiPge9+XbjlhXmOoykC1Tomo3oclPQp5ABAl0
-	 Ixc0Wkvg2QxBgfgCwvehKgGCaK5EW2gcGmpIDVEQ=
+	b=2gCzvblrgaOLanvdPt2WVH1jmES90V4H8Us7aGycE8+jmT+2Ijq45QS5sVzGpTxyt
+	 neoHZlG6EhRO0RUUc6kLmZrv5sUdmICFoaOtblacJQshy4VbTv8OzblTm0mHwZAGoZ
+	 v5Vz0lZqdQmPA4ypG0Q8aOq94+JwwQ39kjX/cBFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728415AbgIAOo2 (ORCPT
+        id S1728330AbgIAOom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:44:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57176 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 10:44:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728609AbgIAOnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:43:37 -0400
+        id S1728597AbgIAOnc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:43:32 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E636206EB;
-        Tue,  1 Sep 2020 14:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D28AA21941;
+        Tue,  1 Sep 2020 14:43:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598971416;
-        bh=kaG7HV+v6Jnj36rrvZ1NTf3ijrYzyJj4T+3p2tJeCcU=;
+        s=default; t=1598971412;
+        bh=r6OMV+k73c/v0QmL2y5Q7v1wav2v6TvKpqSSTHWVU+Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pvP227x3M7Uj6arESPQIvGmx6/yhHetTOyqupG0TBpVTahI7ALTTg1yOY0hPwDZL8
-         LINb5mauaj6AN1we5YI1N2YfJF0isDgKf9GLNEVeqXhYVyrhpNwQJ8t8OnBFJvziUv
-         Ta1EmNp16Ic4VlA5h00xIib8gw8bA8N46s7n1+Z8=
+        b=DWwu1BBVScEbx1viQ7lWQQYUeaZcyHkffku82foe5R4M9aVbzbZAdwnDqPI8UW+3J
+         xEERTFENt8vsnN44HSEHj4bXB6oXxFOZELdS3k7dNVTrXaumRXYW2SbZCIvhsRwMG7
+         +kQ4Bp3uFkIQZckkv6GqBVYulB5ENfAnVBWHOxDs=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1kD7VW-008IQP-Ju; Tue, 01 Sep 2020 15:43:34 +0100
+        id 1kD7VR-008IQP-1j; Tue, 01 Sep 2020 15:43:30 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -59,9 +59,9 @@ Cc:     Will Deacon <will@kernel.org>,
         Saravana Kannan <saravanak@google.com>,
         kernel-team@android.com,
         Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH v3 06/16] irqchip/gic-v3: Configure SGIs as standard interrupts
-Date:   Tue,  1 Sep 2020 15:43:14 +0100
-Message-Id: <20200901144324.1071694-7-maz@kernel.org>
+Subject: [PATCH v3 01/16] genirq: Add fasteoi IPI flow
+Date:   Tue,  1 Sep 2020 15:43:09 +0100
+Message-Id: <20200901144324.1071694-2-maz@kernel.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200901144324.1071694-1-maz@kernel.org>
 References: <20200901144324.1071694-1-maz@kernel.org>
@@ -76,211 +76,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the way we deal with GICv3 SGIs by turning them into proper
-IRQs, and calling into the arch code to register the interrupt range
-instead of a callback.
+For irqchips using the fasteoi flow, IPIs are a bit special.
+They need to be EOI'd early (before calling the handler), as
+funny things may happen in the handler (they do not necessarily
+behave like a normal interrupt).
 
 Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3.c | 86 ++++++++++++++++++++----------------
- 1 file changed, 47 insertions(+), 39 deletions(-)
+ include/linux/irq.h |  1 +
+ kernel/irq/chip.c   | 27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index f7c99a302d01..717064588299 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -36,6 +36,8 @@
- #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
- #define FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539	(1ULL << 1)
- 
-+#define GIC_IRQ_TYPE_PARTITION	(GIC_IRQ_TYPE_LPI + 1)
-+
- struct redist_region {
- 	void __iomem		*redist_base;
- 	phys_addr_t		phys_base;
-@@ -383,7 +385,7 @@ static int gic_irq_set_irqchip_state(struct irq_data *d,
- {
- 	u32 reg;
- 
--	if (d->hwirq >= 8192) /* PPI/SPI only */
-+	if (d->hwirq >= 8192) /* SGI/PPI/SPI only */
- 		return -EINVAL;
- 
- 	switch (which) {
-@@ -583,6 +585,9 @@ static int gic_set_type(struct irq_data *d, unsigned int type)
- 
- static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
- {
-+	if (get_intid_range(d) == SGI_RANGE)
-+		return -EINVAL;
-+
- 	if (vcpu)
- 		irqd_set_forwarded_to_vcpu(d);
- 	else
-@@ -657,38 +662,14 @@ static asmlinkage void __exception_irq_entry gic_handle_irq(struct pt_regs *regs
- 	if ((irqnr >= 1020 && irqnr <= 1023))
- 		return;
- 
--	/* Treat anything but SGIs in a uniform way */
--	if (likely(irqnr > 15)) {
--		int err;
--
--		if (static_branch_likely(&supports_deactivate_key))
--			gic_write_eoir(irqnr);
--		else
--			isb();
--
--		err = handle_domain_irq(gic_data.domain, irqnr, regs);
--		if (err) {
--			WARN_ONCE(true, "Unexpected interrupt received!\n");
--			gic_deactivate_unhandled(irqnr);
--		}
--		return;
--	}
--	if (irqnr < 16) {
-+	if (static_branch_likely(&supports_deactivate_key))
- 		gic_write_eoir(irqnr);
--		if (static_branch_likely(&supports_deactivate_key))
--			gic_write_dir(irqnr);
--#ifdef CONFIG_SMP
--		/*
--		 * Unlike GICv2, we don't need an smp_rmb() here.
--		 * The control dependency from gic_read_iar to
--		 * the ISB in gic_write_eoir is enough to ensure
--		 * that any shared data read by handle_IPI will
--		 * be read after the ACK.
--		 */
--		handle_IPI(irqnr, regs);
--#else
--		WARN_ONCE(true, "Unexpected SGI received!\n");
--#endif
-+	else
-+		isb();
-+
-+	if (handle_domain_irq(gic_data.domain, irqnr, regs)) {
-+		WARN_ONCE(true, "Unexpected interrupt received!\n");
-+		gic_deactivate_unhandled(irqnr);
- 	}
+diff --git a/include/linux/irq.h b/include/linux/irq.h
+index 1b7f4dfee35b..57205bbf46bf 100644
+--- a/include/linux/irq.h
++++ b/include/linux/irq.h
+@@ -634,6 +634,7 @@ static inline int irq_set_parent(int irq, int parent_irq)
+  */
+ extern void handle_level_irq(struct irq_desc *desc);
+ extern void handle_fasteoi_irq(struct irq_desc *desc);
++extern void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc);
+ extern void handle_edge_irq(struct irq_desc *desc);
+ extern void handle_edge_eoi_irq(struct irq_desc *desc);
+ extern void handle_simple_irq(struct irq_desc *desc);
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 857f5f4c8098..bed517d5aa4d 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -944,6 +944,33 @@ void handle_percpu_devid_irq(struct irq_desc *desc)
+ 		chip->irq_eoi(&desc->irq_data);
  }
  
-@@ -1136,11 +1117,11 @@ static void gic_send_sgi(u64 cluster_id, u16 tlist, unsigned int irq)
- 	gic_write_sgi1r(val);
- }
- 
--static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
-+static void gic_ipi_send_mask(struct irq_data *d, const struct cpumask *mask)
- {
- 	int cpu;
- 
--	if (WARN_ON(irq >= 16))
-+	if (WARN_ON(d->hwirq >= 16))
- 		return;
- 
- 	/*
-@@ -1154,7 +1135,7 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 		u16 tlist;
- 
- 		tlist = gic_compute_target_list(&cpu, mask, cluster_id);
--		gic_send_sgi(cluster_id, tlist, irq);
-+		gic_send_sgi(cluster_id, tlist, d->hwirq);
- 	}
- 
- 	/* Force the above writes to ICC_SGI1R_EL1 to be executed */
-@@ -1163,10 +1144,24 @@ static void gic_raise_softirq(const struct cpumask *mask, unsigned int irq)
- 
- static void __init gic_smp_init(void)
- {
--	set_smp_cross_call(gic_raise_softirq);
-+	struct irq_fwspec sgi_fwspec = {
-+		.fwnode		= gic_data.fwnode,
-+		.param_count	= 1,
-+	};
-+	int base_sgi;
++/**
++ * handle_percpu_devid_fasteoi_ipi - Per CPU local IPI handler with per cpu
++ *				     dev ids
++ * @desc:	the interrupt description structure for this irq
++ *
++ * The biggest difference with the IRQ version is that the interrupt is
++ * EOIed early, as the IPI could result in a context switch, and we need to
++ * make sure the IPI can fire again. We also assume that the arch code has
++ * registered an action. If not, we are positively doomed.
++ */
++void handle_percpu_devid_fasteoi_ipi(struct irq_desc *desc)
++{
++	struct irq_chip *chip = irq_desc_get_chip(desc);
++	struct irqaction *action = desc->action;
++	unsigned int irq = irq_desc_get_irq(desc);
++	irqreturn_t res;
 +
- 	cpuhp_setup_state_nocalls(CPUHP_AP_IRQ_GIC_STARTING,
- 				  "irqchip/arm/gicv3:starting",
- 				  gic_starting_cpu, NULL);
++	__kstat_incr_irqs_this_cpu(desc);
 +
-+	/* Register all 8 non-secure SGIs */
-+	base_sgi = __irq_domain_alloc_irqs(gic_data.domain, -1, 8,
-+					   NUMA_NO_NODE, &sgi_fwspec,
-+					   false, NULL);
-+	if (WARN_ON(base_sgi <= 0))
-+		return;
++	if (chip->irq_eoi)
++		chip->irq_eoi(&desc->irq_data);
 +
-+	set_smp_ipi_range(base_sgi, 8);
- }
- 
- static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
-@@ -1215,6 +1210,7 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- }
- #else
- #define gic_set_affinity	NULL
-+#define gic_ipi_send_mask	NULL
- #define gic_smp_init()		do { } while(0)
- #endif
- 
-@@ -1257,6 +1253,7 @@ static struct irq_chip gic_chip = {
- 	.irq_set_irqchip_state	= gic_irq_set_irqchip_state,
- 	.irq_nmi_setup		= gic_irq_nmi_setup,
- 	.irq_nmi_teardown	= gic_irq_nmi_teardown,
-+	.ipi_send_mask		= gic_ipi_send_mask,
- 	.flags			= IRQCHIP_SET_TYPE_MASKED |
- 				  IRQCHIP_SKIP_SET_WAKE |
- 				  IRQCHIP_MASK_ON_SUSPEND,
-@@ -1274,6 +1271,7 @@ static struct irq_chip gic_eoimode1_chip = {
- 	.irq_set_vcpu_affinity	= gic_irq_set_vcpu_affinity,
- 	.irq_nmi_setup		= gic_irq_nmi_setup,
- 	.irq_nmi_teardown	= gic_irq_nmi_teardown,
-+	.ipi_send_mask		= gic_ipi_send_mask,
- 	.flags			= IRQCHIP_SET_TYPE_MASKED |
- 				  IRQCHIP_SKIP_SET_WAKE |
- 				  IRQCHIP_MASK_ON_SUSPEND,
-@@ -1289,6 +1287,12 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 
- 	switch (__get_intid_range(hw)) {
- 	case SGI_RANGE:
-+		irq_set_percpu_devid(irq);
-+		irq_domain_set_info(d, irq, hw, chip, d->host_data,
-+				    handle_percpu_devid_fasteoi_ipi,
-+				    NULL, NULL);
-+		break;
++	trace_irq_handler_entry(irq, action);
++	res = action->handler(irq, raw_cpu_ptr(action->percpu_dev_id));
++	trace_irq_handler_exit(irq, action, res);
++}
 +
- 	case PPI_RANGE:
- 	case EPPI_RANGE:
- 		irq_set_percpu_devid(irq);
-@@ -1318,13 +1322,17 @@ static int gic_irq_domain_map(struct irq_domain *d, unsigned int irq,
- 	return 0;
- }
- 
--#define GIC_IRQ_TYPE_PARTITION	(GIC_IRQ_TYPE_LPI + 1)
--
- static int gic_irq_domain_translate(struct irq_domain *d,
- 				    struct irq_fwspec *fwspec,
- 				    unsigned long *hwirq,
- 				    unsigned int *type)
- {
-+	if (fwspec->param_count == 1 && fwspec->param[0] < 16) {
-+		*hwirq = fwspec->param[0];
-+		*type = IRQ_TYPE_EDGE_RISING;
-+		return 0;
-+	}
-+
- 	if (is_of_node(fwspec->fwnode)) {
- 		if (fwspec->param_count < 3)
- 			return -EINVAL;
-@@ -1656,9 +1664,9 @@ static int __init gic_init_bases(void __iomem *dist_base,
- 
- 	gic_update_rdist_properties();
- 
--	gic_smp_init();
- 	gic_dist_init();
- 	gic_cpu_init();
-+	gic_smp_init();
- 	gic_cpu_pm_init();
- 
- 	if (gic_dist_supports_lpis()) {
+ /**
+  * handle_percpu_devid_fasteoi_nmi - Per CPU local NMI handler with per cpu
+  *				     dev ids
 -- 
 2.27.0
 
