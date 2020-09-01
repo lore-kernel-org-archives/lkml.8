@@ -2,89 +2,157 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49C7C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579A6C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADAEA20693
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C56920693
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWrOGraZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgIADmA (ORCPT
+        id S1727819AbgIADmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 23:42:00 -0400
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:45517 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726078AbgIADmA (ORCPT
+        Mon, 31 Aug 2020 23:42:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726112AbgIADmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 23:42:00 -0400
-X-IronPort-AV: E=Sophos;i="5.76,377,1592841600"; 
-   d="scan'208";a="98757915"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 01 Sep 2020 11:41:57 +0800
-Received: from G08CNEXMBPEKD04.g08.fujitsu.local (unknown [10.167.33.201])
-        by cn.fujitsu.com (Postfix) with ESMTP id 00BD348990DF;
-        Tue,  1 Sep 2020 11:41:55 +0800 (CST)
-Received: from G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.203) by
- G08CNEXMBPEKD04.g08.fujitsu.local (10.167.33.201) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Tue, 1 Sep 2020 11:41:54 +0800
-Received: from TSO.g08.fujitsu.local (10.167.226.60) by
- G08CNEXCHPEKD05.g08.fujitsu.local (10.167.33.209) with Microsoft SMTP Server
- id 15.0.1497.2 via Frontend Transport; Tue, 1 Sep 2020 11:41:53 +0800
-From:   Cao jin <caoj.fnst@cn.fujitsu.com>
-To:     <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <x86@kernel.org>
-CC:     <tglx@linutronix.de>, <ingo@redhat.com>, <p@alien8.de>,
-        <hpa@zytor.com>, <corbet@lwn.net>
-Subject: [PATCH] Documentation/x86/boot.rst: minor improvement
-Date:   Tue, 1 Sep 2020 11:41:57 +0800
-Message-ID: <20200901034157.5482-1-caoj.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 31 Aug 2020 23:42:12 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A243C0612FE;
+        Mon, 31 Aug 2020 20:42:11 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id w5so7904936wrp.8;
+        Mon, 31 Aug 2020 20:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gEP+l6VmZ2AQhT9y6MxnJyCmEVijpcWpEhbN/rykvcE=;
+        b=CWrOGraZ3/zNXixoJEwLA3hwBYU2PWVJEJ6ylxVJux52OFGXCCNEGTUhC6mkNsNKpA
+         i1TXATaF9rTSGwMaVqrUu1Zz/Y1O9y1drCGCIQXqHRHg9tOaU+j7fvsU/CuvZxVlMMw5
+         jVxSR6ue24PPOYOWBejC9MloKJqqT/iDlRnzo7+6cRlhm0s17nQW9Gh2F7FrU9ZfvUxp
+         kAj8AgciZRjeU/IJPsUe/joigfP+Mc6xw8KC+pdmtDdlV3fkmAR0oIVELnk2GPlk1ru0
+         iqtKfLijhcQEQ37e9PwlNuKupuMgl1u6xVjd2ZRO3vozd8LXzB4Mr45MwWeEmJ4j6Osg
+         kkIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gEP+l6VmZ2AQhT9y6MxnJyCmEVijpcWpEhbN/rykvcE=;
+        b=EweFKDjX+clP5mxkMY0DlaoNwLVBNJILyvXJReUJD49WiHllT60lCeDlLkD+/agiSA
+         zE+90OUpJmDgwN+w+yz6Jo2FKR8XrwQf+HCJDZRS7xCssR8E34/06jgUurOuKvpKGelG
+         xjHb7H3a1RPM3vCBEpTL+18kTNE3h+Dyb8aAY4LdadWmSx8JP8mo4mGnI9KmLhnUydAi
+         t6fXwdTHRl392S0pSYnoJhy7KO8JGoZ2w5rCcvBQ9+36Z2yEGUoOxHfnd4u+psjKFb5L
+         NLVQHgFb0BNPuLNEnjte4XP9BJRwWiMbjTf0CFJck4POvkfKRsxNhiXtPfhxDVwELS72
+         w59A==
+X-Gm-Message-State: AOAM530elihLRNX3YUSBPug59E9c7/Y+QSm/cATVi/aCwKRTx8Irw+Aj
+        +t6vxjiTW2hOkB2UPXCr9fWB1cqUZOIBQb6qm1w=
+X-Google-Smtp-Source: ABdhPJyAYV0Dm0qLaL1mXbuG+PPAW1SP8BjwTCx+mqZtIG0Clr3g+Jy+4HR4m6cw7nu44h9gRxaSIWDuskrjmVwm3j8=
+X-Received: by 2002:adf:e6c7:: with SMTP id y7mr4030589wrm.147.1598931729990;
+ Mon, 31 Aug 2020 20:42:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-yoursite-MailScanner-ID: 00BD348990DF.A0907
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: caoj.fnst@cn.fujitsu.com
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200814024114.1177553-2-robdclark@gmail.com> <20200901023517.GA54956@uller>
+In-Reply-To: <20200901023517.GA54956@uller>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 31 Aug 2020 20:42:57 -0700
+Message-ID: <CAF6AEGsx5mmUCuNApP692L-rS3wEbn4UqJBXuSr-38MAcVfoBw@mail.gmail.com>
+Subject: Re: [PATCH 01/19] drm/msm: remove dangling submitqueue references
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Typo fix & file name update
+On Mon, Aug 31, 2020 at 7:35 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Fri 14 Aug 02:40 UTC 2020, Rob Clark wrote:
+>
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > Currently it doesn't matter, since we free the ctx immediately.  But
+> > when we start refcnt'ing the ctx, we don't want old dangling list
+> > entries to hang around.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
+> > index a1d94be7883a..90c9d84e6155 100644
+> > --- a/drivers/gpu/drm/msm/msm_submitqueue.c
+> > +++ b/drivers/gpu/drm/msm/msm_submitqueue.c
+> > @@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
+> >        * No lock needed in close and there won't
+> >        * be any more user ioctls coming our way
+> >        */
+> > -     list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
+> > +     list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
+> > +             list_del(&entry->node);
+>
+> If you refcount ctx, what does that do for the entries in the submit
+> queue?
+>
+> "entry" here is kref'ed, but you're popping it off the list regardless
+> of the put ends up freeing the object or not - which afaict would mean
+> leaking the object.
+>
 
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
----
- Documentation/x86/boot.rst | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+What ends up happening is the submit has reference to submit-queue,
+which has reference to the ctx.. the submitqueue could be alive still
+pending in-flight submits (in a later patch), but dead from the PoV of
+userspace interface.
 
-diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
-index 7fafc7ac00d7..c04afec90486 100644
---- a/Documentation/x86/boot.rst
-+++ b/Documentation/x86/boot.rst
-@@ -1379,7 +1379,7 @@ can be calculated as follows::
- In addition to read/modify/write the setup header of the struct
- boot_params as that of 16-bit boot protocol, the boot loader should
- also fill the additional fields of the struct boot_params as described
--in zero-page.txt.
-+in zero-page.rst.
- 
- After setting up the struct boot_params, the boot loader can load
- 64-bit kernel in the same way as that of 16-bit boot protocol, but
-@@ -1391,7 +1391,7 @@ In 64-bit boot protocol, the kernel is started by jumping to the
- 
- At entry, the CPU must be in 64-bit mode with paging enabled.
- The range with setup_header.init_size from start address of loaded
--kernel and zero page and command line buffer get ident mapping;
-+kernel and zero page and command line buffer get identity mapping;
- a GDT must be loaded with the descriptors for selectors
- __BOOT_CS(0x10) and __BOOT_DS(0x18); both descriptors must be 4G flat
- segment; __BOOT_CS must have execute/read permission, and __BOOT_DS
--- 
-2.21.0
+We aren't relying (or at least aren't in the end, and I *think* I
+didn't miss anything in the middle) relying on ctx->submitqueues list
+to clean anything up in the end, just track what is still a valid
+submitqueue from userspace PoV
 
+BR,
+-R
 
-
+>
+> On the other hand, with the current implementation an object with higher
+> refcount with adjacent objects of single refcount would end up with
+> dangling pointers after the put. So in itself this change seems like a
+> net gain, but I'm wondering about the plan described in the commit
+> message.
+>
+> Regards,
+> Bjorn
+>
+> >               msm_submitqueue_put(entry);
+> > +     }
+> >  }
+> >
+> >  int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
+> > --
+> > 2.26.2
+> >
