@@ -2,52 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 558ABC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A6CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2077120FC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8ED6E207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973624;
-	bh=i0Lq5eSHyAtWx6NrNz0vxD9buMUBKlcRxwhAILT0zEw=;
+	s=default; t=1598973626;
+	bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HlqvVG1T+WvHK2MjfRLmyo7+4Qg7Ve3yLLf+nS49ma2w4vcEsl77s5qNAxM+KsuY3
-	 PCjz6pZWnO99queZ/R7Ci9mWske1uuQH86x+4duSqvuibAa5lAdrm+basFw0b5nT9F
-	 LlF97iAyJFqt3Rcm+D7i0Ot/i5qvqnWaG+OxJUW0=
+	b=Il5HZ0P2+ZiILvteFP/AtfTwKRsVju9iZyYpE7E1Q5mpyurotMi8wAh+t6O6PSeip
+	 6qNooPxX5NqxHGWVdElTpzm0mspwbG0Ju0cIR6bHtK60N5bcX35atKC0FHMeFPoFjA
+	 74iDC0rNiQH4Qelv/BV16jYOGenu1WcRa9/PmSOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgIAPUT (ORCPT
+        id S1729599AbgIAPUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:20:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36708 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:20:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbgIAPSZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:25 -0400
+        id S1728899AbgIAPS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:27 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39F612158C;
-        Tue,  1 Sep 2020 15:18:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E00E82166E;
+        Tue,  1 Sep 2020 15:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973504;
-        bh=i0Lq5eSHyAtWx6NrNz0vxD9buMUBKlcRxwhAILT0zEw=;
+        s=default; t=1598973507;
+        bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h1HsmB20osQVlxQ89IFHCg/1UxjiN9pAzgX8Vg1wTGhbFgVENhaHXPDKQbTOqD1jW
-         4+gm/QzuxBk6e2xMMkWNbxH5ZiK9ANTP11I517iw8KPDxthL5dziRgHwC3oNcYZKPs
-         logqwRYbwBXJlA80i6+f7gixzQS0YvpBSqBG/vNQ=
+        b=lliYAVuGYS5tSCJPvi+ghv5DFIoG3MBzdRdBuoAbuNMOnZe94wwMlgaL8H4saQCR1
+         pT0c0xsKpX/76Z6WpYzI/oshfEDJJLP0L0O8PFa7UcnOv4XVClizfyRn0v/SHNR3QI
+         wcU6rdwDRmPKQZSo4awqILVul6oggNbI8HCY5Gas=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Reto Schneider <code@reto-schneider.ch>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Peng Fan <fanpeng@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/91] rtlwifi: rtl8192cu: Prevent leaking urb
-Date:   Tue,  1 Sep 2020 17:09:59 +0200
-Message-Id: <20200901150929.413810206@linuxfoundation.org>
+Subject: [PATCH 4.14 26/91] mips/vdso: Fix resource leaks in genvdso.c
+Date:   Tue,  1 Sep 2020 17:10:00 +0200
+Message-Id: <20200901150929.456402242@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -60,38 +61,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reto Schneider <code@reto-schneider.ch>
+From: Peng Fan <fanpeng@loongson.cn>
 
-[ Upstream commit 03128643eb5453a798db5770952c73dc64fcaf00 ]
+[ Upstream commit a859647b4e6bfeb192284d27d24b6a0c914cae1d ]
 
-If usb_submit_urb fails the allocated urb should be unanchored and
-released.
+Close "fd" before the return of map_vdso() and close "out_file"
+in main().
 
-Signed-off-by: Reto Schneider <code@reto-schneider.ch>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200622132113.14508-3-code@reto-schneider.ch
+Signed-off-by: Peng Fan <fanpeng@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/mips/vdso/genvdso.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index 7a050a75bdcbb..4fa4d877f913b 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -739,8 +739,11 @@ static int _rtl_usb_receive(struct ieee80211_hw *hw)
- 
- 		usb_anchor_urb(urb, &rtlusb->rx_submitted);
- 		err = usb_submit_urb(urb, GFP_KERNEL);
--		if (err)
-+		if (err) {
-+			usb_unanchor_urb(urb);
-+			usb_free_urb(urb);
- 			goto err_out;
-+		}
- 		usb_free_urb(urb);
+diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
+index 530a36f465ced..afcc86726448e 100644
+--- a/arch/mips/vdso/genvdso.c
++++ b/arch/mips/vdso/genvdso.c
+@@ -126,6 +126,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (fstat(fd, &stat) != 0) {
+ 		fprintf(stderr, "%s: Failed to stat '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
  	}
- 	return 0;
+ 
+@@ -134,6 +135,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (addr == MAP_FAILED) {
+ 		fprintf(stderr, "%s: Failed to map '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -143,6 +145,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
+ 		fprintf(stderr, "%s: '%s' is not an ELF file\n", program_name,
+ 			path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -154,6 +157,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF class\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -165,6 +169,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF data order\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -172,15 +177,18 @@ static void *map_vdso(const char *path, size_t *_size)
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF machine (expected EM_MIPS)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	} else if (swap_uint16(ehdr->e_type) != ET_DYN) {
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF type (expected ET_DYN)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+ 	*_size = stat.st_size;
++	close(fd);
+ 	return addr;
+ }
+ 
+@@ -284,10 +292,12 @@ int main(int argc, char **argv)
+ 	/* Calculate and write symbol offsets to <output file> */
+ 	if (!get_symbols(dbg_vdso_path, dbg_vdso)) {
+ 		unlink(out_path);
++		fclose(out_file);
+ 		return EXIT_FAILURE;
+ 	}
+ 
+ 	fprintf(out_file, "};\n");
++	fclose(out_file);
+ 
+ 	return EXIT_SUCCESS;
+ }
 -- 
 2.25.1
 
