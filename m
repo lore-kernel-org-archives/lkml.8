@@ -2,116 +2,139 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4718BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AECA8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D1D021741
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87C8F21897
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y/SqwzUN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728437AbgIAOmn (ORCPT
+        id S1728502AbgIAOm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:42:43 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:55886 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728360AbgIAOme (ORCPT
+        Tue, 1 Sep 2020 10:42:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46632 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbgIAOl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:42:34 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 46FC8299AB2
-Subject: Re: [PATCH v2 1/4] ARM: exynos: clear L310_AUX_CTRL_NS_LOCKDOWN in
- default l2c_aux_val
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        kernel@collabora.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <267a81e550a0b5d479c82b5908e2a2caa4c9c874.1597061474.git.guillaume.tucker@collabora.com>
- <c0509b5f-a064-2e73-7e04-51f41a56d222@collabora.com>
- <CAJKOXPczS_RpSFpjGygZ_1MCYxJ_cUDRjriZvrHd6+zhmq=c8Q@mail.gmail.com>
- <CAJKOXPfT7LvHVpTdaQ1voVi=OtC4aV6hbyzcekmrPMkb+5ebNg@mail.gmail.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <fd1a34c4-dcc1-1480-1e96-8bd94ada9846@collabora.com>
-Date:   Tue, 1 Sep 2020 15:42:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 1 Sep 2020 10:41:28 -0400
+Received: from mail-oi1-x242.google.com (mail-oi1-x242.google.com [IPv6:2607:f8b0:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE52BC061244;
+        Tue,  1 Sep 2020 07:41:27 -0700 (PDT)
+Received: by mail-oi1-x242.google.com with SMTP id j21so1336537oii.10;
+        Tue, 01 Sep 2020 07:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=sZhvalbA03rUwegYGv+Cay08wKnFHq0gcapj8Z9U2kk=;
+        b=Y/SqwzUN1T5jUMi6cZ2ZuDXFCwQ9pIW40bV/unURxBXPwk7DRwOLaHDwtTXPzup9gL
+         cEFKY7SCHTeJimhPAs3bFuPsn0kDmnDHqJqlzU9FZmxXnMBjVPM//99pbmwwqN6oIWte
+         cPVMbo+bJSoElNYuopQ8bm3qvB88PXV5tK4HvcEMtbO3qu1BW8WHnx9BmeYzDwOW94IC
+         ce00MEsUDYw8friyEmXWOpscVEu6BASNFxHjNF7w/Je9hjg36WLddNLUiz4ApumVkjXB
+         JCgKn4rBc2l++lCHpIQKhu6u/KNpjBU6MIMXDIe6asHbk3XQ6DA03spR28BYEr5LsOT7
+         Vn1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=sZhvalbA03rUwegYGv+Cay08wKnFHq0gcapj8Z9U2kk=;
+        b=iWSNWnBFYOKBddw/tSz7QbMmjI3FiAZAfTBljY5JkN2rMNP4lzxmgnEu0fmGm51YxI
+         B5723LYRGFerK1n4bszVMYsb906SpdGa6TduhAnM/iHp7douK7d8pyDMEu1uaH6xTliY
+         tnTlk1HRTlnitzdEM9XAKHRvbl+73FEP1uZUujzXbxzvVCwJZRlU3zJDopVGGitGwKTO
+         C+oO/HDs9N/G5ybi9qyrgz/cH5vXZc/4scLBbtHhMcbPtKiDhsDE2IIcicRzvhThY+QG
+         o6o2cOCvBT7rwhxwj6k1oQFtavqgK0ImIIgiHSEmL6zkRpdmH/6bwUfCfR+KS0jnFV1w
+         lrpw==
+X-Gm-Message-State: AOAM531QHxhHXjvu7r+nYInNKQ9B3m6Z1H3FqOh/4YY/WLI/1J495FME
+        9krJuJ9kFmcPc/fvqc/VjcpoyUS/E//KCnjgBKVNg8HMbL0FtQ==
+X-Google-Smtp-Source: ABdhPJy3jGYbnV0erw5CDV78wbHykPio/a1ecP5Cmr4JMTFhJXSUqBMYPpa4dn07GhhqNIJgtM5NUmjuAwVvejaykGs=
+X-Received: by 2002:aca:d409:: with SMTP id l9mr1255941oig.70.1598971287129;
+ Tue, 01 Sep 2020 07:41:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPfT7LvHVpTdaQ1voVi=OtC4aV6hbyzcekmrPMkb+5ebNg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200901064302.849-1-w@1wt.eu>
+In-Reply-To: <20200901064302.849-1-w@1wt.eu>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 1 Sep 2020 16:41:13 +0200
+Message-ID: <CA+icZUVvOArpuR=PJBg288pJmLmYxtgZxJOHnjk943e9M22WOQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] prandom_u32: make output less predictable
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        George Spelvin <lkml@sdf.org>,
+        Amit Klein <aksecurity@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
+        Florian Westphal <fw@strlen.de>,
+        Marc Plumb <lkml.mplumb@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/09/2020 14:51, Krzysztof Kozlowski wrote:
-> On Tue, 1 Sep 2020 at 15:45, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>
->> On Tue, 1 Sep 2020 at 15:34, Guillaume Tucker
->> <guillaume.tucker@collabora.com> wrote:
->>>
->>> Hi Krzysztof, Russell,
->>>
->>> On 10/08/2020 13:22, Guillaume Tucker wrote:
->>>> The L310_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
->>>> sequence.  There is no need to set it in the default register value,
->>>> this was done before support for it was implemented in the code.  It
->>>> is not set in the hardware initial value either.
->>>>
->>>> Clean this up by removing this flag from the default l2c_aux_val, and
->>>> add it to the l2c_aux_mask to print an alert message if it was already
->>>> set before the kernel initialisation.
->>>>
->>>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->>>> ---
->>>>
->>>> Notes:
->>>>     v2: fix flag name L310_AUX_CTRL_NS_LOCKDOWN
->>>>
->>>>  arch/arm/mach-exynos/exynos.c | 4 ++--
->>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> I believe this v2 series has addressed all previous comments and
->>> you were waiting for the 5.9 merge window to end.  The patches
->>> all still apply cleanly on v5.9-rc3.  Do you want me to resend
->>> the series anyway or is there anything else needed at this point?
->>>
->>> Maybe one thing that wasn't completely clear in v1 was whether
->>> patch 2/4 was the right approach.  I've explained the reason
->>> behind it but didn't get a final reply from Russell[1].
->>
->> I am sorry, my bad. I already applied this one and 3/4 (dts).
->> Apparently I forgot to reply with confirmation and Patchwork did not
->> notify you for some reason.
+On Tue, Sep 1, 2020 at 8:43 AM Willy Tarreau <w@1wt.eu> wrote:
+>
+> This is the cleanup of the latest series of prandom_u32 experimentations
+> consisting in using SipHash instead of Tausworthe to produce the randoms
+> used by the network stack. The changes to the files were kept minimal,
+> and the controversial commit that used to take noise from the fast_pool
+> (f227e3ec3b5c) was reverted. Instead, a dedicated "net_rand_noise" per_cpu
+> variable is fed from various sources of activities (networking, scheduling)
+> to perturb the SipHash state using fast, non-trivially predictable data,
+> instead of keeping it fully deterministic. The goal is essentially to make
+> any occasional memory leakage or brute-force attempt useless.
+>
+> The resulting code was verified to be very slightly faster on x86_64 than
+> what is was with the controversial commit above, though this remains barely
+> above measurement noise. It was only build-tested on arm & arm64.
+>
+> George Spelvin (1):
+>   random32: make prandom_u32() output unpredictable
+>
+> Willy Tarreau (1):
+>   random32: add noise from network and scheduling activity
+>
+>  drivers/char/random.c   |   1 -
+>  include/linux/prandom.h |  55 ++++-
+>  kernel/time/timer.c     |   9 +-
+>  lib/random32.c          | 438 ++++++++++++++++++++++++----------------
+>  net/core/dev.c          |   4 +
+>  5 files changed, 326 insertions(+), 181 deletions(-)
+>
+> Cc: George Spelvin <lkml@sdf.org>
+> Cc: Amit Klein <aksecurity@gmail.com>
+> Cc: Eric Dumazet <edumazet@google.com>
+> Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: tytso@mit.edu
+> Cc: Florian Westphal <fw@strlen.de>
+> Cc: Marc Plumb <lkml.mplumb@gmail.com>
+> Cc: Sedat Dilek <sedat.dilek@gmail.com>
+>
 
-No problem, I see them in linux-next now.  Thanks!
+I have tested with the patchset from [1].
+( Later I saw, you dropped "WIP: tcp: reuse incoming skb hash in
+tcp_conn_request()". )
 
->> Patch 2/4 does not look like one for me so I would need ack from
->> Russell to take. Did you submit it to the ARM patches queue?
+- Sedat -
 
-I've CC-ed linux-arm-kernel@lists.infradead.org on the whole
-series.  Did you mean anything else by the ARM patches queue?
-
->> Patch 4/4 will wait for v5.10-rc1 as it depends on 1/4 and it is DTS patch.
-> 
-> Correct: Patch 4/4 will wait for v5.10 because it depends on the DTS patch.
-
-Sure, in fact patch 4/4 depends on the DTS one (3/4) and also on
-the l2c fix (2/4) as otherwise prefetch would actually not be
-enabled.  So it sounds like both remaining ones 2/4 and 4/4 are
-actually now pending Russell's ack.
-
-Best wishes,
-Guillaume
+https://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/prandom.git/log/?h=20200901-siphash-noise
 
 
-[1] https://lore.kernel.org/lkml/46fa1159-fcd6-b528-b8e8-2fba048236b2@collabora.com/
+> --
+> 2.28.0
