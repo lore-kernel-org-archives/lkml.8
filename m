@@ -2,158 +2,188 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1752C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DC6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1308206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BAYv9bIK"
+	by mail.kernel.org (Postfix) with ESMTP id 7C2382065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598977848;
+	bh=hYHDPNcJLv6GLq7JQ/K4v1nN9Uif5sCAVHnXdu4FShI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Av3bLNmChuDXBSL2vDWWKx/VTRUgVjoS5sZomEuwKKf2FhEXA3k7NcKU3omllcsPw
+	 ZpErIh2XdfdmV03lwH7P/Jv9RsUbLXa2cH0UOC1IRlEeIPQG8GMcNmxs+ztPNRfcee
+	 WVdbjBpNoC8fdkudueM9eKEYKEigb/ZCM64UrDUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729825AbgIAQam (ORCPT
+        id S1730769AbgIAPbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:30:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727950AbgIAQai (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:30:38 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BCE5C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 09:30:37 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id o5so2220914wrn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 09:30:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dJWXvZJM7Rn58/XCux894oNDEA8N0mvrqTZBm36mRD8=;
-        b=BAYv9bIKlv5XxzGIg6gQ4IP+lB247VfdzjbsG0AIE6Xa5tHfIgi7s5SNp1TAn6dQ+3
-         yyJSGNQJNTU7b3U4q1Db1mzZZyYNVJqpb+3BNi2lCay9ZWcxYxAeXrUKXRCrUsEnb5IC
-         vIvE5Bqzlr1pvwvcTVsVEX2JD59ZDJJqlVLqt/AaLcbqN3anmWKTdXzkhiX31VOG9dD2
-         iZiuIcP9PYMGizayS5dQy+iWShXEOz2cBmYgHN0JC06ElVtmu/hAskEs6C7X8WTuvAFo
-         82AwE458kdU70SwXYGW5tudnXh92/gBdlmAMaS8dGhlqOj3EtzHi+6j5csQF/WhltvFr
-         eTlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dJWXvZJM7Rn58/XCux894oNDEA8N0mvrqTZBm36mRD8=;
-        b=tbidSSfMv/dnu5XqPxxyYv4R1g3WEwTFlry88e1foQJNz977HgcTKOdaCa3rOjbtiO
-         dCKTvNrmVAPlsTLlwpc0HetEZwycKR/1VkECQSiUsGrgC42RPcSY8rifGja10pcrfU+P
-         SzxV8HFrMLzfenpVJ5FwNrUV640Vmmkz05Q73sEY8fAAXR41OFem/yv0xS62az19SE8k
-         p5uTqJhJz1UtFKdwiLMuegxfmSX/l+Pc1NGhv72wkqZ18uGOxB41xen4YPbrHp+qTMVr
-         GvKzR4zWLbRDVRLMNOBvJojQCdhb/E+0r+yUd3E+FltBHyCCC7iF6IO4Z/f35CFDua/5
-         pmMQ==
-X-Gm-Message-State: AOAM533UaibshSRqn/Dv1oSj0z3cFwyBRfmc2GSfrV95By+rducCsvd7
-        ZBwoHAfflZ0GknAxBwc8T+RlEzyKgkgdXxsQnQE=
-X-Google-Smtp-Source: ABdhPJzzSrHT7+gBJQ7wWBvPgJGllAEIrLh9E3aUHR/FsKFXgMIVyTDBs4wzl5zRXelF2y/qR6xaj9Pen/T2mxCXszw=
-X-Received: by 2002:adf:ef0a:: with SMTP id e10mr2733473wro.362.1598977836259;
- Tue, 01 Sep 2020 09:30:36 -0700 (PDT)
+        Tue, 1 Sep 2020 11:31:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730489AbgIAP3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:00 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DECAA206C0;
+        Tue,  1 Sep 2020 15:28:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974139;
+        bh=hYHDPNcJLv6GLq7JQ/K4v1nN9Uif5sCAVHnXdu4FShI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=MRamb18/MJxUEmoWi1OciLwE3iWSp76LRgsanEwRB5sopoUIn4/sH4xyM278poxRB
+         5K2q64+mwbRXBBTjhhznVOI/mTQfv04CPynmS0ZAiT7u3cNDeabv0ljHvnfZDYkdjg
+         B1mmXY4CYbEOaG7b4+SOXYUsxnCTggJEPMeJHmIE=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
+        Borislav Petkov <bp@suse.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-edac <linux-edac@vger.kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 058/214] EDAC/ie31200: Fallback if host bridge device is already initialized
+Date:   Tue,  1 Sep 2020 17:08:58 +0200
+Message-Id: <20200901150955.768654803@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200901063227.6057-1-kai.heng.feng@canonical.com>
- <CADnq5_MXs-=BpMrYVudhHPjTpgs1XUE=GEujpp5AeYy5vWS=YA@mail.gmail.com> <3269C99F-2349-4004-8B5F-31A2297A5043@canonical.com>
-In-Reply-To: <3269C99F-2349-4004-8B5F-31A2297A5043@canonical.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Tue, 1 Sep 2020 12:30:25 -0400
-Message-ID: <CADnq5_PMLoL0Zkw8uB+noPJ0buO5aUavDrFGBhBp_GEz8+xBDA@mail.gmail.com>
-Subject: Re: [PATCH] drm/radeon: Reset ASIC if suspend is not managed by
- platform firmware
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:RADEON and AMDGPU DRM DRIVERS" 
-        <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 12:21 PM Kai-Heng Feng
-<kai.heng.feng@canonical.com> wrote:
->
->
->
-> > On Sep 1, 2020, at 22:19, Alex Deucher <alexdeucher@gmail.com> wrote:
-> >
-> > On Tue, Sep 1, 2020 at 3:32 AM Kai-Heng Feng
-> > <kai.heng.feng@canonical.com> wrote:
-> >>
-> >> Suspend with s2idle or by the following steps cause screen frozen:
-> >> # echo devices > /sys/power/pm_test
-> >> # echo freeze > /sys/power/mem
-> >>
-> >> [  289.625461] [drm:uvd_v1_0_ib_test [radeon]] *ERROR* radeon: fence wait timed out.
-> >> [  289.625494] [drm:radeon_ib_ring_tests [radeon]] *ERROR* radeon: failed testing IB on ring 5 (-110).
-> >>
-> >> The issue doesn't happen on traditional S3, probably because firmware or
-> >> hardware provides extra power management.
-> >>
-> >> Inspired by Daniel Drake's patch [1] on amdgpu, using a similar approach
-> >> can fix the issue.
-> >
-> > It doesn't actually fix the issue.  The device is never powered down
-> > so you are using more power than you would if you did not suspend in
-> > the first place.  The reset just works around the fact that the device
-> > is never powered down.
->
-> So how do we properly suspend/resume the device without help from platform firmware?
+From: Jason Baron <jbaron@akamai.com>
 
-I guess you don't?
+[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
 
-Alex
+The Intel uncore driver may claim some of the pci ids from ie31200 which
+means that the ie31200 edac driver will not initialize them as part of
+pci_register_driver().
+
+Let's add a fallback for this case to 'pci_get_device()' to get a
+reference on the device such that it can still be configured. This is
+similar in approach to other edac drivers.
+
+Signed-off-by: Jason Baron <jbaron@akamai.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: linux-edac <linux-edac@vger.kernel.org>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
+ 1 file changed, 47 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
+index d26300f9cb07d..9be43b4f9c506 100644
+--- a/drivers/edac/ie31200_edac.c
++++ b/drivers/edac/ie31200_edac.c
+@@ -170,6 +170,8 @@
+ 	(n << (28 + (2 * skl) - PAGE_SHIFT))
+ 
+ static int nr_channels;
++static struct pci_dev *mci_pdev;
++static int ie31200_registered = 1;
+ 
+ struct ie31200_priv {
+ 	void __iomem *window;
+@@ -541,12 +543,16 @@ fail_free:
+ static int ie31200_init_one(struct pci_dev *pdev,
+ 			    const struct pci_device_id *ent)
+ {
+-	edac_dbg(0, "MC:\n");
++	int rc;
+ 
++	edac_dbg(0, "MC:\n");
+ 	if (pci_enable_device(pdev) < 0)
+ 		return -EIO;
++	rc = ie31200_probe1(pdev, ent->driver_data);
++	if (rc == 0 && !mci_pdev)
++		mci_pdev = pci_dev_get(pdev);
+ 
+-	return ie31200_probe1(pdev, ent->driver_data);
++	return rc;
+ }
+ 
+ static void ie31200_remove_one(struct pci_dev *pdev)
+@@ -555,6 +561,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
+ 	struct ie31200_priv *priv;
+ 
+ 	edac_dbg(0, "\n");
++	pci_dev_put(mci_pdev);
++	mci_pdev = NULL;
+ 	mci = edac_mc_del_mc(&pdev->dev);
+ 	if (!mci)
+ 		return;
+@@ -596,17 +604,53 @@ static struct pci_driver ie31200_driver = {
+ 
+ static int __init ie31200_init(void)
+ {
++	int pci_rc, i;
++
+ 	edac_dbg(3, "MC:\n");
+ 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
+ 	opstate_init();
+ 
+-	return pci_register_driver(&ie31200_driver);
++	pci_rc = pci_register_driver(&ie31200_driver);
++	if (pci_rc < 0)
++		goto fail0;
++
++	if (!mci_pdev) {
++		ie31200_registered = 0;
++		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
++			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
++						  ie31200_pci_tbl[i].device,
++						  NULL);
++			if (mci_pdev)
++				break;
++		}
++		if (!mci_pdev) {
++			edac_dbg(0, "ie31200 pci_get_device fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
++		if (pci_rc < 0) {
++			edac_dbg(0, "ie31200 init fail\n");
++			pci_rc = -ENODEV;
++			goto fail1;
++		}
++	}
++	return 0;
++
++fail1:
++	pci_unregister_driver(&ie31200_driver);
++fail0:
++	pci_dev_put(mci_pdev);
++
++	return pci_rc;
+ }
+ 
+ static void __exit ie31200_exit(void)
+ {
+ 	edac_dbg(3, "MC:\n");
+ 	pci_unregister_driver(&ie31200_driver);
++	if (!ie31200_registered)
++		ie31200_remove_one(mci_pdev);
+ }
+ 
+ module_init(ie31200_init);
+-- 
+2.25.1
 
 
->
-> Kai-Heng
->
-> >
-> > Alex
-> >
-> >>
-> >> [1] https://patchwork.freedesktop.org/patch/335839/
-> >>
-> >> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> >> ---
-> >> drivers/gpu/drm/radeon/radeon_device.c | 3 +++
-> >> 1 file changed, 3 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/radeon/radeon_device.c b/drivers/gpu/drm/radeon/radeon_device.c
-> >> index 266e3cbbd09b..df823b9ad79f 100644
-> >> --- a/drivers/gpu/drm/radeon/radeon_device.c
-> >> +++ b/drivers/gpu/drm/radeon/radeon_device.c
-> >> @@ -33,6 +33,7 @@
-> >> #include <linux/slab.h>
-> >> #include <linux/vga_switcheroo.h>
-> >> #include <linux/vgaarb.h>
-> >> +#include <linux/suspend.h>
-> >>
-> >> #include <drm/drm_cache.h>
-> >> #include <drm/drm_crtc_helper.h>
-> >> @@ -1643,6 +1644,8 @@ int radeon_suspend_kms(struct drm_device *dev, bool suspend,
-> >>                rdev->asic->asic_reset(rdev, true);
-> >>                pci_restore_state(dev->pdev);
-> >>        } else if (suspend) {
-> >> +               if (pm_suspend_no_platform())
-> >> +                       rdev->asic->asic_reset(rdev, true);
-> >>                /* Shut down the device */
-> >>                pci_disable_device(dev->pdev);
-> >>                pci_set_power_state(dev->pdev, PCI_D3hot);
-> >> --
-> >> 2.17.1
-> >>
-> >> _______________________________________________
-> >> dri-devel mailing list
-> >> dri-devel@lists.freedesktop.org
-> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+
