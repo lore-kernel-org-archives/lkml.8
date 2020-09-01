@@ -2,118 +2,105 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1038EC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6C2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBBE820767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C47206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:58:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EtaFk03t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726821AbgIALY5 (ORCPT
+        id S1728409AbgIAO6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:24:57 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:47606 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726285AbgIALTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:19:50 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5F488E04F8117BC3CBA4;
-        Tue,  1 Sep 2020 19:17:07 +0800 (CST)
-Received: from localhost.localdomain (10.69.192.58) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 1 Sep 2020 19:17:00 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <jejb@linux.vnet.ibm.com>, <martin.petersen@oracle.com>
-CC:     <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-scsi@vger.kernel.org>, Luo Jiaxing <luojiaxing@huawei.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH 8/8] scsi: hisi_sas: Some very minor tidying
-Date:   Tue, 1 Sep 2020 19:13:10 +0800
-Message-ID: <1598958790-232272-9-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1598958790-232272-1-git-send-email-john.garry@huawei.com>
-References: <1598958790-232272-1-git-send-email-john.garry@huawei.com>
+        Tue, 1 Sep 2020 10:58:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726895AbgIAO54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:57:56 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C6EC061244;
+        Tue,  1 Sep 2020 07:57:56 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id w20so1566379iom.1;
+        Tue, 01 Sep 2020 07:57:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yRdwCQYWLWUYD6ZttodlfuSxdtjBUQxn+XNGerSDtP8=;
+        b=EtaFk03tzFwc5tMH+rsxUSik8g5VJPPMvtx7M/eykf/pdLY84+Saka4JNpUYX9rEd7
+         Q5LAlX/krsv7FtUzuQB6zcJyGR8HeC10zgYf80u762uJ2yDTmoV9SVvy1F3HShRYJ6yI
+         akO9VdSeu+H6SkRmw0bPOoNuCRmagy+KkAX2ba/EcIIiify1pZfjY4HjMClyKRZ521FP
+         Rp96phfXdtEnDyfl0anZeHOyft166Eu+XarYvgsxxCLkhtHUjG7tje//NFOGEtHFfa6a
+         lgklnX6QB9+fyJnjD/CLQbNIPfrA9TfTybR6mIJMx6gREgzej+ZQ6JwkZtf1eMe+5use
+         NFXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yRdwCQYWLWUYD6ZttodlfuSxdtjBUQxn+XNGerSDtP8=;
+        b=h1Mb/HPvCuYKDpCjG4RfMsDLOYc57AwBswCgjdLwjzf9nLDmwKsRsus31DjKOhNQZq
+         lAk1b/sLMe82UiIKg3O3IOApPmH7RKGS5BTvaqZKzKvsia7AInEVQbGAZHPFr5Sbaxj2
+         UwC6qSGWEXkVj75BCzfWUaAp2B0zkTlF/Zbp2exlKhYyWCqy/1N+z7Wgk1GpvRFWK7SH
+         CPURVTcWvPx/a5uJrD9QNy8gK5LujytplfxYMHH4JYNAirzkx+/QPwzR2yvqJJO8m5Hh
+         kT1dE06g+/3lvQFxF92Txz1VrC9hOW2BsyZiGUbvCQ82PYGzCM2mZNUBUmWpZK70yqI3
+         X0sQ==
+X-Gm-Message-State: AOAM530rNSsidg5vbA8zwKf9l33jbHZe2ulVqYLhK6IyQHewj6cein2w
+        ua8F4PcR0xXqNaIGbkYO7Nk=
+X-Google-Smtp-Source: ABdhPJz5bVWB/XcnZwbiI+pPNVRovMYhKxzkM0mN3BvGS5MXTNMu9yOT9AnUL2uMpI21paadlqf3kg==
+X-Received: by 2002:a05:6602:1589:: with SMTP id e9mr1746626iow.85.1598972275182;
+        Tue, 01 Sep 2020 07:57:55 -0700 (PDT)
+Received: from Davids-MacBook-Pro.local ([2601:282:803:7700:883e:eb9e:60a1:7cfb])
+        by smtp.googlemail.com with ESMTPSA id u25sm633459iob.51.2020.09.01.07.57.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 07:57:54 -0700 (PDT)
+Subject: Re: [PATCH] net: ipv6: fix __rt6_purge_dflt_routers when forwarding
+ is not set on all ifaces
+To:     Eric Dumazet <edumazet@google.com>,
+        Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        David Ahern <dsa@cumulusnetworks.com>
+References: <20200901065758.1141786-1-brianvv@google.com>
+ <CANn89iKA5Ut4AcZfsZi3bVpE33_pqgO=E1RhBzePUeBDn6gznQ@mail.gmail.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <52832405-fa37-38fb-b8fb-d7bd7a0d1d52@gmail.com>
+Date:   Tue, 1 Sep 2020 08:57:53 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.69.192.58]
-X-CFilter-Loop: Reflected
+In-Reply-To: <CANn89iKA5Ut4AcZfsZi3bVpE33_pqgO=E1RhBzePUeBDn6gznQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luo Jiaxing <luojiaxing@huawei.com>
+On 9/1/20 1:56 AM, Eric Dumazet wrote:
+> On Tue, Sep 1, 2020 at 8:58 AM Brian Vazquez <brianvv@google.com> wrote:
+>>
+>> The problem is exposed when the system has multiple ifaces and
+>> forwarding is enabled on a subset of them, __rt6_purge_dflt_routers will
+>> clean the default route on all the ifaces which is not desired.
+>>
+>> This patches fixes that by cleaning only the routes where the iface has
+>> forwarding enabled.
+>>
+>> Fixes: 830218c1add1 ("net: ipv6: Fix processing of RAs in presence of VRF")
 
-We found an extra blank line at the end of some functions, so delete them.
+are you sure that is a Fixes tag for this problem? looking at that
+change it only handles RA for tables beyond the main table; it does not
+change the logic of how many or which routes are purged.
 
-And add spaces around some operators.
 
-Signed-off-by: Luo Jiaxing <luojiaxing@huawei.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- drivers/scsi/hisi_sas/hisi_sas_main.c  | 1 -
- drivers/scsi/hisi_sas/hisi_sas_v2_hw.c | 2 +-
- drivers/scsi/hisi_sas/hisi_sas_v3_hw.c | 4 +---
- 3 files changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_main.c b/drivers/scsi/hisi_sas/hisi_sas_main.c
-index f5ad8e662b4b..f18452942508 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_main.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_main.c
-@@ -1430,7 +1430,6 @@ static void hisi_sas_rescan_topology(struct hisi_hba *hisi_hba, u32 state)
- 		} else {
- 			hisi_sas_phy_down(hisi_hba, phy_no, 0);
- 		}
--
- 	}
- }
- 
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-index 68d07a4f8422..b57177b52fac 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v2_hw.c
-@@ -1202,7 +1202,7 @@ static void init_reg_v2_hw(struct hisi_hba *hisi_hba)
- 	hisi_sas_write32(hisi_hba, ENT_INT_SRC_MSK3, 0x7ffe20fe);
- 	hisi_sas_write32(hisi_hba, SAS_ECC_INTR_MSK, 0xfff00c30);
- 	for (i = 0; i < hisi_hba->queue_count; i++)
--		hisi_sas_write32(hisi_hba, OQ0_INT_SRC_MSK+0x4*i, 0);
-+		hisi_sas_write32(hisi_hba, OQ0_INT_SRC_MSK + 0x4 * i, 0);
- 
- 	hisi_sas_write32(hisi_hba, AXI_AHB_CLK_CFG, 1);
- 	hisi_sas_write32(hisi_hba, HYPER_STREAM_ID_EN_CFG, 1);
-diff --git a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-index 397846388e85..87bda037303f 100644
---- a/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-+++ b/drivers/scsi/hisi_sas/hisi_sas_v3_hw.c
-@@ -596,7 +596,7 @@ static void init_reg_v3_hw(struct hisi_hba *hisi_hba)
- 	hisi_sas_write32(hisi_hba, AWQOS_AWCACHE_CFG, 0xf0f0);
- 	hisi_sas_write32(hisi_hba, ARQOS_ARCACHE_CFG, 0xf0f0);
- 	for (i = 0; i < hisi_hba->queue_count; i++)
--		hisi_sas_write32(hisi_hba, OQ0_INT_SRC_MSK+0x4*i, 0);
-+		hisi_sas_write32(hisi_hba, OQ0_INT_SRC_MSK + 0x4 * i, 0);
- 
- 	hisi_sas_write32(hisi_hba, HYPER_STREAM_ID_EN_CFG, 1);
- 
-@@ -1350,7 +1350,6 @@ static void prep_smp_v3_hw(struct hisi_hba *hisi_hba,
- 
- 	hdr->cmd_table_addr = cpu_to_le64(req_dma_addr);
- 	hdr->sts_buffer_addr = cpu_to_le64(hisi_sas_status_buf_addr_dma(slot));
--
- }
- 
- static void prep_ata_v3_hw(struct hisi_hba *hisi_hba,
-@@ -1456,7 +1455,6 @@ static void prep_abort_v3_hw(struct hisi_hba *hisi_hba,
- 	/* dw7 */
- 	hdr->dw7 = cpu_to_le32(tag_to_abort << CMD_HDR_ABORT_IPTT_OFF);
- 	hdr->transfer_tags = cpu_to_le32(slot->idx);
--
- }
- 
- static irqreturn_t phy_up_v3_hw(int phy_no, struct hisi_hba *hisi_hba)
--- 
-2.26.2
 
