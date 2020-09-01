@@ -2,402 +2,175 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDA7C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB621C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DB76206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98AE8206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="unGvG35L";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YaIsotXc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BkBIHA6i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbgIAL4u (ORCPT
+        id S1728117AbgIAMuS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:56:50 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39616 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727846AbgIALs2 (ORCPT
+        Tue, 1 Sep 2020 08:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49418 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727961AbgIAL4u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:48:28 -0400
-Date:   Tue, 01 Sep 2020 11:48:02 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598960883;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KFHR+ta88NnmCU84iaUrVoWbZ58Nhek/uundEV0X+mo=;
-        b=unGvG35LKmS4904Uj2hBMbcx06qxVoPUZzCaYDceBlvfIjjUTcWucB0DhFJWhRombewBW5
-        ++sZBdNeXTctV+Y9r2h0XzfsIWSoub1BtV9YeiAXmgSgBmyPcqP7j7MHOFRNInd5d4nJYV
-        SA6UkK8pEXJVJR86tjlHIWVsJW0BjFXFp6YugIsU2MgurW8rxwNgN3+mtdqIbiQxB33eev
-        Gkleok8J0VTh0q9QgbxLc91XqTCMATiJV29FHEpjigtVrfx8+J+0NRp7KDq90lVXn7by+h
-        TyAEc2g1ylXyKuP1DPCRDnXx2CC3iQYEu+bYURqG+VxU9SJwdw0csb2zDQh/SA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598960883;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KFHR+ta88NnmCU84iaUrVoWbZ58Nhek/uundEV0X+mo=;
-        b=YaIsotXcdyRvfVMXRg0s0US3HkjIoVGFanKI9S42QrIcBhTzEDHycOWlVvQZM1HRbF7A62
-        n8L/tL+9GeP1CwCg==
-From:   "tip-bot2 for Steven Rostedt (VMware)" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/static_call] tracepoint: Optimize using static_call()
-Cc:     "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200818135805.279421092@infradead.org>
-References: <20200818135805.279421092@infradead.org>
-MIME-Version: 1.0
-Message-ID: <159896088242.20229.6639521579536854409.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+        Tue, 1 Sep 2020 07:56:50 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3BC4C061246;
+        Tue,  1 Sep 2020 04:56:32 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id mm21so501855pjb.4;
+        Tue, 01 Sep 2020 04:56:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=6PscAPz6fJLdJCbTjR01ipVe7lAs+7UBRAQ+T/hUa/I=;
+        b=BkBIHA6iylmK2/Gte+vvVSLgPmncidY9zzYNBNG9P3Qahsca2Doj2FbECMoQQX8tWC
+         kHN6QBfedZ2llxGqOk3xexWi9gDsBYGSIlttQh6U3BtFenZMjtI3pQCriJRMBXVdaWmV
+         gfsuodcbx8HwM24s4+LNhbpJiR59MTuaV8FEcBFh6UaglAoIsTT6OKKLhQBtIQ3JD/+Y
+         8YUE+9c6RXwqzy+Ss0l8EDBEQRTAsBqyss7SwHOrOyrNhMFqLupV/vc6G4XX37eUVPWu
+         da0MAMdVWuvOTP13pdBw6g7Q23xlDByXOzE1K0AvHVu6sRZXjZZfZOda0igPAX/njBDj
+         FkcA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=6PscAPz6fJLdJCbTjR01ipVe7lAs+7UBRAQ+T/hUa/I=;
+        b=FN1hDaB2MuxM/XQwDR8xH80dx7gYJgIii9zaqKJep62iurPBhrlztyQ4iKS3D/3uh4
+         03Dp5denaHmOmwt/lhLAb+eH2s0hJ8NUIE5UE8xhDnIy4sBikT+MCjPkBktXAHqkFhq5
+         jkAHtP0exy5JzogWSWAXtROVwmUVMsEcgMRkNQERCm2dRhouHCWWI/6hMRo75nnqJa/y
+         99WcGgOJmG9lWyOMOdGq/gz3vigW57I+cObhu9W0LrM0Vd7QDGSFg8FAHb0JF0E6S+eH
+         4sa83Eh5WQuynsnGosSDVZM42+l8nXFeZ5UhkmUpnaJXyO/ahah/+EjKCXkVPNNKRqcc
+         XnPw==
+X-Gm-Message-State: AOAM533RnW53V8oEjoPA4Z2YtHotQ2eMphVgLWDfS3A+d+tK4OjnxkH2
+        Io9TkdnxrkLwEqM098qIn48=
+X-Google-Smtp-Source: ABdhPJyyX1YalBgcnSdcnKVOeaXxXVMHVXACebJC7SOJGm7YpRRxC5ouTKV6Ni+uKIPsId1VUyrK+w==
+X-Received: by 2002:a17:90a:5216:: with SMTP id v22mr1225391pjh.97.1598961392461;
+        Tue, 01 Sep 2020 04:56:32 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.65])
+        by smtp.gmail.com with ESMTPSA id 31sm931534pgo.17.2020.09.01.04.56.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 04:56:32 -0700 (PDT)
+From:   yulei.kernel@gmail.com
+X-Google-Original-From: yuleixzhang@tencent.com
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        junaids@google.com, bgardon@google.com, vkuznets@redhat.com,
+        xiaoguangrong.eric@gmail.com, kernellwp@gmail.com,
+        lihaiwei.kernel@gmail.com, Yulei Zhang <yuleixzhang@tencent.com>
+Subject: [RFC V2 8/9] Introduce kvm module parameter global_tdp to turn on the direct build EPT mode
+Date:   Tue,  1 Sep 2020 19:57:11 +0800
+Message-Id: <1c628ce7f4f068fccfaafdf1e2d30b96753ff370.1598868204.git.yulei.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1598868203.git.yulei.kernel@gmail.com>
+References: <cover.1598868203.git.yulei.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/static_call branch of tip:
+From: Yulei Zhang <yuleixzhang@tencent.com>
 
-Commit-ID:     d25e37d89dd2f41d7acae0429039d2f0ae8b4a07
-Gitweb:        https://git.kernel.org/tip/d25e37d89dd2f41d7acae0429039d2f0ae8b4a07
-Author:        Steven Rostedt (VMware) <rostedt@goodmis.org>
-AuthorDate:    Tue, 18 Aug 2020 15:57:52 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Sep 2020 09:58:06 +02:00
+Currently global_tdp is only supported on intel X86 system with ept
+supported, and it will turn off the smm mode when enable global_tdp.
 
-tracepoint: Optimize using static_call()
-
-Currently the tracepoint site will iterate a vector and issue indirect
-calls to however many handlers are registered (ie. the vector is
-long).
-
-Using static_call() it is possible to optimize this for the common
-case of only having a single handler registered. In this case the
-static_call() can directly call this handler. Otherwise, if the vector
-is longer than 1, call a function that iterates the whole vector like
-the current code.
-
-[peterz: updated to new interface]
-
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20200818135805.279421092@infradead.org
+Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
 ---
- include/linux/tracepoint-defs.h |  5 ++-
- include/linux/tracepoint.h      | 86 ++++++++++++++++++++++----------
- include/trace/define_trace.h    | 14 ++---
- kernel/tracepoint.c             | 25 +++++++--
- 4 files changed, 94 insertions(+), 36 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  4 ++++
+ arch/x86/kvm/mmu/mmu.c          |  5 ++++-
+ arch/x86/kvm/x86.c              | 11 ++++++++++-
+ 3 files changed, 18 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/tracepoint-defs.h b/include/linux/tracepoint-defs.h
-index b29950a..de97450 100644
---- a/include/linux/tracepoint-defs.h
-+++ b/include/linux/tracepoint-defs.h
-@@ -11,6 +11,8 @@
- #include <linux/atomic.h>
- #include <linux/static_key.h>
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 429a50c89268..330cb254b34b 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1357,6 +1357,8 @@ extern u64  kvm_default_tsc_scaling_ratio;
  
-+struct static_call_key;
-+
- struct trace_print_flags {
- 	unsigned long		mask;
- 	const char		*name;
-@@ -30,6 +32,9 @@ struct tracepoint_func {
- struct tracepoint {
- 	const char *name;		/* Tracepoint name */
- 	struct static_key key;
-+	struct static_call_key *static_call_key;
-+	void *static_call_tramp;
-+	void *iterator;
- 	int (*regfunc)(void);
- 	void (*unregfunc)(void);
- 	struct tracepoint_func __rcu *funcs;
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 598fec9..3722a10 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -19,6 +19,7 @@
- #include <linux/cpumask.h>
- #include <linux/rcupdate.h>
- #include <linux/tracepoint-defs.h>
-+#include <linux/static_call.h>
+ extern u64 kvm_mce_cap_supported;
  
- struct module;
- struct tracepoint;
-@@ -92,7 +93,9 @@ extern int syscall_regfunc(void);
- extern void syscall_unregfunc(void);
- #endif /* CONFIG_HAVE_SYSCALL_TRACEPOINTS */
- 
-+#ifndef PARAMS
- #define PARAMS(args...) args
-+#endif
- 
- #define TRACE_DEFINE_ENUM(x)
- #define TRACE_DEFINE_SIZEOF(x)
-@@ -148,6 +151,12 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 
- #ifdef TRACEPOINTS_ENABLED
- 
-+#ifdef CONFIG_HAVE_STATIC_CALL
-+#define __DO_TRACE_CALL(name)	static_call(tp_func_##name)
-+#else
-+#define __DO_TRACE_CALL(name)	__tracepoint_iter_##name
-+#endif /* CONFIG_HAVE_STATIC_CALL */
++extern bool global_tdp;
 +
  /*
-  * it_func[0] is never NULL because there is at least one element in the array
-  * when the array itself is non NULL.
-@@ -157,12 +166,11 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-  * has a "void" prototype, then it is invalid to declare a function
-  * as "(void *, void)".
-  */
--#define __DO_TRACE(tp, proto, args, cond, rcuidle)			\
-+#define __DO_TRACE(name, proto, args, cond, rcuidle)			\
- 	do {								\
- 		struct tracepoint_func *it_func_ptr;			\
--		void *it_func;						\
--		void *__data;						\
- 		int __maybe_unused __idx = 0;				\
-+		void *__data;						\
- 									\
- 		if (!(cond))						\
- 			return;						\
-@@ -182,14 +190,11 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 			rcu_irq_enter_irqson();				\
- 		}							\
- 									\
--		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
--									\
-+		it_func_ptr =						\
-+			rcu_dereference_raw((&__tracepoint_##name)->funcs); \
- 		if (it_func_ptr) {					\
--			do {						\
--				it_func = (it_func_ptr)->func;		\
--				__data = (it_func_ptr)->data;		\
--				((void(*)(proto))(it_func))(args);	\
--			} while ((++it_func_ptr)->func);		\
-+			__data = (it_func_ptr)->data;			\
-+			__DO_TRACE_CALL(name)(args);			\
- 		}							\
- 									\
- 		if (rcuidle) {						\
-@@ -205,7 +210,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 	static inline void trace_##name##_rcuidle(proto)		\
- 	{								\
- 		if (static_key_false(&__tracepoint_##name.key))		\
--			__DO_TRACE(&__tracepoint_##name,		\
-+			__DO_TRACE(name,				\
- 				TP_PROTO(data_proto),			\
- 				TP_ARGS(data_args),			\
- 				TP_CONDITION(cond), 1);			\
-@@ -227,11 +232,13 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-  * poking RCU a bit.
-  */
- #define __DECLARE_TRACE(name, proto, args, cond, data_proto, data_args) \
-+	extern int __tracepoint_iter_##name(data_proto);		\
-+	DECLARE_STATIC_CALL(tp_func_##name, __tracepoint_iter_##name); \
- 	extern struct tracepoint __tracepoint_##name;			\
- 	static inline void trace_##name(proto)				\
- 	{								\
- 		if (static_key_false(&__tracepoint_##name.key))		\
--			__DO_TRACE(&__tracepoint_##name,		\
-+			__DO_TRACE(name,				\
- 				TP_PROTO(data_proto),			\
- 				TP_ARGS(data_args),			\
- 				TP_CONDITION(cond), 0);			\
-@@ -277,21 +284,50 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
-  * structures, so we create an array of pointers that will be used for iteration
-  * on the tracepoints.
-  */
--#define DEFINE_TRACE_FN(name, reg, unreg)				 \
--	static const char __tpstrtab_##name[]				 \
--	__section(__tracepoints_strings) = #name;			 \
--	struct tracepoint __tracepoint_##name __used			 \
--	__section(__tracepoints) =					 \
--		{ __tpstrtab_##name, STATIC_KEY_INIT_FALSE, reg, unreg, NULL };\
--	__TRACEPOINT_ENTRY(name);
-+#define DEFINE_TRACE_FN(_name, _reg, _unreg, proto, args)		\
-+	static const char __tpstrtab_##_name[]				\
-+	__section(__tracepoints_strings) = #_name;			\
-+	extern struct static_call_key STATIC_CALL_KEY(tp_func_##_name);	\
-+	int __tracepoint_iter_##_name(void *__data, proto);		\
-+	struct tracepoint __tracepoint_##_name	__used			\
-+	__section(__tracepoints) = {					\
-+		.name = __tpstrtab_##_name,				\
-+		.key = STATIC_KEY_INIT_FALSE,				\
-+		.static_call_key = &STATIC_CALL_KEY(tp_func_##_name),	\
-+		.static_call_tramp = STATIC_CALL_TRAMP_ADDR(tp_func_##_name), \
-+		.iterator = &__tracepoint_iter_##_name,			\
-+		.regfunc = _reg,					\
-+		.unregfunc = _unreg,					\
-+		.funcs = NULL };					\
-+	__TRACEPOINT_ENTRY(_name);					\
-+	int __tracepoint_iter_##_name(void *__data, proto)		\
-+	{								\
-+		struct tracepoint_func *it_func_ptr;			\
-+		void *it_func;						\
-+									\
-+		it_func_ptr =						\
-+			rcu_dereference_raw((&__tracepoint_##_name)->funcs); \
-+		do {							\
-+			it_func = (it_func_ptr)->func;			\
-+			__data = (it_func_ptr)->data;			\
-+			((void(*)(void *, proto))(it_func))(__data, args); \
-+		} while ((++it_func_ptr)->func);			\
-+		return 0;						\
-+	}								\
-+	DEFINE_STATIC_CALL(tp_func_##_name, __tracepoint_iter_##_name);
- 
--#define DEFINE_TRACE(name)						\
--	DEFINE_TRACE_FN(name, NULL, NULL);
-+#define DEFINE_TRACE(name, proto, args)		\
-+	DEFINE_TRACE_FN(name, NULL, NULL, PARAMS(proto), PARAMS(args));
- 
- #define EXPORT_TRACEPOINT_SYMBOL_GPL(name)				\
--	EXPORT_SYMBOL_GPL(__tracepoint_##name)
-+	EXPORT_SYMBOL_GPL(__tracepoint_##name);				\
-+	EXPORT_SYMBOL_GPL(__tracepoint_iter_##name);			\
-+	EXPORT_STATIC_CALL_GPL(tp_func_##name)
- #define EXPORT_TRACEPOINT_SYMBOL(name)					\
--	EXPORT_SYMBOL(__tracepoint_##name)
-+	EXPORT_SYMBOL(__tracepoint_##name);				\
-+	EXPORT_SYMBOL(__tracepoint_iter_##name);			\
-+	EXPORT_STATIC_CALL(tp_func_##name)
-+
- 
- #else /* !TRACEPOINTS_ENABLED */
- #define __DECLARE_TRACE(name, proto, args, cond, data_proto, data_args) \
-@@ -320,8 +356,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		return false;						\
- 	}
- 
--#define DEFINE_TRACE_FN(name, reg, unreg)
--#define DEFINE_TRACE(name)
-+#define DEFINE_TRACE_FN(name, reg, unreg, proto, args)
-+#define DEFINE_TRACE(name, proto, args)
- #define EXPORT_TRACEPOINT_SYMBOL_GPL(name)
- #define EXPORT_TRACEPOINT_SYMBOL(name)
- 
-diff --git a/include/trace/define_trace.h b/include/trace/define_trace.h
-index bd75f97..0072393 100644
---- a/include/trace/define_trace.h
-+++ b/include/trace/define_trace.h
-@@ -25,7 +25,7 @@
- 
- #undef TRACE_EVENT
- #define TRACE_EVENT(name, proto, args, tstruct, assign, print)	\
--	DEFINE_TRACE(name)
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- #undef TRACE_EVENT_CONDITION
- #define TRACE_EVENT_CONDITION(name, proto, args, cond, tstruct, assign, print) \
-@@ -39,12 +39,12 @@
- #undef TRACE_EVENT_FN
- #define TRACE_EVENT_FN(name, proto, args, tstruct,		\
- 		assign, print, reg, unreg)			\
--	DEFINE_TRACE_FN(name, reg, unreg)
-+	DEFINE_TRACE_FN(name, reg, unreg, PARAMS(proto), PARAMS(args))
- 
- #undef TRACE_EVENT_FN_COND
- #define TRACE_EVENT_FN_COND(name, proto, args, cond, tstruct,		\
- 		assign, print, reg, unreg)			\
--	DEFINE_TRACE_FN(name, reg, unreg)
-+	DEFINE_TRACE_FN(name, reg, unreg, PARAMS(proto), PARAMS(args))
- 
- #undef TRACE_EVENT_NOP
- #define TRACE_EVENT_NOP(name, proto, args, struct, assign, print)
-@@ -54,15 +54,15 @@
- 
- #undef DEFINE_EVENT
- #define DEFINE_EVENT(template, name, proto, args) \
--	DEFINE_TRACE(name)
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- #undef DEFINE_EVENT_FN
- #define DEFINE_EVENT_FN(template, name, proto, args, reg, unreg) \
--	DEFINE_TRACE_FN(name, reg, unreg)
-+	DEFINE_TRACE_FN(name, reg, unreg, PARAMS(proto), PARAMS(args))
- 
- #undef DEFINE_EVENT_PRINT
- #define DEFINE_EVENT_PRINT(template, name, proto, args, print)	\
--	DEFINE_TRACE(name)
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- #undef DEFINE_EVENT_CONDITION
- #define DEFINE_EVENT_CONDITION(template, name, proto, args, cond) \
-@@ -70,7 +70,7 @@
- 
- #undef DECLARE_TRACE
- #define DECLARE_TRACE(name, proto, args)	\
--	DEFINE_TRACE(name)
-+	DEFINE_TRACE(name, PARAMS(proto), PARAMS(args))
- 
- #undef TRACE_INCLUDE
- #undef __TRACE_INCLUDE
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 8e05ed2..e92f3fb 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -221,6 +221,20 @@ static void *func_remove(struct tracepoint_func **funcs,
- 	return old;
+  * EMULTYPE_NO_DECODE - Set when re-emulating an instruction (after completing
+  *			userspace I/O) to indicate that the emulation context
+@@ -1689,6 +1691,8 @@ static inline int kvm_cpu_get_apicid(int mps_cpu)
+ #endif
  }
  
-+static void tracepoint_update_call(struct tracepoint *tp, struct tracepoint_func *tp_funcs)
-+{
-+	void *func = tp->iterator;
++inline bool boot_cpu_is_amd(void);
 +
-+	/* Synthetic events do not have static call sites */
-+	if (!tp->static_call_key)
-+		return;
-+
-+	if (!tp_funcs[1].func)
-+		func = tp_funcs[0].func;
-+
-+	__static_call_update(tp->static_call_key, tp->static_call_tramp, func);
-+}
-+
- /*
-  * Add the probe function to a tracepoint.
-  */
-@@ -251,8 +265,9 @@ static int tracepoint_add_func(struct tracepoint *tp,
- 	 * include/linux/tracepoint.h using rcu_dereference_sched().
- 	 */
- 	rcu_assign_pointer(tp->funcs, tp_funcs);
--	if (!static_key_enabled(&tp->key))
--		static_key_slow_inc(&tp->key);
-+	tracepoint_update_call(tp, tp_funcs);
-+	static_key_enable(&tp->key);
-+
- 	release_probes(old);
- 	return 0;
- }
-@@ -281,9 +296,11 @@ static int tracepoint_remove_func(struct tracepoint *tp,
- 		if (tp->unregfunc && static_key_enabled(&tp->key))
- 			tp->unregfunc();
+ #define put_smstate(type, buf, offset, val)                      \
+ 	*(type *)((buf) + (offset) - 0x7e00) = val
  
--		if (static_key_enabled(&tp->key))
--			static_key_slow_dec(&tp->key);
-+		static_key_disable(&tp->key);
-+	} else {
-+		tracepoint_update_call(tp, tp_funcs);
- 	}
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index f03bf8efcefe..6639d9c7012e 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4573,7 +4573,7 @@ reset_shadow_zero_bits_mask(struct kvm_vcpu *vcpu, struct kvm_mmu *context)
+ }
+ EXPORT_SYMBOL_GPL(reset_shadow_zero_bits_mask);
+ 
+-static inline bool boot_cpu_is_amd(void)
++inline bool boot_cpu_is_amd(void)
+ {
+ 	WARN_ON_ONCE(!tdp_enabled);
+ 	return shadow_x_mask == 0;
+@@ -6497,6 +6497,9 @@ int kvm_direct_tdp_populate_page_table(struct kvm *kvm, struct kvm_memory_slot *
+ 	kvm_pfn_t pfn;
+ 	int host_level;
+ 
++	if (!global_tdp)
++		return 0;
 +
- 	rcu_assign_pointer(tp->funcs, tp_funcs);
- 	release_probes(old);
- 	return 0;
+ 	if (!kvm->arch.global_root_hpa) {
+ 		struct page *page;
+ 		WARN_ON(!tdp_enabled);
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index ee898003f22f..57d64f3239e1 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -161,6 +161,9 @@ module_param(force_emulation_prefix, bool, S_IRUGO);
+ int __read_mostly pi_inject_timer = -1;
+ module_param(pi_inject_timer, bint, S_IRUGO | S_IWUSR);
+ 
++bool __read_mostly global_tdp;
++module_param_named(global_tdp, global_tdp, bool, S_IRUGO);
++
+ #define KVM_NR_SHARED_MSRS 16
+ 
+ struct kvm_shared_msrs_global {
+@@ -3539,7 +3542,10 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 		 * fringe case that is not enabled except via specific settings
+ 		 * of the module parameters.
+ 		 */
+-		r = kvm_x86_ops.has_emulated_msr(MSR_IA32_SMBASE);
++		if (global_tdp)
++			r = 0;
++		else
++			r = kvm_x86_ops.has_emulated_msr(MSR_IA32_SMBASE);
+ 		break;
+ 	case KVM_CAP_VAPIC:
+ 		r = !kvm_x86_ops.cpu_has_accelerated_tpr();
+@@ -9808,6 +9814,9 @@ int kvm_arch_hardware_setup(void *opaque)
+ 	if (r != 0)
+ 		return r;
+ 
++	if ((tdp_enabled == false) || boot_cpu_is_amd())
++		global_tdp = 0;
++
+ 	memcpy(&kvm_x86_ops, ops->runtime_ops, sizeof(kvm_x86_ops));
+ 
+ 	if (!kvm_cpu_cap_has(X86_FEATURE_XSAVES))
+-- 
+2.17.1
+
