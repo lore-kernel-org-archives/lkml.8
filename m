@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC69CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F53C20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0F720767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979431;
-	bh=EqPliGIz8LkLYmz7yNFkXSKHzPxpvzdAIlvfctSHUJY=;
+	s=default; t=1598979432;
+	bh=wQJh5oefg0jJJ1oQVcAo/I9Wd+i3NyiIy03FoMCF264=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B3VNt+47gAc6cjnA9H3nvDpq9AqWDkYMe1Pc6c0tHg1eMtVePZT5e2QmC0JFPefAI
-	 2DJKJ6JSsgZfzku8IhESL/mlJyY3KZAM+iT9xMY72jvk9iZpWxT2dtxHSSj2zMM+4X
-	 KfvlaFhP9gXqxJoVZQURVTaD6nwYpgopSzNQIDuA=
+	b=RAXOiBttv7wSVasviY294lzj1i1t/qb0YJZdDa9rsRoxyTOn2bGQL3jVdErqTKfYZ
+	 dzFD7f2l2/FNECidmhodJgOjtfV9IFF0RNW330cV7eL8lOlRUZ0nKvHcDRTfT7C+8Z
+	 o+cjqHnz+kaI8FRPd3ZZN7/2lvTvwjWr7N5tucjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729521AbgIAPXe (ORCPT
+        id S1729810AbgIAPXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:23:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41172 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:23:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729635AbgIAPUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:52 -0400
+        id S1729630AbgIAPUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:47 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43F4E206EB;
-        Tue,  1 Sep 2020 15:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 271F820767;
+        Tue,  1 Sep 2020 15:20:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973651;
-        bh=EqPliGIz8LkLYmz7yNFkXSKHzPxpvzdAIlvfctSHUJY=;
+        s=default; t=1598973646;
+        bh=wQJh5oefg0jJJ1oQVcAo/I9Wd+i3NyiIy03FoMCF264=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sKsTbmbZc7FswZl790GhFf3a4S3e15qyxV/GFfmTh3puMvmHWXt6id0yZ/0eKlKQz
-         XHeS5QjstlSUXf4YdteRJTHnF87u4Gw290VXj50TU+dIFKPM9LTpOrsF5/v7M1r4Uf
-         J5FwcN1yo4wIt8JLniKv9LvEzO5ScVDfgDJUcwWo=
+        b=qe/asu1jK/6kwg30tZYWWMdaVLxqOMpTH1WcuqhGFQVXU9Siz9JoRED1LFKUkDf/H
+         mhLDk1mEJINXcyffdvsXNJnkFGo/S2xabyv7o9wLRBO96hsGa0EjOwWUyBenSkwuiY
+         FPgkYw2PpPqRW/N4BcnMolcGojxReibErxL6t56k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Brooke Basile <brookebasile@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>, stable <stable@kernel.org>
-Subject: [PATCH 4.14 84/91] USB: gadget: f_ncm: add bounds checks to ncm_unwrap_ntb()
-Date:   Tue,  1 Sep 2020 17:10:58 +0200
-Message-Id: <20200901150932.342721290@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <mawilcox@microsoft.com>
+Subject: [PATCH 4.14 82/91] overflow.h: Add allocation size calculation helpers
+Date:   Tue,  1 Sep 2020 17:10:56 +0200
+Message-Id: <20200901150932.248573619@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,178 +59,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brooke Basile <brookebasile@gmail.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit 2b74b0a04d3e9f9f08ff026e5663dce88ff94e52 upstream.
+commit 610b15c50e86eb1e4b77274fabcaea29ac72d6a8 upstream.
 
-Some values extracted by ncm_unwrap_ntb() could possibly lead to several
-different out of bounds reads of memory.  Specifically the values passed
-to netdev_alloc_skb_ip_align() need to be checked so that memory is not
-overflowed.
+In preparation for replacing unchecked overflows for memory allocations,
+this creates helpers for the 3 most common calculations:
 
-Resolve this by applying bounds checking to a number of different
-indexes and lengths of the structure parsing logic.
+array_size(a, b): 2-dimensional array
+array3_size(a, b, c): 3-dimensional array
+struct_size(ptr, member, n): struct followed by n-many trailing members
 
-Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-Signed-off-by: Brooke Basile <brookebasile@gmail.com>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@kernel.org>
+Each of these return SIZE_MAX on overflow instead of wrapping around.
+
+(Additionally renames a variable named "array_size" to avoid future
+collision.)
+
+Co-developed-by: Matthew Wilcox <mawilcox@microsoft.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_ncm.c |   81 ++++++++++++++++++++++++++++++------
- 1 file changed, 69 insertions(+), 12 deletions(-)
+ drivers/md/dm-table.c    |   10 +++---
+ include/linux/overflow.h |   73 +++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 78 insertions(+), 5 deletions(-)
 
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -1202,12 +1202,15 @@ static int ncm_unwrap_ntb(struct gether
- 	int		ndp_index;
- 	unsigned	dg_len, dg_len2;
- 	unsigned	ndp_len;
-+	unsigned	block_len;
- 	struct sk_buff	*skb2;
- 	int		ret = -EINVAL;
--	unsigned	max_size = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
-+	unsigned	ntb_max = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
-+	unsigned	frame_max = le16_to_cpu(ecm_desc.wMaxSegmentSize);
- 	const struct ndp_parser_opts *opts = ncm->parser_opts;
- 	unsigned	crc_len = ncm->is_crc ? sizeof(uint32_t) : 0;
- 	int		dgram_counter;
-+	bool		ndp_after_header;
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -547,14 +547,14 @@ static int adjoin(struct dm_table *table
+  * On the other hand, dm-switch needs to process bulk data using messages and
+  * excessive use of GFP_NOIO could cause trouble.
+  */
+-static char **realloc_argv(unsigned *array_size, char **old_argv)
++static char **realloc_argv(unsigned *size, char **old_argv)
+ {
+ 	char **argv;
+ 	unsigned new_size;
+ 	gfp_t gfp;
  
- 	/* dwSignature */
- 	if (get_unaligned_le32(tmp) != opts->nth_sign) {
-@@ -1226,25 +1229,37 @@ static int ncm_unwrap_ntb(struct gether
+-	if (*array_size) {
+-		new_size = *array_size * 2;
++	if (*size) {
++		new_size = *size * 2;
+ 		gfp = GFP_KERNEL;
+ 	} else {
+ 		new_size = 8;
+@@ -562,8 +562,8 @@ static char **realloc_argv(unsigned *arr
  	}
- 	tmp++; /* skip wSequence */
- 
-+	block_len = get_ncm(&tmp, opts->block_length);
- 	/* (d)wBlockLength */
--	if (get_ncm(&tmp, opts->block_length) > max_size) {
-+	if (block_len > ntb_max) {
- 		INFO(port->func.config->cdev, "OUT size exceeded\n");
- 		goto err;
+ 	argv = kmalloc(new_size * sizeof(*argv), gfp);
+ 	if (argv) {
+-		memcpy(argv, old_argv, *array_size * sizeof(*argv));
+-		*array_size = new_size;
++		memcpy(argv, old_argv, *size * sizeof(*argv));
++		*size = new_size;
  	}
  
- 	ndp_index = get_ncm(&tmp, opts->ndp_index);
-+	ndp_after_header = false;
+ 	kfree(old_argv);
+--- a/include/linux/overflow.h
++++ b/include/linux/overflow.h
+@@ -233,4 +233,77 @@
+ 		(*_d >> _to_shift) != _a);				\
+ })
  
- 	/* Run through all the NDP's in the NTB */
- 	do {
--		/* NCM 3.2 */
--		if (((ndp_index % 4) != 0) &&
--				(ndp_index < opts->nth_size)) {
-+		/*
-+		 * NCM 3.2
-+		 * dwNdpIndex
-+		 */
-+		if (((ndp_index % 4) != 0) ||
-+				(ndp_index < opts->nth_size) ||
-+				(ndp_index > (block_len -
-+					      opts->ndp_size))) {
- 			INFO(port->func.config->cdev, "Bad index: %#X\n",
- 			     ndp_index);
- 			goto err;
- 		}
-+		if (ndp_index == opts->nth_size)
-+			ndp_after_header = true;
- 
--		/* walk through NDP */
-+		/*
-+		 * walk through NDP
-+		 * dwSignature
-+		 */
- 		tmp = (void *)(skb->data + ndp_index);
- 		if (get_unaligned_le32(tmp) != ncm->ndp_sign) {
- 			INFO(port->func.config->cdev, "Wrong NDP SIGN\n");
-@@ -1255,14 +1270,15 @@ static int ncm_unwrap_ntb(struct gether
- 		ndp_len = get_unaligned_le16(tmp++);
- 		/*
- 		 * NCM 3.3.1
-+		 * wLength
- 		 * entry is 2 items
- 		 * item size is 16/32 bits, opts->dgram_item_len * 2 bytes
- 		 * minimal: struct usb_cdc_ncm_ndpX + normal entry + zero entry
- 		 * Each entry is a dgram index and a dgram length.
- 		 */
- 		if ((ndp_len < opts->ndp_size
--				+ 2 * 2 * (opts->dgram_item_len * 2))
--				|| (ndp_len % opts->ndplen_align != 0)) {
-+				+ 2 * 2 * (opts->dgram_item_len * 2)) ||
-+				(ndp_len % opts->ndplen_align != 0)) {
- 			INFO(port->func.config->cdev, "Bad NDP length: %#X\n",
- 			     ndp_len);
- 			goto err;
-@@ -1279,8 +1295,21 @@ static int ncm_unwrap_ntb(struct gether
- 
- 		do {
- 			index = index2;
-+			/* wDatagramIndex[0] */
-+			if ((index < opts->nth_size) ||
-+					(index > block_len - opts->dpe_size)) {
-+				INFO(port->func.config->cdev,
-+				     "Bad index: %#X\n", index);
-+				goto err;
-+			}
++/**
++ * array_size() - Calculate size of 2-dimensional array.
++ *
++ * @a: dimension one
++ * @b: dimension two
++ *
++ * Calculates size of 2-dimensional array: @a * @b.
++ *
++ * Returns: number of bytes needed to represent the array or SIZE_MAX on
++ * overflow.
++ */
++static inline __must_check size_t array_size(size_t a, size_t b)
++{
++	size_t bytes;
 +
- 			dg_len = dg_len2;
--			if (dg_len < 14 + crc_len) { /* ethernet hdr + crc */
-+			/*
-+			 * wDatagramLength[0]
-+			 * ethernet hdr + crc or larger than max frame size
-+			 */
-+			if ((dg_len < 14 + crc_len) ||
-+					(dg_len > frame_max)) {
- 				INFO(port->func.config->cdev,
- 				     "Bad dgram length: %#X\n", dg_len);
- 				goto err;
-@@ -1304,6 +1333,37 @@ static int ncm_unwrap_ntb(struct gether
- 			index2 = get_ncm(&tmp, opts->dgram_item_len);
- 			dg_len2 = get_ncm(&tmp, opts->dgram_item_len);
- 
-+			if (index2 == 0 || dg_len2 == 0)
-+				break;
++	if (check_mul_overflow(a, b, &bytes))
++		return SIZE_MAX;
 +
-+			/* wDatagramIndex[1] */
-+			if (ndp_after_header) {
-+				if (index2 < opts->nth_size + opts->ndp_size) {
-+					INFO(port->func.config->cdev,
-+					     "Bad index: %#X\n", index2);
-+					goto err;
-+				}
-+			} else {
-+				if (index2 < opts->nth_size + opts->dpe_size) {
-+					INFO(port->func.config->cdev,
-+					     "Bad index: %#X\n", index2);
-+					goto err;
-+				}
-+			}
-+			if (index2 > block_len - opts->dpe_size) {
-+				INFO(port->func.config->cdev,
-+				     "Bad index: %#X\n", index2);
-+				goto err;
-+			}
++	return bytes;
++}
 +
-+			/* wDatagramLength[1] */
-+			if ((dg_len2 < 14 + crc_len) ||
-+					(dg_len2 > frame_max)) {
-+				INFO(port->func.config->cdev,
-+				     "Bad dgram length: %#X\n", dg_len);
-+				goto err;
-+			}
++/**
++ * array3_size() - Calculate size of 3-dimensional array.
++ *
++ * @a: dimension one
++ * @b: dimension two
++ * @c: dimension three
++ *
++ * Calculates size of 3-dimensional array: @a * @b * @c.
++ *
++ * Returns: number of bytes needed to represent the array or SIZE_MAX on
++ * overflow.
++ */
++static inline __must_check size_t array3_size(size_t a, size_t b, size_t c)
++{
++	size_t bytes;
 +
- 			/*
- 			 * Copy the data into a new skb.
- 			 * This ensures the truesize is correct
-@@ -1320,9 +1380,6 @@ static int ncm_unwrap_ntb(struct gether
- 			ndp_len -= 2 * (opts->dgram_item_len * 2);
- 
- 			dgram_counter++;
--
--			if (index2 == 0 || dg_len2 == 0)
--				break;
- 		} while (ndp_len > 2 * (opts->dgram_item_len * 2));
- 	} while (ndp_index);
- 
++	if (check_mul_overflow(a, b, &bytes))
++		return SIZE_MAX;
++	if (check_mul_overflow(bytes, c, &bytes))
++		return SIZE_MAX;
++
++	return bytes;
++}
++
++static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
++{
++	size_t bytes;
++
++	if (check_mul_overflow(n, size, &bytes))
++		return SIZE_MAX;
++	if (check_add_overflow(bytes, c, &bytes))
++		return SIZE_MAX;
++
++	return bytes;
++}
++
++/**
++ * struct_size() - Calculate size of structure with trailing array.
++ * @p: Pointer to the structure.
++ * @member: Name of the array member.
++ * @n: Number of elements in the array.
++ *
++ * Calculates size of memory needed for structure @p followed by an
++ * array of @n @member elements.
++ *
++ * Return: number of bytes needed or SIZE_MAX on overflow.
++ */
++#define struct_size(p, member, n)					\
++	__ab_c_size(n,							\
++		    sizeof(*(p)->member) + __must_be_array((p)->member),\
++		    sizeof(*(p)))
++
+ #endif /* __LINUX_OVERFLOW_H */
 
 
