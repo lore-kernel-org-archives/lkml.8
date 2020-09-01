@@ -2,97 +2,101 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C2EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74298C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E0D9205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:48:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF8C205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:49:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Dr4efZLr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgIAIsL (ORCPT
+        id S1726536AbgIAItx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:48:11 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:3081 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725949AbgIAIsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:48:11 -0400
-Received: from dggeme755-chm.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 07087318D0CCF9839338;
-        Tue,  1 Sep 2020 16:48:09 +0800 (CST)
-Received: from [10.140.157.78] (10.140.157.78) by
- dggeme755-chm.china.huawei.com (10.3.19.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 1 Sep 2020 16:48:08 +0800
-Subject: Re: Adjust interrupt Priority for ARM64 GIC
-To:     Marc Zyngier <maz@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>
-References: <5a6e65cf-d2fe-0107-2318-0e3c81d57000@huawei.com>
- <51146530616bb8fdf23c637ff5bee44e@kernel.org>
-From:   Dongjiu Geng <gengdongjiu@huawei.com>
-Message-ID: <003822ee-c43b-9572-7a64-fda049ecb05f@huawei.com>
-Date:   Tue, 1 Sep 2020 16:48:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Tue, 1 Sep 2020 04:49:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48796 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725949AbgIAItw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:49:52 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8357FC061244;
+        Tue,  1 Sep 2020 01:49:51 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bggk36491z9sTM;
+        Tue,  1 Sep 2020 18:49:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1598950188;
+        bh=OS5jYEkx/bz+JtpadafYuUFnzUgrYohCxZLJW5RQ2h0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Dr4efZLrMZws2qF5Dd6XeW/rTu9RR2pFTF2ahH53nKWwQwk4F7xEpkoUyCC63Oar9
+         zrAqryGgoP9b1sHPnOhglPIbdz+SIXswCme4UKELAzcne+RQydYz3TFGu+u0y98FD3
+         tAxzLcuB/ofIzXbipWONF6u26CqOYFQuTcKqu5q3fgfPLiUMkP4sotMspllTnIoM0E
+         eXjvJSib1p622KwPQgEUWrtblE1yZWYhcy+k2gLXxbXdEz009hgmsSE2rhYyHZfLG8
+         VXLjBj2/YnvLC2XQJ+0uTN/ARZ4qo1ko20CPah3xh2i1/gbzg9WEfhMItH/Hov7fy+
+         cubrKqrvwgamw==
+Date:   Tue, 1 Sep 2020 18:49:28 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: linux-next: Fixes tag needs some work in the arc-current tree
+Message-ID: <20200901184928.057f6082@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <51146530616bb8fdf23c637ff5bee44e@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.140.157.78]
-X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
- dggeme755-chm.china.huawei.com (10.3.19.101)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="Sig_/+gqfVyeX5wILx==AABy5tQ5";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/+gqfVyeX5wILx==AABy5tQ5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 2020/9/1 15:48, Marc Zyngier wrote:
-> Hi Dongjiu,
-> 
-> In the future, please use my kernel.org address, as I don't work
-> for ARM anymore, and would have missed this email if I wasn't pointed
-> to it.
-> 
-> On 2020-08-14 18:10, Dongjiu Geng wrote:
->> Hi Marc,
->>    In the Linux kernel, we can not adjust the  interrupt Priority, For
->> all the interrupts, the interrupt Priority are fixed to 0xa0.
->> In some scenarios, it needs to change the Priority. so I want to
->> upstream a serie patch to support to change the Priority through
->> procfs. do you agree I upstream this feature? thanks~
-> 
-> No, that's not something I would ever consider, and for multiple
-> reasons:
-> 
-> - Linux only supports a single priority, meaning that interrupts are
->   themselves aren't preemptable. Dealing with things like (pseudo) NMI
->   is invasive enough, and I can't see a good reason to relax the
->   single priority requirement.
-> 
-> - Building on top of the above, the whole scheduler and locking model
->   relies on the non-preemptable property of an interrupt.
-> 
-> - I cannot see a good reason to leave the priority control to userspace.
->   That's a sure recipe for userspace-controlled livelocks.
-> 
-> Now, I'm sure you want to introduce this for a reason, and you are not
-> explaining it ("some scenarios" doesn't quite cut it). If you care to
-> explain these "scenarios", maybe there is something we can do.
-Marc，
-    Thanks for answer.
-    In the real-time system(RTOS), we want the timer tick irq is responded as
-soon as possible to trigger kernel do task schedule. Non-preemptable  IRQ decreases the Real-Time Performance of Real-Time Operating System
+In commit
 
-> 
-> But please don't waste time implementing any sort of priority change,
-> there is no way I'll consider it as such.
-> 
-> Thanks,
-> 
->         M.
+  7000c9462d1b ("arc: fix memory initialization for systems with two memory=
+ banks")
+
+Fixes tag
+
+  Fixes: 51930df5801e ("mm: free_area_init: allow defining max_zone_pfn in =
+descend ing order")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/+gqfVyeX5wILx==AABy5tQ5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9OCxgACgkQAVBC80lX
+0GzOmQf/fvIechmbewtjZgVoZVwhQrCe1Us2G2yNRkDe6zFP0iMdRw/w64RsrHOV
+UXsLslz9NTSRoDAQM3EoYF3mbO2j1sFkQDqXMP61cj/Qrv5pf1NmZTDpzgUbCp1N
+y0d7sx3E/+fMT4N2zayY/7ILKKGz9xOfpeXH5exmB6mCUWYb72MYNRUNnx6FqihZ
+hxFlttbKHM+fmrwvbN7gVaD+qfwHET40et31+eMBxGkiFGIK/2Z3VQszZtoIKu1N
++aUWdBDDCqT0qbhqFQ/9gLinVeeZsSsO7g4WtRm16zT2hfFExiPZkGst2RnsnHMd
+/hGG1kmmEwhLoM9Ot7x4V1gKzY3IHw==
+=r+3P
+-----END PGP SIGNATURE-----
+
+--Sig_/+gqfVyeX5wILx==AABy5tQ5--
