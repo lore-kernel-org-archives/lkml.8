@@ -2,51 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1965C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E15C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8093520767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 539B92065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977101;
-	bh=WZWDyFXi+TP4Rzs36ydIREKTJ4YdNubzRsXpohcxDj4=;
+	s=default; t=1598977116;
+	bh=k3sLFeyZTzrCfkRSumuFDZjdrcsEaxOYzrV5Z7HyN04=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ygFcFAwgXOLjFErD+CaQJ6waTMcmNb7eb/EuHNIbe4ZOkAC05EEtIW3ePV3/mnG2G
-	 Z4DcLbyfWplxyu2kBh9E6oBobcDqTKjvcU1R7duEJnwmM1OWEu56Xv9tSe5p/Rx0u8
-	 UTqVlrPxZfd97WUOCLfDOjVrNLlhX3KgI1QCb0Z4=
+	b=YxlI0Bhi9b5VSxS6MsuJ4Pv2HJJiWp2hjGBxHNtaeSEnS6Ly8bgp3WZw9Ve3Wh2aH
+	 OQzSXfCaXXAj69UX4TpmDV4pHAot20ntbvo8+7nVdXOrM3P8Y1a50bk5lUpNEblfjo
+	 ZCizF10kWTVqJUu17v6xDE1ThKQmVSJpzUn0KMoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbgIAPd0 (ORCPT
+        id S1731108AbgIAQSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:33:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728876AbgIAPdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:33:11 -0400
+        id S1731163AbgIAPdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:33:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69D9C214D8;
-        Tue,  1 Sep 2020 15:33:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22422214D8;
+        Tue,  1 Sep 2020 15:33:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974390;
-        bh=WZWDyFXi+TP4Rzs36ydIREKTJ4YdNubzRsXpohcxDj4=;
+        s=default; t=1598974400;
+        bh=k3sLFeyZTzrCfkRSumuFDZjdrcsEaxOYzrV5Z7HyN04=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ajHsmRi+gS6N+/yFKEmGtxGZbaheIT0UZulx9OdpQvFyFmsLqC96qC/pAXdRCCAg+
-         mxPvoKjhs+Zp4zkeIsFopBGZ4iac0nI4DadYi6C4iCFTf0/iMqQxupzfMnswiNgk/k
-         3Lw6sMKDxw54g3xF+RZaRMhXpBYmNbKtKc4r17uY=
+        b=n10RRAv73G2OgbIaF+cfLKy04CIrGzmsYCNjU0mkfwwXuwBWwi2MxeJLZkCxgg6D/
+         hzlKJAkRCa2WY4EyBvVXc6YMsLK5aEwgtViQPuvxO3iXskY3ikvzg2AooaQ1pAZRA/
+         3QRUGQ+KFlkBeAwNus72NUHG+zFsvfunIOFQ1LQA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Omar Sandoval <osandov@osandov.com>,
-        Boris Burkov <boris@bur.io>, David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 156/214] btrfs: detect nocow for swap after snapshot delete
-Date:   Tue,  1 Sep 2020 17:10:36 +0200
-Message-Id: <20200901151000.441108367@linuxfoundation.org>
+        stable@vger.kernel.org, Oleksij Rempel <o.rempel@pengutronix.de>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 131/214] can: j1939: transport: j1939_xtp_rx_dat_one(): compare own packets to detect corruptions
+Date:   Tue,  1 Sep 2020 17:10:11 +0200
+Message-Id: <20200901150959.258921150@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,181 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Burkov <boris@bur.io>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
 
-commit a84d5d429f9eb56f81b388609841ed993f0ddfca upstream.
+[ Upstream commit e052d0540298bfe0f6cbbecdc7e2ea9b859575b2 ]
 
-can_nocow_extent and btrfs_cross_ref_exist both rely on a heuristic for
-detecting a must cow condition which is not exactly accurate, but saves
-unnecessary tree traversal. The incorrect assumption is that if the
-extent was created in a generation smaller than the last snapshot
-generation, it must be referenced by that snapshot. That is true, except
-the snapshot could have since been deleted, without affecting the last
-snapshot generation.
+Since the stack relays on receiving own packets, it was overwriting own
+transmit buffer from received packets.
 
-The original patch claimed a performance win from this check, but it
-also leads to a bug where you are unable to use a swapfile if you ever
-snapshotted the subvolume it's in. Make the check slower and more strict
-for the swapon case, without modifying the general cow checks as a
-compromise. Turning swap on does not seem to be a particularly
-performance sensitive operation, so incurring a possibly unnecessary
-btrfs_search_slot seems worthwhile for the added usability.
+At least theoretically, the received echo buffer can be corrupt or
+changed and the session partner can request to resend previous data. In
+this case we will re-send bad data.
 
-Note: Until the snapshot is competely cleaned after deletion,
-check_committed_refs will still cause the logic to think that cow is
-necessary, so the user must until 'btrfs subvolu sync' finished before
-activating the swapfile swapon.
+With this patch we will stop to overwrite own TX buffer and use it for
+sanity checking.
 
-CC: stable@vger.kernel.org # 5.4+
-Suggested-by: Omar Sandoval <osandov@osandov.com>
-Signed-off-by: Boris Burkov <boris@bur.io>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+Link: https://lore.kernel.org/r/20200807105200.26441-6-o.rempel@pengutronix.de
+Signed-off-by: Marc Kleine-Budde <mkl@pengutronix.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h       |    4 ++--
- fs/btrfs/extent-tree.c |   17 +++++++++++------
- fs/btrfs/file.c        |    2 +-
- fs/btrfs/inode.c       |   16 +++++++++-------
- 4 files changed, 23 insertions(+), 16 deletions(-)
+ net/can/j1939/transport.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -2415,7 +2415,7 @@ int btrfs_pin_extent_for_log_replay(stru
- 				    u64 bytenr, u64 num_bytes);
- int btrfs_exclude_logged_extents(struct extent_buffer *eb);
- int btrfs_cross_ref_exist(struct btrfs_root *root,
--			  u64 objectid, u64 offset, u64 bytenr);
-+			  u64 objectid, u64 offset, u64 bytenr, bool strict);
- struct extent_buffer *btrfs_alloc_tree_block(struct btrfs_trans_handle *trans,
- 					     struct btrfs_root *root,
- 					     u64 parent, u64 root_objectid,
-@@ -2821,7 +2821,7 @@ struct extent_map *btrfs_get_extent_fiem
- 					   u64 start, u64 len);
- noinline int can_nocow_extent(struct inode *inode, u64 offset, u64 *len,
- 			      u64 *orig_start, u64 *orig_block_len,
--			      u64 *ram_bytes);
-+			      u64 *ram_bytes, bool strict);
+diff --git a/net/can/j1939/transport.c b/net/can/j1939/transport.c
+index dbd215cbc53d8..a8dd956b5e8e1 100644
+--- a/net/can/j1939/transport.c
++++ b/net/can/j1939/transport.c
+@@ -1803,7 +1803,20 @@ static void j1939_xtp_rx_dat_one(struct j1939_session *session,
+ 	}
  
- void __btrfs_del_delalloc_inode(struct btrfs_root *root,
- 				struct btrfs_inode *inode);
---- a/fs/btrfs/extent-tree.c
-+++ b/fs/btrfs/extent-tree.c
-@@ -2320,7 +2320,8 @@ static noinline int check_delayed_ref(st
+ 	tpdat = se_skb->data;
+-	memcpy(&tpdat[offset], &dat[1], nbytes);
++	if (!session->transmission) {
++		memcpy(&tpdat[offset], &dat[1], nbytes);
++	} else {
++		int err;
++
++		err = memcmp(&tpdat[offset], &dat[1], nbytes);
++		if (err)
++			netdev_err_once(priv->ndev,
++					"%s: 0x%p: Data of RX-looped back packet (%*ph) doesn't match TX data (%*ph)!\n",
++					__func__, session,
++					nbytes, &dat[1],
++					nbytes, &tpdat[offset]);
++	}
++
+ 	if (packet == session->pkt.rx)
+ 		session->pkt.rx++;
  
- static noinline int check_committed_ref(struct btrfs_root *root,
- 					struct btrfs_path *path,
--					u64 objectid, u64 offset, u64 bytenr)
-+					u64 objectid, u64 offset, u64 bytenr,
-+					bool strict)
- {
- 	struct btrfs_fs_info *fs_info = root->fs_info;
- 	struct btrfs_root *extent_root = fs_info->extent_root;
-@@ -2362,9 +2363,13 @@ static noinline int check_committed_ref(
- 	    btrfs_extent_inline_ref_size(BTRFS_EXTENT_DATA_REF_KEY))
- 		goto out;
- 
--	/* If extent created before last snapshot => it's definitely shared */
--	if (btrfs_extent_generation(leaf, ei) <=
--	    btrfs_root_last_snapshot(&root->root_item))
-+	/*
-+	 * If extent created before last snapshot => it's shared unless the
-+	 * snapshot has been deleted. Use the heuristic if strict is false.
-+	 */
-+	if (!strict &&
-+	    (btrfs_extent_generation(leaf, ei) <=
-+	     btrfs_root_last_snapshot(&root->root_item)))
- 		goto out;
- 
- 	iref = (struct btrfs_extent_inline_ref *)(ei + 1);
-@@ -2389,7 +2394,7 @@ out:
- }
- 
- int btrfs_cross_ref_exist(struct btrfs_root *root, u64 objectid, u64 offset,
--			  u64 bytenr)
-+			  u64 bytenr, bool strict)
- {
- 	struct btrfs_path *path;
- 	int ret;
-@@ -2400,7 +2405,7 @@ int btrfs_cross_ref_exist(struct btrfs_r
- 
- 	do {
- 		ret = check_committed_ref(root, path, objectid,
--					  offset, bytenr);
-+					  offset, bytenr, strict);
- 		if (ret && ret != -ENOENT)
- 			goto out;
- 
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -1568,7 +1568,7 @@ static noinline int check_can_nocow(stru
- 
- 	num_bytes = lockend - lockstart + 1;
- 	ret = can_nocow_extent(&inode->vfs_inode, lockstart, &num_bytes,
--			NULL, NULL, NULL);
-+			NULL, NULL, NULL, false);
- 	if (ret <= 0) {
- 		ret = 0;
- 		btrfs_end_write_no_snapshotting(root);
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -1578,7 +1578,7 @@ next_slot:
- 				goto out_check;
- 			ret = btrfs_cross_ref_exist(root, ino,
- 						    found_key.offset -
--						    extent_offset, disk_bytenr);
-+						    extent_offset, disk_bytenr, false);
- 			if (ret) {
- 				/*
- 				 * ret could be -EIO if the above fails to read
-@@ -7529,7 +7529,7 @@ static struct extent_map *btrfs_new_exte
-  */
- noinline int can_nocow_extent(struct inode *inode, u64 offset, u64 *len,
- 			      u64 *orig_start, u64 *orig_block_len,
--			      u64 *ram_bytes)
-+			      u64 *ram_bytes, bool strict)
- {
- 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
- 	struct btrfs_path *path;
-@@ -7607,8 +7607,9 @@ noinline int can_nocow_extent(struct ino
- 	 * Do the same check as in btrfs_cross_ref_exist but without the
- 	 * unnecessary search.
- 	 */
--	if (btrfs_file_extent_generation(leaf, fi) <=
--	    btrfs_root_last_snapshot(&root->root_item))
-+	if (!strict &&
-+	    (btrfs_file_extent_generation(leaf, fi) <=
-+	     btrfs_root_last_snapshot(&root->root_item)))
- 		goto out;
- 
- 	backref_offset = btrfs_file_extent_offset(leaf, fi);
-@@ -7644,7 +7645,8 @@ noinline int can_nocow_extent(struct ino
- 	 */
- 
- 	ret = btrfs_cross_ref_exist(root, btrfs_ino(BTRFS_I(inode)),
--				    key.offset - backref_offset, disk_bytenr);
-+				    key.offset - backref_offset, disk_bytenr,
-+				    strict);
- 	if (ret) {
- 		ret = 0;
- 		goto out;
-@@ -7865,7 +7867,7 @@ static int btrfs_get_blocks_direct_write
- 		block_start = em->block_start + (start - em->start);
- 
- 		if (can_nocow_extent(inode, start, &len, &orig_start,
--				     &orig_block_len, &ram_bytes) == 1 &&
-+				     &orig_block_len, &ram_bytes, false) == 1 &&
- 		    btrfs_inc_nocow_writers(fs_info, block_start)) {
- 			struct extent_map *em2;
- 
-@@ -11030,7 +11032,7 @@ static int btrfs_swap_activate(struct sw
- 		free_extent_map(em);
- 		em = NULL;
- 
--		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL);
-+		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL, true);
- 		if (ret < 0) {
- 			goto out;
- 		} else if (ret) {
+-- 
+2.25.1
+
 
 
