@@ -2,51 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FFC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885DDC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6980820684
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B68E20684
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974140;
-	bh=j/KPY2XM4hXQO3aZVJ2Yz/YlWJbjLBnEgICKEe0HPAE=;
+	s=default; t=1598974151;
+	bh=FIgXbcABySPjS5C8CGpU9kqOmSRTlk2niq4DSjsFc28=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eTC6Bt1ci50MCKlcV0k2Zbe2re+7bPvymEUuk/SN0dvELHBSgDj/Vn9YxLQrDBkD2
-	 F4MlYyBO+CEAkE5nPrrzrubl/Myw7143G7kVkjGIEoX5UNfsJtCRVB9iYstHcMll3C
-	 o1DIlQisFgAsswJM0yIiVAV1qYbtpfYxWSjVkpiA=
+	b=1QBM4+Lt/x6Cc/g2MPoX/tmqcBJ9pdGapKKtcrrhX5LADg7Kr9Q3QUsUBg7/Ix7fB
+	 2B7ODrPfPF19+cSCSuFuIuAisu2k0huMl8vpwWhKj2/QzcZ6YOT4QqpZNAM2um4Et1
+	 2KSio1BnC+JN25WVo94CA1yi4uKFqID9XSPT4Gxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbgIAP27 (ORCPT
+        id S1730516AbgIAP3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50964 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:29:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729821AbgIAPZz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:55 -0400
+        id S1730085AbgIAP0K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:26:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 531DE20684;
-        Tue,  1 Sep 2020 15:25:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE803207D3;
+        Tue,  1 Sep 2020 15:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973954;
-        bh=j/KPY2XM4hXQO3aZVJ2Yz/YlWJbjLBnEgICKEe0HPAE=;
+        s=default; t=1598973970;
+        bh=FIgXbcABySPjS5C8CGpU9kqOmSRTlk2niq4DSjsFc28=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5i1CK41hfuB7T6y0EMY7X81cf51KvUSo0A78X7idE1RHMY2OPZenaORuNkrTaPgg
-         k8+BDX122filBopS6/g+bOtAnEWyjI4TOIzD2ajy6gG6JPs6k5H1ym72mvXGZq2RS+
-         zePZFnABpRYV07yYwZBj9Jwb+cIaqzSsxuFqc+Qc=
+        b=sVTJGdShza8xew3xH0Zo+ZXOrp0p4dxcTtUp8BfVNEQEzJ8yBSe9ssp/ynl5L2ffE
+         KN3w9M0b5VCTe9t539eGtKsfxusHtyGMjz4r/i7DS1rwQ4fbRCFA2LuHo2gI1ALpBh
+         FyGON/lzh6m1zTZOQcmyQAYsoWk7Uszhnrtwsk9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.19 096/125] writeback: Fix sync livelock due to b_dirty_time processing
-Date:   Tue,  1 Sep 2020 17:10:51 +0200
-Message-Id: <20200901150939.314406670@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 119/125] btrfs: check the right error variable in btrfs_del_dir_entries_in_log
+Date:   Tue,  1 Sep 2020 17:11:14 +0200
+Message-Id: <20200901150940.444311659@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -59,193 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit f9cae926f35e8230330f28c7b743ad088611a8de upstream.
+[ Upstream commit fb2fecbad50964b9f27a3b182e74e437b40753ef ]
 
-When we are processing writeback for sync(2), move_expired_inodes()
-didn't set any inode expiry value (older_than_this). This can result in
-writeback never completing if there's steady stream of inodes added to
-b_dirty_time list as writeback rechecks dirty lists after each writeback
-round whether there's more work to be done. Fix the problem by using
-sync(2) start time is inode expiry value when processing b_dirty_time
-list similarly as for ordinarily dirtied inodes. This requires some
-refactoring of older_than_this handling which simplifies the code
-noticeably as a bonus.
+With my new locking code dbench is so much faster that I tripped over a
+transaction abort from ENOSPC.  This turned out to be because
+btrfs_del_dir_entries_in_log was checking for ret == -ENOSPC, but this
+function sets err on error, and returns err.  So instead of properly
+marking the inode as needing a full commit, we were returning -ENOSPC
+and aborting in __btrfs_unlink_inode.  Fix this by checking the proper
+variable so that we return the correct thing in the case of ENOSPC.
 
-Fixes: 0ae45f63d4ef ("vfs: add support for a lazytime mount option")
-CC: stable@vger.kernel.org
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The ENOENT needs to be checked, because btrfs_lookup_dir_item_index()
+can return -ENOENT if the dir item isn't in the tree log (which would
+happen if we hadn't fsync'ed this guy).  We actually handle that case in
+__btrfs_unlink_inode, so it's an expected error to get back.
 
+Fixes: 4a500fd178c8 ("Btrfs: Metadata ENOSPC handling for tree log")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add note and comment about ENOENT ]
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs-writeback.c                |   44 +++++++++++++++------------------------
- include/trace/events/writeback.h |   13 +++++------
- 2 files changed, 23 insertions(+), 34 deletions(-)
+ fs/btrfs/tree-log.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -45,7 +45,6 @@ struct wb_completion {
- struct wb_writeback_work {
- 	long nr_pages;
- 	struct super_block *sb;
--	unsigned long *older_than_this;
- 	enum writeback_sync_modes sync_mode;
- 	unsigned int tagged_writepages:1;
- 	unsigned int for_kupdate:1;
-@@ -1153,16 +1152,13 @@ static bool inode_dirtied_after(struct i
- #define EXPIRE_DIRTY_ATIME 0x0001
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 090315f4ac78f..3e903e6a33870 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -3422,11 +3422,13 @@ int btrfs_del_dir_entries_in_log(struct btrfs_trans_handle *trans,
+ 	btrfs_free_path(path);
+ out_unlock:
+ 	mutex_unlock(&dir->log_mutex);
+-	if (ret == -ENOSPC) {
++	if (err == -ENOSPC) {
+ 		btrfs_set_log_full_commit(root->fs_info, trans);
+-		ret = 0;
+-	} else if (ret < 0)
+-		btrfs_abort_transaction(trans, ret);
++		err = 0;
++	} else if (err < 0 && err != -ENOENT) {
++		/* ENOENT can be returned if the entry hasn't been fsynced yet */
++		btrfs_abort_transaction(trans, err);
++	}
  
- /*
-- * Move expired (dirtied before work->older_than_this) dirty inodes from
-+ * Move expired (dirtied before dirtied_before) dirty inodes from
-  * @delaying_queue to @dispatch_queue.
-  */
- static int move_expired_inodes(struct list_head *delaying_queue,
- 			       struct list_head *dispatch_queue,
--			       int flags,
--			       struct wb_writeback_work *work)
-+			       int flags, unsigned long dirtied_before)
- {
--	unsigned long *older_than_this = NULL;
--	unsigned long expire_time;
- 	LIST_HEAD(tmp);
- 	struct list_head *pos, *node;
- 	struct super_block *sb = NULL;
-@@ -1170,16 +1166,9 @@ static int move_expired_inodes(struct li
- 	int do_sb_sort = 0;
- 	int moved = 0;
+ 	btrfs_end_log_trans(root);
  
--	if ((flags & EXPIRE_DIRTY_ATIME) == 0)
--		older_than_this = work->older_than_this;
--	else if (!work->for_sync) {
--		expire_time = jiffies - (dirtytime_expire_interval * HZ);
--		older_than_this = &expire_time;
--	}
- 	while (!list_empty(delaying_queue)) {
- 		inode = wb_inode(delaying_queue->prev);
--		if (older_than_this &&
--		    inode_dirtied_after(inode, *older_than_this))
-+		if (inode_dirtied_after(inode, dirtied_before))
- 			break;
- 		list_move(&inode->i_io_list, &tmp);
- 		moved++;
-@@ -1225,18 +1214,22 @@ out:
-  *                                           |
-  *                                           +--> dequeue for IO
-  */
--static void queue_io(struct bdi_writeback *wb, struct wb_writeback_work *work)
-+static void queue_io(struct bdi_writeback *wb, struct wb_writeback_work *work,
-+		     unsigned long dirtied_before)
- {
- 	int moved;
-+	unsigned long time_expire_jif = dirtied_before;
- 
- 	assert_spin_locked(&wb->list_lock);
- 	list_splice_init(&wb->b_more_io, &wb->b_io);
--	moved = move_expired_inodes(&wb->b_dirty, &wb->b_io, 0, work);
-+	moved = move_expired_inodes(&wb->b_dirty, &wb->b_io, 0, dirtied_before);
-+	if (!work->for_sync)
-+		time_expire_jif = jiffies - dirtytime_expire_interval * HZ;
- 	moved += move_expired_inodes(&wb->b_dirty_time, &wb->b_io,
--				     EXPIRE_DIRTY_ATIME, work);
-+				     EXPIRE_DIRTY_ATIME, time_expire_jif);
- 	if (moved)
- 		wb_io_lists_populated(wb);
--	trace_writeback_queue_io(wb, work, moved);
-+	trace_writeback_queue_io(wb, work, dirtied_before, moved);
- }
- 
- static int write_inode(struct inode *inode, struct writeback_control *wbc)
-@@ -1748,7 +1741,7 @@ static long writeback_inodes_wb(struct b
- 	blk_start_plug(&plug);
- 	spin_lock(&wb->list_lock);
- 	if (list_empty(&wb->b_io))
--		queue_io(wb, &work);
-+		queue_io(wb, &work, jiffies);
- 	__writeback_inodes_wb(wb, &work);
- 	spin_unlock(&wb->list_lock);
- 	blk_finish_plug(&plug);
-@@ -1768,7 +1761,7 @@ static long writeback_inodes_wb(struct b
-  * takes longer than a dirty_writeback_interval interval, then leave a
-  * one-second gap.
-  *
-- * older_than_this takes precedence over nr_to_write.  So we'll only write back
-+ * dirtied_before takes precedence over nr_to_write.  So we'll only write back
-  * all dirty pages if they are all attached to "old" mappings.
-  */
- static long wb_writeback(struct bdi_writeback *wb,
-@@ -1776,14 +1769,11 @@ static long wb_writeback(struct bdi_writ
- {
- 	unsigned long wb_start = jiffies;
- 	long nr_pages = work->nr_pages;
--	unsigned long oldest_jif;
-+	unsigned long dirtied_before = jiffies;
- 	struct inode *inode;
- 	long progress;
- 	struct blk_plug plug;
- 
--	oldest_jif = jiffies;
--	work->older_than_this = &oldest_jif;
--
- 	blk_start_plug(&plug);
- 	spin_lock(&wb->list_lock);
- 	for (;;) {
-@@ -1817,14 +1807,14 @@ static long wb_writeback(struct bdi_writ
- 		 * safe.
- 		 */
- 		if (work->for_kupdate) {
--			oldest_jif = jiffies -
-+			dirtied_before = jiffies -
- 				msecs_to_jiffies(dirty_expire_interval * 10);
- 		} else if (work->for_background)
--			oldest_jif = jiffies;
-+			dirtied_before = jiffies;
- 
- 		trace_writeback_start(wb, work);
- 		if (list_empty(&wb->b_io))
--			queue_io(wb, work);
-+			queue_io(wb, work, dirtied_before);
- 		if (work->sb)
- 			progress = writeback_sb_inodes(work->sb, wb, work);
- 		else
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -360,8 +360,9 @@ DEFINE_WBC_EVENT(wbc_writepage);
- TRACE_EVENT(writeback_queue_io,
- 	TP_PROTO(struct bdi_writeback *wb,
- 		 struct wb_writeback_work *work,
-+		 unsigned long dirtied_before,
- 		 int moved),
--	TP_ARGS(wb, work, moved),
-+	TP_ARGS(wb, work, dirtied_before, moved),
- 	TP_STRUCT__entry(
- 		__array(char,		name, 32)
- 		__field(unsigned long,	older)
-@@ -371,19 +372,17 @@ TRACE_EVENT(writeback_queue_io,
- 		__field(unsigned int,	cgroup_ino)
- 	),
- 	TP_fast_assign(
--		unsigned long *older_than_this = work->older_than_this;
- 		strncpy(__entry->name, dev_name(wb->bdi->dev), 32);
--		__entry->older	= older_than_this ?  *older_than_this : 0;
--		__entry->age	= older_than_this ?
--				  (jiffies - *older_than_this) * 1000 / HZ : -1;
-+		__entry->older	= dirtied_before;
-+		__entry->age	= (jiffies - dirtied_before) * 1000 / HZ;
- 		__entry->moved	= moved;
- 		__entry->reason	= work->reason;
- 		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
- 	),
- 	TP_printk("bdi %s: older=%lu age=%ld enqueue=%d reason=%s cgroup_ino=%u",
- 		__entry->name,
--		__entry->older,	/* older_than_this in jiffies */
--		__entry->age,	/* older_than_this in relative milliseconds */
-+		__entry->older,	/* dirtied_before in jiffies */
-+		__entry->age,	/* dirtied_before in relative milliseconds */
- 		__entry->moved,
- 		__print_symbolic(__entry->reason, WB_WORK_REASON),
- 		__entry->cgroup_ino
+-- 
+2.25.1
+
 
 
