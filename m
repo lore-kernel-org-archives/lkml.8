@@ -2,33 +2,32 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E87C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26870C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FC1206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077B0206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbgIAO0p (ORCPT
+        id S1728423AbgIAO1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:26:45 -0400
-Received: from alexa-out.qualcomm.com ([129.46.98.28]:49591 "EHLO
+        Tue, 1 Sep 2020 10:27:41 -0400
+Received: from alexa-out.qualcomm.com ([129.46.98.28]:53509 "EHLO
         alexa-out.qualcomm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728060AbgIAOZJ (ORCPT
+        with ESMTP id S1728381AbgIAOZJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 10:25:09 -0400
 Received: from ironmsg08-lv.qualcomm.com ([10.47.202.152])
-  by alexa-out.qualcomm.com with ESMTP; 01 Sep 2020 07:24:59 -0700
+  by alexa-out.qualcomm.com with ESMTP; 01 Sep 2020 07:24:57 -0700
 Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Sep 2020 07:24:57 -0700
+  by ironmsg08-lv.qualcomm.com with ESMTP/TLS/AES256-SHA; 01 Sep 2020 07:24:55 -0700
 Received: from gubbaven-linux.qualcomm.com ([10.206.64.32])
   by ironmsg02-blr.qualcomm.com with ESMTP; 01 Sep 2020 19:54:32 +0530
 Received: by gubbaven-linux.qualcomm.com (Postfix, from userid 2365015)
-        id E3F8E217CB; Tue,  1 Sep 2020 19:54:30 +0530 (IST)
+        id A078321B32; Tue,  1 Sep 2020 19:54:30 +0530 (IST)
 From:   Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
 To:     marcel@holtmann.org, johan.hedberg@gmail.com
 Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
@@ -37,12 +36,10 @@ Cc:     mka@chromium.org, linux-kernel@vger.kernel.org,
         rjliao@codeaurora.org, hbandi@codeaurora.org,
         abhishekpandit@chromium.org,
         Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
-Subject: [PATCH v1 1/2] Bluetooth: hci_serdev: Close UART port if NON_PERSISTENT_SETUP is set
-Date:   Tue,  1 Sep 2020 19:54:26 +0530
-Message-Id: <1598970267-7170-2-git-send-email-gubbaven@codeaurora.org>
+Subject: [PATCH v1 0/2] Close UART port if NON_PERSISTENT_SETUP is set
+Date:   Tue,  1 Sep 2020 19:54:25 +0530
+Message-Id: <1598970267-7170-1-git-send-email-gubbaven@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598970267-7170-1-git-send-email-gubbaven@codeaurora.org>
-References: <1598970267-7170-1-git-send-email-gubbaven@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,85 +54,14 @@ qurik HCI_QUIRK_NON_PERSISTENT_SETUP is set by clearing
 HCI_UART_PROTO_READY proto flag. On next BT ON, UART
 port is opened if HCI_UART_PROTO_READY proto flag is cleared.
 
-Signed-off-by: Venkata Lakshmi Narayana Gubba <gubbaven@codeaurora.org>
----
- drivers/bluetooth/hci_serdev.c | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+Venkata Lakshmi Narayana Gubba (2):
+  Bluetooth: hci_serdev: Close UART port if NON_PERSISTENT_SETUP is set
+  Bluetooth: hci_qca: Remove duplicate power off in proto close
 
-diff --git a/drivers/bluetooth/hci_serdev.c b/drivers/bluetooth/hci_serdev.c
-index 3977bba..ef96ad0 100644
---- a/drivers/bluetooth/hci_serdev.c
-+++ b/drivers/bluetooth/hci_serdev.c
-@@ -113,8 +113,22 @@ static int hci_uart_flush(struct hci_dev *hdev)
- /* Initialize device */
- static int hci_uart_open(struct hci_dev *hdev)
- {
-+	struct hci_uart *hu = hci_get_drvdata(hdev);
-+	int err;
-+
- 	BT_DBG("%s %p", hdev->name, hdev);
- 
-+	/* When Quirk HCI_QUIRK_NON_PERSISTENT_SETUP is set by
-+	 * driver, BT SoC is completely turned OFF during
-+	 * BT OFF. Upon next BT ON UART port should be opened.
-+	 */
-+	if (!test_bit(HCI_UART_PROTO_READY, &hu->flags)) {
-+		err = serdev_device_open(hu->serdev);
-+		if (err)
-+			return err;
-+		set_bit(HCI_UART_PROTO_READY, &hu->flags);
-+	}
-+
- 	/* Undo clearing this from hci_uart_close() */
- 	hdev->flush = hci_uart_flush;
- 
-@@ -124,11 +138,25 @@ static int hci_uart_open(struct hci_dev *hdev)
- /* Close device */
- static int hci_uart_close(struct hci_dev *hdev)
- {
-+	struct hci_uart *hu = hci_get_drvdata(hdev);
-+
- 	BT_DBG("hdev %p", hdev);
- 
-+	if (!test_bit(HCI_UART_PROTO_READY, &hu->flags))
-+		return 0;
-+
- 	hci_uart_flush(hdev);
- 	hdev->flush = NULL;
- 
-+	/* When QUIRK HCI_QUIRK_NON_PERSISTENT_SETUP is set by driver,
-+	 * BT SOC is completely powered OFF during BT OFF, holding port
-+	 * open may drain the battery.
-+	 */
-+	if (test_bit(HCI_QUIRK_NON_PERSISTENT_SETUP, &hdev->quirks)) {
-+		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
-+		serdev_device_close(hu->serdev);
-+	}
-+
- 	return 0;
- }
- 
-@@ -354,8 +382,6 @@ void hci_uart_unregister_device(struct hci_uart *hu)
- {
- 	struct hci_dev *hdev = hu->hdev;
- 
--	clear_bit(HCI_UART_PROTO_READY, &hu->flags);
--
- 	cancel_work_sync(&hu->init_ready);
- 	if (test_bit(HCI_UART_REGISTERED, &hu->flags))
- 		hci_unregister_dev(hdev);
-@@ -364,6 +390,10 @@ void hci_uart_unregister_device(struct hci_uart *hu)
- 	cancel_work_sync(&hu->write_work);
- 
- 	hu->proto->close(hu);
--	serdev_device_close(hu->serdev);
-+
-+	if (test_bit(HCI_UART_PROTO_READY, &hu->flags)) {
-+		clear_bit(HCI_UART_PROTO_READY, &hu->flags);
-+		serdev_device_close(hu->serdev);
-+	}
- }
- EXPORT_SYMBOL_GPL(hci_uart_unregister_device);
+ drivers/bluetooth/hci_qca.c    |  5 ++---
+ drivers/bluetooth/hci_serdev.c | 36 +++++++++++++++++++++++++++++++++---
+ 2 files changed, 35 insertions(+), 6 deletions(-)
+
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
 of Code Aurora Forum, hosted by The Linux Foundation
