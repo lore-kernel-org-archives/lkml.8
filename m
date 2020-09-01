@@ -2,227 +2,118 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE17C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB92EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17B2C206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89982206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:18:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WckOabD6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Efc7v4gY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbgIAURf (ORCPT
+        id S1728824AbgIAUSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:17:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42238 "EHLO
+        Tue, 1 Sep 2020 16:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727024AbgIAURc (ORCPT
+        with ESMTP id S1728015AbgIAUST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:17:32 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76123C061244;
-        Tue,  1 Sep 2020 13:17:32 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id c18so2893946wrm.9;
-        Tue, 01 Sep 2020 13:17:32 -0700 (PDT)
+        Tue, 1 Sep 2020 16:18:19 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A99CC061244;
+        Tue,  1 Sep 2020 13:18:18 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id c142so1479789pfb.7;
+        Tue, 01 Sep 2020 13:18:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FZmeotuS+laaRvBru8cqS5MsJRn+e3F32IC36oLFMf0=;
-        b=WckOabD605oxINHnkV09nVUwEYDsyNosYnrtRmr24xLzZjXt5pc/76QPeU0+SNjTkT
-         Kzy6VepT+A3rEwvwlghY1aR94RENU3wc+aveOQsUd09S6vdfdr4/JLsOlwwU/NyJD2qy
-         9s0uSiSj9mk9MxosZQqXubfGexcSMfMapBYVf8jB3awuaye5C3REnPsxhmsKbVa1vCJP
-         nyfkZxYmiX8OjTOPUP+X7l/t1cejE3O0Zv/TBVUnFgsF1TombIA1/i4I0wyKzUgg8Cp7
-         sG5g4ZiBreAq6VpepVC8XBMMiHDmCHbq4hsBymN8bBVwOjVLHOhJnLAF+4fdW2skKsz3
-         4FYQ==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=dk1ktHw0iRf7BKe9nG4rTRagfh8n8fK/Z4fCqrEfxFo=;
+        b=Efc7v4gY960IDeqrEgj9Y6eocuEapTW045Kd+nbea0dphZe0a9qwEZQ0A/jAhRdXM4
+         mSmWlVk1whf46+ELpxRB03yPnNa+aRPnwR8ah7BOB7ruvEYJKEE7JN8BIaeJihCqk0F4
+         nt0MHaLAImZea/PQXXYBwYm+M78f71NuAphNS3YOdO2GytnufCIjTQGdWC4daley65Xv
+         Iu6p/aj9rFdNoW62hkNs/b5/H/WhJBVLmxVeg6+jWDh05C7FwOSE634yUurEUUHll/ah
+         BQSYkJqZAorhwoI9ouhfZoahIuItO3twBp7ujlDS7e3IUoctTBYsdGhggdRQPQVP/QaA
+         PTdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FZmeotuS+laaRvBru8cqS5MsJRn+e3F32IC36oLFMf0=;
-        b=GfSdt97CquR8T7WXmX+wi1AeOXCG3HvepvnjzTyHk189vbyTckbp7+b87jX0OCXUW8
-         VdUFwZmOO0hc+GOmgNV2fAAoq+pR41KxEp0nhhUroEHtvwIgEAEz0v69CrnBCJ+B1b8Q
-         g5fpgOMSDFr8WA6yx77nPmwleGZrVu52fbp59kAaMuPjlMZFn7hVNJ9Cb7mOSiGxIC/I
-         38SiEpgyjuD1Sb8TF41zJVeJUPUYaOzHXFf1/SOlggzSWmZslE+mLmxfLbqvF4R4gJH8
-         /P+f8DK5o57528JEoyv74K/Vp0Af+LWKTwE6xgCtnhZDHOdArmOxz4kWis4Pv4abf+zy
-         Rb+A==
-X-Gm-Message-State: AOAM532+znDjsfZYyOze/Y0n589w7gG237B0bE79gHjSiwSwRkyWk8v+
-        FHDYfYsEDYGPUuJrxtmDWHphX9nCbnBr7uf8sek=
-X-Google-Smtp-Source: ABdhPJzqsGdD+8Ug2gH3XIq/XS6eaNQyEDLClXi4/h7iKVRvrj9QXQ8xRZeNOJaBz1v7J8y8uEx5Z1AmG51OuF8pR9M=
-X-Received: by 2002:a5d:4603:: with SMTP id t3mr3467070wrq.424.1598991451043;
- Tue, 01 Sep 2020 13:17:31 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=dk1ktHw0iRf7BKe9nG4rTRagfh8n8fK/Z4fCqrEfxFo=;
+        b=mpoAnLx0jvHep+LN9a3zwadApV7Wc2j3rKd2imisGKtNrbjqrS4CXer52hSzYmEcz7
+         Q+dbSDVMbjuuwe2v8JFLtlnaZKkuuIUU7MHVbwvsqILqpKbAk/UBz6kXrgHvlINXhQ27
+         Xf4xSLeadK8TYel0MUpDV+YH0YUv9ZZm+W2+IihpNWlaB8rL2X++bQBORlILP0l6poin
+         LUAICLDVzhWOfgnhGyUotBpEDG09LtfbQB4SAamdFNqjACyUeu01EWhuujb3uFbJtijd
+         EHs1+vVaFqs+EwNUenNxXEhfKg9kTZxCpXVnzJBZpcUqv5tTzIo6EVDFQW+kLsdiNoJl
+         xwgg==
+X-Gm-Message-State: AOAM531P8IY0oMCw0wXOudDkI8zCvok7NY5jgI/Vf4YxuDZRDIuOs7iQ
+        EFeMa1Eyj0BUUREkJk6Y/LFO16ofZAQ=
+X-Google-Smtp-Source: ABdhPJx5BstFCr65JVrDcS7CTaeTUbeDlPPFRYnkp8xcOd6dwT/dF1SrSGKHXUSmpSGyXRsTLT0nnw==
+X-Received: by 2002:aa7:824a:: with SMTP id e10mr3157439pfn.62.1598991497867;
+        Tue, 01 Sep 2020 13:18:17 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a8sm3024449pga.69.2020.09.01.13.18.16
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 01 Sep 2020 13:18:16 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 13:18:15 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/3] watchdog: cadence: Simplify with dev_err_probe()
+Message-ID: <20200901201815.GA143133@roeck-us.net>
+References: <20200901153141.18960-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200829111437.96334-1-wqu@suse.com> <CAKi4VAJ_nZ9DT1Tm=uufbJPGgZJu+4j+DVVA9otv6oGXuD3jxg@mail.gmail.com>
- <df13d885-6f9d-dc8a-b850-8aa6ae6993eb@redhat.com>
-In-Reply-To: <df13d885-6f9d-dc8a-b850-8aa6ae6993eb@redhat.com>
-From:   Lucas De Marchi <lucas.de.marchi@gmail.com>
-Date:   Tue, 1 Sep 2020 13:17:18 -0700
-Message-ID: <CAKi4VAK4818=-FfSwG7jt-+CwY-3qEYrHfzZ45dTY948smOZ8g@mail.gmail.com>
-Subject: Re: [PATCH] module: Add more error message for failed kernel module loading
-To:     Prarit Bhargava <prarit@redhat.com>
-Cc:     Qu Wenruo <wqu@suse.com>, lkml <linux-kernel@vger.kernel.org>,
-        linux-modules <linux-modules@vger.kernel.org>,
-        Rusty Russell <rusty@rustcorp.com.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901153141.18960-1-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 12:56 PM Prarit Bhargava <prarit@redhat.com> wrote:
->
->
->
-> On 9/1/20 2:50 PM, Lucas De Marchi wrote:
-> > On Sat, Aug 29, 2020 at 4:15 AM Qu Wenruo <wqu@suse.com> wrote:
-> >>
-> >> When kernel module loading failed, user space only get one of the
-> >> following error messages:
-> >> - -ENOEXEC
-> >>   This is the most confusing one. From corrupted ELF header to bad
-> >>   WRITE|EXEC flags check introduced by in module_enforce_rwx_sections()
-> >>   all returns this error number.
-> >>
-> >> - -EPERM
-> >>   This is for blacklisted modules. But mod doesn't do extra explain
-> >>   on this error either.
-> >>
-> >> - -ENOMEM
-> >>   The only error which needs no explain.
-> >>
-> >> This means, if a user got "Exec format error" from modprobe, it provides
-> >> no meaningful way for the user to debug, and will take extra time
-> >> communicating to get extra info.
-> >>
-> >> So this patch will add extra error messages for -ENOEXEC and -EPERM
-> >> errors, allowing user to do better debugging and reporting.
-> >>
-> >> Signed-off-by: Qu Wenruo <wqu@suse.com>
-> >> ---
-> >>  kernel/module.c | 11 +++++++++--
-> >>  1 file changed, 9 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/kernel/module.c b/kernel/module.c
-> >> index 1c5cff34d9f2..9f748c6eeb48 100644
-> >> --- a/kernel/module.c
-> >> +++ b/kernel/module.c
-> >> @@ -2096,8 +2096,12 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
-> >>         int i;
-> >>
-> >>         for (i = 0; i < hdr->e_shnum; i++) {
-> >> -               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
-> >> +               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx) {
-> >> +                       pr_err(
-> >> +                       "Module %s section %d has invalid WRITE|EXEC flags\n",
-> >> +                               mod->name, i);
-> >>                         return -ENOEXEC;
-> >> +               }
-> >>         }
-> >>
-> >>         return 0;
-> >> @@ -3825,8 +3829,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
-> >>         char *after_dashes;
-> >>
-> >>         err = elf_header_check(info);
-> >> -       if (err)
-> >> +       if (err) {
-> >> +               pr_err("Module has invalid ELF header\n");
-> >>                 goto free_copy;
-> >> +       }
-> >>
-> >>         err = setup_load_info(info, flags);
-> >>         if (err)
-> >> @@ -3834,6 +3840,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
-> >>
-> >>         if (blacklisted(info->name)) {
-> >>                 err = -EPERM;
-> >> +               pr_err("Module %s is blacklisted\n", info->name);
-> >
-> > I wonder why would anyone actually add the blacklist to the command
-> > line like this and have no
-> > way to revert that back. This was introduced in
->
-> Debug.  Debug.  Debug. ;)  The parameter was added to debug broken installations
-> and kernel boots.
->
-> > be7de5f91fdc modules: Add kernel parameter to blacklist modules
-> > as a way to overcome broken initrd generation afaics.
->
-> Not the generation of the initramfs, but blocking a module loaded during the
-> boot.  The installation may have failed and there's no easy way to then debug
-> what module was responsible for the failure.
+On Tue, Sep 01, 2020 at 05:31:39PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-if you are using initrd, then *inside* the initrd you should have the
-/etc/modprobe.d/* file
-you want. I said "broken initrd generation" because the tool should
-put the file there, and
-apparently for you it isn't.
+Hmm, I had replied to this but I don't see it on patchwork.
+Trying again.
 
-Even if you don't have the file, you could use modprobe.blacklist= and
-let the blacklist happen
-in the userspace library rather than in the kernel. Module loading is
-not like firmware loading
-that happens without help from userspace.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
->
->  Either kernel
-> > command line (using modprobe.blacklist)
-> > or /etc/modprobe.d options are honoured by libkmod and allow a
-> > sufficiently privileged user to bypass it.
-> >
->
-> Both of those options only work if the filesystem is mounted IIRC.  It could be
-> the case that modprobe.blacklist now works earlier in the boot, however, I've
-> never used it because module_blacklist is the biggest and best hammer that I can
-> use to get through a broken installation or boot.
->
-> In any case you're incorrectly assuming that the system has a filesystem on it.
-> That's not necessarily the case as I'll explain below.
->
-> > +Rusty, +Prarit: is there anything this module parameter is covering
-> > that I'm missing?
->
-> This is the situation I have repeatedly come across :  A system at a remote site
-> will not boot any flavor of Linux.  Since the system would not install the only
-> way to debug was to provide install images to workaround a module load failure.
-> As you can imagine that is a time consuming process as well as a bad end user
-> experience.
->
-> I got so sick of it that I wrote the code above (well similar to it anyway --
-> thanks for the review Randy ;)) to add the module_blacklist parameter to make
-> debugging an uninstallable "bricked" system easier.
->
-> It's come in handy in some unexpected ways.  We've had situations where modules
-> have loaded and corrupted memory and blacklisting them revealed that the modules
-> were responsible for the memory corruption.
+Guenter
 
-ok... but this seems a reimplementation of modprobe.blacklist= option
-in the kernel command line,
-but in kernel space, with no way to remove it after the kernel is booted.
-
-Lucas De Marchi
-
->
-> P.
->
-> >
-> > For the changes here,
-> >
-> > Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
-> >
-> > thanks
-> > Lucas De Marchi
-> >
-> >>                 goto free_copy;
-> >>         }
-> >>
-> >> --
-> >> 2.27.0
-> >>
-> >
->
+> ---
+>  drivers/watchdog/cadence_wdt.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/watchdog/cadence_wdt.c b/drivers/watchdog/cadence_wdt.c
+> index 672b184da875..bc99e9164930 100644
+> --- a/drivers/watchdog/cadence_wdt.c
+> +++ b/drivers/watchdog/cadence_wdt.c
+> @@ -334,12 +334,9 @@ static int cdns_wdt_probe(struct platform_device *pdev)
+>  	watchdog_set_drvdata(cdns_wdt_device, wdt);
+>  
+>  	wdt->clk = devm_clk_get(dev, NULL);
+> -	if (IS_ERR(wdt->clk)) {
+> -		ret = PTR_ERR(wdt->clk);
+> -		if (ret != -EPROBE_DEFER)
+> -			dev_err(dev, "input clock not found\n");
+> -		return ret;
+> -	}
+> +	if (IS_ERR(wdt->clk))
+> +		return dev_err_probe(dev, PTR_ERR(wdt->clk),
+> +				     "input clock not found\n");
+>  
+>  	ret = clk_prepare_enable(wdt->clk);
+>  	if (ret) {
+> -- 
+> 2.17.1
+> 
