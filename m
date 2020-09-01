@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07989C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D08FC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C661A206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35FC9206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976272;
-	bh=PGfxuD/0CedvscxTZBFLO4uNZzYGlM5Fygon8FtRPoo=;
+	s=default; t=1598976282;
+	bh=1N7E8jTdaJiP5AS0s7ssZc9dpyomkdQrUUBLpq3o5w0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KcB2diAFxCTSL1s73m5E3y/6JWrNFMWudbcPm2zOZytTMd/CdwTndopTS22wB0ct8
-	 EsKv+P9X79ZpWLRFNhiXUq6C+hKZ1KWlVo+20/1lQiRcR+vSJsE1tjG6AxSQBGJzeF
-	 /VzcYJp1ed45jIcjVFhe+aNhbx74aUKq3BTuuP4Y=
+	b=uAxOdzt+Yu7+dkOp555LctNXyrxTBDpZbEURaqnnRzJPI7xFc7eoa4LT/hRvkLuxS
+	 LvVHETlRs6aox7JB8fpgtwVQ6KrLtGBvzsx4MNQcwS0RA9LNJntGnhQSU+1v+ZFhmx
+	 RjUudk2pedbJ1BapGK6GlEV9N7ScOzpk52wHTZzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbgIAQEb (ORCPT
+        id S1730122AbgIAQEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54826 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728084AbgIAPmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:42:10 -0400
+        id S1728401AbgIAPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:42:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFDE206EB;
-        Tue,  1 Sep 2020 15:42:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1622206EB;
+        Tue,  1 Sep 2020 15:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974930;
-        bh=PGfxuD/0CedvscxTZBFLO4uNZzYGlM5Fygon8FtRPoo=;
+        s=default; t=1598974922;
+        bh=1N7E8jTdaJiP5AS0s7ssZc9dpyomkdQrUUBLpq3o5w0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YHO2C1EPlUTDawFTVp7IOnNkIOivNfBgJeHTdICFsiWYmsYVVZwB62lsZ79P0p+El
-         s+kN7D2RDvTPqercINZQ/DlyA/juHpypY0xmuMKQwcROH9FLmF8e88wuuqtAsbJAfQ
-         glfnZobgwk/Iqyfg+aRety3dScdEgUwx2HqQKZRo=
+        b=dddhBOJdNon7j4CmRT++IbuCxjHU/oYeLes6htWOEDqKHAoudKwElTK49Ck/CUMU+
+         q6Bl6My5fXGhWPi+JAqB46B5Jr3a0mpInl5aWG61nxwRMssge3g2gFXz+Zy95Zy3lL
+         BweIIs8WaLvbe+O2Fm+PKtOImufFs5jt3x7wp4w4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 144/255] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-Date:   Tue,  1 Sep 2020 17:10:00 +0200
-Message-Id: <20200901151007.602712332@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Yan <tom.ty89@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 141/255] ALSA: usb-audio: ignore broken processing/extension unit
+Date:   Tue,  1 Sep 2020 17:09:57 +0200
+Message-Id: <20200901151007.459879002@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -62,55 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Tom Yan <tom.ty89@gmail.com>
 
-[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
+[ Upstream commit d8d0db7bb358ef65d60726a61bfcd08eccff0bc0 ]
 
-In ufshcd_suspend(), after clk-gating is suspended and link is set
-as Hibern8 state, ufshcd_hold() is still possibly invoked before
-ufshcd_suspend() returns. For example, MediaTek's suspend vops may
-issue UIC commands which would call ufshcd_hold() during the command
-issuing flow.
+Some devices have broken extension unit where getting current value
+doesn't work. Attempt that once when creating mixer control for it. If
+it fails, just ignore it, so that it won't cripple the device entirely
+(and/or make the error floods).
 
-Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
-then ufshcd_hold() may enter infinite loops because there is no
-clk-ungating work scheduled or pending. In this case, ufshcd_hold()
-shall just bypass, and keep the link as Hibern8 state.
-
-Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Co-developed-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Tom Yan <tom.ty89@gmail.com>
+Link: https://lore.kernel.org/r/5f3abc52.1c69fb81.9cf2.fe91@mx.google.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/usb/mixer.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index 136b863bc1d45..2b5acdfb17820 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1566,6 +1566,7 @@ unblock_reqs:
- int ufshcd_hold(struct ufs_hba *hba, bool async)
- {
- 	int rc = 0;
-+	bool flush_result;
- 	unsigned long flags;
- 
- 	if (!ufshcd_is_clkgating_allowed(hba))
-@@ -1597,7 +1598,9 @@ start:
- 				break;
- 			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
--			flush_work(&hba->clk_gating.ungate_work);
-+			flush_result = flush_work(&hba->clk_gating.ungate_work);
-+			if (hba->clk_gating.is_suspended && !flush_result)
-+				goto out;
- 			spin_lock_irqsave(hba->host->host_lock, flags);
- 			goto start;
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index eab0fd4fd7c33..e0b7174c10430 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2367,7 +2367,7 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
+ 	int num_ins;
+ 	struct usb_mixer_elem_info *cval;
+ 	struct snd_kcontrol *kctl;
+-	int i, err, nameid, type, len;
++	int i, err, nameid, type, len, val;
+ 	const struct procunit_info *info;
+ 	const struct procunit_value_info *valinfo;
+ 	const struct usbmix_name_map *map;
+@@ -2470,6 +2470,12 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
+ 			break;
  		}
+ 
++		err = get_cur_ctl_value(cval, cval->control << 8, &val);
++		if (err < 0) {
++			usb_mixer_elem_info_free(cval);
++			return -EINVAL;
++		}
++
+ 		kctl = snd_ctl_new1(&mixer_procunit_ctl, cval);
+ 		if (!kctl) {
+ 			usb_mixer_elem_info_free(cval);
 -- 
 2.25.1
 
