@@ -2,138 +2,105 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C10C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC967C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0508F206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B88E9206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728172AbgIANrK convert rfc822-to-8bit (ORCPT
+        id S1728254AbgIANrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:47:10 -0400
-Received: from smtp.h3c.com ([60.191.123.50]:1634 "EHLO h3cspam02-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbgIANnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:43:39 -0400
-Received: from DAG2EX01-BASE.srv.huawei-3com.com ([10.8.0.64])
-        by h3cspam02-ex.h3c.com with ESMTPS id 081Dg3ce035167
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Sep 2020 21:42:04 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX01-BASE.srv.huawei-3com.com (10.8.0.64) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 1 Sep 2020 21:42:07 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
- mapi id 15.01.1713.004; Tue, 1 Sep 2020 21:42:07 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     "kbusch@kernel.org" <kbusch@kernel.org>,
-        "axboe@fb.com" <axboe@fb.com>, "hch@lst.de" <hch@lst.de>,
-        "sagi@grimberg.me" <sagi@grimberg.me>
-CC:     "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] [v2] nvme-pci: check req to prevent crash in
- nvme_handle_cqe()
-Thread-Topic: [PATCH] [v2] nvme-pci: check req to prevent crash in
- nvme_handle_cqe()
-Thread-Index: AQHWf4Y/N8Vq1L809kGpFMXahwhkUqlTyqMA
-Date:   Tue, 1 Sep 2020 13:42:07 +0000
-Message-ID: <632c4570812a4d2b81102190497fe9c7@h3c.com>
-References: <20200831105553.1621-1-tian.xianting@h3c.com>
-In-Reply-To: <20200831105553.1621-1-tian.xianting@h3c.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 1 Sep 2020 09:47:49 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2725 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728241AbgIANrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:47:06 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id AA6FADA0A00693C13AF8;
+        Tue,  1 Sep 2020 14:46:57 +0100 (IST)
+Received: from localhost (10.52.122.233) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 1 Sep 2020
+ 14:46:57 +0100
+Date:   Tue, 1 Sep 2020 14:45:20 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+CC:     Doug Anderson <dianders@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        "Lars-Peter Clausen" <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dtor@chromium.org>
+Subject: Re: [PATCH] iio: sx9310: Prefer async probe
+Message-ID: <20200901144520.0000576c@Huawei.com>
+In-Reply-To: <159894383586.334488.2938301456606601581@swboyd.mtv.corp.google.com>
+References: <20200828170052.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
+        <20200829161230.398e0051@archlinux>
+        <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
+        <20200829181754.52d3cc3b@archlinux>
+        <CAD=FV=VWrXwDwoxBK9y2ZeFEoG-edO4WktdSW0MFZLfbcS2hLQ@mail.gmail.com>
+        <159894383586.334488.2938301456606601581@swboyd.mtv.corp.google.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com 081Dg3ce035167
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.122.233]
+X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-Could I get the feedback for the patch, whether it can be applied or need some improvement?
-It really can prevent a crash we met.
-Thanks:)
+On Tue, 1 Sep 2020 00:03:55 -0700
+Stephen Boyd <swboyd@chromium.org> wrote:
 
------Original Message-----
-From: tianxianting (RD) 
-Sent: Monday, August 31, 2020 6:56 PM
-To: kbusch@kernel.org; axboe@fb.com; hch@lst.de; sagi@grimberg.me
-Cc: linux-nvme@lists.infradead.org; linux-kernel@vger.kernel.org; tianxianting (RD) <tian.xianting@h3c.com>
-Subject: [PATCH] [v2] nvme-pci: check req to prevent crash in nvme_handle_cqe()
+> Quoting Doug Anderson (2020-08-31 11:59:37)
+> > On Sat, Aug 29, 2020 at 10:18 AM Jonathan Cameron <jic23@kernel.org> wrote:  
+> > > Agreed. However, I'd like a comment next to the place we turn it on
+> > > saying what delays we are trying to mitigate by enabling it in this
+> > > driver.  
+> > 
+> > OK, I used function graph to get a trace.  Some of the time is simply
+> > i2c transfers, which we do A LOT of during initialization (and i2c
+> > transfers aren't known for being instant).  However, that's not the
+> > big problem.  Check out the regmap_read_poll_timeout() in
+> > sx9310_init_compensation().  20 ms per sleep with a 2 second timeout.
+> > This seems to eat over around 220 ms of the time on my system.
+> > 
+> > So how do you want to do this?  Do you want me to re-post the patch
+> > and mention the regmap_read_poll_timeout() in the commit message?  Do
+> > you want to just add that to the commit message yourself?
+> >   
+> 
+> I think the suggestion is to put a comment next to the
+> PROBE_PREFER_ASYNCHRONOUS flag indicating that
+> sx9310_init_compensation() can take a while. 
 
-We met a crash issue when hot-insert a nvme device, blk_mq_tag_to_rq() returned null(req=null), then crash happened in nvme_end_request():
-	struct nvme_request *rq = nvme_req(req);
-	rq->result = result;  <==crash here
+Yup. That's what I meant. Sorry for lack of clarity.
+A comment in the code stops others copying it without making sure they
+understand whether it is relevant in their case.  No one is going
+to look in commit messages.
 
-The test env is, a server is configured with 2 backplanes, each backplane support 8 nvme devices, this crash happened when hot-insert a nvme device to the second backplane. We measured the signal, which is send out of cpu to ack nvme interrupt, the signal is very weak when it reached the second backplane, the device can't distinguish it as a ack signal. So it caused the device can't clear the interrupt flag.
-After updating related driver, the signal sending out of cpu to the second backplane is good, the crash issue disappeared.
+> Should the compensation be
+> delayed even further though to some time when userspace opens the device
+> node?
 
-As blk_mq_tag_to_rq() may return null, so it should be check whether it is null before using it to prevent a crash.
+It's tricky because we may hit it on an individual sysfs read.
+We could spin off a thread to do it I suppose, though that would be
+more or less the same as allowing async probe.
 
-	[ 1124.256246] nvme nvme5: pci function 0000:e1:00.0
-	[ 1124.256323] nvme 0000:e1:00.0: enabling device (0000 -> 0002)
-	[ 1125.720859] nvme nvme5: 96/0/0 default/read/poll queues
-	[ 1125.732483]  nvme5n1: p1 p2 p3
-	[ 1125.788049] BUG: unable to handle kernel NULL pointer dereference at 0000000000000130
-	[ 1125.788054] PGD 0 P4D 0
-	[ 1125.788057] Oops: 0002 [#1] SMP NOPTI
-	[ 1125.788059] CPU: 50 PID: 0 Comm: swapper/50 Kdump: loaded Tainted: G   ------- -t - 4.18.0-147.el8.x86_64 #1
-	[ 1125.788065] RIP: 0010:nvme_irq+0xe8/0x240 [nvme]
-	[ 1125.788068] RSP: 0018:ffff916b8ec83ed0 EFLAGS: 00010813
-	[ 1125.788069] RAX: 0000000000000000 RBX: ffff918ae9211b00 RCX: 0000000000000000
-	[ 1125.788070] RDX: 000000000000400b RSI: 0000000000000000 RDI: 0000000000000000
-	[ 1125.788071] RBP: ffff918ae8870000 R08: 0000000000000004 R09: ffff918ae8870000
-	[ 1125.788072] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-	[ 1125.788073] R13: 0000000000000001 R14: 0000000000000000 R15: 0000000000000001
-	[ 1125.788075] FS:  0000000000000000(0000) GS:ffff916b8ec80000(0000) knlGS:0000000000000000
-	[ 1125.788075] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-	[ 1125.788076] CR2: 0000000000000130 CR3: 0000001768f00000 CR4: 0000000000340ee0
-	[ 1125.788077] Call Trace:
-	[ 1125.788080]  <IRQ>
-	[ 1125.788085]  __handle_irq_event_percpu+0x40/0x180
-	[ 1125.788087]  handle_irq_event_percpu+0x30/0x80
-	[ 1125.788089]  handle_irq_event+0x36/0x53
-	[ 1125.788090]  handle_edge_irq+0x82/0x190
-	[ 1125.788094]  handle_irq+0xbf/0x100
-	[ 1125.788098]  do_IRQ+0x49/0xd0
-	[ 1125.788100]  common_interrupt+0xf/0xf
+Jonathan
 
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- drivers/nvme/host/pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c index ba725ae47..5f1c51a43 100644
---- a/drivers/nvme/host/pci.c
-+++ b/drivers/nvme/host/pci.c
-@@ -960,6 +960,13 @@ static inline void nvme_handle_cqe(struct nvme_queue *nvmeq, u16 idx)
- 	}
- 
- 	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
-+	if (unlikely(!req)) {
-+		dev_warn(nvmeq->dev->ctrl.device,
-+			"req is null(tag:%d) on queue %d\n",
-+			cqe->command_id, le16_to_cpu(cqe->sq_id));
-+		return;
-+	}
-+
- 	trace_nvme_sq(req, cqe->sq_head, nvmeq->sq_tail);
- 	if (!nvme_end_request(req, cqe->status, cqe->result))
- 		nvme_pci_complete_rq(req);
---
-2.17.1
 
