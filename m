@@ -2,70 +2,211 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B64D7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F94C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B77D206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:33:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDCBC206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgIALdI (ORCPT
+        id S1726124AbgIALe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:33:08 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10355 "EHLO huawei.com"
+        Tue, 1 Sep 2020 07:34:26 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35128 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726255AbgIAL2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:28:42 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id B6C335C5C8A95CC4DC61;
-        Tue,  1 Sep 2020 19:11:15 +0800 (CST)
-Received: from [127.0.0.1] (10.174.177.253) by DGGEMS414-HUB.china.huawei.com
+        id S1726406AbgIAL3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:29:12 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B2F8BB1E91330B448EB8;
+        Tue,  1 Sep 2020 19:29:10 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS414-HUB.china.huawei.com
  (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
- 19:11:10 +0800
-Subject: Re: [PATCH v4 0/1] libnvdimm: fix memory leaks in of_pmem.c
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Oliver O'Halloran <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>
-References: <20200901081450.1969-1-thunder.leizhen@huawei.com>
- <9d82bd85-5d6c-b8fe-15c7-c87348aa7a3a@web.de>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <6a9ec7f5-f822-dce5-0560-d49d3bacaf0b@huawei.com>
-Date:   Tue, 1 Sep 2020 19:11:09 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ 19:29:00 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v3 -next] memory: omap-gpmc: Fix -Wunused-function warnings
+Date:   Tue, 1 Sep 2020 19:28:32 +0800
+Message-ID: <20200901112832.3084-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200901035642.22772-1-yuehaibing@huawei.com>
+References: <20200901035642.22772-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <9d82bd85-5d6c-b8fe-15c7-c87348aa7a3a@web.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.177.253]
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If CONFIG_OF is not set, make W=1 warns:
 
+drivers/memory/omap-gpmc.c:987:12: warning: ‘gpmc_cs_remap’ defined but not used [-Wunused-function]
+ static int gpmc_cs_remap(int cs, u32 base)
+            ^~~~~~~~~~~~~
+drivers/memory/omap-gpmc.c:926:20: warning: ‘gpmc_cs_get_name’ defined but not used [-Wunused-function]
+ static const char *gpmc_cs_get_name(int cs)
+                    ^~~~~~~~~~~~~~~~
+drivers/memory/omap-gpmc.c:919:13: warning: ‘gpmc_cs_set_name’ defined but not used [-Wunused-function]
+ static void gpmc_cs_set_name(int cs, const char *name)
+             ^~~~~~~~~~~~~~~~
+Move them to #ifdef CONFIG_OF block to fix this.
 
-On 2020/9/1 18:14, Markus Elfring wrote:
->> v3 --> v4
->> 1. Merge patch 1 and 2 into one:
-> 
-> How do you think about to omit a cover letter for a single patch?
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v3: move the functions to #ifdef block
+v2: update commit log
+---
+ drivers/memory/omap-gpmc.c | 114 ++++++++++++++++++-------------------
+ 1 file changed, 57 insertions(+), 57 deletions(-)
 
-After all, the code hasn't changed except this merge.
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index ac0f577a51a1..cfa730cfd145 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -916,20 +916,6 @@ static bool gpmc_cs_reserved(int cs)
+ 	return gpmc->flags & GPMC_CS_RESERVED;
+ }
+ 
+-static void gpmc_cs_set_name(int cs, const char *name)
+-{
+-	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+-
+-	gpmc->name = name;
+-}
+-
+-static const char *gpmc_cs_get_name(int cs)
+-{
+-	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+-
+-	return gpmc->name;
+-}
+-
+ static unsigned long gpmc_mem_align(unsigned long size)
+ {
+ 	int order;
+@@ -975,49 +961,6 @@ static int gpmc_cs_delete_mem(int cs)
+ 	return r;
+ }
+ 
+-/**
+- * gpmc_cs_remap - remaps a chip-select physical base address
+- * @cs:		chip-select to remap
+- * @base:	physical base address to re-map chip-select to
+- *
+- * Re-maps a chip-select to a new physical base address specified by
+- * "base". Returns 0 on success and appropriate negative error code
+- * on failure.
+- */
+-static int gpmc_cs_remap(int cs, u32 base)
+-{
+-	int ret;
+-	u32 old_base, size;
+-
+-	if (cs >= gpmc_cs_num) {
+-		pr_err("%s: requested chip-select is disabled\n", __func__);
+-		return -ENODEV;
+-	}
+-
+-	/*
+-	 * Make sure we ignore any device offsets from the GPMC partition
+-	 * allocated for the chip select and that the new base confirms
+-	 * to the GPMC 16MB minimum granularity.
+-	 */
+-	base &= ~(SZ_16M - 1);
+-
+-	gpmc_cs_get_memconf(cs, &old_base, &size);
+-	if (base == old_base)
+-		return 0;
+-
+-	ret = gpmc_cs_delete_mem(cs);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = gpmc_cs_insert_mem(cs, base, size);
+-	if (ret < 0)
+-		return ret;
+-
+-	ret = gpmc_cs_set_memconf(cs, base, size);
+-
+-	return ret;
+-}
+-
+ int gpmc_cs_request(int cs, unsigned long size, unsigned long *base)
+ {
+ 	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+@@ -1941,6 +1884,63 @@ static const struct of_device_id gpmc_dt_ids[] = {
+ 	{ }
+ };
+ 
++static void gpmc_cs_set_name(int cs, const char *name)
++{
++	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
++
++	gpmc->name = name;
++}
++
++static const char *gpmc_cs_get_name(int cs)
++{
++	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
++
++	return gpmc->name;
++}
++
++/**
++ * gpmc_cs_remap - remaps a chip-select physical base address
++ * @cs:		chip-select to remap
++ * @base:	physical base address to re-map chip-select to
++ *
++ * Re-maps a chip-select to a new physical base address specified by
++ * "base". Returns 0 on success and appropriate negative error code
++ * on failure.
++ */
++static int gpmc_cs_remap(int cs, u32 base)
++{
++	int ret;
++	u32 old_base, size;
++
++	if (cs >= gpmc_cs_num) {
++		pr_err("%s: requested chip-select is disabled\n", __func__);
++		return -ENODEV;
++	}
++
++	/*
++	 * Make sure we ignore any device offsets from the GPMC partition
++	 * allocated for the chip select and that the new base confirms
++	 * to the GPMC 16MB minimum granularity.
++	 */
++	base &= ~(SZ_16M - 1);
++
++	gpmc_cs_get_memconf(cs, &old_base, &size);
++	if (base == old_base)
++		return 0;
++
++	ret = gpmc_cs_delete_mem(cs);
++	if (ret < 0)
++		return ret;
++
++	ret = gpmc_cs_insert_mem(cs, base, size);
++	if (ret < 0)
++		return ret;
++
++	ret = gpmc_cs_set_memconf(cs, base, size);
++
++	return ret;
++}
++
+ /**
+  * gpmc_read_settings_dt - read gpmc settings from device-tree
+  * @np:		pointer to device-tree node for a gpmc child device
+-- 
+2.17.1
 
-> 
-> Regards,
-> Markus
-> 
-> 
 
