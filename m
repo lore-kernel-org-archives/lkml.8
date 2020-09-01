@@ -2,73 +2,158 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43A0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91177C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F0CA2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58657206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598975100;
+	bh=tnGaXVxjFd8tE27j01WMCgbuhktIS9wS63ugvbMZQ2E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xAzIFQWO5TsYYznYgnXxOINY7SVeBqEQnd5gPAYJjC/kHcQrlHRhmbYYQANmqILpr
+	 U4cj0i1F9zF2+Fdome/4ExvOagxqIIctSoMgp6reXhokbR7bU8czuWKVJTN/DVJisX
+	 W+zBp297Ca6mnqczUsUVb47DDD+YhPnq9e/m7LuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731844AbgIAPox (ORCPT
+        id S1731849AbgIAPo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:44:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:44150 "EHLO foss.arm.com"
+        Tue, 1 Sep 2020 11:44:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55134 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730108AbgIAPmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726140AbgIAPmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:42:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F1521045;
-        Tue,  1 Sep 2020 08:42:21 -0700 (PDT)
-Received: from C02TD0UTHF1T.local (unknown [10.57.10.252])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E9E23F71F;
-        Tue,  1 Sep 2020 08:42:19 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 16:42:17 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-Cc:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, oleg@redhat.com,
-        x86@kernel.org
-Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
-Message-ID: <20200901154217.GD95447@C02TD0UTHF1T.local>
-References: <aefc85852ea518982e74b233e11e16d2e707bc32>
- <20200728131050.24443-1-madvenka@linux.microsoft.com>
- <20200731180955.GC67415@C02TD0UTHF1T.local>
- <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
- <20200804143018.GB7440@C02TD0UTHF1T.local>
- <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
- <20200812100650.GB28154@C02TD0UTHF1T.local>
- <41c4de64-68d0-6fcb-e5c3-63ebd459262e@digikod.net>
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A3A32064B;
+        Tue,  1 Sep 2020 15:42:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974941;
+        bh=tnGaXVxjFd8tE27j01WMCgbuhktIS9wS63ugvbMZQ2E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ajBSidSaXiRoI+NObjjq3RBxfaA7oUxJaQ0f8BtYDmbrfU4dHqkMgOLXvy/JNt+4j
+         ghOpNal++yNZjgyXqL3nTjfr1eoPHvZZmOLDa+nD597TT78kEuUTN2T0zR8MGlOFHn
+         84RSGXMbEY4qAfKuN5ZVCsebPlfFchoUBoVAVp0Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 119/255] spi: stm32: fix fifo threshold level in case of short transfer
+Date:   Tue,  1 Sep 2020 17:09:35 +0200
+Message-Id: <20200901151006.430575434@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <41c4de64-68d0-6fcb-e5c3-63ebd459262e@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 08:53:42PM +0200, Mickaël Salaün wrote:
-> On 12/08/2020 12:06, Mark Rutland wrote:
-> > Contemporary W^X means that a given virtual alias cannot be writeable
-> > and executeable simultaneously, permitting (a) and (b). If you read the
-> > references on the Wikipedia page for W^X you'll see the OpenBSD 3.3
-> > release notes and related presentation make this clear, and further they
-> > expect (b) to occur with JITS flipping W/X with mprotect().
-> 
-> W^X (with "permanent" mprotect restrictions [1]) goes back to 2000 with
-> PaX [2] (which predates partial OpenBSD implementation from 2003).
-> 
-> [1] https://pax.grsecurity.net/docs/mprotect.txt
-> [2] https://undeadly.org/cgi?action=article;sid=20030417082752
+From: Amelie Delaunay <amelie.delaunay@st.com>
 
-Thanks for the pointers!
+[ Upstream commit 3373e9004acc0603242622b4378c64bc01d21b5f ]
 
-Mark.
+When transfer is shorter than half of the fifo, set the data packet size
+up to transfer size instead of up to half of the fifo.
+Check also that threshold is set at least to 1 data frame.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Link: https://lore.kernel.org/r/1597043558-29668-3-git-send-email-alain.volmat@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/spi/spi-stm32.c | 26 ++++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index fce679635829c..7f2113e7b3ddc 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -468,20 +468,27 @@ static int stm32_spi_prepare_mbr(struct stm32_spi *spi, u32 speed_hz,
+ /**
+  * stm32h7_spi_prepare_fthlv - Determine FIFO threshold level
+  * @spi: pointer to the spi controller data structure
++ * @xfer_len: length of the message to be transferred
+  */
+-static u32 stm32h7_spi_prepare_fthlv(struct stm32_spi *spi)
++static u32 stm32h7_spi_prepare_fthlv(struct stm32_spi *spi, u32 xfer_len)
+ {
+-	u32 fthlv, half_fifo;
++	u32 fthlv, half_fifo, packet;
+ 
+ 	/* data packet should not exceed 1/2 of fifo space */
+ 	half_fifo = (spi->fifo_size / 2);
+ 
++	/* data_packet should not exceed transfer length */
++	if (half_fifo > xfer_len)
++		packet = xfer_len;
++	else
++		packet = half_fifo;
++
+ 	if (spi->cur_bpw <= 8)
+-		fthlv = half_fifo;
++		fthlv = packet;
+ 	else if (spi->cur_bpw <= 16)
+-		fthlv = half_fifo / 2;
++		fthlv = packet / 2;
+ 	else
+-		fthlv = half_fifo / 4;
++		fthlv = packet / 4;
+ 
+ 	/* align packet size with data registers access */
+ 	if (spi->cur_bpw > 8)
+@@ -489,6 +496,9 @@ static u32 stm32h7_spi_prepare_fthlv(struct stm32_spi *spi)
+ 	else
+ 		fthlv -= (fthlv % 4); /* multiple of 4 */
+ 
++	if (!fthlv)
++		fthlv = 1;
++
+ 	return fthlv;
+ }
+ 
+@@ -1394,7 +1404,7 @@ static void stm32h7_spi_set_bpw(struct stm32_spi *spi)
+ 	cfg1_setb |= (bpw << STM32H7_SPI_CFG1_DSIZE_SHIFT) &
+ 		     STM32H7_SPI_CFG1_DSIZE;
+ 
+-	spi->cur_fthlv = stm32h7_spi_prepare_fthlv(spi);
++	spi->cur_fthlv = stm32h7_spi_prepare_fthlv(spi, spi->cur_xferlen);
+ 	fthlv = spi->cur_fthlv - 1;
+ 
+ 	cfg1_clrb |= STM32H7_SPI_CFG1_FTHLV;
+@@ -1589,6 +1599,8 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
+ 
+ 	spin_lock_irqsave(&spi->lock, flags);
+ 
++	spi->cur_xferlen = transfer->len;
++
+ 	if (spi->cur_bpw != transfer->bits_per_word) {
+ 		spi->cur_bpw = transfer->bits_per_word;
+ 		spi->cfg->set_bpw(spi);
+@@ -1636,8 +1648,6 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
+ 			goto out;
+ 	}
+ 
+-	spi->cur_xferlen = transfer->len;
+-
+ 	dev_dbg(spi->dev, "transfer communication mode set to %d\n",
+ 		spi->cur_comm);
+ 	dev_dbg(spi->dev,
+-- 
+2.25.1
+
+
+
