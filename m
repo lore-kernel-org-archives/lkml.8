@@ -2,135 +2,127 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DEFC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2311DC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE4CD2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:17:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599002229;
-	bh=dEzwxEuUgfYnGt8tTDL/A1NPb+fEcrJH6io3xPpZIAI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=hGvNhsIjqSbtQoye+1zDOeF8c55gyGnMRtPjt1rD0rC1CZxKYJWvdaWBnNWsdd/WZ
-	 +2zICOkqIAoBPmt06GInDAhaLSqtwP8Ch4IF5fP3g8bJBygLGSfCjlNx5ip9yjZGHX
-	 CrUcQT7rX5DPISpYdhVD8Rsg8WPbF1gW/9oEbLfE=
+	by mail.kernel.org (Postfix) with ESMTP id E82BE206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:18:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="h1W3rhK1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgIAXRI (ORCPT
+        id S1726406AbgIAXSL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 19:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726124AbgIAXRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 19:17:08 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E92202071B
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 23:17:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599002227;
-        bh=dEzwxEuUgfYnGt8tTDL/A1NPb+fEcrJH6io3xPpZIAI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZYj8rqV3HROpw6CDvgMVd5hZg5rBDjH4RSJIo5SPOM7Ja7YqDakNre623J7KNMdv9
-         zpEb0CzMeczKHCD4/DAAOODJN5n6te/K7xaUjswZj03FpVUJmbOxdsGfuH5owN08yV
-         Y8JxqXzezZAiQVMZxYJlE3EINQVxw7bVxJS2ykFo=
-Received: by mail-ej1-f50.google.com with SMTP id a15so1346138ejf.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 16:17:06 -0700 (PDT)
-X-Gm-Message-State: AOAM530Azf3SPnzgFoNk7oLNiIP1uabZU3cGLNrE+8+YaTN5ZYlGJI7/
-        CXVbwm3bKM1cpTq6Fx6z+1Lhn8KmD4qKXoiGYQ==
-X-Google-Smtp-Source: ABdhPJxjGeMplEAO/cPVthJXCGCEi6FG3fNO07cenYqDxG9mxyLxAmv8N/2WWybtiLb8XagSSQ/Sw0SUTCoZ0nSCAFg=
-X-Received: by 2002:a17:906:119b:: with SMTP id n27mr3661770eja.124.1599002225526;
- Tue, 01 Sep 2020 16:17:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063534eucas1p2647f5e9679f79f568e184b092f743f8b@eucas1p2.samsung.com>
- <20200826063316.23486-12-m.szyprowski@samsung.com> <30f20ad6-783b-89c3-17b5-30c6a2587d23@arm.com>
-In-Reply-To: <30f20ad6-783b-89c3-17b5-30c6a2587d23@arm.com>
-From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Date:   Wed, 2 Sep 2020 07:16:54 +0800
-X-Gmail-Original-Message-ID: <CAAOTY_9BaFZbiGFYjat4vJ-_kEONXxfgcTRPd6aKoeKJ7xxBww@mail.gmail.com>
-Message-ID: <CAAOTY_9BaFZbiGFYjat4vJ-_kEONXxfgcTRPd6aKoeKJ7xxBww@mail.gmail.com>
-Subject: Re: [PATCH v9 11/32] drm: mediatek: use common helper for extracting
- pages array
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        iommu@lists.linux-foundation.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tue, 1 Sep 2020 19:18:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41816 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726210AbgIAXSI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 19:18:08 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA735C061246
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 16:18:08 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id mw10so1390455pjb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 16:18:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=4iyrZMhsm50EAs3g2KnI7xhSNv02uS5mIc/bNi5tMhA=;
+        b=h1W3rhK11Ac2ULHxITQVWk+mYa5KEEodEYvcXH6ZBK0sVGUcKUNSYh5WpmAqVdJ4uM
+         laH+r/2+ofVbyxPYxM/BYCZTO3d1jcstILzzhKlZMC4jxxBsADHZmsJZMYMsDLc0Xqts
+         f/ywKAW1F2cWVr+Ovsyf3pu5q6m5rdIcz38XA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=4iyrZMhsm50EAs3g2KnI7xhSNv02uS5mIc/bNi5tMhA=;
+        b=fn2Z8dNXaR9iVRi2nNQP7CVIcebKLqwdNpv5AowBIRumNztcmT5QWMkQcYhSzwPeVs
+         GTTUTEUtDO8NE8eDkqEnxqmh8BajZYTUy45Mcz/S24mdLFrm+6PCeZmsWzaTrqO4Sl+C
+         cwASa17N7o5PI9oHpP04hlZXzTrcgeqEDpU8CpHDRn6KjTUk/u1AkWtCdR/YsE3s2pnN
+         7qUW83Fip3YUgu3LwdkVUowOs3WfZVEVaryoFmwYUfOX5d47gbqoMHp3yN/tLy3TKbuj
+         FQ8nFE4FSU4p54NfS8V+/DEoW0JhdlURNQKQJx7mE75eTIWmKOGOJgHCruAfluWOoY9C
+         w3vQ==
+X-Gm-Message-State: AOAM531VFaAzqZZOwmQjSFN6IVy8lfpW+tDcZ9JlEIbLyIKp70GT/BSf
+        JT2dM/Gb9wdLMdgbNsjRlKyv+A==
+X-Google-Smtp-Source: ABdhPJygBwAH2kY44WcP2KmDZ++JT1L7dvXf2P1Gp3pBp8hQP0G/2rd4h4BS1PltNzQUpbBUJyzvFQ==
+X-Received: by 2002:a17:902:7404:: with SMTP id g4mr2271545pll.176.1599002287789;
+        Tue, 01 Sep 2020 16:18:07 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id l22sm3506944pfc.27.2020.09.01.16.18.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 16:18:06 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 16:18:05 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v6 00/29] Warn on orphan section placement
+Message-ID: <202009011616.E6DC7D54EF@keescook>
+References: <20200821194310.3089815-1-keescook@chromium.org>
+ <202008311240.9F94A39@keescook>
+ <20200901071133.GA3577996@gmail.com>
+ <20200901075937.GA3602433@gmail.com>
+ <20200901081647.GB3602433@gmail.com>
+ <202009010816.80F4692@keescook>
+ <CAKwvOdnn3wxYdJomvnveyD_njwRku3fABWT_bS92duihhywLJQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdnn3wxYdJomvnveyD_njwRku3fABWT_bS92duihhywLJQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Robin Murphy <robin.murphy@arm.com> =E6=96=BC 2020=E5=B9=B49=E6=9C=882=E6=
-=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=882:55=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On 2020-08-26 07:32, Marek Szyprowski wrote:
-> > Use common helper for converting a sg_table object into struct
-> > page pointer array.
->
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
->
-> Side note: is mtk_drm_gem_prime_vmap() missing a call to
-> sg_free_table(sgt) before its kfree(sgt)?
+On Tue, Sep 01, 2020 at 11:02:02AM -0700, Nick Desaulniers wrote:
+> On Tue, Sep 1, 2020 at 8:17 AM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Tue, Sep 01, 2020 at 10:16:47AM +0200, Ingo Molnar wrote:
+> > > > This is with:
+> > > >
+> > > >   GNU ld version 2.25-17.fc23
+> >
+> > (At best, this is from 2015 ... but yes, min binutils in 2.23.)
+> 
+> Ah, crap! Indeed arch/powerpc/Makefile wraps this in ld-option.
 
-Yes, we need another patch to fix that bug, But for this patch,
+Yeah, I totally missed that too. :)
 
-Acked-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
+> Uh oh, the ppc vdso uses cc-ldoption which was removed! (I think by
+> me; let me send patches)  How is that not an error?  Yes, guilty,
+> officer.
+> commit 055efab3120b ("kbuild: drop support for cc-ldoption").
+> Did I not know how to use grep, or?  No, it is
+> commit f2af201002a8 ("powerpc/build: vdso linker warning for orphan sections")
+> that is wrong.
 
->
-> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > ---
-> >   drivers/gpu/drm/mediatek/mtk_drm_gem.c | 9 ++-------
-> >   1 file changed, 2 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/m=
-ediatek/mtk_drm_gem.c
-> > index 3654ec732029..0583e557ad37 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
-> > @@ -233,9 +233,7 @@ void *mtk_drm_gem_prime_vmap(struct drm_gem_object =
-*obj)
-> >   {
-> >       struct mtk_drm_gem_obj *mtk_gem =3D to_mtk_gem_obj(obj);
-> >       struct sg_table *sgt;
-> > -     struct sg_page_iter iter;
-> >       unsigned int npages;
-> > -     unsigned int i =3D 0;
-> >
-> >       if (mtk_gem->kvaddr)
-> >               return mtk_gem->kvaddr;
-> > @@ -249,11 +247,8 @@ void *mtk_drm_gem_prime_vmap(struct drm_gem_object=
- *obj)
-> >       if (!mtk_gem->pages)
-> >               goto out;
-> >
-> > -     for_each_sg_page(sgt->sgl, &iter, sgt->orig_nents, 0) {
-> > -             mtk_gem->pages[i++] =3D sg_page_iter_page(&iter);
-> > -             if (i > npages)
-> > -                     break;
-> > -     }
-> > +     drm_prime_sg_to_page_addr_arrays(sgt, mtk_gem->pages, NULL, npage=
-s);
-> > +
-> >       mtk_gem->kvaddr =3D vmap(mtk_gem->pages, npages, VM_MAP,
-> >                              pgprot_writecombine(PAGE_KERNEL));
-> >
-> >
+Eek, yeah, the vdso needs fixing; whoops. Lucky for my series, I only need
+ld-option! ;)
+
+(Doing test builds now...)
+
+-- 
+Kees Cook
