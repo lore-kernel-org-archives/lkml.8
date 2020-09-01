@@ -2,101 +2,123 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B3C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82879C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B04206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:05:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 600D3207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EVBdaelk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJ9INBN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbgIAVFQ (ORCPT
+        id S1728661AbgIAVIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:05:16 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:37374 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgIAVFN (ORCPT
+        Tue, 1 Sep 2020 17:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50044 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgIAVIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:05:13 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081L3Z2O178125;
-        Tue, 1 Sep 2020 21:05:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=nXG4/CL+hVOi2jIopJ0MFc0Agwfhg8ZWSwan1tEwxp4=;
- b=EVBdaelk/wBjPsGKV4go/ME7XRFrsAWxDVSpr6FSNW5MF+HmUPfM8vRl4CVxcXQTdCTS
- hiZkFOw2UUmRxkwUkvld8+313wUpezgN71VXwPIXV86uMGVKeRj7fqPQhkx84ZUVbZ3C
- PKkC/j4VovMpniWbFPgUmN2g+q3DZsY9ZRFwzzow0YRir6SwXGWM7ix4jeY71SzIbJIf
- Jv6umT0S65S50y1RF/dGJqe/gnwA22qtBxg+plfUgBFqPD6geKWGImQYU1ukWayiCIno
- oIeJVO7lJf9gH0bhmMeVH+aQowLPEkeBylHwGPzukzV9lRbdR9ugEclJrKbZLms/Uy6z 5Q== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 339dmmwbu7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 01 Sep 2020 21:05:03 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081L51n4054616;
-        Tue, 1 Sep 2020 21:05:03 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 3380ssjgr9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Sep 2020 21:05:03 +0000
-Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 081L51Uf014522;
-        Tue, 1 Sep 2020 21:05:02 GMT
-Received: from [192.168.2.112] (/50.38.35.18)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Sep 2020 14:05:01 -0700
-Subject: Re: [Patch v4 7/7] mm/hugetlb: take the free hpage during the
- iteration directly
-To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, bhe@redhat.com
-References: <20200901014636.29737-1-richard.weiyang@linux.alibaba.com>
- <20200901014636.29737-8-richard.weiyang@linux.alibaba.com>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <aa572a2a-6184-7317-8209-bf07dd05af5f@oracle.com>
-Date:   Tue, 1 Sep 2020 14:05:00 -0700
+        Tue, 1 Sep 2020 17:08:14 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D47C061244;
+        Tue,  1 Sep 2020 14:08:13 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id c18so3010526wrm.9;
+        Tue, 01 Sep 2020 14:08:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+CKclAjRFtFzzHuH4Z+cc0RleEsFQT6/9G8VarpeaFQ=;
+        b=iJ9INBN/zOJ9tXPac/L7ys8thnkeloE8N27/kaWQj56mYdS+iVScqRJoY9x+0l+w7w
+         nB+0SkQRMzFybROIgHKwNNcZzDclvoWi+ahM2izct3hxG/kacC4D41FpkC8PooTrVEkM
+         Q/0Ix4PkDgDJR/EhGKSFwZ9lkwcRW3X04wdBWx9nx6KeOBU+e9lk7Xw6iU77ZDjVv4Dd
+         AtO5iZoav85K1E4+x5Qluz6mPKNRYCaCxPq5S53E3PsyXk5ZuQcW59G29KmqGX7SjmtV
+         yu6pn5fcm2Vb1WDLLtIP8bAXF9oVHveJz8jaDpvCEK2FmvAcFCE0eBJFxJXaVpfJWQIv
+         rFsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+CKclAjRFtFzzHuH4Z+cc0RleEsFQT6/9G8VarpeaFQ=;
+        b=pi2od7yiD3/JEpG9tMv8lyHFcctX1dwRRoWy16jAWFnzMFLsUSYG9uKyhNBrpaxXRC
+         hzZgkluEa8R86IWQD/FnAXv6IOX6FvfB89SJzy55mBuIUBJxpDIcijy3cFZLkOqPw6fU
+         MiRKz7BJPezeufQ5UQaqHw0fgiWn7Vrz0qTLxJFxgX1R+TJPDzC8Ijp6WVzX2FIMgNCQ
+         zi7vcB3FzACbwIX8CTJej9r9tzOnLcz7D+8viPLYh887jfjG6VDjFOZrhG/rpvOMixMj
+         GvqlSRk60OumR+OkwQYdoaj6Huey2GJZCfdPnYjpWvpkTaovxnU8Yz20BA6F2Q4g5uUD
+         qQ/g==
+X-Gm-Message-State: AOAM531e/x4qdMwkYBw4rw3nyuOYaOaLPlxlQha8TR3eyJGovYHVi2WC
+        MUzc0b+p0a3Tq1fhefNrBLw=
+X-Google-Smtp-Source: ABdhPJyrtR37csheuTld/JwsHQAsd681gBqX8t+zpuP+aWyKKRFXAtGGsoe2rsyy8mv1hcnFb3M7VA==
+X-Received: by 2002:adf:c182:: with SMTP id x2mr3772220wre.400.1598994491962;
+        Tue, 01 Sep 2020 14:08:11 -0700 (PDT)
+Received: from ?IPv6:2a01:110f:b59:fd00:a062:770b:28ce:a41e? ([2a01:110f:b59:fd00:a062:770b:28ce:a41e])
+        by smtp.gmail.com with ESMTPSA id o4sm3718405wrv.86.2020.09.01.14.08.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 14:08:11 -0700 (PDT)
+Subject: Re: [PATCH v2 0/2] leds: pwm: Make automatic labels work
+To:     Alexander Dahl <post@lespocky.de>, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org
+Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        Alexander Dahl <ada@thorsis.com>
+References: <20200831210232.28052-1-post@lespocky.de>
+From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Message-ID: <a8f9068b-d78d-3ba5-6747-f79ed8e641bd@gmail.com>
+Date:   Tue, 1 Sep 2020 23:08:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200901014636.29737-8-richard.weiyang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200831210232.28052-1-post@lespocky.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009010180
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=2
- spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009010180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/31/20 6:46 PM, Wei Yang wrote:
-> Function dequeue_huge_page_node_exact() iterates the free list and
-> return the first valid free hpage.
-> 
-> Instead of break and check the loop variant, we could return in the loop
-> directly. This could reduce some redundant check.
-> 
-> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+Hi Alexander,
 
-Thank you!
+Thanks for the v2.
 
-Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+On 8/31/20 11:02 PM, Alexander Dahl wrote:
+> Hei hei,
+> 
+> for leds-gpio you can use the properties 'function' and 'color' in the
+> devicetree node and omit 'label', the label is constructed
+> automatically.  This is a common feature supposed to be working for all
+> LED drivers.  However it did not yet work for the 'leds-pwm' driver.
+> This series fixes the driver and takes the opportunity to update the
+> dt-bindings accordingly.
+> 
+> v1: based on v5.9-rc2, backport on v5.4.59 tested and working
+> 
+> v2: based on v5.9-rc3, added the dt-bindings update patch
+> 
+> Greets
+> Alex
+> 
+> Alexander Dahl (2):
+>    leds: pwm: Allow automatic labels for DT based devices
+>    dt-bindings: leds: Convert pwm to yaml
+> 
+>   .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
+>   .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
+>   drivers/leds/leds-pwm.c                       |  9 +-
+>   3 files changed, 93 insertions(+), 51 deletions(-)
+>   delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
+> 
+
+For both patches:
+
+Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 
 -- 
-Mike Kravetz
+Best regards,
+Jacek Anaszewski
