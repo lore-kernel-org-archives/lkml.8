@@ -2,116 +2,73 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1238C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B823C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6AF3206CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:54:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bNeNVIUp"
+	by mail.kernel.org (Postfix) with ESMTP id 7A890206CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726858AbgIBCyg (ORCPT
+        id S1726892AbgIBC40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 22:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46926 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgIBCyF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 22:54:05 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E818C061265
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 19:53:56 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id d19so1781348pgl.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 19:53:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JcvEo160LuHDQD7qfOvAP7KcCyAU7p1FFARh/mGAmoY=;
-        b=bNeNVIUp5wLd20zY7GcMyTGEK+1iPazVe7pNUjLaD0gXYItCy+3Sdv//WvvNwoKDM6
-         Uv+a9vaUg3+t1WxF84thK1gkM5sHMKI+Rq2tNAhA7rAZnF0RzdZRMP6vmNwRs2hT7jbC
-         A2ZuOezSk/Jtm5d8lXaE6Ct1Du9kbe7yDRf6I=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JcvEo160LuHDQD7qfOvAP7KcCyAU7p1FFARh/mGAmoY=;
-        b=RvuYD6ooxxpeANlPjfpeEjg9Rlep5HxKCG7qFQf+M4SAUQC4mYbARI5dgkDOajlbY0
-         he3uHBuvepAjcgm4A7FaSDmngYAx6y4LVMpdi1DLCtBJflFUl7C8YzHpPHxe7iUG6lKT
-         S9F99GBioBS7WEendRoeqlaDWnJoE8FAzx26xZVJCqjz0TAIYQkyZuxD2e8IaLqlDQT0
-         TzHnOYM3pYGTkiTbu5aWOymRTkvAST8C+D8cupYDdAOAUBfu/uIXtbKfUDceqHX9llQU
-         T4VOW3QRmxnvqg0X6cBfHz08WrcJBczn40fPnI4rchk2zHQYgxYcZF2Lgf4d7slc8xSF
-         RTkg==
-X-Gm-Message-State: AOAM530kVe2iA85Hwy3xW4x5o21mrHALNBjTu11e6To48sjG3aCMlR7j
-        BqDTDJypdjx/yst5KHuR/MAi1g==
-X-Google-Smtp-Source: ABdhPJy0HGMfDCWkJW2ahd3RYXmS5RA7xjHg6pHP5/RCgQANMg7x7X7wDQT+vfbBEud/U6454iTChQ==
-X-Received: by 2002:a63:d34e:: with SMTP id u14mr235066pgi.122.1599015236142;
-        Tue, 01 Sep 2020 19:53:56 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o192sm3673517pfg.81.2020.09.01.19.53.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 19:53:54 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v7 5/5] x86/boot/compressed: Warn on orphan section placement
-Date:   Tue,  1 Sep 2020 19:53:47 -0700
-Message-Id: <20200902025347.2504702-6-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200902025347.2504702-1-keescook@chromium.org>
-References: <20200902025347.2504702-1-keescook@chromium.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 1 Sep 2020 22:56:26 -0400
+Received: from mga07.intel.com ([134.134.136.100]:49594 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726426AbgIBC4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 22:56:25 -0400
+IronPort-SDR: Iftd7/tx/YhQ93G7NuN589vT95sn2A0yIbgjeus/oGI6zU89RRZaJh8ZwbwuZrn4sijTP+PQ/E
+ hvNpR/Zcmd6A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="221528363"
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="221528363"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 19:56:23 -0700
+IronPort-SDR: jBgxsSqL2oXJ/4EVq/a9gAZ4Edsb+NYd7YoMISZkZS6tdjBfayU4rHaIkvU+ySPF7v5UTEbSGS
+ w5UMrrgpw8VA==
+X-IronPort-AV: E=Sophos;i="5.76,381,1592895600"; 
+   d="scan'208";a="477457229"
+Received: from bard-ubuntu.sh.intel.com ([10.239.13.33])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 19:56:19 -0700
+From:   Bard Liao <yung-chuan.liao@linux.intel.com>
+To:     alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, linux-kernel@vger.kernel.org, tiwai@suse.de,
+        broonie@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, rander.wang@linux.intel.com,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        pierre-louis.bossart@linux.intel.com, sanyog.r.kale@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: [PATCH 0/7] ASoC: soundwire: Move sdw stream operations to
+Date:   Tue,  1 Sep 2020 23:02:33 +0800
+Message-Id: <20200901150240.19288-1-yung-chuan.liao@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't want to depend on the linker's orphan section placement
-heuristics as these can vary between linkers, and may change between
-versions. All sections need to be explicitly handled in the linker
-script.
+sdw stream operation APIs can be called once per stream. dailink
+callbacks are good places to call these APIs.
 
-Now that all sections are explicitly handled, enable orphan section
-warnings.
+Pierre-Louis Bossart (7):
+  ASoC: soc-dai: clarify return value for get_sdw_stream()
+  soundwire: stream: fix NULL/IS_ERR confusion
+  soundwire: intel: fix NULL/ERR_PTR confusion
+  ASOC: Intel: sof_sdw: add dailink .trigger callback
+  ASOC: Intel: sof_sdw: add dailink .prepare and .hw_free callback
+  soundwire: intel: remove .trigger operation
+  soundwire: intel: remove stream handling from .prepare and .hw_free
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/boot/compressed/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soundwire/intel.c        | 60 ++++-------------------
+ drivers/soundwire/stream.c       |  2 +-
+ include/sound/soc-dai.h          |  3 +-
+ sound/soc/intel/boards/sof_sdw.c | 81 ++++++++++++++++++++++++++++++++
+ 4 files changed, 92 insertions(+), 54 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 5b7f6e175b03..871cc071c925 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -54,6 +54,7 @@ KBUILD_LDFLAGS += $(call ld-option,--no-ld-generated-unwind-info)
- # Compressed kernel should be built as PIE since it may be loaded at any
- # address by the bootloader.
- LDFLAGS_vmlinux := -pie $(call ld-option, --no-dynamic-linker)
-+LDFLAGS_vmlinux += $(call ld-option, --orphan-handling=warn)
- LDFLAGS_vmlinux += -T
- 
- hostprogs	:= mkpiggy
 -- 
-2.25.1
+2.17.1
 
