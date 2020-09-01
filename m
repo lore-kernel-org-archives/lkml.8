@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84900C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C49C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57BE4204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A84520767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:11:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976687;
-	bh=3aEdmM77SGyBfskiqRaEc/vEs5I+jwxpTPr1Qlw1VPM=;
+	s=default; t=1598976688;
+	bh=gWohrytgPPCufu0Y0SdUetLBz+Kc3A0G8R2gLyGeer8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AP4y8dNfKdk1agArdLiZTWihIIjpEvjxclomh7+VbCFTkXA6J59tZf9s7nH+2QfLH
-	 FVMH/X1O+I2GTK2PH7txZkE+NkSTD2+Bsiw/Q+UWH0t+kAZIRUVvvVqGSQgqrkxbgh
-	 G0bMbUJpjQwDz9mUtj92IWti6A74M83DKa3brrdM=
+	b=qNMU8gI/njGNtJkzuvtGslmTtJ99uoI6FQ0B2vSoACjoeQDsmG+bqvGbdDUE79aS6
+	 jaZuUJEiS0HbM/m9baWEGX8Ng0rPVtFJKXKwYLY+kwywD6TEV7gi82qavUzL9HMA4D
+	 i3jzSIHYl9jS8BvX1bHHDEbfiGC47spDxZZiCbyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbgIAQL0 (ORCPT
+        id S1731331AbgIAPhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:11:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbgIAPhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:37:50 -0400
+        id S1728776AbgIAPgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:36:07 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B53521582;
-        Tue,  1 Sep 2020 15:37:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E059620E65;
+        Tue,  1 Sep 2020 15:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974669;
-        bh=3aEdmM77SGyBfskiqRaEc/vEs5I+jwxpTPr1Qlw1VPM=;
+        s=default; t=1598974566;
+        bh=gWohrytgPPCufu0Y0SdUetLBz+Kc3A0G8R2gLyGeer8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RTNWK5eYnN0Js45uUDX8JMXLchv9eMUsUo1p9FJ6J7I5x42nJqhjWLeazybOzgUeL
-         x+EykgVtVwwSD3tehsm67cQWaLcTDx3euBIyLtBsRvEpNzAbGhMWKIvoLls1c/EALu
-         tYVZyiGxGH+7nsyt/xDX4ESmkxVmrbx5HkxWm5ks=
+        b=JpOr+lwpVUG0HWqePFe2m+/LU6yQWVfI02E8K2EHp6MABlCqYGWotQzjE+fzPpoS0
+         koZevvQDWmMVbvxKg4fxY7ZhI0uax0E3zAM7hkhiSY+mz5eINYwY1q3KmwH6XL7WX0
+         yhicBrrINHrzc+jQckHTGWVwckvbcJXtl92gZXiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 048/255] HID: quirks: add NOGET quirk for Logitech GROUP
-Date:   Tue,  1 Sep 2020 17:08:24 +0200
-Message-Id: <20200901151003.040979726@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 011/255] ASoC: tegra: Fix reference count leaks.
+Date:   Tue,  1 Sep 2020 17:07:47 +0200
+Message-Id: <20200901151001.346659314@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,50 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ikjoon Jang <ikjn@chromium.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
+[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
 
-Add HID_QUIRK_NOGET for Logitech GROUP device.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 
-Logitech GROUP is a compound with camera and audio.
-When the HID interface in an audio device is requested to get
-specific report id, all following control transfers are stalled
-and never be restored back.
-
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ sound/soc/tegra/tegra30_ahub.c | 4 +++-
+ sound/soc/tegra/tegra30_i2s.c  | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 6f370e020feb3..7cfa9785bfbb0 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -773,6 +773,7 @@
- #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
- #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
- #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
-+#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
- #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
- #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
- #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 934fc0a798d4d..c242150d35a3a 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
+diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
+index 635eacbd28d47..156e3b9d613c6 100644
+--- a/sound/soc/tegra/tegra30_ahub.c
++++ b/sound/soc/tegra/tegra30_ahub.c
+@@ -643,8 +643,10 @@ static int tegra30_ahub_resume(struct device *dev)
+ 	int ret;
  
- 	{ 0 }
- };
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(ahub->regmap_ahub);
+ 	ret |= regcache_sync(ahub->regmap_apbif);
+ 	pm_runtime_put(dev);
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index d59882ec48f16..db5a8587bfa4c 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -567,8 +567,10 @@ static int tegra30_i2s_resume(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(i2s->regmap);
+ 	pm_runtime_put(dev);
+ 
 -- 
 2.25.1
 
