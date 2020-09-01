@@ -2,183 +2,178 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6412BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A2DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34C77206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FBB2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979878;
-	bh=JrrWF2n/r5gpO5uYUd1ev5i/91uKcI4fODkgRRDZZyQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KmIsjPUjCE2EZE5Cp6jFtKjw3pOv+k8moSTfkpPmo2g+2jO4n0CGoAkHYIznsyBsY
-	 3wbig1a2spu5kA+C7uqujoNUY87QsUUUnfORtdapliH/A7OfVX8FG4+P4d3K4HYDyI
-	 V/NdrNFyfxwWWxnu0Dg2E2g3bm7yBVJ1ldcLPhOo=
+	s=default; t=1598979882;
+	bh=LM0ZlQMq+116FxcurgkDhzTV7jHjOc0VMnH67syAMUQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=E753N3mLt0NoLXvjUV+Vu3oEZ58JW5H2vhNJCWgCDkSDEY+crznI+4iruZkiJfi4c
+	 lz3jDDxbWOwZIxn4yfH+YjYTnP//rZje8wXGp8X2ZMb5gulhuBjy1rStIMXNQR8Kv+
+	 wNTfOkQquyuuRtxCkzb334Zrk9e2ZHsC8XEMlO1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgIAREh (ORCPT
+        id S1728536AbgIAREl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:04:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39294 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:04:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729520AbgIAPTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:53 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        id S1728354AbgIAREY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:04:24 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8354206EB;
-        Tue,  1 Sep 2020 15:19:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6018E206FA;
+        Tue,  1 Sep 2020 17:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973592;
-        bh=JrrWF2n/r5gpO5uYUd1ev5i/91uKcI4fODkgRRDZZyQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w+KGrj/tmV3oltKORgNHY0qWRqnhKyS4RwyBMLlB1TbHQThzb7yH5AdZ/E+/kA6OE
-         EW4UWV27rAlAQ/shtWMbg5r0EdGyCD/isMRyVZraCkOledsvchUFF0gGDfuqNQHeJi
-         m4uupTzK4hxAbbJXmIa5ItNagygnN3WhV2dBNBcU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 59/91] btrfs: fix space cache memory leak after transaction abort
-Date:   Tue,  1 Sep 2020 17:10:33 +0200
-Message-Id: <20200901150931.054124780@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-References: <20200901150928.096174795@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1598979861;
+        bh=LM0ZlQMq+116FxcurgkDhzTV7jHjOc0VMnH67syAMUQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Z112+wpOmHZYDF5q2YSpWCIrvYLUOuuPlvm2AUn1IFORq7sAlh9G0pNLthwMK0910
+         gL4m4deu8dWoMmcLR8/W/O4Bih0lEGbIUJn/kzR0yKkn9JiaLira3RW0tStd8P0thD
+         Q9oawRnaRslbUECyBzZfs32mFe4m9aEoX26mHscg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 332C835226A5; Tue,  1 Sep 2020 10:04:21 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 10:04:21 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, parri.andrea@gmail.com,
+        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: Re: [PATCH kcsan 9/9] tools/memory-model:  Document locking corner
+ cases
+Message-ID: <20200901170421.GF29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
+ <20200831182037.2034-9-paulmck@kernel.org>
+ <20200831201701.GB558270@rowland.harvard.edu>
+ <20200831214738.GE2855@paulmck-ThinkPad-P72>
+ <20200901014504.GB571008@rowland.harvard.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901014504.GB571008@rowland.harvard.edu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+On Mon, Aug 31, 2020 at 09:45:04PM -0400, Alan Stern wrote:
+> On Mon, Aug 31, 2020 at 02:47:38PM -0700, Paul E. McKenney wrote:
+> > On Mon, Aug 31, 2020 at 04:17:01PM -0400, Alan Stern wrote:
+> 
+> > > Is this discussion perhaps overkill?
+> > > 
+> > > Let's put it this way: Suppose we have the following code:
+> > > 
+> > > 	P0(int *x, int *lck)
+> > > 	{
+> > > 		spin_lock(lck);
+> > > 		WRITE_ONCE(*x, 1);
+> > > 		do_something();
+> > > 		spin_unlock(lck);
+> > > 	}
+> > > 
+> > > 	P1(int *x, int *lck)
+> > > 	{
+> > > 		while (READ_ONCE(*x) == 0)
+> > > 			;
+> > > 		spin_lock(lck);
+> > > 		do_something_else();
+> > > 		spin_unlock(lck);
+> > > 	}
+> > > 
+> > > It's obvious that this test won't deadlock.  But if P1 is changed to:
+> > > 
+> > > 	P1(int *x, int *lck)
+> > > 	{
+> > > 		spin_lock(lck);
+> > > 		while (READ_ONCE(*x) == 0)
+> > > 			;
+> > > 		do_something_else();
+> > > 		spin_unlock(lck);
+> > > 	}
+> > > 
+> > > then it's equally obvious that the test can deadlock.  No need for
+> > > fancy memory models or litmus tests or anything else.
+> > 
+> > For people like you and me, who have been thinking about memory ordering
+> > for longer than either of us care to admit, this level of exposition is
+> > most definitely -way- overkill!!!
+> > 
+> > But I have had people be very happy and grateful that I explained this to
+> > them at this level of detail.  Yes, I started parallel programming before
+> > some of them were born, but they are definitely within our target audience
+> > for this particular document.  And it is not just Linux kernel hackers
+> > who need this level of detail.  A roughly similar transactional-memory
+> > scenario proved to be so non-obvious to any number of noted researchers
+> > that Blundell, Lewis, and Martin needed to feature it in this paper:
+> > https://ieeexplore.ieee.org/abstract/document/4069174
+> > (Alternative source: https://repository.upenn.edu/cgi/viewcontent.cgi?article=1344&context=cis_papers)
+> > 
+> > Please note that I am -not- advocating making (say) explanation.txt or
+> > recipes.txt more newbie-accessible than they already are.  After all,
+> > the point of the README file in that same directory is to direct people
+> > to the documentation files that are the best fit for them, and both
+> > explanation.txt and recipes.txt contain advanced material, and thus
+> > require similarly advanced prerequisites.
+> > 
+> > Seem reasonable, or am I missing your point?
+> 
+> The question is, what are you trying to accomplish in this section?  Are 
+> you trying to demonstrate that it isn't safe to allow arbitrary code to 
+> leak into a critical section?  If so then you don't need to present an 
+> LKMM litmus test to make the point; the example I gave here will do 
+> quite as well.  Perhaps even better, since it doesn't drag in all sorts 
+> of extraneous concepts like limitations of litmus tests or how to 
+> emulate a spin loop.
+> 
+> On the other hand, if your goal is to show how to construct a litmus 
+> test that will model a particular C language test case (such as the one 
+> I gave), then the text does a reasonable job -- although I do think it 
+> could be clarified somewhat.  For instance, it wouldn't hurt to include 
+> the real C code before giving the corresponding litmus test, so that the 
+> reader will have a clear idea of what you're trying to model.
 
-commit bbc37d6e475eee8ffa2156ec813efc6bbb43c06d upstream.
+Makes sense.  I can apply this at some point, but I would welcome a patch
+from you, which I would be happy to fold in with your Codeveloped-by.
 
-If a transaction aborts it can cause a memory leak of the pages array of
-a block group's io_ctl structure. The following steps explain how that can
-happen:
+> Just what you want to achieve here is not clear from the context.
 
-1) Transaction N is committing, currently in state TRANS_STATE_UNBLOCKED
-   and it's about to start writing out dirty extent buffers;
+People who have internalized the "roach motel" model of locking
+(https://www.cs.umd.edu/~pugh/java/memoryModel/BidirectionalMemoryBarrier.html)
+need their internalization adjusted.
 
-2) Transaction N + 1 already started and another task, task A, just called
-   btrfs_commit_transaction() on it;
+> Besides, the example is in any case a straw man.  The text starts out 
+> saying "It is tempting to allow memory-reference instructions to be 
+> pulled into a critical section", but then the example pulls an entire 
+> spin loop inside -- not just the memory references but also the 
+> conditional branch instruction at the bottom of the loop!  I can't 
+> imagine anyone would think it was safe to allow branches to leak into a 
+> critical section, particularly when doing so would break a control 
+> dependency (as it does here).
 
-3) Block group B was dirtied (extents allocated from it) by transaction
-   N + 1, so when task A calls btrfs_start_dirty_block_groups(), at the
-   very beginning of the transaction commit, it starts writeback for the
-   block group's space cache by calling btrfs_write_out_cache(), which
-   allocates the pages array for the block group's io_ctl with a call to
-   io_ctl_init(). Block group A is added to the io_list of transaction
-   N + 1 by btrfs_start_dirty_block_groups();
+Most people outside of a few within the Linux kernel community and within
+the various hardware memory-ordering communities don't know that control
+dependencies even exist, so could not be expected to see any danger
+in rather thoroughly folding, spindling, or otherwise mutilating them,
+let alone pulling them into a lock-based critical section.  And many in
+the various toolchain communities see dependencies of any sort as an
+impediment to performance that should be broken wherever and whenever
+possible.
 
-4) While transaction N's commit is writing out the extent buffers, it gets
-   an IO error and aborts transaction N, also setting the file system to
-   RO mode;
+That said, a less prejudicial introduction to this example might be good.
+What did you have in mind?
 
-5) Task A has already returned from btrfs_start_dirty_block_groups(), is at
-   btrfs_commit_transaction() and has set transaction N + 1 state to
-   TRANS_STATE_COMMIT_START. Immediately after that it checks that the
-   filesystem was turned to RO mode, due to transaction N's abort, and
-   jumps to the "cleanup_transaction" label. After that we end up at
-   btrfs_cleanup_one_transaction() which calls btrfs_cleanup_dirty_bgs().
-   That helper finds block group B in the transaction's io_list but it
-   never releases the pages array of the block group's io_ctl, resulting in
-   a memory leak.
-
-In fact at the point when we are at btrfs_cleanup_dirty_bgs(), the pages
-array points to pages that were already released by us at
-__btrfs_write_out_cache() through the call to io_ctl_drop_pages(). We end
-up freeing the pages array only after waiting for the ordered extent to
-complete through btrfs_wait_cache_io(), which calls io_ctl_free() to do
-that. But in the transaction abort case we don't wait for the space cache's
-ordered extent to complete through a call to btrfs_wait_cache_io(), so
-that's why we end up with a memory leak - we wait for the ordered extent
-to complete indirectly by shutting down the work queues and waiting for
-any jobs in them to complete before returning from close_ctree().
-
-We can solve the leak simply by freeing the pages array right after
-releasing the pages (with the call to io_ctl_drop_pages()) at
-__btrfs_write_out_cache(), since we will never use it anymore after that
-and the pages array points to already released pages at that point, which
-is currently not a problem since no one will use it after that, but not a
-good practice anyway since it can easily lead to use-after-free issues.
-
-So fix this by freeing the pages array right after releasing the pages at
-__btrfs_write_out_cache().
-
-This issue can often be reproduced with test case generic/475 from fstests
-and kmemleak can detect it and reports it with the following trace:
-
-unreferenced object 0xffff9bbf009fa600 (size 512):
-  comm "fsstress", pid 38807, jiffies 4298504428 (age 22.028s)
-  hex dump (first 32 bytes):
-    00 a0 7c 4d 3d ed ff ff 40 a0 7c 4d 3d ed ff ff  ..|M=...@.|M=...
-    80 a0 7c 4d 3d ed ff ff c0 a0 7c 4d 3d ed ff ff  ..|M=.....|M=...
-  backtrace:
-    [<00000000f4b5cfe2>] __kmalloc+0x1a8/0x3e0
-    [<0000000028665e7f>] io_ctl_init+0xa7/0x120 [btrfs]
-    [<00000000a1f95b2d>] __btrfs_write_out_cache+0x86/0x4a0 [btrfs]
-    [<00000000207ea1b0>] btrfs_write_out_cache+0x7f/0xf0 [btrfs]
-    [<00000000af21f534>] btrfs_start_dirty_block_groups+0x27b/0x580 [btrfs]
-    [<00000000c3c23d44>] btrfs_commit_transaction+0xa6f/0xe70 [btrfs]
-    [<000000009588930c>] create_subvol+0x581/0x9a0 [btrfs]
-    [<000000009ef2fd7f>] btrfs_mksubvol+0x3fb/0x4a0 [btrfs]
-    [<00000000474e5187>] __btrfs_ioctl_snap_create+0x119/0x1a0 [btrfs]
-    [<00000000708ee349>] btrfs_ioctl_snap_create_v2+0xb0/0xf0 [btrfs]
-    [<00000000ea60106f>] btrfs_ioctl+0x12c/0x3130 [btrfs]
-    [<000000005c923d6d>] __x64_sys_ioctl+0x83/0xb0
-    [<0000000043ace2c9>] do_syscall_64+0x33/0x80
-    [<00000000904efbce>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- fs/btrfs/disk-io.c          |    1 +
- fs/btrfs/free-space-cache.c |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -4344,6 +4344,7 @@ static void btrfs_cleanup_bg_io(struct b
- 		cache->io_ctl.inode = NULL;
- 		iput(inode);
- 	}
-+	ASSERT(cache->io_ctl.pages == NULL);
- 	btrfs_put_block_group(cache);
- }
- 
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -1169,7 +1169,6 @@ static int __btrfs_wait_cache_io(struct
- 	ret = update_cache_item(trans, root, inode, path, offset,
- 				io_ctl->entries, io_ctl->bitmaps);
- out:
--	io_ctl_free(io_ctl);
- 	if (ret) {
- 		invalidate_inode_pages2(inode->i_mapping);
- 		BTRFS_I(inode)->generation = 0;
-@@ -1334,6 +1333,7 @@ static int __btrfs_write_out_cache(struc
- 	 * them out later
- 	 */
- 	io_ctl_drop_pages(io_ctl);
-+	io_ctl_free(io_ctl);
- 
- 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, 0,
- 			     i_size_read(inode) - 1, &cached_state, GFP_NOFS);
-
-
+							Thanx, Paul
