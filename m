@@ -2,112 +2,97 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5898C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BEEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA20B206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DE120767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:10:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q5v+iQL4";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4npmoOZT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mK2/sFCn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728033AbgIAMGG (ORCPT
+        id S1728087AbgIAMKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:06:06 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39440 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbgIALtd (ORCPT
+        Tue, 1 Sep 2020 08:10:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726928AbgIAMD6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:49:33 -0400
-Date:   Tue, 01 Sep 2020 11:48:07 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598960888;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A9m4anUz0N5vIPvPFBVZIXdNWULcKGTjX1fUebtN+IY=;
-        b=q5v+iQL4YC4pEPHqE403FWVC5itrBNdJNsrGSVLxYw7J/jQzUnKbRoRsK4wyNTBGWV6NgJ
-        iCcnfUCIAlESm8iwwX+rYsAUZeh9cWHjcACz7ga8w9rMtn9MjqtRsqygCKDotYjy+2sPjc
-        jxRcdPdk6/mL9calWkuGxQBw/g+Nl7ig36c7gdt82Ep2vfgNZ4ho+Ic1XVNHJILKEthy27
-        8USKxXGygE/T7BDJrf6Yk3twWiFRdiQcA4zKNiEzQN0xL6BZa9N8MvcuZID3QaysjX8nTL
-        JLXgv1ovmr+IkeYgmbyiTPoEzAFsckSUjMGUp9rhREUlI0Ee8nCvIv7K6cC4Jg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598960888;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=A9m4anUz0N5vIPvPFBVZIXdNWULcKGTjX1fUebtN+IY=;
-        b=4npmoOZTR/YdWg7xfYb/vmcvQ+6DnJQmHlud3k6U5qVmlqkOYe3PWjtSyvRRap8RS16+sq
-        uN8wMYd27HX+rbCg==
-From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/static_call] compiler.h: Make __ADDRESSABLE() symbol truly unique
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200818135804.564436253@infradead.org>
-References: <20200818135804.564436253@infradead.org>
+        Tue, 1 Sep 2020 08:03:58 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA239C061244;
+        Tue,  1 Sep 2020 05:03:23 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id z19so359635lfr.4;
+        Tue, 01 Sep 2020 05:03:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yqgydO8pVexduRrHyF4+etAinhWYfI4X4YaMfoX6cu4=;
+        b=mK2/sFCnPbFjpT38ktp0LzS2hAKUMne9uAWmlXGAB17GeJZ3hfxmmvH7iJvxpVvqzy
+         wUXlKHC+HngQWsOqAzIFxx9f7ehzCIuHp1sAWf9mwt/8jYUQ+T1HFQWsB6r3a+HParfg
+         k4fl0vq8KwDKUnlDtWaEzX8ovHP5YqTG6wot0IwW6t7GseRi9amJZaAVBL8bFw3CE8Ly
+         gy+Pb9m/6bE0pMZRljc8U2eOUG71jDeXhuFS8YtJlIWQLFdYLEgOIIsG4a32HOFhlNzc
+         yP1tWCrHkXyihkcH57a7q1P4jb4XAcVS1bh07Isrg97RqPxCazze10zlgyI+VujxD2VK
+         ghEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yqgydO8pVexduRrHyF4+etAinhWYfI4X4YaMfoX6cu4=;
+        b=BGTuYKPDDsg2nSP32vthFRio7yIJgcco1bUd6/HtAyso0JrfS/kImwJcC/ueEpG2pk
+         gU+0Jc4rr+faOovlAwh09b8pCcKM3VrIOiACYlYOJsWD7vjWYxbAH3IGL3jtXhCte6Vu
+         5vn4lm1Ouvwqx4+CjNU5v7pIT/ryds0CLrcCQWRNfj3U4JHMRyVmErf/bs2csW5kn3xn
+         UC0DBvRBh96OBzQ2s5/xeTqjtsci68Qqqu3MSpLkaH5l/mpGzVXUUoaGuTGk9GYfd16/
+         MNHaybrKNXGIhgGxztr4K2HAAu8mxfMnZHGMqh0d2XGS3UVx2+RwzbfxBBRnfW6eA2Fe
+         V/gQ==
+X-Gm-Message-State: AOAM5337up+X+qEkcaopJKD65le96d/qnpNvgWepkxOPNn/t7MUD+AdW
+        DFK/T6o06nuFc5AmHpsT707yrjq+hG8=
+X-Google-Smtp-Source: ABdhPJw6NRBIQkGM/lVrzFTyA/HCVLYkaeLiPnIZG5kbQH0pGqCxE2KRQUz8ruCNn615tkJdtrb/tw==
+X-Received: by 2002:ac2:5547:: with SMTP id l7mr429877lfk.153.1598961801896;
+        Tue, 01 Sep 2020 05:03:21 -0700 (PDT)
+Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.googlemail.com with ESMTPSA id j10sm241221lfh.37.2020.09.01.05.03.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 05:03:21 -0700 (PDT)
+Subject: Re: [PATCH v1 03/12] i2c: tegra: Clean up messages in the code
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200831202303.15391-1-digetx@gmail.com>
+ <20200831202303.15391-4-digetx@gmail.com>
+Message-ID: <e31b01de-9e9c-e153-ca98-3d49df2ba356@gmail.com>
+Date:   Tue, 1 Sep 2020 15:03:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159896088740.20229.7656713937908382909.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200831202303.15391-4-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/static_call branch of tip:
+31.08.2020 23:22, Dmitry Osipenko пишет:
+> Use lowercase and consistent wording for all messages in the code.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 50 ++++++++++++++++------------------
+>  1 file changed, 24 insertions(+), 26 deletions(-)
 
-Commit-ID:     563a02b0c9704f69c0364befedd451f57fe88092
-Gitweb:        https://git.kernel.org/tip/563a02b0c9704f69c0364befedd451f57fe88092
-Author:        Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate:    Tue, 18 Aug 2020 15:57:40 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Sep 2020 09:58:04 +02:00
-
-compiler.h: Make __ADDRESSABLE() symbol truly unique
-
-The __ADDRESSABLE() macro uses the __LINE__ macro to create a temporary
-symbol which has a unique name.  However, if the macro is used multiple
-times from within another macro, the line number will always be the
-same, resulting in duplicate symbols.
-
-Make the temporary symbols truly unique by using __UNIQUE_ID instead of
-__LINE__.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Link: https://lore.kernel.org/r/20200818135804.564436253@infradead.org
----
- include/linux/compiler.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/compiler.h b/include/linux/compiler.h
-index 6810d80..92ef163 100644
---- a/include/linux/compiler.h
-+++ b/include/linux/compiler.h
-@@ -207,7 +207,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
-  */
- #define __ADDRESSABLE(sym) \
- 	static void * __section(.discard.addressable) __used \
--		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
-+		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
- 
- /**
-  * offset_to_ptr - convert a relative memory offset to an absolute pointer
+I'll prepare a v2 because today noticed that there are couple places in
+the code that I missed to change in this patch. I'll also add couple
+more patches.
