@@ -2,169 +2,165 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FF7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8BAC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1A5A204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976347;
-	bh=RYwLB6hsXqUVuuWOGpN+7Mj6mlUmyTGE+toBtsZAumU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sz4Uhmkr+oA1XSPXutNKc7SaO0vwSlsMD3Xap0413GFgawx3ScDFzO9mm3zc4x5w2
-	 aU+O61iNRlM3E7ZAQNjLmf+vnxyV3GC7lE24QuRzBVGkd6y/vR7t7iSpmPg3vRLhMr
-	 3Z67skntreWafCE3D0OjfUCFlwlf/8l2teWBJu0Q=
+	by mail.kernel.org (Postfix) with ESMTP id 2D555204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c703Ej1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgIAPlO (ORCPT
+        id S1731596AbgIAQFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:41:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48794 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731330AbgIAPjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:39:12 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FEC7205F4;
-        Tue,  1 Sep 2020 15:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974751;
-        bh=RYwLB6hsXqUVuuWOGpN+7Mj6mlUmyTGE+toBtsZAumU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CtAdOvbuJYcs/ZOrvOaunzAnQZW31ONZdibVE4TFu8m0lDzHsDDvi4w9TUtcN4q9a
-         2L6ipzPhp/G7GYfkg6oldWgYZIlupeA3b7Rncdja7hJ4hRQlgQg9BDS/jsyL2BmFbZ
-         u4/3pTBDnt+ItVOTLJlYcc/wtAG9a0VwIzzKKwd8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 077/255] arm64: Fix __cpu_logical_map undefined issue
-Date:   Tue,  1 Sep 2020 17:08:53 +0200
-Message-Id: <20200901151004.422558958@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 12:05:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55890 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730187AbgIAPlQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:41:16 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5D12C061246;
+        Tue,  1 Sep 2020 08:41:15 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id e33so887438pgm.0;
+        Tue, 01 Sep 2020 08:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UrLlTmYG1RGdAv4uh1a2Vj9Ca0f5vJ6xgSyvmtjMFJ8=;
+        b=c703Ej1oAv/twTNahzRLiABY2Gdfj7BHDVrm64a2qQIk4mlySrEPWPWhBXk/Z7YV7C
+         7KLjWx47ts3wDWsWsoN9gKXOjI3ISM8D5mAqiTDqv1CPUxYxVqQC4dhHxl/2jdg5HfYq
+         /0V2gpsi/tRtSRlREjtuAU7/0/W1trOjERb0ON/1C9AXajlPBR/N6hqCBq6moOHQR671
+         KqDgmh1voQ822awqEID/n/fcfSkOiOvTBlUvycWF8edxaG8KXWfbRRRd+GKhFfrBF3G8
+         8wfE/zjANx9DOG98a6BPskMiedzWuGyVrZJfnj+WioMkmfOEhJeNtak0wQeSAcQ2Dwk9
+         f32A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UrLlTmYG1RGdAv4uh1a2Vj9Ca0f5vJ6xgSyvmtjMFJ8=;
+        b=j9YcoYlFJmAphKVcNiGNiBVDEuKdC4VxCB6hD7fCgz5aDtRXDhkOrPWsQeflwPJmcz
+         RkVTBtrh9G9gjCqF+59acqMFsbOVISPXOcUdNQbIKj9BUdTc+H6hn8qvdhAVw/X0ecDb
+         OEJxAMCLGnMBr2AELQeCB+kuC8o8JMKEdse+5qICnuC2mJzOtXpkwPFmoL7OL5eowUan
+         pBAqvNEyzNo4gAXTu5YgfZIv6D+F7CTlUaxOV0xYHqEo8IS7X3MWR8AiIchRThcpm099
+         F7ZlBCD2pnk1xT0LvOMJqEQ2fiiBx6M5oIPQ9rM90q2kJrD4T0pXDj5OZh4TunDOaYIV
+         25IA==
+X-Gm-Message-State: AOAM530TumLKO9RAPvM0XHloOybK+ytQzElQR0HovpcLbFwGOMwMzhKt
+        kE5xAI7j6+/pkXnQHEsoqG8=
+X-Google-Smtp-Source: ABdhPJyFbCGyio3eMah/PcTiHzD5KOkPR/XDwROjdZrngkCxNWsVjpHitZHMPdN8toexNvaczokcKw==
+X-Received: by 2002:a63:5f8b:: with SMTP id t133mr2072708pgb.238.1598974875113;
+        Tue, 01 Sep 2020 08:41:15 -0700 (PDT)
+Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
+        by smtp.gmail.com with ESMTPSA id h11sm2454426pfq.101.2020.09.01.08.41.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 08:41:14 -0700 (PDT)
+From:   Rob Clark <robdclark@gmail.com>
+To:     dri-devel@lists.freedesktop.org
+Cc:     Rob Clark <robdclark@chromium.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH 2/3] drm/msm: Convert shrinker msgs to tracepoints
+Date:   Tue,  1 Sep 2020 08:41:55 -0700
+Message-Id: <20200901154200.2451899-3-robdclark@gmail.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200901154200.2451899-1-robdclark@gmail.com>
+References: <20200901154200.2451899-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Rob Clark <robdclark@chromium.org>
 
-[ Upstream commit eaecca9e7710281be7c31d892c9f447eafd7ddd9 ]
+This reduces the spam in dmesg when we start hitting the shrinker, and
+replaces it with something we can put on a timeline while profiling or
+debugging system issues.
 
-The __cpu_logical_map undefined issue occued when the new
-tegra194-cpufreq drvier building as a module.
-
-ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
-
-The driver using cpu_logical_map() macro which will expand to
-__cpu_logical_map, we can't access it in a drvier. Let's turn
-cpu_logical_map() into a C wrapper and export it to fix the
-build issue.
-
-Also create a function set_cpu_logical_map(cpu, hwid) when assign
-a value to cpu_logical_map(cpu).
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- arch/arm64/include/asm/smp.h | 7 ++++++-
- arch/arm64/kernel/setup.c    | 8 +++++++-
- arch/arm64/kernel/smp.c      | 6 +++---
- 3 files changed, 16 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/msm/msm_gem_shrinker.c |  5 +++--
+ drivers/gpu/drm/msm/msm_gpu_trace.h    | 26 ++++++++++++++++++++++++++
+ 2 files changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
-index a0c8a0b652593..0eadbf933e359 100644
---- a/arch/arm64/include/asm/smp.h
-+++ b/arch/arm64/include/asm/smp.h
-@@ -46,7 +46,12 @@ DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
-  * Logical CPU mapping.
-  */
- extern u64 __cpu_logical_map[NR_CPUS];
--#define cpu_logical_map(cpu)    __cpu_logical_map[cpu]
-+extern u64 cpu_logical_map(int cpu);
-+
-+static inline void set_cpu_logical_map(int cpu, u64 hwid)
-+{
-+	__cpu_logical_map[cpu] = hwid;
-+}
+diff --git a/drivers/gpu/drm/msm/msm_gem_shrinker.c b/drivers/gpu/drm/msm/msm_gem_shrinker.c
+index 722d61668a97..482576d7a39a 100644
+--- a/drivers/gpu/drm/msm/msm_gem_shrinker.c
++++ b/drivers/gpu/drm/msm/msm_gem_shrinker.c
+@@ -6,6 +6,7 @@
  
- struct seq_file;
+ #include "msm_drv.h"
+ #include "msm_gem.h"
++#include "msm_gpu_trace.h"
  
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 93b3844cf4421..07b7940951e28 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -85,7 +85,7 @@ u64 __cacheline_aligned boot_args[4];
- void __init smp_setup_processor_id(void)
+ static bool msm_gem_shrinker_lock(struct drm_device *dev, bool *unlock)
  {
- 	u64 mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
--	cpu_logical_map(0) = mpidr;
-+	set_cpu_logical_map(0, mpidr);
+@@ -87,7 +88,7 @@ msm_gem_shrinker_scan(struct shrinker *shrinker, struct shrink_control *sc)
+ 		mutex_unlock(&dev->struct_mutex);
  
- 	/*
- 	 * clear __my_cpu_offset on boot CPU to avoid hang caused by
-@@ -276,6 +276,12 @@ arch_initcall(reserve_memblock_reserved_regions);
+ 	if (freed > 0)
+-		pr_info_ratelimited("Purging %lu bytes\n", freed << PAGE_SHIFT);
++		trace_msm_gem_purge(freed << PAGE_SHIFT);
  
- u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
- 
-+u64 cpu_logical_map(int cpu)
-+{
-+	return __cpu_logical_map[cpu];
-+}
-+EXPORT_SYMBOL_GPL(cpu_logical_map);
-+
- void __init setup_arch(char **cmdline_p)
- {
- 	init_mm.start_code = (unsigned long) _text;
-diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
-index e43a8ff19f0f6..8cd6316a0d833 100644
---- a/arch/arm64/kernel/smp.c
-+++ b/arch/arm64/kernel/smp.c
-@@ -567,7 +567,7 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_interrupt *processor)
- 		return;
- 
- 	/* map the logical cpu id to cpu MPIDR */
--	cpu_logical_map(cpu_count) = hwid;
-+	set_cpu_logical_map(cpu_count, hwid);
- 
- 	cpu_madt_gicc[cpu_count] = *processor;
- 
-@@ -681,7 +681,7 @@ static void __init of_parse_and_init_cpus(void)
- 			goto next;
- 
- 		pr_debug("cpu logical map 0x%llx\n", hwid);
--		cpu_logical_map(cpu_count) = hwid;
-+		set_cpu_logical_map(cpu_count, hwid);
- 
- 		early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
- next:
-@@ -722,7 +722,7 @@ void __init smp_init_cpus(void)
- 	for (i = 1; i < nr_cpu_ids; i++) {
- 		if (cpu_logical_map(i) != INVALID_HWID) {
- 			if (smp_cpu_setup(i))
--				cpu_logical_map(i) = INVALID_HWID;
-+				set_cpu_logical_map(i, INVALID_HWID);
- 		}
- 	}
+ 	return freed;
  }
+@@ -123,7 +124,7 @@ msm_gem_shrinker_vmap(struct notifier_block *nb, unsigned long event, void *ptr)
+ 	*(unsigned long *)ptr += unmapped;
+ 
+ 	if (unmapped > 0)
+-		pr_info_ratelimited("Purging %u vmaps\n", unmapped);
++		trace_msm_gem_purge_vmaps(unmapped);
+ 
+ 	return NOTIFY_DONE;
+ }
+diff --git a/drivers/gpu/drm/msm/msm_gpu_trace.h b/drivers/gpu/drm/msm/msm_gpu_trace.h
+index 07572ab179fa..1079fe551279 100644
+--- a/drivers/gpu/drm/msm/msm_gpu_trace.h
++++ b/drivers/gpu/drm/msm/msm_gpu_trace.h
+@@ -114,6 +114,32 @@ TRACE_EVENT(msm_gmu_freq_change,
+ 		TP_printk("freq=%u, perf_index=%u", __entry->freq, __entry->perf_index)
+ );
+ 
++
++TRACE_EVENT(msm_gem_purge,
++		TP_PROTO(u32 bytes),
++		TP_ARGS(bytes),
++		TP_STRUCT__entry(
++			__field(u32, bytes)
++			),
++		TP_fast_assign(
++			__entry->bytes = bytes;
++			),
++		TP_printk("Purging %u bytes", __entry->bytes)
++);
++
++
++TRACE_EVENT(msm_gem_purge_vmaps,
++		TP_PROTO(u32 unmapped),
++		TP_ARGS(unmapped),
++		TP_STRUCT__entry(
++			__field(u32, unmapped)
++			),
++		TP_fast_assign(
++			__entry->unmapped = unmapped;
++			),
++		TP_printk("Purging %u vmaps", __entry->unmapped)
++);
++
+ #endif
+ 
+ #undef TRACE_INCLUDE_PATH
 -- 
-2.25.1
-
-
+2.26.2
 
