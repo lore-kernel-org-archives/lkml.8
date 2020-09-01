@@ -2,264 +2,211 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25EAFC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC5DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA4D82078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978535;
-	bh=X1vd/hNDwaUxtFbZyy1MUDoC1bemL9dRQgvtcayG5Ho=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yj9u5q9JQ9oto316w2r1TOtJq9vGzWJFAZc5kOF5UJMEIG/JVp31XOnr1QzI3GgX/
-	 Alimv73UF7kxSd+rFIozEotbRIf743c/WpEGoxpZyeMhEIEswagq33dGtNHqjid9nk
-	 vgQbjAK4wkCmiIRhDjs2QyfZSjTtTsLGzHbLhFpI=
+	by mail.kernel.org (Postfix) with ESMTP id 0624620767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Ub1CAZJY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732243AbgIAQmL (ORCPT
+        id S1730276AbgIAQmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:42:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55748 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:42:19 -0400
+Received: from mout.gmx.net ([212.227.15.19]:55739 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730319AbgIAP2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:01 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE35A20BED;
-        Tue,  1 Sep 2020 15:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974081;
-        bh=X1vd/hNDwaUxtFbZyy1MUDoC1bemL9dRQgvtcayG5Ho=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uyh4lEJhDrTgBaoww/PKbpTLP8vcEpcTUCwPGQvb8mFHo3RJAGIx7kptjcbrEnFqt
-         IXTfC6cqgxYoK6IwG8ID/QAnLMZeKTcDPGEkc2XMWZDHIZbRHr3ojMqeFwAgm3x4dV
-         0QbLJjkVG4TIaeAz9p77T6gnpU2i15fyJ8430M2Q=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 037/214] selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
-Date:   Tue,  1 Sep 2020 17:08:37 +0200
-Message-Id: <20200901150954.743288024@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730334AbgIAQmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:42:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1598978476;
+        bh=iS+KmbY1ndEJSpXJ6ApP71r110vbaj/m88hnuZyQwTA=;
+        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
+        b=Ub1CAZJYKYLiobVhHR8Et1pUU6d5a0ERsK2MsY7wzhw0HjhUjXhJSc4b4w7JLVY2K
+         imx2QUOs2xWvIZbhXholxKb0puJB9y9zCeV2KFD9q6C/NjJJszwTuwNoPvI/AfTNic
+         kg6J1s8vPoCo/SATwJopqTMYp2II/N+zrO+5Tf7M=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.187.2]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MqaxO-1kzdF62DEe-00mXqh; Tue, 01
+ Sep 2020 18:41:16 +0200
+Subject: Re: [PATCH 07/28] 53c700: improve non-coherent DMA handling
+From:   Helge Deller <deller@gmx.de>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-mm@kvack.org, alsa-devel@alsa-project.org
+References: <20200819065555.1802761-1-hch@lst.de>
+ <20200819065555.1802761-8-hch@lst.de>
+ <1598971960.4238.5.camel@HansenPartnership.com>
+ <20200901150554.GN14765@casper.infradead.org>
+ <1598973776.4238.11.camel@HansenPartnership.com>
+ <3369218e-eea4-14e9-15f1-870269e4649d@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+ c2TFWAS8k6RLkk41ZUU8ENX8+qZx/Q==
+Message-ID: <77c9b2b6-bedc-d090-8b23-6ac664df1d1f@gmx.de>
+Date:   Tue, 1 Sep 2020 18:41:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <3369218e-eea4-14e9-15f1-870269e4649d@gmx.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:4Y8gxSC3mimemrR4PtvEKNwyw28FqcRZSkoK2gQkqvo/KOoRbTg
+ w40kQskhrNaheI6REKgULCG68Fy6MEYc0KsJy9WRPUH71+WKoerrwaE3EISLn47wt9qPakq
+ Z9gMZCEqcjMGAkwuPOCtdfBULoqR2MkqoEWEFsPLv/Ad3iHMpMr0z0ACL6exzE1IUZ+o2Jw
+ GUtUnwHdeUzKCJ46isMYw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:4lG/PGFS7YQ=:rR2RWvp5WhtvYGYgat1e00
+ 0rF5u2mtUMkAk5WSd9Aa85NoBhY1TSBoWKZBCJ4rwtlnRn8wdTBwkngGfwpVVlNUoTFLjSyrV
+ dM46jjweSnPFr8XhH+kUbZi8nfv6BYzG7I3YF2PswSg74hJGslsbwd81I/cZ8KPvjSLwgvlMG
+ qic+xZolA+MdQVgJGn64EkYW1DlcXV4gMG9LXW4+9553DiKfcM+5/zwWxw0cpO6Jnoe1L7rrA
+ kOYQmwe1wTN3lP6q4Xz99dj7FqfZVVuegxF6peou2o6w+ITCPtuLm6egQPtVE3C6amruAZb29
+ glICo0l6SpftC4oBEVgkOIRfdQ2jQlwZcG9QmH3rSp9u2BHEwOTXSLJGiNFvzVoeqt4t7uyVj
+ eXAkUz9hT0d3IU2KosWY3+BLBxNPncgp0/VCs5JvwdO2SHDAByGYT2FqbPFevV9b4XMT/M5PU
+ eh/og76n7UYqpMe+mlzJq5cKbAJVu450dqW7JGEm/PibmF9c0u6QJTppVgX6yAGLFMQI5O9xU
+ 2apy5bcA5aU8jWW9cDTNCwuqkNw0U0/2WWfyQEKJTgRxKgJBU0sIEczgDpxOO5RTNcdBtGFBs
+ V8jzcgpZ5KsngR5t2lWAZMzdwZVP34TfYH1XK6c0CVgBD47Sw5eX5U1Q0rCy37oNa6YIXTE9a
+ Xp6aYP4h3KFkk0s/RoT6Ke1bjKj3Va5B9o5MciBLLx7WvEBlZXYF/EEysP4bV82Xrv5FGgcOg
+ oh52J5bfjodQ5wWNdaRK+e38oUkyRhmURb3XRxrW2fDrcBCchtAsE9mGJ6LB5fBtmYoRsJTmf
+ cXUesL8SjI8AG1F15nWfDKKjsgJI9i4Nv1rLO7jSenStdlCv9bzYkzFYplFgiJQ7cLqwWvAjc
+ 7CPUrsYcLfK4Wbdm0m/VUh6wASK8K0QNytwoXTs/ljGIIK4U52UZJrzgFAKQJhXuVubth+eZY
+ AZkmQQLpSFPMuX6IF1nH1Mc2UjtK1Cp2LEUeAnKDI1fCjiem+fClfbf2G10U0l3tob6wDRsRI
+ t7OdZsZXe0f7TM/u0vGP4R9Cwsl6Fho63YI7D5w6/u5NL5QGtBDEC95y9+G63wmiXSBcng3A4
+ 1UTqryoUHc8aKHXYqF84O5q/rWzFMRztwG8wy1uv0KBlIypD0gFTmCI+GG5eMT7pfTy4hzJ0B
+ r5KBGKxghDj+/3MGdhdvMFOuYS5qssBiWkis3r4/O5Ueg/OUyPJBrZmB18VBFEydfdyctQt6r
+ mkZNnjtzj1HuFIBiQ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+On 01.09.20 18:21, Helge Deller wrote:
+> On 01.09.20 17:22, James Bottomley wrote:
+>> On Tue, 2020-09-01 at 16:05 +0100, Matthew Wilcox wrote:
+>>> On Tue, Sep 01, 2020 at 07:52:40AM -0700, James Bottomley wrote:
+>>>> I think this looks mostly OK, except for one misnamed parameter
+>>>> below. Unfortunately, the last non-coherent parisc was the 700
+>>>> series and I no longer own a box, so I can't test that part of it
+>>>> (I can fire up the C360 to test it on a coherent arch).
+>>>
+>>> I have a 715/50 that probably hasn't been powered on in 15 years if
+>>> you need something that old to test on (I believe the 725/100 uses
+>>> the 7100LC and so is coherent).  I'll need to set up a cross-compiler
+>>> ...
+>>
+>> I'm not going to say no to actual testing, but it's going to be a world
+>> of pain getting something so old going.  I do have a box of older
+>> systems I keep for architectural testing that I need to rummage around
+>> in ... I just have a vague memory that my 715 actually caught fire a
+>> decade ago and had to be disposed of.
+>
+> I still have a zoo of machines running for such testing, including a
+> 715/64 and two 730.
+> I'm going to test this git tree on the 715/64:
+> git://git.infradead.org/users/hch/misc.git dma_alloc_pages
 
-[ Upstream commit 3337bf41e0dd70b4064cdf60acdfcdc2d050066c ]
+This tree boots nicely (up to a command prompt with i82596 nic working):
 
-An extra count on ebb_state.stats.pmc_count[PMC_INDEX(pmc)] is being per-
-formed when count_pmc() is used to reset PMCs on a few selftests. This
-extra pmc_count can occasionally invalidate results, such as the ones from
-cycles_test shown hereafter. The ebb_check_count() failed with an above
-the upper limit error due to the extra value on ebb_state.stats.pmc_count.
+53c700: Version 2.8 By James.Bottomley@HansenPartnership.com
+scsi0: 53c710 rev 2
+scsi host0: LASI SCSI 53c700
+scsi 0:0:6:0: Direct-Access     QUANTUM  FIREBALL_TM3200S 300X PQ: 0 ANSI:=
+ 2
+scsi target0:0:6: Beginning Domain Validation
+scsi 0:0:6:0: tag#56 Enabling Tag Command Queuing
+scsi target0:0:6: asynchronous
+scsi target0:0:6: FAST-10 SCSI 10.0 MB/s ST (100 ns, offset 8)
+scsi target0:0:6: Domain Validation skipping write tests
+scsi target0:0:6: Ending Domain Validation
+scsi 0:0:6:1: tag#63 Disabling Tag Command Queuing
+st: Version 20160209, fixed bufsize 32768, s/g segs 256
+sd 0:0:6:0: Power-on or device reset occurred
+sd 0:0:6:0: Attached scsi generic sg0 type 0
+LASI 82596 driver - Revision: 1.30
+Found i82596 at 0xf0107000, IRQ 17
+eth0: 82596 at 0xf0107000, 08:00:09:c2:9e:60 IRQ 17.
+sd 0:0:6:0: [sda] 6281856 512-byte logical blocks: (3.22 GB/3.00 GiB)
+sd 0:0:6:0: [sda] Write Protect is off
 
-Furthermore, this extra count is also indicated by extra PMC1 trace_log on
-the output of the cycle test (as well as on pmc56_overflow_test):
+Christoph, you may add a
+Tested-by: Helge Deller <deller@gmx.de> # parisc
+to the series.
 
-==========
-   ...
-   [21]: counter = 8
-   [22]: register SPRN_MMCR0 = 0x0000000080000080
-   [23]: register SPRN_PMC1  = 0x0000000080000004
-   [24]: counter = 9
-   [25]: register SPRN_MMCR0 = 0x0000000080000080
-   [26]: register SPRN_PMC1  = 0x0000000080000004
-   [27]: counter = 10
-   [28]: register SPRN_MMCR0 = 0x0000000080000080
-   [29]: register SPRN_PMC1  = 0x0000000080000004
->> [30]: register SPRN_PMC1  = 0x000000004000051e
-PMC1 count (0x280000546) above upper limit 0x2800003e8 (+0x15e)
-[FAIL] Test FAILED on line 52
-failure: cycles
-==========
-
-Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200626164737.21943-1-desnesn@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c      | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c    | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/ebb.c              | 2 --
- .../selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c  | 2 --
- .../selftests/powerpc/pmu/ebb/lost_exception_test.c        | 1 -
- .../testing/selftests/powerpc/pmu/ebb/multi_counter_test.c | 7 -------
- .../selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c       | 2 --
- .../testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c | 2 --
- .../selftests/powerpc/pmu/ebb/pmc56_overflow_test.c        | 2 --
- 11 files changed, 26 deletions(-)
-
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-index a2d7b0e3dca97..a26ac122c759f 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-@@ -91,8 +91,6 @@ int back_to_back_ebbs(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-index bc893813483ee..bb9f587fa76e8 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-@@ -42,8 +42,6 @@ int cycles(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-index dcd351d203289..9ae795ce314e6 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-@@ -99,8 +99,6 @@ int cycles_with_freeze(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	printf("EBBs while frozen %d\n", ebbs_while_frozen);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-index 94c99c12c0f23..4b45a2e70f62b 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-@@ -71,8 +71,6 @@ int cycles_with_mmcr2(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-index dfbc5c3ad52d7..21537d6eb6b7d 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-@@ -396,8 +396,6 @@ int ebb_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-index ca2f7d729155b..b208bf6ad58d3 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-@@ -38,8 +38,6 @@ static int victim_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	FAIL_IF(ebb_state.stats.ebb_count == 0);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-index ac3e6e182614a..ba2681a12cc7b 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-@@ -75,7 +75,6 @@ static int test_body(void)
- 	ebb_freeze_pmcs();
- 	ebb_global_disable();
- 
--	count_pmc(4, sample_period);
- 	mtspr(SPRN_PMC4, 0xdead);
- 
- 	dump_summary_ebb_state();
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-index b8242e9d97d2d..791d37ba327b5 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-@@ -70,13 +70,6 @@ int multi_counter(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--	count_pmc(2, sample_period);
--	count_pmc(3, sample_period);
--	count_pmc(4, sample_period);
--	count_pmc(5, sample_period);
--	count_pmc(6, sample_period);
--
- 	dump_ebb_state();
- 
- 	for (i = 0; i < 6; i++)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-index a05c0e18ded63..9b0f70d597020 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-@@ -61,8 +61,6 @@ static int cycles_child(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_summary_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-index 153ebc92234fd..2904c741e04e5 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-@@ -82,8 +82,6 @@ static int test_body(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	if (mmcr0_mismatch)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-index eadad75ed7e6f..b29f8ba22d1e6 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-@@ -76,8 +76,6 @@ int pmc56_overflow(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(2, sample_period);
--
- 	dump_ebb_state();
- 
- 	printf("PMC5/6 overflow %d\n", pmc56_overflowed);
--- 
-2.25.1
-
-
-
+Helge
