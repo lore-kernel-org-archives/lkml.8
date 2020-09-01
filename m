@@ -2,177 +2,128 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLACK autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE130C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C79C2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88B5A2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980864;
-	bh=4RWpZvOoJA/5UINqIY4RDIvOA2ssL54rfpG3Hg+9Hsk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RYyV0VgOna91FsL1OnmCoSPu9PNIakaHYNrQuL76v8vf/nbI9kr6J7yp7fjgE/V06
-	 zY1wMhGiVcMSMfZuiTwBre0BJ0FOp2n3B4wHdo3VsXPGNK+QEek2EVPi0bOb2xwNc+
-	 4zVKpcc7NB4TEVVEpjE6M9WEADqLwL554raljnKA=
+	by mail.kernel.org (Postfix) with ESMTP id 8F0F12087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pFHku2ua"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728724AbgIAPMq (ORCPT
+        id S1727984AbgIARVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:12:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54886 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728725AbgIAPM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:29 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A41F6206FA;
-        Tue,  1 Sep 2020 15:12:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973148;
-        bh=4RWpZvOoJA/5UINqIY4RDIvOA2ssL54rfpG3Hg+9Hsk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OAZrmcd2hVPcTHboG1ZuxtJ17MTWYPh4PhwP7juj9miONYAlNLHg9ZsZ2tT9Ss/cy
-         ddKJbRJjwrGr0Wm+R8gzmIl+1km1DMn90jT18nCFHf1zTLvbp6gxBwmgqmQeb8bfpd
-         X9rgdT4ZiHBAsHhkq7JFHyoQXYWkwWayzogiPCgU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 07/62] ALSA: pci: delete repeated words in comments
-Date:   Tue,  1 Sep 2020 17:09:50 +0200
-Message-Id: <20200901150921.083289829@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
-References: <20200901150920.697676718@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 13:21:13 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40464 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728771AbgIAPMn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:43 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081F9ll8133109;
+        Tue, 1 Sep 2020 15:12:31 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=69XBy7Prznwop6rn97Xe1cVn6rbsvD5ZvUeBPMnuuvQ=;
+ b=pFHku2uaE5OiCnbPBE6xpzZ33M2FVJwUkv41wIGr1eBRvVX/dLV2AiEu+2mcgdlcN9jz
+ P19htcvLglSXz81j4njmBNFFVwP3EGTEEH8GdUB8imSUJFkq9e6dY8pmZU2IunLd2Ld7
+ l7aQjD6MsPP91eC1sfisbSYM9jteII6gJ+rLjz38o3rvopgslch/ER9Jo/+uFfvzVFvA
+ 7zNvfHbMnqOiL5MYHzWymPOfjC//GlihH4O9PUsTsxAmk6cLaLswsnxEHCDPgsWqzN/0
+ wfsXeYLH16jc1YrAgXIPK3Or+xRD637UIpcl8+PB5ngbaO5EsGu10pApM/STlAKIDCuw BA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 339dmmudhh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Sep 2020 15:12:31 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081F9uEW117432;
+        Tue, 1 Sep 2020 15:12:31 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 3380xwkduh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Sep 2020 15:12:31 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 081FCT5i023180;
+        Tue, 1 Sep 2020 15:12:29 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Sep 2020 08:12:29 -0700
+Date:   Tue, 1 Sep 2020 08:12:33 -0700
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     hch@infradead.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] iomap: fix WARN_ON_ONCE() from unprivileged users
+Message-ID: <20200901151233.GC6096@magnolia>
+References: <20200831182353.14593-1-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831182353.14593-1-cai@lca.pw>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=56
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009010126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9730 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=56
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010126
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Mon, Aug 31, 2020 at 02:23:53PM -0400, Qian Cai wrote:
+> It is trivial to trigger a WARN_ON_ONCE(1) in iomap_dio_actor() by
+> unprivileged users which would taint the kernel, or worse - panic if
+> panic_on_warn or panic_on_taint is set. Hence, just convert it to
+> pr_warn_ratelimited() to let users know their workloads are racing.
+> Thank Dave Chinner for the initial analysis of the racing reproducers.
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-[ Upstream commit c7fabbc51352f50cc58242a6dc3b9c1a3599849b ]
+Looks ok to me too.
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Drop duplicated words in sound/pci/.
-{and, the, at}
+--D
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20200806021926.32418-1-rdunlap@infradead.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/pci/cs46xx/cs46xx_lib.c       | 2 +-
- sound/pci/cs46xx/dsp_spos_scb_lib.c | 2 +-
- sound/pci/hda/hda_codec.c           | 2 +-
- sound/pci/hda/hda_generic.c         | 2 +-
- sound/pci/hda/patch_sigmatel.c      | 2 +-
- sound/pci/ice1712/prodigy192.c      | 2 +-
- sound/pci/oxygen/xonar_dg.c         | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/sound/pci/cs46xx/cs46xx_lib.c b/sound/pci/cs46xx/cs46xx_lib.c
-index 2706f271a83b0..8a174c170e0aa 100644
---- a/sound/pci/cs46xx/cs46xx_lib.c
-+++ b/sound/pci/cs46xx/cs46xx_lib.c
-@@ -780,7 +780,7 @@ static void snd_cs46xx_set_capture_sample_rate(struct snd_cs46xx *chip, unsigned
- 		rate = 48000 / 9;
- 
- 	/*
--	 *  We can not capture at at rate greater than the Input Rate (48000).
-+	 *  We can not capture at a rate greater than the Input Rate (48000).
- 	 *  Return an error if an attempt is made to stray outside that limit.
- 	 */
- 	if (rate > 48000)
-diff --git a/sound/pci/cs46xx/dsp_spos_scb_lib.c b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-index 7488e1b7a7707..4e726d39b05d1 100644
---- a/sound/pci/cs46xx/dsp_spos_scb_lib.c
-+++ b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-@@ -1742,7 +1742,7 @@ int cs46xx_iec958_pre_open (struct snd_cs46xx *chip)
- 	struct dsp_spos_instance * ins = chip->dsp_spos_instance;
- 
- 	if ( ins->spdif_status_out & DSP_SPDIF_STATUS_OUTPUT_ENABLED ) {
--		/* remove AsynchFGTxSCB and and PCMSerialInput_II */
-+		/* remove AsynchFGTxSCB and PCMSerialInput_II */
- 		cs46xx_dsp_disable_spdif_out (chip);
- 
- 		/* save state */
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index 825d9b27dbe12..4962a9d8a572b 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -3496,7 +3496,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save);
-  * @nid: NID to check / update
-  *
-  * Check whether the given NID is in the amp list.  If it's in the list,
-- * check the current AMP status, and update the the power-status according
-+ * check the current AMP status, and update the power-status according
-  * to the mute status.
-  *
-  * This function is supposed to be set or called from the check_power_status
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 869c322ddae31..7cd1047a4edf3 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -837,7 +837,7 @@ static void activate_amp_in(struct hda_codec *codec, struct nid_path *path,
- 	}
- }
- 
--/* sync power of each widget in the the given path */
-+/* sync power of each widget in the given path */
- static hda_nid_t path_power_update(struct hda_codec *codec,
- 				   struct nid_path *path,
- 				   bool allow_powerdown)
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index d1a6d20ace0da..80b72d0702c5e 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -862,7 +862,7 @@ static int stac_auto_create_beep_ctls(struct hda_codec *codec,
- 	static struct snd_kcontrol_new beep_vol_ctl =
- 		HDA_CODEC_VOLUME(NULL, 0, 0, 0);
- 
--	/* check for mute support for the the amp */
-+	/* check for mute support for the amp */
- 	if ((caps & AC_AMPCAP_MUTE) >> AC_AMPCAP_MUTE_SHIFT) {
- 		const struct snd_kcontrol_new *temp;
- 		if (spec->anabeep_nid == nid)
-diff --git a/sound/pci/ice1712/prodigy192.c b/sound/pci/ice1712/prodigy192.c
-index 3919aed39ca03..5e52086d7b986 100644
---- a/sound/pci/ice1712/prodigy192.c
-+++ b/sound/pci/ice1712/prodigy192.c
-@@ -31,7 +31,7 @@
-  *		  Experimentally I found out that only a combination of
-  *		  OCKS0=1, OCKS1=1 (128fs, 64fs output) and ice1724 -
-  *		  VT1724_MT_I2S_MCLK_128X=0 (256fs input) yields correct
-- *		  sampling rate. That means the the FPGA doubles the
-+ *		  sampling rate. That means that the FPGA doubles the
-  *		  MCK01 rate.
-  *
-  *	Copyright (c) 2003 Takashi Iwai <tiwai@suse.de>
-diff --git a/sound/pci/oxygen/xonar_dg.c b/sound/pci/oxygen/xonar_dg.c
-index 4cf3200e988b0..df44135e1b0c9 100644
---- a/sound/pci/oxygen/xonar_dg.c
-+++ b/sound/pci/oxygen/xonar_dg.c
-@@ -39,7 +39,7 @@
-  *   GPIO 4 <- headphone detect
-  *   GPIO 5 -> enable ADC analog circuit for the left channel
-  *   GPIO 6 -> enable ADC analog circuit for the right channel
-- *   GPIO 7 -> switch green rear output jack between CS4245 and and the first
-+ *   GPIO 7 -> switch green rear output jack between CS4245 and the first
-  *             channel of CS4361 (mechanical relay)
-  *   GPIO 8 -> enable output to speakers
-  *
--- 
-2.25.1
-
-
-
+> ---
+> v4: use %pD4.
+> v3: Keep the default case and update the message.
+> v2: Record the path, pid and command as well.
+> 
+>  fs/iomap/direct-io.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/fs/iomap/direct-io.c b/fs/iomap/direct-io.c
+> index c1aafb2ab990..9519113ebc35 100644
+> --- a/fs/iomap/direct-io.c
+> +++ b/fs/iomap/direct-io.c
+> @@ -388,6 +388,16 @@ iomap_dio_actor(struct inode *inode, loff_t pos, loff_t length,
+>  		return iomap_dio_bio_actor(inode, pos, length, dio, iomap);
+>  	case IOMAP_INLINE:
+>  		return iomap_dio_inline_actor(inode, pos, length, dio, iomap);
+> +	case IOMAP_DELALLOC:
+> +		/*
+> +		 * DIO is not serialised against mmap() access at all, and so
+> +		 * if the page_mkwrite occurs between the writeback and the
+> +		 * iomap_apply() call in the DIO path, then it will see the
+> +		 * DELALLOC block that the page-mkwrite allocated.
+> +		 */
+> +		pr_warn_ratelimited("Direct I/O collision with buffered writes! File: %pD4 Comm: %.20s\n",
+> +				    dio->iocb->ki_filp, current->comm);
+> +		return -EIO;
+>  	default:
+>  		WARN_ON_ONCE(1);
+>  		return -EIO;
+> -- 
+> 2.18.4
+> 
