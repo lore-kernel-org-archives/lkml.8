@@ -7,64 +7,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D5FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6AAC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E73D42073A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF012073A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="YDk70Rux"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="vh0MrWbx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIAAXp (ORCPT
+        id S1726657AbgIAAXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 20:23:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55462 "EHLO
+        Mon, 31 Aug 2020 20:23:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbgIAAXi (ORCPT
+        with ESMTP id S1726400AbgIAAXp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 20:23:38 -0400
+        Mon, 31 Aug 2020 20:23:45 -0400
 Received: from mail-pf1-x449.google.com (mail-pf1-x449.google.com [IPv6:2607:f8b0:4864:20::449])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E60C061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:37 -0700 (PDT)
-Received: by mail-pf1-x449.google.com with SMTP id x125so1676903pfc.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FF6CC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:45 -0700 (PDT)
+Received: by mail-pf1-x449.google.com with SMTP id o184so1673935pfb.12
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=x7hoSHeAWK5P4oeCQGgLVlcI02P7mwgUY7iVKcw4mtY=;
-        b=YDk70RuxUX7JQxUoCoDpBMB4Nx2aegPpci+1o9QaktjEfeowcrNv+0ouGv724IqC8j
-         E2Tqc64XZ/ymVWNhnLAcq3uKinmAGRj0iXaYmqfvusL+IBKOp3hXe8RzakZ5TZtykMsP
-         H21xkmRpBkBTJmxSSOJ4IGQFh9HCTudfkATQ7LeIrQmZ7sueou1bCu0WJuOndNJDE2/1
-         MmheDrpYbHtKEjwVaDI+x3ZjkV64wIByHFUc90xTNlh5v7f9PVEri1cFA94LJwOlYH4q
-         kd8a6w0sQ8Mvc1aLNaD6Rrj/d902fu/fbBEYwOJGOq6isRAf+dQf/mQPdQTlkcAmH9G+
-         3Stg==
+        bh=90voGTWRAh9zyb+/yxZJ0Qpab+sDHCs4FBicC4wnAQo=;
+        b=vh0MrWbx8c75wggoN8fSxobI1hCwLxVpnv7SdzNrisbQNqFivlJkqv9L23p2waHNoH
+         th7pQorhcMyzuGwgI6VHIGlBuz91DVuuVtIM1VaGFnRMyLY15cQcfGa85ISwr0eSrIFU
+         FXFHy4VmczgmUG+HYNI2ECufDgVuiG5gY5IoXnoCNcWhGZih/PG21VDsWeVS+5K/avUI
+         dK80fFxZVdGAGzkQHfLckGyMCN3Oi3QqsISMlO+MLJE/TTN8tL1NnUdSpzNRt/XSap6S
+         KrY7zwouXXDiJxhwdHsKMeD4P1XH7QlBrFwXR7SeTTZCTgsnosz99ZJZFT6wL6S+S1Zq
+         rc/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=x7hoSHeAWK5P4oeCQGgLVlcI02P7mwgUY7iVKcw4mtY=;
-        b=aqG1V8ditnppGvvrxCG+jgNv0VDEuKw2JLT6oLhd8jvJJYbtH0CSdNONR1moL8IZ1M
-         92dAeU31g7piPBMaQha8tTrPX64cqcXpgMrDuaxOwGC0bx3d4r2lsP3T85Xdgci1mWNg
-         nOF+gIDLyTGAUsOT/b7l0NYcazPy8RxZ6D2O9ZaBH+CtnaSu3tcutPyGyWEnrUThQ5ES
-         Ag47KfKpyRkAq6Zr64PtjdTyv+2IA58UNSzxXz3uWI1D7R5ioAy9uQMNT53pzl0+NPog
-         0cwp+r3WUS95PRezwXQt1/sLB7gCksCybbb+f3cCsIITTlbxLytHQ+crvrxTPhCtIKFF
-         DyPQ==
-X-Gm-Message-State: AOAM530UrYQJHMJc5kQMxT606Qsx94zb4qv3vireG7ImR5s3ega3VV0u
-        D1lBr2D4jZeOyniGkYH6dH/Rf4loIXMrJj1t0JE=
-X-Google-Smtp-Source: ABdhPJwED4nLxHhSz5AKhDraPa+/J0fY4ButKN1zuzXmRYkgkklqlX1iwDxieuNT/RU/gbhQkyoLgKvW/jlXNgldQ10=
+        bh=90voGTWRAh9zyb+/yxZJ0Qpab+sDHCs4FBicC4wnAQo=;
+        b=Z18VysyeXY91nnBg3/QoFWS8uBNPE3M/oXbP9vbWoKZSG4R1YaF7bMifZ4hAja4Pxz
+         4b5hAVRsDcds9BKE+1Y0ot6X9/Ha0tNftITZPHQfoxWLGQ2iIb2LzOA4RVLdFp/rzSod
+         1g1TBi7BzaHtGuisB0jTZj2E2g+WkR2vcBGTHlEXq31EKq9LQRBcXZe7cukvgbfnafUR
+         sAWQdmAmbU2KZKRPcMuRfdgIb9VrarjJVdRP0TgQxU8LFv1I+a4mzkeaeNrcRuhhlRsN
+         dHVc/nvu9VSVMwk3SCf5CEe4wihNgaBoud7z+u0MROFGgTQc+0s18xDhYWZd2Xh2Phb+
+         uhnw==
+X-Gm-Message-State: AOAM531avTjDA+XrCYRMD0w9sWYzcl/vbqxvIQqvTyavztmLHexpXbYi
+        h/bVuGjG4AZWNQL2XRw7tQX4887Fqo4SVHQ/ops=
+X-Google-Smtp-Source: ABdhPJwMXeaN4tNH9H5++r3kcrJCsz+x2BTYTZynMy7uqKGUJvgK01z0h6HMukItgUOz5RKuA84KGl6agOsCH8FHEYM=
 X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a62:4c5:0:b029:138:413e:3e65 with
- SMTP id 188-20020a6204c50000b0290138413e3e65mr782938pfe.3.1598919817460; Mon,
- 31 Aug 2020 17:23:37 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 17:23:22 -0700
+ (user=ndesaulniers job=sendgmr) by 2002:a62:7e0e:: with SMTP id
+ z14mr3356377pfc.56.1598919824832; Mon, 31 Aug 2020 17:23:44 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 17:23:26 -0700
 In-Reply-To: <20200901002326.1137289-1-ndesaulniers@google.com>
-Message-Id: <20200901002326.1137289-4-ndesaulniers@google.com>
+Message-Id: <20200901002326.1137289-8-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20200901002326.1137289-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH v2 3/7] Revert "arm64: bti: Require clang >= 10.0.1 for
- in-kernel BTI support"
+Subject: [PATCH v2 7/7] compiler-gcc: improve version error
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -87,29 +85,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit b9249cba25a5dce5de87e5404503a5e11832c2dd.
+As Kees suggests, do so provides developers with two useful pieces of
+information:
+- The kernel build was attempting to use GCC.
+  (Maybe they accidentally poked the wrong configs in a CI.)
+- They need 4.9 or better.
+  ("Upgrade to what version?" doesn't need to be dug out of documentation,
+   headers, etc.)
 
-The minimum supported version of clang is now 10.0.1.
-
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/arm64/Kconfig | 2 --
- 1 file changed, 2 deletions(-)
+ include/linux/compiler-gcc.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 6d232837cbee..2a70b85b1a61 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1630,8 +1630,6 @@ config ARM64_BTI_KERNEL
- 	depends on CC_HAS_BRANCH_PROT_PAC_RET_BTI
- 	# https://gcc.gnu.org/bugzilla/show_bug.cgi?id=94697
- 	depends on !CC_IS_GCC || GCC_VERSION >= 100100
--	# https://reviews.llvm.org/rGb8ae3fdfa579dbf366b1bb1cbfdbf8c51db7fa55
--	depends on !CC_IS_CLANG || CLANG_VERSION >= 100001
- 	depends on !(CC_IS_CLANG && GCOV_KERNEL)
- 	depends on (!FUNCTION_GRAPH_TRACER || DYNAMIC_FTRACE_WITH_REGS)
- 	help
+diff --git a/include/linux/compiler-gcc.h b/include/linux/compiler-gcc.h
+index 7a3769040d7d..d1e3c6896b71 100644
+--- a/include/linux/compiler-gcc.h
++++ b/include/linux/compiler-gcc.h
+@@ -12,7 +12,7 @@
+ 
+ /* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=58145 */
+ #if GCC_VERSION < 40900
+-# error Sorry, your compiler is too old - please upgrade it.
++# error Sorry, your version of GCC is too old - please use 4.9 or newer.
+ #endif
+ 
+ /* Optimization barrier */
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
