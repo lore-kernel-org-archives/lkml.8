@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C17FC28E83
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 623B4C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:50:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0A52067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 259E920767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979002;
-	bh=wWrsBSoomeH4DSGAdrpLjOIFXXCeyh5X5tzUvZwC4SE=;
+	s=default; t=1598979005;
+	bh=r+vHRWWu2w3ZF3UsA/CeFeXJT3lpFdYiC0k6NtPT8Wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHB0EBfUPKxUSKqXspCBqN6uFQHlqvnwkpDhM8HEyTn3DeZCvW4xS01Qex/Qxj6Du
-	 zw5dGjXWdaW+Ri/Of5f/OVjE1ZzyUXQiinl6qNWKjMBIuAtYUdElffQ+WFQTwB98zu
-	 G4HioMnR/bVAKdzudxEF48iPktxIbpHRcqkGg6mQ=
+	b=Ryjj3uhuAxb8KqZ4gv0atd1TLq8CtIWhoCRBD3RzhaIb+FDSq7SWyTo3CSg0hhErE
+	 c3OmGimVFPvDcOFEepL3SiX9z+Pr7kArl+1A1w9DAXB3qqOHVjGB53gU2Lkz9whlnm
+	 eAmhP4LXMQ8h+xHv/+QvfdOQaNGEvEUtJ4tboIZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730136AbgIAP0s (ORCPT
+        id S1730118AbgIAP0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:26:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729790AbgIAPXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:15 -0400
+        id S1729784AbgIAPXK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51E1320FC3;
-        Tue,  1 Sep 2020 15:23:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 422982078B;
+        Tue,  1 Sep 2020 15:23:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973794;
-        bh=wWrsBSoomeH4DSGAdrpLjOIFXXCeyh5X5tzUvZwC4SE=;
+        s=default; t=1598973789;
+        bh=r+vHRWWu2w3ZF3UsA/CeFeXJT3lpFdYiC0k6NtPT8Wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zI9xAoc5HCacW4dOXTG+y4GMHIugpHvvUQkretbzDa3WHfbCauP5NRKyMyE8B9mmM
-         7OkQq12gZXZ6rZfdfJaeNr32ACE9hPuc2V+KQXOIMjBpy5qAwgQ4b3ajPqNiiPVvD6
-         +L076+l7zqKRt644UOhYxmRo9fgYZ3+FwNT6O2uc=
+        b=oqd/EmHng+fe68sPiimPyP57ACo766EL3IUO8hM4sYieE2wXUfkprleazqQGrRCi3
+         LqTyIHFPcL22Eb7zCIAbZez8DRAk918xrclj+MM8pqbHlzMoQrMnU6PuhCCD4ZuzSI
+         sWQl1CwOzoeWqwP3NzxsBB5NVFbbGqJYPA7kRPLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jeremy Kerr <jk@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        kjlu@umn.edu, wu000273@umn.edu,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Enrico Weigelt <info@metux.net>,
+        "Andrew F. Davis" <afd@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 049/125] powerpc/spufs: add CONFIG_COREDUMP dependency
-Date:   Tue,  1 Sep 2020 17:10:04 +0200
-Message-Id: <20200901150936.951624858@linuxfoundation.org>
+Subject: [PATCH 4.19 030/125] omapfb: fix multiple reference count leaks due to pm_runtime_get_sync
+Date:   Tue,  1 Sep 2020 17:09:45 +0200
+Message-Id: <20200901150936.033812451@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -61,45 +68,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit b648a5132ca3237a0f1ce5d871fff342b0efcf8a ]
+[ Upstream commit 78c2ce9bde70be5be7e3615a2ae7024ed8173087 ]
 
-The kernel test robot pointed out a slightly different error message
-after recent commit 5456ffdee666 ("powerpc/spufs: simplify spufs core
-dumping") to spufs for a configuration that never worked:
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_proxydma_info_dump':
->> file.c:(.text+0x4c68): undefined reference to `.dump_emit'
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_dma_info_dump':
-   file.c:(.text+0x4d70): undefined reference to `.dump_emit'
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_wbox_info_dump':
-   file.c:(.text+0x4df4): undefined reference to `.dump_emit'
-
-Add a Kconfig dependency to prevent this from happening again.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200706132302.3885935-1-arnd@arndb.de
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Cc: kjlu@umn.edu
+Cc: wu000273@umn.edu
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Enrico Weigelt <info@metux.net>
+cc: "Andrew F. Davis" <afd@ti.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Alexios Zavras <alexios.zavras@intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200614030528.128064-1-pakki001@umn.edu
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/cell/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 7 +++++--
+ drivers/video/fbdev/omap2/omapfb/dss/dsi.c   | 7 +++++--
+ drivers/video/fbdev/omap2/omapfb/dss/dss.c   | 7 +++++--
+ drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 5 +++--
+ drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c | 5 +++--
+ drivers/video/fbdev/omap2/omapfb/dss/venc.c  | 7 +++++--
+ 6 files changed, 26 insertions(+), 12 deletions(-)
 
-diff --git a/arch/powerpc/platforms/cell/Kconfig b/arch/powerpc/platforms/cell/Kconfig
-index 9f5958f169234..741a8fa8a3e6b 100644
---- a/arch/powerpc/platforms/cell/Kconfig
-+++ b/arch/powerpc/platforms/cell/Kconfig
-@@ -46,6 +46,7 @@ config SPU_FS
- 	tristate "SPU file system"
- 	default m
- 	depends on PPC_CELL
-+	depends on COREDUMP
- 	select SPU_BASE
- 	help
- 	  The SPU file system is used to access Synergistic Processing
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+index a06d9c25765c5..0bd582e845f31 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
+@@ -531,8 +531,11 @@ int dispc_runtime_get(void)
+ 	DSSDBG("dispc_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&dispc.pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&dispc.pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ EXPORT_SYMBOL(dispc_runtime_get);
+ 
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+index 8e1d60d48dbb0..50792d31533bf 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
+@@ -1148,8 +1148,11 @@ static int dsi_runtime_get(struct platform_device *dsidev)
+ 	DSSDBG("dsi_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&dsi->pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&dsi->pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ 
+ static void dsi_runtime_put(struct platform_device *dsidev)
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+index b6c6c24979dd6..faebf9a773ba5 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+@@ -779,8 +779,11 @@ int dss_runtime_get(void)
+ 	DSSDBG("dss_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&dss.pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&dss.pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ 
+ void dss_runtime_put(void)
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+index 28de56e21c74b..9fd9a02bb871d 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
+@@ -50,9 +50,10 @@ static int hdmi_runtime_get(void)
+ 	DSSDBG("hdmi_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
+-	WARN_ON(r < 0);
+-	if (r < 0)
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&hdmi.pdev->dev);
+ 		return r;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
+index 2e2fcc3d6d4f7..13f3a5ce55294 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
+@@ -54,9 +54,10 @@ static int hdmi_runtime_get(void)
+ 	DSSDBG("hdmi_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
+-	WARN_ON(r < 0);
+-	if (r < 0)
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&hdmi.pdev->dev);
+ 		return r;
++	}
+ 
+ 	return 0;
+ }
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+index 392464da12e41..96714b4596d2d 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
+@@ -402,8 +402,11 @@ static int venc_runtime_get(void)
+ 	DSSDBG("venc_runtime_get\n");
+ 
+ 	r = pm_runtime_get_sync(&venc.pdev->dev);
+-	WARN_ON(r < 0);
+-	return r < 0 ? r : 0;
++	if (WARN_ON(r < 0)) {
++		pm_runtime_put_sync(&venc.pdev->dev);
++		return r;
++	}
++	return 0;
+ }
+ 
+ static void venc_runtime_put(void)
 -- 
 2.25.1
 
