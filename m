@@ -2,93 +2,128 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D61C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11883C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:42:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6A5F208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:42:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F9C21655
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="zWf7fhWF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxxGJfPE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728222AbgIAOmL (ORCPT
+        id S1728142AbgIAOmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:42:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46716 "EHLO
+        Tue, 1 Sep 2020 10:42:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42798 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728536AbgIAOl6 (ORCPT
+        with ESMTP id S1728115AbgIAOQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:41:58 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03584C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 07:41:57 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id b16so516471pjp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 07:41:57 -0700 (PDT)
+        Tue, 1 Sep 2020 10:16:46 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE299C061260;
+        Tue,  1 Sep 2020 07:16:42 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id t9so861829pfq.8;
+        Tue, 01 Sep 2020 07:16:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rN6mVq1C675COOeO9181t4h75F89OjQk6hHpgH+S2X8=;
-        b=zWf7fhWFHujfWaocQn49l9sQhhPq6xyQeaCS4rvpip82Yg4nGFcQsS/l32lvBaxghQ
-         w8UaOQwYaD6gwz9dGJN2uVaNuBPQZYnoFcap4fWwhOCDmaaq4RrKwPeefiocvDkkgHrJ
-         24Uuwoy8QMsErURjw7uLdcKrhxkFqbkopqSxv/HyZO/ftoDj+/LMXPdlvUmq1LM3M2Yy
-         th1SUVnuedh8P7SRbR7zqCtQchZ55aIsGN9Tez4fMp9NS+3qhEQZAaOneAMbclltMKdH
-         Ly8iQ51E0C6AGzrvyHAL99zOB1yxiMqKYX5tIUS75Po6vwYmPu9+lw7PDYD+usWZ0So7
-         5hGA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0vzoL+VsrIPHuqh1rtEB2SuTababb460vueko2jTOo4=;
+        b=XxxGJfPETQ7BZiIuZPtIZTdbh7ieNNvvgRcIjzPetj4CA6WlA6eQmTamnSI4ThlLOp
+         I7Bwm5vBwBcLIzkRWQszNO5+mqimneWWmxfugSbuIDaZBS1IFgcKiHHRPoGqQ9F0f1Co
+         EtKxeYYXyyTeeVAotBk5cJhyUZaR4+HBsL5QEX1us7JCul4yTuZkY6ldhldS6dO979lI
+         6GMBbSl5F4bzmlOnmQPmXLMDigRNfA8+tv59CLpLU2rwgaSkfRh0VzP3KXE3IfkGNyw9
+         zEyx5WAdD5EPiTaL9zeyWyu9rVYM327qiAvJMWhWZCNi3jRtlhh4RqwMP6Y+qcdURY6h
+         n5iw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rN6mVq1C675COOeO9181t4h75F89OjQk6hHpgH+S2X8=;
-        b=TrjLGJWYzdRl9lnjksYeQN4C9WmYic27Kl+mQ7gN4NBcc4+FlVlpBG8bmhjJyO7qkF
-         gc3KzighaGvag+2sCsUK7aQj+oroPVD5NyEUIbwP5Ad1N8VAm0bqxCjdE+lM4tND4xNw
-         BtzvaQ1H+++Dt835/secUyPeC4TEoxCb3cGMGZLYXFg6kKRzK8Yit/KARfHvpEBFKfFm
-         86r5RUeTlgzzB7TCVSdJb/jPelxvOTqTKgkz7iTWttx5Qs94s2HZJyLBvgzRIK3JhXZM
-         mD5do2BWwO23zTX3ixgrdT77uCLSrIDvLm0tXeU/UGnaOCqpUdy9Ud3u0aSCFK1hYYgg
-         Md7w==
-X-Gm-Message-State: AOAM5331XehP1rCThGDLKCE621nEgg1h3SiuCjANTe9k4CmHkDitwKLm
-        RPurQNFYmLDPEmaJg6/wD61AniMrvnOoEDoi
-X-Google-Smtp-Source: ABdhPJxyUYNNoAYg+p0rUio5na1hUQeQkT9Gz50MFaKFx0Ho8v3YbST/94HbTYB5NkVRq+gbMPEODQ==
-X-Received: by 2002:a17:90b:1049:: with SMTP id gq9mr1941000pjb.28.1598971317157;
-        Tue, 01 Sep 2020 07:41:57 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id r123sm2340138pfc.187.2020.09.01.07.41.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 07:41:56 -0700 (PDT)
-Subject: Re: [PATCH v3 0/4] Some clean-ups for bio merge
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     ming.lei@redhat.com, hch@lst.de, baolin.wang7@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <aa37ce36-c02f-835b-e62b-3e47daa27022@kernel.dk>
-Date:   Tue, 1 Sep 2020 08:41:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0vzoL+VsrIPHuqh1rtEB2SuTababb460vueko2jTOo4=;
+        b=Jy8y74+5R27O5h+T6o0x8S5i4Qu/hVE3Egcr6m44BWGoS2C6mk2rZ1UbeC6IGlhWH6
+         b+sc8Ev4hIlv/NLjaDLSAWR54QwZt9vjmWr7o9Ms5l6DMKDMLOTQqZ0uofOWHqF2UFSD
+         RtXrj6qcs8fu2TMxBGM06AMChtLMnUAL9t3o51iBx4Nffa+9EK6I1HeKWcB57taWMCtE
+         KjndyB5X5lPlGuioeFiIJKnH7GL9VyuGgdJMUg4npVFepWJdQEW1cGbIXs6ncwb81WTC
+         4hrrcz9w1kKsZNoFPdPmDtngSmgC2zkbs8y+cSCu2L/8GU0Kp0PhzPE+wgriGwEribFA
+         mztw==
+X-Gm-Message-State: AOAM5309f1hlRTYkWCQ8rENJKI0kF/8KG7texWgyh3PW/y7Rw+aAnSf+
+        HvOXQfcT1ao08aE281cgzmYNQezsM3o=
+X-Google-Smtp-Source: ABdhPJxhdXGBFtIiSfY5hgzmizcaBGI6SG79Dre9MXBlOMApIf1kkDG0o9XLXTCLh5Pm5ekdjZE4cg==
+X-Received: by 2002:a65:5689:: with SMTP id v9mr1729375pgs.271.1598969802057;
+        Tue, 01 Sep 2020 07:16:42 -0700 (PDT)
+Received: from bobo.ibm.com ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 07:16:41 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        openrisc@lists.librecores.org
+Subject: [PATCH v3 14/23] openrisc: use asm-generic/mmu_context.h for no-op implementations
+Date:   Wed,  2 Sep 2020 00:15:30 +1000
+Message-Id: <20200901141539.1757549-15-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
+References: <20200901141539.1757549-1-npiggin@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/20 8:52 PM, Baolin Wang wrote:
-> Hi,
-> 
-> There are some duplicated code when trying to merge bio from pluged list
-> and software queue, thus this patch set did some clean-ups when merging
-> a bio. Any comments are welcome. Thanks.
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Cc: Stafford Horne <shorne@gmail.com>
+Cc: openrisc@lists.librecores.org
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+---
 
-Applied, thanks.
+Please ack or nack if you object to this being mered via
+Arnd's tree.
 
+ arch/openrisc/include/asm/mmu_context.h | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/arch/openrisc/include/asm/mmu_context.h b/arch/openrisc/include/asm/mmu_context.h
+index ced577542e29..a6702384c77d 100644
+--- a/arch/openrisc/include/asm/mmu_context.h
++++ b/arch/openrisc/include/asm/mmu_context.h
+@@ -17,13 +17,13 @@
+ 
+ #include <asm-generic/mm_hooks.h>
+ 
++#define init_new_context init_new_context
+ extern int init_new_context(struct task_struct *tsk, struct mm_struct *mm);
++#define destroy_context destroy_context
+ extern void destroy_context(struct mm_struct *mm);
+ extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 		      struct task_struct *tsk);
+ 
+-#define deactivate_mm(tsk, mm)	do { } while (0)
+-
+ #define activate_mm(prev, next) switch_mm((prev), (next), NULL)
+ 
+ /* current active pgd - this is similar to other processors pgd
+@@ -32,8 +32,6 @@ extern void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 
+ extern volatile pgd_t *current_pgd[]; /* defined in arch/openrisc/mm/fault.c */
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
++#include <asm-generic/mmu_context.h>
+ 
+ #endif
 -- 
-Jens Axboe
+2.23.0
 
