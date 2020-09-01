@@ -5,53 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 209D1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3917C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F0BA5206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78CDC206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976294;
-	bh=a4AFxIIbHQK9Lqw9oBlSp8gM0Wf/4JFV3vGKeiNeUr8=;
+	s=default; t=1598976298;
+	bh=5ce+FHrLo36TS/g31EXfQ81YDAJMHQLxvWN2O+WB90I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rps8XYPgarDOhE3FQ15tLI8vXEYOeKJYd0AdzeSLVyawQerdZyK/TmU3pP2kfkre8
-	 p9VKTeaeNvEDFkHSDjL468Qb65YE5KkQoAHDg11mA2xLr9wIzeLAn3KB2PV6JA9phY
-	 YvMF4UqMvXwtYGziMboxsOyT9I0YS2O5FouPeBUA=
+	b=r9uTlVXxvhru0MRkULTNsdJa76usqX2xUJzb8u/03hXUNwJLrWFB12aqon6IVSDug
+	 MHEcredAJSPfxgMBl4TsrvUO+bzx2b2XH89cLz/GqtInnUAXp38AGxudhYlynjtN4a
+	 1AqxqOdrikPwY93+KiDcazVPvkMllknW6jGLZYok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731302AbgIAQEt (ORCPT
+        id S1730543AbgIAQEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:04:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55812 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:04:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730697AbgIAPmk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:42:40 -0400
+        id S1731536AbgIAPmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:42:03 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66C182064B;
-        Tue,  1 Sep 2020 15:42:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1511120866;
+        Tue,  1 Sep 2020 15:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974960;
-        bh=a4AFxIIbHQK9Lqw9oBlSp8gM0Wf/4JFV3vGKeiNeUr8=;
+        s=default; t=1598974914;
+        bh=5ce+FHrLo36TS/g31EXfQ81YDAJMHQLxvWN2O+WB90I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VJ5q2SxgkS7/Ohbz8ekOopA6UQw3zTEbyzWJMbuNowCX1rgXQnTVYhL1err/n14BX
-         pSICQLafvOQ49Ufuc1GkFnVzh+5DvoKQ20zXgNbL7AdxZkgM2NCVii+TthKsqUii21
-         mH61UpU0kLmKHGT05MDkr6sGudg/5JKK0h7PPIms=
+        b=WHeUbIH1nE/yd2pi8gopNGL1mBrekniUy6ZSk/XU2Ec1BCqWZT1dkErzFs0TNWlRN
+         yB2NvNb9ojk7FW1AW9Ynsnbau2k7B7k7rfI0ah7XSlAGH8yM5eyvCJlV5tL/JIeBsb
+         J+QWOsmREOmpuH6xw81wBfhPnWonLX/GqHr6MXds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 148/255] scsi: qla2xxx: Flush all sessions on zone disable
-Date:   Tue,  1 Sep 2020 17:10:04 +0200
-Message-Id: <20200901151007.780748111@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Pozulp <pozulp.kernel@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 138/255] ALSA: hda/realtek: Add model alc298-samsung-headphone
+Date:   Tue,  1 Sep 2020 17:09:54 +0200
+Message-Id: <20200901151007.323227723@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -64,48 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Mike Pozulp <pozulp.kernel@gmail.com>
 
-[ Upstream commit 10ae30ba664822f62de169a61628e31c999c7cc8 ]
+[ Upstream commit 23dc958689449be85e39351a8c809c3d344b155b ]
 
-On Zone Disable, certain switches would ignore all commands. This causes
-timeout for both switch scan command and abort of that command. On
-detection of this condition, all sessions will be shutdown.
+The very quiet and distorted headphone output bug that afflicted my
+Samsung Notebook 9 is appearing in many other Samsung laptops. Expose
+the quirk which fixed my laptop as a model so other users can try it.
 
-Link: https://lore.kernel.org/r/20200806111014.28434-2-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
+Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
+Link: https://lore.kernel.org/r/20200817043219.458889-1-pozulp.kernel@gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_gs.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
-index df670fba2ab8a..c6b6a3250312e 100644
---- a/drivers/scsi/qla2xxx/qla_gs.c
-+++ b/drivers/scsi/qla2xxx/qla_gs.c
-@@ -3736,6 +3736,18 @@ static void qla2x00_async_gpnft_gnnft_sp_done(srb_t *sp, int res)
- 		unsigned long flags;
- 		const char *name = sp->name;
- 
-+		if (res == QLA_OS_TIMER_EXPIRED) {
-+			/* switch is ignoring all commands.
-+			 * This might be a zone disable behavior.
-+			 * This means we hit 64s timeout.
-+			 * 22s GPNFT + 44s Abort = 64s
-+			 */
-+			ql_dbg(ql_dbg_disc, vha, 0xffff,
-+			       "%s: Switch Zone check please .\n",
-+			       name);
-+			qla2x00_mark_all_devices_lost(vha);
-+		}
-+
- 		/*
- 		 * We are in an Interrupt context, queue up this
- 		 * sp for GNNFT_DONE work. This will allow all
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index b767d8fce828e..da23c2d4ca51e 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -7969,6 +7969,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
+ 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
+ 	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
+ 	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
++	{.id = ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET, .name = "alc298-samsung-headphone"},
+ 	{}
+ };
+ #define ALC225_STANDARD_PINS \
 -- 
 2.25.1
 
