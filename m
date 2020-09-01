@@ -2,125 +2,115 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E1E5C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837C6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2AF32208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:42:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OAbWCK0Y"
+	by mail.kernel.org (Postfix) with ESMTP id 635662098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598939222;
+	bh=QaG3/rBMRYAANZWx2ugTj+2VOdfslHDof0tq4Vo/tko=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qqAq7ImDykOAif2WPJwRofEnJyMyTyotOo1ylgNTN84SgS+YV2NZvrhilhIP3+XsL
+	 Q5Xh8sFSFGTeiihqL3ZtHUQ+EbGl5GFuvogXQ4e8xVYZKQsjuIOgh7IGHKbqMK1SBz
+	 vijhm4CfKQiQWcasx96DUkVvuAGU6GImjCDm36oU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbgIAFmt (ORCPT
+        id S1726139AbgIAFrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:42:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48214 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726301AbgIAFmq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:42:46 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75EB2C0612A3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:42:45 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id n129so8458767qkd.6
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=TjPySNIpD++R3nIfiDfbAnLHmr0c9i/LGC5Y9ogD0v8=;
-        b=OAbWCK0Yezbsh/mzcgeE7sC/EeQQhZZ8WSfMp/Fmv/B7Lk2xTWpDZL7ez5bf5UDPWK
-         4Tue7VtzfuaCr5qUWiEay3FADaV89uAXqiEQ2f0UU/LKgixPCrQhkFXl83SKtXawRPug
-         3VswzBVU7BhUiPiBt4EI5sghR0SBrIxLZku0fNksghFQsFPBBSKTndX/FfB6TpJMrVJJ
-         TE/FJhQHMSxivxBOC5CwlJvVL2inpaqTLLxgpXo2oLYU/jPdXYGaBWizv/c5P/4Twm4n
-         oUcO4KIExFshItVD3J8hb+p6lpoDxm4JTY8Saz2oGC55/ChiWAPX6WIBTSDYFkqzsCAo
-         81SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=TjPySNIpD++R3nIfiDfbAnLHmr0c9i/LGC5Y9ogD0v8=;
-        b=tZfb4q10oBoLkQGOOEcCaTb9Fl8laeaRnv9bNvE+9g6zCjXTAd1ctTfYujUMSITJN4
-         94t8En2CnXafvthsxWgpvVGAFsPULepXS31/Zo0YfGPhOKyA86C0Z00GtMctfEy8lF03
-         CvN0kIFvyuVkylohQ2klVAOvmb/kaeZvlIIXmvYdqATR5FD9y1HB08KeQuDkuiDhMdJ1
-         kjLOnYzNy4p5pwYVzQxxr6d4/SVCts01NtQ9/LoCSmN9GQN13QCgZ1JgCeIE/mTImeQ6
-         TGFS1Eyay+8PSYbKZQtm+sQf8r1zG3jpPC2lbliLO8/NTH+bMIRucYnmwQPRv9LrUF2D
-         qJ/w==
-X-Gm-Message-State: AOAM5323sTgIUACsEQMcVPL7CddtfeGbvA/kji3IEJK9GqKmiFb565Cb
-        cg6O94hYl3T5dxHuPrI/ccQ48A==
-X-Google-Smtp-Source: ABdhPJzptDekz3V1QxRTxrgjsN9RM1EoaAMnK6eUWK4D92iBVLom/mgdEqgNNG4GBVYJ/DvH3YX36g==
-X-Received: by 2002:a37:b307:: with SMTP id c7mr270811qkf.33.1598938964675;
-        Mon, 31 Aug 2020 22:42:44 -0700 (PDT)
-Received: from uller (ec2-34-197-84-77.compute-1.amazonaws.com. [34.197.84.77])
-        by smtp.gmail.com with ESMTPSA id s20sm354299qkg.65.2020.08.31.22.42.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 22:42:44 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 05:42:42 +0000
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 01/19] drm/msm: remove dangling submitqueue references
-Message-ID: <20200901054242.GC54956@uller>
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-2-robdclark@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814024114.1177553-2-robdclark@gmail.com>
+        Tue, 1 Sep 2020 01:47:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgIAFrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 01:47:00 -0400
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 795B12087D;
+        Tue,  1 Sep 2020 05:46:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598939219;
+        bh=QaG3/rBMRYAANZWx2ugTj+2VOdfslHDof0tq4Vo/tko=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=N/zAUdQTxbnNoXgZ/dUG6rsk/Kx2NIpkT1XXRlRPugC/qgPv9Kgnfpa6fJMFpPsgF
+         RnSrUTcm1JPEKWzsTVbOVbI5T2IkcoHIPJ7wjdeulkGUoTfT1+euiZHy5us/e6Fp+T
+         bxLZruhXf4FGw33CkIw0xS6RqyL13TGH/t/AW7rI=
+Date:   Tue, 1 Sep 2020 14:46:56 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH 5/6] Documentation: tracing: Add %return suffix
+ description
+Message-Id: <20200901144656.35ced5c71cc07b45fe2d1da9@kernel.org>
+In-Reply-To: <20200901072745.9ca00fc7efeabe9f0cf479e6@kernel.org>
+References: <159887792384.1330989.5993224243767476896.stgit@devnote2>
+        <159887797048.1330989.6092698289026009625.stgit@devnote2>
+        <210c7494-da9e-5314-c648-917493081c32@infradead.org>
+        <20200901072745.9ca00fc7efeabe9f0cf479e6@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 14 Aug 02:40 UTC 2020, Rob Clark wrote:
+On Tue, 1 Sep 2020 07:27:45 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-> From: Rob Clark <robdclark@chromium.org>
+> On Mon, 31 Aug 2020 11:50:20 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
 > 
-> Currently it doesn't matter, since we free the ctx immediately.  But
-> when we start refcnt'ing the ctx, we don't want old dangling list
-> entries to hang around.
+> > On 8/31/20 5:46 AM, Masami Hiramatsu wrote:
+> > > Add a description of the %return suffix option for kprobe tracer.
+> > > 
+> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > > ---
+> > >  Documentation/trace/kprobetrace.rst |    2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
+> > > index c1709165c553..d29d1f9e6721 100644
+> > > --- a/Documentation/trace/kprobetrace.rst
+> > > +++ b/Documentation/trace/kprobetrace.rst
+> > 
+> > Check spacing:
+> > 
+> > > @@ -37,6 +38,7 @@ Synopsis of kprobe_events
+> > >  		  based on SYM+offs or MEMADDR.
+> > >   MOD		: Module name which has given SYM.
+> > >   SYM[+offs]	: Symbol+offset where the probe is inserted.
+> > > + SYM%return     : Return address of the symbol
+> > >   MEMADDR	: Address where the probe is inserted.
+> > >   MAXACTIVE	: Maximum number of instances of the specified function that
+> > >  		  can be probed simultaneously, or 0 for the default value
+> > 
+> > If I remove the '+', the ':' lines up but the SYM does not line up.
+> > Am I missing something?
+> > 
+> > @@ -37,6 +38,7 @@ Synopsis of kprobe_events
+> >  		  based on SYM+offs or MEMADDR.
+> >   MOD		: Module name which has given SYM.
+> >   SYM[+offs]	: Symbol+offset where the probe is inserted.
+> >  SYM%return     : Return address of the symbol
+> >   MEMADDR	: Address where the probe is inserted.
+> >   MAXACTIVE	: Maximum number of instances of the specified function that
+> >  		  can be probed simultaneously, or 0 for the default value
+> > 
 > 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Shouldn't we use the horizontal tab in .rst ? It seems other lines
+use a tab to indent, but this line doesn't (VIM converted the tab to spaces.)
 
-> ---
->  drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-> index a1d94be7883a..90c9d84e6155 100644
-> --- a/drivers/gpu/drm/msm/msm_submitqueue.c
-> +++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-> @@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
->  	 * No lock needed in close and there won't
->  	 * be any more user ioctls coming our way
->  	 */
-> -	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
-> +	list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
-> +		list_del(&entry->node);
->  		msm_submitqueue_put(entry);
-> +	}
->  }
->  
->  int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
-> -- 
-> 2.26.2
-> 
+Thank you,
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
