@@ -2,196 +2,156 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-23.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B138C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:46:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF16C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88D84207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:46:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5791C21548
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XpsC/oBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729143AbgIARqq (ORCPT
+        id S1728126AbgIARr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:46:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:47622 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgIARqp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:46:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 679CC1FB;
-        Tue,  1 Sep 2020 10:46:44 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A5AC3F71F;
-        Tue,  1 Sep 2020 10:46:37 -0700 (PDT)
-Subject: Re: [PATCH v9 03/32] drm: core: fix common struct sg_table related
- issues
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063529eucas1p19d797cf74bf653bf68b0a0e860806dbf@eucas1p1.samsung.com>
- <20200826063316.23486-4-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a96aefea-936a-e54d-1604-93902443b360@arm.com>
-Date:   Tue, 1 Sep 2020 18:46:33 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 13:47:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgIARrZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:47:25 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67655C061246
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 10:47:24 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id b16so779369pjp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:47:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IsThTySUC2LXoDe5C5uelfQGGzR8IIc/eah+C0Q213A=;
+        b=XpsC/oBxOrx4l0QwY0wYpPyU12/z2BUrVW00eLZvg+PjRFJ0rr7HBN4K89mKq/ahLx
+         HMSTKYYuq63/D9UyOHzdL8xYU4W7Ipz4ixkCQ3zxlJ+Eyz9+jaSQBYL1TY9/W9e6ODld
+         3DRvt8IClVNVZGNx3CRVKDvo3ylRp7X3pem3Kn5udMhFpTAcrmYxkYjIz+xWfAZVSs3b
+         NQvUXL7xj/KHzh7CmWScQ3//BiJKXoByLtcpna+7a4lx8M1MeyAJnpLQvLcgjoEIy16m
+         jl9GQfR4//ETenO6byMmJhVyy9WBBHX6WIJ6H+eduzIMzYzyt7bU9mKW2G76f4OCSbCu
+         q27g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IsThTySUC2LXoDe5C5uelfQGGzR8IIc/eah+C0Q213A=;
+        b=XGnWkiDGZYLr1KzG2syWdXfm1Er1a/M05w1hMPvfGIz8oGzoKG+SB+zdGeO/Zh9ir6
+         wWUBH4NUnwnVnfNhlJwTdLZF3t6dWH9ubu9PWpZuv6O9I1cdG8+XP31cl/1Rx7Jxtcm4
+         UFVafVYsAjSlZAlQXUW0njsxLqpO7d16dcY6YRwyB/eKDyqNGqu7g13IlqkzzCmbdJgh
+         C8e3MECueG+GurL3gyo/j25kDZxAb6GuJgzt/BF5+f2Dr6FMiVYWGt6TlKt9i9sOiZdi
+         +SWtnDgeOqDKclCbgcWbLWEzGy+NG59g+obFu/QATD7U+yVwubSbuwbCrP9zWux3imil
+         8c4Q==
+X-Gm-Message-State: AOAM5336Lry4XtYmzIWwsAMbTnBtBpXkvwNCGmQX7zZhx+gxk7ilvHGY
+        T5MNtrZmxxlULh71nqKKh1He2P7nX9mkADGlQpgAEw==
+X-Google-Smtp-Source: ABdhPJyy/gARQ06E1lQvzSFMajJ+LnC3PB8OuEJKEaCQMevyZx2d+23ztQstfofFoOhGr9dGnniONqsiWwobCSfcQRk=
+X-Received: by 2002:a17:902:9a45:: with SMTP id x5mr2304256plv.208.1598982443692;
+ Tue, 01 Sep 2020 10:47:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200826063316.23486-4-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200901070834.1015754-1-natechancellor@gmail.com>
+In-Reply-To: <20200901070834.1015754-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 1 Sep 2020 10:47:12 -0700
+Message-ID: <CAKwvOdnrg0-s64kPCv4+kyFrxmJPXmYm66QbjrROkTr6OVTUYA@mail.gmail.com>
+Subject: Re: [PATCH] mwifiex: Remove unnecessary braces from HostCmd_SET_SEQ_NO_BSS_INFO
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Andy Lavr <andy.lavr@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 07:32, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
-> 
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
-> 
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
-> 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+On Tue, Sep 1, 2020 at 12:08 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> A new warning in clang points out when macro expansion might result in a
+> GNU C statement expression. There is an instance of this in the mwifiex
+> driver:
+>
+> drivers/net/wireless/marvell/mwifiex/cmdevt.c:217:34: warning: '}' and
+> ')' tokens terminating statement expression appear in different macro
+> expansion contexts [-Wcompound-token-split-by-macro]
+>         host_cmd->seq_num = cpu_to_le16(HostCmd_SET_SEQ_NO_BSS_INFO
+>                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> drivers/net/wireless/marvell/mwifiex/fw.h:519:46: note: expanded from
+> macro 'HostCmd_SET_SEQ_NO_BSS_INFO'
+>         (((type) & 0x000f) << 12);                  }
+>                                                     ^
+>
+> This does not appear to be a real issue. Removing the braces and
+> replacing them with parentheses will fix the warning and not change the
+> meaning of the code.
+>
+> Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1146
+> Reported-by: Andy Lavr <andy.lavr@gmail.com>
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Wow, that's tricky. The unnecessary extra parens mix with the extra
+curly braces to form a GNU C statement expression.  Thanks for the
+patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
 > ---
->   drivers/gpu/drm/drm_cache.c            |  2 +-
->   drivers/gpu/drm/drm_gem_shmem_helper.c | 14 +++++++++-----
->   drivers/gpu/drm/drm_prime.c            | 11 ++++++-----
->   3 files changed, 16 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
-> index 03e01b000f7a..0fe3c496002a 100644
-> --- a/drivers/gpu/drm/drm_cache.c
-> +++ b/drivers/gpu/drm/drm_cache.c
-> @@ -127,7 +127,7 @@ drm_clflush_sg(struct sg_table *st)
->   		struct sg_page_iter sg_iter;
->   
->   		mb(); /*CLFLUSH is ordered only by using memory barriers*/
-> -		for_each_sg_page(st->sgl, &sg_iter, st->nents, 0)
-> +		for_each_sgtable_page(st, &sg_iter, 0)
->   			drm_clflush_page(sg_page_iter_page(&sg_iter));
->   		mb(); /*Make sure that all cache line entry is flushed*/
->   
-> diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> index 4b7cfbac4daa..47d8211221f2 100644
-> --- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-> @@ -126,8 +126,8 @@ void drm_gem_shmem_free_object(struct drm_gem_object *obj)
->   		drm_prime_gem_destroy(obj, shmem->sgt);
->   	} else {
->   		if (shmem->sgt) {
-> -			dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
-> -				     shmem->sgt->nents, DMA_BIDIRECTIONAL);
-> +			dma_unmap_sgtable(obj->dev->dev, shmem->sgt,
-> +					  DMA_BIDIRECTIONAL, 0);
->   			sg_free_table(shmem->sgt);
->   			kfree(shmem->sgt);
->   		}
-> @@ -424,8 +424,7 @@ void drm_gem_shmem_purge_locked(struct drm_gem_object *obj)
->   
->   	WARN_ON(!drm_gem_shmem_is_purgeable(shmem));
->   
-> -	dma_unmap_sg(obj->dev->dev, shmem->sgt->sgl,
-> -		     shmem->sgt->nents, DMA_BIDIRECTIONAL);
-> +	dma_unmap_sgtable(obj->dev->dev, shmem->sgt, DMA_BIDIRECTIONAL, 0);
->   	sg_free_table(shmem->sgt);
->   	kfree(shmem->sgt);
->   	shmem->sgt = NULL;
-> @@ -697,12 +696,17 @@ struct sg_table *drm_gem_shmem_get_pages_sgt(struct drm_gem_object *obj)
->   		goto err_put_pages;
->   	}
->   	/* Map the pages for use by the h/w. */
-> -	dma_map_sg(obj->dev->dev, sgt->sgl, sgt->nents, DMA_BIDIRECTIONAL);
-> +	ret = dma_map_sgtable(obj->dev->dev, sgt, DMA_BIDIRECTIONAL, 0);
-> +	if (ret)
-> +		goto err_free_sgt;
->   
->   	shmem->sgt = sgt;
->   
->   	return sgt;
->   
-> +err_free_sgt:
-> +	sg_free_table(sgt);
-> +	kfree(sgt);
+>  drivers/net/wireless/marvell/mwifiex/cmdevt.c | 4 ++--
+>  drivers/net/wireless/marvell/mwifiex/fw.h     | 8 ++++----
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> index d068b9075c32..3a11342a6bde 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> +++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+> @@ -322,9 +322,9 @@ static int mwifiex_dnld_sleep_confirm_cmd(struct mwifiex_adapter *adapter)
+>
+>         adapter->seq_num++;
+>         sleep_cfm_buf->seq_num =
+> -               cpu_to_le16((HostCmd_SET_SEQ_NO_BSS_INFO
+> +               cpu_to_le16(HostCmd_SET_SEQ_NO_BSS_INFO
+>                                         (adapter->seq_num, priv->bss_num,
+> -                                        priv->bss_type)));
+> +                                        priv->bss_type));
+>
+>         mwifiex_dbg(adapter, CMD,
+>                     "cmd: DNLD_CMD: %#x, act %#x, len %d, seqno %#x\n",
+> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+> index 8047e307892e..1f02c5058aed 100644
+> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
+> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+> @@ -513,10 +513,10 @@ enum mwifiex_channel_flags {
+>
+>  #define RF_ANTENNA_AUTO                 0xFFFF
+>
+> -#define HostCmd_SET_SEQ_NO_BSS_INFO(seq, num, type) {   \
+> -       (((seq) & 0x00ff) |                             \
+> -        (((num) & 0x000f) << 8)) |                     \
+> -       (((type) & 0x000f) << 12);                  }
+> +#define HostCmd_SET_SEQ_NO_BSS_INFO(seq, num, type) \
+> +       ((((seq) & 0x00ff) |                        \
+> +        (((num) & 0x000f) << 8)) |                 \
+> +       (((type) & 0x000f) << 12))
+>
+>  #define HostCmd_GET_SEQ_NO(seq)       \
+>         ((seq) & HostCmd_SEQ_NUM_MASK)
+> --
 
-Should this be a separate patch to add the missing error handling to the 
-existing code first?
-
-Otherwise the rest of the mechanical conversion looks straightforward 
-enough, and I'm not the separation-of-concerns police (for this 
-subsystem, at least), so either way,
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
->   err_put_pages:
->   	drm_gem_shmem_put_pages(shmem);
->   	return ERR_PTR(ret);
-> diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
-> index 5d181bf60a44..c45b0cc6e31d 100644
-> --- a/drivers/gpu/drm/drm_prime.c
-> +++ b/drivers/gpu/drm/drm_prime.c
-> @@ -617,6 +617,7 @@ struct sg_table *drm_gem_map_dma_buf(struct dma_buf_attachment *attach,
->   {
->   	struct drm_gem_object *obj = attach->dmabuf->priv;
->   	struct sg_table *sgt;
-> +	int ret;
->   
->   	if (WARN_ON(dir == DMA_NONE))
->   		return ERR_PTR(-EINVAL);
-> @@ -626,11 +627,12 @@ struct sg_table *drm_gem_map_dma_buf(struct dma_buf_attachment *attach,
->   	else
->   		sgt = obj->dev->driver->gem_prime_get_sg_table(obj);
->   
-> -	if (!dma_map_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
-> -			      DMA_ATTR_SKIP_CPU_SYNC)) {
-> +	ret = dma_map_sgtable(attach->dev, sgt, dir,
-> +			      DMA_ATTR_SKIP_CPU_SYNC);
-> +	if (ret) {
->   		sg_free_table(sgt);
->   		kfree(sgt);
-> -		sgt = ERR_PTR(-ENOMEM);
-> +		sgt = ERR_PTR(ret);
->   	}
->   
->   	return sgt;
-> @@ -652,8 +654,7 @@ void drm_gem_unmap_dma_buf(struct dma_buf_attachment *attach,
->   	if (!sgt)
->   		return;
->   
-> -	dma_unmap_sg_attrs(attach->dev, sgt->sgl, sgt->nents, dir,
-> -			   DMA_ATTR_SKIP_CPU_SYNC);
-> +	dma_unmap_sgtable(attach->dev, sgt, dir, DMA_ATTR_SKIP_CPU_SYNC);
->   	sg_free_table(sgt);
->   	kfree(sgt);
->   }
-> 
+-- 
+Thanks,
+~Nick Desaulniers
