@@ -2,75 +2,221 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B51C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA919C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703EE20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FC5520767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978503;
-	bh=Dpj3KMcxE1VLvM7pvNMakfITVTdblxRjjMAZljRkcDU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LbVPC79/mRjo15MIJPhnVdlUqN55r3Pf5ZI1GU1H3q4TBYh0KUOBvjmh+k3TBt4gz
-	 fBEGnXle60+iXwBeUfdD2yNgAMHaO4q0X0o12MxqDUpMf16Xd5Blof5oE3azTfC2Tu
-	 bZhZChcayrnkMCvfnEEyhheHahT6I7ucvHpet1QY=
+	s=default; t=1598978517;
+	bh=7MusbzOPRuLYV64al/y9MYxeG/Uy3neV6EYixeQZD8U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=p9Ts8j7u+PqF2k2u9Qeu3G7GEvwNWWxw04fOFoY35zt3ECgX4EgDfbQ9P3QZP3/BH
+	 KqpbTAqqN6x3FaKCcVamJMp+CKDVQiG/REn573AM5eNfsyo0nQk1P4Sneg7ayZPEI6
+	 RjhZ1mFcTt+Is4HUYA2u0TeOS6ICCIIGTNdUBge8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbgIAQll (ORCPT
+        id S1732129AbgIAQlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:41:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36984 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:41:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730413AbgIAQle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:41:34 -0400
-Received: from gmail.com (unknown [104.132.1.76])
+        id S1730334AbgIAP2E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:04 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0E5C20767;
-        Tue,  1 Sep 2020 16:41:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 47CCF20684;
+        Tue,  1 Sep 2020 15:28:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598978493;
-        bh=Dpj3KMcxE1VLvM7pvNMakfITVTdblxRjjMAZljRkcDU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WvjCz2qBgk+FjDtaXrxOLkuzmSpoC4TPO6NJF7n+CDvIMNWJQWf99TvOqppqIMqw8
-         6AhmQ6HzzYRQSIMUnBHMLF7hekb3DnxI1zqCnflew4pbnq/sR2xUas2XQNIH19JdHZ
-         F9Syn/FXhE0QGH+nz2WFVMtNgTW0oGlziYXvCKB0=
-Date:   Tue, 1 Sep 2020 09:41:32 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     willy@infradead.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/7] mm: Make more use of readahead_control
-Message-ID: <20200901164132.GD669796@gmail.com>
-References: <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
+        s=default; t=1598974083;
+        bh=7MusbzOPRuLYV64al/y9MYxeG/Uy3neV6EYixeQZD8U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uuD8QPkk6jfO7dh53lT2yuytDKwXDOVxpRPQJO1ZmwW3nS9+mmF39Ty59PgQimPYb
+         zsMoUsSKtMhzOUzlt4qvvTYtfoQAJG9O2s13uWhUd027V23GMzFz4lCaoR3xLeErjp
+         FkkxrMCk4uo4DrAKhTzLsJDrP4A4EiKrScsRagIg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 038/214] f2fs: fix error path in do_recover_data()
+Date:   Tue,  1 Sep 2020 17:08:38 +0200
+Message-Id: <20200901150954.788759817@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 05:28:15PM +0100, David Howells wrote:
-> 
-> Hi Willy,
-> 
-> Here's a set of patches to expand the use of the readahead_control struct,
-> essentially from do_sync_mmap_readahead() down.  Note that I've been
-> passing the number of pages to read in rac->_nr_pages, and then saving it
-> and changing it certain points, e.g. page_cache_readahead_unbounded().
-> 
-> Also pass file_ra_state into force_page_cache_readahead().
-> 
-> Also there's an apparent minor bug in khugepaged.c that I've included a
-> patch for: page_cache_sync_readahead() looks to be given the wrong size in
-> collapse_file().
-> 
+From: Chao Yu <yuchao0@huawei.com>
 
-What branch does this apply to?
+[ Upstream commit 9627a7b31f3c4ff8bc8f3be3683983ffe6eaebe6 ]
 
-- Eric
+- don't panic kernel if f2fs_get_node_page() fails in
+f2fs_recover_inline_data() or f2fs_recover_inline_xattr();
+- return error number of f2fs_truncate_blocks() to
+f2fs_recover_inline_data()'s caller;
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/f2fs/f2fs.h     |  4 ++--
+ fs/f2fs/inline.c   | 19 ++++++++++++-------
+ fs/f2fs/node.c     |  6 ++++--
+ fs/f2fs/recovery.c | 10 ++++++++--
+ 4 files changed, 26 insertions(+), 13 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 03693d6b1c104..b3b7e63394be7 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -3061,7 +3061,7 @@ bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid);
+ void f2fs_alloc_nid_done(struct f2fs_sb_info *sbi, nid_t nid);
+ void f2fs_alloc_nid_failed(struct f2fs_sb_info *sbi, nid_t nid);
+ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink);
+-void f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
++int f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
+ int f2fs_recover_xattr_data(struct inode *inode, struct page *page);
+ int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page);
+ int f2fs_restore_node_summary(struct f2fs_sb_info *sbi,
+@@ -3487,7 +3487,7 @@ int f2fs_read_inline_data(struct inode *inode, struct page *page);
+ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page);
+ int f2fs_convert_inline_inode(struct inode *inode);
+ int f2fs_write_inline_data(struct inode *inode, struct page *page);
+-bool f2fs_recover_inline_data(struct inode *inode, struct page *npage);
++int f2fs_recover_inline_data(struct inode *inode, struct page *npage);
+ struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
+ 			struct fscrypt_name *fname, struct page **res_page);
+ int f2fs_make_empty_inline_dir(struct inode *inode, struct inode *parent,
+diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+index 896db0416f0e6..183388393c6a8 100644
+--- a/fs/f2fs/inline.c
++++ b/fs/f2fs/inline.c
+@@ -252,7 +252,7 @@ int f2fs_write_inline_data(struct inode *inode, struct page *page)
+ 	return 0;
+ }
+ 
+-bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
++int f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+ 	struct f2fs_inode *ri = NULL;
+@@ -274,7 +274,8 @@ bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
+ 			ri && (ri->i_inline & F2FS_INLINE_DATA)) {
+ process_inline:
+ 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
+-		f2fs_bug_on(sbi, IS_ERR(ipage));
++		if (IS_ERR(ipage))
++			return PTR_ERR(ipage);
+ 
+ 		f2fs_wait_on_page_writeback(ipage, NODE, true, true);
+ 
+@@ -287,21 +288,25 @@ process_inline:
+ 
+ 		set_page_dirty(ipage);
+ 		f2fs_put_page(ipage, 1);
+-		return true;
++		return 1;
+ 	}
+ 
+ 	if (f2fs_has_inline_data(inode)) {
+ 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
+-		f2fs_bug_on(sbi, IS_ERR(ipage));
++		if (IS_ERR(ipage))
++			return PTR_ERR(ipage);
+ 		f2fs_truncate_inline_inode(inode, ipage, 0);
+ 		clear_inode_flag(inode, FI_INLINE_DATA);
+ 		f2fs_put_page(ipage, 1);
+ 	} else if (ri && (ri->i_inline & F2FS_INLINE_DATA)) {
+-		if (f2fs_truncate_blocks(inode, 0, false))
+-			return false;
++		int ret;
++
++		ret = f2fs_truncate_blocks(inode, 0, false);
++		if (ret)
++			return ret;
+ 		goto process_inline;
+ 	}
+-	return false;
++	return 0;
+ }
+ 
+ struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
+diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+index 90a20bd129614..daeac4268c1ab 100644
+--- a/fs/f2fs/node.c
++++ b/fs/f2fs/node.c
+@@ -2512,7 +2512,7 @@ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink)
+ 	return nr - nr_shrink;
+ }
+ 
+-void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
++int f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ {
+ 	void *src_addr, *dst_addr;
+ 	size_t inline_size;
+@@ -2520,7 +2520,8 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ 	struct f2fs_inode *ri;
+ 
+ 	ipage = f2fs_get_node_page(F2FS_I_SB(inode), inode->i_ino);
+-	f2fs_bug_on(F2FS_I_SB(inode), IS_ERR(ipage));
++	if (IS_ERR(ipage))
++		return PTR_ERR(ipage);
+ 
+ 	ri = F2FS_INODE(page);
+ 	if (ri->i_inline & F2FS_INLINE_XATTR) {
+@@ -2539,6 +2540,7 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
+ update_inode:
+ 	f2fs_update_inode(inode, ipage);
+ 	f2fs_put_page(ipage, 1);
++	return 0;
+ }
+ 
+ int f2fs_recover_xattr_data(struct inode *inode, struct page *page)
+diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+index 783773e4560de..5f230e981c483 100644
+--- a/fs/f2fs/recovery.c
++++ b/fs/f2fs/recovery.c
+@@ -514,7 +514,9 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 
+ 	/* step 1: recover xattr */
+ 	if (IS_INODE(page)) {
+-		f2fs_recover_inline_xattr(inode, page);
++		err = f2fs_recover_inline_xattr(inode, page);
++		if (err)
++			goto out;
+ 	} else if (f2fs_has_xattr_block(ofs_of_node(page))) {
+ 		err = f2fs_recover_xattr_data(inode, page);
+ 		if (!err)
+@@ -523,8 +525,12 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+ 	}
+ 
+ 	/* step 2: recover inline data */
+-	if (f2fs_recover_inline_data(inode, page))
++	err = f2fs_recover_inline_data(inode, page);
++	if (err) {
++		if (err == 1)
++			err = 0;
+ 		goto out;
++	}
+ 
+ 	/* step 3: recover data indices */
+ 	start = f2fs_start_bidx_of_node(ofs_of_node(page), inode);
+-- 
+2.25.1
+
+
+
