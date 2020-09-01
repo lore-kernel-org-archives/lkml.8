@@ -2,115 +2,95 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837C6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C74DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 635662098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598939222;
-	bh=QaG3/rBMRYAANZWx2ugTj+2VOdfslHDof0tq4Vo/tko=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qqAq7ImDykOAif2WPJwRofEnJyMyTyotOo1ylgNTN84SgS+YV2NZvrhilhIP3+XsL
-	 Q5Xh8sFSFGTeiihqL3ZtHUQ+EbGl5GFuvogXQ4e8xVYZKQsjuIOgh7IGHKbqMK1SBz
-	 vijhm4CfKQiQWcasx96DUkVvuAGU6GImjCDm36oU=
+	by mail.kernel.org (Postfix) with ESMTP id 2C3552087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i0Vnj588"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgIAFrA (ORCPT
+        id S1726292AbgIAFrr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:47:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35552 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgIAFrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:47:00 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 795B12087D;
-        Tue,  1 Sep 2020 05:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598939219;
-        bh=QaG3/rBMRYAANZWx2ugTj+2VOdfslHDof0tq4Vo/tko=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N/zAUdQTxbnNoXgZ/dUG6rsk/Kx2NIpkT1XXRlRPugC/qgPv9Kgnfpa6fJMFpPsgF
-         RnSrUTcm1JPEKWzsTVbOVbI5T2IkcoHIPJ7wjdeulkGUoTfT1+euiZHy5us/e6Fp+T
-         bxLZruhXf4FGw33CkIw0xS6RqyL13TGH/t/AW7rI=
-Date:   Tue, 1 Sep 2020 14:46:56 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 5/6] Documentation: tracing: Add %return suffix
- description
-Message-Id: <20200901144656.35ced5c71cc07b45fe2d1da9@kernel.org>
-In-Reply-To: <20200901072745.9ca00fc7efeabe9f0cf479e6@kernel.org>
-References: <159887792384.1330989.5993224243767476896.stgit@devnote2>
-        <159887797048.1330989.6092698289026009625.stgit@devnote2>
-        <210c7494-da9e-5314-c648-917493081c32@infradead.org>
-        <20200901072745.9ca00fc7efeabe9f0cf479e6@kernel.org>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 1 Sep 2020 01:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgIAFrq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 01:47:46 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF58C0612A3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=z0w4+hNfdldNlYEJjiZeG1sutgNqlA1BYQPXsEIo0Jo=; b=i0Vnj588KWHlGnV0+RT994CjOG
+        r/nD5PmJoKEJyKHXSYH0lRtT0Cylwc9SvFdUkldryRiUXY3YdZwMxDc5UXRu1T7HQV+GY77aVyej3
+        GJpH7DVvX/wfwDwanif+gPGkjVSnhGUaU9X9S5FlN9V8AKeRMMcCOugf5rtoJO5WmYOWuwCuobv/L
+        +aJlZq/a8gLUs2WnutFnRwMUr/TRWYsbThgGGuVoOJSoxmhkRyI7rQhxgqJCeHwmbeCuFLUQpoV2D
+        jklZZdYeQjFg8DV0ImY9Sf9P91HKX1LuT0R+iDAD9tzSG0G5YddvboFf8E9NMhixz7P9PwVndD1GT
+        LEBrDRVg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCz8u-0001Hp-Nx; Tue, 01 Sep 2020 05:47:41 +0000
+Subject: Re: ERROR: "min_low_pfn" undefined!
+To:     kernel test robot <lkp@intel.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>
+References: <202009011306.LeUnyxbp%lkp@intel.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <dccbf654-3684-c491-4659-0d6d4044d43a@infradead.org>
+Date:   Mon, 31 Aug 2020 22:47:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <202009011306.LeUnyxbp%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 07:27:45 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
-
-> On Mon, 31 Aug 2020 11:50:20 -0700
-> Randy Dunlap <rdunlap@infradead.org> wrote:
+On 8/31/20 10:41 PM, kernel test robot wrote:
+> Hi Arnd,
 > 
-> > On 8/31/20 5:46 AM, Masami Hiramatsu wrote:
-> > > Add a description of the %return suffix option for kprobe tracer.
-> > > 
-> > > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > > ---
-> > >  Documentation/trace/kprobetrace.rst |    2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-> > > index c1709165c553..d29d1f9e6721 100644
-> > > --- a/Documentation/trace/kprobetrace.rst
-> > > +++ b/Documentation/trace/kprobetrace.rst
-> > 
-> > Check spacing:
-> > 
-> > > @@ -37,6 +38,7 @@ Synopsis of kprobe_events
-> > >  		  based on SYM+offs or MEMADDR.
-> > >   MOD		: Module name which has given SYM.
-> > >   SYM[+offs]	: Symbol+offset where the probe is inserted.
-> > > + SYM%return     : Return address of the symbol
-> > >   MEMADDR	: Address where the probe is inserted.
-> > >   MAXACTIVE	: Maximum number of instances of the specified function that
-> > >  		  can be probed simultaneously, or 0 for the default value
-> > 
-> > If I remove the '+', the ':' lines up but the SYM does not line up.
-> > Am I missing something?
-> > 
-> > @@ -37,6 +38,7 @@ Synopsis of kprobe_events
-> >  		  based on SYM+offs or MEMADDR.
-> >   MOD		: Module name which has given SYM.
-> >   SYM[+offs]	: Symbol+offset where the probe is inserted.
-> >  SYM%return     : Return address of the symbol
-> >   MEMADDR	: Address where the probe is inserted.
-> >   MAXACTIVE	: Maximum number of instances of the specified function that
-> >  		  can be probed simultaneously, or 0 for the default value
-> > 
+> First bad commit (maybe != root cause):
 > 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   b51594df17d0ce80b9f9f35394a1f42d7ac94472
+> commit: 710ec38b0f633ab3e2581f07a73442d809e28ab0 mm: add dummy can_do_mlock() helper
+> date:   11 months ago
+> config: microblaze-randconfig-r031-20200831 (attached as .config)
+> compiler: microblaze-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 710ec38b0f633ab3e2581f07a73442d809e28ab0
+>         # save the attached .config to linux build tree
+>         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=microblaze 
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>>> ERROR: "min_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
+>    ERROR: "min_low_pfn" [drivers/block/aoe/aoe.ko] undefined!
 
-Shouldn't we use the horizontal tab in .rst ? It seems other lines
-use a tab to indent, but this line doesn't (VIM converted the tab to spaces.)
 
-Thank you,
+Please test
+https://lore.kernel.org/lkml/20200829000110.2408-1-rdunlap@infradead.org/
+
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+~Randy
+
