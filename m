@@ -2,137 +2,109 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5660C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7913CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2ABC206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pXwfFcp7"
+	by mail.kernel.org (Postfix) with ESMTP id 56718206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbgIANbk (ORCPT
+        id S1727792AbgIANdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:31:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35202 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728047AbgIAN1x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:27:53 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD23C061245;
-        Tue,  1 Sep 2020 06:27:52 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bgntf72DLz9sTN;
-        Tue,  1 Sep 2020 23:27:38 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1598966866;
-        bh=b8fBMPirmgEDaVPbjXdRIYPwIrTUtQaTXRmfGBF/egk=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=pXwfFcp7DEZhdSaVT5PD8DrmDNJcZnA4u3LePXbs+Xb49cAmRXaxJrmXg/VJlWIzR
-         Q9Z+EfZBm7r6mhEVXxyXQhUmW0fa5OWGfrmOVAZI3itGQAU61ebluXbCJK+AIc60vF
-         1lpEQtozskWFVBMd7eJLB6Kr3ed2+dixG5IYLvugFo8ywj0S6XpgkfnAthm3BhrzXv
-         8D0og0Lq9pFYRuwgHyCnfhfBZXrYFBGSojjeGeHhiOdKVVtQpLLH9UWs9qF4OuV5Cr
-         KzxdsR4L7qCBMFnd1HxBtLQKZU2Du8AyMTHI6pRxfwvNsOSSUSd9mxXbEuet6K+c7h
-         OfGS3/kjMeThw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>, benh@kernel.crashing.org,
-        paulus@samba.org, rth@twiddle.net, ink@jurassic.park.msu.ru,
-        mattst88@gmail.com, tony.luck@intel.com, fenghua.yu@intel.com,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de
-Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
-Subject: Re: [RESEND][PATCH 1/7] powerpc/iommu: Avoid overflow at boundary_size
-In-Reply-To: <20200831203811.8494-2-nicoleotsuka@gmail.com>
-References: <20200831203811.8494-1-nicoleotsuka@gmail.com> <20200831203811.8494-2-nicoleotsuka@gmail.com>
-Date:   Tue, 01 Sep 2020 23:27:36 +1000
-Message-ID: <87lfht1vav.fsf@mpe.ellerman.id.au>
+        Tue, 1 Sep 2020 09:33:53 -0400
+Received: from elvis.franken.de ([193.175.24.41]:45627 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728129AbgIANby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:31:54 -0400
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1kD6NY-0001cg-00; Tue, 01 Sep 2020 15:31:16 +0200
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id A31F7C0E44; Tue,  1 Sep 2020 15:29:05 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 15:29:05 +0200
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-mm@kvack.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 06/28] lib82596: move DMA allocation into the callers of
+ i82596_probe
+Message-ID: <20200901132905.GA11506@alpha.franken.de>
+References: <20200819065555.1802761-1-hch@lst.de>
+ <20200819065555.1802761-7-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200819065555.1802761-7-hch@lst.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicolin Chen <nicoleotsuka@gmail.com> writes:
-> The boundary_size might be as large as ULONG_MAX, which means
-> that a device has no specific boundary limit. So either "+ 1"
-> or passing it to ALIGN() would potentially overflow.
->
-> According to kernel defines:
->     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
->     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
->
-> We can simplify the logic here:
->   ALIGN(boundary + 1, 1 << shift) >> shift
-> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
-> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
-> = [b + 1 + (1 << s) - 1] >> s
-> = [b + (1 << s)] >> s
-> = (b >> s) + 1
->
-> So fixing a potential overflow with the safer shortcut.
->
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> Cc: Christoph Hellwig <hch@lst.de>
+On Wed, Aug 19, 2020 at 08:55:33AM +0200, Christoph Hellwig wrote:
+> This allows us to get rid of the LIB82596_DMA_ATTR defined and prepare
+> for untangling the coherent vs non-coherent DMA allocation API.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  arch/powerpc/kernel/iommu.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-
-Are you asking for acks, or for maintainers to merge the patches
-individually?
-
-> diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
-> index 9704f3f76e63..c01ccbf8afdd 100644
-> --- a/arch/powerpc/kernel/iommu.c
-> +++ b/arch/powerpc/kernel/iommu.c
-> @@ -236,15 +236,14 @@ static unsigned long iommu_range_alloc(struct device *dev,
->  		}
->  	}
+>  drivers/net/ethernet/i825xx/lasi_82596.c | 24 ++++++++++------
+>  drivers/net/ethernet/i825xx/lib82596.c   | 36 ++++++++----------------
+>  drivers/net/ethernet/i825xx/sni_82596.c  | 19 +++++++++----
+>  3 files changed, 40 insertions(+), 39 deletions(-)
+> 
+> [...]
+> diff --git a/drivers/net/ethernet/i825xx/sni_82596.c b/drivers/net/ethernet/i825xx/sni_82596.c
+> index 22f5887578b2bd..e80e790ffbd4d4 100644
+> --- a/drivers/net/ethernet/i825xx/sni_82596.c
+> +++ b/drivers/net/ethernet/i825xx/sni_82596.c
+> @@ -24,8 +24,6 @@
 >  
-> -	if (dev)
-> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
-> -				      1 << tbl->it_page_shift);
-> -	else
-> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
->  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
-> +	boundary_size = dev ? dma_get_seg_boundary(dev) : U32_MAX;
-
-Is there any path that passes a NULL dev anymore?
-
-Both iseries_hv_alloc() and iseries_hv_map() were removed years ago.
-See:
-  8ee3e0d69623 ("powerpc: Remove the main legacy iSerie platform code")
-
-
-So maybe we should do a lead-up patch that drops the NULL dev support,
-which will then make this patch simpler.
-
-cheers
-
-
-> +	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
-> +	boundary_size = (boundary_size >> tbl->it_page_shift) + 1;
+>  static const char sni_82596_string[] = "snirm_82596";
 >  
->  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
-> -			     boundary_size >> tbl->it_page_shift, align_mask);
-> +			     boundary_size, align_mask);
->  	if (n == -1) {
->  		if (likely(pass == 0)) {
->  			/* First try the pool from the start */
-> -- 
-> 2.17.1
+> -#define LIB82596_DMA_ATTR	0
+> -
+>  #define DMA_WBACK(priv, addr, len)     do { } while (0)
+>  #define DMA_INV(priv, addr, len)       do { } while (0)
+>  #define DMA_WBACK_INV(priv, addr, len) do { } while (0)
+> @@ -134,10 +132,19 @@ static int sni_82596_probe(struct platform_device *dev)
+>  	lp->ca = ca_addr;
+>  	lp->mpu_port = mpu_addr;
+>  
+> +	lp->dma = dma_alloc_coherent(dev->dev.parent, sizeof(struct i596_dma),
+> +				     &lp->dma_addr, GFP_KERNEL);
+
+this needs to use &dev->dev as device argument otherwise I get a
+
+WARNING: CPU: 0 PID: 1 at linux/kernel/dma/mapping.c:416 dma_alloc_attrs+0x64/0x98
+
+(coherent_dma_mask is set correctly).
+
+dev->dev.parent was correct when going from netdevice to underlying device,
+but now allocation is done via platform_device probe. I wonder why this works
+for parisc.
+
+Thomas.
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
