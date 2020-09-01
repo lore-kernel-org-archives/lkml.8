@@ -2,123 +2,122 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82879C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB6B0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 600D3207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8789206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:11:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJ9INBN/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jZO9hYcy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgIAVIP (ORCPT
+        id S1728927AbgIAVLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50044 "EHLO
+        Tue, 1 Sep 2020 17:11:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbgIAVIO (ORCPT
+        with ESMTP id S1727927AbgIAVL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:08:14 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3D47C061244;
-        Tue,  1 Sep 2020 14:08:13 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id c18so3010526wrm.9;
-        Tue, 01 Sep 2020 14:08:13 -0700 (PDT)
+        Tue, 1 Sep 2020 17:11:27 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C105C061244;
+        Tue,  1 Sep 2020 14:11:26 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id b12so465793lfp.9;
+        Tue, 01 Sep 2020 14:11:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+CKclAjRFtFzzHuH4Z+cc0RleEsFQT6/9G8VarpeaFQ=;
-        b=iJ9INBN/zOJ9tXPac/L7ys8thnkeloE8N27/kaWQj56mYdS+iVScqRJoY9x+0l+w7w
-         nB+0SkQRMzFybROIgHKwNNcZzDclvoWi+ahM2izct3hxG/kacC4D41FpkC8PooTrVEkM
-         Q/0Ix4PkDgDJR/EhGKSFwZ9lkwcRW3X04wdBWx9nx6KeOBU+e9lk7Xw6iU77ZDjVv4Dd
-         AtO5iZoav85K1E4+x5Qluz6mPKNRYCaCxPq5S53E3PsyXk5ZuQcW59G29KmqGX7SjmtV
-         yu6pn5fcm2Vb1WDLLtIP8bAXF9oVHveJz8jaDpvCEK2FmvAcFCE0eBJFxJXaVpfJWQIv
-         rFsA==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=84MPreMuR2/T3yIOiZ/2P9Fj1HLxAFnVjtsguhtVnHk=;
+        b=jZO9hYcymOzuenDVMRBEJxSwecPQAP9LrYB5scHsZVAR+SqLC1rNtGtRXEBwH1f/Cp
+         UW5PQJdA3aA+6OxbegLO6K7YaW+wFxycI9/jDwz/M4B8MVG2pEml41g1J5ZcUw11mLCt
+         EBxrGpmNDJBLKCbcXnE+2ZkKrJKh1obCgNipXb4mwglYjyL/kdmW9EJwdQv9uqUZ1YRT
+         jp8MRuXR6+wHi6hkMDlosCM1R4TAinP7ZHgb8Nhx/53XAx39ukkBCv8n9u7n0tcCkhMX
+         /BteBL8BhbgJYZDIfKZDf76Bx3bvQJ7zivpOweYXFDVBviE5grHoRBXztc/0RQyyzLqg
+         TK8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=+CKclAjRFtFzzHuH4Z+cc0RleEsFQT6/9G8VarpeaFQ=;
-        b=pi2od7yiD3/JEpG9tMv8lyHFcctX1dwRRoWy16jAWFnzMFLsUSYG9uKyhNBrpaxXRC
-         hzZgkluEa8R86IWQD/FnAXv6IOX6FvfB89SJzy55mBuIUBJxpDIcijy3cFZLkOqPw6fU
-         MiRKz7BJPezeufQ5UQaqHw0fgiWn7Vrz0qTLxJFxgX1R+TJPDzC8Ijp6WVzX2FIMgNCQ
-         zi7vcB3FzACbwIX8CTJej9r9tzOnLcz7D+8viPLYh887jfjG6VDjFOZrhG/rpvOMixMj
-         GvqlSRk60OumR+OkwQYdoaj6Huey2GJZCfdPnYjpWvpkTaovxnU8Yz20BA6F2Q4g5uUD
-         qQ/g==
-X-Gm-Message-State: AOAM531e/x4qdMwkYBw4rw3nyuOYaOaLPlxlQha8TR3eyJGovYHVi2WC
-        MUzc0b+p0a3Tq1fhefNrBLw=
-X-Google-Smtp-Source: ABdhPJyrtR37csheuTld/JwsHQAsd681gBqX8t+zpuP+aWyKKRFXAtGGsoe2rsyy8mv1hcnFb3M7VA==
-X-Received: by 2002:adf:c182:: with SMTP id x2mr3772220wre.400.1598994491962;
-        Tue, 01 Sep 2020 14:08:11 -0700 (PDT)
-Received: from ?IPv6:2a01:110f:b59:fd00:a062:770b:28ce:a41e? ([2a01:110f:b59:fd00:a062:770b:28ce:a41e])
-        by smtp.gmail.com with ESMTPSA id o4sm3718405wrv.86.2020.09.01.14.08.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 14:08:11 -0700 (PDT)
-Subject: Re: [PATCH v2 0/2] leds: pwm: Make automatic labels work
-To:     Alexander Dahl <post@lespocky.de>, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org
-Cc:     Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
-        Alexander Dahl <ada@thorsis.com>
-References: <20200831210232.28052-1-post@lespocky.de>
-From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Message-ID: <a8f9068b-d78d-3ba5-6747-f79ed8e641bd@gmail.com>
-Date:   Tue, 1 Sep 2020 23:08:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        bh=84MPreMuR2/T3yIOiZ/2P9Fj1HLxAFnVjtsguhtVnHk=;
+        b=PbkMAIiyCxPedV4VOvBDGmaG2ubR6uMPWiW+hpGIQs+Mi3SZETXZjrZgpRzQuzdq6b
+         +JidjcaBOycHiAEO4+AWtKtihTC6YGCX20POqoVNFz1G9uh0xcE7tUZXU6Vvps1jKzyr
+         MfheGQzaXMmGkXAyPPINJ9+z8SKkoGfPA6zolEVPz2Ix5rSBt76vEJLK7PUmb6hqyEsB
+         Gby0PChBah1PtSR+UZTPFwJ1AGWC7SzKh+i7HrMON5WLTksHoG0Nu4WCrp/tNSG26a2I
+         7z+zrkKO518QMTaXefK/yoU+Dud5F0RdPKW0XJRxCnFHRo7OrJX3BByXp5byh/IACOar
+         RNhQ==
+X-Gm-Message-State: AOAM533OQe3+Tin9a1m1SjCOUWC4fYI2GmjjtEUYGPYgxfA7RRz0ZvFo
+        rF9jK2fyIsf09EBVW9fZGjs=
+X-Google-Smtp-Source: ABdhPJx6UYt5kPQ7boJpEv3lj8V4IiEwS52R1CZ2imLoJEADp0rp1OMFFh89lPObOv8y0TbZftqmwg==
+X-Received: by 2002:a19:f245:: with SMTP id d5mr1545418lfk.97.1598994683653;
+        Tue, 01 Sep 2020 14:11:23 -0700 (PDT)
+Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
+        by smtp.gmail.com with ESMTPSA id g19sm502656ljk.125.2020.09.01.14.11.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 14:11:22 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 00/17] Improvements for Tegra I2C driver
+Date:   Wed,  2 Sep 2020 00:10:45 +0300
+Message-Id: <20200901211102.11072-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-In-Reply-To: <20200831210232.28052-1-post@lespocky.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alexander,
+Hello!
 
-Thanks for the v2.
+This series performs a small refactoring of the Tegra I2C driver code and
+hardens the atomic-transfer mode.
 
-On 8/31/20 11:02 PM, Alexander Dahl wrote:
-> Hei hei,
-> 
-> for leds-gpio you can use the properties 'function' and 'color' in the
-> devicetree node and omit 'label', the label is constructed
-> automatically.  This is a common feature supposed to be working for all
-> LED drivers.  However it did not yet work for the 'leds-pwm' driver.
-> This series fixes the driver and takes the opportunity to update the
-> dt-bindings accordingly.
-> 
-> v1: based on v5.9-rc2, backport on v5.4.59 tested and working
-> 
-> v2: based on v5.9-rc3, added the dt-bindings update patch
-> 
-> Greets
-> Alex
-> 
-> Alexander Dahl (2):
->    leds: pwm: Allow automatic labels for DT based devices
->    dt-bindings: leds: Convert pwm to yaml
-> 
->   .../devicetree/bindings/leds/leds-pwm.txt     | 50 -----------
->   .../devicetree/bindings/leds/leds-pwm.yaml    | 85 +++++++++++++++++++
->   drivers/leds/leds-pwm.c                       |  9 +-
->   3 files changed, 93 insertions(+), 51 deletions(-)
->   delete mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.yaml
-> 
+Changelog:
 
-For both patches:
+v2: - Cleaned more messages in the "Clean up messages in the code" patch.
 
-Acked-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+    - The error code of reset_control_reset() is checked now.
+
+    - Added these new patches to clean up couple more things:
+
+        i2c: tegra: Check errors for both positive and negative values
+        i2c: tegra: Improve coding style of tegra_i2c_wait_for_config_load()
+        i2c: tegra: Remove unnecessary whitespaces and newlines
+        i2c: tegra: Rename variable in tegra_i2c_issue_bus_clear()
+        i2c: tegra: Improve driver module description
+
+Dmitry Osipenko (17):
+  i2c: tegra: Make tegra_i2c_flush_fifos() usable in atomic transfer
+  i2c: tegra: Add missing newline before returns
+  i2c: tegra: Clean up messages in the code
+  i2c: tegra: Don't ignore tegra_i2c_flush_fifos() error
+  i2c: tegra: Use reset_control_reset()
+  i2c: tegra: Improve formatting of function variables
+  i2c: tegra: Use dev_err_probe()
+  i2c: tegra: Runtime PM always available on Tegra
+  i2c: tegra: Clean up probe function
+  i2c: tegra: Drop '_timeout' from wait/poll function names
+  i2c: tegra: Remove likely/unlikely from the code
+  i2c: tegra: Factor out error recovery from tegra_i2c_xfer_msg()
+  i2c: tegra: Check errors for both positive and negative values
+  i2c: tegra: Improve coding style of tegra_i2c_wait_for_config_load()
+  i2c: tegra: Remove unnecessary whitespaces and newlines
+  i2c: tegra: Rename variable in tegra_i2c_issue_bus_clear()
+  i2c: tegra: Improve driver module description
+
+ drivers/i2c/busses/i2c-tegra.c | 686 ++++++++++++++++++---------------
+ 1 file changed, 379 insertions(+), 307 deletions(-)
 
 -- 
-Best regards,
-Jacek Anaszewski
+2.27.0
+
