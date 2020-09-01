@@ -2,98 +2,96 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B320C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD4AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1BBF2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33732071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:08:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1uphIErQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbgIATHR (ORCPT
+        id S1729528AbgIATIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:07:17 -0400
-Received: from mga05.intel.com ([192.55.52.43]:63806 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbgIATHQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:07:16 -0400
-IronPort-SDR: PKw8KBYDoU8ZLUShZh7Wm8URCC04sN1rFEAmLYf/diilx5b7sKDFAeU5R/QPX8NmT6Rw0TdOVL
- 6BMNfBIKc2gw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="242076431"
-X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
-   d="scan'208";a="242076431"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 12:07:14 -0700
-IronPort-SDR: Y0QpoXYKfjIAJWqzdi17Y3vk5+rA+zAu5vHVuWaXf0bYuO1wpbjNTy5TbTnVxh2ahy0BpyG7nV
- o8/m22Zl9uTQ==
-X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
-   d="scan'208";a="446251312"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.255.231.183])
-  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 12:07:14 -0700
-Message-ID: <818b61c1375dabc60df770bbc462ce6728091dbc.camel@linux.intel.com>
-Subject: Re: [PATCH v4 0/5] cpufreq: intel_pstate: Address some HWP-related
- oddities
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Date:   Tue, 01 Sep 2020 12:07:11 -0700
-In-Reply-To: <3748218.V0HrpZKF9g@kreacher>
-References: <3748218.V0HrpZKF9g@kreacher>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 1 Sep 2020 15:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59888 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbgIATIq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 15:08:46 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D89BC061244;
+        Tue,  1 Sep 2020 12:08:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=lAEF16Y7hbBT4eu86EXXZSLR75YbGx6Vr2GM79NERmk=; b=1uphIErQeCBiKEiiWPf6ob4E/d
+        Dkcaf4xig5oOYejDV/HrxTzmcbXWYhfeNn/8XEaYrotA1HZpoP2PxDNdG9YZZ4uq4juK8D3z1cKir
+        CFtfSvv75IWC6t69whf1ByKmJSXxFGW6oVo9eHr2FOk9xp8RYOoMpnZdC223ztaxp9fyylSznpdt4
+        kukumAHay0Q1R6Aa5T7jVnvP7E2/N/X4EPx/XA/kYFFnyyvGwshOy65B1BuSv7PsLyvLRhHnWIEs+
+        7mU/cT5hhzpgYHJQw7SBlS7AVn4VDgNLP9wotofmNFANSbc1yPs8Npll3RYhT9Bzyh8A5xRcrZj+o
+        VOeDRRkw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDBdb-0000oV-Jo; Tue, 01 Sep 2020 19:08:11 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5DFC998046E; Tue,  1 Sep 2020 21:08:08 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 21:08:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Eddy_Wu@trendmicro.com,
+        x86@kernel.org, davem@davemloft.net, rostedt@goodmis.org,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        linux-arch@vger.kernel.org, cameron@moodycamel.com,
+        oleg@redhat.com, will@kernel.org, paulmck@kernel.org
+Subject: Re: [PATCH v5 00/21] kprobes: Unify kretprobe trampoline handlers
+ and make kretprobe lockless
+Message-ID: <20200901190808.GK29142@worktop.programming.kicks-ass.net>
+References: <159870598914.1229682.15230803449082078353.stgit@devnote2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <159870598914.1229682.15230803449082078353.stgit@devnote2>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-09-01 at 19:23 +0200, Rafael J. Wysocki wrote:
-> Hi All,
+On Sat, Aug 29, 2020 at 09:59:49PM +0900, Masami Hiramatsu wrote:
+> Masami Hiramatsu (16):
+>       kprobes: Add generic kretprobe trampoline handler
+>       x86/kprobes: Use generic kretprobe trampoline handler
+>       arm: kprobes: Use generic kretprobe trampoline handler
+>       arm64: kprobes: Use generic kretprobe trampoline handler
+>       arc: kprobes: Use generic kretprobe trampoline handler
+>       csky: kprobes: Use generic kretprobe trampoline handler
+>       ia64: kprobes: Use generic kretprobe trampoline handler
+>       mips: kprobes: Use generic kretprobe trampoline handler
+>       parisc: kprobes: Use generic kretprobe trampoline handler
+>       powerpc: kprobes: Use generic kretprobe trampoline handler
+>       s390: kprobes: Use generic kretprobe trampoline handler
+>       sh: kprobes: Use generic kretprobe trampoline handler
+>       sparc: kprobes: Use generic kretprobe trampoline handler
+>       kprobes: Remove NMI context check
+>       kprobes: Free kretprobe_instance with rcu callback
+>       kprobes: Make local used functions static
 > 
-> The last two patches in the v3 needed to be updated to take re-
-> enabling of HWP
-> after an ACPI S3 suspend/resume cycle into account
-> appropriately.  The first
-> three patches are the same as before.
-> 
-> The purpose of this series is to address some peculiarities related
-> to
-> taking CPUs offline/online and switching between different operation
-> modes with HWP enabled that have become visible after allowing the
-> driver to work in the passive mode with HWP enabled in 5.9-rc1 (and
-> one that was there earlier, but can be addressed easily after the
-> changes made in 5.9-rc1).
-> 
-> Please refer to the patch changelogs for details.
-> 
-> For easier testing/review, the series is available from the git
-> branch at:
-> 
->  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
->  intel_pstate-testing
-> 
-> I've done my best to address all of the possible corner cases, but
-> the test
-> matrix is quite extensive and I may have missed something, so go
-> ahead
-> and test.
+> Peter Zijlstra (5):
+>       llist: Add nonatomic __llist_add() and __llist_dell_all()
+>       kprobes: Remove kretprobe hash
+>       asm-generic/atomic: Add try_cmpxchg() fallbacks
+>       freelist: Lock less freelist
+>       kprobes: Replace rp->free_instance with freelist
 
-Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+This looks good to me, do you want me to merge them through -tip? If so,
+do we want to try and get them in this release still?
 
+Ingo, opinions? This basically fixes a regression cauesd by
 
-> 
-> Thanks,
-> Rafael
-> 
-> 
-> 
+  0d00449c7a28 ("x86: Replace ist_enter() with nmi_enter()")
 
