@@ -2,108 +2,98 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EDAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C37C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA1EA218AC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DF4F214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974282;
-	bh=lQCnpE+h3F7ldlhOlP/LmTgLkwRbrAWwyY8D9fia1fg=;
+	s=default; t=1598974287;
+	bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYo283P9FnQZYfdly9DFHcBeUjxxIqMBqWtDCan807KQLyinNl34LprV/6L4jb3wV
-	 fqTeLek1HPpEjSyOJYTLjt+Q6nUiULddi4sDFJkukSB3ZdcQXVVVIQdE/uZJO5tprN
-	 IYF+tX4vyfgz1zp3DnLGQBSNFZFlCPaj0dO42J3s=
+	b=VnrXwZ0Jendd0SRvnB+chXOXYa28BYTST8OEmnIdBLTND5VA2c1cGmizLcMI2Yscv
+	 FbYuiAyal8DNZc2Bi1GF8Vjqh+vOFrxdsj0fTpRK35hOHpeqjZyzP6AWQAuwMIVCXk
+	 +GfUSHuxaxKeWvVLj6JsDbkS2xw7uaw4sxWmr0kI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgIAPbS (ORCPT
+        id S1730164AbgIAPbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55748 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:31:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbgIAP17 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:59 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730367AbgIAP2O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:14 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CD7C2100A;
-        Tue,  1 Sep 2020 15:27:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AA9C20BED;
+        Tue,  1 Sep 2020 15:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974078;
-        bh=lQCnpE+h3F7ldlhOlP/LmTgLkwRbrAWwyY8D9fia1fg=;
+        s=default; t=1598974094;
+        bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m9ezrBcITeM03VLnUcB2yHSUbMGl07t9SG4iL8L9fX6fmWiJrm1m6eDlk21/simjC
-         0r3hzUvihtAn8zL1j8ci9rCw7Wu/SLrupJCv41/pUe0YYviRov8xg1VHyDzvQ1J2Ug
-         amglPELe1Gp4Zcjic1dsxW/C4IcJs/RIpR3/V0iQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 05/11] spi: cadence-quadspi: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 17:27:07 +0200
-Message-Id: <20200901152713.18629-5-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901152713.18629-1-krzk@kernel.org>
-References: <20200901152713.18629-1-krzk@kernel.org>
+        b=M/5K12ljBw5iUPDm07CNqEF/GeHGqpM0a5chqRzZtCir/DVPbWTQk6nQCT1jLmI6x
+         Rloj8nLMJtFjlKWNNOd1boqe2iHw7b/KHCrk4UdFw6oHbLY0M7Vr3GD9//UFQnvJZO
+         yyQzpl8kTjCRnXZ4lj9RfJA0Go2W+yJgG3jkBgPA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Reto Schneider <code@reto-schneider.ch>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 042/214] rtlwifi: rtl8192cu: Prevent leaking urb
+Date:   Tue,  1 Sep 2020 17:08:42 +0200
+Message-Id: <20200901150954.980915852@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+From: Reto Schneider <code@reto-schneider.ch>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[ Upstream commit 03128643eb5453a798db5770952c73dc64fcaf00 ]
+
+If usb_submit_urb fails the allocated urb should be unanchored and
+released.
+
+Signed-off-by: Reto Schneider <code@reto-schneider.ch>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200622132113.14508-3-code@reto-schneider.ch
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-cadence-quadspi.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-cadence-quadspi.c b/drivers/spi/spi-cadence-quadspi.c
-index 508b219eabf8..cec4e89ab9b2 100644
---- a/drivers/spi/spi-cadence-quadspi.c
-+++ b/drivers/spi/spi-cadence-quadspi.c
-@@ -1117,11 +1117,8 @@ static int cqspi_request_mmap_dma(struct cqspi_st *cqspi)
- 	cqspi->rx_chan = dma_request_chan_by_mask(&mask);
- 	if (IS_ERR(cqspi->rx_chan)) {
- 		int ret = PTR_ERR(cqspi->rx_chan);
--
--		if (ret != -EPROBE_DEFER)
--			dev_err(&cqspi->pdev->dev, "No Rx DMA available\n");
- 		cqspi->rx_chan = NULL;
--		return ret;
-+		return dev_err_probe(&cqspi->pdev->dev, ret, "No Rx DMA available\n");
- 	}
- 	init_completion(&cqspi->rx_dma_complete);
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index c66c6dc003783..bad06939a247c 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -718,8 +718,11 @@ static int _rtl_usb_receive(struct ieee80211_hw *hw)
  
+ 		usb_anchor_urb(urb, &rtlusb->rx_submitted);
+ 		err = usb_submit_urb(urb, GFP_KERNEL);
+-		if (err)
++		if (err) {
++			usb_unanchor_urb(urb);
++			usb_free_urb(urb);
+ 			goto err_out;
++		}
+ 		usb_free_urb(urb);
+ 	}
+ 	return 0;
 -- 
-2.17.1
+2.25.1
+
+
 
