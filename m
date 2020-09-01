@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE114C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3718EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A0A206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17EDE2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977298;
-	bh=uIhW5tHOuw8G1JjTU52rcRogwkRDRzPM6/2NCn4Zdw8=;
+	s=default; t=1598977302;
+	bh=ZoDP69SRJjxZrcKtbRjhAlNdFM1J6kH8Mc4Sl3yWmO4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lI4cnjinAa+rfmScEbXZM2cwqIGETWFqZMI0Ri0G92qLpkCZyuNI8eiVaI1cHsyoq
-	 wVJR2caZrP55bqTyQxM/a+LoWWq0QddkkhiFlYVaArabjnfj1qukfjKv92AKzeNpeV
-	 xktI9OQTLpgpuvkI9ex7cKT3H4uZsMVYP1Naanxs=
+	b=tSQp8fP0XNPQmyAzAY4gqVriIKY4VjZzGgIm2xI4ix8G1vo7UHu41qyE6C+phktYs
+	 FZHViekU4rmDOdSURsefuxrPPMnVTJFk/4kHBVZUdhWxvburXQjWD3baXQTfyZ/DUf
+	 w3rJHtKcC2o/HW0XuHtQB4wExdbSkSntNlapJZyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731060AbgIAPcZ (ORCPT
+        id S1731052AbgIAPcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 1 Sep 2020 11:32:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34180 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:34128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730694AbgIAPbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:31:19 -0400
+        id S1730196AbgIAPbQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:31:16 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3913621548;
-        Tue,  1 Sep 2020 15:31:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8455B2078B;
+        Tue,  1 Sep 2020 15:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974278;
-        bh=uIhW5tHOuw8G1JjTU52rcRogwkRDRzPM6/2NCn4Zdw8=;
+        s=default; t=1598974276;
+        bh=ZoDP69SRJjxZrcKtbRjhAlNdFM1J6kH8Mc4Sl3yWmO4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mcZk0qTXsgh8sQ12ZgjUFOaqt5gCCoYLAZV1HXDbeHrlDfEaQmHBD/W+x+J5CjmLk
-         WVf9+Vz15GedM4+uJAj+YsbuDkXnXWiu4VZAsvA4uzkEYPHTZZxZEwIAOGMi8pT6MD
-         97XVVhWq38u4feP6Qv/0y7H+eoMVB5dJU9xMNvAA=
+        b=XWxnFosqvO1YPUW8WNBYw+cdCus4nl80E+8SJC4sCG/KLES5/6aBbtYK25oHlsAn9
+         aaUUGysJ+Sf05YGhbXiONL+l2RHUVE5mnFL3SRvTrTt1e150pm3Jiu27gdjZ+nNmQV
+         bdaocLSQ4D3FbjjeLgvxOF/YUjJBVCH35Jb1m3Dk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Tobias Schramm <t.schramm@manjaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 114/214] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
-Date:   Tue,  1 Sep 2020 17:09:54 +0200
-Message-Id: <20200901150958.445923171@linuxfoundation.org>
+Subject: [PATCH 5.4 113/214] spi: stm32: clear only asserted irq flags on interrupt
+Date:   Tue,  1 Sep 2020 17:09:53 +0200
+Message-Id: <20200901150958.399129506@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,60 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Tobias Schramm <t.schramm@manjaro.org>
 
-[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
+[ Upstream commit ae1ba50f1e706dfd7ce402ac52c1f1f10becad68 ]
 
-Callers of __jbd2_journal_unfile_buffer() and
-__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
-fact if it's not, we can end up with journal_head refcounting errors
-leading to crash much later that might be very hard to track down. Add
-asserts to make sure that is the case.
+Previously the stm32h7 interrupt thread cleared all non-masked interrupts.
+If an interrupt was to occur during the handling of another interrupt its
+flag would be unset, resulting in a lost interrupt.
+This patches fixes the issue by clearing only the currently set interrupt
+flags.
 
-We also make sure that b_next_transaction is NULL in
-__jbd2_journal_unfile_buffer() since the callers expect that as well and
-we should not get into that stage in this state anyway, leading to
-problems later on if we do.
-
-Tested with fstests.
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+Link: https://lore.kernel.org/r/20200804195136.1485392-1-t.schramm@manjaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/spi/spi-stm32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index de992a70ddfef..0b663269771d4 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1983,6 +1983,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
-  */
- static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
- {
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
-+
- 	__jbd2_journal_temp_unlink_buffer(jh);
- 	jh->b_transaction = NULL;
- 	jbd2_journal_put_journal_head(jh);
-@@ -2530,6 +2533,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 7e92ab0cc9920..dc6334f67e6ae 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -962,7 +962,7 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+ 			stm32h7_spi_read_rxfifo(spi, false);
  
- 	was_dirty = test_clear_buffer_jbddirty(bh);
- 	__jbd2_journal_temp_unlink_buffer(jh);
-+
-+	/*
-+	 * b_transaction must be set, otherwise the new b_transaction won't
-+	 * be holding jh reference
-+	 */
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+
- 	/*
- 	 * We set b_transaction here because b_next_transaction will inherit
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+-	writel_relaxed(mask, spi->base + STM32H7_SPI_IFCR);
++	writel_relaxed(sr & mask, spi->base + STM32H7_SPI_IFCR);
+ 
+ 	spin_unlock_irqrestore(&spi->lock, flags);
+ 
 -- 
 2.25.1
 
