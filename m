@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E14B3C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961EAC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E702067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74E95204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976648;
-	bh=oTjC9jfaLqaZgNMzxkpn5Xgk4LZV2PW+EeOGjegi/zA=;
+	s=default; t=1598976659;
+	bh=OdkqtBV3OgW7BJbj4JUVEARVm6DHMpSCUn3XLTLT04g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJsdNQAMnl7Opwli3nhwTTa6XjE3agv7f1Yc3PRdg/KGanu7tkBit0LjI5fBmeQZu
-	 MqC/Id3AskuhaByiX6ZahS9NgHx/1harwFYJc6wfnpqiMIxwmgLlwFs3fPTn8AbSP4
-	 m6dfOTZmWm7hf8gu3IRcsV1H6Xp+WfTly0j0crl8=
+	b=M7sUm07dS4RQKFFcaxmaaCGc4W/Q8l2Ab/NLhVfkXxyAR+t+7NlYnLsGmMOs0edlV
+	 leyHoh3x0Q6sCAYUv3gj0wA8faS2UcMM6zaRWr218QvBFsVbc0qubx70F8Vwyh6D7X
+	 J7SMaz8YSiv1b/CNT1rgtMrHqhWtfX9X0FvadplQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbgIAQKr (ORCPT
+        id S1731653AbgIAQK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:10:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46882 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:10:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731391AbgIAPiJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:38:09 -0400
+        id S1731224AbgIAPiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:06 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E42220E65;
-        Tue,  1 Sep 2020 15:38:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6764D205F4;
+        Tue,  1 Sep 2020 15:38:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974688;
-        bh=oTjC9jfaLqaZgNMzxkpn5Xgk4LZV2PW+EeOGjegi/zA=;
+        s=default; t=1598974686;
+        bh=OdkqtBV3OgW7BJbj4JUVEARVm6DHMpSCUn3XLTLT04g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yl6BC8DZp1TErz3osVJr9xSHxuyTGiQKyn/2O53+D8ETQ7LwLkSHVdahnYXoANRTe
-         JA+yllBT37Jl0y1x4m8zzy+yM5l6WxxTTf2npci+5T1GTXZdSOM7fv/wSwAMTbDmLJ
-         Ywy0Hfi9wS5Lx2hrycgPWCYwgyh5nz5jjCA0eoc0=
+        b=juCEPI9UfOqKXg+M4CRKPP0LX6fQSfSekN7lLIygJz215qKeA5WInkm31N8hmvuVn
+         NWglPylpDZJKytk6IjDReqqIKX6V2HrCeWPfAJTa0lcZnF80zHjZfh4nd7A1ox6VXC
+         JINM+W3/dHda4M4+UnPnWvwf/H9+flzSjquCh0A4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Popov <alex.popov@linux.com>,
-        Kees Cook <keescook@chromium.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 016/255] gcc-plugins/stackleak: Dont instrument itself
-Date:   Tue,  1 Sep 2020 17:07:52 +0200
-Message-Id: <20200901151001.568883262@linuxfoundation.org>
+Subject: [PATCH 5.8 025/255] drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
+Date:   Tue,  1 Sep 2020 17:08:01 +0200
+Message-Id: <20200901151001.977920685@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,34 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Popov <alex.popov@linux.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 005e696df65d0ff90468ecf38a50aa584dc82421 ]
+[ Upstream commit 9ba8923cbbe11564dd1bf9f3602add9a9cfbb5c6 ]
 
-There is no need to try instrumenting functions in kernel/stackleak.c.
-Otherwise that can cause issues if the cleanup pass of stackleak gcc plugin
-is disabled.
+in amdgpu_driver_open_kms the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
-Signed-off-by: Alexander Popov <alex.popov@linux.com>
-Link: https://lore.kernel.org/r/20200624123330.83226-2-alex.popov@linux.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index f3218bc5ec69f..155b5380500ad 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -125,6 +125,7 @@ obj-$(CONFIG_WATCH_QUEUE) += watch_queue.o
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+index 21292098bc023..0c49ab17be303 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -992,7 +992,7 @@ int amdgpu_driver_open_kms(struct drm_device *dev, struct drm_file *file_priv)
  
- obj-$(CONFIG_SYSCTL_KUNIT_TEST) += sysctl-test.o
+ 	r = pm_runtime_get_sync(dev->dev);
+ 	if (r < 0)
+-		return r;
++		goto pm_put;
  
-+CFLAGS_stackleak.o += $(DISABLE_STACKLEAK_PLUGIN)
- obj-$(CONFIG_GCC_PLUGIN_STACKLEAK) += stackleak.o
- KASAN_SANITIZE_stackleak.o := n
- KCSAN_SANITIZE_stackleak.o := n
+ 	fpriv = kzalloc(sizeof(*fpriv), GFP_KERNEL);
+ 	if (unlikely(!fpriv)) {
+@@ -1043,6 +1043,7 @@ error_pasid:
+ 
+ out_suspend:
+ 	pm_runtime_mark_last_busy(dev->dev);
++pm_put:
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 
+ 	return r;
 -- 
 2.25.1
 
