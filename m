@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2226BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1141C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C292087D
+	by mail.kernel.org (Postfix) with ESMTP id C4A9C2078B
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978340;
-	bh=9WsD+M7msmhvOrmHNhbANDUr/qQT8t+aOQRv8aa9ybg=;
+	s=default; t=1598978339;
+	bh=SDJyTNl9km4Ovqqcj2QEAXhf2ayIR8viGJpVgHB8K5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=biAN9hzVGJxDqaOlyi1qOVP2nIq6CW67VvCBgVXDS/HAQ/R0J1FbvhK7Aq8nS6rUU
-	 i+M1tNb0omQ80CyjUFQNF/3Y1vcF+HtxxmY0QdSmQDxiNWNkLXqV1IR/hZLimQqYuk
-	 A5ICiKus5Qgx7FHK4KjkE2FKrCUoUAhJoLLMQFnw=
+	b=klbP9LQNLsTBPGVUoGMsu/azWaqDmPwIYie2XZNXwIFoZ0pI3dwrT5RwoPueLXpu2
+	 248NxA4OTIPEb4sS1Qkyh0VPXjTfZgnOK1g+KI2nfiXv7VlIygaWYL+DtRVQ93ziPV
+	 mrC0oj1FG2PvgR5zlBhN+M506sI8Lvu3mwAm5Nbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgIAP2p (ORCPT
+        id S1730762AbgIAQiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49668 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:38:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729446AbgIAPZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:17 -0400
+        id S1730096AbgIAP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3FB920FC3;
-        Tue,  1 Sep 2020 15:25:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496F920BED;
+        Tue,  1 Sep 2020 15:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973917;
-        bh=9WsD+M7msmhvOrmHNhbANDUr/qQT8t+aOQRv8aa9ybg=;
+        s=default; t=1598974124;
+        bh=SDJyTNl9km4Ovqqcj2QEAXhf2ayIR8viGJpVgHB8K5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xOmRR5UtgPqNWZJ/+y/PLwlB5uBHwxX48in7LPS812NbnbR+USiITowsJ5UaCBA19
-         qkJvYT3WI9hFLV5r40AfWYE8P+y8DK6ShneUJbv8FMzwwL1sY+8b6Vfm8T92w/+eXe
-         WqBhb7QomJ71u1x1smChmQ1sGn7cfaFwFEnTWC1k=
+        b=PXEvZKDo1wvz2hvSwK/SHfYXbEUPW70H6e6SSiJdITSSrrEGYOtJpmBeRnKpMLde6
+         6Df1QTZPoGAamoh7c3qfgXFLDq8G7bjd9GOoA0Dk9yGgqTp3wuJUqcGp/fbl97RKZS
+         ulSZtwWaXcrY8ezvhtMMbifsOTfEcjJ7OEgYFfiI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 068/125] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
-Date:   Tue,  1 Sep 2020 17:10:23 +0200
-Message-Id: <20200901150937.911488032@linuxfoundation.org>
+Subject: [PATCH 5.4 053/214] btrfs: make btrfs_qgroup_check_reserved_leak take btrfs_inode
+Date:   Tue,  1 Sep 2020 17:08:53 +0200
+Message-Id: <20200901150955.521484537@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,41 +60,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Vijayan <vneethv@linux.ibm.com>
+From: Nikolay Borisov <nborisov@suse.com>
 
-[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
+[ Upstream commit cfdd45921571eb24073e0737fa0bd44b4218f914 ]
 
-The scanning through subchannels during the time of an event could
-take significant amount of time in case of platforms with lots of
-known subchannels. This might result in higher scheduling latencies
-for other tasks especially on systems with a single CPU. Add
-cond_resched() call, as the loop in slow_eval_known_fn() can be
-executed for a longer duration.
+vfs_inode is used only for the inode number everything else requires
+btrfs_inode.
 
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ use btrfs_ino ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/css.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/btrfs/inode.c  |  2 +-
+ fs/btrfs/qgroup.c | 14 +++++++-------
+ fs/btrfs/qgroup.h |  2 +-
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index df09ed53ab459..825a8f2703b4f 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -615,6 +615,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
- 		rc = css_evaluate_known_subchannel(sch, 1);
- 		if (rc == -EAGAIN)
- 			css_schedule_eval(sch->schid);
-+		/*
-+		 * The loop might take long time for platforms with lots of
-+		 * known devices. Allow scheduling here.
-+		 */
-+		cond_resched();
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index fa7f3a59813ea..411ec3e3a7dc1 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -9568,7 +9568,7 @@ void btrfs_destroy_inode(struct inode *inode)
+ 			btrfs_put_ordered_extent(ordered);
+ 		}
  	}
- 	return 0;
+-	btrfs_qgroup_check_reserved_leak(inode);
++	btrfs_qgroup_check_reserved_leak(BTRFS_I(inode));
+ 	inode_tree_del(inode);
+ 	btrfs_drop_extent_cache(BTRFS_I(inode), 0, (u64)-1, 0);
  }
+diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
+index b94f6f99e90d0..04fd02e6124dd 100644
+--- a/fs/btrfs/qgroup.c
++++ b/fs/btrfs/qgroup.c
+@@ -3769,7 +3769,7 @@ void btrfs_qgroup_convert_reserved_meta(struct btrfs_root *root, int num_bytes)
+  * Check qgroup reserved space leaking, normally at destroy inode
+  * time
+  */
+-void btrfs_qgroup_check_reserved_leak(struct inode *inode)
++void btrfs_qgroup_check_reserved_leak(struct btrfs_inode *inode)
+ {
+ 	struct extent_changeset changeset;
+ 	struct ulist_node *unode;
+@@ -3777,19 +3777,19 @@ void btrfs_qgroup_check_reserved_leak(struct inode *inode)
+ 	int ret;
+ 
+ 	extent_changeset_init(&changeset);
+-	ret = clear_record_extent_bits(&BTRFS_I(inode)->io_tree, 0, (u64)-1,
++	ret = clear_record_extent_bits(&inode->io_tree, 0, (u64)-1,
+ 			EXTENT_QGROUP_RESERVED, &changeset);
+ 
+ 	WARN_ON(ret < 0);
+ 	if (WARN_ON(changeset.bytes_changed)) {
+ 		ULIST_ITER_INIT(&iter);
+ 		while ((unode = ulist_next(&changeset.range_changed, &iter))) {
+-			btrfs_warn(BTRFS_I(inode)->root->fs_info,
+-				"leaking qgroup reserved space, ino: %lu, start: %llu, end: %llu",
+-				inode->i_ino, unode->val, unode->aux);
++			btrfs_warn(inode->root->fs_info,
++		"leaking qgroup reserved space, ino: %llu, start: %llu, end: %llu",
++				btrfs_ino(inode), unode->val, unode->aux);
+ 		}
+-		btrfs_qgroup_free_refroot(BTRFS_I(inode)->root->fs_info,
+-				BTRFS_I(inode)->root->root_key.objectid,
++		btrfs_qgroup_free_refroot(inode->root->fs_info,
++				inode->root->root_key.objectid,
+ 				changeset.bytes_changed, BTRFS_QGROUP_RSV_DATA);
+ 
+ 	}
+diff --git a/fs/btrfs/qgroup.h b/fs/btrfs/qgroup.h
+index 17e8ac992c502..b0420c4f5d0ef 100644
+--- a/fs/btrfs/qgroup.h
++++ b/fs/btrfs/qgroup.h
+@@ -399,7 +399,7 @@ void btrfs_qgroup_free_meta_all_pertrans(struct btrfs_root *root);
+  */
+ void btrfs_qgroup_convert_reserved_meta(struct btrfs_root *root, int num_bytes);
+ 
+-void btrfs_qgroup_check_reserved_leak(struct inode *inode);
++void btrfs_qgroup_check_reserved_leak(struct btrfs_inode *inode);
+ 
+ /* btrfs_qgroup_swapped_blocks related functions */
+ void btrfs_qgroup_init_swapped_blocks(
 -- 
 2.25.1
 
