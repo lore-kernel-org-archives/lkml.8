@@ -2,68 +2,112 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B04CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:44:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AABC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 751052068F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:44:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="hgJzV6bb"
+	by mail.kernel.org (Postfix) with ESMTP id 1D0322071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598949988;
+	bh=Ej/xXbLv6pFbyjl0t87cGQ0joph447A5JF+zxsqDPpk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XnbK2nFZWr1rohajtWtdVyPdLAdkkLo0k83DXqlb4dFU3JhIa8o9cd9F0lvnQ+LVA
+	 n3vwpxE3ubNOun0sOprA8PU/PjXIt7K7ejwOcDJhF5oE6cNeipiVVTWdC3kMb6fisK
+	 Gu3uJ0+RJ6o/UpUdaLuBGKYRHHYOkb99VzEh+xEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbgIAIoj (ORCPT
+        id S1727794AbgIAIq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:44:39 -0400
-Received: from uho.ysoft.cz ([81.19.3.130]:38910 "EHLO uho.ysoft.cz"
+        Tue, 1 Sep 2020 04:46:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgIAIoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:44:37 -0400
-Received: from [10.1.8.111] (unknown [10.1.8.111])
-        by uho.ysoft.cz (Postfix) with ESMTP id 8046CA00D7;
-        Tue,  1 Sep 2020 10:44:35 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
-        s=20160406-ysoft-com; t=1598949875;
-        bh=mIdANwWwlPqHszzYGjhQKPmy/JsZ+HrTUgoApsidgoY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hgJzV6bbgTlG6jqkhi4G/K86n/3yxvlWgkaIxznqz/g03TnZpxBUf5V6impw8wE+S
-         HCuYNUHOmAQxJ7F1ihLVdNHeK6I8xK/JG9LNmPtoK1rf5XJoTDPR1krxDh5i04phrI
-         YQHWNRRSjTghnlmtZvgDNYl8L3cUh3GLPirE+++o=
-Subject: Re: [PATCH v4] video: fbdev: ssd1307fb: Added support to Column
- offset
-To:     b.zolnierkie@samsung.com
-Cc:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>,
-        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
-References: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
-From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
-Message-ID: <d15729dd-63d1-7a06-f957-22eab6d74c9f@ysoft.com>
-Date:   Tue, 1 Sep 2020 10:44:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726536AbgIAIq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:46:26 -0400
+Received: from localhost (p54b33ab6.dip0.t-ipconnect.de [84.179.58.182])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E28F3205CB;
+        Tue,  1 Sep 2020 08:46:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598949985;
+        bh=Ej/xXbLv6pFbyjl0t87cGQ0joph447A5JF+zxsqDPpk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZI49kMFsc2zKwEcaGT3/TULcL3HB1mxWb0Ku2a0c3iDNnPMsljE08FZLwCkwrf2+g
+         u5wk3BhzwMmeqLtt59U3pjogdjQaFIMf4aq8lbBOlgQiGS2mGutpv9S7MyqLwolxUk
+         fIyQqj14UyGEcmihr8CabeYxU7ocxzLbUrrJK9Kk=
+Date:   Tue, 1 Sep 2020 10:46:19 +0200
+From:   Wolfram Sang <wsa@kernel.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>, jdelvare@suse.de,
+        jarkko.nikula@linux.intel.com, chris.packham@alliedtelesis.co.nz,
+        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
+Message-ID: <20200901084619.GA897@ninjato>
+References: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
+ <20200901082046.GO1891694@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Disposition: inline
+In-Reply-To: <20200901082046.GO1891694@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24. 07. 20 22:22, Rodrigo Alencar wrote:
-> This patch provides support for displays like VGM128064B0W10,
-> which requires a column offset of 2, i.e., its segments starts
-> in SEG2 and ends in SEG129.
-> 
-> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 
-Hi Bartlomiej,
-what is the status of this patch? I would like to see this merged so I can send
-patches for our in-tree imx6dl-yapp4 device trees that need exactly this change.
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you,
-Michal
+
+> > +/**
+> > + * struct i2c_bus_settings - The configured i2c bus settings
+> > + * @mode: Configured i2c bus mode (PCA9665)
+> > + * @tlow: Configured SCL LOW period (PCA9665)
+> > + * @thi: Configured SCL HIGH period (PCA9665)
+> > + * @clock_freq: The configured clock frequency (PCA9564)
+> > + */
+> > +struct i2c_bus_settings {
+> > +	int mode;
+> > +	int tlow;
+> > +	int thi;
+> > +	int clock_freq;
+> > +};
+>=20
+> This is a good candidate to have it in generic header for sake of the
+> unification. Possible users:
+>=20
+> struct tegra_i2c_hw_feature
+> struct cci_data::struct hw_params
+
+Could be evaluated, but outside the scope of this patch, I think. This
+is a bugfix, so a self-contained patch makes backporting a lot easier.
+
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9OClcACgkQFA3kzBSg
+KbZ3xQ/+P34ln28a/hlgQwyw/s8pEjEAxK0+TTq9GQroguDqywWfo1d9wruqwmG1
+NuHBkVKvOKlIeICymzEBpDtvncbbdgMVG/ewECf+wg9/kpsCYFOCa9GJN7zkVJVJ
+40eldiFUiYk0IrbqiIypqSnKPlnO5NOrlYqidf44f40F6mJS5lz5ooXbP+I5a++K
+FggKsNNhpyKeOyONz2iOe+lqMJYqC/3iJxeYBJzUB2IFjJcZN3fXHQ5qkMqsSLgW
+xjWi3Dg8sCIkwqqKOtIJ22daXVQ05pYNNWkYhzVG1/dB9ICAoqgIiLVVv+PEZ/5/
+OpEBFwE+9CtBFfRoJI6MTYop3/TGeE7RZDj+f5u3X41EEYW1lhoCypnfRDQMXMOL
+vRlpzZ/ja98vZZBUCB14P024BHHRcINxMCpXFAGlj4jw5yIlXxSZ9mJoAHEZYdwd
+KfP8h+vaFyFYqXd8P6VIWsUxj888vSpxz9vBVRXb/dYjYZi4vx5Ao8io72mLnKST
+jkPou/lXb1Xm9b6jpic9pGx7C+13GyrM2p1NNcWnE1KHAq7g8bLVSIDWJ+WHsRCT
+nnKP8spABei4sHL3ZkEotMuBQX4ZeLXAdLeNMBgGVcov+KaH7kLjeAREF3oAnkm/
+8BEj4NxwHYs/PQBjgCV2yKWoZXsFoogu0KeiMSw39+fX3SbclJA=
+=UEqD
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
