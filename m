@@ -2,112 +2,121 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57AABC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1364FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D0322071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598949988;
-	bh=Ej/xXbLv6pFbyjl0t87cGQ0joph447A5JF+zxsqDPpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=XnbK2nFZWr1rohajtWtdVyPdLAdkkLo0k83DXqlb4dFU3JhIa8o9cd9F0lvnQ+LVA
-	 n3vwpxE3ubNOun0sOprA8PU/PjXIt7K7ejwOcDJhF5oE6cNeipiVVTWdC3kMb6fisK
-	 Gu3uJ0+RJ6o/UpUdaLuBGKYRHHYOkb99VzEh+xEw=
+	by mail.kernel.org (Postfix) with ESMTP id D567920866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZhdAwXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgIAIq1 (ORCPT
+        id S1727855AbgIAIqb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:46:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34536 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726536AbgIAIq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:46:26 -0400
-Received: from localhost (p54b33ab6.dip0.t-ipconnect.de [84.179.58.182])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E28F3205CB;
-        Tue,  1 Sep 2020 08:46:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598949985;
-        bh=Ej/xXbLv6pFbyjl0t87cGQ0joph447A5JF+zxsqDPpk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZI49kMFsc2zKwEcaGT3/TULcL3HB1mxWb0Ku2a0c3iDNnPMsljE08FZLwCkwrf2+g
-         u5wk3BhzwMmeqLtt59U3pjogdjQaFIMf4aq8lbBOlgQiGS2mGutpv9S7MyqLwolxUk
-         fIyQqj14UyGEcmihr8CabeYxU7ocxzLbUrrJK9Kk=
-Date:   Tue, 1 Sep 2020 10:46:19 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>, jdelvare@suse.de,
-        jarkko.nikula@linux.intel.com, chris.packham@alliedtelesis.co.nz,
-        linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
-Message-ID: <20200901084619.GA897@ninjato>
-References: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
- <20200901082046.GO1891694@smile.fi.intel.com>
+        Tue, 1 Sep 2020 04:46:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726293AbgIAIqa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:46:30 -0400
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D818BC061244;
+        Tue,  1 Sep 2020 01:46:29 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id 109so508499otv.3;
+        Tue, 01 Sep 2020 01:46:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=AGctBs2sDmt4ExjN4cAU8I9Yq9CZgsHUVhDgE0odfdA=;
+        b=JZhdAwXLEqO1maNzgzV4iNSzNEsdWXMsuq8Diw3KiHENmdAXxVsghAgx+O6xiALh19
+         oJs/xNEWE2efFDO0TbBhYIkpo6y3JlNi3ubrdWFjdwyqor0fpK/PVtAwW1HUENhn8SAC
+         IspZ4Agdi2UA+OhTLiOCc5Mgh4sETgmKUV3S+gDKZ8DGccYff2LtHY/NNgL4sD47/pj0
+         WR1I9UpVMfVhPVCsX9ldcPVEgpraD27ORyCtgPpTCWQuHnwqDJmcPBdsRUwlWTgDSCgb
+         T71lBH4KkzC4vi70dIBAR3kVSchhk0wTDcs5yb7ncIPr9mheOcc0heDdjtsjPCxx0LWR
+         aWQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=AGctBs2sDmt4ExjN4cAU8I9Yq9CZgsHUVhDgE0odfdA=;
+        b=I5SXWOcKvFBAGewDaMPif8HED1s2baNvGDsbLlujK4uxQcA1fXLzWWpRC4isL2Qob8
+         S1XLqiJ9EMYyI3trivjnlg/7CH2nKBTkWB7AXn78aI/thpHN0QZDfHtlA7tHLr9T//rD
+         x4g8M9QFDEXhWx+Jty1QIK3v/hmQlHCawVbI80GBMlXkezlPpGOZGvBJeHm3gmcrgqU1
+         Z88J7JqmSuQ1uPAudaJAXpMWELOn8jdmVhWPJsiF4n9FxaPLI5e3Kc3BnnzlwBDJNEZ5
+         7DhNDp3/iqZzUdIQRKfifAyU5osCf5aOEZJzQGywCBHWxKIRuiotXuOI3RP0Zs1n8YXU
+         5K7A==
+X-Gm-Message-State: AOAM531wHaMJnBGkJD6VjaTMo7lTyiPHXvnfVJj9tV5w2yX992RvqQaI
+        iL/sCcXAlu7riJv40WTcKut9Km9sV8qlJniOkps=
+X-Google-Smtp-Source: ABdhPJyWZ3NTRRvSNIT/KxkPbedzD1MVC9yAZ8pG2y47s/El3XH+OP4Ny2jbdlyovyKrMOnC3ftcc0CnlBfA7CT7NvU=
+X-Received: by 2002:a9d:7656:: with SMTP id o22mr600508otl.109.1598949987882;
+ Tue, 01 Sep 2020 01:46:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
-Content-Disposition: inline
-In-Reply-To: <20200901082046.GO1891694@smile.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200901064302.849-1-w@1wt.eu> <20200901064302.849-2-w@1wt.eu>
+ <CAKQ1sVM9SMYVTSZYaGuPDhQHfyEOFSxBL8PNixyaN4pR2PWMxQ@mail.gmail.com> <20200901083947.GB901@1wt.eu>
+In-Reply-To: <20200901083947.GB901@1wt.eu>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 1 Sep 2020 10:46:16 +0200
+Message-ID: <CA+icZUXjDaoLG36X7Jd7i6=Ncf6xTm44qL7ZV+i7pmNgtLuJSA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] random32: make prandom_u32() output unpredictable
+To:     Willy Tarreau <w@1wt.eu>
+Cc:     Yann Ylavic <ylavic.dev@gmail.com>, linux-kernel@vger.kernel.org,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        George Spelvin <lkml@sdf.org>,
+        Amit Klein <aksecurity@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
+        Florian Westphal <fw@strlen.de>,
+        Marc Plumb <lkml.mplumb@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Sep 1, 2020 at 10:39 AM Willy Tarreau <w@1wt.eu> wrote:
+>
+> On Tue, Sep 01, 2020 at 10:33:40AM +0200, Yann Ylavic wrote:
+> > On Tue, Sep 1, 2020 at 8:45 AM Willy Tarreau <w@1wt.eu> wrote:
+> > >
+> > > +/*
+> > > + *     Generate some initially weak seeding values to allow
+> > > + *     the prandom_u32() engine to be started.
+> > > + */
+> > > +static int __init prandom_init_early(void)
+> > > +{
+> > > +       int i;
+> > > +       unsigned long v0, v1, v2, v3;
+> > > +
+> > > +       if (!arch_get_random_long(&v0))
+> > > +               v0 = jiffies;
+> > > +       if (!arch_get_random_long(&v1))
+> > > +               v0 = random_get_entropy();
+> >
+> > Shouldn't the above be:
+> >                   v1 = random_get_entropy();
+> > ?
+>
+> Very good catch, many thanks Yann! Now fixed in my local tree.
+>
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for offering a new patchset, Willy.
 
+Will you push the updated patchset to your prandom Git - for easy fetching?
 
-> > +/**
-> > + * struct i2c_bus_settings - The configured i2c bus settings
-> > + * @mode: Configured i2c bus mode (PCA9665)
-> > + * @tlow: Configured SCL LOW period (PCA9665)
-> > + * @thi: Configured SCL HIGH period (PCA9665)
-> > + * @clock_freq: The configured clock frequency (PCA9564)
-> > + */
-> > +struct i2c_bus_settings {
-> > +	int mode;
-> > +	int tlow;
-> > +	int thi;
-> > +	int clock_freq;
-> > +};
->=20
-> This is a good candidate to have it in generic header for sake of the
-> unification. Possible users:
->=20
-> struct tegra_i2c_hw_feature
-> struct cci_data::struct hw_params
+Thanks.
 
-Could be evaluated, but outside the scope of this patch, I think. This
-is a bugfix, so a self-contained patch makes backporting a lot easier.
+- Sedat -
 
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl9OClcACgkQFA3kzBSg
-KbZ3xQ/+P34ln28a/hlgQwyw/s8pEjEAxK0+TTq9GQroguDqywWfo1d9wruqwmG1
-NuHBkVKvOKlIeICymzEBpDtvncbbdgMVG/ewECf+wg9/kpsCYFOCa9GJN7zkVJVJ
-40eldiFUiYk0IrbqiIypqSnKPlnO5NOrlYqidf44f40F6mJS5lz5ooXbP+I5a++K
-FggKsNNhpyKeOyONz2iOe+lqMJYqC/3iJxeYBJzUB2IFjJcZN3fXHQ5qkMqsSLgW
-xjWi3Dg8sCIkwqqKOtIJ22daXVQ05pYNNWkYhzVG1/dB9ICAoqgIiLVVv+PEZ/5/
-OpEBFwE+9CtBFfRoJI6MTYop3/TGeE7RZDj+f5u3X41EEYW1lhoCypnfRDQMXMOL
-vRlpzZ/ja98vZZBUCB14P024BHHRcINxMCpXFAGlj4jw5yIlXxSZ9mJoAHEZYdwd
-KfP8h+vaFyFYqXd8P6VIWsUxj888vSpxz9vBVRXb/dYjYZi4vx5Ao8io72mLnKST
-jkPou/lXb1Xm9b6jpic9pGx7C+13GyrM2p1NNcWnE1KHAq7g8bLVSIDWJ+WHsRCT
-nnKP8spABei4sHL3ZkEotMuBQX4ZeLXAdLeNMBgGVcov+KaH7kLjeAREF3oAnkm/
-8BEj4NxwHYs/PQBjgCV2yKWoZXsFoogu0KeiMSw39+fX3SbclJA=
-=UEqD
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/prandom.git/
