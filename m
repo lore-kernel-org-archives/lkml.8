@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44D2C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAC8C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4672078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E0A20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jfADtGc2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="diYFxRQB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729700AbgIAQrP (ORCPT
+        id S1732234AbgIAQrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:47:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37762 "EHLO
+        Tue, 1 Sep 2020 12:47:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37786 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730326AbgIAQq0 (ORCPT
+        with ESMTP id S1729812AbgIAQqd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:46:26 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10570C061244;
-        Tue,  1 Sep 2020 09:46:25 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x18so816493pll.6;
-        Tue, 01 Sep 2020 09:46:25 -0700 (PDT)
+        Tue, 1 Sep 2020 12:46:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A163EC061246;
+        Tue,  1 Sep 2020 09:46:32 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id o20so1105540pfp.11;
+        Tue, 01 Sep 2020 09:46:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Tk5zPp0nu93VQrlRpBetxr1lff5xE8i/LH2EjPSUXEI=;
-        b=jfADtGc2ZPCjhynKOdCJEaVZwckWuNnvv0bA+wk9rmOjtBW3xWIDyC6ePwcx4A24/i
-         6vn81mR2qNa14TEuW0kfe6glsktawQ1wOLEdACNI/tLpDGFwh8en3sZP3gJeIno6a7eD
-         qo1y7fY8cSKmdS6eK9Tx9pEZ8LYZC9hNnmqMblP6vQt1ZGGTmAY6qFVHOUDQMcUU/YRh
-         X+51rpiAjLJN8TJZhjJGGWh1gSTKuI8vvMP8H0bWvCzGUfPZdLvlZz+aiNDVyKTkBYTX
-         9lm/yEsLeSlOO+JoGVjnYwbwZutIZjR0i2wrCnjW/xo/Ipu7ChHwMkU8FaYvLbHqQYsI
-         k0LA==
+        bh=9GY8MTV08PrdHUp+EWWyNucwylbtR4J8MJ49qiKRTr8=;
+        b=diYFxRQBFCAYzBMr1oUdzb90W8KPNy1WuyBKtljKjHAsRM6NJtOgedMjx4M0bbCDQg
+         1NokvIoSeI5QQcdk6vTojUxuiMokN3r33V1FHU8uVaQ14ufEsfsb3Nvx1iVIBAexr9H/
+         283ozm+4h7ZptZESKcLhyBqrLn89MnSBsD9w0mibZJZ7q0oEdNm6nJpnsenZRJHEuHPY
+         Bz+lAcKZMBzXfwiFf0M2NtgabZxm4VoIyDyGNYia6T7GB7gtM49q9T0bxdundFLyn1Iu
+         ouTkPBFotIrezZ9aXt71kBbK+tYVdLk09S967qZQ4Emfr+8HXiXcg5A2UTZMlWa/dxCX
+         hHXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Tk5zPp0nu93VQrlRpBetxr1lff5xE8i/LH2EjPSUXEI=;
-        b=S+ETN14chclQ4IN5nXFRZDXwEyvTKRItZXDSqO8M12o435XGVpCHoeHOWHL1VqoT6X
-         /SikfqNC+aUctJE5Vpg2FxsAUlZA04/8RyJl5ID+0uLVlHZeWIMw7XAsBSB4Z/TcFlov
-         Qb/cOQfF4FRmIB9apwir0RHMKQFSgZj4TC+P4l3VuGgNgxmKj8vMzyfkkRw5kPRouJi+
-         6HfqkYrf0QxPVZXtaqf3p2HWQapnO4tovtT6Y3+mxHoGRJ+Th3UM2/SVtxBcJ9zT/xJB
-         uxsjMRgGSoVY64ZhqI85MhWQOyEwtW1Z4x41zlukon2duODeWuZzb2z9q6ypzSnIXxyJ
-         /lUw==
-X-Gm-Message-State: AOAM533t34m54Icy7B9GFQtefAin01V6xr6ipZFTN1myDdZKXBnbTxKd
-        TU4TCBIv9OpGjp9D5hEO6to=
-X-Google-Smtp-Source: ABdhPJyTygZSGFX5eIM6/dkAIywFF35ZHmq9xGT/4duvrNw2xgG3rUQmmclMh4zKcn0Nwpq4ubuUiw==
-X-Received: by 2002:a17:90a:dac5:: with SMTP id g5mr2325737pjx.5.1598978784522;
-        Tue, 01 Sep 2020 09:46:24 -0700 (PDT)
+        bh=9GY8MTV08PrdHUp+EWWyNucwylbtR4J8MJ49qiKRTr8=;
+        b=EDg5Auwxux1malfetRcByfU4iYE7RGUyXjMD724XdVVReXZVXDDkiEIiRfhG9nbICH
+         Xlq9Of6+USpk3KiRBsL2WLTtsFFL58Sd3LzmU+lcjF81oTbNqlrCu3BeycHTxMNrGswx
+         QinkeUV+6H1tYG8OsTsgrSJXCD4/ITHvQTirsk6i5fHAypeI1N+v3CngeFiGNl/0J6Su
+         q3yre+izOrSeO4LybrbfGapsWRqoo5lwakAKHJJTtwahVard5MSZ2LPbShKe9OslekAa
+         HhSdnZLx1B2hCERB5BDshuZ8DvsZqdjpvmo51nHaG/isQODDrdZDrbtE3YiCMT+SpdCJ
+         dMzw==
+X-Gm-Message-State: AOAM531lzLyu5ouCaUnWTrAbVwqagD2su9PGcwRLXxBYpl5e0aZAMCAL
+        lF2x4cUKz4oBWO6L8QSpkfY=
+X-Google-Smtp-Source: ABdhPJxkErnGII/ajapuRB93tieR8/YaguR9xdhO4M2IHzqSfAfV4/ovlSOHBb+EyThZc7WuL4iTfA==
+X-Received: by 2002:a63:2043:: with SMTP id r3mr2258427pgm.289.1598978792128;
+        Tue, 01 Sep 2020 09:46:32 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id u123sm2401020pfb.209.2020.09.01.09.46.23
+        by smtp.gmail.com with ESMTPSA id s187sm79986pfc.134.2020.09.01.09.46.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 09:46:23 -0700 (PDT)
+        Tue, 01 Sep 2020 09:46:31 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
@@ -71,10 +71,18 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Akhil P Oommen <akhilpo@codeaurora.org>,
         Rob Clark <robdclark@chromium.org>,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v16 02/20] drm/msm: Add private interface for adreno-smmu
-Date:   Tue,  1 Sep 2020 09:46:19 -0700
-Message-Id: <20200901164707.2645413-3-robdclark@gmail.com>
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jonathan Marek <jonathan@marek.ca>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
+        GPU), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v16 04/20] drm/msm: Set adreno_smmu as gpu's drvdata
+Date:   Tue,  1 Sep 2020 09:46:21 -0700
+Message-Id: <20200901164707.2645413-5-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901164707.2645413-1-robdclark@gmail.com>
 References: <20200901164707.2645413-1-robdclark@gmail.com>
@@ -87,70 +95,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Rob Clark <robdclark@chromium.org>
 
-This interface will be used for drm/msm to coordinate with the
-qcom_adreno_smmu_impl to enable/disable TTBR0 translation.
-
-Once TTBR0 translation is enabled, the GPU's CP (Command Processor)
-will directly switch TTBR0 pgtables (and do the necessary TLB inv)
-synchronized to the GPU's operation.  But help from the SMMU driver
-is needed to initially bootstrap TTBR0 translation, which cannot be
-done from the GPU.
-
-Since this is a very special case, a private interface is used to
-avoid adding highly driver specific things to the public iommu
-interface.
+This will be populated by adreno-smmu, to provide a way for coordinating
+enabling/disabling TTBR0 translation.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- include/linux/adreno-smmu-priv.h | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 include/linux/adreno-smmu-priv.h
+ drivers/gpu/drm/msm/adreno/adreno_device.c | 2 --
+ drivers/gpu/drm/msm/msm_gpu.c              | 2 +-
+ drivers/gpu/drm/msm/msm_gpu.h              | 6 +++++-
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/adreno-smmu-priv.h b/include/linux/adreno-smmu-priv.h
-new file mode 100644
-index 000000000000..a889f28afb42
---- /dev/null
-+++ b/include/linux/adreno-smmu-priv.h
-@@ -0,0 +1,36 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2020 Google, Inc
-+ */
+diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+index 26664e1b30c0..58e03b20e1c7 100644
+--- a/drivers/gpu/drm/msm/adreno/adreno_device.c
++++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+@@ -417,8 +417,6 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
+ 		return PTR_ERR(gpu);
+ 	}
+ 
+-	dev_set_drvdata(dev, gpu);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+index 6aa9e04e52e7..806eb0957280 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.c
++++ b/drivers/gpu/drm/msm/msm_gpu.c
+@@ -892,7 +892,7 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+ 		gpu->gpu_cx = NULL;
+ 
+ 	gpu->pdev = pdev;
+-	platform_set_drvdata(pdev, gpu);
++	platform_set_drvdata(pdev, &gpu->adreno_smmu);
+ 
+ 	msm_devfreq_init(gpu);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+index 8bda7beaed4b..f91b141add75 100644
+--- a/drivers/gpu/drm/msm/msm_gpu.h
++++ b/drivers/gpu/drm/msm/msm_gpu.h
+@@ -7,6 +7,7 @@
+ #ifndef __MSM_GPU_H__
+ #define __MSM_GPU_H__
+ 
++#include <linux/adreno-smmu-priv.h>
+ #include <linux/clk.h>
+ #include <linux/interconnect.h>
+ #include <linux/pm_opp.h>
+@@ -73,6 +74,8 @@ struct msm_gpu {
+ 	struct platform_device *pdev;
+ 	const struct msm_gpu_funcs *funcs;
+ 
++	struct adreno_smmu_priv adreno_smmu;
 +
-+#ifndef __ADRENO_SMMU_PRIV_H
-+#define __ADRENO_SMMU_PRIV_H
-+
-+#include <linux/io-pgtable.h>
-+
-+/**
-+ * struct adreno_smmu_priv - private interface between adreno-smmu and GPU
-+ *
-+ * @cookie:        An opque token provided by adreno-smmu and passed
-+ *                 back into the callbacks
-+ * @get_ttbr1_cfg: Get the TTBR1 config for the GPUs context-bank
-+ * @set_ttbr0_cfg: Set the TTBR0 config for the GPUs context bank.  A
-+ *                 NULL config disables TTBR0 translation, otherwise
-+ *                 TTBR0 translation is enabled with the specified cfg
-+ *
-+ * The GPU driver (drm/msm) and adreno-smmu work together for controlling
-+ * the GPU's SMMU instance.  This is by necessity, as the GPU is directly
-+ * updating the SMMU for context switches, while on the other hand we do
-+ * not want to duplicate all of the initial setup logic from arm-smmu.
-+ *
-+ * This private interface is used for the two drivers to coordinate.  The
-+ * cookie and callback functions are populated when the GPU driver attaches
-+ * it's domain.
-+ */
-+struct adreno_smmu_priv {
-+    const void *cookie;
-+    const struct io_pgtable_cfg *(*get_ttbr1_cfg)(const void *cookie);
-+    int (*set_ttbr0_cfg)(const void *cookie, const struct io_pgtable_cfg *cfg);
-+};
-+
-+#endif /* __ADRENO_SMMU_PRIV_H */
-\ No newline at end of file
+ 	/* performance counters (hw & sw): */
+ 	spinlock_t perf_lock;
+ 	bool perfcntr_active;
+@@ -143,7 +146,8 @@ struct msm_gpu {
+ 
+ static inline struct msm_gpu *dev_to_gpu(struct device *dev)
+ {
+-	return dev_get_drvdata(dev);
++	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(dev);
++	return container_of(adreno_smmu, struct msm_gpu, adreno_smmu);
+ }
+ 
+ /* It turns out that all targets use the same ringbuffer size */
 -- 
 2.26.2
 
