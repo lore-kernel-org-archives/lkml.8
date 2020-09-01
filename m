@@ -2,135 +2,224 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD104C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D401C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:02:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 858C520767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 586BA207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:02:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="KZizb+Dd"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mcXMBgTr";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Lpw3BGSP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732794AbgIAUCF (ORCPT
+        id S1732802AbgIAUCQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:02:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39840 "EHLO
+        Tue, 1 Sep 2020 16:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732568AbgIAUCD (ORCPT
+        with ESMTP id S1730316AbgIAUCO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:02:03 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA34C061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 13:02:03 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id ls14so1147760pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 13:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=0TFvfjapBtpOjCK3cnf0JVXwOOm9nRjQC9YR5LerqTw=;
-        b=KZizb+DdvnIhtxo9NJ/Mj4uCuEuWwUiJI2z2QI8dHInz2CbTiSw03qvl8d7N0gM/VK
-         lZouzCV/sW+xZ0kBkq0kvenYq2rqkgf1HiE1wQoFV5I9UkGWHNHNImzOgvpN51xuPvyW
-         Q8LffDrfTl4v2t9wFOHvUHZPDnurDYyg2OkTAdWlbQTTjQVdENs5I+//6wTXWNIMPGmk
-         PUAUi+KsPluN8g1Gb6uzv0uQJEgtnyeqwNPb4nIOFIp9HTanGC1w2ooJx5O2WatjtOFh
-         s+BwRafjpzAi3X+pEXXgTO+TY6Dd1ORudlPnSa6MtteW2sdiz706begthdfAItvuS9PT
-         evbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0TFvfjapBtpOjCK3cnf0JVXwOOm9nRjQC9YR5LerqTw=;
-        b=c0aj9O1moVc//ko2DjzaFzwC6DUeYlfcZk/FUiDWGJ1/zpznpp+n1oHCxvFxYKYUZS
-         awi0d3xKnKh1gEvmH+IsNLSwuN9MV/Se559Tga78X0ZQpPVNyQjGRk1nL+l9XkskB6rs
-         jucysMoJElDYqnJG97WmRH5cuRYWszNN2db7W1Tx6kTqxE4toWVlQDGrBH5GpbpMimX5
-         6+J6Hi+uQ1HDY7Iuc4oHjneWB/Dsga2GPYsjGSM2kkeq3UyaCFzjt2mSKX77kPrnF7Jv
-         wqW4U1rINarZtC414toaMdMT5iAiJonICxInrk4TtgfZN+UA/EcjDjwZDim8umFUs13L
-         L3uA==
-X-Gm-Message-State: AOAM531LjS6dUGaIUiLJ5ETHpUa9/0GY79rJAiglsM2KtyYHAXQ7UtfK
-        ts+ULHvHGL5eXRXIPNCFEzCQggYgayd+i5hW
-X-Google-Smtp-Source: ABdhPJw4z0MtzIa/uyRVdxpAtHcbKBFq10NoDMe7R9TwBTG7E94El7Zku9kR9xW9ZZcV0wpl5FfwpA==
-X-Received: by 2002:a17:902:6a8b:: with SMTP id n11mr2849235plk.75.1598990522125;
-        Tue, 01 Sep 2020 13:02:02 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id x188sm2851565pfb.37.2020.09.01.13.02.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 13:02:01 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in
- io_sq_wq_submit_work()
-From:   Jens Axboe <axboe@kernel.dk>
-To:     yinxin_1989 <yinxin_1989@aliyun.com>,
-        viro <viro@zeniv.linux.org.uk>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200901015442.44831-1-yinxin_1989@aliyun.com>
- <ae9f3887-5205-8aa8-afa7-4e01d03921bc@kernel.dk>
- <67f27d17-81fa-43a8-baa9-429b1ccd65d0.yinxin_1989@aliyun.com>
- <4eeefb43-488c-dc90-f47c-10defe6f9278@kernel.dk>
-Message-ID: <98f2cbbf-4f6f-501b-2f4e-1b8b803ce6a6@kernel.dk>
-Date:   Tue, 1 Sep 2020 14:01:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 1 Sep 2020 16:02:14 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61657C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 13:02:14 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598990530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jgSfVN3YpVZ6JpX+NU+pZI0+w1g1cMMgKLi6CxrStU0=;
+        b=mcXMBgTrcAKfw0cUVZuwLAsTWPw5qETOF7r3kf3Vs/6SKHpRqLq59u6/q2dtZCjO2JESnT
+        0VVocNBOXzBDTDtRYMXQrHZznSiwIFXN8GCC+GE2qpQ9HIDzp7jyvFif7xs5NlKAvyQzYx
+        uuz3wc8RctcKLNFTfcZ3XQvt6CWctLRmS/xPGBSRPxNCm97hozuaKkP/zgdNjaENrZr5qg
+        2tpkrj0xVzsuDMNLSzcYRHeRc++mZUkP/p1Zr/XrDy4sDOIRMV3y0Oec02zXN3mjWhRalH
+        5NfFnn1myK2ReLXGPEecxeBPIRIoJ1P2oQd1mgRLDWtGJhB30GAv6e8jq0eMvg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598990530;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=jgSfVN3YpVZ6JpX+NU+pZI0+w1g1cMMgKLi6CxrStU0=;
+        b=Lpw3BGSPDBGWg0fU1imYEz5fiIEdAHCeQ1KTGqKCwfci0GqE9wc7xsGT9Ox26yRIp2jtF7
+        uaIIkTRkpKF8pFAg==
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vineeth Pillai <viremana@linux.microsoft.com>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        Dhaval Giani <dhaval.giani@oracle.com>,
+        Chris Hyser <chris.hyser@oracle.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        mingo@kernel.org, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
+        keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
+        Chen Yu <yu.c.chen@intel.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Agata Gruza <agata.gruza@intel.com>,
+        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
+        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
+        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
+        Aubrey Li <aubrey.li@linux.intel.com>,
+        Tim Chen <tim.c.chen@intel.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [RFC PATCH v7 17/23] kernel/entry: Add support for core-wide protection of kernel-mode
+In-Reply-To: <20200901165052.GA1662854@google.com>
+References: <cover.1598643276.git.jdesfossez@digitalocean.com> <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com> <87y2lth4qa.fsf@nanos.tec.linutronix.de> <20200901165052.GA1662854@google.com>
+Date:   Tue, 01 Sep 2020 22:02:10 +0200
+Message-ID: <875z8xl0zh.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <4eeefb43-488c-dc90-f47c-10defe6f9278@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 8:52 AM, Jens Axboe wrote:
-> On 8/31/20 10:59 PM, yinxin_1989 wrote:
->>
->>> On 8/31/20 7:54 PM, Xin Yin wrote:
->>>> the commit <1c4404efcf2c0> ("<io_uring: make sure async workqueue
->>>> is canceled on exit>") caused a crash in io_sq_wq_submit_work().
->>>> when io_ring-wq get a req form async_list, which may not have been
->>>> added to task_list. Then try to delete the req from task_list will caused
->>>> a "NULL pointer dereference".
->>>
->>> Hmm, do you have a reproducer for this?
->>
->> I update code to linux5.4.y , and I can reproduce this issue on an arm
->> board and my x86 pc by fio tools.
-> 
-> Right, I figured this was 5.4 stable, as that's the only version that
-> has this patch.
+Joel,
 
-I took a closer look, and I think your patch can basically be boiled down
-to this single hunk. If you agree, can you resend your patch with the
-description based on that, then I'll get it queued up for 5.4-stable.
-Thanks!
+On Tue, Sep 01 2020 at 12:50, Joel Fernandes wrote:
+> On Tue, Sep 01, 2020 at 05:54:53PM +0200, Thomas Gleixner wrote:
+>> On Fri, Aug 28 2020 at 15:51, Julien Desfossez wrote:
+>> >  		/*
+>> > -		 * Disable interrupts and reevaluate the work flags as they
+>> > -		 * might have changed while interrupts and preemption was
+>> > -		 * enabled above.
+>> > +		 * Reevaluate the work flags as they might have changed
+>> > +		 * while interrupts and preemption were enabled.
+>> 
+>> What enables preemption and interrupts? Can you pretty please write
+>> comments which explain what's going on.
+>
+> Yes, sorry. So, sched_core_unsafe_exit_wait() will spin with IRQs enabled and
+> preemption disabled. I did it this way to get past stop_machine() issues
+> where you were unhappy with us spinning in IRQ disabled region.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index fada14ee1cdc..cbbcd85780c4 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2378,6 +2378,16 @@ static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
- 		list_del_init(&req->list);
- 		ret = false;
- 	}
+So the comment is even more nonsensical :)
+
+>> > -	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
+>> > -		ti_work = exit_to_user_mode_loop(regs, ti_work);
+>> > +	ti_work = exit_to_user_mode_loop(regs);
+>> 
+>> Why has the above loop to be invoked unconditionally even when that core
+>> scheduling muck is disabled? Just to make all return to user paths more
+>> expensive unconditionally, right?
+>
+> If you see the above loop, we are calling exit_to_user_mode_work()
+> conditionally by calling exit_to_user_mode_work_pending() which does the same
+> thing.
+
+It does the same thing technically, but the fastpath, i.e. no work to
+do, is not longer straight forward. Just look at the resulting ASM
+before and after. It's awful.
+
+> So we are still conditionally doing the usual exit_to_user_mode work, its
+> just that now we have to unconditionally invoke the 'loop' anyway.
+
+No.
+
+> The reason for that is, the loop can switch into another thread, so we
+> have to do unsafe_exit() for the old thread, and unsafe_enter() for
+> the new one while handling the tif work properly. We could get
+> migrated to another CPU in this loop itself, AFAICS. So the
+> unsafe_enter() / unsafe_exit() calls could also happen on different
+> CPUs.
+
+That's fine. It still does not justify to make everything slower even if
+that 'pretend that HT is secure' thing is disabled.
+
+Something like the below should be sufficient to do what you want
+while restricting the wreckage to the 'pretend ht is secure' case.
+
+The generated code for the CONFIG_PRETENT_HT_SECURE=n case is the same
+as without the patch. With CONFIG_PRETENT_HT_SECURE=y the impact is
+exactly two NOP-ed out jumps if the muck is not enabled on the command
+line which should be the default behaviour.
+
+Thanks,
+
+        tglx
+
+---
+--- /dev/null
++++ b/include/linux/pretend_ht_secure.h
+@@ -0,0 +1,21 @@
++#ifndef _LINUX_PRETEND_HT_SECURE_H
++#define _LINUX_PRETEND_HT_SECURE_H
 +
-+	if (ret) {
-+		struct io_ring_ctx *ctx = req->ctx;
-+		unsigned long flags;
++#ifdef CONFIG_PRETEND_HT_SECURE
++static inline void enter_from_user_ht_sucks(void)
++{
++	if (static_branch_unlikely(&pretend_ht_secure_key))
++		enter_from_user_pretend_ht_is_secure();
++}
 +
-+		spin_lock_irqsave(&ctx->task_lock, flags);
-+		list_add(&req->task_list, &ctx->task_list);
-+		req->work_task = NULL;
-+		spin_unlock_irqrestore(&ctx->task_lock, flags);
-+	}
- 	spin_unlock(&list->lock);
- 	return ret;
++static inline void exit_to_user_ht_sucks(void)
++{
++	if (static_branch_unlikely(&pretend_ht_secure_key))
++		exit_to_user_pretend_ht_is_secure();
++}
++#else
++static inline void enter_from_user_ht_sucks(void) { }
++static inline void exit_to_user_ht_sucks(void) { }
++#endif
++
++#endif
+--- a/kernel/entry/common.c
++++ b/kernel/entry/common.c
+@@ -17,6 +17,7 @@
+  * 1) Tell lockdep that interrupts are disabled
+  * 2) Invoke context tracking if enabled to reactivate RCU
+  * 3) Trace interrupts off state
++ * 4) Pretend that HT is secure
+  */
+ static __always_inline void enter_from_user_mode(struct pt_regs *regs)
+ {
+@@ -28,6 +29,7 @@ static __always_inline void enter_from_u
+ 
+ 	instrumentation_begin();
+ 	trace_hardirqs_off_finish();
++	enter_from_user_ht_sucks();
+ 	instrumentation_end();
  }
-
--- 
-Jens Axboe
-
+ 
+@@ -111,6 +113,12 @@ static __always_inline void exit_to_user
+ /* Workaround to allow gradual conversion of architecture code */
+ void __weak arch_do_signal(struct pt_regs *regs) { }
+ 
++static inline unsigned long exit_to_user_get_work(void)
++{
++	exit_to_user_ht_sucks();
++	return READ_ONCE(current_thread_info()->flags);
++}
++
+ static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
+ 					    unsigned long ti_work)
+ {
+@@ -149,7 +157,7 @@ static unsigned long exit_to_user_mode_l
+ 		 * enabled above.
+ 		 */
+ 		local_irq_disable_exit_to_user();
+-		ti_work = READ_ONCE(current_thread_info()->flags);
++		ti_work = exit_to_user_get_work();
+ 	}
+ 
+ 	/* Return the latest work state for arch_exit_to_user_mode() */
+@@ -158,7 +166,7 @@ static unsigned long exit_to_user_mode_l
+ 
+ static void exit_to_user_mode_prepare(struct pt_regs *regs)
+ {
+-	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
++	unsigned long ti_work = exit_to_user_get_work();
+ 
+ 	lockdep_assert_irqs_disabled();
+ 
