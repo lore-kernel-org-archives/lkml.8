@@ -2,136 +2,107 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C33C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC60C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:10:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E71932083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D21D2083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:10:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726518AbgIAJJG convert rfc822-to-8bit (ORCPT
+        id S1726266AbgIAJKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:09:06 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:59782 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726515AbgIAJJD (ORCPT
+        Tue, 1 Sep 2020 05:10:12 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:52458 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgIAJKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:09:03 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-283-TOoGT-t2Oa-s63UZlOFx8A-1; Tue, 01 Sep 2020 10:07:44 +0100
-X-MC-Unique: TOoGT-t2Oa-s63UZlOFx8A-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 1 Sep 2020 10:07:42 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 1 Sep 2020 10:07:42 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Joe Perches' <joe@perches.com>, Denis Efremov <efremov@linux.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Julia Lawall <julia.lawall@inria.fr>,
-        Alex Dewar <alex.dewar90@gmail.com>
-CC:     York Sun <york.sun@nxp.com>, Borislav Petkov <bp@alien8.de>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        "James Morse" <james.morse@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        "Maxim Levitsky" <maximlevitsky@gmail.com>,
-        Alex Dubov <oakad@yahoo.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "Arnd Bergmann" <arnd@arndb.de>,
-        Madalin Bucur <madalin.bucur@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "Douglas Miller" <dougmill@linux.ibm.com>,
-        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        =?iso-8859-1?Q?Kai_M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Mark Brown <broonie@kernel.org>,
-        Oliver Neukum <oneukum@suse.com>,
-        Pete Zaitcev <zaitcev@redhat.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "platform-driver-x86@vger.kernel.org" 
-        <platform-driver-x86@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Subject: RE: sysfs output without newlines
-Thread-Topic: sysfs output without newlines
-Thread-Index: AQHWfkO/+C/EB0p8Hk2MEQnp7JjooqlTgZKw
-Date:   Tue, 1 Sep 2020 09:07:42 +0000
-Message-ID: <5f0b48e0291b4b54bc1caeb8b5715c65@AcuMS.aculab.com>
-References: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
-         <4cd6275c-6e95-3aeb-9924-141f62e00449@linux.com>
- <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel@perches.com>
-In-Reply-To: <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel@perches.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 1 Sep 2020 05:10:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 50D5F28C318
+Subject: Re: [PATCH v5 0/7] platform/chrome: cros_ec_proto: Convert EC error
+ codes to Linux error codes
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Benson Leung <bleung@chromium.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>,
+        linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200822150857.205775-1-linux@roeck-us.net>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <5fe68c6d-ae3d-e756-ca5d-873f3ca1cc45@collabora.com>
+Date:   Tue, 1 Sep 2020 11:10:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.001
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20200822150857.205775-1-linux@roeck-us.net>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches
-> Sent: 29 August 2020 21:34
-...
-> > On 8/29/20 9:23 PM, Joe Perches wrote:
-> > > While doing an investigation for a possible treewide conversion of
-> > > sysfs output using sprintf/snprintf/scnprintf, I discovered
-> > > several instances of sysfs output without terminating newlines.
-> > >
-> > > It seems likely all of these should have newline terminations
-> > > or have the \n\r termination changed to a single newline.
-> >
-> > I think that it could break badly written scripts in rare cases.
+Dear all,
+
+On 22/8/20 17:08, Guenter Roeck wrote:
+> The EC reports a variety of error codes. Most of those, with the exception
+> of EC_RES_INVALID_VERSION, are converted to -EPROTO. As result, the actual
+> error code gets lost. In cros_ec_cmd_xfer_status(), convert all EC errors
+> to Linux error codes to report a more meaningful error to the caller to aid
+> debugging.
 > 
-> Maybe.
+> To prepare for this change, handle error codes other than -EPROTO for all
+> callers of cros_ec_cmd_xfer_status(). Specifically, no longer assume that
+> -EPROTO reflects an error from the EC and all other error codes reflect a
+> transfer error.
 > 
-> Is sysfs output a nominally unchangeable api like seq_?
-> Dunno.  seq_ output is extended all the time.
+> v2: Add patches 1/4 to 3/4 to handle callers of cros_ec_cmd_xfer_status()
+> v3: Add patches 4/6 and 5/6 to handle additional callers of
+> 	cros_ec_cmd_xfer_status()
+>     Use -ENOPROTOOPT for EC_RES_INVALID_VERSION
+>     Implement function to convert error codes
+> v4: Add coments describing the functionality of cros_ec_num_pwms().
+>     Add patch 7/7 to clean up cros_ec_num_pwms() after the new error code
+>     support has been implemented.
+>     Rebased series to v5.8.
+> v5: If there is no error, cros_ec_cmd_xfer_status() needs to return the
+>     number of received bytes, not 0. While fixing that (in patch 6/7),
+>     rearranged the function to reduce its indentation.
+>     Rebased series to v5.9-rc1
 > 
-> I think whitespace isn't generally considered part of
-> sscanf type input content awareness.
+> ----------------------------------------------------------------
+> Guenter Roeck (7):
+>       iio: cros_ec: Accept -EOPNOTSUPP as 'not supported' error code
+>       cros_ec_lightbar: Accept more error codes from cros_ec_cmd_xfer_status
+>       platform/chrome: cros_ec_sysfs: Report range of error codes from EC
+>       pwm: cros-ec: Accept more error codes from cros_ec_cmd_xfer_status
+>       platform/input: cros_ec: Replace -ENOTSUPP with -ENOPROTOOPT
+>       platform/chrome: cros_ec_proto: Convert EC error codes to Linux error codes
+>       pwm: cros-ec: Simplify EC error handling
+> 
+>  .../iio/common/cros_ec_sensors/cros_ec_sensors.c   |  2 +-
+>  drivers/input/keyboard/cros_ec_keyb.c              |  2 +-
+>  drivers/platform/chrome/cros_ec_lightbar.c         | 10 ++--
+>  drivers/platform/chrome/cros_ec_proto.c            | 57 +++++++++++++++++-----
+>  drivers/platform/chrome/cros_ec_sysfs.c            | 24 ++++-----
+>  drivers/pwm/pwm-cros-ec.c                          | 37 +++++++-------
+>  6 files changed, 78 insertions(+), 54 deletions(-)
+> 
 
-The shell will remove trailing '\n' (but not '\r') from:
-	foo=$(cat bar)
-So shell scripts are unlikely to be affected.
+I applied all the patches and queued for 5.10 in the chrome-platform tree. If at
+some point we need to create an immutable branch I can provide it.
 
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
-
+Thanks,
+ Enric
