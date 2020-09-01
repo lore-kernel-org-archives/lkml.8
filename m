@@ -2,93 +2,241 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 339E1C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB9FC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BCB0206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:03:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9A0206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="QSlvYWiA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m+/3w5yO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728656AbgIAPDw (ORCPT
+        id S1727116AbgIAPEw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:03:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50096 "EHLO
+        Tue, 1 Sep 2020 11:04:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726285AbgIAPDt (ORCPT
+        with ESMTP id S1726255AbgIAPEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:03:49 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 649ACC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:03:49 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id d27so1112333qtg.4
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:03:49 -0700 (PDT)
+        Tue, 1 Sep 2020 11:04:46 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D18FAC061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:04:45 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id t23so1944322ljc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:04:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=mAaL6U+iakwGOs+fKr9GVAdl6EHOJaIxZ7vvSFP7iy4=;
-        b=QSlvYWiApz3Il7TzqFB1RZN0q7RWIwkf5QFz7RNkzlO+xImve52k6f+ehFMq4/w1+2
-         zGfYq/J/yn1WLm1/nerm9ZFIcBt9/aMtnrc4is0GNCBmR1gLKui/4PSJTm+KF8St48kS
-         kCpHlHeOQf+F+xrvfkYYAFeZDgUosGYBaSkSeZWXRVKKIp+E7vgt8D6VzlxFKpXBkCi5
-         6vokKRH5obxIM3wov/h7MeIAyGdI4EWOPPyLFoG0YFf8JrTfshxGr7viaB/R/Gi12gKQ
-         VzPDKb7+RQkpyvxykXHJ/rcMXnf28rZVX0VUzRl7OdcwNyphjQ5LxOwG7fT3tbz9hDnU
-         GgzQ==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Hb7r+KvjTn1fI1bbdwQosrAVf1D62HZ/qglZn6BY0k=;
+        b=m+/3w5yOKIp+/HPKm5IajyrPUsIvE8lLsvQ79OvZJQRYCtuwvb4+uKOHzhkZdtyDvG
+         8ytnhGluUZyOvgxu7tBXHoYaVE9LR0jS3S0zPuFPezUVejN04RwSEU2O+4r62XT72rWJ
+         rxi9/tfvaeJjuJsMEHLb1miKfjis8nxWHP2IvstsP/ztWqEwa+uQGI3FlyX4hLHBFibM
+         QmyTL9G5958Aur90NMzdNQBJyHz7Pjgb66D9VqpyoTM2HP+78fY/eTDuw38p6aCMx/uS
+         vsRngVRRVu4LsGmIvOs7lQaPVULqD6iAGAoa4Ivt1ar8HEb6G0kzZWdQRC9QtZmd+stx
+         u5dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mAaL6U+iakwGOs+fKr9GVAdl6EHOJaIxZ7vvSFP7iy4=;
-        b=gu0tHS9VQjaSHtrHExS2qwX0FU09A5IS842qMhigH2TJH5ZwkwevD/IxbnuKK1xI6U
-         M0IKMxBCwmrg5ioBBZ01nMxTuManIS/ut+kfXPoz4MC53tIJZjXJw6MA80WDzGu+f6FV
-         a5CJnk+YJ50tP/hfjGXXSs6TDl3df6tt87NYrQ5zPeSJOEiAZadEWlQ3ch0rJRBvVqR1
-         cfdMxTnXHK4D4jzbLyFg9YcBHRjnv9F20ku1Q6MJ/yl3z9wfmCoaAOaJYuWYEWq7+Y5N
-         rIcHZiwtGXS+FvT239GmufWTN1+pGOUmakAzh925+mCLWDL01QInIeHycow+Y4GJIGXl
-         xSuQ==
-X-Gm-Message-State: AOAM5314AOngUSO43MFlkqQGtJDDcLBLnIn7AGqR1Dyi8gz1GIEawBtN
-        4VmSzhiBzd9YefNYM3b5UA4isw==
-X-Google-Smtp-Source: ABdhPJyJ/mmJ7wKiwiGfXg73+aLX68eKTyDwVHU8p4OwQPU3PwpkwjigQ67x+5KcBMyhz0Rfo3liRA==
-X-Received: by 2002:aed:362a:: with SMTP id e39mr2192152qtb.121.1598972628686;
-        Tue, 01 Sep 2020 08:03:48 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:fc60])
-        by smtp.gmail.com with ESMTPSA id s20sm1852279qkg.65.2020.09.01.08.03.47
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8Hb7r+KvjTn1fI1bbdwQosrAVf1D62HZ/qglZn6BY0k=;
+        b=UJMMwqYMPku9F6IErAEWhG8azqIDMMypSreT0s2e0abmQIr+5qIyvzaZEWwpKc1abZ
+         EYRxU3Fg9Iy1/l9jjfxEQfVJXAMF7TnKRnaMHHiYeZW4ogWQfZGbj0d/u7aMavr8S7+f
+         NCnrsHJX7s4oSCZRHSwC9JmBPbvb0cgzp3K+3mq+sQUh+qATS6IxC8siKz4hKKBZ91BH
+         wghvK8DMSLAvQPuJqNeFdpnuV+s2OH4l+A2WTsYKRiZZBGGpUd4LzLIkXSCbGHzdOQm/
+         vSYQ3WGKkqXBYXksjfD9bym/1NU1bRCXib4Evp5CnkUxTKzAClYiX7zPGibQuUSSrug6
+         uGNQ==
+X-Gm-Message-State: AOAM533ao/FKijBd23yJVvZiSMMDwmwvr351en9aybBQecfo6sPGZiTf
+        8OzlO7mHWEZ57BZHY7CVw0DRKA==
+X-Google-Smtp-Source: ABdhPJyPDO/atWKWL3yuF/BeRjbDONzlDxLqDuMjYm7EAhe/rsnhsSpu+ZmNGswu0PCPqQG6Q7AOVg==
+X-Received: by 2002:a05:651c:1122:: with SMTP id e2mr834205ljo.36.1598972683228;
+        Tue, 01 Sep 2020 08:04:43 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-180-79.NA.cust.bahnhof.se. [98.128.180.79])
+        by smtp.gmail.com with ESMTPSA id u11sm328651ljh.17.2020.09.01.08.04.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 08:03:48 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 11:02:32 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 2/5] mm: migration of hugetlbfs page skip memcg
-Message-ID: <20200901150232.GB45118@cmpxchg.org>
-References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
- <alpine.LSU.2.11.2008301359460.5954@eggly.anvils>
+        Tue, 01 Sep 2020 08:04:42 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     linux-mmc@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>,
+        Rich Felker <dalias@libc.org>, Christoph Hellwig <hch@lst.de>
+Cc:     Mark Brown <broonie@kernel.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when CONFIG_HAS_DMA is unset
+Date:   Tue,  1 Sep 2020 17:04:38 +0200
+Message-Id: <20200901150438.228887-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2008301359460.5954@eggly.anvils>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 02:01:30PM -0700, Hugh Dickins wrote:
-> hugetlbfs pages do not participate in memcg: so although they do find
-> most of migrate_page_states() useful, it would be better if they did
-> not call into mem_cgroup_migrate() - where Qian Cai reported that LTP's
-> move_pages12 triggers the warning in Alex Shi's prospective commit
-> "mm/memcg: warning on !memcg after readahead page charged".
-> 
-> Signed-off-by: Hugh Dickins <hughd@google.com>
+The commit cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU") made
+CONFIG_NO_DMA to be set for some platforms, for good reasons.
+Consequentially, CONFIG_HAS_DMA doesn't get set, which makes the DMA
+mapping interface to be built as stub functions, but also prevent the
+mmc_spi driver from being built as it depends on CONFIG_HAS_DMA.
 
-Acked-by: Johannes Weiner <hannes@cmpxch.org>
+It turns out that for some odd cases, the driver still relied on the DMA
+mapping interface, even if the DMA was not actively being used.
+
+To fixup the behaviour, let's drop the build dependency for CONFIG_HAS_DMA.
+Moreover, as to allow the driver to succeed probing, let's move the DMA
+initializations behind "#ifdef CONFIG_HAS_DMA".
+
+Fixes: cd57d07b1e4e ("sh: don't allow non-coherent DMA for NOMMU")
+Reported-by: Rich Felker <dalias@libc.org>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+
+Changes in v2:
+	- Drop build dependency to CONFIG_HAS_DMA.
+	- Rephrase commit message and its header, to reflect the updated change.
+
+---
+ drivers/mmc/host/Kconfig   |  2 +-
+ drivers/mmc/host/mmc_spi.c | 86 +++++++++++++++++++++++---------------
+ 2 files changed, 53 insertions(+), 35 deletions(-)
+
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 9c89a5b780e8..9a34c827c96e 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -602,7 +602,7 @@ config MMC_GOLDFISH
+ 
+ config MMC_SPI
+ 	tristate "MMC/SD/SDIO over SPI"
+-	depends on SPI_MASTER && HAS_DMA
++	depends on SPI_MASTER
+ 	select CRC7
+ 	select CRC_ITU_T
+ 	help
+diff --git a/drivers/mmc/host/mmc_spi.c b/drivers/mmc/host/mmc_spi.c
+index 39bb1e30c2d7..5055a7eb134a 100644
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1278,6 +1278,52 @@ mmc_spi_detect_irq(int irq, void *mmc)
+ 	return IRQ_HANDLED;
+ }
+ 
++#ifdef CONFIG_HAS_DMA
++static int mmc_spi_dma_alloc(struct mmc_spi_host *host)
++{
++	struct spi_device *spi = host->spi;
++	struct device *dev;
++
++	if (!spi->master->dev.parent->dma_mask)
++		return 0;
++
++	dev = spi->master->dev.parent;
++
++	host->ones_dma = dma_map_single(dev, host->ones, MMC_SPI_BLOCKSIZE,
++					DMA_TO_DEVICE);
++	if (dma_mapping_error(dev, host->ones_dma))
++		return -ENOMEM;
++
++	host->data_dma = dma_map_single(dev, host->data, sizeof(*host->data),
++					DMA_BIDIRECTIONAL);
++	if (dma_mapping_error(dev, host->data_dma)) {
++		dma_unmap_single(dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
++				 DMA_TO_DEVICE);
++		return -ENOMEM;
++	}
++
++	dma_sync_single_for_cpu(dev, host->data_dma, sizeof(*host->data),
++				DMA_BIDIRECTIONAL);
++
++	host->dma_dev = dev;
++	return 0;
++}
++
++static void mmc_spi_dma_free(struct mmc_spi_host *host)
++{
++	if (!host->dma_dev)
++		return;
++
++	dma_unmap_single(host->dma_dev, host->ones_dma, MMC_SPI_BLOCKSIZE,
++			 DMA_TO_DEVICE);
++	dma_unmap_single(host->dma_dev, host->data_dma,	sizeof(*host->data),
++			 DMA_BIDIRECTIONAL);
++}
++#else
++static inline mmc_spi_dma_alloc(struct mmc_spi_host *host) { return 0; }
++static inline void mmc_spi_dma_free(struct mmc_spi_host *host) {}
++#endif
++
+ static int mmc_spi_probe(struct spi_device *spi)
+ {
+ 	void			*ones;
+@@ -1374,23 +1420,9 @@ static int mmc_spi_probe(struct spi_device *spi)
+ 	if (!host->data)
+ 		goto fail_nobuf1;
+ 
+-	if (spi->master->dev.parent->dma_mask) {
+-		struct device	*dev = spi->master->dev.parent;
+-
+-		host->dma_dev = dev;
+-		host->ones_dma = dma_map_single(dev, ones,
+-				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+-		if (dma_mapping_error(dev, host->ones_dma))
+-			goto fail_ones_dma;
+-		host->data_dma = dma_map_single(dev, host->data,
+-				sizeof(*host->data), DMA_BIDIRECTIONAL);
+-		if (dma_mapping_error(dev, host->data_dma))
+-			goto fail_data_dma;
+-
+-		dma_sync_single_for_cpu(host->dma_dev,
+-				host->data_dma, sizeof(*host->data),
+-				DMA_BIDIRECTIONAL);
+-	}
++	status = mmc_spi_dma_alloc(host);
++	if (status)
++		goto fail_dma;
+ 
+ 	/* setup message for status/busy readback */
+ 	spi_message_init(&host->readback);
+@@ -1458,20 +1490,12 @@ static int mmc_spi_probe(struct spi_device *spi)
+ fail_add_host:
+ 	mmc_remove_host(mmc);
+ fail_glue_init:
+-	if (host->dma_dev)
+-		dma_unmap_single(host->dma_dev, host->data_dma,
+-				sizeof(*host->data), DMA_BIDIRECTIONAL);
+-fail_data_dma:
+-	if (host->dma_dev)
+-		dma_unmap_single(host->dma_dev, host->ones_dma,
+-				MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+-fail_ones_dma:
++	mmc_spi_dma_free(host);
++fail_dma:
+ 	kfree(host->data);
+-
+ fail_nobuf1:
+ 	mmc_free_host(mmc);
+ 	mmc_spi_put_pdata(spi);
+-
+ nomem:
+ 	kfree(ones);
+ 	return status;
+@@ -1489,13 +1513,7 @@ static int mmc_spi_remove(struct spi_device *spi)
+ 
+ 	mmc_remove_host(mmc);
+ 
+-	if (host->dma_dev) {
+-		dma_unmap_single(host->dma_dev, host->ones_dma,
+-			MMC_SPI_BLOCKSIZE, DMA_TO_DEVICE);
+-		dma_unmap_single(host->dma_dev, host->data_dma,
+-			sizeof(*host->data), DMA_BIDIRECTIONAL);
+-	}
+-
++	mmc_spi_dma_free(host);
+ 	kfree(host->data);
+ 	kfree(host->ones);
+ 
+-- 
+2.25.1
+
