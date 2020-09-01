@@ -2,265 +2,126 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12776C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BFBC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D7440206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E18952078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:16:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="G6jPiXec"
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="MGUliN1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgIAUQa (ORCPT
+        id S1729201AbgIAUQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:16:30 -0400
-Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:54271 "EHLO
-        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729154AbgIAUPv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:15:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1598991351; x=1630527351;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=Ph/A67bIhyw6DFbl4Ir4VqjT1J/KB7CX/pltexmW3mY=;
-  b=G6jPiXec93zy+9eWo+qGeebesm4CkoLRplQ5s5G7txqJAUIxhHQBY2Ur
-   /4A4FKb6nUbW+NaCzXheZqphX/VQJdXzHXuSIJ3z/ufwMSfqnNqiQ68Gn
-   1L4Em0bvSTTMM/hh4T9cvyQHnmAFVIceSA8R0OBzBc0vMy4r+SdAv92EN
-   w=;
-X-IronPort-AV: E=Sophos;i="5.76,380,1592870400"; 
-   d="scan'208";a="72781470"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 01 Sep 2020 20:15:46 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id A56CAA1887;
-        Tue,  1 Sep 2020 20:15:42 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 1 Sep 2020 20:15:41 +0000
-Received: from u79c5a0a55de558.ant.amazon.com (10.43.160.229) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 1 Sep 2020 20:15:38 +0000
-From:   Alexander Graf <graf@amazon.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     Jonathan Corbet <corbet@lwn.net>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        "Joerg Roedel" <joro@8bytes.org>,
-        KarimAllah Raslan <karahmed@amazon.de>,
-        Aaron Lewis <aaronlewis@google.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 4/7] KVM: x86: SVM: Prevent MSR passthrough when MSR access is denied
-Date:   Tue, 1 Sep 2020 22:15:14 +0200
-Message-ID: <20200901201517.29086-5-graf@amazon.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901201517.29086-1-graf@amazon.com>
-References: <20200901201517.29086-1-graf@amazon.com>
+        Tue, 1 Sep 2020 16:16:56 -0400
+Received: from mx4.wp.pl ([212.77.101.11]:13869 "EHLO mx4.wp.pl"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728580AbgIAUQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 16:16:56 -0400
+Received: (wp-smtpd smtp.wp.pl 21030 invoked from network); 1 Sep 2020 22:16:53 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1598991413; bh=VolP2AdWJDNHJUxzl2uH3Tf1xodNxV4v/c7KNG3s6dM=;
+          h=From:To:Cc:Subject;
+          b=MGUliN1VCS1LL2fiONrnIleoysVx67v0G6wvxQ0gZK6rZ9NfHeXyja5+YFH5sQAHq
+           FOc3Tw/3w/d21nYMGzpW+UPDiwscf0dcKMms4oiddJWZcJIXtRs7j9b9eTgilBg+zk
+           M6ksyD1h/ayE8jaQGCtcuL0/qAXmE/xXKzp9G4ds=
+Received: from 188.146.102.178.nat.umts.dynamic.t-mobile.pl (HELO localhost) (antoni.przybylik@wp.pl@[188.146.102.178])
+          (envelope-sender <antoni.przybylik@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <gregkh@linuxfoundation.org>; 1 Sep 2020 22:16:53 +0200
+From:   Antoni Przybylik <antoni.przybylik@wp.pl>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Antoni Przybylik <antoni.przybylik@wp.pl>
+Subject: [PATCH] staging: gdm724x: gdm_tty: replaced macro with a function
+Date:   Tue,  1 Sep 2020 22:16:26 +0200
+Message-Id: <20200901201626.75405-1-antoni.przybylik@wp.pl>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.43.160.229]
-X-ClientProxiedBy: EX13D18UWC001.ant.amazon.com (10.43.162.105) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                      
+X-WP-MailID: 44cd1ac88d72e20bcf7ed632bb54e9df
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000002 [cXER]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We will introduce the concept of MSRs that may not be handled in kernel
-space soon. Some MSRs are directly passed through to the guest, effectively
-making them handled by KVM from user space's point of view.
+This approach is more elegant and prevents some problems related to
+macros such as operator precedence in expanded expression.
 
-This patch introduces all logic required to ensure that MSRs that
-user space wants trapped are not marked as direct access for guests.
-
-Signed-off-by: Alexander Graf <graf@amazon.com>
+Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
 ---
- arch/x86/kvm/svm/svm.c | 78 +++++++++++++++++++++++++++++++++++++-----
- arch/x86/kvm/svm/svm.h |  7 ++++
- 2 files changed, 77 insertions(+), 8 deletions(-)
+ drivers/staging/gdm724x/gdm_tty.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index eb673b59f7b7..6a3f4017dd98 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -91,7 +91,7 @@ static DEFINE_PER_CPU(u64, current_tsc_ratio);
- static const struct svm_direct_access_msrs {
- 	u32 index;   /* Index of the MSR */
- 	bool always; /* True if intercept is always on */
--} direct_access_msrs[] = {
-+} direct_access_msrs[MAX_DIRECT_ACCESS_MSRS] = {
- 	{ .index = MSR_STAR,				.always = true  },
- 	{ .index = MSR_IA32_SYSENTER_CS,		.always = true  },
- #ifdef CONFIG_X86_64
-@@ -553,15 +553,40 @@ static int svm_cpu_init(int cpu)
+diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
+index 6e813693a766..c19d82a6f25e 100644
+--- a/drivers/staging/gdm724x/gdm_tty.c
++++ b/drivers/staging/gdm724x/gdm_tty.c
+@@ -27,8 +27,6 @@
  
- }
+ #define MUX_TX_MAX_SIZE 2048
  
--static bool valid_msr_intercept(u32 index)
-+static int direct_access_msr_idx(u32 msr)
- {
--	int i;
-+	u32 i;
+-#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
+-
+ static struct tty_driver *gdm_driver[TTY_MAX_COUNT];
+ static struct gdm *gdm_table[TTY_MAX_COUNT][GDM_TTY_MINOR];
+ static DEFINE_MUTEX(gdm_table_lock);
+@@ -36,6 +34,11 @@ static DEFINE_MUTEX(gdm_table_lock);
+ static const char *DRIVER_STRING[TTY_MAX_COUNT] = {"GCTATC", "GCTDM"};
+ static char *DEVICE_STRING[TTY_MAX_COUNT] = {"GCT-ATC", "GCT-DM"};
  
- 	for (i = 0; direct_access_msrs[i].index != MSR_INVALID; i++)
--		if (direct_access_msrs[i].index == index)
--			return true;
-+		if (direct_access_msrs[i].index == msr)
-+			return i;
- 
--	return false;
-+	return -EINVAL;
++static int gdm_tty_ready(struct gdm *gdm)
++{
++	return (gdm && gdm->tty_dev && gdm->port.count);
 +}
 +
-+static void set_shadow_msr_intercept(struct vcpu_svm *svm, u32 msr, int read,
-+				     int write)
-+{
-+	int idx = direct_access_msr_idx(msr);
-+
-+	if (idx == -EINVAL)
-+		return;
-+
-+	/* Set the shadow bitmaps to the desired intercept states */
-+	if (read)
-+		set_bit(idx, svm->shadow_msr_intercept.read);
-+	else
-+		clear_bit(idx, svm->shadow_msr_intercept.read);
-+
-+	if (write)
-+		set_bit(idx, svm->shadow_msr_intercept.write);
-+	else
-+		clear_bit(idx, svm->shadow_msr_intercept.write);
-+}
-+
-+static bool valid_msr_intercept(u32 index)
-+{
-+	return direct_access_msr_idx(index) != -EINVAL;
- }
- 
- static bool msr_write_intercepted(struct kvm_vcpu *vcpu, u32 msr)
-@@ -583,8 +608,8 @@ static bool msr_write_intercepted(struct kvm_vcpu *vcpu, u32 msr)
- 	return !!test_bit(bit_write,  &tmp);
- }
- 
--static void set_msr_interception(struct kvm_vcpu *vcpu, u32 msr, int read,
--				 int write)
-+static void set_msr_interception_nosync(struct kvm_vcpu *vcpu, u32 msr,
-+					int read, int write)
+ static void gdm_port_destruct(struct tty_port *port)
  {
- 	struct vcpu_svm *svm = to_svm(vcpu);
- 	u32 *msrpm = svm->msrpm;
-@@ -598,6 +623,13 @@ static void set_msr_interception(struct kvm_vcpu *vcpu, u32 msr, int read,
- 	 */
- 	WARN_ON(!valid_msr_intercept(msr));
- 
-+	/* Enforce non allowed MSRs to trap */
-+	if (read && !kvm_msr_allowed(vcpu, msr, KVM_MSR_ALLOW_READ))
-+		read = 0;
-+
-+	if (write && !kvm_msr_allowed(vcpu, msr, KVM_MSR_ALLOW_WRITE))
-+		write = 0;
-+
- 	offset    = svm_msrpm_offset(msr);
- 	bit_read  = 2 * (msr & 0x0f);
- 	bit_write = 2 * (msr & 0x0f) + 1;
-@@ -611,6 +643,15 @@ static void set_msr_interception(struct kvm_vcpu *vcpu, u32 msr, int read,
- 	msrpm[offset] = tmp;
- }
- 
-+static void set_msr_interception(struct kvm_vcpu *vcpu, u32 msr, int read,
-+				 int write)
-+{
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+
-+	set_shadow_msr_intercept(svm, msr, read, write);
-+	set_msr_interception_nosync(vcpu, msr, read, write);
-+}
-+
- static void svm_vcpu_init_msrpm(struct kvm_vcpu *vcpu, u32 *msrpm)
+ 	struct gdm *gdm = container_of(port, struct gdm, port);
+@@ -119,7 +122,7 @@ static int gdm_tty_recv_complete(void *data,
  {
- 	int i;
-@@ -625,6 +666,25 @@ static void svm_vcpu_init_msrpm(struct kvm_vcpu *vcpu, u32 *msrpm)
- 	}
- }
+ 	struct gdm *gdm = tty_dev->gdm[index];
  
-+static void svm_msr_filter_changed(struct kvm_vcpu *vcpu)
-+{
-+	struct vcpu_svm *svm = to_svm(vcpu);
-+	u32 i;
-+
-+	/*
-+	 * Set intercept permissions for all direct access MSRs again. They
-+	 * will automatically get filtered through the MSR filter, so we are
-+	 * back in sync after this.
-+	 */
-+	for (i = 0; direct_access_msrs[i].index != MSR_INVALID; i++) {
-+		u32 msr = direct_access_msrs[i].index;
-+		u32 read = test_bit(i, svm->shadow_msr_intercept.read);
-+		u32 write = test_bit(i, svm->shadow_msr_intercept.write);
-+
-+		set_msr_interception_nosync(vcpu, msr, read, write);
-+	}
-+}
-+
- static void add_msr_offset(u32 offset)
+-	if (!GDM_TTY_READY(gdm)) {
++	if (!gdm_tty_ready(gdm)) {
+ 		if (complete == RECV_PACKET_PROCESS_COMPLETE)
+ 			gdm->tty_dev->recv_func(gdm->tty_dev->priv_dev,
+ 						gdm_tty_recv_complete);
+@@ -146,7 +149,7 @@ static void gdm_tty_send_complete(void *arg)
  {
- 	int i;
-@@ -4088,6 +4148,8 @@ static struct kvm_x86_ops svm_x86_ops __initdata = {
- 	.need_emulation_on_page_fault = svm_need_emulation_on_page_fault,
+ 	struct gdm *gdm = arg;
  
- 	.apic_init_signal_blocked = svm_apic_init_signal_blocked,
-+
-+	.msr_filter_changed = svm_msr_filter_changed,
- };
+-	if (!GDM_TTY_READY(gdm))
++	if (!gdm_tty_ready(gdm))
+ 		return;
  
- static struct kvm_x86_init_ops svm_init_ops __initdata = {
-diff --git a/arch/x86/kvm/svm/svm.h b/arch/x86/kvm/svm/svm.h
-index 6ac4c00a5d82..4c387470c27f 100644
---- a/arch/x86/kvm/svm/svm.h
-+++ b/arch/x86/kvm/svm/svm.h
-@@ -31,6 +31,7 @@ static const u32 host_save_user_msrs[] = {
+ 	tty_port_tty_wakeup(&gdm->port);
+@@ -160,7 +163,7 @@ static int gdm_tty_write(struct tty_struct *tty, const unsigned char *buf,
+ 	int sent_len = 0;
+ 	int sending_len = 0;
  
- #define NR_HOST_SAVE_USER_MSRS ARRAY_SIZE(host_save_user_msrs)
+-	if (!GDM_TTY_READY(gdm))
++	if (!gdm_tty_ready(gdm))
+ 		return -ENODEV;
  
-+#define MAX_DIRECT_ACCESS_MSRS	15
- #define MSRPM_OFFSETS	16
- extern u32 msrpm_offsets[MSRPM_OFFSETS] __read_mostly;
- extern bool npt_enabled;
-@@ -161,6 +162,12 @@ struct vcpu_svm {
+ 	if (!len)
+@@ -187,7 +190,7 @@ static int gdm_tty_write_room(struct tty_struct *tty)
+ {
+ 	struct gdm *gdm = tty->driver_data;
  
- 	/* which host CPU was used for running this vcpu */
- 	unsigned int last_cpu;
-+
-+	/* Save desired MSR intercept (read: pass-through) state */
-+	struct {
-+		DECLARE_BITMAP(read, MAX_DIRECT_ACCESS_MSRS);
-+		DECLARE_BITMAP(write, MAX_DIRECT_ACCESS_MSRS);
-+	} shadow_msr_intercept;
- };
+-	if (!GDM_TTY_READY(gdm))
++	if (!gdm_tty_ready(gdm))
+ 		return -ENODEV;
  
- struct svm_cpu_data {
+ 	return WRITE_SIZE;
 -- 
-2.17.1
-
-
-
-
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
-
-
+2.28.0
 
