@@ -2,99 +2,87 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EC1C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F42BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 807E7206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9D19208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977744;
-	bh=WBAWP8txpeH9Pazy5YXen/TfY6UKlJXLsPE5CpfFVGI=;
+	s=default; t=1598977749;
+	bh=2TOcs6pEYZ/R2ZwIOWWycu5Eesv8Cv5fL5GCe6HBCDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pQMTOY8t/SxCU66UV6sj342hf0mgi02OWUtJlGWraManeq784QVgpnYsmY6camGRM
-	 7UCLIHTBakskmc8DmMKGuCyWvjowktQX5YOlBjDqFh3rJEiW438AnBvHnw67twrdkX
-	 R3CzCeM59ue1srE0RES/Kj73IXOXTudqy2STkycY=
+	b=dQnLJUD5q67G3ZUTisqqjcGLxZS+5qDz1e2KIelD5A3YJ8wsWILlU4E1+vT/I9gJo
+	 M4ASMKSMVasgOrNvGlkImluzyilbdEvLgGOO36YBffwU2DKGHxQB0xXs4AqayfVll/
+	 2NoAvZ8IgGxJvjpP59Xl+IUFphQC12kahnP1ilBo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbgIAPcA (ORCPT
+        id S1731370AbgIAQ3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:29:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730553AbgIAP3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:48 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730828AbgIAPb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:31:59 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08E0E2078B;
-        Tue,  1 Sep 2020 15:29:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 473702158C;
+        Tue,  1 Sep 2020 15:31:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974187;
-        bh=WBAWP8txpeH9Pazy5YXen/TfY6UKlJXLsPE5CpfFVGI=;
+        s=default; t=1598974319;
+        bh=2TOcs6pEYZ/R2ZwIOWWycu5Eesv8Cv5fL5GCe6HBCDY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d19DZ3Fp/4JOhkmuF5HGiD9iZPz1IYO54PacNxMYjB0T9apL+PMJ6D1YvTIaQzgX3
-         CRgtiyV31isnzrMcv9o3iSnjtGGLP37pNadwm7Nrxh+/ThUzhIR5IGZDuwGskvBtLP
-         RVwnoFTypkO448WXImhL+XFYM5RelgBvfHgZtLlA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Brazdil <dbrazdil@google.com>,
-        Marc Zyngier <maz@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/214] KVM: arm64: Fix symbol dependency in __hyp_call_panic_nvhe
-Date:   Tue,  1 Sep 2020 17:09:01 +0200
-Message-Id: <20200901150955.907938010@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=O4OLORC3rltkj827+yJajf2QcHJtT2oxnZTQsXi20OKUSQHgCT+wj0aGLff3EXq8i
+         nEtnJJJa63q1o7Dh3ts6vf1NyQn+wMbbX2s3okILwikBh4T+1xFOKTcxCDVWp69XFe
+         iaF2jvzo7AN1Rq3uyWHZ/QXW/iMUcTnYKzbB4/dw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 2/3] watchdog: davinci: Simplify with dev_err_probe()
+Date:   Tue,  1 Sep 2020 17:31:40 +0200
+Message-Id: <20200901153141.18960-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901153141.18960-1-krzk@kernel.org>
+References: <20200901153141.18960-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Brazdil <dbrazdil@google.com>
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-[ Upstream commit b38b298aa4397e2dc74a89b4dd3eac9e59b64c96 ]
-
-__hyp_call_panic_nvhe contains inline assembly which did not declare
-its dependency on the __hyp_panic_string symbol.
-
-The static-declared string has previously been kept alive because of a use in
-__hyp_call_panic_vhe. Fix this in preparation for separating the source files
-between VHE and nVHE when the two users land in two different compilation
-units. The static variable otherwise gets dropped when compiling the nVHE
-source file, causing an undefined symbol linker error later.
-
-Signed-off-by: David Brazdil <dbrazdil@google.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Link: https://lore.kernel.org/r/20200625131420.71444-2-dbrazdil@google.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/kvm/hyp/switch.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/davinci_wdt.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/kvm/hyp/switch.c b/arch/arm64/kvm/hyp/switch.c
-index d76a3d39b2699..6f4838b475d0d 100644
---- a/arch/arm64/kvm/hyp/switch.c
-+++ b/arch/arm64/kvm/hyp/switch.c
-@@ -754,7 +754,7 @@ static void __hyp_text __hyp_call_panic_nvhe(u64 spsr, u64 elr, u64 par,
- 	 * making sure it is a kernel address and not a PC-relative
- 	 * reference.
- 	 */
--	asm volatile("ldr %0, =__hyp_panic_string" : "=r" (str_va));
-+	asm volatile("ldr %0, =%1" : "=r" (str_va) : "S" (__hyp_panic_string));
+diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
+index 2b3f3cd382ef..e6eaba6bae5b 100644
+--- a/drivers/watchdog/davinci_wdt.c
++++ b/drivers/watchdog/davinci_wdt.c
+@@ -206,12 +206,9 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
  
- 	__hyp_do_panic(str_va,
- 		       spsr, elr,
+ 	davinci_wdt->clk = devm_clk_get(dev, NULL);
+-
+-	if (IS_ERR(davinci_wdt->clk)) {
+-		if (PTR_ERR(davinci_wdt->clk) != -EPROBE_DEFER)
+-			dev_err(dev, "failed to get clock node\n");
+-		return PTR_ERR(davinci_wdt->clk);
+-	}
++	if (IS_ERR(davinci_wdt->clk))
++		return dev_err_probe(dev, PTR_ERR(davinci_wdt->clk),
++				     "failed to get clock node\n");
+ 
+ 	ret = clk_prepare_enable(davinci_wdt->clk);
+ 	if (ret) {
 -- 
-2.25.1
-
-
+2.17.1
 
