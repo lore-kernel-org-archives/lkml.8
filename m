@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7659CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 637B0C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49FF020866
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E59D206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974823;
-	bh=DdoQvatDqTZIoDRIfxcl76Ibbop5/KP36qPswZ8z1P8=;
+	s=default; t=1598974831;
+	bh=gFg3mT5egsP14MTeQNbTG7x7JmJeEAdQR1uiseNTQp8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jgeCK9KYO/5a6efd2EJEBEzKIWc7PJ5fFeRbkUT53MUufrCjGSGSbIx+JHQMosS3f
-	 I9zya9gpkbBwTtMlG21mvB7bfYAGKxjlZEzYQdT50DkcwhH3bDXkA+ugc5FcjjtAzt
-	 jB+R0zAjD2dCijKr1qc4tuDCbd0L7m6WWxWCqw/U=
+	b=aJSrwaafeWrygIx43HQOKz4fevraIymLiVXBQJ0dUL5bBTbkLCHJkSRYEEyhCm1hJ
+	 Mm7WPl6XIEd+7UL3VAlqT7mSiIXdpIq/GiUKKcL4A689QhBjR9dtfGQtzNl55wTxSd
+	 AuD9P1lSrcYywewvYDdCrMqj8O0ZC9syz0qfH7pc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgIAPkV (ORCPT
+        id S1731499AbgIAPk3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:40:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47272 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:40:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbgIAPiU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:38:20 -0400
+        id S1727778AbgIAPip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C50120E65;
-        Tue,  1 Sep 2020 15:38:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7CF22168B;
+        Tue,  1 Sep 2020 15:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974699;
-        bh=DdoQvatDqTZIoDRIfxcl76Ibbop5/KP36qPswZ8z1P8=;
+        s=default; t=1598974723;
+        bh=gFg3mT5egsP14MTeQNbTG7x7JmJeEAdQR1uiseNTQp8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0RjphpRPoIoGEaj9DyOPfFspYxmKeJP3/E35uyWc0FNR9FMeQagpHzwbbjIw0KLKF
-         +EqhFnp+C7FpZo+puDEOur6lPD0rLsS93DHzamb8Yaqo1S5AUxCYWVhGAO1WnJ53hu
-         4MLYpLuOWittEsy+zso1d0c/TcXEjJ4eDtJo7jaI=
+        b=ln7baXd+P4KP4a9aMO1omaJB61U5y6Di7alvq19fzcCfpd7LVxdr254roaqSiAea6
+         gNXRRUILyYWP+QdXnn1M4m/zmKYAd8vsI9n5+2mGcPEF/09DhuW0eKHWHyOMyVjU9P
+         StGGVKNWfvHfDX8eRF5cUB0xA8k31vSNdRwOCL7o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>, Wolfram Sang <wsa@kernel.org>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jeremy Kerr <jk@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 061/255] i2c: i801: Add support for Intel Tiger Lake PCH-H
-Date:   Tue,  1 Sep 2020 17:08:37 +0200
-Message-Id: <20200901151003.649516350@linuxfoundation.org>
+Subject: [PATCH 5.8 069/255] powerpc/spufs: add CONFIG_COREDUMP dependency
+Date:   Tue,  1 Sep 2020 17:08:45 +0200
+Message-Id: <20200901151004.038118585@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,56 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit f46efbcad97bfb2caded0397eccce7c71402868c ]
+[ Upstream commit b648a5132ca3237a0f1ce5d871fff342b0efcf8a ]
 
-Add SMBus PCI ID on Intel Tiger Lake PCH-H.
+The kernel test robot pointed out a slightly different error message
+after recent commit 5456ffdee666 ("powerpc/spufs: simplify spufs core
+dumping") to spufs for a configuration that never worked:
 
-Signed-off-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
+   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_proxydma_info_dump':
+>> file.c:(.text+0x4c68): undefined reference to `.dump_emit'
+   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_dma_info_dump':
+   file.c:(.text+0x4d70): undefined reference to `.dump_emit'
+   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_wbox_info_dump':
+   file.c:(.text+0x4df4): undefined reference to `.dump_emit'
+
+Add a Kconfig dependency to prevent this from happening again.
+
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200706132302.3885935-1-arnd@arndb.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-i801.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/powerpc/platforms/cell/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/i2c-i801.c b/drivers/i2c/busses/i2c-i801.c
-index fea644921a768..f206e28af5831 100644
---- a/drivers/i2c/busses/i2c-i801.c
-+++ b/drivers/i2c/busses/i2c-i801.c
-@@ -67,6 +67,7 @@
-  * Comet Lake-H (PCH)		0x06a3	32	hard	yes	yes	yes
-  * Elkhart Lake (PCH)		0x4b23	32	hard	yes	yes	yes
-  * Tiger Lake-LP (PCH)		0xa0a3	32	hard	yes	yes	yes
-+ * Tiger Lake-H (PCH)		0x43a3	32	hard	yes	yes	yes
-  * Jasper Lake (SOC)		0x4da3	32	hard	yes	yes	yes
-  * Comet Lake-V (PCH)		0xa3a3	32	hard	yes	yes	yes
-  *
-@@ -221,6 +222,7 @@
- #define PCI_DEVICE_ID_INTEL_GEMINILAKE_SMBUS		0x31d4
- #define PCI_DEVICE_ID_INTEL_ICELAKE_LP_SMBUS		0x34a3
- #define PCI_DEVICE_ID_INTEL_5_3400_SERIES_SMBUS		0x3b30
-+#define PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS		0x43a3
- #define PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS		0x4b23
- #define PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS		0x4da3
- #define PCI_DEVICE_ID_INTEL_BROXTON_SMBUS		0x5ad4
-@@ -1074,6 +1076,7 @@ static const struct pci_device_id i801_ids[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_COMETLAKE_V_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TIGERLAKE_LP_SMBUS) },
-+	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS) },
- 	{ PCI_DEVICE(PCI_VENDOR_ID_INTEL, PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS) },
- 	{ 0, }
- };
-@@ -1748,6 +1751,7 @@ static int i801_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	case PCI_DEVICE_ID_INTEL_COMETLAKE_H_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_ELKHART_LAKE_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_TIGERLAKE_LP_SMBUS:
-+	case PCI_DEVICE_ID_INTEL_TIGERLAKE_H_SMBUS:
- 	case PCI_DEVICE_ID_INTEL_JASPER_LAKE_SMBUS:
- 		priv->features |= FEATURE_BLOCK_PROC;
- 		priv->features |= FEATURE_I2C_BLOCK_READ;
+diff --git a/arch/powerpc/platforms/cell/Kconfig b/arch/powerpc/platforms/cell/Kconfig
+index 0f7c8241912b9..f2ff359041eec 100644
+--- a/arch/powerpc/platforms/cell/Kconfig
++++ b/arch/powerpc/platforms/cell/Kconfig
+@@ -44,6 +44,7 @@ config SPU_FS
+ 	tristate "SPU file system"
+ 	default m
+ 	depends on PPC_CELL
++	depends on COREDUMP
+ 	select SPU_BASE
+ 	help
+ 	  The SPU file system is used to access Synergistic Processing
 -- 
 2.25.1
 
