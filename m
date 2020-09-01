@@ -2,131 +2,87 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D04FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FE6C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03A90206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:42:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aODv4vSb"
+	by mail.kernel.org (Postfix) with ESMTP id CD4BE206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgIANmU (ORCPT
+        id S1728083AbgIANq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35834 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbgIANcF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:32:05 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080B2C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 06:32:03 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id e11so984105wme.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 06:32:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=bx9oQ2NagEe6NO8GIGkDSi51bJAcX461SHWuEDdlU9s=;
-        b=aODv4vSb/PtYX2etcdsUG9b4DkQ7ggsrTqv4odqPbmVeKSOtc8x4orvCVl5pTPdofn
-         GzpU8kzSxnyrFLBsV4wDhaUkZVId84QvpqgasHh9RvVJ0U1Mk7G/7qsTfZCy2OJUeYaY
-         v84qOYWsNzUtbkktxEDEnj+npfSVvCVZvemEU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=bx9oQ2NagEe6NO8GIGkDSi51bJAcX461SHWuEDdlU9s=;
-        b=bJC20ayGTuuJt16Wwrn8BB2Wz8Nc3BexcYxarFtK8cE1ssV+s4UJozKmrtfEC0ZXE0
-         5wOB0oEjX7D/zLk6l/DmpX9GtXx2kAzByVovsyWJIndsC4/Z6HeIdhfj5S9xWodf6Tcj
-         UhFpIIziREGNqvlVcezWGTIurseqeBveYerSSXyoADr9nAkd78ZIWmbE1p6Z8rpHXoCU
-         OiXnFN4JRnzwsEr8y/fnSog7/3ZRkxZk8a5aERDTP5HLWsYIdzMhx8/hOsqsxp1mmqc+
-         8QMok4H7ufAseVpso8RaIdc0goaj3VV9xXvxDoFwFAzLHDeJ3upoNT08xcMX3f/hxJEl
-         w9aA==
-X-Gm-Message-State: AOAM532XzhTrhlQKOJIr7IvjgXTYniBqrpLxExcPQkHl478ILyAxtatO
-        18RPE/+cw2iaGXjlReUTSM6k3onoz/60ZG6i
-X-Google-Smtp-Source: ABdhPJxMIpyA4+ivRVmjL76n4SwUIJPpyNp2oXzgh60A0zsTrXOGV9cAYNKuDeIxPZ/25Yor8JDoOQ==
-X-Received: by 2002:a1c:2b43:: with SMTP id r64mr1778101wmr.105.1598967122596;
-        Tue, 01 Sep 2020 06:32:02 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id s124sm2056569wme.29.2020.09.01.06.32.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 06:32:01 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 15:32:00 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Gustavo Padovan <gustavo@padovan.org>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-Subject: Re: [PATCH] dma-buf: fix kernel-doc warning in dma-fence.c
-Message-ID: <20200901133200.GE2352366@phenom.ffwll.local>
-Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
-        Gustavo Padovan <gustavo@padovan.org>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-References: <20200831041713.12571-1-rdunlap@infradead.org>
- <81dc0a34-90f6-401a-f846-924fdff4aaff@amd.com>
+        Tue, 1 Sep 2020 09:46:26 -0400
+Received: from mga06.intel.com ([134.134.136.31]:21500 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727937AbgIANoQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:44:16 -0400
+IronPort-SDR: XwqyiRFBGqz6dT/XqYn29ktHJuXQAaBJaogHyl3SJndca544u2Jk8954Ca18Xq/WOW0yOyWkxb
+ 6/It8qdvrtLQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="218716992"
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="218716992"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 06:43:52 -0700
+IronPort-SDR: F97Nl6M4+gKE+m+OZaZKFNWuKx8k1xlWUrXo/A72FuUkANm6Z1SDaftvAs//5IWn4w2eFJtOWU
+ r8vITEePHSWQ==
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="446131895"
+Received: from dlabricc-mobl.amr.corp.intel.com (HELO [10.212.239.51]) ([10.212.239.51])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 06:43:52 -0700
+Subject: Re: [PATCH v2] regmap: soundwire: remove unused header
+ mod_devicetable.h
+To:     Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20200901111331.641072-1-vkoul@kernel.org>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9d4720f4-83e1-ec3d-74cc-b94474eb07e9@linux.intel.com>
+Date:   Tue, 1 Sep 2020 08:43:50 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <81dc0a34-90f6-401a-f846-924fdff4aaff@amd.com>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
+In-Reply-To: <20200901111331.641072-1-vkoul@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 12:02:03PM +0200, Christian König wrote:
-> Am 31.08.20 um 06:17 schrieb Randy Dunlap:
-> > Add @cookie to dma_fence_end_signalling() to prevent kernel-doc
-> > warning in drivers/dma-buf/dma-fence.c:
-> > 
-> > ../drivers/dma-buf/dma-fence.c:291: warning: Function parameter or member 'cookie' not described in 'dma_fence_end_signalling'
-> > 
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> > Cc: Gustavo Padovan <gustavo@padovan.org>
-> > Cc: Christian König <christian.koenig@amd.com>
-> > Cc: linux-media@vger.kernel.org
-> > Cc: dri-devel@lists.freedesktop.org
+
+
+On 9/1/20 6:13 AM, Vinod Koul wrote:
+> mod_devicetable.h does not seem to be required for this file, so
+> remove it.
 > 
-> Acked-by: Christian König <christian.koenig@amd.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 
-Will you merge these two to drm-misc-fixes or should someone else?
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-Always a bit confusing when maintainers reply with acks/r-b but not what
-they'll do with the patch :-)
-
-Cheers, Daniel
-
+> ---
 > 
-> > ---
-> >   drivers/dma-buf/dma-fence.c |    1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > --- lnx-59-rc3.orig/drivers/dma-buf/dma-fence.c
-> > +++ lnx-59-rc3/drivers/dma-buf/dma-fence.c
-> > @@ -283,6 +283,7 @@ EXPORT_SYMBOL(dma_fence_begin_signalling
-> >   /**
-> >    * dma_fence_end_signalling - end a critical DMA fence signalling section
-> > + * @cookie: opaque cookie from dma_fence_begin_signalling()
-> >    *
-> >    * Closes a critical section annotation opened by dma_fence_begin_signalling().
-> >    */
+> changes in v2:
+>    - fix typo in patch subject
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+>   drivers/base/regmap/regmap-sdw.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
+> index 50a66382d87d..c92d614b4943 100644
+> --- a/drivers/base/regmap/regmap-sdw.c
+> +++ b/drivers/base/regmap/regmap-sdw.c
+> @@ -2,7 +2,6 @@
+>   // Copyright(c) 2015-17 Intel Corporation.
+>   
+>   #include <linux/device.h>
+> -#include <linux/mod_devicetable.h>
+>   #include <linux/module.h>
+>   #include <linux/soundwire/sdw.h>
+>   #include "internal.h"
+> 
