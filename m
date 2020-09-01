@@ -2,55 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B2DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37887C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A86A206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB9A220767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973339;
-	bh=VBnpavIvqKRm9y/bhO7kKV9M1J0DcjiXg++eXLPozXQ=;
+	s=default; t=1598973345;
+	bh=vf8P7knMKxAd8czp29JUejgGx8ytmQ5ofKwx9f36CKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6CIyjRC4RXH8OlCLj/cOvR4hWmTsKDlnwObtK5h5FJ0Y0I0Oocw8aAGN3mI9G6JZ
-	 GmDGgDxEH3c374FndMWjNfVD/pf/Wxj8fKVShMN4dxBrQUAqAQme+wOcz0Ce7TQAl7
-	 ttLp3c3y3IbisExJ5w4ttZADEGzwoL4z7kM9k/bY=
+	b=znLfRsX2D6z7bfPMsDCGn5bfNCJ6Io9bMqCO3NHzvuF4Kv6pGG1tZ51Y1PKlNRDr1
+	 w0UUg+8Y2bsNFrZxIpGS3UHDriLax/OiYayk4jZOxV65JAAcXa/jSxdYPkrhmNDCkp
+	 KSUocTz8YjVhLljjfo+uYugL4aMW+J1rfx5lIoHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729209AbgIAPPg (ORCPT
+        id S1729227AbgIAPPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:15:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58760 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:15:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728764AbgIAPOu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:50 -0400
+        id S1729070AbgIAPO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:56 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66AB3206FA;
-        Tue,  1 Sep 2020 15:14:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5321206FA;
+        Tue,  1 Sep 2020 15:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973288;
-        bh=VBnpavIvqKRm9y/bhO7kKV9M1J0DcjiXg++eXLPozXQ=;
+        s=default; t=1598973296;
+        bh=vf8P7knMKxAd8czp29JUejgGx8ytmQ5ofKwx9f36CKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e7xShHs2i3TDaO1fUMy9Lx0zLnFZHhzI1lRkFWobltCxH21G1Sz3fG/3THkUQMmom
-         KG3s5TOf8UmDdDG7WBX4wudEa1eoSJRQRvfUmXlbOwYy4vL1sMo+hGUNqy/7iFLRvq
-         Grl1ZNSk/LcSWT0qQ65JUsYeAVv9wIxIa/rQtdxo=
+        b=AfcnwuPOulqVu2loWh0rnypGxWGovd4Jtf46prfkxMwwwvB50Lu51AOP5DZ5g8DIp
+         Om/LdXVV6V+dsiThQSXt5a1FGB434cQrXOu7qw0UzZFWVYAwU4LUUuKfTgIM7RFKkA
+         BwPZzDJahH5PmOkH0gB609Ot/SO0/Qa1TWeRlFlw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Jarod Wilson <jarod@redhat.com>
-Subject: [PATCH 4.9 02/78] bonding: show saner speed for broadcast mode
-Date:   Tue,  1 Sep 2020 17:09:38 +0200
-Message-Id: <20200901150924.836925701@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 22/78] PCI: Fix pci_create_slot() reference count leak
+Date:   Tue,  1 Sep 2020 17:09:58 +0200
+Message-Id: <20200901150925.857660977@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -63,74 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 4ca0d9ac3fd8f9f90b72a15d8da2aca3ffb58418 ]
+[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
 
-Broadcast mode bonds transmit a copy of all traffic simultaneously out of
-all interfaces, so the "speed" of the bond isn't really the aggregate of
-all interfaces, but rather, the speed of the slowest active interface.
+kobject_init_and_add() takes a reference even when it fails.  If it returns
+an error, kobject_put() must be called to clean up the memory associated
+with the object.
 
-Also, the type of the speed field is u32, not unsigned long, so adjust
-that accordingly, as required to make min() function here without
-complaining about mismatching types.
+When kobject_init_and_add() fails, call kobject_put() instead of kfree().
 
-Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
+
+Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/pci/slot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4132,13 +4132,23 @@ static netdev_tx_t bond_start_xmit(struc
- 	return ret;
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index 429d34c348b9f..01a343ad7155c 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -303,13 +303,16 @@ placeholder:
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		kfree(slot);
+ 		goto err;
+ 	}
+ 
+ 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
+ 				   "%s", slot_name);
+-	if (err)
++	if (err) {
++		kobject_put(&slot->kobj);
+ 		goto err;
++	}
+ 
+ 	INIT_LIST_HEAD(&slot->list);
+ 	list_add(&slot->list, &parent->slots);
+@@ -328,7 +331,6 @@ out:
+ 	mutex_unlock(&pci_slot_mutex);
+ 	return slot;
+ err:
+-	kfree(slot);
+ 	slot = ERR_PTR(err);
+ 	goto out;
  }
- 
-+static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
-+{
-+	if (speed == 0 || speed == SPEED_UNKNOWN)
-+		speed = slave->speed;
-+	else
-+		speed = min(speed, slave->speed);
-+
-+	return speed;
-+}
-+
- static int bond_ethtool_get_settings(struct net_device *bond_dev,
- 				     struct ethtool_cmd *ecmd)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	unsigned long speed = 0;
- 	struct list_head *iter;
- 	struct slave *slave;
-+	u32 speed = 0;
- 
- 	ecmd->duplex = DUPLEX_UNKNOWN;
- 	ecmd->port = PORT_OTHER;
-@@ -4150,8 +4160,13 @@ static int bond_ethtool_get_settings(str
- 	 */
- 	bond_for_each_slave(bond, slave, iter) {
- 		if (bond_slave_can_tx(slave)) {
--			if (slave->speed != SPEED_UNKNOWN)
--				speed += slave->speed;
-+			if (slave->speed != SPEED_UNKNOWN) {
-+				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
-+					speed = bond_mode_bcast_speed(slave,
-+								      speed);
-+				else
-+					speed += slave->speed;
-+			}
- 			if (ecmd->duplex == DUPLEX_UNKNOWN &&
- 			    slave->duplex != DUPLEX_UNKNOWN)
- 				ecmd->duplex = slave->duplex;
+-- 
+2.25.1
+
 
 
