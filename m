@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FF0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB95C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CADDC206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 459DE206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979526;
-	bh=6deX/TmUbsvm1tTU+C7Pa7u01gKIJUvlmIN2OgFCEIg=;
+	s=default; t=1598979536;
+	bh=+qMlhpBqo7uDBTw2M3PwWfIBd3Tya3VGpz/pwkPdLDU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wkB9UTnvmYlbqX1asK0YuZuMeIUHgIkP6d7Hk0RtADvmWyX1MZMNaP3erOxUZY2GW
-	 7QhD+v09fTR04MkzNl49QWNiX29013n/1ZseTgiBwos/dagXWWKaf7IWDt304AgeMB
-	 PUgvo6wE1QCD7IHBJVHe0Ic3gLNtQF0eSr7Ozg4I=
+	b=qn34G2KLvoJHjYWCVz4s5hc95dLeXj79OdqFMsCBTCxTazMZA3CBiM1L7/qZnpKmq
+	 sn2iRhF/YCxS9lf1EpW/YhMvYtAdgu6/F5dM89C/lLXwKk0+bLk9yDRj1ldarAHYD+
+	 cP4IApqsXPsSM9G4/h+Ysy6OTD6H3v3F1UDz4xyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbgIAQ6m (ORCPT
+        id S1730636AbgIAQ6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:58:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43768 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:58:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729748AbgIAPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729746AbgIAPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:22:17 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F6DD20FC3;
-        Tue,  1 Sep 2020 15:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0D5F206FA;
+        Tue,  1 Sep 2020 15:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973735;
-        bh=6deX/TmUbsvm1tTU+C7Pa7u01gKIJUvlmIN2OgFCEIg=;
+        s=default; t=1598973733;
+        bh=+qMlhpBqo7uDBTw2M3PwWfIBd3Tya3VGpz/pwkPdLDU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p6YlObHghV08mRiR4n9z3l56L0VHK66A9GAxMEVteu7wCc4B3qIalcugbAanpYyb1
-         WTMHx61xkE2oCC1WIDioKQK8jbluRhVipNWC9WOZ9tLpFf0NupTD99Ow13GIUBH1KM
-         X0k6lm0NWb2zJYan2j/gu8Xuzo6L0a6C2isqB9Cs=
+        b=zkFfHvA8RHk9hTLIo16hLHGeCaoK7s92g+dh4k8GEAiwXBGUTnuXOWfE71RShn/kr
+         8u/OTrCOzSAe7hz9n5f8GzNObEvW/Sw5UrQcp0ZMwEwtU39r6vF9BZPJYpstbIJLlT
+         8l9G3THDoNMLzIXtXFKSipW1csjiLngi5WppQsNQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 025/125] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
-Date:   Tue,  1 Sep 2020 17:09:40 +0200
-Message-Id: <20200901150935.792494856@linuxfoundation.org>
+Subject: [PATCH 4.19 024/125] drm/amdgpu: fix ref count leak in amdgpu_display_crtc_set_config
+Date:   Tue,  1 Sep 2020 17:09:39 +0200
+Message-Id: <20200901150935.750706681@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -63,71 +63,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
+[ Upstream commit e008fa6fb41544b63973a529b704ef342f47cc65 ]
 
-The call to pm_runtime_get_sync increments the counter even in case of
-failure, leading to incorrect ref count.
-In case of failure, decrement the ref count before returning.
+in amdgpu_display_crtc_set_config, the call to pm_runtime_get_sync
+increments the counter even in case of failure, leading to incorrect
+ref count. In case of failure, decrement the ref count before returning.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-index c770d73352a79..c15286858f0bf 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-@@ -718,8 +718,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
+index 686a26de50f91..049a1961c3fa5 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
+@@ -275,7 +275,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
  
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
+ 	ret = pm_runtime_get_sync(dev->dev);
+ 	if (ret < 0)
+-		return ret;
++		goto out;
+ 
+ 	ret = drm_crtc_helper_set_config(set, ctx);
+ 
+@@ -290,7 +290,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
+ 	   take the current one */
+ 	if (active && !adev->have_disp_power_ref) {
+ 		adev->have_disp_power_ref = true;
+-		return ret;
++		goto out;
+ 	}
+ 	/* if we have no active crtcs, then drop the power ref
+ 	   we got before */
+@@ -299,6 +299,7 @@ int amdgpu_display_crtc_set_config(struct drm_mode_set *set,
+ 		adev->have_disp_power_ref = false;
  	}
  
- 	if (encoder) {
-@@ -856,8 +858,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	encoder = amdgpu_connector_best_single_encoder(connector);
-@@ -979,8 +983,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
-@@ -1329,8 +1335,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
++out:
+ 	/* drop the power reference we got coming in here */
+ 	pm_runtime_put_autosuspend(dev->dev);
+ 	return ret;
 -- 
 2.25.1
 
