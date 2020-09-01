@@ -2,115 +2,135 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E10C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E011220707
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 281D4212CC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:45:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgIABmI (ORCPT
+        id S1726131AbgIABpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 21:42:08 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:57547 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725941AbgIABmI (ORCPT
+        Mon, 31 Aug 2020 21:45:06 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:37433 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726023AbgIABpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 21:42:08 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R511e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0U7Tly0l_1598924523;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U7Tly0l_1598924523)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 01 Sep 2020 09:42:04 +0800
-Date:   Tue, 1 Sep 2020 09:42:03 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
-        akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, bhe@redhat.com
-Subject: Re: [Patch v3 7/7] mm/hugetlb: take the free hpage during the
- iteration directly
-Message-ID: <20200901014203.GA29343@L-31X9LVDL-1304.local>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-References: <20200831022351.20916-1-richard.weiyang@linux.alibaba.com>
- <20200831022351.20916-8-richard.weiyang@linux.alibaba.com>
- <d36e57db-b02f-fd75-6c0c-734635f58ff5@oracle.com>
+        Mon, 31 Aug 2020 21:45:05 -0400
+Received: (qmail 571492 invoked by uid 1000); 31 Aug 2020 21:45:04 -0400
+Date:   Mon, 31 Aug 2020 21:45:04 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
+        kernel-team@fb.com, mingo@kernel.org, parri.andrea@gmail.com,
+        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
+        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
+        luc.maranget@inria.fr, akiyks@gmail.com
+Subject: Re: [PATCH kcsan 9/9] tools/memory-model:  Document locking corner
+ cases
+Message-ID: <20200901014504.GB571008@rowland.harvard.edu>
+References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
+ <20200831182037.2034-9-paulmck@kernel.org>
+ <20200831201701.GB558270@rowland.harvard.edu>
+ <20200831214738.GE2855@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d36e57db-b02f-fd75-6c0c-734635f58ff5@oracle.com>
+In-Reply-To: <20200831214738.GE2855@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 04:06:54PM -0700, Mike Kravetz wrote:
->On 8/30/20 7:23 PM, Wei Yang wrote:
->> Function dequeue_huge_page_node_exact() iterates the free list and
->> return the first valid free hpage.
->> 
->> Instead of break and check the loop variant, we could return in the loop
->> directly. This could reduce some redundant check.
->> 
->> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
->> ---
->>  mm/hugetlb.c | 20 ++++++++------------
->>  1 file changed, 8 insertions(+), 12 deletions(-)
->> 
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index 7b3357c1dcec..709be7ab65af 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -1040,21 +1040,17 @@ static struct page *dequeue_huge_page_node_exact(struct hstate *h, int nid)
->>  		if (nocma && is_migrate_cma_page(page))
->>  			continue;
->>  
->> -		if (!PageHWPoison(page))
->> +		if (PageHWPoison(page))
->>  			break;
->
->Previously, when encountering a PageHWPoison(page) the loop would continue
->and check the next page in the list.  It now breaks the loop and returns
->NULL.  Is not this a change in behavior?  Perhaps you want to change that
->break to a continue.  Or, restructure in some other way.
+On Mon, Aug 31, 2020 at 02:47:38PM -0700, Paul E. McKenney wrote:
+> On Mon, Aug 31, 2020 at 04:17:01PM -0400, Alan Stern wrote:
 
-Shame on me. You are right. I should change it to continue.
+> > Is this discussion perhaps overkill?
+> > 
+> > Let's put it this way: Suppose we have the following code:
+> > 
+> > 	P0(int *x, int *lck)
+> > 	{
+> > 		spin_lock(lck);
+> > 		WRITE_ONCE(*x, 1);
+> > 		do_something();
+> > 		spin_unlock(lck);
+> > 	}
+> > 
+> > 	P1(int *x, int *lck)
+> > 	{
+> > 		while (READ_ONCE(*x) == 0)
+> > 			;
+> > 		spin_lock(lck);
+> > 		do_something_else();
+> > 		spin_unlock(lck);
+> > 	}
+> > 
+> > It's obvious that this test won't deadlock.  But if P1 is changed to:
+> > 
+> > 	P1(int *x, int *lck)
+> > 	{
+> > 		spin_lock(lck);
+> > 		while (READ_ONCE(*x) == 0)
+> > 			;
+> > 		do_something_else();
+> > 		spin_unlock(lck);
+> > 	}
+> > 
+> > then it's equally obvious that the test can deadlock.  No need for
+> > fancy memory models or litmus tests or anything else.
+> 
+> For people like you and me, who have been thinking about memory ordering
+> for longer than either of us care to admit, this level of exposition is
+> most definitely -way- overkill!!!
+> 
+> But I have had people be very happy and grateful that I explained this to
+> them at this level of detail.  Yes, I started parallel programming before
+> some of them were born, but they are definitely within our target audience
+> for this particular document.  And it is not just Linux kernel hackers
+> who need this level of detail.  A roughly similar transactional-memory
+> scenario proved to be so non-obvious to any number of noted researchers
+> that Blundell, Lewis, and Martin needed to feature it in this paper:
+> https://ieeexplore.ieee.org/abstract/document/4069174
+> (Alternative source: https://repository.upenn.edu/cgi/viewcontent.cgi?article=1344&context=cis_papers)
+> 
+> Please note that I am -not- advocating making (say) explanation.txt or
+> recipes.txt more newbie-accessible than they already are.  After all,
+> the point of the README file in that same directory is to direct people
+> to the documentation files that are the best fit for them, and both
+> explanation.txt and recipes.txt contain advanced material, and thus
+> require similarly advanced prerequisites.
+> 
+> Seem reasonable, or am I missing your point?
 
-Andrew,
+The question is, what are you trying to accomplish in this section?  Are 
+you trying to demonstrate that it isn't safe to allow arbitrary code to 
+leak into a critical section?  If so then you don't need to present an 
+LKMM litmus test to make the point; the example I gave here will do 
+quite as well.  Perhaps even better, since it doesn't drag in all sorts 
+of extraneous concepts like limitations of litmus tests or how to 
+emulate a spin loop.
 
-Sorry for the inconvenience.
+On the other hand, if your goal is to show how to construct a litmus 
+test that will model a particular C language test case (such as the one 
+I gave), then the text does a reasonable job -- although I do think it 
+could be clarified somewhat.  For instance, it wouldn't hurt to include 
+the real C code before giving the corresponding litmus test, so that the 
+reader will have a clear idea of what you're trying to model.
 
->-- 
->Mike Kravetz
->
->> +
->> +		list_move(&page->lru, &h->hugepage_activelist);
->> +		set_page_refcounted(page);
->> +		h->free_huge_pages--;
->> +		h->free_huge_pages_node[nid]--;
->> +		return page;
->>  	}
->>  
->> -	/*
->> -	 * if 'non-isolated free hugepage' not found on the list,
->> -	 * the allocation fails.
->> -	 */
->> -	if (&h->hugepage_freelists[nid] == &page->lru)
->> -		return NULL;
->> -	list_move(&page->lru, &h->hugepage_activelist);
->> -	set_page_refcounted(page);
->> -	h->free_huge_pages--;
->> -	h->free_huge_pages_node[nid]--;
->> -	return page;
->> +	return NULL;
->>  }
->>  
->>  static struct page *dequeue_huge_page_nodemask(struct hstate *h, gfp_t gfp_mask, int nid,
->> 
+Just what you want to achieve here is not clear from the context.
 
--- 
-Wei Yang
-Help you, Help me
+Besides, the example is in any case a straw man.  The text starts out 
+saying "It is tempting to allow memory-reference instructions to be 
+pulled into a critical section", but then the example pulls an entire 
+spin loop inside -- not just the memory references but also the 
+conditional branch instruction at the bottom of the loop!  I can't 
+imagine anyone would think it was safe to allow branches to leak into a 
+critical section, particularly when doing so would break a control 
+dependency (as it does here).
+
+Alan
