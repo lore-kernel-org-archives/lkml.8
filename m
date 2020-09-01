@@ -2,157 +2,135 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E715DC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF6CCC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C133A208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598946997;
-	bh=L83kyDyjs+VkGWTN+LCdkeP51ajJNz4QLy7rIBLuONM=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=w9Zw+XkbeV7p6ygN2DsbLqiXmBMs/MoiBbzGD1IlPruATXwlt87OcwOvRtcOJK3j6
-	 HyN9gj/zt3f7nvHnktG/S7Gq92U+B6IAjyIxitBlsXDGPt8PCkz4TKFTXkmxA6W5Mj
-	 8PXdBgiKk55Mf6qVJslRsozpOEQUb8wjd0Gbyi18=
+	by mail.kernel.org (Postfix) with ESMTP id 8D7A92098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:56:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ILDt4bQb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgIAH4g (ORCPT
+        id S1728078AbgIAH4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:56:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgIAH4g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:56:36 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D007A2078B;
-        Tue,  1 Sep 2020 07:56:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598946995;
-        bh=L83kyDyjs+VkGWTN+LCdkeP51ajJNz4QLy7rIBLuONM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kAHrN+Burr1jiFyzAI/WOb4/b1fS0g4iuPGbh4Q1VzRx+ycKjurcaKJK8EyoHRHeT
-         mA/iQopm//1dTBcTinZudTXC+rZxsAFx6pmsiaNUiWmwGMzwLCTJEoD3cdmMmv5hTO
-         e6YRn3AgZ9ZGYn84vmTkKoeftR2iaU22m/UfmZm8=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 0/6] tracing/boot: Add new options for tracing specific period
-Date:   Tue,  1 Sep 2020 16:56:30 +0900
-Message-Id: <159894698993.1478826.2813843560314595660.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-User-Agent: StGit/0.19
+        Tue, 1 Sep 2020 03:56:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40564 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726044AbgIAH4l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:56:41 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6485C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:56:40 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id e14so397102ile.6
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 00:56:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TEWosj+T/FRGHSF9tH65GTqlEJ9j3rwP8Dj/lqmsNo8=;
+        b=ILDt4bQbXAm2fNXcqA27lrOZxCdF/zXdcbjLA74g0gZSpUOh8srrDHs5dzuCQ7hpe+
+         a6tLJfBYvF97GfS6EwZzZMMSavbQ1TDHuI24//IQx5nRolW+H8zunuG3uAYt51D8KTkX
+         2bWTazW6q3DUO9ehNgEb3gmWhuNS34HJDqph80nZL5JImd7vgyl4PKlYRkeQ3TRFdIs4
+         D7sAAdTh2pIFg9shiHyc4n9cjyGqjPX7nTPNt1EpQCSyKi46f3dW+0tH7Dv2ksNKwpBS
+         7fryGzuHI8VefQ7r+EwAW1hd/jEaXwbSJZ3j4vg6hHL5edpCf0nC5fw17aMwYJtv7NXT
+         Mh1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TEWosj+T/FRGHSF9tH65GTqlEJ9j3rwP8Dj/lqmsNo8=;
+        b=HOMwin+NQFdqiu2RE9MY3ShcmRuqTOLycJmayHpvKK0nK3F3qBkzlImo/zKdPYN7I5
+         WkKSUAcQFQdOdGSB1gldOY/uoI7o51H0WEj6NJVGqy2Fhew2VGlOQvarD/iYk5K/b9Fe
+         OS9/GUvzd0py9Axx5PJqpKrjFeJFux8IIh2ci+/pxpD+EMUVSAfgbJwk9dq2huorlepA
+         EQ5ug2OoBrLun1jrKfWKSPvzpJO1M+KinGF2WjhjA/Rn4jekVd0iGabxOLNs5PcA5LZ2
+         0kJGkPVE8xEy2rcdrRKj2KPo7vHtELFTsUF+mG8DgLejt5WPDscAr3/++nLDBgCeNxSG
+         gjDA==
+X-Gm-Message-State: AOAM530fy+dLy1lVO5z7wiVHsGJC/Y/ZySa/Vqcjqkv1yXwdgqWaFiCw
+        Zr6LlGztZR9lYR//drw4VyO7MM5StzpryZX5xoXgxA==
+X-Google-Smtp-Source: ABdhPJyzfgc7rPdiRryei3TV9tpT3eT551dswjAZusUJFZsBCA8Lc7j+N5wK7ANhav4txz/BTlblPGK0DUE/GbM97Wo=
+X-Received: by 2002:a92:4001:: with SMTP id n1mr310227ila.69.1598947000122;
+ Tue, 01 Sep 2020 00:56:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20200901065758.1141786-1-brianvv@google.com>
+In-Reply-To: <20200901065758.1141786-1-brianvv@google.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 1 Sep 2020 09:56:28 +0200
+Message-ID: <CANn89iKA5Ut4AcZfsZi3bVpE33_pqgO=E1RhBzePUeBDn6gznQ@mail.gmail.com>
+Subject: Re: [PATCH] net: ipv6: fix __rt6_purge_dflt_routers when forwarding
+ is not set on all ifaces
+To:     Brian Vazquez <brianvv@google.com>
+Cc:     Brian Vazquez <brianvv.kernel@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        David Ahern <dsa@cumulusnetworks.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Here is the 2nd version of the series to improve the boot-time tracing to
-support kretprobe and tracing_on option. Previous version is here:
-
- https://lkml.kernel.org/r/159887792384.1330989.5993224243767476896.stgit@devnote2
-
-This version fixes a build error ([1/6]) and fix a space indent issue
-([5/6]).
-
-The combination of tracing_on and kretprobe allows us to trace events
-while a specific function call period. For example, the below bootconfig
-will make a function callgraph in the pci_proc_init() function at boot
-time.
-
-ftrace {
-	tracing_on = 0  # off at start
-	tracer = function_graph
-	event.kprobes {
-		start_event {
-			probes = "pci_proc_init"
-			actions = "traceon"
-		}
-		end_event {
-			probes = "pci_proc_init%return"
-			actions = "traceoff"
-		}
-	}
-}
-
-Here is the example output;
-
-# tracer: function_graph
-#
-# CPU  DURATION                  FUNCTION CALLS
-# |     |   |                     |   |   |   |
- 0)               |  pci_proc_init() {
- 0)               |    proc_mkdir() {
- 0)               |      proc_mkdir_data() {
- 0)               |        __proc_create() {
- 0)               |          _raw_read_lock() {
- 0)   0.179 us    |            preempt_count_add();
- 0)   0.203 us    |            do_raw_read_lock();
- 0)   1.210 us    |          }
- 0)               |          __xlate_proc_name() {
- 0)   0.449 us    |            pde_subdir_find();
- 0)   0.913 us    |          }
- 0)               |          _raw_read_unlock() {
- 0)   0.169 us    |            do_raw_read_unlock();
- 0)   0.175 us    |            preempt_count_sub();
- 0)   0.841 us    |          }
- 0)               |          kmem_cache_alloc() {
- 0)               |            fs_reclaim_acquire() {
- 0)   0.154 us    |              __need_fs_reclaim();
- 0)   0.240 us    |              fs_reclaim_acquire.part.0();
- 0)   0.889 us    |            }
- 0)               |            fs_reclaim_release() {
- 0)   0.174 us    |              __need_fs_reclaim();
- 0)   0.516 us    |            }
- 0)   0.157 us    |            should_failslab();
- 0)               |            rcu_read_lock_sched_held() {
- 0)               |              rcu_read_lock_held_common() {
- 0)   0.156 us    |                rcu_is_watching();
- 0)   0.158 us    |                rcu_lockdep_current_cpu_online();
- 0)   0.735 us    |              }
- 0)   1.054 us    |            }
- 0)   3.407 us    |          }
- 0)   0.168 us    |          __raw_spin_lock_init();
- 0)   7.575 us    |        }
- 0)               |        proc_register() {
- 0)               |          _raw_spin_lock_irqsave() {
- 0)   0.187 us    |            preempt_count_add();
-...
+On Tue, Sep 1, 2020 at 8:58 AM Brian Vazquez <brianvv@google.com> wrote:
+>
+> The problem is exposed when the system has multiple ifaces and
+> forwarding is enabled on a subset of them, __rt6_purge_dflt_routers will
+> clean the default route on all the ifaces which is not desired.
+>
+> This patches fixes that by cleaning only the routes where the iface has
+> forwarding enabled.
+>
+> Fixes: 830218c1add1 ("net: ipv6: Fix processing of RAs in presence of VRF")
 
 
-Thank you,
-
----
-
-Masami Hiramatsu (6):
-      kprobes: tracing/kprobes: Fix to kill kprobes on initmem after boot
-      tracing/boot: Add per-instance tracing_on option support
-      Documentation: tracing: Add tracing_on option to boot-time tracer
-      tracing/kprobes: Support perf-style return probe
-      Documentation: tracing: Add %return suffix description
-      Documentation: tracing: boot: Add an example of tracing function-calls
 
 
- Documentation/trace/boottime-trace.rst |   24 ++++++++++++++++++++++++
- Documentation/trace/kprobetrace.rst    |    2 ++
- include/linux/kprobes.h                |    5 +++++
- init/main.c                            |    2 ++
- kernel/kprobes.c                       |   22 ++++++++++++++++++++++
- kernel/trace/trace_boot.c              |   10 ++++++++++
- kernel/trace/trace_kprobe.c            |   21 ++++++++++++++++++++-
- 7 files changed, 85 insertions(+), 1 deletion(-)
 
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
+> Cc: David Ahern <dsa@cumulusnetworks.com>
+> Signed-off-by: Brian Vazquez <brianvv@google.com>
+> ---
+>  net/ipv6/route.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+>
+> diff --git a/net/ipv6/route.c b/net/ipv6/route.c
+> index 5e7e25e2523a..41181cd489ea 100644
+> --- a/net/ipv6/route.c
+> +++ b/net/ipv6/route.c
+> @@ -4283,6 +4283,7 @@ static void __rt6_purge_dflt_routers(struct net *net,
+>                                      struct fib6_table *table)
+>  {
+>         struct fib6_info *rt;
+> +       bool deleted = false;
+>
+>  restart:
+>         rcu_read_lock();
+> @@ -4291,16 +4292,19 @@ static void __rt6_purge_dflt_routers(struct net *net,
+>                 struct inet6_dev *idev = dev ? __in6_dev_get(dev) : NULL;
+>
+>                 if (rt->fib6_flags & (RTF_DEFAULT | RTF_ADDRCONF) &&
+> -                   (!idev || idev->cnf.accept_ra != 2) &&
+> +                   (!idev || (idev->cnf.forwarding == 1 &&
+> +                              idev->cnf.accept_ra != 2)) &&
+>                     fib6_info_hold_safe(rt)) {
+>                         rcu_read_unlock();
+>                         ip6_del_rt(net, rt, false);
+> +                       deleted = true;
+>                         goto restart;
+>                 }
+>         }
+>         rcu_read_unlock();
+>
+> -       table->flags &= ~RT6_TABLE_HAS_DFLT_ROUTER;
+> +       if (deleted)
+> +               table->flags &= ~RT6_TABLE_HAS_DFLT_ROUTER;
+
+
+This seems wrong : We want to keep the flag set if at least one
+candidate route has not been deleted,
+so that next time rt6_purge_dflt_routers() is called, we can call
+__rt6_purge_dflt_routers() ?
