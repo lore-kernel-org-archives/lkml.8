@@ -2,54 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9182FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4914C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:54:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC0C206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2CB02064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975638;
-	bh=dOh1KjTAvwCbwoYE9RLeEs7tiaRL0Fgwego3FzwZgtE=;
+	s=default; t=1598975648;
+	bh=u8zMHey+yOMxaEFYU2TU2BQcMfx2dnwt8ZGCM9UlWV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TXHo0AZfpP7bHrxRUqxv/6las5LEeSavh1QMEyOfzHO4yTEEGzki0aC5l87yId6oe
-	 K0K2VK6b90rS4j0gydBpkeTt7F3vMq/ypf+x+cq70t9kuoJ12p5ATcxr/phe69y5LM
-	 llO28UDy9Ej06E4gzKXoSJW2DM+qkW0sfEHu8wQ4=
+	b=gsBAzgfM8GXzWMSAZjO1bbOjHZp8dZTC65CUcia0lYNsaMZX7ZvuDhd9MGDrEz+ao
+	 Lxw8B5JNeqzGUEnpgPkdBbffZqykZUqg+yCW1Iv/YID2HOiM1+/m1gx6fZ4Ng/H4Bq
+	 SGjxLfqiCgvuMIG7Y4tjgcSPGSN+qa/2yk1HAXgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732000AbgIAPxo (ORCPT
+        id S1731955AbgIAPyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:53:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:54:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731964AbgIAPq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:46:57 -0400
+        id S1731958AbgIAPqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:46:52 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C9212078B;
-        Tue,  1 Sep 2020 15:46:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F026206EF;
+        Tue,  1 Sep 2020 15:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975216;
-        bh=dOh1KjTAvwCbwoYE9RLeEs7tiaRL0Fgwego3FzwZgtE=;
+        s=default; t=1598975211;
+        bh=u8zMHey+yOMxaEFYU2TU2BQcMfx2dnwt8ZGCM9UlWV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vP5xjVyx7C4wmV2vNkZf4MW/icvyy/yJBmpeMBliAWmQ6PvweZYWjsXTvqMatByXF
-         a907PkQlqMO2NsW3F6xJje2bzrwnd9kznAJZ4Y93fVqBALMAq+lsZzbASIvikrH8Vx
-         dQZLRl70Ma84EF9vk7/KXpkiGAXJwWcSUWNLHL0g=
+        b=nnNkRpCAoFatjj9jDjrWu7RLGsxdapEXh2wbFOIq0aHVBs1XPHHJ/nASJ1QB39EfI
+         MR5tIWaE5y1CIseH59rF5iChtrlw7MAkt2yywb40aVroMENV5gAE0qav0YRG2mHd/M
+         F5NJXzxWSHlfL4atNGrJG3G3FEQDj4cVeMRjht54=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Sasha Levin <sashal@kernel.org>,
-        syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH 5.8 247/255] fbmem: pull fbcon_update_vcs() out of fb_set_var()
-Date:   Tue,  1 Sep 2020 17:11:43 +0200
-Message-Id: <20200901151012.600631910@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
+Subject: [PATCH 5.8 222/255] USB: yurex: Fix bad gfp argument
+Date:   Tue,  1 Sep 2020 17:11:18 +0200
+Message-Id: <20200901151011.375309996@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -62,133 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit d88ca7e1a27eb2df056bbf37ddef62e1c73d37ea ]
+commit f176ede3a3bde5b398a6777a7f9ff091baa2d3ff upstream.
 
-syzbot is reporting OOB read bug in vc_do_resize() [1] caused by memcpy()
-based on outdated old_{rows,row_size} values, for resize_screen() can
-recurse into vc_do_resize() which changes vc->vc_{cols,rows} that outdates
-old_{rows,row_size} values which were saved before calling resize_screen().
+The syzbot fuzzer identified a bug in the yurex driver: It passes
+GFP_KERNEL as a memory-allocation flag to usb_submit_urb() at a time
+when its state is TASK_INTERRUPTIBLE, not TASK_RUNNING:
 
-Daniel Vetter explained that resize_screen() should not recurse into
-fbcon_update_vcs() path due to FBINFO_MISC_USEREVENT being still set
-when calling resize_screen().
+do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000370c7c68>] prepare_to_wait+0xb1/0x2a0 kernel/sched/wait.c:247
+WARNING: CPU: 1 PID: 340 at kernel/sched/core.c:7253 __might_sleep+0x135/0x190
+kernel/sched/core.c:7253
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 340 Comm: syz-executor677 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google
+01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:231
+ __warn.cold+0x20/0x50 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x41/0x80 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:7253
+Code: 65 48 8b 1c 25 40 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06 00 75
+2b 48 8b 73 10 48 c7 c7 e0 9e 06 86 e8 ed 12 f6 ff <0f> 0b e9 46 ff ff ff e8 1f
+b2 4b 00 e9 29 ff ff ff e8 15 b2 4b 00
+RSP: 0018:ffff8881cdb77a28 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff8881c6458000 RCX: 0000000000000000
+RDX: ffff8881c6458000 RSI: ffffffff8129ec93 RDI: ffffed1039b6ef37
+RBP: ffffffff86fdade2 R08: 0000000000000001 R09: ffff8881db32f54f
+R10: 0000000000000000 R11: 0000000030343354 R12: 00000000000001f2
+R13: 0000000000000000 R14: 0000000000000068 R15: ffffffff83c1b1aa
+ slab_pre_alloc_hook.constprop.0+0xea/0x200 mm/slab.h:498
+ slab_alloc_node mm/slub.c:2816 [inline]
+ slab_alloc mm/slub.c:2900 [inline]
+ kmem_cache_alloc_trace+0x46/0x220 mm/slub.c:2917
+ kmalloc include/linux/slab.h:554 [inline]
+ dummy_urb_enqueue+0x7a/0x880 drivers/usb/gadget/udc/dummy_hcd.c:1251
+ usb_hcd_submit_urb+0x2b2/0x22d0 drivers/usb/core/hcd.c:1547
+ usb_submit_urb+0xb4e/0x13e0 drivers/usb/core/urb.c:570
+ yurex_write+0x3ea/0x820 drivers/usb/misc/yurex.c:495
 
-Instead of masking FBINFO_MISC_USEREVENT before calling fbcon_update_vcs(),
-we can remove FBINFO_MISC_USEREVENT by calling fbcon_update_vcs() only if
-fb_set_var() returned 0. This change assumes that it is harmless to call
-fbcon_update_vcs() when fb_set_var() returned 0 without reaching
-fb_notifier_call_chain().
+This patch changes the call to use GFP_ATOMIC instead of GFP_KERNEL.
 
-[1] https://syzkaller.appspot.com/bug?id=c70c88cfd16dcf6e1d3c7f0ab8648b3144b5b25e
+Reported-and-tested-by: syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200810182954.GB307778@rowland.harvard.edu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reported-and-tested-by: syzbot <syzbot+c37a14770d51a085a520@syzkaller.appspotmail.com>
-Suggested-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Reported-by: kernel test robot <lkp@intel.com> for missing #include
-Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Link: https://patchwork.freedesktop.org/patch/msgid/075b7e37-3278-cd7d-31ab-c5073cfa8e92@i-love.sakura.ne.jp
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/core/fbmem.c   | 8 ++------
- drivers/video/fbdev/core/fbsysfs.c | 4 ++--
- drivers/video/fbdev/ps3fb.c        | 5 +++--
- include/linux/fb.h                 | 2 --
- 4 files changed, 7 insertions(+), 12 deletions(-)
+ drivers/usb/misc/yurex.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/fbdev/core/fbmem.c b/drivers/video/fbdev/core/fbmem.c
-index 30e73ec4ad5c8..da7c88ffaa6a8 100644
---- a/drivers/video/fbdev/core/fbmem.c
-+++ b/drivers/video/fbdev/core/fbmem.c
-@@ -957,7 +957,6 @@ static int fb_check_caps(struct fb_info *info, struct fb_var_screeninfo *var,
- int
- fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
- {
--	int flags = info->flags;
- 	int ret = 0;
- 	u32 activate;
- 	struct fb_var_screeninfo old_var;
-@@ -1052,9 +1051,6 @@ fb_set_var(struct fb_info *info, struct fb_var_screeninfo *var)
- 	event.data = &mode;
- 	fb_notifier_call_chain(FB_EVENT_MODE_CHANGE, &event);
- 
--	if (flags & FBINFO_MISC_USEREVENT)
--		fbcon_update_vcs(info, activate & FB_ACTIVATE_ALL);
--
- 	return 0;
- }
- EXPORT_SYMBOL(fb_set_var);
-@@ -1105,9 +1101,9 @@ static long do_fb_ioctl(struct fb_info *info, unsigned int cmd,
- 			return -EFAULT;
- 		console_lock();
- 		lock_fb_info(info);
--		info->flags |= FBINFO_MISC_USEREVENT;
- 		ret = fb_set_var(info, &var);
--		info->flags &= ~FBINFO_MISC_USEREVENT;
-+		if (!ret)
-+			fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
- 		unlock_fb_info(info);
- 		console_unlock();
- 		if (!ret && copy_to_user(argp, &var, sizeof(var)))
-diff --git a/drivers/video/fbdev/core/fbsysfs.c b/drivers/video/fbdev/core/fbsysfs.c
-index d54c88f88991d..65dae05fff8e6 100644
---- a/drivers/video/fbdev/core/fbsysfs.c
-+++ b/drivers/video/fbdev/core/fbsysfs.c
-@@ -91,9 +91,9 @@ static int activate(struct fb_info *fb_info, struct fb_var_screeninfo *var)
- 
- 	var->activate |= FB_ACTIVATE_FORCE;
- 	console_lock();
--	fb_info->flags |= FBINFO_MISC_USEREVENT;
- 	err = fb_set_var(fb_info, var);
--	fb_info->flags &= ~FBINFO_MISC_USEREVENT;
-+	if (!err)
-+		fbcon_update_vcs(fb_info, var->activate & FB_ACTIVATE_ALL);
- 	console_unlock();
- 	if (err)
- 		return err;
-diff --git a/drivers/video/fbdev/ps3fb.c b/drivers/video/fbdev/ps3fb.c
-index 9df78fb772672..203c254f8f6cb 100644
---- a/drivers/video/fbdev/ps3fb.c
-+++ b/drivers/video/fbdev/ps3fb.c
-@@ -29,6 +29,7 @@
- #include <linux/freezer.h>
- #include <linux/uaccess.h>
- #include <linux/fb.h>
-+#include <linux/fbcon.h>
- #include <linux/init.h>
- 
- #include <asm/cell-regs.h>
-@@ -824,12 +825,12 @@ static int ps3fb_ioctl(struct fb_info *info, unsigned int cmd,
- 				var = info->var;
- 				fb_videomode_to_var(&var, vmode);
- 				console_lock();
--				info->flags |= FBINFO_MISC_USEREVENT;
- 				/* Force, in case only special bits changed */
- 				var.activate |= FB_ACTIVATE_FORCE;
- 				par->new_mode_id = val;
- 				retval = fb_set_var(info, &var);
--				info->flags &= ~FBINFO_MISC_USEREVENT;
-+				if (!retval)
-+					fbcon_update_vcs(info, var.activate & FB_ACTIVATE_ALL);
- 				console_unlock();
- 			}
- 			break;
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 3b4b2f0c6994d..b11eb02cad6d3 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -400,8 +400,6 @@ struct fb_tile_ops {
- #define FBINFO_HWACCEL_YPAN		0x2000 /* optional */
- #define FBINFO_HWACCEL_YWRAP		0x4000 /* optional */
- 
--#define FBINFO_MISC_USEREVENT          0x10000 /* event request
--						  from userspace */
- #define FBINFO_MISC_TILEBLITTING       0x20000 /* use tile blitting */
- 
- /* A driver may set this flag to indicate that it does want a set_par to be
--- 
-2.25.1
-
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -492,7 +492,7 @@ static ssize_t yurex_write(struct file *
+ 	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
+ 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
+ 		dev->cntl_buffer[0]);
+-	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
++	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
+ 	if (retval >= 0)
+ 		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
+ 	finish_wait(&dev->waitq, &wait);
 
 
