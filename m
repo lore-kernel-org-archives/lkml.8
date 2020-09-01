@@ -2,100 +2,112 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9CAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:08:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5898C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB808206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:08:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598962119;
-	bh=bS1viyL8NjfwjcMbt5ItRCCKbfY+WgWbL+lmwBqbddk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ld2jlI7yTSGQFoiF24aH/eG7cbcHbD/9UKyz5gEzm50No/bZ6iV5uJOyowuRmOgPn
-	 1ga8Epx3tFrlDFzvoZvcdQE5iYw/7KsmvsdPyBuklb3KZGFMfSR+J6deiZmdPcDUje
-	 6GfEUvy/V7v46BCwAeAzd4ndy6MprQK3aClGckv8=
+	by mail.kernel.org (Postfix) with ESMTP id BA20B206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:10:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q5v+iQL4";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4npmoOZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgIAMIf (ORCPT
+        id S1728033AbgIAMGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:08:35 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42660 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728018AbgIAL5t (ORCPT
+        Tue, 1 Sep 2020 08:06:06 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39440 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgIALtd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:57:49 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g10so885143otq.9;
-        Tue, 01 Sep 2020 04:57:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bS1viyL8NjfwjcMbt5ItRCCKbfY+WgWbL+lmwBqbddk=;
-        b=XCQGOoNfFs7MiAmmizNo4TWmVBcua3WaMZz7HcTQXw8pErpaf8/8UqzU5o8Tp2urpO
-         FGyrXrTHYR1XQmgTVZi+60BVNpF7sI2M0gajqmo2AIXkPQsPoNobexCEikXHN3eqIw94
-         e1dVimrJKJKOR01Vpr0Ch25gfgHPbhYTgqD/yvWOuGR8uJD2hlhZG9m/TxIQptd/RypT
-         1MkCmkAlnW0b6nbN6zvkfmj+mx2RseZjyW1P1S88GY5B0whn3L4fNTEN2b2WYxi99tbu
-         jgbtaUhY9aQcpOy2vmYdc8/FT+6XmJ8dQP+4uOtZe3umVF0aWjyq+xWrGxL/LeHVkmTn
-         oHVw==
-X-Gm-Message-State: AOAM5330+LDVvHLTMO/w5s1GmWoxNlq4Dwt5cmz+uOGZJOdnlmLhMRZz
-        GsdKY/qVKUDwhej8hczlpR2XqOpsqBFCBqASUgU=
-X-Google-Smtp-Source: ABdhPJwOq6HEEjQ3xAjudQZKFJPfbYu1NdSQrGq3FL2K08dbGzeOdfoH+V2BBxV3R1Xz+2libeoWvf6J9F6bWaodlSI=
-X-Received: by 2002:a9d:7e99:: with SMTP id m25mr1059559otp.118.1598961464586;
- Tue, 01 Sep 2020 04:57:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <1598943859-21857-1-git-send-email-claude.yen@mediatek.com>
-In-Reply-To: <1598943859-21857-1-git-send-email-claude.yen@mediatek.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 1 Sep 2020 13:57:33 +0200
-Message-ID: <CAJZ5v0hOGEUamXw124q4CnL67o97qRHy9Vv9_F2AQqefDdu3vQ@mail.gmail.com>
-Subject: Re: [PATCH] PM: s2idle: Introduce syscore callbacks in s2idle flow
-To:     Claude Yen <claude.yen@mediatek.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        Tue, 1 Sep 2020 07:49:33 -0400
+Date:   Tue, 01 Sep 2020 11:48:07 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598960888;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A9m4anUz0N5vIPvPFBVZIXdNWULcKGTjX1fUebtN+IY=;
+        b=q5v+iQL4YC4pEPHqE403FWVC5itrBNdJNsrGSVLxYw7J/jQzUnKbRoRsK4wyNTBGWV6NgJ
+        iCcnfUCIAlESm8iwwX+rYsAUZeh9cWHjcACz7ga8w9rMtn9MjqtRsqygCKDotYjy+2sPjc
+        jxRcdPdk6/mL9calWkuGxQBw/g+Nl7ig36c7gdt82Ep2vfgNZ4ho+Ic1XVNHJILKEthy27
+        8USKxXGygE/T7BDJrf6Yk3twWiFRdiQcA4zKNiEzQN0xL6BZa9N8MvcuZID3QaysjX8nTL
+        JLXgv1ovmr+IkeYgmbyiTPoEzAFsckSUjMGUp9rhREUlI0Ee8nCvIv7K6cC4Jg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598960888;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=A9m4anUz0N5vIPvPFBVZIXdNWULcKGTjX1fUebtN+IY=;
+        b=4npmoOZTR/YdWg7xfYb/vmcvQ+6DnJQmHlud3k6U5qVmlqkOYe3PWjtSyvRRap8RS16+sq
+        uN8wMYd27HX+rbCg==
+From:   "tip-bot2 for Josh Poimboeuf" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/static_call] compiler.h: Make __ADDRESSABLE() symbol truly unique
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC..." 
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200818135804.564436253@infradead.org>
+References: <20200818135804.564436253@infradead.org>
+MIME-Version: 1.0
+Message-ID: <159896088740.20229.7656713937908382909.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 9:05 AM Claude Yen <claude.yen@mediatek.com> wrote:
->
-> This series based on 5.9-rc1
-> This patch makes s2idle call existing syscore callbacks. Currently,
-> when s2idle is selected as system suspend method, callbacks hooked
-> by register_syscore_ops() will not be triggered. This may induce
-> unexpected results.
+The following commit has been merged into the core/static_call branch of tip:
 
-They are not executed by design.
+Commit-ID:     563a02b0c9704f69c0364befedd451f57fe88092
+Gitweb:        https://git.kernel.org/tip/563a02b0c9704f69c0364befedd451f57fe88092
+Author:        Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate:    Tue, 18 Aug 2020 15:57:40 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 01 Sep 2020 09:58:04 +02:00
 
-> For example, sched_clock_suspend() was added to s2idle flow in
-> commit 3f2552f7e9c5 ("timers/sched_clock: Prevent generic sched_clock
-> wrap caused by tick_freeze()") to fix clock wrap problem. However,
-> sched_clock_suspend() is originally registered in syscore callback.
+compiler.h: Make __ADDRESSABLE() symbol truly unique
 
-I'm not sure why this matters here.
+The __ADDRESSABLE() macro uses the __LINE__ macro to create a temporary
+symbol which has a unique name.  However, if the macro is used multiple
+times from within another macro, the line number will always be the
+same, resulting in duplicate symbols.
 
-> With this patch, if another syscore callback is needed in s2idle,
-> additional migration effort could be saved.
+Make the temporary symbols truly unique by using __UNIQUE_ID instead of
+__LINE__.
 
-s2idle cannot execute syscore callbacks, because it doesn' take
-non-boot CPUs offline and it won't do that.
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Link: https://lore.kernel.org/r/20200818135804.564436253@infradead.org
+---
+ include/linux/compiler.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
+diff --git a/include/linux/compiler.h b/include/linux/compiler.h
+index 6810d80..92ef163 100644
+--- a/include/linux/compiler.h
++++ b/include/linux/compiler.h
+@@ -207,7 +207,7 @@ void ftrace_likely_update(struct ftrace_likely_data *f, int val,
+  */
+ #define __ADDRESSABLE(sym) \
+ 	static void * __section(.discard.addressable) __used \
+-		__PASTE(__addressable_##sym, __LINE__) = (void *)&sym;
++		__UNIQUE_ID(__PASTE(__addressable_,sym)) = (void *)&sym;
+ 
+ /**
+  * offset_to_ptr - convert a relative memory offset to an absolute pointer
