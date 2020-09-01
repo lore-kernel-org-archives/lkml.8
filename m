@@ -2,44 +2,215 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16550C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48A2C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E74B3208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:41:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7E22068E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:46:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S3yYZOhg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727100AbgIAHlq (ORCPT
+        id S1726928AbgIAHq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:41:46 -0400
-Received: from verein.lst.de ([213.95.11.211]:52257 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgIAHlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:41:46 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id CB8ED68B05; Tue,  1 Sep 2020 09:41:43 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 09:41:43 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Baolin Wang <baolin.wang@linux.alibaba.com>
-Cc:     axboe@kernel.dk, ming.lei@redhat.com, hch@lst.de,
-        baolin.wang7@gmail.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/4] Some clean-ups for bio merge
-Message-ID: <20200901074143.GA30547@lst.de>
-References: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
+        Tue, 1 Sep 2020 03:46:29 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51448 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbgIAHq1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:46:27 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0817k83L056118;
+        Tue, 1 Sep 2020 02:46:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598946368;
+        bh=IArKfXZjgWen9X3q7V/DQYJ14EV6u7IF2HjW9A6oRts=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=S3yYZOhgjNY+2Pafmm6vxaksZY3A6sXjztPLPMIHZ2lpaGx/hCS/oQEdZ74sq0E0L
+         auF29YHwaaLT7+VLZe+VwoWhf5/OP6jY6wVzu12JzzKaeMD6qNErJj8RsPtVGMffVz
+         CqVIiGTV/MXvKG/oGWxSnyxjB8d8JN+U7Zvp5AdI=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0817k8vJ130624;
+        Tue, 1 Sep 2020 02:46:08 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Sep
+ 2020 02:46:07 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 1 Sep 2020 02:46:07 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0817k3oJ118971;
+        Tue, 1 Sep 2020 02:46:04 -0500
+Subject: Re: [PATCH v9 2/3] drm: bridge: Add support for Cadence MHDP8546
+ DPI/DP bridge
+To:     Swapnil Jakhade <sjakhade@cadence.com>,
+        <Laurent.pinchart@ideasonboard.com>,
+        <dri-devel@lists.freedesktop.org>
+CC:     <airlied@linux.ie>, <daniel@ffwll.ch>, <robh+dt@kernel.org>,
+        <a.hajda@samsung.com>, <narmstrong@baylibre.com>,
+        <jonas@kwiboo.se>, <jernej.skrabec@siol.net>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mparab@cadence.com>, <yamonkar@cadence.com>, <jsarha@ti.com>,
+        <nsekhar@ti.com>, <praneeth@ti.com>, <nikhil.nd@ti.com>
+References: <1598862215-10222-1-git-send-email-sjakhade@cadence.com>
+ <1598862215-10222-3-git-send-email-sjakhade@cadence.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <71452de7-80e7-0144-4802-e3370c00854b@ti.com>
+Date:   Tue, 1 Sep 2020 10:46:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1598580324.git.baolin.wang@linux.alibaba.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1598862215-10222-3-git-send-email-sjakhade@cadence.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+Hi Swapnil,
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+On 31/08/2020 11:23, Swapnil Jakhade wrote:
+
+> +static int cdns_mhdp_validate_mode_params(struct cdns_mhdp_device *mhdp,
+> +					  const struct drm_display_mode *mode,
+> +					  struct drm_bridge_state *bridge_state)
+> +{
+> +	u32 tu_size = 30, line_thresh1, line_thresh2, line_thresh = 0;
+> +	u32 rate, vs, vs_f, required_bandwidth, available_bandwidth;
+> +	struct cdns_mhdp_bridge_state *state;
+> +	int pxlclock;
+> +	u32 bpp;
+> +
+> +	state = to_cdns_mhdp_bridge_state(bridge_state);
+> +
+> +	pxlclock = mode->crtc_clock;
+> +
+> +	/* Get rate in MSymbols per second per lane */
+> +	rate = mhdp->link.rate / 1000;
+> +
+> +	bpp = cdns_mhdp_get_bpp(&mhdp->display_fmt);
+
+None of the above are used when calling cdns_mhdp_bandwidth_ok(). For clarity, I'd move the above
+lines a bit closer to where they are needed, as currently it makes me think the above values are
+used when checking the bandwidth.
+
+> +	if (!cdns_mhdp_bandwidth_ok(mhdp, mode, mhdp->link.num_lanes,
+> +				    mhdp->link.rate)) {
+> +		dev_err(mhdp->dev, "%s: Not enough BW for %s (%u lanes at %u Mbps)\n",
+> +			__func__, mode->name, mhdp->link.num_lanes,
+> +			mhdp->link.rate / 100);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* find optimal tu_size */
+> +	required_bandwidth = pxlclock * bpp / 8;
+> +	available_bandwidth = mhdp->link.num_lanes * rate;
+> +	do {
+> +		tu_size += 2;
+> +
+> +		vs_f = tu_size * required_bandwidth / available_bandwidth;
+> +		vs = vs_f / 1000;
+> +		vs_f = vs_f % 1000;
+> +		/* Downspreading is unused currently */
+> +	} while ((vs == 1 || ((vs_f > 850 || vs_f < 100) && vs_f != 0) ||
+> +		 tu_size - vs < 2) && tu_size < 64);
+> +
+> +	if (vs > 64) {
+> +		dev_err(mhdp->dev,
+> +			"%s: No space for framing %s (%u lanes at %u Mbps)\n",
+> +			__func__, mode->name, mhdp->link.num_lanes,
+> +			mhdp->link.rate / 100);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (vs == tu_size)
+> +		vs = tu_size - 1;
+> +
+> +	line_thresh1 = ((vs + 1) << 5) * 8 / bpp;
+> +	line_thresh2 = (pxlclock << 5) / 1000 / rate * (vs + 1) - (1 << 5);
+> +	line_thresh = line_thresh1 - line_thresh2 / mhdp->link.num_lanes;
+> +	line_thresh = (line_thresh >> 5) + 2;
+> +
+> +	state->vs = vs;
+> +	state->tu_size = tu_size;
+> +	state->line_thresh = line_thresh;
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_mhdp_atomic_check(struct drm_bridge *bridge,
+> +				  struct drm_bridge_state *bridge_state,
+> +				  struct drm_crtc_state *crtc_state,
+> +				  struct drm_connector_state *conn_state)
+> +{
+> +	struct cdns_mhdp_device *mhdp = bridge_to_mhdp(bridge);
+> +	const struct drm_display_mode *mode = &crtc_state->adjusted_mode;
+> +	int ret;
+> +
+> +	mutex_lock(&mhdp->link_mutex);
+> +
+> +	if (!mhdp->plugged) {
+> +		mhdp->link.rate = mhdp->host.link_rate;
+> +		mhdp->link.num_lanes = mhdp->host.lanes_cnt;
+> +	}
+> +
+> +	ret = cdns_mhdp_validate_mode_params(mhdp, mode, bridge_state);
+> +
+> +	mutex_unlock(&mhdp->link_mutex);
+> +
+> +	return ret;
+> +}
+
+Laurent mentioned that atomic_check should not change state. Note that
+cdns_mhdp_validate_mode_params also changes state, as it calculates tu_size, vs and line_thresh.
+
+There seems to be issues with mode changes, but I think the first step would be to clarify the
+related code a bit. cdns_mhdp_validate_mode_params() is misnamed, I think it should be renamed to
+calculate_tu or something like that.
+
+cdns_mhdp_bandwidth_ok() should take display_fmt or bpp as a parameter, as currently it digs that up
+from the current state.
+
+Probably cdns_mhdp_validate_mode_params() would be better if it doesn't write the result to the
+state, but returns the values. That way it could also be used to verify if suitable settings can be
+found, without changing the state.
+
+The are two issues I see with some testing, which are probably related.
+
+The first one is that if I run kmstest with a new mode, I see tu-size & co being calculated. But the
+calculation happens before link training, which doesn't make sense. So I think what's done here is
+that atomic_check causes tu-size calculations, then atomic_enable does link training and enables the
+video.
+
+The second happens when my monitor fails with the first CR after power-on, and the driver drops
+number-of-lanes to 2. It goes like this:
+
+The driver is loaded. Based on EDID, fbdev is created with 1920x1200. Link training is done, which
+has the CR issue, and because of that the actual mode that we get is 1280x960. I get a proper
+picture here, so far so good.
+
+Then if I run kmstest, it only allows 1280x960 as the link doesn't support higher modes (that's ok).
+It the does link training and gets a 4 lane link, and enables 1280x960. But the picture is not ok.
+
+If I then exit kmstest, it goes back to fbdev, but now that picture is broken also.
+
+Running kmstest again gives me 1920x1200 (as the link has been 4 lane now), and the picture is fine.
+
+I think the above suggests that the driver is not properly updating all the registers based on the
+new mode and link. I tried adding cdns_mhdp_validate_mode_params() call to
+cdns_mhdp_atomic_enable(), so that tu-size etc will be calculated, but that did not fix the problem.
+
+ Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
