@@ -2,233 +2,108 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921FDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF0EC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5443C2073A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:24:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4986520E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:26:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hWFQawWJ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="VzVNnOpB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726929AbgIAAYy (ORCPT
+        id S1726112AbgIAA0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 20:24:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61450 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725987AbgIAAYx (ORCPT
+        Mon, 31 Aug 2020 20:26:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgIAA0g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 20:24:53 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0810I5di085973;
-        Mon, 31 Aug 2020 20:24:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding; s=pp1;
- bh=deJxd9HqlqVaOwemxvY4Rdre3L6cKhhHSqsfzIjrEAk=;
- b=hWFQawWJDC8IITJQmvX/jX8I2xnYEA6Bo526vJCHijlDRY2pT1xPcQU2v78TSDXG8VJk
- oUJ7c9qOaR2+/Fqj3gwC3jDA0b/Om4b/VnbUp3tO20HCxxwlrjxAi9qsEOE+PjiCSBnX
- 1vf22/xM0NdjlODzuxBFE8EUU+/rgET8l2DszIWGGQOkDr7w5kssSbGTkywAaaU82F+4
- 7ssFI+Hk6ze0t+Ac2iBHxho6iWK4ho8yn3PfmOJRqTzUUMXFTvERTc1i7CyJcJwigtYE
- eMYI1YHD804V7YKRoefFtmgYNuUvNzHREsvPbHJcXr1G6FRcn1TbfpXpYHqdLDXXsBHV +Q== 
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 339bmx02v8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 31 Aug 2020 20:24:23 -0400
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0810C5v1000785;
-        Tue, 1 Sep 2020 00:24:22 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 337en9h0b6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 00:24:22 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0810OMRF38207946
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Sep 2020 00:24:22 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA42B28058;
-        Tue,  1 Sep 2020 00:24:21 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7201528060;
-        Tue,  1 Sep 2020 00:24:21 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.40.195.188])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Sep 2020 00:24:21 +0000 (GMT)
-From:   Tyrel Datwyler <tyreld@linux.ibm.com>
-To:     james.bottomley@hansenpartnership.com
-Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        brking@linux.ibm.com, Tyrel Datwyler <tyreld@linux.ibm.com>
-Subject: [PATCH v2] scsi: ibmvfc: interface updates for future FPIN and MQ support
-Date:   Mon, 31 Aug 2020 19:24:20 -0500
-Message-Id: <20200901002420.648532-1-tyreld@linux.ibm.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 31 Aug 2020 20:26:36 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EC8C061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:26:36 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id di5so3224098qvb.13
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:26:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=25EP6lDyA/VCn85jeEaspBr9VnHNH+CoU2Es2Lg6BDE=;
+        b=VzVNnOpB/iZRtjs0/1dL+nyroS8pJ/JR/teYVPRC7ehg6J0uj6p4zAJr6eqtSZ2zcS
+         rmxMytC4VbsLpe5JIp8JF1WcWZZLy3GlDY23qNPj+/ABik90fsRKa+S4ki9e8FJ+CvoR
+         A8xblUuWz+yRHu4JwqhUE2Jzdun6FWJ0Ytx+/0mAeJ82Y47xkJ8nvg184gjVdiyrxAaG
+         inDzKjNxRp63B1/Nooabo6cFApB3xKxZYphB4eN1imAT6tQO1SDWWLNoFEJBZhszfD6c
+         TAQeF0yEsXqa9+LFUvUvXi6GNT7UNIUO7yWizAYb4Bk2vSaH40Cb9pvN+ZD6T4uhR0yt
+         buKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=25EP6lDyA/VCn85jeEaspBr9VnHNH+CoU2Es2Lg6BDE=;
+        b=CUeOKZLfqiAo2K5I/Mqk41n/qP6TTv2ceNxcURzpw4vVuS6mM6LtYK8Ihf/mAHzvoV
+         Exoe5+PwnZj2tg2LihA+k1XLe+vBQOiD3yre9mpf9lfHmmz4LVcPxzIyHJXxCDQ4zUmr
+         tRWt81oEzBelr9BDM8V/jLwQvmHQOvCemMcr1QFmJ4kSyd5uRO09DBFffcuhjO1b1kBC
+         V635kD5QRdBHKQJjFgBttTyyBphud845a9pct9hMp+3Hfgh26BK7+qQqjZkD2ZkvCByB
+         mv4I7vQ4OXSZrO75hzBqLvLH5P5VerG+SL4wUuvAgp16WlsbbLhrXegw+aKcPTqOaTk4
+         LUkw==
+X-Gm-Message-State: AOAM533s6yb5p9IjieGewM+Y6+wBCXJzRcRtBRLDDXtypfirj2Jo1uWO
+        clB0Gi9MuorV5azs8I1SsL65wg==
+X-Google-Smtp-Source: ABdhPJzJhMCsv9DIr2p50bKrzX+/ZhDja6UADS9AoiMBVU3C3F/pJwgZhRS+rIVYPK+5D15jnq+I8A==
+X-Received: by 2002:a05:6214:5c8:: with SMTP id t8mr3683557qvz.86.1598919995600;
+        Mon, 31 Aug 2020 17:26:35 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
+        by smtp.gmail.com with ESMTPSA id d15sm10918024qka.91.2020.08.31.17.26.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 17:26:35 -0700 (PDT)
+Received: from jgg by mlx with local (Exim 4.94)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1kCu8A-003WwX-Ad; Mon, 31 Aug 2020 21:26:34 -0300
+Date:   Mon, 31 Aug 2020 21:26:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Jann Horn <jannh@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Subject: Re: [PATCH] mm/mmu_notifier: Fix mmget() assert in
+ __mmu_interval_notifier_insert
+Message-ID: <20200901002634.GD24045@ziepe.ca>
+References: <20200901000143.207585-1-jannh@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-08-31_10:2020-08-31,2020-08-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 phishscore=0 mlxlogscore=962 suspectscore=1 mlxscore=0
- lowpriorityscore=0 adultscore=0 bulkscore=0 clxscore=1015 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2008310145
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901000143.207585-1-jannh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VIOS partitions with SLI-4 enabled Emulex adapters will be capable of
-driving IO in parallel through mulitple work queues or channels, and
-with new hyperviosr firmware that supports multiple interrupt sources
-an ibmvfc NPIV single initiator can be modified to exploit end to end
-channelization in a PowerVM environment.
+On Tue, Sep 01, 2020 at 02:01:43AM +0200, Jann Horn wrote:
+> The comment talks about having to hold mmget() (which means mm_users), but
+> the actual check is on mm_count (which would be mmgrab()).
+> 
+> Given that MMU notifiers are torn down in
+> mmput() -> __mmput() -> exit_mmap() -> mmu_notifier_release(),
+> I believe that the comment is correct and the check should be on
+> mm->mm_users. Fix it up accordingly.
+> 
+> Fixes: 99cb252f5e68 ("mm/mmu_notifier: add an interval tree notifier")
+> Signed-off-by: Jann Horn <jannh@google.com>
+> ---
+> Can someone please double-check this? I'm like 90% sure that I fixed
+> this the right way around, but it'd be good if someone more familiar
+> with mmu notifiers could confirm.
 
-VIOS hosts will also be able to expose fabric perfromance impact
-notifications (FPIN) via a new asynchronous event to ibmvfc clients that
-advertise support via IBMVFC_CAN_HANDLE_FPIN in their capabilities flag
-during NPIV_LOGIN.
+Hmm.. I added the comment but copied the expression from older code.
 
-This patch introduces three new Managment Datagrams (MADs) for
-channelization support negotiation as well as the FPIN asynchronous
-event and FPIN status flags. Follow up work is required to plumb the
-ibmvfc client driver to use these new interfaces.
+The intent is certainly that the caller must have a mmget, this
+function must not race with __mmu_notifier_release() and the mmget is
+what prevents that.
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
----
-v1 -> v2:
-	Fixup complier errors from neglected commit --amend
+Reviewed-by: Jason Gunthorpe <jgg@nvidia.com>
 
----
- drivers/scsi/ibmvscsi/ibmvfc.h | 66 +++++++++++++++++++++++++++++++++-
- 1 file changed, 65 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/scsi/ibmvscsi/ibmvfc.h b/drivers/scsi/ibmvscsi/ibmvfc.h
-index 907889f1fa9d..fe55cfc79421 100644
---- a/drivers/scsi/ibmvscsi/ibmvfc.h
-+++ b/drivers/scsi/ibmvscsi/ibmvfc.h
-@@ -124,6 +124,9 @@ enum ibmvfc_mad_types {
- 	IBMVFC_PASSTHRU		= 0x0200,
- 	IBMVFC_TMF_MAD		= 0x0100,
- 	IBMVFC_NPIV_LOGOUT	= 0x0800,
-+	IBMVFC_CHANNEL_ENQUIRY	= 0x1000,
-+	IBMVFC_CHANNEL_SETUP	= 0x2000,
-+	IBMVFC_CONNECTION_INFO	= 0x4000,
- };
- 
- struct ibmvfc_mad_common {
-@@ -162,6 +165,8 @@ struct ibmvfc_npiv_login {
- 	__be32 max_cmds;
- 	__be64 capabilities;
- #define IBMVFC_CAN_MIGRATE		0x01
-+#define IBMVFC_CAN_USE_CHANNELS		0x02
-+#define IBMVFC_CAN_HANDLE_FPIN		0x04
- 	__be64 node_name;
- 	struct srp_direct_buf async;
- 	u8 partition_name[IBMVFC_MAX_NAME];
-@@ -204,6 +209,7 @@ struct ibmvfc_npiv_login_resp {
- 	__be64 capabilities;
- #define IBMVFC_CAN_FLUSH_ON_HALT	0x08
- #define IBMVFC_CAN_SUPPRESS_ABTS	0x10
-+#define IBMVFC_CAN_SUPPORT_CHANNELS	0x20
- 	__be32 max_cmds;
- 	__be32 scsi_id_sz;
- 	__be64 max_dma_len;
-@@ -482,6 +488,52 @@ struct ibmvfc_passthru_mad {
- 	struct ibmvfc_passthru_fc_iu fc_iu;
- }__attribute__((packed, aligned (8)));
- 
-+struct ibmvfc_channel_enquiry {
-+	struct ibmvfc_mad_common common;
-+	__be32 flags;
-+#define IBMVFC_NO_CHANNELS_TO_CRQ_SUPPORT	0x01
-+#define IBMVFC_SUPPORT_VARIABLE_SUBQ_MSG	0x02
-+#define IBMVFC_NO_N_TO_M_CHANNELS_SUPPORT	0x04
-+	__be32 num_scsi_subq_channels;
-+	__be32 num_nvmeof_subq_channels;
-+	__be32 num_scsi_vas_channels;
-+	__be32 num_nvmeof_vas_channels;
-+}__attribute__((packed, aligned (8)));
-+
-+struct ibmvfc_channel_setup_mad {
-+	struct ibmvfc_mad_common common;
-+	struct srp_direct_buf buffer;
-+}__attribute__((packed, aligned (8)));
-+
-+#define IBMVFC_MAX_CHANNELS	502
-+
-+struct ibmvfc_channel_setup {
-+	__be32 flags;
-+#define IBMVFC_CANCEL_CHANNELS		0x01
-+#define IBMVFC_USE_BUFFER		0x02
-+#define IBMVFC_CHANNELS_CANCELED	0x04
-+	__be32 reserved;
-+	__be32 num_scsi_subq_channels;
-+	__be32 num_nvmeof_subq_channels;
-+	__be32 num_scsi_vas_channels;
-+	__be32 num_nvmeof_vas_channels;
-+	struct srp_direct_buf buffer;
-+	__be64 reserved2[5];
-+	__be64 channel_handles[IBMVFC_MAX_CHANNELS];
-+}__attribute__((packed, aligned (8)));
-+
-+struct ibmvfc_connection_info {
-+	struct ibmvfc_mad_common common;
-+	__be64 information_bits;
-+#define IBMVFC_NO_FC_IO_CHANNEL		0x01
-+#define IBMVFC_NO_PHYP_VAS		0x02
-+#define IBMVFC_NO_PHYP_SUBQ		0x04
-+#define IBMVFC_PHYP_DEPRECATED_SUBQ	0x08
-+#define IBMVFC_PHYP_PRESERVED_SUBQ	0x10
-+#define IBMVFC_PHYP_FULL_SUBQ		0x20
-+	__be64 reserved[16];
-+}__attribute__((packed, aligned (8)));
-+
- struct ibmvfc_trace_start_entry {
- 	u32 xfer_len;
- }__attribute__((packed));
-@@ -532,6 +584,7 @@ enum ibmvfc_async_event {
- 	IBMVFC_AE_HALT			= 0x0400,
- 	IBMVFC_AE_RESUME			= 0x0800,
- 	IBMVFC_AE_ADAPTER_FAILED	= 0x1000,
-+	IBMVFC_AE_FPIN			= 0x2000,
- };
- 
- struct ibmvfc_async_desc {
-@@ -560,10 +613,18 @@ enum ibmvfc_ae_link_state {
- 	IBMVFC_AE_LS_LINK_DEAD		= 0x08,
- };
- 
-+enum ibmvfc_ae_fpin_status {
-+	IBMVFC_AE_FPIN_LINK_CONGESTED	= 0x1,
-+	IBMVFC_AE_FPIN_PORT_CONGESTED	= 0x2,
-+	IBMVFC_AE_FPIN_PORT_CLEARED	= 0x3,
-+	IBMVFC_AE_FPIN_PORT_DEGRADED	= 0x4,
-+};
-+
- struct ibmvfc_async_crq {
- 	volatile u8 valid;
- 	u8 link_state;
--	u8 pad[2];
-+	u8 fpin_status;
-+	u8 pad;
- 	__be32 pad2;
- 	volatile __be64 event;
- 	volatile __be64 scsi_id;
-@@ -590,6 +651,9 @@ union ibmvfc_iu {
- 	struct ibmvfc_tmf tmf;
- 	struct ibmvfc_cmd cmd;
- 	struct ibmvfc_passthru_mad passthru;
-+	struct ibmvfc_channel_enquiry channel_enquiry;
-+	struct ibmvfc_channel_setup_mad channel_setup;
-+	struct ibmvfc_connection_info connection_info;
- }__attribute__((packed, aligned (8)));
- 
- enum ibmvfc_target_action {
--- 
-2.27.0
-
+Jason
