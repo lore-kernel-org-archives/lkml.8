@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A64C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FEEC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 25805206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F09E206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975006;
-	bh=RA3r1b3PMeFmJLBAecy91rRZxghvGtQ0YKv3cDs5nFA=;
+	s=default; t=1598975017;
+	bh=fIHIM0NwOWuvBqLrNo02Cp7DkkhrsMdirJnurd7PR9E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EQPj9hflv6dzjh59k5GueU75kgKK1e+IC8n35RM66ILJjjpEBUbP1A64sZqz68hlE
-	 0Zv4xwSCo1X1vorRJ4kGVKtkGF8VBdgk0tTadOEj4lz713fKXvSnVwuiDqnrlzoP9e
-	 Q5H4bOosd73MOb0tdqniEFPJIl+vBk60gKM9xKbs=
+	b=aBiwRrr1ji9BG5fU9FsjQHscRTqlgolQdV1BjyUhATI7e09wFt8XA4vtNULgi5Lui
+	 OQ+ij2z2EDQKA3cfKuzAoiKbLiORnf4CEDLjiUHE6q8zRBP+boveTuDwTQA9qZyCDg
+	 lHQQbUcZLwInMI5ITqAdjxW/LL+ZZgphhVtTZ1Ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbgIAPnY (ORCPT
+        id S1731668AbgIAPne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:43:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52400 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:43:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728318AbgIAPkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:40:53 -0400
+        id S1731516AbgIAPk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:40:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20296206EF;
-        Tue,  1 Sep 2020 15:40:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32D55206EF;
+        Tue,  1 Sep 2020 15:40:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974852;
-        bh=RA3r1b3PMeFmJLBAecy91rRZxghvGtQ0YKv3cDs5nFA=;
+        s=default; t=1598974857;
+        bh=fIHIM0NwOWuvBqLrNo02Cp7DkkhrsMdirJnurd7PR9E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b9pxCnpMEzLG3mBd70lVVUc6OQc9BWfQ/AfetLum7vtoy+GyUsXOO1MryhB4YKylp
-         NdyYdK0RRB/NW0gY/qvCo6VIhzn4dhcwPWUyhLHisiUAN/xLOwfv35HDNn3ZRsMQPi
-         m+wYS8fuQIg0yOyI3DONE9Hbxo3qGkn7m4qn0u2I=
+        b=OZRGggsI/1nB6HuuvX8PyQryDuACLFlYfP5SSiI4fpgSvCL9izZIrm31ConDHgoNh
+         bjnIvUlevUe7PH1rFKCsWQl1xTUOZZCVCq0eN314jcKxPPoRT67xIXjCBGRhx38fI3
+         D630ZpY1mvIn57hy3hfHW7+XWB4V9JUiTaTv09PM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Ritesh Harjani <riteshh@linux.ibm.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 114/255] ext4: handle option set by mount flags correctly
-Date:   Tue,  1 Sep 2020 17:09:30 +0200
-Message-Id: <20200901151006.187535982@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Changpeng Liu <changpeng.liu@intel.com>,
+        Daniel Verkamp <dverkamp@chromium.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 087/255] block: virtio_blk: fix handling single range discard request
+Date:   Tue,  1 Sep 2020 17:09:03 +0200
+Message-Id: <20200901151004.895777425@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,96 +65,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit f25391ebb475d3ffb3aa61bb90e3594c841749ef ]
+[ Upstream commit af822aa68fbdf0a480a17462ed70232998127453 ]
 
-Currently there is a problem with mount options that can be both set by
-vfs using mount flags or by a string parsing in ext4.
+1f23816b8eb8 ("virtio_blk: add discard and write zeroes support") starts
+to support multi-range discard for virtio-blk. However, the virtio-blk
+disk may report max discard segment as 1, at least that is exactly what
+qemu is doing.
 
-i_version/iversion options gets lost after remount, for example
+So far, block layer switches to normal request merge if max discard segment
+limit is 1, and multiple bios can be merged to single segment. This way may
+cause memory corruption in virtblk_setup_discard_write_zeroes().
 
-$ mount -o i_version /dev/pmem0 /mnt
-$ grep pmem0 /proc/self/mountinfo | grep i_version
-310 95 259:0 / /mnt rw,relatime shared:163 - ext4 /dev/pmem0 rw,seclabel,i_version
-$ mount -o remount,ro /mnt
-$ grep pmem0 /proc/self/mountinfo | grep i_version
+Fix the issue by handling single max discard segment in straightforward
+way.
 
-nolazytime gets ignored by ext4 on remount, for example
-
-$ mount -o lazytime /dev/pmem0 /mnt
-$ grep pmem0 /proc/self/mountinfo | grep lazytime
-310 95 259:0 / /mnt rw,relatime shared:163 - ext4 /dev/pmem0 rw,lazytime,seclabel
-$ mount -o remount,nolazytime /mnt
-$ grep pmem0 /proc/self/mountinfo | grep lazytime
-310 95 259:0 / /mnt rw,relatime shared:163 - ext4 /dev/pmem0 rw,lazytime,seclabel
-
-Fix it by applying the SB_LAZYTIME and SB_I_VERSION flags from *flags to
-s_flags before we parse the option and use the resulting state of the
-same flags in *flags at the end of successful remount.
-
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Ritesh Harjani <riteshh@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200723150526.19931-1-lczerner@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 1f23816b8eb8 ("virtio_blk: add discard and write zeroes support")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Changpeng Liu <changpeng.liu@intel.com>
+Cc: Daniel Verkamp <dverkamp@chromium.org>
+Cc: Michael S. Tsirkin <mst@redhat.com>
+Cc: Stefan Hajnoczi <stefanha@redhat.com>
+Cc: Stefano Garzarella <sgarzare@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ drivers/block/virtio_blk.c | 31 +++++++++++++++++++++++--------
+ 1 file changed, 23 insertions(+), 8 deletions(-)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index c77b10257b36a..85849e5b31b28 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5487,7 +5487,7 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- {
- 	struct ext4_super_block *es;
- 	struct ext4_sb_info *sbi = EXT4_SB(sb);
--	unsigned long old_sb_flags;
-+	unsigned long old_sb_flags, vfs_flags;
- 	struct ext4_mount_options old_opts;
- 	int enable_quota = 0;
- 	ext4_group_t g;
-@@ -5530,6 +5530,14 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 	if (sbi->s_journal && sbi->s_journal->j_task->io_context)
- 		journal_ioprio = sbi->s_journal->j_task->io_context->ioprio;
+diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+index 980df853ee497..99991b6a6f0ed 100644
+--- a/drivers/block/virtio_blk.c
++++ b/drivers/block/virtio_blk.c
+@@ -126,16 +126,31 @@ static int virtblk_setup_discard_write_zeroes(struct request *req, bool unmap)
+ 	if (!range)
+ 		return -ENOMEM;
  
-+	/*
-+	 * Some options can be enabled by ext4 and/or by VFS mount flag
-+	 * either way we need to make sure it matches in both *flags and
-+	 * s_flags. Copy those selected flags from *flags to s_flags
-+	 */
-+	vfs_flags = SB_LAZYTIME | SB_I_VERSION;
-+	sb->s_flags = (sb->s_flags & ~vfs_flags) | (*flags & vfs_flags);
-+
- 	if (!parse_options(data, sb, NULL, &journal_ioprio, 1)) {
- 		err = -EINVAL;
- 		goto restore_opts;
-@@ -5583,9 +5591,6 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		set_task_ioprio(sbi->s_journal->j_task, journal_ioprio);
- 	}
- 
--	if (*flags & SB_LAZYTIME)
--		sb->s_flags |= SB_LAZYTIME;
+-	__rq_for_each_bio(bio, req) {
+-		u64 sector = bio->bi_iter.bi_sector;
+-		u32 num_sectors = bio->bi_iter.bi_size >> SECTOR_SHIFT;
 -
- 	if ((bool)(*flags & SB_RDONLY) != sb_rdonly(sb)) {
- 		if (sbi->s_mount_flags & EXT4_MF_FS_ABORTED) {
- 			err = -EROFS;
-@@ -5733,7 +5738,13 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 	}
- #endif
- 
--	*flags = (*flags & ~SB_LAZYTIME) | (sb->s_flags & SB_LAZYTIME);
+-		range[n].flags = cpu_to_le32(flags);
+-		range[n].num_sectors = cpu_to_le32(num_sectors);
+-		range[n].sector = cpu_to_le64(sector);
+-		n++;
 +	/*
-+	 * Some options can be enabled by ext4 and/or by VFS mount flag
-+	 * either way we need to make sure it matches in both *flags and
-+	 * s_flags. Copy those selected flags from s_flags to *flags
++	 * Single max discard segment means multi-range discard isn't
++	 * supported, and block layer only runs contiguity merge like
++	 * normal RW request. So we can't reply on bio for retrieving
++	 * each range info.
 +	 */
-+	*flags = (*flags & ~vfs_flags) | (sb->s_flags & vfs_flags);
++	if (queue_max_discard_segments(req->q) == 1) {
++		range[0].flags = cpu_to_le32(flags);
++		range[0].num_sectors = cpu_to_le32(blk_rq_sectors(req));
++		range[0].sector = cpu_to_le64(blk_rq_pos(req));
++		n = 1;
++	} else {
++		__rq_for_each_bio(bio, req) {
++			u64 sector = bio->bi_iter.bi_sector;
++			u32 num_sectors = bio->bi_iter.bi_size >> SECTOR_SHIFT;
 +
- 	ext4_msg(sb, KERN_INFO, "re-mounted. Opts: %s", orig_data);
- 	kfree(orig_data);
- 	return 0;
++			range[n].flags = cpu_to_le32(flags);
++			range[n].num_sectors = cpu_to_le32(num_sectors);
++			range[n].sector = cpu_to_le64(sector);
++			n++;
++		}
+ 	}
+ 
++	WARN_ON_ONCE(n != segments);
++
+ 	req->special_vec.bv_page = virt_to_page(range);
+ 	req->special_vec.bv_offset = offset_in_page(range);
+ 	req->special_vec.bv_len = sizeof(*range) * segments;
 -- 
 2.25.1
 
