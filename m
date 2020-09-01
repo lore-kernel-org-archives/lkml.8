@@ -2,168 +2,147 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC79EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:52:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C9DC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5ED420707
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22325206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="FaF/YWwk";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="umchNfya"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dK+g3nPb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbgIALwQ (ORCPT
+        id S1727932AbgIALwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:52:16 -0400
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25]:59123 "EHLO
-        wout2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727046AbgIALl4 (ORCPT
+        Tue, 1 Sep 2020 07:52:45 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49042 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727048AbgIALl4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 07:41:56 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id A5635E85;
-        Tue,  1 Sep 2020 07:40:19 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 01 Sep 2020 07:40:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=9azO1dZNqCpcvjOzPEkevlaB/dN
-        EkdBBbt08o9p7OMQ=; b=FaF/YWwkEtJgACjyc2uHponLFGWFEGR3ROixkHhvnb6
-        Xssz8kcZxNs5cGu7UuvuY0s8NI0eAiPcwHb8XRZOuQ7i+TbS0Um7LeMq3hSPg6E1
-        TVSl26AnyIjWe/7rc4VJLb+Y2ApN7lgqaK+UStkyBpRYht5fsHdgZjqjZ2Qyvwlf
-        SYP2Zf27I1T5I/d41Zp7aDuRLqpUJ3+9VsWKKI93W+8XtpLmO6LCWQKudxxzATCW
-        OC1yiMT5AdbY3/piMfT/7XNLQPEPLr/uA7BI2Tc3OLlLrUd/EjYFRj99HcbuLNlO
-        TwNfHyhX9x48Cu5kFpy8xKthjWwFMEgFxq8efBQD4Rg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=9azO1d
-        ZNqCpcvjOzPEkevlaB/dNEkdBBbt08o9p7OMQ=; b=umchNfyaf/QvFjAE9hF9XK
-        2P5nENuThzppKBSmtEaBKLazC/MrALvwJtUBjMWuSVqVAKnt5whSuzLVqopP8CiU
-        bamRAkyhv8sLpdk4kZX4rNUY/8M4b/vqSkHoi8hS9sTquhb1zez9tTX0+nrfDcI6
-        J2GNLYI0UeDjs34c3Uk+nT7ugNUfpRRj+/s2rWBHprMVNcgtwbssNVEeFWEt4a0V
-        TPbaox9nZQ+cRQ/bcw41Bqdqa0JTGZs2188Bi0EMBqKtF+BkynHYs3cJqwldTS78
-        yle2qCrcUDpqlsO22pq8VnF+WtGr2Qe0QJ+o6snsREEcTBh2UvPZmOYd0FE0U6Ww
-        ==
-X-ME-Sender: <xms:ITNOXxeRzxPtwPqC_EbQgd_R8AlVqXzC9GmK7cqbLvBpZYL34VE3iw>
-    <xme:ITNOX_OM5eZH9kemW44j1p9_XPVWITxmrJVR4g3bFrickZr_1gLTwy5_oJFFNR3Zg
-    jTo9n4pcDaK6iNdPRY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefjedggeegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:ITNOX6itwy3K-fwLF2qSs9nVGKU0SGt8MYX8UPLMNnsVHc4-HD__og>
-    <xmx:ITNOX69MGVYxkZyI_NnbWslaIU-mbmQkedMDUoKLB5Aqact_4aVxPw>
-    <xmx:ITNOX9ukQhMvJzXxhr_k4F-pjfB2KjoFmt1k4C5OIuyCl0SR9qeG-A>
-    <xmx:IzNOX-856FswgbWULPhNp89561mwgvcITuqV2hnDYquClKT9D2AvXg>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id A4631328005D;
-        Tue,  1 Sep 2020 07:40:17 -0400 (EDT)
-Date:   Tue, 1 Sep 2020 13:40:15 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     Martin Cerveny <m.cerveny@computer.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: crypto: add new compatible for V3s
-Message-ID: <20200901114015.qivovvjqvmhkicdl@gilmour.lan>
-References: <20200831073101.3608-1-m.cerveny@computer.org>
- <20200831073101.3608-2-m.cerveny@computer.org>
- <20200901093249.orwyc5sr3z2y43fz@gilmour.lan>
- <20200901105719.GA2639@Red>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d4zgxzgmrbrrtklg"
-Content-Disposition: inline
-In-Reply-To: <20200901105719.GA2639@Red>
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 081B2xXE021249;
+        Tue, 1 Sep 2020 07:05:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
+ from : to : cc : date : in-reply-to : references : content-type :
+ mime-version : content-transfer-encoding; s=pp1;
+ bh=xXWHJPjAJlz3TybqT9CscGwSEJpGhYi9Z4DQ9I5Cebw=;
+ b=dK+g3nPbtCX+mi/9VqDIlKsayT5XBPcLexGA1J8R0Y6kEapzKyRghjRtxYVbmCjwgtXi
+ /OAl65LQ7GLTOU+jRjV9ayjTXE/eVP0BLV9HT0Iw/FKVHgZodDUK1Y7VgEwXBV0/FsXh
+ e0yc0K4PflokZ1/e+YTtNrzb++ouK87NeXYwMLkvp0lzxs3NeNtlOsV1k64Ml2HNqs8g
+ DCs+Eodswe+cOAuCOl2d7dK6RPFr5TrwcVFmBVjiPMr3g/WmjYhqPBxwxMJLMCoMLUJT
+ xTwMWYcZ09sxKM5OwAuKDYhGe6tflAw0WY806hxg+jgbEKOFP+kB6AUdCG+DEZ29NxhV 9A== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339m1qhqrk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 07:05:33 -0400
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 081B3nJr023217;
+        Tue, 1 Sep 2020 07:05:31 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339m1qhqf6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 07:05:26 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 081B3XUH027732;
+        Tue, 1 Sep 2020 11:05:09 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+        by ppma03ams.nl.ibm.com with ESMTP id 337en8ba5k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 11:05:09 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 081B576Q17039682
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Sep 2020 11:05:07 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 26B9BAE056;
+        Tue,  1 Sep 2020 11:05:07 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 10363AE05F;
+        Tue,  1 Sep 2020 11:05:06 +0000 (GMT)
+Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.77.139])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Sep 2020 11:05:05 +0000 (GMT)
+Message-ID: <ae06c113ec91442e293f2466cae3dd1b81f241eb.camel@linux.ibm.com>
+Subject: Re: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
+ EVM_ALLOW_METADATA_WRITES is set
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Roberto Sassu <roberto.sassu@huawei.com>,
+        "mjg59@google.com" <mjg59@google.com>
+Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Date:   Tue, 01 Sep 2020 07:05:05 -0400
+In-Reply-To: <a5e6a5acf2274a6d844b275dacfbabb8@huawei.com>
+References: <20200618160329.1263-2-roberto.sassu@huawei.com>
+         <20200618160458.1579-7-roberto.sassu@huawei.com>
+         <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
+         <a5e6a5acf2274a6d844b275dacfbabb8@huawei.com>
+Content-Type: text/plain; charset="ISO-8859-15"
+X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-01_08:2020-09-01,2020-09-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 bulkscore=0
+ mlxlogscore=999 impostorscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 2020-09-01 at 09:08 +0000, Roberto Sassu wrote:
+> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
+> > Sent: Monday, August 24, 2020 2:18 PM
+> > On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
+> > > When EVM_ALLOW_METADATA_WRITES is set, EVM allows any operation
+> > on
+> > > metadata. Its main purpose is to allow users to freely set metadata when
+> > > they are protected by a portable signature, until the HMAC key is loaded.
+> > >
+> > > However, IMA is not notified about metadata changes and, after the first
+> > > appraisal, always allows access to the files without checking metadata
+> > > again.
+> > 
+> > ^after the first successful appraisal
+> > >
+> > > This patch checks in evm_reset_status() if EVM_ALLOW_METADATA
+> > WRITES is
+> > > enabled and if it is, sets the IMA_CHANGE_XATTR/ATTR bits depending on
+> > the
+> > > operation performed. At the next appraisal, metadata are revalidated.
+> > 
+> > EVM modifying IMA bits crosses the boundary between EVM and IMA.
+> > There
+> > is already an IMA post_setattr hook.  IMA could reset its own bit
+> > there.  If necessary EVM could export as a function it's status info.
+> 
+> I wouldn't try to guess in IMA when EVM resets its status. We would have
+> to duplicate the logic to check if an EVM key is loaded, if the passed xattr
+> is a POSIX ACL, ...
 
---d4zgxzgmrbrrtklg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Agreed, but IMA could call an EVM function.
 
-On Tue, Sep 01, 2020 at 12:57:19PM +0200, Corentin Labbe wrote:
-> On Tue, Sep 01, 2020 at 11:32:49AM +0200, Maxime Ripard wrote:
-> > On Mon, Aug 31, 2020 at 09:30:59AM +0200, Martin Cerveny wrote:
-> > > Like A33 "sun4i-ss" has a difference, it give SHA1 digest
-> > > directly in BE. So add new compatible.
-> > >=20
-> > > Tested-by: Martin Cerveny <m.cerveny@computer.org>
-> >=20
-> > The Tested-by tag is for the other developpers. You're very much
-> > expected to have tested your patch before contributing it.
-> >=20
-> > > Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
-> > > ---
-> > >  .../bindings/crypto/allwinner,sun4i-a10-crypto.yaml          | 5 +++=
-+-
-> > >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i=
--a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i=
--a10-crypto.yaml
-> > > index fc823572b..180efd13a 100644
-> > > --- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-cr=
-ypto.yaml
-> > > +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-cr=
-ypto.yaml
-> > > @@ -25,6 +25,7 @@ properties:
-> > >            - const: allwinner,sun4i-a10-crypto
-> > >        - items:
-> > >            - const: allwinner,sun8i-a33-crypto
-> > > +      - const: allwinner,sun8i-v3s-crypto
-> >=20
-> > If it's compatible with the A33, why do we need to introduce a new comp=
-atible?
-> >=20
-> > > =20
-> > >    reg:
-> > >      maxItems: 1
-> > > @@ -59,7 +60,9 @@ if:
-> > >    properties:
-> > >      compatible:
-> > >        contains:
-> > > -        const: allwinner,sun6i-a31-crypto
-> > > +        oneOf:
-> > > +          - const: allwinner,sun6i-a31-crypto
-> > > +          - const: allwinner,sun8i-v3s-crypto
-> >=20
-> > I guess the A33 compatible should be on that list as well?
->=20
-> This is the list of "need reset".
-> So we cannot use allwinner,sun8i-a33-crypto
-> Probably this explanation should be in the commit message.
+> 
+> I think it is better to set a flag, maybe a new one, directly in EVM, to notify
+> the integrity subsystem that iint->evm_status is no longer valid.
+> 
+> If the EVM flag is set, IMA would reset the appraisal flags, as it uses
+> iint->evm_status for appraisal. We can consider to reset also the measure
+> flags when we have a template that includes file metadata.
 
-But the A33 has a reset in the DTSI
+When would IMA read the EVM flag?   Who would reset the flag?  At what
+point would it be reset?   Just as EVM shouldn't be resetting the IMA
+flag, IMA shouldn't be resetting the EVM flag.
 
-Maxime
+Mimi
 
---d4zgxzgmrbrrtklg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX04zHwAKCRDj7w1vZxhR
-xXtfAQCBNwO0KHktfVHdqJ1A31xqeae+JkhAoO14ISBQKDyKbgEAhtvQBryHrXgM
-Ts2NqtdzP/w7zF4ZtCJvTt3J9AKJmAo=
-=cE+X
------END PGP SIGNATURE-----
-
---d4zgxzgmrbrrtklg--
