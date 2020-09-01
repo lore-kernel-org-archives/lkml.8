@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635F7C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57278C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2963B2100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1565C206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974960;
-	bh=zkZMGY/CYIoNUZbkh72y2HEDhe9M8knRpG2npOH/GiM=;
+	s=default; t=1598974970;
+	bh=FKKuidAsptulu2SULsrg3AXtyPmmvR0aPFIzqvPaZ5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7yDo6MR1QIRC7sYznqWrnqxHdqEKxLEs4KT9vRw8vAFUUN8OFVMs9rhGe4GKp+qh
-	 Kt3YW5ILGyh9x9Egp5kR1tCLzUoDzD8nqipeqW7RcYMPZMzooDBUPKupzikgKtANW1
-	 Y88U+bw5c9A1G4/dFNwoUERnHH2kyAeme46yYKzs=
+	b=H5J1VXwmCn+P0KbowgiEVTgtXMvFkGz6WHF2lDBvJIltx0I62NxMaB1bNhDGaAMml
+	 BAZ4TC4anubCt18w1pIE1cjVMH3OwseTEEBgbMOVvf/j+bevmU59str88IbsS0UKe0
+	 MuKJD+UUbVfHtcXaZECkL2tHusWoJSlLUxaSmZkU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbgIAPmh (ORCPT
+        id S1731611AbgIAPms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50978 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:42:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbgIAPkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:40:09 -0400
+        id S1731497AbgIAPk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:40:29 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE7B2176B;
-        Tue,  1 Sep 2020 15:40:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E452064B;
+        Tue,  1 Sep 2020 15:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974808;
-        bh=zkZMGY/CYIoNUZbkh72y2HEDhe9M8knRpG2npOH/GiM=;
+        s=default; t=1598974828;
+        bh=FKKuidAsptulu2SULsrg3AXtyPmmvR0aPFIzqvPaZ5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UT/13ai5wEMarVDFd3gABLJEae4Ck1VIsSYQswqd8zTjLYL7fzwr95IjBxh/wKqEr
-         kTvFDDGmbSuowsWyledrdj5ERPmlu8DQ4jr8m0RQYBSAKZbT8l8UFhf6RCoSFXJHQo
-         7Cmyc3OHIsD7vV872hvvcM8BHLgwHCF4Ewi2mppw=
+        b=lVkBgngDyW1QPs2YD0V5EKIxyUuDIbiOjNtH3TE2fXHqFSUnoXV9aLLk4pcaeDv3k
+         QSmA5GtIDGEbFF8WoM1sY/gUEKs7zpIrTCt0SNSW6aHlcoq1xowyUYIO4YJ4ESGZA6
+         w0Z+n0v7VKbCrxhnDmXTjPFRpStM+RF83RdsiwJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lucas Stach <l.stach@pengutronix.de>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org, Tobias Schramm <t.schramm@manjaro.org>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 099/255] drm/etnaviv: always start/stop scheduler in timeout processing
-Date:   Tue,  1 Sep 2020 17:09:15 +0200
-Message-Id: <20200901151005.467213257@linuxfoundation.org>
+Subject: [PATCH 5.8 106/255] spi: stm32: clear only asserted irq flags on interrupt
+Date:   Tue,  1 Sep 2020 17:09:22 +0200
+Message-Id: <20200901151005.793463093@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,72 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas Stach <l.stach@pengutronix.de>
+From: Tobias Schramm <t.schramm@manjaro.org>
 
-[ Upstream commit 50248a3ec0f5e5debd18033eb2a29f0b793a7000 ]
+[ Upstream commit ae1ba50f1e706dfd7ce402ac52c1f1f10becad68 ]
 
-The drm scheduler currently expects that the stop/start sequence is always
-executed in the timeout handling, as the job at the head of the hardware
-execution list is always removed from the ring mirror before the driver
-function is called and only inserted back into the list when starting the
-scheduler.
+Previously the stm32h7 interrupt thread cleared all non-masked interrupts.
+If an interrupt was to occur during the handling of another interrupt its
+flag would be unset, resulting in a lost interrupt.
+This patches fixes the issue by clearing only the currently set interrupt
+flags.
 
-This adds some unnecessary overhead if the timeout handler determines
-that the GPU is still executing jobs normally and just wished to extend
-the timeout, but a better solution requires a major rearchitecture of the
-scheduler, which is not applicable as a fix.
-
-Fixes: 135517d3565b ("drm/scheduler: Avoid accessing freed bad job.")
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Tobias Schramm <t.schramm@manjaro.org>
+Link: https://lore.kernel.org/r/20200804195136.1485392-1-t.schramm@manjaro.org
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/etnaviv/etnaviv_sched.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/spi/spi-stm32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_sched.c b/drivers/gpu/drm/etnaviv/etnaviv_sched.c
-index 4e3e95dce6d87..cd46c882269cc 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_sched.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_sched.c
-@@ -89,12 +89,15 @@ static void etnaviv_sched_timedout_job(struct drm_sched_job *sched_job)
- 	u32 dma_addr;
- 	int change;
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 9672cda2f8031..13f3d959759fb 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -967,7 +967,7 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 		if (!spi->cur_usedma && (spi->rx_buf && (spi->rx_len > 0)))
+ 			stm32h7_spi_read_rxfifo(spi, false);
  
-+	/* block scheduler */
-+	drm_sched_stop(&gpu->sched, sched_job);
-+
- 	/*
- 	 * If the GPU managed to complete this jobs fence, the timout is
- 	 * spurious. Bail out.
- 	 */
- 	if (dma_fence_is_signaled(submit->out_fence))
--		return;
-+		goto out_no_timeout;
+-	writel_relaxed(mask, spi->base + STM32H7_SPI_IFCR);
++	writel_relaxed(sr & mask, spi->base + STM32H7_SPI_IFCR);
  
- 	/*
- 	 * If the GPU is still making forward progress on the front-end (which
-@@ -105,12 +108,9 @@ static void etnaviv_sched_timedout_job(struct drm_sched_job *sched_job)
- 	change = dma_addr - gpu->hangcheck_dma_addr;
- 	if (change < 0 || change > 16) {
- 		gpu->hangcheck_dma_addr = dma_addr;
--		return;
-+		goto out_no_timeout;
- 	}
+ 	spin_unlock_irqrestore(&spi->lock, flags);
  
--	/* block scheduler */
--	drm_sched_stop(&gpu->sched, sched_job);
--
- 	if(sched_job)
- 		drm_sched_increase_karma(sched_job);
- 
-@@ -120,6 +120,7 @@ static void etnaviv_sched_timedout_job(struct drm_sched_job *sched_job)
- 
- 	drm_sched_resubmit_jobs(&gpu->sched);
- 
-+out_no_timeout:
- 	/* restart scheduler after GPU is usable again */
- 	drm_sched_start(&gpu->sched, true);
- }
 -- 
 2.25.1
 
