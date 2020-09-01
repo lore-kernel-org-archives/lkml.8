@@ -2,163 +2,124 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C458BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:29:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D12DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF8E2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:29:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDQ1rQhu"
+	by mail.kernel.org (Postfix) with ESMTP id 571E72083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgIAB31 (ORCPT
+        id S1726107AbgIABcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 21:29:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725987AbgIAB30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 21:29:26 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93F9C061757;
-        Mon, 31 Aug 2020 18:29:25 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id h11so2873564ilj.11;
-        Mon, 31 Aug 2020 18:29:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oZzvSv3INTtQ3ilXht2L8FPuTMljS06aolPhjRvrCfY=;
-        b=FDQ1rQhukSmRUNM8XZlkAvSqe63LJVbWQ4EF3OKcMjHhJ/5WVO6w6unpV8LiaWhvmb
-         hdfyAlOhuXcfIq3DJygell1i44RaNl/xV+651kWJOzLxXT7LkzOcSHHFbBQtfKkd39Bl
-         yQ5AWXHq00gXij4C8wZ5lUOft/o6xuOh192U4/2LreYGcW0mugUyDGe9W3u/0ii5I3HS
-         Ty3+mXNg4i932k6iiDoqD3UXU8/H6P8MgCTcGuwLBZ/J8aAnesxk3wbzfjFWnKEKmwEM
-         K8kwJ7brhcWd7B+jnVCkWZ0hJjhYU80mnub0zaOytHvkrym3yMj4XCgWCQsJhsVDmLni
-         QnVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oZzvSv3INTtQ3ilXht2L8FPuTMljS06aolPhjRvrCfY=;
-        b=fleElEfn+tH2gi9QsjiMVdk2KFIeIs5oTiLCf/uC2OmA0ZwSqkidDrWmFalRgwJJLn
-         ryQ4gYz4dhSg7WFnnGnt/zBYYT2AVaWt98fdIKUFKMjBmd73U3B7YQxVZdwhpOXOunaB
-         j+qqpYaPBqN6vOvszSrW5UJ6pJLsxASWt5kYTaR2jUPZ1UI7myEQyig1I+JtbzlkrE1J
-         5vH7wqv52Y9PiKM/jWhT/ISGZAOyHfeYKhBiK177iUU+zBFyW6+cCzTBOAqIriiYpbDE
-         QZ1fczEYQPvNpVvJwwzOoWiJL6bNzNO94S1C5NMP7c0UdkoLNml4UJveOCDIo9qxpGkx
-         B/Wg==
-X-Gm-Message-State: AOAM532Y+UI3oU6xhzbRACthSEmxMM73SM2sEtghyxa6AARcWU7q2sbq
-        SwC0ewBECrUHRQcndBkNpEWhwgU1pn5MTkFgTh8=
-X-Google-Smtp-Source: ABdhPJzOSNzFPSecQoYsAY+49p7Kl4uFD1pNqj9fnvFVi9blc54Naj+ZT8YKDp98L/pB9UWEBLq/Ze60UN616hRySmc=
-X-Received: by 2002:a92:bad9:: with SMTP id t86mr3592955ill.308.1598923764953;
- Mon, 31 Aug 2020 18:29:24 -0700 (PDT)
+        Mon, 31 Aug 2020 21:32:22 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8611 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgIABcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 21:32:21 -0400
+IronPort-SDR: vOEf0Ir2pOUMan6bk76rE8VNhWc7CgDqykEpSdkdF+ggBCvjVZG+uklGWfrDUQgi53P7izTYmY
+ r7OMErlk42WA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175133765"
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="175133765"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 18:32:20 -0700
+IronPort-SDR: lugXe3z7kbG58nryL+5J4L9ZnuKQL4VxJSXkMyF8Eaaf57wasNIk18rz0ONNu6n1icBDfOVWmW
+ 4bo7InQpshdg==
+X-IronPort-AV: E=Sophos;i="5.76,376,1592895600"; 
+   d="scan'208";a="476983121"
+Received: from yungchua-mobl.ccr.corp.intel.com (HELO [10.252.184.97]) ([10.252.184.97])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 18:32:15 -0700
+Subject: Re: [PATCH v3 0/3] ASoC: soundwire: fix port_ready[] dynamic
+ allocation
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        alsa-devel@alsa-project.org, vkoul@kernel.org
+Cc:     vinod.koul@linaro.org, tiwai@suse.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        mengdong.lin@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200830132742.20404-1-yung-chuan.liao@linux.intel.com>
+ <dd947a84-87cb-7eed-9ac2-fe3de42dfc31@linux.intel.com>
+From:   Bard liao <yung-chuan.liao@linux.intel.com>
+Message-ID: <71cfedc3-2819-d18a-2cc8-7f0f6e7dab8b@linux.intel.com>
+Date:   Tue, 1 Sep 2020 09:32:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-References: <20200824101825.4106-1-jiangshanlai@gmail.com> <CAJhGHyC1Ykq5V_2nFPLRz9JmtAiQu6aw4fCKo1LO7Qwzjvfg2g@mail.gmail.com>
- <875z8zx8qs.fsf@vitty.brq.redhat.com>
-In-Reply-To: <875z8zx8qs.fsf@vitty.brq.redhat.com>
-From:   Lai Jiangshan <jiangshanlai@gmail.com>
-Date:   Tue, 1 Sep 2020 09:29:13 +0800
-Message-ID: <CAJhGHyCLF4+5LV8Zwu5kczL48imKPDHJKizVd+VZwVha0U8BaQ@mail.gmail.com>
-Subject: Re: [PATCH] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        kvm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <dd947a84-87cb-7eed-9ac2-fe3de42dfc31@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 9:09 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Lai Jiangshan <jiangshanlai@gmail.com> writes:
->
-> > Ping @Sean Christopherson
-> >
->
-> Let's try 'Beetlejuice' instead :-)
->
-> > On Mon, Aug 24, 2020 at 5:18 PM Lai Jiangshan <jiangshanlai@gmail.com> wrote:
-> >>
-> >> From: Lai Jiangshan <laijs@linux.alibaba.com>
-> >>
-> >> 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
-> >> changed it without giving any reason in the changelog.
-> >>
-> >> In theory, the syncing is needed, and need to be fixed by reverting
-> >> this part of change.
->
-> Even if the original commit is not wordy enough this is hardly
-> better.
 
-Hello,
-Thank you for reviewing it.
-
-I'm sorry that when I said "reverting this part of change",
-I meant "reverting this line of code". This line of code itself
-is quite clear that it is not related to the original commit
-according to its changelog.
-
-> Are you seeing a particular scenario when a change in current
-> vCPU's MMU requires flushing TLB entries for *other* contexts, ... (see
-> below)
-
-So I don't think the patch needs to explain this because the patch
-does not change/revert anything about it.
-
-Anyway, using a "revert" in the changelog is misleading, when it
-is not really reverting the whole targeted commit. I would
-remove this wording.
-
-For the change in my patch, when kvm_mmu_get_page() gets a
-page with unsync children, the host side pagetable is
-unsynchronized with the guest side pagedtable, and the
-guest might not issue a "flush" operation on it. It is
-all about the host's emulation of the pagetable. So the host
-has the responsibility to synchronize the pagetables.
-
-Thanks
-Lai
-
-> >>
-> >> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
-> >> ---
-> >>  arch/x86/kvm/mmu/mmu.c | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> >> index 4e03841f053d..9a93de921f2b 100644
-> >> --- a/arch/x86/kvm/mmu/mmu.c
-> >> +++ b/arch/x86/kvm/mmu/mmu.c
-> >> @@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
-> >>                 }
-> >>
-> >>                 if (sp->unsync_children)
-> >> -                       kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
-> >> +                       kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+On 8/31/2020 11:12 PM, Pierre-Louis Bossart wrote:
 >
-> ... in particular, why are you reverting only this hunk? Please elaborate.
 >
-> >>
-> >>                 __clear_sp_write_flooding_count(sp);
-> >>
-> >> --
-> >> 2.19.1.6.gb485710b
-> >>
-> >
+> On 8/30/20 8:27 AM, Bard Liao wrote:
+>> The existing code allocates memory for the total number of ports.
+>> This only works if the ports are contiguous, but will break if e.g. a
+>> Devices uses port0, 1, and 14. The port_ready[] array would contain 3
+>> elements, which would lead to an out-of-bounds access. Conversely in
+>> other cases, the wrong port index would be used leading to timeouts on
+>> prepare.
+>>
+>> This can be fixed by allocating for the worst-case of 15
+>> ports (DP0..DP14). In addition since the number is now fixed, we can
+>> use an array instead of a dynamic allocation.
 >
-> --
-> Vitaly
+> Bard, the order of patches will break git bisect, no? I tried on my 
+> side and get the following error after applying patch1
 >
+> sound/soc/codecs/max98373-sdw.c:337:20: error: assignment to 
+> expression with array type
+>   337 |  slave->port_ready = devm_kcalloc(&slave->dev, num_of_ports,
+>       |
+>
+> the order should be
+>
+> ASoC: codecs: soundwire: remove port_ready[] usage from codecs.
+> soundwire: add definition for maximum number of ports
+> soundwire: fix port_ready[] dynamic allocation in mipi_disco
+
+
+Thanks Pierre. I will send a new version soon.
+
+
+>
+>> Changes in v3:
+>> - Add ASoC tag in the cover letter title.
+>> - Edit the title and commit message of the third patch for better
+>>    understanding.
+>>
+>> Changes in v2:
+>> - Split patches into sdw and asoc patches. Please note that "soundwire:
+>>    fix port_ready[] dynamic allocation in mipi_disco" and "ASoC: codecs:
+>>    fix port_ready[] dynamic allocation in ASoC codecs" should be merged
+>>    at the same time.
+>>
+>> Pierre-Louis Bossart (3):
+>>    soundwire: add definition for maximum number of ports
+>>    soundwire: fix port_ready[] dynamic allocation in mipi_disco
+>>    ASoC: codecs: soundwire: remove port_ready[] usage from codecs.
+>>
+>>   drivers/soundwire/mipi_disco.c  | 18 +-----------------
+>>   drivers/soundwire/slave.c       |  4 ++++
+>>   include/linux/soundwire/sdw.h   |  5 +++--
+>>   sound/soc/codecs/max98373-sdw.c | 15 +--------------
+>>   sound/soc/codecs/rt1308-sdw.c   | 14 +-------------
+>>   sound/soc/codecs/rt5682-sdw.c   | 15 +--------------
+>>   sound/soc/codecs/rt700-sdw.c    | 15 +--------------
+>>   sound/soc/codecs/rt711-sdw.c    | 15 +--------------
+>>   sound/soc/codecs/rt715-sdw.c    | 33 +--------------------------------
+>>   9 files changed, 14 insertions(+), 120 deletions(-)
+>>
