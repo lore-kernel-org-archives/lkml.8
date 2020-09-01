@@ -5,51 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F95BC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EF7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B9B520767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2C10206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973430;
-	bh=/UCB/PpDEnLE9Fta+4Tzj3SAueG/dBgdBs1/QLbgD8U=;
+	s=default; t=1598973437;
+	bh=gbrPAb5D+pucDE79Ksf5Uxw0vvUmK08Y4Q2vfBlMLJw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FuNHg3ECQea6jI7LtTvboUrDi6cwtUiZegzKeH/WEPA+c2hhziiRrvkD38IPGOzN4
-	 bPCt6Tfjtu7cidEgRLB4fmvPu/5xHsMe2qQKS6rDgjpt6OGVXBdaqokomRSm0T6RDi
-	 l555fhCdsByGVFGiWPVFiGOYTc9+XjOY/UehwKfU=
+	b=xyLt9GsvXT+z4boqRi2NiSCHsN7ENPuwurqonJKoIaxKDn2DzMW2VWnif25jvynjC
+	 JSo97IKfv6ZjYDCTK4uslUfP4a2wvT/TfU5YUiAAFMduLPZqfuLsACDdKFuKZxCcJ6
+	 NmHmWRSAlBC3f6ykeCWFjyn0XXUPXZ4hqRakY3eQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728988AbgIAPRI (ORCPT
+        id S1728948AbgIAPRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:17:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60824 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbgIAPQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:16:06 -0400
+        id S1729276AbgIAPQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:16:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36B70206FA;
-        Tue,  1 Sep 2020 15:16:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 738CD206FA;
+        Tue,  1 Sep 2020 15:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973365;
-        bh=/UCB/PpDEnLE9Fta+4Tzj3SAueG/dBgdBs1/QLbgD8U=;
+        s=default; t=1598973370;
+        bh=gbrPAb5D+pucDE79Ksf5Uxw0vvUmK08Y4Q2vfBlMLJw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z+2k4fIT32C3hn3PnEzulmXiCI6dQNzRP+ccFUYuxthmxkouUyvpngRU2gyM2TSf4
-         wUNovE9s6mpdi8dxq2j3y4BNhgQLE3v61JGvgP9ye7OkGeTSsBaNSv+t6ial1hIGOS
-         1q17NXvpEfeiT8/uwXDH9lyo9sFXPE2zUA+w5SpE=
+        b=SIXjjAY4YMK1Yt15+FDRvoZfcjs4sW8amtrCjasj6HwjVTr0zeszFn6YXUTP4etpS
+         TVrE7kNNhhoZw3xrruJfCh5aFk8HzheHbJOr5Yq7R0GkStCSa4TOqo7QtD5sZKjT8F
+         KQ+nI3LVO42tpeIJ6lDybJTA93F0RYQWWJJm+0Sc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Andrea Borgia <andrea@borgia.bo.it>
-Subject: [PATCH 4.9 49/78] HID: i2c-hid: Always sleep 60ms after I2C_HID_PWR_ON commands
-Date:   Tue,  1 Sep 2020 17:10:25 +0200
-Message-Id: <20200901150927.196454030@linuxfoundation.org>
+        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
+        syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 51/78] fbcon: prevent user font height or width change from causing potential out-of-bounds access
+Date:   Tue,  1 Sep 2020 17:10:27 +0200
+Message-Id: <20200901150927.299704736@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -62,93 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: George Kennedy <george.kennedy@oracle.com>
 
-commit eef4016243e94c438f177ca8226876eb873b9c75 upstream.
+commit 39b3cffb8cf3111738ea993e2757ab382253d86a upstream.
 
-Before this commit i2c_hid_parse() consists of the following steps:
+Add a check to fbcon_resize() to ensure that a possible change to user font
+height or user font width will not allow a font data out-of-bounds access.
+NOTE: must use original charcount in calculation as font charcount can
+change and cannot be used to determine the font data allocated size.
 
-1. Send power on cmd
-2. usleep_range(1000, 5000)
-3. Send reset cmd
-4. Wait for reset to complete (device interrupt, or msleep(100))
-5. Send power on cmd
-6. Try to read HID descriptor
-
-Notice how there is an usleep_range(1000, 5000) after the first power-on
-command, but not after the second power-on command.
-
-Testing has shown that at least on the BMAX Y13 laptop's i2c-hid touchpad,
-not having a delay after the second power-on command causes the HID
-descriptor to read as all zeros.
-
-In case we hit this on other devices too, the descriptor being all zeros
-can be recognized by the following message being logged many, many times:
-
-hid-generic 0018:0911:5288.0002: unknown main item tag 0x0
-
-At the same time as the BMAX Y13's touchpad issue was debugged,
-Kai-Heng was working on debugging some issues with Goodix i2c-hid
-touchpads. It turns out that these need a delay after a PWR_ON command
-too, otherwise they stop working after a suspend/resume cycle.
-According to Goodix a delay of minimal 60ms is needed.
-
-Having multiple cases where we need a delay after sending the power-on
-command, seems to indicate that we should always sleep after the power-on
-command.
-
-This commit fixes the mentioned issues by moving the existing 1ms sleep to
-the i2c_hid_set_power() function and changing it to a 60ms sleep.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208247
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reported-and-tested-by: Andrea Borgia <andrea@borgia.bo.it>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/1596213192-6635-1-git-send-email-george.kennedy@oracle.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/i2c-hid/i2c-hid-core.c |   22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/video/console/fbcon.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -407,6 +407,19 @@ static int i2c_hid_set_power(struct i2c_
- 		dev_err(&client->dev, "failed to change power setting.\n");
- 
- set_pwr_exit:
-+
-+	/*
-+	 * The HID over I2C specification states that if a DEVICE needs time
-+	 * after the PWR_ON request, it should utilise CLOCK stretching.
-+	 * However, it has been observered that the Windows driver provides a
-+	 * 1ms sleep between the PWR_ON and RESET requests.
-+	 * According to Goodix Windows even waits 60 ms after (other?)
-+	 * PWR_ON requests. Testing has confirmed that several devices
-+	 * will not work properly without a delay after a PWR_ON request.
-+	 */
-+	if (!ret && power_state == I2C_HID_PWR_ON)
-+		msleep(60);
-+
- 	return ret;
+--- a/drivers/video/console/fbcon.c
++++ b/drivers/video/console/fbcon.c
+@@ -2116,6 +2116,9 @@ static void updatescrollmode(struct disp
+ 	}
  }
  
-@@ -428,15 +441,6 @@ static int i2c_hid_hwreset(struct i2c_cl
- 	if (ret)
- 		goto out_unlock;
++#define PITCH(w) (((w) + 7) >> 3)
++#define CALC_FONTSZ(h, p, c) ((h) * (p) * (c)) /* size = height * pitch * charcount */
++
+ static int fbcon_resize(struct vc_data *vc, unsigned int width, 
+ 			unsigned int height, unsigned int user)
+ {
+@@ -2125,6 +2128,24 @@ static int fbcon_resize(struct vc_data *
+ 	struct fb_var_screeninfo var = info->var;
+ 	int x_diff, y_diff, virt_w, virt_h, virt_fw, virt_fh;
  
--	/*
--	 * The HID over I2C specification states that if a DEVICE needs time
--	 * after the PWR_ON request, it should utilise CLOCK stretching.
--	 * However, it has been observered that the Windows driver provides a
--	 * 1ms sleep between the PWR_ON and RESET requests and that some devices
--	 * rely on this.
--	 */
--	usleep_range(1000, 5000);
--
- 	i2c_hid_dbg(ihid, "resetting...\n");
++	if (ops->p && ops->p->userfont && FNTSIZE(vc->vc_font.data)) {
++		int size;
++		int pitch = PITCH(vc->vc_font.width);
++
++		/*
++		 * If user font, ensure that a possible change to user font
++		 * height or width will not allow a font data out-of-bounds access.
++		 * NOTE: must use original charcount in calculation as font
++		 * charcount can change and cannot be used to determine the
++		 * font data allocated size.
++		 */
++		if (pitch <= 0)
++			return -EINVAL;
++		size = CALC_FONTSZ(vc->vc_font.height, pitch, FNTCHARCNT(vc->vc_font.data));
++		if (size > FNTSIZE(vc->vc_font.data))
++			return -EINVAL;
++	}
++
+ 	virt_w = FBCON_SWAP(ops->rotate, width, height);
+ 	virt_h = FBCON_SWAP(ops->rotate, height, width);
+ 	virt_fw = FBCON_SWAP(ops->rotate, vc->vc_font.width,
+@@ -2586,7 +2607,7 @@ static int fbcon_set_font(struct vc_data
+ 	int size;
+ 	int i, csum;
+ 	u8 *new_data, *data = font->data;
+-	int pitch = (font->width+7) >> 3;
++	int pitch = PITCH(font->width);
  
- 	ret = i2c_hid_command(client, &hid_reset_cmd, NULL, 0);
+ 	/* Is there a reason why fbconsole couldn't handle any charcount >256?
+ 	 * If not this check should be changed to charcount < 256 */
+@@ -2602,7 +2623,7 @@ static int fbcon_set_font(struct vc_data
+ 	if (fbcon_invalid_charcount(info, charcount))
+ 		return -EINVAL;
+ 
+-	size = h * pitch * charcount;
++	size = CALC_FONTSZ(h, pitch, charcount);
+ 
+ 	new_data = kmalloc(FONT_EXTRA_WORDS * sizeof(int) + size, GFP_USER);
+ 
 
 
