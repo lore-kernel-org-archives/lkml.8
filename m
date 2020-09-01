@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96375C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3C0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62432206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9BB2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975281;
-	bh=UJ42Mfh9bPHjl8/DqG67pNEC5IjIOdTO5F1IYqKYwS0=;
+	s=default; t=1598975283;
+	bh=XZofRMEuhipyLINL8hAHelkVwYgHCkVlOIbGVYdKOns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SDA/mPDSCzwOolvaa78isnpHxXlMn+ELNeQTBPwhPbJTyo/XGxmhZuKbXCaVX4I2l
-	 n4frRbTutVcHmVS9R0J3cXzAy3xAh9lg8zYNfa77FM2g7H7rlti9cRufS9MB5aMXe8
-	 Nde8AZzxG38M8p/WyMyZNGmcCsHdoVgP4lRiWpgY=
+	b=2LoaXLK+LT2c840wQac8AXajBIvEuk54f1fmzCaye+FbiwfCYXlbEHk20oKtnD4Gx
+	 ORA+4IvL/MrR1twkKlCP2P8TYX1b4YSBPR8yDnQC5sM20jplXv/qUWozgqa7Uf/ssC
+	 vcoExoCvYu65k2ejdch5FQXJ+Jbi+amOJk4/uYyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbgIAPr7 (ORCPT
+        id S1731997AbgIAPsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:47:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:48:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731468AbgIAPoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:22 -0400
+        id S1731785AbgIAPoZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:44:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 733C4206FA;
-        Tue,  1 Sep 2020 15:44:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB0C82064B;
+        Tue,  1 Sep 2020 15:44:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975061;
-        bh=UJ42Mfh9bPHjl8/DqG67pNEC5IjIOdTO5F1IYqKYwS0=;
+        s=default; t=1598975064;
+        bh=XZofRMEuhipyLINL8hAHelkVwYgHCkVlOIbGVYdKOns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0JGoPpgmbVNx/3zgzzIR+ISnD2ESIV05Bbfhlbln2fhW7yvuViei2TygW1n13i4s+
-         XG42WbsVsffFtd1gzb9W6pZ8jlscIdWGv3+Q5MA1yLNbKqrZ/DiUvVLLWiZXRM7d/k
-         u3daXV2CgjVCrhDQIOTbJ5oPaEbpZsKpB+Y3XwAU=
+        b=wirATaxDsrpnJyJt6WvWFxD/jPomi52LtjF8SjWuLzGYSL0ISGDpYz6iD/d7zni4Z
+         35jsWSV1SO44uugg5zRJCQjkevbUg6GZrYybE02oqon2k0fJoajdEZSDRanlKJujRc
+         092K0mtD15TjhrkKv+xnkNBKrFyk/CR0fNL3cu6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        stable@vger.kernel.org, Ding Hui <dinghui@sangfor.com.cn>,
         Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.8 195/255] xhci: Do warm-reset when both CAS and XDEV_RESUME are set
-Date:   Tue,  1 Sep 2020 17:10:51 +0200
-Message-Id: <20200901151010.030657212@linuxfoundation.org>
+Subject: [PATCH 5.8 196/255] xhci: Always restore EP_SOFT_CLEAR_TOGGLE even if ep reset failed
+Date:   Tue,  1 Sep 2020 17:10:52 +0200
+Message-Id: <20200901151010.078830328@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,69 +59,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Ding Hui <dinghui@sangfor.com.cn>
 
-commit 904df64a5f4d5ebd670801d869ca0a6d6a6e8df6 upstream.
+commit f1ec7ae6c9f8c016db320e204cb519a1da1581b8 upstream.
 
-Sometimes re-plugging a USB device during system sleep renders the device
-useless:
-[  173.418345] xhci_hcd 0000:00:14.0: Get port status 2-4 read: 0x14203e2, return 0x10262
-...
-[  176.496485] usb 2-4: Waited 2000ms for CONNECT
-[  176.496781] usb usb2-port4: status 0000.0262 after resume, -19
-[  176.497103] usb 2-4: can't resume, status -19
-[  176.497438] usb usb2-port4: logical disconnect
+Some device drivers call libusb_clear_halt when target ep queue
+is not empty. (eg. spice client connected to qemu for usb redir)
 
-Because PLS equals to XDEV_RESUME, xHCI driver reports U3 to usbcore,
-despite of CAS bit is flagged.
+Before commit f5249461b504 ("xhci: Clear the host side toggle
+manually when endpoint is soft reset"), that works well.
+But now, we got the error log:
 
-So proritize CAS over XDEV_RESUME to let usbcore handle warm-reset for
-the port.
+    EP not empty, refuse reset
 
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+xhci_endpoint_reset failed and left ep_state's EP_SOFT_CLEAR_TOGGLE
+bit still set
+
+So all the subsequent urb sumbits to the ep will fail with the
+warn log:
+
+    Can't enqueue URB while manually clearing toggle
+
+We need to clear ep_state EP_SOFT_CLEAR_TOGGLE bit after
+xhci_endpoint_reset, even if it failed.
+
+Fixes: f5249461b504 ("xhci: Clear the host side toggle manually when endpoint is soft reset")
+Cc: stable <stable@vger.kernel.org> # v4.17+
+Signed-off-by: Ding Hui <dinghui@sangfor.com.cn>
 Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200821091549.20556-3-mathias.nyman@linux.intel.com
+Link: https://lore.kernel.org/r/20200821091549.20556-4-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-hub.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ drivers/usb/host/xhci.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/xhci-hub.c
-+++ b/drivers/usb/host/xhci-hub.c
-@@ -740,15 +740,6 @@ static void xhci_hub_report_usb3_link_st
- {
- 	u32 pls = status_reg & PORT_PLS_MASK;
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -3236,10 +3236,11 @@ static void xhci_endpoint_reset(struct u
  
--	/* resume state is a xHCI internal state.
--	 * Do not report it to usb core, instead, pretend to be U3,
--	 * thus usb core knows it's not ready for transfer
--	 */
--	if (pls == XDEV_RESUME) {
--		*status |= USB_SS_PORT_LS_U3;
--		return;
--	}
--
- 	/* When the CAS bit is set then warm reset
- 	 * should be performed on port
- 	 */
-@@ -771,6 +762,16 @@ static void xhci_hub_report_usb3_link_st
- 		pls |= USB_PORT_STAT_CONNECTION;
- 	} else {
- 		/*
-+		 * Resume state is an xHCI internal state.  Do not report it to
-+		 * usb core, instead, pretend to be U3, thus usb core knows
-+		 * it's not ready for transfer.
-+		 */
-+		if (pls == XDEV_RESUME) {
-+			*status |= USB_SS_PORT_LS_U3;
-+			return;
-+		}
-+
-+		/*
- 		 * If CAS bit isn't set but the Port is already at
- 		 * Compliance Mode, fake a connection so the USB core
- 		 * notices the Compliance state and resets the port.
+ 	wait_for_completion(cfg_cmd->completion);
+ 
+-	ep->ep_state &= ~EP_SOFT_CLEAR_TOGGLE;
+ 	xhci_free_command(xhci, cfg_cmd);
+ cleanup:
+ 	xhci_free_command(xhci, stop_cmd);
++	if (ep->ep_state & EP_SOFT_CLEAR_TOGGLE)
++		ep->ep_state &= ~EP_SOFT_CLEAR_TOGGLE;
+ }
+ 
+ static int xhci_check_streams_endpoint(struct xhci_hcd *xhci,
 
 
