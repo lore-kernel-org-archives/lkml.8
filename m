@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97D4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D7BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F441207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4915207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:16:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973396;
-	bh=y7+3mb3F1IV1P7eyHp4J62UIqOIDN8ka/C+d2ylHIHE=;
+	s=default; t=1598973399;
+	bh=I5sszpnEsWLW9bceSHEeRvrJ/DB70tDxtWUEm34wodg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bRQsw9+ecEzAVkkQIgCb6BVHyPrB4zoECJpqIVxFUlZ5RUPstMlZhs7g2vJh2NyyL
-	 S/XdOoWd4kSoYKIht3iOSUkfmCdPi8lZXzT07hTLxf5knBjH91BVZrrEDg/pwX/xR7
-	 uGYy8zrLzzIUMHrcP7r2ByCCoE0ogDop31P7vTNw=
+	b=1FV9YpVi0R+lsUCdZzvyqdgB2Ao+xtmuGzn6/xP927BNo2r3WPQDVC1SSL6pxDWIw
+	 2uDsa3tB3kwLtM6T1aVfiePcQ4FRrnmL2TWHCuUrLufCfyyZl05VKO2D+vsJhzCPB0
+	 ik6k1z9YazH/5kbnjD2eL0RMZEkDbW9ACSvrrAXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgIAPQe (ORCPT
+        id S1728915AbgIAPQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:16:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59804 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:16:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729208AbgIAPPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:15:36 -0400
+        id S1729228AbgIAPPm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:15:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 258E3206FA;
-        Tue,  1 Sep 2020 15:15:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 270F120BED;
+        Tue,  1 Sep 2020 15:15:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973328;
-        bh=y7+3mb3F1IV1P7eyHp4J62UIqOIDN8ka/C+d2ylHIHE=;
+        s=default; t=1598973341;
+        bh=I5sszpnEsWLW9bceSHEeRvrJ/DB70tDxtWUEm34wodg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tP2al5vRdw06hXPz/obVU2eXQxNB7iQ7Tr1Xt0vAiUCORoVsW4Nazh+hG1UADNpAz
-         llRzxpBt+rrIEN9Tj8MMxLcsoPtBgH7pFV4bJgk5L8YIFNenhZNLhWFysli0tQctie
-         8yX1xm5eYMl7QYylnCsA4eQD8Qx8y9sTfOSoDeH8=
+        b=hISJ2K2j/LzPCb2EDWVk2wn7i/dCgof1eSM4dkgeU0R0bBxh0BGJ7IDeNg4gh+HSz
+         jqdZiH6/n8eKsPBbmPPe5j9bxqRAJxYEPihk6DZiiYpWxfvfwEwSyVz9Il0R39Izpb
+         wwsoNk2M7agQr6OXJD/JuTk1oxAm21otGV9mAcns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 28/78] locking/lockdep: Fix overflow in presentation of average lock-time
-Date:   Tue,  1 Sep 2020 17:10:04 +0200
-Message-Id: <20200901150926.151655527@linuxfoundation.org>
+Subject: [PATCH 4.9 41/78] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
+Date:   Tue,  1 Sep 2020 17:10:17 +0200
+Message-Id: <20200901150926.807375332@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -61,40 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Wilson <chris@chris-wilson.co.uk>
+From: Lukas Czerner <lczerner@redhat.com>
 
-[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
+[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
 
-Though the number of lock-acquisitions is tracked as unsigned long, this
-is passed as the divisor to div_s64() which interprets it as a s32,
-giving nonsense values with more than 2 billion acquisitons. E.g.
+Callers of __jbd2_journal_unfile_buffer() and
+__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
+fact if it's not, we can end up with journal_head refcounting errors
+leading to crash much later that might be very hard to track down. Add
+asserts to make sure that is the case.
 
-  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
-  -------------------------------------------------------------------------
-    2350439395           0.07         353.38   649647067.36          0.-32
+We also make sure that b_next_transaction is NULL in
+__jbd2_journal_unfile_buffer() since the callers expect that as well and
+we should not get into that stage in this state anyway, leading to
+problems later on if we do.
 
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
+Tested with fstests.
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/locking/lockdep_proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/jbd2/transaction.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
-index 75d80809c48c9..09bad6cbb95cf 100644
---- a/kernel/locking/lockdep_proc.c
-+++ b/kernel/locking/lockdep_proc.c
-@@ -425,7 +425,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
- 	seq_time(m, lt->min);
- 	seq_time(m, lt->max);
- 	seq_time(m, lt->total);
--	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
-+	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
- }
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 8de458d64134a..1478512ecab3e 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1896,6 +1896,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
+  */
+ static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
+ {
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
++
+ 	__jbd2_journal_temp_unlink_buffer(jh);
+ 	jh->b_transaction = NULL;
+ 	jbd2_journal_put_journal_head(jh);
+@@ -2443,6 +2446,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
  
- static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
+ 	was_dirty = test_clear_buffer_jbddirty(bh);
+ 	__jbd2_journal_temp_unlink_buffer(jh);
++
++	/*
++	 * b_transaction must be set, otherwise the new b_transaction won't
++	 * be holding jh reference
++	 */
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++
+ 	/*
+ 	 * We set b_transaction here because b_next_transaction will inherit
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
 -- 
 2.25.1
 
