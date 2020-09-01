@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE02C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF055C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADE19204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 870C8204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976484;
-	bh=I24xA+xdUYKV5J6GVNJn/ZBPTE2W97W1L7NFtlcKG18=;
+	s=default; t=1598976497;
+	bh=6dFFkWLzbNIBlnnV8OfPIGc8YaZCwGt/Hzc0zWiY8oE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7mStuWTjnMTXb7nBTTVZaUncYcNNbk+U3dhCMoVQXGkJFdZRioLVE0Cqwmy9iTww
-	 hhnW3MGH2I42G1p2Bg0R+XnhH4IAdPz/FRYG2fKqyCGBo3Jrdblmhl3Qg/3JMKnVBD
-	 nQGyiM1RJXcZ8djFMR5Y/b4UUGO3fwq7aBYmOaRw=
+	b=mdV8SfNA0eoKmQLiT4SSOLE6XeYScAzrUPL+uJMBkx+ZNvTvKYeHjXFLEAN7G6kaq
+	 R201VhIRqpOZsXNXmI9g1mKJnNRbc50mNrZaccEI0RfNuKbz3ZckWU5Gom3Mrka7Sn
+	 XdeiqnB/P/XgMdoWTN/28lj4o1cW+JvCxHmt6kKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731717AbgIAQIC (ORCPT
+        id S1730622AbgIAQIQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:08:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:08:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731405AbgIAPjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:39:37 -0400
+        id S1731123AbgIAPjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:39:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3B6E20866;
-        Tue,  1 Sep 2020 15:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A815E205F4;
+        Tue,  1 Sep 2020 15:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974776;
-        bh=I24xA+xdUYKV5J6GVNJn/ZBPTE2W97W1L7NFtlcKG18=;
+        s=default; t=1598974763;
+        bh=6dFFkWLzbNIBlnnV8OfPIGc8YaZCwGt/Hzc0zWiY8oE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+FeebT8lwfUR4/dCpyIJ7tLVj2MCvz7K85qmXk6aTl+zsXkskX/oBV9by2yjApN1
-         AFvvxtvFI5NhvH2Qf0Eau3rXd6QM4dklvyn82LzONKWKlvr/8urdS9CUC5hmCvpVDO
-         tQZnQtM6WDK7hac8GwRVW1aW3XzHvWSTOLRKUItU=
+        b=BvmKQYvkm9xj2c8N+ymzRzBDNzeWFGCZCiLgadJ9UB+sqkUVIMvBmXHT9pwABue32
+         B55rrcrK145ChaJAlvHXPUaiRBysjCU5Lk6Zn/ka95E5qXetM2hm2cDjXTwR5znPVq
+         Kj60g4llLctoJl/NFMvdza/uXdaf1Ac1ypHm4pnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Christie <michael.christie@oracle.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 056/255] scsi: iscsi: Do not put host in iscsi_set_flashnode_param()
-Date:   Tue,  1 Sep 2020 17:08:32 +0200
-Message-Id: <20200901151003.404069234@linuxfoundation.org>
+Subject: [PATCH 5.8 080/255] PCI: qcom: Change duplicate PCI reset to phy reset
+Date:   Tue,  1 Sep 2020 17:08:56 +0200
+Message-Id: <20200901151004.566480498@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -62,35 +63,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Xiangfeng <jingxiangfeng@huawei.com>
+From: Abhishek Sahu <absahu@codeaurora.org>
 
-[ Upstream commit 68e12e5f61354eb42cfffbc20a693153fc39738e ]
+[ Upstream commit dd58318c019f10bc94db36df66af6c55d4c0cbba ]
 
-If scsi_host_lookup() fails we will jump to put_host which may cause a
-panic. Jump to exit_set_fnode instead.
+The deinit issues reset_control_assert for PCI twice and does not contain
+phy reset.
 
-Link: https://lore.kernel.org/r/20200615081226.183068-1-jingxiangfeng@huawei.com
-Reviewed-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/r/20200615210608.21469-4-ansuelsmth@gmail.com
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 7ae5024e78243..df07ecd94793a 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -3291,7 +3291,7 @@ static int iscsi_set_flashnode_param(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.set_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_set_fnode;
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index aa25a3040f7cc..20c917327a8bd 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -298,14 +298,14 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ {
+ 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 
++	clk_disable_unprepare(res->phy_clk);
+ 	reset_control_assert(res->pci_reset);
+ 	reset_control_assert(res->axi_reset);
+ 	reset_control_assert(res->ahb_reset);
+ 	reset_control_assert(res->por_reset);
+-	reset_control_assert(res->pci_reset);
++	reset_control_assert(res->phy_reset);
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+-	clk_disable_unprepare(res->phy_clk);
+ 	clk_disable_unprepare(res->aux_clk);
+ 	clk_disable_unprepare(res->ref_clk);
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+@@ -344,12 +344,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_clk_core;
  	}
  
- 	idx = ev->u.set_flashnode.flashnode_idx;
+-	ret = clk_prepare_enable(res->phy_clk);
+-	if (ret) {
+-		dev_err(dev, "cannot prepare/enable phy clock\n");
+-		goto err_clk_phy;
+-	}
+-
+ 	ret = clk_prepare_enable(res->aux_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable aux clock\n");
+@@ -422,6 +416,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		return ret;
+ 	}
+ 
++	ret = clk_prepare_enable(res->phy_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable phy clock\n");
++		goto err_deassert_ahb;
++	}
++
+ 	/* wait for clock acquisition */
+ 	usleep_range(1000, 1500);
+ 
+@@ -439,8 +439,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ err_clk_ref:
+ 	clk_disable_unprepare(res->aux_clk);
+ err_clk_aux:
+-	clk_disable_unprepare(res->phy_clk);
+-err_clk_phy:
+ 	clk_disable_unprepare(res->core_clk);
+ err_clk_core:
+ 	clk_disable_unprepare(res->iface_clk);
 -- 
 2.25.1
 
