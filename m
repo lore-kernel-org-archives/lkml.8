@@ -2,117 +2,163 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF899C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CCDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FA652078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980357;
-	bh=8HA6Zp1D35AX6SDV3LddE/JnbQFz64MPlIJpnOrE81Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EDf3CXfJ3jr0ous73KdrhbKUc6sCGZRCnhvTuggikTxvBXSE0wKmyexe4n5NPsWnQ
-	 G6RgQud1ksNOaGG4S6GbRUGAWe0hLxqqYpUitp9Pahpv+ZxPd+51sPlXVHneg0KGzu
-	 6YJXBJoQt4zDWeBtL9ToXEd0TJwDMErqw3L9CZds=
+	by mail.kernel.org (Postfix) with ESMTP id 0C46A206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nc5W8jjH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbgIARMd (ORCPT
+        id S1729304AbgIARMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:12:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbgIAPPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:15:52 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 1 Sep 2020 13:12:47 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49664 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730242AbgIARMe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:12:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598980351;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=6tq9XbBkkctfISvu/8JAip4aOF6DG++oXbCP77hju3Y=;
+        b=Nc5W8jjHYz3TEc8a2EyIdmPuFOTGztX3Fkv8vjGWzm8pB20RSsn2zz0YtjmE2k11pxtZPD
+        1yHtl36fby/j2d1PxS9WISPI6OfX/Mb781KPLv9XGFntzAKB1WKiwenLrKIBM0llcDc3WQ
+        rTduzCi3x51+mbUcUvQYBUj0mLkrsCY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-559-gfbAtqhlPbKr-7JAzqN6xw-1; Tue, 01 Sep 2020 13:12:27 -0400
+X-MC-Unique: gfbAtqhlPbKr-7JAzqN6xw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D77920BED;
-        Tue,  1 Sep 2020 15:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973352;
-        bh=8HA6Zp1D35AX6SDV3LddE/JnbQFz64MPlIJpnOrE81Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WkLkHjtNR0e/4EDDzaXUHjuOszrRJFkbs2Ddqfy0qB2HHbqMd7Z+Oiuf5neKILjV7
-         rxQK+mdB/moTf5Y0bnPUO3LzadYhKvOigQyYiBOb48ox9Wi6FzmPy7N0rK67fulpW1
-         CRbxOYz5JTQELJOPcKx0VR2kl+m+Xl2Nn4Zm2aw0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
-        Andy Teng <andy.teng@mediatek.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 45/78] scsi: ufs: Fix possible infinite loop in ufshcd_hold
-Date:   Tue,  1 Sep 2020 17:10:21 +0200
-Message-Id: <20200901150927.003135968@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
-References: <20200901150924.680106554@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 344B11006708;
+        Tue,  1 Sep 2020 17:12:26 +0000 (UTC)
+Received: from treble (ovpn-113-168.rdu2.redhat.com [10.10.113.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B1BD1002D60;
+        Tue,  1 Sep 2020 17:12:22 +0000 (UTC)
+Date:   Tue, 1 Sep 2020 12:12:20 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Petr Mladek <pmladek@suse.com>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: refactoring livepatch documentation was Re: [PATCH 1/2]
+ docs/livepatch: Add new compiler considerations doc
+Message-ID: <20200901171220.pgepj3hxrfwy37rj@treble>
+References: <20200721161407.26806-1-joe.lawrence@redhat.com>
+ <20200721161407.26806-2-joe.lawrence@redhat.com>
+ <20200721230442.5v6ah7bpjx4puqva@treble>
+ <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
+ <20200722205139.hwbej2atk2ejq27n@treble>
+ <20200806120336.GP24529@alley>
+ <3842fe65-332e-9f90-fe75-7cd80b34b75e@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <3842fe65-332e-9f90-fe75-7cd80b34b75e@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+On Mon, Aug 10, 2020 at 03:46:46PM -0400, Joe Lawrence wrote:
+> > > > > I'm thinking a newcomer reading this might be lost.  It's not
+> > > > > necessarily clear that there are currently two completely different
+> > > > > approaches to creating a livepatch module, each with their own quirks
+> > > > > and benefits/drawbacks.  There is one mention of a "source-based
+> > > > > livepatch author" but no explanation of what that means.
+> > > > > 
+> > > > 
+> > > > Yes, the initial draft was light on source-based patching since I only
+> > > > really tinker with it for samples/kselftests.  The doc was the result of an
+> > > > experienced livepatch developer and Sunday afternoon w/the compiler. I'm
+> > > > sure it reads as such. :)
+> > > 
+> > > Are experienced livepatch developers the intended audience?  If so I
+> > > question what value this document has in its current form.  Presumably
+> > > experienced livepatch developers would already know this stuff.
+> > 
+> > IMHO, this document is useful even for newbies. They might at
+> > least get a clue about these catches. It is better than nothing.
+> > 
+> > I do not want to discourage Joe from creating even better
+> > documentation. But if he does not have interest or time
+> > to work on it, I am happy even for this piece.
 
-[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
+Agreed.  Joe, sorry for instigating and then disappearing :-)
 
-In ufshcd_suspend(), after clk-gating is suspended and link is set
-as Hibern8 state, ufshcd_hold() is still possibly invoked before
-ufshcd_suspend() returns. For example, MediaTek's suspend vops may
-issue UIC commands which would call ufshcd_hold() during the command
-issuing flow.
+I know we're all busy and I didn't intend to block the patch until we
+reach Documentation Nirvana.  Though it would be _really_ nice to get
+more input from those who have more experience with the subject matter
+(source-based patch generation).
 
-Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
-then ufshcd_hold() may enter infinite loops because there is no
-clk-ungating work scheduled or pending. In this case, ufshcd_hold()
-shall just bypass, and keep the link as Hibern8 state.
+It's part of my job as a maintainer to push back, question, and
+sometimes even complain.  I was just wondering where this is heading,
+because as our documentation grows (a good thing), the overall state is
+getting less cohesive (a bad thing).
 
-Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
-Reviewed-by: Avri Altman <avri.altman@wdc.com>
-Co-developed-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Andy Teng <andy.teng@mediatek.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/scsi/ufs/ufshcd.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Anyway, ACK to the original patch.
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index a7f520581cb0f..9916c574e8b80 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -659,6 +659,7 @@ unblock_reqs:
- int ufshcd_hold(struct ufs_hba *hba, bool async)
- {
- 	int rc = 0;
-+	bool flush_result;
- 	unsigned long flags;
- 
- 	if (!ufshcd_is_clkgating_allowed(hba))
-@@ -690,7 +691,9 @@ start:
- 				break;
- 			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
--			flush_work(&hba->clk_gating.ungate_work);
-+			flush_result = flush_work(&hba->clk_gating.ungate_work);
-+			if (hba->clk_gating.is_suspended && !flush_result)
-+				goto out;
- 			spin_lock_irqsave(hba->host->host_lock, flags);
- 			goto start;
- 		}
+> 1. Provide a better index page to connect the other files/docs, like
+> https://www.kernel.org/doc/html/latest/core-api/index.html but obviously not
+> that extensive.  Right now we have only a Table of Contents tree without any
+> commentary.
+> 
+> 2. Rearrange and refactor sections:
+> 
+> livepatch.rst
+>   Keep just about everything
+>   Add a history section to explain ksplice, kgraft, kpatch for the
+>     uninitiated?
+>   Add a section on source based vs. binary diff livepatch creation,
+>     this may be worth its own top-level section
+> 
+> Livepatch API
+>   Basic API
+>   Callbacks
+>   Shadow variables
+>   Cumulative patches
+>   System state
+> 
+> KLP Relocations
+>   Right now this is a bit academic AFAIK kpatch is the only tool
+>   currently making use of them.  So maybe this document becomes a
+>   more general purpose doc explaining how to reference unexported
+>   symbols?  (ie, how does kgraft currently do it, particularly
+>   w/kallsyms going unexported?)
+> 
+>   Eventually this could contain klp-convert howto if it ever gets
+>   merged.
+> 
+> Compiler considerations
+>   TBD
+
+This is certainly a logical way to organize things.  But again I would
+wonder, who's the audience?
+
+> I suppose this doesn't create a "Livepatching creation for dummies" guide,
+> but my feeling is that there are so many potential (hidden) pitfalls that
+> such guide would be dangerous.
+
+I disagree that a live patching creation guide would be dangerous.  I
+think it would be less dangerous than *not* having one.  There are
+several companies now delivering (hopefully reliable) livepatches to
+customers, and they're all presumably following processes.  We just need
+to agree on best practices and document the resulting process.  Over
+time I believe that will create much more good than harm.
+
+Sure, there are pitfalls, but the known ones can be highlighted in the
+guide.  No document is perfect but it hopefully improves and becomes
+more useful over time.
+
 -- 
-2.25.1
-
-
+Josh
 
