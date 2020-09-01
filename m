@@ -2,123 +2,126 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DEBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB075C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:00:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D957C206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:00:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CE4F206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:00:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="H5/MMJ5Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732450AbgIARAi (ORCPT
+        id S1728944AbgIARAk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:00:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39948 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732338AbgIARAP (ORCPT
+        Tue, 1 Sep 2020 13:00:40 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:56828 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728992AbgIARAe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:00:15 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B08DAC061244;
-        Tue,  1 Sep 2020 10:00:14 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: gtucker)
-        with ESMTPSA id 30C17296B56
-Subject: Re: [PATCH v2 1/4] ARM: exynos: clear L310_AUX_CTRL_NS_LOCKDOWN in
- default l2c_aux_val
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        kernel@collabora.com, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <267a81e550a0b5d479c82b5908e2a2caa4c9c874.1597061474.git.guillaume.tucker@collabora.com>
- <c0509b5f-a064-2e73-7e04-51f41a56d222@collabora.com>
- <CAJKOXPczS_RpSFpjGygZ_1MCYxJ_cUDRjriZvrHd6+zhmq=c8Q@mail.gmail.com>
- <CAJKOXPfT7LvHVpTdaQ1voVi=OtC4aV6hbyzcekmrPMkb+5ebNg@mail.gmail.com>
- <fd1a34c4-dcc1-1480-1e96-8bd94ada9846@collabora.com>
- <CAJKOXPdQiXc3zVRK25AsfYPBwL1Rm6y1niFt5wxkC5gH5baiZA@mail.gmail.com>
-From:   Guillaume Tucker <guillaume.tucker@collabora.com>
-Message-ID: <1cf0722a-df3a-33af-3317-c48eeb5a5842@collabora.com>
-Date:   Tue, 1 Sep 2020 18:00:08 +0100
+        Tue, 1 Sep 2020 13:00:34 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081Gsr8o013992;
+        Tue, 1 Sep 2020 17:00:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=aibERFvdWUYyUmBPyrFjkji1LkSFLR29QppeRLSjaDY=;
+ b=H5/MMJ5QuXxZhpwreszvtwwTWXDkuqFToe0zYEtxEGW6D+CgiayRbUQORvvAoKQ7hhdC
+ O2VNA5CkOp6VVHFr85FCmNfR/PJLQRtx3X3f/t8EVsInT2l3oKvVDqsuUDa6gKAoQRzl
+ wtxZpDKhwAWlk8zCY1CPgJiHxCTxb2fGsb+ODuYpNdoXsrZ2JldTpWFToDyvkg8lG3QN
+ +ZboiQURhXPZ+WWRBsmSqXjyM9WOkREjsRrn3i33QdweBmfeM4QM5+9YBt3A/6lmkxT7
+ kVbJxm0kqo6WaUiAqvZwFBAjjdjZQv10E7y1KdTuLXfkK5Ve+pSsxBOc3es7pGSAI5+r FQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 337eeqwqw5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Sep 2020 17:00:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081GxfIH029482;
+        Tue, 1 Sep 2020 17:00:29 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 3380xwsywp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Sep 2020 17:00:29 +0000
+Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 081H0RpH028907;
+        Tue, 1 Sep 2020 17:00:27 GMT
+Received: from [10.154.191.218] (/10.154.191.218)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Sep 2020 10:00:26 -0700
+Subject: Re: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low
+ speed devices
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     gregkh@linuxfoundation.org, erkka.talvitie@vincit.fi,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <cover.1598887346.git.khalid@gonehiking.org>
+ <20200901023117.GD571008@rowland.harvard.edu>
+ <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
+ <20200901163602.GG587030@rowland.harvard.edu>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+X-Pep-Version: 2.0
+Message-ID: <4d1ab90a-ec55-85e8-d646-cfa58f08d449@oracle.com>
+Date:   Tue, 1 Sep 2020 11:00:16 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <CAJKOXPdQiXc3zVRK25AsfYPBwL1Rm6y1niFt5wxkC5gH5baiZA@mail.gmail.com>
+In-Reply-To: <20200901163602.GG587030@rowland.harvard.edu>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 adultscore=0 phishscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 mlxlogscore=999 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009010142
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
+ lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009010141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/09/2020 16:25, Krzysztof Kozlowski wrote:
-> On Tue, 1 Sep 2020 at 16:42, Guillaume Tucker
-> <guillaume.tucker@collabora.com> wrote:
+On 9/1/20 10:36 AM, Alan Stern wrote:
+> On Tue, Sep 01, 2020 at 09:15:46AM -0700, Khalid Aziz wrote:
+>> On 8/31/20 8:31 PM, Alan Stern wrote:
+>>> Can you collect a usbmon trace showing an example of this problem?
+>>>
 >>
->> On 01/09/2020 14:51, Krzysztof Kozlowski wrote:
->>> On Tue, 1 Sep 2020 at 15:45, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->>>>
->>>> On Tue, 1 Sep 2020 at 15:34, Guillaume Tucker
->>>> <guillaume.tucker@collabora.com> wrote:
->>>>>
->>>>> Hi Krzysztof, Russell,
->>>>>
->>>>> On 10/08/2020 13:22, Guillaume Tucker wrote:
->>>>>> The L310_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
->>>>>> sequence.  There is no need to set it in the default register value,
->>>>>> this was done before support for it was implemented in the code.  It
->>>>>> is not set in the hardware initial value either.
->>>>>>
->>>>>> Clean this up by removing this flag from the default l2c_aux_val, and
->>>>>> add it to the l2c_aux_mask to print an alert message if it was already
->>>>>> set before the kernel initialisation.
->>>>>>
->>>>>> Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
->>>>>> ---
->>>>>>
->>>>>> Notes:
->>>>>>     v2: fix flag name L310_AUX_CTRL_NS_LOCKDOWN
->>>>>>
->>>>>>  arch/arm/mach-exynos/exynos.c | 4 ++--
->>>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> I believe this v2 series has addressed all previous comments and
->>>>> you were waiting for the 5.9 merge window to end.  The patches
->>>>> all still apply cleanly on v5.9-rc3.  Do you want me to resend
->>>>> the series anyway or is there anything else needed at this point?
->>>>>
->>>>> Maybe one thing that wasn't completely clear in v1 was whether
->>>>> patch 2/4 was the right approach.  I've explained the reason
->>>>> behind it but didn't get a final reply from Russell[1].
->>>>
->>>> I am sorry, my bad. I already applied this one and 3/4 (dts).
->>>> Apparently I forgot to reply with confirmation and Patchwork did not
->>>> notify you for some reason.
->>
->> No problem, I see them in linux-next now.  Thanks!
->>
->>>> Patch 2/4 does not look like one for me so I would need ack from
->>>> Russell to take. Did you submit it to the ARM patches queue?
->>
->> I've CC-ed linux-arm-kernel@lists.infradead.org on the whole
->> series.  Did you mean anything else by the ARM patches queue?
-> 
-> Unless anything changed, so far all ARM-core related patches had to be
-> submitted to Russell's system. I didn't submit anything for 3 years so
-> maybe something changed...
-> https://www.arm.linux.org.uk/developer/patches/
+>> I have attached usbmon traces for when USB hub with keyboards and mous=
+e
+>> is plugged into USB 2.0 port and when it is plugged into the NEC USB 3=
+=2E0
+>> port.
+>=20
+> The usbmon traces show lots of errors, but no Clear-TT events.  The=20
+> large number of errors suggests that you've got a hardware problem;=20
+> either a bad hub or bad USB connections.
 
-Ah yes, thanks.  I hadn't visited that website for ages...  The
-patch 2/4 is there now:
+That is what I thought initially which is why I got additional hubs and
+a USB 2.0 PCI card to test. I am seeing errors across 3 USB controllers,
+4 USB hubs and 4 slow/full speed devices. All of the hubs and slow/full
+devices work with zero errors on my laptop. My keyboard/mouse devices
+and 2 of my USB hubs predate motherboard update and they all worked
+flawlessly before the motherboard upgrade. Some combinations of these
+also works with no errors on my desktop with new motherboard that I had
+listed in my original email:
 
-  https://www.arm.linux.org.uk/developer/patches/viewpatch.php?id=9007/1
+2. USB 2.0 controller - WORKS
+5. USB 3.0/3.1 controller -> Bus powered USB 2.0 hub - WORKS
 
-Best wishes,
-Guillaume
+I am not seeing a common failure here that would point to any specific
+hardware being bad. Besides, that one code change (which I still can't
+say is the right code change) in ehci-q.c makes USB 2.0 controller work
+reliably with all my devices.
+
+--
+Khalid
+
