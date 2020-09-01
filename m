@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A5BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A5BC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABA1207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8963207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973709;
-	bh=Aj2i/GFWkXVTO/WsK2WQJzbadJ+weGi3Imo/eq3lzZA=;
+	s=default; t=1598973717;
+	bh=fH37D9OBwg8FmwnXoMpWvRvm003f6JYQBo7oh5pvM90=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IfPTa5xxbQeYGm82RrDf3zyZNgFg+1QVl4D1WbIJszLHMfJQlm4V5dOyv/movj+ii
-	 BhwKplFZcN9uCsEalyq+JJ6X290oX1Gk0/z7xv6J8u1iurREr3thZul9vwl/aZmmZ1
-	 Lz1t6S7ZDmlh1IAYZjnSmF7f/epDINZz6MA6FMF0=
+	b=RzEsM7CR5Hk1ayQrWb3DbJnd7slTxbkCN//todKE90vq9BtavMkBgXg/iD5fX7PnV
+	 +ZrRs0nnxeM5d5RmFLFpLMsRJu3lfzz7rL5rjZMBxELr/DW0u9wa1qyUbLkPjtWIQM
+	 y5tQ+3+CVEzXFhip9bYkeilPI9q3Qb2KCU64Twqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgIAPVr (ORCPT
+        id S1729708AbgIAPV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:21:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37916 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:21:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728762AbgIAPTI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:08 -0400
+        id S1729271AbgIAPT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:19:29 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFD08206EB;
-        Tue,  1 Sep 2020 15:19:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39AB22100A;
+        Tue,  1 Sep 2020 15:19:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973547;
-        bh=Aj2i/GFWkXVTO/WsK2WQJzbadJ+weGi3Imo/eq3lzZA=;
+        s=default; t=1598973559;
+        bh=fH37D9OBwg8FmwnXoMpWvRvm003f6JYQBo7oh5pvM90=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ux10aOT888Qt/YYqs92rwQB5IrQaZDuFFvcvsh8jWO4YspHvgM7EIU76TdU/5pFae
-         Uy8R0lS71WuIXwzx5tmOQQfAip242ZR3dL86SjBQWaJfvIw7sLfe+Hlj7beApfubck
-         F8OiO+LWsim8ud0Kc6s1MuBxkFiKXvBHjNh2vQig=
+        b=KqKoggsvtTuEpBo2b3S3g8Pe76XhuGVk/OX1pTiTIE7H+i/JRWHNNsUJ80uSJ7x4g
+         wkj6Dw+RMB3myU4nc4qLKXwvuBQlGEEa/B5mMomMlJuDegTZfQH+0i5bDHm2QlfKBK
+         wTG58pXAjkUAb7LVRo8z3b2zWGyOMlpMN6KqmoFE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 43/91] nvme-fc: Fix wrong return value in __nvme_fc_init_request()
-Date:   Tue,  1 Sep 2020 17:10:17 +0200
-Message-Id: <20200901150930.277875366@linuxfoundation.org>
+Subject: [PATCH 4.14 30/91] drm/nouveau: Fix reference count leak in nouveau_connector_detect
+Date:   Tue,  1 Sep 2020 17:10:04 +0200
+Message-Id: <20200901150929.645450097@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -63,47 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit f34448cd0dc697723fb5f4118f8431d9233b370d ]
+[ Upstream commit 990a1162986e8eff7ca18cc5a0e03b4304392ae2 ]
 
-On an error exit path, a negative error code should be returned
-instead of a positive return value.
+nouveau_connector_detect() calls pm_runtime_get_sync and in turn
+increments the reference count. In case of failure, decrement the
+ref count before returning the error.
 
-Fixes: e399441de9115 ("nvme-fabrics: Add host support for FC transport")
-Cc: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/fc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index 058d542647dd5..13c89cc9d10cf 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1492,7 +1492,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
- 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.cmddma)) {
- 		dev_err(ctrl->dev,
- 			"FCP Op failed - cmdiu dma mapping failed.\n");
--		ret = EFAULT;
-+		ret = -EFAULT;
- 		goto out_on_error;
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 4a7d50a96d36f..b5c8219c54557 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -580,8 +580,10 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 		pm_runtime_get_noresume(dev->dev);
+ 	} else {
+ 		ret = pm_runtime_get_sync(dev->dev);
+-		if (ret < 0 && ret != -EACCES)
++		if (ret < 0 && ret != -EACCES) {
++			pm_runtime_put_autosuspend(dev->dev);
+ 			return conn_status;
++		}
  	}
  
-@@ -1502,7 +1502,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
- 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.rspdma)) {
- 		dev_err(ctrl->dev,
- 			"FCP Op failed - rspiu dma mapping failed.\n");
--		ret = EFAULT;
-+		ret = -EFAULT;
- 	}
- 
- 	atomic_set(&op->state, FCPOP_STATE_IDLE);
+ 	nv_encoder = nouveau_connector_ddc_detect(connector);
 -- 
 2.25.1
 
