@@ -2,202 +2,141 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5F9C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3107B207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DE3220767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R8IE3Y0B"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OATQFdU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732723AbgIAT4k (ORCPT
+        id S1732009AbgIAUAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:56:40 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22693 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727107AbgIAT4i (ORCPT
+        Tue, 1 Sep 2020 16:00:36 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55672 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726936AbgIAUAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:56:38 -0400
+        Tue, 1 Sep 2020 16:00:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598990195;
+        s=mimecast20190719; t=1598990432;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=orAsHObun3zJ3OofKpu/i01XLLE0xJQF3S9VG2aFo2Q=;
-        b=R8IE3Y0BluOVezp5Blm0kmBdC/IXIi9zLpgKUciFjgIx8dGHfCqM4gx14EI4HBGEeOEs/v
-        KnMBDZqM+lG5L5EMonzY1qFwhpKfXgxjoHqxgVCCg1rnL2S+Dr07cr56GoYBjFn6Wzskts
-        +Tss7Lmo3H5IWIPHUqwAgD7Iys5h2rs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-315-nnuTM77NNyyfYq_8vjMACg-1; Tue, 01 Sep 2020 15:56:33 -0400
-X-MC-Unique: nnuTM77NNyyfYq_8vjMACg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DDFC2FD00;
-        Tue,  1 Sep 2020 19:56:32 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AE8665C5BB;
-        Tue,  1 Sep 2020 19:56:31 +0000 (UTC)
-Subject: Re: [PATCH] module: Add more error message for failed kernel module
- loading
-To:     Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Qu Wenruo <wqu@suse.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        linux-modules <linux-modules@vger.kernel.org>,
-        Rusty Russell <rusty@rustcorp.com.au>
-References: <20200829111437.96334-1-wqu@suse.com>
- <CAKi4VAJ_nZ9DT1Tm=uufbJPGgZJu+4j+DVVA9otv6oGXuD3jxg@mail.gmail.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <df13d885-6f9d-dc8a-b850-8aa6ae6993eb@redhat.com>
-Date:   Tue, 1 Sep 2020 15:56:30 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        bh=Vc3R4m+8MTjsRaa5gUjV4LA0oqfm1u6CW8ImByjlE7A=;
+        b=OATQFdU2ghR72FVMuoJTeAM8fgO8hDXPKLHGnh7zIi921kJMJ6KpQdibH7qlMI+RxEVkeQ
+        cKUQwHXPylsKNNBmQa/LD/Y3S+bvL8GuVMPyRdZNctadImggpDIFca/bGXJUCMa4qrNmFI
+        mLYmuTIJLkJL/ADVMaANzJfyb9yoKVw=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-519--suZiAPwPaW7dGLnV3NBPg-1; Tue, 01 Sep 2020 16:00:28 -0400
+X-MC-Unique: -suZiAPwPaW7dGLnV3NBPg-1
+Received: by mail-qt1-f197.google.com with SMTP id w15so1879610qtv.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 13:00:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Vc3R4m+8MTjsRaa5gUjV4LA0oqfm1u6CW8ImByjlE7A=;
+        b=WJRaySDl58bMqJsiV/+9JFzSHRwdgc/S7IJwBv756QFwhhlu13VtsGnAJmsRHdK7Iq
+         ATLLz7bPRMNFUpAfYt94vv/SSf7/uXeSjdouSufiq7bcoAJ8OWLhn9vDoDpDm6fLel/C
+         PLerH8pjY9QvFuKgdfD0+hhhfunzEvTTya9rgFFxxMrkWFhlpXQtt5v0Sbm9/qQKIrqc
+         +bTBhsyl4CEyJH8rPnKf8esaFMrjA7DSVJPA+tejSYbHFldnNruf7GOzwrdzOKDi2Ilv
+         rMGI8CigZ1fCVKcJ1yo5Y2t3Of/tR4QH1m2SrRADPtHM7JEDHjzNIaMKdBWBKopDeB8c
+         0T4g==
+X-Gm-Message-State: AOAM530n5S61qKw3yHT6//DidvJF9npGGVmwtPGAUCQGDupZ2ZHAqR5E
+        8+PKMjE0g/bMFrlh+255VO7J+O25imAOzPj1xju6oWP0UYFzRnklWI1hhbM5n2OYtx3bVEu7/Kq
+        8fNpWm67XA+lpAjila7HCfqEw
+X-Received: by 2002:a37:64d4:: with SMTP id y203mr3623671qkb.359.1598990424706;
+        Tue, 01 Sep 2020 13:00:24 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyu0YmC5kC1aUFd9w+Ovk9eAmNQQBT7X2Nm9TKQFxFHF2t+4Nd1e2v1kCKNfsvGi8l6orS7/A==
+X-Received: by 2002:a37:64d4:: with SMTP id y203mr3623648qkb.359.1598990424405;
+        Tue, 01 Sep 2020 13:00:24 -0700 (PDT)
+Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
+        by smtp.gmail.com with ESMTPSA id x126sm2733262qkb.101.2020.09.01.13.00.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 13:00:22 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 16:00:21 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Michael Tsirkin <mst@redhat.com>,
+        Julia Suvorova <jsuvorov@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
+Message-ID: <20200901200021.GB3053@xz-x1>
+References: <20200807141232.402895-1-vkuznets@redhat.com>
+ <20200825212526.GC8235@xz-x1>
+ <87eenlwoaa.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKi4VAJ_nZ9DT1Tm=uufbJPGgZJu+4j+DVVA9otv6oGXuD3jxg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Disposition: inline
+In-Reply-To: <87eenlwoaa.fsf@vitty.brq.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 9/1/20 2:50 PM, Lucas De Marchi wrote:
-> On Sat, Aug 29, 2020 at 4:15 AM Qu Wenruo <wqu@suse.com> wrote:
->>
->> When kernel module loading failed, user space only get one of the
->> following error messages:
->> - -ENOEXEC
->>   This is the most confusing one. From corrupted ELF header to bad
->>   WRITE|EXEC flags check introduced by in module_enforce_rwx_sections()
->>   all returns this error number.
->>
->> - -EPERM
->>   This is for blacklisted modules. But mod doesn't do extra explain
->>   on this error either.
->>
->> - -ENOMEM
->>   The only error which needs no explain.
->>
->> This means, if a user got "Exec format error" from modprobe, it provides
->> no meaningful way for the user to debug, and will take extra time
->> communicating to get extra info.
->>
->> So this patch will add extra error messages for -ENOEXEC and -EPERM
->> errors, allowing user to do better debugging and reporting.
->>
->> Signed-off-by: Qu Wenruo <wqu@suse.com>
->> ---
->>  kernel/module.c | 11 +++++++++--
->>  1 file changed, 9 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/module.c b/kernel/module.c
->> index 1c5cff34d9f2..9f748c6eeb48 100644
->> --- a/kernel/module.c
->> +++ b/kernel/module.c
->> @@ -2096,8 +2096,12 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
->>         int i;
->>
->>         for (i = 0; i < hdr->e_shnum; i++) {
->> -               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
->> +               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx) {
->> +                       pr_err(
->> +                       "Module %s section %d has invalid WRITE|EXEC flags\n",
->> +                               mod->name, i);
->>                         return -ENOEXEC;
->> +               }
->>         }
->>
->>         return 0;
->> @@ -3825,8 +3829,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
->>         char *after_dashes;
->>
->>         err = elf_header_check(info);
->> -       if (err)
->> +       if (err) {
->> +               pr_err("Module has invalid ELF header\n");
->>                 goto free_copy;
->> +       }
->>
->>         err = setup_load_info(info, flags);
->>         if (err)
->> @@ -3834,6 +3840,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
->>
->>         if (blacklisted(info->name)) {
->>                 err = -EPERM;
->> +               pr_err("Module %s is blacklisted\n", info->name);
+On Tue, Sep 01, 2020 at 04:43:25PM +0200, Vitaly Kuznetsov wrote:
+> Peter Xu <peterx@redhat.com> writes:
 > 
-> I wonder why would anyone actually add the blacklist to the command
-> line like this and have no
-> way to revert that back. This was introduced in
-
-Debug.  Debug.  Debug. ;)  The parameter was added to debug broken installations
-and kernel boots.
-
-> be7de5f91fdc modules: Add kernel parameter to blacklist modules
-> as a way to overcome broken initrd generation afaics.
-
-Not the generation of the initramfs, but blocking a module loaded during the
-boot.  The installation may have failed and there's no easy way to then debug
-what module was responsible for the failure.
-
- Either kernel
-> command line (using modprobe.blacklist)
-> or /etc/modprobe.d options are honoured by libkmod and allow a
-> sufficiently privileged user to bypass it.
+> > On Fri, Aug 07, 2020 at 04:12:29PM +0200, Vitaly Kuznetsov wrote:
+> >> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
+> >> I observed 8193 accesses to PCI hole memory. When such exit is handled
+> >> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
+> >> Handling the same exit in userspace is six times slower (0.000006 sec) so
+> >> the overal; difference is 0.04 sec. This may be significant for 'microvm'
+> >> ideas.
+> >
+> > Sorry to comment so late, but just curious... have you looked at what's those
+> > 8000+ accesses to PCI holes and what they're used for?  What I can think of are
+> > some port IO reads (e.g. upon vendor ID field) during BIOS to scan the devices
+> > attached.  Though those should be far less than 8000+, and those should also be
+> > pio rather than mmio.
 > 
-
-Both of those options only work if the filesystem is mounted IIRC.  It could be
-the case that modprobe.blacklist now works earlier in the boot, however, I've
-never used it because module_blacklist is the biggest and best hammer that I can
-use to get through a broken installation or boot.
-
-In any case you're incorrectly assuming that the system has a filesystem on it.
-That's not necessarily the case as I'll explain below.
-
-> +Rusty, +Prarit: is there anything this module parameter is covering
-> that I'm missing?
-
-This is the situation I have repeatedly come across :  A system at a remote site
-will not boot any flavor of Linux.  Since the system would not install the only
-way to debug was to provide install images to workaround a module load failure.
-As you can imagine that is a time consuming process as well as a bad end user
-experience.
-
-I got so sick of it that I wrote the code above (well similar to it anyway --
-thanks for the review Randy ;)) to add the module_blacklist parameter to make
-debugging an uninstallable "bricked" system easier.
-
-It's come in handy in some unexpected ways.  We've had situations where modules
-have loaded and corrupted memory and blacklisting them revealed that the modules
-were responsible for the memory corruption.
-
-P.
-
+> And sorry for replying late)
 > 
-> For the changes here,
+> We explicitly want MMIO instead of PIO to speed things up, afaiu PIO
+> requires two exits per device (and we exit all the way to
+> QEMU). Julia/Michael know better about the size of the space.
 > 
-> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> >
+> > If this is only an overhead for virt (since baremetal mmios should be fast),
+> > I'm also thinking whether we can make it even better to skip those pci hole
+> > reads.  Because we know we're virt, so it also gives us possibility that we may
+> > provide those information in a better way than reading PCI holes in the guest?
 > 
-> thanks
-> Lucas De Marchi
-> 
->>                 goto free_copy;
->>         }
->>
->> --
->> 2.27.0
->>
-> 
+> This means let's invent a PV interface and if we decide to go down this
+> road, I'd even argue for abandoning PCI completely. E.g. we can do
+> something similar to Hyper-V's Vmbus.
+
+My whole point was more about trying to understand the problem behind.
+Providing a fast path for reading pci holes seems to be reasonable as is,
+however it's just that I'm confused on why there're so many reads on the pci
+holes after all.  Another important question is I'm wondering how this series
+will finally help the use case of microvm.  I'm not sure I get the whole point
+of it, but... if microvm is the major use case of this, it would be good to
+provide some quick numbers on those if possible.
+
+For example, IIUC microvm uses qboot (as a better alternative than seabios) for
+fast boot, and qboot has:
+
+https://github.com/bonzini/qboot/blob/master/pci.c#L20
+
+I'm kind of curious whether qboot will still be used when this series is used
+with microvm VMs?  Since those are still at least PIO based.
+
+Thanks,
+
+-- 
+Peter Xu
 
