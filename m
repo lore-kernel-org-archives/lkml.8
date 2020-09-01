@@ -2,95 +2,170 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C74DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B80C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C3552087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C0CB2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:50:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="i0Vnj588"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="M2KqIvrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbgIAFrr (ORCPT
+        id S1726247AbgIAFug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:47:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgIAFrq (ORCPT
+        Tue, 1 Sep 2020 01:50:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61896 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725930AbgIAFue (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:47:46 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AF58C0612A3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:47:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=z0w4+hNfdldNlYEJjiZeG1sutgNqlA1BYQPXsEIo0Jo=; b=i0Vnj588KWHlGnV0+RT994CjOG
-        r/nD5PmJoKEJyKHXSYH0lRtT0Cylwc9SvFdUkldryRiUXY3YdZwMxDc5UXRu1T7HQV+GY77aVyej3
-        GJpH7DVvX/wfwDwanif+gPGkjVSnhGUaU9X9S5FlN9V8AKeRMMcCOugf5rtoJO5WmYOWuwCuobv/L
-        +aJlZq/a8gLUs2WnutFnRwMUr/TRWYsbThgGGuVoOJSoxmhkRyI7rQhxgqJCeHwmbeCuFLUQpoV2D
-        jklZZdYeQjFg8DV0ImY9Sf9P91HKX1LuT0R+iDAD9tzSG0G5YddvboFf8E9NMhixz7P9PwVndD1GT
-        LEBrDRVg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kCz8u-0001Hp-Nx; Tue, 01 Sep 2020 05:47:41 +0000
-Subject: Re: ERROR: "min_low_pfn" undefined!
-To:     kernel test robot <lkp@intel.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>
-References: <202009011306.LeUnyxbp%lkp@intel.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <dccbf654-3684-c491-4659-0d6d4044d43a@infradead.org>
-Date:   Mon, 31 Aug 2020 22:47:36 -0700
+        Tue, 1 Sep 2020 01:50:34 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0815Wjfi181438;
+        Tue, 1 Sep 2020 01:50:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=aSbxaMH+A3QRu+Kf+eDhiPblQC4mg+HYmfTQenYZu/A=;
+ b=M2KqIvrmNjKCfiUbMFRun4bcPwEd2D1S+fRwVTPlX8YqxUYlTECezVjbIa12SjxjkMEC
+ Etn/ZHgJmBLyiDEVi1vW38WRZwdDl2rISfkglTKO7vWq14pLuUjkEgmFTNsv09uXHkqv
+ WMpC+cr2xx7gxqptb3azwYOX0VM/j64slmZaUDEWLr4pvpwvoB1ovoUkDNef4275eHzR
+ idTvm1WueDhfiXaSh/eSY7KXZS5/SGzCVd+Kx+6W3qBUvIBIrMckDnuQAw15kYW5deLf
+ FlWxWlv08Jxg1h0caiJGmuB+4qf0vjJFEQwTAfB3lPJ7PHAW1MAPKsADwLKiLuR5jq9j oA== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 339g8aracd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 01:50:19 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0815XdLl182819;
+        Tue, 1 Sep 2020 01:50:19 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 339g8arac5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 01:50:18 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0815m0iE026426;
+        Tue, 1 Sep 2020 05:50:18 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 337en930hv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 05:50:18 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0815oHKY55312884
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Sep 2020 05:50:17 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 333E7112067;
+        Tue,  1 Sep 2020 05:50:17 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 72B68112061;
+        Tue,  1 Sep 2020 05:50:10 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.82.45])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Sep 2020 05:50:09 +0000 (GMT)
+Subject: Re: [PATCH v6 1/5] perf/jevents: Remove jevents.h file
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        john.garry@huawei.com
+References: <20200827130958.189146-1-kjain@linux.ibm.com>
+ <20200827130958.189146-2-kjain@linux.ibm.com> <20200831084348.GB287892@krava>
+From:   kajoljain <kjain@linux.ibm.com>
+Message-ID: <98ae2072-f336-d6e9-28bf-eb1d633ed234@linux.ibm.com>
+Date:   Tue, 1 Sep 2020 11:20:08 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <202009011306.LeUnyxbp%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200831084348.GB287892@krava>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-01_04:2020-08-31,2020-09-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 clxscore=1015
+ mlxscore=0 adultscore=0 malwarescore=0 spamscore=0 priorityscore=1501
+ mlxlogscore=999 lowpriorityscore=0 phishscore=0 suspectscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010046
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/31/20 10:41 PM, kernel test robot wrote:
-> Hi Arnd,
-> 
-> First bad commit (maybe != root cause):
-> 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   b51594df17d0ce80b9f9f35394a1f42d7ac94472
-> commit: 710ec38b0f633ab3e2581f07a73442d809e28ab0 mm: add dummy can_do_mlock() helper
-> date:   11 months ago
-> config: microblaze-randconfig-r031-20200831 (attached as .config)
-> compiler: microblaze-linux-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         git checkout 710ec38b0f633ab3e2581f07a73442d809e28ab0
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=microblaze 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->>> ERROR: "min_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
->    ERROR: "min_low_pfn" [drivers/block/aoe/aoe.ko] undefined!
 
 
-Please test
-https://lore.kernel.org/lkml/20200829000110.2408-1-rdunlap@infradead.org/
+On 8/31/20 2:13 PM, Jiri Olsa wrote:
+> On Thu, Aug 27, 2020 at 06:39:54PM +0530, Kajol Jain wrote:
+>> This patch removes jevents.h file and add its data inside
+>> jevents.c as this file is only included there.
+>>
+>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+>> ---
+>>  tools/perf/pmu-events/jevents.c |  9 ++++++++-
+>>  tools/perf/pmu-events/jevents.h | 23 -----------------------
+>>  2 files changed, 8 insertions(+), 24 deletions(-)
+>>  delete mode 100644 tools/perf/pmu-events/jevents.h
+>>
+>> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+>> index fa86c5f997cc..1c55cc754b5a 100644
+>> --- a/tools/perf/pmu-events/jevents.c
+>> +++ b/tools/perf/pmu-events/jevents.c
+>> @@ -48,11 +48,18 @@
+>>  #include <linux/list.h>
+>>  #include "jsmn.h"
+>>  #include "json.h"
+>> -#include "jevents.h"
+>>  
+>>  int verbose;
+>>  char *prog;
+>>  
+>> +#ifndef min
+>> +#define min(x, y) ({				\
+>> +	typeof(x) _min1 = (x);			\
+>> +	typeof(y) _min2 = (y);			\
+>> +	(void)(&_min1 == &_min2);		\
+>> +	_min1 < _min2 ? _min1 : _min2; })
+>> +#endif
+>> +
+>>  int eprintf(int level, int var, const char *fmt, ...)
+>>  {
+>>  
+>> diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
+>> deleted file mode 100644
+>> index 2afc8304529e..000000000000
+>> --- a/tools/perf/pmu-events/jevents.h
+>> +++ /dev/null
+>> @@ -1,23 +0,0 @@
+>> -/* SPDX-License-Identifier: GPL-2.0 */
+>> -#ifndef JEVENTS_H
+>> -#define JEVENTS_H 1
+>> -
+>> -int json_events(const char *fn,
+>> -		int (*func)(void *data, char *name, char *event, char *desc,
+>> -				char *long_desc,
+>> -				char *pmu,
+>> -				char *unit, char *perpkg, char *metric_expr,
+>> -				char *metric_name, char *metric_group,
+>> -				char *deprecated, char *metric_constraint),
+>> -		void *data);
+>> -char *get_cpu_str(void);
+> 
+> I think you can also remove get_cpu_str from jevents.c
 
+Hi Jiri,
+     Yes, I will check that part.
 
--- 
-~Randy
-
+Thanks,
+Kajol Jain
+> 
+> thanks,
+> jirka
+> 
