@@ -6,73 +6,62 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FBDC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E640C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7BC0208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE2B208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598971872;
-	bh=QhxWa/F/NMW+oameRtkqv5jXPp0FIPxPDF8V1I1dqhs=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=CZJcZCWwZBwuNJHt7U88DNTf/s2DbEy4V9A1XbjS+a8n+0BvtzjlkAhjdgOeKBZnp
-	 +szCnuyUD1xrY1ZRU8Lv+JZ/T+yS/RYRdXPHvUxV/WwaA1IErMotgXn5SVUQHWikio
-	 2QsZvjymSooIEM6kXHStUcSCkhMEJYAwxhHK1JOc=
+	s=default; t=1598971874;
+	bh=ZXbib2oV5w0YlPIh/haYE+UDUt9otm2EZ8ObPawlcOA=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=p4Sg/4w5rEMdv7LZO39C7ASoHY8OSv/rcDQIKMvJwISTLBvVnslGS8RIF1sN7vkXZ
+	 /aUdeRazhBR1m3836ismvq+dkOLh9NBZiq+Q2gJpzfP5Xt/KrsYJQQRBUHsQqZS0L/
+	 kABEdYePn/z71Ld8NVOCK0eCfRiXsg6MFg087aOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgIAOvI (ORCPT
+        id S1728742AbgIAOvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:51:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35998 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 10:51:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbgIAOuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:50:40 -0400
+        id S1728506AbgIAOup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:50:45 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D1FA206FA;
-        Tue,  1 Sep 2020 14:50:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8501D206EB;
+        Tue,  1 Sep 2020 14:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598971839;
-        bh=QhxWa/F/NMW+oameRtkqv5jXPp0FIPxPDF8V1I1dqhs=;
+        s=default; t=1598971845;
+        bh=ZXbib2oV5w0YlPIh/haYE+UDUt9otm2EZ8ObPawlcOA=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=AyJRxS3tQ10Mf0V/RCpt2UeJKOQ2AsPPul3WwEyWfe8T3NzcE8nSq+BGwr8EGrcAd
-         5ivmBFoDxh0qLSJS7UAvRqAkWmLPMWHsEYxHbS8WnUtzuv7lXN7h1y53jsX41Mgv1P
-         CJ/ovP+4vPqBdIW24HqlwfFO5/qx8APuDiAZ/pNw=
-Date:   Tue, 01 Sep 2020 15:50:00 +0100
+        b=KZootyeLyjib4y1qrCcS/xBceUm4FEua8DQgAHaJjhfgX7+u4D16kmrSqqBLGSh3D
+         bXvX0dlfHef/j/SyplsIQ7kz5odClVmMG4A4FO32MhAVMV93T4XPS4awe9d1XoK0E3
+         xGl01/tUrNUkhhuiPc+dXN/6wxzxOnBRZAlkG43M=
+Date:   Tue, 01 Sep 2020 15:50:05 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel@lists.freedesktop.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Lee Jones <lee.jones@linaro.org>,
+To:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
         Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
         alsa-devel@alsa-project.org, Sangbeom Kim <sbkim73@samsung.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>, Daniel Vetter <daniel@ffwll.ch>,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>
-In-Reply-To: <20200829142501.31478-1-krzk@kernel.org>
-References: <20200829142501.31478-1-krzk@kernel.org>
-Subject: Re: [PATCH 01/10] dt-bindings: arm: samsung: pmu: Use unevaluatedProperties
-Message-Id: <159897179515.47719.9922715760129781914.b4-ty@kernel.org>
+        devicetree@vger.kernel.org
+In-Reply-To: <20200830112633.6732-1-krzk@kernel.org>
+References: <20200830112633.6732-1-krzk@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: sound: midas-audio: Correct parsing sound-dai phandles
+Message-Id: <159897179515.47719.6003518135515395142.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Aug 2020 16:24:52 +0200, Krzysztof Kozlowski wrote:
-> Additional properties actually might appear (e.g. assigned-clocks) so
-> use unevaluatedProperties to fix dtbs_check warnings like:
+On Sun, 30 Aug 2020 13:26:32 +0200, Krzysztof Kozlowski wrote:
+> The "sound-dai" property has cells therefore phandle-array should be
+> used, even if it is just one phandle.  This fixes dtbs_check warnings
+> like:
 > 
->   arch/arm64/boot/dts/exynos/exynos5433-tm2.dt.yaml: system-controller@105c0000:
->     'assigned-clock-parents', 'assigned-clocks' do not match any of the regexes: 'pinctrl-[0-9]+'
+>   arch/arm/boot/dts/exynos4412-trats2.dt.yaml: sound: cpu:sound-dai:0:1: missing phandle tag in 0
+>   arch/arm/boot/dts/exynos4412-trats2.dt.yaml: sound: cpu:sound-dai:0: [158, 0] is too long
 
 Applied to
 
@@ -80,8 +69,10 @@ Applied to
 
 Thanks!
 
-[1/1] ASoC: samsung-i2s: Use unevaluatedProperties
-      commit: 8187d8300251a99e40e288be80bef6a15b7b22e4
+[1/2] ASoC: midas-audio: Correct parsing sound-dai phandles
+      commit: 3e7ba1c0432ef9a792b9c77d36f78037626303b0
+[2/2] ASoC: odroid: Use unevaluatedProperties
+      commit: a57307ca6b661e16f9435a25f376ac277c3de697
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
