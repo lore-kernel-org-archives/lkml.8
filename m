@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1299C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7597C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9757920E65
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2737215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974620;
-	bh=ZtBz4H4zHKmKdeBV2j6B7ls2H3PJ6PDwFiAz16xd6zc=;
+	s=default; t=1598974628;
+	bh=Oz7t0NWmXB5bAB+zgwUm8UAx3M15rm8xgTdMeCo8jq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vCunYsj8UHQWtYnqrqYfw8SwPtqnIGknN0dd8+VJoRtDoUTTE3sVdVwNRfz2r8oFz
-	 +fpIp4tj3B15ClG9qJSOQZxv9SdpstPfQ4+vNNWqekngcPFKGUNB5WurewY9hs6pQ7
-	 QDYEIx4/0cPnZgNV8rJKyPBfxnDbhs5Ae6mDOD3s=
+	b=NdIvx7ffbV1iQc1YNWHIsHdMEt07d/1IeJ/u6y+ky0DtfLq+SA8eI3oYoydrMm7oX
+	 HbWD+9sMegmdLvzABN4iR5jLSFDY18MEIYXuE4Btuvb7nNM7bfHCqaZywKUUync/qM
+	 M3SCN/FNAOtg25EMpbNK7PYbCYj0IHg+NZ49nFN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbgIAPgy (ORCPT
+        id S1731315AbgIAPhG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:36:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41622 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:37:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731161AbgIAPfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:40 -0400
+        id S1731170AbgIAPfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:35:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47E7A21534;
-        Tue,  1 Sep 2020 15:35:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17113205F4;
+        Tue,  1 Sep 2020 15:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974540;
-        bh=ZtBz4H4zHKmKdeBV2j6B7ls2H3PJ6PDwFiAz16xd6zc=;
+        s=default; t=1598974542;
+        bh=Oz7t0NWmXB5bAB+zgwUm8UAx3M15rm8xgTdMeCo8jq0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jcG1eAF90iosU/QfsmnhvX+rM5hSsf51O/VPlfO0/pRVRO2dRA4/JDkLTJQB4Dk2J
-         TrivLwdeWhMl//Emc3f+0kGDyhX+Id9CD9eJbzRupcR/h8B7A7gjE89i43yoA6zkSN
-         e6P8DjZJPpwTJ4+rR2aTFFHx01Pq5nzOnIYqa8Vs=
+        b=rlXaIaNGLDdqu8/YUV53afbD9TMMnYpNgLXcasqMeoS0U2LtCLyNH74/C1AQ73iju
+         0BCfCSqZq5MNwp1V2WpoiVeH/8tOxrjtDr2oWMoZh12rccUU+gQZ0Xm+9eNP+v/TIg
+         vCioqWk6iLp+538f5wlnv6vkxRLpD7e44hSyiqo0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5.4 194/214] usb: host: ohci-exynos: Fix error handling in exynos_ohci_probe()
-Date:   Tue,  1 Sep 2020 17:11:14 +0200
-Message-Id: <20200901151002.244766167@linuxfoundation.org>
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Kees Cook <keescook@chromium.org>,
+        Brooke Basile <brookebasile@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>, stable <stable@kernel.org>
+Subject: [PATCH 5.4 195/214] USB: gadget: u_f: add overflow checks to VLA macros
+Date:   Tue,  1 Sep 2020 17:11:15 +0200
+Message-Id: <20200901151002.294183568@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,41 +62,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Brooke Basile <brookebasile@gmail.com>
 
-commit 1d4169834628d18b2392a2da92b7fbf5e8e2ce89 upstream.
+commit b1cd1b65afba95971fa457dfdb2c941c60d38c5b upstream.
 
-If the function platform_get_irq() failed, the negative value
-returned will not be detected here. So fix error handling in
-exynos_ohci_probe(). And when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+size can potentially hold an overflowed value if its assigned expression
+is left unchecked, leading to a smaller than needed allocation when
+vla_group_size() is used by callers to allocate memory.
+To fix this, add a test for saturation before declaring variables and an
+overflow check to (n) * sizeof(type).
+If the expression results in overflow, vla_group_size() will return SIZE_MAX.
 
-Fixes: 62194244cf87 ("USB: Add Samsung Exynos OHCI diver")
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20200826144931.1828-1-tangbin@cmss.chinamobile.com
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Suggested-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Brooke Basile <brookebasile@gmail.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/ohci-exynos.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/usb/gadget/u_f.h |   38 +++++++++++++++++++++++++++-----------
+ 1 file changed, 27 insertions(+), 11 deletions(-)
 
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -171,9 +171,8 @@ static int exynos_ohci_probe(struct plat
- 	hcd->rsrc_len = resource_size(res);
+--- a/drivers/usb/gadget/u_f.h
++++ b/drivers/usb/gadget/u_f.h
+@@ -14,6 +14,7 @@
+ #define __U_F_H__
  
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "Failed to get IRQ\n");
--		err = -ENODEV;
-+	if (irq < 0) {
-+		err = irq;
- 		goto fail_io;
- 	}
+ #include <linux/usb/gadget.h>
++#include <linux/overflow.h>
  
+ /* Variable Length Array Macros **********************************************/
+ #define vla_group(groupname) size_t groupname##__next = 0
+@@ -21,21 +22,36 @@
+ 
+ #define vla_item(groupname, type, name, n) \
+ 	size_t groupname##_##name##__offset = ({			       \
+-		size_t align_mask = __alignof__(type) - 1;		       \
+-		size_t offset = (groupname##__next + align_mask) & ~align_mask;\
+-		size_t size = (n) * sizeof(type);			       \
+-		groupname##__next = offset + size;			       \
++		size_t offset = 0;					       \
++		if (groupname##__next != SIZE_MAX) {			       \
++			size_t align_mask = __alignof__(type) - 1;	       \
++			size_t offset = (groupname##__next + align_mask)       \
++					 & ~align_mask;			       \
++			size_t size = array_size(n, sizeof(type));	       \
++			if (check_add_overflow(offset, size,		       \
++					       &groupname##__next)) {          \
++				groupname##__next = SIZE_MAX;		       \
++				offset = 0;				       \
++			}						       \
++		}							       \
+ 		offset;							       \
+ 	})
+ 
+ #define vla_item_with_sz(groupname, type, name, n) \
+-	size_t groupname##_##name##__sz = (n) * sizeof(type);		       \
+-	size_t groupname##_##name##__offset = ({			       \
+-		size_t align_mask = __alignof__(type) - 1;		       \
+-		size_t offset = (groupname##__next + align_mask) & ~align_mask;\
+-		size_t size = groupname##_##name##__sz;			       \
+-		groupname##__next = offset + size;			       \
+-		offset;							       \
++	size_t groupname##_##name##__sz = array_size(n, sizeof(type));	        \
++	size_t groupname##_##name##__offset = ({			        \
++		size_t offset = 0;						\
++		if (groupname##__next != SIZE_MAX) {				\
++			size_t align_mask = __alignof__(type) - 1;		\
++			size_t offset = (groupname##__next + align_mask)	\
++					 & ~align_mask;				\
++			if (check_add_overflow(offset, groupname##_##name##__sz,\
++							&groupname##__next)) {	\
++				groupname##__next = SIZE_MAX;			\
++				offset = 0;					\
++			}							\
++		}								\
++		offset;								\
+ 	})
+ 
+ #define vla_ptr(ptr, groupname, name) \
 
 
