@@ -2,131 +2,112 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A90C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D77C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7E8E2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:40:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D22F2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYk3UcD1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbgIAVkf convert rfc822-to-8bit (ORCPT
+        id S1729633AbgIAVoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:40:35 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:45125 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726521AbgIAVkb (ORCPT
+        Tue, 1 Sep 2020 17:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727918AbgIAVnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:40:31 -0400
-Received: by mail-oi1-f196.google.com with SMTP id d189so2487216oig.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 14:40:30 -0700 (PDT)
+        Tue, 1 Sep 2020 17:43:55 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EFEC061245;
+        Tue,  1 Sep 2020 14:43:54 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s10so770048plp.1;
+        Tue, 01 Sep 2020 14:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=AyKMQ8WKejiUbQ0uoIq3ttpVPmq3IB07qohgDLCsLRM=;
+        b=iYk3UcD1MRyTugIBSur90bL7s2ttFeEfAlYOfb9ezgpcRS8uU0w9JsNsAFKqXZk+LV
+         Y+VCsuf6/hyA0h1lNvC1scXpdPYYAyqk3RU0VsgGINcituOdlLBEK9ewKhxtjFnCktgr
+         59eYUvwTyZI3P/qXO8uQZwCPHQQPRrmOXiX+Bs6Q9obAbjJcguuY+d/1cmBwBx9LIHQz
+         QOBjrJerAPTy4UujMsojfVRK5Xv6eOj0pfOLVcZ0rfjJ39d/UC/NNIn+PjUgXgktE+gs
+         gxqqZD8ejKwpgNrSL2JKHhLDY65MhZVpJQSV7iOCNu2yhs9rMTy0P5LRRtmlEt58Kcj/
+         kXxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=HtDmdS2o4yWHgA155sIUrMDEsVQmMWq03sAjdZrfpNk=;
-        b=IsLdozd6Pw6iEzE1ovnOp6TxuS/5nVmtGPRFzgbYJey4IbW4GpI2jQqXPHsqIT+7wA
-         8/3XUsMnRe76hKcI/lzVX90yZYfIYHMN4UKIvR/bozAgCbq61seoG0WaGznw0JIM1e1g
-         sAsqRkvWUaB8uHdPNKCiazNKxnAMszmZi0Fg0lFnFOa9FE+Yi88ecTUiZTdiLj32+bdu
-         QxxwIwDe4ai8b6SX9hDyAjnCJGLXeVUvnV9SEc6WQZndBasCeVpY5Uy8bqCJKZADjj1p
-         +FGYrHX8lTTQJ0jCAU/u6otOOOLa/2OS0qxcRGBeDwIzlf9m+Au2UQQTiOIHlr3gvh7x
-         Pn2g==
-X-Gm-Message-State: AOAM532Vt62ISFHZXXoV6CcNpFHd0kfIVLyutHUDFjABNRjSHU5YOUd5
-        d+JiYCaI00f7aR0qGkcjsMADuDIxxi0=
-X-Google-Smtp-Source: ABdhPJxenpaLsQUXRnF8a77NHv63bnGTVcmJ92/owODA9gm6QU4ssuZsaMiBall4T4sqA12IXi/6Ew==
-X-Received: by 2002:aca:3d41:: with SMTP id k62mr120156oia.156.1598996430048;
-        Tue, 01 Sep 2020 14:40:30 -0700 (PDT)
-Received: from mail-ot1-f41.google.com (mail-ot1-f41.google.com. [209.85.210.41])
-        by smtp.gmail.com with ESMTPSA id 5sm398746otb.67.2020.09.01.14.40.29
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 14:40:29 -0700 (PDT)
-Received: by mail-ot1-f41.google.com with SMTP id v16so2474992otp.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 14:40:29 -0700 (PDT)
-X-Received: by 2002:a05:6830:12c3:: with SMTP id a3mr3039860otq.74.1598996428949;
- Tue, 01 Sep 2020 14:40:28 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=AyKMQ8WKejiUbQ0uoIq3ttpVPmq3IB07qohgDLCsLRM=;
+        b=ZJxoJUoMtO9A+vRYop8C97Q0IoNWt2rxEz0lx6U/FCXKnk2WW3wXGZrDNvXxpm6voD
+         3OFbYBSjjIeWwWOx1ZmVSrfb/S8H/H5lxOCGkUdBAMTt+JaCoCTGyvk63l6XJCOMUw6g
+         W/bPITSU3ujOvWLB0DNNK/bW3oO+NH3B63iAbux/PsXp3qXPnRes5zhjAFeAzXw9hwwF
+         G9MILdy8Xz3T5DifFnm56ih6Tgw6Vcqp6988nsnGo+TH/+BxpY6HNL4p3FCJ37e0+9Nk
+         jPr6Kp52gv1uFecb6M0yAzcqvuSNQOq1TeZpWJGlsx8LKEgO+83KlOlTcwJHymCknzGA
+         qWmw==
+X-Gm-Message-State: AOAM531iPRmGoY4b+43on2xiAW1zr0qCABaFpk0B9i5aAHPc5xtmCoNz
+        +xKefuiqN92FsOcOe21ElZ1OnBfjXtE=
+X-Google-Smtp-Source: ABdhPJy7WjLjS4YhujBCm9ZAknj1AcuJdwvIuC4GttjemzaULadTZxoB1GkEvfiv7gZOFlyuK4WyWw==
+X-Received: by 2002:a17:902:7e82:b029:cf:85aa:69f6 with SMTP id z2-20020a1709027e82b02900cf85aa69f6mr782949pla.3.1598996633483;
+        Tue, 01 Sep 2020 14:43:53 -0700 (PDT)
+Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id 131sm128663pfy.5.2020.09.01.14.43.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 14:43:52 -0700 (PDT)
+From:   Florian Fainelli <f.fainelli@gmail.com>
+To:     netdev@vger.kernel.org
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
+        bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM SYSTEMPORT
+        ETHERNET DRIVER)
+Subject: [PATCH net-next 1/3] dt-bindings: net: Document Broadcom SYSTEMPORT clocks
+Date:   Tue,  1 Sep 2020 14:43:46 -0700
+Message-Id: <20200901214348.1523403-2-f.fainelli@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200901214348.1523403-1-f.fainelli@gmail.com>
+References: <20200901214348.1523403-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
-References: <20200730125259.GA8948@gondor.apana.org.au> <VE1PR04MB6687FB075B9A6A0923F576978F2E0@VE1PR04MB6687.eurprd04.prod.outlook.com>
- <20200901015630.GA9065@gondor.apana.org.au>
-In-Reply-To: <20200901015630.GA9065@gondor.apana.org.au>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Tue, 1 Sep 2020 16:40:16 -0500
-X-Gmail-Original-Message-ID: <CADRPPNTt5dCX1pRUp5OenZBuMNJcN+k8jMVmUo5qw5g0VLZ4hQ@mail.gmail.com>
-Message-ID: <CADRPPNTt5dCX1pRUp5OenZBuMNJcN+k8jMVmUo5qw5g0VLZ4hQ@mail.gmail.com>
-Subject: Re: [PATCH] soc: fsl: Remove bogus packed attributes from qman.h
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 8:57 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Tue, Sep 01, 2020 at 01:50:38AM +0000, Leo Li wrote:
-> >
-> > Sorry for the late response.  I missed this email previously.
-> >
-> > These structures are descriptors used by hardware, we cannot have _ANY_ padding from the compiler.  The compiled result might be the same with or without the __packed attribute for now, but I think keep it there probably is safer for dealing with unexpected alignment requirements from the compiler in the future.
-> >
-> > Having conflicting alignment requirements warning might means something is wrong with the structure in certain scenario.  I just tried a ARM64 build but didn't see the warnings.  Could you share the warning you got and the build setup?  Thanks.
->
-> Just do a COMPILE_TEST build on x86-64:
->
-> In file included from ../drivers/crypto/caam/qi.c:12:
+The Broadcom SYSTEMPORT adapters require the use of two clocks for
+normal operations and during Wake-on-LAN, document those in the binding
+document.
 
-Looks like the CAAM driver and dependent QBMAN driver doesn't support
-COMPILE_TEST yet.  Are you trying to add the support for it?
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ Documentation/devicetree/bindings/net/brcm,systemport.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-I changed the Kconfig to enable the COMPILE_TEST anyway and updated my
-toolchain to gcc-10 trying to duplicate the issue.  The issues can
-only be reproduced with "W=1".
+diff --git a/Documentation/devicetree/bindings/net/brcm,systemport.txt b/Documentation/devicetree/bindings/net/brcm,systemport.txt
+index 83f29e0e11ba..745bb1776572 100644
+--- a/Documentation/devicetree/bindings/net/brcm,systemport.txt
++++ b/Documentation/devicetree/bindings/net/brcm,systemport.txt
+@@ -20,6 +20,11 @@ Optional properties:
+ - systemport,num-tier1-arb: number of tier 1 arbiters, an integer
+ - systemport,num-txq: number of HW transmit queues, an integer
+ - systemport,num-rxq: number of HW receive queues, an integer
++- clocks: When provided, must be two phandles to the functional clocks nodes of
++  the SYSTEMPORT block. The first phandle is the main SYSTEMPORT clock used
++  during normal operation, while the second phandle is the Wake-on-LAN clock.
++- clock-names: When provided, names of the functional clock phandles, first
++  name should be "sw_sysport" and second should be "sw_sysportwol".
+ 
+ Example:
+ ethernet@f04a0000 {
+-- 
+2.25.1
 
-> ../include/soc/fsl/qman.h:259:1: warning: alignment 1 of ‘struct qm_dqrr_entry’ is less than 8 [-Wpacked-not-aligned]
->  } __packed;
->  ^
-> ../include/soc/fsl/qman.h:292:2: warning: alignment 1 of ‘struct <anonymous>’ is less than 8 [-Wpacked-not-aligned]
->   } __packed ern;
->   ^
-
-I think this is a valid concern that if the parent structure doesn't
-meet certain alignment requirements, the alignment for the
-sub-structure cannot be guaranteed.  If we just remove the __packed
-attribute from the parent structure, the compiler could try to add
-padding in the parent structure to fulfill the alignment requirements
-of the sub structure which is not good.  I think the following changes
-are a better fix for the warnings:
-
-diff --git a/include/soc/fsl/qman.h b/include/soc/fsl/qman.h
-index cfe00e08e85b..9f484113cfda 100644
---- a/include/soc/fsl/qman.h
-+++ b/include/soc/fsl/qman.h
-@@ -256,7 +256,7 @@ struct qm_dqrr_entry {
-        __be32 context_b;
-        struct qm_fd fd;
-        u8 __reserved4[32];
--} __packed;
-+} __packed __aligned(64);
- #define QM_DQRR_VERB_VBIT              0x80
- #define QM_DQRR_VERB_MASK              0x7f    /* where the verb contains; */
- #define QM_DQRR_VERB_FRAME_DEQUEUE     0x60    /* "this format" */
-@@ -289,7 +289,7 @@ union qm_mr_entry {
-                __be32 tag;
-                struct qm_fd fd;
-                u8 __reserved1[32];
--       } __packed ern;
-+       } __packed __aligned(64) ern;
-        struct {
-                u8 verb;
-                u8 fqs;         /* Frame Queue Status */
-
-
-Regards,
-Leo
