@@ -2,241 +2,152 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E333C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079B9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F50D2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BkuhoMCQ"
+	by mail.kernel.org (Postfix) with ESMTP id DA51D207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732570AbgIARSm (ORCPT
+        id S1732008AbgIARSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:18:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42748 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732650AbgIARSS (ORCPT
+        Tue, 1 Sep 2020 13:18:51 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:36374 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728994AbgIARSS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 13:18:18 -0400
-Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE9A9C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 10:18:17 -0700 (PDT)
-Received: by mail-pl1-x644.google.com with SMTP id l9so861527plt.8
+Received: by mail-io1-f69.google.com with SMTP id h8so1441691ioa.3
         for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:18:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dW7GB60WM2kkdTwVir0X+YeJCT4DzRMmVe7Fu3eHOuE=;
-        b=BkuhoMCQPMF9r7IbrTJB856k16mWef66ZLvrE0tI5gwb64pfmFnQ1HDIwhxGhJcGuO
-         SB4GYxlcSHw/KjaggedgpPQPVAD5UiMZ5p6u2H/nLBFtCU5LoveZH39Hbb2bFBTHWzNZ
-         LrGCy1TC0dlnpz6WnGC+wyajcxUhmxz4TBqJhm9fwOUzBo3UbS46sfgIqkUNXD22RUzm
-         3sWtlRULn44JvJ1GuwGccLQWSGOXvpWDlDwFN8oHh4e0+vjIGRPNhLkPYQ4PwwyD/7JQ
-         1TI0m8fj0IjTUJtLxEZKFSWgsAzDkJw7mfQeLCKbe9HBedBus8lziMtxUcXAisWO19l4
-         BFJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dW7GB60WM2kkdTwVir0X+YeJCT4DzRMmVe7Fu3eHOuE=;
-        b=TBnf0naNwNP11ZBa399jdBA97ogwlTdGMPJoARFJTx7DCJxWCIhQPuHqpFtqo38kLd
-         yaDlEz7aYXSln+tAktjtsTR2wkQlIcJHWGJzuygCGZEKBolzSN+A83uywb91zKMQw+ed
-         zcmQW8KdBoV9EdD73rl+QZV5dEdkmtL4SpRkI9939IB7hZjpNHKua1sHWUVuJibhpqEr
-         WAjtueOZJqpEvAydP/Wu3r1+xEspLFja1zC+H5LGceBy2yHtQ/5tHEilM0qC7I5geXkJ
-         10pAsV2leWUUcAm5oJPLoRtiUDUkl8X8lDMCw+pdyU4ZM9ONd/R8HIZvM0pahdvPCpnD
-         7lZg==
-X-Gm-Message-State: AOAM533oOjzWTIHuwczw5y+OIiIdpBjkcQ31kmhzasbwN5OHUBACUmkz
-        lVhJj5zIKhj78gfnZIi5OTnscOLlMLnIhQ==
-X-Google-Smtp-Source: ABdhPJyXHh/LWDGrGPsvzYmoxDsHwlqpFhaZQXh71pUs6QyW6PpXsHAPr3Z5mP+arjHcXouGnHTUtA==
-X-Received: by 2002:a17:90a:9292:: with SMTP id n18mr2620785pjo.159.1598980696876;
-        Tue, 01 Sep 2020 10:18:16 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id b15sm2480105pft.84.2020.09.01.10.18.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 10:18:16 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 11:18:14 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        jeremy.linton@arm.com, coresight@lists.linaro.org,
-        mike.leach@linaro.org
-Subject: Re: [PATCH] coresight: etm4x: Handle unreachable sink in perf mode
-Message-ID: <20200901171814.GB236120@xps15>
-References: <20200818192931.168584-1-suzuki.poulose@arm.com>
- <20200819192200.GA3845366@xps15>
- <92f6080e-8168-fc6e-ec76-82560b91c36e@arm.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=FxTGVKFsQfLx849aB24wjiFOLnvV6WwA9z4aBDTxdrI=;
+        b=uocZ0OlToWsrgIoyomT04gJyYt48bYakpGpRDddcoUt59EF5CuIhU+cz2Y3OuAVLzZ
+         qZS0a3Ztyg7U6hy1nD3UjnWGrbFZBhPv7UNqxLeqLY4dNz1Mx8gaC+ZwHBJ/DQmrFyFf
+         cZFS943odHJb9LngRxe/ASV2A4hn2kF+XsCCm05yG4o4vo/NLMRoyhvE+VIbZhw0dE0y
+         0XVEYjbDWdGAjwgr2LwijZsoGgC96CuaCBBra2Az8PGPpXE/j78ryaiR926XZ9YYz7GD
+         vLgEC55ZESaEpmNQ84X58ceNTO3PB+0d/kS0b9x2TrdXwyNCYgZvRsryS7vrVD+egFEp
+         HjqA==
+X-Gm-Message-State: AOAM533RtR/ybwTm1G7Q8Fv3ztWUdHLjmAV5KHwAU/fnqK9Xa0rkFJZT
+        U7TvUUPi70CncB8hnIa0xu9wC+HsgkMkckBR5SDfPmTgWjo9
+X-Google-Smtp-Source: ABdhPJw9VF/mVvBTssdBX69XEB+x1xz5RJkUszVPbdDc9W0S7CQC8XNgSsw6QPfcU16yAr6tg5S5XGafeu62S8pegCVAiRLEC61M
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <92f6080e-8168-fc6e-ec76-82560b91c36e@arm.com>
+X-Received: by 2002:a02:838e:: with SMTP id z14mr2403961jag.84.1598980696981;
+ Tue, 01 Sep 2020 10:18:16 -0700 (PDT)
+Date:   Tue, 01 Sep 2020 10:18:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000007244da05ae43b492@google.com>
+Subject: KMSAN: uninit-value in scsi_mode_sense
+From:   syzbot <syzbot+6b02c1da3865f750164a@syzkaller.appspotmail.com>
+To:     glider@google.com, jejb@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good morning,
+Hello,
 
-On Tue, Sep 01, 2020 at 11:28:55AM +0100, Suzuki K Poulose wrote:
-> On 08/19/2020 08:22 PM, Mathieu Poirier wrote:
-> > Hi Suzuki,
-> > 
-> > On Tue, Aug 18, 2020 at 08:29:31PM +0100, Suzuki K Poulose wrote:
-> > > If the specified/hinted sink is not reachable from a subset of the CPUs,
-> > > we could end up unable to trace the event on those CPUs. This
-> > > is the best effort we could do until we support 1:1 configurations.
-> > > Fail gracefully in such cases avoiding a WARN_ON, which can be easily
-> > > triggered by the user on certain platforms, like :
-> > > 
-> > > [10919.513250] ------------[ cut here ]------------
-> > > [10919.517861] WARNING: CPU: 2 PID: 24021 at
-> > > drivers/hwtracing/coresight/coresight-etm-perf.c:316 etm_event_start+0xf8/0x100
-> > > ...
-> > > 
-> > > [10919.564403] CPU: 2 PID: 24021 Comm: perf Not tainted 5.8.0+ #24
-> > > [10919.570308] pstate: 80400089 (Nzcv daIf +PAN -UAO BTYPE=--)
-> > > [10919.575865] pc : etm_event_start+0xf8/0x100
-> > > [10919.580034] lr : etm_event_start+0x80/0x100
-> > > [10919.584202] sp : fffffe001932f940
-> > > [10919.587502] x29: fffffe001932f940 x28: fffffc834995f800
-> > > [10919.592799] x27: 0000000000000000 x26: fffffe0011f3ced0
-> > > [10919.598095] x25: fffffc837fce244c x24: fffffc837fce2448
-> > > [10919.603391] x23: 0000000000000002 x22: fffffc8353529c00
-> > > [10919.608688] x21: fffffc835bb31000 x20: 0000000000000000
-> > > [10919.613984] x19: fffffc837fcdcc70 x18: 0000000000000000
-> > > [10919.619281] x17: 0000000000000000 x16: 0000000000000000
-> > > [10919.624577] x15: 0000000000000000 x14: 00000000000009f8
-> > > [10919.629874] x13: 00000000000009f8 x12: 0000000000000018
-> > > [10919.635170] x11: 0000000000000000 x10: 0000000000000000
-> > > [10919.640467] x9 : fffffe00108cd168 x8 : 0000000000000000
-> > > [10919.645763] x7 : 0000000000000020 x6 : 0000000000000001
-> > > [10919.651059] x5 : 0000000000000002 x4 : 0000000000000001
-> > > [10919.656356] x3 : 0000000000000000 x2 : 0000000000000000
-> > > [10919.661652] x1 : fffffe836eb40000 x0 : 0000000000000000
-> > > [10919.666949] Call trace:
-> > > [10919.669382]  etm_event_start+0xf8/0x100
-> > > [10919.673203]  etm_event_add+0x40/0x60
-> > > [10919.676765]  event_sched_in.isra.134+0xcc/0x210
-> > > [10919.681281]  merge_sched_in+0xb0/0x2a8
-> > > [10919.685017]  visit_groups_merge.constprop.140+0x15c/0x4b8
-> > > [10919.690400]  ctx_sched_in+0x15c/0x170
-> > > [10919.694048]  perf_event_sched_in+0x6c/0xa0
-> > > [10919.698130]  ctx_resched+0x60/0xa0
-> > > [10919.701517]  perf_event_exec+0x288/0x2f0
-> > > [10919.705425]  begin_new_exec+0x4c8/0xf58
-> > > [10919.709247]  load_elf_binary+0x66c/0xf30
-> > > [10919.713155]  exec_binprm+0x15c/0x450
-> > > [10919.716716]  __do_execve_file+0x508/0x748
-> > > [10919.720711]  __arm64_sys_execve+0x40/0x50
-> > > [10919.724707]  do_el0_svc+0xf4/0x1b8
-> > > [10919.728095]  el0_sync_handler+0xf8/0x124
-> > > [10919.732003]  el0_sync+0x140/0x180
-> > > 
-> > > Fixes: f9d81a657bb8 ("coresight: perf: Allow tracing on hotplugged CPUs")
-> > > Reported-by: Jeremy Linton <jeremy.linton@arm.com>
-> > > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > > Cc: Mike Leach <mike.leach@linaro.org>
-> > > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> > > ---
-> > >   drivers/hwtracing/coresight/coresight-etm-perf.c | 10 ++++++++++
-> > >   1 file changed, 10 insertions(+)
-> > > 
-> > > diff --git a/drivers/hwtracing/coresight/coresight-etm-perf.c b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > > index 1a3169e69bb1..9d61a71da96f 100644
-> > > --- a/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > > +++ b/drivers/hwtracing/coresight/coresight-etm-perf.c
-> > > @@ -321,6 +321,16 @@ static void etm_event_start(struct perf_event *event, int flags)
-> > >   	if (!event_data)
-> > >   		goto fail;
-> > > +	/*
-> > > +	 * Check if this ETM is allowed to trace, as decided
-> > > +	 * at etm_setup_aux(). This could be due to an unreachable
-> > > +	 * sink from this ETM. We can't do much in this case if
-> > > +	 * the sink was specified or hinted to the driver. For
-> > > +	 * now, simply don't record anything on this ETM.
-> > > +	 */
-> > 
-> > Can you provide more details on the scenario and the topology of the system?
-> > Without either it is hard to wrap my head around the problem to address.
-> > Having that information in the changelog would go a long way.
-> 
-> Sure. This was detected on N1SDP with the following topology, with the
-> command :
-> 
-> 
-> $ perf record -e cs_etm/@tmc_etf0/ --per-thread dd if=/dev/zero of=BIGFILE
-> bs=1M count=100
-> 
-> 
-> CPU0
->       \
->         Funnel0 ---- ETF0 --
->       /                      \
-> CPU1
->                                Funnel2
-> CPU2
->       \                      /
->         Funnel1 ---- ETF1 --
->       /
-> CPU3
-> 
-> 
-> Basically, a pair of CPUS (0&1, 2&3 respectively) are connected to a static
-> funnel followed by a TMC-ETF, before connecting to a main
-> funnel which merges the ETMs and the STM on the system.
-> 
-> In such a case, if the user selects tmc_etf0 as the sink for a perf
-> session this could trigger a warning when starting the event on ETM2
-> as we haven't been able to create a path. Also the CPU2 is cleared in
-> the event_data->cpumask.
+syzbot found the following issue on:
 
-Ok, that's the kind of topology I imagined you were dealing with.
+HEAD commit:    ce8056d1 wip: changed copy_from_user where instrumented
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=10278e91900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3afe005fb99591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=6b02c1da3865f750164a
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=177d957a900000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14528186900000
 
-> 
-> I will add the above to the commit log.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+6b02c1da3865f750164a@syzkaller.appspotmail.com
 
-Yes please.
+sd 1:0:0:0: [sdb] 0 512-byte logical blocks: (0 B/0 B)
+sd 1:0:0:0: [sdb] 0-byte physical blocks
+=====================================================
+BUG: KMSAN: uninit-value in scsi_mode_sense+0x10f0/0x17b0 drivers/scsi/scsi_lib.c:2138
+CPU: 1 PID: 624 Comm: kworker/u4:6 Not tainted 5.8.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events_unbound async_run_entry_fn
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x21c/0x280 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ scsi_mode_sense+0x10f0/0x17b0 drivers/scsi/scsi_lib.c:2138
+ sd_read_write_protect_flag drivers/scsi/sd.c:2636 [inline]
+ sd_revalidate_disk+0x4ffa/0xdae0 drivers/scsi/sd.c:3175
+ sd_probe+0x10d1/0x18c0 drivers/scsi/sd.c:3405
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach_async_helper+0x31a/0x3f0 drivers/base/dd.c:833
+ async_run_entry_fn+0x1a2/0x7d0 kernel/async.c:123
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
 
-> 
-> For now we don't really support multiple sinks for a perf session. This
-> will need to be addressed for the per-CPU buffer scenario. But, we
-> should fix the current logic until we get there, to avoid triggering
-> the warnings, which can be done quite easily on these systems, which
-> are not really per-CPU buffers.
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+ __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
+ bio_copy_kern_endio_read+0x494/0x5f0 block/blk-map.c:448
+ bio_endio+0xce1/0xde0 block/bio.c:1447
+ req_bio_endio block/blk-core.c:261 [inline]
+ blk_update_request+0x1178/0x2710 block/blk-core.c:1569
+ scsi_end_request+0x102/0xc00 drivers/scsi/scsi_lib.c:558
+ scsi_io_completion+0x34f/0x2f20 drivers/scsi/scsi_lib.c:934
+ scsi_finish_command+0x85b/0x880 drivers/scsi/scsi.c:214
+ scsi_softirq_done+0x683/0xa80 drivers/scsi/scsi_lib.c:1460
+ blk_done_softirq+0x2fe/0x4e0 block/blk-softirq.c:37
+ __do_softirq+0x2ea/0x7f5 kernel/softirq.c:293
 
-I agree that it should fail gracefully.  
+Uninit was created at:
+ kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
+ kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
+ kmsan_alloc_page+0xc5/0x1a0 mm/kmsan/kmsan_shadow.c:293
+ __alloc_pages_nodemask+0xdf0/0x1030 mm/page_alloc.c:4889
+ alloc_pages_current+0x685/0xb50 mm/mempolicy.c:2292
+ alloc_pages include/linux/gfp.h:545 [inline]
+ bio_copy_kern block/blk-map.c:494 [inline]
+ blk_rq_map_kern+0xdda/0x1570 block/blk-map.c:743
+ __scsi_execute+0x318/0xc80 drivers/scsi/scsi_lib.c:258
+ scsi_execute_req include/scsi/scsi_device.h:460 [inline]
+ scsi_mode_sense+0x600/0x17b0 drivers/scsi/scsi_lib.c:2115
+ sd_read_write_protect_flag drivers/scsi/sd.c:2636 [inline]
+ sd_revalidate_disk+0x4ffa/0xdae0 drivers/scsi/sd.c:3175
+ sd_probe+0x10d1/0x18c0 drivers/scsi/sd.c:3405
+ really_probe+0xf20/0x20b0 drivers/base/dd.c:529
+ driver_probe_device+0x293/0x390 drivers/base/dd.c:701
+ __device_attach_driver+0x63f/0x830 drivers/base/dd.c:807
+ bus_for_each_drv+0x2ca/0x3f0 drivers/base/bus.c:431
+ __device_attach_async_helper+0x31a/0x3f0 drivers/base/dd.c:833
+ async_run_entry_fn+0x1a2/0x7d0 kernel/async.c:123
+ process_one_work+0x1688/0x2140 kernel/workqueue.c:2269
+ worker_thread+0x10bc/0x2730 kernel/workqueue.c:2415
+ kthread+0x551/0x590 kernel/kthread.c:292
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
+=====================================================
 
-> 
-> > 
-> > I'm sure this is a per-thread scenario because there is more than one CPU per
-> 
-> Yes, it is a per-thread scenario.
-> 
-> > event.  I'm also suspecting this is on a system where there is one sink per CPU
-> > cluster, and that is not supported.
-> 
-> No, that is not exactly the case, from the topology above. But not N:1
-> either. More of N:M and this is possible on systems with per cluster ETFs.
-> 
-> > 
-> > If I am right on both account I am questionning the "Fixes".  On a system with
-> > N:1 topology the code introduced by f9d81a657bb8 will work in the event a CPU is
-> > hotplugged in.  The code introduced in this patch is simply to prevent a
-> 
-> Correct. But, without the above commit, we would have failed while
-> creating a path to the sink, because if a CPU was offline then we don't
-> care about a path from that ETM. So this warning is essentially
-> triggered only after the above commit and thus the Fixes tag.
 
-That is an equally valid argument.
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> 
-> > warn_on() trace from being generated on systems that aren't supported.  It should
-> > have a "stable" tag.
-> 
-> Cheers
-> Suzuki
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this issue, for details see:
+https://goo.gl/tpsmEJ#testing-patches
