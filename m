@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A92AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D8DC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE6C52064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0508F206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975382;
-	bh=ETWogNxOHsaLuoYxc2Eg3dSmqUpvqHKbxRNDaG0gEL4=;
+	s=default; t=1598975385;
+	bh=M6mO7aD4g3nwn2ky5GQ939Xtf4Z8vXz99rt/x9hNkn8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=svE2SyHur/0XezlcNP1hhc0x4Hfwaa4AZJPPg0B0jT3nvLJDKKVPJ1h9HHD+8PZnI
-	 KjI7v+qCAo6Jjr6eFtbSLPdvtA+exsUhLCjIvMVFKpW8aAdu9E8Lt3B3bBYfJSOxip
-	 dFlC1NxyH2bHEzt/iBDXLcrqrfIdl2M7xV4WzFTg=
+	b=zHITIB6uIp4hIZ28XHZvUfv8GuYIsJj8+i2ZWrfHjGYyPCKqI+yW8xfXcg6Q0qqED
+	 +bWjwcy9pBs2mxqgxjKC8hMItKWONKU+FIxJOLQEyDXSNQSt61O8ZFvffKFeeaN124
+	 q8cchGMup0kg4FOw8KOCV3XbeeAk5oYXUESoWjNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732122AbgIAPtj (ORCPT
+        id S1732130AbgIAPto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:49:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35268 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:49:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731919AbgIAPqD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:46:03 -0400
+        id S1731926AbgIAPqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:46:07 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4D08206FA;
-        Tue,  1 Sep 2020 15:46:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02691206FA;
+        Tue,  1 Sep 2020 15:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975162;
-        bh=ETWogNxOHsaLuoYxc2Eg3dSmqUpvqHKbxRNDaG0gEL4=;
+        s=default; t=1598975167;
+        bh=M6mO7aD4g3nwn2ky5GQ939Xtf4Z8vXz99rt/x9hNkn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PyIDD4aqQP4fjL1FbvyLnTbiYd0spleHYklWVeLRI3fIoH3m6rJ493R1w93BoIrKW
-         Nb6mujLWbzrWy9KcpqHUo5nJd+oVzf/OkpLVF+YXYGWYs+9e1zOi1dQfRErgiCu63B
-         +i72+3+NiN3YYL2DhM4UIiRm9FSVTmLiKekZVGJ4=
+        b=wG+r2VO5Jv65epQZfVvs/x5ll0EgcegQiPM+jSbMIoukDC6JV9xR5wWCPaBqbcCsD
+         C6ui0HlQXGSeN/OBQuYINC7Ahu0kvf0WEr670EoreV3/ovPuvnQ8utgNGTlyEmGhwn
+         FpovIzaZRuS9aATC1wnGUlb8IQXRFDS6kFnkOivw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.8 233/255] usb: dwc3: gadget: Handle ZLP for sg requests
-Date:   Tue,  1 Sep 2020 17:11:29 +0200
-Message-Id: <20200901151011.915888562@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?q?Till=20D=C3=B6rges?= <doerges@pre-sense.de>
+Subject: [PATCH 5.8 235/255] usb: storage: Add unusual_uas entry for Sony PSZ drives
+Date:   Tue,  1 Sep 2020 17:11:31 +0200
+Message-Id: <20200901151012.009820301@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,62 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit bc9a2e226ea95e1699f7590845554de095308b75 upstream.
+commit 20934c0de13b49a072fb1e0ca79fe0fe0e40eae5 upstream.
 
-Currently dwc3 doesn't handle usb_request->zero for SG requests. This
-change checks and prepares extra TRBs for the ZLP for SG requests.
+The PSZ-HA* family of USB disk drives from Sony can't handle the
+REPORT OPCODES command when using the UAS protocol.  This patch adds
+an appropriate quirks entry.
 
-Cc: <stable@vger.kernel.org> # v4.5+
-Fixes: 04c03d10e507 ("usb: dwc3: gadget: handle request->zero")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Reported-and-tested-by: Till Dörges <doerges@pre-sense.de>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200826143229.GB400430@rowland.harvard.edu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |   31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1143,6 +1143,37 @@ static void dwc3_prepare_one_trb_sg(stru
- 					req->request.short_not_ok,
- 					req->request.no_interrupt,
- 					req->request.is_last);
-+		} else if (req->request.zero && req->request.length &&
-+			   !usb_endpoint_xfer_isoc(dep->endpoint.desc) &&
-+			   !rem && !chain) {
-+			struct dwc3	*dwc = dep->dwc;
-+			struct dwc3_trb	*trb;
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -28,6 +28,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
+ 
++/* Reported-by: Till Dörges <doerges@pre-sense.de> */
++UNUSUAL_DEV(0x054c, 0x087d, 0x0000, 0x9999,
++		"Sony",
++		"PSZ-HA*",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
 +
-+			req->needs_extra_trb = true;
-+
-+			/* Prepare normal TRB */
-+			dwc3_prepare_one_trb(dep, req, trb_length, true, i);
-+
-+			/* Prepare one extra TRB to handle ZLP */
-+			trb = &dep->trb_pool[dep->trb_enqueue];
-+			req->num_trbs++;
-+			__dwc3_prepare_one_trb(dep, trb, dwc->bounce_addr, 0,
-+					       !req->direction, 1,
-+					       req->request.stream_id,
-+					       req->request.short_not_ok,
-+					       req->request.no_interrupt,
-+					       req->request.is_last);
-+
-+			/* Prepare one more TRB to handle MPS alignment */
-+			if (!req->direction) {
-+				trb = &dep->trb_pool[dep->trb_enqueue];
-+				req->num_trbs++;
-+				__dwc3_prepare_one_trb(dep, trb, dwc->bounce_addr, maxp,
-+						       false, 1, req->request.stream_id,
-+						       req->request.short_not_ok,
-+						       req->request.no_interrupt,
-+						       req->request.is_last);
-+			}
- 		} else {
- 			dwc3_prepare_one_trb(dep, req, trb_length, chain, i);
- 		}
+ /* Reported-by: Julian Groß <julian.g@posteo.de> */
+ UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
+ 		"LaCie",
 
 
