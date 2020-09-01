@@ -2,54 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD06C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDAE0C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 910EE206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8796B206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="zTowO2Ns"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="CggetlT8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728138AbgIAWKp (ORCPT
+        id S1728247AbgIAWKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:10:45 -0400
-Received: from mail-bn8nam12on2073.outbound.protection.outlook.com ([40.107.237.73]:21376
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        Tue, 1 Sep 2020 18:10:55 -0400
+Received: from mail-mw2nam10on2070.outbound.protection.outlook.com ([40.107.94.70]:18048
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726352AbgIAWKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:10:41 -0400
+        id S1726352AbgIAWKv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 18:10:51 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MFHWe8v+Isi4WBcSEWZYX04uyodpz+qDxgGPd+Lb4iXzaDV6e22GF7kAN7DU1uLrXzuxoSPcntRDcSlc7pMmw+EM8YK9xkeUYQ289g6tZsUHvnHVttMYWwssNVYUzrlP+pDPn92HgwrlV2i6xPmYsVcMqL0JLn+LPgFFBxPBYE2dTqczi/NFHwQ2KgQjb+AwZ4O7/8CHQBNZfCOV9tUSB9Ygst+JXTUXccuxO6a+aQBlEtyJlqb3SX6U7sQAmrDqc6ipZvDz/vbL9Sc3JdIX+sqRM7LocTcuactECG4rePi4le+lDwjPOB4gaNJUZ3S/g/WOmU+rkEXrdeoCKlkDrA==
+ b=XhwJHgHfDML2twPOe7xRPRxGlwGb2RsewotiZKwM3IUwXbEsECcYJLZ17kAtuccx3UG8NziUDkiyFK6WOgsYuaMq31XUuRDfZ8gfKCBwtQgxsVUw0coIW8DP522G9MeoPEJXACMirmdGqvznfgRjZR0wkTCEtKv9tLmwBQ1bsIFBX2FdpMAV69kaIcOJPuCnFdKArOi9eElgl8xjq6D6L0gmDG6HIp5df6R5NvwgGzVI8H2jo+0Xjx0LeaA70X48mXo429og0mcgCxSYhmVWyiORTps5FO+mRb1USrBsOufDD2Js89jKZV8GsH1XeBj3dQzvXNMQcv9oQjAe0bOQ3A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Po4lD1ys5PDqVitz+XOgdy4gqzcRu+wiDZweXjr/CmE=;
- b=DgwrdTDvJjpKWHkWpeTOmpncXL1AGX1J/KV+Web90/E48NOtZwFngIclUgq54yPvKDI4ZjszgtZMCTY2d5z2xm5wsn4OeSNpnkhLhecNr4SU5VehQ3CfkHNpi3hJ5bAQOwi9Qtl6AEuz/PO0j+ZBOMURIqzD94FwBUXNiBVSw7ivRGhnq49wdNYmN6sDhrHkHanZKdLRPfrxj8ml/jFj1EMdBAFnk5bpm7hdBObPMjuQc7gBffdCvTumImOOUcAejfXSyDhN7i3LVI4laEbHPRK72DK6B2XSde3ymjR813DX+ln4hcYSv7wjpWRt7QPU4m2jdw6vV8x3I0uwptiLcw==
+ bh=g0NoC8/gBB/xQ570+ZBiq3NbPqKHa973HkW9UHs+/6c=;
+ b=I0ilMAeH9YLYxj26P+XDcO/q4DbXfy7owHN7AicRJnHpvI4NLgMQe80ikY+LcOUXjfhXCIiDhZ/4wHJ4iNU4wtbPTfFlZYm1R1rL0mV21RylzDq2FmwAzy+MbNaTsr5+EygV/oRZN/i3s/AEhBPoz7p+VEDwIzkZ+De46NJC2qs458J4aItlL3yNvbWIO4+5V4xu4fjtqHCwRuX0rTMjnUy7sZsXk5N2ZVu5ceWHsEdGO8R1QgEQpRiNapWTaSweItvgeKa/VvHpjihty0glxBitlCSR//hWDhNG+W65gvLMHTtBr2aY48rS54b7EWYOMoxkdbOSOsyjbuI/wZFinw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Po4lD1ys5PDqVitz+XOgdy4gqzcRu+wiDZweXjr/CmE=;
- b=zTowO2Nse33D7Jr3QJ8zy/SSsJP93iV4PeodNq9ANq3AY2yFDQoVseb6EzymcYWyr6C5/OTWUwACpkRRS1erUZxq7wXAintrI33CfimVMMmRwKLpsWlRmdFp5a7t+AUmfk5JgqdkkoMQQPMhQdrZhCu9ltIabyek8rJX8Bc9Kdg=
+ bh=g0NoC8/gBB/xQ570+ZBiq3NbPqKHa973HkW9UHs+/6c=;
+ b=CggetlT8l/bt2KilfTL+5E8bKz/rf2AjPTfjSjPw4Oa2tBLEIRTo1wk1vlgpLEECZY8BiEaYwMyAra51ws+T4kHQ/jl73QGrxKNlFworNsDuTBvLVQmVgPs9bNhCx7/R8L3L2iF/+lByDWdvwLZGQEkYiltw/0bevXj8UL/mGi0=
 Authentication-Results: redhat.com; dkim=none (message not signed)
  header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
 Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
- by BN6PR1201MB0148.namprd12.prod.outlook.com (2603:10b6:405:55::21) with
+ by BN8PR12MB2977.namprd12.prod.outlook.com (2603:10b6:408:4a::25) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Tue, 1 Sep
- 2020 22:10:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Tue, 1 Sep
+ 2020 22:10:45 +0000
 Received: from BN8PR12MB2946.namprd12.prod.outlook.com
  ([fe80::a92d:18c0:971b:48e6]) by BN8PR12MB2946.namprd12.prod.outlook.com
  ([fe80::a92d:18c0:971b:48e6%6]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
- 22:10:30 +0000
+ 22:10:45 +0000
 From:   Kim Phillips <kim.phillips@amd.com>
 To:     Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -73,93 +72,54 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>,
         linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/4] perf vendor events amd: Add recommended events
-Date:   Tue,  1 Sep 2020 17:09:43 -0500
-Message-Id: <20200901220944.277505-3-kim.phillips@amd.com>
+Subject: [PATCH 4/4] perf vendor events amd: Enable Family 19h users by matching Zen2 events
+Date:   Tue,  1 Sep 2020 17:09:44 -0500
+Message-Id: <20200901220944.277505-4-kim.phillips@amd.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200901220944.277505-1-kim.phillips@amd.com>
 References: <20200901220944.277505-1-kim.phillips@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM3PR03CA0001.namprd03.prod.outlook.com
- (2603:10b6:0:50::11) To BN8PR12MB2946.namprd12.prod.outlook.com
+X-ClientProxiedBy: DM5PR04CA0067.namprd04.prod.outlook.com
+ (2603:10b6:3:ef::29) To BN8PR12MB2946.namprd12.prod.outlook.com
  (2603:10b6:408:9d::13)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by DM3PR03CA0001.namprd03.prod.outlook.com (2603:10b6:0:50::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Tue, 1 Sep 2020 22:10:27 +0000
+Received: from 255.255.255.255 (255.255.255.255) by DM5PR04CA0067.namprd04.prod.outlook.com (2603:10b6:3:ef::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Tue, 1 Sep 2020 22:10:42 +0000
 X-Mailer: git-send-email 2.27.0
 X-Originating-IP: [165.204.77.11]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a28d0922-b1de-4508-98da-08d84ec3d6b8
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB0148:
+X-MS-Office365-Filtering-Correlation-Id: fe716732-9b03-4953-32b4-08d84ec3dfa5
+X-MS-TrafficTypeDiagnostic: BN8PR12MB2977:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB014884247BD0824A26E23BD4872E0@BN6PR1201MB0148.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Microsoft-Antispam-PRVS: <BN8PR12MB297702685565BBD471A7A6E0872E0@BN8PR12MB2977.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2150;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: o3HnHEOwpNwllX48lCmhag7hnHhr8SN9UlpltjXdZJxuSlY1JcNODWiU893GmFKTP+KeJSyEjqXmt+Pw4jh5PS3TNsV3EKFog94BYrMK0tz8xruy56wZXrj86Jj42L43NAO8CX4zjOWesQ3CdQTfq7/4SkLoBdQE1VIgZ5hF0vozGg4E7X4Q9jtE37E178cR/dt+tgXSx+VUqVs/A+D1EUfZfGNNy8wFvTDfeTjZd9rZ1DPoy4jGz5D7DxG3WqMhK1LfTt7AOxfP7zWmqJ31PTrhX9iUAh6lPYd3zCsNcY6DcaYgYJ34Rcl4l+HwI7VqTTSE2FUCo/9T+2ZaHogLwHR52vGjnY1LXpjGLC8Nk8uKJbYrtwIZL95EZmEWFMtgEKouWQghOWGLpdRNAg8LCQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(39860400002)(136003)(366004)(376002)(66556008)(66476007)(66946007)(6666004)(52116002)(30864003)(5660300002)(2906002)(956004)(8936002)(2616005)(66574015)(316002)(83380400001)(1076003)(8676002)(44832011)(4326008)(36756003)(16576012)(186003)(26005)(966005)(7416002)(478600001)(54906003)(86362001)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: veQgVUA/YlL6B/kKhmDwzc1OYiPGtA4H/zAYe9C7Lw9xjUn4A1Vm6L9ycl1UZ0xA6bey8dljVGFjaGHrEg8xQtqOBljfkTgP/Zw7vMOymLcMvrEGRswdQTKrmm0oYQnR3WfItzk/3y0bOG7iW/Rlx9BSOcvhIvnUIDLm6gV6ghR87NcNtKsCFQ9ER3ENrAziMS7th7BzSlDin1EK+MpBkORBk5N4i/YaAsbdiu/1IYyVJHMdmRVNjcVw38o012J0xfs6PfFcP1Mt3N3ul849ashM3SJChbV6vcjJ+Eyi4jDqWaoH2duJkj9xGiONwMTJWfbZwmgekMpc3uEagBDHoQ4kJWsbvmSopSHcW/FIlvODQ1TPXxVGoorhiKmRdUNs8v6bRwsqsVdz0kvSU6RLw5/dFh5vLRrrHf4WMbn5HrpZyC3jsMbpxHcXOTCf43ty1VNhpr2vGQDlUVfSGjc0WoxqKELp/f8LjwTL1KVPs2DMWB+Kyo5QPViqy1KD7BSSvEesiGfgSKMc3ciDgspgzzU7IH+wmIHHg+997f2DudJ0CG5Udx5PIaT95qiZYWDQvxKK01t+FhYN3JL6xnpKHZ45e++IDGckJ0AJhqgDRCoFjOU9AMdZggEr9212Adon2G07WQzXZ1Bb+ExJdqU0Eg==
+X-Microsoft-Antispam-Message-Info: jlR9AdvxahVtmYgyN/ig8hJGeKotlSPxZGu34lzSbYLGWl083TUv8zlMtKW84hBPjXb+X72AfoiTjEuHbEVgPe7gFfOIdn81slU0aeiNTm7Ic4Ps/QRtE2J+UULO8+L5BS66ZC5Nxx85VCZfGdPBUal35YmGb4WU8pqdgUN5Yim9PrP4V/5gTZKad/gpStQGRXcJuhhTgVliGyRHlLX9CPsiHM0yl//zQbOJbBdgZyOnbX0X7L8ARrzzLicWQivuRbn6+VwSQ4Xj6GDtmLiewaWB56cXPmNHsJcl0klPP6zueWlNRy1Gvh5ZRXQuReVW7OjtYJHvMgaNGB0Stvl79w==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(396003)(346002)(39860400002)(66946007)(66476007)(6486002)(44832011)(7416002)(4326008)(66556008)(2616005)(956004)(86362001)(1076003)(478600001)(8936002)(2906002)(8676002)(36756003)(186003)(52116002)(26005)(316002)(54906003)(16576012)(5660300002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: ooENbOiLWvfa2yNQGis8cdQU9TjXojbxCYtzR4rFE9lvQyPmtkWEUd/OOruyeqvJoojBVcfNTAcWwdrh9TBJ/yQfo49fPN502q/qHfI2PzuRcgcJpL/216gND6zQw6M/V8e/AGGdbreeZ13FoxUTiJJQEmSzA7KBImOseKKMZ1YyYwkVZtd7Sez9d2g8J+VGvtNhhoSz8Gnc78A5y2vKJfhOXnXJLt25rRjkUj5A++9US9lZlygzqivGVapGKL2jHlMYHQtXQMB26+uWZ5Tjce7mTcPwHiM3ehdvomB3EnLXIo2ICAg/JC1bNbFwIQW2TQlJtLtMuCaFgfFqAI8CBDCUhQGrjltyxrXpDW9ONdkBaJxjFqfVx9fZDBPOqUYK/aJkDsiD8jQFgZhbsV53YIgagWdXnGTXdIDbBdA1hwOj6X6qIUMs5nnE12y1WPyqURa36fH1iF43v4uHHQpD4Hbm29dcAvmDZKuH6uoznAzAWhJ3OSIigGjwwb+RqQyo8+SkTsNrhL8p1VVXYZZagTHWwUtV9ia1jWTTc5YXCah8khWijzKoptt7O0zopMV5HGp2EjXGfZd0qXJ4q7MIFR091KNYSjcZJff6LIiNUxcKL1Nf1dDwfTmd+dIXEP9iGMWDE9J6zVLxlkLgSNVaOA==
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a28d0922-b1de-4508-98da-08d84ec3d6b8
+X-MS-Exchange-CrossTenant-Network-Message-Id: fe716732-9b03-4953-32b4-08d84ec3dfa5
 X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 22:10:30.5393
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 22:10:45.2329
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: eNaadUk6n16Q3WbM1uUZDzS7RAwVY/s/eqt39znsDGHIOb0cv2x23g6IyA1h/OT7O0LTyn5w3taVzU+ypQRVbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0148
+X-MS-Exchange-CrossTenant-UserPrincipalName: yB3NNMke2iskAtG/IDD8NVCckaDeaiY96z6t+vHeUfYCCvboMxLeQg0owIgaW9NvazDPO2GPMQwqcerJq0gEFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB2977
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for events listed in Section 2.1.15.2 "Performance
-Measurement" of "PPR for AMD Family 17h Model 31h B0 - 55803
-Rev 0.54 - Sep 12, 2019".
+This enables zen3 users by reusing mostly-compatible zen2 events
+until the official public list of zen3 events is published in a
+future PPR.
 
-perf now supports these new events (-e):
-
-  all_dc_accesses
-  all_tlbs_flushed
-  l1_dtlb_misses
-  l2_cache_accesses_from_dc_misses
-  l2_cache_accesses_from_ic_misses
-  l2_cache_hits_from_dc_misses
-  l2_cache_hits_from_ic_misses
-  l2_cache_misses_from_dc_misses
-  l2_cache_misses_from_ic_miss
-  l2_dtlb_misses
-  l2_itlb_misses
-  sse_avx_stalls
-  uops_dispatched
-  uops_retired
-  l3_accesses
-  l3_misses
-
-and these metrics (-M):
-
-  branch_misprediction_ratio
-  all_l2_cache_accesses
-  all_l2_cache_hits
-  all_l2_cache_misses
-  ic_fetch_miss_ratio
-  l2_cache_accesses_from_l2_hwpf
-  l2_cache_hits_from_l2_hwpf
-  l2_cache_misses_from_l2_hwpf
-  l3_read_miss_latency
-  l1_itlb_misses
-  all_remote_links_outbound
-  nps1_die_to_dram
-
-The nps1_die_to_dram event may need perf stat's --metric-no-group
-switch if the number of available data fabric counters is less
-than the number it uses (8).
-
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -185,689 +145,18 @@ Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- .../pmu-events/arch/x86/amdzen1/cache.json    |  23 +++
- .../arch/x86/amdzen1/data-fabric.json         |  98 ++++++++++
- .../arch/x86/amdzen1/recommended.json         | 178 ++++++++++++++++++
- .../pmu-events/arch/x86/amdzen2/cache.json    |  23 +++
- .../arch/x86/amdzen2/data-fabric.json         |  98 ++++++++++
- .../arch/x86/amdzen2/recommended.json         | 178 ++++++++++++++++++
- tools/perf/pmu-events/jevents.c               |   1 +
- 7 files changed, 599 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/data-fabric.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/data-fabric.json
- create mode 100644 tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
+ tools/perf/pmu-events/arch/x86/mapfile.csv | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-index 695ed3ffa3a6..4ea7ec4f496e 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-@@ -117,6 +117,11 @@
-     "BriefDescription": "Miscellaneous events covered in more detail by l2_request_g2 (PMCx061).",
-     "UMask": "0x1"
-   },
-+  {
-+    "EventName": "l2_request_g1.all_no_prefetch",
-+    "EventCode": "0x60",
-+    "UMask": "0xf9"
-+  },
-   {
-     "EventName": "l2_request_g2.group1",
-     "EventCode": "0x61",
-@@ -243,6 +248,24 @@
-     "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache request miss in L2.",
-     "UMask": "0x1"
-   },
-+  {
-+    "EventName": "l2_cache_req_stat.ic_access_in_l2",
-+    "EventCode": "0x64",
-+    "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache requests in L2.",
-+    "UMask": "0x7"
-+  },
-+  {
-+    "EventName": "l2_cache_req_stat.ic_dc_miss_in_l2",
-+    "EventCode": "0x64",
-+    "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache request miss in L2 and Data cache request miss in L2 (all types).",
-+    "UMask": "0x9"
-+  },
-+  {
-+    "EventName": "l2_cache_req_stat.ic_dc_hit_in_l2",
-+    "EventCode": "0x64",
-+    "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache request hit in L2 and Data cache request hit in L2 (all types).",
-+    "UMask": "0xf6"
-+  },
-   {
-     "EventName": "l2_fill_pending.l2_fill_busy",
-     "EventCode": "0x6d",
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/data-fabric.json b/tools/perf/pmu-events/arch/x86/amdzen1/data-fabric.json
-new file mode 100644
-index 000000000000..40271df40015
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/data-fabric.json
-@@ -0,0 +1,98 @@
-+[
-+  {
-+    "EventName": "remote_outbound_data_controller_0",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 0",
-+    "EventCode": "0x7c7",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "remote_outbound_data_controller_1",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 1",
-+    "EventCode": "0x807",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "remote_outbound_data_controller_2",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 2",
-+    "EventCode": "0x847",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "remote_outbound_data_controller_3",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 3",
-+    "EventCode": "0x887",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_0",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x07",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_1",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x47",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_2",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x87",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_3",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0xc7",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_4",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x107",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_5",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x147",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_6",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x187",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_7",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x1c7",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-new file mode 100644
-index 000000000000..2cfe2d2f3bfd
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/recommended.json
-@@ -0,0 +1,178 @@
-+[
-+  {
-+    "MetricName": "branch_misprediction_ratio",
-+    "BriefDescription": "Execution-Time Branch Misprediction Ratio (Non-Speculative)",
-+    "MetricExpr": "d_ratio(ex_ret_brn_misp, ex_ret_brn)",
-+    "MetricGroup": "branch_prediction",
-+    "ScaleUnit": "100%"
-+  },
-+  {
-+    "EventName": "all_dc_accesses",
-+    "EventCode": "0x29",
-+    "BriefDescription": "All L1 Data Cache Accesses",
-+    "UMask": "0x7"
-+  },
-+  {
-+    "MetricName": "all_l2_cache_accesses",
-+    "BriefDescription": "All L2 Cache Accesses",
-+    "MetricExpr": "l2_request_g1.all_no_prefetch + l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l2_cache_accesses_from_ic_misses",
-+    "EventCode": "0x60",
-+    "BriefDescription": "L2 Cache Accesses from L1 Instruction Cache Misses (including prefetch)",
-+    "UMask": "0x10"
-+  },
-+  {
-+    "EventName": "l2_cache_accesses_from_dc_misses",
-+    "EventCode": "0x60",
-+    "BriefDescription": "L2 Cache Accesses from L1 Data Cache Misses (including prefetch)",
-+    "UMask": "0xc8"
-+  },
-+  {
-+    "MetricName": "l2_cache_accesses_from_l2_hwpf",
-+    "BriefDescription": "L2 Cache Accesses from L2 HWPF",
-+    "MetricExpr": "l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "MetricName": "all_l2_cache_misses",
-+    "BriefDescription": "All L2 Cache Misses",
-+    "MetricExpr": "l2_cache_req_stat.ic_dc_miss_in_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l2_cache_misses_from_ic_miss",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Misses from L1 Instruction Cache Misses",
-+    "UMask": "0x01"
-+  },
-+  {
-+    "EventName": "l2_cache_misses_from_dc_misses",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Misses from L1 Data Cache Misses",
-+    "UMask": "0x08"
-+  },
-+  {
-+    "MetricName": "l2_cache_misses_from_l2_hwpf",
-+    "BriefDescription": "L2 Cache Misses from L2 HWPF",
-+    "MetricExpr": "l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "MetricName": "all_l2_cache_hits",
-+    "BriefDescription": "All L2 Cache Hits",
-+    "MetricExpr": "l2_cache_req_stat.ic_dc_hit_in_l2 + l2_pf_hit_l2",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l2_cache_hits_from_ic_misses",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Hits from L1 Instruction Cache Misses",
-+    "UMask": "0x06"
-+  },
-+  {
-+    "EventName": "l2_cache_hits_from_dc_misses",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Hits from L1 Data Cache Misses",
-+    "UMask": "0x70"
-+  },
-+  {
-+    "MetricName": "l2_cache_hits_from_l2_hwpf",
-+    "BriefDescription": "L2 Cache Hits from L2 HWPF",
-+    "MetricExpr": "l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l3_accesses",
-+    "EventCode": "0x04",
-+    "BriefDescription": "L3 Accesses",
-+    "UMask": "0xff",
-+    "Unit": "L3PMC"
-+  },
-+  {
-+    "EventName": "l3_misses",
-+    "EventCode": "0x04",
-+    "BriefDescription": "L3 Misses (includes Chg2X)",
-+    "UMask": "0x01",
-+    "Unit": "L3PMC"
-+  },
-+  {
-+    "MetricName": "l3_read_miss_latency",
-+    "BriefDescription": "Average L3 Read Miss Latency (in core clocks)",
-+    "MetricExpr": "(xi_sys_fill_latency * 16) / xi_ccx_sdp_req1.all_l3_miss_req_typs",
-+    "MetricGroup": "l3_cache",
-+    "ScaleUnit": "1core clocks"
-+  },
-+  {
-+    "MetricName": "ic_fetch_miss_ratio",
-+    "BriefDescription": "L1 Instruction Cache (32B) Fetch Miss Ratio",
-+    "MetricExpr": "d_ratio(l2_cache_req_stat.ic_access_in_l2, bp_l1_tlb_fetch_hit + bp_l1_tlb_miss_l2_hit + bp_l1_tlb_miss_l2_miss)",
-+    "MetricGroup": "l2_cache",
-+    "ScaleUnit": "100%"
-+  },
-+  {
-+    "MetricName": "l1_itlb_misses",
-+    "BriefDescription": "L1 ITLB Misses",
-+    "MetricExpr": "bp_l1_tlb_miss_l2_hit + bp_l1_tlb_miss_l2_miss",
-+    "MetricGroup": "tlb"
-+  },
-+  {
-+    "EventName": "l2_itlb_misses",
-+    "EventCode": "0x85",
-+    "BriefDescription": "L2 ITLB Misses & Instruction page walks",
-+    "UMask": "0x07"
-+  },
-+  {
-+    "EventName": "l1_dtlb_misses",
-+    "EventCode": "0x45",
-+    "BriefDescription": "L1 DTLB Misses",
-+    "UMask": "0xff"
-+  },
-+  {
-+    "EventName": "l2_dtlb_misses",
-+    "EventCode": "0x45",
-+    "BriefDescription": "L2 DTLB Misses & Data page walks",
-+    "UMask": "0xf0"
-+  },
-+  {
-+    "EventName": "all_tlbs_flushed",
-+    "EventCode": "0x78",
-+    "BriefDescription": "All TLBs Flushed",
-+    "UMask": "0xdf"
-+  },
-+  {
-+    "EventName": "uops_dispatched",
-+    "EventCode": "0xaa",
-+    "BriefDescription": "Micro-ops Dispatched",
-+    "UMask": "0x03"
-+  },
-+  {
-+    "EventName": "sse_avx_stalls",
-+    "EventCode": "0x0e",
-+    "BriefDescription": "Mixed SSE/AVX Stalls",
-+    "UMask": "0x0e"
-+  },
-+  {
-+    "EventName": "uops_retired",
-+    "EventCode": "0xc1",
-+    "BriefDescription": "Micro-ops Retired"
-+  },
-+  {
-+    "MetricName": "all_remote_links_outbound",
-+    "BriefDescription": "Approximate: Outbound data bytes for all Remote Links for a node (die)",
-+    "MetricExpr": "remote_outbound_data_controller_0 + remote_outbound_data_controller_1 + remote_outbound_data_controller_2 + remote_outbound_data_controller_3",
-+    "MetricGroup": "data_fabric",
-+    "PerPkg": "1",
-+    "ScaleUnit": "3e-5MiB"
-+  },
-+  {
-+    "MetricName": "nps1_die_to_dram",
-+    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-+    "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-+    "MetricGroup": "data_fabric",
-+    "PerPkg": "1",
-+    "ScaleUnit": "6.1e-5MiB"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen2/cache.json b/tools/perf/pmu-events/arch/x86/amdzen2/cache.json
-index 1c60bfa0f00b..f61b982f83ca 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen2/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen2/cache.json
-@@ -47,6 +47,11 @@
-     "BriefDescription": "Miscellaneous events covered in more detail by l2_request_g2 (PMCx061).",
-     "UMask": "0x1"
-   },
-+  {
-+    "EventName": "l2_request_g1.all_no_prefetch",
-+    "EventCode": "0x60",
-+    "UMask": "0xf9"
-+  },
-   {
-     "EventName": "l2_request_g2.group1",
-     "EventCode": "0x61",
-@@ -173,6 +178,24 @@
-     "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache request miss in L2.",
-     "UMask": "0x1"
-   },
-+  {
-+    "EventName": "l2_cache_req_stat.ic_access_in_l2",
-+    "EventCode": "0x64",
-+    "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache requests in L2.",
-+    "UMask": "0x7"
-+  },
-+  {
-+    "EventName": "l2_cache_req_stat.ic_dc_miss_in_l2",
-+    "EventCode": "0x64",
-+    "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache request miss in L2 and Data cache request miss in L2 (all types).",
-+    "UMask": "0x9"
-+  },
-+  {
-+    "EventName": "l2_cache_req_stat.ic_dc_hit_in_l2",
-+    "EventCode": "0x64",
-+    "BriefDescription": "Core to L2 cacheable request access status (not including L2 Prefetch). Instruction cache request hit in L2 and Data cache request hit in L2 (all types).",
-+    "UMask": "0xf6"
-+  },
-   {
-     "EventName": "l2_fill_pending.l2_fill_busy",
-     "EventCode": "0x6d",
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen2/data-fabric.json b/tools/perf/pmu-events/arch/x86/amdzen2/data-fabric.json
-new file mode 100644
-index 000000000000..40271df40015
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/amdzen2/data-fabric.json
-@@ -0,0 +1,98 @@
-+[
-+  {
-+    "EventName": "remote_outbound_data_controller_0",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 0",
-+    "EventCode": "0x7c7",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "remote_outbound_data_controller_1",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 1",
-+    "EventCode": "0x807",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "remote_outbound_data_controller_2",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 2",
-+    "EventCode": "0x847",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "remote_outbound_data_controller_3",
-+    "PublicDescription": "Remote Link Controller Outbound Packet Types: Data (32B): Remote Link Controller 3",
-+    "EventCode": "0x887",
-+    "UMask": "0x02",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_0",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x07",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_1",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x47",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_2",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x87",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_3",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0xc7",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_4",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x107",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_5",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x147",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_6",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x187",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  },
-+  {
-+    "EventName": "dram_channel_data_controller_7",
-+    "PublicDescription": "DRAM Channel Controller Request Types: Requests with Data (64B): DRAM Channel Controller 0",
-+    "EventCode": "0x1c7",
-+    "UMask": "0x38",
-+    "PerPkg": "1",
-+    "Unit": "DFPMC"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-new file mode 100644
-index 000000000000..2ef91e25e661
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/x86/amdzen2/recommended.json
-@@ -0,0 +1,178 @@
-+[
-+  {
-+    "MetricName": "branch_misprediction_ratio",
-+    "BriefDescription": "Execution-Time Branch Misprediction Ratio (Non-Speculative)",
-+    "MetricExpr": "d_ratio(ex_ret_brn_misp, ex_ret_brn)",
-+    "MetricGroup": "branch_prediction",
-+    "ScaleUnit": "100%"
-+  },
-+  {
-+    "EventName": "all_dc_accesses",
-+    "EventCode": "0x29",
-+    "BriefDescription": "All L1 Data Cache Accesses",
-+    "UMask": "0x7"
-+  },
-+  {
-+    "MetricName": "all_l2_cache_accesses",
-+    "BriefDescription": "All L2 Cache Accesses",
-+    "MetricExpr": "l2_request_g1.all_no_prefetch + l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l2_cache_accesses_from_ic_misses",
-+    "EventCode": "0x60",
-+    "BriefDescription": "L2 Cache Accesses from L1 Instruction Cache Misses (including prefetch)",
-+    "UMask": "0x10"
-+  },
-+  {
-+    "EventName": "l2_cache_accesses_from_dc_misses",
-+    "EventCode": "0x60",
-+    "BriefDescription": "L2 Cache Accesses from L1 Data Cache Misses (including prefetch)",
-+    "UMask": "0xc8"
-+  },
-+  {
-+    "MetricName": "l2_cache_accesses_from_l2_hwpf",
-+    "BriefDescription": "L2 Cache Accesses from L2 HWPF",
-+    "MetricExpr": "l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "MetricName": "all_l2_cache_misses",
-+    "BriefDescription": "All L2 Cache Misses",
-+    "MetricExpr": "l2_cache_req_stat.ic_dc_miss_in_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l2_cache_misses_from_ic_miss",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Misses from L1 Instruction Cache Misses",
-+    "UMask": "0x01"
-+  },
-+  {
-+    "EventName": "l2_cache_misses_from_dc_misses",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Misses from L1 Data Cache Misses",
-+    "UMask": "0x08"
-+  },
-+  {
-+    "MetricName": "l2_cache_misses_from_l2_hwpf",
-+    "BriefDescription": "L2 Cache Misses from L2 HWPF",
-+    "MetricExpr": "l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "MetricName": "all_l2_cache_hits",
-+    "BriefDescription": "All L2 Cache Hits",
-+    "MetricExpr": "l2_cache_req_stat.ic_dc_hit_in_l2 + l2_pf_hit_l2",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l2_cache_hits_from_ic_misses",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Hits from L1 Instruction Cache Misses",
-+    "UMask": "0x06"
-+  },
-+  {
-+    "EventName": "l2_cache_hits_from_dc_misses",
-+    "EventCode": "0x64",
-+    "BriefDescription": "L2 Cache Hits from L1 Data Cache Misses",
-+    "UMask": "0x70"
-+  },
-+  {
-+    "MetricName": "l2_cache_hits_from_l2_hwpf",
-+    "BriefDescription": "L2 Cache Hits from L2 HWPF",
-+    "MetricExpr": "l2_pf_hit_l2 + l2_pf_miss_l2_hit_l3 + l2_pf_miss_l2_l3",
-+    "MetricGroup": "l2_cache"
-+  },
-+  {
-+    "EventName": "l3_accesses",
-+    "EventCode": "0x04",
-+    "BriefDescription": "L3 Accesses",
-+    "UMask": "0xff",
-+    "Unit": "L3PMC"
-+  },
-+  {
-+    "EventName": "l3_misses",
-+    "EventCode": "0x04",
-+    "BriefDescription": "L3 Misses (includes Chg2X)",
-+    "UMask": "0x01",
-+    "Unit": "L3PMC"
-+  },
-+  {
-+    "MetricName": "l3_read_miss_latency",
-+    "BriefDescription": "Average L3 Read Miss Latency (in core clocks)",
-+    "MetricExpr": "(xi_sys_fill_latency * 16) / xi_ccx_sdp_req1.all_l3_miss_req_typs",
-+    "MetricGroup": "l3_cache",
-+    "ScaleUnit": "1core clocks"
-+  },
-+  {
-+    "MetricName": "ic_fetch_miss_ratio",
-+    "BriefDescription": "L1 Instruction Cache (32B) Fetch Miss Ratio",
-+    "MetricExpr": "d_ratio(l2_cache_req_stat.ic_access_in_l2, bp_l1_tlb_fetch_hit + bp_l1_tlb_miss_l2_hit + bp_l1_tlb_miss_l2_tlb_miss)",
-+    "MetricGroup": "l2_cache",
-+    "ScaleUnit": "100%"
-+  },
-+  {
-+    "MetricName": "l1_itlb_misses",
-+    "BriefDescription": "L1 ITLB Misses",
-+    "MetricExpr": "bp_l1_tlb_miss_l2_hit + bp_l1_tlb_miss_l2_tlb_miss",
-+    "MetricGroup": "tlb"
-+  },
-+  {
-+    "EventName": "l2_itlb_misses",
-+    "EventCode": "0x85",
-+    "BriefDescription": "L2 ITLB Misses & Instruction page walks",
-+    "UMask": "0x07"
-+  },
-+  {
-+    "EventName": "l1_dtlb_misses",
-+    "EventCode": "0x45",
-+    "BriefDescription": "L1 DTLB Misses",
-+    "UMask": "0xff"
-+  },
-+  {
-+    "EventName": "l2_dtlb_misses",
-+    "EventCode": "0x45",
-+    "BriefDescription": "L2 DTLB Misses & Data page walks",
-+    "UMask": "0xf0"
-+  },
-+  {
-+    "EventName": "all_tlbs_flushed",
-+    "EventCode": "0x78",
-+    "BriefDescription": "All TLBs Flushed",
-+    "UMask": "0xdf"
-+  },
-+  {
-+    "EventName": "uops_dispatched",
-+    "EventCode": "0xaa",
-+    "BriefDescription": "Micro-ops Dispatched",
-+    "UMask": "0x03"
-+  },
-+  {
-+    "EventName": "sse_avx_stalls",
-+    "EventCode": "0x0e",
-+    "BriefDescription": "Mixed SSE/AVX Stalls",
-+    "UMask": "0x0e"
-+  },
-+  {
-+    "EventName": "uops_retired",
-+    "EventCode": "0xc1",
-+    "BriefDescription": "Micro-ops Retired"
-+  },
-+  {
-+    "MetricName": "all_remote_links_outbound",
-+    "BriefDescription": "Approximate: Outbound data bytes for all Remote Links for a node (die)",
-+    "MetricExpr": "remote_outbound_data_controller_0 + remote_outbound_data_controller_1 + remote_outbound_data_controller_2 + remote_outbound_data_controller_3",
-+    "MetricGroup": "data_fabric",
-+    "PerPkg": "1",
-+    "ScaleUnit": "3e-5MiB"
-+  },
-+  {
-+    "MetricName": "nps1_die_to_dram",
-+    "BriefDescription": "Approximate: Combined DRAM B/bytes of all channels on a NPS1 node (die) (may need --metric-no-group)",
-+    "MetricExpr": "dram_channel_data_controller_0 + dram_channel_data_controller_1 + dram_channel_data_controller_2 + dram_channel_data_controller_3 + dram_channel_data_controller_4 + dram_channel_data_controller_5 + dram_channel_data_controller_6 + dram_channel_data_controller_7",
-+    "MetricGroup": "data_fabric",
-+    "PerPkg": "1",
-+    "ScaleUnit": "6.1e-5MiB"
-+  }
-+]
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index fa86c5f997cc..5984906b6893 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -240,6 +240,7 @@ static struct map {
- 	{ "hisi_sccl,hha", "hisi_sccl,hha" },
- 	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
- 	{ "L3PMC", "amd_l3" },
-+	{ "DFPMC", "amd_df" },
- 	{}
- };
- 
+diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-events/arch/x86/mapfile.csv
+index 25b06cf98747..2f2a209e87e1 100644
+--- a/tools/perf/pmu-events/arch/x86/mapfile.csv
++++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
+@@ -38,3 +38,4 @@ GenuineIntel-6-7E,v1,icelake,core
+ GenuineIntel-6-86,v1,tremontx,core
+ AuthenticAMD-23-([12][0-9A-F]|[0-9A-F]),v2,amdzen1,core
+ AuthenticAMD-23-[[:xdigit:]]+,v1,amdzen2,core
++AuthenticAMD-25-[[:xdigit:]]+,v1,amdzen2,core
 -- 
 2.27.0
 
