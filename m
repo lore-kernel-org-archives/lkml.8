@@ -2,108 +2,82 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAEC2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:13:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 165B3C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:14:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C214B206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:13:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2871206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:14:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="eNP8G/Ke"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NdLeU5O6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbgIAJNY (ORCPT
+        id S1726091AbgIAJOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:13:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38370 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726044AbgIAJNX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:13:23 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08191lCw161621;
-        Tue, 1 Sep 2020 05:13:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
- subject : message-id : references : mime-version : content-type :
- in-reply-to; s=pp1; bh=vh82ZqvfNYHb8TupkvFMZAEUYq2dnHzN3E8hPu0gHQE=;
- b=eNP8G/KeFYdbMrKBMXkHUuwN04Tg/mRQVuyIKIEhviyh4nNQLEz46r4IifFIC2Pjvyls
- fRK6NgfHNnaRnG2dUGx7vEB8GD01kIBCQImLPC9FjBRVBsFwdAwCHVJ3w1/NNXj+8y5W
- RsJfNhCXxgOa/Rali6tWfQwXGbtOccW+XhaFPhond4gOgKs4DGvTNRf5o4HRxmAmIKhl
- VY6K/b1VJVz/zlxeHmshlpcG59MapdRh9asACXecYipJGwrRIHcC5MwkZZdi+Q+XHeso
- V6dIXfw+V/GsAHFRRDbOdxZZWOMTTNRj59o6ZcWIMS0qKb8ptaPRcpFloI8mBhcOya0a OA== 
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 339k4g8qr7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 05:13:15 -0400
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0819CWFl021820;
-        Tue, 1 Sep 2020 09:13:13 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma03fra.de.ibm.com with ESMTP id 337en89xyj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 09:13:13 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0819DBxK33030576
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Sep 2020 09:13:11 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E642E52052;
-        Tue,  1 Sep 2020 09:13:10 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.200.53])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 3683052050;
-        Tue,  1 Sep 2020 09:13:10 +0000 (GMT)
-Date:   Tue, 1 Sep 2020 12:13:08 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the arc-current tree
-Message-ID: <20200901091308.GD424181@linux.ibm.com>
-References: <20200901184928.057f6082@canb.auug.org.au>
+        Tue, 1 Sep 2020 05:14:55 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:40836 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726064AbgIAJOy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:14:54 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598951693; h=Content-Type: MIME-Version: Message-ID:
+ In-Reply-To: Date: References: Subject: Cc: To: From: Sender;
+ bh=vTY44rF8xPP0t6pJA9xrALfusMf0jGAsYsXi/IuPGlQ=; b=NdLeU5O6qBWANCItwX/F3+fHOHeRKiZByCnuSUjdtohwHPky4/67LMFcHQ6YFGmjER8E+p+e
+ Z/jOUVU9f5SqG8K7RMQUSy2wuNdUf6oxA7E0Vdix49sbHdN1jPKPuk9GNAz0cs6I5NJzNfnm
+ u6ekX2VYJLomIoQ9eEmAVTduRXg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f4e11004ba82a82fd7f8b33 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:14:40
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 7A43FC43387; Tue,  1 Sep 2020 09:14:40 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F991C433C6;
+        Tue,  1 Sep 2020 09:14:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F991C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH 00/32] Set 2: Rid W=1 warnings in Wireless
+References: <20200821071644.109970-1-lee.jones@linaro.org>
+Date:   Tue, 01 Sep 2020 12:14:36 +0300
+In-Reply-To: <20200821071644.109970-1-lee.jones@linaro.org> (Lee Jones's
+        message of "Fri, 21 Aug 2020 08:16:12 +0100")
+Message-ID: <87o8mp6epv.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901184928.057f6082@canb.auug.org.au>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-01_04:2020-09-01,2020-09-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 adultscore=0 spamscore=0 priorityscore=1501 clxscore=1011
- bulkscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=998 suspectscore=5
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009010075
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 06:49:28PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> In commit
-> 
->   7000c9462d1b ("arc: fix memory initialization for systems with two memory banks")
-> 
-> Fixes tag
-> 
->   Fixes: 51930df5801e ("mm: free_area_init: allow defining max_zone_pfn in descend ing order")
+Lee Jones <lee.jones@linaro.org> writes:
 
-It's line rewrapping:                                                               ^
+> This set is part of a larger effort attempting to clean-up W=1
+> kernel builds, which are currently overwhelmingly riddled with
+> niggly little warnings.
+>
+> There are quite a few W=1 warnings in the Wireless.  My plan
+> is to work through all of them over the next few weeks.
+> Hopefully it won't be too long before drivers/net/wireless
+> builds clean with W=1 enabled.
 
-> 
-> has these problem(s):
-> 
->   - Subject does not match target commit subject
->     Just use
-> 	git log -1 --format='Fixes: %h ("%s")'
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell
+BTW, now the patches are in random order and it's quite annoying to
+review when there's no logic. Grouping them by the driver would be a lot
+more pleasent for reviewers.
 
 -- 
-Sincerely yours,
-Mike.
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
