@@ -2,64 +2,63 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D77C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D147EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D22F2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F3F3207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iYk3UcD1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDFygNzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgIAVoB (ORCPT
+        id S1729486AbgIAVn7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:44:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55524 "EHLO
+        Tue, 1 Sep 2020 17:43:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbgIAVnz (ORCPT
+        with ESMTP id S1727778AbgIAVny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:43:55 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97EFEC061245;
-        Tue,  1 Sep 2020 14:43:54 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s10so770048plp.1;
-        Tue, 01 Sep 2020 14:43:54 -0700 (PDT)
+        Tue, 1 Sep 2020 17:43:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D18BC061244;
+        Tue,  1 Sep 2020 14:43:52 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id k13so1205106plk.13;
+        Tue, 01 Sep 2020 14:43:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=AyKMQ8WKejiUbQ0uoIq3ttpVPmq3IB07qohgDLCsLRM=;
-        b=iYk3UcD1MRyTugIBSur90bL7s2ttFeEfAlYOfb9ezgpcRS8uU0w9JsNsAFKqXZk+LV
-         Y+VCsuf6/hyA0h1lNvC1scXpdPYYAyqk3RU0VsgGINcituOdlLBEK9ewKhxtjFnCktgr
-         59eYUvwTyZI3P/qXO8uQZwCPHQQPRrmOXiX+Bs6Q9obAbjJcguuY+d/1cmBwBx9LIHQz
-         QOBjrJerAPTy4UujMsojfVRK5Xv6eOj0pfOLVcZ0rfjJ39d/UC/NNIn+PjUgXgktE+gs
-         gxqqZD8ejKwpgNrSL2JKHhLDY65MhZVpJQSV7iOCNu2yhs9rMTy0P5LRRtmlEt58Kcj/
-         kXxg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hETCVNkUFaz2ei22FHADF5D/531PuX9nxpBpFN0mSX0=;
+        b=EDFygNzgwGGqHq2IM2VzM32nO8EqO9S/2K1BVjlsJWm9xaaze7gY9ex06sZmEmgC+B
+         QTRy0cRQRzRbTdnGlDJulhvsc0hvtD+NH8CyR7vVsqEJy7w8ChllHEqJymReU2HYPCUo
+         KNrlMraJR8dJhx1QB4EhL+bNzv8j4iUt/iOB99VOHTTFX0SIM7wmAyNPyWGkYjUMp9Gf
+         gH8c+JWrs4Dz4ZEsIYOl4LaKspgS/ZasRD5kP1O0ljs4g8BiodvZe8A1dvCb871XJQ4P
+         4tRP0BjRelBoh42/SKi4mLpJK4zqehstuchXy8ts7553BS2p0+luWFDMmKD5IJYLiKjC
+         M8Ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=AyKMQ8WKejiUbQ0uoIq3ttpVPmq3IB07qohgDLCsLRM=;
-        b=ZJxoJUoMtO9A+vRYop8C97Q0IoNWt2rxEz0lx6U/FCXKnk2WW3wXGZrDNvXxpm6voD
-         3OFbYBSjjIeWwWOx1ZmVSrfb/S8H/H5lxOCGkUdBAMTt+JaCoCTGyvk63l6XJCOMUw6g
-         W/bPITSU3ujOvWLB0DNNK/bW3oO+NH3B63iAbux/PsXp3qXPnRes5zhjAFeAzXw9hwwF
-         G9MILdy8Xz3T5DifFnm56ih6Tgw6Vcqp6988nsnGo+TH/+BxpY6HNL4p3FCJ37e0+9Nk
-         jPr6Kp52gv1uFecb6M0yAzcqvuSNQOq1TeZpWJGlsx8LKEgO+83KlOlTcwJHymCknzGA
-         qWmw==
-X-Gm-Message-State: AOAM531iPRmGoY4b+43on2xiAW1zr0qCABaFpk0B9i5aAHPc5xtmCoNz
-        +xKefuiqN92FsOcOe21ElZ1OnBfjXtE=
-X-Google-Smtp-Source: ABdhPJy7WjLjS4YhujBCm9ZAknj1AcuJdwvIuC4GttjemzaULadTZxoB1GkEvfiv7gZOFlyuK4WyWw==
-X-Received: by 2002:a17:902:7e82:b029:cf:85aa:69f6 with SMTP id z2-20020a1709027e82b02900cf85aa69f6mr782949pla.3.1598996633483;
-        Tue, 01 Sep 2020 14:43:53 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hETCVNkUFaz2ei22FHADF5D/531PuX9nxpBpFN0mSX0=;
+        b=Drd+CQGoA792w5E2MkNYDABN0Yw2jwjm/cIpGPE5TXfErGBNBkVdYUwByZRirn4cJN
+         DaBplML1LJQQo1tC1Ignsr/0xLm9uYwlvEnVmbbV4u9BDcFjkrmUZ2L74Eg9tTWSfpsj
+         0vCoHWlLEg1A93VPulkyD5B5dijQKVmcbZeUc62zIhyqIPsuYJ8qNL3Q7DKT4GnjMRYo
+         tQL4Ow5V20sidn7+FZ2Yz8IZ0x7knS4072fZ+w7TCztB1zJjAtMCipuY3XTyBaU1VvJ/
+         pTIVktL138qfLMFSCwCn3yJgW5hAnIyllbLKYTQxJUU2BEYJ4XUlL01uEga5AV26ypwD
+         sxbw==
+X-Gm-Message-State: AOAM533nYINWMnvh4IumpWbGIuFdy1MW5OKRCAo3QNOAeiErse14AHZO
+        mfLjrchspy7q15CcTYMxVdM2OLRI7Ys=
+X-Google-Smtp-Source: ABdhPJxQty9xHS4RTpNNNNe76LF7bg38cBLXP7gJPBEtr2RTZX4BLRb4PjPASRHJFYe7OWjVugi9HA==
+X-Received: by 2002:a17:90b:289:: with SMTP id az9mr3537548pjb.31.1598996631863;
+        Tue, 01 Sep 2020 14:43:51 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 131sm128663pfy.5.2020.09.01.14.43.52
+        by smtp.gmail.com with ESMTPSA id 131sm128663pfy.5.2020.09.01.14.43.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 14:43:52 -0700 (PDT)
+        Tue, 01 Sep 2020 14:43:50 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
@@ -70,12 +69,10 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
         bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM SYSTEMPORT
         ETHERNET DRIVER)
-Subject: [PATCH net-next 1/3] dt-bindings: net: Document Broadcom SYSTEMPORT clocks
-Date:   Tue,  1 Sep 2020 14:43:46 -0700
-Message-Id: <20200901214348.1523403-2-f.fainelli@gmail.com>
+Subject: [PATCH net-next 0/3] net: systemport: Clock support
+Date:   Tue,  1 Sep 2020 14:43:45 -0700
+Message-Id: <20200901214348.1523403-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200901214348.1523403-1-f.fainelli@gmail.com>
-References: <20200901214348.1523403-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,31 +80,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Broadcom SYSTEMPORT adapters require the use of two clocks for
-normal operations and during Wake-on-LAN, document those in the binding
-document.
+Hi David,
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- Documentation/devicetree/bindings/net/brcm,systemport.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+This patch series makes the SYSTEMPORT driver request and manage its
+main and Wake-on-LAN clocks appropriately.
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,systemport.txt b/Documentation/devicetree/bindings/net/brcm,systemport.txt
-index 83f29e0e11ba..745bb1776572 100644
---- a/Documentation/devicetree/bindings/net/brcm,systemport.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,systemport.txt
-@@ -20,6 +20,11 @@ Optional properties:
- - systemport,num-tier1-arb: number of tier 1 arbiters, an integer
- - systemport,num-txq: number of HW transmit queues, an integer
- - systemport,num-rxq: number of HW receive queues, an integer
-+- clocks: When provided, must be two phandles to the functional clocks nodes of
-+  the SYSTEMPORT block. The first phandle is the main SYSTEMPORT clock used
-+  during normal operation, while the second phandle is the Wake-on-LAN clock.
-+- clock-names: When provided, names of the functional clock phandles, first
-+  name should be "sw_sysport" and second should be "sw_sysportwol".
- 
- Example:
- ethernet@f04a0000 {
+Florian Fainelli (3):
+  dt-bindings: net: Document Broadcom SYSTEMPORT clocks
+  net: systemport: fetch and use clock resources
+  net: systemport: Manage Wake-on-LAN clock
+
+ .../bindings/net/brcm,systemport.txt          |  5 +++
+ drivers/net/ethernet/broadcom/bcmsysport.c    | 40 ++++++++++++++++++-
+ drivers/net/ethernet/broadcom/bcmsysport.h    |  2 +
+ 3 files changed, 45 insertions(+), 2 deletions(-)
+
 -- 
 2.25.1
 
