@@ -2,131 +2,484 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A53EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:06:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B5AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7F42078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:06:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u82f5+1a"
+	by mail.kernel.org (Postfix) with ESMTP id 7035F206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:06:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598980006;
+	bh=M8tO0Gxfm9TMBaADxbgXhKYH8f4oh4OUV1Sr0JxZK3M=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=kZY/w6nwmDp9YIN4b4Z/FXwUXtLr7sK3yo3a0qnVksURMtC/1cqhAkWhlqeyQgM01
+	 M9K0UWsKCvVwY3gjJTGgyC69zqqIgtfR0I9xCebYEx4CpzVX/icpj54tDCVOkt8VHu
+	 nqszYJgzi3vK/mHbMWrBPk4xXSc+9ONwNCCE2e2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgIARGo (ORCPT
+        id S1728327AbgIARGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:06:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40938 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729544AbgIARGh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:06:37 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16A5FC061244;
-        Tue,  1 Sep 2020 10:06:36 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id m8so1157557pfh.3;
-        Tue, 01 Sep 2020 10:06:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PwNRndak15FLf6udHGPDXV3xJclmFk58fcQPrWISEyg=;
-        b=u82f5+1anvYlYHJs/pJvG3+NLXqCVZH3FiTol6fLHW1d3wmBNBgerRa4yBh73/LOQr
-         JJOrhtRUVUP2xuQVN5Ydp6AmboX0BMO4ziQXoNB7AickRbwiT1QTlIa9n+2cEWVRefjP
-         Dkjj/Icu7TrDSd79eTW1qGRWm7ZPAQUi3M6Cwuib+RNoGzm64F7tFXAKuyDddMODzoc8
-         kwDn1jUuDQcF4+TicXIKRz6ayPVb+6XuC5JyXjKfAGiB65AlCo1Yy9qG0r8d6RtMuDAR
-         bVtOu2k3HcIlVHGAL2LgWrTe/HXhHAbRQ4PLruDD/wVJU85WGEPbQ48qCxVr5+Dg3d9z
-         TP0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PwNRndak15FLf6udHGPDXV3xJclmFk58fcQPrWISEyg=;
-        b=lcaEaFq6i5sO62wmt1gawR/L6aOOZMI/zo5x9mPg/yxPU+9VeAb1cI5Abc71YaUe0P
-         NcpuvENtL/46jKZgtMCoZACVw7+lcvAJ7UdR1ilS/gjxZu+yqgdVpmWtfBlv/RdqNhp6
-         LG/x+Qim/2j4J21/yLI2yhNSIQGYcylWqnZcPSD9FHQjnR7C42Mn34t/o5l5fnuRgGTv
-         Gwz6+j5PtMhP9+re5VhrRzcUI5mYbsT8+bteQ41OU0+lN7Yg/DFcK51nTgPvgiOfMFob
-         +65D7ljHOiykelh0S+OPp+ZerJARWSUtEKX1550O13Qb99bR+JVj6EArjkogbjjmXV7t
-         6cLw==
-X-Gm-Message-State: AOAM531sTj6DEepIlooxQDH9DJSa5pb42BzDPHjiQxZWx/2/oHBNmbx/
-        DVam7ai2NWozzx7o27quuK8=
-X-Google-Smtp-Source: ABdhPJyy7JOa3sxonsjDIcIjoW7WMS7fwqpw3kiqxp+QzUYZE4hxNju76g8xRz1QZ/Dl2wBypUzyhg==
-X-Received: by 2002:a63:4418:: with SMTP id r24mr2281840pga.8.1598979995594;
-        Tue, 01 Sep 2020 10:06:35 -0700 (PDT)
-Received: from [192.168.219.31] (ip72-219-184-175.oc.oc.cox.net. [72.219.184.175])
-        by smtp.gmail.com with ESMTPSA id 13sm2603359pfp.3.2020.09.01.10.06.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 10:06:34 -0700 (PDT)
-Subject: Re: RFC: backport of commit a32c1c61212d
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Michal Hocko <mhocko@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        zhaoyang <huangzhaoyang@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Baoquan He <bhe@redhat.com>
-References: <bd960a80-c953-ad11-cdfd-1e48ffdce443@gmail.com>
- <20200901140018.GD397411@kroah.com>
- <4eb51ae0-427d-5359-2439-b38dc0d3b2e5@gmail.com>
- <98f2309c-e674-c3fc-0c13-0bf85f123f8c@gmail.com>
-From:   Doug Berger <opendmb@gmail.com>
-Message-ID: <62fef535-199b-9b62-c206-c92d2d929be3@gmail.com>
-Date:   Tue, 1 Sep 2020 10:09:37 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 1 Sep 2020 13:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729513AbgIAPSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:53 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4284620FC3;
+        Tue,  1 Sep 2020 15:18:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973529;
+        bh=M8tO0Gxfm9TMBaADxbgXhKYH8f4oh4OUV1Sr0JxZK3M=;
+        h=From:To:Cc:Subject:Date:From;
+        b=EQr5U5xSBYvJ8Txxv9UMUVFDCc0iH5Xhmr9Ad+vuYvFTaTODvsF3TqbfGJeXmEtYM
+         qNFj/KaDLS55u2iqFXSqNs7Ya3ym1bYb73zbRTCa4sTcu7qt4V3RYLu7T0ngjVo+qh
+         30CDWd9qe6QMzlzf7dcmx/lh7tyQZROq5sKnCaAM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/91] 4.14.196-rc1 review
+Date:   Tue,  1 Sep 2020 17:09:34 +0200
+Message-Id: <20200901150928.096174795@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-In-Reply-To: <98f2309c-e674-c3fc-0c13-0bf85f123f8c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.196-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.196-rc1
+X-KernelTest-Deadline: 2020-09-03T15:09+00:00
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/2020 9:36 AM, Florian Fainelli wrote:
-> 
-> 
-> On 9/1/2020 9:06 AM, Doug Berger wrote:
->> On 9/1/2020 7:00 AM, Greg Kroah-Hartman wrote:
-> 
-> [snip]
-> 
->> [snip]
->>
->> My best guess at this point is to submit patches to the affected stable
->> branches like the one in my RFC and reference a32c1c61212d as the
->> upstream commit. This would be confusing to anyone that tried to compare
->> the submitted patch with the upstream patch since they
->> wouldn't look at all alike, but the fixes and upstream tags would define
->> the affected range in Linus' tree.
->>
->> I would appreciate any guidance on how best to handle this kind of
->> situation.
-> 
-> You could submit various patches with [PATCH stable x.y] in the subject
-> to indicate they are targeting a specific stable branch, copy
-> stable@vger.kernel.org as well as all recipients in this email and see
-> if that works.
-> 
-> Not sure if there is a more documented process than that.
-Yes, that is what I had in mind based on the "Option 3" for patch
-submission. The sticking point is this requirement:
-"You must note the upstream commit ID in the changelog of your submission"
+This is the start of the stable review cycle for the 4.14.196 release.
+There are 91 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-My best guess is to use a32c1c61212d, but that could easily cause
-confusion in this case. My hope is that now I can reference this
-discussion to provide additional clarity.
+Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
+Anything received after that time might be too late.
 
-Thanks,
-    Doug
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.196-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
+
+thanks,
+
+greg k-h
+
+-------------
+Pseudo-Shortlog of commits:
+
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.196-rc1
+
+Hector Martin <marcan@marcan.st>
+    ALSA: usb-audio: Update documentation comment for MS2109 quirk
+
+Peilin Ye <yepeilin.cs@gmail.com>
+    HID: hiddev: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
+
+Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+    tpm: Unify the mismatching TPM space buffer sizes
+
+Josef Bacik <josef@toxicpanda.com>
+    btrfs: check the right error variable in btrfs_del_dir_entries_in_log
+
+Alan Stern <stern@rowland.harvard.edu>
+    usb: storage: Add unusual_uas entry for Sony PSZ drives
+
+Tom Rix <trix@redhat.com>
+    USB: cdc-acm: rework notification_buffer resizing
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    USB: gadget: u_f: Unbreak offset calculation in VLAs
+
+Brooke Basile <brookebasile@gmail.com>
+    USB: gadget: f_ncm: add bounds checks to ncm_unwrap_ntb()
+
+Brooke Basile <brookebasile@gmail.com>
+    USB: gadget: u_f: add overflow checks to VLA macros
+
+Kees Cook <keescook@chromium.org>
+    overflow.h: Add allocation size calculation helpers
+
+Tang Bin <tangbin@cmss.chinamobile.com>
+    usb: host: ohci-exynos: Fix error handling in exynos_ohci_probe()
+
+Cyril Roelandt <tipecaml@gmail.com>
+    USB: Ignore UAS for JMicron JMS567 ATA/ATAPI Bridge
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    USB: quirks: Add no-lpm quirk for another Raydium touchscreen
+
+Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+    usb: uas: Add quirk for PNY Pro Elite
+
+Alan Stern <stern@rowland.harvard.edu>
+    USB: yurex: Fix bad gfp argument
+
+Alex Deucher <alexander.deucher@amd.com>
+    drm/amdgpu: Fix buffer overflow in INFO ioctl
+
+Heikki Krogerus <heikki.krogerus@linux.intel.com>
+    device property: Fix the secondary firmware node handling in set_primary_fwnode()
+
+Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+    PM: sleep: core: Fix the handling of pending runtime resume requests
+
+Kai-Heng Feng <kai.heng.feng@canonical.com>
+    xhci: Do warm-reset when both CAS and XDEV_RESUME are set
+
+Thomas Gleixner <tglx@linutronix.de>
+    XEN uses irqdesc::irq_data_common::handler_data to store a per interrupt XEN data pointer which contains XEN specific information.
+
+Jan Kara <jack@suse.cz>
+    writeback: Fix sync livelock due to b_dirty_time processing
+
+Jan Kara <jack@suse.cz>
+    writeback: Avoid skipping inode writeback
+
+Jan Kara <jack@suse.cz>
+    writeback: Protect inode->i_io_list with inode->i_lock
+
+Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+    serial: 8250: change lock order in serial8250_do_startup()
+
+Valmer Huhn <valmer.huhn@concurrent-rt.com>
+    serial: 8250_exar: Fix number of ports for Commtech PCIe cards
+
+Lukas Wunner <lukas@wunner.de>
+    serial: pl011: Don't leak amba_ports entry on driver register error
+
+Lukas Wunner <lukas@wunner.de>
+    serial: pl011: Fix oops on -EPROBE_DEFER
+
+Tamseel Shams <m.shams@samsung.com>
+    serial: samsung: Removes the IRQ not found warning
+
+George Kennedy <george.kennedy@oracle.com>
+    vt_ioctl: change VT_RESIZEX ioctl to check for error return from vc_resize()
+
+Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+    vt: defer kfree() of vc_screenbuf in vc_do_resize()
+
+Evgeny Novikov <novikov@ispras.ru>
+    USB: lvtest: return proper error code in probe
+
+George Kennedy <george.kennedy@oracle.com>
+    fbcon: prevent user font height or width change from causing potential out-of-bounds access
+
+Filipe Manana <fdmanana@suse.com>
+    btrfs: fix space cache memory leak after transaction abort
+
+Hans de Goede <hdegoede@redhat.com>
+    HID: i2c-hid: Always sleep 60ms after I2C_HID_PWR_ON commands
+
+Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+    powerpc/perf: Fix soft lockups due to missed interrupt accounting
+
+Sumera Priyadarsini <sylphrenadin@gmail.com>
+    net: gianfar: Add of_node_put() before goto statement
+
+Stanley Chu <stanley.chu@mediatek.com>
+    scsi: ufs: Clean up completed request without interrupt notification
+
+Adrian Hunter <adrian.hunter@intel.com>
+    scsi: ufs: Improve interrupt handling for shared interrupts
+
+Stanley Chu <stanley.chu@mediatek.com>
+    scsi: ufs: Fix possible infinite loop in ufshcd_hold
+
+Vineeth Vijayan <vneethv@linux.ibm.com>
+    s390/cio: add cond_resched() in the slow_eval_known_fn() loop
+
+Amelie Delaunay <amelie.delaunay@st.com>
+    spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
+
+Xianting Tian <xianting_tian@126.com>
+    fs: prevent BUG_ON in submit_bh_wbc()
+
+zhangyi (F) <yi.zhang@huawei.com>
+    jbd2: abort journal if free a async write error metadata buffer
+
+Jan Kara <jack@suse.cz>
+    ext4: don't BUG on inconsistent journal feature
+
+Lukas Czerner <lczerner@redhat.com>
+    jbd2: make sure jh have b_transaction set in refile/unfile_buffer
+
+Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+    usb: gadget: f_tcm: Fix some resource leaks in some error paths
+
+Wolfram Sang <wsa+renesas@sang-engineering.com>
+    i2c: rcar: in slave mode, clear NACK earlier
+
+Hou Pu <houpu@bytedance.com>
+    null_blk: fix passing of REQ_FUA flag in null_handle_rq
+
+Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+    nvme-fc: Fix wrong return value in __nvme_fc_init_request()
+
+Sean Young <sean@mess.org>
+    media: gpio-ir-tx: improve precision of transmitted signal due to scheduling
+
+Zhi Chen <zhichen@codeaurora.org>
+    Revert "ath10k: fix DMA related firmware crashes on multiple devices"
+
+Andrey Konovalov <andreyknvl@google.com>
+    efi: provide empty efi_enter_virtual_mode implementation
+
+Changming Liu <charley.ashbringer@gmail.com>
+    USB: sisusbvga: Fix a potential UB casued by left shifting a negative value
+
+Arnd Bergmann <arnd@arndb.de>
+    powerpc/spufs: add CONFIG_COREDUMP dependency
+
+David Brazdil <dbrazdil@google.com>
+    KVM: arm64: Fix symbol dependency in __hyp_call_panic_nvhe
+
+Evgeny Novikov <novikov@ispras.ru>
+    media: davinci: vpif_capture: fix potential double free
+
+Jason Baron <jbaron@akamai.com>
+    EDAC/ie31200: Fallback if host bridge device is already initialized
+
+Javed Hasan <jhasan@marvell.com>
+    scsi: fcoe: Memory leak fix in fcoe_sysfs_fcf_del()
+
+Xiubo Li <xiubli@redhat.com>
+    ceph: fix potential mdsc use-after-free crash
+
+Jing Xiangfeng <jingxiangfeng@huawei.com>
+    scsi: iscsi: Do not put host in iscsi_set_flashnode_param()
+
+Chris Wilson <chris@chris-wilson.co.uk>
+    locking/lockdep: Fix overflow in presentation of average lock-time
+
+Aditya Pakki <pakki001@umn.edu>
+    drm/nouveau: Fix reference count leak in nouveau_connector_detect
+
+Aditya Pakki <pakki001@umn.edu>
+    drm/nouveau/drm/noveau: fix reference count leak in nouveau_fbcon_open
+
+Li Guifu <bluce.liguifu@huawei.com>
+    f2fs: fix use-after-free issue
+
+Hans Verkuil <hverkuil-cisco@xs4all.nl>
+    cec-api: prevent leaking memory through hole in structure
+
+Peng Fan <fanpeng@loongson.cn>
+    mips/vdso: Fix resource leaks in genvdso.c
+
+Reto Schneider <code@reto-schneider.ch>
+    rtlwifi: rtl8192cu: Prevent leaking urb
+
+Qiushi Wu <wu000273@umn.edu>
+    PCI: Fix pci_create_slot() reference count leak
+
+Aditya Pakki <pakki001@umn.edu>
+    omapfb: fix multiple reference count leaks due to pm_runtime_get_sync
+
+Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+    selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
+
+Dick Kennedy <dick.kennedy@broadcom.com>
+    scsi: lpfc: Fix shost refcount mismatch when deleting vport
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    drm/amdgpu: fix ref count leak in amdgpu_display_crtc_set_config
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    drm/amd/display: fix ref count leak in amdgpu_drm_ioctl
+
+Navid Emamdoost <navid.emamdoost@gmail.com>
+    drm/amdgpu: fix ref count leak in amdgpu_driver_open_kms
+
+Aditya Pakki <pakki001@umn.edu>
+    drm/radeon: fix multiple reference count leak
+
+Qiushi Wu <wu000273@umn.edu>
+    drm/amdkfd: Fix reference count leaks.
+
+Robin Murphy <robin.murphy@arm.com>
+    iommu/iova: Don't BUG on invalid PFNs
+
+Bodo Stroesser <bstroesser@ts.fujitsu.com>
+    scsi: target: tcmu: Fix crash on ARM during cmd completion
+
+Luis Chamberlain <mcgrof@kernel.org>
+    blktrace: ensure our debugfs dir exists
+
+Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+    media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
+
+Alexey Kardashevskiy <aik@ozlabs.ru>
+    powerpc/xive: Ignore kmemleak false positives
+
+Stephan Gerhold <stephan@gerhold.net>
+    arm64: dts: qcom: msm8916: Pull down PDM GPIOs during sleep
+
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+    mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
+
+Qiushi Wu <wu000273@umn.edu>
+    ASoC: tegra: Fix reference count leaks.
+
+Randy Dunlap <rdunlap@infradead.org>
+    ALSA: pci: delete repeated words in comments
+
+Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+    gre6: Fix reception with IP6_TNL_F_RCV_DSCP_COPY
+
+Mahesh Bandewar <maheshb@google.com>
+    ipvlan: fix device features
+
+Cong Wang <xiyou.wangcong@gmail.com>
+    tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
+
+Miaohe Lin <linmiaohe@huawei.com>
+    net: Fix potential wrong skb->protocol in skb_vlan_untag()
+
+Michael Ellerman <mpe@ellerman.id.au>
+    powerpc/64s: Don't init FSCR_DSCR in __init_FSCR()
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/arm64/boot/dts/qcom/msm8916-pins.dtsi         |  2 +-
+ arch/arm64/kvm/hyp/switch.c                        |  2 +-
+ arch/mips/vdso/genvdso.c                           | 10 +++
+ arch/powerpc/kernel/cpu_setup_power.S              |  2 +-
+ arch/powerpc/perf/core-book3s.c                    |  4 ++
+ arch/powerpc/platforms/cell/Kconfig                |  1 +
+ arch/powerpc/sysdev/xive/native.c                  |  2 +
+ drivers/base/core.c                                | 12 ++--
+ drivers/base/power/main.c                          | 16 +++--
+ drivers/block/null_blk.c                           |  2 +-
+ drivers/char/tpm/tpm-chip.c                        |  9 +--
+ drivers/char/tpm/tpm.h                             |  6 +-
+ drivers/char/tpm/tpm2-space.c                      | 26 ++++---
+ drivers/char/tpm/tpmrm-dev.c                       |  2 +-
+ drivers/edac/ie31200_edac.c                        | 50 ++++++++++++-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c     | 16 +++--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_display.c        |  5 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c            |  3 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c            |  7 +-
+ drivers/gpu/drm/amd/amdkfd/kfd_topology.c          | 20 ++++--
+ drivers/gpu/drm/nouveau/nouveau_connector.c        |  4 +-
+ drivers/gpu/drm/nouveau/nouveau_fbcon.c            |  4 +-
+ drivers/gpu/drm/radeon/radeon_connectors.c         | 20 ++++--
+ drivers/hid/i2c-hid/i2c-hid-core.c                 | 22 +++---
+ drivers/hid/usbhid/hiddev.c                        |  4 ++
+ drivers/i2c/busses/i2c-rcar.c                      |  1 +
+ drivers/iommu/iova.c                               |  4 +-
+ drivers/md/dm-table.c                              | 10 +--
+ drivers/media/cec/cec-api.c                        |  8 ++-
+ drivers/media/pci/ttpci/av7110.c                   |  5 +-
+ drivers/media/platform/davinci/vpif_capture.c      |  2 -
+ drivers/media/rc/gpio-ir-tx.c                      |  7 +-
+ drivers/mfd/intel-lpss-pci.c                       |  3 +
+ drivers/net/ethernet/freescale/gianfar.c           |  4 +-
+ drivers/net/ipvlan/ipvlan_main.c                   | 27 +++++--
+ drivers/net/wireless/ath/ath10k/hw.h               |  2 +-
+ drivers/net/wireless/realtek/rtlwifi/usb.c         |  5 +-
+ drivers/nvme/host/fc.c                             |  4 +-
+ drivers/pci/slot.c                                 |  6 +-
+ drivers/s390/cio/css.c                             |  5 ++
+ drivers/scsi/fcoe/fcoe_ctlr.c                      |  2 +-
+ drivers/scsi/lpfc/lpfc_vport.c                     | 26 +++----
+ drivers/scsi/scsi_transport_iscsi.c                |  2 +-
+ drivers/scsi/ufs/ufshcd.c                          | 14 ++--
+ drivers/spi/spi-stm32.c                            |  3 +-
+ drivers/target/target_core_user.c                  |  9 ++-
+ drivers/tty/serial/8250/8250_exar.c                | 24 ++++++-
+ drivers/tty/serial/8250/8250_port.c                |  9 ++-
+ drivers/tty/serial/amba-pl011.c                    | 16 +++--
+ drivers/tty/serial/samsung.c                       |  8 ++-
+ drivers/tty/vt/vt.c                                |  5 +-
+ drivers/tty/vt/vt_ioctl.c                          | 12 +++-
+ drivers/usb/class/cdc-acm.c                        | 22 +++---
+ drivers/usb/core/quirks.c                          |  2 +
+ drivers/usb/gadget/function/f_ncm.c                | 81 +++++++++++++++++----
+ drivers/usb/gadget/function/f_tcm.c                |  7 +-
+ drivers/usb/gadget/u_f.h                           | 38 +++++++---
+ drivers/usb/host/ohci-exynos.c                     |  5 +-
+ drivers/usb/host/xhci-hub.c                        | 19 ++---
+ drivers/usb/misc/lvstest.c                         |  2 +-
+ drivers/usb/misc/sisusbvga/sisusb.c                |  2 +-
+ drivers/usb/misc/yurex.c                           |  2 +-
+ drivers/usb/storage/unusual_devs.h                 |  2 +-
+ drivers/usb/storage/unusual_uas.h                  | 14 ++++
+ drivers/video/fbdev/core/fbcon.c                   | 25 ++++++-
+ drivers/video/fbdev/omap2/omapfb/dss/dispc.c       |  7 +-
+ drivers/video/fbdev/omap2/omapfb/dss/dsi.c         |  7 +-
+ drivers/video/fbdev/omap2/omapfb/dss/dss.c         |  7 +-
+ drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c       |  5 +-
+ drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c       |  5 +-
+ drivers/video/fbdev/omap2/omapfb/dss/venc.c        |  7 +-
+ drivers/xen/events/events_base.c                   | 16 ++---
+ fs/btrfs/disk-io.c                                 |  1 +
+ fs/btrfs/free-space-cache.c                        |  2 +-
+ fs/btrfs/tree-log.c                                | 10 +--
+ fs/buffer.c                                        |  9 +++
+ fs/ceph/mds_client.c                               | 14 +++-
+ fs/ext4/super.c                                    | 75 +++++++++++--------
+ fs/f2fs/super.c                                    |  5 +-
+ fs/fs-writeback.c                                  | 83 ++++++++++++----------
+ fs/jbd2/transaction.c                              | 26 +++++++
+ include/linux/efi.h                                |  4 ++
+ include/linux/fs.h                                 |  8 ++-
+ include/linux/overflow.h                           | 73 +++++++++++++++++++
+ include/trace/events/writeback.h                   | 13 ++--
+ kernel/locking/lockdep_proc.c                      |  2 +-
+ kernel/trace/blktrace.c                            | 12 ++++
+ net/core/skbuff.c                                  |  4 +-
+ net/ipv6/ip6_tunnel.c                              | 10 ++-
+ net/tipc/netlink_compat.c                          | 12 +++-
+ sound/pci/cs46xx/cs46xx_lib.c                      |  2 +-
+ sound/pci/cs46xx/dsp_spos_scb_lib.c                |  2 +-
+ sound/pci/hda/hda_codec.c                          |  2 +-
+ sound/pci/hda/hda_generic.c                        |  2 +-
+ sound/pci/hda/patch_sigmatel.c                     |  2 +-
+ sound/pci/ice1712/prodigy192.c                     |  2 +-
+ sound/pci/oxygen/xonar_dg.c                        |  2 +-
+ sound/soc/tegra/tegra30_ahub.c                     |  4 +-
+ sound/soc/tegra/tegra30_i2s.c                      |  4 +-
+ sound/usb/quirks-table.h                           |  4 +-
+ .../powerpc/pmu/ebb/back_to_back_ebbs_test.c       |  2 -
+ .../selftests/powerpc/pmu/ebb/cycles_test.c        |  2 -
+ .../powerpc/pmu/ebb/cycles_with_freeze_test.c      |  2 -
+ .../powerpc/pmu/ebb/cycles_with_mmcr2_test.c       |  2 -
+ tools/testing/selftests/powerpc/pmu/ebb/ebb.c      |  2 -
+ .../powerpc/pmu/ebb/ebb_on_willing_child_test.c    |  2 -
+ .../powerpc/pmu/ebb/lost_exception_test.c          |  1 -
+ .../selftests/powerpc/pmu/ebb/multi_counter_test.c |  7 --
+ .../powerpc/pmu/ebb/multi_ebb_procs_test.c         |  2 -
+ .../selftests/powerpc/pmu/ebb/pmae_handling_test.c |  2 -
+ .../powerpc/pmu/ebb/pmc56_overflow_test.c          |  2 -
+ 112 files changed, 826 insertions(+), 342 deletions(-)
+
+
