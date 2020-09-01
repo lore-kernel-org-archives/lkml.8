@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1327DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A52C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C3DEB204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02113204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976847;
-	bh=M6mO7aD4g3nwn2ky5GQ939Xtf4Z8vXz99rt/x9hNkn8=;
+	s=default; t=1598976859;
+	bh=7HKd/IscGoK7CQQqMS7/I9PwnB6S63WqRDGkpK4y1JU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ViNfUgnO25FGp5TkDwqA0vI4Bua4XySlO2cqeo2zkYXCfTH9Vi46XPhsEEe7gz+5i
-	 E2PX3vlWITGenih8OXDLeyJI2vK75bEpDboK1OzMgOfyuok94rNMv9hG883zY3fTcT
-	 RocSTKGQcPfpcNwuVQJ4PBspM7yySxuq4Ynjxyd4=
+	b=Aje6s9Lp335NaCsnr5rvQZ61InDpak5n6jHzsM8lw06vQG3yZredBzrhl14JlY4cU
+	 AKFLMt/eap30c0zz95hvHWg+ckOsW6qH3MmsXUY2oWuiKS059MYELOFrUE6G+2LdrK
+	 btjG0bPhu3W+eFCXW83k5MIcja/tzJJKN+I6JcNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731895AbgIAQOG (ORCPT
+        id S1731727AbgIAQOS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:14:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42148 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:14:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728727AbgIAPfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:53 -0400
+        id S1730704AbgIAPfc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:35:32 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A339521655;
-        Tue,  1 Sep 2020 15:35:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8200C20866;
+        Tue,  1 Sep 2020 15:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974553;
-        bh=M6mO7aD4g3nwn2ky5GQ939Xtf4Z8vXz99rt/x9hNkn8=;
+        s=default; t=1598974532;
+        bh=7HKd/IscGoK7CQQqMS7/I9PwnB6S63WqRDGkpK4y1JU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cOe10bmI/ans1MFvsr9qUam3OPzwHp+OwKX1OXL2phHDwrA4RgfxqJkrUofv5j9P0
-         UjwuxaQo0pYeJWEOBdStV5ZODQBnHcYn8QzIAmoEIiXt4OXB/eWH6Krgk6QHeL/IYC
-         tQ1kLgDwJ5mNeQ0IPzekUFX0x97ZtCOWEI0CUKsk=
+        b=uCIgw+APxmSK79utouvJ6psQllUF3FTARaEIHmDj6lPjRrQ7Fwqdie5A3aCfwz+m2
+         sw+KLnTNXed/EFsC+V+DMBmQeYjWsUYRHfnDn4Dbk6CuYeeJiSEjrS03oPj4265gE8
+         a4P4DxMbJ0wE0rIPI9K8h1cy+73UfgNEEohz/io4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        =?UTF-8?q?Till=20D=C3=B6rges?= <doerges@pre-sense.de>
-Subject: [PATCH 5.4 199/214] usb: storage: Add unusual_uas entry for Sony PSZ drives
-Date:   Tue,  1 Sep 2020 17:11:19 +0200
-Message-Id: <20200901151002.479554955@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Peilin Ye <yepeilin.cs@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.4 212/214] HID: hiddev: Fix slab-out-of-bounds write in hiddev_ioctl_usage()
+Date:   Tue,  1 Sep 2020 17:11:32 +0200
+Message-Id: <20200901151003.081654281@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,39 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Peilin Ye <yepeilin.cs@gmail.com>
 
-commit 20934c0de13b49a072fb1e0ca79fe0fe0e40eae5 upstream.
+commit 25a097f5204675550afb879ee18238ca917cba7a upstream.
 
-The PSZ-HA* family of USB disk drives from Sony can't handle the
-REPORT OPCODES command when using the UAS protocol.  This patch adds
-an appropriate quirks entry.
+`uref->usage_index` is not always being properly checked, causing
+hiddev_ioctl_usage() to go out of bounds under some cases. Fix it.
 
-Reported-and-tested-by: Till Dörges <doerges@pre-sense.de>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200826143229.GB400430@rowland.harvard.edu
+Reported-by: syzbot+34ee1b45d88571c2fa8b@syzkaller.appspotmail.com
+Link: https://syzkaller.appspot.com/bug?id=f2aebe90b8c56806b050a20b36f51ed6acabe802
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Peilin Ye <yepeilin.cs@gmail.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/hid/usbhid/hiddev.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -28,6 +28,13 @@
-  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
-  */
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -519,12 +519,16 @@ static noinline int hiddev_ioctl_usage(s
  
-+/* Reported-by: Till Dörges <doerges@pre-sense.de> */
-+UNUSUAL_DEV(0x054c, 0x087d, 0x0000, 0x9999,
-+		"Sony",
-+		"PSZ-HA*",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_REPORT_OPCODES),
-+
- /* Reported-by: Julian Groß <julian.g@posteo.de> */
- UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
- 		"LaCie",
+ 		switch (cmd) {
+ 		case HIDIOCGUSAGE:
++			if (uref->usage_index >= field->report_count)
++				goto inval;
+ 			uref->value = field->value[uref->usage_index];
+ 			if (copy_to_user(user_arg, uref, sizeof(*uref)))
+ 				goto fault;
+ 			goto goodreturn;
+ 
+ 		case HIDIOCSUSAGE:
++			if (uref->usage_index >= field->report_count)
++				goto inval;
+ 			field->value[uref->usage_index] = uref->value;
+ 			goto goodreturn;
+ 
 
 
