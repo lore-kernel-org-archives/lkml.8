@@ -2,91 +2,79 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D8FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:17:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD77C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 767C420767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86AA820767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbgIANRc (ORCPT
+        id S1728043AbgIANTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:17:32 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41586 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727792AbgIANFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:05:47 -0400
-Received: by mail-pg1-f194.google.com with SMTP id w186so644337pgb.8;
-        Tue, 01 Sep 2020 06:05:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YhdpWHRpwdvRmhQjnUWEZYNd+fMg7VoLNQC21qKbNIc=;
-        b=ck8B76O87Xh+xpFoVTit4X75YwHr/XB/lrY69rCIn2adx9CHP23HQ5fJn52wt8S3cl
-         dbfjXT3BF6vKm+UXVx891peSGs3/Cg8aAzCQkjrQRAf5gm3SuecksdbfVxy5EKBEpeth
-         BkFEW7FIaq2w8g5v88HnJRqdqfazbzMCGBldll7VxXfyi35C3s2ZVD9MOwkAq0qJh5+Z
-         bWjUHmg7eEG9rx7Z8BB1aktHM/no0cFg0dL1vPW2i9Nddqz2GqZ+nRXwYewLaI4Z++7e
-         kZRWYixUbqtGKTQ6IsVfJ64EoOg3vBUFp4u3pt91G8xuCKPH+/i7KKdwl2sLgh6bZXhA
-         Vyzg==
-X-Gm-Message-State: AOAM531rJ+dMAhmoNdPQxkd4ENLwZDnjj3gFvFzDSg6wT/MPOIYvi5g+
-        rJYBEJwIb99tx3e3r2MD5UQ=
-X-Google-Smtp-Source: ABdhPJwQvcNXGjwwhXUoU4KG7YSJwDcOLe8KqYgppSWAxzzD0ZIJqTRzDeyHSjupyYMYSLHUBPSLqQ==
-X-Received: by 2002:a63:5d66:: with SMTP id o38mr1401695pgm.366.1598965506787;
-        Tue, 01 Sep 2020 06:05:06 -0700 (PDT)
-Received: from localhost.localdomain ([49.236.93.204])
-        by smtp.gmail.com with ESMTPSA id x12sm1581751pjq.43.2020.09.01.06.05.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 06:05:06 -0700 (PDT)
-From:   Leesoo Ahn <dev@ooseel.net>
-To:     dev@ooseel.net
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Gustavo A. R. Silva" <gustavoars@kernel.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Niu Xilei <niu_xilei@163.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] pktgen: fix error message with wrong function name
-Date:   Tue,  1 Sep 2020 22:04:47 +0900
-Message-Id: <20200901130449.15422-1-dev@ooseel.net>
-X-Mailer: git-send-email 2.25.4
+        Tue, 1 Sep 2020 09:19:06 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:41229 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728172AbgIANRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:17:11 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 081DGNvk001119;
+        Tue, 1 Sep 2020 15:16:23 +0200
+Date:   Tue, 1 Sep 2020 15:16:23 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     David Laight <David.Laight@aculab.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        George Spelvin <lkml@sdf.org>,
+        Amit Klein <aksecurity@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "tytso@mit.edu" <tytso@mit.edu>, Florian Westphal <fw@strlen.de>,
+        Marc Plumb <lkml.mplumb@gmail.com>
+Subject: Re: [PATCH 1/2] random32: make prandom_u32() output unpredictable
+Message-ID: <20200901131623.GB1059@1wt.eu>
+References: <20200901064302.849-1-w@1wt.eu>
+ <20200901064302.849-2-w@1wt.eu>
+ <b460c51a3fa1473b8289d6030a46abdb@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b460c51a3fa1473b8289d6030a46abdb@AcuMS.aculab.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Error on calling kthread_create_on_node prints wrong function name,
-kernel_thread.
+On Tue, Sep 01, 2020 at 01:10:18PM +0000, David Laight wrote:
+> From: Willy Tarreau
+> > Sent: 01 September 2020 07:43
+> ...
+> > +/*
+> > + *	Generate some initially weak seeding values to allow
+> > + *	the prandom_u32() engine to be started.
+> > + */
+> > +static int __init prandom_init_early(void)
+> > +{
+> > +	int i;
+> > +	unsigned long v0, v1, v2, v3;
+> > +
+> > +	if (!arch_get_random_long(&v0))
+> > +		v0 = jiffies;
+> 
+> Isn't jiffies likely to be zero here?
 
-Signed-off-by: Leesoo Ahn <dev@ooseel.net>
----
- net/core/pktgen.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I don't know. But do we really care ? I'd personally have been fine
+with not even assigning it in this case and leaving whatever was in
+the stack in this case, though it could make some static code analyzer
+unhappy.
 
-diff --git a/net/core/pktgen.c b/net/core/pktgen.c
-index 95f4c6b8f51a..44fdbb9c6e53 100644
---- a/net/core/pktgen.c
-+++ b/net/core/pktgen.c
-@@ -3699,7 +3699,7 @@ static int __net_init pktgen_create_thread(int cpu, struct pktgen_net *pn)
- 				   cpu_to_node(cpu),
- 				   "kpktgend_%d", cpu);
- 	if (IS_ERR(p)) {
--		pr_err("kernel_thread() failed for cpu %d\n", t->cpu);
-+		pr_err("kthread_create_on_node() failed for cpu %d\n", t->cpu);
- 		list_del(&t->th_list);
- 		kfree(t);
- 		return PTR_ERR(p);
--- 
-2.25.4
-
+Willy
