@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB1EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C3BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C2412067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32BEF2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:48:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rCKcdS4O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J04apcnc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgIAQrX (ORCPT
+        id S1731548AbgIAQs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37814 "EHLO
+        Tue, 1 Sep 2020 12:48:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729872AbgIAQqn (ORCPT
+        with ESMTP id S1732270AbgIAQrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:46:43 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0AB41C061244;
-        Tue,  1 Sep 2020 09:46:43 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id v15so977375pgh.6;
-        Tue, 01 Sep 2020 09:46:43 -0700 (PDT)
+        Tue, 1 Sep 2020 12:47:22 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E42E5C061244;
+        Tue,  1 Sep 2020 09:47:21 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id ds1so912597pjb.1;
+        Tue, 01 Sep 2020 09:47:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NOKOkqE6cRvO3ADJcUdmnO8hZ1Y+/vNJWyosaD4+OhY=;
-        b=rCKcdS4O80zriSb3FkRuE1KTN0iF08+YOJF/n+VE5MrCuUj0R6qo4/7NJn90zwJtlQ
-         UtoHE+81iIFD24LEgw+xmQZoScXctrzjVtIpHxPw/oSZAWKm86bHzVrEDGiJC+BeCvEM
-         KkDQfwPZ/VVu418zhdnb1NEYc2yBcZ8sMAgr2vpae0WbsAQiM3VPUGofN/ufFu0U+kh0
-         6dkhhI7YVh7e+k5R+/lThG/a6epwhHM87SrCoDlEjbtVqQY1qfuHFJrIsJ/hqae/zYDg
-         9wcQtWi0WYQjEkkK45rsZdGtfuR94wNMCAw1L/+h11j3Bytg9x9XCYhB4ANZXTqzbo3X
-         LDMg==
+        bh=TkWyTxARTuQIVpZ4nA1zGbs/CkLTaav5w1kzBb9PxHE=;
+        b=J04apcnc9yNiayNZvi3RYs6LgZ8DqVcJmH8Wr7KTsf3utcG6+8ceh5GGe5HDRit6bk
+         MdnphK+NGv+I+f/0sk1/MaAHJmh7Ktms/5w3cL3HrJf3mZ0W5ysTqzr+uVCGsNi54rdD
+         rbMoWwFeCig9zC+wiWq9md/RLsMrviLGxPOZZN0NOe+0xEB+j0laN7Xo5Owln6TF29+P
+         eh6M6tnKd8cTmhDBIPYHE863ookRQ6I8lmDX0mV5Uhc8sLnydbYSbjJvwbMYCh4oJk0n
+         Nqh1wBWRypBsmGZYuXraOizi28hKZ/p3WEGvqXA1NuPh18aROFbAVr8B1Uj4YI8vwNGK
+         jMvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NOKOkqE6cRvO3ADJcUdmnO8hZ1Y+/vNJWyosaD4+OhY=;
-        b=LS34NmycEIDGVSIVpPFRmRIZXHZs6xixuOO5IrDfTuocbW3cImeRdit4m4U0DgpJ+k
-         zt/AYftSTKWrGqgI3Znnu/pRMupJdbwRRDJ6XVUTTm99xdxmSLBGcEPYBJU7M13R4Yvd
-         YVS6Gkpu+Z72Mxm8V9/cBttiP+ASOb3KHUFbAojFpTBviMzB+dtXPR/hdoJ8mtd+JtbK
-         31vD2s4CTBoCXdLJBQd3YGjXI/HUVScsDFnNMSRUZdxE/ojZG2FPL+fNQxHSh5xfqHlD
-         D0CGRSDunRGIMbw08krt3qed26vXrZjnr3yCHWxiIdKZjPtRBjXkDNPLI/vc9odKH+Gu
-         hG4Q==
-X-Gm-Message-State: AOAM53107DExDrZ7vjYWQzbUvslP83pIcJ5GCADgtnenV1024Hd5v4aG
-        +/hi4QGTjF8SERGzS7G3i20=
-X-Google-Smtp-Source: ABdhPJzYldHwQ37rzub4gAyAW271smuaR4v22/0wB+spaD0Nqhi4LWE2ogQy9nYAJcReF8ZfBs9Zuw==
-X-Received: by 2002:a63:c551:: with SMTP id g17mr2186091pgd.399.1598978802488;
-        Tue, 01 Sep 2020 09:46:42 -0700 (PDT)
+        bh=TkWyTxARTuQIVpZ4nA1zGbs/CkLTaav5w1kzBb9PxHE=;
+        b=c3uzM+RaeshuYTXdOIu1nmU2WbYgolRuBZ6cRXEcGKKgZtz56bbk0LEFzJakCGuV8L
+         7tB9iHmn82x2NbG1bhAP2I3tLTB4n2jkc9YB4DutbqfUpz0MaIFAHsuzCIkSMjE48qww
+         0gQ9m9VynG8Z3YTWPqOZkgxG1CKEwIuIIRCU9iFoF77snw3yL7K/YalpFImuuyKIHe8x
+         T6cs2O7M+R6j+mHtevDR95jVT6Y36O7ijs03fplUfh9wqhqdY5kPd04WfL0cNNwykYNx
+         qJapRFlqsW2g/PQ0s+56M5jlWztBAupYHlXH4WKB7UEgROd8dkFDTIlmyJ5Ot2WlcCWj
+         MRhQ==
+X-Gm-Message-State: AOAM531AoTvksjQ78cGu1bMCFiOa1jhZRHuAcZrvBmU1TQtpiLWe8cuR
+        2HAjV5bAP2RsdaYw0d4ueS8=
+X-Google-Smtp-Source: ABdhPJzPwgooR5I07lG6agi4o+XJIiUnZtxaG2d2E6PYRW6u09VjILA4cchEz56ubddK4K9nWje7yw==
+X-Received: by 2002:a17:902:407:: with SMTP id 7mr2182544ple.167.1598978841446;
+        Tue, 01 Sep 2020 09:47:21 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id m19sm2006608pjq.18.2020.09.01.09.46.40
+        by smtp.gmail.com with ESMTPSA id u2sm2036508pjj.57.2020.09.01.09.47.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 09:46:41 -0700 (PDT)
+        Tue, 01 Sep 2020 09:47:20 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
@@ -69,24 +69,15 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vivek Gautam <vivek.gautam@codeaurora.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Akhil P Oommen <akhilpo@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
         Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Eric Anholt <eric@anholt.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Wambui Karuga <wambui.karugax@gmail.com>,
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v16 06/20] drm/msm: Drop context arg to gpu->submit()
-Date:   Tue,  1 Sep 2020 09:46:23 -0700
-Message-Id: <20200901164707.2645413-7-robdclark@gmail.com>
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Krishna Reddy <vdumpa@nvidia.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v16 15/20] iommu/arm-smmu: Constify some helpers
+Date:   Tue,  1 Sep 2020 09:46:32 -0700
+Message-Id: <20200901164707.2645413-16-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901164707.2645413-1-robdclark@gmail.com>
 References: <20200901164707.2645413-1-robdclark@gmail.com>
@@ -97,207 +88,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jordan Crouse <jcrouse@codeaurora.org>
+From: Rob Clark <robdclark@chromium.org>
 
-Now that we can get the ctx from the submitqueue, the extra arg is
-redundant.
+Sprinkle a few `const`s where helpers don't need write access.
 
-Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-[split out of previous patch to reduce churny noise]
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/gpu/drm/msm/adreno/a5xx_gpu.c   | 12 +++++-------
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c   |  5 ++---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c |  5 ++---
- drivers/gpu/drm/msm/adreno/adreno_gpu.h |  3 +--
- drivers/gpu/drm/msm/msm_gem_submit.c    |  2 +-
- drivers/gpu/drm/msm/msm_gpu.c           |  9 ++++-----
- drivers/gpu/drm/msm/msm_gpu.h           |  6 ++----
- 7 files changed, 17 insertions(+), 25 deletions(-)
+ drivers/iommu/arm/arm-smmu/arm-smmu.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-index 9e63a190642c..eff2439ea57b 100644
---- a/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a5xx_gpu.c
-@@ -43,8 +43,7 @@ static void a5xx_flush(struct msm_gpu *gpu, struct msm_ringbuffer *ring)
- 		gpu_write(gpu, REG_A5XX_CP_RB_WPTR, wptr);
- }
+diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+index 59ff3fc5c6c8..27c83333fc50 100644
+--- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
++++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
+@@ -377,7 +377,7 @@ struct arm_smmu_master_cfg {
+ 	s16				smendx[];
+ };
  
--static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--	struct msm_file_private *ctx)
-+static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+-static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
++static inline u32 arm_smmu_lpae_tcr(const struct io_pgtable_cfg *cfg)
  {
- 	struct msm_drm_private *priv = gpu->dev->dev_private;
- 	struct msm_ringbuffer *ring = submit->ring;
-@@ -57,7 +56,7 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
- 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-@@ -103,8 +102,7 @@ static void a5xx_submit_in_rb(struct msm_gpu *gpu, struct msm_gem_submit *submit
- 	msm_gpu_retire(gpu);
+ 	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+ 		FIELD_PREP(ARM_SMMU_TCR_SH0, cfg->arm_lpae_s1_cfg.tcr.sh) |
+@@ -398,13 +398,13 @@ static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+ 	return tcr;
  }
  
--static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--	struct msm_file_private *ctx)
-+static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+-static inline u32 arm_smmu_lpae_tcr2(struct io_pgtable_cfg *cfg)
++static inline u32 arm_smmu_lpae_tcr2(const struct io_pgtable_cfg *cfg)
  {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
- 	struct a5xx_gpu *a5xx_gpu = to_a5xx_gpu(adreno_gpu);
-@@ -114,7 +112,7 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 
- 	if (IS_ENABLED(CONFIG_DRM_MSM_GPU_SUDO) && submit->in_rb) {
- 		priv->lastctx = NULL;
--		a5xx_submit_in_rb(gpu, submit, ctx);
-+		a5xx_submit_in_rb(gpu, submit);
- 		return;
- 	}
- 
-@@ -148,7 +146,7 @@ static void a5xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index c5a3e4d4c007..5eabb0109577 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -81,8 +81,7 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
- 	OUT_RING(ring, upper_32_bits(iova));
+ 	return FIELD_PREP(ARM_SMMU_TCR2_PASIZE, cfg->arm_lpae_s1_cfg.tcr.ips) |
+ 	       FIELD_PREP(ARM_SMMU_TCR2_SEP, ARM_SMMU_TCR2_SEP_UPSTREAM);
  }
  
--static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--	struct msm_file_private *ctx)
-+static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
+-static inline u32 arm_smmu_lpae_vtcr(struct io_pgtable_cfg *cfg)
++static inline u32 arm_smmu_lpae_vtcr(const struct io_pgtable_cfg *cfg)
  {
- 	unsigned int index = submit->seqno % MSM_GPU_SUBMIT_STATS_COUNT;
- 	struct msm_drm_private *priv = gpu->dev->dev_private;
-@@ -115,7 +114,7 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 		case MSM_SUBMIT_CMD_IB_TARGET_BUF:
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index d2dbb6968cba..533a34b4cce2 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -457,8 +457,7 @@ void adreno_recover(struct msm_gpu *gpu)
- 	}
- }
- 
--void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx)
-+void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
- 	struct msm_drm_private *priv = gpu->dev->dev_private;
-@@ -472,7 +471,7 @@ void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 			break;
- 		case MSM_SUBMIT_CMD_CTX_RESTORE_BUF:
- 			/* ignore if there has not been a ctx switch: */
--			if (priv->lastctx == ctx)
-+			if (priv->lastctx == submit->queue->ctx)
- 				break;
- 			/* fall-thru */
- 		case MSM_SUBMIT_CMD_BUF:
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-index e55abae365b5..848632758450 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-@@ -269,8 +269,7 @@ struct drm_gem_object *adreno_fw_create_bo(struct msm_gpu *gpu,
- 		const struct firmware *fw, u64 *iova);
- int adreno_hw_init(struct msm_gpu *gpu);
- void adreno_recover(struct msm_gpu *gpu);
--void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx);
-+void adreno_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit);
- void adreno_flush(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
- bool adreno_idle(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
- #if defined(CONFIG_DEBUG_FS) || defined(CONFIG_DEV_COREDUMP)
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index 1464b04d25d3..aa5c60a7132d 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -785,7 +785,7 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 		}
- 	}
- 
--	msm_gpu_submit(gpu, submit, ctx);
-+	msm_gpu_submit(gpu, submit);
- 
- 	args->fence = submit->fence->seqno;
- 
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index 806eb0957280..e1a3cbe25a0c 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -520,7 +520,7 @@ static void recover_worker(struct work_struct *work)
- 			struct msm_ringbuffer *ring = gpu->rb[i];
- 
- 			list_for_each_entry(submit, &ring->submits, node)
--				gpu->funcs->submit(gpu, submit, NULL);
-+				gpu->funcs->submit(gpu, submit);
- 		}
- 	}
- 
-@@ -747,8 +747,7 @@ void msm_gpu_retire(struct msm_gpu *gpu)
- }
- 
- /* add bo's to gpu's ring, and kick gpu: */
--void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx)
-+void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit)
- {
- 	struct drm_device *dev = gpu->dev;
- 	struct msm_drm_private *priv = dev->dev_private;
-@@ -788,8 +787,8 @@ void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
- 			msm_gem_move_to_active(&msm_obj->base, gpu, false, submit->fence);
- 	}
- 
--	gpu->funcs->submit(gpu, submit, ctx);
--	priv->lastctx = ctx;
-+	gpu->funcs->submit(gpu, submit);
-+	priv->lastctx = submit->queue->ctx;
- 
- 	hangcheck_timer_reset(gpu);
- }
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index 97c527e98391..1f96ac0d9049 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -45,8 +45,7 @@ struct msm_gpu_funcs {
- 	int (*hw_init)(struct msm_gpu *gpu);
- 	int (*pm_suspend)(struct msm_gpu *gpu);
- 	int (*pm_resume)(struct msm_gpu *gpu);
--	void (*submit)(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--			struct msm_file_private *ctx);
-+	void (*submit)(struct msm_gpu *gpu, struct msm_gem_submit *submit);
- 	void (*flush)(struct msm_gpu *gpu, struct msm_ringbuffer *ring);
- 	irqreturn_t (*irq)(struct msm_gpu *irq);
- 	struct msm_ringbuffer *(*active_ring)(struct msm_gpu *gpu);
-@@ -290,8 +289,7 @@ int msm_gpu_perfcntr_sample(struct msm_gpu *gpu, uint32_t *activetime,
- 		uint32_t *totaltime, uint32_t ncntrs, uint32_t *cntrs);
- 
- void msm_gpu_retire(struct msm_gpu *gpu);
--void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
--		struct msm_file_private *ctx);
-+void msm_gpu_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit);
- 
- int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
- 		struct msm_gpu *gpu, const struct msm_gpu_funcs *funcs,
+ 	return ARM_SMMU_VTCR_RES1 |
+ 	       FIELD_PREP(ARM_SMMU_VTCR_PS, cfg->arm_lpae_s2_cfg.vtcr.ps) |
 -- 
 2.26.2
 
