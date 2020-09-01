@@ -2,99 +2,73 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE153C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B43A0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A9D3206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975087;
-	bh=6v8rcxjk5E46zO64zz2NpKgHnlGR5IMJkXeHxdpH0BU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aIm7nLtKo+Z0egWHaEfyF53Jb6h8agnl8TkRjC1kKNLbr37oJAx37jdtm6uK13IUH
-	 n1dvuStOEPDqnxZduNnVN4aVdYcOndnWWxroj4ysjZrQ0ydXNxAUWyi/gPcyDw6cZV
-	 a6lLG0sJny8yrXxMKQU/2Ms6OBq8vQ+yiGWbKgaM=
+	by mail.kernel.org (Postfix) with ESMTP id 7F0CA2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731828AbgIAPoq (ORCPT
+        id S1731844AbgIAPox (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:44:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54752 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:44:53 -0400
+Received: from foss.arm.com ([217.140.110.172]:44150 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727970AbgIAPmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:42:07 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 019102064B;
-        Tue,  1 Sep 2020 15:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974927;
-        bh=6v8rcxjk5E46zO64zz2NpKgHnlGR5IMJkXeHxdpH0BU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A59D6HAm3H+lxmop8+rw0y0UAXjRhGPU9T0gUFywrcKFZmaTKYcMTZ+GNoD4tlu+U
-         4KthePiccbbYdCRYkN+Vpk+WC/S7lwSuAalnZtKwVM6pegEcmX1uu5FM/0mBHNdiBY
-         pxP+PTU8acwxtDUpySAa4OhPVI/jSL4mnZsr/6Ag=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        Lee Duncan <lduncan@suse.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 143/255] scsi: fcoe: Fix I/O path allocation
-Date:   Tue,  1 Sep 2020 17:09:59 +0200
-Message-Id: <20200901151007.555981504@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730108AbgIAPmW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:42:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5F1521045;
+        Tue,  1 Sep 2020 08:42:21 -0700 (PDT)
+Received: from C02TD0UTHF1T.local (unknown [10.57.10.252])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E9E23F71F;
+        Tue,  1 Sep 2020 08:42:19 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 16:42:17 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc:     "Madhavan T. Venkataraman" <madvenka@linux.microsoft.com>,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, oleg@redhat.com,
+        x86@kernel.org
+Subject: Re: [PATCH v1 0/4] [RFC] Implement Trampoline File Descriptor
+Message-ID: <20200901154217.GD95447@C02TD0UTHF1T.local>
+References: <aefc85852ea518982e74b233e11e16d2e707bc32>
+ <20200728131050.24443-1-madvenka@linux.microsoft.com>
+ <20200731180955.GC67415@C02TD0UTHF1T.local>
+ <6236adf7-4bed-534e-0956-fddab4fd96b6@linux.microsoft.com>
+ <20200804143018.GB7440@C02TD0UTHF1T.local>
+ <b3368692-afe6-89b5-d634-12f4f0a601f8@linux.microsoft.com>
+ <20200812100650.GB28154@C02TD0UTHF1T.local>
+ <41c4de64-68d0-6fcb-e5c3-63ebd459262e@digikod.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <41c4de64-68d0-6fcb-e5c3-63ebd459262e@digikod.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <michael.christie@oracle.com>
+On Wed, Aug 19, 2020 at 08:53:42PM +0200, Mickaël Salaün wrote:
+> On 12/08/2020 12:06, Mark Rutland wrote:
+> > Contemporary W^X means that a given virtual alias cannot be writeable
+> > and executeable simultaneously, permitting (a) and (b). If you read the
+> > references on the Wikipedia page for W^X you'll see the OpenBSD 3.3
+> > release notes and related presentation make this clear, and further they
+> > expect (b) to occur with JITS flipping W/X with mprotect().
+> 
+> W^X (with "permanent" mprotect restrictions [1]) goes back to 2000 with
+> PaX [2] (which predates partial OpenBSD implementation from 2003).
+> 
+> [1] https://pax.grsecurity.net/docs/mprotect.txt
+> [2] https://undeadly.org/cgi?action=article;sid=20030417082752
 
-[ Upstream commit fa39ab5184d64563cd36f2fb5f0d3fbad83a432c ]
+Thanks for the pointers!
 
-ixgbe_fcoe_ddp_setup() can be called from the main I/O path and is called
-with a spin_lock held, so we have to use GFP_ATOMIC allocation instead of
-GFP_KERNEL.
-
-Link: https://lore.kernel.org/r/1596831813-9839-1-git-send-email-michael.christie@oracle.com
-cc: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-index ec7a11d13fdc0..9e70b9a674409 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-@@ -192,7 +192,7 @@ static int ixgbe_fcoe_ddp_setup(struct net_device *netdev, u16 xid,
- 	}
- 
- 	/* alloc the udl from per cpu ddp pool */
--	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_KERNEL, &ddp->udp);
-+	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_ATOMIC, &ddp->udp);
- 	if (!ddp->udl) {
- 		e_err(drv, "failed allocated ddp context\n");
- 		goto out_noddp_unmap;
--- 
-2.25.1
-
-
-
+Mark.
