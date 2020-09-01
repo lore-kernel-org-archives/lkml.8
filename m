@@ -2,575 +2,183 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2384DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 02:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 002C7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 02:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 023A620707
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 02:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D834D20707
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 02:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgIACaU (ORCPT
+        id S1726526AbgIACbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 22:30:20 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:58358 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgIACaS (ORCPT
+        Mon, 31 Aug 2020 22:31:18 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:54251 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725993AbgIACbS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 22:30:18 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 0812TreT6014375, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 0812TreT6014375
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 1 Sep 2020 10:29:53 +0800
-Received: from RTEXMB01.realtek.com.tw (172.21.6.94) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 1 Sep 2020 10:29:53 +0800
-Received: from localhost (172.22.88.222) by RTEXMB01.realtek.com.tw
- (172.21.6.94) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2044.4; Tue, 1 Sep 2020
- 10:29:52 +0800
-From:   <ricky_wu@realtek.com>
-To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
-        <ricky_wu@realtek.com>, <ulf.hansson@linaro.org>,
-        <bhelgaas@google.com>, <rui_feng@realsil.com.cn>,
-        <yuehaibing@huawei.com>, <zhongjiang@huawei.com>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] misc: rtsx: add power saving function and bios guide options
-Date:   Tue, 1 Sep 2020 10:29:43 +0800
-Message-ID: <20200901022943.32249-1-ricky_wu@realtek.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 31 Aug 2020 22:31:18 -0400
+Received: (qmail 572242 invoked by uid 1000); 31 Aug 2020 22:31:17 -0400
+Date:   Mon, 31 Aug 2020 22:31:17 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     gregkh@linuxfoundation.org, erkka.talvitie@vincit.fi,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low
+ speed devices
+Message-ID: <20200901023117.GD571008@rowland.harvard.edu>
+References: <cover.1598887346.git.khalid@gonehiking.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.22.88.222]
-X-ClientProxiedBy: RTEXMB03.realtek.com.tw (172.21.6.96) To
- RTEXMB01.realtek.com.tw (172.21.6.94)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1598887346.git.khalid@gonehiking.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ricky Wu <ricky_wu@realtek.com>
+On Mon, Aug 31, 2020 at 10:23:30AM -0600, Khalid Aziz wrote:
+> [Resending since I screwed up linux-usb mailing list address in
+> cut-n-paste in original email]
+> 
+> 
+> I recently replaced the motherboard on my desktop with an MSI B450-A
+> Pro Max motherboard. Since then my keybaords, mouse and tablet have
+> become very unreliable. I see messages like this over and over in
+> dmesg:
+> 
+> ug 23 00:01:49 rhapsody kernel: [198769.314732] usb 1-2.4: reset full-speed USB
+>  device number 27 using ehci-pci
+> Aug 23 00:01:49 rhapsody kernel: [198769.562234] usb 1-2.1: reset full-speed USB
+>  device number 28 using ehci-pci
+> Aug 23 00:01:52 rhapsody kernel: [198772.570704] usb 1-2.1: reset full-speed USB
+>  device number 28 using ehci-pci
+> Aug 23 00:02:02 rhapsody kernel: [198782.526669] usb 1-2.4: reset full-speed USB
+>  device number 27 using ehci-pci
+> Aug 23 00:02:03 rhapsody kernel: [198782.714660] usb 1-2.1: reset full-speed USB
+>  device number 28 using ehci-pci
+> Aug 23 00:02:04 rhapsody kernel: [198784.210171] usb 1-2.3: reset low-speed USB device number 26 using ehci-pci
+> Aug 23 00:02:06 rhapsody kernel: [198786.110181] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
+> Aug 23 00:02:08 rhapsody kernel: [198787.726158] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
+> Aug 23 00:02:10 rhapsody kernel: [198790.126628] usb 1-2.1: reset full-speed USB device number 28 using ehci-pci
+> Aug 23 00:02:10 rhapsody kernel: [198790.314141] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
+> Aug 23 00:02:12 rhapsody kernel: [198792.518765] usb 1-2.4: reset full-speed USB device number 27 using ehci-pci
+> 
+> The devices I am using are:
+> 
+> - Logitech K360 wireless keyboard
+> - Wired Lenovo USB keyboard
+> - Wired Lenovo USB mouse
+> - Wired Wacom Intuos tablet
+> 
+> After a reset, the wireless keyboard simply stops working. Rest of
+> the devices keep seeing intermittent failure.
+> 
+> I tried various combinations of hubs and USB controllers to see what
+> works. MSI B450-A motherboard has USB 3.0 and USB 3.1 controllers. I
+> added a USB 2.0 PCI card as well for this test:
+> 
+> 03:00.0 USB controller: Advanced Micro Devices, Inc. [AMD] 400 Series Chipset USB 3.1 XHCI Controller (rev 01)
+> 29:01.0 USB controller: NEC Corporation OHCI USB Controller (rev 43)
+> 29:01.1 USB controller: NEC Corporation OHCI USB Controller (rev 43)
+> 29:01.2 USB controller: NEC Corporation uPD72010x USB 2.0 Controller (rev 04)
+> 2c:00.3 USB controller: Advanced Micro Devices, Inc. [AMD] Matisse USB 3.0 Host Controller
+> 
+> I have a bus powered USB 3.0 hub, a bus powered USB 2.0 hub and a
+> self powered USB 2.0 hub built into my monitor.
+> 
+> I have connected my devices directly into the ports on motherboard
+> and PCI card as well as into external hub. Here are the results I
+> saw when devices wee plugged into various combination of ports:
+> 
+> 1. USB 3.0/3.1 controller - does NOT work
+> 2. USB 2.0 controller - WORKS
+> 3. USB 3.0/3.1 controller -> Self powered USB 2.0 hub in monitor - does
+>    NOT work
+> 4. USB 3.0/3.1 controller -> bus powered USB 3.0 hub - does NOT work
+> 5. USB 3.0/3.1 controller -> Bus powered USB 2.0 hub - WORKS
+> 7. USB 2.0 controller -> Bus powered USB 3.0 hub - does NOT work
+> 8. USB 2.0 controller -> Bus powered 2.0 hub - Does not work
 
-Added rts5227 rts5249 rts5260 rts5228 power saving functions,
-added BIOS guide MMC funciton and U_d3_en register support and
-fixed rts5260 driving parameter
+The error messages in your log extract all refer to ehci-pci, which is 
+the driver for a USB-2 controller.  They are completely unrelated to any 
+problems you may be having with USB-3 controllers.
 
-Signed-off-by: Ricky Wu <ricky_wu@realtek.com>
----
- drivers/misc/cardreader/rts5227.c  | 115 +++++++++++++++++++++-
- drivers/misc/cardreader/rts5228.c  |   5 +-
- drivers/misc/cardreader/rts5249.c  | 147 ++++++++++++++++++++++++++++-
- drivers/misc/cardreader/rts5260.c  |  33 ++++---
- drivers/misc/cardreader/rtsx_pcr.h |  18 ++++
- 5 files changed, 289 insertions(+), 29 deletions(-)
+> I narrowed the failure down to following lines (this code was added
+> in 5.5 with commit 64cc3f12d1c7 "USB: EHCI: Do not return -EPIPE
+> when hub is disconnected"):
+> 
+> drivers/usb/host/ehci-q.c:
+> 
+>  217                 } else if ((token & QTD_STS_MMF) &&
+>  218                                         (QTD_PID(token) == PID_CODE_IN)) {
+>  219                         status = -EPROTO;
+>  220                 /* CERR nonzero + halt --> stall */
+> 
+> At the time of failure, when we reach this conditional, token is
+> either 0x80408d46 or 0x408d46 which means following bits are set:
+> 
+> QTD_STS_STS, QTD_STS_MMF, QTD_STS_HALT, QTD_IOC, QTD_TOGGLE
+> 
+> and 
+> 
+>         QTD_PID = 1
+>         QTD_CERR = 3
+>         QTD_LENGTH = 0x40 (64)
+> 
+> This causes  the branch "(token & QTD_STS_MMF) && (QTD_PID(token) ==
+> PID_CODE_IN" to be taken and qtd_copy_status() returns EPROTO. This
+> return value in qh_completions() results in ehci_clear_tt_buffer()
+> being called:
+> 
+> drivers/usb/host/ehci-q.c:
+>  472                         /* As part of low/full-speed endpoint-halt processi     ng
+>  473                          * we must clear the TT buffer (11.17.5).
+>  474                          */
+>  475                         if (unlikely(last_status != -EINPROGRESS &&
+>  476                                         last_status != -EREMOTEIO)) {
+>  477                                 /* The TT's in some hubs malfunction when t     hey
+>  478                                  * receive this request following a STALL (     they
+>  479                                  * stop sending isochronous packets).  Sinc     e a
+>  480                                  * STALL can't leave the TT buffer in a bus     y
+>  481                                  * state (if you believe Figures 11-48 - 11     -51
+>  482                                  * in the USB 2.0 spec), we won't clear the      TT
+>  483                                  * buffer in this case.  Strictly speaking      this
+>  484                                  * is a violation of the spec.
+>  485                                  */
+>  486                                 if (last_status != -EPIPE)
+>  487                                         ehci_clear_tt_buffer(ehci, qh, urb,
+>  488                                                         token);
+>  489                         }
+> 
+> It seems like clearing TT buffers in this case is resulting in hub
+> hanging. A USB reset gets it going again until we repeat the cycle
+> over again. The comment in this code says "The TT's in some hubs
+> malfunction when they receive this request following a STALL (they
+> stop sending isochronous packets)". That may be what is happening.
 
-diff --git a/drivers/misc/cardreader/rts5227.c b/drivers/misc/cardreader/rts5227.c
-index f5f392ddf3d6..314037eff17d 100644
---- a/drivers/misc/cardreader/rts5227.c
-+++ b/drivers/misc/cardreader/rts5227.c
-@@ -72,6 +72,8 @@ static void rts5227_fetch_vendor_settings(struct rtsx_pcr *pcr)
- 
- 	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
- 	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
-+	if (rtsx_check_mmc_support(reg))
-+		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
- 	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
- 	if (rtsx_reg_check_reverse_socket(reg))
- 		pcr->flags |= PCR_REVERSE_SOCKET;
-@@ -84,16 +86,78 @@ static void rts5227_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
- 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
- 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
- 
--	if (pm_state == HOST_ENTER_S3)
--		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x10);
-+	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x10);
- 
- 	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
- }
- 
-+static void rts5227_init_from_cfg(struct rtsx_pcr *pcr)
-+{
-+	struct pci_dev *pdev = pcr->pci;
-+	int l1ss;
-+	u32 lval;
-+	struct rtsx_cr_option *option = &pcr->option;
-+
-+	l1ss = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_L1SS);
-+	if (!l1ss)
-+		return;
-+
-+	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
-+
-+	if (CHK_PCI_PID(pcr, 0x522A)) {
-+		if (0 == (lval & 0x0F))
-+			rtsx_pci_enable_oobs_polling(pcr);
-+		else
-+			rtsx_pci_disable_oobs_polling(pcr);
-+	}
-+
-+	if (lval & PCI_L1SS_CTL1_ASPM_L1_1)
-+		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
-+	else
-+		rtsx_clear_dev_flag(pcr, ASPM_L1_1_EN);
-+
-+	if (lval & PCI_L1SS_CTL1_ASPM_L1_2)
-+		rtsx_set_dev_flag(pcr, ASPM_L1_2_EN);
-+	else
-+		rtsx_clear_dev_flag(pcr, ASPM_L1_2_EN);
-+
-+	if (lval & PCI_L1SS_CTL1_PCIPM_L1_1)
-+		rtsx_set_dev_flag(pcr, PM_L1_1_EN);
-+	else
-+		rtsx_clear_dev_flag(pcr, PM_L1_1_EN);
-+
-+	if (lval & PCI_L1SS_CTL1_PCIPM_L1_2)
-+		rtsx_set_dev_flag(pcr, PM_L1_2_EN);
-+	else
-+		rtsx_clear_dev_flag(pcr, PM_L1_2_EN);
-+
-+	if (option->ltr_en) {
-+		u16 val;
-+
-+		pcie_capability_read_word(pcr->pci, PCI_EXP_DEVCTL2, &val);
-+		if (val & PCI_EXP_DEVCTL2_LTR_EN) {
-+			option->ltr_enabled = true;
-+			option->ltr_active = true;
-+			rtsx_set_ltr_latency(pcr, option->ltr_active_latency);
-+		} else {
-+			option->ltr_enabled = false;
-+		}
-+	}
-+
-+	if (rtsx_check_dev_flag(pcr, ASPM_L1_1_EN | ASPM_L1_2_EN
-+				| PM_L1_1_EN | PM_L1_2_EN))
-+		option->force_clkreq_0 = false;
-+	else
-+		option->force_clkreq_0 = true;
-+
-+}
-+
- static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
- {
- 	u16 cap;
-+	struct rtsx_cr_option *option = &pcr->option;
- 
-+	rts5227_init_from_cfg(pcr);
- 	rtsx_pci_init_cmd(pcr);
- 
- 	/* Configure GPIO as output */
-@@ -115,9 +179,17 @@ static int rts5227_extra_init_hw(struct rtsx_pcr *pcr)
- 	rts5227_fill_driving(pcr, OUTPUT_3V3);
- 	/* Configure force_clock_req */
- 	if (pcr->flags & PCR_REVERSE_SOCKET)
--		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0xB8, 0xB8);
-+		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0x30, 0x30);
- 	else
--		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0xB8, 0x88);
-+		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0x30, 0x00);
-+
-+	if (option->force_clkreq_0)
-+		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
-+				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
-+	else
-+		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
-+				FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
-+
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, pcr->reg_pm_ctrl3, 0x10, 0x00);
- 
- 	return rtsx_pci_send_cmd(pcr, 100);
-@@ -373,6 +445,27 @@ static int rts522a_switch_output_voltage(struct rtsx_pcr *pcr, u8 voltage)
- 	return rtsx_pci_send_cmd(pcr, 100);
- }
- 
-+static void rts522a_set_l1off_cfg_sub_d0(struct rtsx_pcr *pcr, int active)
-+{
-+	struct rtsx_cr_option *option = &pcr->option;
-+	int aspm_L1_1, aspm_L1_2;
-+	u8 val = 0;
-+
-+	aspm_L1_1 = rtsx_check_dev_flag(pcr, ASPM_L1_1_EN);
-+	aspm_L1_2 = rtsx_check_dev_flag(pcr, ASPM_L1_2_EN);
-+
-+	if (active) {
-+		/* run, latency: 60us */
-+		if (aspm_L1_1)
-+			val = option->ltr_l1off_snooze_sspwrgate;
-+	} else {
-+		/* l1off, latency: 300us */
-+		if (aspm_L1_2)
-+			val = option->ltr_l1off_sspwrgate;
-+	}
-+
-+	rtsx_set_l1off_sub(pcr, val);
-+}
- 
- /* rts522a operations mainly derived from rts5227, except phy/hw init setting.
-  */
-@@ -390,15 +483,29 @@ static const struct pcr_ops rts522a_pcr_ops = {
- 	.cd_deglitch = NULL,
- 	.conv_clk_and_div_n = NULL,
- 	.force_power_down = rts5227_force_power_down,
-+	.set_l1off_cfg_sub_d0 = rts522a_set_l1off_cfg_sub_d0,
- };
- 
- void rts522a_init_params(struct rtsx_pcr *pcr)
- {
-+	struct rtsx_cr_option *option = &pcr->option;
-+
- 	rts5227_init_params(pcr);
- 	pcr->ops = &rts522a_pcr_ops;
- 	pcr->tx_initial_phase = SET_CLOCK_PHASE(20, 20, 11);
- 	pcr->reg_pm_ctrl3 = RTS522A_PM_CTRL3;
- 
-+	option->dev_flags = LTR_L1SS_PWR_GATE_EN;
-+	option->ltr_en = true;
-+
-+	/* init latency of active, idle, L1OFF to 60us, 300us, 3ms */
-+	option->ltr_active_latency = LTR_ACTIVE_LATENCY_DEF;
-+	option->ltr_idle_latency = LTR_IDLE_LATENCY_DEF;
-+	option->ltr_l1off_latency = LTR_L1OFF_LATENCY_DEF;
-+	option->l1_snooze_delay = L1_SNOOZE_DELAY_DEF;
-+	option->ltr_l1off_sspwrgate = 0x7F;
-+	option->ltr_l1off_snooze_sspwrgate = 0x78;
-+
- 	pcr->option.ocp_en = 1;
- 	if (pcr->option.ocp_en)
- 		pcr->hw_param.interrupt_en |= SD_OC_INT_EN;
-diff --git a/drivers/misc/cardreader/rts5228.c b/drivers/misc/cardreader/rts5228.c
-index 28feab1449ab..781a86def59a 100644
---- a/drivers/misc/cardreader/rts5228.c
-+++ b/drivers/misc/cardreader/rts5228.c
-@@ -99,9 +99,8 @@ static void rts5228_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
- 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
- 				RELINK_TIME_MASK, 0);
- 
--	if (pm_state == HOST_ENTER_S3)
--		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
--					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
-+	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
-+			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
- 
- 	rtsx_pci_write_register(pcr, FPDCTL,
- 		SSC_POWER_DOWN, SSC_POWER_DOWN);
-diff --git a/drivers/misc/cardreader/rts5249.c b/drivers/misc/cardreader/rts5249.c
-index 941b3d77f1e9..2659415c175f 100644
---- a/drivers/misc/cardreader/rts5249.c
-+++ b/drivers/misc/cardreader/rts5249.c
-@@ -73,6 +73,8 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
- 
- 	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
- 	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
-+	if (rtsx_check_mmc_support(reg))
-+		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
- 	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
- 	if (rtsx_reg_check_reverse_socket(reg))
- 		pcr->flags |= PCR_REVERSE_SOCKET;
-@@ -85,8 +87,7 @@ static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
- 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 2, 0xFF, 0);
- 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3, 0x01, 0);
- 
--	if (pm_state == HOST_ENTER_S3)
--		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
-+	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
- 			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
- 
- 	rtsx_pci_write_register(pcr, FPDCTL, 0x03, 0x03);
-@@ -105,6 +106,13 @@ static void rts5249_init_from_cfg(struct rtsx_pcr *pcr)
- 
- 	pci_read_config_dword(pdev, l1ss + PCI_L1SS_CTL1, &lval);
- 
-+	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A)) {
-+		if (0 == (lval & 0x0F))
-+			rtsx_pci_enable_oobs_polling(pcr);
-+		else
-+			rtsx_pci_disable_oobs_polling(pcr);
-+	}
-+
- 	if (lval & PCI_L1SS_CTL1_ASPM_L1_1)
- 		rtsx_set_dev_flag(pcr, ASPM_L1_1_EN);
- 
-@@ -144,6 +152,113 @@ static int rts5249_init_from_hw(struct rtsx_pcr *pcr)
- 	return 0;
- }
- 
-+static void rts52xa_save_content_from_efuse(struct rtsx_pcr *pcr)
-+{
-+	u8 cnt, sv, cv;
-+	u8 j = 0;
-+	u8 tmp;
-+	u8 val;
-+	int i;
-+
-+	rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
-+				REG_EFUSE_BYPASS | REG_EFUSE_POR, REG_EFUSE_POR);
-+	udelay(1);
-+
-+	pcr_dbg(pcr, "Enable efuse por!");
-+	pcr_dbg(pcr, "save efuse to autoload");
-+
-+	rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD, REG_EFUSE_ADD_MASK, 0x00);
-+	rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
-+				REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
-+	/* Wait transfer end */
-+	for (j = 0; j < 1024; j++) {
-+		rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
-+		if ((tmp & 0x80) == 0)
-+			break;
-+	}
-+	rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
-+	cnt = val & 0x0F;
-+	sv = val & 0x10;
-+	cv = val & 0x20;
-+
-+	if (sv) {
-+		for (i = 0; i < 4; i++) {
-+			rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
-+				REG_EFUSE_ADD_MASK, 0x04 + i);
-+			rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
-+				REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
-+			/* Wait transfer end */
-+			for (j = 0; j < 1024; j++) {
-+				rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
-+				if ((tmp & 0x80) == 0)
-+					break;
-+			}
-+			rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
-+			rtsx_pci_write_register(pcr, 0xFF04 + i, 0xFF, val);
-+		}
-+	} else {
-+		rtsx_pci_write_register(pcr, 0xFF04, 0xFF, (u8)PCI_VID(pcr));
-+		rtsx_pci_write_register(pcr, 0xFF05, 0xFF, (u8)(PCI_VID(pcr) >> 8));
-+		rtsx_pci_write_register(pcr, 0xFF06, 0xFF, (u8)PCI_PID(pcr));
-+		rtsx_pci_write_register(pcr, 0xFF07, 0xFF, (u8)(PCI_PID(pcr) >> 8));
-+	}
-+
-+	for (i = 0; i < cnt * 4; i++) {
-+		if (sv)
-+			rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
-+				REG_EFUSE_ADD_MASK, 0x08 + i);
-+		else
-+			rtsx_pci_write_register(pcr, RTS525A_EFUSE_ADD,
-+				REG_EFUSE_ADD_MASK, 0x04 + i);
-+		rtsx_pci_write_register(pcr, RTS525A_EFUSE_CTL,
-+				REG_EFUSE_ENABLE | REG_EFUSE_MODE, REG_EFUSE_ENABLE);
-+		/* Wait transfer end */
-+		for (j = 0; j < 1024; j++) {
-+			rtsx_pci_read_register(pcr, RTS525A_EFUSE_CTL, &tmp);
-+			if ((tmp & 0x80) == 0)
-+				break;
-+		}
-+		rtsx_pci_read_register(pcr, RTS525A_EFUSE_DATA, &val);
-+		rtsx_pci_write_register(pcr, 0xFF08 + i, 0xFF, val);
-+	}
-+	rtsx_pci_write_register(pcr, 0xFF00, 0xFF, (cnt & 0x7F) | 0x80);
-+	rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
-+		REG_EFUSE_BYPASS | REG_EFUSE_POR, REG_EFUSE_BYPASS);
-+	pcr_dbg(pcr, "Disable efuse por!");
-+}
-+
-+static void rts52xa_save_content_to_autoload_space(struct rtsx_pcr *pcr)
-+{
-+	u8 val;
-+
-+	rtsx_pci_read_register(pcr, RESET_LOAD_REG, &val);
-+	if (val & 0x02) {
-+		rtsx_pci_read_register(pcr, RTS525A_BIOS_CFG, &val);
-+		if (val & RTS525A_LOAD_BIOS_FLAG) {
-+			rtsx_pci_write_register(pcr, RTS525A_BIOS_CFG,
-+				RTS525A_LOAD_BIOS_FLAG, RTS525A_CLEAR_BIOS_FLAG);
-+
-+			rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
-+				REG_EFUSE_POWER_MASK, REG_EFUSE_POWERON);
-+
-+			pcr_dbg(pcr, "Power ON efuse!");
-+			mdelay(1);
-+			rts52xa_save_content_from_efuse(pcr);
-+		} else {
-+			rtsx_pci_read_register(pcr, RTS524A_PME_FORCE_CTL, &val);
-+			if (!(val & 0x08))
-+				rts52xa_save_content_from_efuse(pcr);
-+		}
-+	} else {
-+		pcr_dbg(pcr, "Load from autoload");
-+		rtsx_pci_write_register(pcr, 0xFF00, 0xFF, 0x80);
-+		rtsx_pci_write_register(pcr, 0xFF04, 0xFF, (u8)PCI_VID(pcr));
-+		rtsx_pci_write_register(pcr, 0xFF05, 0xFF, (u8)(PCI_VID(pcr) >> 8));
-+		rtsx_pci_write_register(pcr, 0xFF06, 0xFF, (u8)PCI_PID(pcr));
-+		rtsx_pci_write_register(pcr, 0xFF07, 0xFF, (u8)(PCI_PID(pcr) >> 8));
-+	}
-+}
-+
- static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
- {
- 	struct rtsx_cr_option *option = &(pcr->option);
-@@ -153,6 +268,9 @@ static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
- 
- 	rtsx_pci_init_cmd(pcr);
- 
-+	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A))
-+		rts52xa_save_content_to_autoload_space(pcr);
-+
- 	/* Rest L1SUB Config */
- 	rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, L1SUB_CONFIG3, 0xFF, 0x00);
- 	/* Configure GPIO as output */
-@@ -171,18 +289,35 @@ static int rts5249_extra_init_hw(struct rtsx_pcr *pcr)
- 	else
- 		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG, 0xB0, 0x80);
- 
-+	rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
-+
-+	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A)) {
-+		rtsx_pci_write_register(pcr, REG_VREF, PWD_SUSPND_EN, PWD_SUSPND_EN);
-+		rtsx_pci_write_register(pcr, RTS524A_PM_CTRL3, 0x01, 0x00);
-+		rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL, 0x30, 0x20);
-+	} else {
-+		rtsx_pci_write_register(pcr, PME_FORCE_CTL, 0xFF, 0x30);
-+		rtsx_pci_write_register(pcr, PM_CTRL3, 0x01, 0x00);
-+	}
- 	/*
- 	 * If u_force_clkreq_0 is enabled, CLKREQ# PIN will be forced
- 	 * to drive low, and we forcibly request clock.
- 	 */
- 	if (option->force_clkreq_0)
--		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
-+		rtsx_pci_write_register(pcr, PETXCFG,
- 			FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
- 	else
--		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
-+		rtsx_pci_write_register(pcr, PETXCFG,
- 			FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
- 
--	return rtsx_pci_send_cmd(pcr, CMD_TIMEOUT_DEF);
-+	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x00);
-+	if (CHK_PCI_PID(pcr, PID_524A) || CHK_PCI_PID(pcr, PID_525A)) {
-+		rtsx_pci_write_register(pcr, RTS524A_PME_FORCE_CTL,
-+				REG_EFUSE_POWER_MASK, REG_EFUSE_POWEROFF);
-+		pcr_dbg(pcr, "Power OFF efuse!");
-+	}
-+
-+	return 0;
- }
- 
- static int rts5249_optimize_phy(struct rtsx_pcr *pcr)
-@@ -668,6 +803,8 @@ static int rts525a_extra_init_hw(struct rtsx_pcr *pcr)
- {
- 	rts5249_extra_init_hw(pcr);
- 
-+	rtsx_pci_write_register(pcr, RTS5250_CLK_CFG3, RTS525A_CFG_MEM_PD, RTS525A_CFG_MEM_PD);
-+
- 	rtsx_pci_write_register(pcr, PCLK_CTL, PCLK_MODE_SEL, PCLK_MODE_SEL);
- 	if (is_version(pcr, 0x525A, IC_VER_A)) {
- 		rtsx_pci_write_register(pcr, L1SUB_CONFIG2,
-diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
-index b9f66b1384a6..0c3e26c79ccb 100644
---- a/drivers/misc/cardreader/rts5260.c
-+++ b/drivers/misc/cardreader/rts5260.c
-@@ -26,21 +26,17 @@ static u8 rts5260_get_ic_version(struct rtsx_pcr *pcr)
- 
- static void rts5260_fill_driving(struct rtsx_pcr *pcr, u8 voltage)
- {
--	u8 driving_3v3[6][3] = {
--		{0x94, 0x94, 0x94},
--		{0x11, 0x11, 0x18},
--		{0x55, 0x55, 0x5C},
--		{0x94, 0x94, 0x94},
--		{0x94, 0x94, 0x94},
--		{0xFF, 0xFF, 0xFF},
-+	u8 driving_3v3[4][3] = {
-+		{0x11, 0x11, 0x11},
-+		{0x22, 0x22, 0x22},
-+		{0x55, 0x55, 0x55},
-+		{0x33, 0x33, 0x33},
- 	};
--	u8 driving_1v8[6][3] = {
--		{0x9A, 0x89, 0x89},
--		{0xC4, 0xC4, 0xC4},
--		{0x3C, 0x3C, 0x3C},
-+	u8 driving_1v8[4][3] = {
-+		{0x35, 0x33, 0x33},
-+		{0x8A, 0x88, 0x88},
-+		{0xBD, 0xBB, 0xBB},
- 		{0x9B, 0x99, 0x99},
--		{0x9A, 0x89, 0x89},
--		{0xFE, 0xFE, 0xFE},
- 	};
- 	u8 (*driving)[3], drive_sel;
- 
-@@ -58,7 +54,7 @@ static void rts5260_fill_driving(struct rtsx_pcr *pcr, u8 voltage)
- 	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
- 			 0xFF, driving[drive_sel][1]);
- 
--	rtsx_pci_write_register(pcr, SD30_CMD_DRIVE_SEL,
-+	rtsx_pci_write_register(pcr, SD30_DAT_DRIVE_SEL,
- 			 0xFF, driving[drive_sel][2]);
- }
- 
-@@ -82,6 +78,8 @@ static void rtsx_base_fetch_vendor_settings(struct rtsx_pcr *pcr)
- 
- 	pci_read_config_dword(pdev, PCR_SETTING_REG2, &reg);
- 	pcr_dbg(pcr, "Cfg 0x%x: 0x%x\n", PCR_SETTING_REG2, reg);
-+	if (rtsx_check_mmc_support(reg))
-+		pcr->extra_caps |= EXTRA_CAPS_NO_MMC;
- 	pcr->sd30_drive_sel_3v3 = rtsx_reg_to_sd30_drive_sel_3v3(reg);
- 	if (rtsx_reg_check_reverse_socket(reg))
- 		pcr->flags |= PCR_REVERSE_SOCKET;
-@@ -95,9 +93,8 @@ static void rtsx_base_force_power_down(struct rtsx_pcr *pcr, u8 pm_state)
- 	rtsx_pci_write_register(pcr, AUTOLOAD_CFG_BASE + 3,
- 				RELINK_TIME_MASK, 0);
- 
--	if (pm_state == HOST_ENTER_S3)
--		rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
--					D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
-+	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3,
-+			D3_DELINK_MODE_EN, D3_DELINK_MODE_EN);
- 
- 	rtsx_pci_write_register(pcr, FPDCTL, ALL_POWER_DOWN, ALL_POWER_DOWN);
- }
-@@ -574,6 +571,8 @@ static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
- 		rtsx_pci_write_register(pcr, PETXCFG,
- 				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
- 
-+	rtsx_pci_write_register(pcr, pcr->reg_pm_ctrl3, 0x10, 0x00);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/misc/cardreader/rtsx_pcr.h b/drivers/misc/cardreader/rtsx_pcr.h
-index 6b322db8738e..f39c22ceb679 100644
---- a/drivers/misc/cardreader/rtsx_pcr.h
-+++ b/drivers/misc/cardreader/rtsx_pcr.h
-@@ -18,7 +18,25 @@
- #define RTS522A_PM_CTRL3		0xFF7E
- 
- #define RTS524A_PME_FORCE_CTL		0xFF78
-+#define REG_EFUSE_BYPASS		0x08
-+#define REG_EFUSE_POR			0x04
-+#define REG_EFUSE_POWER_MASK		0x03
-+#define REG_EFUSE_POWERON		0x03
-+#define REG_EFUSE_POWEROFF		0x00
-+#define RTS5250_CLK_CFG3		0xFF79
-+#define RTS525A_CFG_MEM_PD		0xF0
- #define RTS524A_PM_CTRL3		0xFF7E
-+#define RTS525A_BIOS_CFG		0xFF2D
-+#define RTS525A_LOAD_BIOS_FLAG	0x01
-+#define RTS525A_CLEAR_BIOS_FLAG	0x00
-+
-+#define RTS525A_EFUSE_CTL		0xFC32
-+#define REG_EFUSE_ENABLE		0x80
-+#define REG_EFUSE_MODE			0x40
-+#define RTS525A_EFUSE_ADD		0xFC33
-+#define REG_EFUSE_ADD_MASK		0x3F
-+#define RTS525A_EFUSE_DATA		0xFC35
-+
- 
- #define LTR_ACTIVE_LATENCY_DEF		0x883C
- #define LTR_IDLE_LATENCY_DEF		0x892C
--- 
-2.17.1
+What makes you think that?  Do you have any evidence that the hub is 
+receiving a STALL?  Indeed, the commit you referenced above specifically 
+mentions that when MMF is set and the PID code is IN then it is not a 
+STALL.
 
+> Removing the code that returns EPROTO for such case solves the
+> problem on my machine (as in the RFC patch)
+
+It certainly can't solve the problem for any USB-3 connections, because 
+the patch doesn't touch any of the USB-3 driver code.
+
+>  but that probably is not
+> the right solution. I do not understand USB protocol well enough to
+> propose a better solution. Does anyone have a better idea?
+
+Can you collect a usbmon trace showing an example of this problem?
+
+One possibility is to introduce a special quirk for the NEC uPD72010x 
+EHCI controller.  But we should hold off on that until we know exactly 
+what is happening.
+
+Alan Stern
