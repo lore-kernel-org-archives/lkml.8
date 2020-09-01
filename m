@@ -2,107 +2,144 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABFFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:48:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2582C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE5D82071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:48:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598946486;
-	bh=hMj2e4wFJknK1lax5LtgwDFzrkKqm76QV+xaVk0tjYs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AWOlTcwDGsxFqnVuuDd7Rh5If99AVxqUwkcWnUchDpCcmEF4XV7ScBM29noC+Ir6I
-	 eIMhxmCmr6HmCF5jcumZZ3X11g0ms6qa1zUvuTWiWhL16nN36Aburc0OGRwTdZZjj7
-	 I7hwomZCBv9oXI4IaGCvZ6z3TWwSPlGvj6cO1GXA=
+	by mail.kernel.org (Postfix) with ESMTP id 85E7E2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:50:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gu+J64Tk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgIAHsF (ORCPT
+        id S1726144AbgIAHut (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:48:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbgIAHsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:48:04 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15FA62068E;
-        Tue,  1 Sep 2020 07:48:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598946484;
-        bh=hMj2e4wFJknK1lax5LtgwDFzrkKqm76QV+xaVk0tjYs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lek3gwvlMfsPNSTpoieF5oIDAXBYQImxjW7gBuyg3spxlvPpK7q8N8LYcyKGhroIf
-         uBTxZiGzlmfOo3FXbZ9Gq5n+/hnxmT2Ro3Ax4AR05ZP/ANygw4p3v6Ysir+w6+SYSE
-         EU6ev0NuxKHr+tY0/L+xM51dH82ocKHKsl/j+hgs=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kD11O-008D4p-Fr; Tue, 01 Sep 2020 08:48:02 +0100
+        Tue, 1 Sep 2020 03:50:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39628 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgIAHud (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:50:33 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35E55C061244;
+        Tue,  1 Sep 2020 00:50:33 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u20so348849pfn.0;
+        Tue, 01 Sep 2020 00:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :message-id:content-transfer-encoding;
+        bh=jx4ijV48pwkIXlEWTCV3kDv1viRliVSaJ9ejxp3xhoM=;
+        b=Gu+J64Tks9uYyPaMRIQ/8V2pHoO5Lffox20RipKXlRjHDaPSkNEA9w/P9gzP7tuiXC
+         pqFcnhhXZHsX6nGtN/2hA+LrfaCqvjyhkaMz+JsgD8pvANzp+gZpwrMlINQf3wKGWLoi
+         RLl6DdPsasJ8DfrRa3440bJk1+NyvyXYJHyOH1VIUF2mTmtRFopcolxtdJFRV06xeC03
+         e+1WzE3ACXeKt2eqqaee4n3luLhIUXd2Ury98fv7hy5SO7K5VMeoK/vhITl3WUAEOlxy
+         KSDsVXYY/RBz6VHjcUD7DoDCk001RSF2ObOP3LSXqfol9qzhEECJszREEsFEzSypJxqp
+         XQsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:message-id:content-transfer-encoding;
+        bh=jx4ijV48pwkIXlEWTCV3kDv1viRliVSaJ9ejxp3xhoM=;
+        b=KA4RFrbgfdtrYtOgWTGydN2Ekk9GW7r6Let1QBV+JawC4yonQxxI7AmqAp9tWri3EK
+         C5Ew2DjUx5sV+tol3F3aKe9BcXcO6vYLq0eSBsdkBooqVIEoJFWGQQTb2Xzr/Pd/Vqdr
+         npGyO1gglgcS+Kl4MofzUBISIA0YyU9Gkqi2+i69EXSVm6PrXJGzMWi57aWBPE7RPLL4
+         Az0luwsDqvi25h/msUsTriFjbUfcm+0fkJrgNLDXPetgReAn2kadtqgw51MqLkqlPjGP
+         oMM7Jx3vxekyeQGq5KJM466s/QiXy3zDlfRzbtv+GT4/xU0LHXdWpOPB16mZnKI+iD/2
+         S4Xw==
+X-Gm-Message-State: AOAM531zWHfFynOslqaaQ5jNOq+qWcx3+Vr07uZcfMyW92FazuH21Lux
+        T+O6flFvmDvu2cJrR1EqQes=
+X-Google-Smtp-Source: ABdhPJySDrdLwU7jnwyr/UTlWsUOS+xFQepQCqThWcvpUucdNdxugC+OL2ioqTY/JTHWg9DOYbezpg==
+X-Received: by 2002:a63:4c57:: with SMTP id m23mr439797pgl.77.1598946631169;
+        Tue, 01 Sep 2020 00:50:31 -0700 (PDT)
+Received: from localhost ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id s1sm1171322pgh.47.2020.09.01.00.50.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 00:50:30 -0700 (PDT)
+Date:   Tue, 01 Sep 2020 17:50:24 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 09/23] m68k: use asm-generic/mmu_context.h for no-op
+ implementations
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux MM <linux-mm@kvack.org>
+References: <20200826145249.745432-1-npiggin@gmail.com>
+        <20200826145249.745432-10-npiggin@gmail.com>
+        <CAMuHMdX5qo+2XpEm5QNbuwWRn508Ewee9rHYtmCBadj0x=3VnA@mail.gmail.com>
+        <1598941313.t5y1w43jgl.astroid@bobo.none>
+        <CAMuHMdWfACYhp8434GOx0qx2oHSBTX3Tq+=gtqNtYahnP-t1JQ@mail.gmail.com>
+In-Reply-To: <CAMuHMdWfACYhp8434GOx0qx2oHSBTX3Tq+=gtqNtYahnP-t1JQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 01 Sep 2020 08:48:02 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Dongjiu Geng <gengdongjiu@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, linuxarm@huawei.com
-Subject: Re: Adjust interrupt Priority for ARM64 GIC
-In-Reply-To: <5a6e65cf-d2fe-0107-2318-0e3c81d57000@huawei.com>
-References: <5a6e65cf-d2fe-0107-2318-0e3c81d57000@huawei.com>
-User-Agent: Roundcube Webmail/1.4.8
-Message-ID: <51146530616bb8fdf23c637ff5bee44e@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: gengdongjiu@huawei.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Message-Id: <1598945161.7wv2e8mu4h.astroid@bobo.none>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dongjiu,
+Excerpts from Geert Uytterhoeven's message of September 1, 2020 5:03 pm:
+> Hi Nick,
+>=20
+> On Tue, Sep 1, 2020 at 8:23 AM Nicholas Piggin <npiggin@gmail.com> wrote:
+>> Excerpts from Geert Uytterhoeven's message of August 27, 2020 7:33 pm:
+>> > On Wed, Aug 26, 2020 at 4:53 PM Nicholas Piggin <npiggin@gmail.com> wr=
+ote:
+>> >> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+>> >> Cc: linux-m68k@lists.linux-m68k.org
+>> >> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+>> >
+>> > With the below fixed:
+>> > Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+>> >
+>> >> --- a/arch/m68k/include/asm/mmu_context.h
+>> >> +++ b/arch/m68k/include/asm/mmu_context.h
+>> >> @@ -79,19 +76,6 @@ static inline void switch_mm(struct mm_struct *pre=
+v, struct mm_struct *next,
+>> >>         set_context(tsk->mm->context, next->pgd);
+>> >>  }
+>> >>
+>> >> -/*
+>> >> - * After we have set current->mm to a new value, this activates
+>> >> - * the context for the new mm so we see the new mappings.
+>> >> - */
+>> >> -static inline void activate_mm(struct mm_struct *active_mm,
+>> >> -       struct mm_struct *mm)
+>> >> -{
+>> >> -       get_mmu_context(mm);
+>> >> -       set_context(mm->context, mm->pgd);
+>> >> -}
+>> >
+>> > Assumed switch_mm() in [PATCH v2 01/23] is revived with the above body=
+.
+>>
+>> I'm not sure what you mean here. We can remove this because it's a copy
+>> of switch_mm above, and that's what the new header defaults to if you
+>> don't provide an active_mm.
+>=20
+> IC.  I thought it started relying on <asm-generic/mmu_context.h> for this=
+,
+> where you removed switch_mm().
+>=20
+> Seems I missed the definition above.
 
-In the future, please use my kernel.org address, as I don't work
-for ARM anymore, and would have missed this email if I wasn't pointed
-to it.
+It's supposed to all build incrementally, I'll try to make sure it's
+right...
 
-On 2020-08-14 18:10, Dongjiu Geng wrote:
-> Hi Marc,
->    In the Linux kernel, we can not adjust the  interrupt Priority, For
-> all the interrupts, the interrupt Priority are fixed to 0xa0.
-> In some scenarios, it needs to change the Priority. so I want to
-> upstream a serie patch to support to change the Priority through
-> procfs. do you agree I upstream this feature? thanks~
+>=20
+>> Patch 1 should not have changed that, it should only affect the nommu
+>> architectures (and actually didn't touch m68k because it was not using
+>> the asm-generic/mmu_context.h header).
+>=20
+> OK. Sorry for the noise.
 
-No, that's not something I would ever consider, and for multiple
-reasons:
-
-- Linux only supports a single priority, meaning that interrupts are
-   themselves aren't preemptable. Dealing with things like (pseudo) NMI
-   is invasive enough, and I can't see a good reason to relax the
-   single priority requirement.
-
-- Building on top of the above, the whole scheduler and locking model
-   relies on the non-preemptable property of an interrupt.
-
-- I cannot see a good reason to leave the priority control to userspace.
-   That's a sure recipe for userspace-controlled livelocks.
-
-Now, I'm sure you want to introduce this for a reason, and you are not
-explaining it ("some scenarios" doesn't quite cut it). If you care to
-explain these "scenarios", maybe there is something we can do.
-
-But please don't waste time implementing any sort of priority change,
-there is no way I'll consider it as such.
+No problem thanks for looking at it.
 
 Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Nick
