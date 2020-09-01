@@ -2,263 +2,128 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772CBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C0BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39D892087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06F82087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:36:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="afKhS8kr"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="O6gR6NH0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgIAGg2 (ORCPT
+        id S1726791AbgIAGgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:36:28 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:26764 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgIAGg0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:36:26 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598942185; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=MtvRLVu0tPexObI9DIeBx7/s8Lkjdkb3vwi4JwGLR1c=; b=afKhS8krDyCZHHDKEcTMu0c6E/UNi/tJlSmJTEue1Mg53+BOtcwSJ7OUi/V4QB5lmBKK9EP1
- eQvc2vNb6Nm2362PpFcHK6a+jEdnL8CAm6EarGiIfOMgWPZFTFgk2+hqu5sXcA5VU06YKusw
- AwQqixqZJTl+4CfLVAPaeXaagwA=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
- 5f4debdb9f3347551f8d809a (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 06:36:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 990E0C433A1; Tue,  1 Sep 2020 06:36:10 +0000 (UTC)
-Received: from codeaurora.org (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tingwei)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 55C04C433C6;
-        Tue,  1 Sep 2020 06:36:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 55C04C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tingweiz@codeaurora.org
-Date:   Tue, 1 Sep 2020 14:35:59 +0800
-From:   Tingwei Zhang <tingweiz@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Tingwei Zhang <tingwei@codeaurora.org>, tsoni@codeaurora.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        coresight@lists.linaro.org, Mao Jinlong <jinlmao@codeaurora.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Mike Leach <mike.leach@linaro.org>
-Subject: Re: [PATCH] coresight: cti: write regsiters directly in
- cti_enable_hw()
-Message-ID: <20200901063559.GA13784@codeaurora.org>
-References: <20200818111057.19755-1-tingwei@codeaurora.org>
- <20200818111057.19755-3-tingwei@codeaurora.org>
- <20200827181253.GA22307@xps15>
- <20200828031818.GA24177@codeaurora.org>
- <20200831202819.GB119959@xps15>
+        Tue, 1 Sep 2020 02:36:32 -0400
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:20656 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgIAGgb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:36:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598942191; x=1630478191;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=sJPzQ3w3NJGcVjvcL8Xgt43HqNctNK4Z1JUvgEcgB8Q=;
+  b=O6gR6NH0p4ABVuqjZwZ7eiydXwYv67WqCd5pDLtVe2cw8f4CRMxKK6C7
+   eux0elqjgv737XcbLgMhGulMhx2j2SGO1Ad1VXVACOcfWYSzPc5+bfWUn
+   FDIk68+MHSxLJIIEBzx4QhptcA4Se48EPrkMxZ4Lo317f1+uEd5gJYDVV
+   A=;
+X-IronPort-AV: E=Sophos;i="5.76,378,1592870400"; 
+   d="scan'208";a="52696113"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-af6a10df.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 01 Sep 2020 06:36:29 +0000
+Received: from EX13D31EUA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-af6a10df.us-east-1.amazon.com (Postfix) with ESMTPS id BEEC4A2394;
+        Tue,  1 Sep 2020 06:36:17 +0000 (UTC)
+Received: from u3f2cd687b01c55.ant.amazon.com (10.43.160.100) by
+ EX13D31EUA001.ant.amazon.com (10.43.165.15) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 1 Sep 2020 06:35:59 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Marco Elver <elver@google.com>
+CC:     SeongJae Park <sjpark@amazon.com>, <akpm@linux-foundation.org>,
+        "SeongJae Park" <sjpark@amazon.de>, <Jonathan.Cameron@Huawei.com>,
+        <aarcange@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <amit@kernel.org>,
+        <benh@kernel.crashing.org>, <brendan.d.gregg@gmail.com>,
+        <brendanhiggins@google.com>, <cai@lca.pw>,
+        <colin.king@canonical.com>, <corbet@lwn.net>, <david@redhat.com>,
+        <dwmw@amazon.com>, <fan.du@intel.com>, <foersleo@amazon.de>,
+        <gthelen@google.com>, <irogers@google.com>, <jolsa@redhat.com>,
+        <kirill@shutemov.name>, <mark.rutland@arm.com>, <mgorman@suse.de>,
+        <minchan@kernel.org>, <mingo@redhat.com>, <namhyung@kernel.org>,
+        <peterz@infradead.org>, <rdunlap@infradead.org>,
+        <riel@surriel.com>, <rientjes@google.com>, <rostedt@goodmis.org>,
+        <rppt@kernel.org>, <sblbir@amazon.com>, <shakeelb@google.com>,
+        <shuah@kernel.org>, <sj38.park@gmail.com>, <snu@amazon.de>,
+        <vbabka@suse.cz>, <vdavydov.dev@gmail.com>,
+        <yang.shi@linux.alibaba.com>, <ying.huang@intel.com>,
+        <zgf574564920@gmail.com>, <linux-damon@amazon.com>,
+        <linux-mm@kvack.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC v8 01/10] mm/damon/debugfs: Allow users to set initial monitoring target regions
+Date:   Tue, 1 Sep 2020 08:35:42 +0200
+Message-ID: <20200901063542.1290-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200831180844.GA3992970@elver.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831202819.GB119959@xps15>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D20UWA001.ant.amazon.com (10.43.160.34) To
+ EX13D31EUA001.ant.amazon.com (10.43.165.15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 04:28:19AM +0800, Mathieu Poirier wrote:
-> On Fri, Aug 28, 2020 at 11:18:18AM +0800, Tingwei Zhang wrote:
-> > On Fri, Aug 28, 2020 at 02:12:53AM +0800, Mathieu Poirier wrote:
-> > > Hi Tingwei,
-> > > 
-> > > On Tue, Aug 18, 2020 at 07:10:57PM +0800, Tingwei Zhang wrote:
-> > > > Deadlock as below is triggered by one CPU holds drvdata->spinlock
-> > > > and calls cti_enable_hw(). Smp_call_function_single() is called
-> > > > in cti_enable_hw() and tries to let another CPU write CTI registers.
-> > > > That CPU is trying to get drvdata->spinlock in cti_cpu_pm_notify()
-> > > > and doesn't response to IPI from smp_call_function_single().
-> > > > 
-> > > > [  988.335937] CPU: 6 PID: 10258 Comm: sh Tainted: G        W    L
-> > > > 5.8.0-rc6-mainline-16783-gc38daa79b26b-dirty #1
-> > > > [  988.346364] Hardware name: Thundercomm Dragonboard 845c (DT)
-> > > > [  988.352073] pstate: 20400005 (nzCv daif +PAN -UAO BTYPE=--)
-> > > > [  988.357689] pc : smp_call_function_single+0x158/0x1b8
-> > > > [  988.362782] lr : smp_call_function_single+0x124/0x1b8
-> > > > ...
-> > > > [  988.451638] Call trace:
-> > > > [  988.454119]  smp_call_function_single+0x158/0x1b8
-> > > > [  988.458866]  cti_enable+0xb4/0xf8 [coresight_cti]
-> > > > [  988.463618]  coresight_control_assoc_ectdev+0x6c/0x128
-> [coresight]
-> > > > [  988.469855]  coresight_enable+0x1f0/0x364 [coresight]
-> > > > [  988.474957]  enable_source_store+0x5c/0x9c [coresight]
-> > > > [  988.480140]  dev_attr_store+0x14/0x28
-> > > > [  988.483839]  sysfs_kf_write+0x38/0x4c
-> > > > [  988.487532]  kernfs_fop_write+0x1c0/0x2b0
-> > > > [  988.491585]  vfs_write+0xfc/0x300
-> > > > [  988.494931]  ksys_write+0x78/0xe0
-> > > > [  988.498283]  __arm64_sys_write+0x18/0x20
-> > > > [  988.502240]  el0_svc_common+0x98/0x160
-> > > > [  988.506024]  do_el0_svc+0x78/0x80
-> > > > [  988.509377]  el0_sync_handler+0xd4/0x270
-> > > > [  988.513337]  el0_sync+0x164/0x180
-> > > > 
-> > > 
-> > > Was this the full log or you did cut some of it?
-> > > 
-> > 
-> > I cut some CPU registers' value since it's too long and not relevant.
-> > The Call trace is full.
-> > 
-> > > > This change write CTI registers directly in cti_enable_hw().
-> > > > Config->hw_powered has been checked to be true with spinlock holded.
-> > > > CTI is powered and can be programmed until spinlock is released.
-> > > > 
-> > > 
-> > > From your explanation above it seems that cti_enable_hw() was called
-> from,
-> > > say
-> > > CPUy, to enable the CTI associated to CPUx.  CTIx's drvdata->spinlock
-> was
-> > > taken
-> > > and smp_call_function_single() called right after.  That woke up CPUx
-> and
-> > > cti_cpu_pm_notify() was executed on CPUx in interrupt context, trying
-> to
-> > > take
-> > > CTIx's drvdata->spinlock.  That hung CPUx and the kernel got angry.
-> Is my
-> > > assessment correct?
-> > > 
-> > 
-> > Most of them is correct. The only difference is CPUx is power on when
-> > cti_enable_hw() is called.  Otherwise it will goto cti_state_unchanged:
-> > and won't call cti_enable_hw_smp_call(). cti_cpu_pm_notify() is called
-> > when CPUx tries to suspend instead of resume.
-> > 
-> > > If so I don't think the fix suggested in this patch will work.  The
-> same
-> > > condition will happen whenever cti_enable_hw() is called on a CPU to
-> > > enable a
-> > > CTI that belongs to another CPU and that cti_cpu_pm_notify() is called
-> on
-> > > latter
-> > > CPU at the same time.
-> > > 
-> > 
-> > I'm not sure I understand this correctly.  Let me clarify it a little
-> bit.
-> > It's a deadlock since cti_enable_hw() holds the spinlock and calls
-> > cti_enable_hw_smp_call() from CPUx to enable CTI associated to CPUy. It
-> > waits for cti_enable_hw_smp_call() to return. IPI is sent to CPUy while
-> > CPUy is in cti_cpu_pm_notify() and waits for spinlock. In this patch,
-> > I remove cti_enable_hw_smp_call() and write CTI CPU directly on CPUx.
-> > It won't wait for CPUy and release spinlock after program registers of
-> > CTI. After cti_enable_hw() releases spinlock, cti_cpu_pm_notify() will
-> > continue to run. Since spinlock is held and config->hw_powered is true,
-> > we don't need to worry about CPUy power down when we program CTI on
-> CPUx.
-> > 
-> > > I think a better solution is to grab the lock in cti_enable_hw() and
-> check
-> > > the
-> > > value of ->ctidev.cpu.  If not a global CPU, i.e >= 0, then release
-> the
-> > > lock and
-> > > call smp_call_function_single().  In cti_enable_hw_smp_call() take the
-> > > lock
-> > > again and move forward from there. 
-> > > 
-> > 
-> > After cti_enable_hw() releases the lock, it's possible that CPU is
-> offline
-> > by user, cti_enable_hw_smp_call() will fail in this case.
-> > 
-> >
+On Mon, 31 Aug 2020 20:08:44 +0200 Marco Elver <elver@google.com> wrote:
+
+> On Mon, Aug 31, 2020 at 12:47PM +0200, SeongJae Park wrote:
+> [...]
+> > diff --git a/mm/damon.c b/mm/damon.c
+> > index 7e3c8c82a010..9815d22fc4de 100644
+> > --- a/mm/damon.c
+> > +++ b/mm/damon.c
+> > @@ -2001,6 +2001,147 @@ static ssize_t debugfs_record_write(struct file *file,
+> >  	return ret;
+> >  }
+> >  
+> > +static ssize_t sprint_init_regions(struct damon_ctx *c, char *buf, ssize_t len)
+> > +{
+> > +	struct damon_target *t;
+> > +	struct damon_region *r;
+> > +	int written = 0;
+> > +	int rc;
+> > +
+> > +	damon_for_each_target(t, c) {
+> > +		damon_for_each_region(r, t) {
+> > +			rc = snprintf(&buf[written], len - written,
+> > +					"%lu %lu %lu\n",
+> > +					t->id, r->ar.start, r->ar.end);
 > 
-> I took another look at your solution and you are correct, CPUy won't lock
-> but
-> rather spin waiting for cti_enable_hw() to finish on CPUx.  To make sure
-> CPUx is
-> not interrupted while executing cti_enable_hw() I suggest to use
-> spin_lock_irq().
+> This most likely will not work as intended, because snprintf() returns
+> "[...] the number of characters which would be generated for the given
+> input, excluding the trailing null [...]". Would scnprintf() -- which
+> returns "[...] the number of characters written into @buf not including
+> the trailing '\0' [...]" -- do what you intended?
+
+Ah, you're right!  I will use 'scnprintf' instead, not only here but in other
+relevant parts.
+
+
+Thanks,
+SeongJae Park
+
 > 
-> Thanks,
-> Mathieu
->  
-Sure. I've sent v2 according to your comments.
-> > 
-> > > I have applied the other two patches in this set so no need to send
-> them
-> > > again.
-> > >
-> > Thanks,
-> > Tingwei 
-> > > Thanks,
-> > > Mathieu
-> > > 
-> > > > Fixes: 6a0953ce7de9 ("coresight: cti: Add CPU idle pm notifer to CTI
-> > > devices")
-> > > > Signed-off-by: Tingwei Zhang <tingwei@codeaurora.org>
-> > > > ---
-> > > >  drivers/hwtracing/coresight/coresight-cti.c | 17 +----------------
-> > > >  1 file changed, 1 insertion(+), 16 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/hwtracing/coresight/coresight-cti.c
-> > > b/drivers/hwtracing/coresight/coresight-cti.c
-> > > > index 3ccc703dc940..869569eb8c7f 100644
-> > > > --- a/drivers/hwtracing/coresight/coresight-cti.c
-> > > > +++ b/drivers/hwtracing/coresight/coresight-cti.c
-> > > > @@ -86,13 +86,6 @@ void cti_write_all_hw_regs(struct cti_drvdata
-> > > *drvdata)
-> > > >  	CS_LOCK(drvdata->base);
-> > > >  }
-> > > >  
-> > > > -static void cti_enable_hw_smp_call(void *info)
-> > > > -{
-> > > > -	struct cti_drvdata *drvdata = info;
-> > > > -
-> > > > -	cti_write_all_hw_regs(drvdata);
-> > > > -}
-> > > > -
-> > > >  /* write regs to hardware and enable */
-> > > >  static int cti_enable_hw(struct cti_drvdata *drvdata)
-> > > >  {
-> > > > @@ -112,15 +105,7 @@ static int cti_enable_hw(struct cti_drvdata
-> > > *drvdata)
-> > > >  	if (rc)
-> > > >  		goto cti_err_not_enabled;
-> > > >  
-> > > > -	if (drvdata->ctidev.cpu >= 0) {
-> > > > -		rc = smp_call_function_single(drvdata->ctidev.cpu,
-> > > > -					      cti_enable_hw_smp_call,
-> > > > -					      drvdata, 1);
-> > > > -		if (rc)
-> > > > -			goto cti_err_not_enabled;
-> > > > -	} else {
-> > > > -		cti_write_all_hw_regs(drvdata);
-> > > > -	}
-> > > > +	cti_write_all_hw_regs(drvdata);
-> > > >  
-> > > >  	config->hw_enabled = true;
-> > > >  	atomic_inc(&drvdata->config.enable_req_count);
-> > > > -- 
-> > > > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
-> > > Forum,
-> > > > a Linux Foundation Collaborative Project
-> > > > 
-> > > 
-> > > _______________________________________________
-> > > linux-arm-kernel mailing list
-> > > linux-arm-kernel@lists.infradead.org
-> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > +			if (!rc)
+> > +				return -ENOMEM;
+> > +			written += rc;
+> > +		}
+> > +	}
+> > +	return written;
+> > +}
+> [...]
