@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032ACC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 420302100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64162100A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973629;
-	bh=Lj8KoI+teNo/4KtB8pvPKE4MgbiKSTb6IqPldKFfLw4=;
+	s=default; t=1598973635;
+	bh=Gtz/RmK+vN597YxQslboCRgSw2E0RPm7+U08Qg2SdzE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2S6F/ys3n5PxXDiqvdmk9W3wWqtvXlhT7wSqfcLulkNacNngDq36l+yEllib3vfu
-	 iOlZ9nwUGIKDwqKM8tU3IF8S8cfyM4wE5zhDLCSWlhZTrMNcEmH7OU1uUGHomkqFDN
-	 RRFcf7dEYB3U45S09Mle7Hp7HmNaXc58tjNmmrBE=
+	b=yepTKrAsbBnb779mDVUT8UldReKZjvzcRVsyNqCChGYp94W3rWYwfS9FEVD3v3khn
+	 Q33AiSKsMaJdVmZQIkJhTEItVXbJGl8zCb7jYL9H9c6k0gXcumduAU6bFLsdQoqYV3
+	 M/iEPC4Du2wPAwbGyWjOocN9DGSAa6h5CkXB5ls0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729610AbgIAPU1 (ORCPT
+        id S1729607AbgIAPUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:20:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36642 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729490AbgIAPSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:22 -0400
+        id S1729391AbgIAPSa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5CF9206EB;
-        Tue,  1 Sep 2020 15:18:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57744206EB;
+        Tue,  1 Sep 2020 15:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973502;
-        bh=Lj8KoI+teNo/4KtB8pvPKE4MgbiKSTb6IqPldKFfLw4=;
+        s=default; t=1598973509;
+        bh=Gtz/RmK+vN597YxQslboCRgSw2E0RPm7+U08Qg2SdzE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uxhUgHf1q/MMyIJVB3js1P7HQTtr5rsQ3CeKYWA/Zbe+WBNHX5muwE4Rknqy0LERi
-         jwNvb9LNgXEyIT2XyNl8VZlOgL+6jjp9ajn2z+BZ3sc4+ylPkEWPn9z9I1N+I4gqRn
-         Oi7Yqwpkz4221+ZvnFXv7AytHIYxUTYQx1kfGzQk=
+        b=jRxn7TptnWZtvwxlkg97Yajopn5E8z1NBONxuChn/gDOPdLAMKsm5ILsAgxPuLLl0
+         yCUrghaBoVfpWBFiZ+xJuxNNi/kA5GvMqS6fUAWdOcD/4OaPxDcE3zOcQLsyO7e1ba
+         y8rQ3SObcMJULhXuERdCplmnFtl5toTuT3W1v3zE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        stable@vger.kernel.org, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/91] PCI: Fix pci_create_slot() reference count leak
-Date:   Tue,  1 Sep 2020 17:09:58 +0200
-Message-Id: <20200901150929.361696281@linuxfoundation.org>
+Subject: [PATCH 4.14 27/91] cec-api: prevent leaking memory through hole in structure
+Date:   Tue,  1 Sep 2020 17:10:01 +0200
+Message-Id: <20200901150929.505945989@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -60,57 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
+[ Upstream commit 6c42227c3467549ddc65efe99c869021d2f4a570 ]
 
-kobject_init_and_add() takes a reference even when it fails.  If it returns
-an error, kobject_put() must be called to clean up the memory associated
-with the object.
+Fix this smatch warning:
 
-When kobject_init_and_add() fails, call kobject_put() instead of kfree().
+drivers/media/cec/core/cec-api.c:156 cec_adap_g_log_addrs() warn: check that 'log_addrs' doesn't leak information (struct has a hole after
+'features')
 
-b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject") fixed a similar problem.
-
-Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/slot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/media/cec/cec-api.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index e42909524deed..379925fc49d4e 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -303,13 +303,16 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	slot_name = make_slot_name(name);
- 	if (!slot_name) {
- 		err = -ENOMEM;
-+		kfree(slot);
- 		goto err;
- 	}
+diff --git a/drivers/media/cec/cec-api.c b/drivers/media/cec/cec-api.c
+index 21a5f45e0259e..66ef06f4670c8 100644
+--- a/drivers/media/cec/cec-api.c
++++ b/drivers/media/cec/cec-api.c
+@@ -159,7 +159,13 @@ static long cec_adap_g_log_addrs(struct cec_adapter *adap,
+ 	struct cec_log_addrs log_addrs;
  
- 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
- 				   "%s", slot_name);
--	if (err)
-+	if (err) {
-+		kobject_put(&slot->kobj);
- 		goto err;
-+	}
- 
- 	INIT_LIST_HEAD(&slot->list);
- 	list_add(&slot->list, &parent->slots);
-@@ -328,7 +331,6 @@ struct pci_slot *pci_create_slot(struct pci_bus *parent, int slot_nr,
- 	mutex_unlock(&pci_slot_mutex);
- 	return slot;
- err:
--	kfree(slot);
- 	slot = ERR_PTR(err);
- 	goto out;
- }
+ 	mutex_lock(&adap->lock);
+-	log_addrs = adap->log_addrs;
++	/*
++	 * We use memcpy here instead of assignment since there is a
++	 * hole at the end of struct cec_log_addrs that an assignment
++	 * might ignore. So when we do copy_to_user() we could leak
++	 * one byte of memory.
++	 */
++	memcpy(&log_addrs, &adap->log_addrs, sizeof(log_addrs));
+ 	if (!adap->is_configured)
+ 		memset(log_addrs.log_addr, CEC_LOG_ADDR_INVALID,
+ 		       sizeof(log_addrs.log_addr));
 -- 
 2.25.1
 
