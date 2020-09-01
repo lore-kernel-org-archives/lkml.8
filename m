@@ -2,58 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CABC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77142C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2F09206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C986206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979462;
-	bh=hD71UkAdHU63JljvrXCV2YJMQ2C4XHTG6Mc8ssXoYsI=;
+	s=default; t=1598979466;
+	bh=fh+OxNmXvkqs23PP0vcKLsP5WNXpVmwR6ur73G2DvPE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rUdUo5ZVgxpSNCpts3rVjnYfcXZEBgaWxos1JdWQ3NIBsgkxRA/Dl369RZ8vRFWNg
-	 c5qCVEkUFk6qmaAtfGGJuJJFU30qHR5yymtixxwtzTRlleutmqEliOsjSx42FNnSwQ
-	 9aNX+olr/e8ncJtVHwefpPBnsYHAOR3j+jEM1M1U=
+	b=QSWY11eBjOp+kv15RDOwMrSmshzx4mRvMiM/Icrhrmk+DhHUptb+mWY2pQxSyoLPF
+	 Z3Y4bASOKxP+pwMXqERY1BjNh/4gqDTJGEhB8WHz6RWFEeZJz1wb2VtCprpr9TUrya
+	 M4iq+pvvMJ87q/MLyZ/JGlVObAP8X+J9NI3VOG1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729744AbgIAQ5k (ORCPT
+        id S1729758AbgIAPXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:57:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45752 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:23:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729767AbgIAPXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:05 -0400
+        id S1727842AbgIAPUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:15 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64E8A2078B;
-        Tue,  1 Sep 2020 15:23:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4640F206FA;
+        Tue,  1 Sep 2020 15:20:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973784;
-        bh=hD71UkAdHU63JljvrXCV2YJMQ2C4XHTG6Mc8ssXoYsI=;
+        s=default; t=1598973614;
+        bh=fh+OxNmXvkqs23PP0vcKLsP5WNXpVmwR6ur73G2DvPE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0HJyfQDJjJSfftBcZeZpLPa3/PdRdzmXLjBQ0JpNoCBDCvEdac8VSDBVNklenPTiu
-         rSFEiHXYfrUAGr+C12Ozs91bRcYMY73P/WYAss1v3ThL7Fin+9/SDxq7qVl0Ap0FcP
-         9Aa4ZGcSFmm5ZimOLgfxE5DDdTfOruNWHwCq2TPg=
+        b=OLP63/mvAxz88kBDQ8d/D6iwcUPgMZ+H7lRizW4UHWCOtIiOuFlB8T24K3zsgpaBe
+         +owDbVVljQokg5wtyj4Z+VrBiAUJFi/z0d7Jc5zQWZ0LN4A4srWPgUHiyJ1S5Bg3eY
+         pKALikPW0f66pEBALlISoujESawmzOV2r7bm6QlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Borislav Petkov <bp@suse.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 046/125] EDAC/ie31200: Fallback if host bridge device is already initialized
-Date:   Tue,  1 Sep 2020 17:10:01 +0200
-Message-Id: <20200901150936.823067999@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH 4.14 62/91] vt: defer kfree() of vc_screenbuf in vc_do_resize()
+Date:   Tue,  1 Sep 2020 17:10:36 +0200
+Message-Id: <20200901150931.235013788@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
+References: <20200901150928.096174795@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,127 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-[ Upstream commit 709ed1bcef12398ac1a35c149f3e582db04456c2 ]
+commit f8d1653daec02315e06d30246cff4af72e76e54e upstream.
 
-The Intel uncore driver may claim some of the pci ids from ie31200 which
-means that the ie31200 edac driver will not initialize them as part of
-pci_register_driver().
+syzbot is reporting UAF bug in set_origin() from vc_do_resize() [1], for
+vc_do_resize() calls kfree(vc->vc_screenbuf) before calling set_origin().
 
-Let's add a fallback for this case to 'pci_get_device()' to get a
-reference on the device such that it can still be configured. This is
-similar in approach to other edac drivers.
+Unfortunately, in set_origin(), vc->vc_sw->con_set_origin() might access
+vc->vc_pos when scroll is involved in order to manipulate cursor, but
+vc->vc_pos refers already released vc->vc_screenbuf until vc->vc_pos gets
+updated based on the result of vc->vc_sw->con_set_origin().
 
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Cc: Borislav Petkov <bp@suse.de>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/1594923911-10885-1-git-send-email-jbaron@akamai.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Preserving old buffer and tolerating outdated vc members until set_origin()
+completes would be easier than preventing vc->vc_sw->con_set_origin() from
+accessing outdated vc members.
+
+[1] https://syzkaller.appspot.com/bug?id=6649da2081e2ebdc65c0642c214b27fe91099db3
+
+Reported-by: syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1596034621-4714-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/edac/ie31200_edac.c | 50 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 47 insertions(+), 3 deletions(-)
+ drivers/tty/vt/vt.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index aac9b9b360b80..9e4781a807cfa 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -147,6 +147,8 @@
- 	(n << (28 + (2 * skl) - PAGE_SHIFT))
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -865,7 +865,7 @@ static int vc_do_resize(struct tty_struc
+ 	unsigned int old_rows, old_row_size;
+ 	unsigned int new_cols, new_rows, new_row_size, new_screen_size;
+ 	unsigned int user;
+-	unsigned short *newscreen;
++	unsigned short *oldscreen, *newscreen;
  
- static int nr_channels;
-+static struct pci_dev *mci_pdev;
-+static int ie31200_registered = 1;
+ 	WARN_CONSOLE_UNLOCKED();
  
- struct ie31200_priv {
- 	void __iomem *window;
-@@ -518,12 +520,16 @@ fail_free:
- static int ie31200_init_one(struct pci_dev *pdev,
- 			    const struct pci_device_id *ent)
- {
--	edac_dbg(0, "MC:\n");
-+	int rc;
+@@ -947,10 +947,11 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_scr_end > new_origin)
+ 		scr_memsetw((void *)new_origin, vc->vc_video_erase_char,
+ 			    new_scr_end - new_origin);
+-	kfree(vc->vc_screenbuf);
++	oldscreen = vc->vc_screenbuf;
+ 	vc->vc_screenbuf = newscreen;
+ 	vc->vc_screenbuf_size = new_screen_size;
+ 	set_origin(vc);
++	kfree(oldscreen);
  
-+	edac_dbg(0, "MC:\n");
- 	if (pci_enable_device(pdev) < 0)
- 		return -EIO;
-+	rc = ie31200_probe1(pdev, ent->driver_data);
-+	if (rc == 0 && !mci_pdev)
-+		mci_pdev = pci_dev_get(pdev);
- 
--	return ie31200_probe1(pdev, ent->driver_data);
-+	return rc;
- }
- 
- static void ie31200_remove_one(struct pci_dev *pdev)
-@@ -532,6 +538,8 @@ static void ie31200_remove_one(struct pci_dev *pdev)
- 	struct ie31200_priv *priv;
- 
- 	edac_dbg(0, "\n");
-+	pci_dev_put(mci_pdev);
-+	mci_pdev = NULL;
- 	mci = edac_mc_del_mc(&pdev->dev);
- 	if (!mci)
- 		return;
-@@ -583,17 +591,53 @@ static struct pci_driver ie31200_driver = {
- 
- static int __init ie31200_init(void)
- {
-+	int pci_rc, i;
-+
- 	edac_dbg(3, "MC:\n");
- 	/* Ensure that the OPSTATE is set correctly for POLL or NMI */
- 	opstate_init();
- 
--	return pci_register_driver(&ie31200_driver);
-+	pci_rc = pci_register_driver(&ie31200_driver);
-+	if (pci_rc < 0)
-+		goto fail0;
-+
-+	if (!mci_pdev) {
-+		ie31200_registered = 0;
-+		for (i = 0; ie31200_pci_tbl[i].vendor != 0; i++) {
-+			mci_pdev = pci_get_device(ie31200_pci_tbl[i].vendor,
-+						  ie31200_pci_tbl[i].device,
-+						  NULL);
-+			if (mci_pdev)
-+				break;
-+		}
-+		if (!mci_pdev) {
-+			edac_dbg(0, "ie31200 pci_get_device fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+		pci_rc = ie31200_init_one(mci_pdev, &ie31200_pci_tbl[i]);
-+		if (pci_rc < 0) {
-+			edac_dbg(0, "ie31200 init fail\n");
-+			pci_rc = -ENODEV;
-+			goto fail1;
-+		}
-+	}
-+	return 0;
-+
-+fail1:
-+	pci_unregister_driver(&ie31200_driver);
-+fail0:
-+	pci_dev_put(mci_pdev);
-+
-+	return pci_rc;
- }
- 
- static void __exit ie31200_exit(void)
- {
- 	edac_dbg(3, "MC:\n");
- 	pci_unregister_driver(&ie31200_driver);
-+	if (!ie31200_registered)
-+		ie31200_remove_one(mci_pdev);
- }
- 
- module_init(ie31200_init);
--- 
-2.25.1
-
+ 	/* do part of a reset_terminal() */
+ 	vc->vc_top = 0;
 
 
