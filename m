@@ -2,86 +2,122 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61230C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F59C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 390E9206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9BE8206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:03:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=emersion.fr header.i=@emersion.fr header.b="SJFNbnyI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HMHDBqi/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgIAI5r (ORCPT
+        id S1726144AbgIAJDt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:57:47 -0400
-Received: from mail-40131.protonmail.ch ([185.70.40.131]:53562 "EHLO
-        mail-40131.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgIAI5o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:57:44 -0400
-Date:   Tue, 01 Sep 2020 08:57:37 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=emersion.fr;
-        s=protonmail2; t=1598950661;
-        bh=xS/YRlImtljqm7ETg33B59R/Pa8qsUPNDUud3zarTGk=;
-        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:From;
-        b=SJFNbnyIAbEItmUJEOrsR896BmZwgnsZxfug7OMUQETCJwyqHaQJ5XATjAPDdlExm
-         cm8QRp1uSRQnDL4Adkx8D9PctEtm88pUNQNF5t9O27xzNmfgqsLNQsyDrCRT5w1c3M
-         Xrdzc+jt72n788adu8dJVgZYqQcpEWi6tiPviNfk4UQKeGrBQJf/pvcbpA6VehtHbY
-         qTCoM3bptvaf7vv7LfwhLFMjQ+hFr0MnSVh3DrYPbzyZmN1mYKIs+g3SG2euEjT/hE
-         ZIEgxjyVnswtyIoJmDnvdmFwGEWdD9msLSEAXySmVQBq08PgSmQkQ2KkLRJNoSmsih
-         JielrcdRjQoWw==
-To:     =?utf-8?Q?Ville_Syrj=C3=A4l=C3=A4?= <ville.syrjala@linux.intel.com>
-From:   Simon Ser <contact@emersion.fr>
-Cc:     Sidong Yang <realwakka@gmail.com>,
-        Haneen Mohammed <hamohammed.sa@gmail.com>,
-        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Melissa Wen <melissa.srw@gmail.com>
-Reply-To: Simon Ser <contact@emersion.fr>
-Subject: Re: [PATCH] drm/vkms: add support for gamma_set interface
-Message-ID: <C7EgdPUBX9nRTKx9kkGIZijd0yGMOLEtXOwa2jvk-rKtprmNZKSDP-Jos7mYU88DOQYiXJBnz0_D2FAQ1x7jCwLcR-cmZtzCc5cLsJqyDCk=@emersion.fr>
-In-Reply-To: <20200831134852.GY6112@intel.com>
-References: <20200829140647.7626-1-realwakka@gmail.com> <UeJwFKvmNgKdZY_icN0-nrFly9R1vbzaMZ-TiyxIIPBcdl278uZsK6YdTTdRl6rFukBAmN-eyCFpnfsIB-El9QpyYiutdcpgJg64n4tsRRc=@emersion.fr> <20200831133858.GA9280@realwakka> <20200831134852.GY6112@intel.com>
+        Tue, 1 Sep 2020 05:03:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:35919 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgIAJDr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:03:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598951026; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=Oe/mAJbGLEYEvHBdYOsb7AGn7B8PA1zzDH2N9F8Jb30=;
+ b=HMHDBqi/WnJOGHfNDC/4kxAR1uZLdkJ8ZojctNA+bvzYhJzFyy1g09vBJ5vMMDPa88d9rKmZ
+ ad+FLiLowIhoT7OZHOCD48A2h3rZjBKiz8ZrXKdUy/161C30wnlnK6Lcbs421/c7/qhVuCPz
+ ZQJckzcm0kmKVXuFVOqUu8h27zg=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-east-1.postgun.com with SMTP id
+ 5f4e0e57947f606f7e523e3a (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:03:19
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3F875C433CA; Tue,  1 Sep 2020 09:03:18 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DA470C433C6;
+        Tue,  1 Sep 2020 09:03:15 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DA470C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Subject: Re: [01/28] hostap: Mark 'freq_list' as __maybe_unused
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200819072402.3085022-2-lee.jones@linaro.org>
+References: <20200819072402.3085022-2-lee.jones@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, Jouni Malinen <j@w1.fi>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200901090318.3F875C433CA@smtp.codeaurora.org>
+Date:   Tue,  1 Sep 2020 09:03:18 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, August 31, 2020 3:48 PM, Ville Syrj=C3=A4l=C3=A4 <ville.syrjala@=
-linux.intel.com> wrote:
+Lee Jones <lee.jones@linaro.org> wrote:
 
-> > > It doesn't seem like this IGT test's goal is to exercise support for
-> > > gamma LUTs. Does the test just tries to reset the gamma LUT to linear=
-?
-> > > If so, I think the IGT test should be fixed to ignore "I don't suppor=
-t
-> > > gamma" errors.
-> >
-> > It seems like that IGT test pixel-format is to make gamma lut like belo=
-w.
-> > for (i =3D 0; i < lut_size; i++)
-> > lut[i] =3D (i * 0xffff / (lut_size - 1)) & mask;
-> > And set this table to drm driver. and test begins. It's the test about =
-pixel
-> > format. I think you're right. It's not about gamma lut.
->
-> The point of the gamma LUT stuff in the pixel format test is to throw
-> away a bunch of the lsbs so that the test passes when the result is
-> "close enough" to the 8bpc RGB reference image. Without it we would
-> never get a crc match when testing non-8bpc or YCbCr formats.
+> 'freq_list' is used in some source files which include hostap.h, but
+> not all.  The compiler complains about the times it's not used.  Mark
+> it as __maybe_used to tell the compiler that this is not only okay,
+> it's expected.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  In file included from drivers/net/wireless/intersil/hostap/hostap_80211_tx.c:9:
+>  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+>  In file included from drivers/net/wireless/intersil/hostap/hostap_main.c:31:
+>  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+>  In file included from drivers/net/wireless/intersil/hostap/hostap_proc.c:10:
+>  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+>  In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
+>  from drivers/net/wireless/intersil/hostap/hostap_cs.c:196:
+>  At top level:
+>  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+>  In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
+>  from drivers/net/wireless/intersil/hostap/hostap_pci.c:221:
+>  At top level:
+>  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+>  In file included from drivers/net/wireless/intersil/hostap/hostap_hw.c:50,
+>  from drivers/net/wireless/intersil/hostap/hostap_plx.c:264:
+>  At top level:
+>  drivers/net/wireless/intersil/hostap/hostap.h:11:19: warning: ‘freq_list’ defined but not used [-Wunused-const-variable=]
+> 
+> Cc: Jouni Malinen <j@w1.fi>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-OK, that makes sense. Would it be sensible to:
+10 patches applied to wireless-drivers-next.git, thanks.
 
-- Don't set gamma if the pixel format being tested is 8bpc
-- Make the test skip if the pixel format is >8bpc and gamma isn't
-  supported
+34537d4924ba hostap: Mark 'freq_list' as __maybe_unused
+470d48c1c4c6 rsi: Fix some kernel-doc issues
+2fc4c9ff1606 rsi: File header should not be kernel-doc
+9833f5034597 libertas_tf: Demote non-conformant kernel-doc headers
+25ced81e288d wlcore: cmd: Fix some parameter description disparities
+9554663b8c57 libertas_tf: Fix a bunch of function doc formatting issues
+6182abd858f7 iwlegacy: debug: Demote seemingly unintentional kerneldoc header
+debdbb0c1b20 hostap: hostap_ap: Mark 'txt' as __always_unused
+e2eb189e7660 cw1200: wsm: Remove 'dummy' variables
+f696d724358c libertas: Fix 'timer_list' stored private data related dot-rot
+
+-- 
+https://patchwork.kernel.org/patch/11723193/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
