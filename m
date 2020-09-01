@@ -2,162 +2,120 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BC8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E088C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D40320767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bEaAHm1D"
+	by mail.kernel.org (Postfix) with ESMTP id 47E16206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728093AbgIAMHK (ORCPT
+        id S1728122AbgIAMH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:07:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727910AbgIALyu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:54:50 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9833FC061244;
-        Tue,  1 Sep 2020 04:54:46 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id gf14so453555pjb.5;
-        Tue, 01 Sep 2020 04:54:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=sdnO2t8hyd6szf53M/NoR2MSRbCRlxgUkss4z3MuOMc=;
-        b=bEaAHm1D1BxtyLa8bM9yjHZdHLd39ihus0lyKgaRyBs85nksQ+4dU+sz25MwdtKQts
-         d2HKQRbZBwLyUf9a6lfYxwuPnXafVh3S7C/BQ7FJCJ2ehldic5UYz24HeZwUN1wP1LB4
-         0ZSChwDSMrr8/KR2w33W2oRuEp4K12fDHyBacFgJloBkEzEmruXeWm7NLkjXxM0y44Zg
-         j2hPMLM+/eN6NfkmEkONbvt3rYyrAj1ZpKRelqA6CIt1j/9gueXwqR4CBxOiJiTqp0Au
-         8KDqtCWvPI5yjTpKE3yPZfbwDjOrM7veJm7VVNkJrXVqVqtgez4yxxxSv3t7v8+URum5
-         pOLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=sdnO2t8hyd6szf53M/NoR2MSRbCRlxgUkss4z3MuOMc=;
-        b=gfE8fF/oXqovVctOB5rXRUTg7Ze5WMq3TD6FnY5GJsi4voRMEE8Pp94DuIYCTdJCib
-         v2NToEkqXxDYAIesevgfz4RS3vRCpQcNGrI6FIHEE7Xx/Max0siMqmj8uu/w++DQmKTh
-         JQ7zQhfeDIG8QvzWH9Vman5wlL0YDHydB3ocyU7cpgovjUhyDJxzIqPgtQSOzR5V19Kf
-         kuaY2FQyQS4Za5T1XF9Yvrig9uB3K97Cwu9w/wu+rJLEKz6grEGeTVW1Wl9uwoxuVDKJ
-         AbmG+h5NHieEOeZyUJt9d98igyACRETYN8CNUf7PexWi51drGoWWSDRKyIXDyBtPCszq
-         mYrg==
-X-Gm-Message-State: AOAM530HQE6v2AtCRNXn6VunWgKMrGBt8EON984AYE4DSjq3KJ8CQ+CU
-        cz9tlwEZRVnslWacLhDuFyw=
-X-Google-Smtp-Source: ABdhPJyni4c3PgtmyacjDwV12dTFaVS4/RbZSyqkMStZs1OED2/1zfh/a5HSIQdBWXIHrjsO0lpkTw==
-X-Received: by 2002:a17:90a:ccd:: with SMTP id 13mr1228049pjt.123.1598961286223;
-        Tue, 01 Sep 2020 04:54:46 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.65])
-        by smtp.gmail.com with ESMTPSA id q71sm1478964pjq.7.2020.09.01.04.54.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 04:54:45 -0700 (PDT)
-From:   yulei.kernel@gmail.com
-X-Google-Original-From: yuleixzhang@tencent.com
-To:     pbonzini@redhat.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sean.j.christopherson@intel.com, jmattson@google.com,
-        junaids@google.com, bgardon@google.com, vkuznets@redhat.com,
-        xiaoguangrong.eric@gmail.com, kernellwp@gmail.com,
-        lihaiwei.kernel@gmail.com, Yulei Zhang <yulei.kernel@gmail.com>,
-        Yulei Zhang <yuleixzhang@tencent.com>
-Subject: [RFC V2 4/9] Add release function for direct build ept when guest VM exit
-Date:   Tue,  1 Sep 2020 19:55:42 +0800
-Message-Id: <6023066803ff748b73080fe3bad7aee45ce3f9fa.1598868204.git.yulei.kernel@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <cover.1598868203.git.yulei.kernel@gmail.com>
-References: <cover.1598868203.git.yulei.kernel@gmail.com>
+        Tue, 1 Sep 2020 08:07:28 -0400
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:41211 "EHLO 1wt.eu"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726144AbgIAL6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:58:47 -0400
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id 081Bvts2001080;
+        Tue, 1 Sep 2020 13:57:55 +0200
+Date:   Tue, 1 Sep 2020 13:57:55 +0200
+From:   Willy Tarreau <w@1wt.eu>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        George Spelvin <lkml@sdf.org>,
+        Amit Klein <aksecurity@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
+        Florian Westphal <fw@strlen.de>,
+        Marc Plumb <lkml.mplumb@gmail.com>
+Subject: Re: [PATCH 2/2] random32: add noise from network and scheduling
+ activity
+Message-ID: <20200901115755.GA1059@1wt.eu>
+References: <20200901064302.849-1-w@1wt.eu>
+ <20200901064302.849-3-w@1wt.eu>
+ <ed5d4d2a-0f8f-f202-8c4f-9fc3d4307e97@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed5d4d2a-0f8f-f202-8c4f-9fc3d4307e97@gmail.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yulei Zhang <yulei.kernel@gmail.com>
+Hi Eric,
 
-Release the pre-pinned memory in direct build ept when guest VM
-exit.
+On Tue, Sep 01, 2020 at 12:24:38PM +0200, Eric Dumazet wrote:
+> There is not much entropy here really :
+> 
+> 1) dev & txq are mostly constant on a typical host (at least the kind of hosts that is targeted by 
+> Amit Klein and others in their attacks.
+> 
+> 2) len is also known by the attacker, attacking an idle host.
+> 
+> 3) skb are also allocations from slab cache, which tend to recycle always the same pointers (on idle hosts)
+> 
+> 
+> 4) jiffies might be incremented every 4 ms (if HZ=250)
 
-Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
----
- arch/x86/kvm/mmu/mmu.c | 37 ++++++++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 9 deletions(-)
+I know. The point is essentially that someone "remote" or with rare access
+to the host's memory (i.e. in a VM on the same CPU sharing L1 with some
+CPU vulnerabilities) cannot synchronize with the PRNG and easily stay
+synchronized forever. Otherwise I totally agree that these are pretty
+weak. But in my opinion they are sufficient to turn a 100% success into
+way less. I try not to forget that we're just trying to make a ~15-bit
+port require ~2^14 attempts on average. Oh and by the way the number of
+calls also counts here.
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 03c5e73b96cb..f2124f52b286 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4309,8 +4309,11 @@ static void __kvm_mmu_new_pgd(struct kvm_vcpu *vcpu, gpa_t new_pgd,
- void kvm_mmu_new_pgd(struct kvm_vcpu *vcpu, gpa_t new_pgd, bool skip_tlb_flush,
- 		     bool skip_mmu_sync)
- {
--	__kvm_mmu_new_pgd(vcpu, new_pgd, kvm_mmu_calc_root_page_role(vcpu),
--			  skip_tlb_flush, skip_mmu_sync);
-+	if (!vcpu->arch.direct_build_tdp)
-+		__kvm_mmu_new_pgd(vcpu, new_pgd, kvm_mmu_calc_root_page_role(vcpu),
-+				  skip_tlb_flush, skip_mmu_sync);
-+	else
-+		vcpu->arch.mmu->root_hpa = INVALID_PAGE;
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_new_pgd);
- 
-@@ -5207,10 +5210,14 @@ EXPORT_SYMBOL_GPL(kvm_mmu_load);
- 
- void kvm_mmu_unload(struct kvm_vcpu *vcpu)
- {
--	kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu, KVM_MMU_ROOTS_ALL);
--	WARN_ON(VALID_PAGE(vcpu->arch.root_mmu.root_hpa));
--	kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu, KVM_MMU_ROOTS_ALL);
--	WARN_ON(VALID_PAGE(vcpu->arch.guest_mmu.root_hpa));
-+	if (!vcpu->arch.direct_build_tdp) {
-+		kvm_mmu_free_roots(vcpu, &vcpu->arch.root_mmu, KVM_MMU_ROOTS_ALL);
-+		WARN_ON(VALID_PAGE(vcpu->arch.root_mmu.root_hpa));
-+		kvm_mmu_free_roots(vcpu, &vcpu->arch.guest_mmu, KVM_MMU_ROOTS_ALL);
-+		WARN_ON(VALID_PAGE(vcpu->arch.guest_mmu.root_hpa));
-+	}
-+	vcpu->arch.direct_build_tdp = false;
-+	vcpu->arch.mmu->root_hpa = INVALID_PAGE;
- }
- EXPORT_SYMBOL_GPL(kvm_mmu_unload);
- 
-@@ -6538,6 +6545,14 @@ void kvm_direct_tdp_remove_page_table(struct kvm *kvm, struct kvm_memory_slot *s
- 	kvm_flush_remote_tlbs(kvm);
- }
- 
-+void kvm_direct_tdp_release_global_root(struct kvm *kvm)
-+{
-+	if (kvm->arch.global_root_hpa)
-+		__kvm_walk_global_page(kvm, kvm->arch.global_root_hpa, max_tdp_level);
-+
-+	return;
-+}
-+
- /*
-  * Calculate mmu pages needed for kvm.
-  */
-@@ -6564,9 +6579,13 @@ unsigned long kvm_mmu_calculate_default_mmu_pages(struct kvm *kvm)
- 
- void kvm_mmu_destroy(struct kvm_vcpu *vcpu)
- {
--	kvm_mmu_unload(vcpu);
--	free_mmu_pages(&vcpu->arch.root_mmu);
--	free_mmu_pages(&vcpu->arch.guest_mmu);
-+	if (vcpu->arch.direct_build_tdp) {
-+		vcpu->arch.mmu->root_hpa = INVALID_PAGE;
-+	} else {
-+		kvm_mmu_unload(vcpu);
-+		free_mmu_pages(&vcpu->arch.root_mmu);
-+		free_mmu_pages(&vcpu->arch.guest_mmu);
-+	}
- 	mmu_free_memory_caches(vcpu);
- }
- 
--- 
-2.17.1
+> Maybe we could feed percpu prandom noise with samples of ns resolution timestamps,
+> lazily cached from ktime_get() or similar functions.
+>
+> This would use one instruction on x86 to update the cache, with maybe more generic noise.
 
+Sure! I think the principle here allows to easily extend it to various
+places, and the more the better. Maybe actually we'll figure that there
+are plenty of sources of randomness that were not considered secure enough
+to feed /dev/random while they're perfectly fine for such use cases.
+
+> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+> index 4c47f388a83f17860fdafa3229bba0cc605ec25a..a3e026cbbb6e8c5499ed780e57de5fa09bc010b6 100644
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+> @@ -751,7 +751,7 @@ ktime_t ktime_get(void)
+>  {
+>         struct timekeeper *tk = &tk_core.timekeeper;
+>         unsigned int seq;
+> -       ktime_t base;
+> +       ktime_t res, base;
+>         u64 nsecs;
+>  
+>         WARN_ON(timekeeping_suspended);
+> @@ -763,7 +763,9 @@ ktime_t ktime_get(void)
+>  
+>         } while (read_seqcount_retry(&tk_core.seq, seq));
+>  
+> -       return ktime_add_ns(base, nsecs);
+> +       res = ktime_add_ns(base, nsecs);
+> +       __this_cpu_add(prandom_noise, (unsigned long)ktime_to_ns(res));
+> +       return res;
+>  }
+>  EXPORT_SYMBOL_GPL(ktime_get);
+
+Actually it could even be nice to combine it with __builtin_return_address(0)
+given the large number of callers this one has! But I generally agree with
+your proposal.
+
+Thanks,
+Willy
