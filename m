@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1961DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C565C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E139321734
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051902158C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974558;
-	bh=9i2+7e8Ntk02cW3nUYBZh+5NioLti2D2TNosexCGLXs=;
+	s=default; t=1598974569;
+	bh=rz2Oi2jQqgJvOT8xPOfzKOVn/1wYqkHwox6glnoNiFs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fzOmPp6Im4z2e5nHdE8vkibWQhQ5FGrC7gneHa0MDcX3he2YaB4Y4Wrzi6yPsrZxC
-	 ExtviynwBLXXFU72sAjE1fZeN6dXHIJ39W+rwj9+hTlh8JLLRdu9Lv3NKX7wlcedVR
-	 uZQ+BwPBA/xn4/uSeFHtmJUZO94tUvx4CGmk7LCg=
+	b=LNh7oPWcmfWOmdGpcpvd5fKsnB3G77MmcedXaLk6tAYXwfTJysAsdxSNQTvLStlGS
+	 KYy9jXV8T9QsZLz+j/cxYep2SGybHD8Z/JO8nCm1SbRnioWaYx8Tgb0L0IU78IP8Co
+	 nHABx6tUtEjGj+ADRR1kXZbGirsCPHDIdloWkTng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729947AbgIAPf5 (ORCPT
+        id S1731245AbgIAPgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:35:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40028 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:36:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729571AbgIAPet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:49 -0400
+        id S1727852AbgIAPey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:54 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7DAA205F4;
-        Tue,  1 Sep 2020 15:34:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94050214D8;
+        Tue,  1 Sep 2020 15:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974488;
-        bh=9i2+7e8Ntk02cW3nUYBZh+5NioLti2D2TNosexCGLXs=;
+        s=default; t=1598974493;
+        bh=rz2Oi2jQqgJvOT8xPOfzKOVn/1wYqkHwox6glnoNiFs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TI5uE4P3CXZy2DUPk4IwWN6mfqDUqbF31VYTr9wJZpwvyPl60zF81pdE7q+HfG+Cm
-         3w4QThh4sqtJTrdMQaXPz9yOa8nd5vmiYxo/aCyMFc05QyIJiOQyyZVnE20jsu5+Qr
-         851xYXAzVMNsLha9vPQc6iaF1cLXGgF89N7YReQE=
+        b=P+keaZo3LeXGZCj5XQDP9inMSRPd5fleJKRSTT7bUpviGZWTN2mwQCOiyou7HjgaC
+         tS6wywHaWKen2KvrSJi2Xhk2o1LM55C0aoqKkaMFRG9RBXfJfQdWcWScm1ZnOpUum9
+         R2QTxEh7NISJb8xNUEllMSP9ArWDmkuyEIGna0RI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valmer Huhn <valmer.huhn@concurrent-rt.com>
-Subject: [PATCH 5.4 165/214] serial: 8250_exar: Fix number of ports for Commtech PCIe cards
-Date:   Tue,  1 Sep 2020 17:10:45 +0200
-Message-Id: <20200901151000.888617574@linuxfoundation.org>
+        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 5.4 167/214] writeback: Protect inode->i_io_list with inode->i_lock
+Date:   Tue,  1 Sep 2020 17:10:47 +0200
+Message-Id: <20200901151000.981348206@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -58,79 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valmer Huhn <valmer.huhn@concurrent-rt.com>
+From: Jan Kara <jack@suse.cz>
 
-commit c6b9e95dde7b54e6a53c47241201ab5a4035c320 upstream.
+commit b35250c0816c7cf7d0a8de92f5fafb6a7508a708 upstream.
 
-The following in 8250_exar.c line 589 is used to determine the number
-of ports for each Exar board:
+Currently, operations on inode->i_io_list are protected by
+wb->list_lock. In the following patches we'll need to maintain
+consistency between inode->i_state and inode->i_io_list so change the
+code so that inode->i_lock protects also all inode's i_io_list handling.
 
-nr_ports = board->num_ports ? board->num_ports : pcidev->device & 0x0f;
-
-If the number of ports a card has is not explicitly specified, it defaults
-to the rightmost 4 bits of the PCI device ID. This is prone to error since
-not all PCI device IDs contain a number which corresponds to the number of
-ports that card provides.
-
-This particular case involves COMMTECH_4222PCIE, COMMTECH_4224PCIE and
-COMMTECH_4228PCIE cards with device IDs 0x0022, 0x0020 and 0x0021.
-Currently the multiport cards receive 2, 0 and 1 port instead of 2, 4 and
-8 ports respectively.
-
-To fix this, each Commtech Fastcom PCIe card is given a struct where the
-number of ports is explicitly specified. This ensures 'board->num_ports'
-is used instead of the default 'pcidev->device & 0x0f'.
-
-Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
-Signed-off-by: Valmer Huhn <valmer.huhn@concurrent-rt.com>
-Tested-by: Valmer Huhn <valmer.huhn@concurrent-rt.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200813165255.GC345440@icarus.concurrent-rt.com
+Reviewed-by: Martijn Coenen <maco@android.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+CC: stable@vger.kernel.org # Prerequisite for "writeback: Avoid skipping inode writeback"
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/8250/8250_exar.c |   24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ fs/fs-writeback.c |   22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -725,6 +725,24 @@ static const struct exar8250_board pbn_e
- 	.exit		= pci_xr17v35x_exit,
- };
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -144,6 +144,7 @@ static void inode_io_list_del_locked(str
+ 				     struct bdi_writeback *wb)
+ {
+ 	assert_spin_locked(&wb->list_lock);
++	assert_spin_locked(&inode->i_lock);
  
-+static const struct exar8250_board pbn_fastcom35x_2 = {
-+	.num_ports	= 2,
-+	.setup		= pci_xr17v35x_setup,
-+	.exit		= pci_xr17v35x_exit,
-+};
-+
-+static const struct exar8250_board pbn_fastcom35x_4 = {
-+	.num_ports	= 4,
-+	.setup		= pci_xr17v35x_setup,
-+	.exit		= pci_xr17v35x_exit,
-+};
-+
-+static const struct exar8250_board pbn_fastcom35x_8 = {
-+	.num_ports	= 8,
-+	.setup		= pci_xr17v35x_setup,
-+	.exit		= pci_xr17v35x_exit,
-+};
-+
- static const struct exar8250_board pbn_exar_XR17V4358 = {
- 	.num_ports	= 12,
- 	.setup		= pci_xr17v35x_setup,
-@@ -795,9 +813,9 @@ static const struct pci_device_id exar_p
- 	EXAR_DEVICE(EXAR, EXAR_XR17V358, pbn_exar_XR17V35x),
- 	EXAR_DEVICE(EXAR, EXAR_XR17V4358, pbn_exar_XR17V4358),
- 	EXAR_DEVICE(EXAR, EXAR_XR17V8358, pbn_exar_XR17V8358),
--	EXAR_DEVICE(COMMTECH, COMMTECH_4222PCIE, pbn_exar_XR17V35x),
--	EXAR_DEVICE(COMMTECH, COMMTECH_4224PCIE, pbn_exar_XR17V35x),
--	EXAR_DEVICE(COMMTECH, COMMTECH_4228PCIE, pbn_exar_XR17V35x),
-+	EXAR_DEVICE(COMMTECH, COMMTECH_4222PCIE, pbn_fastcom35x_2),
-+	EXAR_DEVICE(COMMTECH, COMMTECH_4224PCIE, pbn_fastcom35x_4),
-+	EXAR_DEVICE(COMMTECH, COMMTECH_4228PCIE, pbn_fastcom35x_8),
+ 	list_del_init(&inode->i_io_list);
+ 	wb_io_lists_depopulated(wb);
+@@ -1123,7 +1124,9 @@ void inode_io_list_del(struct inode *ino
+ 	struct bdi_writeback *wb;
  
- 	EXAR_DEVICE(COMMTECH, COMMTECH_4222PCI335, pbn_fastcom335_2),
- 	EXAR_DEVICE(COMMTECH, COMMTECH_4224PCI335, pbn_fastcom335_4),
+ 	wb = inode_to_wb_and_lock_list(inode);
++	spin_lock(&inode->i_lock);
+ 	inode_io_list_del_locked(inode, wb);
++	spin_unlock(&inode->i_lock);
+ 	spin_unlock(&wb->list_lock);
+ }
+ 
+@@ -1172,8 +1175,10 @@ void sb_clear_inode_writeback(struct ino
+  * the case then the inode must have been redirtied while it was being written
+  * out and we don't reset its dirtied_when.
+  */
+-static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
++static void redirty_tail_locked(struct inode *inode, struct bdi_writeback *wb)
+ {
++	assert_spin_locked(&inode->i_lock);
++
+ 	if (!list_empty(&wb->b_dirty)) {
+ 		struct inode *tail;
+ 
+@@ -1184,6 +1189,13 @@ static void redirty_tail(struct inode *i
+ 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
+ }
+ 
++static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
++{
++	spin_lock(&inode->i_lock);
++	redirty_tail_locked(inode, wb);
++	spin_unlock(&inode->i_lock);
++}
++
+ /*
+  * requeue inode for re-scanning after bdi->b_io list is exhausted.
+  */
+@@ -1394,7 +1406,7 @@ static void requeue_inode(struct inode *
+ 		 * writeback is not making progress due to locked
+ 		 * buffers. Skip this inode for now.
+ 		 */
+-		redirty_tail(inode, wb);
++		redirty_tail_locked(inode, wb);
+ 		return;
+ 	}
+ 
+@@ -1414,7 +1426,7 @@ static void requeue_inode(struct inode *
+ 			 * retrying writeback of the dirty page/inode
+ 			 * that cannot be performed immediately.
+ 			 */
+-			redirty_tail(inode, wb);
++			redirty_tail_locked(inode, wb);
+ 		}
+ 	} else if (inode->i_state & I_DIRTY) {
+ 		/*
+@@ -1422,7 +1434,7 @@ static void requeue_inode(struct inode *
+ 		 * such as delayed allocation during submission or metadata
+ 		 * updates after data IO completion.
+ 		 */
+-		redirty_tail(inode, wb);
++		redirty_tail_locked(inode, wb);
+ 	} else if (inode->i_state & I_DIRTY_TIME) {
+ 		inode->dirtied_when = jiffies;
+ 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
+@@ -1669,8 +1681,8 @@ static long writeback_sb_inodes(struct s
+ 		 */
+ 		spin_lock(&inode->i_lock);
+ 		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
++			redirty_tail_locked(inode, wb);
+ 			spin_unlock(&inode->i_lock);
+-			redirty_tail(inode, wb);
+ 			continue;
+ 		}
+ 		if ((inode->i_state & I_SYNC) && wbc.sync_mode != WB_SYNC_ALL) {
 
 
