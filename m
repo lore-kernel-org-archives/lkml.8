@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8FB1C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C472FC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B2E5F2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F34F20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978245;
-	bh=mOU3NR/dQoWacFNw89Jy8hh0E8aprv9aZa+5xdqmEYc=;
+	s=default; t=1598978256;
+	bh=EpQIbEJixCkileUcO0LlClN6lDlO2BTH7YZHA6fgbkM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ytTB1Oss2FdLYPsTekRDINdtxM/VDBnIUw8I8Xh1H1DmR5g3/nHtamSmgsMk349Pu
-	 OkhjX7gc/WzdJ5SAyoHu38N611cquTSvmPMBDqkSlLH/Y/tg/yI3XJNFM3LyK6Rlkm
-	 /R3N2RoNmOJNeyseO9aRKJYABxOGDQAaBMsbpXQo=
+	b=TfO+HBYV/Ov6hcBq3V0ztsZStrwYh1b8ZxsFMDpTBNwqlkTES2srUil0LaiSZ5L1v
+	 NgAiNeXPx6ktOGDuzcDnpI6FkJnGk+zmPgZ+HDisDqyIhs+a2NxkDXdpPKyLgPD4fB
+	 jcGqu4/6eWvGKRNVEf7g+7Mw0lP/0oe4ZV5nYNpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732142AbgIAQhV (ORCPT
+        id S1730863AbgIAQhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:37:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58486 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:37:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730070AbgIAP3R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:17 -0400
+        id S1730150AbgIAP3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:15 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC231207D3;
-        Tue,  1 Sep 2020 15:29:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65E2320684;
+        Tue,  1 Sep 2020 15:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974157;
-        bh=mOU3NR/dQoWacFNw89Jy8hh0E8aprv9aZa+5xdqmEYc=;
+        s=default; t=1598974154;
+        bh=EpQIbEJixCkileUcO0LlClN6lDlO2BTH7YZHA6fgbkM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1JO5s2/o7NlagWp1FNAS9P9m/S9H8ByNdkcXMwM8pJJtowkcnVkJsW7b5G457hFI
-         vhXC7Tt0aJXFRRO9hrjstP8eCvUjNcdMwgbTub9+8xGRKJMh45Hr19fIjN9tE6HPYH
-         SZonCmp+0aI78Idq8GwdbATePiZdUM0XxfHcV2YQ=
+        b=t2CF/fg5mjesa2eErOV6Cry9RDZHyaQaDraXGwSR0UEb/L1rf2FllzwkWhXh5qkB7
+         6A4VDbbFVnJSLsZ4+896ntlVfS+QrA07RBFUQCEEht8kQ3IdD13gVbl3c9Mxm7EcPB
+         RomNc2gqCJcjc0ghVCUKfDzKbs42JGyfyHMHCgWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Dave Chinner <dchinner@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/214] mfd: intel-lpss: Add Intel Tiger Lake PCH-H PCI IDs
-Date:   Tue,  1 Sep 2020 17:08:26 +0200
-Message-Id: <20200901150954.222820518@linuxfoundation.org>
+Subject: [PATCH 5.4 035/214] xfs: Dont allow logging of XFS_ISTALE inodes
+Date:   Tue,  1 Sep 2020 17:08:35 +0200
+Message-Id: <20200901150954.648097460@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,47 +61,164 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Dave Chinner <dchinner@redhat.com>
 
-[ Upstream commit bb7fcad48d3804d814b97c785514e2d1657e157f ]
+[ Upstream commit 96355d5a1f0ee6dcc182c37db4894ec0c29f1692 ]
 
-Intel Tiger Lake PCH-H has the same LPSS than Intel Broxton.
-Add the new IDs to the list of supported devices.
+In tracking down a problem in this patchset, I discovered we are
+reclaiming dirty stale inodes. This wasn't discovered until inodes
+were always attached to the cluster buffer and then the rcu callback
+that freed inodes was assert failing because the inode still had an
+active pointer to the cluster buffer after it had been reclaimed.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Debugging the issue indicated that this was a pre-existing issue
+resulting from the way the inodes are handled in xfs_inactive_ifree.
+When we free a cluster buffer from xfs_ifree_cluster, all the inodes
+in cache are marked XFS_ISTALE. Those that are clean have nothing
+else done to them and so eventually get cleaned up by background
+reclaim. i.e. it is assumed we'll never dirty/relog an inode marked
+XFS_ISTALE.
+
+On journal commit dirty stale inodes as are handled by both
+buffer and inode log items to run though xfs_istale_done() and
+removed from the AIL (buffer log item commit) or the log item will
+simply unpin it because the buffer log item will clean it. What happens
+to any specific inode is entirely dependent on which log item wins
+the commit race, but the result is the same - stale inodes are
+clean, not attached to the cluster buffer, and not in the AIL. Hence
+inode reclaim can just free these inodes without further care.
+
+However, if the stale inode is relogged, it gets dirtied again and
+relogged into the CIL. Most of the time this isn't an issue, because
+relogging simply changes the inode's location in the current
+checkpoint. Problems arise, however, when the CIL checkpoints
+between two transactions in the xfs_inactive_ifree() deferops
+processing. This results in the XFS_ISTALE inode being redirtied
+and inserted into the CIL without any of the other stale cluster
+buffer infrastructure being in place.
+
+Hence on journal commit, it simply gets unpinned, so it remains
+dirty in memory. Everything in inode writeback avoids XFS_ISTALE
+inodes so it can't be written back, and it is not tracked in the AIL
+so there's not even a trigger to attempt to clean the inode. Hence
+the inode just sits dirty in memory until inode reclaim comes along,
+sees that it is XFS_ISTALE, and goes to reclaim it. This reclaiming
+of a dirty inode caused use after free, list corruptions and other
+nasty issues later in this patchset.
+
+Hence this patch addresses a violation of the "never log XFS_ISTALE
+inodes" caused by the deferops processing rolling a transaction
+and relogging a stale inode in xfs_inactive_free. It also adds a
+bunch of asserts to catch this problem in debug kernels so that
+we don't reintroduce this problem in future.
+
+Reproducer for this issue was generic/558 on a v4 filesystem.
+
+Signed-off-by: Dave Chinner <dchinner@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ fs/xfs/libxfs/xfs_trans_inode.c |  2 ++
+ fs/xfs/xfs_icache.c             |  3 ++-
+ fs/xfs/xfs_inode.c              | 25 ++++++++++++++++++++++---
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index bc0f3c22021b7..da91965b8f7b2 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -228,6 +228,22 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x34ea), (kernel_ulong_t)&bxt_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x34eb), (kernel_ulong_t)&bxt_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x34fb), (kernel_ulong_t)&spt_info },
-+	/* TGL-H */
-+	{ PCI_VDEVICE(INTEL, 0x43a7), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x43a8), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x43a9), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x43aa), (kernel_ulong_t)&bxt_info },
-+	{ PCI_VDEVICE(INTEL, 0x43ab), (kernel_ulong_t)&bxt_info },
-+	{ PCI_VDEVICE(INTEL, 0x43ad), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x43ae), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x43d8), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x43da), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x43e8), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x43e9), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x43ea), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x43eb), (kernel_ulong_t)&bxt_i2c_info },
-+	{ PCI_VDEVICE(INTEL, 0x43fb), (kernel_ulong_t)&bxt_info },
-+	{ PCI_VDEVICE(INTEL, 0x43fd), (kernel_ulong_t)&bxt_info },
- 	/* EHL */
- 	{ PCI_VDEVICE(INTEL, 0x4b28), (kernel_ulong_t)&bxt_uart_info },
- 	{ PCI_VDEVICE(INTEL, 0x4b29), (kernel_ulong_t)&bxt_uart_info },
+diff --git a/fs/xfs/libxfs/xfs_trans_inode.c b/fs/xfs/libxfs/xfs_trans_inode.c
+index a9ad90926b873..6c7354abd0aea 100644
+--- a/fs/xfs/libxfs/xfs_trans_inode.c
++++ b/fs/xfs/libxfs/xfs_trans_inode.c
+@@ -36,6 +36,7 @@ xfs_trans_ijoin(
+ 
+ 	ASSERT(iip->ili_lock_flags == 0);
+ 	iip->ili_lock_flags = lock_flags;
++	ASSERT(!xfs_iflags_test(ip, XFS_ISTALE));
+ 
+ 	/*
+ 	 * Get a log_item_desc to point at the new item.
+@@ -91,6 +92,7 @@ xfs_trans_log_inode(
+ 
+ 	ASSERT(ip->i_itemp != NULL);
+ 	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
++	ASSERT(!xfs_iflags_test(ip, XFS_ISTALE));
+ 
+ 	/*
+ 	 * Don't bother with i_lock for the I_DIRTY_TIME check here, as races
+diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
+index d95dc9b0f0bba..a1135b86e79f9 100644
+--- a/fs/xfs/xfs_icache.c
++++ b/fs/xfs/xfs_icache.c
+@@ -1132,7 +1132,7 @@ restart:
+ 			goto out_ifunlock;
+ 		xfs_iunpin_wait(ip);
+ 	}
+-	if (xfs_iflags_test(ip, XFS_ISTALE) || xfs_inode_clean(ip)) {
++	if (xfs_inode_clean(ip)) {
+ 		xfs_ifunlock(ip);
+ 		goto reclaim;
+ 	}
+@@ -1219,6 +1219,7 @@ reclaim:
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+ 	xfs_qm_dqdetach(ip);
+ 	xfs_iunlock(ip, XFS_ILOCK_EXCL);
++	ASSERT(xfs_inode_clean(ip));
+ 
+ 	__xfs_inode_free(ip);
+ 	return error;
+diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
+index 18f4b262e61ce..b339ff93df997 100644
+--- a/fs/xfs/xfs_inode.c
++++ b/fs/xfs/xfs_inode.c
+@@ -1761,10 +1761,31 @@ xfs_inactive_ifree(
+ 		return error;
+ 	}
+ 
++	/*
++	 * We do not hold the inode locked across the entire rolling transaction
++	 * here. We only need to hold it for the first transaction that
++	 * xfs_ifree() builds, which may mark the inode XFS_ISTALE if the
++	 * underlying cluster buffer is freed. Relogging an XFS_ISTALE inode
++	 * here breaks the relationship between cluster buffer invalidation and
++	 * stale inode invalidation on cluster buffer item journal commit
++	 * completion, and can result in leaving dirty stale inodes hanging
++	 * around in memory.
++	 *
++	 * We have no need for serialising this inode operation against other
++	 * operations - we freed the inode and hence reallocation is required
++	 * and that will serialise on reallocating the space the deferops need
++	 * to free. Hence we can unlock the inode on the first commit of
++	 * the transaction rather than roll it right through the deferops. This
++	 * avoids relogging the XFS_ISTALE inode.
++	 *
++	 * We check that xfs_ifree() hasn't grown an internal transaction roll
++	 * by asserting that the inode is still locked when it returns.
++	 */
+ 	xfs_ilock(ip, XFS_ILOCK_EXCL);
+-	xfs_trans_ijoin(tp, ip, 0);
++	xfs_trans_ijoin(tp, ip, XFS_ILOCK_EXCL);
+ 
+ 	error = xfs_ifree(tp, ip);
++	ASSERT(xfs_isilocked(ip, XFS_ILOCK_EXCL));
+ 	if (error) {
+ 		/*
+ 		 * If we fail to free the inode, shut down.  The cancel
+@@ -1777,7 +1798,6 @@ xfs_inactive_ifree(
+ 			xfs_force_shutdown(mp, SHUTDOWN_META_IO_ERROR);
+ 		}
+ 		xfs_trans_cancel(tp);
+-		xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 		return error;
+ 	}
+ 
+@@ -1795,7 +1815,6 @@ xfs_inactive_ifree(
+ 		xfs_notice(mp, "%s: xfs_trans_commit returned error %d",
+ 			__func__, error);
+ 
+-	xfs_iunlock(ip, XFS_ILOCK_EXCL);
+ 	return 0;
+ }
+ 
 -- 
 2.25.1
 
