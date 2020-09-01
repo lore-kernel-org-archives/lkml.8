@@ -2,54 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5634BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95519C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 241B620684
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7394F206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974131;
-	bh=7vW9pubFJ2lXT/pAXpSXlFiiGmSmzPr2BzVU76xukgM=;
+	s=default; t=1598974133;
+	bh=WFDwkXOS3rXB8cqlTW2yvf92LTitGrpRrLny+Jqvse0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S2QJdTpKUC/uqgfOzYWE4F9S/SVuv/846ves+uruEdnb99LNdPqMh9qfhiCAuNmCJ
-	 O3YgUkaHcJusnzwtkpclyUvxYOe48yVnUfJ7RYPat8vF+tpk8mg5KrvNUq1plA067z
-	 Nbod50wEUv+8lRx2Gu6BFEQPXSaPPP/jKlyKzuIc=
+	b=daIHgxPtbKtv/QLisF5CXAq3tCuVnLeZMj8D/YRH/PZOIrMJNxbU2tVtHQUpqWdYR
+	 44OtSOsVsW81+N1c727LbHY+r99qReOcJr8u4g9kH/1cVCo+bDrG4yCgyeTzXe2sKx
+	 Lmxj7ZVQODVvutNMdEMqDcHVrM9Y1qoukm6SP+5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgIAP2s (ORCPT
+        id S1730475AbgIAP2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49824 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:28:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgIAPZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:24 -0400
+        id S1729572AbgIAPZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:25:28 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4851206FA;
-        Tue,  1 Sep 2020 15:25:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E63A7207D3;
+        Tue,  1 Sep 2020 15:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973922;
-        bh=7vW9pubFJ2lXT/pAXpSXlFiiGmSmzPr2BzVU76xukgM=;
+        s=default; t=1598973927;
+        bh=WFDwkXOS3rXB8cqlTW2yvf92LTitGrpRrLny+Jqvse0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OF1GcMRcveuex0/zK3txw31U0oci/8UgEt8A+Zsx+HM+eP9AUjl2oMwxCTxZvhZTg
-         6BmOX75cNfWU8tZsdvWAAFhaeRRVPLrevE+SOHhP3nXx6KZoQv7bQrgcl09YlqnxVb
-         xYGLUKK5HhkUAtZcttgxh/9FO3LQDjtKo2HO8nlA=
+        b=NNBVSpie03f0iJ2pF398QGxlSwRWeN3nQpHvBwm4dFPOSYot81H2aCZvNnCJG9eVF
+         rEk/BC6sW7AbaibVWGYpQp4rgZxrapV3HCsYaz+KF4pq7qUzO4NCIQSiEMyzxLPKXL
+         9HM3LD3zI4ECeb0U5iNmoclBUuyRBLKleJXHZ0Zo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hannes Reinecke <hare@suse.de>,
-        Lee Duncan <lduncan@suse.com>,
-        Mike Christie <michael.christie@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 070/125] scsi: fcoe: Fix I/O path allocation
-Date:   Tue,  1 Sep 2020 17:10:25 +0200
-Message-Id: <20200901150938.006852549@linuxfoundation.org>
+        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.19 095/125] writeback: Avoid skipping inode writeback
+Date:   Tue,  1 Sep 2020 17:10:50 +0200
+Message-Id: <20200901150939.262780128@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -62,39 +59,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Christie <michael.christie@oracle.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit fa39ab5184d64563cd36f2fb5f0d3fbad83a432c ]
+commit 5afced3bf28100d81fb2fe7e98918632a08feaf5 upstream.
 
-ixgbe_fcoe_ddp_setup() can be called from the main I/O path and is called
-with a spin_lock held, so we have to use GFP_ATOMIC allocation instead of
-GFP_KERNEL.
+Inode's i_io_list list head is used to attach inode to several different
+lists - wb->{b_dirty, b_dirty_time, b_io, b_more_io}. When flush worker
+prepares a list of inodes to writeback e.g. for sync(2), it moves inodes
+to b_io list. Thus it is critical for sync(2) data integrity guarantees
+that inode is not requeued to any other writeback list when inode is
+queued for processing by flush worker. That's the reason why
+writeback_single_inode() does not touch i_io_list (unless the inode is
+completely clean) and why __mark_inode_dirty() does not touch i_io_list
+if I_SYNC flag is set.
 
-Link: https://lore.kernel.org/r/1596831813-9839-1-git-send-email-michael.christie@oracle.com
-cc: Hannes Reinecke <hare@suse.de>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However there are two flaws in the current logic:
+
+1) When inode has only I_DIRTY_TIME set but it is already queued in b_io
+list due to sync(2), concurrent __mark_inode_dirty(inode, I_DIRTY_SYNC)
+can still move inode back to b_dirty list resulting in skipping
+writeback of inode time stamps during sync(2).
+
+2) When inode is on b_dirty_time list and writeback_single_inode() races
+with __mark_inode_dirty() like:
+
+writeback_single_inode()		__mark_inode_dirty(inode, I_DIRTY_PAGES)
+  inode->i_state |= I_SYNC
+  __writeback_single_inode()
+					  inode->i_state |= I_DIRTY_PAGES;
+					  if (inode->i_state & I_SYNC)
+					    bail
+  if (!(inode->i_state & I_DIRTY_ALL))
+  - not true so nothing done
+
+We end up with I_DIRTY_PAGES inode on b_dirty_time list and thus
+standard background writeback will not writeback this inode leading to
+possible dirty throttling stalls etc. (thanks to Martijn Coenen for this
+analysis).
+
+Fix these problems by tracking whether inode is queued in b_io or
+b_more_io lists in a new I_SYNC_QUEUED flag. When this flag is set, we
+know flush worker has queued inode and we should not touch i_io_list.
+On the other hand we also know that once flush worker is done with the
+inode it will requeue the inode to appropriate dirty list. When
+I_SYNC_QUEUED is not set, __mark_inode_dirty() can (and must) move inode
+to appropriate dirty list.
+
+Reported-by: Martijn Coenen <maco@android.com>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Tested-by: Martijn Coenen <maco@android.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 0ae45f63d4ef ("vfs: add support for a lazytime mount option")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fs-writeback.c  |   17 ++++++++++++-----
+ include/linux/fs.h |    8 ++++++--
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-index ccd852ad62a4b..d50c5b55da180 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_fcoe.c
-@@ -192,7 +192,7 @@ static int ixgbe_fcoe_ddp_setup(struct net_device *netdev, u16 xid,
- 	}
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -162,6 +162,7 @@ static void inode_io_list_del_locked(str
+ 	assert_spin_locked(&wb->list_lock);
+ 	assert_spin_locked(&inode->i_lock);
  
- 	/* alloc the udl from per cpu ddp pool */
--	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_KERNEL, &ddp->udp);
-+	ddp->udl = dma_pool_alloc(ddp_pool->pool, GFP_ATOMIC, &ddp->udp);
- 	if (!ddp->udl) {
- 		e_err(drv, "failed allocated ddp context\n");
- 		goto out_noddp_unmap;
--- 
-2.25.1
-
++	inode->i_state &= ~I_SYNC_QUEUED;
+ 	list_del_init(&inode->i_io_list);
+ 	wb_io_lists_depopulated(wb);
+ }
+@@ -1106,6 +1107,7 @@ static void redirty_tail_locked(struct i
+ 			inode->dirtied_when = jiffies;
+ 	}
+ 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
++	inode->i_state &= ~I_SYNC_QUEUED;
+ }
+ 
+ static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
+@@ -1181,8 +1183,11 @@ static int move_expired_inodes(struct li
+ 			break;
+ 		list_move(&inode->i_io_list, &tmp);
+ 		moved++;
++		spin_lock(&inode->i_lock);
+ 		if (flags & EXPIRE_DIRTY_ATIME)
+-			set_bit(__I_DIRTY_TIME_EXPIRED, &inode->i_state);
++			inode->i_state |= I_DIRTY_TIME_EXPIRED;
++		inode->i_state |= I_SYNC_QUEUED;
++		spin_unlock(&inode->i_lock);
+ 		if (sb_is_blkdev_sb(inode->i_sb))
+ 			continue;
+ 		if (sb && sb != inode->i_sb)
+@@ -1357,6 +1362,7 @@ static void requeue_inode(struct inode *
+ 	} else if (inode->i_state & I_DIRTY_TIME) {
+ 		inode->dirtied_when = jiffies;
+ 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
++		inode->i_state &= ~I_SYNC_QUEUED;
+ 	} else {
+ 		/* The inode is clean. Remove from writeback lists. */
+ 		inode_io_list_del_locked(inode, wb);
+@@ -2220,11 +2226,12 @@ void __mark_inode_dirty(struct inode *in
+ 		inode->i_state |= flags;
+ 
+ 		/*
+-		 * If the inode is being synced, just update its dirty state.
+-		 * The unlocker will place the inode on the appropriate
+-		 * superblock list, based upon its state.
++		 * If the inode is queued for writeback by flush worker, just
++		 * update its dirty state. Once the flush worker is done with
++		 * the inode it will place it on the appropriate superblock
++		 * list, based upon its state.
+ 		 */
+-		if (inode->i_state & I_SYNC)
++		if (inode->i_state & I_SYNC_QUEUED)
+ 			goto out_unlock_inode;
+ 
+ 		/*
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2050,6 +2050,10 @@ static inline void init_sync_kiocb(struc
+  *
+  * I_CREATING		New object's inode in the middle of setting up.
+  *
++ * I_SYNC_QUEUED	Inode is queued in b_io or b_more_io writeback lists.
++ *			Used to detect that mark_inode_dirty() should not move
++ * 			inode between dirty lists.
++ *
+  * Q: What is the difference between I_WILL_FREE and I_FREEING?
+  */
+ #define I_DIRTY_SYNC		(1 << 0)
+@@ -2067,11 +2071,11 @@ static inline void init_sync_kiocb(struc
+ #define I_DIO_WAKEUP		(1 << __I_DIO_WAKEUP)
+ #define I_LINKABLE		(1 << 10)
+ #define I_DIRTY_TIME		(1 << 11)
+-#define __I_DIRTY_TIME_EXPIRED	12
+-#define I_DIRTY_TIME_EXPIRED	(1 << __I_DIRTY_TIME_EXPIRED)
++#define I_DIRTY_TIME_EXPIRED	(1 << 12)
+ #define I_WB_SWITCH		(1 << 13)
+ #define I_OVL_INUSE		(1 << 14)
+ #define I_CREATING		(1 << 15)
++#define I_SYNC_QUEUED		(1 << 17)
+ 
+ #define I_DIRTY_INODE (I_DIRTY_SYNC | I_DIRTY_DATASYNC)
+ #define I_DIRTY (I_DIRTY_INODE | I_DIRTY_PAGES)
 
 
