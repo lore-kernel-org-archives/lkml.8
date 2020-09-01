@@ -2,152 +2,113 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7B8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05B8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC184214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:33:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974386;
-	bh=jbo9dTLCVn9GjanCcLLAnzad3me4gNbwqGBH7gudVxg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NJIugMyXd6MQOo5jzkpUaLqx//5LNyj68czkp2q5YOGVyT02/ZVbDcYByFGKftSBZ
-	 XO0vfTCfS6VqhsUtPLWuMCKdo7D+FWGf6/pbtN8W0cTS477Vki62AKXhaChIXRU7zl
-	 D/4a6eO0by+zePDMfN3cFflIg6n09/fqoblthGCM=
+	by mail.kernel.org (Postfix) with ESMTP id 8C59B21582
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:33:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="InCwqcJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbgIAPdE (ORCPT
+        id S1728326AbgIAPdN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:33:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731144AbgIAPc5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:32:57 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54C8E20E65;
-        Tue,  1 Sep 2020 15:32:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974376;
-        bh=jbo9dTLCVn9GjanCcLLAnzad3me4gNbwqGBH7gudVxg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kASw8oi0tZ68Kulo8nvgRW1Fd48wGtk2iZiNT5qgE8o5346PHBoNjt8MxcIMrAo2u
-         0S1QnmXtZfC2DvFxixbpnLcT+WoJDI0nv8gh98drWnDngwhEy45gKQC/F7DGE3Q2Qt
-         8FMh5Ck8GbtCFus8pTS86Di6JK2kt2MLEglPiEwM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        David Jeffery <djeffery@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 152/214] blk-mq: order adding requests to hctx->dispatch and checking SCHED_RESTART
-Date:   Tue,  1 Sep 2020 17:10:32 +0200
-Message-Id: <20200901151000.248894276@linuxfoundation.org>
+        Tue, 1 Sep 2020 11:33:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54580 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729209AbgIAPc4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:56 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7BF6C061244;
+        Tue,  1 Sep 2020 08:32:54 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id d11so2241288ejt.13;
+        Tue, 01 Sep 2020 08:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zEPKP0AU97R+PVYnTVD02jf9E8X+9qMRm9ouiwdoWWA=;
+        b=InCwqcJTR/4A4+EuZFsM5xaKx0nFq9NH/7wDwaCpNHNzYmfW1s67o66afdrgjeT+42
+         3/IBsOzuQmvbcTIMqzeilMo8jynJopsDvJ04YORoFPrNoteMPeOR9CGnYRn5sTCTx/F8
+         MExLqETfRiiBnfdt5p4S8Fw+UhsQjMtDLGVO+SktivIJKL0jgOtiulaSQfPNJxhuvalA
+         YnMxjXkFrVLYsf7Q9rHbGANzrB4pQCOFOXTTolGhIm/OgJ1H1t2modzQdKwRXUsADB8L
+         Wr95PT8IW7Kyqe+GrX2iD2azK1Ul6M6Ln7WgHWIYOkYGFRrhvMpSiRjMe9w0F1HwAjjO
+         5qzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zEPKP0AU97R+PVYnTVD02jf9E8X+9qMRm9ouiwdoWWA=;
+        b=kZZAjUtuN3hiPdfltUcr+jhnrz7c9rru5yMEq/CkI9aBm/ETez84EH3hV1B78K5P7L
+         hNmGrJSHJ5IWuxDnUZQfaEPySWbcOwFUhahKgCeHLV/pbdTdosT0dhbnN1YfuCqO0dzc
+         iPOvOI7WM/A19xKHKPCspaPpluPkBiUabwFLCWWVb06ZBUUNgVhy/7Dx7Ju8GP3kNUaA
+         Pt0XvSw/Mp/rm2gKvnuDO9QKteP66lw5hvCUTUEIh76d8jMRMY8378JiysKz2wdaz8Fd
+         BYHMvMGbdRy6TAA/Uez3CT9nV1OyhEST03ttXC1lJTpyHbNiA34oKyeRtqCxxOXza5yA
+         k22g==
+X-Gm-Message-State: AOAM5312YM/x/KVL6Su0HEVLMkmVlAUpCOSazQK4PIdtRtPsaThSHihn
+        RPsOkzFPKcz36DsW5eZOFaE=
+X-Google-Smtp-Source: ABdhPJx8pgbFxwX4+nQIkeKINcUC4+itTbYvBBHcPVcN6ZtaYmSEFVcT5J21t8xvkFqrlVQX3t3VOg==
+X-Received: by 2002:a17:907:9c3:: with SMTP id bx3mr2005039ejc.164.1598974373583;
+        Tue, 01 Sep 2020 08:32:53 -0700 (PDT)
+Received: from localhost ([62.96.65.119])
+        by smtp.gmail.com with ESMTPSA id r23sm1371455edt.57.2020.09.01.08.32.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 08:32:52 -0700 (PDT)
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Matias Zuniga <matias.nicolas.zc@gmail.com>
+Subject: [PATCH] memory: tegra: Remove GPU from DRM IOMMU group
+Date:   Tue,  1 Sep 2020 17:32:48 +0200
+Message-Id: <20200901153248.1831263-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Thierry Reding <treding@nvidia.com>
 
-commit d7d8535f377e9ba87edbf7fbbd634ac942f3f54f upstream.
+Commit 63a613fdb16c ("memory: tegra: Add gr2d and gr3d to DRM IOMMU
+group") added the GPU to the DRM IOMMU group, which doesn't make any
+sense. This causes problems when Nouveau tries to attach to the SMMU
+and causes it to fall back to using the DMA API.
 
-SCHED_RESTART code path is relied to re-run queue for dispatch requests
-in hctx->dispatch. Meantime the SCHED_RSTART flag is checked when adding
-requests to hctx->dispatch.
+Remove the GPU from the DRM groups to restore the old behaviour. The
+GPU should always have its own IOMMU domain to make sure it can map
+buffers into contiguous chunks (for big page support) without getting
+in the way of mappings from the DRM group.
 
-memory barriers have to be used for ordering the following two pair of OPs:
-
-1) adding requests to hctx->dispatch and checking SCHED_RESTART in
-blk_mq_dispatch_rq_list()
-
-2) clearing SCHED_RESTART and checking if there is request in hctx->dispatch
-in blk_mq_sched_restart().
-
-Without the added memory barrier, either:
-
-1) blk_mq_sched_restart() may miss requests added to hctx->dispatch meantime
-blk_mq_dispatch_rq_list() observes SCHED_RESTART, and not run queue in
-dispatch side
-
-or
-
-2) blk_mq_dispatch_rq_list still sees SCHED_RESTART, and not run queue
-in dispatch side, meantime checking if there is request in
-hctx->dispatch from blk_mq_sched_restart() is missed.
-
-IO hang in ltp/fs_fill test is reported by kernel test robot:
-
-	https://lkml.org/lkml/2020/7/26/77
-
-Turns out it is caused by the above out-of-order OPs. And the IO hang
-can't be observed any more after applying this patch.
-
-Fixes: bd166ef183c2 ("blk-mq-sched: add framework for MQ capable IO schedulers")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: David Jeffery <djeffery@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 63a613fdb16c ("memory: tegra: Add gr2d and gr3d to DRM IOMMU group")
+Reported-by: Matias Zuniga <matias.nicolas.zc@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- block/blk-mq-sched.c |    9 +++++++++
- block/blk-mq.c       |    9 +++++++++
- 2 files changed, 18 insertions(+)
+ drivers/memory/tegra/tegra124.c | 1 -
+ 1 file changed, 1 deletion(-)
 
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -77,6 +77,15 @@ void blk_mq_sched_restart(struct blk_mq_
- 		return;
- 	clear_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
+diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
+index 493b5dc3a4b3..0cede24479bf 100644
+--- a/drivers/memory/tegra/tegra124.c
++++ b/drivers/memory/tegra/tegra124.c
+@@ -957,7 +957,6 @@ static const struct tegra_smmu_swgroup tegra124_swgroups[] = {
+ static const unsigned int tegra124_group_drm[] = {
+ 	TEGRA_SWGROUP_DC,
+ 	TEGRA_SWGROUP_DCB,
+-	TEGRA_SWGROUP_GPU,
+ 	TEGRA_SWGROUP_VIC,
+ };
  
-+	/*
-+	 * Order clearing SCHED_RESTART and list_empty_careful(&hctx->dispatch)
-+	 * in blk_mq_run_hw_queue(). Its pair is the barrier in
-+	 * blk_mq_dispatch_rq_list(). So dispatch code won't see SCHED_RESTART,
-+	 * meantime new request added to hctx->dispatch is missed to check in
-+	 * blk_mq_run_hw_queue().
-+	 */
-+	smp_mb();
-+
- 	blk_mq_run_hw_queue(hctx, true);
- }
- 
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1319,6 +1319,15 @@ bool blk_mq_dispatch_rq_list(struct requ
- 		spin_unlock(&hctx->lock);
- 
- 		/*
-+		 * Order adding requests to hctx->dispatch and checking
-+		 * SCHED_RESTART flag. The pair of this smp_mb() is the one
-+		 * in blk_mq_sched_restart(). Avoid restart code path to
-+		 * miss the new added requests to hctx->dispatch, meantime
-+		 * SCHED_RESTART is observed here.
-+		 */
-+		smp_mb();
-+
-+		/*
- 		 * If SCHED_RESTART was set by the caller of this function and
- 		 * it is no longer set that means that it was cleared by another
- 		 * thread and hence that a queue rerun is needed.
-
+-- 
+2.28.0
 
