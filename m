@@ -2,109 +2,114 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1A7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7C7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:20:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4B5F2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:17:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p925V7sn"
+	by mail.kernel.org (Postfix) with ESMTP id 7563A2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598998806;
+	bh=75WLpz1kCcV95Q75jYebiNlbKPGSV2VJpE1cN2EJGGs=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=YDfpXfNMD81HFahfD3vI7iuhAf3Heuv0fT7wM4zYFYZuepDR7y0cjZU7K4+k2kLdE
+	 gLPqUAqP18NGEOvQv13dnDiwBfmR/gzScrw6oTKRs5VhjgEwi4wWiBwROyu8/d1DoH
+	 rgpbV/6UGX9U7lzCVMmZXfkR4xAJIElpTO60AiPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbgIAWR2 (ORCPT
+        id S1726714AbgIAWUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:17:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60686 "EHLO
+        Tue, 1 Sep 2020 18:20:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgIAWRX (ORCPT
+        with ESMTP id S1726463AbgIAWUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:17:23 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EDA3C061244;
-        Tue,  1 Sep 2020 15:17:22 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id bh1so1250044plb.12;
-        Tue, 01 Sep 2020 15:17:22 -0700 (PDT)
+        Tue, 1 Sep 2020 18:20:02 -0400
+Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75AADC061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 15:20:01 -0700 (PDT)
+Received: by mail-ot1-x342.google.com with SMTP id u25so2579728otq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 15:20:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=M8j6Ldkq7Y6L6HNtPJpdtArkg82hNoz7EQt2ZZQpQiE=;
-        b=p925V7snElOQZXlWMLip8xP1dwydX4MO40+mVFj0KyAvGYuTSaLzAdLMfBDDV081Yc
-         fEnLq463d09UGAfhsrrBF62cGT/GqQtYjv0nq5ng6OZ5m4jKNTDM86uafLdc6j721eOg
-         6f1p/HTw+taNTu4O7whEf+6bZmHYqxDOIiy5obUbw/5UsCVHJ9vf6MEnKgvy+pQvF+5J
-         IeXr6w2XCQR8Hs6QTtvSXHW9D7hGl2Fnpi3RZZppFwo5+UafHLipz4crtYIUn/PHLBWc
-         C/yluXJaWRsBj31/j7ffRgYozI9+twYp8EsiVCVuCJtaxWo11IwJJw/rhIA2CmV/TP98
-         71mw==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WNfZAUxXAABQdDQchDkXXMD/igGrhM8AWkqaIapbhzY=;
+        b=DjpZ8Pz43XQPA4tMFhKjxeMvsZnmgo5TZYK6EQtknRt18NBR+Z1CPP8FvDanN1eqrI
+         5RfLYveqvbJ0UoMN3poP3t7ptYdA0ifx2+onPY4KHHIpho2WohvUCN5+WBn/l40YwGce
+         E7tiPyJ3v9nH2j5rdWXzC0IkhPmDsYx4ne9q4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=M8j6Ldkq7Y6L6HNtPJpdtArkg82hNoz7EQt2ZZQpQiE=;
-        b=ukiO7dtpVcqm5U0EAXKmIP27VKHX+8Bs1ZWdRZa8PwOYzbaOPPIpuyl87MrfGMTJyz
-         eYCGkjOJagJRVBgo7Xl76Ztgs2xAWKp/x7ndYaJjFr5ly9aO36nv15e+KE1EpKClSmsa
-         BWCTdX/VvUpbEZvSOfZyXhj7Gn92W89u39rSwTDB97OMcs+IER6A8Vb8E6QdvA4511dz
-         3L9zGOaDmQqYmBfyjx4DamA9T5TORD9SRBbo3KVqByrECbtBkBONAFWMnhu4bld1ocqt
-         5tXDiE2cWmKCgkdtwU/bN98WF6qck23f5pIosoeWjF1YAwDxlaWLBk0hQFfam2UHbp2I
-         Lg3A==
-X-Gm-Message-State: AOAM531YpBLHTLqDhPC3ziij+PMqoz/A5sqRFukzjNDOWexbPH4W4rCD
-        MIswmKABJS4C7N+C+YvIA468EtmGpQPMsg==
-X-Google-Smtp-Source: ABdhPJzHMtqQ9oWwXWEViAEvRErMfjdDqEOcrOWlNbyGgorcxLjtTk6m7wzAANlJgigaSW1gJ7x2hQ==
-X-Received: by 2002:a17:902:9a8e:: with SMTP id w14mr3206869plp.6.1598998641433;
-        Tue, 01 Sep 2020 15:17:21 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id w203sm3201356pfc.97.2020.09.01.15.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 15:17:21 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     hch@lst.de
-Cc:     sfr@canb.auug.org.au, mpe@ellerman.id.au, benh@kernel.crashing.org,
-        paulus@samba.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        linux-alpha@vger.kernel.org, tony.luck@intel.com,
-        fenghua.yu@intel.com, linux-ia64@vger.kernel.org,
-        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
-        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, davem@davemloft.net,
-        sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
-        James.Bottomley@HansenPartnership.com, deller@gmx.de,
-        linux-parisc@vger.kernel.org
-Subject: [PATCH 0/2] dma-mapping: update default segment_boundary_mask
-Date:   Tue,  1 Sep 2020 15:16:44 -0700
-Message-Id: <20200901221646.26491-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WNfZAUxXAABQdDQchDkXXMD/igGrhM8AWkqaIapbhzY=;
+        b=NkiuaZWAi+GhlOJhpgHAibRiHmCl4x7hcZAHbH2umEAelshDeHQYLn5V01jU33P3I8
+         KT20Z/QaH5M0ycYqY7i/vEqQGyUOAAgIWEyFEDUtyf22RZXA/p/FaNRUa3yLJykoBAoT
+         AiLcFwkroVE7qos38gTwVFsbnQLoBQcA7uPE7SjsIXxpiAakRT3g9BdotlRo1/m+uOJY
+         lessWuliG2YL35sBlHqUeDySRoCcwWYUivVZu/MHCddR/xBMNgdWp8lE1wOrpNHC2bCG
+         kRboagt4E1TuKYsBwHe+IaP+Ahfa0ReL6KQKjDToly5ifz/t6KInQ2Il9VDbQKC+DEa4
+         Kmwg==
+X-Gm-Message-State: AOAM532QrsA2Xp4tIwX5KVIJ8FqjJ0Jxp/L228GOAt78S8OFgOny7uyL
+        QITW8Jp/igwi6PFrC/1hYxqxqw==
+X-Google-Smtp-Source: ABdhPJzVdMILrV31cHU4FnnfEnKxSF+tr4R1UsCYj9MSPtvicCYZx37ciIkB9EknaLKLbehoAOgvqw==
+X-Received: by 2002:a05:6830:3097:: with SMTP id f23mr2752664ots.305.1598998800742;
+        Tue, 01 Sep 2020 15:20:00 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id 3sm419299otu.46.2020.09.01.15.19.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 15:20:00 -0700 (PDT)
+Subject: Re: [PATCH 5.8 000/255] 5.8.6-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, Shuah Khan <skhan@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <5774a892-bf17-c759-0616-aaec4b740b9d@linuxfoundation.org>
+Date:   Tue, 1 Sep 2020 16:19:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
+MIME-Version: 1.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These two patches are to update default segment_boundary_mask.
+On 9/1/20 9:07 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.8.6 release.
+> There are 255 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.8.6-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.8.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-PATCH-1 fixes overflow issues in callers of dma_get_seg_boundary.
-Previous version was a series: https://lkml.org/lkml/2020/8/31/1026
+Compiled and booted on my test system. No dmesg regressions.
 
-Then PATCH-2 sets default segment_boundary_mask to ULONG_MAX.
+Tested-by: Shuah Khan <skhan@linuxfoundation.org>
 
-Nicolin Chen (2):
-  dma-mapping: introduce dma_get_seg_boundary_nr_pages()
-  dma-mapping: set default segment_boundary_mask to ULONG_MAX
-
- arch/alpha/kernel/pci_iommu.c    |  7 +------
- arch/ia64/hp/common/sba_iommu.c  |  3 +--
- arch/powerpc/kernel/iommu.c      |  9 ++-------
- arch/s390/pci/pci_dma.c          |  6 ++----
- arch/sparc/kernel/iommu-common.c | 10 +++-------
- arch/sparc/kernel/iommu.c        |  3 +--
- arch/sparc/kernel/pci_sun4v.c    |  3 +--
- arch/x86/kernel/amd_gart_64.c    |  3 +--
- drivers/parisc/ccio-dma.c        |  3 +--
- drivers/parisc/sba_iommu.c       |  3 +--
- include/linux/dma-mapping.h      | 21 ++++++++++++++++++++-
- 11 files changed, 34 insertions(+), 37 deletions(-)
-
--- 
-2.17.1
+thanks,
+-- Shuah
 
