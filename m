@@ -5,51 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2403C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA66EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8420820767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 784FE2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978712;
-	bh=Bzvll3pCe1AMYSUjL6S0uyx9RSHYFXoynJQi99sQQyc=;
+	s=default; t=1598978719;
+	bh=ps+HJouMxS0MKhtsq4HA6ltIRrGt1y5G3/30b95tvho=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0uMJNcH0GThyosVN8ZvJnNKol9bF3B2imV8adG1obs90468HBHGM2mZOjCiOowH1G
-	 EnZ0NT7k6lxpRl1QKbKaw89or0lytXYZLwhYNI8d4jV86zq2ZaPxXS8RUDjAvfgTCv
-	 o0d7Hk8blcYVIg5+5hwn7uDmxcUQNrYnqWIiuUhE=
+	b=LH9zi06nPPaQLE+gn2cn1l4hG/6tbBGXX5yAiOYDCoM0SWf3qxfVZHx5t/MgToSj6
+	 zDi7oDDP+LnfG9BalJ2h+Wh1FlcAEl2Mw8FNQz/iaoGAu8oAcaDxd9sar7f/znt+wi
+	 sv1y80L7IOiSyKvsB6CaEVPoGbLZzms5c44S1gjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgIAP1d (ORCPT
+        id S1730584AbgIAQpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47458 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:45:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729928AbgIAPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:59 -0400
+        id S1730202AbgIAP1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A9AB120FC3;
-        Tue,  1 Sep 2020 15:23:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BBAE520684;
+        Tue,  1 Sep 2020 15:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973837;
-        bh=Bzvll3pCe1AMYSUjL6S0uyx9RSHYFXoynJQi99sQQyc=;
+        s=default; t=1598974050;
+        bh=ps+HJouMxS0MKhtsq4HA6ltIRrGt1y5G3/30b95tvho=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USV9xl9PdzqdK4AJQxnl78jVx7LQimd5qpv45NfCeZqRYJRUdkbdwixqzH1QmwXgm
-         6idCjmrELXoYwYjwgoKRl/j/WCKoQ4rPUgcBRIK8t2NSo9KXVOl3JqaLkC7HljFlks
-         4zfbJhNDfgFIqimtnQiD23iEArBAAsS0PfZ81vIg=
+        b=GfDlJzRCdvuIzg1t/QIHgkNHVVFSrMjP0cg/NHqRyKcbPpeN0YGFTH9JWkhbUA3wT
+         BvvhH8zlu7T5qZxOSJXQMv/AsXE3EeH80q+I5M0Q5wcSr9dgxnP72PMlqXn2Cz2g7f
+         VsdEc8YNQGcqo/0P3fhE1zLkuv7VgesVQ3radtDU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 036/125] HID: quirks: add NOGET quirk for Logitech GROUP
-Date:   Tue,  1 Sep 2020 17:09:51 +0200
-Message-Id: <20200901150936.336792629@linuxfoundation.org>
+        stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 024/214] blktrace: ensure our debugfs dir exists
+Date:   Tue,  1 Sep 2020 17:08:24 +0200
+Message-Id: <20200901150954.130300809@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,50 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ikjoon Jang <ikjn@chromium.org>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
+[ Upstream commit b431ef837e3374da0db8ff6683170359aaa0859c ]
 
-Add HID_QUIRK_NOGET for Logitech GROUP device.
+We make an assumption that a debugfs directory exists, but since
+this can fail ensure it exists before allowing blktrace setup to
+complete. Otherwise we end up stuffing blktrace files on the debugfs
+root directory. In the worst case scenario this *in theory* can create
+an eventual panic *iff* in the future a similarly named file is created
+prior on the debugfs root directory. This theoretical crash can happen
+due to a recursive removal followed by a specific dentry removal.
 
-Logitech GROUP is a compound with camera and audio.
-When the HID interface in an audio device is requested to get
-specific report id, all following control transfers are stalled
-and never be restored back.
+This doesn't fix any known crash, however I have seen the files
+go into the main debugfs root directory in cases where the debugfs
+directory was not created due to other internal bugs with blktrace
+now fixed.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
-Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+blktrace is also completely useless without this directory, so
+this ensures to userspace we only setup blktrace if the kernel
+can stuff files where they are supposed to go into.
+
+debugfs directory creations typically aren't checked for, and we have
+maintainers doing sweep removals of these checks, but since we need this
+check to ensure proper userspace blktrace functionality we make sure
+to annotate the justification for the check.
+
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+ kernel/trace/blktrace.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 20530d8adfbb8..2c100b73d3fc1 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -756,6 +756,7 @@
- #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
- #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
- #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
-+#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
- #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
- #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
- #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index bdde16395b2ce..62f87f8bd9720 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index a4c8f9d9522e4..884333b9fc767 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -535,6 +535,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ #endif
+ 		bt->dir = dir = debugfs_create_dir(buts->name, blk_debugfs_root);
  
- 	{ 0 }
- };
++	/*
++	 * As blktrace relies on debugfs for its interface the debugfs directory
++	 * is required, contrary to the usual mantra of not checking for debugfs
++	 * files or directories.
++	 */
++	if (IS_ERR_OR_NULL(dir)) {
++		pr_warn("debugfs_dir not present for %s so skipping\n",
++			buts->name);
++		ret = -ENOENT;
++		goto err;
++	}
++
+ 	bt->dev = dev;
+ 	atomic_set(&bt->dropped, 0);
+ 	INIT_LIST_HEAD(&bt->running_list);
 -- 
 2.25.1
 
