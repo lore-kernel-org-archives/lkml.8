@@ -2,237 +2,277 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7038CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D094C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22BEF2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:31:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=tycho.pizza header.i=@tycho.pizza header.b="kyzLsvsd";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="kwL7+qsY"
+	by mail.kernel.org (Postfix) with ESMTP id 798B22065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:31:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbgIAPbt (ORCPT
+        id S1730830AbgIAQbt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:49 -0400
-Received: from wnew2-smtp.messagingengine.com ([64.147.123.27]:32775 "EHLO
-        wnew2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729950AbgIAP1N (ORCPT
+        Tue, 1 Sep 2020 12:31:49 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:60783 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbgIAQb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:13 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.west.internal (Postfix) with ESMTP id 2B700F6C;
-        Tue,  1 Sep 2020 11:26:23 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 01 Sep 2020 11:26:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tycho.pizza; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm1; bh=GuDHQ4jVsuyrASuXaWUaz8DMdSW
-        QZztw33zChk93mxE=; b=kyzLsvsdDcacF8pFU86UmtFvk0MSWiTnlGA2qrn9RRJ
-        zZNK8kyeZnU/mNCHRMCmKaQRGhs3/sv3CHWcnID2qv4wkgTeUidPTyhASJlx2+xV
-        5zHYQq7NFT6mnLyO5Rqu6+4xI3w2aMdMebw9bSVA4WOklUqHIJnjrNJ9SQ0rUSxL
-        LnTRsDm3mZxUBmJBE6/S6zersMgGr+d8e/NwBbTCcQss5+jWeU1JgfRVCZ2woVwO
-        4w26sgIe1ZZvQcHF4A0mAB4OmJq9ITzi0h9wzlC65ESLIJs+HxnflGWloc7YVq95
-        JR77/ENyhu9Q2VT8xHt4JGOyIOImTuBO2Elk3+HkS2g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=GuDHQ4
-        jVsuyrASuXaWUaz8DMdSWQZztw33zChk93mxE=; b=kwL7+qsYEGxJwMW3FdiHYY
-        FXysChSQsgFK0Ntfy8NwvfRLP2sSqzwBG/n8eOpaTuzMeWuq+bU/nR5laLgw1wYq
-        BKeOC4iMYJaPnWmEg/oMzN3zm64Rm4Y/H9E5nixgcRi84JmiH1VmsTTB/9vfNUmF
-        /mAbe2t9iwJA6RAjS6GIoSIDysTB4Bwd3KvoEszpQ8H9sxNx3onuZDs+MVNsz1w/
-        RnGE83NdwCHAa16FbLNmCIEeXztlziX2yaL7jcOn55UriOa7kQ/d0po4nEpcNoGT
-        zZF+hP1jPUM8kXIo8lcgEhfz8VCGl2DQQoE8ySTyBSIgWStPtzViCBedf+e7Ar5w
-        ==
-X-ME-Sender: <xms:HWhOXwRXCfPFydy2HDYAjRIHz6QD7yrytrI5WYUinAlpejr1oxaMCQ>
-    <xme:HWhOX9zAzdaATr6c5sbJEJLRS6DiwkzKOe6kOixbR--alw0zj_Dmet1gMgW1oJYRT
-    a7CPyLDkjQjs56pZ1c>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefjedgledtucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    goufhushhpvggtthffohhmrghinhculdegledmnecujfgurhepfffhvffukfhfgggtuggj
-    sehttdertddttddvnecuhfhrohhmpefvhigthhhoucetnhguvghrshgvnhcuoehthigthh
-    hosehthigthhhordhpihiiiigrqeenucggtffrrghtthgvrhhnpeffieegtdfhudeiveef
-    iedtveevgeevhfejfeduieeivedvveetgfeuveejkeffudenucffohhmrghinheprghpph
-    hsphhothdrtghomhenucfkphepuddvkedruddtjedrvdeguddrudejtdenucevlhhushht
-    vghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehthigthhhosehthigthh
-    hordhpihiiiigr
-X-ME-Proxy: <xmx:HWhOX90dEdvrJlff7A1MJXbguOWUbdn_T0dgHlqkld9T-LTE94v5TQ>
-    <xmx:HWhOX0CxvRna2WuaZexG6M5eK367_FCMJnzFDuWkEPlHhN_nzMxjEw>
-    <xmx:HWhOX5i8R4Z3BygA_mepAW7D78HEqBQ7msDoEjrQB15XDaBzm4_dmg>
-    <xmx:HmhOX5e25I7IPFW8tpQkckqA_Plycmdzn56F3h7iKyBxdv_DRQLFG3j_zHrbmkYj>
-Received: from cisco (unknown [128.107.241.170])
-        by mail.messagingengine.com (Postfix) with ESMTPA id E8D82328005A;
-        Tue,  1 Sep 2020 11:26:19 -0400 (EDT)
-Date:   Tue, 1 Sep 2020 09:26:17 -0600
-From:   Tycho Andersen <tycho@tycho.pizza>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Christian Brauner <christian@brauner.io>,
-        linux-kernel@vger.kernel.org, luto@amacapital.net,
-        syzbot <syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com>,
-        syzkaller-bugs@googlegroups.com, wad@chromium.org
-Subject: Re: memory leak in do_seccomp
-Message-ID: <20200901152617.GB583718@cisco>
-References: <000000000000e5ea9e05ac9d16c1@google.com>
- <000000000000df80ae05ae244c2b@google.com>
- <202008311620.AC4A7047D@keescook>
- <20200901000915.GA564594@cisco>
- <20200901011459.GA583718@cisco>
- <202008311921.3D64C23D@keescook>
+        Tue, 1 Sep 2020 12:31:26 -0400
+Received: from [192.168.1.173] ([37.4.249.194]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Myb4H-1kWAyZ0pXJ-00yvMd; Tue, 01 Sep 2020 18:31:10 +0200
+Subject: Re: [PATCH v4 29/78] drm/vc4: crtc: Add a delay after disabling the
+ PixelValve output
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Eric Anholt <eric@anholt.net>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        linux-rpi-kernel@lists.infradead.org
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <a1f22aadc60a2f32022831a6348c8bbd6e1954c3.1594230107.git-series.maxime@cerno.tech>
+ <CAPY8ntBLWrfagZ5-kQz+5Mkw4_KaaTP63_L3D4owJAfA5kFpzw@mail.gmail.com>
+ <20200729144251.us6a2pgkjjmm53ov@gilmour.lan>
+ <ff6eca99-d98e-5b50-8b74-bba82928dda2@i2se.com>
+ <20200825150606.utlynhzo664bwksy@gilmour.lan>
+ <b41b066a-2d23-8ac3-be0a-c686f3954284@i2se.com>
+ <20200901095829.64a5hjghf3mlsyvo@gilmour.lan>
+From:   Stefan Wahren <stefan.wahren@i2se.com>
+Autocrypt: addr=stefan.wahren@i2se.com; keydata=
+ LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tClZlcnNpb246IEdudVBHIHYy
+ CgptUUlOQkZ0NmdCTUJFQUN1Yi9wQmV2SHhidkplZnlaRzMySklObW4yYnNFUFgyNVY2ZmVq
+ bXlZd21DR0tqRnRMCi9Eb1VNRVZIRHhDSjQ3Qk1YbzM0NGZIVjFDM0FudWRnTjFCZWhMb0J0
+ TEh4bW5lQ3pnSDNLY1B0V1c3cHRqNEcKdEp2OUNRRFp5MjdTS29FUHh5YUk4Q0YweWdSeEpj
+ NzJNOUk5d21zUFo1YlVIc0x1WVdNcVE3SmNSbVBzNkQ4ZwpCa2srOC95bmdFeU5FeHd4SnBS
+ MXlsajVianhXREh5WVF2dUo1THpaS3VPOUxCM2xYVnNjNGJxWEVqYzZWRnVaCkZDQ2svc3lp
+ by9ZaHNlOE4rUXN4N01RYWd6NHdLVWtRUWJmWGcxVnFrVG5BaXZYczQyVm5Ja211NWd6SXcv
+ MHQKUkp2NTBGUmhIaHhweUtBSThCOG5oTjhRdng3TVZrUGM1dkRmZDN1R1lXNDdKUGhWUUJj
+ VXdKd05rLzQ5RjllQQp2ZzJtdE1QRm5GT1JrV1VSdlArRzZGSmZtNitDdk92N1lmUDF1ZXdB
+ aTRsbitKTzFnK2dqVklXbC9XSnB5MG5UCmlwZGZlSDlkSGtnU2lmUXVuWWN1Y2lzTXlvUmJG
+ OTU1dENna0VZOUVNRWRZMXQ4aUdEaUNnWDZzNTBMSGJpM2sKNDUzdWFjcHhmUVhTYUF3UGtz
+ bDhNa0NPc3YyZUVyNElOQ0hZUUR5WmljbEJ1dUNnOEVOYlI2QUdWdFpTUGNRYgplbnpTektS
+ Wm9POUNhcUlEK2ZhdkxpQi9kaHptSEErOWJnSWhtWGZ2WFJMRFp6ZThwbzFkeXQzRTFzaFhp
+ ZGRaClBBOE51SlZ6RUl0MmxtSTZWOHBaRHBuMjIxcmZLaml2UlFpYW9zNTRUZ1pqak1ZSTdu
+ bko3ZTZ4endBUkFRQUIKdENCVGRHVm1ZVzRnVjJGb2NtVnVJRHgzWVdoeVpXNXpkRUJuYlhn
+ dWJtVjBQb2tDTndRVEFRZ0FJUVVDWElkYwo0Z0liQXdVTENRZ0hBZ1lWQ0FrS0N3SUVGZ0lE
+ QVFJZUFRSVhnQUFLQ1JDVWdld1BFWkR5MjFPVEQvOUdpWkxkCnRSWWNteVJKZ2x0aVFRekFp
+ UWRjSUQ3OGxHb1dwL3grci92Y1U2YjZqdVl1ZVR3Z1Iwclc3djdsMklSQnlEN24KSEp4YSt0
+ SVNvUVpCZ2hvbE1JZmI5TXRoR09KTENZNzdrL1FoQWhuMzJOR1prZWp3OXR6a3MvNDBtclpT
+ VVQ4NApaeWJzUVhyTE0vSFI2VElJL0RlUEIwbktEM0ppcHBzMlVIUUQ5cUQySWpFd1NRUGxI
+ akNPckVaaDQ1UFo3bTkrClo5M0x6aVRlc1dabFlRdUxpSndzNHJLcHRIVzFkL3dSZWxzaG1t
+ NlFxY0wybDRDL2U0MGVEQjlncTRkU1poOVgKUEVZbGxpeU5RaDdhMkxTZHVtRTFyK2NTd0lq
+ RS91ZHRSdmRPOWFLb0psT2JVSzVkTmpTUEg3d0tUYndkWGRZRApHUHdEaFhkNThOQXdyK1BY
+ QmxQajB0STFMQ3ErTEJ4ZUt6aFdYK0dWcTlEb2pWanlVREV4Rk5Ga1h1b0M3ZzhtClY5VDB0
+ ZUJpdVpSbm91WEt3VjJGcHRaT0hIN0JVRVd0a0t0aGgxZXRmT1dwaWdCemtVN2JQc2ZJWVQr
+ cnk5dGIKMW9KK3Y0MVBOYXFaRW1QVXBKeHZmek5UN3Ayd01lRDdaajlmMHJ1YlJQdExBSjJR
+ R2pyRkhzdVh3QU9xcHl6ZQoxOEVidHNZazBOMHp1SEVoY2orUEJJQmZoMFlJWWQ1MW9mNkdJ
+ aU95UjlxMFhYdHBsVUo3VDIvSDF1UXFrWGxwCitnVzRWa2lmc2NJckl1eWZueFpXMTJlSXZq
+ NnlicVdMN2FZS0dZbVQ2aUxDUGJIWXlZY2F5bDRFa0ZjckNGN0UKZTBXVC9zY1ZNaE8vNVgv
+ SGFOQTVIQngvcjUycGdMY3Y0aTlNeExRbVUzUmxabUZ1SUZkaGFISmxiaUE4YzNSbApabUZ1
+ TG5kaGFISmxia0JwTW5ObExtTnZiVDZKQWpnRUV3RUNBQ0lGQWx0NmdCTUNHd01HQ3drSUJ3
+ TUNCaFVJCkFna0tDd1FXQWdNQkFoNEJBaGVBQUFvSkVKU0I3QThSa1BMYmpic1AvamdqYVNz
+ NUh0bGtBSXZXUytGcm15N2MKaG5jT0F4TFRWL0Q2UkV3SU95R0poRkt3d29pck55UTJnOXZV
+ YTNZQ1lDZjFmSjh3RWhhS09COWQwTHBNUm5MNApkRVQ4ZDgyMzhFL3BLK0hxTktpSXNKaHM2
+ SnNLOFpnalZRR3JtbWZua0dyWisxdjBIQnV4ZGljZ0duUC9XdHVBClVsOGw2Mi9BTGJheXlq
+ KzYxQ2xyc0V0UklhcU82N0xJWXdQaVBEUkkrWGlNek5pR3pIRi8xUTZHUjAyUkg2YTMKRjg5
+ ejhhUHhjSGkxWnZDdDJ5a3o2VUVjaHpQMHI1Z3FGSisvTC9VcHU4ME1YaVk0djVlSWFCNTJn
+ VlBnaXlNQQpsTDJkRHMxbUladm5yUkxSWTJ0YjNtQVlOa1Y1QjVJRFQzcGtXeTZrS281T0Nn
+ SytZZFlPUjhGTloyb04ydDhPCnJLK1ZudGFLN01NU0tIbG1ZL3NPd3RSbEVoMU9CbXJjQ3dH
+ d21wLzA1R2tSNDZmL0lzaFJWZUZPUmF3K0dBcXQKUDIrQ0ZhMkNOQS9JSG5aTm95aWtsRHpQ
+ UUhVVUdzck5wcERyaFg5Sm1oQm1nMXYyeXdIMU5YdTFpRGZQMUJBdwpLZ29rdDVmNVVhUkY5
+ c0FBNTN2V0V2YlVVTjllZXNGR0x6UFdkSkdRNWhwZC9WSDVJUXk5U0JyaC93SWNla3E1Cm4w
+ a042cGJUSHhHRTUyU2kvTVZJa05UdURaM2FwbjJqbERaNHBPdHBCWEkydlAzYlBPK05pcUJa
+ anNVM3R4TGkKV2R2MkZqeXp6NlhMUndlV1JZVkw1SGE2TER0eG9yMnZ1NlVQMDdwOXh6MXhS
+ WmFPRFczb1lsSEZ6WXBhNFc1ZwpMSGIybEVrSXVVZlNjaWNHYmpqQXRDbFRkR1ZtWVc0Z1Yy
+ Rm9jbVZ1SUR4emRHVm1ZVzR1ZDJGb2NtVnVRR2x1CkxYUmxZMmd1WTI5dFBva0NOd1FUQVFn
+ QUlRVUNYSWRlaHdJYkF3VUxDUWdIQWdZVkNBa0tDd0lFRmdJREFRSWUKQVFJWGdBQUtDUkNV
+ Z2V3UEVaRHkyeUhURC85VUY3UWxEa0d4elE3QWFDSTZOOTVpUWY4LzFvU1VhRE51Mlk2SQpL
+ K0R6UXBiMVRiVE9yM1ZKd3dZOGEzT1d6NU5MU09MTVdlVnh0K29zTW1sUUlHdWJEM09EWko4
+ aXpQbEcvSnJOCnQ1elNkbU41SUE1ZjNlc1dXUVZLdmdoWkFnVERxZHB2K1pIVzJFbXhuQUox
+ dUxGWFhlUWQzVVpjQzVyMy9nL3YKU2FNbzl4ZWszSjVtTnVEbTcxbEVXc0FzL0JBY0ZjK3lu
+ TGh4d0JXQld3c3Z3UjhiSHRKNURPTVd2YUt1RHNrcApJR0ZVZS9LYjJCK2pyYXZRM1RuNnMv
+ SHFKTTBjZXhTSHo1cGUrMHNHdlArdDlKNzIzNEJGUXdlRkV4cmlleThVCkl4T3I0WEFiYWFi
+ U3J5WW5VL3pWSDlVMWkyQUlRWk1XSkFldkN2VmdRL1UrTmVSaFh1ZGU5WVVtRE1EbzJzQjIK
+ VkFGRUFxaUYyUVVIUEEybThhN0VPM3lmTDRyTWswaUh6TElLdmg2L3JIOFFDWThpM1h4VE5M
+ OWlDTHpCV3UvTgpPbkNBYlMremx2TFphaVNNaDVFZnV4VHR2NFBsVmRFamY2MlArWkhJRDE2
+ Z1VEd0VtYXpMQU1yeDY2NmpINWt1ClVDVFZ5bWJMMFR2Qis2TDZBUmw4QU55TTRBRG1rV2tw
+ eU0yMmtDdUlTWUFFZlFSM3VXWFo5WWd4YVBNcWJWK3cKQnJoSmc0SGFONkM2eFRxR3YzcjRC
+ MmFxYjc3L0NWb1JKMVo5Y3BIQ3dpT3pJYUFtdnl6UFU2TXhDRFhaOEZnWQpsVDR2MjNHNWlt
+ SlAyemdYNXMrRjZBQ1VKOVVRUEQwdVRmK0o5RGEycitza2gvc1dPbloreWNvSE5CUXZvY1pF
+ Ck5BSFFmN2tDRFFSYmVvQVRBUkFBMkhkMGZzRFZLNzJSTFNESGJ5ME9oZ0RjRGxWQk0yTSto
+ WVlwTzNmWDFyKysKc2hpcVBLQ0hWQXNRNWJ4ZTdIbUppbUhhNEtLWXMya3YvbWx0L0NhdUNK
+ Ly9wbWN5Y0JNN0d2d25Lem11WHp1QQpHbVZUWkM2V1I1TGtha0ZydEhPelZtc0VHcE52NVJj
+ OWw2SFlGcExrYlNrVmk1U1BRWkp5K0VNZ01DRmdqclpmClZGNnlvdHdFMWFmN0hOdE1oTlBh
+ TEROMW9VS0Y1aitSeVJnNWl3SnVDRGtuSGp3QlFWNHBndzIvNXZTOEE3WlEKdjJNYlcvVExF
+ eXBLWGlmNzhJaGdBelh0RTJYck0xbi9vNlpINzFvUkZGS096NDJsRmR6ZHJTWDBZc3FYZ0hD
+ WAo1Z0l0TGZxemoxcHNNYTlvMWVpTlRFbTFkVlFyVHFueXMwbDE4b2FsUk5zd1lsUW1uWUJ3
+ cHdDa2FUSExNSHdLCmZHQmJvNWRMUEVzaHRWb3dJNm5zZ3FMVHlRSG1xSFlxVVpZSXBpZ21t
+ QzNTd0JXWTFWNmZmVUVta3FwQUFDRW4KTDQvZ1Vnbjd5US81ZDBzZXFuQXEycFNCSE1VVW9D
+ Y1R6RVFVV1ZraUR2M1JrN2hURm1oVHNNcTc4eHYyWFJzWApNUjZ5UWhTVFBGWkNZRFVFeEVs
+ RXNTbzlGV0hXcjZ6SHlZY2M4cURMRnZHOUZQaG1RdVQyczlCbHg2Z0kzMjNHCm5FcTFsd1dQ
+ SlZ6UDRqUWtKS0lBWHdGcHYrVzhDV0xxekRXT3ZkbHJEYVRhVk1zY0ZUZUg1VzZVcHJsNjVq
+ cUYKUUdNcGNSR0NzOEdDVVcxM0gwSXlPdFF0d1dYQTRueStTTDgxcHZpQW1hU1hVOGxhS2FS
+ dTkxVk9WYUY5ZjRzQQpFUUVBQVlrQ0h3UVlBUUlBQ1FVQ1czcUFFd0liREFBS0NSQ1VnZXdQ
+ RVpEeTIrb1hELzljSEhSa0JaT2ZrbVNxCjE0U3Z4MDYyUHRVMEtWNDcwVFNucC9qV29ZSm5L
+ SXczRzBtWElSZ3J0SDJkUHdwSWdWanNZeVJTVk1LbVNwdDUKWnJEZjlOdFRiTldnazhWb0xl
+ WnpZRW8rSjNvUHFGclRNczNhWVl2N2U0K0pLNjk1WW5tUSttT0Q5bmlhOTE1dApyNUFaajk1
+ VWZTVGx5VW15aWMxZDhvdnNmMWZQN1hDVVZSRmNSamZOZkRGMW9ML3BEZ01QNUdaMk93YVRl
+ am15CkN1SGpNOElSMUNpYXZCcFlEbUJuVFlrN1B0aHk2YXRXdllsMGZ5L0NxYWpUS3N4Nytw
+ OXh6aXU4WmZWWCtpS0IKQ2MrSGUrRURFZEdJRGh2TlovSVFIZk9CMlBVWFdHUytzOUZOVHhy
+ L0E2bkxHWG5BOVk2dzkzaVBkWUl3eFM3SwpYTG9LSmVlMTBEamx6c1lzUmZsRk9XMFpPaVNp
+ aElDWGlRVjF1cU02dHpGRzlndFJjaXVzNVVBdGhXYU8xT3dVClNDUW1mQ09tNGZ2TUlKSUE5
+ cnh0b1M2T3FSUWNpRjNjcm1vMHJKQ3ROMmF3WmZnaThYRWlmN2Q2aGp2MEVLTTkKWFpvaUFa
+ WVpEKy9pTG01VGFLV042b0dJdGkwVmpKdjhaWk9aT2ZDYjZ2cUZJa0pXK2FPdTRvclRMRk16
+ MjhhbwpVM1F5V3BOQzhGRm1kWXNWdWE4czZnTjFOSWE2eTNxYS9aQjhiQS9pa3k1OUFFejRp
+ RElScmdVek1FZzhBazdUCmZtMUtpWWVpVHRCRENvMjVCdlhqYnFzeXhrUUQxbmtSbTZGQVZ6
+ RXVPUEllOEp1cVcyeEQ5aXhHWXZqVTVoa1IKZ0pwM2dQNWIrY25HM0xQcXF1UTJFNmdvS1VN
+ TEFia0NEUVJiZmw5REFSQUFzRExjYStMbFAydm5mdEVHaHBjQQpCR1ZOUUVGbkdQckNhdVU2
+ SGhOODA1V3RQVHRtc1JPdUp6cWdVVDBtcHFXSWZacTZzTXd5dkhLOVRzL0tIM0paClVWYlJD
+ M3oyaDNLZmhIL0RhZjk1cGQ2bVBjL2g5dkYvT3kzK2VUV2hnR25QNmNBNWtsUitmTzFXaEc4
+ VnJpWHYKck5lUkcyMHN6emplSG9jblNJY1Q1WHVaUjB1REhPaUd4T2l6MXNNUkZUR3h6R095
+ MTlSOXJ2dTYzdGlJM2Q3dgpnYzc1T0NBZGtlQi9TZUNFbGFSdzBUZjdMWmJQampzRjI2M0JZ
+ bk1mNGtrTkVLdnFXY1UyaWNNcCtxZXpqeW5CCnB2ZXVlMHJDVFFCWUFRbG9GQ1ZUR0hyV1dB
+ NkQ0VzVPMkFmSWRJYzF1MUpDWnAyZjVMV1ZvVUZUVklyUW5RUVUKU0hDaWZyOU1aeExUdFBK
+ ZFU1Mm9TUHczZGs0aExQOGlKSUx1dnYvYXZhakNzUVlIRXR3WXNiZUZaeGl1TGdscApBN1lj
+ Sk5ObXBnQ3BNRDR3VWh2bEN0QUtOQlFXeXIyOTc2OThFUVRuNDZlQmVVNkttMkNpaFhrZ3dD
+ eWY4ZXlLCkxFM3NYZXdhcTVrZ1pXdk5xNml1NXFZSVJCOXl3K2NYYzYwZE9aRE9scTkzWDVT
+ QVJZemFvZXBrSHo0cmtMa1AKUG8rdENIeUhRUHNHblBYYzlXVDgwREM5Tm5KR2R2VWx5NXJk
+ TUk0eHBaeWdlb2tqd293VlFsUFV1Y1M2TXluNwpmOHc4Y2dmQjdDMklBSWNEeDJwUC9IendY
+ dmtDT1FOQTdtVjFsTTA4bitnVmtUcnpweGlwNURicTRDSW9ZeDJNCkpaVDhiR1JINlhqY1VE
+ S2EwOVFoeVpzQUVRRUFBWWtFUkFRWUFRZ0FEd1VDVzM1ZlF3SWJBZ1VKQThKbkFBSXAKQ1JD
+ VWdld1BFWkR5MjhGZElBUVpBUWdBQmdVQ1czNWZRd0FLQ1JCVnhETFBjVk1NamNkc0QvMFJo
+ QXN1UVlPeQpyMTNCbDNOaFhrWUFaR3AyWkZER3VrZTdPU2tWOG9qT09UZFR5ei9jT1JHQ2J5
+ ZEQrRGd2cUZ5VmRuT1hLZ08wCmxKbUd3ckdlTGRnZ0F2aDBpaHJwNU8wWVVKOWJCU1htR01t
+ UVRZSC9BbUxUR2FkYnVqQ1dqNWZGVWtDeXd4aW0KSHV5MFBiMjRwelR2UzUwR1k1WStxSDBG
+ SE5haWdka2tpV04zcnVnN0haRXUvQ3lsUFpqT1h6K0QxUVBNckV4dwo3ZC9NS2FiVis5YU5i
+ UVlabGRJajk4UXd2VUYxS1N6YThqbFVJdnBoUnEyN0FUOGZER1lHUGZERU1nMmNCT2FlCkty
+ N29uUXM0YjdhV082aWZEbHhRVHB6c3pvK0FuODA3Tk1TdFZFRmYrczNBaFZEM2U3bmY4SkJh
+ dmJWckFlMGsKb20yNm96elBubnh6K2xxVlZ0dzZVazRYTUl6dGl4L0h3SFl3dUNuY1VYWndL
+ MEkzeUFKd2pZd29vck9DaEozUwpFVWJKUVB0R3NneFJERXhWQkZlNk5MUC82MnhQOU82dGFj
+ d09kYjBNbVAxYjM5cFJBVEM3YmdkMWxkVUxpNzVaCmxKckowL1NpVkVyb3FOWXk3OXRmbWdB
+ WjJVeFptczlTckV5Nm85UVNmc24xYVh2K01QTDlKYUNHbWtQNnpiTFEKTm5kajBKY2FRbmtD
+ MHZneWRPMUJtNk11OTZQOXVmbEtaY0FTNndtTE01SWRIT3lqTDg4d0h3anVjakFPQnRjdwpw
+ MG9HVG5WT25Sc05ZU084VzhZWi9LZGJ1Nzg1ZGF6TXFKMmlOakFEdUJiZG02TjRqNUVkTW5r
+ TG4wQklmUEpwCmRnbTR2bDJVcExqd1JHci9NM3dtbTVwdnMrNnVCN2hrL0ZKaUQvNGxsRU5Q
+ NGVNMWg3U200aitWcTZOMSt6VEIKSVhKQWViSXFhc0RwNXlaUzdYcnk0STM2bjg1WEVZZkcw
+ MWx0QXlob05WMkRPOFNJUlFwdWkydHErOVJQM1JLMQpKREJ4eEVKWTJFTzVKWjhNeGFQSFEw
+ RFQwNWxSRmpLMkFsaGRFSXRqTGpwSjNmVW05c3FMeE1XeHpQNlV6M2lpCjJ1YTR1bnJ0Nk9D
+ VHFRd2lqRi8zYlRXaXd2VkFBSG5NRlVpb1hzaEhhb2hWRGNWZm5lSU1mVjBiUUNYWWkzTnAK
+ WTB2MFp3Y2lGSCtnU0M3cUQ2WE51aHBWR1NMNElpbGlGeS9TemNhSkV6QUhlTERTaFpQMkNX
+ ZG5DNHZnbDM3dApocHg4aDU1WWhKbjZIU3VVelBnaGFLdFZCMmsrajdaZXlaK1NGeHA3SXVi
+ SEN3TEhsUWhUNzVSd1EzaUF4S242CjBxajUxY1lUbnF4ZFpYVzZmSDNQa3VNellVNUdwcVIv
+ MU9sNWMvd2ZJNmc2QW04eUtXLzBFVUx0K0tuNExGc1MKbTdZM201SDV2MTJVNkpCWXZWK3Ix
+ M2paaW9zNEVFREU5M0Q1c05IMk1JeVJ6Q0RxMXpkZHQ0WHV5S0ZqUEtXMQo5aWJaRGZGVjdL
+ dUNzdnVMMjNzQmMxc0NNb3ArRTFtVC9ReE9JQTZvRFQxTVFzdHdPVnVReURDdi9PdktTZ2Z6
+ CjhGWEdMNkFQY2xqQ3FqOEFKaHhReXN4ZG9pUVA4bS92dStialdHR3Z4dzVzMWxncGlSRFRS
+ VVBnY0pKTmFHWTIKVklEclpRaTROU2lOUTBOSWkrZGp1NGZOTW1DcFFxZzh0YkMzY0FhNnl3
+ bTZvUUIxU0JobURYMmUxMWdSbGx1SQpPblRHUEUwSFRvM2w3MmxoYmc9PQo9cVpNVgotLS0t
+ LUVORCBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tCg==
+Message-ID: <27a549fe-e38d-f9a2-2677-ae5b5dc1aa45@i2se.com>
+Date:   Tue, 1 Sep 2020 18:31:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008311921.3D64C23D@keescook>
+In-Reply-To: <20200901095829.64a5hjghf3mlsyvo@gilmour.lan>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-Provags-ID: V03:K1:RcSg3wJ7VyDyg5/5BpKd2bIb1xjnlFYxWunm1JoOk8PZRpOnLRc
+ C9f7Ig3FHO0heNqC1YHjhNi0xyDNK4kFVDtbI04IdqLn57vaWqLmuOZ0fij/Ec/BUFxbRvI
+ jbKm1TYcysK/FciE/VylNhR2cdkXmpZ0e21KiiUsmreziWGP4XD3EEJ/bFpUac34hnCpD60
+ A4noq5Ok+5uAHzGFp9V4g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:RFn2Z3FMg8A=:gctpRhZjp6gl/oJpdn7Vth
+ 48bAHLBWGk39jj/B/RKlEd2NvG61XkBZ60o3FSNQBD7cVU+ohwnxvGscg7jm5Z5kF3IEktry1
+ j/h8llgCtvmxsTWe8fmdjyu4NXTKldaUH3Z9wud2D3u3IWveN+rNUSwEBQgSx4Ci4FX3sJOr2
+ W5P7UsLPr05pwNvXMdxj1RaxEfg9iWbSEdiRQwjzY3ZyU1ZZBMxIynJ7LuN69RQSTD7gRIbrI
+ ++PO6JralM7mhuluCE/9AhO5xQ305EhYyY1Jg8edGG/mbDyI4UpWv6WgFaU02jwuhD7L+gf/x
+ TS5UwwjOWIjUPExpIEDOewaFkRHR+52nHTm19P8vLLnHyl8ptg3R+LRZF9RkPQre89EO06wu+
+ 28ndBe4JlLRWUGAGotwjtWo0ves7a/mwNZWBydZSZ2DPoO9rjfR0Ef3TzTq1YP8biNLAt4WNl
+ OJkb2SxtHTzdkvCDMO2Koa8QHRwBSICf6pBQ6d+ByLIDUwv7J9VPi5Epuf210krs8gxuWvxTH
+ 4x4mEhYoQV6sO3DmsK781z0jcx0UaIobdZQ+aw+ztUgDK54jz/GB1kRN+O84UxkWnHSZYGH85
+ MgZFd63kAunOGOst9y9NsFctb2MF3jbS2CUq8OOExcmC/HezQwgaEacppC/whD4VZB96h8aj+
+ 25MZl1CVIJSTQ61AMBphdQ3Z41OklBjXiplC1XqH9c5Wgea4caBiIVO8r3QyvXs+GN8+YPs60
+ i5AqVifkWujO1IlGbjQ7dXM/kOkniwUHofyyEiFSkDlei8UdV0q9PT4smM02PjBv4GvwVHqrB
+ gAKgDZ6X/P3nleLCJi8dQ3uIEA7KoTh1xftBQXmGEPloqYne6RFxH4s9DBmBCqYR9ZJNbSv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 08:08:13AM -0700, Kees Cook wrote:
-> On Mon, Aug 31, 2020 at 07:14:59PM -0600, Tycho Andersen wrote:
-> > On Mon, Aug 31, 2020 at 06:09:15PM -0600, Tycho Andersen wrote:
-> > > On Mon, Aug 31, 2020 at 04:25:35PM -0700, Kees Cook wrote:
-> > > > On Sun, Aug 30, 2020 at 08:50:15PM -0700, syzbot wrote:
-> > > > > syzbot has found a reproducer for the following issue on:
-> > > > > 
-> > > > > HEAD commit:    dcc5c6f0 Merge tag 'x86-urgent-2020-08-30' of git://git.ke..
-> > > > > git tree:       upstream
-> > > > > console output: https://syzkaller.appspot.com/x/log.txt?x=10b297d5900000
-> > > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=903b9fecc3c6d231
-> > > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3ad9614a12f80994c32e
-> > > > > compiler:       gcc (GCC) 10.1.0-syz 20200507
-> > > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14649561900000
-> > > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118aacc1900000
-> > > > > 
-> > > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
-> > > > > Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
-> > > > > 
-> > > > > executing program
-> > > > > executing program
-> > > > > executing program
-> > > > > executing program
-> > > > > executing program
-> > > > > BUG: memory leak
-> > > > > unreferenced object 0xffff88811ba93600 (size 64):
-> > > > >   comm "syz-executor680", pid 6503, jiffies 4294951104 (age 21.940s)
-> > > > >   hex dump (first 32 bytes):
-> > > > >     00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
-> > > > >     08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
-> > > > >   backtrace:
-> > > > >     [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
-> > > > >     [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
-> > > > >     [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
-> > > > >     [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
-> > > > >     [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
-> > > > >     [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
-> > > > >     [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > > 
-> > > > I haven't narrowed this down yet (and it *might* be a false positive),
-> > > > but it looks like this is filter->notif. The only way that's possible is
-> > > > if seccomp_notify_release() was never called *and* seccomp_filter_free()
-> > > > got called... which would imply a reference counting problem. The way
-> > > > there doesn't jump out at me yet, but I haven't yet decoded the C
-> > > > reproducer into the actual seccomp arguments, etc.
-> > > 
-> > > Looks like it's just a bunch of threads in the same thread group
-> > > trying to install a filter with TSYNC and NEW_LISTENER turned on. Does
-> > > the patch below look reasonable?
-> > > 
-> > > I didn't send it separately since I'm in the process of switching my
-> > > e-mail address to tycho@tycho.pizza; let this e-mail serve as proof
-> > > that that e-mail really is me too :). I can send it the normal way if
-> > > it looks good.
-> > > 
-> > > 
-> > > From d497e787e8e1b3e8b9230fdc4c9802616709c920 Mon Sep 17 00:00:00 2001
-> > > From: Tycho Andersen <tycho@tycho.pizza>
-> > > Date: Mon, 31 Aug 2020 17:55:07 -0600
-> > > Subject: [PATCH] seccomp: don't leak memory when filter install races
-> > > 
-> > > In seccomp_set_mode_filter() with TSYNC | NEW_LISTENER, we first initialize
-> > > the listener fd, then check to see if we can actually use it later in
-> > > seccomp_may_assign_mode(), which can fail if anyone else in our thread
-> > > group has installed a filter and caused some divergence. If we can't, we
-> > > partially clean up the newly allocated file: we put the fd, put the file,
-> > > but don't actually clean up the *memory* that was allocated at
-> > > filter->notif. Let's clean that up too.
-> > > 
-> > > Fixes: 51891498f2da ("seccomp: allow TSYNC and USER_NOTIF together")
-> > > Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
-> > > Signed-off-by: Tycho Andersen <tycho@tycho.pizza>
-> > > ---
-> > >  kernel/seccomp.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> > > index 3ee59ce0a323..21a76127833f 100644
-> > > --- a/kernel/seccomp.c
-> > > +++ b/kernel/seccomp.c
-> > > @@ -1581,6 +1581,8 @@ static long seccomp_set_mode_filter(unsigned int flags,
-> > >  			listener_f->private_data = NULL;
-> > >  			fput(listener_f);
-> > >  			put_unused_fd(listener);
-> > > +			kfree(filter->notif);
-> > > +			filter->notif = NULL;
-> > 
-> > Oof, actually this isn't quite right. It should be s/filter/prepared/g.
-> > I can fix that and send out a real patch that's actually tested at
-> > some point tomorrow.
-> 
-> Ah! Yes, nice catch. I was staring at the wrong failure path. :)
-> 
-> I'm thinking the free/NULL pattern, since it's repeated in a few places,
-> should likely be a short helper. I'll stare at this some more...
+Hi Maxime,
 
-I think (?) it's just two, one here and one in
-seccomp_notify_release() but agreed. Maybe something like (untested):
+Am 01.09.20 um 11:58 schrieb Maxime Ripard:
+> Hi Stefan
+>
+> On Tue, Aug 25, 2020 at 11:30:58PM +0200, Stefan Wahren wrote:
+>> Am 25.08.20 um 17:06 schrieb Maxime Ripard:
+>>> Hi Stefan,
+>>>
+>>> On Wed, Jul 29, 2020 at 05:50:31PM +0200, Stefan Wahren wrote:
+>>>> Am 29.07.20 um 16:42 schrieb Maxime Ripard:
+>>>>> Hi,
+>>>>>
+>>>>> On Wed, Jul 29, 2020 at 03:09:21PM +0100, Dave Stevenson wrote:
+>>>>>> On Wed, 8 Jul 2020 at 18:43, Maxime Ripard <maxime@cerno.tech> wrote:
+>>>>>>> In order to avoid pixels getting stuck in the (unflushable) FIFO between
+>>>>>>> the HVS and the PV, we need to add some delay after disabling the PV output
+>>>>>>> and before disabling the HDMI controller. 20ms seems to be good enough so
+>>>>>>> let's use that.
+>>>>>>>
+>>>>>>> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+>>>>>>> ---
+>>>>>>>  drivers/gpu/drm/vc4/vc4_crtc.c | 2 ++
+>>>>>>>  1 file changed, 2 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/gpu/drm/vc4/vc4_crtc.c b/drivers/gpu/drm/vc4/vc4_crtc.c
+>>>>>>> index d0b326e1df0a..7b178d67187f 100644
+>>>>>>> --- a/drivers/gpu/drm/vc4/vc4_crtc.c
+>>>>>>> +++ b/drivers/gpu/drm/vc4/vc4_crtc.c
+>>>>>>> @@ -403,6 +403,8 @@ static void vc4_crtc_atomic_disable(struct drm_crtc *crtc,
+>>>>>>>         ret = wait_for(!(CRTC_READ(PV_V_CONTROL) & PV_VCONTROL_VIDEN), 1);
+>>>>>>>         WARN_ONCE(ret, "Timeout waiting for !PV_VCONTROL_VIDEN\n");
+>>>>>>>
+>>>>>>> +       mdelay(20);
+>>>>>> mdelay for 20ms seems a touch unfriendly as it's a busy wait. Can we
+>>>>>> not msleep instead?
+>>>>> Since the timing was fairly critical, sleeping didn't seem like a good
+>>>>> solution since there's definitely some chance you overshoot and end up
+>>>>> with a higher time than the one you targeted.
+>>>> usleep_range(min, max) isn't a solution?
+>>> My understanding of usleep_range was that you can still overshoot, even
+>>> though it's backed by an HR timer so the resolution is not a jiffy. Are
+>>> we certain that we're going to be in that range?
+>> you are right there is no guarantee about the upper wake up time.
+>>
+>> And it's not worth the effort to poll the FIFO state until its empty
+>> (using 20 ms as timeout)?
+> I know this isn't really a great argument there, but getting this to
+> work has been quite painful, and the timing is very sensitive. If we
+> fail to wait for enough time, there's going to be a pixel shift that we
+> can't get rid of unless we reboot, which is pretty bad (and would fail
+> any CI test that checks for the output integrity).
+>
+> I know busy-looping for 20ms isn't ideal, but it's not really in a
+> hot-path (it's only done when changing a mode), with the sync time of
+> the display likely to be much more than that, and if it can avoid having
+> to look into it ever again or avoid random failures, I'd say it's worth
+> it.
 
-diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-index 3b593b4caaa5..bb0dd9ae699a 100644
---- a/kernel/seccomp.c
-+++ b/kernel/seccomp.c
-@@ -1109,13 +1109,12 @@ static long seccomp_set_mode_strict(void)
- }
- 
- #ifdef CONFIG_SECCOMP_FILTER
--static int seccomp_notify_release(struct inode *inode, struct file *file)
-+static void seccomp_notify_detach(struct seccomp_filter *filter)
- {
--	struct seccomp_filter *filter = file->private_data;
- 	struct seccomp_knotif *knotif;
- 
- 	if (!filter)
--		return 0;
-+		return;
- 
- 	mutex_lock(&filter->notify_lock);
- 
-@@ -1142,6 +1141,13 @@ static int seccomp_notify_release(struct inode *inode, struct file *file)
- 	kfree(filter->notif);
- 	filter->notif = NULL;
- 	mutex_unlock(&filter->notify_lock);
-+}
-+
-+static int seccomp_notify_release(struct inode *inode, struct file *file)
-+{
-+	struct seccomp_filter *filter = file->private_data;
-+
-+	seccomp_notify_detach(filter);
- 	__put_seccomp_filter(filter);
- 	return 0;
- }
-@@ -1581,8 +1587,7 @@ static long seccomp_set_mode_filter(unsigned int flags,
- 			listener_f->private_data = NULL;
- 			fput(listener_f);
- 			put_unused_fd(listener);
--			kfree(prepared->notif);
--			filter->notif = NULL;
-+			seccomp_notify_detach(prepared);
- 		} else {
- 			fd_install(listener, listener_f);
- 			ret = listener;
+i don't want to delay this series.
+
+Could you please add a small comment to the delay to clarify the timing
+is very sensitive?
+
+Thanks
+
+>
+> Maxime
+
