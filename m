@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60346C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E4BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31B3520767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 854BA2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976939;
-	bh=F28mCmXKaBmHgq8qKpeLK4Q0Oq+MJkm+PsF6ppduwXk=;
+	s=default; t=1598976944;
+	bh=2zFgQ/EK2UjnFNqLNvQO5Li4cdQ+2xUr2yjlL79tAYc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=toVZVxuTHEJIDiTQNqD3rJzvrDt8pymP0X82N5tQyQaYDPL4ZRdCFiySuDnJd3F7u
-	 4EG9fydoDzKPaXOrMcH29KK72R29bHEMQVFQLWgg3myDjMvJuekE9rbuGtSBo+6MV6
-	 ZJBAtGZqpA0fHtwf5XqSIW61cubSknn+0shOsvo8=
+	b=hGsLhoU+tFw3n/hAJgKDJFYzbeQaHn8EljF1ss2ZJhBTmCGx+T8iKQG06oxbQL2/H
+	 TrB00/ZkhrLPFyP94Z/pQDgR/m27Biu0AGWB759+qVRj3obf+lFO1NJ6H7u+Ool4B9
+	 cgl8Ede+k75vI+WsLwZEWh8tlgXXDvPEjMbk0fgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgIAPek (ORCPT
+        id S1731424AbgIAQPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:34:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38426 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39798 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731225AbgIAPdz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:33:55 -0400
+        id S1729232AbgIAPel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:41 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9693921548;
-        Tue,  1 Sep 2020 15:33:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1017F205F4;
+        Tue,  1 Sep 2020 15:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974434;
-        bh=F28mCmXKaBmHgq8qKpeLK4Q0Oq+MJkm+PsF6ppduwXk=;
+        s=default; t=1598974480;
+        bh=2zFgQ/EK2UjnFNqLNvQO5Li4cdQ+2xUr2yjlL79tAYc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+E3APUV+wWAlRxdsL4ywzjsGtMabHWoOShhXN4TbyLaSe3IMSgcmg3o7f/RSS8Hf
-         FWw8tJswDRMtf2xIY5Dk/3BbpTZvJ4gJ02+Kudo0tGiJyeIop7mU9XqM2YLAG2fU7b
-         5dJiXIoXrPBEWcYSTkDTzIW/hKL6FYDcORfWEk9k=
+        b=y0jb/4Y/m5Upi3IqoM3dpClmi28Ra6ZuYXBlotuDnjQIIAOjLQopbmMz5/GRTDnkU
+         Uj4FIVCOdwGrl4qto0Gvk+tPn69JiuqI/U76rSxKMtNiRIytms8RExGst3Vnjr/zXi
+         kUX3+zXL+w4OBflyDa7kgI2scSb11zcjiqN9CDhc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Pengfei Xu <pengfei.xu@intel.com>
-Subject: [PATCH 5.4 175/214] PM: sleep: core: Fix the handling of pending runtime resume requests
-Date:   Tue,  1 Sep 2020 17:10:55 +0200
-Message-Id: <20200901151001.366487984@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Aleksey Makarov <amakarov@marvell.com>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Christopher Covington <cov@codeaurora.org>
+Subject: [PATCH 5.4 162/214] serial: pl011: Fix oops on -EPROBE_DEFER
+Date:   Tue,  1 Sep 2020 17:10:42 +0200
+Message-Id: <20200901151000.735976266@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -62,82 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit e3eb6e8fba65094328b8dca635d00de74ba75b45 upstream.
+commit 27afac93e3bd7fa89749cf11da5d86ac9cde4dba upstream.
 
-It has been reported that system-wide suspend may be aborted in the
-absence of any wakeup events due to unforseen interactions of it with
-the runtume PM framework.
+If probing of a pl011 gets deferred until after free_initmem(), an oops
+ensues because pl011_console_match() is called which has been freed.
 
-One failing scenario is when there are multiple devices sharing an
-ACPI power resource and runtime-resume needs to be carried out for
-one of them during system-wide suspend (for example, because it needs
-to be reconfigured before the whole system goes to sleep).  In that
-case, the runtime-resume of that device involves turning the ACPI
-power resource "on" which in turn causes runtime-resume requests
-to be queued up for all of the other devices sharing it.  Those
-requests go to the runtime PM workqueue which is frozen during
-system-wide suspend, so they are not actually taken care of until
-the resume of the whole system, but the pm_runtime_barrier()
-call in __device_suspend() sees them and triggers system wakeup
-events for them which then cause the system-wide suspend to be
-aborted if wakeup source objects are in active use.
+Fix by removing the __init attribute from the function and those it
+calls.
 
-Of course, the logic that leads to triggering those wakeup events is
-questionable in the first place, because clearly there are cases in
-which a pending runtime resume request for a device is not connected
-to any real wakeup events in any way (like the one above).  Moreover,
-it is racy, because the device may be resuming already by the time
-the pm_runtime_barrier() runs and so if the driver doesn't take care
-of signaling the wakeup event as appropriate, it will be lost.
-However, if the driver does take care of that, the extra
-pm_wakeup_event() call in the core is redundant.
+Commit 10879ae5f12e ("serial: pl011: add console matching function")
+introduced pl011_console_match() not just for early consoles but
+regular preferred consoles, such as those added by acpi_parse_spcr().
+Regular consoles may be registered after free_initmem() for various
+reasons, one being deferred probing, another being dynamic enablement
+of serial ports using a DeviceTree overlay.
 
-Accordingly, drop the conditional pm_wakeup_event() call fron
-__device_suspend() and make the latter call pm_runtime_barrier()
-alone.  Also modify the comment next to that call to reflect the new
-code and extend it to mention the need to avoid unwanted interactions
-between runtime PM and system-wide device suspend callbacks.
+Thus, pl011_console_match() must not be declared __init and the
+functions it calls mustn't either.
 
-Fixes: 1e2ef05bb8cf8 ("PM: Limit race conditions between runtime PM and system sleep (v2)")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Tested-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Tested-by: Pengfei Xu <pengfei.xu@intel.com>
-Cc: All applicable <stable@vger.kernel.org>
+Stack trace for posterity:
+
+Unable to handle kernel paging request at virtual address 80c38b58
+Internal error: Oops: 8000000d [#1] PREEMPT SMP ARM
+PC is at pl011_console_match+0x0/0xfc
+LR is at register_console+0x150/0x468
+[<80187004>] (register_console)
+[<805a8184>] (uart_add_one_port)
+[<805b2b68>] (pl011_register_port)
+[<805b3ce4>] (pl011_probe)
+[<80569214>] (amba_probe)
+[<805ca088>] (really_probe)
+[<805ca2ec>] (driver_probe_device)
+[<805ca5b0>] (__device_attach_driver)
+[<805c8060>] (bus_for_each_drv)
+[<805c9dfc>] (__device_attach)
+[<805ca630>] (device_initial_probe)
+[<805c90a8>] (bus_probe_device)
+[<805c95a8>] (deferred_probe_work_func)
+
+Fixes: 10879ae5f12e ("serial: pl011: add console matching function")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.10+
+Cc: Aleksey Makarov <amakarov@marvell.com>
+Cc: Peter Hurley <peter@hurleysoftware.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Christopher Covington <cov@codeaurora.org>
+Link: https://lore.kernel.org/r/f827ff09da55b8c57d316a1b008a137677b58921.1597315557.git.lukas@wunner.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/main.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ drivers/tty/serial/amba-pl011.c |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1728,13 +1728,17 @@ static int __device_suspend(struct devic
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2252,9 +2252,8 @@ pl011_console_write(struct console *co,
+ 	clk_disable(uap->clk);
+ }
+ 
+-static void __init
+-pl011_console_get_options(struct uart_amba_port *uap, int *baud,
+-			     int *parity, int *bits)
++static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
++				      int *parity, int *bits)
+ {
+ 	if (pl011_read(uap, REG_CR) & UART01x_CR_UARTEN) {
+ 		unsigned int lcr_h, ibrd, fbrd;
+@@ -2287,7 +2286,7 @@ pl011_console_get_options(struct uart_am
  	}
+ }
  
- 	/*
--	 * If a device configured to wake up the system from sleep states
--	 * has been suspended at run time and there's a resume request pending
--	 * for it, this is equivalent to the device signaling wakeup, so the
--	 * system suspend operation should be aborted.
-+	 * Wait for possible runtime PM transitions of the device in progress
-+	 * to complete and if there's a runtime resume request pending for it,
-+	 * resume it before proceeding with invoking the system-wide suspend
-+	 * callbacks for it.
-+	 *
-+	 * If the system-wide suspend callbacks below change the configuration
-+	 * of the device, they must disable runtime PM for it or otherwise
-+	 * ensure that its runtime-resume callbacks will not be confused by that
-+	 * change in case they are invoked going forward.
- 	 */
--	if (pm_runtime_barrier(dev) && device_may_wakeup(dev))
--		pm_wakeup_event(dev, 0);
-+	pm_runtime_barrier(dev);
- 
- 	if (pm_wakeup_pending()) {
- 		dev->power.direct_complete = false;
+-static int __init pl011_console_setup(struct console *co, char *options)
++static int pl011_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_amba_port *uap;
+ 	int baud = 38400;
+@@ -2355,8 +2354,8 @@ static int __init pl011_console_setup(st
+  *
+  *	Returns 0 if console matches; otherwise non-zero to use default matching
+  */
+-static int __init pl011_console_match(struct console *co, char *name, int idx,
+-				      char *options)
++static int pl011_console_match(struct console *co, char *name, int idx,
++			       char *options)
+ {
+ 	unsigned char iotype;
+ 	resource_size_t addr;
 
 
