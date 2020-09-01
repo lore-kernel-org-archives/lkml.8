@@ -8,67 +8,66 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581E6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D91CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 318CC21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E20352220B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:47:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rb4ZX3as"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G7S8DAAC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728338AbgIAOrT (ORCPT
+        id S1728387AbgIAOrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:47:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42682 "EHLO
+        Tue, 1 Sep 2020 10:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727819AbgIAOQF (ORCPT
+        with ESMTP id S1728241AbgIAOPx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:16:05 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7801C06125C;
-        Tue,  1 Sep 2020 07:16:04 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id a8so606131plm.2;
-        Tue, 01 Sep 2020 07:16:04 -0700 (PDT)
+        Tue, 1 Sep 2020 10:15:53 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C02A2C06125E;
+        Tue,  1 Sep 2020 07:15:52 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id u128so859908pfb.6;
+        Tue, 01 Sep 2020 07:15:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cqrgjgkwQOLPKBKvSr9gJrTOHEBDRQ8iqEq+YmYLPME=;
-        b=Rb4ZX3asfwOJg4osK9f8BVD5bqX4bXtB9PhlYShZ/rsHMNJrSi7aW2zu7V3aeOSrJm
-         L2LbvTedaoP87o2rocKNCt0/zGqCSl8eyW69u7bu2hDSiC9BpP5v7sW099OXDjyBdWWo
-         3Dg8HtuVdHhv4tO9TNdQ9p7FPLbxF6eKt5KtLUEe04377yijdLe6uEt3jFztB5iQJPK4
-         PJPMg87eK/AzEN4h8pHk8gZr/ac06hwgAeEbRZnmntpetDHiMSbEIcMeq5Hkn+vjZ4Lw
-         qOoGZEdbd+2uUXFX4RlrE4zjEFdoITSaRAxqiXKYn3VD6kqvA2fIF/XqYX5/ac3wnZzd
-         7oQA==
+        bh=DD+NHkNz//cJ/l/7deT3g02opc5NfKv/2SZ3eKZT8h0=;
+        b=G7S8DAAC/HQ1g+FV88jEIa/Jmk+mIymnXDOsHhmBoiLY8bdSi4j2s0Jioaz2HEhh/A
+         jPJhu+mTn4+GpDygwJBvQ+QDADiHp3MOo0oTNtF7u3pJlTs0SjcxDlS+rASyy7mg8C2N
+         InXYMk+m6ySJbdDz4mlBXc1sLQEQrlV8YggBPYQ0i61u6I7EXeJnDxQuumHtfkukhj/X
+         nPP4kT3CvJ5vl/YPsPwwNRR8dMCA9WoqjXFdHdFJSM7bffPKpNxDsWoAu0iVqCvnwY/W
+         NJiRVAvbWkjBODv8vQ+ADt2F/38EfuTi6zTWvnpDtn0QZ+/ek4fgOG8p6Omys8nVs9Jz
+         C/ww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cqrgjgkwQOLPKBKvSr9gJrTOHEBDRQ8iqEq+YmYLPME=;
-        b=gU4esBd6ad5V8fT4AuiKkVXfQ9zI2uXfCeaa8urY+N4xtQGroKdE/StBu6weviKiHX
-         dHnUvByPRUXhxWRWROv+dJU0fFGcHNr6ZB7WZDvNl1L1jltLtuvEZ84YiVwL45+NN6aP
-         2KVTUcHPLC0cGdojXkC4a32aiaZ+C+QYMTuP0hYtj4ydv1flkKpYGFncwk8tYFGeyMdP
-         HGbeFECaA8yArFUKECtlj2pl95SNp5jRzOQn0lkX3CEcRVu0+m49Wcnr+AwikJhuI2If
-         lx3Triay7XUI8oJukPYei3lcmh7csRBRteL4cnAFoevrRrtF+nvvNuSJctsT0PmeZ1Ux
-         K7mg==
-X-Gm-Message-State: AOAM530vtV3Fj86zMPmZymrQAVlQQ/IspcKmLr5mTVDJHBDOKlOdz6Fd
-        1Gmg0JJ0iQ0XGYRqCuadbRS67MC4D+A=
-X-Google-Smtp-Source: ABdhPJzlSzEv9CsAxwBinDg5rdhmsaopGLA6RpgIsGSWM/G1oTk+NhLtBCJS2/eCVKKOb3FB1mzI9A==
-X-Received: by 2002:a17:90a:4e42:: with SMTP id t2mr1758800pjl.121.1598969763778;
-        Tue, 01 Sep 2020 07:16:03 -0700 (PDT)
+        bh=DD+NHkNz//cJ/l/7deT3g02opc5NfKv/2SZ3eKZT8h0=;
+        b=ay37tXr3Jhw4d+6R/v6zqTEFdcUJOveGuJetOPXkVmEYGt9Tj81Wx2pimO2nlhMLrb
+         fNk1D2l3rJqTvSpb5uSIWyWtNpAVJRSgfiLZQ9cOhHyVM45yPlW6Z3h2rdfQt2U8GD4k
+         pkoHChxczIPnQEBW+JPDQs/ozXveTaVgRwxhtcG3lbw9ELUfH3FT3TZrn4SxxNpaO6Ha
+         SVYx7D+prGNv+u/qXVmCJTUUzqn466FWJYpZGh9+qRIiQL6HG0BkSZDAC5+jKX0YThFe
+         VS11zA3T1OXI1sORRiI8d99WVvDTmxgk19RtBQi5I1oSzkFHGS0W1ScCTkfTLfibfO5b
+         mSlw==
+X-Gm-Message-State: AOAM532C7DBY4EEmpuNqnkBD63/DXlTR8px9tQXRnIbtEv9u2vVLttOP
+        /UHBm8bfyBvjALRtPB0R2/5X7KPgehc=
+X-Google-Smtp-Source: ABdhPJyjxjgc9+p9Eqs93m0oRM6EvqZHzcjtwlF7foeZidiL83luX6Sa0saoCyXVuknBGZtaORfSLQ==
+X-Received: by 2002:aa7:9d8b:: with SMTP id f11mr2036814pfq.5.1598969752061;
+        Tue, 01 Sep 2020 07:15:52 -0700 (PDT)
 Received: from bobo.ibm.com ([203.185.249.227])
-        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.00
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.15.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 07:16:03 -0700 (PDT)
+        Tue, 01 Sep 2020 07:15:51 -0700 (PDT)
 From:   Nicholas Piggin <npiggin@gmail.com>
 To:     linux-arch@vger.kernel.org
 Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
         linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v3 04/23] arm: use asm-generic/mmu_context.h for no-op implementations
-Date:   Wed,  2 Sep 2020 00:15:20 +1000
-Message-Id: <20200901141539.1757549-5-npiggin@gmail.com>
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v3 01/23] asm-generic: add generic MMU versions of mmu context functions
+Date:   Wed,  2 Sep 2020 00:15:17 +1000
+Message-Id: <20200901141539.1757549-2-npiggin@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
 References: <20200901141539.1757549-1-npiggin@gmail.com>
@@ -79,71 +78,177 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
+Many of these are no-ops on many architectures, so extend mmu_context.h
+to cover MMU and NOMMU, and split the NOMMU bits out to nommu_context.h
+
+Cc: linux-arch@vger.kernel.org
+Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
+ arch/c6x/include/asm/mmu_context.h        |  6 +++
+ arch/microblaze/include/asm/mmu_context.h |  2 +-
+ arch/sh/include/asm/mmu_context.h         |  2 +-
+ include/asm-generic/mmu_context.h         | 58 +++++++++++++++++------
+ include/asm-generic/nommu_context.h       | 19 ++++++++
+ 5 files changed, 71 insertions(+), 16 deletions(-)
+ create mode 100644 arch/c6x/include/asm/mmu_context.h
+ create mode 100644 include/asm-generic/nommu_context.h
 
-Please ack or nack if you object to this being mered via
-Arnd's tree.
-
- arch/arm/include/asm/mmu_context.h | 26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
-
-diff --git a/arch/arm/include/asm/mmu_context.h b/arch/arm/include/asm/mmu_context.h
-index f99ed524fe41..84e58956fcab 100644
---- a/arch/arm/include/asm/mmu_context.h
-+++ b/arch/arm/include/asm/mmu_context.h
-@@ -26,6 +26,8 @@ void __check_vmalloc_seq(struct mm_struct *mm);
- #ifdef CONFIG_CPU_HAS_ASID
- 
- void check_and_switch_context(struct mm_struct *mm, struct task_struct *tsk);
+diff --git a/arch/c6x/include/asm/mmu_context.h b/arch/c6x/include/asm/mmu_context.h
+new file mode 100644
+index 000000000000..d2659d0a3297
+--- /dev/null
++++ b/arch/c6x/include/asm/mmu_context.h
+@@ -0,0 +1,6 @@
++#ifndef _ASM_C6X_MMU_CONTEXT_H
++#define _ASM_C6X_MMU_CONTEXT_H
 +
-+#define init_new_context init_new_context
- static inline int
- init_new_context(struct task_struct *tsk, struct mm_struct *mm)
- {
-@@ -92,32 +94,10 @@ static inline void finish_arch_post_lock_switch(void)
++#include <asm-generic/nommu_context.h>
++
++#endif /* _ASM_C6X_MMU_CONTEXT_H */
+diff --git a/arch/microblaze/include/asm/mmu_context.h b/arch/microblaze/include/asm/mmu_context.h
+index f74f9da07fdc..34004efb3def 100644
+--- a/arch/microblaze/include/asm/mmu_context.h
++++ b/arch/microblaze/include/asm/mmu_context.h
+@@ -2,5 +2,5 @@
+ #ifdef CONFIG_MMU
+ # include <asm/mmu_context_mm.h>
+ #else
+-# include <asm-generic/mmu_context.h>
++# include <asm-generic/nommu_context.h>
+ #endif
+diff --git a/arch/sh/include/asm/mmu_context.h b/arch/sh/include/asm/mmu_context.h
+index f664e51e8a15..461b1304580b 100644
+--- a/arch/sh/include/asm/mmu_context.h
++++ b/arch/sh/include/asm/mmu_context.h
+@@ -133,7 +133,7 @@ static inline void switch_mm(struct mm_struct *prev,
+ #define set_TTB(pgd)			do { } while (0)
+ #define get_TTB()			(0)
  
- #endif	/* CONFIG_MMU */
+-#include <asm-generic/mmu_context.h>
++#include <asm-generic/nommu_context.h>
  
--static inline int
--init_new_context(struct task_struct *tsk, struct mm_struct *mm)
--{
--	return 0;
--}
--
--
- #endif	/* CONFIG_CPU_HAS_ASID */
+ #endif /* CONFIG_MMU */
  
--#define destroy_context(mm)		do { } while(0)
- #define activate_mm(prev,next)		switch_mm(prev, next, NULL)
+diff --git a/include/asm-generic/mmu_context.h b/include/asm-generic/mmu_context.h
+index 6be9106fb6fb..91727065bacb 100644
+--- a/include/asm-generic/mmu_context.h
++++ b/include/asm-generic/mmu_context.h
+@@ -3,44 +3,74 @@
+ #define __ASM_GENERIC_MMU_CONTEXT_H
  
--/*
-- * This is called when "tsk" is about to enter lazy TLB mode.
-- *
-- * mm:  describes the currently active mm context
-- * tsk: task which is entering lazy tlb
-- * cpu: cpu number which is entering lazy tlb
-- *
-- * tsk->mm will be NULL
-- */
--static inline void
--enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
--{
--}
--
  /*
-  * This is the actual mm switch as far as the scheduler
-  * is concerned.  No registers are touched.  We avoid
-@@ -149,6 +129,6 @@ switch_mm(struct mm_struct *prev, struct mm_struct *next,
- #endif
+- * Generic hooks for NOMMU architectures, which do not need to do
+- * anything special here.
++ * Generic hooks to implement no-op functionality.
+  */
+ 
+-#include <asm-generic/mm_hooks.h>
+-
+ struct task_struct;
+ struct mm_struct;
+ 
++/*
++ * enter_lazy_tlb - Called when "tsk" is about to enter lazy TLB mode.
++ *
++ * @mm:  the currently active mm context which is becoming lazy
++ * @tsk: task which is entering lazy tlb
++ *
++ * tsk->mm will be NULL
++ */
++#ifndef enter_lazy_tlb
+ static inline void enter_lazy_tlb(struct mm_struct *mm,
+ 			struct task_struct *tsk)
+ {
  }
++#endif
  
--#define deactivate_mm(tsk,mm)	do { } while (0)
++/**
++ * init_new_context - Initialize context of a new mm_struct.
++ * @tsk: task struct for the mm
++ * @mm:  the new mm struct
++ * @return: 0 on success, -errno on failure
++ */
++#ifndef init_new_context
+ static inline int init_new_context(struct task_struct *tsk,
+ 			struct mm_struct *mm)
+ {
+ 	return 0;
+ }
++#endif
+ 
++/**
++ * destroy_context - Undo init_new_context when the mm is going away
++ * @mm: old mm struct
++ */
++#ifndef destroy_context
+ static inline void destroy_context(struct mm_struct *mm)
+ {
+ }
++#endif
+ 
+-static inline void deactivate_mm(struct task_struct *task,
+-			struct mm_struct *mm)
+-{
+-}
+-
+-static inline void switch_mm(struct mm_struct *prev,
+-			struct mm_struct *next,
+-			struct task_struct *tsk)
++/**
++ * activate_mm - called after exec switches the current task to a new mm, to switch to it
++ * @prev_mm: previous mm of this task
++ * @next_mm: new mm
++ */
++#ifndef activate_mm
++static inline void activate_mm(struct mm_struct *prev_mm,
++			       struct mm_struct *next_mm)
+ {
++	switch_mm(prev_mm, next_mm, current);
+ }
++#endif
+ 
+-static inline void activate_mm(struct mm_struct *prev_mm,
+-			       struct mm_struct *next_mm)
++/**
++ * dectivate_mm - called when an mm is released after exit or exec switches away from it
++ * @tsk: the task
++ * @mm:  the old mm
++ */
++#ifndef deactivate_mm
++static inline void deactivate_mm(struct task_struct *tsk,
++			struct mm_struct *mm)
+ {
+ }
++#endif
+ 
+ #endif /* __ASM_GENERIC_MMU_CONTEXT_H */
+diff --git a/include/asm-generic/nommu_context.h b/include/asm-generic/nommu_context.h
+new file mode 100644
+index 000000000000..4f916f9e16cd
+--- /dev/null
++++ b/include/asm-generic/nommu_context.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_GENERIC_NOMMU_H
++#define __ASM_GENERIC_NOMMU_H
++
++/*
++ * Generic hooks for NOMMU architectures, which do not need to do
++ * anything special here.
++ */
++#include <asm-generic/mm_hooks.h>
++
++static inline void switch_mm(struct mm_struct *prev,
++			struct mm_struct *next,
++			struct task_struct *tsk)
++{
++}
++
 +#include <asm-generic/mmu_context.h>
- 
- #endif
++
++#endif /* __ASM_GENERIC_NOMMU_H */
 -- 
 2.23.0
 
