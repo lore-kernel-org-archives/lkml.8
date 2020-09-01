@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0351C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DC5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8689A20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC37F2098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978169;
-	bh=rQf9pHyRrJGeKhzV9canzvzUgwfkjPmDF7b/ZBmDqUU=;
+	s=default; t=1598978177;
+	bh=cAzy/Sn/oao7G922f9VL+tjeE4Io52jLSMM4+u7S5yY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aXWXW+cPM4SNZdDdV8cKR2unOfDyDj+zdqr1gpFH+UZpEDCgHmuJarxucXe1vsZCY
-	 HgLwUilR6NPkqcuGx+n/dMNhRrU2w9UaBIdMipIc7K6iladdsR39E4bEOdGIPPZ7jP
-	 QBS48cdXE7Krk9uLCAaFCf5s4k2aqrp6zC2sCbHo=
+	b=pXUI7NdYFh9T9+wbPLm8m5issSE/qMq1AZb55uw0jWzZaL3OJ6M5z/crnUZROb/TB
+	 ZL9DKTfLMy3OdX99NagD51t5ToLRDj5AIdgdF2DDqL8a69PrKuJC+eVVjL9q8D53c1
+	 eVzC5+dVwKeTFAt3IJMwCMw6bQkmrM3IN8y5TlnE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730571AbgIAQgH (ORCPT
+        id S1731676AbgIAQgD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59246 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:36:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730548AbgIAP3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:40 -0400
+        id S1730550AbgIAP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 705062100A;
-        Tue,  1 Sep 2020 15:29:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6955720684;
+        Tue,  1 Sep 2020 15:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974180;
-        bh=rQf9pHyRrJGeKhzV9canzvzUgwfkjPmDF7b/ZBmDqUU=;
+        s=default; t=1598974184;
+        bh=cAzy/Sn/oao7G922f9VL+tjeE4Io52jLSMM4+u7S5yY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g+gE/w3x6WK8hQktJOvEhZn5SWbLBMQRtqTNXkxBh6CxVm64TSb/7CQ9N7jlRRO7+
-         BmMUzy/YhZvekhuOjGBmSuYSNvlgCQ3d2GU2n+VD+aju32lZHJMmQChDikLECl1Fzz
-         hvtyCk6Z5x8bi5rA2uTQpym8p1bDxrnDduTxoi1I=
+        b=zwF9HgSQw6uyetXhgIXxnF5yFWw44RfrAuXORpwz5gplF7hrEdDiA4QfGBrXGIyT5
+         rNVCHPsMJFbZkVnXo7sk9HhJcNKIEN/4atbUYdtzmR4tlObgrmF1awE4Y9bxTDVCZe
+         qM4Mf1XVPGQzvndDqKYishSBBjHtfe9b13oL3ZjQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Gordeev <agordeev@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 076/214] s390/numa: set node distance to LOCAL_DISTANCE
-Date:   Tue,  1 Sep 2020 17:09:16 +0200
-Message-Id: <20200901150956.617148721@linuxfoundation.org>
+Subject: [PATCH 5.4 078/214] btrfs: only commit the delayed inode when doing a full fsync
+Date:   Tue,  1 Sep 2020 17:09:18 +0200
+Message-Id: <20200901150956.716711449@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,66 +61,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 535e4fc623fab2e09a0653fc3a3e17f382ad0251 ]
+From: Filipe Manana <fdmanana@suse.com>
 
-The node distance is hardcoded to 0, which causes a trouble
-for some user-level applications. In particular, "libnuma"
-expects the distance of a node to itself as LOCAL_DISTANCE.
-This update removes the offending node distance override.
+[ Upstream commit 8c8648dd1f6d62aeb912deeb788b6ac33cb782e7 ]
 
-Cc: <stable@vger.kernel.org> # 4.4
-Fixes: 3a368f742da1 ("s390/numa: add core infrastructure")
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Commit 2c2c452b0cafdc ("Btrfs: fix fsync when extend references are added
+to an inode") forced a commit of the delayed inode when logging an inode
+in order to ensure we would end up logging the inode item during a full
+fsync. By committing the delayed inode, we updated the inode item in the
+fs/subvolume tree and then later when copying items from leafs modified in
+the current transaction into the log tree (with copy_inode_items_to_log())
+we ended up copying the inode item from the fs/subvolume tree into the log
+tree. Logging an up to date version of the inode item is required to make
+sure at log replay time we get the link count fixup triggered among other
+things (replay xattr deletes, etc). The test case generic/040 from fstests
+exercises the bug which that commit fixed.
+
+However for a fast fsync we don't need to commit the delayed inode because
+we always log an up to date version of the inode item based on the struct
+btrfs_inode we have in-memory. We started doing this for fast fsyncs since
+commit e4545de5b035c7 ("Btrfs: fix fsync data loss after append write").
+
+So just stop committing the delayed inode if we are doing a fast fsync,
+we are only wasting time and adding contention on fs/subvolume tree.
+
+This patch is part of a series that has the following patches:
+
+1/4 btrfs: only commit the delayed inode when doing a full fsync
+2/4 btrfs: only commit delayed items at fsync if we are logging a directory
+3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
+4/4 btrfs: remove no longer needed use of log_writers for the log root tree
+
+After the entire patchset applied I saw about 12% decrease on max latency
+reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
+ram, using kvm and using a raw NVMe device directly (no intermediary fs on
+the host). The test was invoked like the following:
+
+  mkfs.btrfs -f /dev/sdk
+  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
+  dbench -D /mnt/sdk -t 300 8
+  umount /mnt/dsk
+
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/numa.h     | 1 -
- arch/s390/include/asm/topology.h | 2 --
- arch/s390/numa/numa.c            | 6 ------
- 3 files changed, 9 deletions(-)
+ fs/btrfs/tree-log.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/include/asm/numa.h b/arch/s390/include/asm/numa.h
-index 35f8cbe7e5bb0..c759dcffa9eaf 100644
---- a/arch/s390/include/asm/numa.h
-+++ b/arch/s390/include/asm/numa.h
-@@ -17,7 +17,6 @@
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index cc407c68d356f..0525b191843e1 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -5154,7 +5154,7 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
+ 	struct btrfs_key max_key;
+ 	struct btrfs_root *log = root->log_root;
+ 	int err = 0;
+-	int ret;
++	int ret = 0;
+ 	bool fast_search = false;
+ 	u64 ino = btrfs_ino(inode);
+ 	struct extent_map_tree *em_tree = &inode->extent_tree;
+@@ -5191,14 +5191,16 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
  
- void numa_setup(void);
- int numa_pfn_to_nid(unsigned long pfn);
--int __node_distance(int a, int b);
- void numa_update_cpu_topology(void);
+ 	/*
+ 	 * Only run delayed items if we are a dir or a new file.
+-	 * Otherwise commit the delayed inode only, which is needed in
+-	 * order for the log replay code to mark inodes for link count
+-	 * fixup (create temporary BTRFS_TREE_LOG_FIXUP_OBJECTID items).
++	 * Otherwise commit the delayed inode only if the full sync flag is set,
++	 * as we want to make sure an up to date version is in the subvolume
++	 * tree so copy_inode_items_to_log() / copy_items() can find it and copy
++	 * it to the log tree. For a non full sync, we always log the inode item
++	 * based on the in-memory struct btrfs_inode which is always up to date.
+ 	 */
+ 	if (S_ISDIR(inode->vfs_inode.i_mode) ||
+ 	    inode->generation > fs_info->last_trans_committed)
+ 		ret = btrfs_commit_inode_delayed_items(trans, inode);
+-	else
++	else if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags))
+ 		ret = btrfs_commit_inode_delayed_inode(inode);
  
- extern cpumask_t node_to_cpumask_map[MAX_NUMNODES];
-diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
-index cca406fdbe51f..ef9dd253dfad0 100644
---- a/arch/s390/include/asm/topology.h
-+++ b/arch/s390/include/asm/topology.h
-@@ -83,8 +83,6 @@ static inline const struct cpumask *cpumask_of_node(int node)
- 
- #define pcibus_to_node(bus) __pcibus_to_node(bus)
- 
--#define node_distance(a, b) __node_distance(a, b)
--
- #else /* !CONFIG_NUMA */
- 
- #define numa_node_id numa_node_id
-diff --git a/arch/s390/numa/numa.c b/arch/s390/numa/numa.c
-index d2910fa834c8a..8386c58fdb3a0 100644
---- a/arch/s390/numa/numa.c
-+++ b/arch/s390/numa/numa.c
-@@ -49,12 +49,6 @@ void numa_update_cpu_topology(void)
- 		mode->update_cpu_topology();
- }
- 
--int __node_distance(int a, int b)
--{
--	return mode->distance ? mode->distance(a, b) : 0;
--}
--EXPORT_SYMBOL(__node_distance);
--
- int numa_debug_enabled;
- 
- /*
+ 	if (ret) {
 -- 
 2.25.1
 
