@@ -2,81 +2,141 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 358DCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:08:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76870C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05AD3206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:08:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 484CC207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:11:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="GEuKhE5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728320AbgIAOIx (ORCPT
+        id S1728280AbgIAOLT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:08:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728296AbgIANzt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:55:49 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 619BAC061244;
-        Tue,  1 Sep 2020 06:55:48 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 9D02D391; Tue,  1 Sep 2020 15:55:46 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 15:55:45 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 69/76] x86/realmode: Setup AP jump table
-Message-ID: <20200901135545.GE22385@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-70-joro@8bytes.org>
- <20200831170937.GK27517@zn.tnic>
+        Tue, 1 Sep 2020 10:11:19 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:43545 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727845AbgIANQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:16:30 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598966189; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=iZDL70iS5jOLhNK6xZEocM/uElQ9fMrM5LZHQs4smwk=;
+ b=GEuKhE5Bkfz3k19Y4gK4+i1UyDAsw6BCeMmceYqS5cwVIsyzwL+UD3/j5mcCWqpSFN9QfWFz
+ hUX4Crz6j46EKT+6wBOQ97Zxf/8H5UNM59PshD/VdgOO/jGxpUVvO+YdOkEJGIsDGNBcD+6Y
+ eRi2MeN1PCOhrbPpBz3gT8TwelU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n06.prod.us-east-1.postgun.com with SMTP id
+ 5f4e4992885efaea0a2a16a1 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 13:16:02
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 311B0C433AD; Tue,  1 Sep 2020 13:16:02 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2062FC433C9;
+        Tue,  1 Sep 2020 13:15:58 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2062FC433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831170937.GK27517@zn.tnic>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [24/30] mwifiex: wmm: Mark 'mwifiex_1d_to_wmm_queue' as
+ __maybe_unused
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200826093401.1458456-25-lee.jones@linaro.org>
+References: <20200826093401.1458456-25-lee.jones@linaro.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200901131602.311B0C433AD@smtp.codeaurora.org>
+Date:   Tue,  1 Sep 2020 13:16:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 07:09:37PM +0200, Borislav Petkov wrote:
-> On Mon, Aug 24, 2020 at 10:55:04AM +0200, Joerg Roedel wrote:
-> > +	/* Check if AP Jump Table is non-zero and page-aligned */
-> > +	if (!jump_table_addr || jump_table_addr & ~PAGE_MASK)
-> > +		return 0;
-> 
-> I think you need to return !0 here so that the panic() below fires with
-> a modified message:
-> 
-> 	panic("Failed to get/update SEV-ES AP Jump Table");
-> 
-> or are we gonna boot an UP guest still?
+Lee Jones <lee.jones@linaro.org> wrote:
 
-Right, this needs a !0 return value. This code runs once on the boot CPU
-before the kernel starts the secondary CPUs, so a panic() is the right
-thing to do if this fails.
+> 'mwifiex_1d_to_wmm_queue' is used in'; main.c, txrx.c and uap_txrx.c
+> 
+> ... but not used in 14 other source files which include 'wmm.h'.
+> 
+> Fixes the following W=1 kernel build warning(s):
+> 
+>  In file included from drivers/net/wireless/marvell/mwifiex/init.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+>  In file included from drivers/net/wireless/marvell/mwifiex/cmdevt.c:26:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+>  In file included from drivers/net/wireless/marvell/mwifiex/util.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+>  In file included from drivers/net/wireless/marvell/mwifiex/wmm.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+>  In file included from drivers/net/wireless/marvell/mwifiex/11n.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+>  In file included from drivers/net/wireless/marvell/mwifiex/11n_aggr.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+>  In file included from drivers/net/wireless/marvell/mwifiex/11n_rxreorder.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+>  In file included from drivers/net/wireless/marvell/mwifiex/11n.h:25,
+>  from drivers/net/wireless/marvell/mwifiex/scan.c:25:
+>  drivers/net/wireless/marvell/mwifiex/wmm.h:34:18: warning: ‘mwifiex_1d_to_wmm_queue’ defined but not used [-Wunused-const-variable=]
+>  34 | static const u16 mwifiex_1d_to_wmm_queue[8] = { 1, 0, 0, 1, 2, 2, 3, 3 };
+>  | ^~~~~~~~~~~~~~~~~~~~~~~
+> 
+>  NB: Many entries - snipped for brevity.
+> 
+> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
+> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+> Cc: Xinming Hu <huxinming820@gmail.com>
+> Cc: Kalle Valo <kvalo@codeaurora.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Jakub Kicinski <kuba@kernel.org>
+> Cc: linux-wireless@vger.kernel.org
+> Cc: netdev@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
 
-Regards,
+Failed to apply:
 
-	Joerg
+fatal: sha1 information is lacking or useless (drivers/net/wireless/marvell/mwifiex/wmm.h).
+error: could not build fake ancestor
+Applying: mwifiex: wmm: Mark 'mwifiex_1d_to_wmm_queue' as __maybe_unused
+Patch failed at 0001 mwifiex: wmm: Mark 'mwifiex_1d_to_wmm_queue' as __maybe_unused
+The copy of the patch that failed is found in: .git/rebase-apply/patch
+
+Patch set to Changes Requested.
+
+-- 
+https://patchwork.kernel.org/patch/11737713/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
