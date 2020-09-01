@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105A1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9BBC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D83D0206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 046FD206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979182;
-	bh=YN6z6t1igdxdmPtWM9p/oZkiYtSvg0xJAQvZjA5iT0U=;
+	s=default; t=1598979185;
+	bh=k36O4RMLBdcTwR3dWHVSsB8aYcfmLNDLUKpuTHOopcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kx4657teqdXM5dyl7XIXIUZ6E3kQjIQ9DotY/a266xjeIkLqvv6gOMgNSXH38bvuk
-	 /+4sikB5TRsIoKqCxximBqW3Xs1MlEtfvYfGEb+yENcR3DZDW/dSA7psErWdt1aiO8
-	 sKeGSrC5TB2dwpfCunJ5XUu12gUSG77b1Zbi6XFE=
+	b=163KcTGnKqEGPdRymGaA+z4QLpGufqdNRV14E+LYJO+APfIeUGmvCEbG7x77oES19
+	 KnejUL+pMFaQS4I1mT8OtOqutjGdsj7wzU9C0KzyUi5h0yn/IJTSDcT8CLJT26j63I
+	 5X/EF4h3SMA5LfLm7Y40ERKKU48y9bUy2N1/W/W0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgIAQxB (ORCPT
+        id S1732432AbgIAQw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:53:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50064 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:52:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730041AbgIAPZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:30 -0400
+        id S1730051AbgIAPZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:25:35 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63CA6206FA;
-        Tue,  1 Sep 2020 15:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82C53214D8;
+        Tue,  1 Sep 2020 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973930;
-        bh=YN6z6t1igdxdmPtWM9p/oZkiYtSvg0xJAQvZjA5iT0U=;
+        s=default; t=1598973935;
+        bh=k36O4RMLBdcTwR3dWHVSsB8aYcfmLNDLUKpuTHOopcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ktkVQIX+G1hrOiRhMl7LCmFfvykxTBFMjXx9w/D1nbZKObX3SNQ+ad8Zle6bbD1Qt
-         4En5F01vNCnidjo6IX3+N1xMWRFCNqGir1ZvngYHlgh9tzo0q20O6XZjoWB4qZbYD7
-         lyaXuHHgHWSxGb3RRI8YUSjAHe4tk0vGw6D4RUK4=
+        b=CTOgkEuoBbylOHK/mT2Wig4I/OQGi3wygsluNZTNcz20lIp/xpPldsg0Nfqu7aRDK
+         Hsjby+ClKfAZI13V1VBkIe78B7kspXGk2T+k9qc+vunuVAdfK5dQqKBQQRciBk8hrv
+         kONA4lXf+io2XfnG9VEkBeF+mFMMvROg+BJZpQyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, qiuguorui1 <qiuguorui1@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 4.19 104/125] irqchip/stm32-exti: Avoid losing interrupts due to clearing pending bits by mistake
-Date:   Tue,  1 Sep 2020 17:10:59 +0200
-Message-Id: <20200901150939.704632067@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 106/125] drm/amd/pm: correct Vega10 swctf limit setting
+Date:   Tue,  1 Sep 2020 17:11:01 +0200
+Message-Id: <20200901150939.809238914@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -59,72 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: qiuguorui1 <qiuguorui1@huawei.com>
+From: Evan Quan <evan.quan@amd.com>
 
-commit e579076ac0a3bebb440fab101aef3c42c9f4c709 upstream.
+commit b05d71b51078fc428c6b72582126d9d75d3c1f4c upstream.
 
-In the current code, when the eoi callback of the exti clears the pending
-bit of the current interrupt, it will first read the values of fpr and
-rpr, then logically OR the corresponding bit of the interrupt number,
-and finally write back to fpr and rpr.
+Correct the Vega10 thermal swctf limit.
 
-We found through experiments that if two exti interrupts,
-we call them int1/int2, arrive almost at the same time. in our scenario,
-the time difference is 30 microseconds, assuming int1 is triggered first.
+Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1267
 
-there will be an extreme scenario: both int's pending bit are set to 1,
-the irq handle of int1 is executed first, and eoi handle is then executed,
-at this moment, all pending bits are cleared, but the int 2 has not
-finally been reported to the cpu yet, which eventually lost int2.
-
-According to stm32's TRM description about rpr and fpr: Writing a 1 to this
-bit will trigger a rising edge event on event x, Writing 0 has no
-effect.
-
-Therefore, when clearing the pending bit, we only need to clear the
-pending bit of the irq.
-
-Fixes: 927abfc4461e7 ("irqchip/stm32: Add stm32mp1 support with hierarchy domain")
-Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org # v4.18+
-Link: https://lore.kernel.org/r/20200820031629.15582-1-qiuguorui1@huawei.com
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-stm32-exti.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega10_thermal.c |    7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -382,6 +382,16 @@ static void stm32_irq_ack(struct irq_dat
- 	irq_gc_unlock(gc);
- }
- 
-+/* directly set the target bit without reading first. */
-+static inline void stm32_exti_write_bit(struct irq_data *d, u32 reg)
-+{
-+	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-+	void __iomem *base = chip_data->host_data->base;
-+	u32 val = BIT(d->hwirq % IRQS_PER_BANK);
-+
-+	writel_relaxed(val, base + reg);
-+}
-+
- static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_thermal.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_thermal.c
+@@ -362,6 +362,9 @@ int vega10_thermal_get_temperature(struc
+ static int vega10_thermal_set_temperature_range(struct pp_hwmgr *hwmgr,
+ 		struct PP_TemperatureRange *range)
  {
- 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-@@ -415,9 +425,9 @@ static void stm32_exti_h_eoi(struct irq_
++	struct phm_ppt_v2_information *pp_table_info =
++		(struct phm_ppt_v2_information *)(hwmgr->pptable);
++	struct phm_tdp_table *tdp_table = pp_table_info->tdp_table;
+ 	struct amdgpu_device *adev = hwmgr->adev;
+ 	int low = VEGA10_THERMAL_MINIMUM_ALERT_TEMP *
+ 			PP_TEMPERATURE_UNITS_PER_CENTIGRADES;
+@@ -371,8 +374,8 @@ static int vega10_thermal_set_temperatur
  
- 	raw_spin_lock(&chip_data->rlock);
+ 	if (low < range->min)
+ 		low = range->min;
+-	if (high > range->max)
+-		high = range->max;
++	if (high > tdp_table->usSoftwareShutdownTemp)
++		high = tdp_table->usSoftwareShutdownTemp;
  
--	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
-+	stm32_exti_write_bit(d, stm32_bank->rpr_ofst);
- 	if (stm32_bank->fpr_ofst != UNDEF_REG)
--		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
-+		stm32_exti_write_bit(d, stm32_bank->fpr_ofst);
- 
- 	raw_spin_unlock(&chip_data->rlock);
- 
+ 	if (low > high)
+ 		return -EINVAL;
 
 
