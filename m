@@ -2,54 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE44C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 731D4C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74C7F206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410FA206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980271;
-	bh=ehI1wcfFGxWJMyJJZPEjFF+BAzvbO3OZmYSiAe9FfwQ=;
+	s=default; t=1598980279;
+	bh=JcKkK6SjWJoKNYSJyFxdo3JBVP64FhLpgWA1lDUivaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r0n17gzoaDJSFwJXhlFZqM7RSPSnBK/CdW0P33NR7HnZ0V5cwXDRk6r2B2u4Sc56G
-	 BZKGWjwAU69bdiHILSXObg/a8ixe/y4z9rhrKnVStV1UE5kb7lbel3Y0g+rgKuPWcc
-	 3eK0ojqZImex6FL96z9Af6eHZ7o3maFX74RH48DI=
+	b=KyvKaUOsoZuTh12dHOaO4xYyrHZz4yHfNkDcrUpJ6sQuEKPDcYbSl7/5YHfMRZ4sn
+	 7/+UdPgiDKIxA7toUoUIeOhT17gTw9NIwAbYT4aS/en4JiIkV2hdqgUzxp9JC6XgQN
+	 0Q7us3LOvXudC4BOzzNPsLegBRRkg4eBtW2TRAJc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgIARLJ (ORCPT
+        id S1729194AbgIARLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:11:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33262 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:11:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbgIAPQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:16:33 -0400
+        id S1728826AbgIAPQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:16:27 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CCA8206EB;
-        Tue,  1 Sep 2020 15:16:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35FFE206EB;
+        Tue,  1 Sep 2020 15:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973392;
-        bh=ehI1wcfFGxWJMyJJZPEjFF+BAzvbO3OZmYSiAe9FfwQ=;
+        s=default; t=1598973386;
+        bh=JcKkK6SjWJoKNYSJyFxdo3JBVP64FhLpgWA1lDUivaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUiXbGDldK9RxRSj+YiU6ZJkRCHxGwxasT1/XsK7GOlr2ASirDNal7lhDETDpZWcM
-         Ga/5dY/Q+4rapzcMis61eCon8gWDOfnAruSmPmBfbFqiWgguZ2ZMgYDfc4if2KpiXD
-         V665z3NwNOjmpuct5FfeYiKdM+KBpJ1A7AKW/E1c=
+        b=oI/3HZcRL+OxyuieevM9RH/2h87tzp+mvcPWZY3NSMshCGtdGav3mHYIz/Br/AKmU
+         5KCY9SgJOEc9jzJ1xaf5MX5m3ur4NjZD2CGKZRuorag0sG24O1l9rB2+3nUruzaV2H
+         XVj5NE16f+fzf9yP7wEWoL5VTgFY2lHgZqvlZKE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Raul Rangel <rrangel@google.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.9 58/78] serial: 8250: change lock order in serial8250_do_startup()
-Date:   Tue,  1 Sep 2020 17:10:34 +0200
-Message-Id: <20200901150927.672647510@linuxfoundation.org>
+        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 30/78] ceph: fix potential mdsc use-after-free crash
+Date:   Tue,  1 Sep 2020 17:10:06 +0200
+Message-Id: <20200901150926.247880633@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -62,215 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-commit 205d300aea75623e1ae4aa43e0d265ab9cf195fd upstream.
+[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
 
-We have a number of "uart.port->desc.lock vs desc.lock->uart.port"
-lockdep reports coming from 8250 driver; this causes a bit of trouble
-to people, so let's fix it.
+Make sure the delayed work stopped before releasing the resources.
 
-The problem is reverse lock order in two different call paths:
+cancel_delayed_work_sync() will only guarantee that the work finishes
+executing if the work is already in the ->worklist.  That means after
+the cancel_delayed_work_sync() returns, it will leave the work requeued
+if it was rearmed at the end. That can lead to a use after free once the
+work struct is freed.
 
-chain #1:
+Fix it by flushing the delayed work instead of trying to cancel it, and
+ensure that the work doesn't rearm if the mdsc is stopping.
 
- serial8250_do_startup()
-  spin_lock_irqsave(&port->lock);
-   disable_irq_nosync(port->irq);
-    raw_spin_lock_irqsave(&desc->lock)
-
-chain #2:
-
-  __report_bad_irq()
-   raw_spin_lock_irqsave(&desc->lock)
-    for_each_action_of_desc()
-     printk()
-      spin_lock_irqsave(&port->lock);
-
-Fix this by changing the order of locks in serial8250_do_startup():
- do disable_irq_nosync() first, which grabs desc->lock, and grab
- uart->port after that, so that chain #1 and chain #2 have same lock
- order.
-
-Full lockdep splat:
-
- ======================================================
- WARNING: possible circular locking dependency detected
- 5.4.39 #55 Not tainted
- ======================================================
-
- swapper/0/0 is trying to acquire lock:
- ffffffffab65b6c0 (console_owner){-...}, at: console_lock_spinning_enable+0x31/0x57
-
- but task is already holding lock:
- ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
-
- which lock already depends on the new lock.
-
- the existing dependency chain (in reverse order) is:
-
- -> #2 (&irq_desc_lock_class){-.-.}:
-        _raw_spin_lock_irqsave+0x61/0x8d
-        __irq_get_desc_lock+0x65/0x89
-        __disable_irq_nosync+0x3b/0x93
-        serial8250_do_startup+0x451/0x75c
-        uart_startup+0x1b4/0x2ff
-        uart_port_activate+0x73/0xa0
-        tty_port_open+0xae/0x10a
-        uart_open+0x1b/0x26
-        tty_open+0x24d/0x3a0
-        chrdev_open+0xd5/0x1cc
-        do_dentry_open+0x299/0x3c8
-        path_openat+0x434/0x1100
-        do_filp_open+0x9b/0x10a
-        do_sys_open+0x15f/0x3d7
-        kernel_init_freeable+0x157/0x1dd
-        kernel_init+0xe/0x105
-        ret_from_fork+0x27/0x50
-
- -> #1 (&port_lock_key){-.-.}:
-        _raw_spin_lock_irqsave+0x61/0x8d
-        serial8250_console_write+0xa7/0x2a0
-        console_unlock+0x3b7/0x528
-        vprintk_emit+0x111/0x17f
-        printk+0x59/0x73
-        register_console+0x336/0x3a4
-        uart_add_one_port+0x51b/0x5be
-        serial8250_register_8250_port+0x454/0x55e
-        dw8250_probe+0x4dc/0x5b9
-        platform_drv_probe+0x67/0x8b
-        really_probe+0x14a/0x422
-        driver_probe_device+0x66/0x130
-        device_driver_attach+0x42/0x5b
-        __driver_attach+0xca/0x139
-        bus_for_each_dev+0x97/0xc9
-        bus_add_driver+0x12b/0x228
-        driver_register+0x64/0xed
-        do_one_initcall+0x20c/0x4a6
-        do_initcall_level+0xb5/0xc5
-        do_basic_setup+0x4c/0x58
-        kernel_init_freeable+0x13f/0x1dd
-        kernel_init+0xe/0x105
-        ret_from_fork+0x27/0x50
-
- -> #0 (console_owner){-...}:
-        __lock_acquire+0x118d/0x2714
-        lock_acquire+0x203/0x258
-        console_lock_spinning_enable+0x51/0x57
-        console_unlock+0x25d/0x528
-        vprintk_emit+0x111/0x17f
-        printk+0x59/0x73
-        __report_bad_irq+0xa3/0xba
-        note_interrupt+0x19a/0x1d6
-        handle_irq_event_percpu+0x57/0x79
-        handle_irq_event+0x36/0x55
-        handle_fasteoi_irq+0xc2/0x18a
-        do_IRQ+0xb3/0x157
-        ret_from_intr+0x0/0x1d
-        cpuidle_enter_state+0x12f/0x1fd
-        cpuidle_enter+0x2e/0x3d
-        do_idle+0x1ce/0x2ce
-        cpu_startup_entry+0x1d/0x1f
-        start_kernel+0x406/0x46a
-        secondary_startup_64+0xa4/0xb0
-
- other info that might help us debug this:
-
- Chain exists of:
-   console_owner --> &port_lock_key --> &irq_desc_lock_class
-
-  Possible unsafe locking scenario:
-
-        CPU0                    CPU1
-        ----                    ----
-   lock(&irq_desc_lock_class);
-                                lock(&port_lock_key);
-                                lock(&irq_desc_lock_class);
-   lock(console_owner);
-
-  *** DEADLOCK ***
-
- 2 locks held by swapper/0/0:
-  #0: ffff88810a8e34c0 (&irq_desc_lock_class){-.-.}, at: __report_bad_irq+0x5b/0xba
-  #1: ffffffffab65b5c0 (console_lock){+.+.}, at: console_trylock_spinning+0x20/0x181
-
- stack backtrace:
- CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.4.39 #55
- Hardware name: XXXXXX
- Call Trace:
-  <IRQ>
-  dump_stack+0xbf/0x133
-  ? print_circular_bug+0xd6/0xe9
-  check_noncircular+0x1b9/0x1c3
-  __lock_acquire+0x118d/0x2714
-  lock_acquire+0x203/0x258
-  ? console_lock_spinning_enable+0x31/0x57
-  console_lock_spinning_enable+0x51/0x57
-  ? console_lock_spinning_enable+0x31/0x57
-  console_unlock+0x25d/0x528
-  ? console_trylock+0x18/0x4e
-  vprintk_emit+0x111/0x17f
-  ? lock_acquire+0x203/0x258
-  printk+0x59/0x73
-  __report_bad_irq+0xa3/0xba
-  note_interrupt+0x19a/0x1d6
-  handle_irq_event_percpu+0x57/0x79
-  handle_irq_event+0x36/0x55
-  handle_fasteoi_irq+0xc2/0x18a
-  do_IRQ+0xb3/0x157
-  common_interrupt+0xf/0xf
-  </IRQ>
-
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Fixes: 768aec0b5bcc ("serial: 8250: fix shared interrupts issues with SMP and RT kernels")
-Reported-by: Guenter Roeck <linux@roeck-us.net>
-Reported-by: Raul Rangel <rrangel@google.com>
-BugLink: https://bugs.chromium.org/p/chromium/issues/detail?id=1114800
-Link: https://lore.kernel.org/lkml/CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com/T/#u
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Tested-by: Guenter Roeck <linux@roeck-us.net>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200817022646.1484638-1-sergey.senozhatsky@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+URL: https://tracker.ceph.com/issues/46293
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_port.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/ceph/mds_client.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -2205,6 +2205,10 @@ int serial8250_do_startup(struct uart_po
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 3139fbd4c34e3..4ec5a109df82b 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3386,6 +3386,9 @@ static void delayed_work(struct work_struct *work)
+ 	dout("mdsc delayed_work\n");
+ 	ceph_check_delayed_caps(mdsc);
  
- 	if (port->irq) {
- 		unsigned char iir1;
++	if (mdsc->stopping)
++		return;
 +
-+		if (port->irqflags & IRQF_SHARED)
-+			disable_irq_nosync(port->irq);
+ 	mutex_lock(&mdsc->mutex);
+ 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
+ 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
+@@ -3717,7 +3720,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
+ static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
+ {
+ 	dout("stop\n");
+-	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
++	/*
++	 * Make sure the delayed work stopped before releasing
++	 * the resources.
++	 *
++	 * Because the cancel_delayed_work_sync() will only
++	 * guarantee that the work finishes executing. But the
++	 * delayed work will re-arm itself again after that.
++	 */
++	flush_delayed_work(&mdsc->delayed_work);
 +
- 		/*
- 		 * Test for UARTs that do not reassert THRE when the
- 		 * transmitter is idle and the interrupt has already
-@@ -2214,8 +2218,6 @@ int serial8250_do_startup(struct uart_po
- 		 * allow register changes to become visible.
- 		 */
- 		spin_lock_irqsave(&port->lock, flags);
--		if (up->port.irqflags & IRQF_SHARED)
--			disable_irq_nosync(port->irq);
- 
- 		wait_for_xmitr(up, UART_LSR_THRE);
- 		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
-@@ -2227,9 +2229,10 @@ int serial8250_do_startup(struct uart_po
- 		iir = serial_port_in(port, UART_IIR);
- 		serial_port_out(port, UART_IER, 0);
- 
-+		spin_unlock_irqrestore(&port->lock, flags);
-+
- 		if (port->irqflags & IRQF_SHARED)
- 			enable_irq(port->irq);
--		spin_unlock_irqrestore(&port->lock, flags);
- 
- 		/*
- 		 * If the interrupt is not reasserted, or we otherwise
+ 	if (mdsc->mdsmap)
+ 		ceph_mdsmap_destroy(mdsc->mdsmap);
+ 	kfree(mdsc->sessions);
+-- 
+2.25.1
+
 
 
