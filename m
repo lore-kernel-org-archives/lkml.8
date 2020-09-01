@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4789DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 781E0C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24845206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 465A6206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977229;
-	bh=mHJBKvhnUJ/S+3nxeAcbt10YL0vWVfmMtJO8E7cMELs=;
+	s=default; t=1598977232;
+	bh=Xlt4LANXdOrhRf7zi/oAhoOIZdeFcPS4vzsgy5swhxA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CYBbm0gAo6Ad+MB7UFVpx7n/MBDnshVPc9+sgJbdOdE/kuX+64YhG8FuTC0lktsO9
-	 Z8ARjMkxfeqpNLRGT9nSp99dGZ/OBCraGl8U924jgnI/VIoK10myBnlGnHxfIGLML0
-	 cYlD5iWUKqxhCMcjY4eICEchlOUby1eUWvgpugqk=
+	b=WhPeJsdPMPO7INgEAfYlE7Yay1CeVBtCeHYmeRh5yjv7e6MzO7rCzMhR/PcnUEzjJ
+	 MzYREw8hbMbbldXr3zrJNHfdtsIEbKMZc78FpWuhQf6Tfdy/0A9NWfsI3P4Z2VVJYL
+	 1YZlTVq1OBU4ZYiDTKmikSXMFXV0PqLAdxw4L6kA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728441AbgIAQU1 (ORCPT
+        id S1731127AbgIAPck (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:20:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:32:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgIAPcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:32:47 -0400
+        id S1730728AbgIAPcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:32 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E1C120866;
-        Tue,  1 Sep 2020 15:32:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E3EC205F4;
+        Tue,  1 Sep 2020 15:32:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974366;
-        bh=mHJBKvhnUJ/S+3nxeAcbt10YL0vWVfmMtJO8E7cMELs=;
+        s=default; t=1598974351;
+        bh=Xlt4LANXdOrhRf7zi/oAhoOIZdeFcPS4vzsgy5swhxA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wNmK28yFIAbcIOiNRSboQBJhjWX7LRLT9PrmesQhYDE4WwJ24oF+gr/sGjyNG9zdR
-         zsQ2QMlBpp6ZA5+gVFKOS8sUWsuIEsN2MoLO/hXSVuRwLy4mFDnQJR+jr7QtNgOfHH
-         Tjiz1vmHfDRtcO0l9wCW0qTPpT2saeLalMb2bCW0=
+        b=XLP/HiNETWTCCDoEtvjFQg/1yMRILuKKULyCVq5vk6zCIS3jO1Q261p2104lnqND7
+         NonNxAafQxCmPBjb/Lqw2OzfAYcGY1IG0DzrsWCvtQnELooypkEUjiLK8XtwdLiV03
+         nlE7BY5YyvNhckWAfQ53XwQaDzTt1AJoc7j9LsOE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 148/214] arm64: Allow booting of late CPUs affected by erratum 1418040
-Date:   Tue,  1 Sep 2020 17:10:28 +0200
-Message-Id: <20200901151000.062847132@linuxfoundation.org>
+Subject: [PATCH 5.4 143/214] Revert "scsi: qla2xxx: Fix crash on qla2x00_mailbox_command"
+Date:   Tue,  1 Sep 2020 17:10:23 +0200
+Message-Id: <20200901150959.831506820@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -64,39 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <maz@kernel.org>
+From: Saurav Kashyap <skashyap@marvell.com>
 
-[ Upstream commit bf87bb0881d0f59181fe3bbcf29c609f36483ff8 ]
+[ Upstream commit de7e6194301ad31c4ce95395eb678e51a1b907e5 ]
 
-As we can now switch from a system that isn't affected by 1418040
-to a system that globally is affected, let's allow affected CPUs
-to come in at a later time.
+FCoE adapter initialization failed for ISP8021 with the following patch
+applied. In addition, reproduction of the issue the patch originally tried
+to address has been unsuccessful.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Acked-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200731173824.107480-3-maz@kernel.org
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+This reverts commit 3cb182b3fa8b7a61f05c671525494697cba39c6a.
+
+Link: https://lore.kernel.org/r/20200806111014.28434-11-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/cpu_errata.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/scsi/qla2xxx/qla_mbx.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 0b2830379fe03..51462c59ab5da 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -917,6 +917,8 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
- 		.desc = "ARM erratum 1418040",
- 		.capability = ARM64_WORKAROUND_1418040,
- 		ERRATA_MIDR_RANGE_LIST(erratum_1418040_list),
-+		.type = (ARM64_CPUCAP_SCOPE_LOCAL_CPU |
-+			 ARM64_CPUCAP_PERMITTED_FOR_LATE_CPU),
- 	},
- #endif
- #ifdef CONFIG_ARM64_ERRATUM_1165522
+diff --git a/drivers/scsi/qla2xxx/qla_mbx.c b/drivers/scsi/qla2xxx/qla_mbx.c
+index 62a16463f0254..c1631e42d35d1 100644
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -335,14 +335,6 @@ qla2x00_mailbox_command(scsi_qla_host_t *vha, mbx_cmd_t *mcp)
+ 			if (time_after(jiffies, wait_time))
+ 				break;
+ 
+-			/*
+-			 * Check if it's UNLOADING, cause we cannot poll in
+-			 * this case, or else a NULL pointer dereference
+-			 * is triggered.
+-			 */
+-			if (unlikely(test_bit(UNLOADING, &base_vha->dpc_flags)))
+-				return QLA_FUNCTION_TIMEOUT;
+-
+ 			/* Check for pending interrupts. */
+ 			qla2x00_poll(ha->rsp_q_map[0]);
+ 
 -- 
 2.25.1
 
