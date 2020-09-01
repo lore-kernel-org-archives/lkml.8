@@ -2,100 +2,140 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A30C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DADBC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D543C204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EjZj6y+T"
+	by mail.kernel.org (Postfix) with ESMTP id CD303204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976577;
+	bh=UIiXDKl+MTlpYV/Z9SFdwrRkfKFxU48g8t3ma74X9As=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xikC5F4d4d3vDMWD0T2A/4rtlaMaDafD7uH3G5SNIzFWS0krNM7P97HDxt+PuUeF0
+	 MjRSuGY+7r2BVeH3RbF2Ci/7DKfFFKgY3+4FbQf2LGRneogKHlqIAcrU8kpJHHud7C
+	 /yaZRz+x0PcNBE1AwJTKFn0JxbtkiWbEi604NlkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731431AbgIAPiw (ORCPT
+        id S1730114AbgIAQJg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731309AbgIAPg4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:36:56 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59EEFC061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:36:55 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id l1so560922uai.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:36:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1B9nLNVLY42WxzWWaQLkKFC09iT2uTznxSa/7Ga9+ik=;
-        b=EjZj6y+TjUP2e0zRcKUUQvE66STizixCKC/KAIDXV/69rk8mNQSfWyAU6WYWSKFuzu
-         YdysqzXgzI2xtpYHzb6Bg9vJ2avPXngJVilLH84994hthxQshimmjhHojPFW896ik/4d
-         7+SfIVuVuc/ZxqJXQpx6oVzAu/cP4B59SJR8lGPID+5gG2w4v4nOMnEQcQrCru633HNP
-         zuDN+/5pNOLV30vak4kZQMnpd+VUgw2bg+XdxSwnEBkVo/zJgSOy5ArWNiN7cmol12Bb
-         IqdXYacCg5YMcR4+mn8aBUmFtkx7PyrkYdutuPTIGu4pnVnQseXCdI/TJgx4fELy5snC
-         I+0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1B9nLNVLY42WxzWWaQLkKFC09iT2uTznxSa/7Ga9+ik=;
-        b=Qg8pXR1/bIeJBjDra3sd7iAwlRlQP3Y4TVJNzaUUcSCVYyBmJ17ZGFF8XXUzB/ZZaW
-         6mCoWkGitpY0epa9Lco9+uNEFlqAxIoJnB6s9F3ftQCT70r+gC+T4eADaAqUk0rIBU7v
-         EOvf+AXTdNDNz1Td2i0aTogHgku01EhOGMF2p3k+Qmzo/alIEBJ0RFlAGiYf/s8vgn4M
-         RiYMzTmZrnTkubijhp1cd/kJSTZhIC02Wz03dRWADH9n+N844beB8R4DjTnCdDKno9Kr
-         mMZRcztY30FBUmXLcYqvkxhPowZWkgSHpMW0f/vz02bIqThwkexZQBPDq8hl5jxGllxT
-         AuLg==
-X-Gm-Message-State: AOAM5305sKWokbdGKfRIew+9ehMEv+5oA67eyIxaNuMaibPTe5VntjTx
-        PNrN5iZlp3SdZC6MMFhNzczH/tm/5Gd9F8tH4vMm6gRPJGBkKU7p
-X-Google-Smtp-Source: ABdhPJwNEOdYZ2JzAa+esqv8ikW74w5nzhA2RPqk11Z0XyL+fuHQHEnv1hhlq9RrJ7o9td9gDXMcOORUJEPmsoYSFJ0=
-X-Received: by 2002:ab0:5e43:: with SMTP id a3mr1793697uah.19.1598974614146;
- Tue, 01 Sep 2020 08:36:54 -0700 (PDT)
+        Tue, 1 Sep 2020 12:09:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731418AbgIAPiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:51 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA44020E65;
+        Tue,  1 Sep 2020 15:38:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974731;
+        bh=UIiXDKl+MTlpYV/Z9SFdwrRkfKFxU48g8t3ma74X9As=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=kmxvMBgKBsJf0nVw5AGrXotz3l/GOe/dlNc3HLwLVW/x6xHCgmu24cq1aKgrvJygT
+         bsSb64CFMesHYuJ3SMnoAmGKBGbxozm/ibOG0zBkvy2au98YvvJYZ/r1f1gz9lfqPH
+         yrXjt/yySIXBVc1gXmjlNc+lCdz0M4goTTDziDQk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Manish Narani <manish.narani@xilinx.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 072/255] mmc: sdhci-of-arasan: fix timings allocation code
+Date:   Tue,  1 Sep 2020 17:08:48 +0200
+Message-Id: <20200901151004.181713816@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200901150438.228887-1-ulf.hansson@linaro.org> <20200901150654.GB30034@lst.de>
-In-Reply-To: <20200901150654.GB30034@lst.de>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 1 Sep 2020 17:36:17 +0200
-Message-ID: <CAPDyKFqZXdtVokrDQvJAh-NzN0T2ayPD6MepemLEaDt1TRPduw@mail.gmail.com>
-Subject: Re: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when
- CONFIG_HAS_DMA is unset
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Rich Felker <dalias@libc.org>, Mark Brown <broonie@kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 17:06, Christoph Hellwig <hch@lst.de> wrote:
->
-> On Tue, Sep 01, 2020 at 05:04:38PM +0200, Ulf Hansson wrote:
-> > +#ifdef CONFIG_HAS_DMA
-> > +static int mmc_spi_dma_alloc(struct mmc_spi_host *host)
-> > +{
-> > +     struct spi_device *spi = host->spi;
-> > +     struct device *dev;
-> > +
-> > +     if (!spi->master->dev.parent->dma_mask)
-> > +             return 0;
->
-> I still don't think this makes sense, as the dma_mask should always
-> be non-NULL here.
+From: Manish Narani <manish.narani@xilinx.com>
 
-If that is the case, I wonder how the driver could even have worked without DMA.
+[ Upstream commit 88e1d0b175ec0bfa775c8629eae2a728726e2c6a ]
 
-Because in the existing code, host->dma_dev gets assigned to
-spi->master->dev.parent->dma_mask - which seems to turn on the DMA
-usage in the driver.
+The initial code that was adding delays was doing a cast over undefined
+memory. This meant that the delays would be all gibberish.
 
-What am I missing?
+This change, allocates all delays on the stack, and assigns them from the
+ZynqMP & Versal macros/phase-list. And then finally copies them over the
+common iclk_phase & oclk_phase variables.
 
-Kind regards
-Uffe
+Signed-off-by: Manish Narani <manish.narani@xilinx.com>
+Link: https://lore.kernel.org/r/1594753953-62980-1-git-send-email-manish.narani@xilinx.com
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/mmc/host/sdhci-of-arasan.c | 25 ++++++++++++++-----------
+ 1 file changed, 14 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
+index fb26e743e1fd4..d0a80bfb953b0 100644
+--- a/drivers/mmc/host/sdhci-of-arasan.c
++++ b/drivers/mmc/host/sdhci-of-arasan.c
+@@ -1025,7 +1025,6 @@ static void arasan_dt_read_clk_phase(struct device *dev,
+ static void arasan_dt_parse_clk_phases(struct device *dev,
+ 				       struct sdhci_arasan_clk_data *clk_data)
+ {
+-	int *iclk_phase, *oclk_phase;
+ 	u32 mio_bank = 0;
+ 	int i;
+ 
+@@ -1037,28 +1036,32 @@ static void arasan_dt_parse_clk_phases(struct device *dev,
+ 	clk_data->set_clk_delays = sdhci_arasan_set_clk_delays;
+ 
+ 	if (of_device_is_compatible(dev->of_node, "xlnx,zynqmp-8.9a")) {
+-		iclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) ZYNQMP_ICLK_PHASE;
+-		oclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) ZYNQMP_OCLK_PHASE;
++		u32 zynqmp_iclk_phase[MMC_TIMING_MMC_HS400 + 1] =
++			ZYNQMP_ICLK_PHASE;
++		u32 zynqmp_oclk_phase[MMC_TIMING_MMC_HS400 + 1] =
++			ZYNQMP_OCLK_PHASE;
+ 
+ 		of_property_read_u32(dev->of_node, "xlnx,mio-bank", &mio_bank);
+ 		if (mio_bank == 2) {
+-			oclk_phase[MMC_TIMING_UHS_SDR104] = 90;
+-			oclk_phase[MMC_TIMING_MMC_HS200] = 90;
++			zynqmp_oclk_phase[MMC_TIMING_UHS_SDR104] = 90;
++			zynqmp_oclk_phase[MMC_TIMING_MMC_HS200] = 90;
+ 		}
+ 
+ 		for (i = 0; i <= MMC_TIMING_MMC_HS400; i++) {
+-			clk_data->clk_phase_in[i] = iclk_phase[i];
+-			clk_data->clk_phase_out[i] = oclk_phase[i];
++			clk_data->clk_phase_in[i] = zynqmp_iclk_phase[i];
++			clk_data->clk_phase_out[i] = zynqmp_oclk_phase[i];
+ 		}
+ 	}
+ 
+ 	if (of_device_is_compatible(dev->of_node, "xlnx,versal-8.9a")) {
+-		iclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) VERSAL_ICLK_PHASE;
+-		oclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) VERSAL_OCLK_PHASE;
++		u32 versal_iclk_phase[MMC_TIMING_MMC_HS400 + 1] =
++			VERSAL_ICLK_PHASE;
++		u32 versal_oclk_phase[MMC_TIMING_MMC_HS400 + 1] =
++			VERSAL_OCLK_PHASE;
+ 
+ 		for (i = 0; i <= MMC_TIMING_MMC_HS400; i++) {
+-			clk_data->clk_phase_in[i] = iclk_phase[i];
+-			clk_data->clk_phase_out[i] = oclk_phase[i];
++			clk_data->clk_phase_in[i] = versal_iclk_phase[i];
++			clk_data->clk_phase_out[i] = versal_oclk_phase[i];
+ 		}
+ 	}
+ 
+-- 
+2.25.1
+
+
+
