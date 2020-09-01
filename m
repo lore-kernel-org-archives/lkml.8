@@ -2,155 +2,120 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDD4C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5EAC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 997A3206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AB4A206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:59:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GotAERU2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gd9YLKEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726268AbgIAP7F (ORCPT
+        id S1732252AbgIAP70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:59:05 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23392 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731348AbgIAP6q (ORCPT
+        Tue, 1 Sep 2020 11:59:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731272AbgIAP6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:58:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598975924;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=UhsKoxZOV+aMUeWUqsZWLQ4wnv3Es/RDZokZoWqv3Kk=;
-        b=GotAERU2tv3wrbqMmdqCakhiw+1suNDCVMkBamtuk3g/0TRWN56FCS7NnTZdChpbrQ2Ytd
-        GC8RfjGKFcTLZlRZ/sICNZaxS+UWReGSselqVK6KD3zt/mDCYR9c/Zc53K9m5G89cLs/+Q
-        cuCLMG/5YE39CueVoLPd7ORLXSKXSqs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-pdRs3gXXM0-lrlYitRpMFA-1; Tue, 01 Sep 2020 11:58:39 -0400
-X-MC-Unique: pdRs3gXXM0-lrlYitRpMFA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 00120E75D;
-        Tue,  1 Sep 2020 15:58:37 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (unknown [10.3.128.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8999078B55;
-        Tue,  1 Sep 2020 15:58:37 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id D7A4520D; Tue,  1 Sep 2020 12:58:34 -0300 (BRT)
-Date:   Tue, 1 Sep 2020 12:58:34 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     peterz@infradead.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Al Grant <al.grant@foss.arm.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf: correct SNOOPX field offset
-Message-ID: <20200901155834.GC10147@redhat.com>
-References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
- <20200825174043.GQ1509399@tassilo.jf.intel.com>
- <20200826142631.GA5351@redhat.com>
- <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
- <20200901150225.GA1424523@kernel.org>
- <20200901150630.GB1424523@kernel.org>
- <20200901151204.GE2674@hirez.programming.kicks-ass.net>
+        Tue, 1 Sep 2020 11:58:12 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA4FC061251;
+        Tue,  1 Sep 2020 08:58:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=YMlFrJEyBw+GGxYkmnybpKhHqx0sfDNv5s7PaPhHxwU=; b=Gd9YLKEUh+L4SFkaUhbHG3M8dD
+        CML4P2q8lRLBgi2V/zqNZbsMdET9SOcLwrXiQhlC89FsEOhv4JJUVlczC5tz1NVFJGPZUGNw0mpN5
+        qzMVcmbfdKTrImeYfVqLp70KKyuHY1d2ubXJy5DbmFDTX/vqy+og9g1EbJ/6WSVHl1eU8SSA2z/HI
+        ytc8BoebmRFkeg1tryurIuFiGvIV6ETH0Mg6xVt+XrjRDBbOJe+pEs56+koko8zHmKVzoDwGo8HoE
+        qpYFiFPkZtW/ERm5Tm+y4EKezU04PHf7JUWHAb6eJCibEvzWG7ZWLoJFdHCtl/sk7HYfM9oltIJYO
+        AW3zTaqw==;
+Received: from [2001:4bb8:18c:45ba:2f95:e5:ca6b:9b4a] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD8fZ-0004Qh-74; Tue, 01 Sep 2020 15:58:01 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        nbd@other.debian.org, ceph-devel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: [PATCH 6/9] nvme: opencode revalidate_disk in nvme_validate_ns
+Date:   Tue,  1 Sep 2020 17:57:45 +0200
+Message-Id: <20200901155748.2884-7-hch@lst.de>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901155748.2884-1-hch@lst.de>
+References: <20200901155748.2884-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901151204.GE2674@hirez.programming.kicks-ass.net>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Sep 01, 2020 at 05:12:04PM +0200, peterz@infradead.org escreveu:
-> On Tue, Sep 01, 2020 at 12:06:30PM -0300, Arnaldo Carvalho de Melo wrote:
-> 
-> > Also you mixed up tools/ with include/ things, the perf part of the
-> > kernel is maintained by Ingo, PeterZ.
-> 
-> Right, it helps if the right people are on Cc.
-> 
-> > Peter, the patch is the one below, I'll collect the
-> > tools/include/uapi/linux/perf_event.h bit as it fixes the tooling,
-> > please consider taking the kernel part.
-> 
-> Al, can you resend with the right people on Cc? Also see below.
-> 
-> > ---
-> > 
-> > From:   Al Grant <al.grant@foss.arm.com>
-> > Subject: [PATCH] perf: correct SNOOPX field offset
-> > Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
-> > Date:   Mon, 24 Aug 2020 10:28:34 +0100
-> > 
-> > perf_event.h has macros that define the field offsets in the
-> > data_src bitmask in perf records. The SNOOPX and REMOTE offsets
-> > were both 37. These are distinct fields, and the bitfield layout
-> > in perf_mem_data_src confirms that SNOOPX should be at offset 38.
-> > 
-> 
-> This needs a Fixes: tag.
+Keep control in the NVMe driver instead of going through an indirect
+call back into ->revalidate_disk.  Also reorder the function a bit to be
+easier to follow with the additional code.
 
-He provided it in a later message, here it goes:
+And now that we have removed all callers of revalidate_disk() in the nvme
+code, ->revalidate_disk is only called from the open code when first
+opening the device.  Which is of course totally pointless as we have
+a valid size since the initial scan, and will get an updated view
+through the asynchronous notifiation everytime the size changes.
 
-    Fixes: 52839e653b5629bd ("perf tools: Add support for printing new mem_info encodings")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/nvme/host/core.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-Also Andi has provided this:
-
-    Reviewed-by: Andi Kleen <ak@linux.intel.com>
-
-- Arnaldo
-
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index bc18523774b4be..9428e7deb68b09 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2323,7 +2323,6 @@ static const struct block_device_operations nvme_fops = {
+ 	.open		= nvme_open,
+ 	.release	= nvme_release,
+ 	.getgeo		= nvme_getgeo,
+-	.revalidate_disk= nvme_revalidate_disk,
+ 	.report_zones	= nvme_report_zones,
+ 	.pr_ops		= &nvme_pr_ops,
+ };
+@@ -4020,14 +4019,19 @@ static void nvme_ns_remove_by_nsid(struct nvme_ctrl *ctrl, u32 nsid)
+ static void nvme_validate_ns(struct nvme_ctrl *ctrl, unsigned nsid)
+ {
+ 	struct nvme_ns *ns;
++	int ret;
  
-> > Signed-off-by: Al Grant <al.grant@arm.com>
-> > 
-> > ---
-> > 
-> >   include/uapi/linux/perf_event.h       | 2 +-
-> >   tools/include/uapi/linux/perf_event.h | 2 +-
-> >   2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > ---
-> > 
-> > diff --git a/include/uapi/linux/perf_event.h 
-> > b/include/uapi/linux/perf_event.h
-> > index 077e7ee69e3d..3e5dcdd48a49 100644
-> > --- a/include/uapi/linux/perf_event.h
-> > +++ b/include/uapi/linux/perf_event.h
-> > @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-> > 
-> >   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
-> >   /* 1 free */
-> > -#define PERF_MEM_SNOOPX_SHIFT  37
-> > +#define PERF_MEM_SNOOPX_SHIFT  38
-> > 
-> >   /* locked instruction */
-> >   #define PERF_MEM_LOCK_NA       0x01 /* not available */
-> > diff --git a/tools/include/uapi/linux/perf_event.h 
-> > b/tools/include/uapi/linux/perf_event.h
-> > index 077e7ee69e3d..3e5dcdd48a49 100644
-> > --- a/tools/include/uapi/linux/perf_event.h
-> > +++ b/tools/include/uapi/linux/perf_event.h
-> > @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
-> > 
-> >   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
-> >   /* 1 free */
-> > -#define PERF_MEM_SNOOPX_SHIFT  37
-> > +#define PERF_MEM_SNOOPX_SHIFT  38
-> > 
-> >   /* locked instruction */
-> >   #define PERF_MEM_LOCK_NA       0x01 /* not available */
+ 	ns = nvme_find_get_ns(ctrl, nsid);
+-	if (ns) {
+-		if (revalidate_disk(ns->disk))
+-			nvme_ns_remove(ns);
+-		nvme_put_ns(ns);
+-	} else
++	if (!ns) {
+ 		nvme_alloc_ns(ctrl, nsid);
++		return;
++	}
++
++	ret = nvme_revalidate_disk(ns->disk);
++	revalidate_disk_size(ns->disk, ret == 0);
++	if (ret)
++		nvme_ns_remove(ns);
++	nvme_put_ns(ns);
+ }
+ 
+ static void nvme_remove_invalid_namespaces(struct nvme_ctrl *ctrl,
+-- 
+2.28.0
 
