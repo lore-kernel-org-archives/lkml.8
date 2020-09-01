@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E44AEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A93C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B51AA207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 007C22078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978456;
-	bh=cOs6hkEis3MMWFlqoXr5LZziZMthQpLZImQjdLCdOCY=;
+	s=default; t=1598978462;
+	bh=DkAnR+iaMjM5GOBkP+c9xavILewYbraf9p+EsXs1328=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JG0lFF1O1eE6EzOk71aE3NUoTyFZ5UWU8TZ3pG49oN7/ASwaIxxAc0tbgkqK1yctD
-	 iq14Ym4JBeVmFM8LP9wnJLEiSe+CB7CB120PG1i19W/wYP1umTNgK/pRsN0G70BaBA
-	 0+AD80Eno0CXHGSQ62GmuNF3CAsBS/JiF5nCyER8=
+	b=Z5a/ideCOjz+DJC9OBos5ef3XX88RdmC8OUdZUE7iNQsaAAiW4DsyJvQWYDvbcnlj
+	 xKPbkI8c02SHCvr9P0HiBPLmqcqgYRIWf+Cb0Wuyuwy09sVJdk+QzH7ip9wwxRixnG
+	 eDVk7wb7TOpjhbBx9f1BblD0ZqE3nnteSWOL7aTM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732140AbgIAQkx (ORCPT
+        id S1732186AbgIAQk7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:40:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:40:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730357AbgIAP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:12 -0400
+        id S1730395AbgIAP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F29F2100A;
-        Tue,  1 Sep 2020 15:28:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DE1206C0;
+        Tue,  1 Sep 2020 15:28:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974091;
-        bh=cOs6hkEis3MMWFlqoXr5LZziZMthQpLZImQjdLCdOCY=;
+        s=default; t=1598974122;
+        bh=DkAnR+iaMjM5GOBkP+c9xavILewYbraf9p+EsXs1328=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Clwvq4rEXsoh3FT6AGBQfZUxNBKNOo7jvikWRz/f5NXUhnCiTB0t5nmbet96WilNR
-         wsDow2k+v7gAAlJ16tKImbBjvl53HPzqI5vUcsECDVT18J+GHQ7JDHGoPtFtO7+7cM
-         aYhOi0kGjto3rXst9XmzXAKT07GPHrL1ZQyJGPUE=
+        b=OPqtDOOVue/XLTg9lX5yte6fsyhkMHqHUiwEEFcYEl1OF8LbfiNg78euoGMuKYYWz
+         QVysBL52zl4Z3LmAXOYnKWh1f0AWNeMphRR1y3arAVUNXy8Dq1WdZMu6/FQNWD7dTo
+         peVkEE8+oI5sr7wpY5xmAlZCsv81LVhbgIVNw2RU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 041/214] ARM: dts: ls1021a: output PPS signal on FIPER2
-Date:   Tue,  1 Sep 2020 17:08:41 +0200
-Message-Id: <20200901150954.931991391@linuxfoundation.org>
+Subject: [PATCH 5.4 052/214] btrfs: file: reserve qgroup space after the hole punch range is locked
+Date:   Tue,  1 Sep 2020 17:08:52 +0200
+Message-Id: <20200901150955.473793414@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,49 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
+From: Qu Wenruo <wqu@suse.com>
 
-[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
+[ Upstream commit a7f8b1c2ac21bf081b41264c9cfd6260dffa6246 ]
 
-The timer fixed interval period pulse generator register
-is used to generate periodic pulses. The down count
-register loads the value programmed in the fixed period
-interval (FIPER). At every tick of the timer accumulator
-overflow, the counter decrements by the value of
-TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
-counter value reaches zero. It reloads the down counter
-in the cycle following a pulse.
+The incoming qgroup reserved space timing will move the data reservation
+to ordered extent completely.
 
-To use the TMR_FIPER register to generate desired periodic
-pulses. The value should programmed is,
-desired_period - tclk_period
+However in btrfs_punch_hole_lock_range() will call
+btrfs_invalidate_page(), which will clear QGROUP_RESERVED bit for the
+range.
 
-Current tmr-fiper2 value is to generate 100us periodic pulses.
-(But the value should have been 99995, not 99990. The tclk_period is 5.)
-This patch is to generate 1 second periodic pulses with value
-999999995 programmed which is more desired by user.
+In current stage it's OK, but if we're making ordered extents handle the
+reserved space, then btrfs_punch_hole_lock_range() can clear the
+QGROUP_RESERVED bit before we submit ordered extent, leading to qgroup
+reserved space leakage.
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Acked-by: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+So here change the timing to make reserve data space after
+btrfs_punch_hole_lock_range().
+The new timing is fine for either current code or the new code.
+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Qu Wenruo <wqu@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/file.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 63d9f4a066e38..5a8e58b663420 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -753,7 +753,7 @@
- 			fsl,tmr-prsc    = <2>;
- 			fsl,tmr-add     = <0xaaaaaaab>;
- 			fsl,tmr-fiper1  = <999999995>;
--			fsl,tmr-fiper2  = <99990>;
-+			fsl,tmr-fiper2  = <999999995>;
- 			fsl,max-adj     = <499999999>;
- 			fsl,extts-fifo;
- 		};
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 3cfbccacef7fd..a02c44b6a2be5 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -3130,14 +3130,14 @@ reserve_space:
+ 		if (ret < 0)
+ 			goto out;
+ 		space_reserved = true;
+-		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
+-						alloc_start, bytes_to_reserve);
+-		if (ret)
+-			goto out;
+ 		ret = btrfs_punch_hole_lock_range(inode, lockstart, lockend,
+ 						  &cached_state);
+ 		if (ret)
+ 			goto out;
++		ret = btrfs_qgroup_reserve_data(inode, &data_reserved,
++						alloc_start, bytes_to_reserve);
++		if (ret)
++			goto out;
+ 		ret = btrfs_prealloc_file_range(inode, mode, alloc_start,
+ 						alloc_end - alloc_start,
+ 						i_blocksize(inode),
 -- 
 2.25.1
 
