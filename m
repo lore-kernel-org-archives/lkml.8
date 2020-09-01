@@ -2,172 +2,157 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875B6C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336E6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63D4A2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3E612078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:12:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DWGoneNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbgIASLn (ORCPT
+        id S1730009AbgIASMm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:11:43 -0400
-Received: from mga11.intel.com ([192.55.52.93]:64009 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726377AbgIASLl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:11:41 -0400
-IronPort-SDR: pyb1UTA7YQrED807E2mO0Oj962rUapGJYQ2yC67d6yAUs4F+1zuiifAu2dQHYA00xIKKjo34T3
- 1rzmp2Db3NZQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="154751471"
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="154751471"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 11:11:39 -0700
-IronPort-SDR: U9Za4Fsprnn24UWgzswsDS3jgMDfq4GjY2CkedkkCRDY31krR7oOGKyx9lKCG8Pc9lJkNVr+uQ
- OXMdfSgp5/bw==
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="301533104"
-Received: from jcervan1-mobl1.amr.corp.intel.com (HELO [10.212.146.17]) ([10.212.146.17])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 11:11:38 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Andy Lutomirski <luto@kernel.org>,
-        "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
- <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
- <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
- <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
- <20200901102758.GY6642@arm.com>
- <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
- <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <32005d57-e51a-7c7f-4e86-612c2ff067f3@intel.com>
-Date:   Tue, 1 Sep 2020 11:11:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 1 Sep 2020 14:12:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgIASMl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 14:12:41 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6A6AC061244;
+        Tue,  1 Sep 2020 11:12:39 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id i10so1318415ybt.11;
+        Tue, 01 Sep 2020 11:12:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fo76CB7ot38YXOx7Pt8T2DJw7Wwns+OpublnLmsqW58=;
+        b=DWGoneNm1E0H2TB0kRrtrEM4Z6g03YA3r+WDj4ntFFFH9GwIGOGQiGBcyz4KakgYdQ
+         ZMsLJWOKJNHY3IVCJ78DN+ZJ49+n/urFRj/hZ0ZwS0CNhqzEA9xo/RYCr+1lR4JZWcgK
+         MKFJeUnWuCzkPmZ13p3LNlIaVuLAyrxCMRRM2qzgtrtSBUxlsTVXl8nRNHpuQLpmwJja
+         P8osFyO/zEqQde54OD2UC9OmaWuz+yWjzfrRBc6IBKS9N67UWS0qzzCAAiri93W6lRwr
+         P5XzlbxVHlpVxbGH8vVEEtYA6RqZUEasi9JUcnrcnXeFRQTud30kGVL9uZsrIToNY7VV
+         mXfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fo76CB7ot38YXOx7Pt8T2DJw7Wwns+OpublnLmsqW58=;
+        b=CANnVMOTUKyGBwnvJ1+iCWB4XiFO6raobG+DmSGa2Vk7pVo3dC0wQGo50zBRdjfbmv
+         OGcusG2yG0JzGcUjL0jKEd4qg9rzjUQQGIZ4PNnzpEpAfeXUk2o6ARDL7vcBKgcG83EE
+         q359eb5g5GHbEGLI8QfJZWJKBDQc7HaQ+Uw5v1rmNm2lfRtuZcN9qsptGooivTmcSTPI
+         GNtlX+vs/o0lmdF8ssxGB/V/D/C3Z/yNwnHvPTG4Z/XOKhD7tKZsKkW0rOGVe4txR1Yn
+         7ky+yx1RA9SwRc4APevdOtosv52euxDNl65MgJKRDzKTwK5fNH9oyIChPg/9VYeHwOj8
+         IgHA==
+X-Gm-Message-State: AOAM533WZrLGFH0FFE8j6keRsK0SDgukWXKz+SCLNvjE9j2MgjXYqCOQ
+        fj7dtx9YrJS7+M0lpaN3F4Nq16QOJLqqaf3uLeE=
+X-Google-Smtp-Source: ABdhPJyNWB7lSMY+KzqZEo4eVLNYUtv6CMdaZ2Mlwnslc8xJRr/gmPTZ86hVWzmXcG5pEs8cqD9DnHuTb17F/JIgkFM=
+X-Received: by 2002:a25:6885:: with SMTP id d127mr4380112ybc.27.1598983957566;
+ Tue, 01 Sep 2020 11:12:37 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-9-haoluo@google.com>
+ <CAEf4BzYC0JRQusCxTrmraYQC7SZdkVjdy8DMUNECKwCbXP9-dw@mail.gmail.com> <CA+khW7jYWNT5aVe5vCinw5qwKKoB0w386qz2g+0ndv1LeeoGGg@mail.gmail.com>
+In-Reply-To: <CA+khW7jYWNT5aVe5vCinw5qwKKoB0w386qz2g+0ndv1LeeoGGg@mail.gmail.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 1 Sep 2020 11:12:26 -0700
+Message-ID: <CAEf4Bza5+m72JQ1Q3a2GRetGB7C-Zemvd-ib0u_VKC2nrYkgdQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 8/8] bpf/selftests: Test for bpf_per_cpu_ptr()
+To:     Hao Luo <haoluo@google.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 10:45 AM, Andy Lutomirski wrote:
->>> For arm64 (and sparc etc.) we continue to use the regular mmap/mprotect
->>> family of calls.  One or two additional arch-specific mmap flags are
->>> sufficient for now.
->>>
->>> Is x86 definitely not going to fit within those calls?
->> That can work for x86.  Andy, what if we create PROT_SHSTK, which can
->> been seen only from the user.  Once in kernel, it is translated to
->> VM_SHSTK.  One question for mremap/mprotect is, do we allow a normal
->> data area to become shadow stack?
-> I'm unconvinced that we want to use a somewhat precious PROT_ or VM_
-> bit for this.  Using a flag bit makes sense if we expect anyone to
-> ever map an fd or similar as a shadow stack, but that seems a bit odd
-> in the first place.  To me, it seems more logical for a shadow stack
-> to be a special sort of mapping with a special vm_ops, not a normal
-> mapping with a special flag set.  Although I realize that we want
-> shadow stacks to work like anonymous memory with respect to fork().
-> Dave?
+On Thu, Aug 27, 2020 at 8:42 PM Hao Luo <haoluo@google.com> wrote:
+>
+> Thanks for taking a look!
+>
+> On Fri, Aug 21, 2020 at 8:30 PM Andrii Nakryiko
+> <andrii.nakryiko@gmail.com> wrote:
+> >
+> > On Wed, Aug 19, 2020 at 3:42 PM Hao Luo <haoluo@google.com> wrote:
+> > >
+> > > Test bpf_per_cpu_ptr(). Test two paths in the kernel. If the base
+> > > pointer points to a struct, the returned reg is of type PTR_TO_BTF_ID.
+> > > Direct pointer dereference can be applied on the returned variable.
+> > > If the base pointer isn't a struct, the returned reg is of type
+> > > PTR_TO_MEM, which also supports direct pointer dereference.
+> > >
+> > > Signed-off-by: Hao Luo <haoluo@google.com>
+> > > ---
+> >
+> > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> >
+> [...]
+> > >
+> > >  __u64 out__runqueues = -1;
+> > >  __u64 out__bpf_prog_active = -1;
+> > > +__u32 out__rq_cpu = -1;
+> > > +unsigned long out__process_counts = -1;
+> >
+> > try to not use long for variables, it is 32-bit integer in user-space
+> > but always 64-bit in BPF. This causes problems when using skeleton on
+> > 32-bit architecture.
+> >
+>
+> Ack. I will use another variable of type 'int' instead.
 
-I actually don't like the idea of *creating* mappings much.
+__u64 is fine as well
 
-I think the pkey model has worked out pretty well where we separate
-creating the mapping from doing something *to* it, like changing
-protections.  For instance, it would be nice if we could preserve things
-like using hugetlbfs or heck even doing KSM for shadow stacks.
+>
+> > >
+> > > -extern const struct rq runqueues __ksym; /* struct type global var. */
+> > > +extern const struct rq runqueues __ksym; /* struct type percpu var. */
+> > >  extern const int bpf_prog_active __ksym; /* int type global var. */
+> > > +extern const unsigned long process_counts __ksym; /* int type percpu var. */
+> > >
+> > >  SEC("raw_tp/sys_enter")
+> > >  int handler(const void *ctx)
+> > >  {
+> > > +       struct rq *rq;
+> > > +       unsigned long *count;
+> > > +
+> > >         out__runqueues = (__u64)&runqueues;
+> > >         out__bpf_prog_active = (__u64)&bpf_prog_active;
+> > >
+> > > +       rq = (struct rq *)bpf_per_cpu_ptr(&runqueues, 1);
+> > > +       if (rq)
+> > > +               out__rq_cpu = rq->cpu;
+> >
+> > this is awesome!
+> >
+> > Are there any per-cpu variables that are arrays? Would be nice to test
+> > those too.
+> >
+> >
+>
+> There are currently per-cpu arrays, but not common. There is a
+> 'pmc_prev_left' in arch/x86, I can add that in this test.
 
-If we're *creating* mappings, we've pretty much ruled out things like
-hugetlbfs.
+arch-specific variables are bad, because selftests will be failing on
+other architectures; let's not do this then.
 
-Something like mprotect_shstk() would allow an implementation today that
-only works on anonymous memory *and* sets up a special vm_ops.  But, the
-same exact ABI could do wonky stuff in the future if we decided we
-wanted to do shadow stacks on DAX or hugetlbfs or whatever.
-
-I don't really like the idea of PROT_SHSTK those are plumbed into a
-bunch of interfaces.  But, I also can't deny that it seems to be working
-fine for the arm64 folks.
+>
+> [...]
