@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B76C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83EF0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 321E721534
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432FB21534
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974768;
-	bh=RirBJnGWSx+8SfHSLXWiXEKeGrvmh1KYf16yHJ8Ti0g=;
+	s=default; t=1598974774;
+	bh=BL0W7hFbJy3nGLXj2Qu5Mnl4f5HBkxNhWtQF4Q8KicI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JlLyqht+qlOvGvew1lvW+bZq72w6ySQ/i+Ul3kxOw/HW9clEBFNHwxrOjqOzQ/Q8x
-	 Ik5qE8VyHY8+OtXoWe9K/r4DQA8GdVG3icD4sNxL0hMylVFepNX6OT61yOkjXr6Mth
-	 cF+eiBxZ1xE3zwTA1ZKe1viO6MckqsM6DFOG7TGs=
+	b=izuaFXzZqQbBqMqaGiqyxSqVWbjK5N5fFYmkZsE+uID0JJ2Vj+tP6jqUsnqN5cl38
+	 hSN/SFom/09z0PSzse8tiJXonzV5kaQTi4/I8cEfRlmNhQIEByufw1RAbPfz6RZmcn
+	 0VTi2nY724P5dnlIDKaoGEFKMqAjlUHmCl8MtG/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbgIAPj1 (ORCPT
+        id S1728828AbgIAPjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:39:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45896 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:39:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731158AbgIAPhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:37:39 -0400
+        id S1731352AbgIAPhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:37:41 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C88820E65;
-        Tue,  1 Sep 2020 15:37:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E79C120E65;
+        Tue,  1 Sep 2020 15:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974658;
-        bh=RirBJnGWSx+8SfHSLXWiXEKeGrvmh1KYf16yHJ8Ti0g=;
+        s=default; t=1598974661;
+        bh=BL0W7hFbJy3nGLXj2Qu5Mnl4f5HBkxNhWtQF4Q8KicI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0iVTI0T25Fc7gDTgJqkOwjGwBHvo5IjqtGPJygiOyEfPKUSAuzJuHqi7r1UQeZ3Kp
-         qbq63waxvgl1DtVe6yDvPYrIscbnMf1yJuKXgx5EncMj+0K8fm0UMnsOo8h3nsE7ld
-         vojZ9z3iUHrDGDd11YMsu8G/A4t40sxCI9MfFYOs=
+        b=J9KoY0jv37ovYchTpgN6Ck9pA/v+GbcvSeRTolsCiwOWow6M4PVtQv79VSfFKwQ3Z
+         bPBfYH5Xl6vXmwgSh4yggKTtZH9HC2Y4Sd98ZN5ypN495/3xfnjw2Kb75CfYRXamOL
+         xr6/B1cxjA8dwt4/VpllgwIB+EYVIi3QMKHo+o7M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <treding@nvidia.com>,
+        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 045/255] gpu: host1x: Put gathers BO on pinning error
-Date:   Tue,  1 Sep 2020 17:08:21 +0200
-Message-Id: <20200901151002.910083150@linuxfoundation.org>
+Subject: [PATCH 5.8 019/255] scsi: target: tcmu: Fix crash on ARM during cmd completion
+Date:   Tue,  1 Sep 2020 17:07:55 +0200
+Message-Id: <20200901151001.691005222@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,93 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit fd323e9ef0a19112c0c85b85afc4848c0518174b ]
+[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
 
-This patch fixes gather's BO refcounting on a pinning error. Gather's BO
-won't be leaked now if something goes wrong.
+If tcmu_handle_completions() has to process a padding shorter than
+sizeof(struct tcmu_cmd_entry), the current call to
+tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
+param is wrong and causes crashes on e.g. ARM, because
+tcmu_flush_dcache_range() in this case calls
+flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
+address above the end of the vmalloc'ed area.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+The fix is to use the minimum of remaining ring space and sizeof(struct
+tcmu_cmd_entry) as the length param.
+
+The patch was tested on kernel 4.19.118.
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
+
+Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/host1x/job.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/target/target_core_user.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/host1x/job.c b/drivers/gpu/host1x/job.c
-index a10643aa89aa5..2ac5a99406d98 100644
---- a/drivers/gpu/host1x/job.c
-+++ b/drivers/gpu/host1x/job.c
-@@ -102,6 +102,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- {
- 	struct host1x_client *client = job->client;
- 	struct device *dev = client->dev;
-+	struct host1x_job_gather *g;
- 	struct iommu_domain *domain;
- 	unsigned int i;
- 	int err;
-@@ -184,7 +185,6 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- 	}
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 63cca0e1e9123..9ab960cc39b6f 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1220,7 +1220,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
  
- 	for (i = 0; i < job->num_gathers; i++) {
--		struct host1x_job_gather *g = &job->gathers[i];
- 		size_t gather_size = 0;
- 		struct scatterlist *sg;
- 		struct sg_table *sgt;
-@@ -194,6 +194,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- 		dma_addr_t *phys;
- 		unsigned int j;
+ 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
  
-+		g = &job->gathers[i];
- 		g->bo = host1x_bo_get(g->bo);
- 		if (!g->bo) {
- 			err = -EINVAL;
-@@ -213,7 +214,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- 		sgt = host1x_bo_pin(host->dev, g->bo, phys);
- 		if (IS_ERR(sgt)) {
- 			err = PTR_ERR(sgt);
--			goto unpin;
-+			goto put;
- 		}
+-		tcmu_flush_dcache_range(entry, sizeof(*entry));
++		/*
++		 * Flush max. up to end of cmd ring since current entry might
++		 * be a padding that is shorter than sizeof(*entry)
++		 */
++		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
++					       udev->cmdr_size);
++		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
++					ring_left : sizeof(*entry));
  
- 		if (!IS_ENABLED(CONFIG_TEGRA_HOST1X_FIREWALL) && host->domain) {
-@@ -226,7 +227,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- 					   host->iova_end >> shift, true);
- 			if (!alloc) {
- 				err = -ENOMEM;
--				goto unpin;
-+				goto put;
- 			}
- 
- 			err = iommu_map_sg(host->domain,
-@@ -235,7 +236,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- 			if (err == 0) {
- 				__free_iova(&host->iova, alloc);
- 				err = -EINVAL;
--				goto unpin;
-+				goto put;
- 			}
- 
- 			job->unpins[job->num_unpins].size = gather_size;
-@@ -245,7 +246,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- 					 DMA_TO_DEVICE);
- 			if (!err) {
- 				err = -ENOMEM;
--				goto unpin;
-+				goto put;
- 			}
- 
- 			job->unpins[job->num_unpins].dir = DMA_TO_DEVICE;
-@@ -263,6 +264,8 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
- 
- 	return 0;
- 
-+put:
-+	host1x_bo_put(g->bo);
- unpin:
- 	host1x_job_unpin(job);
- 	return err;
+ 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
+ 			UPDATE_HEAD(udev->cmdr_last_cleaned,
 -- 
 2.25.1
 
