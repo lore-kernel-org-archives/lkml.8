@@ -2,54 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A673AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC650C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81F9D206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C549206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979397;
-	bh=haMngcYoHsu/t+/mS4mejSu6pXO3QuqXEo3Pm1l24Ag=;
+	s=default; t=1598979430;
+	bh=0T4zPC5JFeMjiOz5QfuMmWoz2MjWto/85jlqA8H2gUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ys9kFZNltiUZspLNmP+qwxFub9s40QXMidgl4ek48MnFgT6MdU59rZtUY7jJV4VfX
-	 5JJlp3jBXAiGtK8pBknA3FLiuSCyYqzqqO51Pw/hXjxt1fsi1c8XFFCmz9t6Mcn4nD
-	 H2Ekpb43zAO/m6XAkOk6uJRqOL6X1XBPfTKNGezY=
+	b=GoScM8WJ4PbGIh4bcy9S9V9iMF/TdTHaekBPccdm+e5uPnQGl7Osv1s/+6/dA6+NC
+	 G7inZWDzv0CKzh97WACgfo0V08ZRJNpeyCEfIBnL02+8ojN7+TyRlO1TzBHzpqS9dk
+	 Z6Zq4V2NvE93EElNCMShxdU18McnVfxq5Gr7621Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbgIAPXq (ORCPT
+        id S1728149AbgIAQ5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:23:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42116 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:57:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46924 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgIAPVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:21:24 -0400
+        id S1729658AbgIAPXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C234206FA;
-        Tue,  1 Sep 2020 15:21:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD68C20FC3;
+        Tue,  1 Sep 2020 15:23:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973684;
-        bh=haMngcYoHsu/t+/mS4mejSu6pXO3QuqXEo3Pm1l24Ag=;
+        s=default; t=1598973822;
+        bh=0T4zPC5JFeMjiOz5QfuMmWoz2MjWto/85jlqA8H2gUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dlfwCZl1xF79FdHoFG4IxRc9QzdNvmoaWJ+7zF2p9lFTMdJhXCZz0JM27YumbVBfP
-         CtDu049rI4g063pIWyGA0mrp87TsNPpFKad3+7ZryneY8o1CtOXftokgXapU/pwwYn
-         daIlXBcXIxn/fh02wZvKeSiroMKPEl6PP1c6Dm1Y=
+        b=q+DRM2pKRvge47mgzCaO9EloQeWrDtPA94F7wTLNU5gCLLH37Je4XIv+0ZUlCyPLd
+         iqHi+RLf2GZb1uI1UkPFHlV3YT9MSBd2lpT/dBGC3fDLSKOtdo3h2bV9n2GdK+/emx
+         3tLwG00gBReTmivgDJvcGSDx7QUxyP448L38mm7I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 4.14 69/91] writeback: Protect inode->i_io_list with inode->i_lock
-Date:   Tue,  1 Sep 2020 17:10:43 +0200
-Message-Id: <20200901150931.602200418@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 059/125] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
+Date:   Tue,  1 Sep 2020 17:10:14 +0200
+Message-Id: <20200901150937.471300783@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-References: <20200901150928.096174795@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,107 +60,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Lukas Czerner <lczerner@redhat.com>
 
-commit b35250c0816c7cf7d0a8de92f5fafb6a7508a708 upstream.
+[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
 
-Currently, operations on inode->i_io_list are protected by
-wb->list_lock. In the following patches we'll need to maintain
-consistency between inode->i_state and inode->i_io_list so change the
-code so that inode->i_lock protects also all inode's i_io_list handling.
+Callers of __jbd2_journal_unfile_buffer() and
+__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
+fact if it's not, we can end up with journal_head refcounting errors
+leading to crash much later that might be very hard to track down. Add
+asserts to make sure that is the case.
 
-Reviewed-by: Martijn Coenen <maco@android.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-CC: stable@vger.kernel.org # Prerequisite for "writeback: Avoid skipping inode writeback"
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We also make sure that b_next_transaction is NULL in
+__jbd2_journal_unfile_buffer() since the callers expect that as well and
+we should not get into that stage in this state anyway, leading to
+problems later on if we do.
 
+Tested with fstests.
+
+Signed-off-by: Lukas Czerner <lczerner@redhat.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs-writeback.c |   22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ fs/jbd2/transaction.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -160,6 +160,7 @@ static void inode_io_list_del_locked(str
- 				     struct bdi_writeback *wb)
- {
- 	assert_spin_locked(&wb->list_lock);
-+	assert_spin_locked(&inode->i_lock);
- 
- 	list_del_init(&inode->i_io_list);
- 	wb_io_lists_depopulated(wb);
-@@ -1039,7 +1040,9 @@ void inode_io_list_del(struct inode *ino
- 	struct bdi_writeback *wb;
- 
- 	wb = inode_to_wb_and_lock_list(inode);
-+	spin_lock(&inode->i_lock);
- 	inode_io_list_del_locked(inode, wb);
-+	spin_unlock(&inode->i_lock);
- 	spin_unlock(&wb->list_lock);
- }
- 
-@@ -1088,8 +1091,10 @@ void sb_clear_inode_writeback(struct ino
-  * the case then the inode must have been redirtied while it was being written
-  * out and we don't reset its dirtied_when.
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 43693b6797105..5a0de78a5d71a 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1915,6 +1915,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
   */
--static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+static void redirty_tail_locked(struct inode *inode, struct bdi_writeback *wb)
+ static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
  {
-+	assert_spin_locked(&inode->i_lock);
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
 +
- 	if (!list_empty(&wb->b_dirty)) {
- 		struct inode *tail;
+ 	__jbd2_journal_temp_unlink_buffer(jh);
+ 	jh->b_transaction = NULL;
+ 	jbd2_journal_put_journal_head(jh);
+@@ -2462,6 +2465,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
  
-@@ -1100,6 +1105,13 @@ static void redirty_tail(struct inode *i
- 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
- }
- 
-+static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+{
-+	spin_lock(&inode->i_lock);
-+	redirty_tail_locked(inode, wb);
-+	spin_unlock(&inode->i_lock);
-+}
+ 	was_dirty = test_clear_buffer_jbddirty(bh);
+ 	__jbd2_journal_temp_unlink_buffer(jh);
 +
- /*
-  * requeue inode for re-scanning after bdi->b_io list is exhausted.
-  */
-@@ -1310,7 +1322,7 @@ static void requeue_inode(struct inode *
- 		 * writeback is not making progress due to locked
- 		 * buffers. Skip this inode for now.
- 		 */
--		redirty_tail(inode, wb);
-+		redirty_tail_locked(inode, wb);
- 		return;
- 	}
- 
-@@ -1330,7 +1342,7 @@ static void requeue_inode(struct inode *
- 			 * retrying writeback of the dirty page/inode
- 			 * that cannot be performed immediately.
- 			 */
--			redirty_tail(inode, wb);
-+			redirty_tail_locked(inode, wb);
- 		}
- 	} else if (inode->i_state & I_DIRTY) {
- 		/*
-@@ -1338,7 +1350,7 @@ static void requeue_inode(struct inode *
- 		 * such as delayed allocation during submission or metadata
- 		 * updates after data IO completion.
- 		 */
--		redirty_tail(inode, wb);
-+		redirty_tail_locked(inode, wb);
- 	} else if (inode->i_state & I_DIRTY_TIME) {
- 		inode->dirtied_when = jiffies;
- 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
-@@ -1585,8 +1597,8 @@ static long writeback_sb_inodes(struct s
- 		 */
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
-+			redirty_tail_locked(inode, wb);
- 			spin_unlock(&inode->i_lock);
--			redirty_tail(inode, wb);
- 			continue;
- 		}
- 		if ((inode->i_state & I_SYNC) && wbc.sync_mode != WB_SYNC_ALL) {
++	/*
++	 * b_transaction must be set, otherwise the new b_transaction won't
++	 * be holding jh reference
++	 */
++	J_ASSERT_JH(jh, jh->b_transaction != NULL);
++
+ 	/*
+ 	 * We set b_transaction here because b_next_transaction will inherit
+ 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
+-- 
+2.25.1
+
 
 
