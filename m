@@ -2,107 +2,109 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59717C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CF5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 332AD2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A0E420767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978403;
-	bh=t6xL7+nzs+mrnXa/pS4dInGiF2OBxrYskhX5bGXiGFI=;
+	s=default; t=1598978409;
+	bh=SzdQ5UM/VjXFBBCT5u3KqWdfzCRrN+x5JpHCAPpSp2g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1APlmU9Ag/Ae5ppYOJ4Y7qY3qh93MviDFMGhsF0a8HxFEUztnNDECVQeHMtQPRuSa
-	 uq2fhB6O9TlWMgBESWp2VGHy53tWs2nLDoBkmVw7YnI/ruBNtYOJ2vE/MwYGZAdHnD
-	 dPqhM/8imXmVw4j5XaeNREaIn7GMxjk0P1F9YeCg=
+	b=zoNOdWZU09tavgxGGnY7dNAUdRSloiRsnA13VvFHADaYmB98vdzeAbhGQVXtP1F0c
+	 vFgYOueB+UwbWM+n6wxd2Yr3K3/NZsODoVYlqEDVqBXNyBE9BTYs52qMEgNzd0AUoC
+	 p9+BYNgkEj0U2StLUeTkcTb96MszL7zXt3JxQWds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732197AbgIAQkA (ORCPT
+        id S1732200AbgIAQkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:40:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56894 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgIAP2b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:31 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730385AbgIAP21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:27 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A72020BED;
-        Tue,  1 Sep 2020 15:28:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 629B0206FA;
+        Tue,  1 Sep 2020 15:28:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974108;
-        bh=t6xL7+nzs+mrnXa/pS4dInGiF2OBxrYskhX5bGXiGFI=;
+        s=default; t=1598974106;
+        bh=SzdQ5UM/VjXFBBCT5u3KqWdfzCRrN+x5JpHCAPpSp2g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bnoPmKNKd28LlKy9QcwtnZ1wTrOYtz9newemzZarooh81jBwMIyRhJTmPaNMR8oGQ
-         4Go50IxD1/QkxcX3PT4keyZdUiI8B6Zyi/1MBBPNmewdGrNtW/XBTcM1OC7J2R1kDu
-         PCEU13qOJ6L6443LtBlXMTT0CPmw/7Xc6eUSnpis=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 09/11] spi: synquacer: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 17:27:11 +0200
-Message-Id: <20200901152713.18629-9-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901152713.18629-1-krzk@kernel.org>
-References: <20200901152713.18629-1-krzk@kernel.org>
+        b=Y/xTPWhAtfnxYrB6BG5y/AwCjw0iYNPlDyo2c3kDl3vvOjW6M7yYwN10ehJu8YgVA
+         ziDhHYU3fZ6knfzzS79vy99NoDnvtIiHirouO01dwxwi3iClh+XqY5x7tMnoqMwRZd
+         +5vv0fyP00H75ySZ+jY2xBfHG+0adraw4eE1KswY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ikjoon Jang <ikjn@chromium.org>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 046/214] HID: quirks: add NOGET quirk for Logitech GROUP
+Date:   Tue,  1 Sep 2020 17:08:46 +0200
+Message-Id: <20200901150955.182976330@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+From: Ikjoon Jang <ikjn@chromium.org>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[ Upstream commit 68f775ddd2a6f513e225f9a565b054ab48fef142 ]
+
+Add HID_QUIRK_NOGET for Logitech GROUP device.
+
+Logitech GROUP is a compound with camera and audio.
+When the HID interface in an audio device is requested to get
+specific report id, all following control transfers are stalled
+and never be restored back.
+
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203419
+Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-synquacer.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/drivers/spi/spi-synquacer.c b/drivers/spi/spi-synquacer.c
-index ae17c99cce03..42e82dbe3d41 100644
---- a/drivers/spi/spi-synquacer.c
-+++ b/drivers/spi/spi-synquacer.c
-@@ -640,9 +640,8 @@ static int synquacer_spi_probe(struct platform_device *pdev)
- 		}
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 73e4590ea9c94..09df5ecc2c79b 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -771,6 +771,7 @@
+ #define USB_DEVICE_ID_LOGITECH_G27_WHEEL	0xc29b
+ #define USB_DEVICE_ID_LOGITECH_WII_WHEEL	0xc29c
+ #define USB_DEVICE_ID_LOGITECH_ELITE_KBD	0xc30a
++#define USB_DEVICE_ID_LOGITECH_GROUP_AUDIO	0x0882
+ #define USB_DEVICE_ID_S510_RECEIVER	0xc50c
+ #define USB_DEVICE_ID_S510_RECEIVER_2	0xc517
+ #define USB_DEVICE_ID_LOGITECH_CORDLESS_DESKTOP_LX500	0xc512
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index a49fa2b047cba..b3dd60897ffda 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -179,6 +179,7 @@ static const struct hid_device_id hid_quirks[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP_LTD2, USB_DEVICE_ID_SMARTJOY_DUAL_PLUS), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_WISEGROUP, USB_DEVICE_ID_QUAD_USB_JOYPAD), HID_QUIRK_NOGET | HID_QUIRK_MULTI_INPUT },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_XIN_MO, USB_DEVICE_ID_XIN_MO_DUAL_ARCADE), HID_QUIRK_MULTI_INPUT },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_GROUP_AUDIO), HID_QUIRK_NOGET },
  
- 		if (IS_ERR(sspi->clk)) {
--			if (!(PTR_ERR(sspi->clk) == -EPROBE_DEFER))
--				dev_err(&pdev->dev, "clock not found\n");
--			ret = PTR_ERR(sspi->clk);
-+			ret = dev_err_probe(&pdev->dev, PTR_ERR(sspi->clk),
-+					    "clock not found\n");
- 			goto put_spi;
- 		}
- 
+ 	{ 0 }
+ };
 -- 
-2.17.1
+2.25.1
+
+
 
