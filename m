@@ -2,106 +2,160 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11005C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30841C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAB6F206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:03:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="yf2xWWvk"
+	by mail.kernel.org (Postfix) with ESMTP id 0E909206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbgIAPDU (ORCPT
+        id S1728544AbgIAPDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:03:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49990 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728386AbgIAPDH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:03:07 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F6FEC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:03:06 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id b13so650686qvl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7hamU6hh70qynnTiDqdZnxkwA4lZpFog+JwYUlEr/IU=;
-        b=yf2xWWvk1xRfdDfp5/KDnPzVZmvLVynwUatxUyczMxvoo5qoWCz2qKcQxQU5mFSpxw
-         NhRb12uOylBNsJ1CMLYVSQXaAGWHeX/eo1nS6nEmcUx2UPP93DWSblcZlbXuOZxRW1hQ
-         mHo5vzXl8FzCyzcogsYpiwRXSh5mq4UzkHPeThfBd8DZnkJ8FI+IEPw7F9doDbu0QrIO
-         HR9BQOYBpg2EwPDUPn8el3O4u6N+g7GCcfWVuHk0h1ZFaSA23RnMd7gHXjL3EwbRcCSL
-         RikWYHtdni0MdsfqEjfbdfQ7AqmNItT8xlpt3hJYb4MyUNt07Je4rKAOSAMSAHYaS54p
-         rVwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7hamU6hh70qynnTiDqdZnxkwA4lZpFog+JwYUlEr/IU=;
-        b=SH8My7rMv/TvhBh6tZtf66BaoYwLMduWolM8KKu36wYYZWXKFPp5PFjrJpGamuacmr
-         g+r1Y8PnbOIvwGcroSwv81CEVyZnKu16RolkRHSaaioqv80mg4lvhQPNNXVVFzYvG6GZ
-         ymsetNQ4ZGvHW7l5LQOaDHhZh0Uz2McHTlgodvT6vQS9k7BeeuQwT8Psmadl2f1ECWGr
-         cbpl29mDeCRSBYkTgk64XLZuGgomaWZCnbLaF1WiInM7XFvjrxNbwU33+ieTdkQW5ThF
-         kFvmDCtLdxMU0Y4BaZJCt2x0hBrnWeJCoW1LkkVcHxO+rEaYL+Kj6KN/WI/hqbt7WQrF
-         cKCA==
-X-Gm-Message-State: AOAM532wgAcHynCne3rZrP70Fj10ENsH2nZj4yXutr8ZqAtTHtmVFtGz
-        y7Ewnz1L2gZ0Rs/KaLLWHwf0mQ==
-X-Google-Smtp-Source: ABdhPJwtD/7grvATMu4/sg0JKKjoDM+Eqq34lDdwy3HkegafTZWNtmYCYMELv86LJoXc8FcgmDD6gQ==
-X-Received: by 2002:a0c:e04e:: with SMTP id y14mr2200632qvk.117.1598972585297;
-        Tue, 01 Sep 2020 08:03:05 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:fc60])
-        by smtp.gmail.com with ESMTPSA id s20sm1850047qkg.65.2020.09.01.08.03.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 08:03:04 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 11:01:49 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH 1/5] ksm: reinstate memcg charge on copied pages
-Message-ID: <20200901150149.GA45118@cmpxchg.org>
-References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils>
- <alpine.LSU.2.11.2008301358020.5954@eggly.anvils>
+        Tue, 1 Sep 2020 11:03:31 -0400
+Received: from mga01.intel.com ([192.55.52.88]:8666 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726285AbgIAPD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:03:28 -0400
+IronPort-SDR: 32ERPcARan7kfUuzk7XhINayhrcZe/iDU0pUXTYNgqbH0L9EYqmtD9b3L/RaGb7rPkna8M+NJb
+ WmZRIIXASWoA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175228547"
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="175228547"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 08:03:26 -0700
+IronPort-SDR: tq2ofberLy/TtBiy1TXtfKoNDJCWHtd/CgWV3yrDjhKJhi/RhfjSgsQmUe1g3/r0AjKslti7ZU
+ KAaRi4wbJgzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="314756852"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga002.jf.intel.com with ESMTP; 01 Sep 2020 08:03:25 -0700
+Received: from [10.214.152.83] (mreddy3x-MOBL.gar.corp.intel.com [10.214.152.83])
+        by linux.intel.com (Postfix) with ESMTP id 4A7D5580679;
+        Tue,  1 Sep 2020 08:03:23 -0700 (PDT)
+Subject: Re: [PATCH v5 1/2] dt-bindings: dma: Add bindings for intel LGM SOC
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Rob Herring <robh@kernel.org>, dmaengine@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        andriy.shevchenko@intel.com, cheol.yong.kim@intel.com,
+        qi-ming.wu@intel.com, chuanhua.lei@linux.intel.com,
+        malliamireddy009@gmail.com
+References: <cover.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <68c77fd2ffb477aa4a52a58f8a26bfb191d3c5d1.1597381889.git.mallikarjunax.reddy@linux.intel.com>
+ <20200814203222.GA2674896@bogus>
+ <7cdc0587-8b4f-4360-a303-1541c9ad57b2@linux.intel.com>
+ <20200825112107.GN2639@vkoul-mobl>
+ <ffa5ba4d-f1b2-6a30-f2f1-f4578a77bce2@linux.intel.com>
+ <20200828104530.GT2639@vkoul-mobl>
+ <09547b0e-1c2e-d916-d4c0-f66b0110e173@linux.intel.com>
+ <20200831110032.GN2639@vkoul-mobl>
+From:   "Reddy, MallikarjunaX" <mallikarjunax.reddy@linux.intel.com>
+Message-ID: <b2f3df54-40b2-b90b-8696-48de2abadd34@linux.intel.com>
+Date:   Tue, 1 Sep 2020 23:03:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LSU.2.11.2008301358020.5954@eggly.anvils>
+In-Reply-To: <20200831110032.GN2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 01:59:35PM -0700, Hugh Dickins wrote:
-> In 5.8 some instances of memcg charging in do_swap_page() and unuse_pte()
-> were removed, on the understanding that swap cache is now already charged
-> at those points; but a case was missed, when ksm_might_need_to_copy() has
-> decided it must allocate a substitute page: such pages were never charged.
-> Fix it inside ksm_might_need_to_copy().
-> 
-> This was discovered by Alex Shi's prospective commit "mm/memcg: warning
-> on !memcg after readahead page charged".
-> 
-> But there is a another surprise: this also fixes some rarer uncharged
-> PageAnon cases, when KSM is configured in, but has never been activated.
-> ksm_might_need_to_copy()'s anon_vma->root and linear_page_index() check
-> sometimes catches a case which would need to have been copied if KSM
-> were turned on.  Or that's my optimistic interpretation (of my own old
-> code), but it leaves some doubt as to whether everything is working as
-> intended there - might it hint at rare anon ptes which rmap cannot find?
-> A question not easily answered: put in the fix for missed memcg charges.
-> 
-> Fixes: 4c6355b25e8b ("mm: memcontrol: charge swapin pages on instantiation")
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> Cc: stable@vger.kernel.org # v5.8
+Hi Vinod,
+Thanks for the review, please see my comments inline.
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+On 8/31/2020 7:00 PM, Vinod Koul wrote:
+> On 31-08-20, 16:06, Reddy, MallikarjunaX wrote:
+>> Hi Vinod,
+>>
+>> Thanks for the review. Please see my comment inline.
+>>
+>> On 8/28/2020 6:45 PM, Vinod Koul wrote:
+>>> On 27-08-20, 17:54, Reddy, MallikarjunaX wrote:
+>>>> Hi Vinod,
+>>>> Thanks for the review comments.
+>>>>
+>>>> On 8/25/2020 7:21 PM, Vinod Koul wrote:
+>>>>> On 18-08-20, 15:00, Reddy, MallikarjunaX wrote:
+>>>>>
+>>>>>>>> +
+>>>>>>>> +            intel,chans:
+>>>>>>>> +              $ref: /schemas/types.yaml#/definitions/uint32-array
+>>>>>>>> +              description:
+>>>>>>>> +                 The channels included on this port. Format is channel start
+>>>>>>>> +                 number and how many channels on this port.
+>>>>>>> Why does this need to be in DT? This all seems like it can be in the dma
+>>>>>>> cells for each client.
+>>>>>> (*ABC)
+>>>>>> Yes. We need this.
+>>>>>> for dma0(lgm-cdma) old SOC supports 16 channels and the new SOC supports 22
+>>>>>> channels. and the logical channel mapping for the peripherals also differ
+>>>>>> b/w old and new SOCs.
+>>>>>>
+>>>>>> Because of this hardware limitation we are trying to configure the total
+>>>>>> channels and port-channel mapping dynamically from device tree.
+>>>>>>
+>>>>>> based on port name we are trying to configure the default values for
+>>>>>> different peripherals(ports).
+>>>>>> Example: burst length is not same for all ports, so using port name to do
+>>>>>> default configurations.
+>>>>> Sorry that does not make sense to me, why not specify the values to be
+>>>>> used here instead of defining your own name scheme!
+>>>> OK. Agreed. I will remove port name from DT and only use intel,chans
+>>> what is intel,chans, why not use dma-channels?
+>>   The intel,chans says about the channels included on the correspondng port.
+> What do you mean by a port here?
+Here Port is nothing but Peripheral(SPI, HSNAND...)
+>
+>> Format is channel start number and how many channels on this port.
+> It is perfectly reasonable to have 16 channels but linux not use use all, lets
+> say from 5th channel channel onwards
+>
+> So you need to use standard dma-channels also with dma-channel-mask to
+> specify which channels linux can use
+Ok, let me verify and use the standard dma-channels also dma-channel-mask.
+>
+>>   The reasong behind using this attribute instead of standrad dma-channels
+>> is...
+>>
+>>
+>> DMA_VER22 HW supports 22 channels. But there is a hole in HW, total it can
+>> use only 16.
+>>
+>> Old soc supports 4ports and 16 channels.
+>> New soc supports 6ports and 22 channels.
+>> (old and new soc carry the same version VER22)
+>>
+>> port channel mapping for the old and new soc also not the same.
+>> old soc: logical channels:(Rx, Tx)
+>> 0, 1 - SPI0
+>> 2, 3 - SPI1
+>> 4, 5 - HSNAND
+>> 12, 14, 13, 15 - Memcopy
+>>
+>> New soc: Logical channels(Rx, Tx)
+>> 0, 1 - SPI0
+>> 2, 3 - SPI1
+>> 4, 5 - SPI2
+>> 6, 7 - SPI3
+>> 8, 9 - HSNAND
+>> 10 to 21 - Mcopy
+> Mapping is different, client can set that channel required in dmas
+> property and use a specific required channel.
+OK.
+>
+>> Because of these reasons we are trying to use "intel,chans" attribute, and
+>> reading then number of channels from the dt.
+>> Advantaage:
+>> 1. we can map the channels correspondign to port
+>> 2. Dynamically configure the channels (due to hw limitation)
+>>
+>> If this is not ok, please suggest us the better way to handle this.
