@@ -2,111 +2,134 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CDC9C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78777C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:38:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE02206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48F2C2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:38:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SnQgHt59"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="I+ldFzuz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726298AbgIAIiS (ORCPT
+        id S1726686AbgIAIif (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46972 "EHLO
+        Tue, 1 Sep 2020 04:38:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgIAIiP (ORCPT
+        with ESMTP id S1726044AbgIAIie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:38:15 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0675C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 01:38:15 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id t9so392164pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:38:15 -0700 (PDT)
+        Tue, 1 Sep 2020 04:38:34 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4659DC061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 01:38:34 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id q9so307102wmj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:38:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sVtA4BoZtd+qYp70Vhjk25E1OWB6lKP1vnEo/fyHhLs=;
-        b=SnQgHt594OnvLQ+HxoV+1b+xHTfWiZdjynemjFAeMz42JIh9tNJ12ru0Sdf87mOruN
-         YIS2eu2r1BgbUmwZ5B6/xd2LkGoztpFrlWs8OA5BQTUysDWl9UFYPnuOpjogN4KbX2YR
-         cKS6X66plUmYw9WLQnKQB2lbF41fKnPmq0ZAc4NUbGlb6lhiNtmG25L7KtxXA67rgAtq
-         2BNfqsH4eLHVD18cv5Y0FLwxrPM2ZeN9ZVsrWYIVi7A8mp3/FYORXPRdo5jFVHPf8xtD
-         JaHb7u2FUskbMnYCc+RlYKp/pNEoGHUdb790uRF8fS08FGQeaVWozJSDGsWLJt2fZCRE
-         PsWg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=CwdDqKiv13j6gxEkvaxPCgHtAv5njMtVL6N5RbhQfi0=;
+        b=I+ldFzuz7akDpEw/IprINLtKXcj9Eb+v1udgM4suKCzJEtBxzoUV6fOUhRnuu91xM2
+         gBWzCON8+9+Otp1rYyQ8fkxLbuaHSzm3RqmoVXTdUo6QsUGWqipafznSnxLCcA2ba4Zp
+         lpUFBt9ioBZN8iW9BXfPcRVHBrWZZjR34EZPbZ6rCUBeKHJRNZf9VcfIc+koeHBSA6pT
+         8/1ZVEtuAal+CpKEW21MSXALr3PIppAzauhM7FssSrMjxKffiJSPiLMVI7NGiMWZisRH
+         a/wkk17h/vJWb2t5LDDIrQcR9Z2FQJUxbx6EX8s/EtZJTfQVQrdOOlFZ7g3jga8G2y4G
+         a3nQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sVtA4BoZtd+qYp70Vhjk25E1OWB6lKP1vnEo/fyHhLs=;
-        b=OG2ujQVHFMLa1iQ12cJrhlcS8n6gwxIG6wqAnc7dAPSmIAwy+sZMVFhpy9Gh1o6/Br
-         FMMW3c6UvklOL0KfL9LIwegViADSJLo6WzFzOOlGYeIcd5tlycR7H+U67wjb0Eps7xVM
-         cPpm0328Vi286fWYXJea6d6BjEjHq9XhfWBF31ExgaMSan6XYXbWXlbc1LRvqTwPvmkY
-         f3FSiMb5fFel2jaB76nrMRbqCjltpfl+1WOa1P98MbLYA+Z7FDLi1sppcVVrN88fXavM
-         x0xp5ZY5MnJn2lj8xYcFH/CAtZJLH5Syw0vuvTOH/BJROGT1L/4lZMCDCRTpQWeV08SW
-         Knag==
-X-Gm-Message-State: AOAM531NlFAXFzX/nXGerydmeUTIqqklF3AUONf7YtauZLONCrupciEE
-        d/HtVUvIOEJWhaJBSvm+38lkSg==
-X-Google-Smtp-Source: ABdhPJwZHBfT3ETPIgNI5qRnnz8/BpmRAeI4KxWCHE2M6+mIYJNgUAe/wNWoWcH+xoGqRksqZeUjGg==
-X-Received: by 2002:a63:ba49:: with SMTP id l9mr605427pgu.101.1598949495328;
-        Tue, 01 Sep 2020 01:38:15 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id o6sm708807pju.25.2020.09.01.01.38.14
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Sep 2020 01:38:14 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 14:08:06 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2 3/8] drm/msm: Unconditionally call
- dev_pm_opp_of_remove_table()
-Message-ID: <20200901083806.a2wz7idmfce2aj3a@vireshk-i7>
-References: <cover.1598594714.git.viresh.kumar@linaro.org>
- <6e4110032f8711e8bb0acbeccfe66dec3b09d5c1.1598594714.git.viresh.kumar@linaro.org>
- <bc64e031-c42f-9ed2-c597-18a790a4d3bb@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bc64e031-c42f-9ed2-c597-18a790a4d3bb@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=CwdDqKiv13j6gxEkvaxPCgHtAv5njMtVL6N5RbhQfi0=;
+        b=IuDn1agqisyz+dgwHSpXE4WKtZmaPeahCTz//vdtJRYotGgbex09q+vV3m1bNlEYbo
+         GnDqyWlzkpMfKbStVLGFlCm87VqandkpZZeLGJaSFpdtVMGgpdMtPlgoRQq9+/0ixiY/
+         yzjD5zRwRNBLLlLNbc29zwdAy3tFOLzOeOygKLCLfauUaYvx2dbunxQA/wGq6y9yLTf6
+         xoJwNjkcXJEVnyilomngg9WfefAofMyhervr0fLnG/YjuGl5C1joqGcVLapkFnP2bUUq
+         ibGBOOY6z0ezPD9EEDCI5dGHn1/KAJ1V1xprCgJg59tmDGEdLm9+vWKjC0cFfHUE7nrx
+         TgGA==
+X-Gm-Message-State: AOAM531q7koa7Y9LU1A23GZdfM3Wi7AqaY+xQWF3Lh8EXgy8nJIvzUzy
+        UOfEDuoeZYsO1zwfvAY4uSc6IA==
+X-Google-Smtp-Source: ABdhPJwcuuBPrF+TN4l2irgwT9uVGlH1kQckz0VR8evQB7BUKv1PzT0f58DHF9CXmExogUubS8lnbQ==
+X-Received: by 2002:a1c:750c:: with SMTP id o12mr705641wmc.34.1598949512901;
+        Tue, 01 Sep 2020 01:38:32 -0700 (PDT)
+Received: from hackbox2.linaro.org ([81.128.185.34])
+        by smtp.gmail.com with ESMTPSA id d190sm911260wmd.23.2020.09.01.01.38.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 01:38:32 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Ian Rogers <irogers@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        James Clark <james.clark@arm.com>,
+        Wei Li <liwei391@huawei.com>, Al Grant <Al.Grant@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v2 01/14] perf mem: Search event name with more flexible path
+Date:   Tue,  1 Sep 2020 09:38:02 +0100
+Message-Id: <20200901083815.13755-2-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901083815.13755-1-leo.yan@linaro.org>
+References: <20200901083815.13755-1-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-09-20, 13:01, Rajendra Nayak wrote:
-> So FWIU, dpu_unbind() gets called even when dpu_bind() fails for some reason.
+Perf tool searches memory event name under the folder
+'/sys/devices/cpu/events/', this leads to the limitation for selection
+memory profiling event which must be under this folder.  Thus it's
+impossible to use any other event as memory event which is not under
+this specific folder, e.g. Arm SPE hardware event is not located in
+'/sys/devices/cpu/events/' so it cannot be enabled for memory profiling.
 
-Ahh, I see.
+This patch changes to search folder from '/sys/devices/cpu/events/' to
+'/sys/devices', so it give flexibility to find events which can be used
+for memory profiling.
 
-> I tried to address that earlier [1] which I realized did not land.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/util/mem-events.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I don't think that patch was required, as you can call
-dev_pm_opp_put_clkname() multiple times and it will return without any
-errors/crash.
-
-> But with these changes
-> it will be even more broken unless we identify if we failed dpu_bind() before
-> adding the OPP table, while adding it, or all went well with opps and handle things
-> accordingly in dpu_unbind.
-
-Maybe not as dev_pm_opp_of_remove_table() can be called multiple times
-as well without any errors or crash.
-
-> [1] https://lore.kernel.org/patchwork/patch/1275632/
-
+diff --git a/tools/perf/util/mem-events.c b/tools/perf/util/mem-events.c
+index ea0af0bc4314..35c8d175a9d2 100644
+--- a/tools/perf/util/mem-events.c
++++ b/tools/perf/util/mem-events.c
+@@ -18,8 +18,8 @@ unsigned int perf_mem_events__loads_ldlat = 30;
+ #define E(t, n, s) { .tag = t, .name = n, .sysfs_name = s }
+ 
+ struct perf_mem_event perf_mem_events[PERF_MEM_EVENTS__MAX] = {
+-	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"mem-loads"),
+-	E("ldlat-stores",	"cpu/mem-stores/P",		"mem-stores"),
++	E("ldlat-loads",	"cpu/mem-loads,ldlat=%u/P",	"cpu/events/mem-loads"),
++	E("ldlat-stores",	"cpu/mem-stores/P",		"cpu/events/mem-stores"),
+ };
+ #undef E
+ 
+@@ -93,7 +93,7 @@ int perf_mem_events__init(void)
+ 		struct perf_mem_event *e = &perf_mem_events[j];
+ 		struct stat st;
+ 
+-		scnprintf(path, PATH_MAX, "%s/devices/cpu/events/%s",
++		scnprintf(path, PATH_MAX, "%s/devices/%s",
+ 			  mnt, e->sysfs_name);
+ 
+ 		if (!stat(path, &st))
 -- 
-viresh
+2.20.1
+
