@@ -2,149 +2,95 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA879C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2496CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69BA6206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1D3F206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:12:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="asHEft0U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oNUGojQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726310AbgIAILC (ORCPT
+        id S1726323AbgIAIMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:11:02 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52138 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726107AbgIAIK7 (ORCPT
+        Tue, 1 Sep 2020 04:12:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43084 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726020AbgIAIMy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:10:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598947857;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ywbzOyojoAfTL6CSiMEtbtQG/UWMpLz/fFs6teic35M=;
-        b=asHEft0UNqUe8bG9GJ2cPQatCMykMwuQ5YT7O3legygmB2qWYfqmwkhoxb4FUs723QLSjK
-        JxPkOIVe5VAjNIfB7ChF8U0QJ845fF1wIUst27uACi9eNuztP2OAmaOPnAeoGy4upmLEBC
-        qQz0Ltsbd4elQ42X6qtEOzM8A+W5ZF0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-24-HSVVKrY1Mqucc9pI8HeXCw-1; Tue, 01 Sep 2020 04:10:54 -0400
-X-MC-Unique: HSVVKrY1Mqucc9pI8HeXCw-1
-Received: by mail-wr1-f72.google.com with SMTP id k11so251055wrw.16
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:10:53 -0700 (PDT)
+        Tue, 1 Sep 2020 04:12:54 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E071CC061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 01:12:52 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id 12so245708lfb.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:12:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hbTfqn3dImHPoURfH7UKW3vOdKiFrwL6dfSxV5kclZo=;
+        b=oNUGojQpvZOEPWI2xpiwDnkwVfNbMxDrJzno2TdXnD3nlEmK36gs2Kt4zQUUpe7ky+
+         zUX5TQ0YfB1aG1KwAXhDiw/AfSVOXwG8tE+mufH+sE5G88v/kJl292r5W0x3irkyuauy
+         w6mJXNMUd0G8O/+sNWuEaERc2ZNrtSbS4fZlid7Lccc6qwBxwcx7S98v3urWVnxAbBQl
+         kRz/kCIk9yw0H86/mjQg8M5ZTzyv1m0aaDQViSrGva8ZmHlZVv2jd+1o3bym8rMSBv0Q
+         e6gOO3jRm7k16lWIEwwqA1J4WaDjEDMXkcnnTYjgzdRzNqk1r1Bu16Q4+mz1qycIlp+1
+         r/0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ywbzOyojoAfTL6CSiMEtbtQG/UWMpLz/fFs6teic35M=;
-        b=meNZwwaB8XMONFjwAx/L/5eWfovT5+gzl4XNY8VvjOw3Yxds8XwTtZygUoXYAqx+6G
-         EctuT/imi46azbWubeeXOBJYKwmLq36vShsMimHV/ERmpjttnfbvSqqa4VxdFC8L7Oi/
-         fcpbMvxttWsmnZVI0g5wR2w3WWeYyr/tBqLGgZn45PHHaN9Gh94AGDEdj4w8KgYKsHSB
-         vGayjJGMYPdhavx+frEV1DWtUDVMGqmTyKCK06OuxiXlKt0pjh6icANDk3YQhyjdITLO
-         vzdxxesba6zSufbqY7prbIyjhzRd5njiyY7hEuwmAOHH6m0lA2mur7T5PWF5A18u0agb
-         QE1g==
-X-Gm-Message-State: AOAM532G3x8AWf9UDBRYS7pIIXg4FX7w9OfIckZougP/zT0SLabvqI7X
-        IAygB5hqV0bawNRwCB3eqMWFzBUu12+DSw4UMHC8AeKEps7rqyHMB16wlx9hUS+2mULEztPNdpp
-        U78lokMfseXdxWi9oTptriXFO
-X-Received: by 2002:a5d:420b:: with SMTP id n11mr526477wrq.11.1598947852915;
-        Tue, 01 Sep 2020 01:10:52 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJys7NT738indZhV+2AmYFWU6qfb0ENn9iwBCkNPPMVDsNV8FR86m8VpWUAMS1aZrJF0pLZkcQ==
-X-Received: by 2002:a5d:420b:: with SMTP id n11mr526450wrq.11.1598947852620;
-        Tue, 01 Sep 2020 01:10:52 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id n21sm705241wmi.21.2020.09.01.01.10.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 01:10:52 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Lai Jiangshan <jiangshanlai@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Lai Jiangshan <laijs@linux.alibaba.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
-In-Reply-To: <CAJhGHyCLF4+5LV8Zwu5kczL48imKPDHJKizVd+VZwVha0U8BaQ@mail.gmail.com>
-References: <20200824101825.4106-1-jiangshanlai@gmail.com> <CAJhGHyC1Ykq5V_2nFPLRz9JmtAiQu6aw4fCKo1LO7Qwzjvfg2g@mail.gmail.com> <875z8zx8qs.fsf@vitty.brq.redhat.com> <CAJhGHyCLF4+5LV8Zwu5kczL48imKPDHJKizVd+VZwVha0U8BaQ@mail.gmail.com>
-Date:   Tue, 01 Sep 2020 10:10:50 +0200
-Message-ID: <87y2ltx6gl.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hbTfqn3dImHPoURfH7UKW3vOdKiFrwL6dfSxV5kclZo=;
+        b=tuVWzzUCoAZmB5MbPP3OR69ScQFLQRZMxdyGuuDTlZT8ko0Hk4do6INuz1F6mmYGc9
+         OH6KUlIjypQ6LQXfy/cl8viMwqEOCw4Ws3Vf1n1solFTbKynhSCdGpq7Zcli/tubeUyP
+         YWiOy1C8HvZDs0K0V0QYeTcQZ8Y+E9tYVX3UtoyApIvzXuakom/5l4ObjJ90ZQtrEJ4B
+         OxABzVOj3njkaI6Ug4x1VVQRu9Asgh0ytPoaR1m1y7sWtuir3GNunxwnbxdlQP9lX5iw
+         OuVFjYGS0AQBQ2JoLHvD5hIlI30sjd5PzZDotRF7axBq9l2XeFyyLTZe/6RYpDFooqZ4
+         XcJg==
+X-Gm-Message-State: AOAM532qX9EAQ/oE5T2wuBt2zszfMMH4rvt7Ezl7k2blJwt5gYuQkE+4
+        BY0BZ2V5NeMtQwKPS62K/jsBTme1v4F161WYlAw=
+X-Google-Smtp-Source: ABdhPJwqIlAldn/nfKWkqME+9tUsn7AFUgQruxqSUTEO0w05IrXUcckchMZjG6Fayrj/hkYyEyD1gUe0VLjcB9w58kY=
+X-Received: by 2002:a19:447:: with SMTP id 68mr611827lfe.26.1598947971337;
+ Tue, 01 Sep 2020 01:12:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200901002326.1137289-1-ndesaulniers@google.com> <20200901002326.1137289-8-ndesaulniers@google.com>
+In-Reply-To: <20200901002326.1137289-8-ndesaulniers@google.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 1 Sep 2020 10:12:40 +0200
+Message-ID: <CANiq72kouA9jNPb3ySBfNhSfsKCiELM8G785D4feTZzqFx509Q@mail.gmail.com>
+Subject: Re: [PATCH v2 7/7] compiler-gcc: improve version error
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lai Jiangshan <jiangshanlai@gmail.com> writes:
+On Tue, Sep 1, 2020 at 2:23 AM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>
+> do so provides developers
 
-> On Mon, Aug 31, 2020 at 9:09 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->>
->> Lai Jiangshan <jiangshanlai@gmail.com> writes:
->>
->> > Ping @Sean Christopherson
->> >
->>
->> Let's try 'Beetlejuice' instead :-)
->>
->> > On Mon, Aug 24, 2020 at 5:18 PM Lai Jiangshan <jiangshanlai@gmail.com> wrote:
->> >>
->> >> From: Lai Jiangshan <laijs@linux.alibaba.com>
->> >>
->> >> 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
->> >> changed it without giving any reason in the changelog.
->> >>
->> >> In theory, the syncing is needed, and need to be fixed by reverting
->> >> this part of change.
->>
->> Even if the original commit is not wordy enough this is hardly
->> better.
->
-> Hello,
-> Thank you for reviewing it.
->
-> I'm sorry that when I said "reverting this part of change",
-> I meant "reverting this line of code". This line of code itself
-> is quite clear that it is not related to the original commit
-> according to its changelog.
->
->> Are you seeing a particular scenario when a change in current
->> vCPU's MMU requires flushing TLB entries for *other* contexts, ... (see
->> below)
->
-> So I don't think the patch needs to explain this because the patch
-> does not change/revert anything about it.
->
-> Anyway, using a "revert" in the changelog is misleading, when it
-> is not really reverting the whole targeted commit. I would
-> remove this wording.
->
-> For the change in my patch, when kvm_mmu_get_page() gets a
-> page with unsync children, the host side pagetable is
-> unsynchronized with the guest side pagedtable, and the
-> guest might not issue a "flush" operation on it. It is
-> all about the host's emulation of the pagetable. So the host
-> has the responsibility to synchronize the pagetables.
->
+"doing so"? "to do so"?
 
-Ah, I see now, so it seems Sean's commit has a stray change in it: the
-intention was to change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT
-so we don't unneedlesly flush other contexts but one of the hunks
-changed KVM_REQ_MMU_SYNC instead. Syncronizing MMU roots can't be
-replaced with a TLB flush, we need to revert back the change. This
-sounds reasonable to me, please send out v2 with the updated
-description. Thanks!
+>  include/linux/compiler-gcc.h | 2 +-
 
--- 
-Vitaly
+Reviewed-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
 
+Cheers,
+Miguel
