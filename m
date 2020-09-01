@@ -2,342 +2,208 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B25C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEDFC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DD2208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5B3C2083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="fHbUjcMU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AQ0Ns747"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbgIAEYC (ORCPT
+        id S1726085AbgIAEcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 00:24:02 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:45522 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgIAEYB (ORCPT
+        Tue, 1 Sep 2020 00:32:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37328 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgIAEcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 00:24:01 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200901042356epoutp037a7789cc2c8b25b9025109b3f3cbd84b~wjjdwweJ91795217952epoutp03O
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 04:23:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200901042356epoutp037a7789cc2c8b25b9025109b3f3cbd84b~wjjdwweJ91795217952epoutp03O
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598934236;
-        bh=HEleXd154gvtjOYUHD9LEA9e4nbT1EF1jtvkB6V95Lg=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=fHbUjcMUX7VjNoHDYeGGxorN1o8u3lh1bybhe2OGa3TsOb626C/xeQBURhn/t43BT
-         Gxta8mlFhTn3YLG5UysuXMxoFNusqBPvjECrjccgUwJrDCMvMKmJnjq/kOS24XAFat
-         TJBhYVYiOS9LkhWNsCXLBFODgHpjKOhg3VD+Hr5g=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200901042356epcas1p17eab17f52fdcfdf244aa8ef518002097~wjjdcTY_m2881228812epcas1p1r;
-        Tue,  1 Sep 2020 04:23:56 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4BgYqC6zbhzMqYm7; Tue,  1 Sep
-        2020 04:23:51 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3E.84.28578.6DCCD4F5; Tue,  1 Sep 2020 13:23:50 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20200901042349epcas1p4c0906c49619e7fcaf04eb28ac495eb90~wjjXIZqRX1004910049epcas1p4n;
-        Tue,  1 Sep 2020 04:23:49 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200901042349epsmtrp1b69f539acfdf8a54c5d044446e63d24c~wjjXHebWk0757407574epsmtrp1v;
-        Tue,  1 Sep 2020 04:23:49 +0000 (GMT)
-X-AuditID: b6c32a39-8dfff70000006fa2-32-5f4dccd6017f
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        23.31.08303.5DCCD4F5; Tue,  1 Sep 2020 13:23:49 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200901042349epsmtip161026905ebc73cab9b7dde031bca6d24~wjjW30X411709917099epsmtip1f;
-        Tue,  1 Sep 2020 04:23:49 +0000 (GMT)
-Subject: Re: [PATCH v4 62/78] drm/vc4: hdmi: Adjust HSM clock rate depending
- on pixel rate
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <95172a9a-e861-5e5d-bf51-2ec03c730237@samsung.com>
-Date:   Tue, 1 Sep 2020 13:36:17 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 1 Sep 2020 00:32:16 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 283BFC0612A0
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:32:15 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 109so57708otv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:32:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=6R0w32dHRH3+SBeVCMfaRe9dqTNsO2sbD8FOePJ7bRI=;
+        b=AQ0Ns747XkOOSF/pd838/AQpkaJww0p9SS2YjA33J96ISeP2BQtVSiqecu5E3fvFe6
+         Jb58fivxjJHf+vH0Ytps7p6nor87tlxqOxWKGlUKnALfAkv7/r9qpZe0d9zEbpiL0ijc
+         ob1gXiK9CozRDgRc0KTnEulqVZdBVD02F+XjqcWym5X8oKW8qJ/qw1e1TAPL8MJDYub8
+         IrAzvOs4a5YlTtlfjLy0thUuI+lnVJXJOe+9cIksq0Qwc0K+z7OoOdd9rHD7fFBPVzAH
+         lgg74fkpms7c5PJ5C3myeiIOMFOK1RraZl1knC8Kam1yHGtxatpTePXQlvsC7vw7m6Ci
+         XfdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=6R0w32dHRH3+SBeVCMfaRe9dqTNsO2sbD8FOePJ7bRI=;
+        b=O6yUhmn3ewhXtUNZJnJyPF0Tm5Y0LEFuLC94Uqwv4WPh9MrvVet9+VyuwtTJDuLZCZ
+         YYEMiDI4IECwu6D0qvgkH81/r2mVAb/VsQZVVd0zhusKV9TOzh5sKzS/GIrE8xqRPkhx
+         7B7K9YQSOOnqhj/WobSzbaBk1IMYzY3r6sQrGwWLsQqW3wuDNktORpoO4muDovWTBRIu
+         RvNh3J6BdN7b1KL9La9KQziLiorYKDFly8ABYu0gTAJl702lQnpMrAjF/s4y0y7dBPAb
+         x9f185oB1pPDHx5zHAQo9MlALKR3kkEOR8vLHLgiN7URJ1KodhRoP6xnWRCFQuURcv8Q
+         1KNg==
+X-Gm-Message-State: AOAM532ll6QSYhJ4FM9qfA3tBQsGQJYc30ilSzxaWsfTguXqgHhv5WhK
+        9TxrDsIo+iGmTlydXg06kPOpTSJE2bu1Sg==
+X-Google-Smtp-Source: ABdhPJwme/u5M3h14OxrBdRlOBTBOLIg+gJr5HMqBioo8/D+h9xfhE4wPOwDoY7s+tBkKE8hH9+LtQ==
+X-Received: by 2002:a9d:4695:: with SMTP id z21mr90592ote.91.1598934735028;
+        Mon, 31 Aug 2020 21:32:15 -0700 (PDT)
+Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
+        by smtp.gmail.com with ESMTPSA id e7sm2199948otj.28.2020.08.31.21.32.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 21:32:14 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 23:32:11 -0500
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 06/19] drm/msm/gpu: add dev_to_gpu() helper
+Message-ID: <20200901043211.GN3715@yoga>
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200814024114.1177553-7-robdclark@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <5919dccdd4a792936e6cb7eb55983c530c9a468d.1594230107.git-series.maxime@cerno.tech>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJJsWRmVeSWpSXmKPExsWy7bCmnu61M77xBitmyFus7T3KYvF27mIW
-        iytf37NZHGi8zGix6fE1VovLu+awWUy8vYHdYsaPf4wW22YtZ7NYd+s1m8WjqfcZHbg9mt4f
-        Y/OYdf8sm8edc+fZPO53H2fy2Lyk3qP16C8Wj82nqz0+b5IL4IjKtslITUxJLVJIzUvOT8nM
-        S7dV8g6Od443NTMw1DW0tDBXUshLzE21VXLxCdB1y8wBulNJoSwxpxQoFJBYXKykb2dTlF9a
-        kqqQkV9cYquUWpCSU2BZoFecmFtcmpeul5yfa2VoYGBkClSYkJ2x9d1RxoKHDhWf35xmb2C8
-        atzFyMkhIWAiMW/dTrYuRi4OIYEdjBJNe/YyQjifGCW67y2FynxmlGg5ep0NpuX663VQiV2M
-        Eht3vGcGSQgJvAdqOSEOYgsLxEgc69/PCGKLCJRLtHfuZwZpYBbYwSTRcWo62CQ2AS2J/S9u
-        gNn8AooSV388BmvgFbCTWPJnDdhQFgEVif+HPrOA2KICYRInt7VA1QhKnJz5BCzOKRAvseDC
-        alYQm1lAXOLWk/lMELa8xPa3c5ghrr7CIXG5NQPCdpFYt3IlC4QtLPHq+BZ2CFtK4mV/G5Rd
-        LbHy5BGwLyUEOhgltuy/wAqRMJbYv3Qy0AIOoAWaEut36UOEFSV2/p7LCLGXT+Ld1x5WkBIJ
-        AV6JjjYhiBJlicsP7jJB2JISi9s72SYwKs1C8s0sJB/MQvLBLIRlCxhZVjGKpRYU56anFhsW
-        mCLH9iZGcBrWstzBOP3tB71DjEwcjIcYJTiYlUR4D+zyjhfiTUmsrEotyo8vKs1JLT7EaAoM
-        34nMUqLJ+cBMkFcSb2hqZGxsbGFiaGZqaKgkzvvwlkK8kEB6YklqdmpqQWoRTB8TB6dUAxPb
-        X12HR5liulwBRcw/SmXEX1YIVb5f92Pp6U2G2lVeZrNC9m07H3PDSHDZcb6DDxn6kg/yTAzK
-        OvpbiqP8VcWz6sY899ooz6xjFpvn+6/Tu6L+YVGwU0DHS6Fjxtd++J3RT4pL33JZW+WscJvh
-        80mv7d9UJpyw6b92/2HXd4eP4kvKHRtrIpZdLP6ux9UaMmV6jswnCX5VA/1Hh6LnKJzZuD3P
-        Ya236lTDM1EhZzpjuZgv3wxtvijqvOhE+J+1vaaSD7dlJYivbZer9wt6fHD9ylydi3GaP1Zw
-        9/F6VTivrXmeaFil8S9luwu3a9bc3Y8f/MhwMtWttNg4edoMXc5t2VWXdnCdYzKbc95svRJL
-        cUaioRZzUXEiAD0MPpVMBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSnO7VM77xBjv6BC3W9h5lsXg7dzGL
-        xZWv79ksDjReZrTY9Pgaq8XlXXPYLCbe3sBuMePHP0aLbbOWs1msu/WazeLR1PuMDtweTe+P
-        sXnMun+WzePOufNsHve7jzN5bF5S79F69BeLx+bT1R6fN8kFcERx2aSk5mSWpRbp2yVwZWx9
-        d5Sx4KFDxec3p9kbGK8adzFyckgImEhcf72OrYuRi0NIYAejxOWJB9ghEpIS0y4eZe5i5ACy
-        hSUOHy6GqHnLKLFzwWQmkBphgRiJY/37GUFsEYFKic9zdjGDFDEL7GCS6Hp8mgWio5dJYsXm
-        WWBVbAJaEvtf3GADsfkFFCWu/ngMFucVsJNY8mcNM4jNIqAi8f/QZxYQW1QgTGLnksdMEDWC
-        EidnPgGLcwrESyy4sJoVxGYWUJf4M+8SM4QtLnHryXwmCFteYvvbOcwTGIVnIWmfhaRlFpKW
-        WUhaFjCyrGKUTC0ozk3PLTYsMMpLLdcrTswtLs1L10vOz93ECI5JLa0djHtWfdA7xMjEwXiI
-        UYKDWUmE98Au73gh3pTEyqrUovz4otKc1OJDjNIcLErivF9nLYwTEkhPLEnNTk0tSC2CyTJx
-        cEo1MPm/2tV82ngFY+TjmUn1b4ol1kptS7xp2D63a8O+/erGKy+xTn6rY1jbXv9QKt5H8sNP
-        mYsTdmyeoSDLuvNP972LHq83qzMcCoh7Jj916W7pdC29W1b3H1h9X2kxp55viunvaaZKEyTP
-        7zzkvfLHCcFtviU6X/YeC2HLWsz/axHjXwm3mi/nbBbmNst7ZKUbZl00CKyPqFtWbG3EnXxo
-        4xqpxbu2NwtemtmvyPG7wc24UIX3whKuFc3XOVMn+8RoP3KZpbzvtHLGQcHDuy/pnZnnIVCi
-        lBDccddepMMipXgtQ4pbbG71e4ftf1ZdmHdqf/RJw2npLErvj+wxUPPYXt3L/GNazv7J0o8n
-        Xt/A8liJpTgj0VCLuag4EQC62TWmOAMAAA==
-X-CMS-MailID: 20200901042349epcas1p4c0906c49619e7fcaf04eb28ac495eb90
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200708174513epcas1p2c059db88d8dad1d58aae3651b3c98c2b
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
-        <CGME20200708174513epcas1p2c059db88d8dad1d58aae3651b3c98c2b@epcas1p2.samsung.com>
-        <5919dccdd4a792936e6cb7eb55983c530c9a468d.1594230107.git-series.maxime@cerno.tech>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200814024114.1177553-7-robdclark@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On Thu 13 Aug 21:41 CDT 2020, Rob Clark wrote:
 
-On 7/9/20 2:42 AM, Maxime Ripard wrote:
-> The HSM clock needs to be setup at around 101% of the pixel rate. This
-> was done previously by setting the clock rate to 163.7MHz at probe time and
-> only check in mode_valid whether the mode pixel clock was under the pixel
-> clock +1% or not.
+> From: Rob Clark <robdclark@chromium.org>
 > 
-> However, with 4k we need to change that frequency to a higher frequency
-> than 163.7MHz, and yet want to have the lowest clock as possible to have a
-> decent power saving.
+> In a later patch, the drvdata will not directly be 'struct msm_gpu *',
+> so add a helper to reduce the churn.
 > 
-> Let's change that logic a bit by setting the clock rate of the HSM clock
-> to the pixel rate at encoder_enable time. This would work for the
-> BCM2711 that support 4k resolutions and has a clock that can provide it,
-> but we still have to take care of a 4k panel plugged on a BCM283x SoCs
-> that wouldn't be able to use those modes, so let's define the limit in
-> the variant.
-> 
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 > ---
->  drivers/gpu/drm/vc4/vc4_hdmi.c | 79 ++++++++++++++++-------------------
->  drivers/gpu/drm/vc4/vc4_hdmi.h |  3 +-
->  2 files changed, 41 insertions(+), 41 deletions(-)
+>  drivers/gpu/drm/msm/adreno/adreno_device.c | 10 ++++------
+>  drivers/gpu/drm/msm/msm_gpu.c              |  6 +++---
+>  drivers/gpu/drm/msm/msm_gpu.h              |  5 +++++
+>  3 files changed, 12 insertions(+), 9 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> index 17797b14cde4..9f30fab744f2 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-> @@ -53,7 +53,6 @@
->  #include "vc4_hdmi_regs.h"
->  #include "vc4_regs.h"
->  
-> -#define HSM_CLOCK_FREQ 163682864
->  #define CEC_CLOCK_FREQ 40000
->  
->  static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
-> @@ -326,6 +325,7 @@ static void vc4_hdmi_encoder_disable(struct drm_encoder *encoder)
->  	HDMI_WRITE(HDMI_VID_CTL,
->  		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
->  
-> +	clk_disable_unprepare(vc4_hdmi->hsm_clock);
->  	clk_disable_unprepare(vc4_hdmi->pixel_clock);
->  
->  	ret = pm_runtime_put(&vc4_hdmi->pdev->dev);
-> @@ -423,6 +423,7 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
->  	struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
->  	struct vc4_hdmi_encoder *vc4_encoder = to_vc4_hdmi_encoder(encoder);
->  	bool debug_dump_regs = false;
-> +	unsigned long pixel_rate, hsm_rate;
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> index 9eeb46bf2a5d..26664e1b30c0 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> @@ -282,7 +282,7 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
 >  	int ret;
 >  
->  	ret = pm_runtime_get_sync(&vc4_hdmi->pdev->dev);
-> @@ -431,9 +432,8 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
->  		return;
->  	}
+>  	if (pdev)
+> -		gpu = platform_get_drvdata(pdev);
+> +		gpu = dev_to_gpu(&pdev->dev);
 >  
-> -	ret = clk_set_rate(vc4_hdmi->pixel_clock,
-> -			   mode->clock * 1000 *
-> -			   ((mode->flags & DRM_MODE_FLAG_DBLCLK) ? 2 : 1));
-> +	pixel_rate = mode->clock * 1000 * ((mode->flags & DRM_MODE_FLAG_DBLCLK) ? 2 : 1);
-> +	ret = clk_set_rate(vc4_hdmi->pixel_clock, pixel_rate);
->  	if (ret) {
->  		DRM_ERROR("Failed to set pixel clock rate: %d\n", ret);
->  		return;
-> @@ -445,6 +445,36 @@ static void vc4_hdmi_encoder_enable(struct drm_encoder *encoder)
->  		return;
->  	}
->  
-> +	/*
-> +	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
-> +	 * be faster than pixel clock, infinitesimally faster, tested in
-> +	 * simulation. Otherwise, exact value is unimportant for HDMI
-> +	 * operation." This conflicts with bcm2835's vc4 documentation, which
-> +	 * states HSM's clock has to be at least 108% of the pixel clock.
-> +	 *
-> +	 * Real life tests reveal that vc4's firmware statement holds up, and
-> +	 * users are able to use pixel clocks closer to HSM's, namely for
-> +	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
-> +	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
-> +	 * 162MHz.
-> +	 *
-> +	 * Additionally, the AXI clock needs to be at least 25% of
-> +	 * pixel clock, but HSM ends up being the limiting factor.
-> +	 */
-> +	hsm_rate = max_t(unsigned long, 120000000, (pixel_rate / 100) * 101);
-> +	ret = clk_set_rate(vc4_hdmi->hsm_clock, hsm_rate);
-> +	if (ret) {
-> +		DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
-> +		return;
-> +	}
-> +
-> +	ret = clk_prepare_enable(vc4_hdmi->hsm_clock);
-> +	if (ret) {
-> +		DRM_ERROR("Failed to turn on HSM clock: %d\n", ret);
-> +		clk_disable_unprepare(vc4_hdmi->pixel_clock);
-> +		return;
-> +	}
-
-About vc4_hdmi->hsm_clock instance, usually, we need to enable the clock
-with clk_prepare_enable() and then touch the clock like clk_set_rate().
-I think that need to enable the clock before calling clk_set_rate().
-
-When I tested this patchset, it is well working because I think that
-vc4_hdmi->hsm_clock was already enabled on other side.
-
-> +
->  	if (vc4_hdmi->variant->reset)
->  		vc4_hdmi->variant->reset(vc4_hdmi);
->  
-> @@ -559,23 +589,9 @@ static enum drm_mode_status
->  vc4_hdmi_encoder_mode_valid(struct drm_encoder *encoder,
->  			    const struct drm_display_mode *mode)
+>  	if (!gpu) {
+>  		dev_err_once(dev->dev, "no GPU device was found\n");
+> @@ -425,7 +425,7 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
+>  static void adreno_unbind(struct device *dev, struct device *master,
+>  		void *data)
 >  {
-> -	/*
-> -	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock must
-> -	 * be faster than pixel clock, infinitesimally faster, tested in
-> -	 * simulation. Otherwise, exact value is unimportant for HDMI
-> -	 * operation." This conflicts with bcm2835's vc4 documentation, which
-> -	 * states HSM's clock has to be at least 108% of the pixel clock.
-> -	 *
-> -	 * Real life tests reveal that vc4's firmware statement holds up, and
-> -	 * users are able to use pixel clocks closer to HSM's, namely for
-> -	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
-> -	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
-> -	 * 162MHz.
-> -	 *
-> -	 * Additionally, the AXI clock needs to be at least 25% of
-> -	 * pixel clock, but HSM ends up being the limiting factor.
-> -	 */
-> -	if (mode->clock > HSM_CLOCK_FREQ / (1000 * 101 / 100))
-> +	struct vc4_hdmi *vc4_hdmi = encoder_to_vc4_hdmi(encoder);
+> -	struct msm_gpu *gpu = dev_get_drvdata(dev);
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	pm_runtime_force_suspend(dev);
+>  	gpu->funcs->destroy(gpu);
+> @@ -490,16 +490,14 @@ static const struct of_device_id dt_match[] = {
+>  #ifdef CONFIG_PM
+>  static int adreno_resume(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	return gpu->funcs->pm_resume(gpu);
+>  }
+>  
+>  static int adreno_suspend(struct device *dev)
+>  {
+> -	struct platform_device *pdev = to_platform_device(dev);
+> -	struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	return gpu->funcs->pm_suspend(gpu);
+>  }
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> index d5645472b25d..6aa9e04e52e7 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.c
+> +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> @@ -24,7 +24,7 @@
+>  static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+>  		u32 flags)
+>  {
+> -	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  	struct dev_pm_opp *opp;
+>  
+>  	opp = devfreq_recommended_opp(dev, freq, flags);
+> @@ -45,7 +45,7 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+>  static int msm_devfreq_get_dev_status(struct device *dev,
+>  		struct devfreq_dev_status *status)
+>  {
+> -	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  	ktime_t time;
+>  
+>  	if (gpu->funcs->gpu_get_freq)
+> @@ -64,7 +64,7 @@ static int msm_devfreq_get_dev_status(struct device *dev,
+>  
+>  static int msm_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
+>  {
+> -	struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> +	struct msm_gpu *gpu = dev_to_gpu(dev);
+>  
+>  	if (gpu->funcs->gpu_get_freq)
+>  		*freq = gpu->funcs->gpu_get_freq(gpu);
+> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> index 0db117a7339b..8bda7beaed4b 100644
+> --- a/drivers/gpu/drm/msm/msm_gpu.h
+> +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> @@ -141,6 +141,11 @@ struct msm_gpu {
+>  	struct msm_gpu_state *crashstate;
+>  };
+>  
+> +static inline struct msm_gpu *dev_to_gpu(struct device *dev)
+
+That's a fairly generic name for a driver-global helper :)
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> +{
+> +	return dev_get_drvdata(dev);
+> +}
 > +
-> +	if ((mode->clock * 1000) > vc4_hdmi->variant->max_pixel_clock)
->  		return MODE_CLOCK_HIGH;
->  
->  	return MODE_OK;
-> @@ -1349,23 +1365,6 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->  		return -EPROBE_DEFER;
->  	}
->  
-> -	/* This is the rate that is set by the firmware.  The number
-> -	 * needs to be a bit higher than the pixel clock rate
-> -	 * (generally 148.5Mhz).
-> -	 */
-> -	ret = clk_set_rate(vc4_hdmi->hsm_clock, HSM_CLOCK_FREQ);
-> -	if (ret) {
-> -		DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
-> -		goto err_put_i2c;
-> -	}
-> -
-> -	ret = clk_prepare_enable(vc4_hdmi->hsm_clock);
-> -	if (ret) {
-> -		DRM_ERROR("Failed to turn on HDMI state machine clock: %d\n",
-> -			  ret);
-> -		goto err_put_i2c;
-> -	}
-> -
->  	/* Only use the GPIO HPD pin if present in the DT, otherwise
->  	 * we'll use the HDMI core's register.
->  	 */
-> @@ -1413,9 +1412,7 @@ static int vc4_hdmi_bind(struct device *dev, struct device *master, void *data)
->  err_destroy_encoder:
->  	drm_encoder_cleanup(encoder);
->  err_unprepare_hsm:
-> -	clk_disable_unprepare(vc4_hdmi->hsm_clock);
->  	pm_runtime_disable(dev);
-> -err_put_i2c:
->  	put_device(&vc4_hdmi->ddc->dev);
->  
->  	return ret;
-> @@ -1454,7 +1451,6 @@ static void vc4_hdmi_unbind(struct device *dev, struct device *master,
->  	vc4_hdmi_connector_destroy(&vc4_hdmi->connector);
->  	drm_encoder_cleanup(&vc4_hdmi->encoder.base.base);
->  
-> -	clk_disable_unprepare(vc4_hdmi->hsm_clock);
->  	pm_runtime_disable(dev);
->  
->  	put_device(&vc4_hdmi->ddc->dev);
-> @@ -1479,6 +1475,7 @@ static int vc4_hdmi_dev_remove(struct platform_device *pdev)
->  static const struct vc4_hdmi_variant bcm2835_variant = {
->  	.encoder_type		= VC4_ENCODER_TYPE_HDMI0,
->  	.debugfs_name		= "hdmi_regs",
-> +	.max_pixel_clock	= 162000000,
->  	.cec_available		= true,
->  	.registers		= vc4_hdmi_fields,
->  	.num_registers		= ARRAY_SIZE(vc4_hdmi_fields),
-> diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> index 3f07aebe89f1..342f6e0227a2 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-> +++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-> @@ -36,6 +36,9 @@ struct vc4_hdmi_variant {
->  	/* Set to true when the CEC support is available */
->  	bool cec_available;
->  
-> +	/* Maximum pixel clock supported by the controller (in Hz) */
-> +	unsigned long long max_pixel_clock;
-> +
->  	/* List of the registers available on that variant */
->  	const struct vc4_hdmi_register *registers;
->  
+>  /* It turns out that all targets use the same ringbuffer size */
+>  #define MSM_GPU_RINGBUFFER_SZ SZ_32K
+>  #define MSM_GPU_RINGBUFFER_BLKSIZE 32
+> -- 
+> 2.26.2
 > 
-
-
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
