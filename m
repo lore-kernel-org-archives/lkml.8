@@ -2,125 +2,178 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F149C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093EAC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:10:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E568C20FC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:07:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAA3720BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:10:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Z302qOXK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EVRQhziY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbgIAPHd (ORCPT
+        id S1728264AbgIAPIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:07:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23396 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727886AbgIAPHa (ORCPT
+        Tue, 1 Sep 2020 11:08:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726064AbgIAPIR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:07:30 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 081Di55p087820;
-        Tue, 1 Sep 2020 10:08:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id; s=pp1;
- bh=xFcTUIX01cLLAjK4w1JAdadIh0Qdzl7X/zatSLI9ejQ=;
- b=Z302qOXKFuUrmf4blDuX0goYyb0LfiStAGSSJkRdEHWAu4NTgU0+vntAQqSnklVBS45h
- AiylFju0oTxnN3PYcEPLMXjoKaHlBe+Z5LhNEnWc8ULccqyJy26dEyv2lbwvwLz/Ssgs
- 11iL4aD97aLmA1JbQnessMa3y6bFB9LLHfZAXK/y5mh4cXMusdvqtDZWHom/8HWxGANZ
- 7TyWBjXvrgms+q3WGxOuVUgm47hmyC7jSWy86+qQCODgg6yOIIXCkz4BD4iNZ6exzOs7
- hHf7lb39zBniyW2dceTz9tZxc1QXnVMaxuose8Jyyzm8AEHuSZKLV22boHWLzdmybcwm Bg== 
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 339msjne7m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 10:08:49 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 081E7M0t006465;
-        Tue, 1 Sep 2020 14:08:48 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01wdc.us.ibm.com with ESMTP id 337en90h4a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 14:08:48 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 081E8ix356754552
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Sep 2020 14:08:44 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 190E3C6059;
-        Tue,  1 Sep 2020 14:08:47 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8F0FBC6055;
-        Tue,  1 Sep 2020 14:08:46 +0000 (GMT)
-Received: from sofia.ibm.com (unknown [9.77.196.208])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Sep 2020 14:08:46 +0000 (GMT)
-Received: by sofia.ibm.com (Postfix, from userid 1000)
-        id B10CB2E301D; Tue,  1 Sep 2020 19:38:41 +0530 (IST)
-From:   "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>
-Cc:     linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org,
-        "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH] cpuidle-pseries: Fix CEDE latency conversion from tb to us
-Date:   Tue,  1 Sep 2020 19:38:13 +0530
-Message-Id: <1598969293-29228-1-git-send-email-ego@linux.vnet.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-01_08:2020-09-01,2020-09-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 phishscore=0
- clxscore=1011 impostorscore=0 priorityscore=1501 bulkscore=0 spamscore=0
- mlxlogscore=784 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009010113
+        Tue, 1 Sep 2020 11:08:17 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36628C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:08:17 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id 2so761846pjx.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:08:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=QZZAmt3NC6QblC9/oOUbzzxE2cTL6pED0AVWyZ9CzSA=;
+        b=EVRQhziYoIWUWb6kwgPBU9uxVRVKKpQ+Pkbi/W+4VvpuXEwlXL8BiwMqc8Hx+A/RJh
+         zbOHTFx1Tof8AQMYBVe5cty45Cbg/3EIr+LDmNB0RUPm0CInT4MQEHh7NWa5gaC5hX/p
+         RkDxqpILxkfISzURz2Blc/HhoVsRUb+3h5i/k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=QZZAmt3NC6QblC9/oOUbzzxE2cTL6pED0AVWyZ9CzSA=;
+        b=hER2YGpmSRz3Ae1s6k7Ff5co+0FU0nnJbzI9WPb3eszcLBl6YRH40UGPtV7Wx4exAb
+         NxML03BpgK4mxjUIEZHM4cSMxLtGgXT1wriA9gtS1h2ChURB1+4idpT74XK1jRgpQVey
+         UqgHI7dQbvG31fBExFHiM0HeHF3qCCjuC8lsZhKr9FDGt7CV1zaWuqkHNstziSgLDPpY
+         gPawkbR084IUNRuHSCaDg8Gq1ZiFjIECFuN7BzVjKx0Tee183xQbHF0yGaLLEd15xpAD
+         iLwNx5/XOSbSnoApt7bhjGmKin+3l5J8kANVEL/ZRvRSiBF1/KAGRSokyexY42n4cfbO
+         jEiw==
+X-Gm-Message-State: AOAM530A4LOGATSA97t1T7z7dIGFTHZYoOUI3N2koHk4INBQQ89dGaEc
+        LcKIpltu/ZvmC4qOO1OVVLuJziCZN5kZgQ==
+X-Google-Smtp-Source: ABdhPJxMq85g+Q6tJiMAqwYZiqLaCQMh3akF+zHBK+owj2yMBbtvC4hunTNDoJzE2/LzDHJwAJCWIA==
+X-Received: by 2002:a17:90a:19dc:: with SMTP id 28mr1972382pjj.103.1598972896638;
+        Tue, 01 Sep 2020 08:08:16 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x3sm1055250pgg.54.2020.09.01.08.08.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 08:08:14 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 08:08:13 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Tycho Andersen <tycho@tycho.pizza>
+Cc:     Christian Brauner <christian@brauner.io>,
+        linux-kernel@vger.kernel.org, luto@amacapital.net,
+        syzbot <syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com>,
+        syzkaller-bugs@googlegroups.com, wad@chromium.org
+Subject: Re: memory leak in do_seccomp
+Message-ID: <202008311921.3D64C23D@keescook>
+References: <000000000000e5ea9e05ac9d16c1@google.com>
+ <000000000000df80ae05ae244c2b@google.com>
+ <202008311620.AC4A7047D@keescook>
+ <20200901000915.GA564594@cisco>
+ <20200901011459.GA583718@cisco>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901011459.GA583718@cisco>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Mon, Aug 31, 2020 at 07:14:59PM -0600, Tycho Andersen wrote:
+> On Mon, Aug 31, 2020 at 06:09:15PM -0600, Tycho Andersen wrote:
+> > On Mon, Aug 31, 2020 at 04:25:35PM -0700, Kees Cook wrote:
+> > > On Sun, Aug 30, 2020 at 08:50:15PM -0700, syzbot wrote:
+> > > > syzbot has found a reproducer for the following issue on:
+> > > > 
+> > > > HEAD commit:    dcc5c6f0 Merge tag 'x86-urgent-2020-08-30' of git://git.ke..
+> > > > git tree:       upstream
+> > > > console output: https://syzkaller.appspot.com/x/log.txt?x=10b297d5900000
+> > > > kernel config:  https://syzkaller.appspot.com/x/.config?x=903b9fecc3c6d231
+> > > > dashboard link: https://syzkaller.appspot.com/bug?extid=3ad9614a12f80994c32e
+> > > > compiler:       gcc (GCC) 10.1.0-syz 20200507
+> > > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14649561900000
+> > > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=118aacc1900000
+> > > > 
+> > > > IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> > > > Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
+> > > > 
+> > > > executing program
+> > > > executing program
+> > > > executing program
+> > > > executing program
+> > > > executing program
+> > > > BUG: memory leak
+> > > > unreferenced object 0xffff88811ba93600 (size 64):
+> > > >   comm "syz-executor680", pid 6503, jiffies 4294951104 (age 21.940s)
+> > > >   hex dump (first 32 bytes):
+> > > >     00 00 00 00 00 00 00 00 08 36 a9 1b 81 88 ff ff  .........6......
+> > > >     08 36 a9 1b 81 88 ff ff 11 ce 98 89 3a d5 b4 8f  .6..........:...
+> > > >   backtrace:
+> > > >     [<00000000896418b0>] kmalloc include/linux/slab.h:554 [inline]
+> > > >     [<00000000896418b0>] kzalloc include/linux/slab.h:666 [inline]
+> > > >     [<00000000896418b0>] init_listener kernel/seccomp.c:1473 [inline]
+> > > >     [<00000000896418b0>] seccomp_set_mode_filter kernel/seccomp.c:1546 [inline]
+> > > >     [<00000000896418b0>] do_seccomp+0x8ce/0xd40 kernel/seccomp.c:1649
+> > > >     [<000000002b04976c>] do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+> > > >     [<00000000322b4126>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > > 
+> > > I haven't narrowed this down yet (and it *might* be a false positive),
+> > > but it looks like this is filter->notif. The only way that's possible is
+> > > if seccomp_notify_release() was never called *and* seccomp_filter_free()
+> > > got called... which would imply a reference counting problem. The way
+> > > there doesn't jump out at me yet, but I haven't yet decoded the C
+> > > reproducer into the actual seccomp arguments, etc.
+> > 
+> > Looks like it's just a bunch of threads in the same thread group
+> > trying to install a filter with TSYNC and NEW_LISTENER turned on. Does
+> > the patch below look reasonable?
+> > 
+> > I didn't send it separately since I'm in the process of switching my
+> > e-mail address to tycho@tycho.pizza; let this e-mail serve as proof
+> > that that e-mail really is me too :). I can send it the normal way if
+> > it looks good.
+> > 
+> > 
+> > From d497e787e8e1b3e8b9230fdc4c9802616709c920 Mon Sep 17 00:00:00 2001
+> > From: Tycho Andersen <tycho@tycho.pizza>
+> > Date: Mon, 31 Aug 2020 17:55:07 -0600
+> > Subject: [PATCH] seccomp: don't leak memory when filter install races
+> > 
+> > In seccomp_set_mode_filter() with TSYNC | NEW_LISTENER, we first initialize
+> > the listener fd, then check to see if we can actually use it later in
+> > seccomp_may_assign_mode(), which can fail if anyone else in our thread
+> > group has installed a filter and caused some divergence. If we can't, we
+> > partially clean up the newly allocated file: we put the fd, put the file,
+> > but don't actually clean up the *memory* that was allocated at
+> > filter->notif. Let's clean that up too.
+> > 
+> > Fixes: 51891498f2da ("seccomp: allow TSYNC and USER_NOTIF together")
+> > Reported-by: syzbot+3ad9614a12f80994c32e@syzkaller.appspotmail.com
+> > Signed-off-by: Tycho Andersen <tycho@tycho.pizza>
+> > ---
+> >  kernel/seccomp.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> > index 3ee59ce0a323..21a76127833f 100644
+> > --- a/kernel/seccomp.c
+> > +++ b/kernel/seccomp.c
+> > @@ -1581,6 +1581,8 @@ static long seccomp_set_mode_filter(unsigned int flags,
+> >  			listener_f->private_data = NULL;
+> >  			fput(listener_f);
+> >  			put_unused_fd(listener);
+> > +			kfree(filter->notif);
+> > +			filter->notif = NULL;
+> 
+> Oof, actually this isn't quite right. It should be s/filter/prepared/g.
+> I can fix that and send out a real patch that's actually tested at
+> some point tomorrow.
 
-commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
-CEDE(0)") sets the exit latency of CEDE(0) based on the latency values
-of the Extended CEDE states advertised by the platform. The values
-advertised by the platform are in timebase ticks. However the cpuidle
-framework requires the latency values in microseconds.
+Ah! Yes, nice catch. I was staring at the wrong failure path. :)
 
-If the tb-ticks value advertised by the platform correspond to a value
-smaller than 1us, during the conversion from tb-ticks to microseconds,
-in the current code, the result becomes zero. This is incorrect as it
-puts a CEDE state on par with the snooze state.
+I'm thinking the free/NULL pattern, since it's repeated in a few places,
+should likely be a short helper. I'll stare at this some more...
 
-This patch fixes this by rounding up the result obtained while
-converting the latency value from tb-ticks to microseconds.
-
-Fixes: commit d947fb4c965c ("cpuidle: pseries: Fixup exit latency for
-CEDE(0)")
-
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- drivers/cpuidle/cpuidle-pseries.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/cpuidle/cpuidle-pseries.c b/drivers/cpuidle/cpuidle-pseries.c
-index ff6d99e..9043358 100644
---- a/drivers/cpuidle/cpuidle-pseries.c
-+++ b/drivers/cpuidle/cpuidle-pseries.c
-@@ -361,7 +361,7 @@ static void __init fixup_cede0_latency(void)
- 	for (i = 0; i < nr_xcede_records; i++) {
- 		struct xcede_latency_record *record = &payload->records[i];
- 		u64 latency_tb = be64_to_cpu(record->latency_ticks);
--		u64 latency_us = tb_to_ns(latency_tb) / NSEC_PER_USEC;
-+		u64 latency_us = DIV_ROUND_UP_ULL(tb_to_ns(latency_tb), NSEC_PER_USEC);
- 
- 		if (latency_us < min_latency_us)
- 			min_latency_us = latency_us;
 -- 
-1.9.4
-
+Kees Cook
