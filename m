@@ -2,126 +2,129 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C34C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6C3C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D55E2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="BpZgKGoI"
+	by mail.kernel.org (Postfix) with ESMTP id 1C3042064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598975333;
+	bh=px4bCdgldJNN2SrLtBSSsGhmQR2maebJ4rb7YVyyUBE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Zvymoh5NHOXfV3ClFeLrBiX+frg7gqV15mzb1RrG6g1iZjy4uGPHm2K1E4ImmQczE
+	 qriQaJAN/88TjSCLa2OaPZg6d/XX4ZcGQN6kdYnXedZxPFWx3vkZsLfYbS2m93K6Yh
+	 wap38dAFcS+FvHsxsLDtnIhxm6yHWcl+yGtNz+lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbgIAPsl (ORCPT
+        id S1731838AbgIAPsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:48:41 -0400
-Received: from mx4.wp.pl ([212.77.101.12]:32719 "EHLO mx4.wp.pl"
+        Tue, 1 Sep 2020 11:48:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731588AbgIAPo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:58 -0400
-Received: (wp-smtpd smtp.wp.pl 31785 invoked from network); 1 Sep 2020 17:44:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1598975094; bh=0TkTRTTd/MctTe5GI7P3dkE8JPMJ2kvU+Sh6IzYUwwI=;
-          h=From:To:Cc:Subject;
-          b=BpZgKGoI2vxuvDAMOWuwlOaIhaPypqM3wZfW4WsN8OFySN8ssUKax0EwxOmLT7OrA
-           7DVIpGyzGltoAY8hxvsmL2sG0dZF8boGD/Ay17JtS/JGc2hf6NnookkUNRCrFHu+G0
-           lTgXrqnY1EUwHgFwxXH4DzjWBfbUJ6e/txb6Aftg=
-Received: from 188.146.234.2.nat.umts.dynamic.t-mobile.pl (HELO localhost) (antoni.przybylik@wp.pl@[188.146.234.2])
-          (envelope-sender <antoni.przybylik@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <gregkh@linuxfoundation.org>; 1 Sep 2020 17:44:54 +0200
-From:   Antoni Przybylik <antoni.przybylik@wp.pl>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        Antoni Przybylik <antoni.przybylik@wp.pl>
-Subject: [PATCH] staging: gdm724x: gdm_tty: replaced macro with an inline function
-Date:   Tue,  1 Sep 2020 17:44:37 +0200
-Message-Id: <20200901154437.110056-1-antoni.przybylik@wp.pl>
+        id S1731582AbgIAPoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:44:55 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F07D2078B;
+        Tue,  1 Sep 2020 15:44:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598975095;
+        bh=px4bCdgldJNN2SrLtBSSsGhmQR2maebJ4rb7YVyyUBE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AshxspGXOphG+4c5A4bdiEN97TKVN75+DX5hVOjThi2IQomLa+wCxFBpfi69EIfed
+         NeSPp0c+ehHxlyGv324jKEtht/Gq9ITewrTT48+NHSVoQSk/j9rI8sGbQSMD0EsWkv
+         AFrdIuRWrIjTtuo8Wffa5vEbwmiYh8OhdkGh+nVI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, qiuguorui1 <qiuguorui1@huawei.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.8 207/255] irqchip/stm32-exti: Avoid losing interrupts due to clearing pending bits by mistake
+Date:   Tue,  1 Sep 2020 17:11:03 +0200
+Message-Id: <20200901151010.618387021@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-WP-DKIM-Status: good (id: wp.pl)                                      
-X-WP-MailID: f1f5b46372db9c67cbcc3a4a70c1c0b8
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000002 [oTHR]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This approach is more elegant and prevents some problems related to
-macros such as operator precedence in expanded  expression.
+From: qiuguorui1 <qiuguorui1@huawei.com>
 
-Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
+commit e579076ac0a3bebb440fab101aef3c42c9f4c709 upstream.
+
+In the current code, when the eoi callback of the exti clears the pending
+bit of the current interrupt, it will first read the values of fpr and
+rpr, then logically OR the corresponding bit of the interrupt number,
+and finally write back to fpr and rpr.
+
+We found through experiments that if two exti interrupts,
+we call them int1/int2, arrive almost at the same time. in our scenario,
+the time difference is 30 microseconds, assuming int1 is triggered first.
+
+there will be an extreme scenario: both int's pending bit are set to 1,
+the irq handle of int1 is executed first, and eoi handle is then executed,
+at this moment, all pending bits are cleared, but the int 2 has not
+finally been reported to the cpu yet, which eventually lost int2.
+
+According to stm32's TRM description about rpr and fpr: Writing a 1 to this
+bit will trigger a rising edge event on event x, Writing 0 has no
+effect.
+
+Therefore, when clearing the pending bit, we only need to clear the
+pending bit of the irq.
+
+Fixes: 927abfc4461e7 ("irqchip/stm32: Add stm32mp1 support with hierarchy domain")
+Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org # v4.18+
+Link: https://lore.kernel.org/r/20200820031629.15582-1-qiuguorui1@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/staging/gdm724x/gdm_tty.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/irqchip/irq-stm32-exti.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
-index 6e813693a766..e789b7348dee 100644
---- a/drivers/staging/gdm724x/gdm_tty.c
-+++ b/drivers/staging/gdm724x/gdm_tty.c
-@@ -27,8 +27,6 @@
+--- a/drivers/irqchip/irq-stm32-exti.c
++++ b/drivers/irqchip/irq-stm32-exti.c
+@@ -431,6 +431,16 @@ static void stm32_irq_ack(struct irq_dat
+ 	irq_gc_unlock(gc);
+ }
  
- #define MUX_TX_MAX_SIZE 2048
- 
--#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
--
- static struct tty_driver *gdm_driver[TTY_MAX_COUNT];
- static struct gdm *gdm_table[TTY_MAX_COUNT][GDM_TTY_MINOR];
- static DEFINE_MUTEX(gdm_table_lock);
-@@ -36,6 +34,11 @@ static DEFINE_MUTEX(gdm_table_lock);
- static const char *DRIVER_STRING[TTY_MAX_COUNT] = {"GCTATC", "GCTDM"};
- static char *DEVICE_STRING[TTY_MAX_COUNT] = {"GCT-ATC", "GCT-DM"};
- 
-+inline int gdm_tty_ready(gdm *gdm)
++/* directly set the target bit without reading first. */
++static inline void stm32_exti_write_bit(struct irq_data *d, u32 reg)
 +{
-+	return (gdm && gdm->tty_dev && gdm->port.count);
++	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
++	void __iomem *base = chip_data->host_data->base;
++	u32 val = BIT(d->hwirq % IRQS_PER_BANK);
++
++	writel_relaxed(val, base + reg);
 +}
 +
- static void gdm_port_destruct(struct tty_port *port)
+ static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
  {
- 	struct gdm *gdm = container_of(port, struct gdm, port);
-@@ -119,7 +122,7 @@ static int gdm_tty_recv_complete(void *data,
- {
- 	struct gdm *gdm = tty_dev->gdm[index];
+ 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
+@@ -464,9 +474,9 @@ static void stm32_exti_h_eoi(struct irq_
  
--	if (!GDM_TTY_READY(gdm)) {
-+	if (!gdm_tty_ready(gdm)) {
- 		if (complete == RECV_PACKET_PROCESS_COMPLETE)
- 			gdm->tty_dev->recv_func(gdm->tty_dev->priv_dev,
- 						gdm_tty_recv_complete);
-@@ -146,7 +149,7 @@ static void gdm_tty_send_complete(void *arg)
- {
- 	struct gdm *gdm = arg;
+ 	raw_spin_lock(&chip_data->rlock);
  
--	if (!GDM_TTY_READY(gdm))
-+	if (!gdm_tty_ready(gdm))
- 		return;
+-	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
++	stm32_exti_write_bit(d, stm32_bank->rpr_ofst);
+ 	if (stm32_bank->fpr_ofst != UNDEF_REG)
+-		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
++		stm32_exti_write_bit(d, stm32_bank->fpr_ofst);
  
- 	tty_port_tty_wakeup(&gdm->port);
-@@ -160,7 +163,7 @@ static int gdm_tty_write(struct tty_struct *tty, const unsigned char *buf,
- 	int sent_len = 0;
- 	int sending_len = 0;
+ 	raw_spin_unlock(&chip_data->rlock);
  
--	if (!GDM_TTY_READY(gdm))
-+	if (!gdm_tty_ready(gdm))
- 		return -ENODEV;
- 
- 	if (!len)
-@@ -187,7 +190,7 @@ static int gdm_tty_write_room(struct tty_struct *tty)
- {
- 	struct gdm *gdm = tty->driver_data;
- 
--	if (!GDM_TTY_READY(gdm))
-+	if (!gdm_tty_ready(gdm))
- 		return -ENODEV;
- 
- 	return WRITE_SIZE;
--- 
-2.28.0
+
 
