@@ -5,48 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D08FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2951BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35FC9206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0988C2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976282;
-	bh=1N7E8jTdaJiP5AS0s7ssZc9dpyomkdQrUUBLpq3o5w0=;
+	s=default; t=1598976286;
+	bh=q88Q+P2+4EgBQdQl1eeHV49GcwL+Mnk0zzT6hd6Yes8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uAxOdzt+Yu7+dkOp555LctNXyrxTBDpZbEURaqnnRzJPI7xFc7eoa4LT/hRvkLuxS
-	 LvVHETlRs6aox7JB8fpgtwVQ6KrLtGBvzsx4MNQcwS0RA9LNJntGnhQSU+1v+ZFhmx
-	 RjUudk2pedbJ1BapGK6GlEV9N7ScOzpk52wHTZzs=
+	b=xXD6iZtINF9NACJXf8hu7qcRxrRPnIV+Eh1yfFTpi9TgUrg1b6v8tFQIgMQm/bZv0
+	 3sjFK0lIwYK034+R0/NgrKSW3C958OXX+OqnB3CExWlP/qFeWvV3LoR3bZHWTwbhpe
+	 ibvjgFZloH5BgS2EX/7nnMeCT9BZwCMZjm7klwII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730122AbgIAQEl (ORCPT
+        id S1730736AbgIAQEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgIAPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731538AbgIAPmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:42:04 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1622206EB;
-        Tue,  1 Sep 2020 15:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 44DBA20BED;
+        Tue,  1 Sep 2020 15:41:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974922;
-        bh=1N7E8jTdaJiP5AS0s7ssZc9dpyomkdQrUUBLpq3o5w0=;
+        s=default; t=1598974919;
+        bh=q88Q+P2+4EgBQdQl1eeHV49GcwL+Mnk0zzT6hd6Yes8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dddhBOJdNon7j4CmRT++IbuCxjHU/oYeLes6htWOEDqKHAoudKwElTK49Ck/CUMU+
-         q6Bl6My5fXGhWPi+JAqB46B5Jr3a0mpInl5aWG61nxwRMssge3g2gFXz+Zy95Zy3lL
-         BweIIs8WaLvbe+O2Fm+PKtOImufFs5jt3x7wp4w4=
+        b=GzYo6JLpTbR3zLBpFP7WT/VzAri3kZTBi9XCLqsZ7j5AkKQ8EOUSqqJpme1PW034X
+         pW+YIE7QmEnbMFA5/rZLGe5Gss+4tM1WGqIO2gKKU2BhsBmGJUAl7XAGVnyOvugqwQ
+         aL7cyFLq24Ebcbo7yMCN2aAcrn6Ca6VjFtKJmtog=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Yan <tom.ty89@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 141/255] ALSA: usb-audio: ignore broken processing/extension unit
-Date:   Tue,  1 Sep 2020 17:09:57 +0200
-Message-Id: <20200901151007.459879002@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 140/255] ASoC: wm8994: Avoid attempts to read unreadable registers
+Date:   Tue,  1 Sep 2020 17:09:56 +0200
+Message-Id: <20200901151007.417904684@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,49 +62,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Yan <tom.ty89@gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-[ Upstream commit d8d0db7bb358ef65d60726a61bfcd08eccff0bc0 ]
+[ Upstream commit f082bb59b72039a2326ec1a44496899fb8aa6d0e ]
 
-Some devices have broken extension unit where getting current value
-doesn't work. Attempt that once when creating mixer control for it. If
-it fails, just ignore it, so that it won't cripple the device entirely
-(and/or make the error floods).
+The driver supports WM1811, WM8994, WM8958 devices but according to
+documentation and the regmap definitions the WM8958_DSP2_* registers
+are only available on WM8958. In current code these registers are
+being accessed as if they were available on all the three chips.
 
-Signed-off-by: Tom Yan <tom.ty89@gmail.com>
-Link: https://lore.kernel.org/r/5f3abc52.1c69fb81.9cf2.fe91@mx.google.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+When starting playback on WM1811 CODEC multiple errors like:
+"wm8994-codec wm8994-codec: ASoC: error at soc_component_read_no_lock on wm8994-codec: -5"
+can be seen, which is caused by attempts to read an unavailable
+WM8958_DSP2_PROGRAM register. The issue has been uncovered by recent
+commit "e2329ee ASoC: soc-component: add soc_component_err()".
+
+This patch adds a check in wm8958_aif_ev() callback so the DSP2 handling
+is only done for WM8958.
+
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200731173834.23832-1-s.nawrocki@samsung.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ sound/soc/codecs/wm8958-dsp2.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index eab0fd4fd7c33..e0b7174c10430 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2367,7 +2367,7 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
- 	int num_ins;
- 	struct usb_mixer_elem_info *cval;
- 	struct snd_kcontrol *kctl;
--	int i, err, nameid, type, len;
-+	int i, err, nameid, type, len, val;
- 	const struct procunit_info *info;
- 	const struct procunit_value_info *valinfo;
- 	const struct usbmix_name_map *map;
-@@ -2470,6 +2470,12 @@ static int build_audio_procunit(struct mixer_build *state, int unitid,
- 			break;
- 		}
+diff --git a/sound/soc/codecs/wm8958-dsp2.c b/sound/soc/codecs/wm8958-dsp2.c
+index ca42445b649d4..b471892d84778 100644
+--- a/sound/soc/codecs/wm8958-dsp2.c
++++ b/sound/soc/codecs/wm8958-dsp2.c
+@@ -412,8 +412,12 @@ int wm8958_aif_ev(struct snd_soc_dapm_widget *w,
+ 		  struct snd_kcontrol *kcontrol, int event)
+ {
+ 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
++	struct wm8994 *control = dev_get_drvdata(component->dev->parent);
+ 	int i;
  
-+		err = get_cur_ctl_value(cval, cval->control << 8, &val);
-+		if (err < 0) {
-+			usb_mixer_elem_info_free(cval);
-+			return -EINVAL;
-+		}
++	if (control->type != WM8958)
++		return 0;
 +
- 		kctl = snd_ctl_new1(&mixer_procunit_ctl, cval);
- 		if (!kctl) {
- 			usb_mixer_elem_info_free(cval);
+ 	switch (event) {
+ 	case SND_SOC_DAPM_POST_PMU:
+ 	case SND_SOC_DAPM_PRE_PMU:
 -- 
 2.25.1
 
