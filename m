@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E65DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:19:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEFFC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 713BD207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:19:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E29D206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973598;
-	bh=l58UeMdt58IB+x76B7v0N/wZQsYhLLAl8Lj5oZQQp3c=;
+	s=default; t=1598973603;
+	bh=HGL5Op0feGs6xIwMLfwoEoZrGaTgBEfpzudxmdqy9eo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ZC8r2jky3NE4SI2JCIOCJia+r6GXnHyw0LosaELLoJj8R/WRfMQeupro9ewLcP/S
-	 LZ+LXR1ItGYbH+T+KZNxK3c/XHr0dH9XZqm+E4nRMy3mY73Iq2xmdyA+R7PohM5Rhc
-	 3Ejd60uljeXosXx5pBclT7ksOFaaPklELpgT5hUo=
+	b=DjBCMUt5ytzjCAoMOH/LeAoEUBId/iSjc+4b6YbrSkxQCB8PPcz0QOD6CSZLs+9hf
+	 lRbMl6XZkimyXZ92TFxoGH9qWvRdvxccI/9POxY1Bqdl7gNPF9W8egvWaQm18C8VUE
+	 1u103FsiQUojcue8d5PZmkgsreWCZz/wQv+sCavg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgIAPTz (ORCPT
+        id S1729580AbgIAPUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:19:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35516 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:20:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbgIAPRu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:17:50 -0400
+        id S1729441AbgIAPSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:01 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8262151B;
-        Tue,  1 Sep 2020 15:17:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B95121527;
+        Tue,  1 Sep 2020 15:17:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973470;
-        bh=l58UeMdt58IB+x76B7v0N/wZQsYhLLAl8Lj5oZQQp3c=;
+        s=default; t=1598973477;
+        bh=HGL5Op0feGs6xIwMLfwoEoZrGaTgBEfpzudxmdqy9eo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JT38Q8sWZmvUomxG8GRuO+HJcK4BjMbg5z8hMg6pOtJk/t2lLLkCUIjoYU8EBsXJo
-         7DwAteKqGTh1hkJZ8uM/x6hycvPwNJ4ZnOIS0KFjfRQ1OmONywHqpehxYadGUa/nom
-         SyTdtFXcOV4RPAcvsftZj2qQ4qiNneZlunD5zGzQ=
+        b=1hnSwn7VaT9OaEX5x4AqZgVIMEzwFaD2s4WFUk7KVszfti77zWhGyKCvK1LkjgB6v
+         dVrUqjM7JFvYxQ0Varo5WYExjlpcMXrOnnnJdLr9RTeNr5MEMDwPHr55tVxvx9c4ez
+         U0B9QpYGhFkYp4fZUxN3rodKHhMJEkaOwfzUBq7E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/91] blktrace: ensure our debugfs dir exists
-Date:   Tue,  1 Sep 2020 17:09:46 +0200
-Message-Id: <20200901150928.715876880@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 15/91] drm/amdkfd: Fix reference count leaks.
+Date:   Tue,  1 Sep 2020 17:09:49 +0200
+Message-Id: <20200901150928.866547819@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,64 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit b431ef837e3374da0db8ff6683170359aaa0859c ]
+[ Upstream commit 20eca0123a35305e38b344d571cf32768854168c ]
 
-We make an assumption that a debugfs directory exists, but since
-this can fail ensure it exists before allowing blktrace setup to
-complete. Otherwise we end up stuffing blktrace files on the debugfs
-root directory. In the worst case scenario this *in theory* can create
-an eventual panic *iff* in the future a similarly named file is created
-prior on the debugfs root directory. This theoretical crash can happen
-due to a recursive removal followed by a specific dentry removal.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object.
 
-This doesn't fix any known crash, however I have seen the files
-go into the main debugfs root directory in cases where the debugfs
-directory was not created due to other internal bugs with blktrace
-now fixed.
-
-blktrace is also completely useless without this directory, so
-this ensures to userspace we only setup blktrace if the kernel
-can stuff files where they are supposed to go into.
-
-debugfs directory creations typically aren't checked for, and we have
-maintainers doing sweep removals of these checks, but since we need this
-check to ensure proper userspace blktrace functionality we make sure
-to annotate the justification for the check.
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 9a55c5bc52434..987daf9cc6e54 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -541,6 +541,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	if (!dir)
- 		goto err;
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+index e0b78fd9804de..ab79c1030f005 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
+@@ -821,8 +821,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
  
-+	/*
-+	 * As blktrace relies on debugfs for its interface the debugfs directory
-+	 * is required, contrary to the usual mantra of not checking for debugfs
-+	 * files or directories.
-+	 */
-+	if (IS_ERR_OR_NULL(dir)) {
-+		pr_warn("debugfs_dir not present for %s so skipping\n",
-+			buts->name);
-+		ret = -ENOENT;
-+		goto err;
+ 	ret = kobject_init_and_add(dev->kobj_node, &node_type,
+ 			sys_props.kobj_nodes, "%d", id);
+-	if (ret < 0)
++	if (ret < 0) {
++		kobject_put(dev->kobj_node);
+ 		return ret;
 +	}
-+
- 	bt->dev = dev;
- 	atomic_set(&bt->dropped, 0);
- 	INIT_LIST_HEAD(&bt->running_list);
+ 
+ 	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
+ 	if (!dev->kobj_mem)
+@@ -865,8 +867,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(mem->kobj, &mem_type,
+ 				dev->kobj_mem, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(mem->kobj);
+ 			return ret;
++		}
+ 
+ 		mem->attr.name = "properties";
+ 		mem->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -884,8 +888,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(cache->kobj, &cache_type,
+ 				dev->kobj_cache, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(cache->kobj);
+ 			return ret;
++		}
+ 
+ 		cache->attr.name = "properties";
+ 		cache->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -903,8 +909,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+ 			return -ENOMEM;
+ 		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
+ 				dev->kobj_iolink, "%d", i);
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(iolink->kobj);
+ 			return ret;
++		}
+ 
+ 		iolink->attr.name = "properties";
+ 		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
+@@ -956,8 +964,10 @@ static int kfd_topology_update_sysfs(void)
+ 		ret = kobject_init_and_add(sys_props.kobj_topology,
+ 				&sysprops_type,  &kfd_device->kobj,
+ 				"topology");
+-		if (ret < 0)
++		if (ret < 0) {
++			kobject_put(sys_props.kobj_topology);
+ 			return ret;
++		}
+ 
+ 		sys_props.kobj_nodes = kobject_create_and_add("nodes",
+ 				sys_props.kobj_topology);
 -- 
 2.25.1
 
