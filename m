@@ -2,234 +2,109 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01C4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A273C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A33612065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 292F22078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:36:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w9XTgjGS"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hmjdaJHt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgIAFfs (ORCPT
+        id S1726467AbgIAFgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:35:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47080 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgIAFfq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:35:46 -0400
-Received: from mail-oi1-x244.google.com (mail-oi1-x244.google.com [IPv6:2607:f8b0:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 195D6C0612A0
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:35:45 -0700 (PDT)
-Received: by mail-oi1-x244.google.com with SMTP id x19so123952oix.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 22:35:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bqLgjtRNDTI/SCbsYrw9ssaBt/TftKu39O2QQtBM9Tk=;
-        b=w9XTgjGSu41nt9IFeQpEbJjO8J6dMiQcWgbPKtyAAyS9OdjINki2co+sS9dqTcXxwP
-         9a50dhJmZZ/pcAKuZZi1bZ5FG47qFmFnjFsnK34WIOJM6sawqS2BxkA+wnfFo/0NO5U7
-         T7HJ125TAyC1FH3SF7fLiQaDDx5zDeJAmOcAZKM1DVJi6UnrWGuRpUp+p8SUOQ2fh7+5
-         koAKBtid/eWHiFAWyqy49gYwFOUY404kNbsU8ifI+myNLNWaMyjPnehz8klEfrv8vU8c
-         HqtvtyCyEHdtd1ZzNRXAF5xnjwtcLtq7Ej9dmL+S5qx1xFf3gOBJIJdNRD441DwhKLQt
-         oJHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bqLgjtRNDTI/SCbsYrw9ssaBt/TftKu39O2QQtBM9Tk=;
-        b=joEcNkoNo2HFWP+RoLYwxDX2imVpC1PHwGMVHDbcgPbwHqGlnn3IZLa/2dA/ZKKbfT
-         OQhgqsLSqEsXcvxESatqyevvJxOEKsAaKj0bt2XHOCoktAMTsp/TVOSu5JHOj6G/yemi
-         mdQHZX9/S5kO/459lam0Z1zLu5Fon4Lwi0gjAHckH1E4S1zahuj5Xp91ZzKCWtRCzgSi
-         +tn+KbV1iEFBQM9nq58fit0/TmH/Ih36zC0x1gdq47lfdvVobooUQWXb1JfRWf8Zl6QB
-         9nZ4pumoUtlj6JBXkqXuicuhYAiwOw7usKIfcG7KGyQtdqWWveQ2xIxE+cgUMArQjk5A
-         KwkA==
-X-Gm-Message-State: AOAM5336v0QIm4+zbymvc7tWe3bk4FOKiDBfR4wMlKB7TFybQXWPInCT
-        3H5Sq80XWCVtkWa6h5b6t3UdN4CYuqkBRg==
-X-Google-Smtp-Source: ABdhPJxCwPxWpbx9/FQ/pHgMctBc48p1eEulQ2TAksIyKoN3KLenR9QKBzFuscBKV7AaA2Ff800Myg==
-X-Received: by 2002:aca:190a:: with SMTP id l10mr117370oii.175.1598938544802;
-        Mon, 31 Aug 2020 22:35:44 -0700 (PDT)
-Received: from yoga ([2605:6000:e5cb:c100:8898:14ff:fe6d:34e])
-        by smtp.gmail.com with ESMTPSA id u28sm20035otj.13.2020.08.31.22.35.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 22:35:44 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 00:35:41 -0500
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>, freedreno@lists.freedesktop.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 19/19] drm/msm: show process names in gem_describe
-Message-ID: <20200901053541.GY3715@yoga>
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-20-robdclark@gmail.com>
+        Tue, 1 Sep 2020 01:36:31 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:50809 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgIAFga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 01:36:30 -0400
+Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3280:1098:42a1:36db:233c])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0815ZoYg3466113
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Mon, 31 Aug 2020 22:35:50 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0815ZoYg3466113
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020082401; t=1598938551;
+        bh=D1w2z0wwywyGWyM+Ovcf5tkTNQaIiyhfu7pJSPgagqw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hmjdaJHtKRlZIZmdeAAIWNkOWb0IPHJnWi5DHteLmVli+6LQDT1xQh0K/lV0/ZXpG
+         FFLum+W496p29BTSsrjWDbLU/oI8/isvPHoKwl/z+aR9Q/jpR1x3NcGC/geSBREpd3
+         4Omravp5qtMacPfaHw6+k8eS6povBblhS0DVV+3aIrIkSHyKCYuEuR/CaTIgw3uP0n
+         wegyrckQOK3pOzb+y8Zdy367JVMcVTi4E69xY73U13j+nriPNxpWqMO/b37IB6YO+I
+         uznTOeUsfQ2Hs31MsDTL+HHygr/ME3vbj1UscxVFsPl1a4tUDtY9q1WA91YZ/sJaXM
+         OBNMLe3/HJ3Dg==
+Subject: Re: [PATCH] Documentation/x86/boot.rst: minor improvement
+To:     Cao jin <caoj.fnst@cn.fujitsu.com>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, corbet@lwn.net
+References: <20200901034157.5482-1-caoj.fnst@cn.fujitsu.com>
+ <da11d436-8910-f560-e132-827132576f1d@cn.fujitsu.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <2cb35238-0008-4a89-7abf-8045bd753728@zytor.com>
+Date:   Mon, 31 Aug 2020 22:35:40 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200814024114.1177553-20-robdclark@gmail.com>
+In-Reply-To: <da11d436-8910-f560-e132-827132576f1d@cn.fujitsu.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13 Aug 21:41 CDT 2020, Rob Clark wrote:
+If you are going to fix the language...
 
-> From: Rob Clark <robdclark@chromium.org>
+On 2020-08-31 22:25, Cao jin wrote:
+> Sorry, I mis-copied 2 addresses. make sure they are CCed.
 > 
-> In $debugfs/gem we already show any vma(s) associated with an object.
-> Also show process names if the vma's address space is a per-process
-> address space.
-> 
+> On 9/1/20 11:41 AM, Cao jin wrote:
+>> Typo fix & file name update
+>>
+>> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+>> ---
+>>  Documentation/x86/boot.rst | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+>> index 7fafc7ac00d7..c04afec90486 100644
+>> --- a/Documentation/x86/boot.rst
+>> +++ b/Documentation/x86/boot.rst
+>> @@ -1379,7 +1379,7 @@ can be calculated as follows::
+>>  In addition to read/modify/write the setup header of the struct
+>>  boot_params as that of 16-bit boot protocol, the boot loader should
+>>  also fill the additional fields of the struct boot_params as described
+>> -in zero-page.txt.
+>> +in zero-page.rst.
+>>  
+>>  After setting up the struct boot_params, the boot loader can load
+>>  64-bit kernel in the same way as that of 16-bit boot protocol, but
+>> @@ -1391,7 +1391,7 @@ In 64-bit boot protocol, the kernel is started by jumping to the
+>>  
+>>  At entry, the CPU must be in 64-bit mode with paging enabled.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+(Paging enabled is redundant here.)
 
-> Signed-off-by: Rob Clark <robdclark@chromium.org>
-> ---
->  drivers/gpu/drm/msm/msm_drv.c     |  2 +-
->  drivers/gpu/drm/msm/msm_gem.c     | 25 +++++++++++++++++++++----
->  drivers/gpu/drm/msm/msm_gem.h     |  5 +++++
->  drivers/gpu/drm/msm/msm_gem_vma.c |  1 +
->  drivers/gpu/drm/msm/msm_gpu.c     |  8 +++++---
->  drivers/gpu/drm/msm/msm_gpu.h     |  2 +-
->  6 files changed, 34 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index 8e70d220bba8..8d5c4f98c332 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -597,7 +597,7 @@ static int context_init(struct drm_device *dev, struct drm_file *file)
->  	kref_init(&ctx->ref);
->  	msm_submitqueue_init(dev, ctx);
->  
-> -	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu);
-> +	ctx->aspace = msm_gpu_create_private_address_space(priv->gpu, current);
->  	file->driver_priv = ctx;
->  
->  	return 0;
-> diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> index 3cb7aeb93fd3..76a6c5271e57 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.c
-> +++ b/drivers/gpu/drm/msm/msm_gem.c
-> @@ -842,11 +842,28 @@ void msm_gem_describe(struct drm_gem_object *obj, struct seq_file *m)
->  
->  		seq_puts(m, "      vmas:");
->  
-> -		list_for_each_entry(vma, &msm_obj->vmas, list)
-> -			seq_printf(m, " [%s: %08llx,%s,inuse=%d]",
-> -				vma->aspace != NULL ? vma->aspace->name : NULL,
-> -				vma->iova, vma->mapped ? "mapped" : "unmapped",
-> +		list_for_each_entry(vma, &msm_obj->vmas, list) {
-> +			const char *name, *comm;
-> +			if (vma->aspace) {
-> +				struct msm_gem_address_space *aspace = vma->aspace;
-> +				struct task_struct *task =
-> +					get_pid_task(aspace->pid, PIDTYPE_PID);
-> +				if (task) {
-> +					comm = kstrdup(task->comm, GFP_KERNEL);
-> +				} else {
-> +					comm = NULL;
-> +				}
-> +				name = aspace->name;
-> +			} else {
-> +				name = comm = NULL;
-> +			}
-> +			seq_printf(m, " [%s%s%s: aspace=%p, %08llx,%s,inuse=%d]",
-> +				name, comm ? ":" : "", comm ? comm : "",
-> +				vma->aspace, vma->iova,
-> +				vma->mapped ? "mapped" : "unmapped",
->  				vma->inuse);
-> +			kfree(comm);
-> +		}
->  
->  		seq_puts(m, "\n");
->  	}
-> diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-> index 9c573c4269cb..7b1c7a5f8eef 100644
-> --- a/drivers/gpu/drm/msm/msm_gem.h
-> +++ b/drivers/gpu/drm/msm/msm_gem.h
-> @@ -24,6 +24,11 @@ struct msm_gem_address_space {
->  	spinlock_t lock; /* Protects drm_mm node allocation/removal */
->  	struct msm_mmu *mmu;
->  	struct kref kref;
-> +
-> +	/* For address spaces associated with a specific process, this
-> +	 * will be non-NULL:
-> +	 */
-> +	struct pid *pid;
->  };
->  
->  struct msm_gem_vma {
-> diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-> index 29cc1305cf37..80a8a266d68f 100644
-> --- a/drivers/gpu/drm/msm/msm_gem_vma.c
-> +++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-> @@ -17,6 +17,7 @@ msm_gem_address_space_destroy(struct kref *kref)
->  	drm_mm_takedown(&aspace->mm);
->  	if (aspace->mmu)
->  		aspace->mmu->funcs->destroy(aspace->mmu);
-> +	put_pid(aspace->pid);
->  	kfree(aspace);
->  }
->  
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-> index 951850804d77..ac8961187a73 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.c
-> +++ b/drivers/gpu/drm/msm/msm_gpu.c
-> @@ -825,10 +825,9 @@ static int get_clocks(struct platform_device *pdev, struct msm_gpu *gpu)
->  
->  /* Return a new address space for a msm_drm_private instance */
->  struct msm_gem_address_space *
-> -msm_gpu_create_private_address_space(struct msm_gpu *gpu)
-> +msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task)
->  {
->  	struct msm_gem_address_space *aspace = NULL;
-> -
->  	if (!gpu)
->  		return NULL;
->  
-> @@ -836,8 +835,11 @@ msm_gpu_create_private_address_space(struct msm_gpu *gpu)
->  	 * If the target doesn't support private address spaces then return
->  	 * the global one
->  	 */
-> -	if (gpu->funcs->create_private_address_space)
-> +	if (gpu->funcs->create_private_address_space) {
->  		aspace = gpu->funcs->create_private_address_space(gpu);
-> +		if (!IS_ERR(aspace))
-> +			aspace->pid = get_pid(task_pid(task));
-> +	}
->  
->  	if (IS_ERR_OR_NULL(aspace))
->  		aspace = msm_gem_address_space_get(gpu->aspace);
-> diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-> index 4052a18e18c2..59f26bd0fe42 100644
-> --- a/drivers/gpu/drm/msm/msm_gpu.h
-> +++ b/drivers/gpu/drm/msm/msm_gpu.h
-> @@ -298,7 +298,7 @@ int msm_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  		const char *name, struct msm_gpu_config *config);
->  
->  struct msm_gem_address_space *
-> -msm_gpu_create_private_address_space(struct msm_gpu *gpu);
-> +msm_gpu_create_private_address_space(struct msm_gpu *gpu, struct task_struct *task);
->  
->  void msm_gpu_cleanup(struct msm_gpu *gpu);
->  
-> -- 
-> 2.26.2
-> 
+>>  The range with setup_header.init_size from start address of loaded
+>> -kernel and zero page and command line buffer get ident mapping;
+>> +kernel and zero page and command line buffer get identity mapping;
+
+The range with setup_header.init_size from start address of the loaded kernel,
+the zero page, and the command line buffer get identity-mapped, anda GDT must
+be loaded with the descriptors for selectors __BOOT_CS(0x10) and
+__BOOT_DS(0x18): both descriptors must be 4G flat segment with __BOOT_CS
+having execute/read
+permission and __BOOT_DS...
+
+Also, it might be useful to take a look to see if other data structures, like
+setup_data and the initrd also need to be in the identity map.
+
+	-hpa
+
