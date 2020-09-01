@@ -2,71 +2,83 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77C47C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2BFFC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC0F20BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C0E20BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jZd0L7aT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728249AbgIAPGR (ORCPT
+        id S1728684AbgIAPGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:06:17 -0400
-Received: from verein.lst.de ([213.95.11.211]:53698 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbgIAPF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:05:58 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 90CCB68B05; Tue,  1 Sep 2020 17:05:53 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 17:05:53 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Mark Rutland <mark.rutland@arm.com>
+        Tue, 1 Sep 2020 11:06:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728021AbgIAPGZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:06:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F326C061244;
+        Tue,  1 Sep 2020 08:06:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TQLSoH0xPQ3SjLQOZr/hg2RXQ7cUeDg7DQ8wAuWlnPY=; b=jZd0L7aTlxDR248PzMNlW27wkh
+        U5RPUon6By39MJmZf0ctObEI9pE6t9/Rga1EYLZwsrKYL9QKBtSzQY4MensUyVRxNASrX33Pl6ldS
+        zbXRi9/lO7DOPWfK1zGncHVRI29r2AMThiNWFyK5BL0hKgOTicHc7ljMttBaeAT085JBU3dfIIkhB
+        i2DXKzLWz59dGh9/sp69/KBXolj/SaGGtRWihBzzh4x4klX60zoq5kB/U7R9cVPhcDeNn5gerBNkJ
+        glYPLWys77T11Ln0t8j7NNm/ySZOphISgDrR6WnPzsdkVah1bi4+EBuWuom6AkSHomcEJms18cORZ
+        5mRx4n8A==;
+Received: from willy by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD7r8-0008OT-59; Tue, 01 Sep 2020 15:05:54 +0000
+Date:   Tue, 1 Sep 2020 16:05:54 +0100
+From:   Matthew Wilcox <willy@infradead.org>
+To:     James Bottomley <James.Bottomley@hansenpartnership.com>
 Cc:     Christoph Hellwig <hch@lst.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/uaccess: Use pointer masking to limit uaccess
- speculation
-Message-ID: <20200901150553.GA30034@lst.de>
-References: <f12e7d3cecf41b2c29734ea45a393be21d4a8058.1597848273.git.jpoimboe@redhat.com> <20200901140208.GA95447@C02TD0UTHF1T.local> <20200901144641.GA28580@lst.de> <20200901145442.GC95447@C02TD0UTHF1T.local>
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-mm@kvack.org, alsa-devel@alsa-project.org
+Subject: Re: [PATCH 07/28] 53c700: improve non-coherent DMA handling
+Message-ID: <20200901150554.GN14765@casper.infradead.org>
+References: <20200819065555.1802761-1-hch@lst.de>
+ <20200819065555.1802761-8-hch@lst.de>
+ <1598971960.4238.5.camel@HansenPartnership.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901145442.GC95447@C02TD0UTHF1T.local>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <1598971960.4238.5.camel@HansenPartnership.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 03:54:42PM +0100, Mark Rutland wrote:
-> On Tue, Sep 01, 2020 at 04:46:41PM +0200, Christoph Hellwig wrote:
-> > On Tue, Sep 01, 2020 at 03:02:08PM +0100, Mark Rutland wrote:
-> > > One thing to consider is whether you need a speculation barrier after
-> > > set_fs(). Otherwise for code like:
-> > 
-> > FYI, at least for x86 and powerpc I have a pending series to kill
-> > set_fs().  I'd love to see someone help with the arm/arm64 side, otherwise
-> > I'll try to get to it eventually.
-> 
-> Is there anything in particular that's tricky, or do you just want
-> someone to look generally? From a quick grep arch/arm64/* looks clean, but
-> I suspect that's misleading.
+On Tue, Sep 01, 2020 at 07:52:40AM -0700, James Bottomley wrote:
+> I think this looks mostly OK, except for one misnamed parameter below. 
+> Unfortunately, the last non-coherent parisc was the 700 series and I no
+> longer own a box, so I can't test that part of it (I can fire up the
+> C360 to test it on a coherent arch).
 
-Yes, it should be mostly trivial.  I just bet the maintainers are
-better at optimizing the low-level assembly code with the variable
-address limit gone than I am.  (See Linus comments on the x86 version
-for example).  And I don't have a physical arm64 to test with so I'd
-have to rely on qemu for any testing.
+I have a 715/50 that probably hasn't been powered on in 15 years if you
+need something that old to test on (I believe the 725/100 uses the 7100LC
+and so is coherent).  I'll need to set up a cross-compiler ...
