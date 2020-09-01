@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8892C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD86EC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90F8E206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 727BB206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980097;
-	bh=/VdehSFRiCvDfRW4r2Q4xY4nZ3QsJKEWtyYfU3wvK8g=;
+	s=default; t=1598980115;
+	bh=/Ur067JFdQ/tL9AN3hGu+HrsEjzPVW70BsMe7Owp1xM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RbpMZsX1SsQaSQ+zrMBEj4WRxcy5ynSghsZ2bEkjmEVH5WnniLM8HWQnCjOMtiP9z
-	 UURHTQU7i92hDnY1tDxMK54d1/TQFWEb3wO+eWgSSOqB0asaVCVUW5D8CqrfUJLnzR
-	 vIxdi3D00iVraP5R9ygkQHsahCEnaue3XUd9c3Vo=
+	b=OVR/xcrJ6sYhRqbkVRwucnNSaFYTpJ1HSPJlbvAvGZa8pCNaSCE04jhnCMvf0puAP
+	 dXjMsdR6OF50bzd1YLDf6WpS9ZwRBnpuf5+cCPEsU7sqUOQXU4Ko5XkgjgIvPCpXjX
+	 CUxSSrW4UPQsDjATwzCFLVPX8RvkvgLHm6CZLRII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgIARIO (ORCPT
+        id S1730175AbgIARId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36112 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:08:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729454AbgIAPSI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:08 -0400
+        id S1729451AbgIAPSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14D1B206EB;
-        Tue,  1 Sep 2020 15:18:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEEE420BED;
+        Tue,  1 Sep 2020 15:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973487;
-        bh=/VdehSFRiCvDfRW4r2Q4xY4nZ3QsJKEWtyYfU3wvK8g=;
+        s=default; t=1598973485;
+        bh=/Ur067JFdQ/tL9AN3hGu+HrsEjzPVW70BsMe7Owp1xM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L2mjeLpD18GJVSZlfJqyNpgonVASNNsVleJJngI12vSfP7Jiqlm0x3cz4qSBf9y+i
-         L93rK27sQiQITR7hvVkOGvbbifm0fE/VqklUF60mVh6Xv2+U1c5lOPeM6ruum2ACAD
-         lTRXNDWG1or4NWXpNswD/eAO3itJfxKOLURGU/xs=
+        b=uShAGOFzJ4PgB2Ir7jnzE7gMqlU93uuAugnSe5JYTmTNcDwNTG/QPe0HsBG8miso/
+         c31H/YJkDY8hB0F39/n1lnN3MGIJupCCF7tjmNud6t4/rIy7/OWmYHrwp8KQa+Jsuj
+         n8t2O2/r15nlUOWkJ61WD1VFSkaFI4R3NVjedpUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Navid Emamdoost <navid.emamdoost@gmail.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/91] drm/amdgpu: fix ref count leak in amdgpu_display_crtc_set_config
-Date:   Tue,  1 Sep 2020 17:09:53 +0200
-Message-Id: <20200901150929.110266358@linuxfoundation.org>
+Subject: [PATCH 4.14 18/91] drm/amd/display: fix ref count leak in amdgpu_drm_ioctl
+Date:   Tue,  1 Sep 2020 17:09:52 +0200
+Message-Id: <20200901150929.019432148@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -63,49 +63,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit e008fa6fb41544b63973a529b704ef342f47cc65 ]
+[ Upstream commit 5509ac65f2fe5aa3c0003237ec629ca55024307c ]
 
-in amdgpu_display_crtc_set_config, the call to pm_runtime_get_sync
-increments the counter even in case of failure, leading to incorrect
+in amdgpu_drm_ioctl the call to pm_runtime_get_sync increments the
+counter even in case of failure, leading to incorrect
 ref count. In case of failure, decrement the ref count before returning.
 
 Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-index 6ad243293a78b..df24494299791 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-@@ -269,7 +269,7 @@ int amdgpu_crtc_set_config(struct drm_mode_set *set,
- 
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+index ae23f7e0290c3..465ece90e63ab 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
+@@ -801,11 +801,12 @@ long amdgpu_drm_ioctl(struct file *filp,
+ 	dev = file_priv->minor->dev;
  	ret = pm_runtime_get_sync(dev->dev);
  	if (ret < 0)
 -		return ret;
 +		goto out;
  
- 	ret = drm_crtc_helper_set_config(set, ctx);
+ 	ret = drm_ioctl(filp, cmd, arg);
  
-@@ -284,7 +284,7 @@ int amdgpu_crtc_set_config(struct drm_mode_set *set,
- 	   take the current one */
- 	if (active && !adev->have_disp_power_ref) {
- 		adev->have_disp_power_ref = true;
--		return ret;
-+		goto out;
- 	}
- 	/* if we have no active crtcs, then drop the power ref
- 	   we got before */
-@@ -293,6 +293,7 @@ int amdgpu_crtc_set_config(struct drm_mode_set *set,
- 		adev->have_disp_power_ref = false;
- 	}
- 
+ 	pm_runtime_mark_last_busy(dev->dev);
 +out:
- 	/* drop the power reference we got coming in here */
  	pm_runtime_put_autosuspend(dev->dev);
  	return ret;
+ }
 -- 
 2.25.1
 
