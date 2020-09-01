@@ -2,97 +2,97 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86761C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157A2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56F3B2065F
+	by mail.kernel.org (Postfix) with ESMTP id F2217207D3
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977996;
-	bh=PGgPonbuMctZ14if7l7JBzf62pDMSbaJSGT+E013UtI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s/082zbpGt/4GMvA98NGT7AgLcXRvIPIbCUs4SdRsg0+Ug/L1sjbwhPJTkVgv7tCw
-	 vO+tZFi6RyI5OtVXY8KFGQsAapYSXLQoEfF+vXxS4tAXr14PgXkcdZAGARrMbLrU2V
-	 nubgapYY+Gg7QSdeyegC0QdMlqa3G/iHMbvcFz6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730556AbgIAQcv (ORCPT
+        id S1730787AbgIAQdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:32:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35172 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730740AbgIAPbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:31:47 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4BA821534;
-        Tue,  1 Sep 2020 15:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974307;
-        bh=PGgPonbuMctZ14if7l7JBzf62pDMSbaJSGT+E013UtI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P4pC+mvfzKKmJnGoYyS+JcX4vpBTNmIFpRT610SnSiWd3Z1eruFnT5p6RnBN+F2DG
-         PsyyepljvlVcpWcZT74u96v8gIQscotXaMwtTLSMt4H96uEV5t5VRVTnRR4QqKDmnw
-         3ZgfQ/NaJ3Aiv83sX0N/0nSIl8ioCoGMzPMk0CP0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 124/214] spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
-Date:   Tue,  1 Sep 2020 17:10:04 +0200
-Message-Id: <20200901150958.924939081@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 12:33:15 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54450 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727950AbgIAQdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:33:11 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kD9DZ-00028h-7Q; Tue, 01 Sep 2020 16:33:09 +0000
+Date:   Tue, 1 Sep 2020 18:33:08 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sargun Dhillon <sargun@sargun.me>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-kselftest@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Jens Axboe <axboe@kernel.dk>, linux-api@vger.kernel.org
+Subject: Re: [PATCH 1/4] pidfd: support PIDFD_NONBLOCK in pidfd_open()
+Message-ID: <20200901163308.mwd334y462fmml6s@wittgenstein>
+References: <20200831134551.1599689-1-christian.brauner@ubuntu.com>
+ <20200831134551.1599689-2-christian.brauner@ubuntu.com>
+ <20200901162309.GB4386@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200901162309.GB4386@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+On Tue, Sep 01, 2020 at 06:23:10PM +0200, Oleg Nesterov wrote:
+> On 08/31, Christian Brauner wrote:
+> >
+> > --- /dev/null
+> > +++ b/include/uapi/linux/pidfd.h
+> > @@ -0,0 +1,12 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> > +
+> > +#ifndef _UAPI_LINUX_PIDFD_H
+> > +#define _UAPI_LINUX_PIDFD_H
+> > +
+> > +#include <linux/types.h>
+> > +#include <linux/fcntl.h>
+> > +
+> > +/* Flags for pidfd_open().  */
+> > +#define PIDFD_NONBLOCK O_NONBLOCK
+> > +
+> > +#endif /* _UAPI_LINUX_PIDFD_H */
+> 
+> Why? Can't we simply use O_NONBLOCK ?
 
-[ Upstream commit 9cc61973bf9385b19ff5dda4a2a7e265fcba85e4 ]
+It's the same thing we seem to do for any other (anon inode) fds:
 
-Fix spi->clk_rate when it is odd to the nearest lowest even value because
-minimum SPI divider is 2.
+include/linux/eventfd.h:#define		EFD_NONBLOCK O_NONBLOCK
+include/uapi/linux/inotify.h:#define	IN_NONBLOCK O_NONBLOCK
+include/uapi/linux/signalfd.h:#define	SFD_NONBLOCK O_NONBLOCK
+include/uapi/linux/timerfd.h:#define	TFD_NONBLOCK O_NONBLOCK
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Link: https://lore.kernel.org/r/1597043558-29668-4-git-send-email-alain.volmat@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/spi/spi-stm32.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+also for O_CLOEXEC:
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index f092bc8e00819..50ef03a8252d7 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -443,7 +443,8 @@ static int stm32_spi_prepare_mbr(struct stm32_spi *spi, u32 speed_hz,
- {
- 	u32 div, mbrdiv;
- 
--	div = DIV_ROUND_UP(spi->clk_rate, speed_hz);
-+	/* Ensure spi->clk_rate is even */
-+	div = DIV_ROUND_UP(spi->clk_rate & ~0x1, speed_hz);
- 
- 	/*
- 	 * SPI framework set xfer->speed_hz to master->max_speed_hz if
--- 
-2.25.1
+include/linux/eventfd.h:#define		EFD_CLOEXEC O_CLOEXEC
+include/linux/userfaultfd_k.h:#define	UFFD_CLOEXEC O_CLOEXEC
+include/uapi/linux/eventpoll.h:#define	EPOLL_CLOEXEC O_CLOEXEC
+include/uapi/linux/mount.h:#define	OPEN_TREE_CLOEXEC    O_CLOEXEC
+include/uapi/linux/perf_event.h:#define PERF_FLAG_FD_CLOEXEC (1UL << 3) /* O_CLOEXEC */
+include/uapi/linux/signalfd.h:#define	SFD_CLOEXEC O_CLOEXEC
+include/uapi/linux/timerfd.h:#define	TFD_CLOEXEC O_CLOEXEC
 
+So I think we should just do the same. A clean flag namespace seems
+nicer to me too tbh.
 
-
+Christian
