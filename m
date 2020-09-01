@@ -2,52 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AAAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B36C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 668F42065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C252065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978117;
-	bh=ZMkXKSTSBiaCcYZxiGbeuz15CQ86paK9AtdPbUfBVOg=;
+	s=default; t=1598978122;
+	bh=dUnRKN63euXMnnE/TPo9Pk5s7qNIZV5FF+T1lo9FPVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KnYD87QSzUy6DlW3XTSyii+Xkw0d+vNY3Fl30oBUsNAkpSviYsRTLHFhjhq7dNDA8
-	 lEs1EHWPwFwOPxrooM4OIBqoRMMQ/a7YsrkCnoWL+VjCA+53hKpaog7RL6eWGdlHwn
-	 ThMqB3Dsv1mJU7JmJh/0pHi4wXf37dWy9Ij/gj88=
+	b=HT7iKS1biW+N6JVk3SIC0szDedB24fGUsvPHJxmp36tRhr7kEuKXGDEssdejbsfWy
+	 qfgxDPtfU/Yb3OgOEoh1x/RldO9745y6vATIe3gK9reLdsAbuCc/UmQenLVcYDA5CW
+	 wuEF3C7L9LyxysyhrBIhtgLGp4/jo1YX591jqNBI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730411AbgIAPaz (ORCPT
+        id S1730981AbgIAQfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53076 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730156AbgIAP0y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:26:54 -0400
+        id S1730621AbgIAPam (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:30:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC1A3206FA;
-        Tue,  1 Sep 2020 15:26:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05117205F4;
+        Tue,  1 Sep 2020 15:30:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974014;
-        bh=ZMkXKSTSBiaCcYZxiGbeuz15CQ86paK9AtdPbUfBVOg=;
+        s=default; t=1598974242;
+        bh=dUnRKN63euXMnnE/TPo9Pk5s7qNIZV5FF+T1lo9FPVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H9aCMG0YTKf2diHPOtWmgCtIHlPRrLAxw3GmqUFbW7SmP7GICx9gjAdYrlphilde5
-         oMmz0Mxf/SJLVWI68mWRWf3o1HxA7qQvBZYKUlufkT23hmpsd138VINtl9qgtIkrf2
-         7LR8FrId0C8VvuS7LZ0MHNsYEcUPa7YkVmjvo9q0=
+        b=Q6KJ78C3zZ+Wn+GXEWOOO0N+ZPWoAsJ+Vu0zj8e3gE5cOytkloGaAZ9z7AIrCeNos
+         zR/J7/vPImiC3vErh0hmNbAugjzQpvd0gDrTBTcD8+Oc4YSJAWJAMZpcWzgxje+ueG
+         JGsnLcB35udI52y7drLxPVJXcG6ojaFGe6bJWGLc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 011/214] net/sched: act_ct: Fix skb double-free in tcf_ct_handle_fragments() error flow
-Date:   Tue,  1 Sep 2020 17:08:11 +0200
-Message-Id: <20200901150953.508117152@linuxfoundation.org>
+        stable@vger.kernel.org, Sham Muthayyan <smuthayy@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 093/214] PCI: qcom: Add missing ipq806x clocks in PCIe driver
+Date:   Tue,  1 Sep 2020 17:09:33 +0200
+Message-Id: <20200901150957.444681609@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,33 +63,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alaa Hleihel <alaa@mellanox.com>
+From: Ansuel Smith <ansuelsmth@gmail.com>
 
-[ Upstream commit eda814b97dfb8d9f4808eb2f65af9bd3705c4cae ]
+[ Upstream commit 8b6f0330b5f9a7543356bfa9e76d580f03aa2c1e ]
 
-tcf_ct_handle_fragments() shouldn't free the skb when ip_defrag() call
-fails. Otherwise, we will cause a double-free bug.
-In such cases, just return the error to the caller.
+Aux and Ref clk are missing in PCIe qcom driver. Add support for this
+optional clks for ipq8064/apq8064 SoC.
 
-Fixes: b57dc7c13ea9 ("net/sched: Introduce action ct")
-Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200615210608.21469-2-ansuelsmth@gmail.com
+Fixes: 82a823833f4e ("PCI: qcom: Add Qualcomm PCIe controller driver")
+Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/act_ct.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pcie-qcom.c | 38 ++++++++++++++++++++++----
+ 1 file changed, 33 insertions(+), 5 deletions(-)
 
---- a/net/sched/act_ct.c
-+++ b/net/sched/act_ct.c
-@@ -186,7 +186,7 @@ static int tcf_ct_handle_fragments(struc
- 		memset(IP6CB(skb), 0, sizeof(struct inet6_skb_parm));
- 		err = nf_ct_frag6_gather(net, skb, user);
- 		if (err && err != -EINPROGRESS)
--			goto out_free;
-+			return err;
- #else
- 		err = -EOPNOTSUPP;
- 		goto out_free;
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 270d502b8cd50..380a77a914fa0 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -103,6 +103,8 @@ struct qcom_pcie_resources_2_1_0 {
+ 	struct clk *iface_clk;
+ 	struct clk *core_clk;
+ 	struct clk *phy_clk;
++	struct clk *aux_clk;
++	struct clk *ref_clk;
+ 	struct reset_control *pci_reset;
+ 	struct reset_control *axi_reset;
+ 	struct reset_control *ahb_reset;
+@@ -253,6 +255,14 @@ static int qcom_pcie_get_resources_2_1_0(struct qcom_pcie *pcie)
+ 	if (IS_ERR(res->phy_clk))
+ 		return PTR_ERR(res->phy_clk);
+ 
++	res->aux_clk = devm_clk_get_optional(dev, "aux");
++	if (IS_ERR(res->aux_clk))
++		return PTR_ERR(res->aux_clk);
++
++	res->ref_clk = devm_clk_get_optional(dev, "ref");
++	if (IS_ERR(res->ref_clk))
++		return PTR_ERR(res->ref_clk);
++
+ 	res->pci_reset = devm_reset_control_get_exclusive(dev, "pci");
+ 	if (IS_ERR(res->pci_reset))
+ 		return PTR_ERR(res->pci_reset);
+@@ -285,6 +295,8 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+ 	clk_disable_unprepare(res->phy_clk);
++	clk_disable_unprepare(res->aux_clk);
++	clk_disable_unprepare(res->ref_clk);
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+ }
+ 
+@@ -315,16 +327,28 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_assert_ahb;
+ 	}
+ 
++	ret = clk_prepare_enable(res->core_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable core clock\n");
++		goto err_clk_core;
++	}
++
+ 	ret = clk_prepare_enable(res->phy_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable phy clock\n");
+ 		goto err_clk_phy;
+ 	}
+ 
+-	ret = clk_prepare_enable(res->core_clk);
++	ret = clk_prepare_enable(res->aux_clk);
+ 	if (ret) {
+-		dev_err(dev, "cannot prepare/enable core clock\n");
+-		goto err_clk_core;
++		dev_err(dev, "cannot prepare/enable aux clock\n");
++		goto err_clk_aux;
++	}
++
++	ret = clk_prepare_enable(res->ref_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable ref clock\n");
++		goto err_clk_ref;
+ 	}
+ 
+ 	ret = reset_control_deassert(res->ahb_reset);
+@@ -400,10 +424,14 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 	return 0;
+ 
+ err_deassert_ahb:
+-	clk_disable_unprepare(res->core_clk);
+-err_clk_core:
++	clk_disable_unprepare(res->ref_clk);
++err_clk_ref:
++	clk_disable_unprepare(res->aux_clk);
++err_clk_aux:
+ 	clk_disable_unprepare(res->phy_clk);
+ err_clk_phy:
++	clk_disable_unprepare(res->core_clk);
++err_clk_core:
+ 	clk_disable_unprepare(res->iface_clk);
+ err_assert_ahb:
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+-- 
+2.25.1
+
 
 
