@@ -2,121 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A777C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C67C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E0837214F1
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:07:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="yraft6Tr"
+	by mail.kernel.org (Postfix) with ESMTP id EB5F320BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:07:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgIAPHL (ORCPT
+        id S1728648AbgIAPHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:07:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50516 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728603AbgIAPGa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:06:30 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 028B8C061244;
-        Tue,  1 Sep 2020 08:06:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
-        Reply-To:Cc:Content-ID:Content-Description;
-        bh=tss5M/CgWtNHrn8kN3neH2rNWYnxcMFrfLkwrH1qZaA=; b=yraft6TribLHwkrXJ7oKDtJRbK
-        cOoSth/ZTysdAmjuNC9rchtYeF0z+4F1RM8ZSndjz2v5LMkusAM9mIEOSPtOBEwb0PrM+xXx7Ea7l
-        /ikF7LoG7gYahgDVNW4fpo5YAAYo7+GSKX3Kj5LrIdLfBohdGxGfIZnJ7e4SMWbdBgoLHEIW8Tgf+
-        njRXFLID+gofXGqnwhgAGdxbeaCAz+DaJh+I7tc9ACsUsCsauw+lX1T/rK1szN+XezzxnPVRwgJmj
-        cElkLQkrY4Cp0YxyEUGpaWUKkF76V0isaghz3YuqDIfij7YJSYYX6sQuqof0yxOOvFOlXTjYKms7X
-        VU1axofA==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD7rf-0005MS-Oa; Tue, 01 Sep 2020 15:06:28 +0000
-Subject: Re: [PATCH] dma-buf: fix kernel-doc warning in dma-fence.c
-To:     =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>,
-        linux-kernel@vger.kernel.org,
-        Gustavo Padovan <gustavo@padovan.org>,
-        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
-References: <20200831041713.12571-1-rdunlap@infradead.org>
- <81dc0a34-90f6-401a-f846-924fdff4aaff@amd.com>
- <20200901133200.GE2352366@phenom.ffwll.local>
- <d057988a-7ba4-7e3b-1c36-e40e9a5a8d9a@amd.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e15d8d9b-3988-191d-f9c0-6e5c3efe7485@infradead.org>
-Date:   Tue, 1 Sep 2020 08:06:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 1 Sep 2020 11:07:24 -0400
+Received: from verein.lst.de ([213.95.11.211]:53716 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727886AbgIAPG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:06:57 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 103C368B05; Tue,  1 Sep 2020 17:06:55 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 17:06:54 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     linux-mmc@vger.kernel.org, Rich Felker <dalias@libc.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Mark Brown <broonie@kernel.org>, linux-sh@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mmc: mmc_spi: Allow the driver to be built when
+ CONFIG_HAS_DMA is unset
+Message-ID: <20200901150654.GB30034@lst.de>
+References: <20200901150438.228887-1-ulf.hansson@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <d057988a-7ba4-7e3b-1c36-e40e9a5a8d9a@amd.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901150438.228887-1-ulf.hansson@linaro.org>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 6:37 AM, Christian König wrote:
-> Am 01.09.20 um 15:32 schrieb Daniel Vetter:
->> On Mon, Aug 31, 2020 at 12:02:03PM +0200, Christian König wrote:
->>> Am 31.08.20 um 06:17 schrieb Randy Dunlap:
->>>> Add @cookie to dma_fence_end_signalling() to prevent kernel-doc
->>>> warning in drivers/dma-buf/dma-fence.c:
->>>>
->>>> ../drivers/dma-buf/dma-fence.c:291: warning: Function parameter or member 'cookie' not described in 'dma_fence_end_signalling'
->>>>
->>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
->>>> Cc: Sumit Semwal <sumit.semwal@linaro.org>
->>>> Cc: Gustavo Padovan <gustavo@padovan.org>
->>>> Cc: Christian König <christian.koenig@amd.com>
->>>> Cc: linux-media@vger.kernel.org
->>>> Cc: dri-devel@lists.freedesktop.org
->>> Acked-by: Christian König <christian.koenig@amd.com>
->> Will you merge these two to drm-misc-fixes or should someone else?
-> 
-> I was wondering the same thing and just waiting for Randy to reply with please pick them up or I'm going to push them because I have commit access.
+On Tue, Sep 01, 2020 at 05:04:38PM +0200, Ulf Hansson wrote:
+> +#ifdef CONFIG_HAS_DMA
+> +static int mmc_spi_dma_alloc(struct mmc_spi_host *host)
+> +{
+> +	struct spi_device *spi = host->spi;
+> +	struct device *dev;
+> +
+> +	if (!spi->master->dev.parent->dma_mask)
+> +		return 0;
 
-I didn't realize that was needed, but anyway, Christian, please apply these 2
-dma-buf kernel-doc patches.
-
-thanks.
-
-> Regards,
-> Christian.
-> 
->>
->> Always a bit confusing when maintainers reply with acks/r-b but not what
->> they'll do with the patch :-)
-
-Agreed.
-
->> Cheers, Daniel
->>
->>>> ---
->>>>    drivers/dma-buf/dma-fence.c |    1 +
->>>>    1 file changed, 1 insertion(+)
->>>>
->>>> --- lnx-59-rc3.orig/drivers/dma-buf/dma-fence.c
->>>> +++ lnx-59-rc3/drivers/dma-buf/dma-fence.c
->>>> @@ -283,6 +283,7 @@ EXPORT_SYMBOL(dma_fence_begin_signalling
->>>>    /**
->>>>     * dma_fence_end_signalling - end a critical DMA fence signalling section
->>>> + * @cookie: opaque cookie from dma_fence_begin_signalling()
->>>>     *
->>>>     * Closes a critical section annotation opened by dma_fence_begin_signalling().
->>>>     */
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
-
-
--- 
-~Randy
-
+I still don't think this makes sense, as the dma_mask should always
+be non-NULL here.
