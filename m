@@ -2,141 +2,185 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AC5C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5270DC43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9439B2083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361E7214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726419AbgIAJIl (ORCPT
+        id S1726493AbgIAJJA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:08:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgIAJIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:08:41 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD349C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 02:08:40 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 7804A2993BC
-Subject: Re: [PATCH v2] platform/chrome: cros_ec_typec: USB4 support
-To:     Prashant Malani <pmalani@chromium.org>,
-        linux-kernel@vger.kernel.org
-Cc:     rajmohan.mani@intel.com,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-References: <20200710194017.1126000-1-pmalani@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <7c539d28-d1aa-4f4b-ebc4-f92ef3af93d6@collabora.com>
-Date:   Tue, 1 Sep 2020 11:08:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200710194017.1126000-1-pmalani@chromium.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 1 Sep 2020 05:09:00 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2719 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbgIAJJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:09:00 -0400
+Received: from lhreml732-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 2E910473AFED2B69E7F2;
+        Tue,  1 Sep 2020 10:08:58 +0100 (IST)
+Received: from fraeml702-chm.china.huawei.com (10.206.15.51) by
+ lhreml732-chm.china.huawei.com (10.201.108.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.1913.5; Tue, 1 Sep 2020 10:08:57 +0100
+Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
+ fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 1 Sep 2020 11:08:57 +0200
+Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
+ fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
+ Tue, 1 Sep 2020 11:08:57 +0200
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        "mjg59@google.com" <mjg59@google.com>
+CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: RE: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
+ EVM_ALLOW_METADATA_WRITES is set
+Thread-Topic: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
+ EVM_ALLOW_METADATA_WRITES is set
+Thread-Index: AQHWRYqWnNLPRhTOMk2ID5bSdlZ6YalHdJUAgAx1KTA=
+Date:   Tue, 1 Sep 2020 09:08:57 +0000
+Message-ID: <a5e6a5acf2274a6d844b275dacfbabb8@huawei.com>
+References: <20200618160329.1263-2-roberto.sassu@huawei.com>
+         <20200618160458.1579-7-roberto.sassu@huawei.com>
+ <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
+In-Reply-To: <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.48.193.114]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant and Heikki,
+> From: Mimi Zohar [mailto:zohar@linux.ibm.com]
+> Sent: Monday, August 24, 2020 2:18 PM
+> On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
+> > When EVM_ALLOW_METADATA_WRITES is set, EVM allows any operation
+> on
+> > metadata. Its main purpose is to allow users to freely set metadata when
+> > they are protected by a portable signature, until the HMAC key is loaded.
+> >
+> > However, IMA is not notified about metadata changes and, after the first
+> > appraisal, always allows access to the files without checking metadata
+> > again.
+> 
+> ^after the first successful appraisal
+> >
+> > This patch checks in evm_reset_status() if EVM_ALLOW_METADATA
+> WRITES is
+> > enabled and if it is, sets the IMA_CHANGE_XATTR/ATTR bits depending on
+> the
+> > operation performed. At the next appraisal, metadata are revalidated.
+> 
+> EVM modifying IMA bits crosses the boundary between EVM and IMA.
+> There
+> is already an IMA post_setattr hook.  IMA could reset its own bit
+> there.  If necessary EVM could export as a function it's status info.
 
-On 10/7/20 21:40, Prashant Malani wrote:
-> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+I wouldn't try to guess in IMA when EVM resets its status. We would have
+to duplicate the logic to check if an EVM key is loaded, if the passed xattr
+is a POSIX ACL, ...
+
+I think it is better to set a flag, maybe a new one, directly in EVM, to notify
+the integrity subsystem that iint->evm_status is no longer valid.
+
+If the EVM flag is set, IMA would reset the appraisal flags, as it uses
+iint->evm_status for appraisal. We can consider to reset also the measure
+flags when we have a template that includes file metadata.
+
+Roberto
+
+HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
+Managing Director: Li Peng, Li Jian, Shi Yanli
+
+> Mimi
 > 
-> With USB4 mode the mux driver needs the Enter_USB Data
-> Object (EUDO) that was used when the USB mode was entered.
-> Though the object is not available in the driver, it is
-> possible to construct it from the information we have.
-> 
-> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
+> >
+> > This patch also adds a call to evm_reset_status() in
+> > evm_inode_post_setattr() so that EVM won't return the cached status
+> the
+> > next time appraisal is performed.
+> >
+> > Cc: stable@vger.kernel.org # 4.16.x
+> > Fixes: ae1ba1676b88e ("EVM: Allow userland to permit modification of
+> EVM-protected metadata")
+> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+> > ---
+> >  security/integrity/evm/evm_main.c | 14 ++++++++++----
+> >  1 file changed, 10 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/security/integrity/evm/evm_main.c
+> b/security/integrity/evm/evm_main.c
+> > index 41cc6a4aaaab..d4d918183094 100644
+> > --- a/security/integrity/evm/evm_main.c
+> > +++ b/security/integrity/evm/evm_main.c
+> > @@ -478,13 +478,17 @@ int evm_inode_removexattr(struct dentry
+> *dentry, const char *xattr_name)
+> >  	return evm_protect_xattr(dentry, xattr_name, NULL, 0);
+> >  }
+> >
+> > -static void evm_reset_status(struct inode *inode)
+> > +static void evm_reset_status(struct inode *inode, int bit)
+> >  {
+> >  	struct integrity_iint_cache *iint;
+> >
+> >  	iint = integrity_iint_find(inode);
+> > -	if (iint)
+> > +	if (iint) {
+> > +		if (evm_initialized & EVM_ALLOW_METADATA_WRITES)
+> > +			set_bit(bit, &iint->atomic_flags);
+> > +
+> >  		iint->evm_status = INTEGRITY_UNKNOWN;
+> > +	}
+> >  }
+> >
+> >  /**:q
+> > @@ -507,7 +511,7 @@ void evm_inode_post_setxattr(struct dentry
+> *dentry, const char *xattr_name,
+> >  				  && !posix_xattr_acl(xattr_name)))
+> >  		return;
+> >
+> > -	evm_reset_status(dentry->d_inode);
+> > +	evm_reset_status(dentry->d_inode, IMA_CHANGE_XATTR);
+> >
+> >  	evm_update_evmxattr(dentry, xattr_name, xattr_value,
+> xattr_value_len);
+> >  }
+> > @@ -527,7 +531,7 @@ void evm_inode_post_removexattr(struct dentry
+> *dentry, const char *xattr_name)
+> >  	if (!evm_key_loaded() || !evm_protected_xattr(xattr_name))
+> >  		return;
+> >
+> > -	evm_reset_status(dentry->d_inode);
+> > +	evm_reset_status(dentry->d_inode, IMA_CHANGE_XATTR);
+> >
+> >  	evm_update_evmxattr(dentry, xattr_name, NULL, 0);
+> >  }
+> > @@ -600,6 +604,8 @@ void evm_inode_post_setattr(struct dentry
+> *dentry, int ia_valid)
+> >  	if (!evm_key_loaded())
+> >  		return;
+> >
+> > +	evm_reset_status(dentry->d_inode, IMA_CHANGE_ATTR);
+> > +
+> >  	if (ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
+> >  		evm_update_evmxattr(dentry, NULL, NULL, 0);
+> >  }
 > 
 
-Applied for 5.10.
-
-Thanks,
- Enric
-
-> This patch depends on latest usb-next from Greg KH, this commit in
-> particular:
-> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=ad8db94d6813dc659bd4de0531a8a1150559eafb
-> 
-> Changes in v2:
-> - Removed EUDO bits for cable current and tunneling support.
-> 
->  drivers/platform/chrome/cros_ec_typec.c | 33 ++++++++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 0c041b79cbba..a9700275a851 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -13,6 +13,7 @@
->  #include <linux/platform_data/cros_ec_proto.h>
->  #include <linux/platform_data/cros_usbpd_notify.h>
->  #include <linux/platform_device.h>
-> +#include <linux/usb/pd.h>
->  #include <linux/usb/typec.h>
->  #include <linux/usb/typec_altmode.h>
->  #include <linux/usb/typec_dp.h>
-> @@ -494,6 +495,34 @@ static int cros_typec_enable_dp(struct cros_typec_data *typec,
->  	return typec_mux_set(port->mux, &port->state);
->  }
->  
-> +static int cros_typec_enable_usb4(struct cros_typec_data *typec,
-> +				  int port_num,
-> +				  struct ec_response_usb_pd_control_v2 *pd_ctrl)
-> +{
-> +	struct cros_typec_port *port = typec->ports[port_num];
-> +	struct enter_usb_data data;
-> +
-> +	data.eudo = EUDO_USB_MODE_USB4 << EUDO_USB_MODE_SHIFT;
-> +
-> +	/* Cable Speed */
-> +	data.eudo |= pd_ctrl->cable_speed << EUDO_CABLE_SPEED_SHIFT;
-> +
-> +	/* Cable Type */
-> +	if (pd_ctrl->control_flags & USB_PD_CTRL_OPTICAL_CABLE)
-> +		data.eudo |= EUDO_CABLE_TYPE_OPTICAL << EUDO_CABLE_TYPE_SHIFT;
-> +	else if (pd_ctrl->control_flags & USB_PD_CTRL_ACTIVE_CABLE)
-> +		data.eudo |= EUDO_CABLE_TYPE_RE_TIMER << EUDO_CABLE_TYPE_SHIFT;
-> +
-> +	data.active_link_training = !!(pd_ctrl->control_flags &
-> +				       USB_PD_CTRL_ACTIVE_LINK_UNIDIR);
-> +
-> +	port->state.alt = NULL;
-> +	port->state.data = &data;
-> +	port->state.mode = TYPEC_MODE_USB4;
-> +
-> +	return typec_mux_set(port->mux, &port->state);
-> +}
-> +
->  static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
->  				uint8_t mux_flags,
->  				struct ec_response_usb_pd_control_v2 *pd_ctrl)
-> @@ -514,7 +543,9 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
->  	if (ret)
->  		return ret;
->  
-> -	if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
-> +	if (mux_flags & USB_PD_MUX_USB4_ENABLED) {
-> +		ret = cros_typec_enable_usb4(typec, port_num, pd_ctrl);
-> +	} else if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
->  		ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
->  	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
->  		ret = cros_typec_enable_dp(typec, port_num, pd_ctrl);
-> 
