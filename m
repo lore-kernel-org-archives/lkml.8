@@ -2,259 +2,123 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4E6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4636C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 083E4206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF31321527
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="nmMk/gR5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qlO5fZKX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726814AbgIAWO4 (ORCPT
+        id S1728304AbgIAWRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:14:56 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:23317 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726078AbgIAWOy (ORCPT
+        Tue, 1 Sep 2020 18:17:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726526AbgIAWR0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:14:54 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598998492; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=CihyVjIvp+TmDkyAm229UOS4eE/s5fm2jitEPh8edkU=; b=nmMk/gR58/h/DRAmmMSe5bEy6T3In0OkbOInwJjFYfgbEZN9WlLqbaBvpgH3eY/NZJQEX89s
- C0BIgOH0t8cgASX6YxcvlLzLSxTB7jWiGvR+8nST3wMIzMDBp5+vZm9kmMQ/5UCd9O3r0F+E
- UC89aGfastyewmh7sYHtnkSxVlI=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
- 5f4ec7dbd3d3df8c396b1796 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 22:14:51
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4763FC433CA; Tue,  1 Sep 2020 22:14:51 +0000 (UTC)
-Received: from [10.110.73.30] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wcheng)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F64EC433C6;
-        Tue,  1 Sep 2020 22:14:49 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F64EC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=wcheng@codeaurora.org
-Subject: Re: [PATCH v2] usb: dwc3: Stop active transfers before halting the
- controller
-To:     Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-        "balbi@kernel.org" <balbi@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "jackp@codeaurora.org" <jackp@codeaurora.org>
-References: <20200828224440.22091-1-wcheng@codeaurora.org>
- <e7e0cac8-b0f1-3173-a54a-ccf061807c0c@synopsys.com>
-From:   Wesley Cheng <wcheng@codeaurora.org>
-Message-ID: <d9ff68b0-6f5e-bf6d-9dfb-daac8b0a7abe@codeaurora.org>
-Date:   Tue, 1 Sep 2020 15:14:49 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <e7e0cac8-b0f1-3173-a54a-ccf061807c0c@synopsys.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 1 Sep 2020 18:17:26 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D65CC061246;
+        Tue,  1 Sep 2020 15:17:24 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id h2so1270791plr.0;
+        Tue, 01 Sep 2020 15:17:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=8oVSt+XXgts9V9hBX8ORH+AS6m2J43vGA4wo7bjMGSw=;
+        b=qlO5fZKXWIaweztfSZt5lscCfMeb95G8MhWsQ/lSaJ+FDb1SNokcNpp+7z3DLE4rF3
+         2dysm9rS4OSd3k64RrCb2iDLfTihhQIBsWHIM4pO3zun/ZZiHw5M0ZYz7xotRRp0Vl6H
+         gVuKb6zzb+/D4Aziqs+kgokfp0Tdgx+wAi7EGpiAZ/wFNGynAtvTJuP+UbdooYJgbhjP
+         o7AepCWbCypJyziUVIcTQr08TEiIxGgWthqCZQfDFV+gKNvojJajEcK9KwneuTuD6th6
+         msoaUb3F3Quj/oIp2iNYcujpjaBrVxAyuvNikmWWuoEg7qjTdOjx5lIdZ2jVaiaUQPfR
+         XRDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=8oVSt+XXgts9V9hBX8ORH+AS6m2J43vGA4wo7bjMGSw=;
+        b=ALIO8OW2BRqHXGaYnyIl/Br/NpqTSmuVlnURkFmOfol4rrjvPy28qBySBvtCU0Xw4a
+         nOp5ziw1gVD11xhNMXKyuoOONB3ah0FmHOQsc1o22xchaM1466JGjb+nvHuKUE7H5FIN
+         GAmoJFJ64QoXygxNEeYAKf+i3iqwnGz8Qk1oq0p91tBicYNKOkIN0299/JcNMUUcaAPw
+         Y8ZJ8Ka6Gz5CqJiWBeqW/TChjoOLE4Ke3CsvU18jwutVYAL2nkEzx+vPXEVIHMk4U/Qd
+         4bBlNGHSSut061V9KmU4mtKvvsi29x2A5dyxTpRXCmRYTNyCFwZmktWdjekqfNc8Ox+r
+         5qyw==
+X-Gm-Message-State: AOAM530wSMOLbikDFwlzmeAvrJKnn23hzuTcFSeCnOj03FMhTRU3JHSB
+        SZsVqRujl3KuXy48mV21kMs=
+X-Google-Smtp-Source: ABdhPJzdJq9eyRVuKNEYyNWukVThnPxVvwkVZFW01G6oPEDkIuTUBku5fZJKBabSN7o4EGbI7+mmXA==
+X-Received: by 2002:a17:902:6ac2:: with SMTP id i2mr3270568plt.71.1598998644148;
+        Tue, 01 Sep 2020 15:17:24 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id w203sm3201356pfc.97.2020.09.01.15.17.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 15:17:23 -0700 (PDT)
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     hch@lst.de
+Cc:     sfr@canb.auug.org.au, mpe@ellerman.id.au, benh@kernel.crashing.org,
+        paulus@samba.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        linux-alpha@vger.kernel.org, tony.luck@intel.com,
+        fenghua.yu@intel.com, linux-ia64@vger.kernel.org,
+        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, davem@davemloft.net,
+        sparclinux@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH 2/2] dma-mapping: set default segment_boundary_mask to ULONG_MAX
+Date:   Tue,  1 Sep 2020 15:16:46 -0700
+Message-Id: <20200901221646.26491-3-nicoleotsuka@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901221646.26491-1-nicoleotsuka@gmail.com>
+References: <20200901221646.26491-1-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The default segment_boundary_mask was set to DMA_BIT_MAKS(32)
+a decade ago by referencing SCSI/block subsystem, as a 32-bit
+mask was good enough for most of the devices.
 
+Now more and more drivers set dma_masks above DMA_BIT_MAKS(32)
+while only a handful of them call dma_set_seg_boundary(). This
+means that most drivers have a 4GB segmention boundary because
+DMA API returns a 32-bit default value, though they might not
+really have such a limit.
 
-On 8/29/2020 2:35 PM, Thinh Nguyen wrote:
-> Wesley Cheng wrote:
->> In the DWC3 databook, for a device initiated disconnect or bus reset, the
->> driver is required to send dependxfer commands for any pending transfers.
->> In addition, before the controller can move to the halted state, the SW
->> needs to acknowledge any pending events.  If the controller is not halted
->> properly, there is a chance the controller will continue accessing stale or
->> freed TRBs and buffers.
->>
->> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
->>
->> ---
->> Changes in v2:
->>  - Moved cleanup code to the pullup() API to differentiate between device
->>    disconnect and hibernation.
->>  - Added cleanup code to the bus reset case as well.
->>  - Verified the move to pullup() did not reproduce the problen using the
->>    same test sequence.
->>
->> Verified fix by adding a check for ETIMEDOUT during the run stop call.
->> Shell script writing to the configfs UDC file to trigger disconnect and
->> connect.  Batch script to have PC execute data transfers over adb (ie adb
->> push)  After a few iterations, we'd run into a scenario where the
->> controller wasn't halted.  With the following change, no failed halts after
->> many iterations.
->> ---
->>  drivers/usb/dwc3/ep0.c    |  2 +-
->>  drivers/usb/dwc3/gadget.c | 52 ++++++++++++++++++++++++++++++++++++++-
->>  2 files changed, 52 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/usb/dwc3/ep0.c b/drivers/usb/dwc3/ep0.c
->> index 59f2e8c31bd1..456aa87e8778 100644
->> --- a/drivers/usb/dwc3/ep0.c
->> +++ b/drivers/usb/dwc3/ep0.c
->> @@ -197,7 +197,7 @@ int dwc3_gadget_ep0_queue(struct usb_ep *ep, struct usb_request *request,
->>  	int				ret;
->>  
->>  	spin_lock_irqsave(&dwc->lock, flags);
->> -	if (!dep->endpoint.desc) {
->> +	if (!dep->endpoint.desc || !dwc->pullups_connected) {
->>  		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
->>  				dep->name);
->>  		ret = -ESHUTDOWN;
->> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
->> index 3ab6f118c508..df8d89d6bdc9 100644
->> --- a/drivers/usb/dwc3/gadget.c
->> +++ b/drivers/usb/dwc3/gadget.c
->> @@ -1516,7 +1516,7 @@ static int __dwc3_gadget_ep_queue(struct dwc3_ep *dep, struct dwc3_request *req)
->>  {
->>  	struct dwc3		*dwc = dep->dwc;
->>  
->> -	if (!dep->endpoint.desc) {
->> +	if (!dep->endpoint.desc || !dwc->pullups_connected) {
->>  		dev_err(dwc->dev, "%s: can't queue to disabled endpoint\n",
->>  				dep->name);
->>  		return -ESHUTDOWN;
->> @@ -1926,6 +1926,24 @@ static int dwc3_gadget_set_selfpowered(struct usb_gadget *g,
->>  	return 0;
->>  }
->>  
->> +static void dwc3_stop_active_transfers(struct dwc3 *dwc)
->> +{
->> +	u32 epnum;
->> +
->> +	for (epnum = 2; epnum < DWC3_ENDPOINTS_NUM; epnum++) {
->> +		struct dwc3_ep *dep;
->> +
->> +		dep = dwc->eps[epnum];
->> +		if (!dep)
->> +			continue;
->> +
->> +		if (!(dep->flags & DWC3_EP_ENABLED))
->> +			continue;
-> 
-> Don't do the enabled check here. Let the dwc3_stop_active_transfer() do
-> that checking.
-> 
+The default segment_boundary_mask should mean "no limit" since
+the device doesn't explicitly set the mask. But a 32-bit mask
+certainly limits those devices capable of 32+ bits addressing.
 
-Hi Thinh,
+So this patch sets default segment_boundary_mask to ULONG_MAX.
 
-Thanks for the detailed review, as always.  Got it, we can allow that to
-catch it based off the DWC3_EP_TRANSFER_STARTED.
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+ include/linux/dma-mapping.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->> +
->> +		dwc3_remove_requests(dwc, dep);
->> +	}
->> +}
->> +
->>  static int dwc3_gadget_run_stop(struct dwc3 *dwc, int is_on, int suspend)
->>  {
->>  	u32			reg;
->> @@ -1994,9 +2012,39 @@ static int dwc3_gadget_pullup(struct usb_gadget *g, int is_on)
->>  		}
->>  	}
->>  
->> +	/*
->> +	 * Synchronize and disable any further event handling while controller
->> +	 * is being enabled/disabled.
->> +	 */
->> +	disable_irq(dwc->irq_gadget);
-> 
-> I think it's better to do dwc3_gadget_disable_irq(). This only stops
-> handling events. Although it's unlikely, the controller may still
-> generate events before it's halted.
-> 
-
-I think its better if we can do both.  At least with the disable_irq()
-call present, we can ensure the irq handlers are complete, or we can do
-as Felipe suggested, and first disable the controller events (using
-dwc3_gadget_disable_irq()) and then calling synchronize_irq().
-
-The concern I had is the pullup() API updating the lpos, and the hardirq
-handler referencing it to update the evt buf cache and waking up the
-threaded irq handler. (since we don't clear the evt->count explicitly,
-it may reference empty/stale events)
-
->>  	spin_lock_irqsave(&dwc->lock, flags);
->> +
->> +	/* Controller is not halted until pending events are acknowledged */
->> +	if (!is_on) {
->> +		u32 reg;
->> +
->> +		__dwc3_gadget_ep_disable(dwc->eps[0]);
->> +		__dwc3_gadget_ep_disable(dwc->eps[1]);
-> 
-> You can just do __dwc3_gadget_stop(), and do that after
-> dwc3_stop_active_transfers().
-> 
-
-Got it.
-
->> +
->> +		/*
->> +		 * The databook explicitly mentions for a device-initiated
->> +		 * disconnect sequence, the SW needs to ensure that it ends any
->> +		 * active transfers.
->> +		 */
->> +		dwc3_stop_active_transfers(dwc);
->> +
->> +		reg = dwc3_readl(dwc->regs, DWC3_GEVNTCOUNT(0));
->> +		reg &= DWC3_GEVNTCOUNT_MASK;
-> 
-> Can we use another variable "count" instead of reusing reg to make it a
-> little clearer?
-> 
-
-Sure, I'll add another variable.
-
-Thanks
-Wesley
-
->> +		if (reg > 0) {
->> +			dwc3_writel(dwc->regs, DWC3_GEVNTCOUNT(0), reg);
->> +			dwc->ev_buf->lpos = (dwc->ev_buf->lpos + reg) %
->> +						dwc->ev_buf->length;
->> +		}
->> +	}
->> +
->>  	ret = dwc3_gadget_run_stop(dwc, is_on, false);
->>  	spin_unlock_irqrestore(&dwc->lock, flags);
->> +	enable_irq(dwc->irq_gadget);
->>  
->>  	return ret;
->>  }
->> @@ -3100,6 +3148,8 @@ static void dwc3_gadget_reset_interrupt(struct dwc3 *dwc)
->>  	}
->>  
->>  	dwc3_reset_gadget(dwc);
->> +	/* Stop any active/pending transfers when receiving bus reset */
->> +	dwc3_stop_active_transfers(dwc);
->>  
->>  	reg = dwc3_readl(dwc->regs, DWC3_DCTL);
->>  	reg &= ~DWC3_DCTL_TSTCTRL_MASK;
-> 
-> Looks good to me.
-> 
-> Thanks,
-> Thinh
-> 
-
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index faab0a8210b9..df0bff2ea750 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -629,7 +629,7 @@ static inline unsigned long dma_get_seg_boundary(struct device *dev)
+ {
+ 	if (dev->dma_parms && dev->dma_parms->segment_boundary_mask)
+ 		return dev->dma_parms->segment_boundary_mask;
+-	return DMA_BIT_MASK(32);
++	return ULONG_MAX;
+ }
+ 
+ /**
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.17.1
+
