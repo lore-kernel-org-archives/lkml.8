@@ -2,110 +2,141 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96DECC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AC5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 612A72083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:07:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="TTmHJrIZ"
+	by mail.kernel.org (Postfix) with ESMTP id 9439B2083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726380AbgIAJHa (ORCPT
+        id S1726419AbgIAJIl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:07:30 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:22494 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbgIAJH2 (ORCPT
+        Tue, 1 Sep 2020 05:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51712 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgIAJIl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:07:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598951248; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=r4jgLB2Y7HqxGBSoMmSZHzBfBOvDTq/waBu4T4pLAgY=;
- b=TTmHJrIZDO/zXuJpUTuv13lxDU975lUTTOiFbAeJM/HBUNbM4Pt5H6a4nweEwXz0LRpXuXZa
- 3KZexhTkqpfCAON8M7J+5sL34LLGjfnZitXVDdYvCwcUgAOfU5v050iD54gxUsSeuu4yWYY3
- rdUrliw59ljUBG+dTyMz9L5ra28=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5f4e0f367f21d51b300b6cea (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:07:02
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 09D7CC433A0; Tue,  1 Sep 2020 09:07:01 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D0A85C433C6;
-        Tue,  1 Sep 2020 09:06:58 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D0A85C433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Sep 2020 05:08:41 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD349C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 02:08:40 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 7804A2993BC
+Subject: Re: [PATCH v2] platform/chrome: cros_ec_typec: USB4 support
+To:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org
+Cc:     rajmohan.mani@intel.com,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200710194017.1126000-1-pmalani@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <7c539d28-d1aa-4f4b-ebc4-f92ef3af93d6@collabora.com>
+Date:   Tue, 1 Sep 2020 11:08:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
+In-Reply-To: <20200710194017.1126000-1-pmalani@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [15/28] mt7601u: phy: Fix misnaming when documented function
- parameter 'dac'
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200819072402.3085022-16-lee.jones@linaro.org>
-References: <20200819072402.3085022-16-lee.jones@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Jakub Kicinski <kubakici@wp.pl>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Felix Fietkau <nbd@openwrt.org>,
-        linux-mediatek@lists.infradead.org
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901090702.09D7CC433A0@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 09:07:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> wrote:
+Hi Prashant and Heikki,
 
-> Fixes the following W=1 kernel build warning(s):
+On 10/7/20 21:40, Prashant Malani wrote:
+> From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > 
->  drivers/net/wireless/mediatek/mt7601u/phy.c:1216: warning: Function parameter or member 'dac' not described in 'mt7601u_set_tx_dac'
->  drivers/net/wireless/mediatek/mt7601u/phy.c:1216: warning: Excess function parameter 'path' description in 'mt7601u_set_tx_dac'
+> With USB4 mode the mux driver needs the Enter_USB Data
+> Object (EUDO) that was used when the USB mode was entered.
+> Though the object is not available in the driver, it is
+> possible to construct it from the information we have.
 > 
-> Cc: Jakub Kicinski <kubakici@wp.pl>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Matthias Brugger <matthias.bgg@gmail.com>
-> Cc: Felix Fietkau <nbd@openwrt.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: linux-mediatek@lists.infradead.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Jakub Kicinski <kubakici@wp.pl>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+> 
 
-10 patches applied to wireless-drivers-next.git, thanks.
+Applied for 5.10.
 
-e6cf87bfe869 mt7601u: phy: Fix misnaming when documented function parameter 'dac'
-a8433a92521b rsi: Fix misnamed function parameter 'rx_pkt'
-5dfcdc7a520e rsi: Fix a few kerneldoc misdemeanours
-311175173c8a rsi: Fix a myriad of documentation issues
-9463fd554bb8 rsi: File header comments should not be kernel-doc
-7951a3bfa2b1 iwlegacy: 4965: Demote a bunch of nonconformant kernel-doc headers
-2de64ca7c9fa brcmfmac: p2p: Deal with set but unused variables
-457023556e94 libertas: Fix misnaming for function param 'device'
-f030ed4079d0 libertas_tf: Fix function documentation formatting errors
-ec511969097f hostap: Remove set but unused variable 'hostscan'
+Thanks,
+ Enric
 
--- 
-https://patchwork.kernel.org/patch/11723151/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
-
+> This patch depends on latest usb-next from Greg KH, this commit in
+> particular:
+> https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git/commit/?h=usb-next&id=ad8db94d6813dc659bd4de0531a8a1150559eafb
+> 
+> Changes in v2:
+> - Removed EUDO bits for cable current and tunneling support.
+> 
+>  drivers/platform/chrome/cros_ec_typec.c | 33 ++++++++++++++++++++++++-
+>  1 file changed, 32 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 0c041b79cbba..a9700275a851 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/platform_data/cros_ec_proto.h>
+>  #include <linux/platform_data/cros_usbpd_notify.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/usb/pd.h>
+>  #include <linux/usb/typec.h>
+>  #include <linux/usb/typec_altmode.h>
+>  #include <linux/usb/typec_dp.h>
+> @@ -494,6 +495,34 @@ static int cros_typec_enable_dp(struct cros_typec_data *typec,
+>  	return typec_mux_set(port->mux, &port->state);
+>  }
+>  
+> +static int cros_typec_enable_usb4(struct cros_typec_data *typec,
+> +				  int port_num,
+> +				  struct ec_response_usb_pd_control_v2 *pd_ctrl)
+> +{
+> +	struct cros_typec_port *port = typec->ports[port_num];
+> +	struct enter_usb_data data;
+> +
+> +	data.eudo = EUDO_USB_MODE_USB4 << EUDO_USB_MODE_SHIFT;
+> +
+> +	/* Cable Speed */
+> +	data.eudo |= pd_ctrl->cable_speed << EUDO_CABLE_SPEED_SHIFT;
+> +
+> +	/* Cable Type */
+> +	if (pd_ctrl->control_flags & USB_PD_CTRL_OPTICAL_CABLE)
+> +		data.eudo |= EUDO_CABLE_TYPE_OPTICAL << EUDO_CABLE_TYPE_SHIFT;
+> +	else if (pd_ctrl->control_flags & USB_PD_CTRL_ACTIVE_CABLE)
+> +		data.eudo |= EUDO_CABLE_TYPE_RE_TIMER << EUDO_CABLE_TYPE_SHIFT;
+> +
+> +	data.active_link_training = !!(pd_ctrl->control_flags &
+> +				       USB_PD_CTRL_ACTIVE_LINK_UNIDIR);
+> +
+> +	port->state.alt = NULL;
+> +	port->state.data = &data;
+> +	port->state.mode = TYPEC_MODE_USB4;
+> +
+> +	return typec_mux_set(port->mux, &port->state);
+> +}
+> +
+>  static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+>  				uint8_t mux_flags,
+>  				struct ec_response_usb_pd_control_v2 *pd_ctrl)
+> @@ -514,7 +543,9 @@ static int cros_typec_configure_mux(struct cros_typec_data *typec, int port_num,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
+> +	if (mux_flags & USB_PD_MUX_USB4_ENABLED) {
+> +		ret = cros_typec_enable_usb4(typec, port_num, pd_ctrl);
+> +	} else if (mux_flags & USB_PD_MUX_TBT_COMPAT_ENABLED) {
+>  		ret = cros_typec_enable_tbt(typec, port_num, pd_ctrl);
+>  	} else if (mux_flags & USB_PD_MUX_DP_ENABLED) {
+>  		ret = cros_typec_enable_dp(typec, port_num, pd_ctrl);
+> 
