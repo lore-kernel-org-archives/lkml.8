@@ -2,144 +2,100 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAE3C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CBFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5DC0B206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:47:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen.com header.i=@soleen.com header.b="SMKY9Vrr"
+	by mail.kernel.org (Postfix) with ESMTP id 5E84F206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:47:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728019AbgIAMrh (ORCPT
+        id S1728054AbgIAMrk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57060 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727924AbgIAMqZ (ORCPT
+        Tue, 1 Sep 2020 08:47:40 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:53455 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgIAMrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:46:25 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861F5C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 05:46:18 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id di5so404718qvb.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 05:46:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0EbJzeQX4jAOlaQv090h8txgX83njocsNSsm4gpQ07M=;
-        b=SMKY9VrrqKbwRQ0E+ot5l7RltqosCCRkRECjN3d2NrsZRpvpNpcjobwDjf2wt4PpGe
-         SbyhYFaiZs12gjEMRtRugWt5x1X7rl8f7Z478CRZhmId+Es1H+eERYn25MLlPfOnup54
-         jk+ttq/l9yb0tYI9uag64iEDPmQSxYwdJW/W5bs8OR/OfPWDTaJc4qUihUxjpCIWk240
-         SFLki13Wt3I5UuhaxHHEbwWFKqAnbPXgb5jqr2iNO+hIltZC0fTDQRpo4X7mMiQ54JNX
-         v/hk+J6jVL9tx+bSV1YOAJZ7G0Kld0MCofBHLhbSuVvxZNFGj11e6KGm8ccVQ4Qp2e+K
-         i+ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0EbJzeQX4jAOlaQv090h8txgX83njocsNSsm4gpQ07M=;
-        b=HZ9VS0xhL+z3viaQL2x7rMzGM+Fu7aq5Xe1NbbO6pwJ5Y+eP5RItTdQ5cDRsxlMSVE
-         lkkiXc2sa/2FBOIf9iv+2GWvv0X2WFocqg/XOG2AXfUtzM+WIDWKzgM6MxcgBv71/1yp
-         7J9R1Wmg6WdXFuIufgeEeFAX79c6SHi+PtgNVz9RR5R6U1ThBEY0M/U4T9z0vPnRNMZ6
-         lGLrLbXMJbtmid9BPOBG+QkyC1+gIcFSwHrj3YbUhoGJkaTioyizkt24EjO1/qz8G7TV
-         xQD689kfBysDImY1c/IqeOmgPx7cBCp2ZVcAoe7gdtVrJDrYl+bQWfQoEH2bh+5eksEE
-         OWZw==
-X-Gm-Message-State: AOAM530oXHLK/yO2dY90R5N125jmqoEwYiNcTRFCy9TMTuDqfbj7H+W8
-        z36/Nuepog7P+K4/tY9KGkfiUOjFI72zPw==
-X-Google-Smtp-Source: ABdhPJzI6VbDC4fq5pUk5Y0mvd9RYe8P9jfixUEyckDCLJXrCHMcKaIXzo96VnnXI5FL5iJI6WpL1g==
-X-Received: by 2002:ad4:524e:: with SMTP id s14mr1683355qvq.36.1598964377184;
-        Tue, 01 Sep 2020 05:46:17 -0700 (PDT)
-Received: from localhost.localdomain (c-73-69-118-222.hsd1.nh.comcast.net. [73.69.118.222])
-        by smtp.gmail.com with ESMTPSA id l95sm1275537qte.36.2020.09.01.05.46.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 05:46:16 -0700 (PDT)
-From:   Pavel Tatashin <pasha.tatashin@soleen.com>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        mhocko@suse.com, linux-mm@kvack.org, pasha.tatashin@soleen.com
-Subject: [PATCH] mm/memory_hotplug: drain per-cpu pages again during memory offline
-Date:   Tue,  1 Sep 2020 08:46:15 -0400
-Message-Id: <20200901124615.137200-1-pasha.tatashin@soleen.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 1 Sep 2020 08:47:16 -0400
+Received: from mail-qt1-f177.google.com ([209.85.160.177]) by
+ mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MuUWi-1kUCnk0TgY-00rWwS for <linux-kernel@vger.kernel.org>; Tue, 01 Sep
+ 2020 14:47:10 +0200
+Received: by mail-qt1-f177.google.com with SMTP id b3so698121qtg.13
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 05:47:09 -0700 (PDT)
+X-Gm-Message-State: AOAM532fabhHKWDoPLYi/0WWkPE4Bp9d5MhZBPOqv6ucRM77EuaHGzJY
+        wrj2s6jOZyTCjC50HaHDTdYI6QM9qg+2qh1jNJw=
+X-Google-Smtp-Source: ABdhPJyEX1Bj17gYYbPbQRBgq2qQMyZPZIpAPBTqH2kyUvklm+l3HhpmVOla7Px2A9na4NmbDSFrdP0TE41yus16msQ=
+X-Received: by 2002:ac8:46d7:: with SMTP id h23mr1554599qto.18.1598964429025;
+ Tue, 01 Sep 2020 05:47:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1598952616-6416-1-git-send-email-prime.zeng@hisilicon.com>
+In-Reply-To: <1598952616-6416-1-git-send-email-prime.zeng@hisilicon.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 1 Sep 2020 14:46:52 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1SJEEJ_U9Vai1jCyXYEH=qcsk+zaeo9sjzbB5qByPKDA@mail.gmail.com>
+Message-ID: <CAK8P3a1SJEEJ_U9Vai1jCyXYEH=qcsk+zaeo9sjzbB5qByPKDA@mail.gmail.com>
+Subject: Re: [PATCH] time: Avoid undefined behaviour in timespec64_to_ns
+To:     Zeng Tao <prime.zeng@hisilicon.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:850DmXH/rTlWd/nxehZmZuhDMjNFqASnRAD925F+4UZe/2itSh9
+ L4hvoK0J4b0jE57zHhb1NT43zf4l1ybhRrsBfPf3wqKu/2ZQeGOXG7QMCxivMTFvGveMM+o
+ GfgYwKmRMZawSxUfq1GK+q5x8M+bCSj5s8RSoLIzVvpUZFgx095plv+uzr8qcJjAvs4lz3f
+ UPIWsRXYv5MjByhVCG+qA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:LzUa6R8TRk0=:fiPQ4iNPwKzJuwRaAhGSJy
+ zX78459wEMI/FyNi+fAAMWGbPS2WzE7MUIhhAr27HZsR8J5pRDZ2WJSdsH+IoLjBWTpkQ+iui
+ O5QjqwXx+2BiOfq5JiQYBmBhIT50SS01mKBDo1AuDiJVdYpHjMmFDb6T9+2LzIZQ9suAA6tjt
+ SUtSka+4nuqMBUltDGGK+Zr7rwQudYIuwOa64qeD+Q9yvylueaXJgBA3bCMWBmSUeQz4sYYJ7
+ NUPxKM0G2BQHWSTyVAWFO96dBUfo1G38rdKlNg3GNU8CsbMn/MSh5DzujShJkMoYQraPoli3M
+ 6xUrfAZy/qTUl32ARjzdNm1ubDaYNb2G0UnzyKoCHymOGEn9bCpCqJqljYupCfUJTmfwB5zBR
+ PJ32mNkEDWYmsLEYhLEHsW9HCofKXkvB/OM2i8hygcjld1jyODlIB6fRKLPZJY7pnqpBZAFFT
+ G/aGrNwDTGSV/5sv6vUHNrLtRJDCz4GFNWtmqW0OTVYAUhPw7YrhGHaF4KCv1CnLWOjUX2tEo
+ SbYRX5vzMfsOkBbrInI4vInXzZQg9tFmkfcUIRo2rFECL/RHk5eYCA1i3xcLtMuCAXDw4de4t
+ r26egOW5ZxHrTH7dvm/LwlpiB1K8mzM1rBzUCHF6nUZdzKSnYk0g7kGg+487Aiy1BiKfqZ1uH
+ YIH33reTsj+oNkdtcIaTnihjN0RMcTv0x0LfwNVMw+0/IDMI41LgDoIkEfQtOyBQpnBxapptK
+ BIjkwD0H/Cyt0v/BWogzFVBRFpENIn+iCXnsteCZvD6rdaJAmgEzIJ9HR5gVkDzaA64UK9yDC
+ XlljCcWy6ht0ARaSrOla0HuqvFenQbXYyLHmqGrsBfQKgoCyYhBdisp9h5hy5Crfodc5+Ve
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a race during page offline that can lead to infinite loop:
-a page never ends up on a buddy list and __offline_pages() keeps
-retrying infinitely or until a termination signal is received.
+On Tue, Sep 1, 2020 at 11:32 AM Zeng Tao <prime.zeng@hisilicon.com> wrote:
+>
+> Since commit bd40a175769d ("y2038: itimer: change implementation to timespec64")
+> we have break the time clamping which handles the potential overflow.
 
-Thread#1 - a new process:
+Indeed, good catch!
 
-load_elf_binary
- begin_new_exec
-  exec_mmap
-   mmput
-    exit_mmap
-     tlb_finish_mmu
-      tlb_flush_mmu
-       release_pages
-        free_unref_page_list
-         free_unref_page_prepare
-          set_pcppage_migratetype(page, migratetype);
-             // Set page->index migration type below  MIGRATE_PCPTYPES
+And I broke it despite the comment telling me about the problem.
 
-Thread#2 - hot-removes memory
-__offline_pages
-  start_isolate_page_range
-    set_migratetype_isolate
-      set_pageblock_migratetype(page, MIGRATE_ISOLATE);
-        Set migration type to MIGRATE_ISOLATE-> set
-        drain_all_pages(zone);
-             // drain per-cpu page lists to buddy allocator.
+> In this patch, we fix it in the timespec64_to_ns because there is
+> possiblity to cause the same undefined behaviour on overflow whenever
+> the function is called.
 
-Thread#1 - continue
-         free_unref_page_commit
-           migratetype = get_pcppage_migratetype(page);
-              // get old migration type
-           list_add(&page->lru, &pcp->lists[migratetype]);
-              // add new page to already drained pcp list
+I checked the most important callers of this function, and I agree
+that truncating at the maximum would be sensible in most cases
+here.
 
-Thread#2
-Never drains pcp again, and therefore gets stuck in the loop.
+In timekeeping_init(), there is already a check for
+timespec64_valid_settod() that limits it even further, but that
+wouldn't make sense for most callers.
 
-The fix is to try to drain per-cpu lists again after
-check_pages_isolated_cb() fails.
+> Fixes: bd40a175769d ("y2038: itimer: change implementation to timespec64")
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: stable@vger.kernel.org
----
- mm/memory_hotplug.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+This one caused the regression, but if we add the check here, it
+may be best to also add it in prior kernels that may have the same
+bug in other callers of the same function. Maybe backport all the
+way to stable kernels that first added timespec64?
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index e9d5ab5d3ca0..d6d54922bfce 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1575,6 +1575,15 @@ static int __ref __offline_pages(unsigned long start_pfn,
- 		/* check again */
- 		ret = walk_system_ram_range(start_pfn, end_pfn - start_pfn,
- 					    NULL, check_pages_isolated_cb);
-+		/*
-+		 * per-cpu pages are drained in start_isolate_page_range, but if
-+		 * there are still pages that are not free, make sure that we
-+		 * drain again, because when we isolated range we might
-+		 * have raced with another thread that was adding pages to
-+		 * pcp list.
-+		 */
-+		if (ret)
-+			drain_all_pages(zone);
- 	} while (ret);
- 
- 	/* Ok, all of our target is isolated.
--- 
-2.25.1
+Cc <stable@vger.kernel.org> # v3.17+
 
+> Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
