@@ -2,52 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C008AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0115C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89FA72067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683E32067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978705;
-	bh=bpAPGWFkXj0y4Gl9wBaXlkTFfrLh15LKfUJ8jWWZ0SI=;
+	s=default; t=1598978710;
+	bh=PBjywAkB5vZAJ4hhSMwUDs22mIJkEDd3jovDCARY+7U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fj7vheb1Kjnk47v5WiZFozZMSO2uJI3qL5cPynLn/n3/CLdQ9pr+gc9a3mCAawPfj
-	 ncO6gnIZhLHt7w6a0iAfVzmftFj/q0C1d1jfY3ZXphz23RoTIk3nFTc5fdXHojqsJH
-	 O0fSjSAbulvjmo1i+ZJ8+XXpQRKfUmX/LfahUSRs=
+	b=rM7mHYLrgSQR4iG1oHlnVHB0DWoO4jBGSAqDajmbpjMr1DwhN814aHFVniHA6+ruS
+	 0XWVYB4zZpX/xBKFQhhp5EcUJ7Kb68FI0UX5ffi08XVa+mzThEhgWqXwjuqNAJFQnW
+	 ovTBoee/D83Wy7TTcBWUpmxmvjw/SvHqlDmgjvLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730438AbgIAQpC (ORCPT
+        id S1730306AbgIAQpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:45:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54742 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:45:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730219AbgIAP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:36 -0400
+        id S1730213AbgIAP1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:33 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB6DE206FA;
-        Tue,  1 Sep 2020 15:27:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BD752078B;
+        Tue,  1 Sep 2020 15:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974055;
-        bh=bpAPGWFkXj0y4Gl9wBaXlkTFfrLh15LKfUJ8jWWZ0SI=;
+        s=default; t=1598974052;
+        bh=PBjywAkB5vZAJ4hhSMwUDs22mIJkEDd3jovDCARY+7U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u3SA1S4ulj+kaGLtRYHfGwFWgcFcTRynPnZ6IGsRgP76ro+kskTRu0aMnCM3RJk0I
-         dUmy1+cEQ/Ae9sEmTZsFqW3taHRRMo/sAwqUdrgBly41Ch9OsFAEUbm/JlNZPDhipo
-         m6XtFsNdRSfrMTnFmG8l2hJStbln3eYXrEtWwPKE=
+        b=uNj3VvcL5Hi5iEpGOHv8epPFF+w2I/HLOA4sL5PTSwr2vFLWJ0oyxO6ImLqba3+yw
+         ym+oELKuBIqYpyxhdkJStgY/fR7p3PcSc9lIwgUVaDwnEfw032k+IAbypGnLrcpjA7
+         AF46ltWPvCJf5gvxAos9kLjMJqXAn8njpaMuGsZ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 003/214] gre6: Fix reception with IP6_TNL_F_RCV_DSCP_COPY
-Date:   Tue,  1 Sep 2020 17:08:03 +0200
-Message-Id: <20200901150953.122920456@linuxfoundation.org>
+        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 025/214] scsi: target: tcmu: Fix crash on ARM during cmd completion
+Date:   Tue,  1 Sep 2020 17:08:25 +0200
+Message-Id: <20200901150954.179618374@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,42 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit 272502fcb7cda01ab07fc2fcff82d1d2f73d43cc ]
+[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
 
-When receiving an IPv4 packet inside an IPv6 GRE packet, and the
-IP6_TNL_F_RCV_DSCP_COPY flag is set on the tunnel, the IPv4 header would
-get corrupted. This is due to the common ip6_tnl_rcv() function assuming
-that the inner header is always IPv6. This patch checks the tunnel
-protocol for IPv4 inner packets, but still defaults to IPv6.
+If tcmu_handle_completions() has to process a padding shorter than
+sizeof(struct tcmu_cmd_entry), the current call to
+tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
+param is wrong and causes crashes on e.g. ARM, because
+tcmu_flush_dcache_range() in this case calls
+flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
+address above the end of the vmalloc'ed area.
 
-Fixes: 308edfdf1563 ("gre6: Cleanup GREv6 receive path, call common GRE functions")
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The fix is to use the minimum of remaining ring space and sizeof(struct
+tcmu_cmd_entry) as the length param.
+
+The patch was tested on kernel 4.19.118.
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
+
+Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/ip6_tunnel.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/target/target_core_user.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/net/ipv6/ip6_tunnel.c
-+++ b/net/ipv6/ip6_tunnel.c
-@@ -860,7 +860,15 @@ int ip6_tnl_rcv(struct ip6_tnl *t, struc
- 		struct metadata_dst *tun_dst,
- 		bool log_ecn_err)
- {
--	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, ip6ip6_dscp_ecn_decapsulate,
-+	int (*dscp_ecn_decapsulate)(const struct ip6_tnl *t,
-+				    const struct ipv6hdr *ipv6h,
-+				    struct sk_buff *skb);
-+
-+	dscp_ecn_decapsulate = ip6ip6_dscp_ecn_decapsulate;
-+	if (tpi->proto == htons(ETH_P_IP))
-+		dscp_ecn_decapsulate = ip4ip6_dscp_ecn_decapsulate;
-+
-+	return __ip6_tnl_rcv(t, skb, tpi, tun_dst, dscp_ecn_decapsulate,
- 			     log_ecn_err);
- }
- EXPORT_SYMBOL(ip6_tnl_rcv);
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index d766fb14942b3..8888cdf3eead9 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1220,7 +1220,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
+ 
+ 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
+ 
+-		tcmu_flush_dcache_range(entry, sizeof(*entry));
++		/*
++		 * Flush max. up to end of cmd ring since current entry might
++		 * be a padding that is shorter than sizeof(*entry)
++		 */
++		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
++					       udev->cmdr_size);
++		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
++					ring_left : sizeof(*entry));
+ 
+ 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
+ 			UPDATE_HEAD(udev->cmdr_last_cleaned,
+-- 
+2.25.1
+
 
 
