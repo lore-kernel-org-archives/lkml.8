@@ -2,530 +2,182 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.4 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCC0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E98AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD497206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AD51206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E3XQEIWX"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="fFtlmKxv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730984AbgIAPcU (ORCPT
+        id S1731914AbgIAQXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:31086 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730618AbgIAPan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598974241;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=xu3cVcioCl1IrGTebVXQzmJa6KU5z6bxH+TuHDlDuzo=;
-        b=E3XQEIWXwuytod2U+CJD3jQ4V4ppJdeitHACIHhksyaCFJCLxQwky4eg5oX0eLQCRQT6uC
-        qXbSiJ4/ZBvu/3QuGFM23ZoEUfr2yz4Cw7YDDCp1pga0IJlb2aTsxRTGxB0Z4NBmW0dNAr
-        1uU59ipGNfELPLckyLPaQOi1if0Qt+4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-236-x5Xo3N9jMOeQmY-TJUjZrg-1; Tue, 01 Sep 2020 11:30:37 -0400
-X-MC-Unique: x5Xo3N9jMOeQmY-TJUjZrg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1DAB3800461;
-        Tue,  1 Sep 2020 15:30:35 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-113-168.rdu2.redhat.com [10.10.113.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8BDCF10013BD;
-        Tue,  1 Sep 2020 15:30:30 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Will Deacon <will@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        David Laight <David.Laight@aculab.com>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2] x86/uaccess: Use pointer masking to limit uaccess speculation
-Date:   Tue,  1 Sep 2020 10:30:19 -0500
-Message-Id: <bef9e78f9486d2a06c3e026d401511ffa117b0da.1598973982.git.jpoimboe@redhat.com>
+        Tue, 1 Sep 2020 12:23:25 -0400
+Received: from mout.gmx.net ([212.227.15.19]:50421 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729309AbgIAQXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:23:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1598977327;
+        bh=VcT1PIqQZcXCFi4aQmXr+rx2ZuYJ73wnhTYMW8H7+PU=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=fFtlmKxv2Y+p2huMqlURIGwCnY+YHR3OxCrqTmR7/c09gtEsmBQajpEBeWdzANXQU
+         nOtwsOvykJoSrphCQY3l60MBSUuF98AeyYjUWc4soGvag+zKXapN25SAOhCuREYuas
+         If9yS7veEqLQYXu1KBoCsQbtBSPXTizjivA2Vmz0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.20.60] ([92.116.187.2]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MK3W0-1jrdNg3lmA-00LUav; Tue, 01
+ Sep 2020 18:22:07 +0200
+Subject: Re: [PATCH 07/28] 53c700: improve non-coherent DMA handling
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Joonyoung Shim <jy0922.shim@samsung.com>,
+        Seung-Woo Kim <sw0312.kim@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Pawel Osciak <pawel@osciak.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        iommu@lists.linux-foundation.org,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
+        linux-mm@kvack.org, alsa-devel@alsa-project.org
+References: <20200819065555.1802761-1-hch@lst.de>
+ <20200819065555.1802761-8-hch@lst.de>
+ <1598971960.4238.5.camel@HansenPartnership.com>
+ <20200901150554.GN14765@casper.infradead.org>
+ <1598973776.4238.11.camel@HansenPartnership.com>
+From:   Helge Deller <deller@gmx.de>
+Autocrypt: addr=deller@gmx.de; keydata=
+ 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
+ c2TFWAS8k6RLkk41ZUU8ENX8+qZx/Q==
+Message-ID: <3369218e-eea4-14e9-15f1-870269e4649d@gmx.de>
+Date:   Tue, 1 Sep 2020 18:21:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <1598973776.4238.11.camel@HansenPartnership.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:ZB4M5bHJm2lT0eoLHk37MoNKcSKNbWnO0I+HozfOxJD3VBajWa/
+ 2YmeAFUi9NWtJ+BwUk/HUg0wTP7BOmNOnQ/gn+knEGQKbwqDbO3XJTfcv99kwA2MdYWpTg/
+ OELXP8GWQ4gUfymXUhK/7WblA+uNciI9f2zTsxEcsgOFoyBI0fFfIrl3FCp9IVjo9r0WPlF
+ dWbroS2KiZXHO835wd86Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M4PZy0wxx2o=:CpsZCDcX0hTdkQnvx3IlKn
+ GAUEQQNQ7kNtc917PGYWcbYooCkewvBFUfOy/DpMNfcN1K/TM2fQAhdlJz7pYCkHO94Fhq0gN
+ ZgVHlpHuuqpj8B5dFc4RwNGyns9gvuyn6faJpEloMlGsraJXmxZCyEnWCI5zHgavwNmb9mrnM
+ y2nWJN2L462idmrD18bFjqWCzYo3Mg/qjoCLQKn1pmFcctArxevyCDPcvyZdmsC6TJ7euxSyv
+ ykFbq7WOOa2ZPdD0c+OBjlGQjFs18FuwEQ+oB7yw3KHbifQZqL94RPmG9LUHK60WQ5Cm+v1su
+ AUonzRplXMtNsj0tbKoZ3XaL0Ji6dXXTAMwd4GNQzTo8sm5fUmEpNrGOT90Rei1b2axNj4mpv
+ WzoTUIC74wYe2spAtIwvNMszcn8GfQCIL41q9UP7Ae1V7PioT1UQF7F1IZ7sxz63/dMqkKq77
+ OVuCGhdZcTR6olpfCKP53X1ycW6molAI9F/mL4o1AIpYYYsr3Fi/ZHqtCBPTexmg9kedSbJKw
+ Rphuwf8SoVT6qY+BsTFgOWeEj8Q6Uot5TFJ92NHahXyqcP5YFytIa8q0WB0jkCrAW88Dj7hMI
+ 9V7zr8sJfQEIA8jnpy+xYazCGSBiyboARJyXc1q/7azwarcFqQfND0eshCJoT/9XOhEKBk4Fn
+ 2Sj8bAW4K964PSpgSQAwjPQwknsqdtqA2QH9RfbiKdsXjWIYIALSzWJKl2yIv/VUU4KA298xq
+ HNBYBnkFRxBsU2ILxR8zNOz36tvXvcLPHSg5DRRP7B+3C0dy81S346dnAoAVmK0DjPCXOpp67
+ Lm2w80/SRje5NzG1jnygwmyNxiyaQ3kfttEXfCtwoGpgVifyhvaY80skP2iz1KLDBGS6HKB18
+ BOCOBRn/deUeVee+0rc/42aFMsNRvtruHMinehuGBfqk2ou1BkKCptlWOck2S0RSxe47/AI5Y
+ wnkVTwtC+iNIlU0W82GouYyLkqh55gUsh2gJvnmTvSvGwk7ArUABCJCOOnxDU5WuX3Si22AL1
+ O6N/9k9J4HrnnTwOaecHKSa8k1wQdPBkKviAg1ct9KW47XyZYBDP42txCUV7IZzT6JP5J67tN
+ fBdJsKU/eqipSYf4M1IfwBiE8o/h/Pcu4RKFAyIWtX7C8sFVGVyAkyY+klHrPFf+PnMGclPI7
+ TDcPzNnXJQWLXNXIXHJso8DdEEU5NjEbmgcWh0RN7oBxOANTZWQ4aXOfNt5dhZsXHjR7bzg7E
+ twgqH/LFHU56Rgmij
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The x86 uaccess code uses barrier_nospec() in various places to prevent
-speculative dereferencing of user-controlled pointers (which might be
-combined with further gadgets or CPU bugs to leak data).
+On 01.09.20 17:22, James Bottomley wrote:
+> On Tue, 2020-09-01 at 16:05 +0100, Matthew Wilcox wrote:
+>> On Tue, Sep 01, 2020 at 07:52:40AM -0700, James Bottomley wrote:
+>>> I think this looks mostly OK, except for one misnamed parameter
+>>> below. Unfortunately, the last non-coherent parisc was the 700
+>>> series and I no longer own a box, so I can't test that part of it
+>>> (I can fire up the C360 to test it on a coherent arch).
+>>
+>> I have a 715/50 that probably hasn't been powered on in 15 years if
+>> you need something that old to test on (I believe the 725/100 uses
+>> the 7100LC and so is coherent).  I'll need to set up a cross-compiler
+>> ...
+>
+> I'm not going to say no to actual testing, but it's going to be a world
+> of pain getting something so old going.  I do have a box of older
+> systems I keep for architectural testing that I need to rummage around
+> in ... I just have a vague memory that my 715 actually caught fire a
+> decade ago and had to be disposed of.
 
-There are some issues with the current implementation:
+I still have a zoo of machines running for such testing, including a
+715/64 and two 730.
+I'm going to test this git tree on the 715/64:
+git://git.infradead.org/users/hch/misc.git dma_alloc_pages
 
-- The barrier_nospec() in copy_from_user() was inadvertently removed
-  with: 4b842e4e25b1 ("x86: get rid of small constant size cases in
-  raw_copy_{to,from}_user()")
-
-- copy_to_user() and friends should also have a speculation barrier,
-  because a speculative write to a user-controlled address can still
-  populate the cache line with the original data.
-
-- The LFENCE in barrier_nospec() is overkill, when more lightweight user
-  pointer masking can be used instead.
-
-Remove all existing barrier_nospec() usage, and instead do user pointer
-masking, throughout the x86 uaccess code.  This is similar to what arm64
-is already doing.
-
-barrier_nospec() is now unused, and can be removed.
-
-Fixes: 4b842e4e25b1 ("x86: get rid of small constant size cases in raw_copy_{to,from}_user()")
-Suggested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
-v2:
-- fix 32-bit build
-
- Documentation/admin-guide/hw-vuln/spectre.rst |  6 ++--
- arch/x86/include/asm/barrier.h                |  3 --
- arch/x86/include/asm/checksum_32.h            |  6 ++--
- arch/x86/include/asm/futex.h                  |  5 +++
- arch/x86/include/asm/uaccess.h                | 31 ++++++++++++-------
- arch/x86/include/asm/uaccess_64.h             | 16 +++++-----
- arch/x86/lib/csum-wrappers_64.c               |  6 ++--
- arch/x86/lib/getuser.S                        | 10 +++---
- arch/x86/lib/putuser.S                        |  8 +++++
- arch/x86/lib/usercopy_32.c                    |  6 ++--
- arch/x86/lib/usercopy_64.c                    |  4 +--
- lib/iov_iter.c                                |  2 +-
- 12 files changed, 60 insertions(+), 43 deletions(-)
-
-diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
-index e05e581af5cf..849c613afb35 100644
---- a/Documentation/admin-guide/hw-vuln/spectre.rst
-+++ b/Documentation/admin-guide/hw-vuln/spectre.rst
-@@ -426,9 +426,9 @@ Spectre variant 1
-    <spec_ref2>` to avoid any usable disclosure gadgets. However, it may
-    not cover all attack vectors for Spectre variant 1.
- 
--   Copy-from-user code has an LFENCE barrier to prevent the access_ok()
--   check from being mis-speculated.  The barrier is done by the
--   barrier_nospec() macro.
-+   Usercopy code uses user pointer masking to prevent the access_ok()
-+   check from being mis-speculated in the success path with a kernel
-+   address.  The masking is done by the uaccess_mask_ptr() macro.
- 
-    For the swapgs variant of Spectre variant 1, LFENCE barriers are
-    added to interrupt, exception and NMI entry where needed.  These
-diff --git a/arch/x86/include/asm/barrier.h b/arch/x86/include/asm/barrier.h
-index 7f828fe49797..d158ea1fa250 100644
---- a/arch/x86/include/asm/barrier.h
-+++ b/arch/x86/include/asm/barrier.h
-@@ -48,9 +48,6 @@ static inline unsigned long array_index_mask_nospec(unsigned long index,
- /* Override the default implementation from linux/nospec.h. */
- #define array_index_mask_nospec array_index_mask_nospec
- 
--/* Prevent speculative execution past this barrier. */
--#define barrier_nospec() alternative("", "lfence", X86_FEATURE_LFENCE_RDTSC)
--
- #define dma_rmb()	barrier()
- #define dma_wmb()	barrier()
- 
-diff --git a/arch/x86/include/asm/checksum_32.h b/arch/x86/include/asm/checksum_32.h
-index 11624c8a9d8d..d2bbea5b0334 100644
---- a/arch/x86/include/asm/checksum_32.h
-+++ b/arch/x86/include/asm/checksum_32.h
-@@ -56,8 +56,8 @@ static inline __wsum csum_and_copy_from_user(const void __user *src,
- 			*err_ptr = -EFAULT;
- 		return sum;
- 	}
--	ret = csum_partial_copy_generic((__force void *)src, dst,
--					len, sum, err_ptr, NULL);
-+	ret = csum_partial_copy_generic((__force void *)uaccess_mask_ptr(src),
-+					dst, len, sum, err_ptr, NULL);
- 	user_access_end();
- 
- 	return ret;
-@@ -185,7 +185,7 @@ static inline __wsum csum_and_copy_to_user(const void *src,
- 
- 	might_sleep();
- 	if (user_access_begin(dst, len)) {
--		ret = csum_partial_copy_generic(src, (__force void *)dst,
-+		ret = csum_partial_copy_generic(src, (__force void *)uaccess_mask_ptr(dst),
- 						len, sum, NULL, err_ptr);
- 		user_access_end();
- 		return ret;
-diff --git a/arch/x86/include/asm/futex.h b/arch/x86/include/asm/futex.h
-index f9c00110a69a..89e7e37c2b25 100644
---- a/arch/x86/include/asm/futex.h
-+++ b/arch/x86/include/asm/futex.h
-@@ -59,6 +59,8 @@ static __always_inline int arch_futex_atomic_op_inuser(int op, int oparg, int *o
- 	if (!user_access_begin(uaddr, sizeof(u32)))
- 		return -EFAULT;
- 
-+	uaddr = uaccess_mask_ptr(uaddr);
-+
- 	switch (op) {
- 	case FUTEX_OP_SET:
- 		unsafe_atomic_op1("xchgl %0, %2", oval, uaddr, oparg, Efault);
-@@ -94,6 +96,9 @@ static inline int futex_atomic_cmpxchg_inatomic(u32 *uval, u32 __user *uaddr,
- 
- 	if (!user_access_begin(uaddr, sizeof(u32)))
- 		return -EFAULT;
-+
-+	uaddr = uaccess_mask_ptr(uaddr);
-+
- 	asm volatile("\n"
- 		"1:\t" LOCK_PREFIX "cmpxchgl %4, %2\n"
- 		"2:\n"
-diff --git a/arch/x86/include/asm/uaccess.h b/arch/x86/include/asm/uaccess.h
-index ecefaffd15d4..e697b42d0533 100644
---- a/arch/x86/include/asm/uaccess.h
-+++ b/arch/x86/include/asm/uaccess.h
-@@ -6,6 +6,7 @@
-  */
- #include <linux/compiler.h>
- #include <linux/kasan-checks.h>
-+#include <linux/nospec.h>
- #include <linux/string.h>
- #include <asm/asm.h>
- #include <asm/page.h>
-@@ -96,6 +97,15 @@ static inline bool pagefault_disabled(void);
- 	likely(!__range_not_ok(addr, size, user_addr_max()));		\
- })
- 
-+/*
-+ * Sanitize a uaccess pointer such that it becomes NULL if it's not a valid
-+ * user pointer.  This blocks speculative dereferences of user-controlled
-+ * pointers.
-+ */
-+#define uaccess_mask_ptr(ptr) \
-+	(__typeof__(ptr)) array_index_nospec((__force unsigned long)ptr, user_addr_max())
-+
-+
- /*
-  * These are the main single-value transfer routines.  They automatically
-  * use the right size if we just have the right pointer type.
-@@ -119,11 +129,6 @@ extern int __get_user_bad(void);
- 
- #define __uaccess_begin() stac()
- #define __uaccess_end()   clac()
--#define __uaccess_begin_nospec()	\
--({					\
--	stac();				\
--	barrier_nospec();		\
--})
- 
- /*
-  * This is the smallest unsigned integer type that can fit a value
-@@ -357,7 +362,7 @@ do {									\
- 	__label__ __pu_label;					\
- 	int __pu_err = -EFAULT;					\
- 	__typeof__(*(ptr)) __pu_val = (x);			\
--	__typeof__(ptr) __pu_ptr = (ptr);			\
-+	__typeof__(ptr) __pu_ptr = uaccess_mask_ptr(ptr);	\
- 	__typeof__(size) __pu_size = (size);			\
- 	__uaccess_begin();					\
- 	__put_user_size(__pu_val, __pu_ptr, __pu_size, __pu_label);	\
-@@ -371,9 +376,9 @@ __pu_label:							\
- ({									\
- 	int __gu_err;							\
- 	__inttype(*(ptr)) __gu_val;					\
--	__typeof__(ptr) __gu_ptr = (ptr);				\
-+	__typeof__(ptr) __gu_ptr = uaccess_mask_ptr(ptr);		\
- 	__typeof__(size) __gu_size = (size);				\
--	__uaccess_begin_nospec();					\
-+	__uaccess_begin();						\
- 	__get_user_size(__gu_val, __gu_ptr, __gu_size, __gu_err);	\
- 	__uaccess_end();						\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
-@@ -482,7 +487,7 @@ static __must_check __always_inline bool user_access_begin(const void __user *pt
- {
- 	if (unlikely(!access_ok(ptr,len)))
- 		return 0;
--	__uaccess_begin_nospec();
-+	__uaccess_begin();
- 	return 1;
- }
- #define user_access_begin(a,b)	user_access_begin(a,b)
-@@ -491,14 +496,16 @@ static __must_check __always_inline bool user_access_begin(const void __user *pt
- #define user_access_save()	smap_save()
- #define user_access_restore(x)	smap_restore(x)
- 
--#define unsafe_put_user(x, ptr, label)	\
--	__put_user_size((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)), label)
-+#define unsafe_put_user(x, ptr, label)						\
-+	__put_user_size((__typeof__(*(ptr)))(x), uaccess_mask_ptr(ptr),		\
-+			sizeof(*(ptr)), label)
- 
- #define unsafe_get_user(x, ptr, err_label)					\
- do {										\
- 	int __gu_err;								\
- 	__inttype(*(ptr)) __gu_val;						\
--	__get_user_size(__gu_val, (ptr), sizeof(*(ptr)), __gu_err);		\
-+	__get_user_size(__gu_val, uaccess_mask_ptr(ptr), sizeof(*(ptr)),	\
-+			__gu_err);						\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;				\
- 	if (unlikely(__gu_err)) goto err_label;					\
- } while (0)
-diff --git a/arch/x86/include/asm/uaccess_64.h b/arch/x86/include/asm/uaccess_64.h
-index bc10e3dc64fe..ef859e1ae956 100644
---- a/arch/x86/include/asm/uaccess_64.h
-+++ b/arch/x86/include/asm/uaccess_64.h
-@@ -47,7 +47,7 @@ copy_user_generic(void *to, const void *from, unsigned len)
- }
- 
- static __always_inline __must_check unsigned long
--copy_to_user_mcsafe(void *to, const void *from, unsigned len)
-+copy_to_user_mcsafe(void __user *to, const void *from, size_t len)
- {
- 	unsigned long ret;
- 
-@@ -57,7 +57,7 @@ copy_to_user_mcsafe(void *to, const void *from, unsigned len)
- 	 * handle exceptions / faults.  memcpy_mcsafe() may fall back to
- 	 * memcpy() which lacks this handling.
- 	 */
--	ret = __memcpy_mcsafe(to, from, len);
-+	ret = __memcpy_mcsafe((__force void *)uaccess_mask_ptr(to), from, len);
- 	__uaccess_end();
- 	return ret;
- }
-@@ -65,20 +65,20 @@ copy_to_user_mcsafe(void *to, const void *from, unsigned len)
- static __always_inline __must_check unsigned long
- raw_copy_from_user(void *dst, const void __user *src, unsigned long size)
- {
--	return copy_user_generic(dst, (__force void *)src, size);
-+	return copy_user_generic(dst, (__force void *)uaccess_mask_ptr(src), size);
- }
- 
- static __always_inline __must_check unsigned long
- raw_copy_to_user(void __user *dst, const void *src, unsigned long size)
- {
--	return copy_user_generic((__force void *)dst, src, size);
-+	return copy_user_generic((__force void *)uaccess_mask_ptr(dst), src, size);
- }
- 
- static __always_inline __must_check
- unsigned long raw_copy_in_user(void __user *dst, const void __user *src, unsigned long size)
- {
--	return copy_user_generic((__force void *)dst,
--				 (__force void *)src, size);
-+	return copy_user_generic((__force void *)uaccess_mask_ptr(dst),
-+				 (__force void *)uaccess_mask_ptr(src), size);
- }
- 
- extern long __copy_user_nocache(void *dst, const void __user *src,
-@@ -93,14 +93,14 @@ __copy_from_user_inatomic_nocache(void *dst, const void __user *src,
- 				  unsigned size)
- {
- 	kasan_check_write(dst, size);
--	return __copy_user_nocache(dst, src, size, 0);
-+	return __copy_user_nocache(dst, uaccess_mask_ptr(src), size, 0);
- }
- 
- static inline int
- __copy_from_user_flushcache(void *dst, const void __user *src, unsigned size)
- {
- 	kasan_check_write(dst, size);
--	return __copy_user_flushcache(dst, src, size);
-+	return __copy_user_flushcache(dst, uaccess_mask_ptr(src), size);
- }
- 
- unsigned long
-diff --git a/arch/x86/lib/csum-wrappers_64.c b/arch/x86/lib/csum-wrappers_64.c
-index ee63d7576fd2..d677b91a7e84 100644
---- a/arch/x86/lib/csum-wrappers_64.c
-+++ b/arch/x86/lib/csum-wrappers_64.c
-@@ -52,8 +52,8 @@ csum_and_copy_from_user(const void __user *src, void *dst,
- 			len -= 2;
- 		}
- 	}
--	isum = csum_partial_copy_generic((__force const void *)src,
--				dst, len, isum, errp, NULL);
-+	isum = csum_partial_copy_generic((__force const void *)uaccess_mask_ptr(src),
-+					 dst, len, isum, errp, NULL);
- 	user_access_end();
- 	if (unlikely(*errp))
- 		goto out_err;
-@@ -108,7 +108,7 @@ csum_and_copy_to_user(const void *src, void __user *dst,
- 	}
- 
- 	*errp = 0;
--	ret = csum_partial_copy_generic(src, (void __force *)dst,
-+	ret = csum_partial_copy_generic(src, (void __force *)uaccess_mask_ptr(dst),
- 					len, isum, NULL, errp);
- 	user_access_end();
- 	return ret;
-diff --git a/arch/x86/lib/getuser.S b/arch/x86/lib/getuser.S
-index c8a85b512796..90ae5be8af23 100644
---- a/arch/x86/lib/getuser.S
-+++ b/arch/x86/lib/getuser.S
-@@ -40,7 +40,7 @@ SYM_FUNC_START(__get_user_1)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 1:	movzbl (%_ASM_AX),%edx
-@@ -56,7 +56,7 @@ SYM_FUNC_START(__get_user_2)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 2:	movzwl -1(%_ASM_AX),%edx
-@@ -72,7 +72,7 @@ SYM_FUNC_START(__get_user_4)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 3:	movl -3(%_ASM_AX),%edx
-@@ -89,7 +89,7 @@ SYM_FUNC_START(__get_user_8)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 4:	movq -7(%_ASM_AX),%rdx
-@@ -102,7 +102,7 @@ SYM_FUNC_START(__get_user_8)
- 	mov PER_CPU_VAR(current_task), %_ASM_DX
- 	cmp TASK_addr_limit(%_ASM_DX),%_ASM_AX
- 	jae bad_get_user_8
--	sbb %_ASM_DX, %_ASM_DX		/* array_index_mask_nospec() */
-+	sbb %_ASM_DX, %_ASM_DX		/* uaccess_mask_ptr() */
- 	and %_ASM_DX, %_ASM_AX
- 	ASM_STAC
- 4:	movl -7(%_ASM_AX),%edx
-diff --git a/arch/x86/lib/putuser.S b/arch/x86/lib/putuser.S
-index 7c7c92db8497..a4384b0ce013 100644
---- a/arch/x86/lib/putuser.S
-+++ b/arch/x86/lib/putuser.S
-@@ -38,6 +38,8 @@ SYM_FUNC_START(__put_user_1)
- 	ENTER
- 	cmp TASK_addr_limit(%_ASM_BX),%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 1:	movb %al,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -52,6 +54,8 @@ SYM_FUNC_START(__put_user_2)
- 	sub $1,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 2:	movw %ax,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -66,6 +70,8 @@ SYM_FUNC_START(__put_user_4)
- 	sub $3,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 3:	movl %eax,(%_ASM_CX)
- 	xor %eax,%eax
-@@ -80,6 +86,8 @@ SYM_FUNC_START(__put_user_8)
- 	sub $7,%_ASM_BX
- 	cmp %_ASM_BX,%_ASM_CX
- 	jae .Lbad_put_user
-+	sbb %_ASM_BX, %_ASM_BX		/* uaccess_mask_ptr() */
-+	and %_ASM_BX, %_ASM_CX
- 	ASM_STAC
- 4:	mov %_ASM_AX,(%_ASM_CX)
- #ifdef CONFIG_X86_32
-diff --git a/arch/x86/lib/usercopy_32.c b/arch/x86/lib/usercopy_32.c
-index 7d290777246d..185ae8f56477 100644
---- a/arch/x86/lib/usercopy_32.c
-+++ b/arch/x86/lib/usercopy_32.c
-@@ -68,7 +68,7 @@ clear_user(void __user *to, unsigned long n)
- {
- 	might_fault();
- 	if (access_ok(to, n))
--		__do_clear_user(to, n);
-+		__do_clear_user(uaccess_mask_ptr(to), n);
- 	return n;
- }
- EXPORT_SYMBOL(clear_user);
-@@ -331,7 +331,7 @@ do {									\
- 
- unsigned long __copy_user_ll(void *to, const void *from, unsigned long n)
- {
--	__uaccess_begin_nospec();
-+	__uaccess_begin();
- 	if (movsl_is_ok(to, from, n))
- 		__copy_user(to, from, n);
- 	else
-@@ -344,7 +344,7 @@ EXPORT_SYMBOL(__copy_user_ll);
- unsigned long __copy_from_user_ll_nocache_nozero(void *to, const void __user *from,
- 					unsigned long n)
- {
--	__uaccess_begin_nospec();
-+	__uaccess_begin();
- #ifdef CONFIG_X86_INTEL_USERCOPY
- 	if (n > 64 && static_cpu_has(X86_FEATURE_XMM2))
- 		n = __copy_user_intel_nocache(to, from, n);
-diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-index b0dfac3d3df7..abe5d2d1c49a 100644
---- a/arch/x86/lib/usercopy_64.c
-+++ b/arch/x86/lib/usercopy_64.c
-@@ -51,7 +51,7 @@ EXPORT_SYMBOL(__clear_user);
- unsigned long clear_user(void __user *to, unsigned long n)
- {
- 	if (access_ok(to, n))
--		return __clear_user(to, n);
-+		return __clear_user(uaccess_mask_ptr(to), n);
- 	return n;
- }
- EXPORT_SYMBOL(clear_user);
-@@ -108,7 +108,7 @@ EXPORT_SYMBOL_GPL(arch_wb_cache_pmem);
- long __copy_user_flushcache(void *dst, const void __user *src, unsigned size)
- {
- 	unsigned long flushed, dest = (unsigned long) dst;
--	long rc = __copy_user_nocache(dst, src, size, 0);
-+	long rc = __copy_user_nocache(dst, uaccess_mask_ptr(src), size, 0);
- 
- 	/*
- 	 * __copy_user_nocache() uses non-temporal stores for the bulk
-diff --git a/lib/iov_iter.c b/lib/iov_iter.c
-index 5e40786c8f12..175cc8320220 100644
---- a/lib/iov_iter.c
-+++ b/lib/iov_iter.c
-@@ -642,7 +642,7 @@ static int copyout_mcsafe(void __user *to, const void *from, size_t n)
- {
- 	if (access_ok(to, n)) {
- 		instrument_copy_to_user(to, from, n);
--		n = copy_to_user_mcsafe((__force void *) to, from, n);
-+		n = copy_to_user_mcsafe(to, from, n);
- 	}
- 	return n;
- }
--- 
-2.25.4
-
+Helge
