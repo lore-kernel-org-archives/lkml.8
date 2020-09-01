@@ -2,106 +2,150 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 549BAC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D002C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 367892071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B9692071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:58:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ebiQOl0H"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ViVWcIQp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbgIAS5p (ORCPT
+        id S1731893AbgIAS62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:57:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
+        Tue, 1 Sep 2020 14:58:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728638AbgIAS5j (ORCPT
+        with ESMTP id S1728336AbgIAS6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:57:39 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66BBC061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 11:57:39 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id q1so1064291pjd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 11:57:39 -0700 (PDT)
+        Tue, 1 Sep 2020 14:58:24 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA763C061244;
+        Tue,  1 Sep 2020 11:58:24 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so997248plk.10;
+        Tue, 01 Sep 2020 11:58:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=myAjLsXJJ5WrIyplttBLOJrb3cYFWSnfDJgomMmHBsY=;
-        b=ebiQOl0HdWb1qsZ8K4nAaddfFhbr3U7deevLOcXXTD6OLvfKSnSROhSsCjgZ7mCdSU
-         KEk3JPhKcmdeA0QtKKnHHoNdav2XUrlVbf6RKDK+ixxHf+lELn4fBRXQcE7RzE2wmQCF
-         jhg7c/3b8g07wxtC6uK6VnR8kOyuLPgRU1LbY=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Egkzc6e2Q4GbPtLeZeOCULkEnLy5OXPFzZB/7n/Y2E8=;
+        b=ViVWcIQpbdBaPCNOXuJV7psU4rp6f6j39vW8N8NGcspfPHUB+igEwzm2cmiGv9SOhP
+         fy3b3otQzVtQ8447D/Ud2x5HADT7J/oBpWcESVvKpH5B4nbJehYrgPK3E4A/kzAm0CbB
+         ZOnbLMoM19mHPIAPcUZrei3PgrYQgCgrLvAQWEYCf0lU+53dXfm4QKIceaKJ6dzZ9Qoo
+         x48+2vBHDhdD3uTO5htD1VLczyVZU3hzFsQajSsMY/Ga3npzSdvGyUCh5zbFTme+7/+a
+         WiaMOVUr+DJ1ml0+qchsCUhzRtFY8MvwbBwLaWivGE4Td44F36tl14QVcXaO3Mp5pugs
+         L4wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=myAjLsXJJ5WrIyplttBLOJrb3cYFWSnfDJgomMmHBsY=;
-        b=NjHCpTB2hmthyBjs6IIHVU4fW1swrRaYOmCq5ilebebQEIIMVQgjc7SDWXwt9loGZB
-         bXED9puYVx5tNwhN6ToB0kKL4KRQ/dEiUp5JvzBBY/VT1c4MEOgnusmlwWERs9mQ5yR2
-         bH1rXc/Sqhw3yoTb0KXGVFwPSKndV/S+6l4B1uqzaje374zYR15NSbkpjWeEcJEbe1HK
-         9pFORcOT/mFWnc5VvACS4kUqNitYF5JpfCumQ2dm7z9hwuFR+8i5g9NCkuuDYLLw7nIK
-         6Gyc1Hf6Nn7aOO93tuw4ENtSa6AoJy7X5hc/lyXgBKeea8yRkbkE7zcufXDkje1wm7eJ
-         N7+Q==
-X-Gm-Message-State: AOAM532+PGH9qm+LrgqFE797HVrsdRT+QCAfdJ0f5s1StLN2X5Pca4eT
-        gXDH8KFOxtBEtErNYzjqZe8kFw==
-X-Google-Smtp-Source: ABdhPJxM7CI6ObOTA/dAnpNqk4c7bPseM/evKd+pRwbVQYq3IOIRkOFgQb1ors7cvRWIw5JowuZv0w==
-X-Received: by 2002:a17:90a:450d:: with SMTP id u13mr2718413pjg.99.1598986659307;
-        Tue, 01 Sep 2020 11:57:39 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id b10sm1613877pff.85.2020.09.01.11.57.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:57:38 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 11:57:37 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Subject: Re: [PATCH 05/10] lkdtm: disable set_fs-based tests for
- !CONFIG_SET_FS
-Message-ID: <202009011156.0F49882@keescook>
-References: <20200827150030.282762-1-hch@lst.de>
- <20200827150030.282762-6-hch@lst.de>
- <CAHk-=wipbWD66sU7etETXwDW5NRsU2vnbDpXXQ5i94hiTcawyw@mail.gmail.com>
- <20200829092406.GB8833@lst.de>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=Egkzc6e2Q4GbPtLeZeOCULkEnLy5OXPFzZB/7n/Y2E8=;
+        b=c1ytjqlNA8O8mSzfpRTDJG1RCnz7v+TllSchSl1U2ulPAnh9OqCjRPthpTF7wrlGh6
+         nNHwWXTtlyBUxyUJlljTASYqoASyagzz8EPzrQ44nCKhHRT5Ys9+lIOmykEiOV03wkcK
+         38PSxw2xabsNRzW+oIm8N0S0ZJGJ5OjxWJAgvXfplFGaggzLEluRVE2EBtSdyII29Y1Y
+         /9iw3I4dbX6limjcXQINuLBw2rPVuFsDJqTsytV8gXpUNfPKbJ442SPSRwilY8Wjlzt4
+         WqZbhTKPXo41cPbMXyFhrEAuZw3PZW/XWAHlrKPPr8zK/lMfKCNMCwT+OgHNt5dR8y1N
+         5RZA==
+X-Gm-Message-State: AOAM533B5q1PEbMZmveqvTpYiIaO5D+SJ67cGXZsog5OR96h0sTUHudt
+        A2MSjd1vfKatn0ItvQlGBz3uyof5Tno=
+X-Google-Smtp-Source: ABdhPJxbvsTju367WrmAAxqFZ9z7yPHStmCPq1J9gqzHfE19gfSEoq012FQFPh/Sl18PiPfQyCAkPA==
+X-Received: by 2002:a17:902:d702:: with SMTP id w2mr2685896ply.53.1598986703989;
+        Tue, 01 Sep 2020 11:58:23 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n128sm1489597pga.5.2020.09.01.11.58.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 11:58:23 -0700 (PDT)
+Subject: Re: [PATCH 4.4 00/62] 4.4.235-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200901150920.697676718@linuxfoundation.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
+Message-ID: <76622586-3742-692a-c9de-994ac21c5257@roeck-us.net>
+Date:   Tue, 1 Sep 2020 11:58:21 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200829092406.GB8833@lst.de>
+In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Aug 29, 2020 at 11:24:06AM +0200, Christoph Hellwig wrote:
-> On Thu, Aug 27, 2020 at 11:06:28AM -0700, Linus Torvalds wrote:
-> > On Thu, Aug 27, 2020 at 8:00 AM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > Once we can't manipulate the address limit, we also can't test what
-> > > happens when the manipulation is abused.
-> > 
-> > Just remove these tests entirely.
-> > 
-> > Once set_fs() doesn't exist on x86, the tests no longer make any sense
-> > what-so-ever, because test coverage will be basically zero.
-> > 
-> > So don't make the code uglier just to maintain a fiction that
-> > something is tested when it isn't really.
+On 9/1/20 8:09 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.4.235 release.
+> There are 62 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Sure fine with me unless Kees screams.
+> Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
+> Anything received after that time might be too late.
+> 
 
-To clarify: if any of x86, arm64, arm, powerpc, riscv, and s390 are
-using set_fs(), I want to keep this test. "ugly" is fine in lkdtm. :)
+Building powerpc:defconfig ... failed
+--------------
+Error log:
+arch/powerpc/perf/core-book3s.c: In function ‘record_and_restart’:
+arch/powerpc/perf/core-book3s.c:2045:7: error: implicit declaration of function ‘perf_event_account_interrupt’; did you mean ‘perf_event_interrupt’? [-Werror=implicit-function-declaration]
+   if (perf_event_account_interrupt(event))
 
--- 
-Kees Cook
+Caused by commit 91d6f90ac6d5 ("powerpc/perf: Fix soft lockups due
+to missed interrupt accounting"). perf_event_account_interrupt()
+does not exist in v4.4.y.
+
+Guenter
