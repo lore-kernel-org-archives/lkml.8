@@ -2,230 +2,245 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEE8C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBAE3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99E42073A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A01D02073A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="0YgfD29K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRRVF+tc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgIAAfL (ORCPT
+        id S1726355AbgIAAhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 20:35:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57220 "EHLO
+        Mon, 31 Aug 2020 20:37:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgIAAfH (ORCPT
+        with ESMTP id S1725941AbgIAAhx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 20:35:07 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA26FC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:35:06 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id f2so5417602qkh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:35:06 -0700 (PDT)
+        Mon, 31 Aug 2020 20:37:53 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92132C061573;
+        Mon, 31 Aug 2020 17:37:53 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id p65so6228353qtd.2;
+        Mon, 31 Aug 2020 17:37:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=u1h+Z4m7wDNO0C3YgQOk9ULf7HqqBVP3DARz2vlWcqM=;
-        b=0YgfD29KFW61aSUj03zT3rqIuzjSwn2XOBZ1dmV1pogKfTpds/qLyxwjGE9+oq++WR
-         fcSrnLAgNOL3yVIw52uMfN1U9ofohgkfVdOIMPtC/kgkXfZm4ZnvBQuLWU3kifQUcKPu
-         MdBnHdibUg+/Gn9IzNvEHFVnjZ8tgkOLsoF67ZLwOLah2qHkgrTQqBcCrQThfD6ROUtR
-         ZC56KqRtJw0sZiz/aFRpZjeNHYKjMbTZrJ2j+m7EUh/Zqny7XjkNxUMlLyfyh1QoFwJK
-         o5dUPof0R31BnyEvroneXQz/CWnwvXVgeEj4YNb1C4lucR8gMMjWZzENoEiaTEt0BZ01
-         2MSg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=dIEiNvBLTWIM+tsDzxoNt6hyhVE3CsWqm/oHRKciIWg=;
+        b=HRRVF+tc4ypb2vdDNbx/KCJwXvTudDkCICJgqEHeViRKY5LkASvyKgKess9ALDPEOz
+         zsB4d9J6LKLTdu/R7sTuvlo/J9gcsSevNMkPUhdqpkRmOPsP6RkVruHzdMWUnSPQGOI0
+         q8B35pKiq0jbdAnJKPgcDXtRC+XIi6bkhenvuO4YHYCAbfnsKrE3W0n1Jh7312xXCbiE
+         WVjUCswFcipZScBQPsHYd2oSN96ZcSuWQzYv3Oz2AcgNz/byGmyW5FBQJ6ZTtvS2hnyW
+         MFvFIGfbs0GaYn9WaiNCeBQaLPpDpHGvEPDV3u7ygVfDsf4NMdYm7H7hW6EU7F15TxkG
+         29QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=u1h+Z4m7wDNO0C3YgQOk9ULf7HqqBVP3DARz2vlWcqM=;
-        b=mrCcuiKD6k+g6VHMBR9L+l8OM4uUlqsLUFXNxlF2JMeoTdnda+ScjxBeOEU9Fblz4r
-         7pWkYCw5byjUVKBv8qX9T4zp+0rxWy1iaqjJ7W27dFH3M5L+51Q2qZxyJ1+UDL9VZmcY
-         QsfSGhsYM08ktoqiINfTOvRQZqINDVX38AbIH8UQiKqO/IpmfRAXVRp8zpqTqIj+6oJt
-         RKbga2PUl4O7oM5Z9z0EV17drVqf3EZiIAhaqeTGiD++72jiNi0rLuzxmtpUN6y5htny
-         4NLRgcFg7aQ5Nnkrddeev2WYD3SFcpVqKMRL2ysYcq1CERXaSdwXfhLrJS8BxOglZR1O
-         aecQ==
-X-Gm-Message-State: AOAM531T1qIcfhxXd0sKv7BKwL//ffQhFdJ2qkuqcInjrDgiBSQ4D5pM
-        qe9q8Jm8xWhwBm94Uv0x/Zc0EQ==
-X-Google-Smtp-Source: ABdhPJzkk38aCbZ8lDflnNZZa3DrorTjRhUVl4b8Gm3wfJppKByyt10onThah9H/JwFhC+CC8K4kXg==
-X-Received: by 2002:a05:620a:16b8:: with SMTP id s24mr4057084qkj.67.1598920506032;
-        Mon, 31 Aug 2020 17:35:06 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q185sm11438597qke.25.2020.08.31.17.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 17:35:05 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH] arm64: dts: qcom: add sm8250 fastrpc nodes
-Date:   Mon, 31 Aug 2020 20:33:46 -0400
-Message-Id: <20200901003346.12210-1-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
+        bh=dIEiNvBLTWIM+tsDzxoNt6hyhVE3CsWqm/oHRKciIWg=;
+        b=dDqt+B+C/nHVLvGqVPOzhkW+/En5UwatUhXh2SDttMjd93pk7hOAOt7n1gpQ6o9+N2
+         e4ty0NzVO+D6PTyGaV0FdWu5XU3icNMQhlTKYcNPWJ/F2ju1e5nd0OHB6OpDVJRgAym1
+         w/RI3DzADjI6YU1CzHB6bqKp4TN3EUXmx7pgRmTOEJu5Tj9p0Rg4Wh9s46rmsGs5H5N5
+         c6DCIcCPjyfkg1eqL2lQrPNkPv+djXFCOfovsjoUTDw6AQFGa/p/gTYn3CMxP/pyFeuY
+         dYbOFsQPgR2QTF9HnrYUrWXrIjNHLPaKhSKRH9L+tBB04OnwlH5FVwmxT+i1PtSLFN4A
+         Jgwg==
+X-Gm-Message-State: AOAM532JHqgc7AKAFJ8kGL9bsAWOsZ2Da+Emv5TXKcsB0xdxvqOTNevw
+        61SIDHIzshIC3dZ2EvoQJZc=
+X-Google-Smtp-Source: ABdhPJz8Wv+480GnFY5uMGID4S7SJE7C6JOU80tX6PtSYNDga7dFV/9ruYA31xALkSW8gmKcxnVesw==
+X-Received: by 2002:aed:3081:: with SMTP id 1mr3885485qtf.356.1598920671550;
+        Mon, 31 Aug 2020 17:37:51 -0700 (PDT)
+Received: from [192.168.1.181] (pool-173-75-208-99.phlapa.fios.verizon.net. [173.75.208.99])
+        by smtp.gmail.com with ESMTPSA id m26sm12957327qtc.83.2020.08.31.17.37.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 31 Aug 2020 17:37:50 -0700 (PDT)
+Subject: Re: KASAN: use-after-free Write in rtl_fw_do_work
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+dc3cab055dff074f2d7f@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, davem@davemloft.net, kuba@kernel.org,
+        kvalo@codeaurora.org, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, pkshih@realtek.com,
+        syzkaller-bugs@googlegroups.com
+References: <00000000000059779405ae2afa90@google.com>
+ <20200831133053.9300-1-hdanton@sina.com>
+ <35bb65f9-0a9e-7fb8-ee8d-47ce3c781fe4@gmail.com>
+From:   Brooke Basile <brookebasile@gmail.com>
+Message-ID: <77d41cee-d145-d1b5-729e-4931839ea41f@gmail.com>
+Date:   Mon, 31 Aug 2020 20:37:49 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <35bb65f9-0a9e-7fb8-ee8d-47ce3c781fe4@gmail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add fastrpc nodes for sDSP, cDSP, and aDSP.
+On 8/31/20 7:56 PM, Hillf Danton wrote:
+> 
+> On Mon, 31 Aug 2020 15:15:13 -0400 Brooke Basile wrote:
+>>
+>> On 8/31/20 9:30 AM, Hillf Danton wrote:
+>>>
+>>> Mon, 31 Aug 2020 04:48:15 -0700
+>>>> syzbot found the following issue on:
+>>>>
+>>>> HEAD commit:    3ed8e1c2 usb: typec: tcpm: Migrate workqueue to RT priorit..
+>>>> git tree:       https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git usb-testing
+>>>> console output: https://syzkaller.appspot.com/x/log.txt?x=111f9015900000
+>>>> kernel config:  https://syzkaller.appspot.com/x/.config?x=ccafc70ac3d5f49c
+>>>> dashboard link: https://syzkaller.appspot.com/bug?extid=dc3cab055dff074f2d7f
+>>>> compiler:       gcc (GCC) 10.1.0-syz 20200507
+>>>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=148a00c9900000
+>>>>
+>>>> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+>>>> Reported-by: syzbot+dc3cab055dff074f2d7f@syzkaller.appspotmail.com
+>>>>
+>>>> usb 1-1: Direct firmware load for rtlwifi/rtl8192cufw_TMSC.bin failed with error -2
+>>>> usb 1-1: Direct firmware load for rtlwifi/rtl8192cufw.bin failed with error -2
+>>>> rtlwifi: Loading alternative firmware rtlwifi/rtl8192cufw.bin
+>>>> rtlwifi: Selected firmware is not available
+>>>> ==================================================================
+>>>> BUG: KASAN: use-after-free in rtl_fw_do_work.cold+0x68/0x6a drivers/net/wireless/realtek/rtlwifi/core.c:93
+>>>> Write of size 4 at addr ffff8881c9c2ff30 by task kworker/1:5/3063
+>>>>
+>>>> CPU: 1 PID: 3063 Comm: kworker/1:5 Not tainted 5.9.0-rc1-syzkaller #0
+>>>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>>>> Workqueue: events request_firmware_work_func
+>>>> Call Trace:
+>>>>    __dump_stack lib/dump_stack.c:77 [inline]
+>>>>    dump_stack+0xf6/0x16e lib/dump_stack.c:118
+>>>>    print_address_description.constprop.0+0x1c/0x210 mm/kasan/report.c:383
+>>>>    __kasan_report mm/kasan/report.c:513 [inline]
+>>>>    kasan_report.cold+0x37/0x7c mm/kasan/report.c:530
+>>>>    rtl_fw_do_work.cold+0x68/0x6a drivers/net/wireless/realtek/rtlwifi/core.c:93
+>>>>    request_firmware_work_func+0x126/0x250 drivers/base/firmware_loader/main.c:1001
+>>>>    process_one_work+0x94c/0x15f0 kernel/workqueue.c:2269
+>>>>    worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
+>>>>    kthread+0x392/0x470 kernel/kthread.c:292
+>>>>    ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
+>>>>
+>>>> The buggy address belongs to the page:
+>>>> page:000000008323bb9d refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x1c9c2f
+>>>> flags: 0x200000000000000()
+>>>> raw: 0200000000000000 0000000000000000 ffffea0007270bc8 0000000000000000
+>>>> raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+>>>> page dumped because: kasan: bad access detected
+>>>>
+>>>> Memory state around the buggy address:
+>>>>    ffff8881c9c2fe00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>>>>    ffff8881c9c2fe80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>>>>> ffff8881c9c2ff00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>>>>                                        ^
+>>>>    ffff8881c9c2ff80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>>>>    ffff8881c9c30000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+>>>> ==================================================================
+>>>
+>>>
+>>> While probing pci for instance, wait for kworker to finish its work in the
+>>> err branches.
+>>>
+>>>
+>>> --- a/drivers/net/wireless/realtek/rtlwifi/core.c
+>>> +++ b/drivers/net/wireless/realtek/rtlwifi/core.c
+>>> @@ -78,7 +78,6 @@ static void rtl_fw_do_work(const struct
+>>>    
+>>>    	RT_TRACE(rtlpriv, COMP_ERR, DBG_LOUD,
+>>>    		 "Firmware callback routine entered!\n");
+>>> -	complete(&rtlpriv->firmware_loading_complete);
+>>>    	if (!firmware) {
+>>>    		if (rtlpriv->cfg->alt_fw_name) {
+>>>    			err = request_firmware(&firmware,
+>>> @@ -91,13 +90,12 @@ static void rtl_fw_do_work(const struct
+>>>    		}
+>>>    		pr_err("Selected firmware is not available\n");
+>>>    		rtlpriv->max_fw_size = 0;
+>>> -		return;
+>>> +		goto out;
+>>>    	}
+>>>    found_alt:
+>>>    	if (firmware->size > rtlpriv->max_fw_size) {
+>>>    		pr_err("Firmware is too big!\n");
+>>> -		release_firmware(firmware);
+>>> -		return;
+>>> +		goto release;
+>>>    	}
+>>>    	if (!is_wow) {
+>>>    		memcpy(rtlpriv->rtlhal.pfirmware, firmware->data,
+>>> @@ -108,7 +106,11 @@ found_alt:
+>>>    		       firmware->size);
+>>>    		rtlpriv->rtlhal.wowlan_fwsize = firmware->size;
+>>>    	}
+>>> +
+>>> +release:
+>>>    	release_firmware(firmware);
+>>> +out:
+>>> +	complete(&rtlpriv->firmware_loading_complete);
+>>>    }
+>>>    
+>>>    void rtl_fw_cb(const struct firmware *firmware, void *context)
+>>> --- a/drivers/net/wireless/realtek/rtlwifi/pci.c
+>>> +++ b/drivers/net/wireless/realtek/rtlwifi/pci.c
+>>> @@ -2161,6 +2161,7 @@ int rtl_pci_probe(struct pci_dev *pdev,
+>>>    	struct rtl_pci *rtlpci;
+>>>    	unsigned long pmem_start, pmem_len, pmem_flags;
+>>>    	int err;
+>>> +	bool wait_kworker = false;
+>>>    
+>>>    	err = pci_enable_device(pdev);
+>>>    	if (err) {
+>>> @@ -2272,6 +2273,7 @@ int rtl_pci_probe(struct pci_dev *pdev,
+>>>    		err = -ENODEV;
+>>>    		goto fail3;
+>>>    	}
+>>> +	wait_kworker = true;
+>>>    	rtlpriv->cfg->ops->init_sw_leds(hw);
+>>>    
+>>>    	/*aspm */
+>>> @@ -2327,7 +2329,8 @@ fail2:
+>>>    		pci_iounmap(pdev, (void __iomem *)rtlpriv->io.pci_mem_start);
+>>>    
+>>>    	pci_release_regions(pdev);
+>>> -	complete(&rtlpriv->firmware_loading_complete);
+>>> +	if (wait_kworker == true)
+>>> +		wait_for_completion(&rtlpriv->firmware_loading_complete);
+>>>    
+>>>    fail1:
+>>>    	if (hw)
+>>>
+>>
+>> Hi,
+> 
+> Hi Brooke
+>>
+>> It looks like this is probably a duplicate related to this patch:
+>> https://syzkaller.appspot.com/bug?id=1f05ed98df706bb64aeee4dccc5ab48cd7542643
+> 
+> Quite likely, particularly for the accesses to the link above in the
+> far east cities like Shanghai. More interesting may be that we can see
+> the difference between the two patches if you can copy-n-paste that
+> one in reply to this message because I have no clear idea if it's the
+> ad hoc matter of fact that fixes for syzbot reports should better be
+> posted in the report mail thread at lore.kernel.org, with the
+> ant-anntena-size bonus to facilitate those who are disabled outside
+> lore in the split of a second.
+> 
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 115 ++++++++++++++++++++++++++-
- 1 file changed, 113 insertions(+), 2 deletions(-)
+Sorry, in hindsight my wording may have been a bit awkward in my 
+message-- what I meant to say is, your patch may also resolve that bug. :)
+I don't actually have a patch for this, I had just begun working on it 
+over the weekend and saw that your patch could be related to the issue.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 345934fbc251..6d13e60ee6a9 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -1500,8 +1500,35 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
- 				mboxes = <&ipcc IPCC_CLIENT_SLPI
- 						IPCC_MPROC_SIGNAL_GLINK_QMP>;
- 
--				label = "lpass";
-+				label = "slpi";
- 				qcom,remote-pid = <3>;
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "dsps";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@1 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <1>;
-+						iommus = <&apps_smmu 0x0541 0x0>;
-+					};
-+
-+					compute-cb@2 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <2>;
-+						iommus = <&apps_smmu 0x0542 0x0>;
-+					};
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x0543 0x0>;
-+						/* note: shared-cb = <4> in downstream */
-+					};
-+				};
- 			};
- 		};
- 
-@@ -1538,8 +1565,66 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
- 				mboxes = <&ipcc IPCC_CLIENT_CDSP
- 						IPCC_MPROC_SIGNAL_GLINK_QMP>;
- 
--				label = "lpass";
-+				label = "cdsp";
- 				qcom,remote-pid = <5>;
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "cdsp";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@1 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <1>;
-+						iommus = <&apps_smmu 0x1001 0x0460>;
-+					};
-+
-+					compute-cb@2 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <2>;
-+						iommus = <&apps_smmu 0x1002 0x0460>;
-+					};
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x1003 0x0460>;
-+					};
-+
-+					compute-cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_smmu 0x1004 0x0460>;
-+					};
-+
-+					compute-cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_smmu 0x1005 0x0460>;
-+					};
-+
-+					compute-cb@6 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <6>;
-+						iommus = <&apps_smmu 0x1006 0x0460>;
-+					};
-+
-+					compute-cb@7 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <7>;
-+						iommus = <&apps_smmu 0x1007 0x0460>;
-+					};
-+
-+					compute-cb@8 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <8>;
-+						iommus = <&apps_smmu 0x1008 0x0460>;
-+					};
-+
-+					/* note: secure cb9 in downstream */
-+				};
- 			};
- 		};
- 
-@@ -3112,6 +3197,32 @@ q6routing: routing {
- 						};
- 					};
- 				};
-+
-+				fastrpc {
-+					compatible = "qcom,fastrpc";
-+					qcom,glink-channels = "fastrpcglink-apps-dsp";
-+					label = "adsp";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					compute-cb@3 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <3>;
-+						iommus = <&apps_smmu 0x1803 0x0>;
-+					};
-+
-+					compute-cb@4 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <4>;
-+						iommus = <&apps_smmu 0x1804 0x0>;
-+					};
-+
-+					compute-cb@5 {
-+						compatible = "qcom,fastrpc-compute-cb";
-+						reg = <5>;
-+						iommus = <&apps_smmu 0x1805 0x0>;
-+					};
-+				};
- 			};
- 		};
- 
--- 
-2.26.1
-
+Best,
+Brooke Basile
