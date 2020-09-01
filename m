@@ -2,107 +2,204 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1459EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68FA9C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D842B206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 385962071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:24:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7myy3wG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgIAKYO (ORCPT
+        id S1726586AbgIAKYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 06:24:14 -0400
-Received: from se14-4.privateemail.com ([198.54.127.71]:43938 "EHLO
-        se14-4.privateemail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbgIAKYJ (ORCPT
+        Tue, 1 Sep 2020 06:24:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35200 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbgIAKYo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 06:24:09 -0400
-X-Greylist: delayed 4387 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Sep 2020 06:24:09 EDT
-Received: from new-01.privateemail.com ([68.65.122.22])
-        by se14.registrar-servers.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.92)
-        (envelope-from <javier@beren.dev>)
-        id 1kD2JV-0002RT-G2; Tue, 01 Sep 2020 02:10:53 -0700
-Received: from MTA-12.privateemail.com (unknown [10.20.147.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by NEW-01.privateemail.com (Postfix) with ESMTPS id C82FE60047;
-        Tue,  1 Sep 2020 09:10:41 +0000 (UTC)
-Received: from mta-12.privateemail.com (localhost [127.0.0.1])
-        by mta-12.privateemail.com (Postfix) with ESMTP id 1CD0D8005D;
-        Tue,  1 Sep 2020 05:10:40 -0400 (EDT)
-Received: from localhost.localdomain (unknown [10.20.151.207])
-        by mta-12.privateemail.com (Postfix) with ESMTPA id 2F7388005E;
-        Tue,  1 Sep 2020 09:10:36 +0000 (UTC)
-From:   Javier Garcia <javier@beren.dev>
-To:     corbet@lwn.net
-Cc:     rdunlap@infradead.org, grandmaster@al2klimov.de,
-        billy_wilson@byu.edu, tony.fischetti@gmail.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Javier Garcia <javier@beren.dev>
-Subject: [PATCH] Documentation: process: step 2: Link to email list fixed.
-Date:   Tue,  1 Sep 2020 11:09:49 +0200
-Message-Id: <20200901090949.14514-1-javier@beren.dev>
-X-Mailer: git-send-email 2.25.1
+        Tue, 1 Sep 2020 06:24:44 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F185CC061244;
+        Tue,  1 Sep 2020 03:24:43 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id j2so894148wrx.7;
+        Tue, 01 Sep 2020 03:24:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=BSt68/4cPL6B9cbf1fFvNtUnV0pY08yiPoiq1b4k1C0=;
+        b=S7myy3wG2JuXN07jCRBXVQEkcUWLvqicrue256XR6ACpbJb2cgsL4VaYdajdUpMBJg
+         5BEHLdorN6ZwlmNj8zlmGHGkyvmLfBXW17jx1/MRTk2rGs0WVBWRmD3gAPjQi5zmPzrD
+         ELE6RdhzMCPmR6fGRMl7qBvhbonyvAY9M41R9bnzzNnb8lQkKFW3vZ4q9Tz/RN8NonHM
+         wgCBCdHwUSuNi6UEmDzI+vR6skypaDwHML/xuEKwy/i45fNksaEnXLctqqlSeAvzyZI0
+         3BkOhxYT9WhnGukYj5iIj1d0fpDUJR/yVd54p4037RIo0fMAvqynsvocQ+J5GArP64dy
+         xbIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=BSt68/4cPL6B9cbf1fFvNtUnV0pY08yiPoiq1b4k1C0=;
+        b=Q85lW70mO+oT/RAGhxrEFv4W9NVdPry0o26V6Cs3igC7lC36tFQcsFhI1YHzS00UHR
+         AcuZX6C04G1HGnu3sz+eu5KnBb3HTyweK4uhK/xUuNLaTo/G1BUxY2qHo+nIb4qlebmU
+         zzo1oZN2HnARKoQ2swP3s0Wbg41Dqe+QR2fdYsHg8KPuw2lQyVunQKcpNKZG/ULsZ27L
+         oK82RZzqYvC4sf5IqKeeGW9ZIeOAytq1RGWn8rXqFv7DuoqaeV6zlnHTcE/JS3ralsF0
+         KnYD5AW0dyu3CiJr1HtPdmErIldnup6c2ByNcVxReQwvooS0mHT9wHtU8nexoL2dQx3x
+         TgZQ==
+X-Gm-Message-State: AOAM532GdewuwecsIVWXp0gdHhRD3IUcly0nJT6bwG26XmptU8pHQspy
+        Lwfl3/FjsbNA+XybMORwKkU=
+X-Google-Smtp-Source: ABdhPJxn8Pb1jUHnsNUO9WCAd6GraSIjHy5Th5Wm/JL+aPo3SX1EFDLyAFgK6p5HIYEYcZhcz45qdw==
+X-Received: by 2002:a5d:4e0b:: with SMTP id p11mr1113430wrt.32.1598955882575;
+        Tue, 01 Sep 2020 03:24:42 -0700 (PDT)
+Received: from [192.168.8.147] ([37.171.241.11])
+        by smtp.gmail.com with ESMTPSA id s5sm1515675wrm.33.2020.09.01.03.24.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 03:24:41 -0700 (PDT)
+Subject: Re: [PATCH 2/2] random32: add noise from network and scheduling
+ activity
+To:     Willy Tarreau <w@1wt.eu>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     Sedat Dilek <sedat.dilek@gmail.com>, George Spelvin <lkml@sdf.org>,
+        Amit Klein <aksecurity@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
+        Florian Westphal <fw@strlen.de>,
+        Marc Plumb <lkml.mplumb@gmail.com>
+References: <20200901064302.849-1-w@1wt.eu> <20200901064302.849-3-w@1wt.eu>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <ed5d4d2a-0f8f-f202-8c4f-9fc3d4307e97@gmail.com>
+Date:   Tue, 1 Sep 2020 12:24:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP
-X-Originating-IP: 68.65.122.22
-X-SpamExperts-Domain: o1.privateemail.com
-X-SpamExperts-Username: out-01
-Authentication-Results: registrar-servers.com; auth=pass (plain) smtp.auth=out-01@o1.privateemail.com
-X-SpamExperts-Outgoing-Class: ham
-X-SpamExperts-Outgoing-Evidence: Combined (0.08)
-X-Recommended-Action: accept
-X-Filter-ID: Mvzo4OR0dZXEDF/gcnlw0VKALJWqpbz84ezJUOplsTqpSDasLI4SayDByyq9LIhVIuQF43nnBMRX
- MP08rPosJ0TNWdUk1Ol2OGx3IfrIJKyP9eGNFz9TW9u+Jt8z2T3K8BDv5Ys6stOQKuhUsdyE/YXh
- jScmTpVv5IonvxmB5O2cLC1IK8e+Ehvc2ewaYOyqLDmknkFCtrExuxg140V9nMQADXLdBQ+nLlc/
- tA4Sj9OZ3L3pjRPMgR642BMqzMTpdD5k9W8Y1NI1olsN2+X6tW8f5KzuRwo/u4ywWX5sXihWdYve
- LjBT1D2OrZqPRZiV+tkmU+/KX0nJnQyIUdcchsZB14E0iQtvqvjtp9rD8IfSSTIqPFW0EznUJres
- HIC6dmOq8/idP5dSGXlfHvUTLiTg127TqHZDxA/kZB41Rh/voK34s6CNmUeOB0vgUWUzE9aykhW0
- 8S2Q9BZfV4rjkuGF6ePhLVNfQ99xpFdqMeNulR8PV9sblK50edB8qs77GrXdW109g+lAMkAbyNlo
- TmD2SPbyZg7C0RNzNzUl0hPX/5RQ1HtujZudOVdkqb3xdfogTEiyipNb7Us9zHswFHAQhDClaeZ3
- 9G/lq5mRCb4Z9Ey3vmI3Pf8Lyj0qFPdM2eJGTkj50kHu0eP3+1tcOW5Gb3kL1+ScpijA9VJdIVZb
- 7VBYLa6SImlWmEsHWCOKqycb0ySQ8Q07QZMExH8QT39q0aZI3qbhXsaDdLgW9bprwAm+Udkqe7Lp
- E2Hbbj4OR1THjBWZFF00ALVWc/sntqhVr03UHlrscRrHorFm3BMamUdylUIKhf3z2GAHxH7IVEmg
- Qguj/lqkiC7ysrrDB5+6T7ALZGg9YLgY4aE4PatIT5U1N+BGv6dnx6KLDRADCyAuqK3fwzkfwU8H
- tX9oG/hw5BrSTYo8TxfzGzupTiaBDudO1dDoXig4TwvcULI7uP1eRabXi62XkKnwoNEefWv6ViZL
- 9FCh/jIOcMlF46KNFdtqMvNGFbSZmdAMur/jYg8E23qlZg9I758Jzz+FbLwq2QQraYe+zAzhh4qo
- 6jj7LEO/oCofTKVeJ/7WMCTsrjj7zXbV00TFoWVIRaGUZ61JS1wPrYDD/ctpiLRIW50zenHiZyHp
- r4AKKQd4IGQ04A7VxFLPO2D4Ht1VWvy1QT999TZxGwd1aPlvUNMk2g7ooxwbXsRR+vzvUHpiFqCM
- KokzYs+OyHavH6lgRmVX2PVSNSRLgqDi+US6XMgTGhTPGZb0dYXfvI9I/tmgU3euMS+4ayUpOtEh
- dxekWDmK9g==
-X-Report-Abuse-To: spam@se16.registrar-servers.com
+In-Reply-To: <20200901064302.849-3-w@1wt.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the past, these email lists where located at lists.redhat.com. This
-is not longer the case and they are now at redhat.com/mailman/listinfo
 
-Signed-off-by: Javier Garcia <javier@beren.dev>
----
- Documentation/process/2.Process.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/process/2.Process.rst b/Documentation/process/2.Process.rst
-index 4ae1e0f600c1..e05fb1b8f8b6 100644
---- a/Documentation/process/2.Process.rst
-+++ b/Documentation/process/2.Process.rst
-@@ -405,7 +405,7 @@ be found at:
- 	http://vger.kernel.org/vger-lists.html
+On 8/31/20 11:43 PM, Willy Tarreau wrote:
+> With the removal of the interrupt perturbations in previous random32
+> change (random32: make prandom_u32() output unpredictable), the PRNG
+> has become 100% deterministic again. While SipHash is expected to be
+> way more robust against brute force than the previous Tausworthe LFSR,
+> there's still the risk that whoever has even one temporary access to
+> the PRNG's internal state is able to predict all subsequent draws till
+> the next reseed (roughly every minute). This may happen through a side
+> channel attack or any data leak.
+> 
+> This patch restores the spirit of commit f227e3ec3b5c ("random32: update
+> the net random state on interrupt and activity") in that it will perturb
+> the internal PRNG's statee using externally collected noise, except that
+> it will not pick that noise from the random pool's bits nor upon
+> interrupt, but will rather combine a few elements along the Tx path
+> that are collectively hard to predict, such as dev, skb and txq
+> pointers, packet length and jiffies values. These ones are combined
+> using a single round of SipHash into a single long variable that is
+> mixed with the net_rand_state upon each invocation.
+> 
+> The operation was inlined because it produces very small and efficient
+> code, typically 3 xor, 2 add and 2 rol. The performance was measured
+> to be the same (even very slightly better) than before the switch to
+> SipHash; on a 6-core 12-thread Core i7-8700k equipped with a 40G NIC
+> (i40e), the connection rate dropped from 556k/s to 555k/s while the
+> SYN cookie rate grew from 5.38 Mpps to 5.45 Mpps.
+> 
+
+> diff --git a/net/core/dev.c b/net/core/dev.c
+> index b9c6f31ae96e..e075f7e0785a 100644
+> --- a/net/core/dev.c
+> +++ b/net/core/dev.c
+> @@ -144,6 +144,7 @@
+>  #include <linux/indirect_call_wrapper.h>
+>  #include <net/devlink.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/prandom.h>
+>  
+>  #include "net-sysfs.h"
+>  
+> @@ -3557,6 +3558,7 @@ static int xmit_one(struct sk_buff *skb, struct net_device *dev,
+>  		dev_queue_xmit_nit(skb, dev);
+>  
+>  	len = skb->len;
+> +	PRANDOM_ADD_NOISE(skb, dev, txq, len + jiffies);
+>  	trace_net_dev_start_xmit(skb, dev);
+>  	rc = netdev_start_xmit(skb, dev, txq, more);
+>  	trace_net_dev_xmit(skb, rc, dev, len);
+> @@ -4129,6 +4131,7 @@ static int __dev_queue_xmit(struct sk_buff *skb, struct net_device *sb_dev)
+>  			if (!skb)
+>  				goto out;
+>  
+> +			PRANDOM_ADD_NOISE(skb, dev, txq, jiffies);
+>  			HARD_TX_LOCK(dev, txq, cpu);
+>  
+>  			if (!netif_xmit_stopped(txq)) {
+> @@ -4194,6 +4197,7 @@ int dev_direct_xmit(struct sk_buff *skb, u16 queue_id)
+>  
+>  	skb_set_queue_mapping(skb, queue_id);
+>  	txq = skb_get_tx_queue(dev, skb);
+> +	PRANDOM_ADD_NOISE(skb, dev, txq, jiffies);
+>  
+>  	local_bh_disable();
+>  
+> 
+
+Hi Willy
+
+There is not much entropy here really :
+
+1) dev & txq are mostly constant on a typical host (at least the kind of hosts that is targeted by 
+Amit Klein and others in their attacks.
+
+2) len is also known by the attacker, attacking an idle host.
+
+3) skb are also allocations from slab cache, which tend to recycle always the same pointers (on idle hosts)
+
+
+4) jiffies might be incremented every 4 ms (if HZ=250)
+
+Maybe we could feed percpu prandom noise with samples of ns resolution timestamps,
+lazily cached from ktime_get() or similar functions.
+
+This would use one instruction on x86 to update the cache, with maybe more generic noise.
+
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 4c47f388a83f17860fdafa3229bba0cc605ec25a..a3e026cbbb6e8c5499ed780e57de5fa09bc010b6 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -751,7 +751,7 @@ ktime_t ktime_get(void)
+ {
+        struct timekeeper *tk = &tk_core.timekeeper;
+        unsigned int seq;
+-       ktime_t base;
++       ktime_t res, base;
+        u64 nsecs;
  
- There are lists hosted elsewhere, though; a number of them are at
--lists.redhat.com.
-+redhat.com/mailman/listinfo.
+        WARN_ON(timekeeping_suspended);
+@@ -763,7 +763,9 @@ ktime_t ktime_get(void)
  
- The core mailing list for kernel development is, of course, linux-kernel.
- This list is an intimidating place to be; volume can reach 500 messages per
--- 
-2.25.1
+        } while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+-       return ktime_add_ns(base, nsecs);
++       res = ktime_add_ns(base, nsecs);
++       __this_cpu_add(prandom_noise, (unsigned long)ktime_to_ns(res));
++       return res;
+ }
+ EXPORT_SYMBOL_GPL(ktime_get);
 
