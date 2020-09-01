@@ -2,120 +2,99 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32793C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE5FC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F32212067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988F02067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hwBRc/XJ"
+	dkim=pass (2048-bit key) header.d=axis.com header.i=@axis.com header.b="TG49cmr5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgIANJI (ORCPT
+        id S1728072AbgIANK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:09:08 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:31809 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727796AbgIANHB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:07:01 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598965565; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=cSrZbk7e/jeZSp8Bprl3QgOkG7poAuCV3fNdztHsFvY=;
- b=hwBRc/XJayLFYw9CoqnENmwDe+nrXyC2FwjovfNbn0HuNSTPuzzGGiJXVJM1hKT+ogWov4q2
- v6z7T/etzhWhm4RCLczP8qnTGVtGx27W6K2WqkXsmQ9aZ5QqwemmI+eiz9+BfEQ/tcE+uQlP
- wvfhkXfPE6SRs8BE1gatR61C6gY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n07.prod.us-east-1.postgun.com with SMTP id
- 5f4e4739238e1efa37926920 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 13:06:01
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 10DFBC43395; Tue,  1 Sep 2020 13:06:01 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2DC04C433CA;
-        Tue,  1 Sep 2020 13:05:57 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2DC04C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Sep 2020 09:10:27 -0400
+Received: from smtp1.axis.com ([195.60.68.17]:42489 "EHLO smtp1.axis.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728031AbgIANIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:08:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=axis.com; l=1083; q=dns/txt; s=axis-central1;
+  t=1598965698; x=1630501698;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=XM/YiO1AN+GvGSxUyxQbpOxOSqb3rPJ2qUV4jnebMHM=;
+  b=TG49cmr5xGTWothO2DnT16JGI8wtshMGF+WPcGdS9wuKLTp/EPVnl3EG
+   JH+WJPBlx/oxUA0M6CgjSCxi4AY2vdafpphIogpQYMKDVOV5ixGMaUrUR
+   LbN22hCV7Qt5+z7xyheMIHknXRCV338sha5dCaF+S9k9dNVrRJaIbM5Gb
+   TqnfTHm+mbYbjqNZiSFZlsOwIFTMcZwwa6JEUdgg2ltbaIm7ht+2jjFWb
+   R7m+4xvbLWkCx5BMETNqY+pnpdDKTtjMVumKef1/QEhmaZd2oIkqB730N
+   FmunBtW7ipdWX+PfCfn5wh6KVq38SwnYUzV2KT4/cNDHa/YdhG8Oud5E2
+   w==;
+IronPort-SDR: JSWorGGGlbfcZbzI5fleFnnnHVRJWrr9awe3/ZTkPFcjNndKis4aT3mf4kLCBRg7CLgBsNQsP/
+ VmhwplkhScCG1ZsWDV/6cO89BonM6vV9ZUtnMj8DXa2IRWh9XgyAoP76bgaEYFl7MaENAci8vF
+ ZU7yzW/TQ5fJhjJhuvzhic6Aylqj3I8DXEzh3jvoMS5VhSKPIB8purSKuRkWRW/QQoSE4pPFkP
+ VJOf7CF6q1h2rrGIQW8M8YLths3IIjNRtqgSFY3sExQDZG+XZSAdbfx8+fODezYDqcer8jq4/Z
+ mEg=
+X-IronPort-AV: E=Sophos;i="5.76,379,1592863200"; 
+   d="scan'208";a="12435719"
+From:   Camel Guo <camel.guo@axis.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <dmurphy@ti.com>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@axis.com>, Camel Guo <camelg@axis.com>,
+        Camel Guo <camel.guo@axis.com>
+Subject: [PATCH] ASoC: tlv320adcx140: Fix accessing uninitialized adcx140->dev
+Date:   Tue, 1 Sep 2020 15:07:53 +0200
+Message-ID: <20200901130753.27670-2-camel.guo@axis.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200901130753.27670-1-camel.guo@axis.com>
+References: <20200901130753.27670-1-camel.guo@axis.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [01/30] mwifiex: pcie: Move tables to the only place they're used
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200826093401.1458456-2-lee.jones@linaro.org>
-References: <20200826093401.1458456-2-lee.jones@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901130601.10DFBC43395@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 13:06:01 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> wrote:
+From: Camel Guo <camelg@axis.com>
 
-> Saves on 10's of complains about 'defined but not used' variables.
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  In file included from drivers/net/wireless/marvell/mwifiex/main.h:57,
->  from drivers/net/wireless/marvell/mwifiex/main.c:22:
->  drivers/net/wireless/marvell/mwifiex/pcie.h:310:41: warning: ‘mwifiex_pcie8997’ defined but not used [-Wunused-const-variable=]
->  310 | static const struct mwifiex_pcie_device mwifiex_pcie8997 = {
->  | ^~~~~~~~~~~~~~~~
->  drivers/net/wireless/marvell/mwifiex/pcie.h:300:41: warning: ‘mwifiex_pcie8897’ defined but not used [-Wunused-const-variable=]
->  300 | static const struct mwifiex_pcie_device mwifiex_pcie8897 = {
->  | ^~~~~~~~~~~~~~~~
->  drivers/net/wireless/marvell/mwifiex/pcie.h:292:41: warning: ‘mwifiex_pcie8766’ defined but not used [-Wunused-const-variable=]
->  292 | static const struct mwifiex_pcie_device mwifiex_pcie8766 = {
->  | ^~~~~~~~~~~~~~~~
-> 
->  NB: Repeats 10's of times - snipped for brevity.
-> 
-> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> Cc: Xinming Hu <huxinming820@gmail.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+In adcx140_i2c_probe, adcx140->dev is accessed before its
+initialization. This commit fixes this bug.
 
-10 patches applied to wireless-drivers-next.git, thanks.
+Fixes: 689c7655b50c ("ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family")
+Signed-off-by: Camel Guo <camel.guo@axis.com>
+---
+ sound/soc/codecs/tlv320adcx140.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-77dacc8fc64c mwifiex: pcie: Move tables to the only place they're used
-f5c3bf15f34c brcmsmac: ampdu: Remove a couple set but unused variables
-dd13d6dcc24d iwlegacy: 3945-mac: Remove all non-conformant kernel-doc headers
-305fd82aee87 iwlegacy: 3945-rs: Remove all non-conformant kernel-doc headers
-a60e33af4e28 iwlegacy: 3945: Remove all non-conformant kernel-doc headers
-78211e026bd0 brcmfmac: p2p: Fix a couple of function headers
-ef8308d34a93 orinoco_usb: Downgrade non-conforming kernel-doc headers
-1d2389b53c85 brcmsmac: phy_cmn: Remove a unused variables 'vbat' and 'temp'
-2fae7bf8e379 zd1211rw: zd_chip: Fix formatting
-f3242a5ba91d zd1211rw: zd_mac: Add missing or incorrect function documentation
-
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 5cd50d841177..7ae6ec374be3 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -980,6 +980,8 @@ static int adcx140_i2c_probe(struct i2c_client *i2c,
+ 	if (!adcx140)
+ 		return -ENOMEM;
+ 
++	adcx140->dev = &i2c->dev;
++
+ 	adcx140->gpio_reset = devm_gpiod_get_optional(adcx140->dev,
+ 						      "reset", GPIOD_OUT_LOW);
+ 	if (IS_ERR(adcx140->gpio_reset))
+@@ -1007,7 +1009,7 @@ static int adcx140_i2c_probe(struct i2c_client *i2c,
+ 			ret);
+ 		return ret;
+ 	}
+-	adcx140->dev = &i2c->dev;
++
+ 	i2c_set_clientdata(i2c, adcx140);
+ 
+ 	return devm_snd_soc_register_component(&i2c->dev,
 -- 
-https://patchwork.kernel.org/patch/11737755/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.20.1
 
