@@ -2,53 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E973C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5552C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D93322078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B99FE208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980841;
-	bh=Ddpwz/E5gUQcqcz8/r5+5asTNDcAsvUOCUgXTnJurOs=;
+	s=default; t=1598980847;
+	bh=09Wqh4L9or5jeLtdxk2mtE42QNDtQ7tzYcsmQ3nsWK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KxwmZJaAsu2215t6na43tjBPBou8+eP9VQ/9qbiF0GG4gEO6E4B3UnWB9MAckDhgr
-	 qb4ElqC6WvXH+MAalAqXy6XnQvUTHGFIdmZgUS7YXjYFMetIj+wiWzC9GmSYQdL2ty
-	 SBwrYq7EOqA1MtSP2HHFpzP8wXIHS5LqC+SILBNc=
+	b=zXi+UoHX3HkilkSa2EyCxH38QvQW9xVG+2JTIor0zWLCi3mpB7LK725PYV7ZLb98/
+	 7CetkGXg5ec0Hrgc6TtJTajDVoiHZAarUa1GFJgp59dkLAAeZT5NGDeAjDjn6W3zRf
+	 bSSsZcrVswAwPCUwURM0sst9jY2u2OCCAHAac7VU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728453AbgIARUi (ORCPT
+        id S1732668AbgIARUp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:20:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55762 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:20:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbgIAPNA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:00 -0400
+        id S1728829AbgIAPM7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:59 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7487F206FA;
-        Tue,  1 Sep 2020 15:12:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98BB62078B;
+        Tue,  1 Sep 2020 15:12:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973180;
-        bh=Ddpwz/E5gUQcqcz8/r5+5asTNDcAsvUOCUgXTnJurOs=;
+        s=default; t=1598973175;
+        bh=09Wqh4L9or5jeLtdxk2mtE42QNDtQ7tzYcsmQ3nsWK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uKqjqPEJ18TBa0CW6mQQkJYJIYMJ0a760seSOohV4Jt3UsL4HfX5rsUl/uH9W2me5
-         E/pstukz7iO/TKAXQcrcD56K7SC0UzRC6QRBi1dk638JZjFqvKfaL511Gk+o5wWxXH
-         LJJPJT4Acaf/7UBtoVQ4rA4+YA3f3TirYRYBiy8M=
+        b=iAdG7wquEbk40k3TERdDy9SSchkZxXSECIMXcXYQyPzjxvdVrOwgBVbzjfmLzVeBz
+         ZeoflKDFvkAiObi8dJSrRJfjMH/gHOT+Gm68x0Vll0t7P0USYTy0d7l8b/ZbBR0tnh
+         cg3Jz41Tvz97nVVQIITVouZP9Ink9uoW/wyk9Mvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 39/62] powerpc/perf: Fix soft lockups due to missed interrupt accounting
-Date:   Tue,  1 Sep 2020 17:10:22 +0200
-Message-Id: <20200901150922.705693094@linuxfoundation.org>
+Subject: [PATCH 4.4 37/62] scsi: ufs: Fix possible infinite loop in ufshcd_hold
+Date:   Tue,  1 Sep 2020 17:10:20 +0200
+Message-Id: <20200901150922.610356896@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -61,51 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+From: Stanley Chu <stanley.chu@mediatek.com>
 
-[ Upstream commit 17899eaf88d689529b866371344c8f269ba79b5f ]
+[ Upstream commit 93b6c5db06028a3b55122bbb74d0715dd8ca4ae0 ]
 
-Performance monitor interrupt handler checks if any counter has
-overflown and calls record_and_restart() in core-book3s which invokes
-perf_event_overflow() to record the sample information. Apart from
-creating sample, perf_event_overflow() also does the interrupt and
-period checks via perf_event_account_interrupt().
+In ufshcd_suspend(), after clk-gating is suspended and link is set
+as Hibern8 state, ufshcd_hold() is still possibly invoked before
+ufshcd_suspend() returns. For example, MediaTek's suspend vops may
+issue UIC commands which would call ufshcd_hold() during the command
+issuing flow.
 
-Currently we record information only if the SIAR (Sampled Instruction
-Address Register) valid bit is set (using siar_valid() check) and
-hence the interrupt check.
+Now if UFSHCD_CAP_HIBERN8_WITH_CLK_GATING capability is enabled,
+then ufshcd_hold() may enter infinite loops because there is no
+clk-ungating work scheduled or pending. In this case, ufshcd_hold()
+shall just bypass, and keep the link as Hibern8 state.
 
-But it is possible that we do sampling for some events that are not
-generating valid SIAR, and hence there is no chance to disable the
-event if interrupts are more than max_samples_per_tick. This leads to
-soft lockup.
-
-Fix this by adding perf_event_account_interrupt() in the invalid SIAR
-code path for a sampling event. ie if SIAR is invalid, just do
-interrupt check and don't record the sample information.
-
-Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1596717992-7321-1-git-send-email-atrajeev@linux.vnet.ibm.com
+Link: https://lore.kernel.org/r/20200809050734.18740-1-stanley.chu@mediatek.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Co-developed-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/core-book3s.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/ufs/ufshcd.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2040,6 +2040,10 @@ static void record_and_restart(struct pe
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index d15cd7a02f9b4..d7a0a64f64536 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -575,6 +575,7 @@ unblock_reqs:
+ int ufshcd_hold(struct ufs_hba *hba, bool async)
+ {
+ 	int rc = 0;
++	bool flush_result;
+ 	unsigned long flags;
  
- 		if (perf_event_overflow(event, &data, regs))
- 			power_pmu_stop(event, 0);
-+	} else if (period) {
-+		/* Account for interrupt in case of invalid SIAR */
-+		if (perf_event_account_interrupt(event))
-+			power_pmu_stop(event, 0);
- 	}
- }
- 
+ 	if (!ufshcd_is_clkgating_allowed(hba))
+@@ -601,7 +602,9 @@ start:
+ 				break;
+ 			}
+ 			spin_unlock_irqrestore(hba->host->host_lock, flags);
+-			flush_work(&hba->clk_gating.ungate_work);
++			flush_result = flush_work(&hba->clk_gating.ungate_work);
++			if (hba->clk_gating.is_suspended && !flush_result)
++				goto out;
+ 			spin_lock_irqsave(hba->host->host_lock, flags);
+ 			goto start;
+ 		}
+-- 
+2.25.1
+
 
 
