@@ -2,127 +2,133 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F3C7C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C28C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:29:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0138B20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:29:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jAYS2ZZc"
+	by mail.kernel.org (Postfix) with ESMTP id 5C8E92087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:29:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598981398;
+	bh=+s+pCurhvidYuSPa5gLrpalcWwRdWwzFktQe+NIAdVs=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=uLI9BtAntGNNqhi1/0NWnHbz+JQDYTtIAC2vHIpTWn/oP23HZ5Rm7XqITwvZtRzaF
+	 G3C1X+kKhBTSiEISmMPfNZlZgHi10KySyIKuWZXknJ+wX/aNwPKU6RtUY7s15kOadt
+	 l2z1NH7FGUjb1+DuBhPN4WS9ZcYAxqGJ8Sa+eKFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728454AbgIAR3r (ORCPT
+        id S1732588AbgIAR35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:29:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44510 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbgIAR3n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:29:43 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87D82C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 10:29:42 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id o20so1184181pfp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:29:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FW5La7opiv4KWG16c7XYpf3DTcgrj7Pdfd83aUNKNrc=;
-        b=jAYS2ZZc79qZYnTsWwjv1SadjMN4RsSUm73yL30/GRwcwxgx4b2Nzm1acr8EpXHU9A
-         boOwDj4V+fB5mPRPo+Bphq2QhUwtv9CGHRTG0Mst/tBdwp4NX2vO6i7ag2MSCNrd/HIi
-         AZQ+fBRYvWGIFiYzyOdjiuLJEwGDoPjfTasrm4iP6Bxhunex1Odsdg877c+L2oeUIjyl
-         BvD61dtjU9PXUL0yTB3RKH36Q/pHpRkVTcfkriR5wU0n1ydpyKxsMdyKoKf2KiK0Wrgh
-         jFGMvRTtmQI4gSn4b684qUrpZw/MICxUnYbOWXjmbDcERxcrngcctPQze1oDKK2bpbTD
-         aFyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FW5La7opiv4KWG16c7XYpf3DTcgrj7Pdfd83aUNKNrc=;
-        b=K0iOYNwbbbQXhw9F0hbL/vdt6FilqB/PSyy18prx3MxQOMOjAeHFirtoNFvbG8Xl1q
-         Ge0kmQGl9m131MXcIz53in3KpWocJceW6M87PG7CYgTFgoQ18Q5U5vv8oUD7Hv+5QTeQ
-         TCASlkoJBbd36FQ6bwU35tecO/m8C4vujMfaRd/fCMNY9mU/DQ6YArcmW9UpTDgwcQmf
-         LBqB3JTAH8aMFca/2Sicdcrxd9CpruyFfAUGRIOj60FORDPiWyUzP2SQ70rHPrN03LK+
-         saK53nUgUDVDN5YpFJ9KyOD+kALYolVOg5nfZs9CulrBBLrASDmcv0FZtd7yR1slIQrK
-         rwBA==
-X-Gm-Message-State: AOAM533Xp/WpQIz3DGhoZew/32qETEOXxoXOgxgkJr+vwU/daV5MEH5V
-        +TK2AJwJNg3ZC77BkbqrMzjAv5YVnoE5stBqAWXbOA==
-X-Google-Smtp-Source: ABdhPJy+wnhFDll+mv7LIiKSNfRQ41dAABi9B9GZjw2dwvoiws5enWPEeNCL3N0k/xB5qaMMi/h/yGiXziML8E6Nkz4=
-X-Received: by 2002:a63:d62:: with SMTP id 34mr2356233pgn.179.1598981381718;
- Tue, 01 Sep 2020 10:29:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200727175720.4022402-1-willmcvicker@google.com>
- <20200727175720.4022402-2-willmcvicker@google.com> <20200729214607.GA30831@salvia>
- <20200731002611.GA1035680@google.com> <20200731175115.GA16982@salvia>
- <20200731181633.GA1209076@google.com> <20200803183156.GA3084830@google.com>
- <20200804113711.GA20988@salvia> <20200901153607.GC4292@willie-the-truck>
-In-Reply-To: <20200901153607.GC4292@willie-the-truck>
-From:   William Mcvicker <willmcvicker@google.com>
-Date:   Tue, 1 Sep 2020 10:29:25 -0700
-Message-ID: <CABYd82ZDVqJo4KUiF0oMX6CW7pC_Y0DB_PdXJMft-yU=c5TCBg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] netfilter: nat: add a range check for l3/l4 protonum
-To:     Will Deacon <will@kernel.org>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>, security@kernel.org,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
+        Tue, 1 Sep 2020 13:29:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbgIAR3y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:29:54 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91EE920866;
+        Tue,  1 Sep 2020 17:29:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598981393;
+        bh=+s+pCurhvidYuSPa5gLrpalcWwRdWwzFktQe+NIAdVs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=pLFRoNLzcPgdZE4K1Nv9wRlDf1cGZh5X+Ixcih4U6XT2LYU/mxHz6sPJBunBRLh6c
+         H9RVhxy6iW5YGyllgPQj3i0+qaNUS0qvzqyX6Wpt9cBjOawsurfGKA9UtGtrBvnSIw
+         CA18o22vkpuDCKAO1pIQI7T3HOgOovl2kYaQnJmE=
+Date:   Tue, 1 Sep 2020 12:36:03 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Jakub Kicinski <kubakici@wp.pl>, Kalle Valo <kvalo@codeaurora.org>,
         "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@android.com, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] mt7601u: Use fallthrough pseudo-keyword
+Message-ID: <20200901173603.GA2701@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Pablo is going to add the latest patch to the nf.git tree. Once that
-happens, I'm going to propose the patch in nf.git get cherry-picked to
-the -stable branches.
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-Thanks,
-Will
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/mediatek/mt7601u/dma.c | 4 ++--
+ drivers/net/wireless/mediatek/mt7601u/mac.c | 4 ++--
+ drivers/net/wireless/mediatek/mt7601u/phy.c | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
+diff --git a/drivers/net/wireless/mediatek/mt7601u/dma.c b/drivers/net/wireless/mediatek/mt7601u/dma.c
+index f6a0454abe04..09f931d4598c 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/dma.c
++++ b/drivers/net/wireless/mediatek/mt7601u/dma.c
+@@ -196,7 +196,7 @@ static void mt7601u_complete_rx(struct urb *urb)
+ 	default:
+ 		dev_err_ratelimited(dev->dev, "rx urb failed: %d\n",
+ 				    urb->status);
+-		/* fall through */
++		fallthrough;
+ 	case 0:
+ 		break;
+ 	}
+@@ -241,7 +241,7 @@ static void mt7601u_complete_tx(struct urb *urb)
+ 	default:
+ 		dev_err_ratelimited(dev->dev, "tx urb failed: %d\n",
+ 				    urb->status);
+-		/* fall through */
++		fallthrough;
+ 	case 0:
+ 		break;
+ 	}
+diff --git a/drivers/net/wireless/mediatek/mt7601u/mac.c b/drivers/net/wireless/mediatek/mt7601u/mac.c
+index cad5e81fcf77..d2ee1aaa3c81 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/mac.c
++++ b/drivers/net/wireless/mediatek/mt7601u/mac.c
+@@ -45,7 +45,7 @@ mt76_mac_process_tx_rate(struct ieee80211_tx_rate *txrate, u16 rate)
+ 		return;
+ 	case MT_PHY_TYPE_HT_GF:
+ 		txrate->flags |= IEEE80211_TX_RC_GREEN_FIELD;
+-		/* fall through */
++		fallthrough;
+ 	case MT_PHY_TYPE_HT:
+ 		txrate->flags |= IEEE80211_TX_RC_MCS;
+ 		txrate->idx = idx;
+@@ -419,7 +419,7 @@ mt76_mac_process_rate(struct ieee80211_rx_status *status, u16 rate)
+ 		return;
+ 	case MT_PHY_TYPE_HT_GF:
+ 		status->enc_flags |= RX_ENC_FLAG_HT_GF;
+-		/* fall through */
++		fallthrough;
+ 	case MT_PHY_TYPE_HT:
+ 		status->encoding = RX_ENC_HT;
+ 		status->rate_idx = idx;
+diff --git a/drivers/net/wireless/mediatek/mt7601u/phy.c b/drivers/net/wireless/mediatek/mt7601u/phy.c
+index d863ab4a66c9..430ae4c1d7db 100644
+--- a/drivers/net/wireless/mediatek/mt7601u/phy.c
++++ b/drivers/net/wireless/mediatek/mt7601u/phy.c
+@@ -787,7 +787,7 @@ mt7601u_phy_rf_pa_mode_val(struct mt7601u_dev *dev, int phy_mode, int tx_rate)
+ 	switch (phy_mode) {
+ 	case MT_PHY_TYPE_OFDM:
+ 		tx_rate += 4;
+-		/* fall through */
++		fallthrough;
+ 	case MT_PHY_TYPE_CCK:
+ 		reg = dev->rf_pa_mode[0];
+ 		break;
+-- 
+2.27.0
 
-On Tue, Sep 1, 2020 at 8:36 AM Will Deacon <will@kernel.org> wrote:
->
-> Hi Will, Pablo,
->
-> On Tue, Aug 04, 2020 at 01:37:11PM +0200, Pablo Neira Ayuso wrote:
-> > This patch is much smaller and if you confirm this is address the
-> > issue, then this is awesome.
->
-> Did that ever get confirmed? AFAICT, nothing ended up landing in the stable
-> trees for this.
->
-> Cheers,
->
-> Will
->
->
-> > On Mon, Aug 03, 2020 at 06:31:56PM +0000, William Mcvicker wrote:
-> > [...]
-> > > diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
-> > > index 31fa94064a62..56d310f8b29a 100644
-> > > --- a/net/netfilter/nf_conntrack_netlink.c
-> > > +++ b/net/netfilter/nf_conntrack_netlink.c
-> > > @@ -1129,6 +1129,8 @@ ctnetlink_parse_tuple(const struct nlattr * const cda[],
-> > >     if (!tb[CTA_TUPLE_IP])
-> > >             return -EINVAL;
-> > >
-> > > +   if (l3num >= NFPROTO_NUMPROTO)
-> > > +           return -EINVAL;
-> >
-> > l3num can only be either NFPROTO_IPV4 or NFPROTO_IPV6.
-> >
-> > Other than that, bail out with EOPNOTSUPP.
-> >
-> > Thank you.
