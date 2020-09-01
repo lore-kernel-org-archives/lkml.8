@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD6E2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B75AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DDF6205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E978321534
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:32:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974367;
-	bh=qIzc2g0EcLYoSanPApIcHyJK6rhR/iYiqcR/MpPeHDs=;
+	s=default; t=1598974371;
+	bh=fT7/KHv1jxEWmpF88afCfjuIPWXcmWAOdkZ5qUcHkNs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kA3wrqbDGmWzgWWflJahhPMxchnvdQzB0za8nqzs2M1Rlt1G/DwArKn6D1IY39RhE
-	 8B9u4ibkeis54BNOeRne+e/37zgBF2q/VuY9qjWKpsULTmLh0RkBd9bt79cJntzAvs
-	 PuBtpLLAxg8uueme2kLWwKgoHF1ZWWXreQ68MT5I=
+	b=L1skDHhvFBPZRidCsjzzTbIoiPnw9tV87QZxhUNqEQ03Lbynm0T3t8wd6reb7IlbH
+	 TsKM9Rk8MBuJ9YjoaJBgqaw0zZASU9vQK6aA5zJZLHnnrNwwXJVXJzE5mdzOYw4on+
+	 OuDR1Jgsr5/xj4XS7mwywyaLXDzrNaI/em80JKtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731137AbgIAPcq (ORCPT
+        id S1731130AbgIAPco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36394 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:32:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbgIAPcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:32:42 -0400
+        id S1726895AbgIAPch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:37 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F52220866;
-        Tue,  1 Sep 2020 15:32:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 49D4920E65;
+        Tue,  1 Sep 2020 15:32:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974361;
-        bh=qIzc2g0EcLYoSanPApIcHyJK6rhR/iYiqcR/MpPeHDs=;
+        s=default; t=1598974356;
+        bh=fT7/KHv1jxEWmpF88afCfjuIPWXcmWAOdkZ5qUcHkNs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AuUuHZXGydmK+gNtCuOJ7IkMhi7JwgOCDEgt+t1kiSn6ZAAuQKlDewegv5nhNRIQ4
-         I+Ln4gtR6j7HH+D8WEHe2ET/vx4dv1lvnAcpPT3FCv3CEKCu43QJcMQJ1ce9Pf4E3d
-         UbrjZJHqlSdzN4tWI9eq31aU3zsJxvXSsUX+m6/w=
+        b=MbWFdQNAkGFi/0EUZBGQDBbWjRMraZPysT/ekBuXs7erGYzqj9zEh5T460HPCzwv8
+         7hQkJZfqYJQcPhrFgeNM/Lu5PMoNbbo2AE07IkamCwuQD/n8JMiFd5qkOuTDiueDZh
+         Zt9TVrmuIy3T2rtMs5koyAMt+ZY049C3HbZt44b4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 146/214] powerpc/perf: Fix soft lockups due to missed interrupt accounting
-Date:   Tue,  1 Sep 2020 17:10:26 +0200
-Message-Id: <20200901150959.973024097@linuxfoundation.org>
+Subject: [PATCH 5.4 127/214] drm/amd/powerplay: correct UVD/VCE PG state on custom pptable uploading
+Date:   Tue,  1 Sep 2020 17:10:07 +0200
+Message-Id: <20200901150959.064636932@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,54 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+From: Evan Quan <evan.quan@amd.com>
 
-[ Upstream commit 17899eaf88d689529b866371344c8f269ba79b5f ]
+[ Upstream commit 2c5b8080d810d98e3e59617680218499b17c84a1 ]
 
-Performance monitor interrupt handler checks if any counter has
-overflown and calls record_and_restart() in core-book3s which invokes
-perf_event_overflow() to record the sample information. Apart from
-creating sample, perf_event_overflow() also does the interrupt and
-period checks via perf_event_account_interrupt().
+The UVD/VCE PG state is managed by UVD and VCE IP. It's error-prone to
+assume the bootup state in SMU based on the dpm status.
 
-Currently we record information only if the SIAR (Sampled Instruction
-Address Register) valid bit is set (using siar_valid() check) and
-hence the interrupt check.
-
-But it is possible that we do sampling for some events that are not
-generating valid SIAR, and hence there is no chance to disable the
-event if interrupts are more than max_samples_per_tick. This leads to
-soft lockup.
-
-Fix this by adding perf_event_account_interrupt() in the invalid SIAR
-code path for a sampling event. ie if SIAR is invalid, just do
-interrupt check and don't record the sample information.
-
-Reported-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-Tested-by: Alexey Kardashevskiy <aik@ozlabs.ru>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1596717992-7321-1-git-send-email-atrajeev@linux.vnet.ibm.com
+Signed-off-by: Evan Quan <evan.quan@amd.com>
+Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/perf/core-book3s.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/arch/powerpc/perf/core-book3s.c b/arch/powerpc/perf/core-book3s.c
-index ca92e01d0bd1b..e32f7700303bc 100644
---- a/arch/powerpc/perf/core-book3s.c
-+++ b/arch/powerpc/perf/core-book3s.c
-@@ -2106,6 +2106,10 @@ static void record_and_restart(struct perf_event *event, unsigned long val,
+diff --git a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
+index 08b91c31532ba..947e4fa3c5e68 100644
+--- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
++++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega20_hwmgr.c
+@@ -1640,12 +1640,6 @@ static void vega20_init_powergate_state(struct pp_hwmgr *hwmgr)
  
- 		if (perf_event_overflow(event, &data, regs))
- 			power_pmu_stop(event, 0);
-+	} else if (period) {
-+		/* Account for interrupt in case of invalid SIAR */
-+		if (perf_event_account_interrupt(event))
-+			power_pmu_stop(event, 0);
- 	}
+ 	data->uvd_power_gated = true;
+ 	data->vce_power_gated = true;
+-
+-	if (data->smu_features[GNLD_DPM_UVD].enabled)
+-		data->uvd_power_gated = false;
+-
+-	if (data->smu_features[GNLD_DPM_VCE].enabled)
+-		data->vce_power_gated = false;
  }
  
+ static int vega20_enable_dpm_tasks(struct pp_hwmgr *hwmgr)
 -- 
 2.25.1
 
