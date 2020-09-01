@@ -7,48 +7,55 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F346C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819D0C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:24:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F6C220767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:24:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAA22078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977487;
-	bh=gFg3mT5egsP14MTeQNbTG7x7JmJeEAdQR1uiseNTQp8=;
+	s=default; t=1598977489;
+	bh=Zd9trFmb/P/F9p8nDs9AnkiHR6lVNPcpkIQyVaBL0kg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BFP9x/5j49yAn7eqL0y9DwPq6KAeykUi+e1Wl5MkIWECfB7XDLcC9RarbWhcKd8GI
-	 /2N23Qbw9eG0qj2oprGc4bzAUumxkh2MUOESVmxvz9Z3DUtVsSLcyrfUm7d4GNcKl4
-	 UuMu3jToL4If4B5dmSgHoNNgYJjkNgmbbpQIyVwo=
+	b=bETWTz3qk/j8414+2+GUMj5WzNoM0VJdAPAUdKQYzQk1fz1kI9inwpZ9WmBgDh7mX
+	 sty5sw33ri2dJR1hX+zVcpsSQMrY5/Z7DX8Wt5kYfZDibLQOTQEAF6oFHXVLR3EvG+
+	 +T9j6lieF723gNzLz6tPmNXAq7DOf0vLTYrYTBg0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730905AbgIAPcJ (ORCPT
+        id S1730968AbgIAPcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60394 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730593AbgIAPaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:15 -0400
+        id S1729373AbgIAPak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:30:40 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6E172078B;
-        Tue,  1 Sep 2020 15:30:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 472AD20767;
+        Tue,  1 Sep 2020 15:30:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974215;
-        bh=gFg3mT5egsP14MTeQNbTG7x7JmJeEAdQR1uiseNTQp8=;
+        s=default; t=1598974240;
+        bh=Zd9trFmb/P/F9p8nDs9AnkiHR6lVNPcpkIQyVaBL0kg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jalBhlbSmDnlSqVe0DIiUKysobK8i+Fjy7EU/GixghuNpIlqQkYbEbypPTQJI8WOm
-         cVvkHhJnDrVsvVSYsTmoWD6ISohlbq+ZnLuvJBMsYIjqsbifECInIHHqeqJUB2eIUZ
-         Hx0OKO3gvEwb7dAwgBQiiiJ//fIciH45h9yJ67wY=
+        b=ZvvYUxDonjQfRpW2KCBUVksnl2gPX11bNU8hnug7jG8lbx3ZPYFYMXgR9TqdkpZRx
+         qY6Yrv6qk+ArOhIFF2BRVFmNWs/jG7YKErMNRCQprBU+AVxNc35Fagb3v2WmCMQonn
+         2BDc8PYkSYS6Rue63/bHYsiLLYgTDoFAfbGIgefo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Arnd Bergmann <arnd@arndb.de>, Jeremy Kerr <jk@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org,
+        syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Colin Walters <walters@verbum.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/214] powerpc/spufs: add CONFIG_COREDUMP dependency
-Date:   Tue,  1 Sep 2020 17:09:02 +0200
-Message-Id: <20200901150955.946510868@linuxfoundation.org>
+Subject: [PATCH 5.4 059/214] hugetlbfs: prevent filesystem stacking of hugetlbfs
+Date:   Tue,  1 Sep 2020 17:08:59 +0200
+Message-Id: <20200901150955.817821964@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,45 +68,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Mike Kravetz <mike.kravetz@oracle.com>
 
-[ Upstream commit b648a5132ca3237a0f1ce5d871fff342b0efcf8a ]
+[ Upstream commit 15568299b7d9988063afce60731df605ab236e2a ]
 
-The kernel test robot pointed out a slightly different error message
-after recent commit 5456ffdee666 ("powerpc/spufs: simplify spufs core
-dumping") to spufs for a configuration that never worked:
+syzbot found issues with having hugetlbfs on a union/overlay as reported
+in [1].  Due to the limitations (no write) and special functionality of
+hugetlbfs, it does not work well in filesystem stacking.  There are no
+know use cases for hugetlbfs stacking.  Rather than making modifications
+to get hugetlbfs working in such environments, simply prevent stacking.
 
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_proxydma_info_dump':
->> file.c:(.text+0x4c68): undefined reference to `.dump_emit'
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_dma_info_dump':
-   file.c:(.text+0x4d70): undefined reference to `.dump_emit'
-   powerpc64-linux-ld: arch/powerpc/platforms/cell/spufs/file.o: in function `.spufs_wbox_info_dump':
-   file.c:(.text+0x4df4): undefined reference to `.dump_emit'
+[1] https://lore.kernel.org/linux-mm/000000000000b4684e05a2968ca6@google.com/
 
-Add a Kconfig dependency to prevent this from happening again.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200706132302.3885935-1-arnd@arndb.de
+Reported-by: syzbot+d6ec23007e951dadf3de@syzkaller.appspotmail.com
+Suggested-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Colin Walters <walters@verbum.org>
+Link: http://lkml.kernel.org/r/80f869aa-810d-ef6c-8888-b46cee135907@oracle.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/cell/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ fs/hugetlbfs/inode.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/powerpc/platforms/cell/Kconfig b/arch/powerpc/platforms/cell/Kconfig
-index 0f7c8241912b9..f2ff359041eec 100644
---- a/arch/powerpc/platforms/cell/Kconfig
-+++ b/arch/powerpc/platforms/cell/Kconfig
-@@ -44,6 +44,7 @@ config SPU_FS
- 	tristate "SPU file system"
- 	default m
- 	depends on PPC_CELL
-+	depends on COREDUMP
- 	select SPU_BASE
- 	help
- 	  The SPU file system is used to access Synergistic Processing
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 40306c1eab07c..5fff7cb3582f0 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -1284,6 +1284,12 @@ hugetlbfs_fill_super(struct super_block *sb, struct fs_context *fc)
+ 	sb->s_magic = HUGETLBFS_MAGIC;
+ 	sb->s_op = &hugetlbfs_ops;
+ 	sb->s_time_gran = 1;
++
++	/*
++	 * Due to the special and limited functionality of hugetlbfs, it does
++	 * not work well as a stacking filesystem.
++	 */
++	sb->s_stack_depth = FILESYSTEM_MAX_STACK_DEPTH;
+ 	sb->s_root = d_make_root(hugetlbfs_get_root(sb, ctx));
+ 	if (!sb->s_root)
+ 		goto out_free;
 -- 
 2.25.1
 
