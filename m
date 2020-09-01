@@ -2,51 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1418C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C35A5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0704206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D887206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976178;
-	bh=h68ZEXTEgHOBmJRPT4W4AKNXN5F2l6HFFOywB0QBYrs=;
+	s=default; t=1598976191;
+	bh=elLIwk+vXIz3X/dNZdhcxZlWgo/Xj0p8DfSj9gycQNg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MNHqX+mgs7ToJ3BFziv+d9OjZfh57vKGtzFde5hs1vygqnWtTFPN2qAfKYkslern3
-	 qNMKQfSTRykIoxpzkoz+V7+lmc4htVWG7FiFFpKbERv7yrs774maxPIcN10b5vSbbB
-	 +WnH4E5xXLrkRnQ++1A15rACsWD1YfxhH+cbiacM=
+	b=HbQjNGNnLyYPGZXTGIPqFL3O+2q/vb0jyCG++8ldObQYeJoduYAUatptvrNA8IiAc
+	 s3WBHvZyvO1FkWkl6T+Io29tmHuIvj3w07/3/bK8wrHS9+wmqT57PGOrjw+LkcxMBz
+	 l/CB0icmP7ZsPx8BDDNfP+1eE/Y/nwfUo0vdNYR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbgIAQC4 (ORCPT
+        id S1729016AbgIAQDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:02:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56978 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:03:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731446AbgIAPnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:43:11 -0400
+        id S1731626AbgIAPnB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:43:01 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8A9E2064B;
-        Tue,  1 Sep 2020 15:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 505C2207D3;
+        Tue,  1 Sep 2020 15:43:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974991;
-        bh=h68ZEXTEgHOBmJRPT4W4AKNXN5F2l6HFFOywB0QBYrs=;
+        s=default; t=1598974980;
+        bh=elLIwk+vXIz3X/dNZdhcxZlWgo/Xj0p8DfSj9gycQNg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EVXP+rFgGbvpzeHPpjSwMC+dOc+4P2FztW4rCbbo/IgLhQwNEYM2+Dw3ujLVWRCjM
-         Dlrug6QSU3eAn0HLQK9g7vjlqPOn95ILqwrcbCpOvcER3byDCLxHG279Vu9s12q4or
-         RzUODZMYglBcjhlw74jbON0+r9tq1+4naTwSqfdo=
+        b=x5yUJWqGEL5sr3dRr5o1TEkAQo7u55getY6a5x1KaJVytEBtPIpTpDa2vlfpSherR
+         MdNm+9g531SuHTxlefcTCkZmNo3QJA+bhwB9w1pMSaR6pk+xMuTl09us/IjXc3+UoR
+         jrXBW6XfexmABHHY/xFJ1ipJzny5u+ofb4XB3r/k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tim Harvey <tharvey@gateworks.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.8 167/255] hwmon: (gsc-hwmon) Scale temperature to millidegrees
-Date:   Tue,  1 Sep 2020 17:10:23 +0200
-Message-Id: <20200901151008.696784793@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 164/255] bpf: selftests: global_funcs: Check err_str before strstr
+Date:   Tue,  1 Sep 2020 17:10:20 +0200
+Message-Id: <20200901151008.551710444@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,33 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tim Harvey <tharvey@gateworks.com>
+From: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
 
-commit c1ae18d313e24bc7833e1749dd36dba5d47f259c upstream.
+[ Upstream commit c210773d6c6f595f5922d56b7391fe343bc7310e ]
 
-The GSC registers report temperature in decidegrees celcius so we
-need to scale it to represent the hwmon sysfs API of millidegrees.
+The error path in libbpf.c:load_program() has calls to pr_warn()
+which ends up for global_funcs tests to
+test_global_funcs.c:libbpf_debug_print().
 
-Cc: stable@vger.kernel.org
-Fixes: 3bce5377ef66 ("hwmon: Add Gateworks System Controller support")
-Signed-off-by: Tim Harvey <tharvey@gateworks.com>
-Link: https://lore.kernel.org/r/1598548824-16898-1-git-send-email-tharvey@gateworks.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+For the tests with no struct test_def::err_str initialized with a
+string, it causes call of strstr() with NULL as the second argument
+and it segfaults.
 
+Fix it by calling strstr() only for non-NULL err_str.
+
+Signed-off-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200820115843.39454-1-yauheni.kaliuta@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/gsc-hwmon.c |    1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/bpf/prog_tests/test_global_funcs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/hwmon/gsc-hwmon.c
-+++ b/drivers/hwmon/gsc-hwmon.c
-@@ -172,6 +172,7 @@ gsc_hwmon_read(struct device *dev, enum
- 	case mode_temperature:
- 		if (tmp > 0x8000)
- 			tmp -= 0xffff;
-+		tmp *= 100; /* convert to millidegrees celsius */
- 		break;
- 	case mode_voltage_raw:
- 		tmp = clamp_val(tmp, 0, BIT(GSC_HWMON_RESOLUTION));
+diff --git a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
+index 25b068591e9a4..193002b14d7f6 100644
+--- a/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
++++ b/tools/testing/selftests/bpf/prog_tests/test_global_funcs.c
+@@ -19,7 +19,7 @@ static int libbpf_debug_print(enum libbpf_print_level level,
+ 	log_buf = va_arg(args, char *);
+ 	if (!log_buf)
+ 		goto out;
+-	if (strstr(log_buf, err_str) == 0)
++	if (err_str && strstr(log_buf, err_str) == 0)
+ 		found = true;
+ out:
+ 	printf(format, log_buf);
+-- 
+2.25.1
+
 
 
