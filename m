@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 240D3C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33840C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E4E652067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DA52067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I7UCJIze"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d2/URyDw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732304AbgIAQrp (ORCPT
+        id S1730298AbgIAQrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:47:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37966 "EHLO
+        Tue, 1 Sep 2020 12:47:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37986 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729983AbgIAQrf (ORCPT
+        with ESMTP id S1732292AbgIAQrl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:47:35 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83AA1C061245;
-        Tue,  1 Sep 2020 09:47:35 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 67so965517pgd.12;
-        Tue, 01 Sep 2020 09:47:35 -0700 (PDT)
+        Tue, 1 Sep 2020 12:47:41 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E17C061244;
+        Tue,  1 Sep 2020 09:47:40 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so811561plk.10;
+        Tue, 01 Sep 2020 09:47:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=6bArpQOenZ1r4IwzKVpzZ3sdPjqYb3Z5T6BZu8MLRy0=;
-        b=I7UCJIzeBAAOgAsNsgzoZK0Uza7dH630S1MxfkMHiactiF7JQraMk9MJUguKgnYv2q
-         veR/pLP1tvmFgw31DChdsSWvzB082tn5HdPs6QStgad0OAEqSQVtxxzoz1a4U6Q1BSl1
-         f36D17v3JLTqEsrDLWUw3jvM5fOpOIM9QRY+99292MfG+ajAbggm1TZAo4GktMprZHXx
-         aKdKGCwrN+fcInF0B1thh9V3FrL9xReZb8qF35PSwTxaz3jTDfLdTpGX+6mEkBzUC1LO
-         AWzae63KE8yDM8KCr/56g4Ryiom6ATcPCuMoQOhO4mHakiv0tm5ZTM7YKiiSoOF9P0sE
-         4WcQ==
+        bh=VJrx+AWRDEEJgr3DuJf5FGtuFm676MmhtRSCNhrUo5I=;
+        b=d2/URyDwjchuggwTyHw8d/OgnYrxNo2olK6OBqsGffjs9tubNZacMeAts3N4QEfxw8
+         5Q6mP/Io1kZ6ShbzKsdMp66CaPux8VHjQyV2cKCN9Xa0KLS+9ZSDrVarpGKC172y1hw6
+         AfTeVgZ0r3PwraILILQvgL8q68+6/C3O3c2itMcUplLuX4Uw8as90AeNj4yxr2mng2/D
+         U9PHtA6MttoyqkO7LLkNGz6fP5ePa4dmCRHpzecQ94K0BOVx9z2rfL9ZetZaMKGMMvxC
+         zICl0CqJ2zk04r8CDOMEUTsvAtNeEM+44tgYS4vy503g6QOoJCmAH7g2srag0k4AM47h
+         dE9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6bArpQOenZ1r4IwzKVpzZ3sdPjqYb3Z5T6BZu8MLRy0=;
-        b=PwORo9i4T8LsIFArFLwHbDaJKxHbm442y3/pBI5JSGgBPKrAliD5whIL5ysAWWgW2f
-         JaGyPnU/RUUsP1GZ/NR22fTj5nX1T3Q/AcXqwU6BvBCRU2yuCybJH7zlEQZs0ftNayXo
-         H3hiArMsauvE/1mFfOVwFciUbNp0z6bzExzL69vnqWRNymFsjL4K55OaT3nsEnjz/VxE
-         GA1j4V41NMFKFXxvh87YU3Wvg0DuQ8pPg0v3Rzw/nXeZ+DVpeGRaeQys2TSTFh8dui5a
-         2mZ2GJGHh4UtBFdin41H7nnffoMl+AaDDRIJLjlUcwp2r0KNcCo4nn4tuDF5Dv+7q05D
-         4Zxg==
-X-Gm-Message-State: AOAM531sQJ2jclQC4zmZUZxZcn6f2ku8S+zRW/oyV5uUSiAku2ZiUoWI
-        gMlgbJV0QjEzei25Qys6ac0=
-X-Google-Smtp-Source: ABdhPJxP2Btj8c5sNN2AEoBDA2X8SJkq9iwTq3L2XoqeeqMxQ9sgaHXP7ArHd4K3sOypPhsMrGtq/Q==
-X-Received: by 2002:a63:62c7:: with SMTP id w190mr2280107pgb.25.1598978854996;
-        Tue, 01 Sep 2020 09:47:34 -0700 (PDT)
+        bh=VJrx+AWRDEEJgr3DuJf5FGtuFm676MmhtRSCNhrUo5I=;
+        b=RiPcsywsMm5UNbp2o2m6BwzxSrDC7f0S+50/i1g5k4Jze5MHWM1mmNDRGAEUPW7+UK
+         zSKw0CzGYdU6OLFQ1kVrXUQUCiK3KuFEYV4ky2VsAFT6lhoxvQjmahtWkSm+1t9/G7wK
+         kktijdDri/Sy3v8YrXybqzyOkRXeJjSXByvfgHhmsogo6Z9vRlISfsj/YDFHEjcZa8Mn
+         Ka09NgT6XDEIi6RpGWdXbtHSd7hi6CZEka6v5EkLcXwKxMoozejEt4ObRo3yUs7bgSmk
+         Y/iLkSIM43SQsnOURQ8VlGNb/u4NJXA0WJhB28njTCnV5W5bAOlPIM3SiEeJWm0ttbah
+         j6Jg==
+X-Gm-Message-State: AOAM532BxClB/cRx0KIja6eUebGp033Qzf9RhGwGuf2WfydbzAM4Rn/O
+        1mWlZoxVe1yVZgDwpBiic1Q=
+X-Google-Smtp-Source: ABdhPJxfV0FiOo9Kg84TzFlg6WinbO0JkLmr3QdQ0ZPhheez1khfYC5+K4MYQGR60MpSKWKBwCPGmQ==
+X-Received: by 2002:a17:90a:718c:: with SMTP id i12mr2397826pjk.101.1598978860386;
+        Tue, 01 Sep 2020 09:47:40 -0700 (PDT)
 Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id k6sm1998873pju.2.2020.09.01.09.47.33
+        by smtp.gmail.com with ESMTPSA id k4sm2755950pfp.189.2020.09.01.09.47.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 09:47:33 -0700 (PDT)
+        Tue, 01 Sep 2020 09:47:39 -0700 (PDT)
 From:   Rob Clark <robdclark@gmail.com>
 To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
         linux-arm-msm@vger.kernel.org, Will Deacon <will@kernel.org>,
@@ -69,18 +69,15 @@ Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
         Vivek Gautam <vivek.gautam@codeaurora.org>,
         Stephen Boyd <swboyd@chromium.org>,
         Akhil P Oommen <akhilpo@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
         Jordan Crouse <jcrouse@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Krishna Reddy <vdumpa@nvidia.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM SMMU DRIVERS),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v16 17/20] iommu/arm-smmu: Add a way for implementations to influence SCTLR
-Date:   Tue,  1 Sep 2020 09:46:34 -0700
-Message-Id: <20200901164707.2645413-18-robdclark@gmail.com>
+        Rob Clark <robdclark@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v16 19/20] arm: dts: qcom: sm845: Set the compatible string for the GPU SMMU
+Date:   Tue,  1 Sep 2020 09:46:36 -0700
+Message-Id: <20200901164707.2645413-20-robdclark@gmail.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901164707.2645413-1-robdclark@gmail.com>
 References: <20200901164707.2645413-1-robdclark@gmail.com>
@@ -91,73 +88,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-For the Adreno GPU's SMMU, we want SCTLR.HUPCF set to ensure that
-pending translations are not terminated on iova fault.  Otherwise
-a terminated CP read could hang the GPU by returning invalid
-command-stream data.
+Set the qcom,adreno-smmu compatible string for the GPU SMMU to enable
+split pagetables and per-instance pagetables for drm/msm.
 
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
 Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c | 6 ++++++
- drivers/iommu/arm/arm-smmu/arm-smmu.c      | 3 +++
- drivers/iommu/arm/arm-smmu/arm-smmu.h      | 3 +++
- 3 files changed, 12 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi | 9 +++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi       | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-index 5640d9960610..2aa6249050ff 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu-qcom.c
-@@ -127,6 +127,12 @@ static int qcom_adreno_smmu_init_context(struct arm_smmu_domain *smmu_domain,
- 	    (smmu_domain->cfg.fmt == ARM_SMMU_CTX_FMT_AARCH64))
- 		pgtbl_cfg->quirks |= IO_PGTABLE_QUIRK_ARM_TTBR1;
- 
-+	/*
-+	 * On the GPU device we want to process subsequent transactions after a
-+	 * fault to keep the GPU from hanging
-+	 */
-+	smmu_domain->cfg.sctlr_set |= ARM_SMMU_SCTLR_HUPCF;
-+
- 	/*
- 	 * Initialize private interface with GPU:
- 	 */
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.c b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-index 68b7b9e6140e..1773f54a7464 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.c
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.c
-@@ -617,6 +617,9 @@ void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
- 	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
- 		reg |= ARM_SMMU_SCTLR_E;
- 
-+	reg |= cfg->sctlr_set;
-+	reg &= ~cfg->sctlr_clr;
-+
- 	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, reg);
- }
- 
-diff --git a/drivers/iommu/arm/arm-smmu/arm-smmu.h b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-index cd75a33967bb..2df3a70a8a41 100644
---- a/drivers/iommu/arm/arm-smmu/arm-smmu.h
-+++ b/drivers/iommu/arm/arm-smmu/arm-smmu.h
-@@ -144,6 +144,7 @@ enum arm_smmu_cbar_type {
- #define ARM_SMMU_CB_SCTLR		0x0
- #define ARM_SMMU_SCTLR_S1_ASIDPNE	BIT(12)
- #define ARM_SMMU_SCTLR_CFCFG		BIT(7)
-+#define ARM_SMMU_SCTLR_HUPCF		BIT(8)
- #define ARM_SMMU_SCTLR_CFIE		BIT(6)
- #define ARM_SMMU_SCTLR_CFRE		BIT(5)
- #define ARM_SMMU_SCTLR_E		BIT(4)
-@@ -341,6 +342,8 @@ struct arm_smmu_cfg {
- 		u16			asid;
- 		u16			vmid;
- 	};
-+	u32				sctlr_set;    /* extra bits to set in SCTLR */
-+	u32				sctlr_clr;    /* bits to mask in SCTLR */
- 	enum arm_smmu_cbar_type		cbar;
- 	enum arm_smmu_context_fmt	fmt;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+index 64fc1bfd66fa..39f23cdcbd02 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
+@@ -633,6 +633,15 @@ &mdss_mdp {
+ 	status = "okay";
  };
+ 
++/*
++ * Cheza fw does not properly program the GPU aperture to allow the
++ * GPU to update the SMMU pagetables for context switches.  Work
++ * around this by dropping the "qcom,adreno-smmu" compat string.
++ */
++&adreno_smmu {
++	compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
++};
++
+ &mss_pil {
+ 	iommus = <&apps_smmu 0x781 0x0>,
+ 		 <&apps_smmu 0x724 0x3>;
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 2884577dcb77..76a8a34640ae 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -4058,7 +4058,7 @@ opp-257000000 {
+ 		};
+ 
+ 		adreno_smmu: iommu@5040000 {
+-			compatible = "qcom,sdm845-smmu-v2", "qcom,smmu-v2";
++			compatible = "qcom,sdm845-smmu-v2", "qcom,adreno-smmu", "qcom,smmu-v2";
+ 			reg = <0 0x5040000 0 0x10000>;
+ 			#iommu-cells = <1>;
+ 			#global-interrupts = <2>;
 -- 
 2.26.2
 
