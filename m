@@ -2,109 +2,86 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A273C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:36:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 225F3C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 292F22078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3996208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="hmjdaJHt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uQqpnV4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgIAFgb (ORCPT
+        id S1726311AbgIAFie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:36:31 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50809 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgIAFga (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:36:30 -0400
-Received: from carbon-x1.hos.anvin.org ([IPv6:2601:646:8600:3280:1098:42a1:36db:233c])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0815ZoYg3466113
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Mon, 31 Aug 2020 22:35:50 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 0815ZoYg3466113
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020082401; t=1598938551;
-        bh=D1w2z0wwywyGWyM+Ovcf5tkTNQaIiyhfu7pJSPgagqw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=hmjdaJHtKRlZIZmdeAAIWNkOWb0IPHJnWi5DHteLmVli+6LQDT1xQh0K/lV0/ZXpG
-         FFLum+W496p29BTSsrjWDbLU/oI8/isvPHoKwl/z+aR9Q/jpR1x3NcGC/geSBREpd3
-         4Omravp5qtMacPfaHw6+k8eS6povBblhS0DVV+3aIrIkSHyKCYuEuR/CaTIgw3uP0n
-         wegyrckQOK3pOzb+y8Zdy367JVMcVTi4E69xY73U13j+nriPNxpWqMO/b37IB6YO+I
-         uznTOeUsfQ2Hs31MsDTL+HHygr/ME3vbj1UscxVFsPl1a4tUDtY9q1WA91YZ/sJaXM
-         OBNMLe3/HJ3Dg==
-Subject: Re: [PATCH] Documentation/x86/boot.rst: minor improvement
-To:     Cao jin <caoj.fnst@cn.fujitsu.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, corbet@lwn.net
-References: <20200901034157.5482-1-caoj.fnst@cn.fujitsu.com>
- <da11d436-8910-f560-e132-827132576f1d@cn.fujitsu.com>
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-ID: <2cb35238-0008-4a89-7abf-8045bd753728@zytor.com>
-Date:   Mon, 31 Aug 2020 22:35:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
+        Tue, 1 Sep 2020 01:38:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47516 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgIAFid (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 01:38:33 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 661E5C061290;
+        Mon, 31 Aug 2020 22:38:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=74ARs/QLVt0FtIH6XZq1/tIKx5RoEbX/1dBxjgtPyXo=; b=uQqpnV4Z8fohmyamj23JkpBaND
+        7/ZzYrkKs48eP7mR7t/ymk7r5XXIwa+++KZN2Ek4YFgf22uprngL/NZ6HKYpuVFnRH9vukA8l9j7i
+        i98hI2wHyZdADe6Clv3kaIz9+pyBL2zKIl8QN9kplzfy4WXy1pDpDPd7pHXWzrJAODsfCT3Idk3Yq
+        vl18o7tm3wuU9Yu890Avx+cFxmj5bi349JejbPvAmrUWMPqaecJsFaGNSVE18Yvyzqi8q+X+8RZSa
+        dTN7AcxOGbm7U+yqZxRBSsCddIBsVQ+fbxrRpYcZm21f9iI8DS5utnlFoOyfc8t64upZoy7AekpUP
+        8TGxKvMA==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac] (helo=smtpauth.infradead.org)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kCz01-0000U6-2P; Tue, 01 Sep 2020 05:38:29 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Karel Zak <kzak@redhat.com>,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Martin Mares <mj@ucw.cz>, linux-video@atrey.karlin.mff.cuni.cz,
+        "H. Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org
+Subject: [RFC PATCH 0/2] Documentation/admin-guide: remove use of "rdev"
+Date:   Mon, 31 Aug 2020 22:38:20 -0700
+Message-Id: <20200901053822.9374-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <da11d436-8910-f560-e132-827132576f1d@cn.fujitsu.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If you are going to fix the language...
 
-On 2020-08-31 22:25, Cao jin wrote:
-> Sorry, I mis-copied 2 addresses. make sure they are CCed.
-> 
-> On 9/1/20 11:41 AM, Cao jin wrote:
->> Typo fix & file name update
->>
->> Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
->> ---
->>  Documentation/x86/boot.rst | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
->> index 7fafc7ac00d7..c04afec90486 100644
->> --- a/Documentation/x86/boot.rst
->> +++ b/Documentation/x86/boot.rst
->> @@ -1379,7 +1379,7 @@ can be calculated as follows::
->>  In addition to read/modify/write the setup header of the struct
->>  boot_params as that of 16-bit boot protocol, the boot loader should
->>  also fill the additional fields of the struct boot_params as described
->> -in zero-page.txt.
->> +in zero-page.rst.
->>  
->>  After setting up the struct boot_params, the boot loader can load
->>  64-bit kernel in the same way as that of 16-bit boot protocol, but
->> @@ -1391,7 +1391,7 @@ In 64-bit boot protocol, the kernel is started by jumping to the
->>  
->>  At entry, the CPU must be in 64-bit mode with paging enabled.
+Remove mention of using "rdev" to set boot device, video mode,
+or ramdisk information for the booting kernel.
 
-(Paging enabled is redundant here.)
+FIX patch 1/2 Subject:
 
->>  The range with setup_header.init_size from start address of loaded
->> -kernel and zero page and command line buffer get ident mapping;
->> +kernel and zero page and command line buffer get identity mapping;
+Cc: Karel Zak <kzak@redhat.com>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: linux-block@vger.kernel.org
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Martin Mares <mj@ucw.cz>
+Cc: linux-video@atrey.karlin.mff.cuni.cz
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: linux-doc@vger.kernel.org
 
-The range with setup_header.init_size from start address of the loaded kernel,
-the zero page, and the command line buffer get identity-mapped, anda GDT must
-be loaded with the descriptors for selectors __BOOT_CS(0x10) and
-__BOOT_DS(0x18): both descriptors must be 4G flat segment with __BOOT_CS
-having execute/read
-permission and __BOOT_DS...
 
-Also, it might be useful to take a look to see if other data structures, like
-setup_data and the initrd also need to be in the identity map.
+ [RFC PATCH 1/2] Documentation/admin-guide: README & svga: remove use of "rdev"
+ [RFC PATCH 2/2] Documentation/admin-guide: blockdev/ramdisk: remove use of "rdev"
 
-	-hpa
-
+ Documentation/admin-guide/README.rst            |    6 -
+ Documentation/admin-guide/blockdev/ramdisk.rst  |   70 ++++----------
+ Documentation/admin-guide/kernel-parameters.txt |    9 -
+ Documentation/admin-guide/svga.rst              |    6 -
+ 4 files changed, 33 insertions(+), 58 deletions(-)
