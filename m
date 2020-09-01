@@ -2,103 +2,151 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8812EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4D5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC6A2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tVRoeQwB"
+	by mail.kernel.org (Postfix) with ESMTP id F1E742065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:56:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598986620;
+	bh=HbKlxLoyNfuJ+PYxw3pGmdfgMjFnR8bPA42Ap6SI98Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NYWwenKHdSVT1QApgvW5H5hZxiadoQrUx4IjJ8Fki8fp7oFuUogdHP9YsB7tj78Qd
+	 29eD5p4BzWGrXEHXrctYxX5IQNwI9MyIRN4GM8O0d+/vPNU0tZbWe4tExlA1E/U0Ak
+	 /PRAsbpisH9jjSvT9oauEIXXF63nbhu39jl7bM2c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbgIAS4n (ORCPT
+        id S1731649AbgIAS44 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:56:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57976 "EHLO
+        Tue, 1 Sep 2020 14:56:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731566AbgIAS4Z (ORCPT
+        with ESMTP id S1731245AbgIASxJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:56:25 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11949C061244;
-        Tue,  1 Sep 2020 11:56:25 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id y2so1379503lfy.10;
-        Tue, 01 Sep 2020 11:56:24 -0700 (PDT)
+        Tue, 1 Sep 2020 14:53:09 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71775C06124F;
+        Tue,  1 Sep 2020 11:53:08 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id d20so1996903qka.5;
+        Tue, 01 Sep 2020 11:53:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G85PUm7a3EZzS/FYnNEVI0eznDTH8pPJcc+osLm7WqY=;
-        b=tVRoeQwB/gWeuJVETgIoI6uDSLBu9Oi18EgggfK6uMO6UdxaRljqsV964YZWadqrUD
-         gnqR/AUlD1T/UL2fXjhcB4us5pytm/ub02fZv4t79xOsyGD7v2OKOonJB1hxTlohcn/b
-         3SL21pqUtnNXQs4+7+oouQ2Ppzio4eXKbbvGhuujsuUCRBRioI75eRg/okkBcUhbEPXT
-         Wb1CQfA3E//DU2JpFZteOvIezkrUmhiGht8sT2mEGv4iAMtCcwm76LuMvZO0fb6Dv1V/
-         jScuFD/qzzG4zSH31l/chlaXN3QgEuoeBbsGZBYjbVRN9Hxo17lJ2aY1WoAw1VrY0L6M
-         GiBg==
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uLHwGiWfWkP5kcHSnqjONlJj/O0Qbx60l9TYb+oGkco=;
+        b=B3K+LIBrV807PBKY6u2wypELmyggq3KtY8cxZwTKZ8RQA/n1e71fVHCy4sRQklcUtr
+         CREI/4x1mQ+mcdi46kL6S9vLmtbUlnz9bBxhQWCYyCv2fc8NYLI9HGzXRFS12nQnr/7r
+         ClhF+3BwIXFLZqWPw7pfXSiCSun3gZx/vd+gKCAmgcbETNSruJmVVwEXokDYSM3piiJU
+         Kl96VzKmr+GcZYj7+ZLR+PoPVmd0WtAM4O/uxMk5okGAOPNdjr14YsIo2gBwdDgqKjIQ
+         2rly3BSMOKkL/pVu0MvnbEvXy4n1PpK9mIplhN1bpK56tpdiUGmth5nbGN49e2UaWbtV
+         H2aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G85PUm7a3EZzS/FYnNEVI0eznDTH8pPJcc+osLm7WqY=;
-        b=RJC9J7ogCFEv8GMgyeZ913sFscxuqelQjVKtRHYo7YittwUVmNRKCUHOLaTF0kceu4
-         2zkitXYaZAkCBEOUeP0OWJyGibM7zyy+pgONjKXTxtYyKIBSan3sg+jkuQp6WTQNFACZ
-         KSuOO4K2BycPLDK4KopZedM5JD+qgOO5EbznYJwc6s5y9xzGPUjRI3eHJbodumxQ4/hT
-         Gz6KSxB7FN5vx65OMvAueSsFYBXeJWvyhtbDTnlD4JXUEQrEoWlp9zWXtk4cg/Aepvlc
-         IHZ/T3e4ADzPyUyMBw1o5rjAdU///D+OyWm4V01k+ouTR799bxUaO2oMC8ESsuSxFWxc
-         HFUQ==
-X-Gm-Message-State: AOAM531un6BGW7OgJTJR0Zrf+tORPIASHZGJwMBu+/XD0edyn/JsVYdL
-        4tL4CsBpH7rsIUXkYKCtA1Bhn7es1X8=
-X-Google-Smtp-Source: ABdhPJytkMxC+QnEFyPCwOzPuvfcWYWQYoBFmyrc6f5aTlvzcgsyU7pjMfTvbqXAGKvX8ZR5PgQIPg==
-X-Received: by 2002:a19:447:: with SMTP id 68mr1387400lfe.26.1598986583325;
-        Tue, 01 Sep 2020 11:56:23 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id 10sm468433lfq.64.2020.09.01.11.56.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 11:56:22 -0700 (PDT)
-Subject: Re: [PATCH v4] iommu/tegra-smmu: Add locking around mapping
- operations
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Krishna Reddy <vdumpa@nvidia.com>
-Cc:     iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200901171305.6929-1-digetx@gmail.com>
-Message-ID: <2d38fcab-bc7a-2986-ff39-9403164914e4@gmail.com>
-Date:   Tue, 1 Sep 2020 21:56:21 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=uLHwGiWfWkP5kcHSnqjONlJj/O0Qbx60l9TYb+oGkco=;
+        b=aprzarl+XOLn8Qco4ucUL0vr0zoMclLak5/hCgl2GzVytxAA9zntJ/bXBBpQAk4e1C
+         2/XjeS+SZELUOxIZx/OFw4UUINx5kICmIM7wRrLOgebeuN4fOVxxlqLqr+OeopoiqN/p
+         I6SPWVlKAKivwGEwE7jzuCEz/63HDBbQ2m5k3/YF3tRqnE8RRDFucs1YGgRxR0viLLFH
+         V6ag8iEZQDFBFuZoCaPeFcfpbV+1SMqjqOSbiwmXQl571g5zEaXZ6Yk1oUEe2aX2BmyN
+         v1p6760MVwJ13iUf2Bk6dur6O4ZCatH23hZRnh3nJ/IaRa3QnINC4tpUvmxjC0Y0KM6l
+         m5EQ==
+X-Gm-Message-State: AOAM531XskOITEueK6O9l7++jIjCJ87XdNRj+wlZ/5FDLrrCjTmN8D8k
+        uDV0BsESOB4m++aMfO4kGRM9hl7hlMxSFg==
+X-Google-Smtp-Source: ABdhPJz/FzbNt/DYQEKFdJtI4ZeTtPEVzwUyDfGj2haKHEtcgF8tR5a76OyunS6WmzWCcMJ5geoj4w==
+X-Received: by 2002:a37:9d4d:: with SMTP id g74mr3064979qke.422.1598986387528;
+        Tue, 01 Sep 2020 11:53:07 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::1:a198])
+        by smtp.gmail.com with ESMTPSA id b13sm1675828qkl.46.2020.09.01.11.53.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 11:53:07 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk
+Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
+        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org
+Subject: [PATCH 02/27] blk-stat: make q->stats->lock irqsafe
+Date:   Tue,  1 Sep 2020 14:52:32 -0400
+Message-Id: <20200901185257.645114-3-tj@kernel.org>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
+References: <20200901185257.645114-1-tj@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200901171305.6929-1-digetx@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.09.2020 20:13, Dmitry Osipenko пишет:
-...
-> +	/*
-> +	 * In order to prevent exhaustion of the atomic memory pool, we
-> +	 * allocate page in a sleeping context if GFP flags permit. Hence
-> +	 * spinlock needs to be unlocked and re-locked after allocation.
-> +	 */
-> +	if (!(gfp & GFP_NOWAIT))
-> +		spin_unlock_irqrestore(&as->lock, *flags);
-> +
-> +	page = alloc_page(gfp | __GFP_DMA | __GFP_ZERO);
-> +
-> +	if (!(gfp & GFP_NOWAIT))
-> +		spin_lock_irqsave(&as->lock, *flags);
+blk-iocost calls blk_stat_enable_accounting() while holding an irqsafe lock
+which triggers a lockdep splat because q->stats->lock isn't irqsafe. Let's
+make it irqsafe.
 
-I realized that GFP_NOWAIT is a wrong flag to check here once I saw
-warnings about sleeping in atomic context. Apparently __GFP_ATOMIC
-should be used instead, I'll make v5.
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Fixes: cd006509b0a9 ("blk-iocost: account for IO size when testing latencies")
+Cc: stable@vger.kernel.org # v5.8+
+---
+ block/blk-stat.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/block/blk-stat.c b/block/blk-stat.c
+index 7da302ff88d0..ae3dd1fb8e61 100644
+--- a/block/blk-stat.c
++++ b/block/blk-stat.c
+@@ -137,6 +137,7 @@ void blk_stat_add_callback(struct request_queue *q,
+ 			   struct blk_stat_callback *cb)
+ {
+ 	unsigned int bucket;
++	unsigned long flags;
+ 	int cpu;
+ 
+ 	for_each_possible_cpu(cpu) {
+@@ -147,20 +148,22 @@ void blk_stat_add_callback(struct request_queue *q,
+ 			blk_rq_stat_init(&cpu_stat[bucket]);
+ 	}
+ 
+-	spin_lock(&q->stats->lock);
++	spin_lock_irqsave(&q->stats->lock, flags);
+ 	list_add_tail_rcu(&cb->list, &q->stats->callbacks);
+ 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
+-	spin_unlock(&q->stats->lock);
++	spin_unlock_irqrestore(&q->stats->lock, flags);
+ }
+ 
+ void blk_stat_remove_callback(struct request_queue *q,
+ 			      struct blk_stat_callback *cb)
+ {
+-	spin_lock(&q->stats->lock);
++	unsigned long flags;
++
++	spin_lock_irqsave(&q->stats->lock, flags);
+ 	list_del_rcu(&cb->list);
+ 	if (list_empty(&q->stats->callbacks) && !q->stats->enable_accounting)
+ 		blk_queue_flag_clear(QUEUE_FLAG_STATS, q);
+-	spin_unlock(&q->stats->lock);
++	spin_unlock_irqrestore(&q->stats->lock, flags);
+ 
+ 	del_timer_sync(&cb->timer);
+ }
+@@ -183,10 +186,12 @@ void blk_stat_free_callback(struct blk_stat_callback *cb)
+ 
+ void blk_stat_enable_accounting(struct request_queue *q)
+ {
+-	spin_lock(&q->stats->lock);
++	unsigned long flags;
++
++	spin_lock_irqsave(&q->stats->lock, flags);
+ 	q->stats->enable_accounting = true;
+ 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
+-	spin_unlock(&q->stats->lock);
++	spin_unlock_irqrestore(&q->stats->lock, flags);
+ }
+ EXPORT_SYMBOL_GPL(blk_stat_enable_accounting);
+ 
+-- 
+2.26.2
+
