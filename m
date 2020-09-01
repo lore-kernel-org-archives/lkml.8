@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4195DC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D10C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12281206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC5321534
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973972;
-	bh=aTZLwlQyCFvyZkMxkLIwGuWolRH0Yckkp2Be1TpzaLg=;
+	s=default; t=1598973976;
+	bh=tS6wCFBnmInIhbJdhLXjodAbxNXaMdJe2JzSqhoA64U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TljnP+6DTKLuBO5yZg6/SRzTXNYaFUZzz1bU1scfGWoHdjlmrr8W9TfnPn4I/Xo49
-	 dNe95FBuaSj3vQvPgvbbcL37zrJIcY3KfONdqQ0v8i2+yhR38qowfIhGFoAzQeEs3c
-	 KKn+D8LtGmjy6jHajhONnw+ZiUHsOlao+rtoFd5A=
+	b=LOBPLsrrGdAwXRLRIFFvlYyzRMNw3aWXiuhY0ZYukgLwdpiZ506/etntr9aLesIFs
+	 Yj+RnSfUWpky615BAhXbxkeU2lSqKwTP273rGwe1NgTn9j07ab5T7rFvsQWiYcLw3z
+	 zvqzB06zTHhzo6XdgznzbGYQJemPXmcUMg453yeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730083AbgIAP0J (ORCPT
+        id S1730092AbgIAP0N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:26:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:26:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728512AbgIAPW6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:22:58 -0400
+        id S1728556AbgIAPXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED34D206FA;
-        Tue,  1 Sep 2020 15:22:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 695612078B;
+        Tue,  1 Sep 2020 15:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973777;
-        bh=aTZLwlQyCFvyZkMxkLIwGuWolRH0Yckkp2Be1TpzaLg=;
+        s=default; t=1598973779;
+        bh=tS6wCFBnmInIhbJdhLXjodAbxNXaMdJe2JzSqhoA64U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nOupszr60dzc+wPwanokuJf2icf+iSWF113/zfFFEKIoGnUr+3+5KrIUNuYZKuyt
-         gV0O4m/riYRsQOu09tFn68MFrOiHBSkqJSMPGgj8bBNYqduzW35PhYJIw9y7XmkvwS
-         D1rXJX57RVHr49PE+ApUPhKtuzvFELiF26O4RQCY=
+        b=guTZE8QlwJI7JRXmp85+ClvB/8N3bHDEB/dQru6pOJqbvCExVGPsx4aB/aFO4OhVA
+         mEM3yGENbj5XuRH94xv/lqzCLSebXHWpnRxWspNS4gRudt4Wa6RDE1615hWs8oL+7f
+         UzvG5UbG+J1kb+KJyJSzWUwOXEYXYxSuYC3wreGA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mike Christie <michael.christie@oracle.com>,
-        Jing Xiangfeng <jingxiangfeng@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 043/125] scsi: iscsi: Do not put host in iscsi_set_flashnode_param()
-Date:   Tue,  1 Sep 2020 17:09:58 +0200
-Message-Id: <20200901150936.674229985@linuxfoundation.org>
+Subject: [PATCH 4.19 044/125] ceph: fix potential mdsc use-after-free crash
+Date:   Tue,  1 Sep 2020 17:09:59 +0200
+Message-Id: <20200901150936.724649920@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -62,35 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jing Xiangfeng <jingxiangfeng@huawei.com>
+From: Xiubo Li <xiubli@redhat.com>
 
-[ Upstream commit 68e12e5f61354eb42cfffbc20a693153fc39738e ]
+[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
 
-If scsi_host_lookup() fails we will jump to put_host which may cause a
-panic. Jump to exit_set_fnode instead.
+Make sure the delayed work stopped before releasing the resources.
 
-Link: https://lore.kernel.org/r/20200615081226.183068-1-jingxiangfeng@huawei.com
-Reviewed-by: Mike Christie <michael.christie@oracle.com>
-Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+cancel_delayed_work_sync() will only guarantee that the work finishes
+executing if the work is already in the ->worklist.  That means after
+the cancel_delayed_work_sync() returns, it will leave the work requeued
+if it was rearmed at the end. That can lead to a use after free once the
+work struct is freed.
+
+Fix it by flushing the delayed work instead of trying to cancel it, and
+ensure that the work doesn't rearm if the mdsc is stopping.
+
+URL: https://tracker.ceph.com/issues/46293
+Signed-off-by: Xiubo Li <xiubli@redhat.com>
+Reviewed-by: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/scsi_transport_iscsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/ceph/mds_client.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
-index 04d095488c764..6983473011980 100644
---- a/drivers/scsi/scsi_transport_iscsi.c
-+++ b/drivers/scsi/scsi_transport_iscsi.c
-@@ -3172,7 +3172,7 @@ static int iscsi_set_flashnode_param(struct iscsi_transport *transport,
- 		pr_err("%s could not find host no %u\n",
- 		       __func__, ev->u.set_flashnode.host_no);
- 		err = -ENODEV;
--		goto put_host;
-+		goto exit_set_fnode;
- 	}
+diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
+index 0fa14d8b9c64c..5f3707a90e7f7 100644
+--- a/fs/ceph/mds_client.c
++++ b/fs/ceph/mds_client.c
+@@ -3615,6 +3615,9 @@ static void delayed_work(struct work_struct *work)
+ 	dout("mdsc delayed_work\n");
+ 	ceph_check_delayed_caps(mdsc);
  
- 	idx = ev->u.set_flashnode.flashnode_idx;
++	if (mdsc->stopping)
++		return;
++
+ 	mutex_lock(&mdsc->mutex);
+ 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
+ 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
+@@ -3950,7 +3953,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
+ static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
+ {
+ 	dout("stop\n");
+-	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
++	/*
++	 * Make sure the delayed work stopped before releasing
++	 * the resources.
++	 *
++	 * Because the cancel_delayed_work_sync() will only
++	 * guarantee that the work finishes executing. But the
++	 * delayed work will re-arm itself again after that.
++	 */
++	flush_delayed_work(&mdsc->delayed_work);
++
+ 	if (mdsc->mdsmap)
+ 		ceph_mdsmap_destroy(mdsc->mdsmap);
+ 	kfree(mdsc->sessions);
 -- 
 2.25.1
 
