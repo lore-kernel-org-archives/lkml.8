@@ -2,121 +2,97 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1364FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C2EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D567920866
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:46:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZhdAwXL"
+	by mail.kernel.org (Postfix) with ESMTP id 8E0D9205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgIAIqb (ORCPT
+        id S1726380AbgIAIsL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48282 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgIAIqa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:46:30 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D818BC061244;
-        Tue,  1 Sep 2020 01:46:29 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 109so508499otv.3;
-        Tue, 01 Sep 2020 01:46:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=AGctBs2sDmt4ExjN4cAU8I9Yq9CZgsHUVhDgE0odfdA=;
-        b=JZhdAwXLEqO1maNzgzV4iNSzNEsdWXMsuq8Diw3KiHENmdAXxVsghAgx+O6xiALh19
-         oJs/xNEWE2efFDO0TbBhYIkpo6y3JlNi3ubrdWFjdwyqor0fpK/PVtAwW1HUENhn8SAC
-         IspZ4Agdi2UA+OhTLiOCc5Mgh4sETgmKUV3S+gDKZ8DGccYff2LtHY/NNgL4sD47/pj0
-         WR1I9UpVMfVhPVCsX9ldcPVEgpraD27ORyCtgPpTCWQuHnwqDJmcPBdsRUwlWTgDSCgb
-         T71lBH4KkzC4vi70dIBAR3kVSchhk0wTDcs5yb7ncIPr9mheOcc0heDdjtsjPCxx0LWR
-         aWQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=AGctBs2sDmt4ExjN4cAU8I9Yq9CZgsHUVhDgE0odfdA=;
-        b=I5SXWOcKvFBAGewDaMPif8HED1s2baNvGDsbLlujK4uxQcA1fXLzWWpRC4isL2Qob8
-         S1XLqiJ9EMYyI3trivjnlg/7CH2nKBTkWB7AXn78aI/thpHN0QZDfHtlA7tHLr9T//rD
-         x4g8M9QFDEXhWx+Jty1QIK3v/hmQlHCawVbI80GBMlXkezlPpGOZGvBJeHm3gmcrgqU1
-         Z88J7JqmSuQ1uPAudaJAXpMWELOn8jdmVhWPJsiF4n9FxaPLI5e3Kc3BnnzlwBDJNEZ5
-         7DhNDp3/iqZzUdIQRKfifAyU5osCf5aOEZJzQGywCBHWxKIRuiotXuOI3RP0Zs1n8YXU
-         5K7A==
-X-Gm-Message-State: AOAM531wHaMJnBGkJD6VjaTMo7lTyiPHXvnfVJj9tV5w2yX992RvqQaI
-        iL/sCcXAlu7riJv40WTcKut9Km9sV8qlJniOkps=
-X-Google-Smtp-Source: ABdhPJyWZ3NTRRvSNIT/KxkPbedzD1MVC9yAZ8pG2y47s/El3XH+OP4Ny2jbdlyovyKrMOnC3ftcc0CnlBfA7CT7NvU=
-X-Received: by 2002:a9d:7656:: with SMTP id o22mr600508otl.109.1598949987882;
- Tue, 01 Sep 2020 01:46:27 -0700 (PDT)
+        Tue, 1 Sep 2020 04:48:11 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:3081 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725949AbgIAIsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:48:11 -0400
+Received: from dggeme755-chm.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 07087318D0CCF9839338;
+        Tue,  1 Sep 2020 16:48:09 +0800 (CST)
+Received: from [10.140.157.78] (10.140.157.78) by
+ dggeme755-chm.china.huawei.com (10.3.19.101) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1913.5; Tue, 1 Sep 2020 16:48:08 +0800
+Subject: Re: Adjust interrupt Priority for ARM64 GIC
+To:     Marc Zyngier <maz@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <5a6e65cf-d2fe-0107-2318-0e3c81d57000@huawei.com>
+ <51146530616bb8fdf23c637ff5bee44e@kernel.org>
+From:   Dongjiu Geng <gengdongjiu@huawei.com>
+Message-ID: <003822ee-c43b-9572-7a64-fda049ecb05f@huawei.com>
+Date:   Tue, 1 Sep 2020 16:48:08 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.6.0
 MIME-Version: 1.0
-References: <20200901064302.849-1-w@1wt.eu> <20200901064302.849-2-w@1wt.eu>
- <CAKQ1sVM9SMYVTSZYaGuPDhQHfyEOFSxBL8PNixyaN4pR2PWMxQ@mail.gmail.com> <20200901083947.GB901@1wt.eu>
-In-Reply-To: <20200901083947.GB901@1wt.eu>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 1 Sep 2020 10:46:16 +0200
-Message-ID: <CA+icZUXjDaoLG36X7Jd7i6=Ncf6xTm44qL7ZV+i7pmNgtLuJSA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] random32: make prandom_u32() output unpredictable
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Yann Ylavic <ylavic.dev@gmail.com>, linux-kernel@vger.kernel.org,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        George Spelvin <lkml@sdf.org>,
-        Amit Klein <aksecurity@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
-        Florian Westphal <fw@strlen.de>,
-        Marc Plumb <lkml.mplumb@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <51146530616bb8fdf23c637ff5bee44e@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.140.157.78]
+X-ClientProxiedBy: dggeme712-chm.china.huawei.com (10.1.199.108) To
+ dggeme755-chm.china.huawei.com (10.3.19.101)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 10:39 AM Willy Tarreau <w@1wt.eu> wrote:
->
-> On Tue, Sep 01, 2020 at 10:33:40AM +0200, Yann Ylavic wrote:
-> > On Tue, Sep 1, 2020 at 8:45 AM Willy Tarreau <w@1wt.eu> wrote:
-> > >
-> > > +/*
-> > > + *     Generate some initially weak seeding values to allow
-> > > + *     the prandom_u32() engine to be started.
-> > > + */
-> > > +static int __init prandom_init_early(void)
-> > > +{
-> > > +       int i;
-> > > +       unsigned long v0, v1, v2, v3;
-> > > +
-> > > +       if (!arch_get_random_long(&v0))
-> > > +               v0 = jiffies;
-> > > +       if (!arch_get_random_long(&v1))
-> > > +               v0 = random_get_entropy();
-> >
-> > Shouldn't the above be:
-> >                   v1 = random_get_entropy();
-> > ?
->
-> Very good catch, many thanks Yann! Now fixed in my local tree.
->
 
-Thanks for offering a new patchset, Willy.
 
-Will you push the updated patchset to your prandom Git - for easy fetching?
+On 2020/9/1 15:48, Marc Zyngier wrote:
+> Hi Dongjiu,
+> 
+> In the future, please use my kernel.org address, as I don't work
+> for ARM anymore, and would have missed this email if I wasn't pointed
+> to it.
+> 
+> On 2020-08-14 18:10, Dongjiu Geng wrote:
+>> Hi Marc,
+>>    In the Linux kernel, we can not adjust the  interrupt Priority, For
+>> all the interrupts, the interrupt Priority are fixed to 0xa0.
+>> In some scenarios, it needs to change the Priority. so I want to
+>> upstream a serie patch to support to change the Priority through
+>> procfs. do you agree I upstream this feature? thanks~
+> 
+> No, that's not something I would ever consider, and for multiple
+> reasons:
+> 
+> - Linux only supports a single priority, meaning that interrupts are
+>   themselves aren't preemptable. Dealing with things like (pseudo) NMI
+>   is invasive enough, and I can't see a good reason to relax the
+>   single priority requirement.
+> 
+> - Building on top of the above, the whole scheduler and locking model
+>   relies on the non-preemptable property of an interrupt.
+> 
+> - I cannot see a good reason to leave the priority control to userspace.
+>   That's a sure recipe for userspace-controlled livelocks.
+> 
+> Now, I'm sure you want to introduce this for a reason, and you are not
+> explaining it ("some scenarios" doesn't quite cut it). If you care to
+> explain these "scenarios", maybe there is something we can do.
+Marc，
+    Thanks for answer.
+    In the real-time system(RTOS), we want the timer tick irq is responded as
+soon as possible to trigger kernel do task schedule. Non-preemptable  IRQ decreases the Real-Time Performance of Real-Time Operating System
 
-Thanks.
-
-- Sedat -
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/wtarreau/prandom.git/
+> 
+> But please don't waste time implementing any sort of priority change,
+> there is no way I'll consider it as such.
+> 
+> Thanks,
+> 
+>         M.
