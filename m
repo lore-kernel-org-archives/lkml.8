@@ -2,89 +2,145 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEB9DC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDB8C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA34206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:04:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DRtqDkGz"
+	by mail.kernel.org (Postfix) with ESMTP id 30C792071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:06:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgIAJEA (ORCPT
+        id S1726247AbgIAJGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:04:00 -0400
-Received: from ozlabs.org ([203.11.71.1]:49879 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgIAJD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:03:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bgh2M5xvBz9sTS;
-        Tue,  1 Sep 2020 19:03:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598951036;
-        bh=EBqFZ+7gjT+GJqGJ9xRTYbNv77jFG4C4i0OaQps+hKw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DRtqDkGz/O9/EtHDHqYh4dDvQO1WObwKsOOuA+GB9C8EiLL5zn2gWmp9H4mZJwqBs
-         WElOdqdc5TLhJUzEGKt2A7t4Mm433+SHdd/URaLoSaRqZuht/jsk2Vb9DcMtJSh2py
-         eM0TdGokCsYbvvkMPVw7OUWRUIqa0px19o8TYgsWy5WpcO0UszukSnTF2AzUQIw0pS
-         PdYQP7F/YKJBfgUHTy4VprLUopG4bIvNuZnkunmQJB2CXjme/XKLo3JlKByMoprwQJ
-         o00APKU/RJ6pryfpdOeKs4b4KMIbZVzdQF4rSnkWxbzCIwKiNdXrqKnjIZwTjeaC5p
-         IhD2dE9NWBFCQ==
-Date:   Tue, 1 Sep 2020 19:03:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Julia Lawall <Julia.Lawall@inria.fr>
-Subject: linux-next: Signed-off-by missing for commits in the v4l-dvb tree
-Message-ID: <20200901190354.38b0d16c@canb.auug.org.au>
+        Tue, 1 Sep 2020 05:06:06 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:57191
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725989AbgIAJGE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:06:04 -0400
+X-IronPort-AV: E=Sophos;i="5.76,359,1592863200"; 
+   d="scan'208";a="357773374"
+Received: from abo-173-121-68.mrs.modulonet.fr (HELO hadrien) ([85.68.121.173])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 11:06:00 +0200
+Date:   Tue, 1 Sep 2020 11:06:00 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@inria.fr>
+X-X-Sender: jll@hadrien
+To:     Denis Efremov <efremov@linux.com>
+cc:     julia.lawall@inria.fr, cocci@systeme.lip6.fr,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>
+Subject: Re: [PATCH v2] coccinelle: misc: add uninitialized_var.cocci
+ script
+In-Reply-To: <20200901071533.2725-1-efremov@linux.com>
+Message-ID: <alpine.DEB.2.22.394.2009011103480.2533@hadrien>
+References: <20200811210127.11889-1-efremov@linux.com> <20200901071533.2725-1-efremov@linux.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/POKICJpTD8GfIrtLag1qN0H";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/POKICJpTD8GfIrtLag1qN0H
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Commits
+On Tue, 1 Sep 2020, Denis Efremov wrote:
 
-  063a27cb9820 ("media: tm6000: drop unnecessary list_empty")
-  1c047c859965 ("media: saa7134: drop unnecessary list_empty")
-  3fdcea7c763a ("media: cx231xx: drop unnecessary list_empty")
+> Commit 63a0895d960a ("compiler: Remove uninitialized_var() macro") and
+> commit 4b19bec97c88 ("docs: deprecated.rst: Add uninitialized_var()")
+> removed uninitialized_var() and deprecated it.
 
-are missing a Signed-off-by from their author.
+I'm not really sure to understand the above.  How can something that has
+already been removed be deprecated, since it doesn't exist any more?
+Maybe the commits should be mentioned in the opposite order?
 
---=20
-Cheers,
-Stephen Rothwell
+Personally, I would find the sentence a lot easier to read without the
+commit subject lines in parentheses in the middle of it.  It inspires me
+to just ignore the paragraph completely.  I wonder if it could be allowed
+to just mention the commit ids in the sentence and then put the ids
+followed by the subject line afterwards?
 
---Sig_/POKICJpTD8GfIrtLag1qN0H
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+julia
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9ODnoACgkQAVBC80lX
-0GxOOwf/SZ1MgrrSp2n7ghJmNc88l33v3luuTzZZ5jSLNyQPHW9sLFhmw9pRrf8i
-GN+nWKkQVWp8HnajUfzqgUShyY9yzVOgGlcdZgytGaVEv4pu6nQGVoravvxt7UW6
-kec4wnX36m+5XRnNgnvjJl1Lpx7YmyrBPR3bRbkQpU8lxvIFnzuRV9IWvWspLOC4
-KZ3ewUo7mZNGVwBkNG91uhPe08a9LEFhDiprj2jt7ayJsPSkYI5JurkfA6jCIZBu
-+sofWD7ZI7W/7O9L+SGANY9109rI3467Jk2uWBuKgfZNqR/ZbfYa8TuuoJPfuB4J
-cm3yJLWsM05ql+6iZoRJF+RkebXuBQ==
-=G8lv
------END PGP SIGNATURE-----
-
---Sig_/POKICJpTD8GfIrtLag1qN0H--
+>
+> The purpose of this script is to prevent new occurrences of open-coded
+> variants of uninitialized_var().
+>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Gustavo A. R. Silva <gustavoars@kernel.org>
+> Signed-off-by: Denis Efremov <efremov@linux.com>
+> ---
+> Changes in v2:
+>  - Documentation cited in the script's description
+>  - kernel.org link added to the diagnostics messages
+>  - "T *var = &var;" pattern removed
+>  - "var =@p var", "var =@p *(&(var))" patterns added
+>
+>  .../coccinelle/misc/uninitialized_var.cocci   | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 scripts/coccinelle/misc/uninitialized_var.cocci
+>
+> diff --git a/scripts/coccinelle/misc/uninitialized_var.cocci b/scripts/coccinelle/misc/uninitialized_var.cocci
+> new file mode 100644
+> index 000000000000..8fa845cefe11
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/uninitialized_var.cocci
+> @@ -0,0 +1,51 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +///
+> +/// Please, don't reintroduce uninitialized_var().
+> +/// From Documentation/process/deprecated.rst:
+> +///  For any compiler warnings about uninitialized variables, just add
+> +///  an initializer. Using warning-silencing tricks is dangerous as it
+> +///  papers over real bugs (or can in the future), and suppresses unrelated
+> +///  compiler warnings (e.g. "unused variable"). If the compiler thinks it
+> +///  is uninitialized, either simply initialize the variable or make compiler
+> +///  changes. Keep in mind that in most cases, if an initialization is
+> +///  obviously redundant, the compiler's dead-store elimination pass will make
+> +///  sure there are no needless variable writes.
+> +///
+> +// Confidence: High
+> +// Copyright: (C) 2020 Denis Efremov ISPRAS
+> +// Options: --no-includes --include-headers
+> +//
+> +
+> +virtual context
+> +virtual report
+> +virtual org
+> +
+> +@r@
+> +identifier var;
+> +type T;
+> +position p;
+> +@@
+> +
+> +(
+> +* T var =@p var;
+> +|
+> +* T var =@p *(&(var));
+> +|
+> +* var =@p var
+> +|
+> +* var =@p *(&(var))
+> +)
+> +
+> +@script:python depends on report@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.report.print_report(p[0],
+> +  "WARNING this kind of initialization is deprecated (https://www.kernel.org/doc/html/latest/process/deprecated.html#uninitialized-var)")
+> +
+> +@script:python depends on org@
+> +p << r.p;
+> +@@
+> +
+> +coccilib.org.print_todo(p[0],
+> +  "WARNING this kind of initialization is deprecated (https://www.kernel.org/doc/html/latest/process/deprecated.html#uninitialized-var)")
+> --
+> 2.26.2
+>
+>
