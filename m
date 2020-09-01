@@ -2,157 +2,142 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBBBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07955C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA9820665
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:25:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DLiEuhMV";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KgnDNEPT"
+	by mail.kernel.org (Postfix) with ESMTP id E93172071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:26:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbgIASZs (ORCPT
+        id S1730318AbgIAS0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:25:48 -0400
-Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:55454 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726107AbgIASZl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:25:41 -0400
-Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 41F3AC0090;
-        Tue,  1 Sep 2020 18:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1598984740; bh=GQv+aB3Bo1VnEPYdLq5Myc0vB6nO8Pe+tlwKwUVDfK0=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=DLiEuhMV6QtfmnJ9sC5HCQUh0F4eKJD+fB+4u+CS+n2gvWJEmxuKrQrum36fgPLdh
-         jRrYg+mO0UHFtSP1K29eFpZaLehEZE3Iog/dTW2PsW8oXPAhEISsuyaLilU7lpOip9
-         vcMBXIzj/RdglEtbSs8WLPkT6ZxhLWoJ6hcNCX/2q1dRMFgk84tx3mAIis6nikPF/g
-         Q/KG+zFzGjXf5XjOj3F4EMZgM8vMJmsxl1WHYHMDeBZ27w7xP2KHbB55Z6aj0qLPRN
-         3ULHkBGnIxDJJHZw30uQ/S9vBFDcV6Xf66vhDlPIdHJJG28/aSHHpdYXT85WxyzAud
-         XTTlFshxCHQ2g==
-Received: from o365relay-in.synopsys.com (us03-o365relay1.synopsys.com [10.4.161.137])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id A58CFA0071;
-        Tue,  1 Sep 2020 18:25:36 +0000 (UTC)
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2059.outbound.protection.outlook.com [104.47.36.59])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "mail.protection.outlook.com", Issuer "GlobalSign Organization Validation CA - SHA256 - G3" (verified OK))
-        by o365relay-in.synopsys.com (Postfix) with ESMTPS id 966E18000A;
-        Tue,  1 Sep 2020 18:25:32 +0000 (UTC)
-Authentication-Results: o365relay-in.synopsys.com; dmarc=pass (p=reject dis=none) header.from=synopsys.com
-Authentication-Results: o365relay-in.synopsys.com; spf=pass smtp.mailfrom=vgupta@synopsys.com
-Authentication-Results: o365relay-in.synopsys.com;
-        dkim=pass (1024-bit key; unprotected) header.d=synopsys.com header.i=@synopsys.com header.b="KgnDNEPT";
-        dkim-atps=neutral
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gWlcbfLk5mbkluKOUl7cjbNttuNcQKwC5svQ3zcy5tM/Suw2tEMSY69z7p+N5udBMaOYaLWduskftc9/iMep3xU2pefL5BDkrriBJlVt0u2PV2yzCtPBrTDUcTmnNx18Xz3IuQekl+UTKv0JRlA+vhT/c8H4xQt8KKdkRFhd+gony3HjQjp7Ks6slQfrQaxaHfMIdLTeodun+o2f5DitIZlvRk6ajeeKUkzxgOpG8gz5Bk1b3GZkQubbU936iMa5OziMA89kpR3GHTFH86a7ts6yW5ek0nTkEzXY/noOLQrKY8014IciM4/QjzJQkTA63FCylshGKEC24dNEqfhrxA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qar2B78Y+L5vPudWPJ5vhWEGvL2XziLjb14eXQmmhJc=;
- b=Vp4DoCqt81IwAbWxDNDGjDH/uQBB9UFRACpephYwSsBKGFSR8TA6ycMk4AeCqK0NsD+NPgX2A0ZNqvnpIarno45rP8wZlfvSpzXoW8ugGF1piYz5cuP5EwNkoadRsIAbuJLwOXt4bYbNCMT+aobcN5JfJCdA6p1+Xp7rqlNFhuQHnQdb044FJ0NlIWxhuBu+hLSIf5wKL/jLKrfw08DfpHpKi18cGqugat637jOEqM0Mo3OFxr7UCm4ldmXJxkB/wEbi+GPDpsBYlFGVqQDfqWLdINoKktmmYoMRhoWIXyPAZ9/lr5DcgSEjn48GHGKRmdz24kCQaMgNb/acrC9oQA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
- dkim=pass header.d=synopsys.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=synopsys.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qar2B78Y+L5vPudWPJ5vhWEGvL2XziLjb14eXQmmhJc=;
- b=KgnDNEPToMxpeLv92Sl4YPqOJIWNKZaznoKKd2Susf5SIdwHdB5de0iOiOFngrxBievJttng2BNI64cvYYLYAjIqfPsiGCb/pEDKBDkG5XygFjGjbM41OTRIFx6DlBJClWjlXz9AlCfBvycxF7suTLoZCdUTv7I35UUhwLRPQDc=
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com (2603:10b6:a03:dc::26)
- by BY5PR12MB3684.namprd12.prod.outlook.com (2603:10b6:a03:1a2::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Tue, 1 Sep
- 2020 18:25:30 +0000
-Received: from BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::19e1:33b2:5f25:5c5e]) by BYAPR12MB3479.namprd12.prod.outlook.com
- ([fe80::19e1:33b2:5f25:5c5e%5]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
- 18:25:30 +0000
-X-SNPS-Relay: synopsys.com
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mike Rapoport <rppt@linux.ibm.com>
-CC:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: Fixes tag needs some work in the arc-current tree
-Thread-Topic: linux-next: Fixes tag needs some work in the arc-current tree
-Thread-Index: AQHWgDzhn7xIpMUkL0+Wa/kLEL8h16lTf70AgAAoLQCAAHImgA==
-Date:   Tue, 1 Sep 2020 18:25:30 +0000
-Message-ID: <456f8a93-2467-7a73-3db4-2231b7e91e25@synopsys.com>
-References: <20200901184928.057f6082@canb.auug.org.au>
- <20200901091308.GD424181@linux.ibm.com>
- <20200901213656.4d216c83@canb.auug.org.au>
-In-Reply-To: <20200901213656.4d216c83@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-authentication-results: canb.auug.org.au; dkim=none (message not signed)
- header.d=none;canb.auug.org.au; dmarc=none action=none
- header.from=synopsys.com;
-x-originating-ip: [2601:641:c100:b9:9593:5cb1:ebc3:8ee9]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8dffba29-7cba-4ca6-261a-08d84ea46879
-x-ms-traffictypediagnostic: BY5PR12MB3684:
-x-microsoft-antispam-prvs: <BY5PR12MB368469995E8ABFA515F1FF72B62E0@BY5PR12MB3684.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:166;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 42o2CI+YnWc65F2CEztaIk+VJLXcMKEcglHn43p2wHLG6G1aUxYN+lU2pmmgvJT/4anDHyY7fZod4QM6Usp6+a/o+wKPa/4XKoerqtGyM/2aYr7X3KB0CgTStk4w/bVqerOJl46MBGrTb+9m/H/9ex3xAz6OLXbOeTyciqBIr5EsVxZ9mwgMu6apguN/uWn0u/f9t79psaDT7OH2C6Au+X1RzgAj+qKb8PQ+n9nQh7IqlsSvnYMMyWN/Puk4THqmHmTeAqB/ERBpkPIlckAKTZ2Rck0qIK9HPqihwvKE31fM9947nkpLwt3mmzE80vg6OTrt3MJhsmtb2ea/oMfasdmQQY/Z6nXJRJvKRotoDQ6Ktk3Q6GC5ygb1C8Hrq6E2
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB3479.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(136003)(396003)(346002)(39860400002)(376002)(366004)(5660300002)(110136005)(71200400001)(6512007)(4744005)(31686004)(6506007)(8936002)(54906003)(2616005)(8676002)(36756003)(6486002)(31696002)(478600001)(316002)(4326008)(66556008)(186003)(83380400001)(66476007)(66946007)(53546011)(2906002)(76116006)(86362001)(64756008)(66446008)(43740500002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: txVlzhzTaSRwZEbUEO3xXh2nnVSkq7483P+qEmk+/uvczdftLXiDFD9lkk1cel+McbfhLLVPB2BP2U966TCvQXADsxE6QDPjJLnDb1BlEZNFmcFmuWNOVfhNYI6M/eGFdGBpuXqmFn2WO43bHB6MPueZ6Wm6TYTELUJekJjID123cVNKVdTWcko+9w4+hr4P01t1kXBqlxLQUSgPvomfvjjyGl7JRG2Oi2pZB2Re7hoPr4WGFdDDK0iN8UHg+A6J4vdrUxZJHI6RRLNMdmeQZUDZQzOoLS/QMuGV9aG6x2YLhpdJVpaml2fgVJgTaCHGcPPEExicB4REBQ3JsrhL0kjLu9u9xdl9mxeo6ijPxeCICyuDcOZnsK+KO5emps6X/kSwPYhYywJrvaANxS4dy570a+tjzIqNrAl/Ig5lCSeGPhaz1wxq76DdiukjgKjaKyDJ8dcNOlkZMyY22p2ShR1Xvf+kpafxLopof6UYb1hr86s/QhcPsv0UzJ+vnnCKhvS42miQhgiPYgAsvIPztG1biOiNuquJ2Nr0QBWRmDC0dxk8oRdR8qJiFqAtuNySZMDB0XORenSBv5Ao0o5UgT+zmx//nhYhYHUH6djuK/cX84Z9JnOeWnUJIb2xkH6Iq6ByRfulbAwwnbJvR1V2D0YV/8Sz5zb+2sGd/dAuGIei45IO1FawFUgJu2SnAVk4MbDhn6B2MmhTrK3eem8umQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <776F433F61C2AC4FA3E3661F1005AFB3@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 1 Sep 2020 14:26:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:48016 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727991AbgIAS0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 14:26:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4B5561FB;
+        Tue,  1 Sep 2020 11:26:35 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 63A0F3F71F;
+        Tue,  1 Sep 2020 11:26:33 -0700 (PDT)
+Subject: Re: [PATCH v9 04/32] drm: armada: fix common struct sg_table related
+ issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Russell King <linux@armlinux.org.uk>
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+ <CGME20200826063529eucas1p24a398fd2bacf53a33a14d7977a097f61@eucas1p2.samsung.com>
+ <20200826063316.23486-5-m.szyprowski@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f3a3e178-4d52-7015-1913-bf44993f07f3@arm.com>
+Date:   Tue, 1 Sep 2020 19:26:32 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-X-OriginatorOrg: synopsys.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB3479.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8dffba29-7cba-4ca6-261a-08d84ea46879
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2020 18:25:30.5359
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q+WxNTK+wSDO9rlqg2/9hvKSFgj7+++WDoteJcyDj5dWSPIpmoJrHYuMCuUI4KCaWZV7CCPmAJqkNG0+BnxdWA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR12MB3684
+In-Reply-To: <20200826063316.23486-5-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 4:36 AM, Stephen Rothwell wrote:
-> Hi Mike,
->
-> On Tue, 1 Sep 2020 12:13:08 +0300 Mike Rapoport <rppt@linux.ibm.com> wrot=
-e:
->> On Tue, Sep 01, 2020 at 06:49:28PM +1000, Stephen Rothwell wrote:
->>> In commit
->>>
->>>   7000c9462d1b ("arc: fix memory initialization for systems with two me=
-mory banks")
->>>
->>> Fixes tag
->>>
->>>   Fixes: 51930df5801e ("mm: free_area_init: allow defining max_zone_pfn=
- in descend ing order") =20
->> It's line rewrapping:                                                   =
-            ^
-> Yeah, wrapped and then unwrapped with an extra space :-(
+On 2020-08-26 07:32, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
+> 
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+> 
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+> 
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>   drivers/gpu/drm/armada/armada_gem.c | 12 ++++++------
+>   1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/armada/armada_gem.c b/drivers/gpu/drm/armada/armada_gem.c
+> index 8005614d2e6b..bedd8937d8a1 100644
+> --- a/drivers/gpu/drm/armada/armada_gem.c
+> +++ b/drivers/gpu/drm/armada/armada_gem.c
+> @@ -395,7 +395,7 @@ armada_gem_prime_map_dma_buf(struct dma_buf_attachment *attach,
+>   
+>   		mapping = dobj->obj.filp->f_mapping;
+>   
+> -		for_each_sg(sgt->sgl, sg, count, i) {
+> +		for_each_sgtable_sg(sgt, sg, i) {
+>   			struct page *page;
+>   
+>   			page = shmem_read_mapping_page(mapping, i);
+> @@ -407,8 +407,8 @@ armada_gem_prime_map_dma_buf(struct dma_buf_attachment *attach,
+>   			sg_set_page(sg, page, PAGE_SIZE, 0);
+>   		}
+>   
+> -		if (dma_map_sg(attach->dev, sgt->sgl, sgt->nents, dir) == 0) {
+> -			num = sgt->nents;
+> +		if (dma_map_sgtable(attach->dev, sgt, dir, 0)) {
+> +			num = count;
 
-Its vim's doing. Now fixed and pushed !
+I think it might be even nicer to get rid of "num" entirely and convert 
+the cleanup path to for_each_sgtable_sg() for completeness - AFAICS it 
+should only need an extra "if (sg_page(sg))..." check in that loop. Then 
+"count" could possibly be squashed into its one remaining use as well, 
+but maybe it's worth keeping for readability.
 
-Thx,
--Vineet
+Robin.
+
+>   			goto release;
+>   		}
+>   	} else if (dobj->page) {
+> @@ -418,7 +418,7 @@ armada_gem_prime_map_dma_buf(struct dma_buf_attachment *attach,
+>   
+>   		sg_set_page(sgt->sgl, dobj->page, dobj->obj.size, 0);
+>   
+> -		if (dma_map_sg(attach->dev, sgt->sgl, sgt->nents, dir) == 0)
+> +		if (dma_map_sgtable(attach->dev, sgt, dir, 0))
+>   			goto free_table;
+>   	} else if (dobj->linear) {
+>   		/* Single contiguous physical region - no struct page */
+> @@ -449,11 +449,11 @@ static void armada_gem_prime_unmap_dma_buf(struct dma_buf_attachment *attach,
+>   	int i;
+>   
+>   	if (!dobj->linear)
+> -		dma_unmap_sg(attach->dev, sgt->sgl, sgt->nents, dir);
+> +		dma_unmap_sgtable(attach->dev, sgt, dir, 0);
+>   
+>   	if (dobj->obj.filp) {
+>   		struct scatterlist *sg;
+> -		for_each_sg(sgt->sgl, sg, sgt->nents, i)
+> +		for_each_sgtable_sg(sgt, sg, i)
+>   			put_page(sg_page(sg));
+>   	}
+>   
+> 
