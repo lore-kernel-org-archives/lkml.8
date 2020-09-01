@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B40DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:34:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7554C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD9C220E65
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78684205F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:34:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974453;
-	bh=0pLi0SLVd6e4BBOw66dxZETJ9nGIBorqtqaZQsTosqY=;
+	s=default; t=1598974498;
+	bh=NkA8PEf4GzDYWrPWLhgilQx3bxTCKVY7CDrjO5GtJRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P9wruiHWB0okEr9/QVPhzbj5nCkRrAvlTYYnHs6qBtVf+AMnLg3P+ucW+RZxyRUD3
-	 N3bnLiO4Ecd1bfOTtc4WggRJ+KtEArAU9HHq9+OaL2DYi7eBv5KGqU37dfuOWlRbVx
-	 uvtIVHljVBgVd5hQy4LzSc8RuVe22AfGncVQNOXM=
+	b=XEZh1azPjabkMKWeJCeb52OGlCu+Dpaqk0/fZ/u8zI6iykQ/jbyhB6l9I4N++H+8Q
+	 tcRlrF44Xz0KsLNA+zT6BSEPCRMX+0/Nj97X3iyiAapPWovNoYjbZ0J/ZKzuOFUI7A
+	 AsQS+xDfB1D4DSJyZ9V8PA9C38PQ2FN63VU9e3cw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgIAPeI (ORCPT
+        id S1727910AbgIAPex (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:34:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38368 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:34:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731205AbgIAPdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:33:51 -0400
+        id S1730713AbgIAPeF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD10621534;
-        Tue,  1 Sep 2020 15:33:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1095C21582;
+        Tue,  1 Sep 2020 15:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974431;
-        bh=0pLi0SLVd6e4BBOw66dxZETJ9nGIBorqtqaZQsTosqY=;
+        s=default; t=1598974444;
+        bh=NkA8PEf4GzDYWrPWLhgilQx3bxTCKVY7CDrjO5GtJRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YSkNeT/3cdaAXrZjTA5kQyOKE9ehYJiCTxePvk2+xr3zsO55U8lVp6eYqKYR9r1ah
-         x0qP61jE98e8R4yuEUCZTQa4q3cESAWKZoVIqSOuOLp1OV5oJKUBDedwWz3Bz43hD4
-         EYFdSClzuAF6/6msxl+SZmeuhPxcNRDXHrPO2odw=
+        b=0a1L+vjszs6/LFnFDkbp1sspCXZiwxSMrYrAI8iJhq+gBzRrprAaCi8sI7GOAvkpn
+         qPyv4kh7b5ZV7TWAHwwhMO5TFLewQAg/HgJfx+h4Rm8zinC6Hx/KvOcQLvPGLvBHm1
+         J9jW/hqReyrS1OEd1zWoSWCDXBA4QJDIuIC1sk4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank van der Linden <fllinden@amazon.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.4 174/214] arm64: vdso32: make vdso32 install conditional
-Date:   Tue,  1 Sep 2020 17:10:54 +0200
-Message-Id: <20200901151001.316341279@linuxfoundation.org>
+        stable@vger.kernel.org, Caleb Jorden <caljorden@hotmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 178/214] crypto: af_alg - Work around empty control messages without MSG_MORE
+Date:   Tue,  1 Sep 2020 17:10:58 +0200
+Message-Id: <20200901151001.502942541@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,36 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank van der Linden <fllinden@amazon.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 5d28ba5f8a0cfa3a874fa96c33731b8fcd141b3a upstream.
+commit c195d66a8a75c60515819b101975f38b7ec6577f upstream.
 
-vdso32 should only be installed if CONFIG_COMPAT_VDSO is enabled,
-since it's not even supposed to be compiled otherwise, and arm64
-builds without a 32bit crosscompiler will fail.
+The iwd daemon uses libell which sets up the skcipher operation with
+two separate control messages.  As the first control message is sent
+without MSG_MORE, it is interpreted as an empty request.
 
-Fixes: 8d75785a8142 ("ARM64: vdso32: Install vdso32 from vdso_install")
-Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-Cc: stable@vger.kernel.org [5.4+]
-Link: https://lore.kernel.org/r/20200827234012.19757-1-fllinden@amazon.com
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+While libell should be fixed to use MSG_MORE where appropriate, this
+patch works around the bug in the kernel so that existing binaries
+continue to work.
+
+We will print a warning however.
+
+A separate issue is that the new kernel code no longer allows the
+control message to be sent twice within the same request.  This
+restriction is obviously incompatible with what iwd was doing (first
+setting an IV and then sending the real control message).  This
+patch changes the kernel so that this is explicitly allowed.
+
+Reported-by: Caleb Jorden <caljorden@hotmail.com>
+Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/Makefile |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ crypto/af_alg.c |   13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -146,7 +146,8 @@ zinstall install:
- PHONY += vdso_install
- vdso_install:
- 	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso $@
--	$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso32 $@
-+	$(if $(CONFIG_COMPAT_VDSO), \
-+		$(Q)$(MAKE) $(build)=arch/arm64/kernel/vdso32 $@)
+--- a/crypto/af_alg.c
++++ b/crypto/af_alg.c
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/net.h>
+ #include <linux/rwsem.h>
++#include <linux/sched.h>
+ #include <linux/sched/signal.h>
+ #include <linux/security.h>
  
- # We use MRPROPER_FILES and CLEAN_FILES now
- archclean:
+@@ -847,9 +848,15 @@ int af_alg_sendmsg(struct socket *sock,
+ 	}
+ 
+ 	lock_sock(sk);
+-	if (ctx->init && (init || !ctx->more)) {
+-		err = -EINVAL;
+-		goto unlock;
++	if (ctx->init && !ctx->more) {
++		if (ctx->used) {
++			err = -EINVAL;
++			goto unlock;
++		}
++
++		pr_info_once(
++			"%s sent an empty control message without MSG_MORE.\n",
++			current->comm);
+ 	}
+ 	ctx->init = true;
+ 
 
 
