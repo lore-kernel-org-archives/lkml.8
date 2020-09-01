@@ -2,107 +2,124 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E002C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98951C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 44F342067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6532320767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978653;
-	bh=jo5js8lscFdRLSI/iL/0MdnOq2JeNN+Y1xQFxh7q//s=;
+	s=default; t=1598978657;
+	bh=PqrMqbBH0Z4mgkBMY6zCc7uImtlAmTC0nFywzlrEX6A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UY0S2zEL1hZh7oBMhpUtCQSxy3vaSRxMsU8o0C7jXavkuR+LWvujlL6H5DH6rFQ53
-	 syLx/eWM5lJBJWfEwQlrD7mchJoSn1eRHTu2W6G29z1MXDV+VFM2ED9w0HRPGJgGxW
-	 Lw53AC+ZQdccJuzRbTAPaAZcc+O4vgS4slmwbEbg=
+	b=OcQUwCecZgBTjDhhMuuaSAqVw2ZaiiwrEYw2/7pL/zWIDv9+xrCbZA7g4qRZIw+hu
+	 BOFJlAsjTxVEnPTmTI48xaUcrI8gqcZ/QxTrkYY8WcGXrdGaxz5R6ftYo0uuhm4dM9
+	 fsw0EC6ALAgxbebA1Yv7MAn+pKdyDyKdu+N5oW9s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730273AbgIAQoL (ORCPT
+        id S1730265AbgIAQoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:44:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55064 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:44:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730258AbgIAP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730259AbgIAP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:27:43 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB5A9207D3;
-        Tue,  1 Sep 2020 15:27:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CE72206FA;
+        Tue,  1 Sep 2020 15:27:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974062;
-        bh=jo5js8lscFdRLSI/iL/0MdnOq2JeNN+Y1xQFxh7q//s=;
+        s=default; t=1598974063;
+        bh=PqrMqbBH0Z4mgkBMY6zCc7uImtlAmTC0nFywzlrEX6A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g7ARaH/6gOwD0Qobni24k3l1FK1h9lohBOSSiMWp1zDmY29GS2uEBiXYEB8w/mMRy
-         dWIESHQOUL9Sm/eKOoGkTa5jVu/U50ba2pw7lGsX32GR0ma0KXpP+2Yj3eJwSGKyCl
-         2Gir9We9wSMfaBjfLz7kXjkoSL+SRHr5UgQe8JiY=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 03/11] spi: atmel: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 17:27:05 +0200
-Message-Id: <20200901152713.18629-3-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901152713.18629-1-krzk@kernel.org>
-References: <20200901152713.18629-1-krzk@kernel.org>
+        b=1bbpehUXpj7vHZa0Nfy63ArP5NUGnzOchiXTQWbtUcdkl9Dk34vwBHm+c2Fw2RNMO
+         ZOmXkFZkRA1Fq8GbldT94WdmlmvvteTk8G8q4Wq+eMGp9AerOopYxXggaA+2ZBrt9o
+         kqwheu0h1G/RuMcjVueFNzOVrrV8aoaNf6GXTW+E=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com,
+        Necip Fazil Yildiran <necip@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 006/214] net: qrtr: fix usage of idr in port assignment to socket
+Date:   Tue,  1 Sep 2020 17:08:06 +0200
+Message-Id: <20200901150953.254936782@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+From: Necip Fazil Yildiran <necip@google.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[ Upstream commit 8dfddfb79653df7c38a9c8c4c034f242a36acee9 ]
+
+Passing large uint32 sockaddr_qrtr.port numbers for port allocation
+triggers a warning within idr_alloc() since the port number is cast
+to int, and thus interpreted as a negative number. This leads to
+the rejection of such valid port numbers in qrtr_port_assign() as
+idr_alloc() fails.
+
+To avoid the problem, switch to idr_alloc_u32() instead.
+
+Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
+Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
+Signed-off-by: Necip Fazil Yildiran <necip@google.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/spi/spi-atmel.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ net/qrtr/qrtr.c |   20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-index 2cfe6253a784..7c68d5cdbdc6 100644
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -513,9 +513,8 @@ static int atmel_spi_configure_dma(struct spi_master *master,
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -547,23 +547,25 @@ static void qrtr_port_remove(struct qrtr
+  */
+ static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
+ {
++	u32 min_port;
+ 	int rc;
  
- 	master->dma_tx = dma_request_chan(dev, "tx");
- 	if (IS_ERR(master->dma_tx)) {
--		err = PTR_ERR(master->dma_tx);
--		if (err != -EPROBE_DEFER)
--			dev_err(dev, "No TX DMA channel, DMA is disabled\n");
-+		err = dev_err_probe(dev, PTR_ERR(master->dma_tx),
-+				    "No TX DMA channel, DMA is disabled\n");
- 		goto error_clear;
+ 	mutex_lock(&qrtr_port_lock);
+ 	if (!*port) {
+-		rc = idr_alloc(&qrtr_ports, ipc,
+-			       QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
+-			       GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = QRTR_MIN_EPH_SOCKET;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
+ 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
+ 		rc = -EACCES;
+ 	} else if (*port == QRTR_PORT_CTRL) {
+-		rc = idr_alloc(&qrtr_ports, ipc, 0, 1, GFP_ATOMIC);
++		min_port = 0;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
+ 	} else {
+-		rc = idr_alloc(&qrtr_ports, ipc, *port, *port + 1, GFP_ATOMIC);
+-		if (rc >= 0)
+-			*port = rc;
++		min_port = *port;
++		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
++		if (!rc)
++			*port = min_port;
  	}
+ 	mutex_unlock(&qrtr_port_lock);
  
--- 
-2.17.1
+
 
