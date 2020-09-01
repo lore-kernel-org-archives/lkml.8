@@ -2,151 +2,57 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DC5C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8823C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC37F2098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978177;
-	bh=cAzy/Sn/oao7G922f9VL+tjeE4Io52jLSMM4+u7S5yY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pXUI7NdYFh9T9+wbPLm8m5issSE/qMq1AZb55uw0jWzZaL3OJ6M5z/crnUZROb/TB
-	 ZL9DKTfLMy3OdX99NagD51t5ToLRDj5AIdgdF2DDqL8a69PrKuJC+eVVjL9q8D53c1
-	 eVzC5+dVwKeTFAt3IJMwCMw6bQkmrM3IN8y5TlnE=
+	by mail.kernel.org (Postfix) with ESMTP id AB2BA20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:36:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731676AbgIAQgD (ORCPT
+        id S1732056AbgIAQgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 1 Sep 2020 12:36:19 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:59193 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1731658AbgIAQgD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 12:36:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59376 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730550AbgIAP3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:45 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6955720684;
-        Tue,  1 Sep 2020 15:29:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974184;
-        bh=cAzy/Sn/oao7G922f9VL+tjeE4Io52jLSMM4+u7S5yY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zwF9HgSQw6uyetXhgIXxnF5yFWw44RfrAuXORpwz5gplF7hrEdDiA4QfGBrXGIyT5
-         rNVCHPsMJFbZkVnXo7sk9HhJcNKIEN/4atbUYdtzmR4tlObgrmF1awE4Y9bxTDVCZe
-         qM4Mf1XVPGQzvndDqKYishSBBjHtfe9b13oL3ZjQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 078/214] btrfs: only commit the delayed inode when doing a full fsync
-Date:   Tue,  1 Sep 2020 17:09:18 +0200
-Message-Id: <20200901150956.716711449@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: (qmail 592735 invoked by uid 1000); 1 Sep 2020 12:36:02 -0400
+Date:   Tue, 1 Sep 2020 12:36:02 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Khalid Aziz <khalid.aziz@oracle.com>
+Cc:     gregkh@linuxfoundation.org, erkka.talvitie@vincit.fi,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low
+ speed devices
+Message-ID: <20200901163602.GG587030@rowland.harvard.edu>
+References: <cover.1598887346.git.khalid@gonehiking.org>
+ <20200901023117.GD571008@rowland.harvard.edu>
+ <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+On Tue, Sep 01, 2020 at 09:15:46AM -0700, Khalid Aziz wrote:
+> On 8/31/20 8:31 PM, Alan Stern wrote:
+> > Can you collect a usbmon trace showing an example of this problem?
+> > 
+> 
+> I have attached usbmon traces for when USB hub with keyboards and mouse
+> is plugged into USB 2.0 port and when it is plugged into the NEC USB 3.0
+> port.
 
-[ Upstream commit 8c8648dd1f6d62aeb912deeb788b6ac33cb782e7 ]
+The usbmon traces show lots of errors, but no Clear-TT events.  The 
+large number of errors suggests that you've got a hardware problem; 
+either a bad hub or bad USB connections.
 
-Commit 2c2c452b0cafdc ("Btrfs: fix fsync when extend references are added
-to an inode") forced a commit of the delayed inode when logging an inode
-in order to ensure we would end up logging the inode item during a full
-fsync. By committing the delayed inode, we updated the inode item in the
-fs/subvolume tree and then later when copying items from leafs modified in
-the current transaction into the log tree (with copy_inode_items_to_log())
-we ended up copying the inode item from the fs/subvolume tree into the log
-tree. Logging an up to date version of the inode item is required to make
-sure at log replay time we get the link count fixup triggered among other
-things (replay xattr deletes, etc). The test case generic/040 from fstests
-exercises the bug which that commit fixed.
-
-However for a fast fsync we don't need to commit the delayed inode because
-we always log an up to date version of the inode item based on the struct
-btrfs_inode we have in-memory. We started doing this for fast fsyncs since
-commit e4545de5b035c7 ("Btrfs: fix fsync data loss after append write").
-
-So just stop committing the delayed inode if we are doing a fast fsync,
-we are only wasting time and adding contention on fs/subvolume tree.
-
-This patch is part of a series that has the following patches:
-
-1/4 btrfs: only commit the delayed inode when doing a full fsync
-2/4 btrfs: only commit delayed items at fsync if we are logging a directory
-3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
-4/4 btrfs: remove no longer needed use of log_writers for the log root tree
-
-After the entire patchset applied I saw about 12% decrease on max latency
-reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
-ram, using kvm and using a raw NVMe device directly (no intermediary fs on
-the host). The test was invoked like the following:
-
-  mkfs.btrfs -f /dev/sdk
-  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
-  dbench -D /mnt/sdk -t 300 8
-  umount /mnt/dsk
-
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/btrfs/tree-log.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
-index cc407c68d356f..0525b191843e1 100644
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -5154,7 +5154,7 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
- 	struct btrfs_key max_key;
- 	struct btrfs_root *log = root->log_root;
- 	int err = 0;
--	int ret;
-+	int ret = 0;
- 	bool fast_search = false;
- 	u64 ino = btrfs_ino(inode);
- 	struct extent_map_tree *em_tree = &inode->extent_tree;
-@@ -5191,14 +5191,16 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
- 
- 	/*
- 	 * Only run delayed items if we are a dir or a new file.
--	 * Otherwise commit the delayed inode only, which is needed in
--	 * order for the log replay code to mark inodes for link count
--	 * fixup (create temporary BTRFS_TREE_LOG_FIXUP_OBJECTID items).
-+	 * Otherwise commit the delayed inode only if the full sync flag is set,
-+	 * as we want to make sure an up to date version is in the subvolume
-+	 * tree so copy_inode_items_to_log() / copy_items() can find it and copy
-+	 * it to the log tree. For a non full sync, we always log the inode item
-+	 * based on the in-memory struct btrfs_inode which is always up to date.
- 	 */
- 	if (S_ISDIR(inode->vfs_inode.i_mode) ||
- 	    inode->generation > fs_info->last_trans_committed)
- 		ret = btrfs_commit_inode_delayed_items(trans, inode);
--	else
-+	else if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags))
- 		ret = btrfs_commit_inode_delayed_inode(inode);
- 
- 	if (ret) {
--- 
-2.25.1
-
-
-
+Alan Stern
