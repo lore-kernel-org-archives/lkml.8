@@ -2,185 +2,136 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5270DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09C33C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 361E7214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71932083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:09:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726493AbgIAJJA convert rfc822-to-8bit (ORCPT
+        id S1726518AbgIAJJG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:09:00 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2719 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725848AbgIAJJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:09:00 -0400
-Received: from lhreml732-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 2E910473AFED2B69E7F2;
-        Tue,  1 Sep 2020 10:08:58 +0100 (IST)
-Received: from fraeml702-chm.china.huawei.com (10.206.15.51) by
- lhreml732-chm.china.huawei.com (10.201.108.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Tue, 1 Sep 2020 10:08:57 +0100
-Received: from fraeml714-chm.china.huawei.com (10.206.15.33) by
- fraeml702-chm.china.huawei.com (10.206.15.51) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Tue, 1 Sep 2020 11:08:57 +0200
-Received: from fraeml714-chm.china.huawei.com ([10.206.15.33]) by
- fraeml714-chm.china.huawei.com ([10.206.15.33]) with mapi id 15.01.1913.007;
- Tue, 1 Sep 2020 11:08:57 +0200
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        "mjg59@google.com" <mjg59@google.com>
-CC:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: RE: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
- EVM_ALLOW_METADATA_WRITES is set
-Thread-Topic: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
- EVM_ALLOW_METADATA_WRITES is set
-Thread-Index: AQHWRYqWnNLPRhTOMk2ID5bSdlZ6YalHdJUAgAx1KTA=
-Date:   Tue, 1 Sep 2020 09:08:57 +0000
-Message-ID: <a5e6a5acf2274a6d844b275dacfbabb8@huawei.com>
-References: <20200618160329.1263-2-roberto.sassu@huawei.com>
-         <20200618160458.1579-7-roberto.sassu@huawei.com>
- <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
-In-Reply-To: <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
-Accept-Language: en-US
-Content-Language: en-US
+        Tue, 1 Sep 2020 05:09:06 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151]:59782 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726515AbgIAJJD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:09:03 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-283-TOoGT-t2Oa-s63UZlOFx8A-1; Tue, 01 Sep 2020 10:07:44 +0100
+X-MC-Unique: TOoGT-t2Oa-s63UZlOFx8A-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Tue, 1 Sep 2020 10:07:42 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 1 Sep 2020 10:07:42 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Joe Perches' <joe@perches.com>, Denis Efremov <efremov@linux.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Alex Dewar <alex.dewar90@gmail.com>
+CC:     York Sun <york.sun@nxp.com>, Borislav Petkov <bp@alien8.de>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>,
+        "James Morse" <james.morse@arm.com>,
+        Robert Richter <rric@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        "Maxim Levitsky" <maximlevitsky@gmail.com>,
+        Alex Dubov <oakad@yahoo.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "Arnd Bergmann" <arnd@arndb.de>,
+        Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "Douglas Miller" <dougmill@linux.ibm.com>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        =?iso-8859-1?Q?Kai_M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Mark Brown <broonie@kernel.org>,
+        Oliver Neukum <oneukum@suse.com>,
+        Pete Zaitcev <zaitcev@redhat.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Subject: RE: sysfs output without newlines
+Thread-Topic: sysfs output without newlines
+Thread-Index: AQHWfkO/+C/EB0p8Hk2MEQnp7JjooqlTgZKw
+Date:   Tue, 1 Sep 2020 09:07:42 +0000
+Message-ID: <5f0b48e0291b4b54bc1caeb8b5715c65@AcuMS.aculab.com>
+References: <0f837bfb394ac632241eaac3e349b2ba806bce09.camel@perches.com>
+         <4cd6275c-6e95-3aeb-9924-141f62e00449@linux.com>
+ <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel@perches.com>
+In-Reply-To: <b64a4cb0ee68fee01973616e5ef0f299ac191f6d.camel@perches.com>
+Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.48.193.114]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0.001
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> Sent: Monday, August 24, 2020 2:18 PM
-> On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
-> > When EVM_ALLOW_METADATA_WRITES is set, EVM allows any operation
-> on
-> > metadata. Its main purpose is to allow users to freely set metadata when
-> > they are protected by a portable signature, until the HMAC key is loaded.
+From: Joe Perches
+> Sent: 29 August 2020 21:34
+...
+> > On 8/29/20 9:23 PM, Joe Perches wrote:
+> > > While doing an investigation for a possible treewide conversion of
+> > > sysfs output using sprintf/snprintf/scnprintf, I discovered
+> > > several instances of sysfs output without terminating newlines.
+> > >
+> > > It seems likely all of these should have newline terminations
+> > > or have the \n\r termination changed to a single newline.
 > >
-> > However, IMA is not notified about metadata changes and, after the first
-> > appraisal, always allows access to the files without checking metadata
-> > again.
+> > I think that it could break badly written scripts in rare cases.
 > 
-> ^after the first successful appraisal
-> >
-> > This patch checks in evm_reset_status() if EVM_ALLOW_METADATA
-> WRITES is
-> > enabled and if it is, sets the IMA_CHANGE_XATTR/ATTR bits depending on
-> the
-> > operation performed. At the next appraisal, metadata are revalidated.
+> Maybe.
 > 
-> EVM modifying IMA bits crosses the boundary between EVM and IMA.
-> There
-> is already an IMA post_setattr hook.  IMA could reset its own bit
-> there.  If necessary EVM could export as a function it's status info.
-
-I wouldn't try to guess in IMA when EVM resets its status. We would have
-to duplicate the logic to check if an EVM key is loaded, if the passed xattr
-is a POSIX ACL, ...
-
-I think it is better to set a flag, maybe a new one, directly in EVM, to notify
-the integrity subsystem that iint->evm_status is no longer valid.
-
-If the EVM flag is set, IMA would reset the appraisal flags, as it uses
-iint->evm_status for appraisal. We can consider to reset also the measure
-flags when we have a template that includes file metadata.
-
-Roberto
-
-HUAWEI TECHNOLOGIES Duesseldorf GmbH, HRB 56063
-Managing Director: Li Peng, Li Jian, Shi Yanli
-
-> Mimi
+> Is sysfs output a nominally unchangeable api like seq_?
+> Dunno.  seq_ output is extended all the time.
 > 
-> >
-> > This patch also adds a call to evm_reset_status() in
-> > evm_inode_post_setattr() so that EVM won't return the cached status
-> the
-> > next time appraisal is performed.
-> >
-> > Cc: stable@vger.kernel.org # 4.16.x
-> > Fixes: ae1ba1676b88e ("EVM: Allow userland to permit modification of
-> EVM-protected metadata")
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > ---
-> >  security/integrity/evm/evm_main.c | 14 ++++++++++----
-> >  1 file changed, 10 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/security/integrity/evm/evm_main.c
-> b/security/integrity/evm/evm_main.c
-> > index 41cc6a4aaaab..d4d918183094 100644
-> > --- a/security/integrity/evm/evm_main.c
-> > +++ b/security/integrity/evm/evm_main.c
-> > @@ -478,13 +478,17 @@ int evm_inode_removexattr(struct dentry
-> *dentry, const char *xattr_name)
-> >  	return evm_protect_xattr(dentry, xattr_name, NULL, 0);
-> >  }
-> >
-> > -static void evm_reset_status(struct inode *inode)
-> > +static void evm_reset_status(struct inode *inode, int bit)
-> >  {
-> >  	struct integrity_iint_cache *iint;
-> >
-> >  	iint = integrity_iint_find(inode);
-> > -	if (iint)
-> > +	if (iint) {
-> > +		if (evm_initialized & EVM_ALLOW_METADATA_WRITES)
-> > +			set_bit(bit, &iint->atomic_flags);
-> > +
-> >  		iint->evm_status = INTEGRITY_UNKNOWN;
-> > +	}
-> >  }
-> >
-> >  /**:q
-> > @@ -507,7 +511,7 @@ void evm_inode_post_setxattr(struct dentry
-> *dentry, const char *xattr_name,
-> >  				  && !posix_xattr_acl(xattr_name)))
-> >  		return;
-> >
-> > -	evm_reset_status(dentry->d_inode);
-> > +	evm_reset_status(dentry->d_inode, IMA_CHANGE_XATTR);
-> >
-> >  	evm_update_evmxattr(dentry, xattr_name, xattr_value,
-> xattr_value_len);
-> >  }
-> > @@ -527,7 +531,7 @@ void evm_inode_post_removexattr(struct dentry
-> *dentry, const char *xattr_name)
-> >  	if (!evm_key_loaded() || !evm_protected_xattr(xattr_name))
-> >  		return;
-> >
-> > -	evm_reset_status(dentry->d_inode);
-> > +	evm_reset_status(dentry->d_inode, IMA_CHANGE_XATTR);
-> >
-> >  	evm_update_evmxattr(dentry, xattr_name, NULL, 0);
-> >  }
-> > @@ -600,6 +604,8 @@ void evm_inode_post_setattr(struct dentry
-> *dentry, int ia_valid)
-> >  	if (!evm_key_loaded())
-> >  		return;
-> >
-> > +	evm_reset_status(dentry->d_inode, IMA_CHANGE_ATTR);
-> > +
-> >  	if (ia_valid & (ATTR_MODE | ATTR_UID | ATTR_GID))
-> >  		evm_update_evmxattr(dentry, NULL, NULL, 0);
-> >  }
-> 
+> I think whitespace isn't generally considered part of
+> sscanf type input content awareness.
+
+The shell will remove trailing '\n' (but not '\r') from:
+	foo=$(cat bar)
+So shell scripts are unlikely to be affected.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
