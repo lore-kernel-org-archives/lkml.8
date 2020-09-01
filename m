@@ -2,110 +2,110 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4563C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E9DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA992078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C6620767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598980611;
+	bh=cUGyqRoLKLvxQhBGrRQhHCN2eGOlJljyoYCfi1tGecU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zRwCBwo0d92tOVqgStout4aEbQkf29FLwcSGtoTXmYiesaFIx3G7QoTRX/M4uZI4Y
+	 3eHnzWw+JGX31rQd5hc3g8Th3wxR9HkHPd/fZeyX8wkCp5nUNmBe9buhToe+GIto2z
+	 MbZsgazQzHwc1xCGsn36L1X/XLBC6221jYcShPI8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732581AbgIARQl (ORCPT
+        id S1732501AbgIARQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:16:41 -0400
-Received: from verein.lst.de ([213.95.11.211]:54502 "EHLO verein.lst.de"
+        Tue, 1 Sep 2020 13:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727784AbgIARQg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:16:36 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 48CDB68B05; Tue,  1 Sep 2020 19:16:27 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 19:16:27 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc:     Christoph Hellwig <hch@lst.de>, alsa-devel@alsa-project.org,
-        linux-ia64@vger.kernel.org, linux-doc@vger.kernel.org,
-        nouveau@lists.freedesktop.org, linux-nvme@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        linux-mm@kvack.org, Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-samsung-soc@vger.kernel.org,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        linux-scsi@vger.kernel.org,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        linux-media@vger.kernel.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
-        netdev@vger.kernel.org, Seung-Woo Kim <sw0312.kim@samsung.com>,
-        linux-mips@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 22/28] sgiseeq: convert from dma_cache_sync to
- dma_sync_single_for_device
-Message-ID: <20200901171627.GA8255@lst.de>
-References: <20200819065555.1802761-1-hch@lst.de> <20200819065555.1802761-23-hch@lst.de> <20200901152209.GA14288@alpha.franken.de> <20200901171241.GA20685@alpha.franken.de>
+        id S1727864AbgIAPOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:24 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B0120BED;
+        Tue,  1 Sep 2020 15:14:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973264;
+        bh=cUGyqRoLKLvxQhBGrRQhHCN2eGOlJljyoYCfi1tGecU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zL7s7jJH4dGf3r8voSQcvOuWC7WQCTJ/kJYRpZrsUYXaj5cxoBXi42LjT592CHgw+
+         R6ENIZGAJP16SvGsMrISZPGavHEMXZlmQod8+js5BrjQH/wubdN8z5AY1Kb5oVAg7W
+         LXRNxTjBrDC8M/XJ0CNXowqBjweb1ZOsBkeKj/Gc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 10/78] media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
+Date:   Tue,  1 Sep 2020 17:09:46 +0200
+Message-Id: <20200901150925.249121062@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
+References: <20200901150924.680106554@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901171241.GA20685@alpha.franken.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 07:12:41PM +0200, Thomas Bogendoerfer wrote:
-> On Tue, Sep 01, 2020 at 05:22:09PM +0200, Thomas Bogendoerfer wrote:
-> > On Wed, Aug 19, 2020 at 08:55:49AM +0200, Christoph Hellwig wrote:
-> > > Use the proper modern API to transfer cache ownership for incoherent DMA.
-> > > 
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  drivers/net/ethernet/seeq/sgiseeq.c | 12 ++++++++----
-> > >  1 file changed, 8 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/net/ethernet/seeq/sgiseeq.c b/drivers/net/ethernet/seeq/sgiseeq.c
-> > > index 39599bbb5d45b6..f91dae16d69a19 100644
-> > > --- a/drivers/net/ethernet/seeq/sgiseeq.c
-> > > +++ b/drivers/net/ethernet/seeq/sgiseeq.c
-> > > @@ -112,14 +112,18 @@ struct sgiseeq_private {
-> > >  
-> > >  static inline void dma_sync_desc_cpu(struct net_device *dev, void *addr)
-> > >  {
-> > > -	dma_cache_sync(dev->dev.parent, addr, sizeof(struct sgiseeq_rx_desc),
-> > > -		       DMA_FROM_DEVICE);
-> > > +	struct sgiseeq_private *sp = netdev_priv(dev);
-> > > +
-> > > +	dma_sync_single_for_cpu(dev->dev.parent, VIRT_TO_DMA(sp, addr),
-> > > +			sizeof(struct sgiseeq_rx_desc), DMA_BIDIRECTIONAL);
-> > >  }
-> > >  
-> > >  static inline void dma_sync_desc_dev(struct net_device *dev, void *addr)
-> > >  {
-> > > -	dma_cache_sync(dev->dev.parent, addr, sizeof(struct sgiseeq_rx_desc),
-> > > -		       DMA_TO_DEVICE);
-> > > +	struct sgiseeq_private *sp = netdev_priv(dev);
-> > > +
-> > > +	dma_sync_single_for_device(dev->dev.parent, VIRT_TO_DMA(sp, addr),
-> > > +			sizeof(struct sgiseeq_rx_desc), DMA_BIDIRECTIONAL);
-> > >  }
-> > 
-> > this breaks ethernet on IP22 completely, but I haven't figured out why, yet.
-> 
-> the problem is that dma_sync_single_for_cpu() doesn't flush anything
-> for IP22, because it only flushes for CPUs which do speculation. So
-> either MIPS arch_sync_dma_for_cpu() should always flush or sgiseeq
-> needs to use a different sync funktion, when it wants to re-read descriptors
-> from memory.
+From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
 
-Well, if IP22 doesn't speculate (which I'm pretty sure is the case),
-dma_sync_single_for_cpu should indeeed be a no-op.  But then there
-also shouldn't be anything in the cache, as the previous
-dma_sync_single_for_device should have invalidated it.  So it seems like
-we are missing one (or more) ownership transfers to the device.  I'll
-try to look at the the ownership management in a little more detail
-tomorrow.
+[ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+
+The value av7110->debi_virt is stored in DMA memory, and it is assigned
+to data, and thus data[0] can be modified at any time by malicious
+hardware. In this case, "if (data[0] < 2)" can be passed, but then
+data[0] can be changed into a large number, which may cause buffer
+overflow when the code "av7110->ci_slot[data[0]]" is used.
+
+To fix this possible bug, data[0] is assigned to a local variable, which
+replaces the use of data[0].
+
+Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/pci/ttpci/av7110.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
+index 382caf200ba16..c313f51688f44 100644
+--- a/drivers/media/pci/ttpci/av7110.c
++++ b/drivers/media/pci/ttpci/av7110.c
+@@ -426,14 +426,15 @@ static void debiirq(unsigned long cookie)
+ 	case DATA_CI_GET:
+ 	{
+ 		u8 *data = av7110->debi_virt;
++		u8 data_0 = data[0];
+ 
+-		if ((data[0] < 2) && data[2] == 0xff) {
++		if (data_0 < 2 && data[2] == 0xff) {
+ 			int flags = 0;
+ 			if (data[5] > 0)
+ 				flags |= CA_CI_MODULE_PRESENT;
+ 			if (data[5] > 5)
+ 				flags |= CA_CI_MODULE_READY;
+-			av7110->ci_slot[data[0]].flags = flags;
++			av7110->ci_slot[data_0].flags = flags;
+ 		} else
+ 			ci_get_data(&av7110->ci_rbuffer,
+ 				    av7110->debi_virt,
+-- 
+2.25.1
+
+
+
