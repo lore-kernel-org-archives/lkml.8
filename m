@@ -2,88 +2,99 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67976C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3941C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8C32064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975593;
-	bh=aHCoyj+j2lJWVdm5UgfX/mxFvh+za0C90Ro5NNi9D4I=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1g3//uLo7ll/MLVnZHx0XS6T07qlCNZCZp8+jfQFEsvFqyYP7tflMtnUffu2j5v/u
-	 Nle4OcwKrH4Sfob0bYo1RpzVZnpAYobWZ3YAEkimH/sj0oEK5VYO33abNCVBeQPQX9
-	 tScA35hVvecokgcYOLozUCX8qxyuOs9odS8OqEmI=
+	by mail.kernel.org (Postfix) with ESMTP id CCEC920767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgIAPxJ (ORCPT
+        id S1731548AbgIAPxN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:53:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38034 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:53:13 -0400
+Received: from foss.arm.com ([217.140.110.172]:44482 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731973AbgIAPrR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:47:17 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD525214D8;
-        Tue,  1 Sep 2020 15:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975234;
-        bh=aHCoyj+j2lJWVdm5UgfX/mxFvh+za0C90Ro5NNi9D4I=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=othLkvXqq2FTv8yyORTshVe8zgRYP3HDyEMiQn/2zpy4EweBxIZOZocshjDdiGgLm
-         mVnZKyrBXdq3Cf0RkZ9b+4nBPHZtlqCZD45Q5grXn5l3hSVe9zeJLy/zguiTynHdv7
-         O47nvkvOSjWJGaG+Q/qcdBAqfhXoXoZ/HtZvOgZU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.8 254/255] dma-pool: Fix an uninitialized variable bug in atomic_pool_expand()
-Date:   Tue,  1 Sep 2020 17:11:50 +0200
-Message-Id: <20200901151012.940296455@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726283AbgIAPxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:53:00 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 760461045;
+        Tue,  1 Sep 2020 08:52:59 -0700 (PDT)
+Received: from [10.57.45.104] (unknown [10.57.45.104])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E26ED3F71F;
+        Tue,  1 Sep 2020 08:52:55 -0700 (PDT)
+Subject: Re: [PATCH RESEND v1 05/11] perf mem: Support AUX trace
+To:     Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Ian Rogers <irogers@google.com>,
+        Kemeng Shi <shikemeng@huawei.com>,
+        Wei Li <liwei391@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>
+References: <20200806030727.30267-1-leo.yan@linaro.org>
+ <20200806030727.30267-6-leo.yan@linaro.org>
+Cc:     nd <nd@arm.com>
+From:   James Clark <james.clark@arm.com>
+Message-ID: <7b0e61d3-3f28-0e98-9c82-b9a9573bf571@arm.com>
+Date:   Tue, 1 Sep 2020 16:52:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200806030727.30267-6-leo.yan@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+Hi Leo,
 
-commit 892fc9f6835ecf075efac20789b012c5c9997fcc upstream.
+>  
+> +static int process_attr(struct perf_tool *tool __maybe_unused,
+> +			union perf_event *event,
+> +			struct evlist **pevlist)
+> +{
+> +	int err;
+> +
+> +	err = perf_event__process_attr(tool, event, pevlist);
+> +	if (err)
+> +		return err;
+> +
+> +	return 0;
+> +}
+> +
+>  int cmd_mem(int argc, const char **argv)
+>  {
+>  	struct stat st;
+> @@ -405,8 +430,12 @@ int cmd_mem(int argc, const char **argv)
+>  			.comm		= perf_event__process_comm,
+>  			.lost		= perf_event__process_lost,
+>  			.fork		= perf_event__process_fork,
+> +			.attr		= process_attr,
+>  			.build_id	= perf_event__process_build_id,
 
-The "page" pointer can be used with out being initialized.
+I don't understand the __maybe_unused here. And also isn't this equivalent
+to this without the new function:
 
-Fixes: d7e673ec2c8e ("dma-pool: Only allocate from CMA when in same memory zone")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/dma/pool.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -84,7 +84,7 @@ static int atomic_pool_expand(struct gen
- 			      gfp_t gfp)
- {
- 	unsigned int order;
--	struct page *page;
-+	struct page *page = NULL;
- 	void *addr;
- 	int ret = -ENOMEM;
- 
+  @@ -405,8 +430,12 @@ int cmd_mem(int argc, const char **argv)
+   			.comm		= perf_event__process_comm,
+   			.lost		= perf_event__process_lost,
+   			.fork		= perf_event__process_fork,
+  +			.attr		= perf_event__process_attr,
+   			.build_id	= perf_event__process_build_id,
 
 
+James
