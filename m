@@ -2,154 +2,113 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F458C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABA1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9732078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:42:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F0F520767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgIASmj (ORCPT
+        id S1730546AbgIASnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:42:39 -0400
-Received: from foss.arm.com ([217.140.110.172]:48186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIASmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:42:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 272A71FB;
-        Tue,  1 Sep 2020 11:42:37 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C9B773F71F;
-        Tue,  1 Sep 2020 11:42:34 -0700 (PDT)
-Subject: Re: [PATCH v9 08/32] drm: i915: fix common struct sg_table related
- issues
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        intel-gfx@lists.freedesktop.org
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063532eucas1p2a9e0215f483104d45af0560d5dbfa8e0@eucas1p2.samsung.com>
- <20200826063316.23486-9-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <38960f66-aab6-8615-9187-b85cf628a4fd@arm.com>
-Date:   Tue, 1 Sep 2020 19:42:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 14:43:05 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:45336 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgIASnC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 14:43:02 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 21B441C0B9B; Tue,  1 Sep 2020 20:43:00 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 20:42:58 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Evgeny Novikov <novikov@ispras.ru>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 047/125] media: davinci: vpif_capture: fix potential
+ double free
+Message-ID: <20200901183912.GA5295@duo.ucw.cz>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150936.857115610@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200826063316.23486-9-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
+Content-Disposition: inline
+In-Reply-To: <20200901150936.857115610@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 07:32, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
-> 
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
-> 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
-> 
-> This driver creatively uses sg_table->orig_nents to store the size of the
-> allocated scatterlist and ignores the number of the entries returned by
-> dma_map_sg function. The sg_table->orig_nents is (mis)used to properly
-> free the (over)allocated scatterlist.
-> 
-> This patch only introduces the common DMA-mapping wrappers operating
-> directly on the struct sg_table objects to the dmabuf related functions,
-> so the other drivers, which might share buffers with i915 could rely on
-> the properly set nents and orig_nents values.
 
-This one looks mechanical enough :)
+--bCsyhTFzCvuiizWE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Hi!
 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> [ Upstream commit 602649eadaa0c977e362e641f51ec306bc1d365d ]
+>=20
+> In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
+> and unregisters the V4L2 device. But then this is done again by
+> vpif_probe() itself. The patch removes the cleaning from
+> vpif_probe_complete().
+
+> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->   drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c       | 11 +++--------
->   drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c |  7 +++----
->   2 files changed, 6 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
-> index 2679380159fc..8a988592715b 100644
-> --- a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
-> +++ b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
-> @@ -48,12 +48,9 @@ static struct sg_table *i915_gem_map_dma_buf(struct dma_buf_attachment *attachme
->   		src = sg_next(src);
->   	}
->   
-> -	if (!dma_map_sg_attrs(attachment->dev,
-> -			      st->sgl, st->nents, dir,
-> -			      DMA_ATTR_SKIP_CPU_SYNC)) {
-> -		ret = -ENOMEM;
-> +	ret = dma_map_sgtable(attachment->dev, st, dir, DMA_ATTR_SKIP_CPU_SYNC);
-> +	if (ret)
->   		goto err_free_sg;
-> -	}
->   
->   	return st;
->   
-> @@ -73,9 +70,7 @@ static void i915_gem_unmap_dma_buf(struct dma_buf_attachment *attachment,
->   {
->   	struct drm_i915_gem_object *obj = dma_buf_to_obj(attachment->dmabuf);
->   
-> -	dma_unmap_sg_attrs(attachment->dev,
-> -			   sg->sgl, sg->nents, dir,
-> -			   DMA_ATTR_SKIP_CPU_SYNC);
-> +	dma_unmap_sgtable(attachment->dev, sg, dir, DMA_ATTR_SKIP_CPU_SYNC);
->   	sg_free_table(sg);
->   	kfree(sg);
->   
-> diff --git a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
-> index debaf7b18ab5..be30b27e2926 100644
-> --- a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
-> +++ b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
-> @@ -28,10 +28,9 @@ static struct sg_table *mock_map_dma_buf(struct dma_buf_attachment *attachment,
->   		sg = sg_next(sg);
->   	}
->   
-> -	if (!dma_map_sg(attachment->dev, st->sgl, st->nents, dir)) {
-> -		err = -ENOMEM;
-> +	err = dma_map_sgtable(attachment->dev, st, dir, 0);
-> +	if (err)
->   		goto err_st;
-> -	}
->   
->   	return st;
->   
-> @@ -46,7 +45,7 @@ static void mock_unmap_dma_buf(struct dma_buf_attachment *attachment,
->   			       struct sg_table *st,
->   			       enum dma_data_direction dir)
->   {
-> -	dma_unmap_sg(attachment->dev, st->sgl, st->nents, dir);
-> +	dma_unmap_sgtable(attachment->dev, st, dir, 0);
->   	sg_free_table(st);
->   	kfree(st);
->   }
-> 
+>  drivers/media/platform/davinci/vpif_capture.c | 2 --
+>  1 file changed, 2 deletions(-)
+>=20
+> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/medi=
+a/platform/davinci/vpif_capture.c
+> index a96f53ce80886..cf1d11e6dd8c4 100644
+> --- a/drivers/media/platform/davinci/vpif_capture.c
+> +++ b/drivers/media/platform/davinci/vpif_capture.c
+> @@ -1489,8 +1489,6 @@ probe_out:
+>  		/* Unregister video device */
+>  		video_unregister_device(&ch->video_dev);
+>  	}
+> -	kfree(vpif_obj.sd);
+> -	v4l2_device_unregister(&vpif_obj.v4l2_dev);
+> =20
+>  	return err;
+>  }
+
+This one is wrong. Unlike mainline, 4.19 does check return value of
+vpif_probe_complete(), and thus it will lead to memory leak in 4.19.
+
+Furthermore, I believe mainline still has a problems after this
+patch. There is sync and async path where vpif_probe_complete(), and
+while this fixes the sync path in mainline, I believe it will cause
+memory leak on the async path.
+
+Best regards,
+									Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--bCsyhTFzCvuiizWE
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX06WMgAKCRAw5/Bqldv6
+8oVYAJ0bhGBctKpJkKysPtiS8fIF7oACrwCgp0ZfdNdUxd0xmdcm83RhLUXGHk4=
+=Cn3J
+-----END PGP SIGNATURE-----
+
+--bCsyhTFzCvuiizWE--
