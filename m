@@ -2,53 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0C8C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:10:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1855C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:10:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A44206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:10:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90AC206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:10:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980206;
-	bh=wTvkF6vhLaFYgW45kqnAV3ZrQrcm0/5IEZgDjgn4oPw=;
+	s=default; t=1598980210;
+	bh=R+sy9+rbfVvRFi768ot2J0wZfyfxGXGm41rBOzJRWFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jDytPMBlE9DLpw03AILGmU6UHKEYAkoohdLQbOw5omW4YnzvbAmIcgKPxp8i0yRuw
-	 ZiJ53BtMbSkuQlYlfxSCFzbLwLN5NfMCrN7oi2ZeJaZJZERfQn+pE37QKGv74XTVbg
-	 M+14zza7/ohDSH9d4WdnCjsXtgFJ4BcM11sZLkao=
+	b=h/Ux3bHB0LNR2n26xDfDZmKk0t2MFPSqxyvmxfKEjmWpJZDCfFH2M33NamHrdw/mC
+	 jOYxxLcU58ia/Oy1ttxifPnmIzWFlZ/bSjXeNBImHmrew19BMmui5kYnd2EOoXSjBT
+	 Xhax+h+38ahImMHg5C0xtJzeU8VNI+rGcWh4nstc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730163AbgIARKE (ORCPT
+        id S1731620AbgIARKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34542 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbgIAPRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:17:13 -0400
+        id S1729379AbgIAPRK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:17:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CA5220BED;
-        Tue,  1 Sep 2020 15:17:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE1A4206FA;
+        Tue,  1 Sep 2020 15:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973432;
-        bh=wTvkF6vhLaFYgW45kqnAV3ZrQrcm0/5IEZgDjgn4oPw=;
+        s=default; t=1598973430;
+        bh=R+sy9+rbfVvRFi768ot2J0wZfyfxGXGm41rBOzJRWFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZQuptt+OhtzxVgpu6Yq10BQkyT4wgU9U8DPi0ImgWS6oiLa3nN2qyt6Vf/r31bNYx
-         SBWr0LFZnXhEeJ5mdkuSR+2HfZF92QoKciRne7UBy8uyxzjZCZPAHdWVZTpOTgzoUM
-         9RjkQ0qYLMPQBGEUsbt+5wkhtM40uKMXYMBSA9Ug=
+        b=P+95ND7bOMfJuk9x6XZsjqeyl3keNxmtPr3kgXHzp8nz2lDBgAF1IlZISkv09/joX
+         5EG1PWKn6M2mE1eRlnDnXONj9T+z3zp1a4SnE23P1tyTkV8hbVFC5Bd8/FYCLIq4p8
+         Vxnc1c3nwC4rZeR0/Xvt55AqPjta33RWrWa1CxnU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 76/78] btrfs: check the right error variable in btrfs_del_dir_entries_in_log
-Date:   Tue,  1 Sep 2020 17:10:52 +0200
-Message-Id: <20200901150928.552772177@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        =?UTF-8?q?Till=20D=C3=B6rges?= <doerges@pre-sense.de>
+Subject: [PATCH 4.9 75/78] usb: storage: Add unusual_uas entry for Sony PSZ drives
+Date:   Tue,  1 Sep 2020 17:10:51 +0200
+Message-Id: <20200901150928.504618980@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -61,59 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit fb2fecbad50964b9f27a3b182e74e437b40753ef ]
+commit 20934c0de13b49a072fb1e0ca79fe0fe0e40eae5 upstream.
 
-With my new locking code dbench is so much faster that I tripped over a
-transaction abort from ENOSPC.  This turned out to be because
-btrfs_del_dir_entries_in_log was checking for ret == -ENOSPC, but this
-function sets err on error, and returns err.  So instead of properly
-marking the inode as needing a full commit, we were returning -ENOSPC
-and aborting in __btrfs_unlink_inode.  Fix this by checking the proper
-variable so that we return the correct thing in the case of ENOSPC.
+The PSZ-HA* family of USB disk drives from Sony can't handle the
+REPORT OPCODES command when using the UAS protocol.  This patch adds
+an appropriate quirks entry.
 
-The ENOENT needs to be checked, because btrfs_lookup_dir_item_index()
-can return -ENOENT if the dir item isn't in the tree log (which would
-happen if we hadn't fsync'ed this guy).  We actually handle that case in
-__btrfs_unlink_inode, so it's an expected error to get back.
+Reported-and-tested-by: Till Dörges <doerges@pre-sense.de>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200826143229.GB400430@rowland.harvard.edu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 4a500fd178c8 ("Btrfs: Metadata ENOSPC handling for tree log")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ add note and comment about ENOENT ]
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/tree-log.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
-index c28ac9c464251..5bd1758f57b64 100644
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -3191,11 +3191,13 @@ int btrfs_del_dir_entries_in_log(struct btrfs_trans_handle *trans,
- 	btrfs_free_path(path);
- out_unlock:
- 	mutex_unlock(&BTRFS_I(dir)->log_mutex);
--	if (ret == -ENOSPC) {
-+	if (err == -ENOSPC) {
- 		btrfs_set_log_full_commit(root->fs_info, trans);
--		ret = 0;
--	} else if (ret < 0)
--		btrfs_abort_transaction(trans, ret);
-+		err = 0;
-+	} else if (err < 0 && err != -ENOENT) {
-+		/* ENOENT can be returned if the entry hasn't been fsynced yet */
-+		btrfs_abort_transaction(trans, err);
-+	}
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -41,6 +41,13 @@
+  * and don't forget to CC: the USB development list <linux-usb@vger.kernel.org>
+  */
  
- 	btrfs_end_log_trans(root);
- 
--- 
-2.25.1
-
++/* Reported-by: Till Dörges <doerges@pre-sense.de> */
++UNUSUAL_DEV(0x054c, 0x087d, 0x0000, 0x9999,
++		"Sony",
++		"PSZ-HA*",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_REPORT_OPCODES),
++
+ /* Reported-by: Julian Groß <julian.g@posteo.de> */
+ UNUSUAL_DEV(0x059f, 0x105f, 0x0000, 0x9999,
+ 		"LaCie",
 
 
