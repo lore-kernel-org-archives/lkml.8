@@ -2,137 +2,175 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BD7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38B5C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1E3206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FSqYBgSG"
+	by mail.kernel.org (Postfix) with ESMTP id CA631206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598977774;
+	bh=Evw0TAfbSQ69ANI8VceYk5KVjE9MAatzHdPPh8BbDOs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dfmEVZ7zilxmJy33anWhgM0LKKuxzRJY6NB37QlY9jecTEk7ruq3x1Z0CffWG0t/u
+	 J74xn8r9O6LgsNMgNq7boMZ2Jwvc+jM7it/GNhB6CwopDEQeoQJd2xik2JXbdmEAHA
+	 h3kLPNd+O+n6sN1ggj0KVDEUXB7iHFHDNUP7dtUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730972AbgIAQ32 (ORCPT
+        id S1730826AbgIAPb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:29:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:27035 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730936AbgIAQ3N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:29:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598977752;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EKeTQTlHEH1DvrHRoJ98xax44gVFHErnwIJFKqA+kZE=;
-        b=FSqYBgSGvi/Beco3sU89gD4Jlxm5hfh5G+oALUn28C5HKhL32Nz2kpCmFn/X1xCoYczskO
-        n1jybJF3evkdMhZQPmj/6bw8TsKtr8YCHv8uhxtrlpFkGNjJqk0g0EZtukd9y1IA29hPDq
-        1G3kqhokGBdOZWSrW90NVB4kpoXnYzQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-zK7EKLIlO6u-8mZrVFZPSQ-1; Tue, 01 Sep 2020 12:29:10 -0400
-X-MC-Unique: zK7EKLIlO6u-8mZrVFZPSQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 1 Sep 2020 11:31:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730545AbgIAP3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:38 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABA9680572E;
-        Tue,  1 Sep 2020 16:29:08 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-231.rdu2.redhat.com [10.10.113.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AC1915D9CC;
-        Tue,  1 Sep 2020 16:29:07 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-Subject: [RFC PATCH 7/7] mm: Pass a file_ra_state struct into
- force_page_cache_readahead()
-From:   David Howells <dhowells@redhat.com>
-To:     willy@infradead.org
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Tue, 01 Sep 2020 17:29:06 +0100
-Message-ID: <159897774687.405783.6157146299031279302.stgit@warthog.procyon.org.uk>
-In-Reply-To: <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
-References: <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/0.23
+        by mail.kernel.org (Postfix) with ESMTPSA id F2DEB20684;
+        Tue,  1 Sep 2020 15:29:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974177;
+        bh=Evw0TAfbSQ69ANI8VceYk5KVjE9MAatzHdPPh8BbDOs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qNU38RUC8xMgxAgwdL1XbRZXT3C4nFPgUxIGTZqR7IzuxyZ9sDgJe5Bn0MUA+zV8F
+         tg+SMHPOxsg6jYETrDbiZC9IoJj4WoTv38JBicC66EDKdbmU5zRyTSVWDh74LMKzjp
+         t+qF2rzwCHKCnQJulj7efPMQzZ92Y/GnryjTMTTs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 075/214] drm/xen-front: Fix misused IS_ERR_OR_NULL checks
+Date:   Tue,  1 Sep 2020 17:09:15 +0200
+Message-Id: <20200901150956.566463675@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass a file_ra_state struct into force_page_cache_readahead().  One caller
-has one that should be passed in and the other doesn't, but the former
-needs to pass its in.
+From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+[ Upstream commit 14dee058610446aa464254fc5c8e88c7535195e0 ]
+
+The patch c575b7eeb89f: "drm/xen-front: Add support for Xen PV
+display frontend" from Apr 3, 2018, leads to the following static
+checker warning:
+
+	drivers/gpu/drm/xen/xen_drm_front_gem.c:140 xen_drm_front_gem_create()
+	warn: passing zero to 'ERR_CAST'
+
+drivers/gpu/drm/xen/xen_drm_front_gem.c
+   133  struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
+   134                                                  size_t size)
+   135  {
+   136          struct xen_gem_object *xen_obj;
+   137
+   138          xen_obj = gem_create(dev, size);
+   139          if (IS_ERR_OR_NULL(xen_obj))
+   140                  return ERR_CAST(xen_obj);
+
+Fix this and the rest of misused places with IS_ERR_OR_NULL in the
+driver.
+
+Fixes:  c575b7eeb89f: "drm/xen-front: Add support for Xen PV display frontend"
+
+Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200813062113.11030-3-andr2000@gmail.com
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ drivers/gpu/drm/xen/xen_drm_front.c     | 4 ++--
+ drivers/gpu/drm/xen/xen_drm_front_gem.c | 8 ++++----
+ drivers/gpu/drm/xen/xen_drm_front_kms.c | 2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
- mm/fadvise.c   |    2 +-
- mm/internal.h  |    2 +-
- mm/readahead.c |    6 +++---
- 3 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/mm/fadvise.c b/mm/fadvise.c
-index b68d2f2959d5..2f1550279757 100644
---- a/mm/fadvise.c
-+++ b/mm/fadvise.c
-@@ -107,7 +107,7 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
- 		{
- 			DEFINE_READAHEAD(rac, file, mapping, start_index);
- 			rac._nr_pages = nrpages;
--			force_page_cache_readahead(&rac);
-+			force_page_cache_readahead(&rac, &rac.file->f_ra);
- 		}
- 		break;
- 	case POSIX_FADV_NOREUSE:
-diff --git a/mm/internal.h b/mm/internal.h
-index de3b2ce2743a..977ad7d81b1b 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -49,7 +49,7 @@ void unmap_page_range(struct mmu_gather *tlb,
- 			     unsigned long addr, unsigned long end,
- 			     struct zap_details *details);
+diff --git a/drivers/gpu/drm/xen/xen_drm_front.c b/drivers/gpu/drm/xen/xen_drm_front.c
+index 374142018171c..09894a1d343f3 100644
+--- a/drivers/gpu/drm/xen/xen_drm_front.c
++++ b/drivers/gpu/drm/xen/xen_drm_front.c
+@@ -400,8 +400,8 @@ static int xen_drm_drv_dumb_create(struct drm_file *filp,
+ 	args->size = args->pitch * args->height;
  
--void force_page_cache_readahead(struct readahead_control *);
-+void force_page_cache_readahead(struct readahead_control *, struct file_ra_state *);
- void __do_page_cache_readahead(struct readahead_control *, unsigned long);
- 
- /**
-diff --git a/mm/readahead.c b/mm/readahead.c
-index 28ff80304a21..b001720c13aa 100644
---- a/mm/readahead.c
-+++ b/mm/readahead.c
-@@ -273,11 +273,11 @@ void __do_page_cache_readahead(struct readahead_control *rac,
-  * Chunk the readahead into 2 megabyte units, so that we don't pin too much
-  * memory at once.
-  */
--void force_page_cache_readahead(struct readahead_control *rac)
-+void force_page_cache_readahead(struct readahead_control *rac,
-+				struct file_ra_state *ra)
- {
- 	struct address_space *mapping = rac->mapping;
- 	struct backing_dev_info *bdi = inode_to_bdi(mapping->host);
--	struct file_ra_state *ra = &rac->file->f_ra;
- 	unsigned long max_pages, index, nr_to_read;
- 
- 	if (unlikely(!mapping->a_ops->readpage && !mapping->a_ops->readpages &&
-@@ -657,7 +657,7 @@ void page_cache_sync_readahead(struct readahead_control *rac,
- 
- 	/* be dumb */
- 	if (rac->file && (rac->file->f_mode & FMODE_RANDOM)) {
--		force_page_cache_readahead(rac);
-+		force_page_cache_readahead(rac, ra);
- 		return;
+ 	obj = xen_drm_front_gem_create(dev, args->size);
+-	if (IS_ERR_OR_NULL(obj)) {
+-		ret = PTR_ERR_OR_ZERO(obj);
++	if (IS_ERR(obj)) {
++		ret = PTR_ERR(obj);
+ 		goto fail;
  	}
  
+diff --git a/drivers/gpu/drm/xen/xen_drm_front_gem.c b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+index f0b85e0941114..4ec8a49241e17 100644
+--- a/drivers/gpu/drm/xen/xen_drm_front_gem.c
++++ b/drivers/gpu/drm/xen/xen_drm_front_gem.c
+@@ -83,7 +83,7 @@ static struct xen_gem_object *gem_create(struct drm_device *dev, size_t size)
+ 
+ 	size = round_up(size, PAGE_SIZE);
+ 	xen_obj = gem_create_obj(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return xen_obj;
+ 
+ 	if (drm_info->front_info->cfg.be_alloc) {
+@@ -117,7 +117,7 @@ static struct xen_gem_object *gem_create(struct drm_device *dev, size_t size)
+ 	 */
+ 	xen_obj->num_pages = DIV_ROUND_UP(size, PAGE_SIZE);
+ 	xen_obj->pages = drm_gem_get_pages(&xen_obj->base);
+-	if (IS_ERR_OR_NULL(xen_obj->pages)) {
++	if (IS_ERR(xen_obj->pages)) {
+ 		ret = PTR_ERR(xen_obj->pages);
+ 		xen_obj->pages = NULL;
+ 		goto fail;
+@@ -136,7 +136,7 @@ struct drm_gem_object *xen_drm_front_gem_create(struct drm_device *dev,
+ 	struct xen_gem_object *xen_obj;
+ 
+ 	xen_obj = gem_create(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return ERR_CAST(xen_obj);
+ 
+ 	return &xen_obj->base;
+@@ -194,7 +194,7 @@ xen_drm_front_gem_import_sg_table(struct drm_device *dev,
+ 
+ 	size = attach->dmabuf->size;
+ 	xen_obj = gem_create_obj(dev, size);
+-	if (IS_ERR_OR_NULL(xen_obj))
++	if (IS_ERR(xen_obj))
+ 		return ERR_CAST(xen_obj);
+ 
+ 	ret = gem_alloc_pages_array(xen_obj, size);
+diff --git a/drivers/gpu/drm/xen/xen_drm_front_kms.c b/drivers/gpu/drm/xen/xen_drm_front_kms.c
+index 21ad1c359b613..e4dedbb184ab7 100644
+--- a/drivers/gpu/drm/xen/xen_drm_front_kms.c
++++ b/drivers/gpu/drm/xen/xen_drm_front_kms.c
+@@ -60,7 +60,7 @@ fb_create(struct drm_device *dev, struct drm_file *filp,
+ 	int ret;
+ 
+ 	fb = drm_gem_fb_create_with_funcs(dev, filp, mode_cmd, &fb_funcs);
+-	if (IS_ERR_OR_NULL(fb))
++	if (IS_ERR(fb))
+ 		return fb;
+ 
+ 	gem_obj = drm_gem_object_lookup(filp, mode_cmd->handles[0]);
+-- 
+2.25.1
+
 
 
