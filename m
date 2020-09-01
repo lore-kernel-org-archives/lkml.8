@@ -2,117 +2,88 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AD3C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BDBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 621B52065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977364;
-	bh=p+uNYajHCNM3JrW5tTlFYkZ3P8VMd+9AAH5nA2e4Gv8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r320gOR4HBG6ujQspUGX7qZJi5M4hi+2pk8JzWquv38tEKc+5G4s5nvoWc9RZCpJg
-	 4bA8u8MhMqYDEL/D/dWNGM5Ysiu2FCfbSO/IazMDVsv2+p0y5iTcgapU+MOleygiSB
-	 hiXGXHn+ZUEHc/m1eHVLzwwCIvoYDsW2UTQNKZD0=
+	by mail.kernel.org (Postfix) with ESMTP id 2AB672065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgIAQWl (ORCPT
+        id S1731791AbgIAQWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35852 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:22:50 -0400
+Received: from mga02.intel.com ([134.134.136.20]:8412 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731010AbgIAPcV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:32:21 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B647A20866;
-        Tue,  1 Sep 2020 15:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974341;
-        bh=p+uNYajHCNM3JrW5tTlFYkZ3P8VMd+9AAH5nA2e4Gv8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Z7MWXpQ0EDBZj3Qf/LSIjIo4fPDmS2pr4bxna4jLcNem778pZEX3fXYLMBwn54Tl
-         lX0Nbf+uJAcAQY6K69dCdOdI47A+LRWO8wg6JSoOvC12OxCKWAXNT69mbFx2jSVHNp
-         yb/lxeW2S48Fsqwdd4i3RyKmr7a9lspkX4qrzsGE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Can Guo <cang@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 139/214] scsi: ufs: Clean up completed request without interrupt notification
-Date:   Tue,  1 Sep 2020 17:10:19 +0200
-Message-Id: <20200901150959.642820073@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728203AbgIAQWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:22:46 -0400
+IronPort-SDR: cvtamdoHYUuq4QXoPnebGNvc/mppgg/2S9xJjaNxfHJu0xHPjwSemuvqVhCdR49Bm7pnaz4Toe
+ E3q2Fwt3BN5w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="144939931"
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="144939931"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 09:22:44 -0700
+IronPort-SDR: 5hhM7C4HH2LqVhXMHA0UmLVWRA4p+L554xhv4DOf/55fw0C39nnROp6eoShIuzd8yGU+6Ng4CR
+ Smj2pKXQBl/Q==
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="477261186"
+Received: from tracimsx-mobl5.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.252.140.215])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 09:22:43 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
+        gregkh@linuxfoundation.org,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org (open list:REGISTER MAP ABSTRACTION)
+Subject: [PATCH v2 1/3] regmap: sdw: add required header files
+Date:   Tue,  1 Sep 2020 11:22:23 -0500
+Message-Id: <20200901162225.33343-2-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
+References: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+Explicitly add header files used by regmap SoundWire support.
 
-[ Upstream commit b10178ee7fa88b68a9e8adc06534d2605cb0ec23 ]
-
-If somehow no interrupt notification is raised for a completed request and
-its doorbell bit is cleared by host, UFS driver needs to cleanup its
-outstanding bit in ufshcd_abort(). Otherwise, system may behave abnormally
-in the following scenario:
-
-After ufshcd_abort() returns, this request will be requeued by SCSI layer
-with its outstanding bit set. Any future completed request will trigger
-ufshcd_transfer_req_compl() to handle all "completed outstanding bits". At
-this time the "abnormal outstanding bit" will be detected and the "requeued
-request" will be chosen to execute request post-processing flow. This is
-wrong because this request is still "alive".
-
-Link: https://lore.kernel.org/r/20200811141859.27399-2-huobean@gmail.com
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Acked-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Suggested-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
+Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
+Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/base/regmap/regmap-sdw.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index b51ccbf6cc59c..5e502e1605549 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -6140,7 +6140,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 			/* command completed already */
- 			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
- 				__func__, tag);
--			goto out;
-+			goto cleanup;
- 		} else {
- 			dev_err(hba->dev,
- 				"%s: no response from device. tag = %d, err %d\n",
-@@ -6174,6 +6174,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 		goto out;
- 	}
+diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
+index c92d614b4943..c83be26434e7 100644
+--- a/drivers/base/regmap/regmap-sdw.c
++++ b/drivers/base/regmap/regmap-sdw.c
+@@ -2,7 +2,9 @@
+ // Copyright(c) 2015-17 Intel Corporation.
  
-+cleanup:
- 	scsi_dma_unmap(cmd);
+ #include <linux/device.h>
++#include <linux/errno.h>
+ #include <linux/module.h>
++#include <linux/regmap.h>
+ #include <linux/soundwire/sdw.h>
+ #include "internal.h"
  
- 	spin_lock_irqsave(host->host_lock, flags);
 -- 
 2.25.1
-
-
 
