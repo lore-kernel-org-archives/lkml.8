@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA26C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C59D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1335B208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2437208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:58:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cs79uMAB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edgvh+aX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726503AbgIAE5K (ORCPT
+        id S1726521AbgIAE6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 00:57:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41140 "EHLO
+        Tue, 1 Sep 2020 00:58:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgIAE5H (ORCPT
+        with ESMTP id S1726006AbgIAE56 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 00:57:07 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1906C061290
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:57:06 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id cr8so1499624qvb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:57:06 -0700 (PDT)
+        Tue, 1 Sep 2020 00:57:58 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C6A7C061290
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:57:56 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id m14so2224766qvt.1
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 21:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=RIJpNCkK5FQVXNXvvi2V2cWOQc/wyJO0hGvFWp5jPHE=;
-        b=Cs79uMABpRcHICHGXIR5UMN8CCL+86nyKTUfm6aVs0CNG4j2/R2P0Di6lRIzOCONcq
-         iFI4KV4IlHpaTOqg5fbPpUEgsEqagDlj0Mxd2ygYkRRG7BaYYt0Riui7D8e6HiZunYga
-         vmrjS2EF6gmv5VWQVQKSg9oJTFkkEqRdhFmEHrO1H3h5yUhqS1rRP+tOJnadN483gmEv
-         ewMWqcPVvxHcIqsSe753qvpdXz/g/NKYBC65btqZ6nCuWuk4iJBOOrws/Tdme8EwSfl+
-         ULxmvMGx3qmgw9ZvToluI3DQMnTX+4g2P6aitvxszBMrV9zLkEDrNs+s4UukK1uPK0Tc
-         wrBg==
+        bh=WkMMV5KfqKlAUNBzYZCx8Wlk7RJHSHOVVyqgVoAjcfI=;
+        b=edgvh+aXOxwB9ngwCe0vRggHYKm6bej3nmlusDc9EU6i0wiw4po7g2IYU9yeWgJSP0
+         L53Sh+IEGIodrvvbv9Ddfh5dDaEnNZHYLmlmAG8u8f5MlXYrs+io9S62XMi/+zLc7Z6J
+         8nMW58eScu3xlBtNEGoq2Vn1Kc84V6grNjfwRA2oiO5hetymzYHDJr/pffb4riKwN3Uz
+         sUnsV76BZOVxLFS00GGYWEX2IJLTUokOANPT/VqgYZRk/Wj2A9MhSn3RDK9sCvMi2SeV
+         wL0WJmG6/lnbH5ZjLuj5NCHsRUxEfUYKGk7h3cksUVdtNhktN7cibrfnf0/aPnWQ2Pbq
+         pXYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=RIJpNCkK5FQVXNXvvi2V2cWOQc/wyJO0hGvFWp5jPHE=;
-        b=UnQolFEicvUXyzRVObqFfDBJFvJkWH1KU14ZMpAtru0iNUZw0ruZjdXAeTFJ1oQn8b
-         xqY+ptqUAiwqISO6ywsrFCmCT47x0VXi1HqQsk+WOKe7GttdhUajmV0cBwYTYf31wBOt
-         Piv/WUFn1kMMHA6RZImhZGwfHtJEY2O3Cq37B0ewM/WKG0GA1ozqrnKBMUUXxzJKdtSR
-         rap4bqgmmQPAEY6lpoFowClvdWxyPLg1IUPTJXmpiQ9P2Kc6gpI0Syiq0jL1SXMrlS2i
-         7WjNEqxdFzMbdSOO2ptn1amOUioPJ9JoF2ldEsg39KkNIQvByf4FfpIRhsWJT0by6uyI
-         iFhQ==
-X-Gm-Message-State: AOAM533pVV9V5pqT+6+bPj1B9Xj5LvX02eSHBx5tuiY55syA4ejkTOZ4
-        2eGxuaj8aaSjlFONtInwRvGYvOAyYIdIgw==
-X-Google-Smtp-Source: ABdhPJybU9gdtYkTPBNKo8L9h2z919ZHAf6Bnah9Dbx8ky5AnULI3NiQWtarOxjiL5n+4PrIb3IUCw==
-X-Received: by 2002:ad4:576c:: with SMTP id r12mr174085qvx.232.1598936226194;
-        Mon, 31 Aug 2020 21:57:06 -0700 (PDT)
+        bh=WkMMV5KfqKlAUNBzYZCx8Wlk7RJHSHOVVyqgVoAjcfI=;
+        b=rw9aQS7ap9F9rpM1pCeP8KjEZBL7LWxyuV52XXrOduRdqKDWXTKsj+WzgRhWohKpPu
+         2FsUKXpsS28AtodxZUICB4VH3iZ/ctRZWqXozIyjdIwAhmMGQBhWwL5fnDBLQISfERJi
+         kr+Zo4ip0VlYFnlLlXCN9m+w14e2KQl4UaSFwCt0/7DgAMMKj+aYh9b2kT9/6YXD84tP
+         mURXvg7ahwG4FutlRkuOBkmOn2LepYfZCoKiE5r9d/kkP1TLJJwVVHkZOrM+cQUhtX3v
+         Eho0cWCB8ZEHg3BrxA9vlzrRQPw7MGuiiN5FipUF1Vv6ONJbnJdLni6q+ieZx3YnXdcJ
+         5KwQ==
+X-Gm-Message-State: AOAM533jYZV6a0tbX5G8iMfbFTeQq6ta5M4AQKEs3aIfC0dHUacVlYvp
+        f+qLqGeRBzI48LpFK2BPVC0=
+X-Google-Smtp-Source: ABdhPJyE1UHDa7wfbBRHtEZTsjhsrumKH2JvhTk1r9+5puEnpF6kWoHaIY1Z7gc9jl4RrzVtsPoOHw==
+X-Received: by 2002:a0c:e844:: with SMTP id l4mr193470qvo.154.1598936275487;
+        Mon, 31 Aug 2020 21:57:55 -0700 (PDT)
 Received: from ubuntu-n2-xlarge-x86 ([2604:1380:45d1:2600::1])
-        by smtp.gmail.com with ESMTPSA id j4sm210942qkd.129.2020.08.31.21.57.05
+        by smtp.gmail.com with ESMTPSA id k185sm237276qkd.94.2020.08.31.21.57.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 21:57:05 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 21:57:03 -0700
+        Mon, 31 Aug 2020 21:57:55 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 21:57:53 -0700
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Nick Desaulniers <ndesaulniers@google.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
@@ -75,52 +75,81 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Will Deacon <will@kernel.org>,
         Vincenzo Frascino <vincenzo.frascino@arm.com>,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 5/7] Partial revert "ARM: 8905/1: Emit __gnu_mcount_nc
- when using Clang 10.0.0 or newer"
-Message-ID: <20200901045703.GD1561318@ubuntu-n2-xlarge-x86>
+Subject: Re: [PATCH v2 6/7] kasan: Remove mentions of unsupported Clang
+ versions
+Message-ID: <20200901045753.GE1561318@ubuntu-n2-xlarge-x86>
 References: <20200901002326.1137289-1-ndesaulniers@google.com>
- <20200901002326.1137289-6-ndesaulniers@google.com>
+ <20200901002326.1137289-7-ndesaulniers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200901002326.1137289-6-ndesaulniers@google.com>
+In-Reply-To: <20200901002326.1137289-7-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nit: Partially in commit message?
-
-On Mon, Aug 31, 2020 at 05:23:24PM -0700, Nick Desaulniers wrote:
-> This partially reverts commit b0fe66cf095016e0b238374c10ae366e1f087d11.
+On Mon, Aug 31, 2020 at 05:23:25PM -0700, Nick Desaulniers wrote:
+> From: Marco Elver <elver@google.com>
 > 
-> The minimum supported version of clang is now clang 10.0.1. We still
-> want to pass -meabi=gnu.
-
-Thank you for calling this out.
-
-> Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+> Since the kernel now requires at least Clang 10.0.1, remove any mention
+> of old Clang versions and simplify the documentation.
+> 
+> Reviewed-by: Andrey Konovalov <andreyknvl@google.com>
+> Signed-off-by: Marco Elver <elver@google.com>
 > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 
 Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 
 > ---
->  arch/arm/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/dev-tools/kasan.rst | 4 ++--
+>  lib/Kconfig.kasan                 | 9 ++++-----
+>  2 files changed, 6 insertions(+), 7 deletions(-)
 > 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 82c197a248dd..09a7669eea1d 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -83,7 +83,7 @@ config ARM
->  	select HAVE_FAST_GUP if ARM_LPAE
->  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
->  	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
-> -	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && (CC_IS_GCC || CLANG_VERSION >= 100000)
-> +	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
->  	select HAVE_GCC_PLUGINS
->  	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
->  	select HAVE_IDE if PCI || ISA || PCMCIA
+> diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
+> index 38fd5681fade..4abc84b1798c 100644
+> --- a/Documentation/dev-tools/kasan.rst
+> +++ b/Documentation/dev-tools/kasan.rst
+> @@ -13,10 +13,10 @@ KASAN uses compile-time instrumentation to insert validity checks before every
+>  memory access, and therefore requires a compiler version that supports that.
+>  
+>  Generic KASAN is supported in both GCC and Clang. With GCC it requires version
+> -8.3.0 or later. With Clang it requires version 7.0.0 or later, but detection of
+> +8.3.0 or later. Any supported Clang version is compatible, but detection of
+>  out-of-bounds accesses for global variables is only supported since Clang 11.
+>  
+> -Tag-based KASAN is only supported in Clang and requires version 7.0.0 or later.
+> +Tag-based KASAN is only supported in Clang.
+>  
+>  Currently generic KASAN is supported for the x86_64, arm64, xtensa, s390 and
+>  riscv architectures, and tag-based KASAN is supported only for arm64.
+> diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
+> index 047b53dbfd58..033a5bc67ac4 100644
+> --- a/lib/Kconfig.kasan
+> +++ b/lib/Kconfig.kasan
+> @@ -54,9 +54,9 @@ config KASAN_GENERIC
+>  	  Enables generic KASAN mode.
+>  
+>  	  This mode is supported in both GCC and Clang. With GCC it requires
+> -	  version 8.3.0 or later. With Clang it requires version 7.0.0 or
+> -	  later, but detection of out-of-bounds accesses for global variables
+> -	  is supported only since Clang 11.
+> +	  version 8.3.0 or later. Any supported Clang version is compatible,
+> +	  but detection of out-of-bounds accesses for global variables is
+> +	  supported only since Clang 11.
+>  
+>  	  This mode consumes about 1/8th of available memory at kernel start
+>  	  and introduces an overhead of ~x1.5 for the rest of the allocations.
+> @@ -78,8 +78,7 @@ config KASAN_SW_TAGS
+>  	  Enables software tag-based KASAN mode.
+>  
+>  	  This mode requires Top Byte Ignore support by the CPU and therefore
+> -	  is only supported for arm64. This mode requires Clang version 7.0.0
+> -	  or later.
+> +	  is only supported for arm64. This mode requires Clang.
+>  
+>  	  This mode consumes about 1/16th of available memory at kernel start
+>  	  and introduces an overhead of ~20% for the rest of the allocations.
 > -- 
 > 2.28.0.402.g5ffc5be6b7-goog
 > 
