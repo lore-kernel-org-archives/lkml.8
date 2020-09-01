@@ -2,51 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DC9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31700C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1A7206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9ED9206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979125;
-	bh=mSyNTHBqT3kcZrvjwHZZMwTAixoL38dXqRDWSKh4sFY=;
+	s=default; t=1598979135;
+	bh=oohKm4wA5PeEduUAWRlKUhWqsHa0F45uQylFxb/AJN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i1rJA9iYFqyZLeSb288ZExMCk/xhAB/IQ9cKark1jRW1PbasZjCRcrXu/XPgZ6JkD
-	 Ji157YshjF2hS43261sCjtjIOmqZn2hmY9XkXYihRGCCHHWePZ2KtUotg+exLrvWa6
-	 Z+06GJl423+17OFgTjbef8T2OJShbZBXniSlIbUE=
+	b=p5gk9vL4x334m5BOkxbKJnJWWdGT+AhRaDoaimmD8ml5zwA0S4OpVzMGi+3JRVKdv
+	 Av4WAjhnUUqOFWD6MZikx4IG0eb+OQU2WloGU0lKIC/07gH9lU1Woy7NMaGhuKorqy
+	 CMO4vTcTK7n8yfAsczEhxD4D8CiOPFIxJsWGPWkg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728675AbgIAPZq (ORCPT
+        id S1730137AbgIAQwK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:25:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44422 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:52:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgIAPWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:22:39 -0400
+        id S1727108AbgIAPZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:25:48 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B3CC206FA;
-        Tue,  1 Sep 2020 15:22:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02ACF20FC3;
+        Tue,  1 Sep 2020 15:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973758;
-        bh=mSyNTHBqT3kcZrvjwHZZMwTAixoL38dXqRDWSKh4sFY=;
+        s=default; t=1598973947;
+        bh=oohKm4wA5PeEduUAWRlKUhWqsHa0F45uQylFxb/AJN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aMR0iDSsTmsLLuoCsuhztGD4yXKLTfo2wwjh65VtcJkM/vqg4NLjFTNsj38h7paXj
-         FN52qtsbeACCc2th+bTDr9bM0inIbf1L8gXDoZi21cCt23Spbdfs4rFgWgVKGkygju
-         RrUvTObaw8dsBV3ER5Y+oSF0qbfQjdVcyrxqK7d8=
+        b=aACI3m8X5wp+oNGWQ9IeBOZ7Xsql6JJY/N1LXBG4x+JwnkP3HultT0nnxz5LnaXLs
+         tu1ValWzGHAhava8Gw+G0yJ3ZAJmYtZ5aonlQjqAeS14xpYYFqcviHQ9DsZKUDme75
+         RQStWRYIBmUAlyaFpBPgRhNhUFlQf7cAJ+rLuRSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 009/125] ALSA: pci: delete repeated words in comments
-Date:   Tue,  1 Sep 2020 17:09:24 +0200
-Message-Id: <20200901150935.042763274@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Jean-Christophe Barnoud <jcbarnoud@gmail.com>
+Subject: [PATCH 4.19 111/125] USB: quirks: Ignore duplicate endpoint on Sound Devices MixPre-D
+Date:   Tue,  1 Sep 2020 17:11:06 +0200
+Message-Id: <20200901150940.052570716@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -59,120 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit c7fabbc51352f50cc58242a6dc3b9c1a3599849b ]
+commit 068834a2773b6a12805105cfadbb3d4229fc6e0a upstream.
 
-Drop duplicated words in sound/pci/.
-{and, the, at}
+The Sound Devices MixPre-D audio card suffers from the same defect
+as the Sound Devices USBPre2: an endpoint shared between a normal
+audio interface and a vendor-specific interface, in violation of the
+USB spec.  Since the USB core now treats duplicated endpoints as bugs
+and ignores them, the audio endpoint isn't available and the card
+can't be used for audio capture.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Link: https://lore.kernel.org/r/20200806021926.32418-1-rdunlap@infradead.org
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Along the same lines as commit bdd1b147b802 ("USB: quirks: blacklist
+duplicate ep on Sound Devices USBPre2"), this patch adds a quirks
+entry saying to ignore ep5in for interface 1, leaving it available for
+use with standard audio interface 2.
+
+Reported-and-tested-by: Jean-Christophe Barnoud <jcbarnoud@gmail.com>
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
+Link: https://lore.kernel.org/r/20200826194624.GA412633@rowland.harvard.edu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/pci/cs46xx/cs46xx_lib.c       | 2 +-
- sound/pci/cs46xx/dsp_spos_scb_lib.c | 2 +-
- sound/pci/hda/hda_codec.c           | 2 +-
- sound/pci/hda/hda_generic.c         | 2 +-
- sound/pci/hda/patch_sigmatel.c      | 2 +-
- sound/pci/ice1712/prodigy192.c      | 2 +-
- sound/pci/oxygen/xonar_dg.c         | 2 +-
- 7 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/usb/core/quirks.c |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/sound/pci/cs46xx/cs46xx_lib.c b/sound/pci/cs46xx/cs46xx_lib.c
-index 146e1a3498c73..419da70cd942a 100644
---- a/sound/pci/cs46xx/cs46xx_lib.c
-+++ b/sound/pci/cs46xx/cs46xx_lib.c
-@@ -780,7 +780,7 @@ static void snd_cs46xx_set_capture_sample_rate(struct snd_cs46xx *chip, unsigned
- 		rate = 48000 / 9;
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -370,6 +370,10 @@ static const struct usb_device_id usb_qu
+ 	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
+ 			USB_QUIRK_ENDPOINT_BLACKLIST },
  
- 	/*
--	 *  We can not capture at at rate greater than the Input Rate (48000).
-+	 *  We can not capture at a rate greater than the Input Rate (48000).
- 	 *  Return an error if an attempt is made to stray outside that limit.
- 	 */
- 	if (rate > 48000)
-diff --git a/sound/pci/cs46xx/dsp_spos_scb_lib.c b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-index 8d0a3d3573457..8ef51a29380af 100644
---- a/sound/pci/cs46xx/dsp_spos_scb_lib.c
-+++ b/sound/pci/cs46xx/dsp_spos_scb_lib.c
-@@ -1739,7 +1739,7 @@ int cs46xx_iec958_pre_open (struct snd_cs46xx *chip)
- 	struct dsp_spos_instance * ins = chip->dsp_spos_instance;
++	/* Sound Devices MixPre-D */
++	{ USB_DEVICE(0x0926, 0x0208), .driver_info =
++			USB_QUIRK_ENDPOINT_BLACKLIST },
++
+ 	/* Keytouch QWERTY Panel keyboard */
+ 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
+ 			USB_QUIRK_CONFIG_INTF_STRINGS },
+@@ -511,6 +515,7 @@ static const struct usb_device_id usb_am
+  */
+ static const struct usb_device_id usb_endpoint_blacklist[] = {
+ 	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
++	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0208, 1), .driver_info = 0x85 },
+ 	{ }
+ };
  
- 	if ( ins->spdif_status_out & DSP_SPDIF_STATUS_OUTPUT_ENABLED ) {
--		/* remove AsynchFGTxSCB and and PCMSerialInput_II */
-+		/* remove AsynchFGTxSCB and PCMSerialInput_II */
- 		cs46xx_dsp_disable_spdif_out (chip);
- 
- 		/* save state */
-diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
-index f3a6b1d869d8a..dbeb62362f1c3 100644
---- a/sound/pci/hda/hda_codec.c
-+++ b/sound/pci/hda/hda_codec.c
-@@ -3410,7 +3410,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save);
-  * @nid: NID to check / update
-  *
-  * Check whether the given NID is in the amp list.  If it's in the list,
-- * check the current AMP status, and update the the power-status according
-+ * check the current AMP status, and update the power-status according
-  * to the mute status.
-  *
-  * This function is supposed to be set or called from the check_power_status
-diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
-index 2609161707a41..97adb7e340f99 100644
---- a/sound/pci/hda/hda_generic.c
-+++ b/sound/pci/hda/hda_generic.c
-@@ -825,7 +825,7 @@ static void activate_amp_in(struct hda_codec *codec, struct nid_path *path,
- 	}
- }
- 
--/* sync power of each widget in the the given path */
-+/* sync power of each widget in the given path */
- static hda_nid_t path_power_update(struct hda_codec *codec,
- 				   struct nid_path *path,
- 				   bool allow_powerdown)
-diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
-index d8168aa2cef38..85c33f528d7b3 100644
---- a/sound/pci/hda/patch_sigmatel.c
-+++ b/sound/pci/hda/patch_sigmatel.c
-@@ -845,7 +845,7 @@ static int stac_auto_create_beep_ctls(struct hda_codec *codec,
- 	static struct snd_kcontrol_new beep_vol_ctl =
- 		HDA_CODEC_VOLUME(NULL, 0, 0, 0);
- 
--	/* check for mute support for the the amp */
-+	/* check for mute support for the amp */
- 	if ((caps & AC_AMPCAP_MUTE) >> AC_AMPCAP_MUTE_SHIFT) {
- 		const struct snd_kcontrol_new *temp;
- 		if (spec->anabeep_nid == nid)
-diff --git a/sound/pci/ice1712/prodigy192.c b/sound/pci/ice1712/prodigy192.c
-index 3919aed39ca03..5e52086d7b986 100644
---- a/sound/pci/ice1712/prodigy192.c
-+++ b/sound/pci/ice1712/prodigy192.c
-@@ -31,7 +31,7 @@
-  *		  Experimentally I found out that only a combination of
-  *		  OCKS0=1, OCKS1=1 (128fs, 64fs output) and ice1724 -
-  *		  VT1724_MT_I2S_MCLK_128X=0 (256fs input) yields correct
-- *		  sampling rate. That means the the FPGA doubles the
-+ *		  sampling rate. That means that the FPGA doubles the
-  *		  MCK01 rate.
-  *
-  *	Copyright (c) 2003 Takashi Iwai <tiwai@suse.de>
-diff --git a/sound/pci/oxygen/xonar_dg.c b/sound/pci/oxygen/xonar_dg.c
-index 4cf3200e988b0..df44135e1b0c9 100644
---- a/sound/pci/oxygen/xonar_dg.c
-+++ b/sound/pci/oxygen/xonar_dg.c
-@@ -39,7 +39,7 @@
-  *   GPIO 4 <- headphone detect
-  *   GPIO 5 -> enable ADC analog circuit for the left channel
-  *   GPIO 6 -> enable ADC analog circuit for the right channel
-- *   GPIO 7 -> switch green rear output jack between CS4245 and and the first
-+ *   GPIO 7 -> switch green rear output jack between CS4245 and the first
-  *             channel of CS4361 (mechanical relay)
-  *   GPIO 8 -> enable output to speakers
-  *
--- 
-2.25.1
-
 
 
