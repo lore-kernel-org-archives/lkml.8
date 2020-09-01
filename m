@@ -2,280 +2,203 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48274C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8280BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:42:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19247206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:42:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R8+I10x8"
+	by mail.kernel.org (Postfix) with ESMTP id 4C632206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:42:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbgIAMmV (ORCPT
+        id S1728193AbgIAMmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:42:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56268 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728193AbgIAMlL (ORCPT
+        Tue, 1 Sep 2020 08:42:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47044 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728031AbgIAMmb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:41:11 -0400
-Received: from mail-ua1-x942.google.com (mail-ua1-x942.google.com [IPv6:2607:f8b0:4864:20::942])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EBC3C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 05:41:11 -0700 (PDT)
-Received: by mail-ua1-x942.google.com with SMTP id g20so364935uap.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 05:41:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bBCu6FHgxguSBfkPCPFqZiUriRUMXM86xLMa0edLmtk=;
-        b=R8+I10x8/LthKRRpJVQTUgLYcrwDu5HfoB+xCjPsuFSBD/YvLV6GNB0aPP21+G8NUU
-         kweGRIEfNdxx9sgl/1sjpZwUNYUJETSfbZThBK4TuA3yBjylEPwzKSUAa9Pa4eq5JR43
-         LwSN6UaksoaQejbGEmuAaEuhfbLN/qmetPwjJ6A4V1ouxnB5A9HwhXVj08jhrS6wkDaA
-         0Mz9LwA+lMrto4KyhnQ2x1e/TapSc3Z/0Epy/Qb+yOZ9okeOWcR8fZDmVCHtp3joXWDV
-         fRRjB/E2iCaXTP529suMcfI1815JbAwCj1rRB9vZWP27mXdS6VfLdjROGJIfzDpOMe/l
-         IDNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bBCu6FHgxguSBfkPCPFqZiUriRUMXM86xLMa0edLmtk=;
-        b=GucMMKb0aOc0FM6B829n+K1rTbfbnak68FX8roJbRilrHKzgsdraqKSDq53wGTPoZI
-         XzcQWMMD0ZZ+SNl3rSdeGciqObxf7wbiY/ZG7AyRNmLz/M2FUVMg+mYUgNtdjw4S+365
-         t97xMi0/unXzkQcFkA0R2erERkTy4bxRGDLmu2p7+z7TAqmp1ILfKICC60V0q/aiZE6d
-         JVuihUOJLLtzqFKtnP8gPvo4svXGoLdBpaykkbWo26pZA/wxEQefH9zMWPAWEjuyd3dX
-         k9KXYZjpsUop5/A/WA8OWOw1CqIuEcsBURAFJ/Voos6V8ZZM5OLQVPrTGyqGBRk4mgMi
-         ZjHA==
-X-Gm-Message-State: AOAM530Gpn+uuKUukUDDi5QWSY/nSaCWpjFVAIoMAii1eGiSBWrukKSq
-        HVyzKEOBhMh8IO0IWaxlXl5LDgYa6UnNmnyqzhiG9Q==
-X-Google-Smtp-Source: ABdhPJxu1ERbPvjY7TJsr9HVtz7VDa71o+qVsuDfQ+KfVQFIpDusYDoXLyQ/1QZaTmiNrnCE+H1u6lcGD3M9lA70G2g=
-X-Received: by 2002:a9f:2431:: with SMTP id 46mr348690uaq.129.1598964070187;
- Tue, 01 Sep 2020 05:41:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
- <20200831194402.GD2855@paulmck-ThinkPad-P72> <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
- <CAPDyKFrTERjpLrPOFtkqLyNsk2T_58Ye2FQ1mPf-0u78aWW=Xw@mail.gmail.com>
- <20200901104206.GU1362448@hirez.programming.kicks-ass.net> <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
-In-Reply-To: <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 1 Sep 2020 14:40:33 +0200
-Message-ID: <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
-Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
- OF driver helper
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     paulmck@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Saravana Kannan <saravanak@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
-        Linux PM <linux-pm@vger.kernel.org>,
+        Tue, 1 Sep 2020 08:42:31 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kD5bW-0002LN-Fa; Tue, 01 Sep 2020 12:41:38 +0000
+Date:   Tue, 1 Sep 2020 14:41:36 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Lokesh Gidra <lokeshgidra@google.com>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        James Morris <jmorris@namei.org>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Daniel Colascione <dancol@dancol.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        KP Singh <kpsingh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Thomas Cedeno <thomascedeno@google.com>,
         Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+        Sami Tolvanen <samitolvanen@google.com>,
+        Matthew Garrett <matthewgarrett@google.com>,
+        Aaron Goidel <acgoide@tycho.nsa.gov>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Adrian Reber <areber@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
+        kaleshsingh@google.com, calin@google.com, surenb@google.com,
+        nnk@google.com, jeffv@google.com, kernel-team@android.com,
+        Daniel Colascione <dancol@google.com>, jannh@google.com
+Subject: Re: [PATCH v8 1/3] Add a new LSM-supporting anonymous inode interface
+Message-ID: <20200901124136.r3krb2p23343licq@wittgenstein>
+References: <20200827063522.2563293-1-lokeshgidra@google.com>
+ <20200827063522.2563293-2-lokeshgidra@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200827063522.2563293-2-lokeshgidra@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 14:35, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Tue, 1 Sep 2020 at 12:42, <peterz@infradead.org> wrote:
-> >
-> > On Tue, Sep 01, 2020 at 08:50:57AM +0200, Ulf Hansson wrote:
-> > > On Tue, 1 Sep 2020 at 08:46, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> > > > On Mon, 31 Aug 2020 at 21:44, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > > > > > [    5.308588] =============================
-> > > > > > [    5.308593] WARNING: suspicious RCU usage
-> > > > > > [    5.316628] sdhci-pltfm: SDHCI platform and OF driver helper
-> > > > > > [    5.320052] 5.9.0-rc3 #1 Not tainted
-> > > > > > [    5.320057] -----------------------------
-> > > > > > [    5.320063] /usr/src/kernel/include/trace/events/lock.h:37 suspicious rcu_dereference_check() usage!
-> > > > > > [    5.320068]
-> > > > > > [    5.320068] other info that might help us debug this:
-> > > > > > [    5.320068]
-> > > > > > [    5.320074]
-> > > > > > [    5.320074] rcu_scheduler_active = 2, debug_locks = 1
-> > > > > > [    5.320078] RCU used illegally from extended quiescent state!
-> > > > > > [    5.320084] no locks held by swapper/0/0.
-> > > > > > [    5.320089]
-> > > > > > [    5.320089] stack backtrace:
-> > > > > > [    5.320098] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
-> > > > > > [    5.346354] sdhci_msm 7864900.sdhci: Got CD GPIO
-> > > > > > [    5.346446] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
-> > > > > > [    5.346452] Call trace:
-> > > > > > [    5.346463]  dump_backtrace+0x0/0x1f8
-> > > > > > [    5.346471]  show_stack+0x2c/0x38
-> > > > > > [    5.346480]  dump_stack+0xec/0x15c
-> > > > > > [    5.346490]  lockdep_rcu_suspicious+0xd4/0xf8
-> > > > > > [    5.346499]  lock_acquire+0x3d0/0x440
-> > > > > > [    5.346510]  _raw_spin_lock_irqsave+0x80/0xb0
-> > > > > > [    5.413118]  __pm_runtime_suspend+0x34/0x1d0
-> > > > > > [    5.417457]  psci_enter_domain_idle_state+0x4c/0xb0
-> > > > > > [    5.421795]  cpuidle_enter_state+0xc8/0x610
-> > > > > > [    5.426392]  cpuidle_enter+0x3c/0x50
-> > > > > > [    5.430561]  call_cpuidle+0x44/0x80
-> > > > > > [    5.434378]  do_idle+0x240/0x2a0
-> >
-> > > > > Note also that Peter Zijlstra (CCed) is working to shrink the portion
-> > > > > of the idle loop that RCU ignores.  Not sure that it covers your
-> > > > > case, but it is worth checking.
-> >
-> > Right, so I think I 'caused' this by making the lock tracepoints
-> > visible. That is, the error always existed, now we actually warn about
-> > it.
-> >
-> > > > Thanks for letting me know. Let's see what Peter thinks about this then.
-> > > >
-> > > > Apologize for my ignorance, but from a cpuidle point of view, what
-> > > > does it mean using RCU_NONIDLE()? I guess we should avoid RCU_NONIDLE
-> > > > on bigger code paths?
-> > > >
-> > > > I could add RCU_NONIDLE for the calls to pm_runtime_put_sync_suspend()
-> > > > and pm_runtime_get_sync() in psci_enter_domain_idle_state(). Perhaps
-> > > > that's the easiest approach, at least to start with.
-> > > >
-> > > > Or do you have any other ideas?
-> >
-> > So IMO trace_*_rcuidle() and RCU_NONIDLE() are bugs, they just mean we
-> > got the ordering wrong and are papering over it. That said, that's been
-> > the modus operandi for a while now, just make it shut up and don't think
-> > about it :-/
-> >
-> > That said; I pushed the rcu_idle_enter() about as deep as it goes into
-> > generic code in commit 1098582a0f6c ("sched,idle,rcu: Push rcu_idle
-> > deeper into the idle path")
->
-> Aha, that commit should fix this problem, I think. Looks like that
-> commit was sent as a fix and included in the recent v5.9-rc3.
->
-> Naresh, can you try with the above commit?
+On Wed, Aug 26, 2020 at 11:35:20PM -0700, Lokesh Gidra wrote:
+> From: Daniel Colascione <dancol@google.com>
+> 
+> This change adds a new function, anon_inode_getfd_secure, that creates
+> anonymous-node file with individual non-S_PRIVATE inode to which security
+> modules can apply policy. Existing callers continue using the original
+> singleton-inode kind of anonymous-inode file. We can transition anonymous
+> inode users to the new kind of anonymous inode in individual patches for
+> the sake of bisection and review.
+> 
+> The new function accepts an optional context_inode parameter that
+> callers can use to provide additional contextual information to
+> security modules for granting/denying permission to create an anon inode
+> of the same type.
+> 
+> For example, in case of userfaultfd, the created inode is a
+> 'logical child' of the context_inode (userfaultfd inode of the
+> parent process) in the sense that it provides the security context
+> required during creation of the child process' userfaultfd inode.
+> 
+> Signed-off-by: Daniel Colascione <dancol@google.com>
+> 
+> [Fix comment documenting return values of inode_init_security_anon()]
+> [Add context_inode description in comments to anon_inode_getfd_secure()]
+> [Remove definition of anon_inode_getfile_secure() as there are no callers]
+> [Make _anon_inode_getfile() static]
+> [Use correct error cast in _anon_inode_getfile()]
+> [Fix error handling in _anon_inode_getfile()]
+> 
+> Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> ---
+>  fs/anon_inodes.c              | 147 +++++++++++++++++++++++++---------
+>  include/linux/anon_inodes.h   |   8 ++
+>  include/linux/lsm_hook_defs.h |   2 +
+>  include/linux/lsm_hooks.h     |   9 +++
+>  include/linux/security.h      |  10 +++
+>  security/security.c           |   8 ++
+>  6 files changed, 144 insertions(+), 40 deletions(-)
+> 
+> diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
+> index 89714308c25b..c3f16deda211 100644
+> --- a/fs/anon_inodes.c
+> +++ b/fs/anon_inodes.c
+> @@ -55,61 +55,79 @@ static struct file_system_type anon_inode_fs_type = {
+>  	.kill_sb	= kill_anon_super,
+>  };
+>  
+> -/**
+> - * anon_inode_getfile - creates a new file instance by hooking it up to an
+> - *                      anonymous inode, and a dentry that describe the "class"
+> - *                      of the file
+> - *
+> - * @name:    [in]    name of the "class" of the new file
+> - * @fops:    [in]    file operations for the new file
+> - * @priv:    [in]    private data for the new file (will be file's private_data)
+> - * @flags:   [in]    flags
+> - *
+> - * Creates a new file by hooking it on a single inode. This is useful for files
+> - * that do not need to have a full-fledged inode in order to operate correctly.
+> - * All the files created with anon_inode_getfile() will share a single inode,
+> - * hence saving memory and avoiding code duplication for the file/inode/dentry
+> - * setup.  Returns the newly created file* or an error pointer.
+> - */
+> -struct file *anon_inode_getfile(const char *name,
+> -				const struct file_operations *fops,
+> -				void *priv, int flags)
+> +static struct inode *anon_inode_make_secure_inode(
+> +	const char *name,
+> +	const struct inode *context_inode)
+>  {
+> -	struct file *file;
+> +	struct inode *inode;
+> +	const struct qstr qname = QSTR_INIT(name, strlen(name));
+> +	int error;
+> +
+> +	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
+> +	if (IS_ERR(inode))
+> +		return inode;
+> +	inode->i_flags &= ~S_PRIVATE;
+> +	error =	security_inode_init_security_anon(inode, &qname, context_inode);
+> +	if (error) {
+> +		iput(inode);
+> +		return ERR_PTR(error);
+> +	}
+> +	return inode;
+> +}
 
-Ah, just realized that I misread the patch. It doesn't fix it.
+Hey,
 
-We would still need a RCU_NONIDLE() in psci_enter_domain_idle_state()
-- or something along the lines of what you suggest below.
+Iiuc, this makes each newly created anon inode fd correspond to a unique
+file and to a unique inode:
 
-Apologies for the noise.
+fd1 -> file1 -> inode1
+fd2 -> file2 -> inode2
 
-Kind regards
-Uffe
+Whereas before we had every anon inode fd correspond to a unique file
+but all files map to the _same_ inode:
 
->
-> >
-> > I suppose the next step is pushing it into individual driver when
-> > needed, something like the below perhaps. I realize the coupled idle
-> > state stuff is more complicated that most, but it's also not an area
-> > I've looked at in detail, so perhaps I've just made a bigger mess, but
-> > it ought to give you enough to get going I think.
->
-> These aren't coupled states. Instead, in cpuidle-psci, we are using PM
-> domains through genpd and runtime PM to manage "shared idle states"
-> between CPUs.
->
-> Kind regards
-> Uffe
->
-> >
-> > Rafael?
-> >
-> > ---
-> > diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
-> > index 74463841805f..617bbef316e6 100644
-> > --- a/drivers/cpuidle/cpuidle-psci.c
-> > +++ b/drivers/cpuidle/cpuidle-psci.c
-> > @@ -49,6 +49,9 @@ static inline u32 psci_get_domain_state(void)
-> >
-> >  static inline int psci_enter_state(int idx, u32 state)
-> >  {
-> > +       /*
-> > +        * XXX push rcu_idle_enter into the coupled code
-> > +        */
-> >         return CPU_PM_CPU_IDLE_ENTER_PARAM(psci_cpu_suspend_enter, idx, state);
-> >  }
-> >
-> > @@ -72,7 +75,9 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
-> >         if (!state)
-> >                 state = states[idx];
-> >
-> > +       rcu_idle_enter();
-> >         ret = psci_cpu_suspend_enter(state) ? -1 : idx;
-> > +       rcu_idle_exit();
-> >
-> >         pm_runtime_get_sync(pd_dev);
-> >
-> > @@ -125,8 +130,13 @@ static int psci_enter_idle_state(struct cpuidle_device *dev,
-> >                                 struct cpuidle_driver *drv, int idx)
-> >  {
-> >         u32 *state = __this_cpu_read(psci_cpuidle_data.psci_states);
-> > +       int ret;
-> >
-> > -       return psci_enter_state(idx, state[idx]);
-> > +       rcu_idle_enter();
-> > +       ret = psci_enter_state(idx, state[idx]);
-> > +       rcu_idle_exit();
-> > +
-> > +       return ret;
-> >  }
-> >
-> >  static const struct of_device_id psci_idle_state_match[] = {
-> > @@ -170,6 +180,7 @@ static int psci_dt_cpu_init_topology(struct cpuidle_driver *drv,
-> >          * deeper states.
-> >          */
-> >         drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
-> > +       drv->states[state_count - 1].flags = CPUIDLE_FLAG_RCU_IDLE;
-> >         psci_cpuidle_use_cpuhp = true;
-> >
-> >         return 0;
-> > @@ -285,6 +296,7 @@ static int psci_idle_init_cpu(struct device *dev, int cpu)
-> >          * state index 0.
-> >          */
-> >         drv->states[0].enter = psci_enter_idle_state;
-> > +       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
-> >         drv->states[0].exit_latency = 1;
-> >         drv->states[0].target_residency = 1;
-> >         drv->states[0].power_usage = UINT_MAX;
-> > diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
-> > index 04becd70cc41..3dbac3bb761b 100644
-> > --- a/drivers/cpuidle/cpuidle.c
-> > +++ b/drivers/cpuidle/cpuidle.c
-> > @@ -239,9 +239,11 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
-> >         time_start = ns_to_ktime(local_clock());
-> >
-> >         stop_critical_timings();
-> > -       rcu_idle_enter();
-> > +       if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
-> > +               rcu_idle_enter();
-> >         entered_state = target_state->enter(dev, drv, index);
-> > -       rcu_idle_exit();
-> > +       if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
-> > +               rcu_idle_exit();
-> >         start_critical_timings();
-> >
-> >         sched_clock_idle_wakeup_event();
-> > diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> > index 75895e6363b8..47f686131a54 100644
-> > --- a/include/linux/cpuidle.h
-> > +++ b/include/linux/cpuidle.h
-> > @@ -82,6 +82,7 @@ struct cpuidle_state {
-> >  #define CPUIDLE_FLAG_UNUSABLE          BIT(3) /* avoid using this state */
-> >  #define CPUIDLE_FLAG_OFF               BIT(4) /* disable this state by default */
-> >  #define CPUIDLE_FLAG_TLB_FLUSHED       BIT(5) /* idle-state flushes TLBs */
-> > +#define CPUIDLE_FLAG_RCU_IDLE          BIT(6) /* driver will do RCU-idle */
-> >
-> >  struct cpuidle_device_kobj;
-> >  struct cpuidle_state_kobj;
+fd1 -> file1 -> inode
+fd2 -> file2 -> inode
+
+The old behavior of hooking up a each anon inode fd to the same inode
+prevented having an evict method attached to the inode. Because it was
+shared that wasn't possible but also simply because that inode never got
+evicted anyway. That surely was intended but it's a bummer to some
+extent.
+With the new model you also can't have an evict method because now you
+have a separate inode for each file.
+
+I'm probably going to get killed for suggesting this but:
+If we're going to expand the anonymous inode infrastructure anyway is
+there a way we can make it so that we have a way to allocate a single
+inode for multiple anonymous inode fds and have callers opt-in to this
+behavior. We'd need a way to find this inode again, obviously.
+
+This would allow for some features on top of anonymous inode fds that
+can refer to the same object, i.e. anonymous inode fds that currently
+stash away the same object in f->private_data.
+In such a model we could allow such anonymous inode fds to stash away
+objects in inode->i_private instead of f->private_data and attach an
+evict method to it. This would e.g. allow a process to be killed when
+the last pidfd to it is closed or a seccomp notifier fd to notify when
+the filter is released without having to do separate reference counting.
+
+This would need a way to lookup that inode by the object that is stashed
+away in it of course which could probably be done by an idr or an
+xarray or something cleverer. It would obviously only affect a subset of
+anonymous inode fds so any other anonymous inode fds wouldn't be
+impacted since they can still use the single-anon-inode interface.
+
+Christian
