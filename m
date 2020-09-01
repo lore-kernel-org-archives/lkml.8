@@ -5,51 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA2A8C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A17BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3BEE206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C846206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:10:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="otkk5rND"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="SM3XVIsH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726913AbgIAWKH (ORCPT
+        id S1727949AbgIAWKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:10:07 -0400
-Received: from mail-dm6nam12on2058.outbound.protection.outlook.com ([40.107.243.58]:27794
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
+        Tue, 1 Sep 2020 18:10:24 -0400
+Received: from mail-bn8nam12on2089.outbound.protection.outlook.com ([40.107.237.89]:35265
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726352AbgIAWKE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:10:04 -0400
+        id S1726352AbgIAWKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 18:10:22 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WjIyF6RF9/Yhig1i/0JZo6rSSwKH2gPQ68qj7pJ6qbXEiUmFNGpjZ5hvOfc24zjI+o50iZSz8bHF/ukdwY53S0z+pylJF4XotWnOwT89SmO50VHYwpHVRuRVuYp4bxjR88kMYF0mwwUbVe5ASQf6ltuauQshKYg8kMl3r2aHGwAriT+P88KNxzGWX/L/K7zykwpt/HR4Xfgfho9w8p+zTEz4MIiN/ttxx3Q5m7qz0r+4todDBrLeiZLOUoNDATCCaWm80Gv57kscBkTTt5U6oH5KBQx//7ype5cPU8RHPyZnuP8uR3cq/MflyvsHJuMmYYmHqL0Q5qoclVpvJ/B0bw==
+ b=QgcxHHXq6r7EoTjEOvZI+107MU3bi3zsFc4LF0Ifwi11/hkzc1gEpegENwtxjX6oSHRTq5cOMLbhOTj4OI5dFgGwIXddmgxY6eiH9jbjHirBhxLZ+TtnzaAZws81pMGWkdjR/oD5pMtwslw/RUnKWG9H7+EOCiefDXS6CH3HaQCXx9+UO2bo0eyupaRiahnI9f+6ipqwP3ZsKs/UIjeMIoe+Pba63aYDPeRcU1S7x9m3oCVATl/Ojn7hDpTMbZcUSA31x9loJeouNS+KHhoIDt0nOs14t/hRGyaIBXhGlTWcnThv4ankfAb+VihloFPuaWZ9M0boCBM/W0OesDO3cA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5MJLkk/7llZ9T5JWMFMdrD5NRzEziS/BGcyBXM7AWEM=;
- b=d2og5DQYLjRqIwRF/C6l9WmIFYofhBhcIayPEsa44VhQA98LoOhnrKcMlaZZVnX418aKySDx+hu1cfTya+p5xB1PDJa+ZKhR5dvv/HyWqZl8BeASBHowYt750cknagMe1pStJ5oSU6fB+Yol1FFdDk7Vu+PwwydE77alenD+dj5heLUoygxX51LgyGp0gJ2mpRlN/7lJ0+S3cyD1VvUOJ/DZNitcbCZPRMUIaes+9MYuLBf4fW+3GU7vLgcRKwHDmRXiMBRdQG7vJ/a1c6g0wKU9Zt+PBI0WYkfiafIuSFblWgOFYmliQK+Jfayw2upmQTGK7vmztLin64TKc1mvlw==
+ bh=Au/LVITQyPULlI7PidbrpByUwTrfy0cMmAUOdtJBB44=;
+ b=BVL9GQjgbQfSIymHcS6LQS2TsOj3VOi7L3mLVnfdElPdmS6q4Ct7nzH/NTjds9PCB6EAZix06kIqknnJWm7bRo/8vbH34HBiZUkMKWGiZJJj1S45sarfTEQ85TJWLmow08FHpjqWpo4p9HixpAgMdyPyu6Tftu8UUT0xDlh0jSc89Nxoh9YnAXvtGmBTCjFm9t9q12MvTZb8Aalu+4R6ModTCmjJUTUEk4sGT+ZRoNRDVjHFOLFBKvCwp05vVOEtAlTZDC+w/TaEfGc1buV18FC80KntVv0yUvF7X7Ho5Az0fW8jatN9PbNF5FYPWqipSExCkisuYhuu/su62f2qJg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5MJLkk/7llZ9T5JWMFMdrD5NRzEziS/BGcyBXM7AWEM=;
- b=otkk5rNDKYuHU/SlQSc7KOGUnV88OckpAIByTafDfdvLudo5Vq5REpxhoCmoAfiiSaYxFQREXBzynejOmjp+0u3QQW8PvQWR4bGPXA+aR2+1rMY0+zLwMek0kSKcMxRRPLmPdXh//REYfP3cMzeDtstu3UZKVGd9D0fcHfFrRQk=
+ bh=Au/LVITQyPULlI7PidbrpByUwTrfy0cMmAUOdtJBB44=;
+ b=SM3XVIsHUG1suuzMvT8oKD2EbLjdcXN/lKamFF9YOAY9nsQE4Cwk3zn27kWyNGr/OM1+139NbIm0obG4K3kdpcxJKuYpj+6sRfODs8gCAWcKs+JTHaWZ8mRvRHsi6SlREr4ZYK+v6rAvMFdA3ejU1HZFpVY84jV2bKZYwsVyh7c=
 Authentication-Results: redhat.com; dkim=none (message not signed)
  header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
 Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
- by BN8PR12MB3169.namprd12.prod.outlook.com (2603:10b6:408:69::24) with
+ by BN6PR1201MB0148.namprd12.prod.outlook.com (2603:10b6:405:55::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Tue, 1 Sep
- 2020 22:10:00 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Tue, 1 Sep
+ 2020 22:10:15 +0000
 Received: from BN8PR12MB2946.namprd12.prod.outlook.com
  ([fe80::a92d:18c0:971b:48e6]) by BN8PR12MB2946.namprd12.prod.outlook.com
  ([fe80::a92d:18c0:971b:48e6%6]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
- 22:10:00 +0000
+ 22:10:15 +0000
 From:   Kim Phillips <kim.phillips@amd.com>
 To:     Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -72,64 +71,79 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         William Cohen <wcohen@redhat.com>,
         Stephane Eranian <eranian@google.com>,
         Ian Rogers <irogers@google.com>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH 1/4] perf vendor events amd: Add L2 Prefetch events for zen1
-Date:   Tue,  1 Sep 2020 17:09:41 -0500
-Message-Id: <20200901220944.277505-1-kim.phillips@amd.com>
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 2/4] perf vendor events amd: Add ITLB Instruction Fetch Hits event for zen1
+Date:   Tue,  1 Sep 2020 17:09:42 -0500
+Message-Id: <20200901220944.277505-2-kim.phillips@amd.com>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200901220944.277505-1-kim.phillips@amd.com>
+References: <20200901220944.277505-1-kim.phillips@amd.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: DM5PR15CA0036.namprd15.prod.outlook.com
- (2603:10b6:4:4b::22) To BN8PR12MB2946.namprd12.prod.outlook.com
+X-ClientProxiedBy: DM3PR03CA0002.namprd03.prod.outlook.com
+ (2603:10b6:0:50::12) To BN8PR12MB2946.namprd12.prod.outlook.com
  (2603:10b6:408:9d::13)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by DM5PR15CA0036.namprd15.prod.outlook.com (2603:10b6:4:4b::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Tue, 1 Sep 2020 22:09:57 +0000
+Received: from 255.255.255.255 (255.255.255.255) by DM3PR03CA0002.namprd03.prod.outlook.com (2603:10b6:0:50::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Tue, 1 Sep 2020 22:10:12 +0000
 X-Mailer: git-send-email 2.27.0
 X-Originating-IP: [165.204.77.11]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0b8635e4-cb26-4a64-a95b-08d84ec3c4fe
-X-MS-TrafficTypeDiagnostic: BN8PR12MB3169:
+X-MS-Office365-Filtering-Correlation-Id: eb340166-9f69-4156-8f58-08d84ec3cdc0
+X-MS-TrafficTypeDiagnostic: BN6PR1201MB0148:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN8PR12MB31692FDF394EEF38E4CCCCD3872E0@BN8PR12MB3169.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Microsoft-Antispam-PRVS: <BN6PR1201MB01486855F86BE906ED78B5B5872E0@BN6PR1201MB0148.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qxuTo6+zPDcwLKdP9/HQHBCnhZS6icinEVdYJ5DKUOTvG3Fo9hHMtc44BOk+iVna2y2pBiDaZSud04RCXN0HSEUc/iuzNS7i82pgxuWN1OPNixCD6J+Tlm+RHUQPCHMQs3ztSZv03jx2WvWvLKsW+AwV02tQvw5F5X7u0sO1pRe7BlvKfFG+H3v1/fQ5+Wrzldxog2JjUNrBS5a84tX6GBh6kPwrVAY85ky8pF9TT/9hfk6w3ie0uWdGjzrz22ODFbdg1sjbjGzL94Q5/kzvkX5qd1mC4aEIVvdN4tTua5AMkkeWYPzjtgCR+DUf9Xp9jLpGLWTLSfGciDpcbj8a1OWjD8Bvpc1VSUyVqsjmSlbSfbonMd2DCOvEf5GnMiFKEGCrx6VWHTvWk0jHyN1TzQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(366004)(396003)(346002)(39860400002)(956004)(5660300002)(8676002)(26005)(54906003)(83380400001)(66476007)(44832011)(66556008)(4326008)(52116002)(36756003)(86362001)(8936002)(6486002)(316002)(16576012)(186003)(7416002)(966005)(2906002)(2616005)(6666004)(478600001)(66946007)(1076003)(66574015);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Ya9zfJdCXbSDQr6Doz2wjJptaAcqCDZRgHze4aS42QIPSU4bIe714XWDPV7Vo/Ppj0pZwSi+nEvZYG5aJBshNFu4hRHaMEnttFZ/GBlKHXFAQldNC7gZi6EXIZ4TZha/zRUT/voF8PXw+ep4ryjcQcpgofEGsig++t7r4RB13fYtGLNWpOD0bO8AS6Cv70yB6m8plI/YAohMaU2MA2y2c4kwHU4/QW1MFUaHjSd+BVH8rT9mTqBJXHOQABcz9E9s2knn8Mjzclv3jTruqeZKoT1RLLhFKbDdSZ1ssUx9s2VNGMc3Oj6THe+EjWGSoIv7t6D/NVe1fDe2uhmZj5A6hfO1SwsEnvkcdlBOVKOS4LXZuVizqwM7kHqfqUKiS2psBxXDBr9hkJrMk4RRjtp8YpR087Gv70Q2OszEZCT6qNvBv0N3gBOCwXsWqPOI3+XWWmEllqEX2SKI42FOH+FTWIFjYeff+oPpkkKnCr1BRVh2Xfw0tLRdz3V3JNlp6ATKWfkg/rDEyDAJ48nEifgWHj1j9/QUew7C+32uSWTuAqqXxSVhwinjsPjd6BSrYXsiDu7CU+613rc5apmWJiWcbP/zSMBnw70qEotlDUaOCVs8IM+OO9eQgl1SbrPANW5H6k1L1cMll4sPTBeHLNIgsA==
+X-Microsoft-Antispam-Message-Info: Rh/MTuH2A5PvfVVKsflBQ4EHS6IocnvHxtStyUs15cwZMYEVX4UJuQQ/S5lDQ7FvTjOVPU2QRpAUUZIJr7jGDR6LvXXrUaC9VgQkS6X3yK0U9qZ1SKZdiT+HHebMtUV3d8LTTCz5vfccIhXJcwCQhdKO7a2x4LxzjbOHAz1ZIHaLAo8MYK6AuJp5xyqJsh8S8HFJy/CYzHKXAp2u5xQ90bMneXJzd7DMu0F9wRThvh2+9JAqpmMuzRrUrgADdjVdUloi+g1Oy3YgkLSBayg3Fil2kyukGiavqG76adXh1ejYzL5uGzMq7Yk706EsGFGaNdt3aTGZNM9V1qrdcQo8FA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(39860400002)(136003)(366004)(376002)(66556008)(66476007)(66946007)(6666004)(52116002)(5660300002)(2906002)(956004)(8936002)(2616005)(316002)(1076003)(8676002)(44832011)(4326008)(36756003)(16576012)(186003)(26005)(7416002)(478600001)(54906003)(86362001)(6486002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: uf7DH2/Bd/BoQvY6MzWceTpiE3rBug0//g4T27u1hIX8nrc5JHyBqHEHaBYHVZQve+rbtqYHwXBNaiWTfn/rPR8vxJlRtZvDzZ9SsTWsOYaVNutXvjofj6hi3CvBX6lE9cVqj3gQ4Zt6I8OL7UKpfuUMQOhVbvrM1mtM5BT+7W8zhLUhZm2+gp+Y5UZeHvdYer9zA5WZR3iDlzINeAUHOLssrwe0ZXs8BU1bvoaiR0gkp/GdJdVrkWh/AFTZcQ9rCSnqZnTF+14dGVBG2mEy2Ih0N7KJcCrUABHt04mVz+wGPHZlmZtODvPp08Jf867uegn49c7OBRoYMhYvUrLVmzgz0dMTNDa+NOxxJiB0378SQpjkASWJq+TIEcez/Q/DTanP9C4t0lUgHIEQw6R3vCnpIJVAmHZggcHk23Sqi1VTuLe8LUvkXTbelrhrmA03Pl6UOLHe/XH13nOdC8sKgGfMbCWfqF/tGNUAIWkzvsrYVOD9nbbDKVdG+NARyfeYoFAZlIIMlhmt9HemqH7GI6g1P/Wq22wcdH4j7rEs/tODieFFgdleO/WxykxpO8DtbJdNUum1HW1a+8ulQnMgjz/2icBRj+f5soYDaJe9LK1YdsUnXSN1uHMIuEh3w7o9p0jKU2or3KkebgmO0PI4KA==
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b8635e4-cb26-4a64-a95b-08d84ec3c4fe
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb340166-9f69-4156-8f58-08d84ec3cdc0
 X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 22:10:00.5077
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 22:10:15.2152
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2LJAX90YRG1A9x8msBlZ8RBaEw9k5dvdATK1IJEkxIXXlYUuCXjdHQH4k40dpwpui0TF2rTsvs0P3c5DNN2Brg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR12MB3169
+X-MS-Exchange-CrossTenant-UserPrincipalName: aLMSbXzi86hVzZ1ANbQNJetVIf2PiO2YaSnGHNIbfA+CgaeErsYboCVtH/ImeRV5CvsOdVGeRo9AHj9koq0ZSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Later revisions of PPRs that post-date the original Family 17h events
-submission patch add these events.
+The ITLB Instruction Fetch Hits event isn't documented even in
+later zen1 PPRs, but it seems to count correctly on zen1 hardware.
 
-Specifically, they were not in this 2017 revision of the F17h PPR:
+Add it to zen1 group so zen1 users can use the upcoming IC Fetch Miss
+Ratio Metric.
 
-Processor Programming Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors Rev 1.14 - April 15, 2017
+The IF1G, 1IF2M, IF4K (Instruction fetches to a 1 GB, 2 MB, and 4K page)
+unit masks are not added because unlike zen2 hardware, zen1 hardware
+counts all its unit masks with a 0 unit mask according to the old
+convention:
 
-But e.g., are included in this 2019 version of the PPR:
+zen1$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
 
-Processor Programming Reference (PPR) for AMD Family 17h Model 18h, Revision B1 Processors Rev. 3.14 - Sep 26, 2019
+ Performance counter stats for 'sleep 1':
+
+           211,318      cpu/event=0x94/u
+           211,318      cpu/event=0x94,umask=0xff/u
+
+Rome/zen2:
+
+zen2$ perf stat -e cpu/event=0x94/,cpu/event=0x94,umask=0xff/ sleep 1
+
+ Performance counter stats for 'sleep 1':
+
+                 0      cpu/event=0x94/u
+           190,744      cpu/event=0x94,umask=0xff/u
 
 Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Fixes: 98c07a8f74f8 ("perf vendor events amd: perf PMU events for AMD Family 17h")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
@@ -153,40 +167,25 @@ Cc: Stephane Eranian <eranian@google.com>
 Cc: Ian Rogers <irogers@google.com>
 Cc: linux-perf-users@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
 ---
- .../pmu-events/arch/x86/amdzen1/cache.json     | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ tools/perf/pmu-events/arch/x86/amdzen1/branch.json | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-index 404d4c569c01..695ed3ffa3a6 100644
---- a/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/amdzen1/cache.json
-@@ -249,6 +249,24 @@
-     "BriefDescription": "Cycles with fill pending from L2. Total cycles spent with one or more fill requests in flight from L2.",
-     "UMask": "0x1"
-   },
-+  {
-+    "EventName": "l2_pf_hit_l2",
-+    "EventCode": "0x70",
-+    "BriefDescription": "L2 prefetch hit in L2.",
-+    "UMask": "0xff"
+diff --git a/tools/perf/pmu-events/arch/x86/amdzen1/branch.json b/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+index a9943eeb8d6b..4ceb67a0db21 100644
+--- a/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
++++ b/tools/perf/pmu-events/arch/x86/amdzen1/branch.json
+@@ -19,5 +19,10 @@
+     "EventName": "bp_de_redirect",
+     "EventCode": "0x91",
+     "BriefDescription": "Decoder Overrides Existing Branch Prediction (speculative)."
 +  },
 +  {
-+    "EventName": "l2_pf_miss_l2_hit_l3",
-+    "EventCode": "0x71",
-+    "BriefDescription": "L2 prefetcher hits in L3. Counts all L2 prefetches accepted by the L2 pipeline which miss the L2 cache and hit the L3.",
-+    "UMask": "0xff"
-+  },
-+  {
-+    "EventName": "l2_pf_miss_l2_l3",
-+    "EventCode": "0x72",
-+    "BriefDescription": "L2 prefetcher misses in L3. All L2 prefetches accepted by the L2 pipeline which miss the L2 and the L3 caches.",
-+    "UMask": "0xff"
-+  },
-   {
-     "EventName": "l3_request_g1.caching_l3_cache_accesses",
-     "EventCode": "0x01",
++    "EventName": "bp_l1_tlb_fetch_hit",
++    "EventCode": "0x94",
++    "BriefDescription": "The number of instruction fetches that hit in the L1 ITLB."
+   }
+ ]
 -- 
 2.27.0
 
