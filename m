@@ -2,273 +2,299 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EE6C433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5A7C433E7
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1A0206FA
+	by mail.kernel.org (Postfix) with ESMTP id 95F41206EB
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BwLfTsvo"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="snGvfPzw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgIALq2 (ORCPT
+        id S1725949AbgIALlr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:46:28 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:23625 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727041AbgIALgC (ORCPT
+        Tue, 1 Sep 2020 07:41:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45500 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726510AbgIALbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:36:02 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200901113538epoutp01c3b12e34550a96619b3ff8ddd55d9653~wpcZC0Vo_0814908149epoutp01V
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 11:35:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200901113538epoutp01c3b12e34550a96619b3ff8ddd55d9653~wpcZC0Vo_0814908149epoutp01V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598960138;
-        bh=YqLyEyefd2EuCky1gKbGz4lUozJOx/Mj4j1disZQLO0=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=BwLfTsvommtNq70lpjXaQFlHqGR3SPvl8bfVDzMXW1c0PObRutvWDL5aSWKGvstj0
-         CUmr0bsDcSIsiBQY5wU6gCnM00DnFFxW6zxDaNexF6XzcWon5syo/fdUdli3f5L1xM
-         LGBDHlncLun6LR2nVjyvXnN4Nws8PZqOplLk02Rw=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200901113538epcas1p4694458fd90ac4d9601b79cf99ce20b6e~wpcYgjG8Q0702007020epcas1p4F;
-        Tue,  1 Sep 2020 11:35:38 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4BglPN0Ff3zMqYkb; Tue,  1 Sep
-        2020 11:35:36 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C9.D6.29173.7023E4F5; Tue,  1 Sep 2020 20:35:35 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200901113535epcas1p3a5d9ee1600e343886cabf86cdea1023b~wpcV1sezp0683206832epcas1p3I;
-        Tue,  1 Sep 2020 11:35:35 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200901113535epsmtrp1b151ed8540122e28c548772ac6cfd14a~wpcV055Do0918009180epsmtrp1h;
-        Tue,  1 Sep 2020 11:35:35 +0000 (GMT)
-X-AuditID: b6c32a37-9b7ff700000071f5-c0-5f4e3207e4ba
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        9B.FF.08303.7023E4F5; Tue,  1 Sep 2020 20:35:35 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200901113534epsmtip1e3167e347495f932743fa656683ddfe4~wpcVmbfSe1857018570epsmtip1L;
-        Tue,  1 Sep 2020 11:35:34 +0000 (GMT)
-Subject: Re: [PATCH v4 03/78] drm/vc4: hvs: Boost the core clock during
- modeset
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Organization: Samsung Electronics
-Message-ID: <6aa8ed4d-1457-ce27-f801-11a197088c56@samsung.com>
-Date:   Tue, 1 Sep 2020 20:48:03 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 1 Sep 2020 07:31:38 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23473C06124F
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 04:31:30 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id s92so569299ybi.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 04:31:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4azl1Pqi34/KM3SUfHQrbAB4z0ey03RVAecsuKreq5M=;
+        b=snGvfPzwW9rhNwrrYSkrDULDiO5BdR63aE1RkVlpa8cYCwjnqE66MWXXLkSSCwDl+1
+         LO9o1FhuipndgnCJstkHUPsnaqKzG2gAQaAPSCQKnVvX7DdA1IPIMWfwSRBJauKT2Hti
+         W6NmO8RZE7odYOpvRl+7kh51FZ/znyA0mTDmhuYUCobE6fJLrxpmApZkFx3Ywk6+L53X
+         IKntmqo63YJYitm+9C+AW6rP8pBLKb0jQpiIo35ei3ReUQRkYfE0VUWH3RpPzSgxD8ur
+         7mGKQOenMQ6H1wngaGa5fy88to8fBIpaWTdnuE6ljmXl3CaPGJDvZAtvCsuJYBpNkorT
+         ZwZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4azl1Pqi34/KM3SUfHQrbAB4z0ey03RVAecsuKreq5M=;
+        b=JHidKoZbqqZHuSozKXOhdyAR3gbtYSVAlgsUxT4ZuxdRpvYfUvnbChdHC2jZFvBAkV
+         u77t8dGkZAs9usI7AXjiUSOaSJY8qaSaTSl13OQRy56JNS9tqqSdxi4Yd/WagePYkTWm
+         ui9T6xiNUWCCEQ9sNqXsdop6e9ww5Y/yxJq09ZN6iTZMo1Zl8xlwH2tTwZcNU4IAAaQs
+         jWj4iDLl8N2hKgWrA/i3G1I2+Vl9nTnwI0owaKenkvPbTkQHmzYtkYZoOBbQ4I3dmm0u
+         VK5ph6R2vmm9SQrWkW4cRjHYMaWXQGpIYZzVeyXzSqPThufQqtLYx3bDSwEufMQQ66eG
+         sQMA==
+X-Gm-Message-State: AOAM531zQ19xNB1hOf+jJhG3ACqVX35rwSUj20xew2d8B3m0JKl5hGPz
+        zR1OJIVn9yLZgO6AE/eV8px6+ZEM7/9sf1cPSIklbuKfujY=
+X-Google-Smtp-Source: ABdhPJwF4OrqCSUd9mXlj8r1EOlnKx/dA9KK9jQxv47MCLREf8tafLhOIPQSl3zpBqWt9lZz8BA0MZDslSjPnbJq1Ss=
+X-Received: by 2002:a5b:411:: with SMTP id m17mr2101536ybp.492.1598959888924;
+ Tue, 01 Sep 2020 04:31:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <a4f6ea62-441a-8e5b-5383-13d7f2b1a920@samsung.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrJJsWRmVeSWpSXmKPExsWy7bCmri67kV+8wbaVVhZre4+yWLydu5jF
-        4srX92wWBxovM1psenyN1eLyrjlsFhNvb2C3mPHjH6PFtlnL2SzW3XrNZvFo6n1GB26PpvfH
-        2Dxm3T/L5nHn3Hk2j/vdx5k8Ni+p92g9+ovFY/Ppao/Pm+QCOKKybTJSE1NSixRS85LzUzLz
-        0m2VvIPjneNNzQwMdQ0tLcyVFPISc1NtlVx8AnTdMnOA7lRSKEvMKQUKBSQWFyvp29kU5ZeW
-        pCpk5BeX2CqlFqTkFFgW6BUn5haX5qXrJefnWhkaGBiZAhUmZGc875jPUtCuXPHlfDtrA+MO
-        6S5GTg4JAROJAw+2MncxcnEICexglPg1aTUbhPOJUWL7q3+sEM5nRon1P1czwrQ03O1iBrGF
-        BHYxSvy5qw9R9J5R4umWF0xdjBwcwgKBEhN2K4HUsAloSex/cYMNxBYRKJdo79wPto5ZYAeT
-        RMep6WAJfgFFias/HoMt4BWwk9g79RUTiM0ioCJx4NorsBpRgTCJk9taoGoEJU7OfMICYnMK
-        2Ess6X0IdhCzgLjErSfzmSBseYntb+eALZMQOMMhMX3/AXaID1wkGiZMg/pGWOLV8S1QcSmJ
-        l/1tUHa1xMqTR9ggmjsYJbbsv8AKkTCW2L90MtiXzAKaEut36UOEFSV2/p7LCLGYT+Ld1x5W
-        kBIJAV6JjjYhiBJlicsP7jJB2JISi9s72SYwKs1C8s4sJC/MQvLCLIRlCxhZVjGKpRYU56an
-        FhsWGCPH9iZGcBrWMt/BOO3tB71DjEwcjIcYJTiYlUR4Z97wjRfiTUmsrEotyo8vKs1JLT7E
-        aAoM4InMUqLJ+cBMkFcSb2hqZGxsbGFiaGZqaKgkzvvwlkK8kEB6YklqdmpqQWoRTB8TB6dU
-        A1MCo9JH/tZwrrXBGT91donkN5WXXvp7mH9FUpJAYYe4dTLLaY2VthdPr9WS3vR7wuutfxfO
-        M3dJSjU7t7Nq/WQV9itvTwcZ3NYOj7RrdtL7ylgd4jS15Nnhkk4tX++jeVfe+8mpV87KtPra
-        W5vo7jjpq/hfF/OMsiVVxS/39arM3rp9hsw8Hz+Z0OAOpd4l9dzHhTRE45acsbY5tj/uwpln
-        zWYfXv7/+yRSJdWJ7bPyvnWcr8oWX/afntSiF/Jvb4XO0cMcIgt14lzijt18oqCUtkCV6YnI
-        w+Tj+4978/C87BUSckhryzoou++lLf+jwzmbO3ZdqZ2hd3798tMRqWWLAyae/LJ1g/nl5ytd
-        wpRYijMSDbWYi4oTAZtZubVMBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsWy7bCSnC67kV+8wYof7BZre4+yWLydu5jF
-        4srX92wWBxovM1psenyN1eLyrjlsFhNvb2C3mPHjH6PFtlnL2SzW3XrNZvFo6n1GB26PpvfH
-        2Dxm3T/L5nHn3Hk2j/vdx5k8Ni+p92g9+ovFY/Ppao/Pm+QCOKK4bFJSczLLUov07RK4Mp53
-        zGcpaFeu+HK+nbWBcYd0FyMnh4SAiUTD3S7mLkYuDiGBHYwSq968ZYFISEpMu3gUKMEBZAtL
-        HD5cDFHzllFiY8MONpC4sECgxITdSiDlbAJaEvtf3GADsUUEKiU+z9kFNpNZYAeTRNfj02Az
-        hQQOMUm0HPQCsfkFFCWu/njMCGLzCthJ7J36ignEZhFQkThw7RXYIFGBMImdSx4zQdQISpyc
-        +QRsDqeAvcSS3ofMIDazgLrEn3mXoGxxiVtP5jNB2PIS29/OYZ7AKDwLSfssJC2zkLTMQtKy
-        gJFlFaNkakFxbnpusWGBUV5quV5xYm5xaV66XnJ+7iZGcDxqae1g3LPqg94hRiYOxkOMEhzM
-        SiK8M2/4xgvxpiRWVqUW5ccXleakFh9ilOZgURLn/TprYZyQQHpiSWp2ampBahFMlomDU6qB
-        acGFSb+eOGz875yw+TzjZ+GvBW9df3RN3m24ZxbLxuiL5X/mfpuRcm/nkdXc9QxfrgR5TS/e
-        ytMTWRTzbpfUXfbAucelr/n+b3taF71gjrayc3bQrvsCqZFHnJ1NnszSeTqLSylF+4e72In1
-        U7LW5s/qs5u9iW3JxLIdaz9bfanpDj9ZcluoYUrX3T1p4uutV2d2OC6LtftTsM8g12M1S++K
-        LysU9dQ7n+xjSLq5cIKYoX7gDBXvLTKZIVY6X883+HOZfzp2LaZj2XXdoIv60tp5pt0PL2w4
-        VG0kvPxixBOlgL2vO8sO1+tempSd48a8R6dDYMPqfVUNd2pqDs/s4D15dovdfIa8biflb+2X
-        jJVYijMSDbWYi4oTAejn/Dk2AwAA
-X-CMS-MailID: 20200901113535epcas1p3a5d9ee1600e343886cabf86cdea1023b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200708174243epcas1p2b5646e3d45e412d1cd1286d90cb9cc37
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
-        <CGME20200708174243epcas1p2b5646e3d45e412d1cd1286d90cb9cc37@epcas1p2.samsung.com>
-        <b04341887fb1acb9ed4adc28d109f9e21f146c7d.1594230107.git-series.maxime@cerno.tech>
-        <a4f6ea62-441a-8e5b-5383-13d7f2b1a920@samsung.com>
+References: <20200828032752.3229698-1-agoode@google.com>
+In-Reply-To: <20200828032752.3229698-1-agoode@google.com>
+From:   Adam Goode <agoode@google.com>
+Date:   Tue, 1 Sep 2020 07:30:53 -0400
+Message-ID: <CAOf41NnayTZKqZYeY4Eu8wES=E8UK6jWLCUoXw4JoF-rLax_NQ@mail.gmail.com>
+Subject: Re: [PATCH v2] media: uvcvideo: Convey full colorspace information to V4L2
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 8:21 PM, Chanwoo Choi wrote:
-> Hi Maxime,
-> 
-> On 7/9/20 2:41 AM, Maxime Ripard wrote:
->> In order to prevent timeouts and stalls in the pipeline, the core clock
->> needs to be maxed at 500MHz during a modeset on the BCM2711.
->>
->> Reviewed-by: Eric Anholt <eric@anholt.net>
->> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
->> ---
->>  drivers/gpu/drm/vc4/vc4_drv.h |  2 ++
->>  drivers/gpu/drm/vc4/vc4_hvs.c |  9 +++++++++
->>  drivers/gpu/drm/vc4/vc4_kms.c |  9 +++++++++
->>  3 files changed, 20 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
->> index e4cde1f9224b..6358f6ca8d56 100644
->> --- a/drivers/gpu/drm/vc4/vc4_drv.h
->> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
->> @@ -320,6 +320,8 @@ struct vc4_hvs {
->>  	void __iomem *regs;
->>  	u32 __iomem *dlist;
->>  
->> +	struct clk *core_clk;
->> +
->>  	/* Memory manager for CRTCs to allocate space in the display
->>  	 * list.  Units are dwords.
->>  	 */
->> diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
->> index 836d8799d79e..091fdf4908aa 100644
->> --- a/drivers/gpu/drm/vc4/vc4_hvs.c
->> +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
->> @@ -19,6 +19,7 @@
->>   * each CRTC.
->>   */
->>  
->> +#include <linux/clk.h>
->>  #include <linux/component.h>
->>  #include <linux/platform_device.h>
->>  
->> @@ -540,6 +541,14 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
->>  	hvs->regset.regs = hvs_regs;
->>  	hvs->regset.nregs = ARRAY_SIZE(hvs_regs);
->>  
->> +	if (hvs->hvs5) {
->> +		hvs->core_clk = devm_clk_get(&pdev->dev, NULL);
->> +		if (IS_ERR(hvs->core_clk)) {
->> +			dev_err(&pdev->dev, "Couldn't get core clock\n");
->> +			return PTR_ERR(hvs->core_clk);
->> +		}
->> +	}
->> +
->>  	if (!hvs->hvs5)
->>  		hvs->dlist = hvs->regs + SCALER_DLIST_START;
->>  	else
->> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
->> index 08318e69061b..210cc2408087 100644
->> --- a/drivers/gpu/drm/vc4/vc4_kms.c
->> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
->> @@ -11,6 +11,8 @@
->>   * crtc, HDMI encoder).
->>   */
->>  
->> +#include <linux/clk.h>
->> +
->>  #include <drm/drm_atomic.h>
->>  #include <drm/drm_atomic_helper.h>
->>  #include <drm/drm_crtc.h>
->> @@ -149,6 +151,7 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
->>  {
->>  	struct drm_device *dev = state->dev;
->>  	struct vc4_dev *vc4 = to_vc4_dev(dev);
->> +	struct vc4_hvs *hvs = vc4->hvs;
->>  	struct vc4_crtc *vc4_crtc;
->>  	int i;
->>  
->> @@ -160,6 +163,9 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
->>  		vc4_hvs_mask_underrun(dev, vc4_crtc->channel);
->>  	}
->>  
->> +	if (vc4->hvs->hvs5)
->> +		clk_set_min_rate(hvs->core_clk, 500000000);
->> +
->>  	drm_atomic_helper_wait_for_fences(dev, state, false);
->>  
->>  	drm_atomic_helper_wait_for_dependencies(state);
->> @@ -182,6 +188,9 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
->>  
->>  	drm_atomic_helper_commit_cleanup_done(state);
->>  
->> +	if (vc4->hvs->hvs5)
->> +		clk_set_min_rate(hvs->core_clk, 0);
->> +
->>  	drm_atomic_state_put(state);
->>  
->>  	up(&vc4->async_modeset);
->>
-> 
-> This patch doesn't control the enable/disable of core_clk.
-> So, I think that it need to handle the clock as following:
-> 
-> diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-> index 4ef88c0b51ab..355d67fd8beb 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hvs.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-> @@ -588,6 +588,12 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
->                         dev_err(&pdev->dev, "Couldn't get core clock\n");
->                         return PTR_ERR(hvs->core_clk);
->                 }
-> +
-> +               ret = clk_prepare_enable(hvs->core_clk);
-> +               if (ret) {
-> +                       dev_err(&pdev->dev, "Couldn't enable core clock\n");
-> +                       return ret;
-> +               }
->         }
->  
->         if (!hvs->hvs5)
-> @@ -681,6 +687,8 @@ static void vc4_hvs_unbind(struct device *dev, struct device *master,
->         drm_mm_takedown(&vc4->hvs->dlist_mm);
->         drm_mm_takedown(&vc4->hvs->lbm_mm);
->  
-> +       clk_prepare_enable(vc4->hvs->core_clk);
-
-I'm sorry. Change to clk_disable_unprepare(vc4->hvs->core_clk);
-
-> +
->         vc4->hvs = NULL;
+On Thu, Aug 27, 2020 at 11:28 PM Adam Goode <agoode@google.com> wrote:
+>
+> The Color Matching Descriptor has been present in USB cameras since
+> the original version of UVC, but it has never been fully exposed
+> in Linux.
+>
+> This change informs V4L2 of all of the UVC colorspace parameters:
+> color primaries, transfer characteristics, and YCbCr encoding.
+> videodev2.h doesn't have values for all the possible UVC color settings,
+> so it is mapped as closely as possible.
+>
+> Additionally, this patch overrides the default setting for quantization
+> for UVC MJPEG. By default, V4L2 assumes that MJPEG is full range encoded,
+> which is not correct for UVC.
+>
+> JPEG itself does not specify YCbCr encoding information, this is
+> left to some other metadata. For typical JPEG images (those that conform to
+> JFIF, see https://www.w3.org/Graphics/JPEG/jfif3.pdf), the colorspace is
+> specified as YCbCr CCIR 601 with full range. The use of this variant
+> on the 601 standard in JFIF is the reason that V4L2 defaults to full range
+> for JPEG.
+>
+> A JPEG image isn't a JFIF unless it contains an APP0 tag with 'JFIF', and
+> the UVC standard is clear that APP0 is optional for its MJPEG payload.
+> It does not mention JFIF at all. Moreover, it provides color metadata
+> in the Color Matching Descriptor, all using limited range as of UVC 1.5.
+>
+> Note that web browsers such as Chrome and Firefox already ignore V4L2's
+> quantization for USB devices and use the correct limited range, but
+> other programs such as qv4l2 will incorrectly interpret the encoding of
+> MJPEG from USB cameras without this change.
+>
+> Since there are many YUV and non-YUV formats supported by UVC cameras (but
+> not mentioned in the official specifications), and the quantization is
+> also not specified for these formats, I am not changing that behavior: all
+> formats besides MJPEG will stay at V4L2_QUANTIZATION_DEFAULT as before.
+>
+> Signed-off-by: Adam Goode <agoode@google.com>
+> ---
+>
+> Changes in v2:
+>  - Apply quantization override only for MJPEG.
+>  - Provide more comments and background information about JPEG vs JFIF.
+>  - Explain the substitutions for xfer func and ycbcr encoding.
+>
+>  drivers/media/usb/uvc/uvc_driver.c | 87 ++++++++++++++++++++++++++++--
+>  drivers/media/usb/uvc/uvc_v4l2.c   |  6 +++
+>  drivers/media/usb/uvc/uvcvideo.h   |  6 ++-
+>  3 files changed, 94 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/media/usb/uvc/uvc_driver.c b/drivers/media/usb/uvc/uvc_driver.c
+> index 431d86e1c94b..4e530a4bf976 100644
+> --- a/drivers/media/usb/uvc/uvc_driver.c
+> +++ b/drivers/media/usb/uvc/uvc_driver.c
+> @@ -248,10 +248,10 @@ static struct uvc_format_desc *uvc_format_by_guid(const u8 guid[16])
+>         return NULL;
 >  }
-> 
-> 
-> 
+>
+> -static u32 uvc_colorspace(const u8 primaries)
+> +static enum v4l2_colorspace uvc_colorspace(const u8 primaries)
+>  {
+> -       static const u8 colorprimaries[] = {
+> -               0,
+> +       static const enum v4l2_colorspace colorprimaries[] = {
+> +               V4L2_COLORSPACE_DEFAULT,  /* Unspecified */
+>                 V4L2_COLORSPACE_SRGB,
+>                 V4L2_COLORSPACE_470_SYSTEM_M,
+>                 V4L2_COLORSPACE_470_SYSTEM_BG,
+> @@ -262,7 +262,61 @@ static u32 uvc_colorspace(const u8 primaries)
+>         if (primaries < ARRAY_SIZE(colorprimaries))
+>                 return colorprimaries[primaries];
+>
+> -       return 0;
+> +       return V4L2_COLORSPACE_DEFAULT;  /* Reserved */
+> +}
+> +
+> +static enum v4l2_xfer_func uvc_xfer_func(const u8 transfer_characteristics)
+> +{
+> +       /* V4L2 currently does not currently have definitions for all
+> +        * possible values of UVC transfer characteristics. If
+> +        * v4l2_xfer_func is extended with new values, the mapping
+> +        * below should be updated.
+> +        *
+> +        * Substitutions are taken from the mapping given for
+> +        * V4L2_XFER_FUNC_DEFAULT documented in videodev2.h.
+> +        */
+> +       static const enum v4l2_xfer_func xfer_funcs[] = {
+> +               V4L2_XFER_FUNC_DEFAULT,    /* Unspecified */
+> +               V4L2_XFER_FUNC_709,
+> +               V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 M */
+> +               V4L2_XFER_FUNC_709,        /* Substitution for BT.470-2 B, G */
+> +               V4L2_XFER_FUNC_709,        /* Substitution for SMPTE 170M */
+> +               V4L2_XFER_FUNC_SMPTE240M,
+> +               V4L2_XFER_FUNC_NONE,
+> +               V4L2_XFER_FUNC_SRGB,
+> +       };
+> +
+> +       if (transfer_characteristics < ARRAY_SIZE(xfer_funcs))
+> +               return xfer_funcs[transfer_characteristics];
+> +
+> +       return V4L2_XFER_FUNC_DEFAULT;  /* Reserved */
+> +}
+> +
+> +static enum v4l2_ycbcr_encoding uvc_ycbcr_enc(const u8 matrix_coefficients)
+> +{
+> +       /* V4L2 currently does not currently have definitions for all
+> +        * possible values of UVC matrix coefficients. If
+> +        * v4l2_ycbcr_encoding is extended with new values, the
+> +        * mapping below should be updated.
+> +        *
+> +        * Substitutions are taken from the mapping given for
+> +        * V4L2_YCBCR_ENC_DEFAULT documented in videodev2.h.
+> +        *
+> +        * FCC is assumed to be close enough to 601.
+> +        */
+> +       static const enum v4l2_ycbcr_encoding ycbcr_encs[] = {
+> +               V4L2_YCBCR_ENC_DEFAULT,  /* Unspecified */
+> +               V4L2_YCBCR_ENC_709,
+> +               V4L2_YCBCR_ENC_601,      /* Substitution for FCC */
+> +               V4L2_YCBCR_ENC_601,      /* Substitution for BT.470-2 B, G */
+> +               V4L2_YCBCR_ENC_601,
+> +               V4L2_YCBCR_ENC_SMPTE240M,
+> +       };
+> +
+> +       if (matrix_coefficients < ARRAY_SIZE(ycbcr_encs))
+> +               return ycbcr_encs[matrix_coefficients];
+> +
+> +       return V4L2_YCBCR_ENC_DEFAULT;  /* Reserved */
+>  }
+>
+>  /* Simplify a fraction using a simple continued fraction decomposition. The
+> @@ -533,6 +587,29 @@ static int uvc_parse_format(struct uvc_device *dev,
+>
+>                 strscpy(format->name, "MJPEG", sizeof(format->name));
+>                 format->fcc = V4L2_PIX_FMT_MJPEG;
+> +               /*
+> +                * JPEG does not define a color encoding and relies on
+> +                * external metadata for this purpose. The most common
+> +                * metadata for this in JPEG is the JFIF
+> +                * specification, which defines a full-range variant
+> +                * of CCIR 601. Because of this, the default
+> +                * quantization for JPEG images in V4L2 is full range.
+> +                *
+> +                * But while most JPEG files are JFIF (identified by
+> +                * the presence of an APP0 tag starting with 'JFIF'),
+> +                * MJPEG frames from UVC are typically not. The MJPEG
+> +                * UVC standard declares APP0 tags as optional and
+> +                * makes no mention of JFIF.
+> +                *
+> +                * For UVC MJPEG, the color encoding metadata comes
+> +                * from the Color Matching descriptor, which uses the
+> +                * standard limited range YCbCr encodings and not the
+> +                * variant JFIF full range encoding.
+> +                *
+> +                * The default for JPEG in V4L2 is full range, so we need
+> +                * to override the default here.
+> +                */
+> +               format->quantization = V4L2_QUANTIZATION_LIM_RANGE;
+>                 format->flags = UVC_FMT_FLAG_COMPRESSED;
+>                 format->bpp = 0;
+>                 ftype = UVC_VS_FRAME_MJPEG;
+> @@ -704,6 +781,8 @@ static int uvc_parse_format(struct uvc_device *dev,
+>                 }
+>
+>                 format->colorspace = uvc_colorspace(buffer[3]);
+> +               format->xfer_func = uvc_xfer_func(buffer[4]);
+> +               format->ycbcr_enc = uvc_ycbcr_enc(buffer[5]);
+>
+>                 buflen -= buffer[0];
+>                 buffer += buffer[0];
+> diff --git a/drivers/media/usb/uvc/uvc_v4l2.c b/drivers/media/usb/uvc/uvc_v4l2.c
+> index 0335e69b70ab..8795f53a6306 100644
+> --- a/drivers/media/usb/uvc/uvc_v4l2.c
+> +++ b/drivers/media/usb/uvc/uvc_v4l2.c
+> @@ -253,6 +253,9 @@ static int uvc_v4l2_try_format(struct uvc_streaming *stream,
+>         fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+>         fmt->fmt.pix.sizeimage = probe->dwMaxVideoFrameSize;
+>         fmt->fmt.pix.colorspace = format->colorspace;
+> +       fmt->fmt.pix.xfer_func = format->xfer_func;
+> +       fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
+> +       fmt->fmt.pix.quantization = format->quantization;
+>
+>         if (uvc_format != NULL)
+>                 *uvc_format = format;
+> @@ -289,6 +292,9 @@ static int uvc_v4l2_get_format(struct uvc_streaming *stream,
+>         fmt->fmt.pix.bytesperline = uvc_v4l2_get_bytesperline(format, frame);
+>         fmt->fmt.pix.sizeimage = stream->ctrl.dwMaxVideoFrameSize;
+>         fmt->fmt.pix.colorspace = format->colorspace;
+> +       fmt->fmt.pix.xfer_func = format->xfer_func;
+> +       fmt->fmt.pix.ycbcr_enc = format->ycbcr_enc;
+> +       fmt->fmt.pix.quantization = format->quantization;
+>
+>  done:
+>         mutex_unlock(&stream->mutex);
+> diff --git a/drivers/media/usb/uvc/uvcvideo.h b/drivers/media/usb/uvc/uvcvideo.h
+> index 6ab972c643e3..e49cc671b0d3 100644
+> --- a/drivers/media/usb/uvc/uvcvideo.h
+> +++ b/drivers/media/usb/uvc/uvcvideo.h
+> @@ -272,6 +272,7 @@ struct uvc_format_desc {
+>         char *name;
+>         u8 guid[16];
+>         u32 fcc;
+> +       enum v4l2_quantization quantization;
+>  };
+>
+>  /* The term 'entity' refers to both UVC units and UVC terminals.
+> @@ -370,7 +371,10 @@ struct uvc_format {
+>         u8 type;
+>         u8 index;
+>         u8 bpp;
+> -       u8 colorspace;
+> +       enum v4l2_colorspace colorspace;
+> +       enum v4l2_xfer_func xfer_func;
+> +       enum v4l2_ycbcr_encoding ycbcr_enc;
+> +       enum v4l2_quantization quantization;
+>         u32 fcc;
+>         u32 flags;
+>
+> --
+> 2.26.2
+>
+
+As mentioned elsewhere, the quantization change here is incorrect. I
+will follow up with a new patch.
 
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Adam
