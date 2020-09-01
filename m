@@ -2,218 +2,195 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7A5C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:44:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AA6C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:47:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E6B12098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1C812087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:47:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZBnqzrSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgIAGoa (ORCPT
+        id S1726237AbgIAGrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:44:30 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:41149 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgIAGoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:44:18 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 0816h8wd000898;
-        Tue, 1 Sep 2020 08:43:08 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>, George Spelvin <lkml@sdf.org>,
-        Amit Klein <aksecurity@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
-        Florian Westphal <fw@strlen.de>,
-        Marc Plumb <lkml.mplumb@gmail.com>
-Subject: [PATCH 2/2] random32: add noise from network and scheduling activity
-Date:   Tue,  1 Sep 2020 08:43:02 +0200
-Message-Id: <20200901064302.849-3-w@1wt.eu>
-X-Mailer: git-send-email 2.9.0
-In-Reply-To: <20200901064302.849-1-w@1wt.eu>
-References: <20200901064302.849-1-w@1wt.eu>
+        Tue, 1 Sep 2020 02:47:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726012AbgIAGrO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:47:14 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBD6C0612AC
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:47:13 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id k13so47781plk.13
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 23:47:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1AJDV09BBbTOXzQ8snHH0cQOlBK0HHUV0mNeBFxuqPQ=;
+        b=ZBnqzrSvtoCueyqstwGgxb1NfiFYcdzf/UalrR2FoneSXastcdNXx08tTrcI+9RHYs
+         CGmosBDedNfjuPEukqlC4PmHe9fY1tbcWrimztFqdxUW3ZNXXGYKB0bl+s1fUjB3cRLz
+         IL/A5js2zGrWHqk+OCS0bPbi74C2M+1DCuWNySZ4k7wlY5TXbDs0Am5kUEYgHocRPuGO
+         6nc7Gq8I3zD6WnRR9BbIDepTYVSFR0hZwYSzSHTtsxOljX0hw2HgYbxeZe9/hnKT4pon
+         CCANlOnlqUyJuOEWvQtevVtxln3MDYueDeUu693lHHRYTxFXxIxUVb7E1mIlPXW2LzMK
+         a+Dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1AJDV09BBbTOXzQ8snHH0cQOlBK0HHUV0mNeBFxuqPQ=;
+        b=tPRcmAMMCsxWpyUlgGv5WqQRAP1rZWAhj5z68mnIrZ6g9e+l9gjM+4Ys4jHpTJy/Av
+         YclLroft5ptCBXOAnsHXhWn8mnHEcYSlhUIQbrGEjOLq0QIR20WzoEtI3vMHqPaJBO3f
+         B1x9/M1V5GfkvRx/qLmxy5Dc5E7GdN4+t0l/3pu7X8Amxq3sDO8Am6XFhmys5QVgotYl
+         nBWZtSjdvqrU8imLMnwy+HX4P6kamW6MXRYu5voFgtGuT3gN+u/SDw9TfWiOt7nJ3JNc
+         y1NiwQen5ZZ8xCTF1mUePgKC6/UxxBnhdwinffSyy22qHfsThXLRQ0ekOgrFid7IZoUF
+         D+kQ==
+X-Gm-Message-State: AOAM533BRmfr3SYCEkLZiW3MzHfmnpXTycTfASaJ7NzekJEE4n0KHtLb
+        AxL9IOUgRo39FfytrTolZVGVkui+pds3k/Np8Ya+zg==
+X-Google-Smtp-Source: ABdhPJysbwqbqBO9gFbZLl/lWurza8u+2nagVzfSi+3Lmt1hXK84GbQStMzWAI2jfzVwCASh3lCzvJZj/7dfX9zh878=
+X-Received: by 2002:a17:902:8eca:: with SMTP id x10mr141764plo.129.1598942832814;
+ Mon, 31 Aug 2020 23:47:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAA+hA=S4eAreb7vo69LAXSk2t5=DEKNxHaiY1wSpk4xTp9urLg@mail.gmail.com>
+ <CAGETcx8Ums+mkD54BCkCvBtU1qx13VZH=DOPqepyiQz62REfCw@mail.gmail.com>
+ <CAGETcx_=Da7hVUCfOFd13Q6YAGPC65VSJD7BiCK_fCegYMCJbQ@mail.gmail.com> <DB6PR0402MB2760752E2666D486B40104B3882E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+In-Reply-To: <DB6PR0402MB2760752E2666D486B40104B3882E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Mon, 31 Aug 2020 23:46:36 -0700
+Message-ID: <CAGETcx8coP=tDp1Q_h0WgMjBwK_OwbvxvvM7-6d51fKE9NSB+w@mail.gmail.com>
+Subject: Re: Lockdep warning caused by "driver core: Fix sleeping in invalid
+ context during device link deletion"
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Dong Aisheng <dongas86@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        gregkh <gregkh@linuxfoundation.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With the removal of the interrupt perturbations in previous random32
-change (random32: make prandom_u32() output unpredictable), the PRNG
-has become 100% deterministic again. While SipHash is expected to be
-way more robust against brute force than the previous Tausworthe LFSR,
-there's still the risk that whoever has even one temporary access to
-the PRNG's internal state is able to predict all subsequent draws till
-the next reseed (roughly every minute). This may happen through a side
-channel attack or any data leak.
+On Mon, Aug 31, 2020 at 11:07 PM Peng Fan <peng.fan@nxp.com> wrote:
+>
+> > Subject: Re: Lockdep warning caused by "driver core: Fix sleeping in invalid
+> > context during device link deletion"
+> >
+> > On Wed, Aug 26, 2020 at 10:17 PM Saravana Kannan
+> > <saravanak@google.com> wrote:
+> > >
+> > > On Thu, Aug 20, 2020 at 8:50 PM Dong Aisheng <dongas86@gmail.com>
+> > wrote:
+> > > >
+> > > > Hi ALL,
+> > > >
+> > > > We met the below WARNING during system suspend on an iMX6Q SDB
+> > board
+> > > > with the latest linus/master branch (v5.9-rc1+) and next-20200820.
+> > > > v5.8 kernel is ok. So i did bisect and finally found it's caused by
+> > > > the patch below.
+> > > > Reverting it can get rid of the warning, but I wonder if there may
+> > > > be other potential issues.
+> > > > Any ideas?
+> > > >
+> > > > Defconfig used is: imx_v6_v7_defconfig
+> > > >
+> > >
+> > > ----- 8< ----- Snipped text that was a bit misleading
+> > >
+> > > >
+> > > > Error log:
+> > > > # echo mem > /sys/power/state
+> > > > [   39.111865] PM: suspend entry (deep)
+> > > > [   39.148650] Filesystems sync: 0.032 seconds
+> > > > [   39.154034]
+> > > > [   39.155537]
+> > ======================================================
+> > > > [   39.161723] WARNING: possible circular locking dependency detected
+> > > > [   39.167911] 5.9.0-rc1-00103-g7eac66d0456f #37 Not tainted
+> > > > [   39.173315] ------------------------------------------------------
+> > > > [   39.179500] sh/647 is trying to acquire lock:
+> > > > [   39.183862] c15a310c (dpm_list_mtx){+.+.}-{3:3}, at:
+> > > > dpm_for_each_dev+0x20/0x5c
+> > > > [   39.191200]
+> > > > [   39.191200] but task is already holding lock:
+> > > > [   39.197036] c15a37e4 (fw_lock){+.+.}-{3:3}, at:
+> > fw_pm_notify+0x90/0xd4
+> > > > [   39.203582]
+> > > > [   39.203582] which lock already depends on the new lock.
+> > > > [   39.203582]
+> > > > [   39.211763]
+> > > > [   39.211763] the existing dependency chain (in reverse order) is:
+> > > > [   39.219249]
+> > > > [   39.219249] -> #2 (fw_lock){+.+.}-{3:3}:
+> > > > [   39.224673]        mutex_lock_nested+0x1c/0x24
+> > > > [   39.229126]        firmware_uevent+0x18/0xa0
+> > > > [   39.233411]        dev_uevent+0xc4/0x1f8
+> > > > [   39.237343]        uevent_show+0x98/0x114
+> > > > [   39.241362]        dev_attr_show+0x18/0x48
+> > > > [   39.245472]        sysfs_kf_seq_show+0x84/0xec
+> > > > [   39.249927]        seq_read+0x138/0x550
+> > > > [   39.253774]        vfs_read+0x94/0x164
+> > > > [   39.257529]        ksys_read+0x60/0xe8
+> > > > [   39.261288]        ret_fast_syscall+0x0/0x28
+> > > > [   39.265564]        0xbed7c808
+> > > > [   39.268538]
+> > > > [   39.268538] -> #1 (kn->active#3){++++}-{0:0}:
+> > > > [   39.274391]        kernfs_remove_by_name_ns+0x40/0x94
+> > > > [   39.279450]        device_del+0x144/0x3fc
+> > >
+> > > Rafael/Greg,
+> > >
+> > > I'm not very familiar with the #0 and #2 calls stacks. But poking
+> > > around a bit, they are NOT due to the device-link-device. But the new
+> > > stuff is the above two lines that are deleting the device-link-device
+> > > (that's used to expose device link details in sysfs) when the device
+> > > link is deleted.
+> > >
+> > > Kicking off a workqueue to break this cycle is easy, but the problem
+> > > is that if I queue a work to delete the device, then the sysfs folder
+> > > won't get removed immediately. And if the same link is created again
+> > > before the work is completed, then there'll be a sysfs name collision
+> > > and warning.
+> > >
+> > > So, I'm kinda stuck here. Open to suggestions. Hoping you'll have
+> > > better ideas for breaking the cycle. Or point out how I'm
+> > > misunderstanding the cycle here.
+> > >
+> >
+> > Aisheng,
+> >
+> > Sent out a fix that I think should work.
+> > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.ke
+> > rnel.org%2Flkml%2F20200831221007.1506441-1-saravanak%40google.com%
+> > 2FT%2F%23u&amp;data=02%7C01%7Cpeng.fan%40nxp.com%7C3254604d7
+> > 41b4d1ce73b08d84dfb65af%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0
+> > %7C0%7C637345089428077609&amp;sdata=5lh8WO%2BYMh4C1sBn58Fsm
+> > XsjqjPj%2B%2FB71%2FENfMGDtTk%3D&amp;reserved=0
+> >
+> > I wasn't able to reproduce it in my hardware. So, if you can test that patch
+> > (and respond to that thread), that'd be great.
+>
+> I not found your patch in my mailbox, but anyway I tested it.
 
-This patch restores the spirit of commit f227e3ec3b5c ("random32: update
-the net random state on interrupt and activity") in that it will perturb
-the internal PRNG's statee using externally collected noise, except that
-it will not pick that noise from the random pool's bits nor upon
-interrupt, but will rather combine a few elements along the Tx path
-that are collectively hard to predict, such as dev, skb and txq
-pointers, packet length and jiffies values. These ones are combined
-using a single round of SipHash into a single long variable that is
-mixed with the net_rand_state upon each invocation.
+Sorry I forgot to CC everyone from the original email!
 
-The operation was inlined because it produces very small and efficient
-code, typically 3 xor, 2 add and 2 rol. The performance was measured
-to be the same (even very slightly better) than before the switch to
-SipHash; on a 6-core 12-thread Core i7-8700k equipped with a 40G NIC
-(i40e), the connection rate dropped from 556k/s to 555k/s while the
-SYN cookie rate grew from 5.38 Mpps to 5.45 Mpps.
+>
+> Tested-by: Peng Fan <peng.fan@nxp.com> (i.MX7ULP EVK)
 
-Link: https://lore.kernel.org/netdev/20200808152628.GA27941@SDF.ORG/
-Cc: George Spelvin <lkml@sdf.org>
-Cc: Amit Klein <aksecurity@gmail.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: tytso@mit.edu
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Marc Plumb <lkml.mplumb@gmail.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Signed-off-by: Willy Tarreau <w@1wt.eu>
----
- include/linux/prandom.h | 19 +++++++++++++++++++
- kernel/time/timer.c     |  2 ++
- lib/random32.c          |  5 +++++
- net/core/dev.c          |  4 ++++
- 4 files changed, 30 insertions(+)
+Thanks for testing!
 
-diff --git a/include/linux/prandom.h b/include/linux/prandom.h
-index cc1e71334e53..aa7de3432e0f 100644
---- a/include/linux/prandom.h
-+++ b/include/linux/prandom.h
-@@ -16,6 +16,12 @@ void prandom_bytes(void *buf, size_t nbytes);
- void prandom_seed(u32 seed);
- void prandom_reseed_late(void);
- 
-+DECLARE_PER_CPU(unsigned long, net_rand_noise);
-+
-+#define PRANDOM_ADD_NOISE(a, b, c, d) \
-+	prandom_u32_add_noise((unsigned long)(a), (unsigned long)(b), \
-+			      (unsigned long)(c), (unsigned long)(d))
-+
- #if BITS_PER_LONG == 64
- /*
-  * The core SipHash round function.  Each line can be executed in
-@@ -50,6 +56,18 @@ void prandom_reseed_late(void);
- #error Unsupported BITS_PER_LONG
- #endif
- 
-+static inline void prandom_u32_add_noise(unsigned long a, unsigned long b,
-+					 unsigned long c, unsigned long d)
-+{
-+	/*
-+	 * This is not used cryptographically; it's just
-+	 * a convenient 4-word hash function. (3 xor, 2 add, 2 rol)
-+	 */
-+	a ^= __this_cpu_read(net_rand_noise);
-+	PRND_SIPROUND(a, b, c, d);
-+	__this_cpu_write(net_rand_noise, d);
-+}
-+
- struct rnd_state {
- 	__u32 s1, s2, s3, s4;
- };
-@@ -99,6 +117,7 @@ static inline void prandom_seed_state(struct rnd_state *state, u64 seed)
- 	state->s2 = __seed(i,   8U);
- 	state->s3 = __seed(i,  16U);
- 	state->s4 = __seed(i, 128U);
-+	PRANDOM_ADD_NOISE(state, i, 0, 0);
- }
- 
- /* Pseudo random number generator from numerical recipes. */
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 401fcb9d7388..bebcf2fc1226 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -1704,6 +1704,8 @@ void update_process_times(int user_tick)
- {
- 	struct task_struct *p = current;
- 
-+	PRANDOM_ADD_NOISE(jiffies, user_tick, p, 0);
-+
- 	/* Note: this timer irq context must be accounted for as well. */
- 	account_process_tick(p, user_tick);
- 	run_local_timers();
-diff --git a/lib/random32.c b/lib/random32.c
-index 00fa925a4487..38db382a8cf5 100644
---- a/lib/random32.c
-+++ b/lib/random32.c
-@@ -324,6 +324,8 @@ struct siprand_state {
- };
- 
- static DEFINE_PER_CPU(struct siprand_state, net_rand_state) __latent_entropy;
-+DEFINE_PER_CPU(unsigned long, net_rand_noise);
-+EXPORT_PER_CPU_SYMBOL(net_rand_noise);
- 
- /*
-  * This is the core CPRNG function.  As "pseudorandom", this is not used
-@@ -347,9 +349,12 @@ static DEFINE_PER_CPU(struct siprand_state, net_rand_state) __latent_entropy;
- static inline u32 siprand_u32(struct siprand_state *s)
- {
- 	unsigned long v0 = s->v0, v1 = s->v1, v2 = s->v2, v3 = s->v3;
-+	unsigned long n = __this_cpu_read(net_rand_noise);
- 
-+	v3 ^= n;
- 	PRND_SIPROUND(v0, v1, v2, v3);
- 	PRND_SIPROUND(v0, v1, v2, v3);
-+	v0 ^= n;
- 	s->v0 = v0;  s->v1 = v1;  s->v2 = v2;  s->v3 = v3;
- 	return v1 + v3;
- }
-diff --git a/net/core/dev.c b/net/core/dev.c
-index b9c6f31ae96e..e075f7e0785a 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -144,6 +144,7 @@
- #include <linux/indirect_call_wrapper.h>
- #include <net/devlink.h>
- #include <linux/pm_runtime.h>
-+#include <linux/prandom.h>
- 
- #include "net-sysfs.h"
- 
-@@ -3557,6 +3558,7 @@ static int xmit_one(struct sk_buff *skb, struct net_device *dev,
- 		dev_queue_xmit_nit(skb, dev);
- 
- 	len = skb->len;
-+	PRANDOM_ADD_NOISE(skb, dev, txq, len + jiffies);
- 	trace_net_dev_start_xmit(skb, dev);
- 	rc = netdev_start_xmit(skb, dev, txq, more);
- 	trace_net_dev_xmit(skb, rc, dev, len);
-@@ -4129,6 +4131,7 @@ static int __dev_queue_xmit(struct sk_buff *skb, struct net_device *sb_dev)
- 			if (!skb)
- 				goto out;
- 
-+			PRANDOM_ADD_NOISE(skb, dev, txq, jiffies);
- 			HARD_TX_LOCK(dev, txq, cpu);
- 
- 			if (!netif_xmit_stopped(txq)) {
-@@ -4194,6 +4197,7 @@ int dev_direct_xmit(struct sk_buff *skb, u16 queue_id)
- 
- 	skb_set_queue_mapping(skb, queue_id);
- 	txq = skb_get_tx_queue(dev, skb);
-+	PRANDOM_ADD_NOISE(skb, dev, txq, jiffies);
- 
- 	local_bh_disable();
- 
--- 
-2.28.0
-
+-Saravana
