@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FAFC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A528C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58AA2204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 154412067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:06:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976408;
-	bh=/27sC7EB6dOUKpZ1EvDls7WufVAls7KH71RT/HIZ86o=;
+	s=default; t=1598976411;
+	bh=AOQDhAs5sbYZs2BMhmI2uixw2SfSCbf3ZGUMKVmE1Xg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kfrSY1AqqmtjuIEI31FDP8r5gGTju0798HGXn5++ElWKm0zRWry5FdE77KLwjiCrQ
-	 itH6h/NErvqw/eoAvsbUdb0u3l997a2XDVI6cEkYiYFR/99fyIoh1zu9ZVUu2fNrGZ
-	 NTwNoKFN6rYD47wFPxbDlp2HYA9cv22bGqm/ejaU=
+	b=AoghqKQeYINdiGlKCaxULNcM/9leB9X1Gg3rXX3ycrzPBoCxI/J11pkqZsQtUEFPR
+	 JvJam+jEKEuoLgyTGMIsdLFQ8AITaD5b7M5PMZo2jFk+2hEDmHRacSfs4SpL0bYekj
+	 wIIhTV4XFbWYP96XR1WWsCGMpAUcxBK8fI7FUzoc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726192AbgIAQGl (ORCPT
+        id S1729394AbgIAPkn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:06:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52678 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:40:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731518AbgIAPlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:01 -0400
+        id S1728241AbgIAPiy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:54 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D758E2078B;
-        Tue,  1 Sep 2020 15:40:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FB0C20866;
+        Tue,  1 Sep 2020 15:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974860;
-        bh=/27sC7EB6dOUKpZ1EvDls7WufVAls7KH71RT/HIZ86o=;
+        s=default; t=1598974734;
+        bh=AOQDhAs5sbYZs2BMhmI2uixw2SfSCbf3ZGUMKVmE1Xg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=flsE4dHbgOHkm6ElvPXRmb/2qA3TvUFUHluRPDlIqfrWXrYHUXBJUVP4MlBF0P5ZX
-         cF4lAq+75AX5JNv0jSDYMJAjMC002lQ5T5qyukTVGuljc6pW3P/oJ1k/ZIWaqhCqxK
-         BRay47k/u0yWLUpfQNlV8+rrRqyVAoYcjBUqGj/c=
+        b=iHz31zlvnTqu6NxItKMPxgIA6I5yvuGNLjvbLF6/edWkX65I5vF6Me3Eo+sUFghLE
+         Uv42XAQxX4db1VjGYz6Zs48ksEW70EU46gg4vvzyA0Je15WrzAF3weBdQgmdrI7uMA
+         NnX/0Q/E6vhr6zUK0cCCnuYpg6qCHZYNlM7y0AS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 088/255] drm/msm/adreno: fix updating ring fence
-Date:   Tue,  1 Sep 2020 17:09:04 +0200
-Message-Id: <20200901151004.941979831@linuxfoundation.org>
+Subject: [PATCH 5.8 073/255] brcmfmac: Set timeout value when configuring power save
+Date:   Tue,  1 Sep 2020 17:08:49 +0200
+Message-Id: <20200901151004.230421914@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,40 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-[ Upstream commit f228af11dfa1d1616bc67f3a4119ab77c36181f1 ]
+[ Upstream commit 3dc05ffb04436020f63138186dbc4f37bd938552 ]
 
-We need to set it to the most recent completed fence, not the most
-recent submitted.  Otherwise we have races where we think we can retire
-submits that the GPU is not finished with, if the GPU doesn't manage to
-overwrite the seqno before we look at it.
+Set the timeout value as per cfg80211's set_power_mgmt() request. If the
+requested value value is left undefined we set it to 2 seconds, the
+maximum supported value.
 
-This can show up with hang recovery if one of the submits after the
-crashing submit also hangs after it is replayed.
-
-Fixes: f97decac5f4c ("drm/msm: Support multiple ringbuffers")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200721112302.22718-1-nsaenzjulienne@suse.de
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c   | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 5db06b5909438..e7b39f3ca33dc 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -396,7 +396,7 @@ int adreno_hw_init(struct msm_gpu *gpu)
- 		ring->next = ring->start;
+diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+index a757abd7a5999..f4db818cccae7 100644
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/cfg80211.c
+@@ -84,6 +84,8 @@
  
- 		/* reset completed fence seqno: */
--		ring->memptrs->fence = ring->seqno;
-+		ring->memptrs->fence = ring->fctx->completed_fence;
- 		ring->memptrs->rptr = 0;
+ #define BRCMF_ND_INFO_TIMEOUT		msecs_to_jiffies(2000)
+ 
++#define BRCMF_PS_MAX_TIMEOUT_MS		2000
++
+ #define BRCMF_ASSOC_PARAMS_FIXED_SIZE \
+ 	(sizeof(struct brcmf_assoc_params_le) - sizeof(u16))
+ 
+@@ -2941,6 +2943,12 @@ brcmf_cfg80211_set_power_mgmt(struct wiphy *wiphy, struct net_device *ndev,
+ 		else
+ 			bphy_err(drvr, "error (%d)\n", err);
  	}
- 
++
++	err = brcmf_fil_iovar_int_set(ifp, "pm2_sleep_ret",
++				min_t(u32, timeout, BRCMF_PS_MAX_TIMEOUT_MS));
++	if (err)
++		bphy_err(drvr, "Unable to set pm timeout, (%d)\n", err);
++
+ done:
+ 	brcmf_dbg(TRACE, "Exit\n");
+ 	return err;
 -- 
 2.25.1
 
