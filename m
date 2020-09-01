@@ -2,54 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC077C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2165C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 707C7206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16A52100A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974085;
-	bh=2zFgQ/EK2UjnFNqLNvQO5Li4cdQ+2xUr2yjlL79tAYc=;
+	s=default; t=1598974089;
+	bh=0sF2i8X150aJR9s1ThR83KFzBqql1OUgtwul40T7+EY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X3B+JNWOyzpFVLbgRyUOncSLdrokWCWpWh/jqgEzDbPVqfoyZpkf0MGDXVg0ahFv7
-	 KvkbeL1QIFA2dgFppokSE88pOsbCExJVH3PZeDzoZNWDzocla40nRLRRqzKzN8zCfQ
-	 vT1/dFvjh/1CIG8rUf5napuFzCL4FdulsPts9WHA=
+	b=bHA1gC7yp45BNyNLMhk3pBKyOsrL2mqAmK3qAJ/TF1oKUmMoD5Tufpm9lJPQe6h8c
+	 DF2Y5yFIybR/c3RMjlFsD6XxZ/H8npb4NGolsiscFVHDHJG/yYNO94/cVxnBSdCxQm
+	 DI60ThlxUeJCndlA8hWMQ9pPJNbf61ucc8fvLNrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbgIAP2E (ORCPT
+        id S1730340AbgIAP2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:28:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbgIAPY5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:24:57 -0400
+        id S1729988AbgIAPZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:25:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8226F2078B;
-        Tue,  1 Sep 2020 15:24:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 04F5D2137B;
+        Tue,  1 Sep 2020 15:24:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973897;
-        bh=2zFgQ/EK2UjnFNqLNvQO5Li4cdQ+2xUr2yjlL79tAYc=;
+        s=default; t=1598973899;
+        bh=0sF2i8X150aJR9s1ThR83KFzBqql1OUgtwul40T7+EY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fkswPn4sT2OAMsL/FnAOjlDhgCJ9oRicrEm3UNZKoKUwWAP5HLeMIKJ9j/uSo6/hN
-         sQVVP1zbebVe9m2xiqcgzst7JKsIH+ywovQp9f9twMaReSa+4xDKmcwnp7N6u72FD6
-         evrgKCbgv3VsoNp3Chfi+cVJA7buh4FeI3awFQZE=
+        b=ognpi+EeNs8KjRP/TGPamf7rJOoFyWckovLL+qU2C59p79jkO1bb0bLnSpvp63sgp
+         R8TW+nDzrKvJHEdlOG16rzfQXqp64AT0hyvUwkSOh2l8ocydy/7lPIDvptDUPo1V65
+         RCp/GhN2DAHmQM0uRicxBCSQ19KoY20hLLYnS3ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Aleksey Makarov <amakarov@marvell.com>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Christopher Covington <cov@codeaurora.org>
-Subject: [PATCH 4.19 090/125] serial: pl011: Fix oops on -EPROBE_DEFER
-Date:   Tue,  1 Sep 2020 17:10:45 +0200
-Message-Id: <20200901150938.993507333@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 064/125] ext4: handle error of ext4_setup_system_zone() on remount
+Date:   Tue,  1 Sep 2020 17:10:19 +0200
+Message-Id: <20200901150937.714785240@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -62,93 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Jan Kara <jack@suse.cz>
 
-commit 27afac93e3bd7fa89749cf11da5d86ac9cde4dba upstream.
+[ Upstream commit d176b1f62f242ab259ff665a26fbac69db1aecba ]
 
-If probing of a pl011 gets deferred until after free_initmem(), an oops
-ensues because pl011_console_match() is called which has been freed.
+ext4_setup_system_zone() can fail. Handle the failure in ext4_remount().
 
-Fix by removing the __init attribute from the function and those it
-calls.
-
-Commit 10879ae5f12e ("serial: pl011: add console matching function")
-introduced pl011_console_match() not just for early consoles but
-regular preferred consoles, such as those added by acpi_parse_spcr().
-Regular consoles may be registered after free_initmem() for various
-reasons, one being deferred probing, another being dynamic enablement
-of serial ports using a DeviceTree overlay.
-
-Thus, pl011_console_match() must not be declared __init and the
-functions it calls mustn't either.
-
-Stack trace for posterity:
-
-Unable to handle kernel paging request at virtual address 80c38b58
-Internal error: Oops: 8000000d [#1] PREEMPT SMP ARM
-PC is at pl011_console_match+0x0/0xfc
-LR is at register_console+0x150/0x468
-[<80187004>] (register_console)
-[<805a8184>] (uart_add_one_port)
-[<805b2b68>] (pl011_register_port)
-[<805b3ce4>] (pl011_probe)
-[<80569214>] (amba_probe)
-[<805ca088>] (really_probe)
-[<805ca2ec>] (driver_probe_device)
-[<805ca5b0>] (__device_attach_driver)
-[<805c8060>] (bus_for_each_drv)
-[<805c9dfc>] (__device_attach)
-[<805ca630>] (device_initial_probe)
-[<805c90a8>] (bus_probe_device)
-[<805c95a8>] (deferred_probe_work_func)
-
-Fixes: 10879ae5f12e ("serial: pl011: add console matching function")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.10+
-Cc: Aleksey Makarov <amakarov@marvell.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Christopher Covington <cov@codeaurora.org>
-Link: https://lore.kernel.org/r/f827ff09da55b8c57d316a1b008a137677b58921.1597315557.git.lukas@wunner.de
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200728130437.7804-2-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/amba-pl011.c |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ fs/ext4/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2252,9 +2252,8 @@ pl011_console_write(struct console *co,
- 	clk_disable(uap->clk);
- }
- 
--static void __init
--pl011_console_get_options(struct uart_amba_port *uap, int *baud,
--			     int *parity, int *bits)
-+static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
-+				      int *parity, int *bits)
- {
- 	if (pl011_read(uap, REG_CR) & UART01x_CR_UARTEN) {
- 		unsigned int lcr_h, ibrd, fbrd;
-@@ -2287,7 +2286,7 @@ pl011_console_get_options(struct uart_am
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 03ebb0b385467..daabd7a2cee81 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -5470,7 +5470,10 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		ext4_register_li_request(sb, first_not_zeroed);
  	}
- }
  
--static int __init pl011_console_setup(struct console *co, char *options)
-+static int pl011_console_setup(struct console *co, char *options)
- {
- 	struct uart_amba_port *uap;
- 	int baud = 38400;
-@@ -2355,8 +2354,8 @@ static int __init pl011_console_setup(st
-  *
-  *	Returns 0 if console matches; otherwise non-zero to use default matching
-  */
--static int __init pl011_console_match(struct console *co, char *name, int idx,
--				      char *options)
-+static int pl011_console_match(struct console *co, char *name, int idx,
-+			       char *options)
- {
- 	unsigned char iotype;
- 	resource_size_t addr;
+-	ext4_setup_system_zone(sb);
++	err = ext4_setup_system_zone(sb);
++	if (err)
++		goto restore_opts;
++
+ 	if (sbi->s_journal == NULL && !(old_sb_flags & SB_RDONLY)) {
+ 		err = ext4_commit_super(sb, 1);
+ 		if (err)
+-- 
+2.25.1
+
 
 
