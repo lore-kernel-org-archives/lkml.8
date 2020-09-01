@@ -2,177 +2,136 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D8CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D61206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA73420767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:05:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R5FCLmAF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LcSn7KwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727929AbgIAMEJ (ORCPT
+        id S1728009AbgIAMFs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:04:09 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:38174 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727049AbgIALvl (ORCPT
+        Tue, 1 Sep 2020 08:05:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbgIALw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:51:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598961099;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ESRP55Rg69yEwDMYjivqnTqvuKK7oN+Pled0DdWVsmg=;
-        b=R5FCLmAFqqd9FjLUQDg07EV9NH/ZFVRvlChjkgGZAnrztzIDmIsosnqKO1QnaFDgn2n2jA
-        vT0E/XmAHVcg3ZnU82JZXScIVRMPYP73T2uDU7SecHyrKucLYGX93DKCUT1L/maMahozix
-        eFP8jH3E8jdBJs0t66mnfwuuSbgOvPQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-21-mmEQVsJONMuZ0kRtnv8r2Q-1; Tue, 01 Sep 2020 07:51:35 -0400
-X-MC-Unique: mmEQVsJONMuZ0kRtnv8r2Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 652C510ABDAB;
-        Tue,  1 Sep 2020 11:51:33 +0000 (UTC)
-Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B908319C4F;
-        Tue,  1 Sep 2020 11:51:30 +0000 (UTC)
-From:   Auger Eric <eric.auger@redhat.com>
-Subject: Re: [PATCH v2 2/9] iommu/ioasid: Rename ioasid_set_data()
-To:     Jacob Pan <jacob.pan.linux@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>, Wu Hao <hao.wu@intel.com>
-References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1598070918-21321-3-git-send-email-jacob.jun.pan@linux.intel.com>
-Message-ID: <cdce91cd-2f9a-36ff-ca87-7aabe3d08ec1@redhat.com>
-Date:   Tue, 1 Sep 2020 13:51:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <1598070918-21321-3-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Tue, 1 Sep 2020 07:52:59 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 567A1C061244;
+        Tue,  1 Sep 2020 04:52:59 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id y6so422147plt.3;
+        Tue, 01 Sep 2020 04:52:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3rTng8S6klnaXBOW81+9mrDYY1I9NVTRnB9JeoS2jtw=;
+        b=LcSn7KwXfafkZ0IC+YHw5KEiNnvCSWevlxP8z2DjXGAba25LnTum8hh367JdOezYo2
+         su945SOoKCr6SLGAWrrDZNyxzj733IghhO9OBGKnVDWilTSKf9UeA/49n1Oo32wndh0e
+         GJ7d21ncUOh+4vpNZA6vcFw3SLdwlH+juMamv4iR09qEbB8BdDnvj1Zs/H9CiVrKweF6
+         Tn9Cyl+HNyOSoA9z4FOJ58sH/1vi4WvxjfCc3i7V99HdXaGiNLfJGKoDASktdRqQV5OG
+         AAN1aRnOW51QSqDuUjLeCOZyRc6AgmmLeOookncCLvHomGNlAPvMWpPkRW3Cawv+7FN3
+         r8+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3rTng8S6klnaXBOW81+9mrDYY1I9NVTRnB9JeoS2jtw=;
+        b=s21VMyY7isUOwWoK8PoumextrMy2Po5gnOptFcmGr9dc0HbtCeZaxBESznZHVivRX6
+         AgsxArgCTO0YUM27R6D4d3VEpixq4ts7ZnsNs0XTljA30z9RfRnUvxpaNmR/bwN6t1KP
+         f8XNIUQCny8swXH2rTsRfpq7ltpDBGOVTfm8VU41+lQWouoqRI0JZgDEv27SeAryN/75
+         hGBIPYaYRXHfZbulh68ohXaxT6qMFdf0zO2KUoNrKhCm2rKyYcSbnnkoaZIQiPLDqGs0
+         KSRYWiQ2/2Pa8oJElpIQPQrvEFYBfC5KN0PfJinTV+hE+o3U5Y781wUQqQDxWZbCTDfb
+         lNcQ==
+X-Gm-Message-State: AOAM532lrs6eo0biUJ/RuNmvS+LyPdsHnZdZllVc4ox8w3drYy+HX3Ef
+        SArqtLcRGT49Tq/BFD3zxck=
+X-Google-Smtp-Source: ABdhPJzajFQFmglNSy1ftQejcM7kY3dMr6o6k6FV5TerWypS4jTtWmLGRJbydsOgb7NrR6ESgRP7UQ==
+X-Received: by 2002:a17:90a:ba04:: with SMTP id s4mr1280236pjr.3.1598961178901;
+        Tue, 01 Sep 2020 04:52:58 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.65])
+        by smtp.gmail.com with ESMTPSA id h15sm1482498pjf.54.2020.09.01.04.52.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 04:52:58 -0700 (PDT)
+From:   yulei.kernel@gmail.com
+X-Google-Original-From: yuleixzhang@tencent.com
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        junaids@google.com, bgardon@google.com, vkuznets@redhat.com,
+        xiaoguangrong.eric@gmail.com, kernellwp@gmail.com,
+        lihaiwei.kernel@gmail.com, Yulei Zhang <yulei.kernel@gmail.com>
+Subject: [RFC V2 0/9] x86/mmu:Introduce parallel memory virtualization to boost performance 
+Date:   Tue,  1 Sep 2020 19:52:42 +0800
+Message-Id: <cover.1598868203.git.yulei.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi jacob,
+From: Yulei Zhang <yulei.kernel@gmail.com>
 
-On 8/22/20 6:35 AM, Jacob Pan wrote:
-> Rename ioasid_set_data() to ioasid_attach_data() to avoid confusion with
-> struct ioasid_set. ioasid_set is a group of IOASIDs that share a common
-> token.
-> 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Currently in KVM memory virtulization we relay on mmu_lock to
+synchronize the memory mapping update, which make vCPUs work
+in serialize mode and slow down the execution, especially after
+migration to do substantial memory mapping will cause visible
+performance drop, and it can get worse if guest has more vCPU
+numbers and memories.
+  
+The idea we present in this patch set is to mitigate the issue
+with pre-constructed memory mapping table. We will fast pin the
+guest memory to build up a global memory mapping table according
+to the guest memslots changes and apply it to cr3, so that after
+guest starts up all the vCPUs would be able to update the memory
+simultaneously without page fault exception, thus the performance
+improvement is expected. 
 
-Eric
-> ---
->  drivers/iommu/intel/svm.c | 6 +++---
->  drivers/iommu/ioasid.c    | 6 +++---
->  include/linux/ioasid.h    | 4 ++--
->  3 files changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
-> index b6972dca2ae0..37a9beabc0ca 100644
-> --- a/drivers/iommu/intel/svm.c
-> +++ b/drivers/iommu/intel/svm.c
-> @@ -342,7 +342,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
->  			svm->gpasid = data->gpasid;
->  			svm->flags |= SVM_FLAG_GUEST_PASID;
->  		}
-> -		ioasid_set_data(data->hpasid, svm);
-> +		ioasid_attach_data(data->hpasid, svm);
->  		INIT_LIST_HEAD_RCU(&svm->devs);
->  		mmput(svm->mm);
->  	}
-> @@ -394,7 +394,7 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
->  	list_add_rcu(&sdev->list, &svm->devs);
->   out:
->  	if (!IS_ERR_OR_NULL(svm) && list_empty(&svm->devs)) {
-> -		ioasid_set_data(data->hpasid, NULL);
-> +		ioasid_attach_data(data->hpasid, NULL);
->  		kfree(svm);
->  	}
->  
-> @@ -437,7 +437,7 @@ int intel_svm_unbind_gpasid(struct device *dev, int pasid)
->  				 * the unbind, IOMMU driver will get notified
->  				 * and perform cleanup.
->  				 */
-> -				ioasid_set_data(pasid, NULL);
-> +				ioasid_attach_data(pasid, NULL);
->  				kfree(svm);
->  			}
->  		}
-> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
-> index 0f8dd377aada..5f63af07acd5 100644
-> --- a/drivers/iommu/ioasid.c
-> +++ b/drivers/iommu/ioasid.c
-> @@ -258,14 +258,14 @@ void ioasid_unregister_allocator(struct ioasid_allocator_ops *ops)
->  EXPORT_SYMBOL_GPL(ioasid_unregister_allocator);
->  
->  /**
-> - * ioasid_set_data - Set private data for an allocated ioasid
-> + * ioasid_attach_data - Set private data for an allocated ioasid
->   * @ioasid: the ID to set data
->   * @data:   the private data
->   *
->   * For IOASID that is already allocated, private data can be set
->   * via this API. Future lookup can be done via ioasid_find.
->   */
-> -int ioasid_set_data(ioasid_t ioasid, void *data)
-> +int ioasid_attach_data(ioasid_t ioasid, void *data)
->  {
->  	struct ioasid_data *ioasid_data;
->  	int ret = 0;
-> @@ -287,7 +287,7 @@ int ioasid_set_data(ioasid_t ioasid, void *data)
->  
->  	return ret;
->  }
-> -EXPORT_SYMBOL_GPL(ioasid_set_data);
-> +EXPORT_SYMBOL_GPL(ioasid_attach_data);
->  
->  /**
->   * ioasid_alloc - Allocate an IOASID
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> index 6f000d7a0ddc..9c44947a68c8 100644
-> --- a/include/linux/ioasid.h
-> +++ b/include/linux/ioasid.h
-> @@ -39,7 +39,7 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  		  bool (*getter)(void *));
->  int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
->  void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
-> -int ioasid_set_data(ioasid_t ioasid, void *data);
-> +int ioasid_attach_data(ioasid_t ioasid, void *data);
->  
->  #else /* !CONFIG_IOASID */
->  static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> @@ -67,7 +67,7 @@ static inline void ioasid_unregister_allocator(struct ioasid_allocator_ops *allo
->  {
->  }
->  
-> -static inline int ioasid_set_data(ioasid_t ioasid, void *data)
-> +static inline int ioasid_attach_data(ioasid_t ioasid, void *data)
->  {
->  	return -ENOTSUPP;
->  }
-> 
+We use memory dirty pattern workload to test the initial patch
+set and get positive result even with huge page enabled. For example,
+we create guest with 32 vCPUs and 64G memories, and let the vcpus
+dirty the entire memory region concurrently, as the initial patch
+eliminate the overhead of mmu_lock, in 2M/1G huge page mode we would
+get the job done in about 50% faster.
+
+We only validate this feature on Intel x86 platform. And as Ben
+pointed out in RFC V1, so far we disable the SMM for resource
+consideration, drop the mmu notification as in this case the
+memory is pinned.
+
+V1->V2:
+* Rebase the code to kernel version 5.9.0-rc1.
+
+Yulei Zhang (9):
+  Introduce new fields in kvm_arch/vcpu_arch struct for direct build EPT
+    support
+  Introduce page table population function for direct build EPT feature
+  Introduce page table remove function for direct build EPT feature
+  Add release function for direct build ept when guest VM exit
+  Modify the page fault path to meet the direct build EPT requirement
+  Apply the direct build EPT according to the memory slots change
+  Add migration support when using direct build EPT
+  Introduce kvm module parameter global_tdp to turn on the direct build
+    EPT mode
+  Handle certain mmu exposed functions properly while turn on direct
+    build EPT mode
+
+ arch/mips/kvm/mips.c            |  13 +
+ arch/powerpc/kvm/powerpc.c      |  13 +
+ arch/s390/kvm/kvm-s390.c        |  13 +
+ arch/x86/include/asm/kvm_host.h |  13 +-
+ arch/x86/kvm/mmu/mmu.c          | 533 ++++++++++++++++++++++++++++++--
+ arch/x86/kvm/svm/svm.c          |   2 +-
+ arch/x86/kvm/vmx/vmx.c          |   7 +-
+ arch/x86/kvm/x86.c              |  55 ++--
+ include/linux/kvm_host.h        |   7 +-
+ virt/kvm/kvm_main.c             |  43 ++-
+ 10 files changed, 639 insertions(+), 60 deletions(-)
+
+-- 
+2.17.1
 
