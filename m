@@ -2,175 +2,131 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE33C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E259C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A671C2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55D9D2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="gJHtFWkH"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="cTMpbC4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgIAF50 (ORCPT
+        id S1726510AbgIAF61 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:57:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19748 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726020AbgIAF50 (ORCPT
+        Tue, 1 Sep 2020 01:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgIAF61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 01:57:26 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0815j0pw150222;
-        Tue, 1 Sep 2020 01:57:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=GKpr7Y/AbhIatG1JNxjGYEZBP+n95TbcZcZI7qxtpKg=;
- b=gJHtFWkHsmer3UyH4zvnbZRAi5iYFpXQJsTEmMOrUfhr+8FSbPE+rebXV8YBAIZSGdIB
- QR4LawO2up0OTMfiaTj6CobBmYnVGL3zgZ7FLlF7eYGkjIQRTwbWXh72Z0GRyIVhm7cu
- cT9Oz1J0uNuwmcBbI5CAXSOrY4ng8TMbQOD+edzb0JUOUJ8c5LRALfAsP0ljz9KBomRz
- 1D50w1gqsqDCMD9iKm4/XQ5Q2/jnVYBOZrv5ECHWbezDR93RWoO0Fy3LtztVJe4Bxtv+
- HbiFkuMCzWLGEWJnywI2sQW4j8Xc/2ttGZbzfIU25h6rSPLmchvpotPpQ4kGj4poWqvm Iw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 339ge5g6df-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 01:57:02 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0815nkrR177245;
-        Tue, 1 Sep 2020 01:57:02 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 339ge5g6d4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 01:57:01 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 0815rLdY031544;
-        Tue, 1 Sep 2020 05:57:00 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-        by ppma01dal.us.ibm.com with ESMTP id 337en9b0mp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 05:57:00 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0815v0Pa13697756
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Sep 2020 05:57:00 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1381A112062;
-        Tue,  1 Sep 2020 05:57:00 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC6A1112061;
-        Tue,  1 Sep 2020 05:56:52 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.82.45])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Sep 2020 05:56:52 +0000 (GMT)
-Subject: Re: [PATCH v6 1/5] perf/jevents: Remove jevents.h file
-To:     John Garry <john.garry@huawei.com>, Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        pc@us.ibm.com, namhyung@kernel.org, ak@linux.intel.com,
-        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, irogers@google.com,
-        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com
-References: <20200827130958.189146-1-kjain@linux.ibm.com>
- <20200827130958.189146-2-kjain@linux.ibm.com> <20200831084348.GB287892@krava>
- <ca73d0ff-0dfa-8d9e-1cb8-5791a78eb4e2@huawei.com>
-From:   kajoljain <kjain@linux.ibm.com>
-Message-ID: <92f58d69-849a-5df4-6b24-87542138806d@linux.ibm.com>
-Date:   Tue, 1 Sep 2020 11:26:45 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 1 Sep 2020 01:58:27 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D515CC0612A3;
+        Mon, 31 Aug 2020 22:58:26 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c10so240243edk.6;
+        Mon, 31 Aug 2020 22:58:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zXS7+3EgnC5I92ixxRxNaCdg1MKz+VkNDCcOltlFbJA=;
+        b=cTMpbC4o8DudpdOFlrGnTxYKJhR5TLl9BTn35t1Vg80O5o366+KbhUnyM7rEN5o1cj
+         gLVgVdvfRy2k8csl7iDtnYcWyRBV54dXE4hV+jPTK7+YPFFOVNaJ6hiNjWPJfKqj3mE+
+         TlMOCmQ8kMybmwAZ2PzJZbHgzB3c8HMJrduJY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zXS7+3EgnC5I92ixxRxNaCdg1MKz+VkNDCcOltlFbJA=;
+        b=T+kwbbFnWw7qI+igVtvJAma6EGaVDPmC++wlW/Yc/tYTsU8f9YsiNYcuCaDdCZYNz+
+         qVqq7xGiHdQo209WUz/uNU8kWTuXOMymVLnkCAu31hTesSETGWJmoEY/p2KiRdYly+VS
+         6Bbq/01EtFsprdSDsn51P0SJJKt5u/2WzLCNS2un0ipc3NPZIC1DpCYkb+m4anwFUDlK
+         PWt3mYWvxpZ6I8bffyUD/V8BJsaRc+Pr/SOArXJX69rAhec1vzBtauAnBIk33rslXxOV
+         r2iCOzVWbPmrvc/ATKsBppBM2TWQ2hDkDh87jlaGE/HmYcowbQm8YiwnLsdnqBUE+aX1
+         nf7A==
+X-Gm-Message-State: AOAM530ecWBM/ahaRoPOj7B/KRpq0TrLAC7FAW2jh1/gXKhyz1ylfLET
+        wcv/yA4wMLt8iAgXvulgthOmYNvuoeYnDj3tRxo=
+X-Google-Smtp-Source: ABdhPJzPz7FKzhyE9tVkVgSodtZ62x5Kp312jVoxK4YoGK8nlMeYcU3Y4PKQ1ykmm4tDi9GtbIpQnd5EMQO2LKaGHEc=
+X-Received: by 2002:a50:f403:: with SMTP id r3mr342011edm.260.1598939905467;
+ Mon, 31 Aug 2020 22:58:25 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ca73d0ff-0dfa-8d9e-1cb8-5791a78eb4e2@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-01_04:2020-08-31,2020-09-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxscore=0 priorityscore=1501 malwarescore=0 clxscore=1015 phishscore=0
- spamscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009010046
+References: <20200820161152.22751-1-eajames@linux.ibm.com> <20200820161152.22751-3-eajames@linux.ibm.com>
+In-Reply-To: <20200820161152.22751-3-eajames@linux.ibm.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Tue, 1 Sep 2020 05:58:12 +0000
+Message-ID: <CACPK8XdMqZv5f0X1-G2WPrYSpYMpMjJC4WxNsiKSxqtWb0M1jw@mail.gmail.com>
+Subject: Re: [PATCH 2/5] input: misc: Add IBM Operation Panel driver
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-input@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        linux-i2c@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        dmitry.torokhov@gmail.com, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 20 Aug 2020 at 16:12, Eddie James <eajames@linux.ibm.com> wrote:
+>
+> Add a driver to get the button events from the panel and provide
+> them to userspace with the input subsystem. The panel is
+> connected with I2C and controls the bus, so the driver registers
+> as an I2C slave device.
+>
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  MAINTAINERS                    |   1 +
+>  drivers/input/misc/Kconfig     |  10 ++
+>  drivers/input/misc/Makefile    |   1 +
+>  drivers/input/misc/ibm-panel.c | 186 +++++++++++++++++++++++++++++++++
+>  4 files changed, 198 insertions(+)
+>  create mode 100644 drivers/input/misc/ibm-panel.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index a9fd08e9cd54..077cc79ad7fd 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -8283,6 +8283,7 @@ M:        Eddie James <eajames@linux.ibm.com>
+>  L:     linux-input@vger.kernel.org
+>  S:     Maintained
+>  F:     Documentation/devicetree/bindings/input/ibm,op-panel.yaml
+> +F:     drivers/input/misc/ibm-panel.c
+>
+>  IBM Power 842 compression accelerator
+>  M:     Haren Myneni <haren@us.ibm.com>
+> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> index 362e8a01980c..88fb465a18b8 100644
+> --- a/drivers/input/misc/Kconfig
+> +++ b/drivers/input/misc/Kconfig
+> @@ -708,6 +708,16 @@ config INPUT_ADXL34X_SPI
+>           To compile this driver as a module, choose M here: the
+>           module will be called adxl34x-spi.
+>
+> +config INPUT_IBM_PANEL
+> +       tristate "IBM Operation Panel driver"
+> +       depends on I2C_SLAVE || COMPILE_TEST
+> +       help
+> +         Supports the IBM Operation Panel as an input device. The panel is a
+> +         controller attached to the system with some buttons and an LCD display
+> +         that allows someone with physical access to the system to perform
+> +         various administrative tasks. This driver only supports the part of
+> +         the controller that sends commands to the system.
 
+Is this always attached via a service processor/bmc? If so, mention it
+here so people know there's no point enabling it on a host/distro
+kernel.
 
-On 8/31/20 2:31 PM, John Garry wrote:
-> On 31/08/2020 09:43, Jiri Olsa wrote:
->> On Thu, Aug 27, 2020 at 06:39:54PM +0530, Kajol Jain wrote:
->>> This patch removes jevents.h file and add its data inside
->>> jevents.c as this file is only included there.
->>>
->>> Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
->>> ---
->>>   tools/perf/pmu-events/jevents.c |  9 ++++++++-
->>>   tools/perf/pmu-events/jevents.h | 23 -----------------------
->>>   2 files changed, 8 insertions(+), 24 deletions(-)
->>>   delete mode 100644 tools/perf/pmu-events/jevents.h
->>>
->>> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
->>> index fa86c5f997cc..1c55cc754b5a 100644
->>> --- a/tools/perf/pmu-events/jevents.c
->>> +++ b/tools/perf/pmu-events/jevents.c
->>> @@ -48,11 +48,18 @@
->>>   #include <linux/list.h>
->>>   #include "jsmn.h"
->>>   #include "json.h"
->>> -#include "jevents.h"
->>>     int verbose;
->>>   char *prog;
->>>   +#ifndef min
->>> +#define min(x, y) ({                \
->>> +    typeof(x) _min1 = (x);            \
->>> +    typeof(y) _min2 = (y);            \
->>> +    (void)(&_min1 == &_min2);        \
->>> +    _min1 < _min2 ? _min1 : _min2; })
->>> +#endif
-> 
-> Wondering what is special about this definition of min that it's required? Compiled ok for me without it.
+I assume you're implementing the protocol correctly.  If you have a
+link to a specification then include that in the file.
 
-Hi John,
-     You are right, for me also in power it compiled without any issues, but not sure if somewhere we have dependency,
-that's why I didn't remove it. 
+The code looks okay to me.
 
-Thanks,
-Kajol Jain
-> 
->>> +
->>>   int eprintf(int level, int var, const char *fmt, ...)
->>>   {
->>>   diff --git a/tools/perf/pmu-events/jevents.h b/tools/perf/pmu-events/jevents.h
->>> deleted file mode 100644
->>> index 2afc8304529e..000000000000
->>> --- a/tools/perf/pmu-events/jevents.h
->>> +++ /dev/null
->>> @@ -1,23 +0,0 @@
->>> -/* SPDX-License-Identifier: GPL-2.0 */
->>> -#ifndef JEVENTS_H
->>> -#define JEVENTS_H 1
->>> -
->>> -int json_events(const char *fn,
->>> -        int (*func)(void *data, char *name, char *event, char *desc,
->>> -                char *long_desc,
->>> -                char *pmu,
->>> -                char *unit, char *perpkg, char *metric_expr,
->>> -                char *metric_name, char *metric_group,
->>> -                char *deprecated, char *metric_constraint),
->>> -        void *data);
->>> -char *get_cpu_str(void);
->>
->> I think you can also remove get_cpu_str from jevents.c
->>
->> thanks,
->> jirka
->>
->> .
->>
-> 
+Reviewed-by: Joel Stanley <joel@jms.id.au>
