@@ -2,105 +2,98 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE08EC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EB9C2BC0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 795E82064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530412064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:51:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XZCGQwgw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3NjA7NmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732016AbgIAPuz (ORCPT
+        id S1732068AbgIAPvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:50:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57354 "EHLO
+        Tue, 1 Sep 2020 11:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728988AbgIAPuh (ORCPT
+        with ESMTP id S1727114AbgIAPu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:50:37 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9AFC06125C
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:50:31 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id v69so1391117qkb.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:50:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jV8bljM3lK+GBB6jw/WspxqJuyJuh/lf4f+szOAk3Fw=;
-        b=XZCGQwgwBt860UII5cREakpxcHTR71LTVSlB36D/ju3AvUYviLZB4KikFD+0jTIyh4
-         elj6nui5j6HeINBSDmNWHrIdG34Uv3wns0bdy9KTaoVYV+kisqyRNmJSOgrYLuePTrad
-         lA3IdMFJZtWBxBXHGSaG/pYJoPXIiHRGQ618S7d0TpMG/bMbJyArJDrv/7cZrSJ2Yojz
-         mFwtdlJXC2TzgWARoJGIRfZ659fxiIKfJZwTq6NzfUmje2J3LyDHznp3jhgy78USqdaf
-         r3yjjGj0lEMDSnlPQp5OvFZlLTcgShRmFUDnTX8/kuG4fVTST5BA+0DKvJ/FMGBpjY70
-         VFZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jV8bljM3lK+GBB6jw/WspxqJuyJuh/lf4f+szOAk3Fw=;
-        b=VmxZpA6kCXCVhj+AzXTw1Ls0EwoBTbv+ZTL4EzSSBouiWcyf8rZGFmpFPDphgwvVaQ
-         0Hy8Vc39+R/D0b+SDF/sDksKm9woMRYdyUDMVEj49eRXsGulcCEhud9uHGHjN6J0IvEW
-         qRRHayYm0/6AXM9aiE/3zl7Z6i3HOfpARkt4gQPHwXlshA1+2vVQVs1EHr/czDHVb4dr
-         NcaVFfCoFXKLMnEIzpl1DILAOuXAdTKhpsFqLKcWW30ZDCr0iXioEpSBC6TSFGUgW5K7
-         TCJ3eSyp32SfH23FGot0okBSFuuFDwdiDpA+pZvMnr/XcGOvBTUMkbmo/JjiDcB0HAUH
-         pQSA==
-X-Gm-Message-State: AOAM5338YReU4oISCEu4tXydsG6DrqkwfpO6x6Tj+x9t0e0BAxbhpsXJ
-        zFLxGHZowRaafqwQPOOnpBDpcI8nvonnnZxyMSMCQQ==
-X-Google-Smtp-Source: ABdhPJzkzDW/A2xwJZao0bULy5cxXeAqA2rpndP/DYOEayvx3lxC0orZ2wXvB+yxIaKuMONJzHiBClgTfH9lIzLya+E=
-X-Received: by 2002:a37:9d4:: with SMTP id 203mr2555955qkj.277.1598975430108;
- Tue, 01 Sep 2020 08:50:30 -0700 (PDT)
+        Tue, 1 Sep 2020 11:50:27 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6356C061247;
+        Tue,  1 Sep 2020 08:50:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=tHPi+SjkOF6w9APKcpbiTQrV0DyQaBz6SgJbSF6lXMk=; b=3NjA7NmECoivZ7oLm1KxCRgUdI
+        gcm8mw9F1Z8G3GoMzLr1uhEe84sAtLIki46X+4JpIaR7wmlZB8eyeWkPscMyUauxVt2QhcldUDJhu
+        N7Bv7E8wgOmUSrXr561FZuMQhOw6QWKNQRgQtDqbWInsG1Pe2tUPw5tDx3n7GugRm7rfQNcN70TkM
+        bMaZ5J4hqMKSrjKSjP7eJgvWSnmHBM2IETGWnLmyF/pgz6fBOjDKT9BJJw4oP3lgyzK8THMYh6bTX
+        svOA2UkXDiIopjcIIfQ1h1rvsR74sGInfUraA3hmPzVvFT2nqTYtD+EDxH6ZUswkP5IYdTAr02s8E
+        hmIvzZCQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD8Y4-0001I2-Tt; Tue, 01 Sep 2020 15:50:17 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2A878307936;
+        Tue,  1 Sep 2020 17:50:15 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 03B3220D7C0E3; Tue,  1 Sep 2020 17:50:14 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 17:50:14 +0200
+From:   peterz@infradead.org
+To:     Lina Iyer <ilina@codeaurora.org>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>, paulmck@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
+ OF driver helper
+Message-ID: <20200901155014.GF2674@hirez.programming.kicks-ass.net>
+References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
+ <20200831194402.GD2855@paulmck-ThinkPad-P72>
+ <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
+ <CAPDyKFrTERjpLrPOFtkqLyNsk2T_58Ye2FQ1mPf-0u78aWW=Xw@mail.gmail.com>
+ <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+ <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
+ <20200901154417.GD20303@codeaurora.org>
 MIME-Version: 1.0
-References: <20200901065758.1141786-1-brianvv@google.com> <CANn89iKA5Ut4AcZfsZi3bVpE33_pqgO=E1RhBzePUeBDn6gznQ@mail.gmail.com>
- <52832405-fa37-38fb-b8fb-d7bd7a0d1d52@gmail.com>
-In-Reply-To: <52832405-fa37-38fb-b8fb-d7bd7a0d1d52@gmail.com>
-From:   Brian Vazquez <brianvv@google.com>
-Date:   Tue, 1 Sep 2020 08:50:18 -0700
-Message-ID: <CAMzD94TmFiJRfgLp44z1GQ1zzg2Zy7o2Oa9GTTCed0kj5tLdLg@mail.gmail.com>
-Subject: Re: [PATCH] net: ipv6: fix __rt6_purge_dflt_routers when forwarding
- is not set on all ifaces
-To:     David Ahern <dsahern@gmail.com>
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Brian Vazquez <brianvv.kernel@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        David Ahern <dsa@cumulusnetworks.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901154417.GD20303@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey David,
+On Tue, Sep 01, 2020 at 09:44:17AM -0600, Lina Iyer wrote:
+> > > > > > I could add RCU_NONIDLE for the calls to pm_runtime_put_sync_suspend()
+> > > > > > and pm_runtime_get_sync() in psci_enter_domain_idle_state(). Perhaps
+> > > > > > that's the easiest approach, at least to start with.
 
-On Tue, Sep 1, 2020 at 7:57 AM David Ahern <dsahern@gmail.com> wrote:
->
-> On 9/1/20 1:56 AM, Eric Dumazet wrote:
-> > On Tue, Sep 1, 2020 at 8:58 AM Brian Vazquez <brianvv@google.com> wrote:
-> >>
-> >> The problem is exposed when the system has multiple ifaces and
-> >> forwarding is enabled on a subset of them, __rt6_purge_dflt_routers will
-> >> clean the default route on all the ifaces which is not desired.
-> >>
-> >> This patches fixes that by cleaning only the routes where the iface has
-> >> forwarding enabled.
-> >>
-> >> Fixes: z ("net: ipv6: Fix processing of RAs in presence of VRF")
->
-> are you sure that is a Fixes tag for this problem? looking at that
-> change it only handles RA for tables beyond the main table; it does not
-> change the logic of how many or which routes are purged.
+> I think this would be nice. This should also cover the case, where PM domain
+> power off notification callbacks call trace function internally. Right?
 
-That commit also added RT6_TABLE_HAS_DFLT_ROUTER so I thought that was
-the commit needed to be mentioned. But probably it shouldn't?
-Also Am I missing something or this is only called on on the sysctl path?
+That's just more crap for me to clean up later :-(
 
->
->
->
+trace_*_rcuidle() and RCU_NONIDLE() need to die, not proliferate.
