@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E2DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E52C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D848D2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0CF8206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979716;
-	bh=KZR/Ez5I0vI5NACVotVlfYFD1yU907tuWKBtUQ3nkUw=;
+	s=default; t=1598979724;
+	bh=mI2ix3jDcTd6+yitBSFLtIfCRzJi7p2SJWcUmdKPOQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MFUcqNY8/cdQ76KdWAY+y7RInBVG+5gm9I7qLjvTx5b8eNIsIrr/7nyYrp68gDZu4
-	 Q095s2l3dvPA2bPdjpRzxKgsLrFZkbZDxG4JHUcyrRBEUStK0CXAfaEZ1/Yp8NjMdr
-	 aA90m+cmAjlw0t/C6eSe7hDVGPQw00gG5vsWxZGw=
+	b=WWeT3eK70067wRr7Wxe7/9cr31Q6jcMQi1VJry0OobUmr0ZHWagKGd6Dq6MLWsjKL
+	 gB5LMhkuZhkAxLnTK44xVIe4afw1oonmdIZZH+OirndlxqyKmQmpEOo6fuik5WUJOe
+	 vQCdJ90EhQW9obttTtEzhnI41yOjaYFoRzidXfJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732536AbgIARBy (ORCPT
+        id S1729910AbgIARCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40950 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:02:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728949AbgIAPUo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:44 -0400
+        id S1729385AbgIAPUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5613207D3;
-        Tue,  1 Sep 2020 15:20:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 600E22078B;
+        Tue,  1 Sep 2020 15:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973644;
-        bh=KZR/Ez5I0vI5NACVotVlfYFD1yU907tuWKBtUQ3nkUw=;
+        s=default; t=1598973641;
+        bh=mI2ix3jDcTd6+yitBSFLtIfCRzJi7p2SJWcUmdKPOQU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UcY9vQhaUODWVr3vpnczWrcn4I/xk4FbPNv+/pvZTkCQw7QhUDuJYZ8YQpllLje2W
-         qqPT+8w5RpvjYhBJp/HyoSPt0yWJhH2Bj8MuNRE6ccuWXqSpmr4wQB2NNrPvDtE/dc
-         E9HbkVo6JT0LA6wvafTBIwvh6q3v3HoFF332T1Nk=
+        b=pOaDF1hrjbP+f7rrwqut4cqd/wTycV5upev5kD+TcL+5QEMRc0yThaXXe0VOLi7jt
+         VSKBGA3ESpBL4DJjWq4//65aLLoWttVjhS1db9Sx0Kw+h9JD8bXUonwL3NWVmErBcW
+         5mkXbf87lORh8P+tHTRD5ErmXba3knto7l0UBapQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Tang Bin <tangbin@cmss.chinamobile.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 4.14 81/91] usb: host: ohci-exynos: Fix error handling in exynos_ohci_probe()
-Date:   Tue,  1 Sep 2020 17:10:55 +0200
-Message-Id: <20200901150932.202252736@linuxfoundation.org>
+        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
+        syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Subject: [PATCH 4.14 63/91] vt_ioctl: change VT_RESIZEX ioctl to check for error return from vc_resize()
+Date:   Tue,  1 Sep 2020 17:10:37 +0200
+Message-Id: <20200901150931.291740317@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,41 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: George Kennedy <george.kennedy@oracle.com>
 
-commit 1d4169834628d18b2392a2da92b7fbf5e8e2ce89 upstream.
+commit bc5269ca765057a1b762e79a1cfd267cd7bf1c46 upstream.
 
-If the function platform_get_irq() failed, the negative value
-returned will not be detected here. So fix error handling in
-exynos_ohci_probe(). And when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+vc_resize() can return with an error after failure. Change VT_RESIZEX ioctl
+to save struct vc_data values that are modified and restore the original
+values in case of error.
 
-Fixes: 62194244cf87 ("USB: Add Samsung Exynos OHCI diver")
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Link: https://lore.kernel.org/r/20200826144931.1828-1-tangbin@cmss.chinamobile.com
+Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/1596213192-6635-2-git-send-email-george.kennedy@oracle.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/ohci-exynos.c |    5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/tty/vt/vt_ioctl.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -166,9 +166,8 @@ skip_phy:
- 	hcd->rsrc_len = resource_size(res);
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "Failed to get IRQ\n");
--		err = -ENODEV;
-+	if (irq < 0) {
-+		err = irq;
- 		goto fail_io;
- 	}
- 
+--- a/drivers/tty/vt/vt_ioctl.c
++++ b/drivers/tty/vt/vt_ioctl.c
+@@ -893,12 +893,22 @@ int vt_ioctl(struct tty_struct *tty,
+ 			console_lock();
+ 			vcp = vc_cons[i].d;
+ 			if (vcp) {
++				int ret;
++				int save_scan_lines = vcp->vc_scan_lines;
++				int save_font_height = vcp->vc_font.height;
++
+ 				if (v.v_vlin)
+ 					vcp->vc_scan_lines = v.v_vlin;
+ 				if (v.v_clin)
+ 					vcp->vc_font.height = v.v_clin;
+ 				vcp->vc_resize_user = 1;
+-				vc_resize(vcp, v.v_cols, v.v_rows);
++				ret = vc_resize(vcp, v.v_cols, v.v_rows);
++				if (ret) {
++					vcp->vc_scan_lines = save_scan_lines;
++					vcp->vc_font.height = save_font_height;
++					console_unlock();
++					return ret;
++				}
+ 			}
+ 			console_unlock();
+ 		}
 
 
