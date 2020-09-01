@@ -2,138 +2,153 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECD0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:12:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA049C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7938A2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:12:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aE+t+KoG"
+	by mail.kernel.org (Postfix) with ESMTP id A77372078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729038AbgIAUMo (ORCPT
+        id S1728675AbgIAUNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:12:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41464 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728893AbgIAUMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:12:38 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0CCC9C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 13:12:38 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id ls14so1162101pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 13:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=e6GgX70OdjL1tqwJUYS3XbI1WRfgqCK//kboQuDHSjM=;
-        b=aE+t+KoG0Wd8K0fWdODEaafawp7uWrxOKVIP5pOq+CaZh5a5QZaU1TKqHqo0IicpIE
-         OKXyjv6Z6jfmVgDwyWYcrdz6KSAEuQG1uEUF2indrcNRycvSHu0RqUeM7aM6dZ0z4MuE
-         L32x8HTrjAkMjBrG0Nqm3QVhk/L67aEZhzwZD9Gm5toLeu3ofg0idQFwnTzXeXb7q2hi
-         0iTswCUa5Og2+6jqmTy11a7IQyDgaHWJXw6s/4Biz0yHTxj3kjvEmU2P5EKA0S3ydPJb
-         3+3dM56syhZBvZ4aEqHMQebqkn59RAW3c9DFTEODXKBjKC55ZMsQOvCkNvxcHx34w/KK
-         HkKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=e6GgX70OdjL1tqwJUYS3XbI1WRfgqCK//kboQuDHSjM=;
-        b=H/5wJ25yrfFYuhg4/qnP/r4YBxCmOFqcBI4Ii0LMN8EzZ1mynlSypVSI76+IONv89y
-         IO2RglBV7WtmUGIIfvofui8Zh/UOb3Zi+9C1G72ODiPp99StT2IZHhmtxPBVG8C9OU34
-         SwNewvLCBO51TKX13tHYNEnrip2888z5omMjhspIwv8TyWfnXIN3ibjaqowfSfZJiE9d
-         DVM9Wwj1qgTJ9xR4cS4jW4fJ0HeHYRLNOVW/BzD0FpQjqa0NZzUAiQEsmOznDctRccvH
-         LxJRLpiS6wJNrp7kS8DD+5dGZ5z3H16+UmemtrRL6xF7F1o2w64Hd8RellISLgI/FI6o
-         MNig==
-X-Gm-Message-State: AOAM533pmoT/6oz90Oro6Nk4Ny8VLZ3Xz7OMRi+3XskMJX0EFb4d7lK9
-        30EUCVACIy74GUlGMXPHg+P9ofqQ9OttZKqR
-X-Google-Smtp-Source: ABdhPJw5TN1eVTK6zQzkrcnavu2RYPsBE9ZH8OtwjjON+M9+5Ru8nVKNqAhIPbU2RY0Qj3bJJgMMTg==
-X-Received: by 2002:a17:90a:e80f:: with SMTP id i15mr1891990pjy.62.1598991157066;
-        Tue, 01 Sep 2020 13:12:37 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id ih11sm2302448pjb.51.2020.09.01.13.12.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 13:12:36 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in
- io_sq_wq_submit_work()
-From:   Jens Axboe <axboe@kernel.dk>
-To:     yinxin_1989 <yinxin_1989@aliyun.com>,
-        viro <viro@zeniv.linux.org.uk>
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-References: <20200901015442.44831-1-yinxin_1989@aliyun.com>
- <ae9f3887-5205-8aa8-afa7-4e01d03921bc@kernel.dk>
- <67f27d17-81fa-43a8-baa9-429b1ccd65d0.yinxin_1989@aliyun.com>
- <4eeefb43-488c-dc90-f47c-10defe6f9278@kernel.dk>
- <98f2cbbf-4f6f-501b-2f4e-1b8b803ce6a6@kernel.dk>
-Message-ID: <1925de10-3c07-0a0b-4434-1049b7ee52c3@kernel.dk>
-Date:   Tue, 1 Sep 2020 14:12:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 1 Sep 2020 16:13:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:49476 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726323AbgIAUNe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 16:13:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCA181FB;
+        Tue,  1 Sep 2020 13:13:33 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B1FE3F66F;
+        Tue,  1 Sep 2020 13:13:31 -0700 (PDT)
+Subject: Re: [PATCH v9 24/32] drm: host1x: fix common struct sg_table related
+ issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-tegra@vger.kernel.org
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+ <CGME20200826063542eucas1p1713d37f4589ddaca27e1968b5fe44027@eucas1p1.samsung.com>
+ <20200826063316.23486-25-m.szyprowski@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <ee8392f8-36eb-4e60-5a3a-965369465dac@arm.com>
+Date:   Tue, 1 Sep 2020 21:13:30 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-In-Reply-To: <98f2cbbf-4f6f-501b-2f4e-1b8b803ce6a6@kernel.dk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200826063316.23486-25-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 2:01 PM, Jens Axboe wrote:
-> On 9/1/20 8:52 AM, Jens Axboe wrote:
->> On 8/31/20 10:59 PM, yinxin_1989 wrote:
->>>
->>>> On 8/31/20 7:54 PM, Xin Yin wrote:
->>>>> the commit <1c4404efcf2c0> ("<io_uring: make sure async workqueue
->>>>> is canceled on exit>") caused a crash in io_sq_wq_submit_work().
->>>>> when io_ring-wq get a req form async_list, which may not have been
->>>>> added to task_list. Then try to delete the req from task_list will caused
->>>>> a "NULL pointer dereference".
->>>>
->>>> Hmm, do you have a reproducer for this?
->>>
->>> I update code to linux5.4.y , and I can reproduce this issue on an arm
->>> board and my x86 pc by fio tools.
->>
->> Right, I figured this was 5.4 stable, as that's the only version that
->> has this patch.
+On 2020-08-26 07:33, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
 > 
-> I took a closer look, and I think your patch can basically be boiled down
-> to this single hunk. If you agree, can you resend your patch with the
-> description based on that, then I'll get it queued up for 5.4-stable.
-> Thanks!
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
+> 
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
+> 
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
 
-Actually, we don't even need the irqsave, this should be enough:
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index fada14ee1cdc..2a539b794f3b 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2378,6 +2378,15 @@ static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
- 		list_del_init(&req->list);
- 		ret = false;
- 	}
-+
-+	if (ret) {
-+		struct io_ring_ctx *ctx = req->ctx;
-+
-+		spin_lock_irq(&ctx->task_lock);
-+		list_add(&req->task_list, &ctx->task_list);
-+		req->work_task = NULL;
-+		spin_unlock_irq(&ctx->task_lock);
-+	}
- 	spin_unlock(&list->lock);
- 	return ret;
- }
-
--- 
-Jens Axboe
-
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>   drivers/gpu/host1x/job.c | 22 ++++++++--------------
+>   1 file changed, 8 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/host1x/job.c b/drivers/gpu/host1x/job.c
+> index 89b6c14b7392..82d0a60ba3f7 100644
+> --- a/drivers/gpu/host1x/job.c
+> +++ b/drivers/gpu/host1x/job.c
+> @@ -170,11 +170,9 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+>   				goto unpin;
+>   			}
+>   
+> -			err = dma_map_sg(dev, sgt->sgl, sgt->nents, dir);
+> -			if (!err) {
+> -				err = -ENOMEM;
+> +			err = dma_map_sgtable(dev, sgt, dir, 0);
+> +			if (err)
+>   				goto unpin;
+> -			}
+>   
+>   			job->unpins[job->num_unpins].dev = dev;
+>   			job->unpins[job->num_unpins].dir = dir;
+> @@ -228,7 +226,7 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+>   		}
+>   
+>   		if (host->domain) {
+> -			for_each_sg(sgt->sgl, sg, sgt->nents, j)
+> +			for_each_sgtable_sg(sgt, sg, j)
+>   				gather_size += sg->length;
+>   			gather_size = iova_align(&host->iova, gather_size);
+>   
+> @@ -240,9 +238,9 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+>   				goto put;
+>   			}
+>   
+> -			err = iommu_map_sg(host->domain,
+> +			err = iommu_map_sgtable(host->domain,
+>   					iova_dma_addr(&host->iova, alloc),
+> -					sgt->sgl, sgt->nents, IOMMU_READ);
+> +					sgt, IOMMU_READ);
+>   			if (err == 0) {
+>   				__free_iova(&host->iova, alloc);
+>   				err = -EINVAL;
+> @@ -252,12 +250,9 @@ static unsigned int pin_job(struct host1x *host, struct host1x_job *job)
+>   			job->unpins[job->num_unpins].size = gather_size;
+>   			phys_addr = iova_dma_addr(&host->iova, alloc);
+>   		} else if (sgt) {
+> -			err = dma_map_sg(host->dev, sgt->sgl, sgt->nents,
+> -					 DMA_TO_DEVICE);
+> -			if (!err) {
+> -				err = -ENOMEM;
+> +			err = dma_map_sgtable(host->dev, sgt, DMA_TO_DEVICE, 0);
+> +			if (err)
+>   				goto put;
+> -			}
+>   
+>   			job->unpins[job->num_unpins].dir = DMA_TO_DEVICE;
+>   			job->unpins[job->num_unpins].dev = host->dev;
+> @@ -660,8 +655,7 @@ void host1x_job_unpin(struct host1x_job *job)
+>   		}
+>   
+>   		if (unpin->dev && sgt)
+> -			dma_unmap_sg(unpin->dev, sgt->sgl, sgt->nents,
+> -				     unpin->dir);
+> +			dma_unmap_sgtable(unpin->dev, sgt, unpin->dir, 0);
+>   
+>   		host1x_bo_unpin(dev, unpin->bo, sgt);
+>   		host1x_bo_put(unpin->bo);
+> 
