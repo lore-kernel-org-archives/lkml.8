@@ -2,75 +2,59 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53250C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:46:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C50BCC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3583F2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:46:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4DA20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:49:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbgIASqZ (ORCPT
+        id S1730614AbgIAStF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:46:25 -0400
-Received: from albireo.enyo.de ([37.24.231.21]:58188 "EHLO albireo.enyo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgIASqY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:46:24 -0400
-Received: from [172.17.203.2] (helo=deneb.enyo.de)
-        by albireo.enyo.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        id 1kDBIB-00022C-08; Tue, 01 Sep 2020 18:46:03 +0000
-Received: from fw by deneb.enyo.de with local (Exim 4.92)
-        (envelope-from <fw@deneb.enyo.de>)
-        id 1kDBIA-0007dD-RY; Tue, 01 Sep 2020 20:46:02 +0200
-From:   Florian Weimer <fw@deneb.enyo.de>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
-        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jann Horn <jannh@google.com>,
-        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
-        David Rientjes <rientjes@google.com>,
-        Arjun Roy <arjunroy@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christian Brauner <christian@brauner.io>,
-        Daniel Colascione <dancol@google.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        SeongJae Park <sjpark@amazon.de>, linux-man@vger.kernel.org
-Subject: Re: [PATCH v9 3/3] mm/madvise: introduce process_madvise() syscall: an external memory hinting API
-References: <20200901000633.1920247-1-minchan@kernel.org>
-        <20200901000633.1920247-4-minchan@kernel.org>
-Date:   Tue, 01 Sep 2020 20:46:02 +0200
-In-Reply-To: <20200901000633.1920247-4-minchan@kernel.org> (Minchan Kim's
-        message of "Mon, 31 Aug 2020 17:06:33 -0700")
-Message-ID: <87blippc7p.fsf@mid.deneb.enyo.de>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Tue, 1 Sep 2020 14:49:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56762 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbgIAStF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 14:49:05 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1DF6C061244;
+        Tue,  1 Sep 2020 11:49:04 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1573513630BDF;
+        Tue,  1 Sep 2020 11:32:18 -0700 (PDT)
+Date:   Tue, 01 Sep 2020 11:49:04 -0700 (PDT)
+Message-Id: <20200901.114904.1478557687217786852.davem@davemloft.net>
+To:     yuehaibing@huawei.com
+Cc:     kuba@kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: sungem: Remove unneeded cast from memory
+ allocation
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200901141028.25264-1-yuehaibing@huawei.com>
+References: <20200901141028.25264-1-yuehaibing@huawei.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Tue, 01 Sep 2020 11:32:18 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Minchan Kim:
+From: YueHaibing <yuehaibing@huawei.com>
+Date: Tue, 1 Sep 2020 22:10:28 +0800
 
->       ssize_t process_madvise(int pidfd, const struct iovec *iovec,
->                 unsigned long vlen, int advice, unsigned int flags);
+> Remove dma_alloc_coherent return value cast.
+> This is detected by coccinelle.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-size_t for vlen provides a clearer hint regarding the type of special
-treatment needed for ILP32 here (zero extension, not changing the type
-to long long).
+Applied.
