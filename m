@@ -2,55 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E260C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A673AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB35B20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81F9D206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979394;
-	bh=PJlJN9iz55FCW+gfWE6Dcvm0SreHsE+AMvFKVq4QXKQ=;
+	s=default; t=1598979397;
+	bh=haMngcYoHsu/t+/mS4mejSu6pXO3QuqXEo3Pm1l24Ag=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Npz9XqVmdUJF+zXtvFNS25kYi8AdKGpSC/czD1QMWUNucBVXNWVG5xoipV6t41rxM
-	 Q4bi6p6mhML9vw5EcOlxF9P6oVZt+la2h3YhqqKnjFxGZP4Qt1OnMFKAnvARAeNSHq
-	 R0fCZBD2wz1aspsNiFWEbrFgykI51H7vP65N6NWw=
+	b=Ys9kFZNltiUZspLNmP+qwxFub9s40QXMidgl4ek48MnFgT6MdU59rZtUY7jJV4VfX
+	 5JJlp3jBXAiGtK8pBknA3FLiuSCyYqzqqO51Pw/hXjxt1fsi1c8XFFCmz9t6Mcn4nD
+	 H2Ekpb43zAO/m6XAkOk6uJRqOL6X1XBPfTKNGezY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729885AbgIAPXs (ORCPT
+        id S1729863AbgIAPXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:23:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42422 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbgIAPVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:21:35 -0400
+        id S1729236AbgIAPVY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:21:24 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3BA5E2137B;
-        Tue,  1 Sep 2020 15:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C234206FA;
+        Tue,  1 Sep 2020 15:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973694;
-        bh=PJlJN9iz55FCW+gfWE6Dcvm0SreHsE+AMvFKVq4QXKQ=;
+        s=default; t=1598973684;
+        bh=haMngcYoHsu/t+/mS4mejSu6pXO3QuqXEo3Pm1l24Ag=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0chunCqN/fYAKL2M59uctKqJIzZmpLOyb+eyw4WnX62x/vDQnck/eyOZuJh7HuFJL
-         bCkXpvNPEeIEYZ2cOjv4Qp3X84pLRgMnPtCL6gptj6iI4yzhl0mJIuSmGUD/IBkOJy
-         ktXkMpUCNv8olDgd8ic9atc4t+u5eKKZ3nxSKqE8=
+        b=dlfwCZl1xF79FdHoFG4IxRc9QzdNvmoaWJ+7zF2p9lFTMdJhXCZz0JM27YumbVBfP
+         CtDu049rI4g063pIWyGA0mrp87TsNPpFKad3+7ZryneY8o1CtOXftokgXapU/pwwYn
+         daIlXBcXIxn/fh02wZvKeSiroMKPEl6PP1c6Dm1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/125] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
-Date:   Tue,  1 Sep 2020 17:09:25 +0200
-Message-Id: <20200901150935.094462104@linuxfoundation.org>
+        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.14 69/91] writeback: Protect inode->i_io_list with inode->i_lock
+Date:   Tue,  1 Sep 2020 17:10:43 +0200
+Message-Id: <20200901150931.602200418@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
+References: <20200901150928.096174795@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,41 +59,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
+commit b35250c0816c7cf7d0a8de92f5fafb6a7508a708 upstream.
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+Currently, operations on inode->i_io_list are protected by
+wb->list_lock. In the following patches we'll need to maintain
+consistency between inode->i_state and inode->i_io_list so change the
+code so that inode->i_lock protects also all inode's i_io_list handling.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+CC: stable@vger.kernel.org # Prerequisite for "writeback: Avoid skipping inode writeback"
+Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/img/img-i2s-in.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/fs-writeback.c |   22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
-index c22880aea82a2..7e48c740bf550 100644
---- a/sound/soc/img/img-i2s-in.c
-+++ b/sound/soc/img/img-i2s-in.c
-@@ -346,8 +346,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -160,6 +160,7 @@ static void inode_io_list_del_locked(str
+ 				     struct bdi_writeback *wb)
+ {
+ 	assert_spin_locked(&wb->list_lock);
++	assert_spin_locked(&inode->i_lock);
  
- 	ret = pm_runtime_get_sync(i2s->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(i2s->dev);
- 		return ret;
-+	}
+ 	list_del_init(&inode->i_io_list);
+ 	wb_io_lists_depopulated(wb);
+@@ -1039,7 +1040,9 @@ void inode_io_list_del(struct inode *ino
+ 	struct bdi_writeback *wb;
  
- 	for (i = 0; i < i2s->active_channels; i++)
- 		img_i2s_in_ch_disable(i2s, i);
--- 
-2.25.1
-
+ 	wb = inode_to_wb_and_lock_list(inode);
++	spin_lock(&inode->i_lock);
+ 	inode_io_list_del_locked(inode, wb);
++	spin_unlock(&inode->i_lock);
+ 	spin_unlock(&wb->list_lock);
+ }
+ 
+@@ -1088,8 +1091,10 @@ void sb_clear_inode_writeback(struct ino
+  * the case then the inode must have been redirtied while it was being written
+  * out and we don't reset its dirtied_when.
+  */
+-static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
++static void redirty_tail_locked(struct inode *inode, struct bdi_writeback *wb)
+ {
++	assert_spin_locked(&inode->i_lock);
++
+ 	if (!list_empty(&wb->b_dirty)) {
+ 		struct inode *tail;
+ 
+@@ -1100,6 +1105,13 @@ static void redirty_tail(struct inode *i
+ 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
+ }
+ 
++static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
++{
++	spin_lock(&inode->i_lock);
++	redirty_tail_locked(inode, wb);
++	spin_unlock(&inode->i_lock);
++}
++
+ /*
+  * requeue inode for re-scanning after bdi->b_io list is exhausted.
+  */
+@@ -1310,7 +1322,7 @@ static void requeue_inode(struct inode *
+ 		 * writeback is not making progress due to locked
+ 		 * buffers. Skip this inode for now.
+ 		 */
+-		redirty_tail(inode, wb);
++		redirty_tail_locked(inode, wb);
+ 		return;
+ 	}
+ 
+@@ -1330,7 +1342,7 @@ static void requeue_inode(struct inode *
+ 			 * retrying writeback of the dirty page/inode
+ 			 * that cannot be performed immediately.
+ 			 */
+-			redirty_tail(inode, wb);
++			redirty_tail_locked(inode, wb);
+ 		}
+ 	} else if (inode->i_state & I_DIRTY) {
+ 		/*
+@@ -1338,7 +1350,7 @@ static void requeue_inode(struct inode *
+ 		 * such as delayed allocation during submission or metadata
+ 		 * updates after data IO completion.
+ 		 */
+-		redirty_tail(inode, wb);
++		redirty_tail_locked(inode, wb);
+ 	} else if (inode->i_state & I_DIRTY_TIME) {
+ 		inode->dirtied_when = jiffies;
+ 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
+@@ -1585,8 +1597,8 @@ static long writeback_sb_inodes(struct s
+ 		 */
+ 		spin_lock(&inode->i_lock);
+ 		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
++			redirty_tail_locked(inode, wb);
+ 			spin_unlock(&inode->i_lock);
+-			redirty_tail(inode, wb);
+ 			continue;
+ 		}
+ 		if ((inode->i_state & I_SYNC) && wbc.sync_mode != WB_SYNC_ALL) {
 
 
