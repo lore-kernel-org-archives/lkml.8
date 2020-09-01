@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCC1C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9C0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEC52158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64DD92158C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974739;
-	bh=DO4WVISNhzP58pGTd3appTpyipFHW2AC97qHtec2TQk=;
+	s=default; t=1598974753;
+	bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qRSRVHSMBedoK6WFKWEtwmuZGb8q7codNOJdeBJxdcWotKD3nxC1o7FlxdbqvWMTe
-	 Mvsbd4CFGBYFZlfPedgI7vcMOYCtRW4rXm3o69AnlW2mdqeoq900/+PO5RXeIs3rUr
-	 psLIs6pX8dyeNeLVnsW4BBHAwGVW0qCVksqDB3dY=
+	b=OrHVa0goj4D6Cmnyu/n0muJDuWRwAHRagBEAojpM5s233isx4DrLLDQ9XiF4q3xRV
+	 fZRGLqFx6YXdWJuO7mDfwS+8WxghF2v7BS2Bu0jyxl6eFwKdS9ZiF3uzd9TUq5KxE8
+	 1502P673TpnT/oFIrSs7oSRk9xT4a9KR/eLkCPAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728684AbgIAPi4 (ORCPT
+        id S1731449AbgIAPjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:38:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45186 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:39:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728053AbgIAPhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:37:18 -0400
+        id S1731341AbgIAPhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:37:31 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F25AA205F4;
-        Tue,  1 Sep 2020 15:37:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F9EE20866;
+        Tue,  1 Sep 2020 15:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974637;
-        bh=DO4WVISNhzP58pGTd3appTpyipFHW2AC97qHtec2TQk=;
+        s=default; t=1598974650;
+        bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=is+Orr9W8bIsm7vMIfWmHSFh3qpze5pMVgcg23troWEdeUzuMqIabSKkujAICNnv4
-         0X3danYBks4y0by3KGohFb157ZTU6rBcdMuyCDNwW5edsmZUv7K0o7eNdZHal4x6YK
-         cjb8HjaQHlKWrkiImbuDfneW2HpFkiTAek0ypRy0=
+        b=QSQgUU8CXHbSMRo4gtzoa6QwXh248fyQ8fbuTBeSs3Nc45PJwkuUrV+yzB1ZA93hs
+         enqJ9mNibKh1uuREWBlE4tE8b+W+SIjx6thsrgbRruDXe6gVfDMeg89m4NXFhsiaYx
+         ZagPtqv4FZRLlFWa0Ebqm9k5azQYfkWC53znIiAw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Reto Schneider <code@reto-schneider.ch>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 037/255] f2fs: fix error path in do_recover_data()
-Date:   Tue,  1 Sep 2020 17:08:13 +0200
-Message-Id: <20200901151002.541070904@linuxfoundation.org>
+Subject: [PATCH 5.8 042/255] rtlwifi: rtl8192cu: Prevent leaking urb
+Date:   Tue,  1 Sep 2020 17:08:18 +0200
+Message-Id: <20200901151002.766076852@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,161 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Reto Schneider <code@reto-schneider.ch>
 
-[ Upstream commit 9627a7b31f3c4ff8bc8f3be3683983ffe6eaebe6 ]
+[ Upstream commit 03128643eb5453a798db5770952c73dc64fcaf00 ]
 
-- don't panic kernel if f2fs_get_node_page() fails in
-f2fs_recover_inline_data() or f2fs_recover_inline_xattr();
-- return error number of f2fs_truncate_blocks() to
-f2fs_recover_inline_data()'s caller;
+If usb_submit_urb fails the allocated urb should be unanchored and
+released.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Reto Schneider <code@reto-schneider.ch>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Link: https://lore.kernel.org/r/20200622132113.14508-3-code@reto-schneider.ch
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/f2fs.h     |  4 ++--
- fs/f2fs/inline.c   | 19 ++++++++++++-------
- fs/f2fs/node.c     |  6 ++++--
- fs/f2fs/recovery.c | 10 ++++++++--
- 4 files changed, 26 insertions(+), 13 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index b35a50f4953c5..7d9afd54e9d8f 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3287,7 +3287,7 @@ bool f2fs_alloc_nid(struct f2fs_sb_info *sbi, nid_t *nid);
- void f2fs_alloc_nid_done(struct f2fs_sb_info *sbi, nid_t nid);
- void f2fs_alloc_nid_failed(struct f2fs_sb_info *sbi, nid_t nid);
- int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink);
--void f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
-+int f2fs_recover_inline_xattr(struct inode *inode, struct page *page);
- int f2fs_recover_xattr_data(struct inode *inode, struct page *page);
- int f2fs_recover_inode_page(struct f2fs_sb_info *sbi, struct page *page);
- int f2fs_restore_node_summary(struct f2fs_sb_info *sbi,
-@@ -3750,7 +3750,7 @@ int f2fs_convert_inline_page(struct dnode_of_data *dn, struct page *page);
- int f2fs_convert_inline_inode(struct inode *inode);
- int f2fs_try_convert_inline_dir(struct inode *dir, struct dentry *dentry);
- int f2fs_write_inline_data(struct inode *inode, struct page *page);
--bool f2fs_recover_inline_data(struct inode *inode, struct page *npage);
-+int f2fs_recover_inline_data(struct inode *inode, struct page *npage);
- struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
- 					const struct f2fs_filename *fname,
- 					struct page **res_page);
-diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
-index dbade310dc792..cf2c347bd7a3d 100644
---- a/fs/f2fs/inline.c
-+++ b/fs/f2fs/inline.c
-@@ -253,7 +253,7 @@ int f2fs_write_inline_data(struct inode *inode, struct page *page)
+diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
+index c66c6dc003783..bad06939a247c 100644
+--- a/drivers/net/wireless/realtek/rtlwifi/usb.c
++++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
+@@ -718,8 +718,11 @@ static int _rtl_usb_receive(struct ieee80211_hw *hw)
+ 
+ 		usb_anchor_urb(urb, &rtlusb->rx_submitted);
+ 		err = usb_submit_urb(urb, GFP_KERNEL);
+-		if (err)
++		if (err) {
++			usb_unanchor_urb(urb);
++			usb_free_urb(urb);
+ 			goto err_out;
++		}
+ 		usb_free_urb(urb);
+ 	}
  	return 0;
- }
- 
--bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
-+int f2fs_recover_inline_data(struct inode *inode, struct page *npage)
- {
- 	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
- 	struct f2fs_inode *ri = NULL;
-@@ -275,7 +275,8 @@ bool f2fs_recover_inline_data(struct inode *inode, struct page *npage)
- 			ri && (ri->i_inline & F2FS_INLINE_DATA)) {
- process_inline:
- 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
--		f2fs_bug_on(sbi, IS_ERR(ipage));
-+		if (IS_ERR(ipage))
-+			return PTR_ERR(ipage);
- 
- 		f2fs_wait_on_page_writeback(ipage, NODE, true, true);
- 
-@@ -288,21 +289,25 @@ process_inline:
- 
- 		set_page_dirty(ipage);
- 		f2fs_put_page(ipage, 1);
--		return true;
-+		return 1;
- 	}
- 
- 	if (f2fs_has_inline_data(inode)) {
- 		ipage = f2fs_get_node_page(sbi, inode->i_ino);
--		f2fs_bug_on(sbi, IS_ERR(ipage));
-+		if (IS_ERR(ipage))
-+			return PTR_ERR(ipage);
- 		f2fs_truncate_inline_inode(inode, ipage, 0);
- 		clear_inode_flag(inode, FI_INLINE_DATA);
- 		f2fs_put_page(ipage, 1);
- 	} else if (ri && (ri->i_inline & F2FS_INLINE_DATA)) {
--		if (f2fs_truncate_blocks(inode, 0, false))
--			return false;
-+		int ret;
-+
-+		ret = f2fs_truncate_blocks(inode, 0, false);
-+		if (ret)
-+			return ret;
- 		goto process_inline;
- 	}
--	return false;
-+	return 0;
- }
- 
- struct f2fs_dir_entry *f2fs_find_in_inline_dir(struct inode *dir,
-diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
-index e61ce7fb0958b..98736d0598b8d 100644
---- a/fs/f2fs/node.c
-+++ b/fs/f2fs/node.c
-@@ -2576,7 +2576,7 @@ int f2fs_try_to_free_nids(struct f2fs_sb_info *sbi, int nr_shrink)
- 	return nr - nr_shrink;
- }
- 
--void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
-+int f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
- {
- 	void *src_addr, *dst_addr;
- 	size_t inline_size;
-@@ -2584,7 +2584,8 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
- 	struct f2fs_inode *ri;
- 
- 	ipage = f2fs_get_node_page(F2FS_I_SB(inode), inode->i_ino);
--	f2fs_bug_on(F2FS_I_SB(inode), IS_ERR(ipage));
-+	if (IS_ERR(ipage))
-+		return PTR_ERR(ipage);
- 
- 	ri = F2FS_INODE(page);
- 	if (ri->i_inline & F2FS_INLINE_XATTR) {
-@@ -2603,6 +2604,7 @@ void f2fs_recover_inline_xattr(struct inode *inode, struct page *page)
- update_inode:
- 	f2fs_update_inode(inode, ipage);
- 	f2fs_put_page(ipage, 1);
-+	return 0;
- }
- 
- int f2fs_recover_xattr_data(struct inode *inode, struct page *page)
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index ae5310f02e7ff..2807251944668 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -544,7 +544,9 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 
- 	/* step 1: recover xattr */
- 	if (IS_INODE(page)) {
--		f2fs_recover_inline_xattr(inode, page);
-+		err = f2fs_recover_inline_xattr(inode, page);
-+		if (err)
-+			goto out;
- 	} else if (f2fs_has_xattr_block(ofs_of_node(page))) {
- 		err = f2fs_recover_xattr_data(inode, page);
- 		if (!err)
-@@ -553,8 +555,12 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
- 	}
- 
- 	/* step 2: recover inline data */
--	if (f2fs_recover_inline_data(inode, page))
-+	err = f2fs_recover_inline_data(inode, page);
-+	if (err) {
-+		if (err == 1)
-+			err = 0;
- 		goto out;
-+	}
- 
- 	/* step 3: recover data indices */
- 	start = f2fs_start_bidx_of_node(ofs_of_node(page), inode);
 -- 
 2.25.1
 
