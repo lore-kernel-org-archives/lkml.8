@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA809C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE389C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 828F2206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97AEA206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:44:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975026;
-	bh=bcv8a7aUYMp16+rL7DKkOjjRhxFK6QVJCj1xeSXR4ts=;
+	s=default; t=1598975040;
+	bh=TYTTdCegp15oLYrWq/F7PP5Ab8BnxcWk62tjoSVlprc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JbKgVFdCEqFPbKOMToPgq59ZH5HOh7tLZErkWcYZZPj8XoO7eMIItBZoOL6aPZhnl
-	 ilBnF5VD0wcdh8FvHjsro325fdGYjlpkvvts7EIZpkH+a++hlRU27RNUoCybyzEj+p
-	 TlWFiOepOmt/zu4yx4ScGiondqLtum7nXSZNKkSs=
+	b=u7i47xg/qfKi1DZhh763KKD9kOZIZ/Oo14PszAU0/ppGhRAYtsHjrf2XCL9E9vl+e
+	 1AH32b66cWsff8v07aVpGzp7EXgIRXax2JbbimfYTYDXLD2jbDQpWWZ6eRctIfJibl
+	 gRCud38A6q+9vONdy/8atZx5WJYDJ4Tiyt/fGdno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbgIAPnp (ORCPT
+        id S1731725AbgIAPn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53158 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:43:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53378 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731419AbgIAPlP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:15 -0400
+        id S1730616AbgIAPlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:41:22 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 833C320767;
-        Tue,  1 Sep 2020 15:41:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C46F1206EB;
+        Tue,  1 Sep 2020 15:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974875;
-        bh=bcv8a7aUYMp16+rL7DKkOjjRhxFK6QVJCj1xeSXR4ts=;
+        s=default; t=1598974880;
+        bh=TYTTdCegp15oLYrWq/F7PP5Ab8BnxcWk62tjoSVlprc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GSqjBjZkukGrkmK0iZhcZhK8a8EXyO5ElezGlnqSsFDFjEcqdg+Jrspp92+YYoryn
-         KBFS9vgA62Nu+09oqsW6+VgiJXjbqxPtWDcfxeaVq0JeVDlic7n6cDNNtv+gXADhzP
-         2Xtm6SfUQubkA8OMQqMDrBwrSyZKoEvkkRQL1bvM=
+        b=Bwd3Xi4C1KYyvuUCd8bkTFO/tHAXpuwCYnUnLvAwPn7f7pTK4Y2eyFWmDNCW53o8M
+         Ot0iWMThnKLDfibJfaW39ldcpBtOcYPATRHDY7PPDCuMQv4NUGemJJJRJBukMR5WfY
+         BNawrRqStVr5IysMrTjLPKQelGWLKHpYV+eNqvmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Jianlin Lv <Jianlin.Lv@arm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 116/255] ext4: correctly restore system zone info when remount fails
-Date:   Tue,  1 Sep 2020 17:09:32 +0200
-Message-Id: <20200901151006.287088129@linuxfoundation.org>
+Subject: [PATCH 5.8 126/255] selftests/bpf: Fix segmentation fault in test_progs
+Date:   Tue,  1 Sep 2020 17:09:42 +0200
+Message-Id: <20200901151006.765388854@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,108 +61,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Jianlin Lv <Jianlin.Lv@arm.com>
 
-[ Upstream commit 0f5bde1db174f6c471f0bd27198575719dabe3e5 ]
+[ Upstream commit 0390c429dbed4068bd2cd8dded937d9a5ec24cd2 ]
 
-When remounting filesystem fails late during remount handling and
-block_validity mount option is also changed during the remount, we fail
-to restore system zone information to a state matching the mount option.
-This is mostly harmless, just the block validity checking will not match
-the situation described by the mount option. Make sure these two are always
-consistent.
+test_progs reports the segmentation fault as below:
 
-Reported-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200728130437.7804-7-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+  $ sudo ./test_progs -t mmap --verbose
+  test_mmap:PASS:skel_open_and_load 0 nsec
+  [...]
+  test_mmap:PASS:adv_mmap1 0 nsec
+  test_mmap:PASS:adv_mmap2 0 nsec
+  test_mmap:PASS:adv_mmap3 0 nsec
+  test_mmap:PASS:adv_mmap4 0 nsec
+  Segmentation fault
+
+This issue was triggered because mmap() and munmap() used inconsistent
+length parameters; mmap() creates a new mapping of 3 * page_size, but the
+length parameter set in the subsequent re-map and munmap() functions is
+4 * page_size; this leads to the destruction of the process space.
+
+To fix this issue, first create 4 pages of anonymous mapping, then do all
+the mmap() with MAP_FIXED.
+
+Another issue is that when unmap the second page fails, the length
+parameter to delete tmp1 mappings should be 4 * page_size.
+
+Signed-off-by: Jianlin Lv <Jianlin.Lv@arm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200810153940.125508-1-Jianlin.Lv@arm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/block_validity.c |  8 --------
- fs/ext4/super.c          | 29 +++++++++++++++++++++--------
- 2 files changed, 21 insertions(+), 16 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/mmap.c | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ext4/block_validity.c b/fs/ext4/block_validity.c
-index e830a9d4e10d3..11aa37693e436 100644
---- a/fs/ext4/block_validity.c
-+++ b/fs/ext4/block_validity.c
-@@ -254,14 +254,6 @@ int ext4_setup_system_zone(struct super_block *sb)
- 	int flex_size = ext4_flex_bg_size(sbi);
- 	int ret;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mmap.c b/tools/testing/selftests/bpf/prog_tests/mmap.c
+index 43d0b5578f461..9c3c5c0f068fb 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mmap.c
++++ b/tools/testing/selftests/bpf/prog_tests/mmap.c
+@@ -21,7 +21,7 @@ void test_mmap(void)
+ 	const long page_size = sysconf(_SC_PAGE_SIZE);
+ 	int err, duration = 0, i, data_map_fd, data_map_id, tmp_fd, rdmap_fd;
+ 	struct bpf_map *data_map, *bss_map;
+-	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp1, *tmp2;
++	void *bss_mmaped = NULL, *map_mmaped = NULL, *tmp0, *tmp1, *tmp2;
+ 	struct test_mmap__bss *bss_data;
+ 	struct bpf_map_info map_info;
+ 	__u32 map_info_sz = sizeof(map_info);
+@@ -183,16 +183,23 @@ void test_mmap(void)
  
--	if (!test_opt(sb, BLOCK_VALIDITY)) {
--		if (sbi->system_blks)
--			ext4_release_system_zone(sb);
--		return 0;
--	}
--	if (sbi->system_blks)
--		return 0;
--
- 	system_blks = kzalloc(sizeof(*system_blks), GFP_KERNEL);
- 	if (!system_blks)
- 		return -ENOMEM;
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 54d1c09329e55..4c8253188d8df 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4698,11 +4698,13 @@ no_journal:
+ 	/* check some more advanced mmap() manipulations */
  
- 	ext4_set_resv_clusters(sb);
- 
--	err = ext4_setup_system_zone(sb);
--	if (err) {
--		ext4_msg(sb, KERN_ERR, "failed to initialize system "
--			 "zone (%d)", err);
--		goto failed_mount4a;
-+	if (test_opt(sb, BLOCK_VALIDITY)) {
-+		err = ext4_setup_system_zone(sb);
-+		if (err) {
-+			ext4_msg(sb, KERN_ERR, "failed to initialize system "
-+				 "zone (%d)", err);
-+			goto failed_mount4a;
-+		}
- 	}
- 
- 	ext4_ext_init(sb);
-@@ -5716,9 +5718,16 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		ext4_register_li_request(sb, first_not_zeroed);
- 	}
- 
--	err = ext4_setup_system_zone(sb);
--	if (err)
--		goto restore_opts;
-+	/*
-+	 * Handle creation of system zone data early because it can fail.
-+	 * Releasing of existing data is done when we are sure remount will
-+	 * succeed.
-+	 */
-+	if (test_opt(sb, BLOCK_VALIDITY) && !sbi->system_blks) {
-+		err = ext4_setup_system_zone(sb);
-+		if (err)
-+			goto restore_opts;
++	tmp0 = mmap(NULL, 4 * page_size, PROT_READ, MAP_SHARED | MAP_ANONYMOUS,
++			  -1, 0);
++	if (CHECK(tmp0 == MAP_FAILED, "adv_mmap0", "errno %d\n", errno))
++		goto cleanup;
++
+ 	/* map all but last page: pages 1-3 mapped */
+-	tmp1 = mmap(NULL, 3 * page_size, PROT_READ, MAP_SHARED,
++	tmp1 = mmap(tmp0, 3 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
+ 			  data_map_fd, 0);
+-	if (CHECK(tmp1 == MAP_FAILED, "adv_mmap1", "errno %d\n", errno))
++	if (CHECK(tmp0 != tmp1, "adv_mmap1", "tmp0: %p, tmp1: %p\n", tmp0, tmp1)) {
++		munmap(tmp0, 4 * page_size);
+ 		goto cleanup;
 +	}
  
- 	if (sbi->s_journal == NULL && !(old_sb_flags & SB_RDONLY)) {
- 		err = ext4_commit_super(sb, 1);
-@@ -5740,6 +5749,8 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 		}
+ 	/* unmap second page: pages 1, 3 mapped */
+ 	err = munmap(tmp1 + page_size, page_size);
+ 	if (CHECK(err, "adv_mmap2", "errno %d\n", errno)) {
+-		munmap(tmp1, map_sz);
++		munmap(tmp1, 4 * page_size);
+ 		goto cleanup;
  	}
- #endif
-+	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
-+		ext4_release_system_zone(sb);
  
- 	/*
- 	 * Some options can be enabled by ext4 and/or by VFS mount flag
-@@ -5761,6 +5772,8 @@ restore_opts:
- 	sbi->s_commit_interval = old_opts.s_commit_interval;
- 	sbi->s_min_batch_time = old_opts.s_min_batch_time;
- 	sbi->s_max_batch_time = old_opts.s_max_batch_time;
-+	if (!test_opt(sb, BLOCK_VALIDITY) && sbi->system_blks)
-+		ext4_release_system_zone(sb);
- #ifdef CONFIG_QUOTA
- 	sbi->s_jquota_fmt = old_opts.s_jquota_fmt;
- 	for (i = 0; i < EXT4_MAXQUOTAS; i++) {
+@@ -201,7 +208,7 @@ void test_mmap(void)
+ 		    MAP_SHARED | MAP_FIXED, data_map_fd, 0);
+ 	if (CHECK(tmp2 == MAP_FAILED, "adv_mmap3", "errno %d\n", errno)) {
+ 		munmap(tmp1, page_size);
+-		munmap(tmp1 + 2*page_size, page_size);
++		munmap(tmp1 + 2*page_size, 2 * page_size);
+ 		goto cleanup;
+ 	}
+ 	CHECK(tmp1 + page_size != tmp2, "adv_mmap4",
+@@ -211,7 +218,7 @@ void test_mmap(void)
+ 	tmp2 = mmap(tmp1, 4 * page_size, PROT_READ, MAP_SHARED | MAP_FIXED,
+ 		    data_map_fd, 0);
+ 	if (CHECK(tmp2 == MAP_FAILED, "adv_mmap5", "errno %d\n", errno)) {
+-		munmap(tmp1, 3 * page_size); /* unmap page 1 */
++		munmap(tmp1, 4 * page_size); /* unmap page 1 */
+ 		goto cleanup;
+ 	}
+ 	CHECK(tmp1 != tmp2, "adv_mmap6", "tmp1: %p, tmp2: %p\n", tmp1, tmp2);
 -- 
 2.25.1
 
