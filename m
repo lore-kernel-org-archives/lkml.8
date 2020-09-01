@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC98FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB23EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2F52067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90FB1214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978744;
-	bh=qQlHZEGX8P6ulmvINYhz+HdyO0Ia6uQ1ctlWB+jqt/0=;
+	s=default; t=1598978751;
+	bh=w+CCad3qJGbJT8Ndl3AfagyrBeavJyGH/yTjj8xmuA0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jNSGZkEqVnUh+bGBB/29gZqp2FLkvlttDhJvdCnRmWLa6RZv1sx6Lfytp1bS/PaMr
-	 H63XJxv+e5bK8O8mmiX5FHXnKOCNy709MX0Jz6IJFKoX/2TVzhbQEFuACBHfdIP89D
-	 iVlu0qmwomvDnR9JwVo1EFs2bLwaS4kYUufAs/Zk=
+	b=VMg6+DaeC0C4TAuVEgDaVh0eFeZh0iiToXnmCIV7dJ9EkLdGKXGYxdG+X6C5S5K18
+	 w9QOTNJUR8drjS0Or/trF+3DIKG6kzg7sDnjQPCPI93+cKu++NqML10NtNLu0EuLNt
+	 O0sLjZGxu7YJlKJ2pcUIWBtTgVhr4y7AtKefSR3E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730200AbgIAP10 (ORCPT
+        id S1730427AbgIAQpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:27:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:45:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729836AbgIAPXp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:45 -0400
+        id S1730195AbgIAP1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 135AE2078B;
-        Tue,  1 Sep 2020 15:23:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F36420684;
+        Tue,  1 Sep 2020 15:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973824;
-        bh=qQlHZEGX8P6ulmvINYhz+HdyO0Ia6uQ1ctlWB+jqt/0=;
+        s=default; t=1598974045;
+        bh=w+CCad3qJGbJT8Ndl3AfagyrBeavJyGH/yTjj8xmuA0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AdbOHWv8CTpPlYleI1itkuMHncFBjsFgAqJzvZt36Ni6OuoBCSvWyrhg/SEDFOxlL
-         YGbI+fs7RBdhAC6k94dB5nGWNav+0872fpTj+d7UenBvZCmHzQjVrWczB9VHoEhvtY
-         pSzy7wVITA3XpfJmh/NfE7wpRvDG6lhWMHXGoZsg=
+        b=M1qDALxjO/T2F55DXWs2NJrHe1BF6s3EZHHVN2oUD1wwUmFgBOV1VXo/PlX2px6Cg
+         pst4N1r3eSAuKpL/wcPu2B5GfO9kNPS/HUAni5HVIAzv3PG3gRCV1ArfdEJlsT7xxY
+         O9gR8Ih7pGq+COQeS0OZA+w/kt17ZAQ57jh8Y/dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/125] ext4: dont BUG on inconsistent journal feature
-Date:   Tue,  1 Sep 2020 17:10:15 +0200
-Message-Id: <20200901150937.522396804@linuxfoundation.org>
+Subject: [PATCH 5.4 022/214] powerpc/xive: Ignore kmemleak false positives
+Date:   Tue,  1 Sep 2020 17:08:22 +0200
+Message-Id: <20200901150954.031909019@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,210 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 11215630aada28307ba555a43138db6ac54fa825 ]
+[ Upstream commit f0993c839e95dd6c7f054a1015e693c87e33e4fb ]
 
-A customer has reported a BUG_ON in ext4_clear_journal_err() hitting
-during an LTP testing. Either this has been caused by a test setup
-issue where the filesystem was being overwritten while LTP was mounting
-it or the journal replay has overwritten the superblock with invalid
-data. In either case it is preferable we don't take the machine down
-with a BUG_ON. So handle the situation of unexpectedly missing
-has_journal feature more gracefully. We issue warning and fail the mount
-in the cases where the race window is narrow and the failed check is
-most likely a programming error. In cases where fs corruption is more
-likely, we do full ext4_error() handling before failing mount / remount.
+xive_native_provision_pages() allocates memory and passes the pointer to
+OPAL so kmemleak cannot find the pointer usage in the kernel memory and
+produces a false positive report (below) (even if the kernel did scan
+OPAL memory, it is unable to deal with __pa() addresses anyway).
 
-Reviewed-by: Lukas Czerner <lczerner@redhat.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200710140759.18031-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+This silences the warning.
+
+unreferenced object 0xc000200350c40000 (size 65536):
+  comm "qemu-system-ppc", pid 2725, jiffies 4294946414 (age 70776.530s)
+  hex dump (first 32 bytes):
+    02 00 00 00 50 00 00 00 00 00 00 00 00 00 00 00  ....P...........
+    01 00 08 07 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000081ff046c>] xive_native_alloc_vp_block+0x120/0x250
+    [<00000000d555d524>] kvmppc_xive_compute_vp_id+0x248/0x350 [kvm]
+    [<00000000d69b9c9f>] kvmppc_xive_connect_vcpu+0xc0/0x520 [kvm]
+    [<000000006acbc81c>] kvm_arch_vcpu_ioctl+0x308/0x580 [kvm]
+    [<0000000089c69580>] kvm_vcpu_ioctl+0x19c/0xae0 [kvm]
+    [<00000000902ae91e>] ksys_ioctl+0x184/0x1b0
+    [<00000000f3e68bd7>] sys_ioctl+0x48/0xb0
+    [<0000000001b2c127>] system_call_exception+0x124/0x1f0
+    [<00000000d2b2ee40>] system_call_common+0xe8/0x214
+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200612043303.84894-1-aik@ozlabs.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/super.c | 68 ++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 47 insertions(+), 21 deletions(-)
+ arch/powerpc/sysdev/xive/native.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 1428dab2afff8..47e406338a322 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -65,10 +65,10 @@ static int ext4_load_journal(struct super_block *, struct ext4_super_block *,
- 			     unsigned long journal_devnum);
- static int ext4_show_options(struct seq_file *seq, struct dentry *root);
- static int ext4_commit_super(struct super_block *sb, int sync);
--static void ext4_mark_recovery_complete(struct super_block *sb,
-+static int ext4_mark_recovery_complete(struct super_block *sb,
- 					struct ext4_super_block *es);
--static void ext4_clear_journal_err(struct super_block *sb,
--				   struct ext4_super_block *es);
-+static int ext4_clear_journal_err(struct super_block *sb,
-+				  struct ext4_super_block *es);
- static int ext4_sync_fs(struct super_block *sb, int wait);
- static int ext4_remount(struct super_block *sb, int *flags, char *data);
- static int ext4_statfs(struct dentry *dentry, struct kstatfs *buf);
-@@ -4545,7 +4545,9 @@ no_journal:
- 	EXT4_SB(sb)->s_mount_state &= ~EXT4_ORPHAN_FS;
- 	if (needs_recovery) {
- 		ext4_msg(sb, KERN_INFO, "recovery complete");
--		ext4_mark_recovery_complete(sb, es);
-+		err = ext4_mark_recovery_complete(sb, es);
-+		if (err)
-+			goto failed_mount8;
+diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+index 50e1a8e02497d..3fd086533dcfc 100644
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -18,6 +18,7 @@
+ #include <linux/delay.h>
+ #include <linux/cpumask.h>
+ #include <linux/mm.h>
++#include <linux/kmemleak.h>
+ 
+ #include <asm/prom.h>
+ #include <asm/io.h>
+@@ -646,6 +647,7 @@ static bool xive_native_provision_pages(void)
+ 			pr_err("Failed to allocate provisioning page\n");
+ 			return false;
+ 		}
++		kmemleak_ignore(p);
+ 		opal_xive_donate_page(chip, __pa(p));
  	}
- 	if (EXT4_SB(sb)->s_journal) {
- 		if (test_opt(sb, DATA_FLAGS) == EXT4_MOUNT_JOURNAL_DATA)
-@@ -4588,10 +4590,8 @@ cantfind_ext4:
- 		ext4_msg(sb, KERN_ERR, "VFS: Can't find ext4 filesystem");
- 	goto failed_mount;
- 
--#ifdef CONFIG_QUOTA
- failed_mount8:
- 	ext4_unregister_sysfs(sb);
--#endif
- failed_mount7:
- 	ext4_unregister_li_request(sb);
- failed_mount6:
-@@ -4727,7 +4727,8 @@ static journal_t *ext4_get_journal(struct super_block *sb,
- 	struct inode *journal_inode;
- 	journal_t *journal;
- 
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (WARN_ON_ONCE(!ext4_has_feature_journal(sb)))
-+		return NULL;
- 
- 	journal_inode = ext4_get_journal_inode(sb, journal_inum);
- 	if (!journal_inode)
-@@ -4757,7 +4758,8 @@ static journal_t *ext4_get_dev_journal(struct super_block *sb,
- 	struct ext4_super_block *es;
- 	struct block_device *bdev;
- 
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (WARN_ON_ONCE(!ext4_has_feature_journal(sb)))
-+		return NULL;
- 
- 	bdev = ext4_blkdev_get(j_dev, sb);
- 	if (bdev == NULL)
-@@ -4849,7 +4851,8 @@ static int ext4_load_journal(struct super_block *sb,
- 	int err = 0;
- 	int really_read_only;
- 
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (WARN_ON_ONCE(!ext4_has_feature_journal(sb)))
-+		return -EFSCORRUPTED;
- 
- 	if (journal_devnum &&
- 	    journal_devnum != le32_to_cpu(es->s_journal_dev)) {
-@@ -4919,7 +4922,12 @@ static int ext4_load_journal(struct super_block *sb,
- 	}
- 
- 	EXT4_SB(sb)->s_journal = journal;
--	ext4_clear_journal_err(sb, es);
-+	err = ext4_clear_journal_err(sb, es);
-+	if (err) {
-+		EXT4_SB(sb)->s_journal = NULL;
-+		jbd2_journal_destroy(journal);
-+		return err;
-+	}
- 
- 	if (!really_read_only && journal_devnum &&
- 	    journal_devnum != le32_to_cpu(es->s_journal_dev)) {
-@@ -5015,26 +5023,32 @@ static int ext4_commit_super(struct super_block *sb, int sync)
-  * remounting) the filesystem readonly, then we will end up with a
-  * consistent fs on disk.  Record that fact.
-  */
--static void ext4_mark_recovery_complete(struct super_block *sb,
--					struct ext4_super_block *es)
-+static int ext4_mark_recovery_complete(struct super_block *sb,
-+				       struct ext4_super_block *es)
- {
-+	int err;
- 	journal_t *journal = EXT4_SB(sb)->s_journal;
- 
- 	if (!ext4_has_feature_journal(sb)) {
--		BUG_ON(journal != NULL);
--		return;
-+		if (journal != NULL) {
-+			ext4_error(sb, "Journal got removed while the fs was "
-+				   "mounted!");
-+			return -EFSCORRUPTED;
-+		}
-+		return 0;
- 	}
- 	jbd2_journal_lock_updates(journal);
--	if (jbd2_journal_flush(journal) < 0)
-+	err = jbd2_journal_flush(journal);
-+	if (err < 0)
- 		goto out;
- 
- 	if (ext4_has_feature_journal_needs_recovery(sb) && sb_rdonly(sb)) {
- 		ext4_clear_feature_journal_needs_recovery(sb);
- 		ext4_commit_super(sb, 1);
- 	}
--
- out:
- 	jbd2_journal_unlock_updates(journal);
-+	return err;
- }
- 
- /*
-@@ -5042,14 +5056,17 @@ out:
-  * has recorded an error from a previous lifetime, move that error to the
-  * main filesystem now.
-  */
--static void ext4_clear_journal_err(struct super_block *sb,
-+static int ext4_clear_journal_err(struct super_block *sb,
- 				   struct ext4_super_block *es)
- {
- 	journal_t *journal;
- 	int j_errno;
- 	const char *errstr;
- 
--	BUG_ON(!ext4_has_feature_journal(sb));
-+	if (!ext4_has_feature_journal(sb)) {
-+		ext4_error(sb, "Journal got removed while the fs was mounted!");
-+		return -EFSCORRUPTED;
-+	}
- 
- 	journal = EXT4_SB(sb)->s_journal;
- 
-@@ -5074,6 +5091,7 @@ static void ext4_clear_journal_err(struct super_block *sb,
- 		jbd2_journal_clear_err(journal);
- 		jbd2_journal_update_sb_errno(journal);
- 	}
-+	return 0;
- }
- 
- /*
-@@ -5344,8 +5362,13 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 			    (sbi->s_mount_state & EXT4_VALID_FS))
- 				es->s_state = cpu_to_le16(sbi->s_mount_state);
- 
--			if (sbi->s_journal)
-+			if (sbi->s_journal) {
-+				/*
-+				 * We let remount-ro finish even if marking fs
-+				 * as clean failed...
-+				 */
- 				ext4_mark_recovery_complete(sb, es);
-+			}
- 			if (sbi->s_mmp_tsk)
- 				kthread_stop(sbi->s_mmp_tsk);
- 		} else {
-@@ -5393,8 +5416,11 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
- 			 * been changed by e2fsck since we originally mounted
- 			 * the partition.)
- 			 */
--			if (sbi->s_journal)
--				ext4_clear_journal_err(sb, es);
-+			if (sbi->s_journal) {
-+				err = ext4_clear_journal_err(sb, es);
-+				if (err)
-+					goto restore_opts;
-+			}
- 			sbi->s_mount_state = le16_to_cpu(es->s_state);
- 
- 			err = ext4_setup_super(sb, es, 0);
+ 	return true;
 -- 
 2.25.1
 
