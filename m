@@ -5,47 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E77C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7286C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86CFB2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF5C2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975353;
-	bh=4XZChSonufT3q06m5nVNuIAve7CPg3nWB8K8EqYwj6Y=;
+	s=default; t=1598975360;
+	bh=oX8ApIi0k5X6UEuGO37U34c3eMFNvHUXh3JOga1C+tk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K1ISvns52AoA1icb1sxUT+5AfeSNkvogCeHpO6aecoRHHKyL/oiwf1+J6SG+C1Wyd
-	 Vkp9RolrwcmDZ9YiBtESeIVPDud7b7/NFIO+KEU3eXKlCXR/ZZvX2fJgha4Ft3UHGR
-	 vANLXiMhsgLRMw0LQoo2u/y0wHGGH7jlMq5wufuY=
+	b=Ec4nkSHJfzB0Mtb+q7eTr0cNYs0Qts8kQ6D4TUpAuZleP8BJtnIsJVHF16eWz55kF
+	 p/79nWA2Mpqow2BhrFk8XBFUvDEuB1Jpbfyf+/peZ688jZXVM+MUxsU8+64KcG0KkE
+	 a5hJCMtpPhpMaEx4Qyi6C8rs5MyqPkM94Y2ML/MU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732058AbgIAPtL (ORCPT
+        id S1732105AbgIAPtT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:49:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:49:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgIAPpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:36 -0400
+        id S1731902AbgIAPpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE29520BED;
-        Tue,  1 Sep 2020 15:45:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEB312098B;
+        Tue,  1 Sep 2020 15:45:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975136;
-        bh=4XZChSonufT3q06m5nVNuIAve7CPg3nWB8K8EqYwj6Y=;
+        s=default; t=1598975149;
+        bh=oX8ApIi0k5X6UEuGO37U34c3eMFNvHUXh3JOga1C+tk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1s0Kc5cgz+8j+iVN1QBqu9hB4enR1fsoi7EIkDAAj1yO/bRWacSJ3lemjECs+YLHM
-         tEExnkkjdEKogv54LLWO8J/Bo+0wVwHo2OhX64PFj3bUmJeZwOAQzkd7XvdQouN7Pm
-         rEJTrKyqSv2UPok1Qs44WSENeHjsSPa0Y/7yiGik=
+        b=DU/NrQc9cGjcpTqoN/fEcEevipmwduEHXEsBx/lryAnDGcUqPaq5fhk3iN1fZgZh2
+         l3ugzmc/ovyJ874G+3iJOKJ7HYZ3ZYNoZGGi+VkEG0dWO5Wjd7mzTHPMDhE/HhMcxg
+         /4ZP1Fjad74NwKFWU+U89X+MM83+OKJW+PvWMNsw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 5.8 224/255] USB: quirks: Add no-lpm quirk for another Raydium touchscreen
-Date:   Tue,  1 Sep 2020 17:11:20 +0200
-Message-Id: <20200901151011.492683926@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Brooke Basile <brookebasile@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>, stable <stable@kernel.org>
+Subject: [PATCH 5.8 229/255] USB: gadget: f_ncm: add bounds checks to ncm_unwrap_ntb()
+Date:   Tue,  1 Sep 2020 17:11:25 +0200
+Message-Id: <20200901151011.731595437@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -58,38 +61,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Brooke Basile <brookebasile@gmail.com>
 
-commit 5967116e8358899ebaa22702d09b0af57fef23e1 upstream.
+commit 2b74b0a04d3e9f9f08ff026e5663dce88ff94e52 upstream.
 
-There's another Raydium touchscreen needs the no-lpm quirk:
-[    1.339149] usb 1-9: New USB device found, idVendor=2386, idProduct=350e, bcdDevice= 0.00
-[    1.339150] usb 1-9: New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[    1.339151] usb 1-9: Product: Raydium Touch System
-[    1.339152] usb 1-9: Manufacturer: Raydium Corporation
-...
-[    6.450497] usb 1-9: can't set config #1, error -110
+Some values extracted by ncm_unwrap_ntb() could possibly lead to several
+different out of bounds reads of memory.  Specifically the values passed
+to netdev_alloc_skb_ip_align() need to be checked so that memory is not
+overflowed.
 
-BugLink: https://bugs.launchpad.net/bugs/1889446
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200731051622.28643-1-kai.heng.feng@canonical.com
+Resolve this by applying bounds checking to a number of different
+indexes and lengths of the structure parsing logic.
+
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Signed-off-by: Brooke Basile <brookebasile@gmail.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/function/f_ncm.c |   81 ++++++++++++++++++++++++++++++------
+ 1 file changed, 69 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -465,6 +465,8 @@ static const struct usb_device_id usb_qu
+--- a/drivers/usb/gadget/function/f_ncm.c
++++ b/drivers/usb/gadget/function/f_ncm.c
+@@ -1181,12 +1181,15 @@ static int ncm_unwrap_ntb(struct gether
+ 	int		ndp_index;
+ 	unsigned	dg_len, dg_len2;
+ 	unsigned	ndp_len;
++	unsigned	block_len;
+ 	struct sk_buff	*skb2;
+ 	int		ret = -EINVAL;
+-	unsigned	max_size = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
++	unsigned	ntb_max = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
++	unsigned	frame_max = le16_to_cpu(ecm_desc.wMaxSegmentSize);
+ 	const struct ndp_parser_opts *opts = ncm->parser_opts;
+ 	unsigned	crc_len = ncm->is_crc ? sizeof(uint32_t) : 0;
+ 	int		dgram_counter;
++	bool		ndp_after_header;
  
- 	{ USB_DEVICE(0x2386, 0x3119), .driver_info = USB_QUIRK_NO_LPM },
+ 	/* dwSignature */
+ 	if (get_unaligned_le32(tmp) != opts->nth_sign) {
+@@ -1205,25 +1208,37 @@ static int ncm_unwrap_ntb(struct gether
+ 	}
+ 	tmp++; /* skip wSequence */
  
-+	{ USB_DEVICE(0x2386, 0x350e), .driver_info = USB_QUIRK_NO_LPM },
++	block_len = get_ncm(&tmp, opts->block_length);
+ 	/* (d)wBlockLength */
+-	if (get_ncm(&tmp, opts->block_length) > max_size) {
++	if (block_len > ntb_max) {
+ 		INFO(port->func.config->cdev, "OUT size exceeded\n");
+ 		goto err;
+ 	}
+ 
+ 	ndp_index = get_ncm(&tmp, opts->ndp_index);
++	ndp_after_header = false;
+ 
+ 	/* Run through all the NDP's in the NTB */
+ 	do {
+-		/* NCM 3.2 */
+-		if (((ndp_index % 4) != 0) &&
+-				(ndp_index < opts->nth_size)) {
++		/*
++		 * NCM 3.2
++		 * dwNdpIndex
++		 */
++		if (((ndp_index % 4) != 0) ||
++				(ndp_index < opts->nth_size) ||
++				(ndp_index > (block_len -
++					      opts->ndp_size))) {
+ 			INFO(port->func.config->cdev, "Bad index: %#X\n",
+ 			     ndp_index);
+ 			goto err;
+ 		}
++		if (ndp_index == opts->nth_size)
++			ndp_after_header = true;
+ 
+-		/* walk through NDP */
++		/*
++		 * walk through NDP
++		 * dwSignature
++		 */
+ 		tmp = (void *)(skb->data + ndp_index);
+ 		if (get_unaligned_le32(tmp) != ncm->ndp_sign) {
+ 			INFO(port->func.config->cdev, "Wrong NDP SIGN\n");
+@@ -1234,14 +1249,15 @@ static int ncm_unwrap_ntb(struct gether
+ 		ndp_len = get_unaligned_le16(tmp++);
+ 		/*
+ 		 * NCM 3.3.1
++		 * wLength
+ 		 * entry is 2 items
+ 		 * item size is 16/32 bits, opts->dgram_item_len * 2 bytes
+ 		 * minimal: struct usb_cdc_ncm_ndpX + normal entry + zero entry
+ 		 * Each entry is a dgram index and a dgram length.
+ 		 */
+ 		if ((ndp_len < opts->ndp_size
+-				+ 2 * 2 * (opts->dgram_item_len * 2))
+-				|| (ndp_len % opts->ndplen_align != 0)) {
++				+ 2 * 2 * (opts->dgram_item_len * 2)) ||
++				(ndp_len % opts->ndplen_align != 0)) {
+ 			INFO(port->func.config->cdev, "Bad NDP length: %#X\n",
+ 			     ndp_len);
+ 			goto err;
+@@ -1258,8 +1274,21 @@ static int ncm_unwrap_ntb(struct gether
+ 
+ 		do {
+ 			index = index2;
++			/* wDatagramIndex[0] */
++			if ((index < opts->nth_size) ||
++					(index > block_len - opts->dpe_size)) {
++				INFO(port->func.config->cdev,
++				     "Bad index: %#X\n", index);
++				goto err;
++			}
 +
- 	/* DJI CineSSD */
- 	{ USB_DEVICE(0x2ca3, 0x0031), .driver_info = USB_QUIRK_NO_LPM },
+ 			dg_len = dg_len2;
+-			if (dg_len < 14 + crc_len) { /* ethernet hdr + crc */
++			/*
++			 * wDatagramLength[0]
++			 * ethernet hdr + crc or larger than max frame size
++			 */
++			if ((dg_len < 14 + crc_len) ||
++					(dg_len > frame_max)) {
+ 				INFO(port->func.config->cdev,
+ 				     "Bad dgram length: %#X\n", dg_len);
+ 				goto err;
+@@ -1283,6 +1312,37 @@ static int ncm_unwrap_ntb(struct gether
+ 			index2 = get_ncm(&tmp, opts->dgram_item_len);
+ 			dg_len2 = get_ncm(&tmp, opts->dgram_item_len);
+ 
++			if (index2 == 0 || dg_len2 == 0)
++				break;
++
++			/* wDatagramIndex[1] */
++			if (ndp_after_header) {
++				if (index2 < opts->nth_size + opts->ndp_size) {
++					INFO(port->func.config->cdev,
++					     "Bad index: %#X\n", index2);
++					goto err;
++				}
++			} else {
++				if (index2 < opts->nth_size + opts->dpe_size) {
++					INFO(port->func.config->cdev,
++					     "Bad index: %#X\n", index2);
++					goto err;
++				}
++			}
++			if (index2 > block_len - opts->dpe_size) {
++				INFO(port->func.config->cdev,
++				     "Bad index: %#X\n", index2);
++				goto err;
++			}
++
++			/* wDatagramLength[1] */
++			if ((dg_len2 < 14 + crc_len) ||
++					(dg_len2 > frame_max)) {
++				INFO(port->func.config->cdev,
++				     "Bad dgram length: %#X\n", dg_len);
++				goto err;
++			}
++
+ 			/*
+ 			 * Copy the data into a new skb.
+ 			 * This ensures the truesize is correct
+@@ -1299,9 +1359,6 @@ static int ncm_unwrap_ntb(struct gether
+ 			ndp_len -= 2 * (opts->dgram_item_len * 2);
+ 
+ 			dgram_counter++;
+-
+-			if (index2 == 0 || dg_len2 == 0)
+-				break;
+ 		} while (ndp_len > 2 * (opts->dgram_item_len * 2));
+ 	} while (ndp_index);
  
 
 
