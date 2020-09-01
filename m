@@ -2,156 +2,137 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-23.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF16C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB97C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:49:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5791C21548
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:47:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="XpsC/oBx"
+	by mail.kernel.org (Postfix) with ESMTP id DC54E207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbgIARr1 (ORCPT
+        id S1728383AbgIARtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:47:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47264 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgIARrZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:47:25 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67655C061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 10:47:24 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id b16so779369pjp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:47:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IsThTySUC2LXoDe5C5uelfQGGzR8IIc/eah+C0Q213A=;
-        b=XpsC/oBxOrx4l0QwY0wYpPyU12/z2BUrVW00eLZvg+PjRFJ0rr7HBN4K89mKq/ahLx
-         HMSTKYYuq63/D9UyOHzdL8xYU4W7Ipz4ixkCQ3zxlJ+Eyz9+jaSQBYL1TY9/W9e6ODld
-         3DRvt8IClVNVZGNx3CRVKDvo3ylRp7X3pem3Kn5udMhFpTAcrmYxkYjIz+xWfAZVSs3b
-         NQvUXL7xj/KHzh7CmWScQ3//BiJKXoByLtcpna+7a4lx8M1MeyAJnpLQvLcgjoEIy16m
-         jl9GQfR4//ETenO6byMmJhVyy9WBBHX6WIJ6H+eduzIMzYzyt7bU9mKW2G76f4OCSbCu
-         q27g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IsThTySUC2LXoDe5C5uelfQGGzR8IIc/eah+C0Q213A=;
-        b=XGnWkiDGZYLr1KzG2syWdXfm1Er1a/M05w1hMPvfGIz8oGzoKG+SB+zdGeO/Zh9ir6
-         wWUBH4NUnwnVnfNhlJwTdLZF3t6dWH9ubu9PWpZuv6O9I1cdG8+XP31cl/1Rx7Jxtcm4
-         UFVafVYsAjSlZAlQXUW0njsxLqpO7d16dcY6YRwyB/eKDyqNGqu7g13IlqkzzCmbdJgh
-         C8e3MECueG+GurL3gyo/j25kDZxAb6GuJgzt/BF5+f2Dr6FMiVYWGt6TlKt9i9sOiZdi
-         +SWtnDgeOqDKclCbgcWbLWEzGy+NG59g+obFu/QATD7U+yVwubSbuwbCrP9zWux3imil
-         8c4Q==
-X-Gm-Message-State: AOAM5336Lry4XtYmzIWwsAMbTnBtBpXkvwNCGmQX7zZhx+gxk7ilvHGY
-        T5MNtrZmxxlULh71nqKKh1He2P7nX9mkADGlQpgAEw==
-X-Google-Smtp-Source: ABdhPJyy/gARQ06E1lQvzSFMajJ+LnC3PB8OuEJKEaCQMevyZx2d+23ztQstfofFoOhGr9dGnniONqsiWwobCSfcQRk=
-X-Received: by 2002:a17:902:9a45:: with SMTP id x5mr2304256plv.208.1598982443692;
- Tue, 01 Sep 2020 10:47:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200901070834.1015754-1-natechancellor@gmail.com>
-In-Reply-To: <20200901070834.1015754-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 1 Sep 2020 10:47:12 -0700
-Message-ID: <CAKwvOdnrg0-s64kPCv4+kyFrxmJPXmYm66QbjrROkTr6OVTUYA@mail.gmail.com>
-Subject: Re: [PATCH] mwifiex: Remove unnecessary braces from HostCmd_SET_SEQ_NO_BSS_INFO
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
+        Tue, 1 Sep 2020 13:49:10 -0400
+Received: from mga01.intel.com ([192.55.52.88]:25772 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbgIARtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:49:05 -0400
+IronPort-SDR: 8xYUkwzS5RGQxRNpzA4TfvXqpHFnHkKLean5tJoO5sRxZnFGn4UFyrIEqJvjS6r++DOKZszxTU
+ O0uiuVpY2hsA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="175279019"
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="175279019"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:49:04 -0700
+IronPort-SDR: r00JZG/t68wMPpNfXe75+DLGZCVTowqwBSk2AwAfB6zDiW3JoLhHW2vWrhS7SndNyloTjPKNse
+ 74BX/suNlhDg==
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="477291046"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.241.30]) ([10.212.241.30])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:49:02 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     "H.J. Lu" <hjl.tools@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Andy Lavr <andy.lavr@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
+ <20200825002540.3351-26-yu-cheng.yu@intel.com>
+ <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
+ <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
+ <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+ <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <20200826170841.GX6642@arm.com> <87tuwow7kg.fsf@oldenburg2.str.redhat.com>
+ <CAMe9rOrhjLSaMNABnzd=Kp5UeVot1Qkx0_PnMng=sT+wd9Xubw@mail.gmail.com>
+ <873648w6qr.fsf@oldenburg2.str.redhat.com>
+ <CAMe9rOqpLyWR+Ek7aBiRY+Kr6sRxkSHAo2Sc6h0YCv3X3-3TuQ@mail.gmail.com>
+ <CAMe9rOpuwZesJqY_2wYhdRXMhd7g0a+MRqPtXKh7wX5B5-OSbA@mail.gmail.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <3c12b6ee-7c93-dcf4-fbf7-2698003386dd@intel.com>
+Date:   Tue, 1 Sep 2020 10:49:01 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
+MIME-Version: 1.0
+In-Reply-To: <CAMe9rOpuwZesJqY_2wYhdRXMhd7g0a+MRqPtXKh7wX5B5-OSbA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 12:08 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> A new warning in clang points out when macro expansion might result in a
-> GNU C statement expression. There is an instance of this in the mwifiex
-> driver:
->
-> drivers/net/wireless/marvell/mwifiex/cmdevt.c:217:34: warning: '}' and
-> ')' tokens terminating statement expression appear in different macro
-> expansion contexts [-Wcompound-token-split-by-macro]
->         host_cmd->seq_num = cpu_to_le16(HostCmd_SET_SEQ_NO_BSS_INFO
->                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-> drivers/net/wireless/marvell/mwifiex/fw.h:519:46: note: expanded from
-> macro 'HostCmd_SET_SEQ_NO_BSS_INFO'
->         (((type) & 0x000f) << 12);                  }
->                                                     ^
->
-> This does not appear to be a real issue. Removing the braces and
-> replacing them with parentheses will fix the warning and not change the
-> meaning of the code.
->
-> Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/1146
-> Reported-by: Andy Lavr <andy.lavr@gmail.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+On 8/27/2020 7:08 AM, H.J. Lu wrote:
+> On Thu, Aug 27, 2020 at 7:07 AM H.J. Lu <hjl.tools@gmail.com> wrote:
+>>
+>> On Thu, Aug 27, 2020 at 6:36 AM Florian Weimer <fweimer@redhat.com> wrote:
+>>>
+>>> * H. J. Lu:
+>>>
+>>>> On Thu, Aug 27, 2020 at 6:19 AM Florian Weimer <fweimer@redhat.com> wrote:
+>>>>>
+>>>>> * Dave Martin:
+>>>>>
+>>>>>> You're right that this has implications: for i386, libc probably pulls
+>>>>>> more arguments off the stack than are really there in some situations.
+>>>>>> This isn't a new problem though.  There are already generic prctls with
+>>>>>> fewer than 4 args that are used on x86.
+>>>>>
+>>>>> As originally posted, glibc prctl would have to know that it has to pull
+>>>>> an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  But
+>>>>> then the u64 argument is a problem for arch_prctl as well.
+>>>>>
+>>>>
+>>>> Argument of ARCH_X86_CET_DISABLE is int and passed in register.
+>>>
+>>> The commit message and the C source say otherwise, I think (not sure
+>>> about the C source, not a kernel hacker).
+>>
+>> It should read:
+>>
+>> arch_prctl(ARCH_X86_CET_DISABLE, unsigned long features)
+>>
+> 
+> Or
+> 
+> arch_prctl(ARCH_X86_CET_DISABLE, unsigned int features)
+> 
 
-Wow, that's tricky. The unnecessary extra parens mix with the extra
-curly braces to form a GNU C statement expression.  Thanks for the
-patch.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Like other arch_prctl()'s, this parameter was 'unsigned long' earlier. 
+The idea was, since this arch_prctl is only implemented for the 64-bit 
+kernel, we wanted it to look as 64-bit only.  I will change it back to 
+'unsigned long'.
 
-> ---
->  drivers/net/wireless/marvell/mwifiex/cmdevt.c | 4 ++--
->  drivers/net/wireless/marvell/mwifiex/fw.h     | 8 ++++----
->  2 files changed, 6 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> index d068b9075c32..3a11342a6bde 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> +++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
-> @@ -322,9 +322,9 @@ static int mwifiex_dnld_sleep_confirm_cmd(struct mwifiex_adapter *adapter)
->
->         adapter->seq_num++;
->         sleep_cfm_buf->seq_num =
-> -               cpu_to_le16((HostCmd_SET_SEQ_NO_BSS_INFO
-> +               cpu_to_le16(HostCmd_SET_SEQ_NO_BSS_INFO
->                                         (adapter->seq_num, priv->bss_num,
-> -                                        priv->bss_type)));
-> +                                        priv->bss_type));
->
->         mwifiex_dbg(adapter, CMD,
->                     "cmd: DNLD_CMD: %#x, act %#x, len %d, seqno %#x\n",
-> diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
-> index 8047e307892e..1f02c5058aed 100644
-> --- a/drivers/net/wireless/marvell/mwifiex/fw.h
-> +++ b/drivers/net/wireless/marvell/mwifiex/fw.h
-> @@ -513,10 +513,10 @@ enum mwifiex_channel_flags {
->
->  #define RF_ANTENNA_AUTO                 0xFFFF
->
-> -#define HostCmd_SET_SEQ_NO_BSS_INFO(seq, num, type) {   \
-> -       (((seq) & 0x00ff) |                             \
-> -        (((num) & 0x000f) << 8)) |                     \
-> -       (((type) & 0x000f) << 12);                  }
-> +#define HostCmd_SET_SEQ_NO_BSS_INFO(seq, num, type) \
-> +       ((((seq) & 0x00ff) |                        \
-> +        (((num) & 0x000f) << 8)) |                 \
-> +       (((type) & 0x000f) << 12))
->
->  #define HostCmd_GET_SEQ_NO(seq)       \
->         ((seq) & HostCmd_SEQ_NUM_MASK)
-> --
-
--- 
-Thanks,
-~Nick Desaulniers
+Yu-cheng
