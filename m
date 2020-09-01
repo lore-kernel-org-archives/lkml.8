@@ -2,178 +2,90 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A2DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2270C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FBB2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979882;
-	bh=LM0ZlQMq+116FxcurgkDhzTV7jHjOc0VMnH67syAMUQ=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=E753N3mLt0NoLXvjUV+Vu3oEZ58JW5H2vhNJCWgCDkSDEY+crznI+4iruZkiJfi4c
-	 lz3jDDxbWOwZIxn4yfH+YjYTnP//rZje8wXGp8X2ZMb5gulhuBjy1rStIMXNQR8Kv+
-	 wNTfOkQquyuuRtxCkzb334Zrk9e2ZHsC8XEMlO1w=
+	by mail.kernel.org (Postfix) with ESMTP id B67AD206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:04:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgIAREl (ORCPT
+        id S1726764AbgIARE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:04:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57606 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:04:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46224 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728354AbgIAREY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:04:24 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6018E206FA;
-        Tue,  1 Sep 2020 17:04:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598979861;
-        bh=LM0ZlQMq+116FxcurgkDhzTV7jHjOc0VMnH67syAMUQ=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Z112+wpOmHZYDF5q2YSpWCIrvYLUOuuPlvm2AUn1IFORq7sAlh9G0pNLthwMK0910
-         gL4m4deu8dWoMmcLR8/W/O4Bih0lEGbIUJn/kzR0yKkn9JiaLira3RW0tStd8P0thD
-         Q9oawRnaRslbUECyBzZfs32mFe4m9aEoX26mHscg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 332C835226A5; Tue,  1 Sep 2020 10:04:21 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 10:04:21 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        kernel-team@fb.com, mingo@kernel.org, parri.andrea@gmail.com,
-        will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-        npiggin@gmail.com, dhowells@redhat.com, j.alglave@ucl.ac.uk,
-        luc.maranget@inria.fr, akiyks@gmail.com
-Subject: Re: [PATCH kcsan 9/9] tools/memory-model:  Document locking corner
- cases
-Message-ID: <20200901170421.GF29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200831182012.GA1965@paulmck-ThinkPad-P72>
- <20200831182037.2034-9-paulmck@kernel.org>
- <20200831201701.GB558270@rowland.harvard.edu>
- <20200831214738.GE2855@paulmck-ThinkPad-P72>
- <20200901014504.GB571008@rowland.harvard.edu>
+        id S1726984AbgIAREN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:04:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 02919ACC5;
+        Tue,  1 Sep 2020 17:04:11 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] mm/pageblock: remove false sharing in
+ pageblock_flags
+To:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Hildenbrand <david@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Mel Gorman <mgorman@techsingularity.net>
+References: <1597816075-61091-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1597816075-61091-2-git-send-email-alex.shi@linux.alibaba.com>
+ <715f1588-9cd5-b845-51a5-ca58549c4d28@arm.com>
+ <a7376a9c-82e8-7dc1-b656-9c0516738801@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <11d6c4ae-6eae-aef9-5652-73a8680cd6e4@suse.cz>
+Date:   Tue, 1 Sep 2020 19:04:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901014504.GB571008@rowland.harvard.edu>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <a7376a9c-82e8-7dc1-b656-9c0516738801@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 09:45:04PM -0400, Alan Stern wrote:
-> On Mon, Aug 31, 2020 at 02:47:38PM -0700, Paul E. McKenney wrote:
-> > On Mon, Aug 31, 2020 at 04:17:01PM -0400, Alan Stern wrote:
+On 8/19/20 10:09 AM, Alex Shi wrote:
 > 
-> > > Is this discussion perhaps overkill?
-> > > 
-> > > Let's put it this way: Suppose we have the following code:
-> > > 
-> > > 	P0(int *x, int *lck)
-> > > 	{
-> > > 		spin_lock(lck);
-> > > 		WRITE_ONCE(*x, 1);
-> > > 		do_something();
-> > > 		spin_unlock(lck);
-> > > 	}
-> > > 
-> > > 	P1(int *x, int *lck)
-> > > 	{
-> > > 		while (READ_ONCE(*x) == 0)
-> > > 			;
-> > > 		spin_lock(lck);
-> > > 		do_something_else();
-> > > 		spin_unlock(lck);
-> > > 	}
-> > > 
-> > > It's obvious that this test won't deadlock.  But if P1 is changed to:
-> > > 
-> > > 	P1(int *x, int *lck)
-> > > 	{
-> > > 		spin_lock(lck);
-> > > 		while (READ_ONCE(*x) == 0)
-> > > 			;
-> > > 		do_something_else();
-> > > 		spin_unlock(lck);
-> > > 	}
-> > > 
-> > > then it's equally obvious that the test can deadlock.  No need for
-> > > fancy memory models or litmus tests or anything else.
-> > 
-> > For people like you and me, who have been thinking about memory ordering
-> > for longer than either of us care to admit, this level of exposition is
-> > most definitely -way- overkill!!!
-> > 
-> > But I have had people be very happy and grateful that I explained this to
-> > them at this level of detail.  Yes, I started parallel programming before
-> > some of them were born, but they are definitely within our target audience
-> > for this particular document.  And it is not just Linux kernel hackers
-> > who need this level of detail.  A roughly similar transactional-memory
-> > scenario proved to be so non-obvious to any number of noted researchers
-> > that Blundell, Lewis, and Martin needed to feature it in this paper:
-> > https://ieeexplore.ieee.org/abstract/document/4069174
-> > (Alternative source: https://repository.upenn.edu/cgi/viewcontent.cgi?article=1344&context=cis_papers)
-> > 
-> > Please note that I am -not- advocating making (say) explanation.txt or
-> > recipes.txt more newbie-accessible than they already are.  After all,
-> > the point of the README file in that same directory is to direct people
-> > to the documentation files that are the best fit for them, and both
-> > explanation.txt and recipes.txt contain advanced material, and thus
-> > require similarly advanced prerequisites.
-> > 
-> > Seem reasonable, or am I missing your point?
 > 
-> The question is, what are you trying to accomplish in this section?  Are 
-> you trying to demonstrate that it isn't safe to allow arbitrary code to 
-> leak into a critical section?  If so then you don't need to present an 
-> LKMM litmus test to make the point; the example I gave here will do 
-> quite as well.  Perhaps even better, since it doesn't drag in all sorts 
-> of extraneous concepts like limitations of litmus tests or how to 
-> emulate a spin loop.
+> 在 2020/8/19 下午3:57, Anshuman Khandual 写道:
+>> 
+>> 
+>> On 08/19/2020 11:17 AM, Alex Shi wrote:
+>>> Current pageblock_flags is only 4 bits, so it has to share a char size
+>>> in cmpxchg when get set, the false sharing cause perf drop.
+>>>
+>>> If we incrase the bits up to 8, false sharing would gone in cmpxchg. and
+>>> the only cost is half char per pageblock, which is half char per 128MB
+>>> on x86, 4 chars in 1 GB.
+>> 
+>> Agreed that increase in memory utilization is negligible here but does
+>> this really improve performance ?
+>> 
 > 
-> On the other hand, if your goal is to show how to construct a litmus 
-> test that will model a particular C language test case (such as the one 
-> I gave), then the text does a reasonable job -- although I do think it 
-> could be clarified somewhat.  For instance, it wouldn't hurt to include 
-> the real C code before giving the corresponding litmus test, so that the 
-> reader will have a clear idea of what you're trying to model.
+> It's no doubt in theory. and it would had a bad impact according to 
+> commit e380bebe4771548  mm, compaction: keep migration source private to a single 
 
-Makes sense.  I can apply this at some point, but I would welcome a patch
-from you, which I would be happy to fold in with your Codeveloped-by.
+I don't think that commit is doing the test_and_set_skip() under lock to avoid
+false sharing. I think it's done to simply make the test and set protected
+against races without relying on e.g. a truly atomic test_and_set_bit(). It's
+still noted that it's just a hint so it's not protected to others calling
+set_pageblock_skip() from other contexts not under a lock.
 
-> Just what you want to achieve here is not clear from the context.
+> but I do have some problem in running thpscale/mmtest. I'd like to see if anyone
+> could give a try.
+> 
+> BTW, I naturally hate the false sharing even it's in theory. Anyone who doesn't? :)
+> 
+> Thanks
+> Alex 
+> 
 
-People who have internalized the "roach motel" model of locking
-(https://www.cs.umd.edu/~pugh/java/memoryModel/BidirectionalMemoryBarrier.html)
-need their internalization adjusted.
-
-> Besides, the example is in any case a straw man.  The text starts out 
-> saying "It is tempting to allow memory-reference instructions to be 
-> pulled into a critical section", but then the example pulls an entire 
-> spin loop inside -- not just the memory references but also the 
-> conditional branch instruction at the bottom of the loop!  I can't 
-> imagine anyone would think it was safe to allow branches to leak into a 
-> critical section, particularly when doing so would break a control 
-> dependency (as it does here).
-
-Most people outside of a few within the Linux kernel community and within
-the various hardware memory-ordering communities don't know that control
-dependencies even exist, so could not be expected to see any danger
-in rather thoroughly folding, spindling, or otherwise mutilating them,
-let alone pulling them into a lock-based critical section.  And many in
-the various toolchain communities see dependencies of any sort as an
-impediment to performance that should be broken wherever and whenever
-possible.
-
-That said, a less prejudicial introduction to this example might be good.
-What did you have in mind?
-
-							Thanx, Paul
