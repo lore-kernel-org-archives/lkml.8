@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9565AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C18C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 565082064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EB82064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975725;
-	bh=oohKm4wA5PeEduUAWRlKUhWqsHa0F45uQylFxb/AJN8=;
+	s=default; t=1598975737;
+	bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aVOPSoHk52tzvU9C0r7nyfO3yh/wLSg0oqhNQR3Oc/j2Qs6n8f6lX7MjkKVj/V4wc
-	 TMi9hVfMYUhfo1wG4Fn3vciWfRJH+h7qDlBMwKD3XmEyZqMixyuR3vLRPAT5O4K91e
-	 fRAmejpjh4I7M+QRV0bYZ9SJIDP+QRsJATfDsVJw=
+	b=FKx6UuVWP3d5ctwA476FHPVBYesxLWTDb1dJ5FsxYRrYgypINgzBXMkoyInH0fVlg
+	 fiH4+V2BvqUt/ToDcSUE6DUcuVmSBukmldrVnivldb5RHFJBeHxIxPdP5RkMM3tVxv
+	 sifP3haafYIudSyG9YCePgGUQyeYZmyleo9UYwqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726210AbgIAPzY (ORCPT
+        id S1732140AbgIAPzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:55:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:55:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731889AbgIAPpj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:39 -0400
+        id S1731880AbgIAPpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:34 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CA38206EB;
-        Tue,  1 Sep 2020 15:45:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF19206EB;
+        Tue,  1 Sep 2020 15:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975138;
-        bh=oohKm4wA5PeEduUAWRlKUhWqsHa0F45uQylFxb/AJN8=;
+        s=default; t=1598975133;
+        bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NtTISVl5Oht43lCjANU/S+7YES5etmBVk80OFfthHqvCuGk6q9yqNKXrJjhI5QMN9
-         urXkZMNPkV7Rhf+WitAaWuuitncLTB6YITrKip8YRJmR575wGOntLJBy6xzvCvoApk
-         LfRN7cxWtIZzlxCVKvp4ewajAy7sXKguTPbjWMMk=
+        b=f8oZmMhDco41949ldwX2kW7yc9M90Vblk0Efh5J/5MxH7qv1gxF8v21UhmWMnEEDL
+         b72WoBz7qsDVK5do9lrpUCHBhiKss9yCa9AdF2Hy/bx39ypTD8eqSXz6cVAaqKMWTH
+         A7Q6G1RGZm5X/KncVoA/C1vNrJLIt2QwJi925k8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Jean-Christophe Barnoud <jcbarnoud@gmail.com>
-Subject: [PATCH 5.8 225/255] USB: quirks: Ignore duplicate endpoint on Sound Devices MixPre-D
-Date:   Tue,  1 Sep 2020 17:11:21 +0200
-Message-Id: <20200901151011.538574094@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>
+Subject: [PATCH 5.8 223/255] usb: uas: Add quirk for PNY Pro Elite
+Date:   Tue,  1 Sep 2020 17:11:19 +0200
+Message-Id: <20200901151011.446626164@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,53 +58,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 068834a2773b6a12805105cfadbb3d4229fc6e0a upstream.
+commit 9a469bc9f32dd33c7aac5744669d21a023a719cd upstream.
 
-The Sound Devices MixPre-D audio card suffers from the same defect
-as the Sound Devices USBPre2: an endpoint shared between a normal
-audio interface and a vendor-specific interface, in violation of the
-USB spec.  Since the USB core now treats duplicated endpoints as bugs
-and ignores them, the audio endpoint isn't available and the card
-can't be used for audio capture.
+PNY Pro Elite USB 3.1 Gen 2 device (SSD) doesn't respond to ATA_12
+pass-through command (i.e. it just hangs). If it doesn't support this
+command, it should respond properly to the host. Let's just add a quirk
+to be able to move forward with other operations.
 
-Along the same lines as commit bdd1b147b802 ("USB: quirks: blacklist
-duplicate ep on Sound Devices USBPre2"), this patch adds a quirks
-entry saying to ignore ep5in for interface 1, leaving it available for
-use with standard audio interface 2.
-
-Reported-and-tested-by: Jean-Christophe Barnoud <jcbarnoud@gmail.com>
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Fixes: 3e4f8e21c4f2 ("USB: core: fix check for duplicate endpoints")
-Link: https://lore.kernel.org/r/20200826194624.GA412633@rowland.harvard.edu
+Cc: stable@vger.kernel.org
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Link: https://lore.kernel.org/r/2b0585228b003eedcc82db84697b31477df152e0.1597803605.git.thinhn@synopsys.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/storage/unusual_uas.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -370,6 +370,10 @@ static const struct usb_device_id usb_qu
- 	{ USB_DEVICE(0x0926, 0x0202), .driver_info =
- 			USB_QUIRK_ENDPOINT_BLACKLIST },
+--- a/drivers/usb/storage/unusual_uas.h
++++ b/drivers/usb/storage/unusual_uas.h
+@@ -80,6 +80,13 @@ UNUSUAL_DEV(0x152d, 0x0578, 0x0000, 0x99
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+ 		US_FL_BROKEN_FUA),
  
-+	/* Sound Devices MixPre-D */
-+	{ USB_DEVICE(0x0926, 0x0208), .driver_info =
-+			USB_QUIRK_ENDPOINT_BLACKLIST },
++/* Reported-by: Thinh Nguyen <thinhn@synopsys.com> */
++UNUSUAL_DEV(0x154b, 0xf00d, 0x0000, 0x9999,
++		"PNY",
++		"Pro Elite SSD",
++		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
++		US_FL_NO_ATA_1X),
 +
- 	/* Keytouch QWERTY Panel keyboard */
- 	{ USB_DEVICE(0x0926, 0x3333), .driver_info =
- 			USB_QUIRK_CONFIG_INTF_STRINGS },
-@@ -511,6 +515,7 @@ static const struct usb_device_id usb_am
-  */
- static const struct usb_device_id usb_endpoint_blacklist[] = {
- 	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0202, 1), .driver_info = 0x85 },
-+	{ USB_DEVICE_INTERFACE_NUMBER(0x0926, 0x0208, 1), .driver_info = 0x85 },
- 	{ }
- };
- 
+ /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
+ UNUSUAL_DEV(0x2109, 0x0711, 0x0000, 0x9999,
+ 		"VIA",
 
 
