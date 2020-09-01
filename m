@@ -4,81 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF51C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A197C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF9120BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3892100A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598971893;
-	bh=hfukjQ/MUILfw8yDC7cf0oDeEgXFfD/okOKu4FWtQjo=;
+	s=default; t=1598971907;
+	bh=yqmMFIpZEbRaW5ShU6QJoTFWzap3EWFgiYQp3JYn0pc=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=zNpDXjFpYaLpvsLL0rCqNmw2hmwXsxYT5vQuJ1zuaOCPobPyPb1NMl66G6zlOmZS7
-	 HArSgd/l4Tk/C+ympNDF9IWFd0xwMzquqcYh0HmtR+X6Bl6wpTPvi3NMAI6GpAvMqL
-	 CINLtUKLisWO55w/tjBXwmsXny0C8bDyhm3aNBkc=
+	b=sGiwU9xY3g4GgGlPFSBnMxFGroKdx/ckFDfh/LPwsHwSjrBzVPtw8eRC251SOxTOh
+	 u/5fL9b5EELyldly5SP0XrUWUapjkC9s1apGIoIO21i9tkregbu1o9uM9ScZtU4fM9
+	 aH/ztKg+e5Shh7Mwc8SzXLyjQcK19YYaWNm6VM58=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbgIAOva (ORCPT
+        id S1728783AbgIAOvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:51:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36992 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 10:51:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgIAOvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:51:08 -0400
+        id S1728755AbgIAOvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:51:18 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70B8A206EB;
-        Tue,  1 Sep 2020 14:51:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82B6D2078B;
+        Tue,  1 Sep 2020 14:51:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598971867;
-        bh=hfukjQ/MUILfw8yDC7cf0oDeEgXFfD/okOKu4FWtQjo=;
+        s=default; t=1598971878;
+        bh=yqmMFIpZEbRaW5ShU6QJoTFWzap3EWFgiYQp3JYn0pc=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=KdZkKrPbJPR6PVQp86UaHDX+HsDJrrw5I5U4tYBdv8Pl0BBqfci5MRo14nfvRMDZw
-         MRR1yz/s4kYCrYRB1Vw2MjvW/WsWHTc8nezzIGOQVoqvC8/QlhSntVTYcCUTBlmyrB
-         LsYvyQzhb74p2tAKSwJ1WvFh4/h2Dk3Uz7uVy3/o=
-Date:   Tue, 01 Sep 2020 15:50:27 +0100
+        b=Xt1B/YItZAkINRQXe+/atByGgbv97z7vWjumtGawq9UZa0QIS/H71DObD7qXix9V8
+         5rkoPihkw7M0HNHHXI2ZrUQzo2t2txOMA7XvEAvGjuuz5KoB/7zhiQufBC6lwAIjT4
+         7M2bDv5SCl2sFTQheqc9xyAIG+V1vz633wC2edLU=
+Date:   Tue, 01 Sep 2020 15:50:38 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Pavel Machek <pavel@ucw.cz>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Dan Murphy <dmurphy@ti.com>, Lee Jones <lee.jones@linaro.org>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200830185356.5365-1-digetx@gmail.com>
-References: <20200830185356.5365-1-digetx@gmail.com>
-Subject: Re: [PATCH v2 0/6] Introduce Embedded Controller driver for Acer A500
-Message-Id: <159897181721.47861.7031289432829890619.b4-ty@kernel.org>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+In-Reply-To: <20200829221104.20870-1-rikard.falkeborn@gmail.com>
+References: <20200829221104.20870-1-rikard.falkeborn@gmail.com>
+Subject: Re: [PATCH 0/8] regulator/tps*: Constify static regulator ops
+Message-Id: <159897183313.47900.16357469471615056811.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 30 Aug 2020 21:53:50 +0300, Dmitry Osipenko wrote:
-> This series adds support for the Embedded Controller which is found on
-> Acer Iconia Tab A500 (Android tablet device).
+On Sun, 30 Aug 2020 00:10:56 +0200, Rikard Falkeborn wrote:
+> Constify static instances of struct regulator_ops to allow the compiler
+> to put them in read-only memory. Patches are independent. Compile-tested
+> only.
 > 
-> The Embedded Controller is ENE KB930 and it's running firmware customized
-> for the A500. The firmware interface may be reused by some other sibling
-> Acer tablets, although none of those tablets are supported in upstream yet.
-> Please review and apply, thanks in advance!
+> Rikard Falkeborn (8):
+>   regulator: tps51632: Constify tps51632_dcdc_ops
+>   regulator: tps6105x: Constify tps6105x_regulator_ops
+>   regulator: tps62360: Constify tps62360_dcdc_ops
+>   regulator: tps65086: Constify static regulator_ops
+>   regulator: tps65090: constify static regulator_ops
+>   regulator: tps6586x: Constify static regulator_ops
+>   regulator: tps65912: Constify static regulator_ops
+>   regulator: tps65910: Constify static regulator_ops
 > 
 > [...]
 
 Applied to
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap.git for-next
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
 Thanks!
 
-[1/1] regmap: Use flexible sleep
-      commit: 2b32d2f7ce0a54ce74a75f0d939b5ee063a05ec5
+[1/8] regulator: tps51632: Constify tps51632_dcdc_ops
+      commit: dcb97c10f967c2cfea4c6316f026bc4a4a165f1e
+[2/8] regulator: tps6105x: Constify tps6105x_regulator_ops
+      commit: 55c81934e7040c1e0c26b72ee752203ccf190b51
+[3/8] regulator: tps62360: Constify tps62360_dcdc_ops
+      commit: 01167e88e9372f9748e94a7322b0d43ccb980d9f
+[4/8] regulator: tps65086: Constify static regulator_ops
+      commit: 2e6d9db83ac7c65b986d3037620dc735dee7383f
+[5/8] regulator: tps65090: constify static regulator_ops
+      commit: 7d844ac3b5a8a97ae4a05d9f545346a4fca77cea
+[6/8] regulator: tps6586x: Constify static regulator_ops
+      commit: 25c8044502ca9fb684fe7a0612985069e27e01eb
+[7/8] regulator: tps65912: Constify static regulator_ops
+      commit: e92b8ef87a8a4a95056d6b5852bd4b5288f34540
+[8/8] regulator: tps65910: Constify static regulator_ops
+      commit: 385d41d7edbc37d6b30197672b744021ce3baccf
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
