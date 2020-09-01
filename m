@@ -2,97 +2,72 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8475C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472B1C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93DAB2100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2179320767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978376;
-	bh=+0u4/ZqP+DbfFDq4UK7cGGHy10AAvbfMHaypC6QioD0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4YACPzKq9G5SSzPU3iOq5uPDBugUXOinuMKa2oyAwf4PswKR0bLaf48+5Y84pOZc
-	 LmvcyrX5jOXeNZRFV62x42a1rqQFidAqfuRzC3JrKiTixLtECG2Ztft5uhEsEQ9sUr
-	 LLnW+fkMLCqjuurZWTMa86RaRuXtgpufv4g9vcc4=
+	s=default; t=1598978381;
+	bh=dr8lHwwOag/AEGKr0f2JEzvp5F69En5NKrtfPtmoJsU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ps9MtCITvfnbjZD2Tm4s28674dvp8JNqWuocfTPz3LDdrK4a7CkaBab8BE8N7ibiJ
+	 xP2m8WgERduya5NTwhj2+XSeXthBdOsC8dkU4YcozXraBs7fVMztx0R++XqznLnCTS
+	 W3VSaWBiFmvin2Qi6hbzQWL2ItdiRfrFyxp+1UJs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbgIAQje (ORCPT
+        id S1732175AbgIAQjj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:39:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57024 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:39:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730084AbgIAP2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:41 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        id S1730335AbgIAQj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:39:29 -0400
+Received: from dhcp-10-100-145-180.wdl.wdc.com (unknown [199.255.45.60])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85C1A20684;
-        Tue,  1 Sep 2020 15:28:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18E3120767;
+        Tue,  1 Sep 2020 16:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974117;
-        bh=+0u4/ZqP+DbfFDq4UK7cGGHy10AAvbfMHaypC6QioD0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IdXqT/4/Do1IFmYFbamsspnA30E3XXR1DS3Q3FbblXUGnNL15oSRZ4X0vaUPUqZ+W
-         axqwWpS4dUGkv+cfyjW4aWG25y+e6jr/LZWQhoW0oMakkq+GQb0Pr1VnUsRgSZxpIV
-         9/ZGEmgxqDj3vda0GUg7QuubjCYZzEwusuFmqQP4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 050/214] drm/nouveau: Fix reference count leak in nouveau_connector_detect
-Date:   Tue,  1 Sep 2020 17:08:50 +0200
-Message-Id: <20200901150955.378320711@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1598978369;
+        bh=dr8lHwwOag/AEGKr0f2JEzvp5F69En5NKrtfPtmoJsU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dv/qp1cvjo4u1Q6QF8ETb659T0g0+yajEQdEqw8WyWSdiVqK4NIr+lbll5oPtdPCR
+         i0klifYzBqWT+ycUZ7i6+OQZL/05aPSXpEQmenRQrJiL7Gw41mVsH+2iqw3NhpsQ42
+         oKZ51Cvyt5xpKsGv+DOutjEoRCNUsInwthq5Po1E=
+Date:   Tue, 1 Sep 2020 09:39:27 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     Xianting Tian <tian.xianting@h3c.com>
+Cc:     axboe@fb.com, hch@lst.de, sagi@grimberg.me,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] nvme-pci: check req to prevent crash in
+ nvme_handle_cqe()
+Message-ID: <20200901163927.GC2831246@dhcp-10-100-145-180.wdl.wdc.com>
+References: <20200831105553.1621-1-tian.xianting@h3c.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831105553.1621-1-tian.xianting@h3c.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+On Mon, Aug 31, 2020 at 06:55:53PM +0800, Xianting Tian wrote:
+> As blk_mq_tag_to_rq() may return null, so it should be check whether it is
+> null before using it to prevent a crash.
 
-[ Upstream commit 990a1162986e8eff7ca18cc5a0e03b4304392ae2 ]
+It may return NULL if the command id exceeds the number of tags. We
+already have a check for a valid command id value, so something is not
+adding up here if we're still getting NULL.
 
-nouveau_connector_detect() calls pm_runtime_get_sync and in turn
-increments the reference count. In case of failure, decrement the
-ref count before returning the error.
-
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_connector.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index eb31c5b6c8e93..0994aee7671ad 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -568,8 +568,10 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
- 		pm_runtime_get_noresume(dev->dev);
- 	} else {
- 		ret = pm_runtime_get_sync(dev->dev);
--		if (ret < 0 && ret != -EACCES)
-+		if (ret < 0 && ret != -EACCES) {
-+			pm_runtime_put_autosuspend(dev->dev);
- 			return conn_status;
-+		}
- 	}
- 
- 	nv_encoder = nouveau_connector_ddc_detect(connector);
--- 
-2.25.1
-
-
-
+>  	req = blk_mq_tag_to_rq(nvme_queue_tagset(nvmeq), cqe->command_id);
+> +	if (unlikely(!req)) {
+> +		dev_warn(nvmeq->dev->ctrl.device,
+> +			"req is null(tag:%d) on queue %d\n",
+> +			cqe->command_id, le16_to_cpu(cqe->sq_id));
+> +		return;
+> +	}
