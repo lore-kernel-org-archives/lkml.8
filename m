@@ -2,264 +2,119 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C942C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2359C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0014A2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980065;
-	bh=8q7jpFrR7NzON+nIZSLEV/HXiwEd2JDxZmgzVD/bby0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qdlwcvA2O4S86zucZlzjIi+7lBstwzcBzJBrxgFdQEH3eR/p8Hr5tn4s73hQ5lwxP
-	 1FoYTk2KiK84Y5R/0tGqHZP/z5HueA7KK+P/16njwlKKTAvTcSY3MNgxf+KVwBnw52
-	 xDOdodVJlzuZDqBUKpnL1jDCtITyGr32rbzzF3Jw=
+	by mail.kernel.org (Postfix) with ESMTP id 6E221206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d9f5Gtt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgIARHn (ORCPT
+        id S1730065AbgIARH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:07:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbgIAPSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:18 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1277320FC3;
-        Tue,  1 Sep 2020 15:18:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973497;
-        bh=8q7jpFrR7NzON+nIZSLEV/HXiwEd2JDxZmgzVD/bby0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cnxeL6GDpbYRdsdUIHomVi1s9O8vEjN5/gIKHN1cZ0PH39b7snkH2mKtaTRcMG8tM
-         wK0m9UGEQPg3vYXTZb32O6xu+kHqF8IN++GCQy3LF6F4DVRGskS5m4gl0xKCT0Un55
-         0vSIBfQKPlX3i3NSk0589QKpSVI666qEjd7rPcOY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/91] selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
-Date:   Tue,  1 Sep 2020 17:09:56 +0200
-Message-Id: <20200901150929.259822936@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-References: <20200901150928.096174795@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 13:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728610AbgIARHs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:07:48 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271B8C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 10:07:48 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id v196so487933pfc.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:07:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1VyEi1l0lOpd52Y7IvNbMVag3NVkD7N6u6BLF7rZqxQ=;
+        b=d9f5Gtt7VQ7McMueG9lou77FPV3UfkIMWyZ2e+cscKXv6JkNF7PYpBaZHD3b7ZYsex
+         +7mpAQ0Nm5GaK5MhZX5peVPJlFGn/h6VzYKhrTSx7tnfjy3q9jOGABY+AQfWOR1tgA8e
+         MMWy3ABq++u/Y4ttPLGF4zk4/yOXTntKxIh2o=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1VyEi1l0lOpd52Y7IvNbMVag3NVkD7N6u6BLF7rZqxQ=;
+        b=bWmeEmyUOhxvX1Fb7sIM7vdGzgY7k9qgcxLXfWOzQkOulQB0FD/zz+6SsHeZOoPQWB
+         hGWeKrb6jCk8QeHdBQ9Zy7gh/vnPeapRhMSdQz8/aFAOLwcyT025aQhAEXQJ9xtoFxXl
+         B+o1IB/0f6UupG7R9HB81pNUhA8GDcgm74y9YTmAfR6YvwdT7fwaLWlurXms7ded5UZt
+         RdX1o3opRpZiZ4Vma3MSeQ3l/Bc1hqDa92i9r0Mu/7ekWc1K1fhrtpkTeZTZSvS7cTuC
+         18BSPvw39qZRkGP12Ypk1BJVMQVYfNDwpGo2H4q9nWiVtzBO0pqPsYIjZLISqC0S45bZ
+         268g==
+X-Gm-Message-State: AOAM532rQ5kqxe6/xDhcPq0iFXPaMTmQef2C0rttO4CR8vpihw14CNB8
+        JtBpDaKzUIpy7MMJb2M1RbjMiA==
+X-Google-Smtp-Source: ABdhPJy/J9QTlV1QLz55vVOu3QT4SNaPomEwKXsQSSS5USZRon8dmLop0heEKjD6Ih3bJYQHimqowQ==
+X-Received: by 2002:a62:1a91:: with SMTP id a139mr2676443pfa.75.1598980067698;
+        Tue, 01 Sep 2020 10:07:47 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id a5sm2818723pgb.23.2020.09.01.10.07.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 10:07:47 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 10:07:45 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for
+ CPU thermal zones
+Message-ID: <20200901170745.GA3419728@google.com>
+References: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+On Thu, Aug 13, 2020 at 11:30:33AM -0700, Matthias Kaehlcke wrote:
+> The 'sustainable_power' attribute provides an estimate of the sustained
+> power that can be dissipated at the desired control temperature. One
+> could argue that this value is not necessarily the same for all devices
+> with the same SoC, which may have different form factors or thermal
+> designs. However there are reasons to specify a (default) value at SoC
+> level for SC7180: most importantly, if no value is specified at all the
+> power_allocator thermal governor (aka 'IPA') estimates a value, using the
+> minimum power of all cooling devices of the zone, which can result in
+> overly aggressive thermal throttling. For most devices an approximate
+> conservative value should be more useful than the minimum guesstimate
+> of power_allocator. Devices that need a different value can overwrite
+> it in their <device>.dts. Also the thermal zones for SC7180 have a high
+> level of granularity (essentially one for each function block), which
+> makes it more likely that the default value just works for many devices.
+> 
+> The values correspond to 1901 MHz for the big cores, and 1804 MHz for
+> the small cores. The values were determined by limiting the CPU
+> frequencies to different max values and launching a bunch of processes
+> that cause high CPU load ('while true; do true; done &' is simple and
+> does a good job). A frequency is deemed sustainable if the CPU
+> temperatures don't rise (consistently) above the second trip point
+> ('control temperature', 95 degC in this case). Once the highest
+> sustainable frequency is found, the sustainable power can be calculated
+> by multiplying the energy consumption per core at this frequency (which
+> can be found in /sys/kernel/debug/energy_model/) with the number of
+> cores that are specified as cooling devices.
+> 
+> The sustainable frequencies were determined at room temperature
+> on a device without heat sink or other passive cooling elements.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+> If maintainers think 'sustainable_power' should be specified at
+> device level (with which I conceptually agree) I'm fine with
+> doing that, just seemed it could be useful to have a reasonable
+> 'default' at SoC level in this case.
 
-[ Upstream commit 3337bf41e0dd70b4064cdf60acdfcdc2d050066c ]
-
-An extra count on ebb_state.stats.pmc_count[PMC_INDEX(pmc)] is being per-
-formed when count_pmc() is used to reset PMCs on a few selftests. This
-extra pmc_count can occasionally invalidate results, such as the ones from
-cycles_test shown hereafter. The ebb_check_count() failed with an above
-the upper limit error due to the extra value on ebb_state.stats.pmc_count.
-
-Furthermore, this extra count is also indicated by extra PMC1 trace_log on
-the output of the cycle test (as well as on pmc56_overflow_test):
-
-==========
-   ...
-   [21]: counter = 8
-   [22]: register SPRN_MMCR0 = 0x0000000080000080
-   [23]: register SPRN_PMC1  = 0x0000000080000004
-   [24]: counter = 9
-   [25]: register SPRN_MMCR0 = 0x0000000080000080
-   [26]: register SPRN_PMC1  = 0x0000000080000004
-   [27]: counter = 10
-   [28]: register SPRN_MMCR0 = 0x0000000080000080
-   [29]: register SPRN_PMC1  = 0x0000000080000004
->> [30]: register SPRN_PMC1  = 0x000000004000051e
-PMC1 count (0x280000546) above upper limit 0x2800003e8 (+0x15e)
-[FAIL] Test FAILED on line 52
-failure: cycles
-==========
-
-Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
-Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200626164737.21943-1-desnesn@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c      | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c    | 2 --
- .../selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c     | 2 --
- tools/testing/selftests/powerpc/pmu/ebb/ebb.c              | 2 --
- .../selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c  | 2 --
- .../selftests/powerpc/pmu/ebb/lost_exception_test.c        | 1 -
- .../testing/selftests/powerpc/pmu/ebb/multi_counter_test.c | 7 -------
- .../selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c       | 2 --
- .../testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c | 2 --
- .../selftests/powerpc/pmu/ebb/pmc56_overflow_test.c        | 2 --
- 11 files changed, 26 deletions(-)
-
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-index 94110b1dcd3d8..031baa43646fb 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
-@@ -91,8 +91,6 @@ int back_to_back_ebbs(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-index 7c57a8d79535d..361e0be9df9ae 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
-@@ -42,8 +42,6 @@ int cycles(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-index ecf5ee3283a3e..fe7d0dc2a1a26 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
-@@ -99,8 +99,6 @@ int cycles_with_freeze(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	printf("EBBs while frozen %d\n", ebbs_while_frozen);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-index c0faba520b35c..b9b30f974b5ea 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
-@@ -71,8 +71,6 @@ int cycles_with_mmcr2(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-index 46681fec549b8..2694ae161a84a 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
-@@ -396,8 +396,6 @@ int ebb_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-index a991d2ea8d0a1..174e4f4dae6c0 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
-@@ -38,8 +38,6 @@ static int victim_child(union pipe read_pipe, union pipe write_pipe)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	FAIL_IF(ebb_state.stats.ebb_count == 0);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-index eb8acb78bc6c1..531083accfcad 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
-@@ -75,7 +75,6 @@ static int test_body(void)
- 	ebb_freeze_pmcs();
- 	ebb_global_disable();
- 
--	count_pmc(4, sample_period);
- 	mtspr(SPRN_PMC4, 0xdead);
- 
- 	dump_summary_ebb_state();
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-index 6ff8c8ff27d66..035c02273cd49 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
-@@ -70,13 +70,6 @@ int multi_counter(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--	count_pmc(2, sample_period);
--	count_pmc(3, sample_period);
--	count_pmc(4, sample_period);
--	count_pmc(5, sample_period);
--	count_pmc(6, sample_period);
--
- 	dump_ebb_state();
- 
- 	for (i = 0; i < 6; i++)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-index 037cb6154f360..3e9d4ac965c85 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
-@@ -61,8 +61,6 @@ static int cycles_child(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_summary_ebb_state();
- 
- 	event_close(&event);
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-index c5fa64790c22e..d90891fe96a32 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
-@@ -82,8 +82,6 @@ static int test_body(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(1, sample_period);
--
- 	dump_ebb_state();
- 
- 	if (mmcr0_mismatch)
-diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-index 30e1ac62e8cb4..8ca92b9ee5b01 100644
---- a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-+++ b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
-@@ -76,8 +76,6 @@ int pmc56_overflow(void)
- 	ebb_global_disable();
- 	ebb_freeze_pmcs();
- 
--	count_pmc(2, sample_period);
--
- 	dump_ebb_state();
- 
- 	printf("PMC5/6 overflow %d\n", pmc56_overflowed);
--- 
-2.25.1
-
-
-
+Any comments on this?
