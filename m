@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77DDAC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA5FC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF6B206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB9DB20BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973798;
-	bh=MPM8xQu0kMXTrgKqN6pug1ACKJ2u56+BVhn4erh7HLU=;
+	s=default; t=1598973816;
+	bh=jUeaoj6CmMMfIJIdDUq79xCU5LfhWVPRv06PMoRIdm4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IJ1Jcv4B6+ELwAN/LYlZXrZaQyeoYTSmwIgeDr3cxEABlhNyUSo9Tas5mu0kwCwBC
-	 +LoXPzEa/UaVJpYREWcAjp32EQzTZQCvoRWKTqejSUbnJ2+er/DNIlvv9sqlDpLAqU
-	 cqDvdFOr90OeOHPgJvTfu+SCoo8ykbvE3RZC5qQg=
+	b=aceP4XeaCfFOqsfbKyP32gtL24gRv2OGBM34Rp/fjWHV09Vs1d1KVTDvqV7pBw1Oz
+	 Cl5CP0qOJzS4VU+WdBdK+Z5Di1oxpMapgzRXbOZ8YJ/MXobHnTu5unbHxzxNmp5YAJ
+	 9JKkydBKo+vdQKdq2qD3yBhbAz61ADjjJ5ByMeyM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgIAPXP (ORCPT
+        id S1729825AbgIAPXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:23:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40660 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:23:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729391AbgIAPUe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:34 -0400
+        id S1729643AbgIAPU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED01520767;
-        Tue,  1 Sep 2020 15:20:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EF75206EB;
+        Tue,  1 Sep 2020 15:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973634;
-        bh=MPM8xQu0kMXTrgKqN6pug1ACKJ2u56+BVhn4erh7HLU=;
+        s=default; t=1598973656;
+        bh=jUeaoj6CmMMfIJIdDUq79xCU5LfhWVPRv06PMoRIdm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZY8InkKk+RI0OKKPOZt8++BTOXqz4VIm9pJ9S0YdhDoC3wZMG+gIL0tMeLA3RXTgj
-         4mtN8vR+riX1h7EBNEsNNoprmOy7NJkKeu/ImByoVUV9MPXqWnt/TautUbWCYQi7Ok
-         yzcC9MVBWsKBCEXn4qa4+bv9U2EZD3JhEQuPcXkg=
+        b=Yv26eUoF4kjZ7vKFq8d6bNFbgipnwwxFlMGDywfPg+EH1zgF8nFH0pFd58fgmWxSi
+         2LyTEQ4IrfB4Xlhx4sFwIXRXEIlYeJ2v5y+OI9pMEDcBBt76FsFLXfHOxBIiRzPUlv
+         X9EX9RJOJWUUnPJEVIyjJW27J8zL92buB3whvou4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>
-Subject: [PATCH 4.14 78/91] usb: uas: Add quirk for PNY Pro Elite
-Date:   Tue,  1 Sep 2020 17:10:52 +0200
-Message-Id: <20200901150932.063527541@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.14 86/91] USB: cdc-acm: rework notification_buffer resizing
+Date:   Tue,  1 Sep 2020 17:11:00 +0200
+Message-Id: <20200901150932.437063724@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -58,39 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Tom Rix <trix@redhat.com>
 
-commit 9a469bc9f32dd33c7aac5744669d21a023a719cd upstream.
+commit f4b9d8a582f738c24ebeabce5cc15f4b8159d74e upstream.
 
-PNY Pro Elite USB 3.1 Gen 2 device (SSD) doesn't respond to ATA_12
-pass-through command (i.e. it just hangs). If it doesn't support this
-command, it should respond properly to the host. Let's just add a quirk
-to be able to move forward with other operations.
+Clang static analysis reports this error
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Link: https://lore.kernel.org/r/2b0585228b003eedcc82db84697b31477df152e0.1597803605.git.thinhn@synopsys.com
+cdc-acm.c:409:3: warning: Use of memory after it is freed
+        acm_process_notification(acm, (unsigned char *)dr);
+
+There are three problems, the first one is that dr is not reset
+
+The variable dr is set with
+
+if (acm->nb_index)
+	dr = (struct usb_cdc_notification *)acm->notification_buffer;
+
+But if the notification_buffer is too small it is resized with
+
+		if (acm->nb_size) {
+			kfree(acm->notification_buffer);
+			acm->nb_size = 0;
+		}
+		alloc_size = roundup_pow_of_two(expected_size);
+		/*
+		 * kmalloc ensures a valid notification_buffer after a
+		 * use of kfree in case the previous allocation was too
+		 * small. Final freeing is done on disconnect.
+		 */
+		acm->notification_buffer =
+			kmalloc(alloc_size, GFP_ATOMIC);
+
+dr should point to the new acm->notification_buffer.
+
+The second problem is any data in the notification_buffer is lost
+when the pointer is freed.  In the normal case, the current data
+is accumulated in the notification_buffer here.
+
+	memcpy(&acm->notification_buffer[acm->nb_index],
+	       urb->transfer_buffer, copy_size);
+
+When a resize happens, anything before
+notification_buffer[acm->nb_index] is garbage.
+
+The third problem is the acm->nb_index is not reset on a
+resizing buffer error.
+
+So switch resizing to using krealloc and reassign dr and
+reset nb_index.
+
+Fixes: ea2583529cd1 ("cdc-acm: reassemble fragmented notifications")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20200801152154.20683-1-trix@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/usb/class/cdc-acm.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -156,6 +156,13 @@ UNUSUAL_DEV(0x152d, 0x0578, 0x0000, 0x99
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_BROKEN_FUA),
- 
-+/* Reported-by: Thinh Nguyen <thinhn@synopsys.com> */
-+UNUSUAL_DEV(0x154b, 0xf00d, 0x0000, 0x9999,
-+		"PNY",
-+		"Pro Elite SSD",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_ATA_1X),
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -390,21 +390,19 @@ static void acm_ctrl_irq(struct urb *urb
+ 	if (current_size < expected_size) {
+ 		/* notification is transmitted fragmented, reassemble */
+ 		if (acm->nb_size < expected_size) {
+-			if (acm->nb_size) {
+-				kfree(acm->notification_buffer);
+-				acm->nb_size = 0;
+-			}
++			u8 *new_buffer;
+ 			alloc_size = roundup_pow_of_two(expected_size);
+-			/*
+-			 * kmalloc ensures a valid notification_buffer after a
+-			 * use of kfree in case the previous allocation was too
+-			 * small. Final freeing is done on disconnect.
+-			 */
+-			acm->notification_buffer =
+-				kmalloc(alloc_size, GFP_ATOMIC);
+-			if (!acm->notification_buffer)
++			/* Final freeing is done on disconnect. */
++			new_buffer = krealloc(acm->notification_buffer,
++					      alloc_size, GFP_ATOMIC);
++			if (!new_buffer) {
++				acm->nb_index = 0;
+ 				goto exit;
++			}
 +
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x2109, 0x0711, 0x0000, 0x9999,
- 		"VIA",
++			acm->notification_buffer = new_buffer;
+ 			acm->nb_size = alloc_size;
++			dr = (struct usb_cdc_notification *)acm->notification_buffer;
+ 		}
+ 
+ 		copy_size = min(current_size,
 
 
