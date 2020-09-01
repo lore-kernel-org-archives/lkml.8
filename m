@@ -2,113 +2,153 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF51C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F5BC2BC0E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A392208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:46:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="cXlpMLt/"
+	by mail.kernel.org (Postfix) with ESMTP id 75A86207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:46:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598982375;
+	bh=XFZ88HewQoEjX2uJ9z8eaQBKTvSmcqHdw3MZB06++UA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LqK7Er7QXI1Y2P2jfHXKbof3MaVsbzVB5fYlO60H3WiOat8uP2llQJtQ28yDBfNcv
+	 eiwIsq8CHuAjULJ4S09MTA7MKoBYfym2GoY0H8508LHEibIk5XCW4LBeUsapiKB3N5
+	 R8gwiH1HVfuA/SK7EEBT/tg771CECmulOAVcAg3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728751AbgIARqG (ORCPT
+        id S1729086AbgIARqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:46:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47036 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726941AbgIARqC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:46:02 -0400
-Received: from mail-qk1-x731.google.com (mail-qk1-x731.google.com [IPv6:2607:f8b0:4864:20::731])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99EA3C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 10:46:01 -0700 (PDT)
-Received: by mail-qk1-x731.google.com with SMTP id b14so1784307qkn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:46:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cSy4+2RDeeEJIAWSQYiuQheGRdiGJb8NlbxFbBqq2AM=;
-        b=cXlpMLt/MZjGGJxxIXI3dRVI4uswoqGbuubaqPQro5E+Vxlidjbo5VD4YxUte9yV9n
-         JGggD9c+n5hNtPF04P2fLwYCnLrn2PjcBNJ2TPdvwxby+LqAdjuTStUJWwXWsv7+VmVM
-         5mRh+XQTeS1ZkGcYpcS2I2jsA3aNfqqxESdch/Lfa1suLKFyKj7pL/q/CaFoZCr613vh
-         nMtVSMocVtIEc52WDjqw2OvCz5cwb6gn8KIGuZiEbNTm8mwhjITdAQNlXSR/HEbhcE/I
-         OWouCb9f0F3A8GvtPJWlYO2AuTtiExzS5h17AM3EKMSVIiqlJsvrIIghN+G9eZ0GdcD3
-         223Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cSy4+2RDeeEJIAWSQYiuQheGRdiGJb8NlbxFbBqq2AM=;
-        b=VKJ7C7br4V0V9sqCjH0vPVCMxvB6GI5+PXRAjAW5pyKN9fJinSCDMVdOY1qYqw+FbC
-         UmelcGsuhFeQajpNqWga8v0i2iGC2WPzu5M26iaaPB5+hFuZ3yFmeiGngPwnHg62PYq6
-         xzvTs1KLrRhxCj+QGVrsFbTMOOnlqpny7TpMvAPmK8rn/FxJuoftTNix3cKBxLEUjndk
-         RwP6uL6CIXMCvglLIYS2raPomBxl1e2N1g/Emt84qehrIv2N8lm7JzkLaBU8DE1ZK3QJ
-         3IdtoNht+iBNK2nlHxDUUV2TRMuOb3pjaPHOqOhn1ZLEg50cK1xeIEfHThCdZhqN48qy
-         PvCw==
-X-Gm-Message-State: AOAM532vo+nTWrHw1h0ybSkhbzQM/w2AjtrYART+kiEWOEjU8rcfx3V3
-        6cabcetd95z5Opoo6zjDXQgiGk8wb9fnnc04NbM=
-X-Google-Smtp-Source: ABdhPJzuyOEEW4u0szMWmuV8qaZb9/osteZ8Kxw8co7ysE17hCNMDWr3cE6A6fD+O8okSgr6GveAkA==
-X-Received: by 2002:a37:2d07:: with SMTP id t7mr2973895qkh.255.1598982360401;
-        Tue, 01 Sep 2020 10:46:00 -0700 (PDT)
-Received: from [192.168.1.45] (cpe-174-109-172-136.nc.res.rr.com. [174.109.172.136])
-        by smtp.gmail.com with ESMTPSA id w20sm2217486qki.108.2020.09.01.10.45.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 10:45:59 -0700 (PDT)
-Subject: Re: remove revalidate_disk()
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
-Cc:     Dan Williams <dan.j.williams@intel.com>, dm-devel@redhat.com,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        nbd@other.debian.org, ceph-devel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <20200901155748.2884-1-hch@lst.de>
-From:   Josef Bacik <josef@toxicpanda.com>
-Message-ID: <b89fe35d-cdf9-e652-2016-599d67bdc5eb@toxicpanda.com>
-Date:   Tue, 1 Sep 2020 13:45:58 -0400
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.12.0
+        Tue, 1 Sep 2020 13:46:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34180 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726941AbgIARqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:46:07 -0400
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 807B02087D
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 17:46:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598982366;
+        bh=XFZ88HewQoEjX2uJ9z8eaQBKTvSmcqHdw3MZB06++UA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Xxq4jGgC3FP6E6gs/q13XQfdoEec6OPL6DZe2AMlX8NETGLlw5cCIhOa+6nXyzLUX
+         uoPktWkJN7ohYD0ZUWHIzNAtWE+iimV6ZSWTLQ9YxeYXOo2wb1XfqVUBSE/b9QQaOs
+         Mu+RS9g2Aa3YatA3A8fs18faklWbaNh4F1BXA5bo=
+Received: by mail-wm1-f52.google.com with SMTP id o21so2045227wmc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:46:06 -0700 (PDT)
+X-Gm-Message-State: AOAM530QGQPu/y58N35brMuFNcuLntL+sh2+SqTHrS4Zl0WywtSXpihn
+        1Cp8GcQaZnrTEEZ55/1VMB6oTNJPzAunGw/UgvLHAA==
+X-Google-Smtp-Source: ABdhPJzgN/ki/QOy8VBTjEfkf88yPgVKoMbt/LBzptwfMiUASf1g/B5786/uD6CW1kC9N6DS/YCeDyVeKhyIJxbKQ58=
+X-Received: by 2002:a1c:2983:: with SMTP id p125mr2831445wmp.21.1598982364949;
+ Tue, 01 Sep 2020 10:46:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200901155748.2884-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com> <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com> <20200826164604.GW6642@arm.com>
+ <87ft892vvf.fsf@oldenburg2.str.redhat.com> <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+ <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com> <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
+ <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
+ <20200901102758.GY6642@arm.com> <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
+In-Reply-To: <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 1 Sep 2020 10:45:53 -0700
+X-Gmail-Original-Message-ID: <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
+Message-ID: <CALCETrWJQgtO_tP1pEaDYYsFgkZ=fOxhyTRE50THcxYoHyTTwg@mail.gmail.com>
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/20 11:57 AM, Christoph Hellwig wrote:
-> Hi Jens,
-> 
-> this series removes the revalidate_disk() function, which has been a
-> really odd duck in the last years.  The prime reason why most people
-> use it is because it propagates a size change from the gendisk to
-> the block_device structure.  But it also calls into the rather ill
-> defined ->revalidate_disk method which is rather useless for the
-> callers.  So this adds a new helper to just propagate the size, and
-> cleans up all kinds of mess around this area.  Follow on patches
-> will eventuall kill of ->revalidate_disk entirely, but ther are a lot
-> more patches needed for that.
-> 
+On Tue, Sep 1, 2020 at 10:23 AM Yu, Yu-cheng <yu-cheng.yu@intel.com> wrote:
+>
+> On 9/1/2020 3:28 AM, Dave Martin wrote:
+> > On Thu, Aug 27, 2020 at 06:26:11AM -0700, H.J. Lu wrote:
+> >> On Wed, Aug 26, 2020 at 12:57 PM Dave Hansen <dave.hansen@intel.com> wrote:
+> >>>
+> >>> On 8/26/20 11:49 AM, Yu, Yu-cheng wrote:
+> >>>>> I would expect things like Go and various JITs to call it directly.
+> >>>>>
+> >>>>> If we wanted to be fancy and add a potentially more widely useful
+> >>>>> syscall, how about:
+> >>>>>
+> >>>>> mmap_special(void *addr, size_t length, int prot, int flags, int type);
+> >>>>>
+> >>>>> Where type is something like MMAP_SPECIAL_X86_SHSTK.  Fundamentally,
+> >>>>> this is really just mmap() except that we want to map something a bit
+> >>>>> magical, and we don't want to require opening a device node to do it.
+> >>>>
+> >>>> One benefit of MMAP_SPECIAL_* is there are more free bits than MAP_*.
+> >>>> Does ARM have similar needs for memory mapping, Dave?
+> >>>
+> >>> No idea.
+> >>>
+> >>> But, mmap_special() is *basically* mmap2() with extra-big flags space.
+> >>> I suspect it will grow some more uses on top of shadow stacks.  It could
+> >>> have, for instance, been used to allocate MPX bounds tables.
+> >>
+> >> There is no reason we can't use
+> >>
+> >> long arch_prctl (int, unsigned long, unsigned long, unsigned long, ..);
+> >>
+> >> for ARCH_X86_CET_MMAP_SHSTK.   We just need to use
+> >>
+> >> syscall (SYS_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, ...);
+> >
+> >
+> > For arm64 (and sparc etc.) we continue to use the regular mmap/mprotect
+> > family of calls.  One or two additional arch-specific mmap flags are
+> > sufficient for now.
+> >
+> > Is x86 definitely not going to fit within those calls?
+>
+> That can work for x86.  Andy, what if we create PROT_SHSTK, which can
+> been seen only from the user.  Once in kernel, it is translated to
+> VM_SHSTK.  One question for mremap/mprotect is, do we allow a normal
+> data area to become shadow stack?
 
-I applied and built everything on Jens's for-next, patch #2 was fuzzy but it 
-applied.
+I'm unconvinced that we want to use a somewhat precious PROT_ or VM_
+bit for this.  Using a flag bit makes sense if we expect anyone to
+ever map an fd or similar as a shadow stack, but that seems a bit odd
+in the first place.  To me, it seems more logical for a shadow stack
+to be a special sort of mapping with a special vm_ops, not a normal
+mapping with a special flag set.  Although I realize that we want
+shadow stacks to work like anonymous memory with respect to fork().
+Dave?
 
-I checked through everything, the only thing that was strange to me is not 
-calling revalidate_disk_size() in nvdimm, but since it's during attach you point 
-out it doesn't matter.  You can add
-
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-
-To the series, thanks,
-
-Josef
+--Andy
