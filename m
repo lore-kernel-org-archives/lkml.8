@@ -2,54 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03140C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1965C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C48C92065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8093520767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977089;
-	bh=SGrvq5KpMJDOoo8ypt7Ljvm6VOL79mY9JtRX84+7CDo=;
+	s=default; t=1598977101;
+	bh=WZWDyFXi+TP4Rzs36ydIREKTJ4YdNubzRsXpohcxDj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/qOPBbVdEJ6/UvfRmguspwCSq0iYxmNF5oB40idX/qPgXZ6ljYAHoGttT3MgVO2p
-	 JiCNtvAqTo9iBRvkItl3McZyoLjnz0E7xQi2Gh52kMZm1xnNuD5QyqkRKyP7x5bKwq
-	 l7vy2xHB4Wfwp8q7LopaBnsYU3bnRkRsXWigjMlg=
+	b=ygFcFAwgXOLjFErD+CaQJ6waTMcmNb7eb/EuHNIbe4ZOkAC05EEtIW3ePV3/mnG2G
+	 Z4DcLbyfWplxyu2kBh9E6oBobcDqTKjvcU1R7duEJnwmM1OWEu56Xv9tSe5p/Rx0u8
+	 UTqVlrPxZfd97WUOCLfDOjVrNLlhX3KgI1QCb0Z4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731849AbgIAQSE (ORCPT
+        id S1730663AbgIAPd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:18:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37660 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:33:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729324AbgIAPd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:33:28 -0400
+        id S1728876AbgIAPdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:33:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C68C5205F4;
-        Tue,  1 Sep 2020 15:33:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 69D9C214D8;
+        Tue,  1 Sep 2020 15:33:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974408;
-        bh=SGrvq5KpMJDOoo8ypt7Ljvm6VOL79mY9JtRX84+7CDo=;
+        s=default; t=1598974390;
+        bh=WZWDyFXi+TP4Rzs36ydIREKTJ4YdNubzRsXpohcxDj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Nlv0mtKYHpWzIJCpsnQ06gQ48Ubw7LVvVNRW8ORspAhGyfZ5OeSAOr3VeWVJt6Kkn
-         b/QXKiW41vMSP3SaWH4EBJ8PP9KqMgRAgJGyZDYCMaC5MBQfPX2o6KSGgQNweZrlWQ
-         Y/HFQoPlhBHHnrCCgYHtrYMB9n+miySF/8fFmzHY=
+        b=ajHsmRi+gS6N+/yFKEmGtxGZbaheIT0UZulx9OdpQvFyFmsLqC96qC/pAXdRCCAg+
+         mxPvoKjhs+Zp4zkeIsFopBGZ4iac0nI4DadYi6C4iCFTf0/iMqQxupzfMnswiNgk/k
+         3Lw6sMKDxw54g3xF+RZaRMhXpBYmNbKtKc4r17uY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/214] ASoC: wm8994: Avoid attempts to read unreadable registers
-Date:   Tue,  1 Sep 2020 17:10:14 +0200
-Message-Id: <20200901150959.400801523@linuxfoundation.org>
+        stable@vger.kernel.org, Omar Sandoval <osandov@osandov.com>,
+        Boris Burkov <boris@bur.io>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 156/214] btrfs: detect nocow for swap after snapshot delete
+Date:   Tue,  1 Sep 2020 17:10:36 +0200
+Message-Id: <20200901151000.441108367@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -62,52 +59,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Boris Burkov <boris@bur.io>
 
-[ Upstream commit f082bb59b72039a2326ec1a44496899fb8aa6d0e ]
+commit a84d5d429f9eb56f81b388609841ed993f0ddfca upstream.
 
-The driver supports WM1811, WM8994, WM8958 devices but according to
-documentation and the regmap definitions the WM8958_DSP2_* registers
-are only available on WM8958. In current code these registers are
-being accessed as if they were available on all the three chips.
+can_nocow_extent and btrfs_cross_ref_exist both rely on a heuristic for
+detecting a must cow condition which is not exactly accurate, but saves
+unnecessary tree traversal. The incorrect assumption is that if the
+extent was created in a generation smaller than the last snapshot
+generation, it must be referenced by that snapshot. That is true, except
+the snapshot could have since been deleted, without affecting the last
+snapshot generation.
 
-When starting playback on WM1811 CODEC multiple errors like:
-"wm8994-codec wm8994-codec: ASoC: error at soc_component_read_no_lock on wm8994-codec: -5"
-can be seen, which is caused by attempts to read an unavailable
-WM8958_DSP2_PROGRAM register. The issue has been uncovered by recent
-commit "e2329ee ASoC: soc-component: add soc_component_err()".
+The original patch claimed a performance win from this check, but it
+also leads to a bug where you are unable to use a swapfile if you ever
+snapshotted the subvolume it's in. Make the check slower and more strict
+for the swapon case, without modifying the general cow checks as a
+compromise. Turning swap on does not seem to be a particularly
+performance sensitive operation, so incurring a possibly unnecessary
+btrfs_search_slot seems worthwhile for the added usability.
 
-This patch adds a check in wm8958_aif_ev() callback so the DSP2 handling
-is only done for WM8958.
+Note: Until the snapshot is competely cleaned after deletion,
+check_committed_refs will still cause the logic to think that cow is
+necessary, so the user must until 'btrfs subvolu sync' finished before
+activating the swapfile swapon.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200731173834.23832-1-s.nawrocki@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+CC: stable@vger.kernel.org # 5.4+
+Suggested-by: Omar Sandoval <osandov@osandov.com>
+Signed-off-by: Boris Burkov <boris@bur.io>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/codecs/wm8958-dsp2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/btrfs/ctree.h       |    4 ++--
+ fs/btrfs/extent-tree.c |   17 +++++++++++------
+ fs/btrfs/file.c        |    2 +-
+ fs/btrfs/inode.c       |   16 +++++++++-------
+ 4 files changed, 23 insertions(+), 16 deletions(-)
 
-diff --git a/sound/soc/codecs/wm8958-dsp2.c b/sound/soc/codecs/wm8958-dsp2.c
-index 18535b326680a..04f23477039a5 100644
---- a/sound/soc/codecs/wm8958-dsp2.c
-+++ b/sound/soc/codecs/wm8958-dsp2.c
-@@ -416,8 +416,12 @@ int wm8958_aif_ev(struct snd_soc_dapm_widget *w,
- 		  struct snd_kcontrol *kcontrol, int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct wm8994 *control = dev_get_drvdata(component->dev->parent);
- 	int i;
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -2415,7 +2415,7 @@ int btrfs_pin_extent_for_log_replay(stru
+ 				    u64 bytenr, u64 num_bytes);
+ int btrfs_exclude_logged_extents(struct extent_buffer *eb);
+ int btrfs_cross_ref_exist(struct btrfs_root *root,
+-			  u64 objectid, u64 offset, u64 bytenr);
++			  u64 objectid, u64 offset, u64 bytenr, bool strict);
+ struct extent_buffer *btrfs_alloc_tree_block(struct btrfs_trans_handle *trans,
+ 					     struct btrfs_root *root,
+ 					     u64 parent, u64 root_objectid,
+@@ -2821,7 +2821,7 @@ struct extent_map *btrfs_get_extent_fiem
+ 					   u64 start, u64 len);
+ noinline int can_nocow_extent(struct inode *inode, u64 offset, u64 *len,
+ 			      u64 *orig_start, u64 *orig_block_len,
+-			      u64 *ram_bytes);
++			      u64 *ram_bytes, bool strict);
  
-+	if (control->type != WM8958)
-+		return 0;
-+
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
- 	case SND_SOC_DAPM_PRE_PMU:
--- 
-2.25.1
-
+ void __btrfs_del_delalloc_inode(struct btrfs_root *root,
+ 				struct btrfs_inode *inode);
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -2320,7 +2320,8 @@ static noinline int check_delayed_ref(st
+ 
+ static noinline int check_committed_ref(struct btrfs_root *root,
+ 					struct btrfs_path *path,
+-					u64 objectid, u64 offset, u64 bytenr)
++					u64 objectid, u64 offset, u64 bytenr,
++					bool strict)
+ {
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct btrfs_root *extent_root = fs_info->extent_root;
+@@ -2362,9 +2363,13 @@ static noinline int check_committed_ref(
+ 	    btrfs_extent_inline_ref_size(BTRFS_EXTENT_DATA_REF_KEY))
+ 		goto out;
+ 
+-	/* If extent created before last snapshot => it's definitely shared */
+-	if (btrfs_extent_generation(leaf, ei) <=
+-	    btrfs_root_last_snapshot(&root->root_item))
++	/*
++	 * If extent created before last snapshot => it's shared unless the
++	 * snapshot has been deleted. Use the heuristic if strict is false.
++	 */
++	if (!strict &&
++	    (btrfs_extent_generation(leaf, ei) <=
++	     btrfs_root_last_snapshot(&root->root_item)))
+ 		goto out;
+ 
+ 	iref = (struct btrfs_extent_inline_ref *)(ei + 1);
+@@ -2389,7 +2394,7 @@ out:
+ }
+ 
+ int btrfs_cross_ref_exist(struct btrfs_root *root, u64 objectid, u64 offset,
+-			  u64 bytenr)
++			  u64 bytenr, bool strict)
+ {
+ 	struct btrfs_path *path;
+ 	int ret;
+@@ -2400,7 +2405,7 @@ int btrfs_cross_ref_exist(struct btrfs_r
+ 
+ 	do {
+ 		ret = check_committed_ref(root, path, objectid,
+-					  offset, bytenr);
++					  offset, bytenr, strict);
+ 		if (ret && ret != -ENOENT)
+ 			goto out;
+ 
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1568,7 +1568,7 @@ static noinline int check_can_nocow(stru
+ 
+ 	num_bytes = lockend - lockstart + 1;
+ 	ret = can_nocow_extent(&inode->vfs_inode, lockstart, &num_bytes,
+-			NULL, NULL, NULL);
++			NULL, NULL, NULL, false);
+ 	if (ret <= 0) {
+ 		ret = 0;
+ 		btrfs_end_write_no_snapshotting(root);
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1578,7 +1578,7 @@ next_slot:
+ 				goto out_check;
+ 			ret = btrfs_cross_ref_exist(root, ino,
+ 						    found_key.offset -
+-						    extent_offset, disk_bytenr);
++						    extent_offset, disk_bytenr, false);
+ 			if (ret) {
+ 				/*
+ 				 * ret could be -EIO if the above fails to read
+@@ -7529,7 +7529,7 @@ static struct extent_map *btrfs_new_exte
+  */
+ noinline int can_nocow_extent(struct inode *inode, u64 offset, u64 *len,
+ 			      u64 *orig_start, u64 *orig_block_len,
+-			      u64 *ram_bytes)
++			      u64 *ram_bytes, bool strict)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_path *path;
+@@ -7607,8 +7607,9 @@ noinline int can_nocow_extent(struct ino
+ 	 * Do the same check as in btrfs_cross_ref_exist but without the
+ 	 * unnecessary search.
+ 	 */
+-	if (btrfs_file_extent_generation(leaf, fi) <=
+-	    btrfs_root_last_snapshot(&root->root_item))
++	if (!strict &&
++	    (btrfs_file_extent_generation(leaf, fi) <=
++	     btrfs_root_last_snapshot(&root->root_item)))
+ 		goto out;
+ 
+ 	backref_offset = btrfs_file_extent_offset(leaf, fi);
+@@ -7644,7 +7645,8 @@ noinline int can_nocow_extent(struct ino
+ 	 */
+ 
+ 	ret = btrfs_cross_ref_exist(root, btrfs_ino(BTRFS_I(inode)),
+-				    key.offset - backref_offset, disk_bytenr);
++				    key.offset - backref_offset, disk_bytenr,
++				    strict);
+ 	if (ret) {
+ 		ret = 0;
+ 		goto out;
+@@ -7865,7 +7867,7 @@ static int btrfs_get_blocks_direct_write
+ 		block_start = em->block_start + (start - em->start);
+ 
+ 		if (can_nocow_extent(inode, start, &len, &orig_start,
+-				     &orig_block_len, &ram_bytes) == 1 &&
++				     &orig_block_len, &ram_bytes, false) == 1 &&
+ 		    btrfs_inc_nocow_writers(fs_info, block_start)) {
+ 			struct extent_map *em2;
+ 
+@@ -11030,7 +11032,7 @@ static int btrfs_swap_activate(struct sw
+ 		free_extent_map(em);
+ 		em = NULL;
+ 
+-		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL);
++		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL, true);
+ 		if (ret < 0) {
+ 			goto out;
+ 		} else if (ret) {
 
 
