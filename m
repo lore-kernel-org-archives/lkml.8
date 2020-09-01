@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC27C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 157E8C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05DDF206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D896F206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979144;
-	bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
+	s=default; t=1598979150;
+	bh=u8zMHey+yOMxaEFYU2TU2BQcMfx2dnwt8ZGCM9UlWV4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PWP0tZuQ0pyGI4oFKvCfI7KPyKnmvw/U4CLAx+iv6dXRrd0612QtaPYzoP5ZU56R7
-	 +kjdC0cZRInZczBxXLzl3ms7/F8rbBumKFmaU3Wl4Q4ggoVuma11ecW3UjqmYQfhI8
-	 OVYDXUe81uLQFOB+uDwLxLH2WiyjfF7gOjq7ZfLY=
+	b=gBlXtmDdoZxuU22vR23jxxsfE4ahRmsxYxZ9fjZWUL2ggTnOVu5U4OpLsk//qKxlw
+	 DhvuRZq2OOfsihOexf+mSGNs9Y2iKOtiX2NehW9ucoIT71hGSzgGAhE5r1SZTwB3PW
+	 VtbUH8VFRDmPWreReitLbGCCKYummsTPQ13zwJz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbgIAQwW (ORCPT
+        id S1732423AbgIAQw1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:52:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50574 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:52:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728452AbgIAPZp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:45 -0400
+        id S1729666AbgIAPZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:25:41 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17415206FA;
-        Tue,  1 Sep 2020 15:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8311320684;
+        Tue,  1 Sep 2020 15:25:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973942;
-        bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
+        s=default; t=1598973940;
+        bh=u8zMHey+yOMxaEFYU2TU2BQcMfx2dnwt8ZGCM9UlWV4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c1mM0SEnYQfbxVzSPMEwZd/BFMiSI4gruU3ufDHtrLyrVnK0iAkozf6qssLs44dAc
-         vynKfzctBaNe8Jw1XmBpUGMU5oaetd3Zqg+ylFCb0iJWhtLGnf7EbDCWh6edtQVVo0
-         9TuuYPexWYyWOuzdQ4l0cWIE+TmxXsDk+PeyNiLk=
+        b=T4w7ynnuYlsLsoQPN+y9R8NtLthqImy794y1JjhQB8i/i8RocdF1fRo2CEa3yL0KD
+         3FLfmo6fWmCpreqGC9wmXEqoMEhas1F7CgXbftGlU889Evnk2CjI1+HKfnyuVWB6Bk
+         xva/Pt9ZEIKfSLJOzsnOWipXtnZK7j5xtBm8YdMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>
-Subject: [PATCH 4.19 109/125] usb: uas: Add quirk for PNY Pro Elite
-Date:   Tue,  1 Sep 2020 17:11:04 +0200
-Message-Id: <20200901150939.955377355@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 108/125] USB: yurex: Fix bad gfp argument
+Date:   Tue,  1 Sep 2020 17:11:03 +0200
+Message-Id: <20200901150939.905188730@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -58,39 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 9a469bc9f32dd33c7aac5744669d21a023a719cd upstream.
+commit f176ede3a3bde5b398a6777a7f9ff091baa2d3ff upstream.
 
-PNY Pro Elite USB 3.1 Gen 2 device (SSD) doesn't respond to ATA_12
-pass-through command (i.e. it just hangs). If it doesn't support this
-command, it should respond properly to the host. Let's just add a quirk
-to be able to move forward with other operations.
+The syzbot fuzzer identified a bug in the yurex driver: It passes
+GFP_KERNEL as a memory-allocation flag to usb_submit_urb() at a time
+when its state is TASK_INTERRUPTIBLE, not TASK_RUNNING:
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Link: https://lore.kernel.org/r/2b0585228b003eedcc82db84697b31477df152e0.1597803605.git.thinhn@synopsys.com
+do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000370c7c68>] prepare_to_wait+0xb1/0x2a0 kernel/sched/wait.c:247
+WARNING: CPU: 1 PID: 340 at kernel/sched/core.c:7253 __might_sleep+0x135/0x190
+kernel/sched/core.c:7253
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 340 Comm: syz-executor677 Not tainted 5.8.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google
+01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xf6/0x16e lib/dump_stack.c:118
+ panic+0x2aa/0x6e1 kernel/panic.c:231
+ __warn.cold+0x20/0x50 kernel/panic.c:600
+ report_bug+0x1bd/0x210 lib/bug.c:198
+ handle_bug+0x41/0x80 arch/x86/kernel/traps.c:234
+ exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
+ asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
+RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:7253
+Code: 65 48 8b 1c 25 40 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06 00 75
+2b 48 8b 73 10 48 c7 c7 e0 9e 06 86 e8 ed 12 f6 ff <0f> 0b e9 46 ff ff ff e8 1f
+b2 4b 00 e9 29 ff ff ff e8 15 b2 4b 00
+RSP: 0018:ffff8881cdb77a28 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff8881c6458000 RCX: 0000000000000000
+RDX: ffff8881c6458000 RSI: ffffffff8129ec93 RDI: ffffed1039b6ef37
+RBP: ffffffff86fdade2 R08: 0000000000000001 R09: ffff8881db32f54f
+R10: 0000000000000000 R11: 0000000030343354 R12: 00000000000001f2
+R13: 0000000000000000 R14: 0000000000000068 R15: ffffffff83c1b1aa
+ slab_pre_alloc_hook.constprop.0+0xea/0x200 mm/slab.h:498
+ slab_alloc_node mm/slub.c:2816 [inline]
+ slab_alloc mm/slub.c:2900 [inline]
+ kmem_cache_alloc_trace+0x46/0x220 mm/slub.c:2917
+ kmalloc include/linux/slab.h:554 [inline]
+ dummy_urb_enqueue+0x7a/0x880 drivers/usb/gadget/udc/dummy_hcd.c:1251
+ usb_hcd_submit_urb+0x2b2/0x22d0 drivers/usb/core/hcd.c:1547
+ usb_submit_urb+0xb4e/0x13e0 drivers/usb/core/urb.c:570
+ yurex_write+0x3ea/0x820 drivers/usb/misc/yurex.c:495
+
+This patch changes the call to use GFP_ATOMIC instead of GFP_KERNEL.
+
+Reported-and-tested-by: syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200810182954.GB307778@rowland.harvard.edu
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/usb/misc/yurex.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -80,6 +80,13 @@ UNUSUAL_DEV(0x152d, 0x0578, 0x0000, 0x99
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_BROKEN_FUA),
- 
-+/* Reported-by: Thinh Nguyen <thinhn@synopsys.com> */
-+UNUSUAL_DEV(0x154b, 0xf00d, 0x0000, 0x9999,
-+		"PNY",
-+		"Pro Elite SSD",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_ATA_1X),
-+
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x2109, 0x0711, 0x0000, 0x9999,
- 		"VIA",
+--- a/drivers/usb/misc/yurex.c
++++ b/drivers/usb/misc/yurex.c
+@@ -492,7 +492,7 @@ static ssize_t yurex_write(struct file *
+ 	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
+ 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
+ 		dev->cntl_buffer[0]);
+-	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
++	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
+ 	if (retval >= 0)
+ 		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
+ 	finish_wait(&dev->waitq, &wait);
 
 
