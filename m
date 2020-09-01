@@ -2,163 +2,103 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32CCDC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FD7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C46A206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Nc5W8jjH"
+	by mail.kernel.org (Postfix) with ESMTP id E444C206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598980373;
+	bh=p8BE7X+nZ6st4U/GVQwBf0Sc/g1a6v51AjLXWy+aJXQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=d/Y8D/AvkXjbi2DTYmaTmSg1gbZ2jux28BvQ+WEPHRpQrr8Ykyu0LtJg2L5J4qtmf
+	 hiece6r1O/JQ2vC0st2RLeBMliAPOqedCuId5Oq7ri5liKNFS4yopczPMDP0ycOVdI
+	 PQUfeCGtByWgZB1N2MjSUA6W5EZIq4k4yysY96JE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgIARMr (ORCPT
+        id S1729269AbgIARMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:12:47 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49664 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730242AbgIARMe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:12:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598980351;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6tq9XbBkkctfISvu/8JAip4aOF6DG++oXbCP77hju3Y=;
-        b=Nc5W8jjHYz3TEc8a2EyIdmPuFOTGztX3Fkv8vjGWzm8pB20RSsn2zz0YtjmE2k11pxtZPD
-        1yHtl36fby/j2d1PxS9WISPI6OfX/Mb781KPLv9XGFntzAKB1WKiwenLrKIBM0llcDc3WQ
-        rTduzCi3x51+mbUcUvQYBUj0mLkrsCY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-559-gfbAtqhlPbKr-7JAzqN6xw-1; Tue, 01 Sep 2020 13:12:27 -0400
-X-MC-Unique: gfbAtqhlPbKr-7JAzqN6xw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 1 Sep 2020 13:12:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729148AbgIAPPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:15:49 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 344B11006708;
-        Tue,  1 Sep 2020 17:12:26 +0000 (UTC)
-Received: from treble (ovpn-113-168.rdu2.redhat.com [10.10.113.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B1BD1002D60;
-        Tue,  1 Sep 2020 17:12:22 +0000 (UTC)
-Date:   Tue, 1 Sep 2020 12:12:20 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     Petr Mladek <pmladek@suse.com>, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: refactoring livepatch documentation was Re: [PATCH 1/2]
- docs/livepatch: Add new compiler considerations doc
-Message-ID: <20200901171220.pgepj3hxrfwy37rj@treble>
-References: <20200721161407.26806-1-joe.lawrence@redhat.com>
- <20200721161407.26806-2-joe.lawrence@redhat.com>
- <20200721230442.5v6ah7bpjx4puqva@treble>
- <de3672ef-8779-245f-943d-3d5a4b875446@redhat.com>
- <20200722205139.hwbej2atk2ejq27n@treble>
- <20200806120336.GP24529@alley>
- <3842fe65-332e-9f90-fe75-7cd80b34b75e@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 01A7F20767;
+        Tue,  1 Sep 2020 15:15:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973349;
+        bh=p8BE7X+nZ6st4U/GVQwBf0Sc/g1a6v51AjLXWy+aJXQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OEZqYXW8UbF4cn/VEbjD3crpCh5iDN568k850oFxgxtMlQtpzGN3A8qxFV49uhuiv
+         biQfk7hGIu/GaYpX3hHZL7G0TnWv4iESTZ7peRKrzy/hzYQstinnmBvblEs+5UJryy
+         oJFlCk62meAFk9vYkVBesrT4EDKPvIdAqdSb54G4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 44/78] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
+Date:   Tue,  1 Sep 2020 17:10:20 +0200
+Message-Id: <20200901150926.958300203@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
+References: <20200901150924.680106554@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3842fe65-332e-9f90-fe75-7cd80b34b75e@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 10, 2020 at 03:46:46PM -0400, Joe Lawrence wrote:
-> > > > > I'm thinking a newcomer reading this might be lost.  It's not
-> > > > > necessarily clear that there are currently two completely different
-> > > > > approaches to creating a livepatch module, each with their own quirks
-> > > > > and benefits/drawbacks.  There is one mention of a "source-based
-> > > > > livepatch author" but no explanation of what that means.
-> > > > > 
-> > > > 
-> > > > Yes, the initial draft was light on source-based patching since I only
-> > > > really tinker with it for samples/kselftests.  The doc was the result of an
-> > > > experienced livepatch developer and Sunday afternoon w/the compiler. I'm
-> > > > sure it reads as such. :)
-> > > 
-> > > Are experienced livepatch developers the intended audience?  If so I
-> > > question what value this document has in its current form.  Presumably
-> > > experienced livepatch developers would already know this stuff.
-> > 
-> > IMHO, this document is useful even for newbies. They might at
-> > least get a clue about these catches. It is better than nothing.
-> > 
-> > I do not want to discourage Joe from creating even better
-> > documentation. But if he does not have interest or time
-> > to work on it, I am happy even for this piece.
+From: Vineeth Vijayan <vneethv@linux.ibm.com>
 
-Agreed.  Joe, sorry for instigating and then disappearing :-)
+[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
 
-I know we're all busy and I didn't intend to block the patch until we
-reach Documentation Nirvana.  Though it would be _really_ nice to get
-more input from those who have more experience with the subject matter
-(source-based patch generation).
+The scanning through subchannels during the time of an event could
+take significant amount of time in case of platforms with lots of
+known subchannels. This might result in higher scheduling latencies
+for other tasks especially on systems with a single CPU. Add
+cond_resched() call, as the loop in slow_eval_known_fn() can be
+executed for a longer duration.
 
-It's part of my job as a maintainer to push back, question, and
-sometimes even complain.  I was just wondering where this is heading,
-because as our documentation grows (a good thing), the overall state is
-getting less cohesive (a bad thing).
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/css.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Anyway, ACK to the original patch.
-
-> 1. Provide a better index page to connect the other files/docs, like
-> https://www.kernel.org/doc/html/latest/core-api/index.html but obviously not
-> that extensive.  Right now we have only a Table of Contents tree without any
-> commentary.
-> 
-> 2. Rearrange and refactor sections:
-> 
-> livepatch.rst
->   Keep just about everything
->   Add a history section to explain ksplice, kgraft, kpatch for the
->     uninitiated?
->   Add a section on source based vs. binary diff livepatch creation,
->     this may be worth its own top-level section
-> 
-> Livepatch API
->   Basic API
->   Callbacks
->   Shadow variables
->   Cumulative patches
->   System state
-> 
-> KLP Relocations
->   Right now this is a bit academic AFAIK kpatch is the only tool
->   currently making use of them.  So maybe this document becomes a
->   more general purpose doc explaining how to reference unexported
->   symbols?  (ie, how does kgraft currently do it, particularly
->   w/kallsyms going unexported?)
-> 
->   Eventually this could contain klp-convert howto if it ever gets
->   merged.
-> 
-> Compiler considerations
->   TBD
-
-This is certainly a logical way to organize things.  But again I would
-wonder, who's the audience?
-
-> I suppose this doesn't create a "Livepatching creation for dummies" guide,
-> but my feeling is that there are so many potential (hidden) pitfalls that
-> such guide would be dangerous.
-
-I disagree that a live patching creation guide would be dangerous.  I
-think it would be less dangerous than *not* having one.  There are
-several companies now delivering (hopefully reliable) livepatches to
-customers, and they're all presumably following processes.  We just need
-to agree on best practices and document the resulting process.  Over
-time I believe that will create much more good than harm.
-
-Sure, there are pitfalls, but the known ones can be highlighted in the
-guide.  No document is perfect but it hopefully improves and becomes
-more useful over time.
-
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index 39a2b0cde9e42..d81fdcd6a1fe0 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -529,6 +529,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
+ 		rc = css_evaluate_known_subchannel(sch, 1);
+ 		if (rc == -EAGAIN)
+ 			css_schedule_eval(sch->schid);
++		/*
++		 * The loop might take long time for platforms with lots of
++		 * known devices. Allow scheduling here.
++		 */
++		cond_resched();
+ 	}
+ 	return 0;
+ }
 -- 
-Josh
+2.25.1
+
+
 
