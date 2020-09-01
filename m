@@ -2,108 +2,107 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D71C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891EDC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 10B8720767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530162078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:14:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976884;
-	bh=qWkM3Om2LckEUxIo++nIEQvs9JMWHngR19nimbA97dg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vlGyH+f5/GL6q8gOOrsK6ij1gByUT52ZovWdXZ/eBkwmBZla884+ZHmviofqTZ7N6
-	 0AaISBPwKYbWRuQTN+/jozQjvjy2O5Bo5BDmvlReAenFtSUgmfDY6oI8HfgGsRiFnw
-	 I86jpD+zxQFPVWocJpou3iEzObqSzri+t5PqSzqE=
+	s=default; t=1598976888;
+	bh=wSYh3X+qxwyoZekqoM20nCWZcWw1dfhsCUJVuXIEPaE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=MxaMYiyf2eF2MWu6W91vMBlpENnV83u90yASoZBGSKam6c8OJ0uQ8XeNHHsaJAMdO
+	 8lCJMNyMJfucTwKpS3Ei4TdB91lJhc6MRFA8IXkvnIivp1wQd8HbB4uubb84HzUqUm
+	 T8+S9Y6q4Jmr1DdexTA9btVvTTMsNmDyBQKQpP6g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgIAQOm (ORCPT
+        id S1731885AbgIAQNt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:14:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40796 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:13:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731199AbgIAPfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:18 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        id S1731108AbgIAQNo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:13:44 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 919B720866;
-        Tue,  1 Sep 2020 15:35:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76C99204EC;
+        Tue,  1 Sep 2020 16:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974511;
-        bh=qWkM3Om2LckEUxIo++nIEQvs9JMWHngR19nimbA97dg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AQh+n6onWRvec9e0ddkHMZNcVaY1cMPuOdD7fdMt2jJulqqS+3/FfhtOQ2xrcDzvU
-         HMAqg3MDPQEV03KXxNHoB4FGJl6jYtlsXog5rww9tazh3itI8Deu+Y1v4KFyNlMO1c
-         mlGRm/g5evZAUL4xh2LW65mac0V00euKx0aKIHP8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Matthias Maennich <maennich@google.com>
-Subject: [PATCH 5.4 205/214] kheaders: remove unneeded cat command piped to head / tail
-Date:   Tue,  1 Sep 2020 17:11:25 +0200
-Message-Id: <20200901151002.753802071@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1598976820;
+        bh=wSYh3X+qxwyoZekqoM20nCWZcWw1dfhsCUJVuXIEPaE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=WKc3b7+l3qEJxpTCJykOhIL5mC4+Tc+4xUuoNh86NmlHnYI62zNec4SSfKIrB0rAl
+         ejM533Ibu1SyDPQ5Dx6TmnAip7Lh6b8EbpmM29rchZrIEuzNWLMiSMXe5Dank5qQjr
+         uH/ubRDB/JaW46oPe7Zn39dD8nr2lIcTL1jF36E8=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 1FB1F35226A5; Tue,  1 Sep 2020 09:13:40 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 09:13:40 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org
+Cc:     Lina Iyer <ilina@codeaurora.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
+ OF driver helper
+Message-ID: <20200901161340.GC29330@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
+ <20200831194402.GD2855@paulmck-ThinkPad-P72>
+ <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
+ <CAPDyKFrTERjpLrPOFtkqLyNsk2T_58Ye2FQ1mPf-0u78aWW=Xw@mail.gmail.com>
+ <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
+ <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+ <CAPDyKFrv+DTF8=twZZk_tenB-sLg6H-CFn9HVDVA5S2kK2=U5Q@mail.gmail.com>
+ <20200901154417.GD20303@codeaurora.org>
+ <20200901155014.GF2674@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901155014.GF2674@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Tue, Sep 01, 2020 at 05:50:14PM +0200, peterz@infradead.org wrote:
+> On Tue, Sep 01, 2020 at 09:44:17AM -0600, Lina Iyer wrote:
+> > > > > > > I could add RCU_NONIDLE for the calls to pm_runtime_put_sync_suspend()
+> > > > > > > and pm_runtime_get_sync() in psci_enter_domain_idle_state(). Perhaps
+> > > > > > > that's the easiest approach, at least to start with.
+> 
+> > I think this would be nice. This should also cover the case, where PM domain
+> > power off notification callbacks call trace function internally. Right?
+> 
+> That's just more crap for me to clean up later :-(
+> 
+> trace_*_rcuidle() and RCU_NONIDLE() need to die, not proliferate.
 
-commit 9a066357184485784f782719093ff804d05b85db upstream.
+Moving the idle-entry boundary further in is good in any number of ways.
+But experience indicates that no matter how far you move it, there will
+be something complex further in.  Unless you are pushing it all the way
+into all the arch-specific code down as far as it can possibly go?
 
-The 'head' and 'tail' commands can take a file path directly.
-So, you do not need to run 'cat'.
-
-  cat kernel/kheaders.md5 | head -1
-
-... is equivalent to:
-
-  head -1 kernel/kheaders.md5
-
-and the latter saves forking one process.
-
-While I was here, I replaced 'head -1' with 'head -n 1'.
-
-I also replaced '==' with '=' since we do not have a good reason to
-use the bashism.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Matthias Maennich <maennich@google.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- kernel/gen_kheaders.sh |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
---- a/kernel/gen_kheaders.sh
-+++ b/kernel/gen_kheaders.sh
-@@ -41,10 +41,10 @@ obj_files_md5="$(find $dir_list -name "*
- this_file_md5="$(ls -l $sfile | md5sum | cut -d ' ' -f1)"
- if [ -f $tarfile ]; then tarfile_md5="$(md5sum $tarfile | cut -d ' ' -f1)"; fi
- if [ -f kernel/kheaders.md5 ] &&
--	[ "$(cat kernel/kheaders.md5|head -1)" == "$src_files_md5" ] &&
--	[ "$(cat kernel/kheaders.md5|head -2|tail -1)" == "$obj_files_md5" ] &&
--	[ "$(cat kernel/kheaders.md5|head -3|tail -1)" == "$this_file_md5" ] &&
--	[ "$(cat kernel/kheaders.md5|tail -1)" == "$tarfile_md5" ]; then
-+	[ "$(head -n 1 kernel/kheaders.md5)" = "$src_files_md5" ] &&
-+	[ "$(head -n 2 kernel/kheaders.md5 | tail -n 1)" = "$obj_files_md5" ] &&
-+	[ "$(head -n 3 kernel/kheaders.md5 | tail -n 1)" = "$this_file_md5" ] &&
-+	[ "$(tail -n 1 kernel/kheaders.md5)" = "$tarfile_md5" ]; then
- 		exit
- fi
- 
-
-
+							Thanx, Paul
