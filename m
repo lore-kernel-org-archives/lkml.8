@@ -2,103 +2,101 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916C0C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:23:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35302C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7348220767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:23:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="aHq09IbG"
+	by mail.kernel.org (Postfix) with ESMTP id 1CF9F20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:23:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbgIAVXB (ORCPT
+        id S1729330AbgIAVXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:23:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIAVW7 (ORCPT
+        Tue, 1 Sep 2020 17:23:02 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:60240 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728411AbgIAVXB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:22:59 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB011C061244;
-        Tue,  1 Sep 2020 14:22:58 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bh0R26hvBz9sPB;
-        Wed,  2 Sep 2020 07:22:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1598995375;
-        bh=3Esvk0W81xrUht6daRuR6VuF2EFX7pYqSLRxhTBc+UI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=aHq09IbG0pm8buLuCZyGCMApsK4jafJJh8AGfiOKTzGoJUWShsGLtvltYv+38clJH
-         RpvtOsyANVy4ofTfVTsAT0G8CyCCxJEveo5m9zfKTQsm3DX/22zQsRqNgsz3ROnYZ4
-         jhZtlGEFMuB2oc+ljnsTvPtU4+pEkpHW0Kava3GjUOJekutwENMzc8tA+/N/Ujauhd
-         I4kvw39LnCKklUZx41eUkNqq4GtieTx69GT/5CyLntp/DaaNh11QK1rvTd8+WkptoE
-         So6zqwEzO8taVQ+eRuJklFTK3zrtAE08G1I3Ovy1k1fCsiZZcTxmKibUz2JuFhJUYs
-         55Ym9JLmLZ8eA==
-Date:   Wed, 2 Sep 2020 07:22:54 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: linux-next: Fixes tags need some work in the printk tree
-Message-ID: <20200902072254.3054db47@canb.auug.org.au>
+        Tue, 1 Sep 2020 17:23:01 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id DA9581C0B9C; Tue,  1 Sep 2020 23:22:58 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 23:22:57 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        George Kennedy <george.kennedy@oracle.com>,
+        syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Subject: Re: [PATCH 4.19 085/125] fbcon: prevent user font height or width
+ change from causing potential out-of-bounds access
+Message-ID: <20200901212257.GB17861@duo.ucw.cz>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150938.740748818@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/rBhn/T6ojvrr=_d+utx4LNb";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
+Content-Disposition: inline
+In-Reply-To: <20200901150938.740748818@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/rBhn/T6ojvrr=_d+utx4LNb
-Content-Type: text/plain; charset=US-ASCII
+
+--neYutvxvOLaeuPCA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi all,
+On Tue 2020-09-01 17:10:40, Greg Kroah-Hartman wrote:
+> From: George Kennedy <george.kennedy@oracle.com>
+>=20
+> commit 39b3cffb8cf3111738ea993e2757ab382253d86a upstream.
+>=20
+> Add a check to fbcon_resize() to ensure that a possible change to user fo=
+nt
+> height or user font width will not allow a font data out-of-bounds access.
+> NOTE: must use original charcount in calculation as font charcount can
+> change and cannot be used to determine the font data allocated size.
 
-In commits
 
-  e5e4c07d9233 ("docs: vmcoreinfo: add lockless printk ringbuffer vmcoreinf=
-o")
-  0cfdacd74ad5 ("scripts/gdb: update for lockless printk ringbuffer")
+> +#define PITCH(w) (((w) + 7) >> 3)
+> +#define CALC_FONTSZ(h, p, c) ((h) * (p) * (c)) /* size =3D height * pitc=
+h * charcount */
 
-Fixes tag
+Ok, so we validate data from user. Can this overflow? Should it be
+inline function for readability?
 
-  Fixes: ("printk: use the lockless ringbuffer")
+>  static int fbcon_resize(struct vc_data *vc, unsigned int width,=20
+>  			unsigned int height, unsigned int user)
+>  {
+> @@ -2161,6 +2164,24 @@ static int fbcon_resize(struct vc_data *
+>  	struct fb_var_screeninfo var =3D info->var;
+>  	int x_diff, y_diff, virt_w, virt_h, virt_fw, virt_fh;
+> =20
+> +	if (ops->p && ops->p->userfont && FNTSIZE(vc->vc_font.data)) {
+> +		int size;
+> +		int pitch =3D PITCH(vc->vc_font.width);
 
-has these problem(s):
+Should size be unsigned?
 
-  - No SHA1 recognised
-
-Maybe you meant
-
-Fixes: 254685ef9374 ("scripts/gdb: update for lockless printk ringbuffer")
-
+Best regards,
+									Pavel
 --=20
-Cheers,
-Stephen Rothwell
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
---Sig_/rBhn/T6ojvrr=_d+utx4LNb
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--neYutvxvOLaeuPCA
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl9Ou64ACgkQAVBC80lX
-0Gzr7Af/fkH9i2kiBWEjQ7QiuHNiHo49tfZZuyGnrBWS/1ct1lIEPi0pr0aVP0JQ
-X8koJ5b4e8Sn7+7FOX24BQJYQOqRYCD3vnI4xC3OJZ63GkGrdW+RuL7x/VOkshJ0
-EhZ2GBS7ydTGvDdvX2ZGWOB+tk7AxdNEpGtPBhvXvlD9REtYLK2G2LA0PhI9ZDQn
-nmvu6ZxU09FfwGbuE41xrHuflw4zMLRH5u8QEd90PfKXMlqDY8qUX/j1gAX0Dlz2
-e6us6vVwhs++6nMEuq8zfmzlfiN5yQGRuJ7z4bIqC0DzVOWuBUthgxHI/fW6ISNw
-vfXtHoD0kjxkm5sKeZHLXan3GKOcVA==
-=t+44
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX067sQAKCRAw5/Bqldv6
+8rpXAJ9uTtvcvDYAN5dPEexRzRORaZsbIwCfcdojqJqhafOpZyAEAQC6CvNxom0=
+=Hbwv
 -----END PGP SIGNATURE-----
 
---Sig_/rBhn/T6ojvrr=_d+utx4LNb--
+--neYutvxvOLaeuPCA--
