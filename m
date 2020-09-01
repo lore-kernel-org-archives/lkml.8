@@ -5,55 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32514C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C939DC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1FC4207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5952206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974068;
-	bh=d8M1P+kY1TpI/qiLOR1OPxgSK5j7DCa50lpNnqH7Ueg=;
+	s=default; t=1598974069;
+	bh=pS29Ox82J1uQr3H8vy0OUqnnoTghniXWdICI/rwgabE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=no6dfUZhI/lcnvEhKA3kMN1STalRk0oe9vpjywpK8ilKwRVi7icIskQaUxk0zkN1Z
-	 HlgXf+9k/6zPsk1p4+jwNjpaoCJYdjGOrPBVBZxeBvO6p3wF0uxNJQERk4fhsVIsv2
-	 jR6Witda+riB9VoT7QwwKMEEuU6J6A5yz2JV9sGU=
+	b=ph4wbaDuUQ2V+s4Cg2jD2ON2Bbmzh3ZOp4yJmF8/6bo4JdFuraL/oLP9OPBvu1tIG
+	 nsVgJK9F7v6h2GNXMALNQuuQx/CPizwJcx29Z7y5gFJg4MNhRgH4B+36MXu80LNGVP
+	 ljtuxNtrLh3y+4FF8HIF++NOOiq7tIEA1ulinABg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbgIAP1q (ORCPT
+        id S1730295AbgIAP1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48460 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:27:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729959AbgIAPYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:24:32 -0400
+        id S1729967AbgIAPYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:37 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A06332100A;
-        Tue,  1 Sep 2020 15:24:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C2DB207D3;
+        Tue,  1 Sep 2020 15:24:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973869;
-        bh=d8M1P+kY1TpI/qiLOR1OPxgSK5j7DCa50lpNnqH7Ueg=;
+        s=default; t=1598973876;
+        bh=pS29Ox82J1uQr3H8vy0OUqnnoTghniXWdICI/rwgabE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QB406MhsJOt23uA+NU4icWGMPUagnUVndbszKDLxF4RFNjHb0vCthJAycdR4DQdJI
-         0yO+ayW8f0nnSbtBG1YXTLIytqgq4aRPu2T53/Frq/AcaL/XgB2CaPq/PdyZYwqWE+
-         pFppqeR/gyH6I3H6iD0Tih15V6GEeNenMyRs+JIU=
+        b=ygwGowK4lHyD7NM35AkRWvv7iPgsayLlwnco1kty2Kj/QOdF4JqaEGcM0XNRMvejb
+         IXQcw6xig+S6LjcDk82f7kQdpKjXw+PGLcJs/VW3E7sUnXoKLvzmMrep348HEEm507
+         ZGxpOgfwR9YdRd/fS6wwXuQk+VQctJOgY/p9Uq+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
-        Hannes Reinecke <hare@suse.com>, Xiao Ni <xni@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Evan Green <evgreen@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        David Jeffery <djeffery@redhat.com>,
         Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 080/125] block: loop: set discard granularity and alignment for block device backed loop
-Date:   Tue,  1 Sep 2020 17:10:35 +0200
-Message-Id: <20200901150938.494703442@linuxfoundation.org>
+Subject: [PATCH 4.19 082/125] blk-mq: order adding requests to hctx->dispatch and checking SCHED_RESTART
+Date:   Tue,  1 Sep 2020 17:10:37 +0200
+Message-Id: <20200901150938.597429566@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -68,106 +64,90 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ming Lei <ming.lei@redhat.com>
 
-commit bcb21c8cc9947286211327d663ace69f07d37a76 upstream.
+commit d7d8535f377e9ba87edbf7fbbd634ac942f3f54f upstream.
 
-In case of block device backend, if the backend supports write zeros, the
-loop device will set queue flag of QUEUE_FLAG_DISCARD. However,
-limits.discard_granularity isn't setup, and this way is wrong,
-see the following description in Documentation/ABI/testing/sysfs-block:
+SCHED_RESTART code path is relied to re-run queue for dispatch requests
+in hctx->dispatch. Meantime the SCHED_RSTART flag is checked when adding
+requests to hctx->dispatch.
 
-	A discard_granularity of 0 means that the device does not support
-	discard functionality.
+memory barriers have to be used for ordering the following two pair of OPs:
 
-Especially 9b15d109a6b2 ("block: improve discard bio alignment in
-__blkdev_issue_discard()") starts to take q->limits.discard_granularity
-for computing max discard sectors. And zero discard granularity may cause
-kernel oops, or fail discard request even though the loop queue claims
-discard support via QUEUE_FLAG_DISCARD.
+1) adding requests to hctx->dispatch and checking SCHED_RESTART in
+blk_mq_dispatch_rq_list()
 
-Fix the issue by setup discard granularity and alignment.
+2) clearing SCHED_RESTART and checking if there is request in hctx->dispatch
+in blk_mq_sched_restart().
 
-Fixes: c52abf563049 ("loop: Better discard support for block devices")
+Without the added memory barrier, either:
+
+1) blk_mq_sched_restart() may miss requests added to hctx->dispatch meantime
+blk_mq_dispatch_rq_list() observes SCHED_RESTART, and not run queue in
+dispatch side
+
+or
+
+2) blk_mq_dispatch_rq_list still sees SCHED_RESTART, and not run queue
+in dispatch side, meantime checking if there is request in
+hctx->dispatch from blk_mq_sched_restart() is missed.
+
+IO hang in ltp/fs_fill test is reported by kernel test robot:
+
+	https://lkml.org/lkml/2020/7/26/77
+
+Turns out it is caused by the above out-of-order OPs. And the IO hang
+can't be observed any more after applying this patch.
+
+Fixes: bd166ef183c2 ("blk-mq-sched: add framework for MQ capable IO schedulers")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
 Signed-off-by: Ming Lei <ming.lei@redhat.com>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Coly Li <colyli@suse.de>
-Cc: Hannes Reinecke <hare@suse.com>
-Cc: Xiao Ni <xni@redhat.com>
-Cc: Martin K. Petersen <martin.petersen@oracle.com>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Gwendal Grignou <gwendal@chromium.org>
-Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
 Cc: Christoph Hellwig <hch@lst.de>
+Cc: David Jeffery <djeffery@redhat.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/block/loop.c |   33 ++++++++++++++++++---------------
- 1 file changed, 18 insertions(+), 15 deletions(-)
+ block/blk-mq-sched.c |    9 +++++++++
+ block/blk-mq.c       |    9 +++++++++
+ 2 files changed, 18 insertions(+)
 
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -864,6 +864,7 @@ static void loop_config_discard(struct l
- 	struct file *file = lo->lo_backing_file;
- 	struct inode *inode = file->f_mapping->host;
- 	struct request_queue *q = lo->lo_queue;
-+	u32 granularity, max_discard_sectors;
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -69,6 +69,15 @@ void blk_mq_sched_restart(struct blk_mq_
+ 		return;
+ 	clear_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
  
- 	/*
- 	 * If the backing device is a block device, mirror its zeroing
-@@ -876,11 +877,10 @@ static void loop_config_discard(struct l
- 		struct request_queue *backingq;
- 
- 		backingq = bdev_get_queue(inode->i_bdev);
--		blk_queue_max_discard_sectors(q,
--			backingq->limits.max_write_zeroes_sectors);
- 
--		blk_queue_max_write_zeroes_sectors(q,
--			backingq->limits.max_write_zeroes_sectors);
-+		max_discard_sectors = backingq->limits.max_write_zeroes_sectors;
-+		granularity = backingq->limits.discard_granularity ?:
-+			queue_physical_block_size(backingq);
- 
- 	/*
- 	 * We use punch hole to reclaim the free space used by the
-@@ -889,23 +889,26 @@ static void loop_config_discard(struct l
- 	 * useful information.
- 	 */
- 	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
--		q->limits.discard_granularity = 0;
--		q->limits.discard_alignment = 0;
--		blk_queue_max_discard_sectors(q, 0);
--		blk_queue_max_write_zeroes_sectors(q, 0);
-+		max_discard_sectors = 0;
-+		granularity = 0;
- 
- 	} else {
--		q->limits.discard_granularity = inode->i_sb->s_blocksize;
--		q->limits.discard_alignment = 0;
--
--		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
--		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
-+		max_discard_sectors = UINT_MAX >> 9;
-+		granularity = inode->i_sb->s_blocksize;
- 	}
- 
--	if (q->limits.max_write_zeroes_sectors)
-+	if (max_discard_sectors) {
-+		q->limits.discard_granularity = granularity;
-+		blk_queue_max_discard_sectors(q, max_discard_sectors);
-+		blk_queue_max_write_zeroes_sectors(q, max_discard_sectors);
- 		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
--	else
-+	} else {
-+		q->limits.discard_granularity = 0;
-+		blk_queue_max_discard_sectors(q, 0);
-+		blk_queue_max_write_zeroes_sectors(q, 0);
- 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
-+	}
-+	q->limits.discard_alignment = 0;
++	/*
++	 * Order clearing SCHED_RESTART and list_empty_careful(&hctx->dispatch)
++	 * in blk_mq_run_hw_queue(). Its pair is the barrier in
++	 * blk_mq_dispatch_rq_list(). So dispatch code won't see SCHED_RESTART,
++	 * meantime new request added to hctx->dispatch is missed to check in
++	 * blk_mq_run_hw_queue().
++	 */
++	smp_mb();
++
+ 	blk_mq_run_hw_queue(hctx, true);
  }
  
- static void loop_unprepare_queue(struct loop_device *lo)
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1222,6 +1222,15 @@ bool blk_mq_dispatch_rq_list(struct requ
+ 		spin_unlock(&hctx->lock);
+ 
+ 		/*
++		 * Order adding requests to hctx->dispatch and checking
++		 * SCHED_RESTART flag. The pair of this smp_mb() is the one
++		 * in blk_mq_sched_restart(). Avoid restart code path to
++		 * miss the new added requests to hctx->dispatch, meantime
++		 * SCHED_RESTART is observed here.
++		 */
++		smp_mb();
++
++		/*
+ 		 * If SCHED_RESTART was set by the caller of this function and
+ 		 * it is no longer set that means that it was cleared by another
+ 		 * thread and hence that a queue rerun is needed.
 
 
