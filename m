@@ -2,111 +2,132 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E698C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43CFC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EAFF206F0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C75E206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:31:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hbS++nkx"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="a/bpJOhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgIAH3w (ORCPT
+        id S1726674AbgIAHbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:29:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36398 "EHLO
+        Tue, 1 Sep 2020 03:31:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgIAH3v (ORCPT
+        with ESMTP id S1726006AbgIAHbH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:29:51 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DECCC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:29:51 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id d11so177019ejt.13
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 00:29:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=7DysICoorfZUUUIF+WpJaAVpr1xSSxTvFAEY3lBDX5U=;
-        b=hbS++nkxV7r4hrc5mADMRlI0aoeJGkpoGtGhsbvCJETmC5+uwfdTl3r8Qv2FTRx9DE
-         Cp+6c/529ATrN3XZmbNP7HzIaqWETtMBLIjBb3yxLRGqMdDnKQfTjoAzCRHw8nq4rZO0
-         8micol+BGeCoIuVKZ5mjc78MAnf6rpxLnzUGIMDkI2nS6bR+NMArVPJlDkNuEC2Vv+vB
-         Heqj3PyH1Npfv+6l0NhkThlcrIlw+ZM7BaEKvlsMUM5kQLOvid//fGoUk1FESUGOz3DR
-         Jt83fD0F3yCpb/x11mFuDZoUQundFTQ5xlYdQsXfEjV8Dc1EMngImDA3axkMA7zQJ97B
-         Y33Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7DysICoorfZUUUIF+WpJaAVpr1xSSxTvFAEY3lBDX5U=;
-        b=pYghMMMOIQ98R6UtssUIy89YTZSyzwl3rr5ECGz4ui1pXU/xUgBH1JtSbS6qbtcRqu
-         +z/2ym7TfDKHEmEde5SeP3uD3TFbDIx3LnDnKOynGyf3Z47Hd7lvXzoPN00CPXkWsPhB
-         0pt+OTmL24vtcfKNJ9fJHzgmF/pJ7y5qAiOSW68MV4G0VGXcEJweJzgv33WJShSp0LwL
-         Eww+h6RrAqosa8/uN36kHFoO/KdMmCL57ILA3fqFaeqXkmWCBPkx4PdN2nGV6l+hAzYY
-         UBOk+1Hc52rbxdyvCjWSW/+ZsRxuT+ewn03LcMEFdwWTvFECojrk+EF+2KOUDVDLFqHV
-         dT1g==
-X-Gm-Message-State: AOAM530CYz5lmtl4FbfIzmyGE77+es9c6TwQsFRgTZmFkf8iAj29F332
-        vSZkbAdhTmv+UD2F00O19Fvgnq98ltioUg==
-X-Google-Smtp-Source: ABdhPJzcEvNnP11aPaOGDAzf9tv6YNP8kpZaQNGAOH/ks5gp7+aVtUsoe1pCyEiwyiD3WLsrno1MlQ==
-X-Received: by 2002:a17:906:f1cf:: with SMTP id gx15mr308395ejb.241.1598945389872;
-        Tue, 01 Sep 2020 00:29:49 -0700 (PDT)
-Received: from ?IPv6:2003:ea:8f23:5700:cd1b:84f5:8ffb:1aa3? (p200300ea8f235700cd1b84f58ffb1aa3.dip0.t-ipconnect.de. [2003:ea:8f23:5700:cd1b:84f5:8ffb:1aa3])
-        by smtp.googlemail.com with ESMTPSA id g5sm430031ejk.52.2020.09.01.00.29.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 00:29:49 -0700 (PDT)
-Subject: Re: [PATCH] drivers: reduce the param length of the line
-To:     Tong Chen <tongchen@whu.edu.cn>
-Cc:     nic_swsd@realtek.com, davem@davemloft.net,
-        linux-kernel@vger.kernel.org
-References: <20200901022811.8675-1-tongchen@whu.edu.cn>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <2552dde8-7d2a-03f9-79cc-07dd506d8b41@gmail.com>
-Date:   Tue, 1 Sep 2020 09:29:43 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 03:31:07 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA5D0C061244;
+        Tue,  1 Sep 2020 00:31:06 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bgdz92lPxz9sTC;
+        Tue,  1 Sep 2020 17:31:01 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1598945461;
+        bh=03sHYm631sdFvHM5NaS/cwjM4VK1GZ0RfuJMTFnqpEc=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=a/bpJOhSiqrggdqpabXGJruLmgoojqIjNOtKdWPNocerR0Tx+kpxlpwOBXWByNo/u
+         4MMDvjMJXHZd3qpIFjDpNQwir2JtlbC9QuIRNfQv7+DKiRCdMAqVS2zB0NNm3xvlxi
+         hvo4hfX2X+T6n9TewBPyqOaQPF1dB6lLff4nNk3wepYL7lE7hDv4mTN4tfQemSqXSJ
+         WI1dVOLHIsHxXYqamewX3UAYivUNxFlBxI1JOPhVmYtR5K6iqZSaxTQcLo/zn3B6PJ
+         QNOduqvxUP/5omK0ZAxn1i6wfTDPjM1ab8plb48Tm0DDJw3DYQUCXwF5Hbpl36yYaa
+         HcDxgeuynTQ2A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nicholas Piggin <npiggin@gmail.com>, linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 16/23] powerpc: use asm-generic/mmu_context.h for no-op implementations
+In-Reply-To: <20200826145249.745432-17-npiggin@gmail.com>
+References: <20200826145249.745432-1-npiggin@gmail.com> <20200826145249.745432-17-npiggin@gmail.com>
+Date:   Tue, 01 Sep 2020 17:30:59 +1000
+Message-ID: <87sgc20x8s.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200901022811.8675-1-tongchen@whu.edu.cn>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.09.2020 04:28, Tong Chen wrote:
-> Reduce the param length of the line from 79 chars to 52 chars,
-> which complies with kernel preferences.
-
-Apart from formal issues with the patch (missing net/net-next
-annotation, wrong prefix): Did you get a checkpatch warning?
-Or what's the source of your assumed kernel preference?
-
-> Signed-off-by: Tong Chen <tongchen@whu.edu.cn>
+Nicholas Piggin <npiggin@gmail.com> writes:
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@ozlabs.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 > ---
->  drivers/net/ethernet/realtek/r8169_phy_config.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/realtek/r8169_phy_config.c b/drivers/net/ethernet/realtek/r8169_phy_config.c
-> index 913d030d73eb..f4b738cf8ad7 100644
-> --- a/drivers/net/ethernet/realtek/r8169_phy_config.c
-> +++ b/drivers/net/ethernet/realtek/r8169_phy_config.c
-> @@ -1302,7 +1302,8 @@ static void rtl8125b_hw_phy_config(struct rtl8169_private *tp,
->  	rtl8125b_config_eee_phy(phydev);
+>  arch/powerpc/include/asm/mmu_context.h | 22 +++++++---------------
+>  1 file changed, 7 insertions(+), 15 deletions(-)
+
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+
+cheers
+
+
+> diff --git a/arch/powerpc/include/asm/mmu_context.h b/arch/powerpc/include/asm/mmu_context.h
+> index 7f3658a97384..bc22e247ab55 100644
+> --- a/arch/powerpc/include/asm/mmu_context.h
+> +++ b/arch/powerpc/include/asm/mmu_context.h
+> @@ -14,7 +14,9 @@
+>  /*
+>   * Most if the context management is out of line
+>   */
+> +#define init_new_context init_new_context
+>  extern int init_new_context(struct task_struct *tsk, struct mm_struct *mm);
+> +#define destroy_context destroy_context
+>  extern void destroy_context(struct mm_struct *mm);
+>  #ifdef CONFIG_SPAPR_TCE_IOMMU
+>  struct mm_iommu_table_group_mem_t;
+> @@ -235,27 +237,15 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+>  }
+>  #define switch_mm_irqs_off switch_mm_irqs_off
+>  
+> -
+> -#define deactivate_mm(tsk,mm)	do { } while (0)
+> -
+> -/*
+> - * After we have set current->mm to a new value, this activates
+> - * the context for the new mm so we see the new mappings.
+> - */
+> -static inline void activate_mm(struct mm_struct *prev, struct mm_struct *next)
+> -{
+> -	switch_mm(prev, next, current);
+> -}
+> -
+> -/* We don't currently use enter_lazy_tlb() for anything */
+> +#ifdef CONFIG_PPC_BOOK3E_64
+> +#define enter_lazy_tlb enter_lazy_tlb
+>  static inline void enter_lazy_tlb(struct mm_struct *mm,
+>  				  struct task_struct *tsk)
+>  {
+>  	/* 64-bit Book3E keeps track of current PGD in the PACA */
+> -#ifdef CONFIG_PPC_BOOK3E_64
+>  	get_paca()->pgd = NULL;
+> -#endif
+>  }
+> +#endif
+>  
+>  extern void arch_exit_mmap(struct mm_struct *mm);
+>  
+> @@ -298,5 +288,7 @@ static inline int arch_dup_mmap(struct mm_struct *oldmm,
+>  	return 0;
 >  }
 >  
-> -void r8169_hw_phy_config(struct rtl8169_private *tp, struct phy_device *phydev,
-> +void r8169_hw_phy_config(struct rtl8169_private *tp,
-> +			 struct phy_device *phydev,
->  			 enum mac_version ver)
->  {
->  	static const rtl_phy_cfg_fct phy_configs[] = {
-> 
-
+> +#include <asm-generic/mmu_context.h>
+> +
+>  #endif /* __KERNEL__ */
+>  #endif /* __ASM_POWERPC_MMU_CONTEXT_H */
+> -- 
+> 2.23.0
