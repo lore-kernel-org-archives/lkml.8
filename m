@@ -2,56 +2,58 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB2AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A12C206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 904F5206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980156;
-	bh=OQzbnqReLKWAXFeJ31Qs4pL4CU0pTPEUgjVmHQ7LnW0=;
+	s=default; t=1598980167;
+	bh=Ltr/3vGVaMTyXTjP45tQiAyg7242z7/wrBrsLCFjBBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z5z1OsATvQyD2ddsl9wCNPuokbnq/YSquftxgjdrYVeE+xdISttU1yoOmFjxQbdWy
-	 eC2+bEA8utXo1qJ/zUxpIAmpVQRIgXD2heIzBr2bJA4yoh9AuYGq3eRUMiHyM1QQFf
-	 qmqu8AylpYrCBChg497fBykz1mqi7QeRFXQgWjyA=
+	b=xC9p/eRsEAqHifBDN036nk2hREWmIDL6zt0NL81dKPND9rYQAbKKFwMzL/ypXOQK1
+	 ulOMr9Qo4ZOgaTkPphHjinQBeZsDZ1sf3CfTKv073nBbT8A+Fyqr2eFbnR7yzlUcn9
+	 w/SHpvlVzeUFR8y9v5YPrdT8n6q925wAy5r1lDpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731499AbgIARJO (ORCPT
+        id S1729875AbgIARJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:09:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:09:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729434AbgIAPRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:17:45 -0400
+        id S1729041AbgIAPRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:17:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9042100A;
-        Tue,  1 Sep 2020 15:17:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D080206EB;
+        Tue,  1 Sep 2020 15:17:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973465;
-        bh=OQzbnqReLKWAXFeJ31Qs4pL4CU0pTPEUgjVmHQ7LnW0=;
+        s=default; t=1598973462;
+        bh=Ltr/3vGVaMTyXTjP45tQiAyg7242z7/wrBrsLCFjBBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbhwXq/Cztc0UcbctIUsO2wMwFXsGT8OO35LvmcIWsENyBQghkSbCOl+z2ivUJZ6D
-         L/ur0Zo4ZteKFitEJ8Of9BIITgH/bJdsujMUkdB4dGTRocrvuk+BxjvJkVHiHtTO/l
-         FYR8fD5CZVZrDEdCB8JCXNbhRYIG+3MSS34DrKS8=
+        b=LLfD2o9qn696nn5u+5wMYPFyDhetbC2RIv/Du2AIqzxAIrZF5tU+IbmmyfCIS1Rra
+         eLXYvS68Dhv9xfflSMiF/izqTzvSXWZ/UrTVFt2ecaD8cWlQdFr8IqNN8Y9Znc2tr6
+         FaWIOTnrcSsrhzplBfPrp900TgRJ+xFkeLxqFZws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/91] powerpc/xive: Ignore kmemleak false positives
-Date:   Tue,  1 Sep 2020 17:09:44 +0200
-Message-Id: <20200901150928.614636143@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Alistair Popple <alistair@popple.id.au>,
+        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Subject: [PATCH 4.14 01/91] powerpc/64s: Dont init FSCR_DSCR in __init_FSCR()
+Date:   Tue,  1 Sep 2020 17:09:35 +0200
+Message-Id: <20200901150928.189143079@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,63 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexey Kardashevskiy <aik@ozlabs.ru>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit f0993c839e95dd6c7f054a1015e693c87e33e4fb ]
+commit 0828137e8f16721842468e33df0460044a0c588b upstream.
 
-xive_native_provision_pages() allocates memory and passes the pointer to
-OPAL so kmemleak cannot find the pointer usage in the kernel memory and
-produces a false positive report (below) (even if the kernel did scan
-OPAL memory, it is unable to deal with __pa() addresses anyway).
+__init_FSCR() was added originally in commit 2468dcf641e4 ("powerpc:
+Add support for context switching the TAR register") (Feb 2013), and
+only set FSCR_TAR.
 
-This silences the warning.
+At that point FSCR (Facility Status and Control Register) was not
+context switched, so the setting was permanent after boot.
 
-unreferenced object 0xc000200350c40000 (size 65536):
-  comm "qemu-system-ppc", pid 2725, jiffies 4294946414 (age 70776.530s)
-  hex dump (first 32 bytes):
-    02 00 00 00 50 00 00 00 00 00 00 00 00 00 00 00  ....P...........
-    01 00 08 07 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000081ff046c>] xive_native_alloc_vp_block+0x120/0x250
-    [<00000000d555d524>] kvmppc_xive_compute_vp_id+0x248/0x350 [kvm]
-    [<00000000d69b9c9f>] kvmppc_xive_connect_vcpu+0xc0/0x520 [kvm]
-    [<000000006acbc81c>] kvm_arch_vcpu_ioctl+0x308/0x580 [kvm]
-    [<0000000089c69580>] kvm_vcpu_ioctl+0x19c/0xae0 [kvm]
-    [<00000000902ae91e>] ksys_ioctl+0x184/0x1b0
-    [<00000000f3e68bd7>] sys_ioctl+0x48/0xb0
-    [<0000000001b2c127>] system_call_exception+0x124/0x1f0
-    [<00000000d2b2ee40>] system_call_common+0xe8/0x214
+Later we added initialisation of FSCR_DSCR to __init_FSCR(), in commit
+54c9b2253d34 ("powerpc: Set DSCR bit in FSCR setup") (Mar 2013), again
+that was permanent after boot.
 
-Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Then commit 2517617e0de6 ("powerpc: Fix context switch DSCR on
+POWER8") (Aug 2013) added a limited context switch of FSCR, just the
+FSCR_DSCR bit was context switched based on thread.dscr_inherit. That
+commit said "This clears the H/FSCR DSCR bit initially", but it
+didn't, it left the initialisation of FSCR_DSCR in __init_FSCR().
+However the initial context switch from init_task to pid 1 would clear
+FSCR_DSCR because thread.dscr_inherit was 0.
+
+That commit also introduced the requirement that FSCR_DSCR be clear
+for user processes, so that we can take the facility unavailable
+interrupt in order to manage dscr_inherit.
+
+Then in commit 152d523e6307 ("powerpc: Create context switch helpers
+save_sprs() and restore_sprs()") (Dec 2015) FSCR was added to
+thread_struct. However it still wasn't fully context switched, we just
+took the existing value and set FSCR_DSCR if the new thread had
+dscr_inherit set. FSCR was still initialised at boot to FSCR_DSCR |
+FSCR_TAR, but that value was not propagated into the thread_struct, so
+the initial context switch set FSCR_DSCR back to 0.
+
+Finally commit b57bd2de8c6c ("powerpc: Improve FSCR init and context
+switching") (Jun 2016) added a full context switch of the FSCR, and
+added an initialisation of init_task.thread.fscr to FSCR_TAR |
+FSCR_EBB, but omitted FSCR_DSCR.
+
+The end result is that swapper runs with FSCR_DSCR set because of the
+initialisation in __init_FSCR(), but no other processes do, they use
+the value from init_task.thread.fscr.
+
+Having FSCR_DSCR set for swapper allows it to access SPR 3 from
+userspace, but swapper never runs userspace, so it has no useful
+effect. It's also confusing to have the value initialised in two
+places to two different values.
+
+So remove FSCR_DSCR from __init_FSCR(), this at least gets us to the
+point where there's a single value of FSCR, even if it's still set in
+two places.
+
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200612043303.84894-1-aik@ozlabs.ru
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: Alistair Popple <alistair@popple.id.au>
+Link: https://lore.kernel.org/r/20200527145843.2761782-1-mpe@ellerman.id.au
+Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/sysdev/xive/native.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/powerpc/kernel/cpu_setup_power.S |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
-index 30cdcbfa1c04e..b0e96f4b728c1 100644
---- a/arch/powerpc/sysdev/xive/native.c
-+++ b/arch/powerpc/sysdev/xive/native.c
-@@ -22,6 +22,7 @@
- #include <linux/delay.h>
- #include <linux/cpumask.h>
- #include <linux/mm.h>
-+#include <linux/kmemleak.h>
+--- a/arch/powerpc/kernel/cpu_setup_power.S
++++ b/arch/powerpc/kernel/cpu_setup_power.S
+@@ -189,7 +189,7 @@ __init_LPCR_ISA300:
  
- #include <asm/prom.h>
- #include <asm/io.h>
-@@ -630,6 +631,7 @@ static bool xive_native_provision_pages(void)
- 			pr_err("Failed to allocate provisioning page\n");
- 			return false;
- 		}
-+		kmemleak_ignore(p);
- 		opal_xive_donate_page(chip, __pa(p));
- 	}
- 	return true;
--- 
-2.25.1
-
+ __init_FSCR:
+ 	mfspr	r3,SPRN_FSCR
+-	ori	r3,r3,FSCR_TAR|FSCR_DSCR|FSCR_EBB
++	ori	r3,r3,FSCR_TAR|FSCR_EBB
+ 	mtspr	SPRN_FSCR,r3
+ 	blr
+ 
 
 
