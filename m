@@ -2,95 +2,219 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=no autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CF1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB47BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5CD3A206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68C32071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:03:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AtMWvdlz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EH2ETTpb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgIARDm (ORCPT
+        id S1728413AbgIARDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:03:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729585AbgIAPUH (ORCPT
+        Tue, 1 Sep 2020 13:03:54 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48245 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726764AbgIARDg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:07 -0400
-Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9105C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:20:06 -0700 (PDT)
-Received: by mail-io1-xd41.google.com with SMTP id z25so1627726iol.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ge/+DxJ15Ua6HWzt57ivLu5/J7fl349A6GNKghGBc48=;
-        b=AtMWvdlzwwyu1P5XIqLQoKsW/5MrUf0fZZ3rjuA9nIxDGzYk1+hiIsXN17FAzg8KM3
-         IkoV7nJ0dd4VtHLUuSD3pkBP6Ig3VZd3FFYyZkK2eKz526VCSz2o5x7wia+06I+0NO60
-         3HyYMyseHFimP0lcXYILtCAhyI87wgfqFsOXTnoaXvsFGrHaVgHewDv3+cTBb2dlCOxq
-         F3DekR95KANdSEBlSUBS/0H3hzJnnKUVtC3WS7fXipRyFGK5ZBoS0O+Ig2rB/eAIpSvW
-         NB336CVUKMPQJRjkvGdZPy2GQ9lcZ0Leme9VBfiKKxgD/mcUzHLM71qlpDoFKJjcE+pw
-         MO2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ge/+DxJ15Ua6HWzt57ivLu5/J7fl349A6GNKghGBc48=;
-        b=eazCOWIDFhHc9gTrtbK8JIC0wBMk4Q3tFdjx/NiKFMLsExr1YqT6NmPeVqnoYKgdHU
-         XLD66EEwKJxFHjgS1dWGCmkO9Uln3g9sEGBdjtTw8i4899dD34NvsfdjXmHCHxP8g3gB
-         ZyUNAWXBm5thv0q61+Mf4vhGslPU+bPCvKxkNICF3uNF1Z8ARWwzGuYxmX9Op1nSbf7a
-         JziONwPSJYIHfLZjoTg+nE7XGL0e8o0VO+lzyBDAvWb6zXHD+JBLM0ve3wpnqZdtPQJ5
-         xnXj1imMi5aXp94Iv1W8ZuALSASG4NMvJ3/SOyWBM1GWo8aeDQqRWAzpkenRRfdIMmk8
-         7DSA==
-X-Gm-Message-State: AOAM530KORXgSI/53R4RAR4+IYiztMkzSd2rKW0Y/kLIyY99zF1eNpe3
-        U/fkKGfXVKrm4WJ7L6yAL/M4LyvoEsXjU2H7RsfU+Q==
-X-Google-Smtp-Source: ABdhPJx/Q89NgOh0VXJempeQiPr1aHcPIYG1M/1O83JNyWFNS6esLspfeXt9U3yxfbBeUXq8jO2jGHrzluthJVmreM0=
-X-Received: by 2002:a02:e47:: with SMTP id 68mr1864149jae.17.1598973605935;
- Tue, 01 Sep 2020 08:20:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200901064302.849-1-w@1wt.eu> <CA+icZUVvOArpuR=PJBg288pJmLmYxtgZxJOHnjk943e9M22WOQ@mail.gmail.com>
- <20200901145509.GC1059@1wt.eu>
-In-Reply-To: <20200901145509.GC1059@1wt.eu>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 1 Sep 2020 17:19:54 +0200
-Message-ID: <CANn89iJ87D3NXHk418Qeeuzr1ANp9STqMQtqdA_QyCpXL=24CQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] prandom_u32: make output less predictable
-To:     Willy Tarreau <w@1wt.eu>
-Cc:     Sedat Dilek <sedat.dilek@gmail.com>,
+        Tue, 1 Sep 2020 13:03:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598979812;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=QWFn91v9jwxb4FQ+OzyyCBPLeQ75xcVaOZUTQVfcSyQ=;
+        b=EH2ETTpbu8X3ymcjV36Nai7nWIdN56XEItHSE3hQETzpi3rRK70vMQX/807ZOtH+BzF5W5
+        pakXxhGo9D69KyVeS7vffGpA5Z7Uwjit9y2ri85LoF0agEbrwtlJO+xuDBVIUUSA1Nk7pT
+        W3wdhlO+nN+3Jw4soVJ28CN9bqa7Gec=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-554-TDnHW8uOOv-P_WcGfmNhSw-1; Tue, 01 Sep 2020 13:03:29 -0400
+X-MC-Unique: TDnHW8uOOv-P_WcGfmNhSw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2ACA110ABDA1;
+        Tue,  1 Sep 2020 17:03:28 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C29360BE2;
+        Tue,  1 Sep 2020 17:03:25 +0000 (UTC)
+Subject: Re: [PATCH v2 7/9] iommu/vt-d: Listen to IOASID notifications
+To:     Jacob Pan <jacob.pan.linux@gmail.com>,
+        iommu@lists.linux-foundation.org,
         LKML <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>, George Spelvin <lkml@sdf.org>,
-        Amit Klein <aksecurity@gmail.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, Florian Westphal <fw@strlen.de>,
-        Marc Plumb <lkml.mplumb@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Wu Hao <hao.wu@intel.com>
+References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1598070918-21321-8-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <e9394a9e-c9d0-9ebc-30a7-745e6b6d8fa0@redhat.com>
+Date:   Tue, 1 Sep 2020 19:03:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1598070918-21321-8-git-send-email-jacob.jun.pan@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 4:55 PM Willy Tarreau <w@1wt.eu> wrote:
->
-> On Tue, Sep 01, 2020 at 04:41:13PM +0200, Sedat Dilek wrote:
-> > I have tested with the patchset from [1].
-> > ( Later I saw, you dropped "WIP: tcp: reuse incoming skb hash in
-> > tcp_conn_request()". )
->
-> Yes because it's a bit out of the cope of this series and makes sense
-> even without these patches, thus I assume Eric will take care of it
-> separately.
+Hi Jacob,
 
-Yes, I am still pondering on this one and really there is no hurry.
+On 8/22/20 6:35 AM, Jacob Pan wrote:
+> On Intel Scalable I/O Virtualization (SIOV) enabled platforms, IOMMU
+> driver is one of the users of IOASIDs. In normal flow, callers will
+> perform IOASID allocation, bind, unbind, and free in order. However, for
+> guest SVA, IOASID free could come before unbind as guest is untrusted.
+> This patch registers IOASID notification handler such that IOMMU driver
+> can perform PASID teardown upon receiving an unexpected IOASID free
+> event.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> ---
+>  drivers/iommu/intel/svm.c   | 74 ++++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/intel-iommu.h |  2 ++
+>  2 files changed, 75 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 634e191ca2c3..600e3ae5b656 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -95,6 +95,72 @@ static inline bool intel_svm_capable(struct intel_iommu *iommu)
+>  	return iommu->flags & VTD_FLAG_SVM_CAPABLE;
+>  }
+>  
+> +#define pasid_lock_held() lock_is_held(&pasid_mutex.dep_map)
+put after the pasid_mutex definition?
+> +static DEFINE_MUTEX(pasid_mutex);
+> +
+> +static void intel_svm_free_async_fn(struct work_struct *work)
+> +{
+> +	struct intel_svm *svm = container_of(work, struct intel_svm, work);
+> +	struct intel_svm_dev *sdev;
+> +
+> +	/*
+> +	 * Unbind all devices associated with this PASID which is
+> +	 * being freed by other users such as VFIO.
+> +	 */
+> +	mutex_lock(&pasid_mutex);
+> +	list_for_each_entry_rcu(sdev, &svm->devs, list, pasid_lock_held()) {
+> +		/* Does not poison forward pointer */
+> +		list_del_rcu(&sdev->list);
+> +		spin_lock(&svm->iommu->lock);
+> +		intel_pasid_tear_down_entry(svm->iommu, sdev->dev,
+> +					svm->pasid, true);
+> +		spin_unlock(&svm->iommu->lock);
+> +		kfree_rcu(sdev, rcu);
+> +		/*
+> +		 * Free before unbind only happens with guest usaged
+usaged?
+> +		 * host PASIDs. IOASID free will detach private data
+> +		 * and free the IOASID entry.
+> +		 */
+> +		ioasid_put(NULL, svm->pasid);
+> +		if (list_empty(&svm->devs))
+> +			kfree(svm);
+> +	}
+> +	mutex_unlock(&pasid_mutex);
+> +}
+> +
+> +
+> +static int pasid_status_change(struct notifier_block *nb,
+> +				unsigned long code, void *data)
+> +{
+> +	struct ioasid_nb_args *args = (struct ioasid_nb_args *)data;
+> +	struct intel_svm *svm = (struct intel_svm *)args->pdata;
+> +	int ret = NOTIFY_DONE;
+> +
+> +	if (code == IOASID_FREE) {
+> +		if (!svm)
+> +			goto done;
+> +		if (args->id != svm->pasid) {
+> +			pr_warn("Notify PASID does not match data %d : %d\n",
+> +				args->id, svm->pasid);
+> +			goto done;
+> +		}
+> +		schedule_work(&svm->work);
+> +		return NOTIFY_OK;
+> +	}
+> +done:
+> +	return ret;> +}
+> +
+> +static struct notifier_block pasid_nb = {
+> +	.notifier_call = pasid_status_change,
+> +};
+> +
+> +void intel_svm_add_pasid_notifier(void)
+> +{
+> +	/* Listen to all PASIDs, not specific to a set */
+> +	ioasid_register_notifier(NULL, &pasid_nb);
+> +}
+> +
+>  void intel_svm_check(struct intel_iommu *iommu)
+>  {
+>  	if (!pasid_supported(iommu))
+> @@ -221,7 +287,6 @@ static const struct mmu_notifier_ops intel_mmuops = {
+>  	.invalidate_range = intel_invalidate_range,
+>  };
+>  
+> -static DEFINE_MUTEX(pasid_mutex);
+>  static LIST_HEAD(global_svm_list);
+>  
+>  #define for_each_svm_dev(sdev, svm, d)			\
+> @@ -342,7 +407,14 @@ int intel_svm_bind_gpasid(struct iommu_domain *domain, struct device *dev,
+>  			svm->gpasid = data->gpasid;
+>  			svm->flags |= SVM_FLAG_GUEST_PASID;
+>  		}
+> +		svm->iommu = iommu;
+> +		/*
+> +		 * Set up cleanup async work in case IOASID core notify us PASID
+> +		 * is freed before unbind.
+> +		 */
+> +		INIT_WORK(&svm->work, intel_svm_free_async_fn);
+>  		ioasid_attach_data(data->hpasid, svm);
+> +		ioasid_get(NULL, svm->pasid);
+>  		INIT_LIST_HEAD_RCU(&svm->devs);
+>  		mmput(svm->mm);
+>  	}
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index b1ed2f25f7c0..d36038e6ae0b 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -744,6 +744,7 @@ void intel_svm_unbind(struct iommu_sva *handle);
+>  int intel_svm_get_pasid(struct iommu_sva *handle);
+>  int intel_svm_page_response(struct device *dev, struct iommu_fault_event *evt,
+>  			    struct iommu_page_response *msg);
+> +void intel_svm_add_pasid_notifier(void);
+>  
+>  struct svm_dev_ops;
+>  
+> @@ -770,6 +771,7 @@ struct intel_svm {
+>  	int gpasid; /* In case that guest PASID is different from host PASID */
+>  	struct list_head devs;
+>  	struct list_head list;
+> +	struct work_struct work; /* For deferred clean up */
+>  };
+>  #else
+>  static inline void intel_svm_check(struct intel_iommu *iommu) {}
+> 
+
+Thanks
+
+Eric
+
