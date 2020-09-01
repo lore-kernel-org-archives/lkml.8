@@ -2,136 +2,149 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2142DC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA879C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEAC6206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:10:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69BA6206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:11:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="asHEft0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726193AbgIAIKq (ORCPT
+        id S1726310AbgIAILC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:10:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:62349 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726050AbgIAIKp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:10:45 -0400
-IronPort-SDR: KbETmduCJU25KeHQOkCP5B6z5sueyhbu6jaNGvEgWoJfI5sqtpj+OlGQmVMNh9xh8Cj2zLuX23
- anWDw68o9RkA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="218679195"
-X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="218679195"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 01:10:44 -0700
-IronPort-SDR: dovm96Q6dXJ+SFXqtKOvg2fPhMEdFiCL95D039Vxn1+8RSZLF2FfnTXohAqzaMgD32DD4pZ8nv
- tBnVd9tV64fg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="330988244"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 01 Sep 2020 01:10:42 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1kD1NI-00DFCj-4D; Tue, 01 Sep 2020 11:10:40 +0300
-Date:   Tue, 1 Sep 2020 11:10:40 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Cc:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        vadivel.muruganx.ramuthevar@linux.intel.com,
-        eswara.kota@linux.intel.com, lakshmi.bai.raja.subramanian@intel.com
-Subject: Re: [PATCH v8 1/3] phy: intel: Rename phy-intel to phy-intel-lgm
-Message-ID: <20200901081040.GN1891694@smile.fi.intel.com>
-References: <20200901044201.20978-1-wan.ahmad.zainie.wan.mohamad@intel.com>
- <20200901044201.20978-2-wan.ahmad.zainie.wan.mohamad@intel.com>
+        Tue, 1 Sep 2020 04:11:02 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52138 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726107AbgIAIK7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:10:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598947857;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ywbzOyojoAfTL6CSiMEtbtQG/UWMpLz/fFs6teic35M=;
+        b=asHEft0UNqUe8bG9GJ2cPQatCMykMwuQ5YT7O3legygmB2qWYfqmwkhoxb4FUs723QLSjK
+        JxPkOIVe5VAjNIfB7ChF8U0QJ845fF1wIUst27uACi9eNuztP2OAmaOPnAeoGy4upmLEBC
+        qQz0Ltsbd4elQ42X6qtEOzM8A+W5ZF0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-HSVVKrY1Mqucc9pI8HeXCw-1; Tue, 01 Sep 2020 04:10:54 -0400
+X-MC-Unique: HSVVKrY1Mqucc9pI8HeXCw-1
+Received: by mail-wr1-f72.google.com with SMTP id k11so251055wrw.16
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:10:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=ywbzOyojoAfTL6CSiMEtbtQG/UWMpLz/fFs6teic35M=;
+        b=meNZwwaB8XMONFjwAx/L/5eWfovT5+gzl4XNY8VvjOw3Yxds8XwTtZygUoXYAqx+6G
+         EctuT/imi46azbWubeeXOBJYKwmLq36vShsMimHV/ERmpjttnfbvSqqa4VxdFC8L7Oi/
+         fcpbMvxttWsmnZVI0g5wR2w3WWeYyr/tBqLGgZn45PHHaN9Gh94AGDEdj4w8KgYKsHSB
+         vGayjJGMYPdhavx+frEV1DWtUDVMGqmTyKCK06OuxiXlKt0pjh6icANDk3YQhyjdITLO
+         vzdxxesba6zSufbqY7prbIyjhzRd5njiyY7hEuwmAOHH6m0lA2mur7T5PWF5A18u0agb
+         QE1g==
+X-Gm-Message-State: AOAM532G3x8AWf9UDBRYS7pIIXg4FX7w9OfIckZougP/zT0SLabvqI7X
+        IAygB5hqV0bawNRwCB3eqMWFzBUu12+DSw4UMHC8AeKEps7rqyHMB16wlx9hUS+2mULEztPNdpp
+        U78lokMfseXdxWi9oTptriXFO
+X-Received: by 2002:a5d:420b:: with SMTP id n11mr526477wrq.11.1598947852915;
+        Tue, 01 Sep 2020 01:10:52 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJys7NT738indZhV+2AmYFWU6qfb0ENn9iwBCkNPPMVDsNV8FR86m8VpWUAMS1aZrJF0pLZkcQ==
+X-Received: by 2002:a5d:420b:: with SMTP id n11mr526450wrq.11.1598947852620;
+        Tue, 01 Sep 2020 01:10:52 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id n21sm705241wmi.21.2020.09.01.01.10.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 01:10:52 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Lai Jiangshan <jiangshanlai@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
+In-Reply-To: <CAJhGHyCLF4+5LV8Zwu5kczL48imKPDHJKizVd+VZwVha0U8BaQ@mail.gmail.com>
+References: <20200824101825.4106-1-jiangshanlai@gmail.com> <CAJhGHyC1Ykq5V_2nFPLRz9JmtAiQu6aw4fCKo1LO7Qwzjvfg2g@mail.gmail.com> <875z8zx8qs.fsf@vitty.brq.redhat.com> <CAJhGHyCLF4+5LV8Zwu5kczL48imKPDHJKizVd+VZwVha0U8BaQ@mail.gmail.com>
+Date:   Tue, 01 Sep 2020 10:10:50 +0200
+Message-ID: <87y2ltx6gl.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901044201.20978-2-wan.ahmad.zainie.wan.mohamad@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 12:41:59PM +0800, Wan Ahmad Zainie wrote:
-> Rename phy-intel-{combo,emmc}.c to phy-intel-lgm-{combo,emmc}.c
-> to make drivers/phy/intel directory more generic for future use.
-> 
-> Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
+Lai Jiangshan <jiangshanlai@gmail.com> writes:
 
-> Reviewed-by: Ramuthevar Vadivel Murugan
-> <vadivel.muruganx.ramuthevar@linux.intel.com>
+> On Mon, Aug 31, 2020 at 9:09 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>>
+>> Lai Jiangshan <jiangshanlai@gmail.com> writes:
+>>
+>> > Ping @Sean Christopherson
+>> >
+>>
+>> Let's try 'Beetlejuice' instead :-)
+>>
+>> > On Mon, Aug 24, 2020 at 5:18 PM Lai Jiangshan <jiangshanlai@gmail.com> wrote:
+>> >>
+>> >> From: Lai Jiangshan <laijs@linux.alibaba.com>
+>> >>
+>> >> 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
+>> >> changed it without giving any reason in the changelog.
+>> >>
+>> >> In theory, the syncing is needed, and need to be fixed by reverting
+>> >> this part of change.
+>>
+>> Even if the original commit is not wordy enough this is hardly
+>> better.
+>
+> Hello,
+> Thank you for reviewing it.
+>
+> I'm sorry that when I said "reverting this part of change",
+> I meant "reverting this line of code". This line of code itself
+> is quite clear that it is not related to the original commit
+> according to its changelog.
+>
+>> Are you seeing a particular scenario when a change in current
+>> vCPU's MMU requires flushing TLB entries for *other* contexts, ... (see
+>> below)
+>
+> So I don't think the patch needs to explain this because the patch
+> does not change/revert anything about it.
+>
+> Anyway, using a "revert" in the changelog is misleading, when it
+> is not really reverting the whole targeted commit. I would
+> remove this wording.
+>
+> For the change in my patch, when kvm_mmu_get_page() gets a
+> page with unsync children, the host side pagetable is
+> unsynchronized with the guest side pagedtable, and the
+> guest might not issue a "flush" operation on it. It is
+> all about the host's emulation of the pagetable. So the host
+> has the responsibility to synchronize the pagetables.
+>
 
-This shall be one line.
-
-> ---
->  drivers/phy/intel/Kconfig                              | 10 +++++-----
->  drivers/phy/intel/Makefile                             |  4 ++--
->  .../intel/{phy-intel-combo.c => phy-intel-lgm-combo.c} |  0
->  .../intel/{phy-intel-emmc.c => phy-intel-lgm-emmc.c}   |  0
->  4 files changed, 7 insertions(+), 7 deletions(-)
->  rename drivers/phy/intel/{phy-intel-combo.c => phy-intel-lgm-combo.c} (100%)
->  rename drivers/phy/intel/{phy-intel-emmc.c => phy-intel-lgm-emmc.c} (100%)
-> 
-> diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-> index 7b47682a4e0e..db8586c3eed8 100644
-> --- a/drivers/phy/intel/Kconfig
-> +++ b/drivers/phy/intel/Kconfig
-> @@ -1,9 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  #
-> -# Phy drivers for Intel Lightning Mountain(LGM) platform
-> +# Phy drivers for Intel platforms
->  #
-> -config PHY_INTEL_COMBO
-> -	bool "Intel ComboPHY driver"
-> +config PHY_INTEL_LGM_COMBO
-> +	bool "Intel Lightning Mountain ComboPHY driver"
->  	depends on X86 || COMPILE_TEST
->  	depends on OF && HAS_IOMEM
->  	select MFD_SYSCON
-> @@ -16,8 +16,8 @@ config PHY_INTEL_COMBO
->  	  chipsets which provides PHYs for various controllers, EMAC,
->  	  SATA and PCIe.
->  
-> -config PHY_INTEL_EMMC
-> -	tristate "Intel EMMC PHY driver"
-> +config PHY_INTEL_LGM_EMMC
-> +	tristate "Intel Lightning Mountain EMMC PHY driver"
->  	depends on X86 || COMPILE_TEST
->  	select GENERIC_PHY
->  	help
-> diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-> index 233d530dadde..662385d0a366 100644
-> --- a/drivers/phy/intel/Makefile
-> +++ b/drivers/phy/intel/Makefile
-> @@ -1,3 +1,3 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -obj-$(CONFIG_PHY_INTEL_COMBO)		+= phy-intel-combo.o
-> -obj-$(CONFIG_PHY_INTEL_EMMC)            += phy-intel-emmc.o
-> +obj-$(CONFIG_PHY_INTEL_LGM_COMBO)	+= phy-intel-lgm-combo.o
-> +obj-$(CONFIG_PHY_INTEL_LGM_EMMC)	+= phy-intel-lgm-emmc.o
-> diff --git a/drivers/phy/intel/phy-intel-combo.c b/drivers/phy/intel/phy-intel-lgm-combo.c
-> similarity index 100%
-> rename from drivers/phy/intel/phy-intel-combo.c
-> rename to drivers/phy/intel/phy-intel-lgm-combo.c
-> diff --git a/drivers/phy/intel/phy-intel-emmc.c b/drivers/phy/intel/phy-intel-lgm-emmc.c
-> similarity index 100%
-> rename from drivers/phy/intel/phy-intel-emmc.c
-> rename to drivers/phy/intel/phy-intel-lgm-emmc.c
-> -- 
-> 2.17.1
-> 
+Ah, I see now, so it seems Sean's commit has a stray change in it: the
+intention was to change KVM_REQ_TLB_FLUSH -> KVM_REQ_TLB_FLUSH_CURRENT
+so we don't unneedlesly flush other contexts but one of the hunks
+changed KVM_REQ_MMU_SYNC instead. Syncronizing MMU roots can't be
+replaced with a TLB flush, we need to revert back the change. This
+sounds reasonable to me, please send out v2 with the updated
+description. Thanks!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Vitaly
 
