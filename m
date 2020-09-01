@@ -2,83 +2,111 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5230AC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A70C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1FEE520FC3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:14:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598958873;
-	bh=ou1HFNRhbw08TpIm1gTEODy4ufYIh3ej/qbXWccTuNI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NRNvrkoADGq+9LDiA+SPXhE4MVPCJ8lH3NuRsovtsBw3UFKYkzi8rQsbxapQdmNn/
-	 XB7D5bjUbKZeaIEqlkPGKw/O3cmRVTnV/Wygh9Y0AgYa5IDgplbwuK2LzGNM3DfYWj
-	 uWt/7jeV1q9yTyLXLSE8ekTI/0GNEb4+GsJRuTFs=
+	by mail.kernel.org (Postfix) with ESMTP id E3DC220FC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eflOJVhF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgIALOa (ORCPT
+        id S1726226AbgIALSX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:14:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60124 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726528AbgIALOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:14:18 -0400
-Received: from localhost.localdomain (unknown [122.172.190.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBD7720FC3;
-        Tue,  1 Sep 2020 11:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598958820;
-        bh=ou1HFNRhbw08TpIm1gTEODy4ufYIh3ej/qbXWccTuNI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Q16auNMUJEcoAh55mDRCCEsaJVhuCzykof8L8S6MdD0Jn+MxlTWTi+4AyuphlTY2a
-         FbR+osdQjEbxcz1zF+4Ka7PU2nQxJWs1qpe/KsQ6jjDgdI/BlX3G2Ld5isEwpFADIQ
-         18zsvPNGBrVxTVx11OAoPrU1uhVSwIGH0H+xPa00=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Vinod Koul <vkoul@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] regmap: soundwire: remove unused header mod_devicetable.h
-Date:   Tue,  1 Sep 2020 16:43:31 +0530
-Message-Id: <20200901111331.641072-1-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 1 Sep 2020 07:18:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:29448 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726674AbgIALOn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:14:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598958882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=STUtmyXZIT8KzVqJU5XU2kgQYureljA3Ku1GnLyYimw=;
+        b=eflOJVhF4wU+cFqUufWQbmr0ly5UkDL027i6zHChfvAQluBtOVBB4t57Etw0iwiwLuknIz
+        C6FLshb30wE32PSSs983xOx0tIM6rykIBvq30gSH9SFKbVc3QUbXjr9TdjJVwszXqM9Emt
+        w5CIgpqc5ub7CF0uOXucpuBdge+yn2I=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-448-N_yNyRGVPvSnDDfvYn5UMg-1; Tue, 01 Sep 2020 07:14:41 -0400
+X-MC-Unique: N_yNyRGVPvSnDDfvYn5UMg-1
+Received: by mail-wm1-f69.google.com with SMTP id a144so276562wme.9
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 04:14:40 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=STUtmyXZIT8KzVqJU5XU2kgQYureljA3Ku1GnLyYimw=;
+        b=jNyFmh4NcyEKlkes1oJCZGdVPzmLFxADUmIzFBrVJlVAn2x0QZyJcl+IJG/dAyJBrj
+         VkJIDLedpe6TIPc8JLoZwXQWoW0aGup8nThVvq4HKlxcKKa+Inilt30Ug+Iz1Bp3KqZm
+         aPYMs+sxmVkOyaCvyZ6+RJZTmYiY25py/HWHkvxzbjetnEot4iaW2heWgr3ar2ytNczS
+         ax9KAGx1fnodDvb8/QaC2VdatCD6UgQTGTymDQBB9zEWAYMIC0CEeEwUV0WvLnKtuSAO
+         c4oQPNjyRZadZy8VsyVeHBsoJ4g/BuoThgww9R4My21GV1Rm+8YZO5/p0Lfgs1LTPtXS
+         aaqw==
+X-Gm-Message-State: AOAM533CgWNP2Qd8Vn20O2SDKZ/NodHnFlzgiVWXZjkLXkZkxP83sKJT
+        9Z1gF57iENnWIZ2z4cQcVJzC0c8LFx1Gb89fOeXGS4jvITUxJRAopIMSEmDctCmpqnGnP2RRvTD
+        0oqZotwGSY5MWqivFtTNnhnVO
+X-Received: by 2002:a7b:c925:: with SMTP id h5mr1261021wml.28.1598958879546;
+        Tue, 01 Sep 2020 04:14:39 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyhiep0HYoVEPjzoTxNmrDMLvfem8Qoq1Zugr1LpbcVQJKpBDMnkFnDG0mj5yp0i4zCh7HKeg==
+X-Received: by 2002:a7b:c925:: with SMTP id h5mr1261007wml.28.1598958879391;
+        Tue, 01 Sep 2020 04:14:39 -0700 (PDT)
+Received: from redhat.com (bzq-79-181-14-13.red.bezeqint.net. [79.181.14.13])
+        by smtp.gmail.com with ESMTPSA id d18sm1614949wrm.10.2020.09.01.04.14.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 04:14:38 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 07:14:35 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     jasowang@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linuxarm@huawei.com
+Subject: Re: [PATCH net-next] vhost: fix typo in error message
+Message-ID: <20200901071400-mutt-send-email-mst@kernel.org>
+References: <1598927949-201997-1-git-send-email-linyunsheng@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1598927949-201997-1-git-send-email-linyunsheng@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mod_devicetable.h does not seem to be required for this file, so
-remove it.
+On Tue, Sep 01, 2020 at 10:39:09AM +0800, Yunsheng Lin wrote:
+> "enable" should be "disable" when the function name is
+> vhost_disable_notify(), which does the disabling work.
+> 
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-changes in v2:
-  - fix typo in patch subject
+Why net-next though? It's a bugfix, can go into net.
 
- drivers/base/regmap/regmap-sdw.c | 1 -
- 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
-index 50a66382d87d..c92d614b4943 100644
---- a/drivers/base/regmap/regmap-sdw.c
-+++ b/drivers/base/regmap/regmap-sdw.c
-@@ -2,7 +2,6 @@
- // Copyright(c) 2015-17 Intel Corporation.
- 
- #include <linux/device.h>
--#include <linux/mod_devicetable.h>
- #include <linux/module.h>
- #include <linux/soundwire/sdw.h>
- #include "internal.h"
--- 
-2.26.2
+> ---
+>  drivers/vhost/vhost.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vhost/vhost.c b/drivers/vhost/vhost.c
+> index 5857d4e..b45519c 100644
+> --- a/drivers/vhost/vhost.c
+> +++ b/drivers/vhost/vhost.c
+> @@ -2537,7 +2537,7 @@ void vhost_disable_notify(struct vhost_dev *dev, struct vhost_virtqueue *vq)
+>  	if (!vhost_has_feature(vq, VIRTIO_RING_F_EVENT_IDX)) {
+>  		r = vhost_update_used_flags(vq);
+>  		if (r)
+> -			vq_err(vq, "Failed to enable notification at %p: %d\n",
+> +			vq_err(vq, "Failed to disable notification at %p: %d\n",
+>  			       &vq->used->flags, r);
+>  	}
+>  }
+> -- 
+> 2.8.1
 
