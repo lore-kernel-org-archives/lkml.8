@@ -2,205 +2,130 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 720B0C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8125C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C39E204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976508;
-	bh=rHpYPZN8zKFda+Wgttqg7RRIoWbptNBBTFiJ9g8isT0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zZS0csJS3znHM0OqeAG9FvDkp0q3MqEZi8g7znU/TKbwDpsHv2Jr3EI28psKCzMe+
-	 d95qJfbNEkFDrpbalscXl8WSj/0MeqqP30W5WAPZls3fjQdzN54XegsL9wVF93imY/
-	 vvstDKZG2eSE41YxRN5jYpCF19UIwCL9RrOJrkN8=
+	by mail.kernel.org (Postfix) with ESMTP id C21082166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/8U9ZP+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731641AbgIAQI0 (ORCPT
+        id S1731797AbgIAQIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:08:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbgIAPjP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:08:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731455AbgIAPjP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:39:15 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A45C1215A4;
-        Tue,  1 Sep 2020 15:39:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974754;
-        bh=rHpYPZN8zKFda+Wgttqg7RRIoWbptNBBTFiJ9g8isT0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WG9oqrHnL2Ek0wy3PG7NNsHcrur5HF9jgQ86EX2asyWCTJESfbGIF6srkKG3cVjSJ
-         Xt9uoIDBbry4sRpUFeqQ7KBf/YqV9YYiPHSl/a8NRiBWRepT1lW5LIt4t8iGCLAN5P
-         iAXddA+tlYpCoQD9bFq8JGcITAh3QA0pXAgqQ92w=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Johan=20Kn=C3=B6=C3=B6s?= <jknoos@google.com>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 078/255] net: openvswitch: introduce common code for flushing flows
-Date:   Tue,  1 Sep 2020 17:08:54 +0200
-Message-Id: <20200901151004.470266181@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34409C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:39:14 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id i26so2274664ejb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:39:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6PG5SiNwVZVH2pkgJv+IFK7tt0WCjvP76ZbFGjJc07s=;
+        b=i/8U9ZP+xxv0b1D3KLACprbO6f9XSdui6Bpc8qWHCAGjJKdf6SV/BwLJGyCkNI3w8z
+         utwAKrw3BY6mIzso/yYfFuWfGTECQ7+S2GJJglSWnuRG1i7Bp7IEakBk2lI8ydIqqedT
+         v9oYslNVOGXacY4YbhO1cqsCwlEYrOZUV0biEgmGK1TKRp95SDA12NtKfAwlcUMe93ud
+         dHZS9fZM0xCRZnZQ5JOyObYV58dweBq4qelLd7pQ0t8xe9+RE9neWOy4ZWoYf9TCf50V
+         L8Wrp+SBtYeR3Pq0uEVbTaRF4pyNXDottPB0Ao1kbMW2rgURZ9yPc+nvFWeuJ8jxGVRD
+         S2zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6PG5SiNwVZVH2pkgJv+IFK7tt0WCjvP76ZbFGjJc07s=;
+        b=L3xEM7UVTl3ywXWdfMWQXmZerWoVFfy5pJl25Q7r1lv9Agzoh3GuA/iLeuHZHL0b+p
+         Yuk8tnWTEI9TfTd+PWemnU5WYTiqw4ZgP1fmL/1gp1rcGnELIjpBPv7b3c75FQc1sgpq
+         mc0dQqO3+q2buCJRQBfnjTpscXdry0Ebb/7fVIB1tYo743hoVZBwZIw/Iqo1eJCrxMPa
+         cqVE4YDA15MDZ7hCImE8qFDFOS7J1Zz2fOzZnsKWFqb8W4izB0XwGzuKOZ7MBy2HOZ0h
+         ZObKjhYZMig58khOBOXgm4ATiIjCiUpMWUf+x96T6Eqi7JzbyJwJBoJTI6H0fmTucczB
+         fKAQ==
+X-Gm-Message-State: AOAM532IaKLCVUCE3thEZIxpZJ2o2jIFA5FVNlrfmh04anegjEvw1e18
+        TZhm4AT8tqdVCV4hG0np6tarsnaqHyykEDkwq37EzcdG6bs=
+X-Google-Smtp-Source: ABdhPJy3CwrJ6zEga+umlT+PQ35ecu20mv5XP4qIonGiniaxceoYl6LbA+wYSR0qjjmWEQ8IBfCfFcdjm5xcXMm/KK8=
+X-Received: by 2002:a17:907:2173:: with SMTP id rl19mr1935562ejb.514.1598974752908;
+ Tue, 01 Sep 2020 08:39:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <alpine.LSU.2.11.2008301401390.5954@eggly.anvils>
+In-Reply-To: <alpine.LSU.2.11.2008301401390.5954@eggly.anvils>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Tue, 1 Sep 2020 08:39:00 -0700
+Message-ID: <CAHbLzko5xAyzJ7s31B55uXJPXT+2dzun+XcGPJngTwJ6mE=ETg@mail.gmail.com>
+Subject: Re: [PATCH 3/5] shmem: shmem_writepage() split unlikely i915 THP
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kuo-Hsin Yang <vovoy@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tonghao Zhang <xiangxia.m.yue@gmail.com>
+On Sun, Aug 30, 2020 at 2:04 PM Hugh Dickins <hughd@google.com> wrote:
+>
+> drivers/gpu/drm/i915/gem/i915_gem_shmem.c contains a shmem_writeback()
+> which calls shmem_writepage() from a shrinker: that usually works well
+> enough; but if /sys/kernel/mm/transparent_hugepage/shmem_enabled has
+> been set to "force" (documented as "Force the huge option on for all -
+> very useful for testing"), shmem_writepage() is surprised to be called
+> with a huge page, and crashes on the VM_BUG_ON_PAGE(PageCompound) (I
+> did not find out where the crash happens when CONFIG_DEBUG_VM is off).
+>
+> LRU page reclaim always splits the shmem huge page first: I'd prefer not
+> to demand that of i915, so check and split compound in shmem_writepage().
+>
+> Fixes: 2d6692e642e7 ("drm/i915: Start writeback from the shrinker")
+> Signed-off-by: Hugh Dickins <hughd@google.com>
+> Cc: stable@vger.kernel.org # v5.3+
+> ---
+> I've marked this for stable just for the info, but the number of users
+> affected is very probably 1, so please feel free to delete that marking.
+>
+>  mm/shmem.c |    9 +++++++++
+>  1 file changed, 9 insertions(+)
+>
+> --- 5.9-rc2/mm/shmem.c  2020-08-16 17:32:50.693507198 -0700
+> +++ linux/mm/shmem.c    2020-08-28 17:35:08.326024349 -0700
+> @@ -1362,7 +1362,15 @@ static int shmem_writepage(struct page *
+>         swp_entry_t swap;
+>         pgoff_t index;
+>
+> -       VM_BUG_ON_PAGE(PageCompound(page), page);
+> +       /*
+> +        * If /sys/kernel/mm/transparent_hugepage/shmem_enabled is "force",
+> +        * then drivers/gpu/drm/i915/gem/i915_gem_shmem.c gets huge pages,
+> +        * and its shmem_writeback() needs them to be split when swapping.
+> +        */
+> +       if (PageTransCompound(page))
+> +               if (split_huge_page(page) < 0)
+> +                       goto redirty;
 
-[ Upstream commit 1f3a090b9033f69de380c03db3ea1a1015c850cf ]
+The change looks good to me. Acked-by: Yang Shi <shy828301@gmail.com>
 
-To avoid some issues, for example RCU usage warning and double free,
-we should flush the flows under ovs_lock. This patch refactors
-table_instance_destroy and introduces table_instance_flow_flush
-which can be invoked by __dp_destroy or ovs_flow_tbl_flush.
+Just a nit: it may be better to move the spilte after the !PageLocked
+assertion? Split needs page locked too.
 
-Fixes: 50b0e61b32ee ("net: openvswitch: fix possible memleak on destroy flow-table")
-Reported-by: Johan Knöös <jknoos@google.com>
-Reported-at: https://mail.openvswitch.org/pipermail/ovs-discuss/2020-August/050489.html
-Signed-off-by: Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Reviewed-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/openvswitch/datapath.c   | 10 +++++++++-
- net/openvswitch/flow_table.c | 35 +++++++++++++++--------------------
- net/openvswitch/flow_table.h |  3 +++
- 3 files changed, 27 insertions(+), 21 deletions(-)
-
-diff --git a/net/openvswitch/datapath.c b/net/openvswitch/datapath.c
-index 94b024534987a..03b81aa99975b 100644
---- a/net/openvswitch/datapath.c
-+++ b/net/openvswitch/datapath.c
-@@ -1736,6 +1736,7 @@ static int ovs_dp_cmd_new(struct sk_buff *skb, struct genl_info *info)
- /* Called with ovs_mutex. */
- static void __dp_destroy(struct datapath *dp)
- {
-+	struct flow_table *table = &dp->table;
- 	int i;
- 
- 	for (i = 0; i < DP_VPORT_HASH_BUCKETS; i++) {
-@@ -1754,7 +1755,14 @@ static void __dp_destroy(struct datapath *dp)
- 	 */
- 	ovs_dp_detach_port(ovs_vport_ovsl(dp, OVSP_LOCAL));
- 
--	/* RCU destroy the flow table */
-+	/* Flush sw_flow in the tables. RCU cb only releases resource
-+	 * such as dp, ports and tables. That may avoid some issues
-+	 * such as RCU usage warning.
-+	 */
-+	table_instance_flow_flush(table, ovsl_dereference(table->ti),
-+				  ovsl_dereference(table->ufid_ti));
-+
-+	/* RCU destroy the ports, meters and flow tables. */
- 	call_rcu(&dp->rcu, destroy_dp_rcu);
- }
- 
-diff --git a/net/openvswitch/flow_table.c b/net/openvswitch/flow_table.c
-index 2398d72383005..f198bbb0c517a 100644
---- a/net/openvswitch/flow_table.c
-+++ b/net/openvswitch/flow_table.c
-@@ -345,19 +345,15 @@ static void table_instance_flow_free(struct flow_table *table,
- 	flow_mask_remove(table, flow->mask);
- }
- 
--static void table_instance_destroy(struct flow_table *table,
--				   struct table_instance *ti,
--				   struct table_instance *ufid_ti,
--				   bool deferred)
-+/* Must be called with OVS mutex held. */
-+void table_instance_flow_flush(struct flow_table *table,
-+			       struct table_instance *ti,
-+			       struct table_instance *ufid_ti)
- {
- 	int i;
- 
--	if (!ti)
--		return;
--
--	BUG_ON(!ufid_ti);
- 	if (ti->keep_flows)
--		goto skip_flows;
-+		return;
- 
- 	for (i = 0; i < ti->n_buckets; i++) {
- 		struct sw_flow *flow;
-@@ -369,18 +365,16 @@ static void table_instance_destroy(struct flow_table *table,
- 
- 			table_instance_flow_free(table, ti, ufid_ti,
- 						 flow, false);
--			ovs_flow_free(flow, deferred);
-+			ovs_flow_free(flow, true);
- 		}
- 	}
-+}
- 
--skip_flows:
--	if (deferred) {
--		call_rcu(&ti->rcu, flow_tbl_destroy_rcu_cb);
--		call_rcu(&ufid_ti->rcu, flow_tbl_destroy_rcu_cb);
--	} else {
--		__table_instance_destroy(ti);
--		__table_instance_destroy(ufid_ti);
--	}
-+static void table_instance_destroy(struct table_instance *ti,
-+				   struct table_instance *ufid_ti)
-+{
-+	call_rcu(&ti->rcu, flow_tbl_destroy_rcu_cb);
-+	call_rcu(&ufid_ti->rcu, flow_tbl_destroy_rcu_cb);
- }
- 
- /* No need for locking this function is called from RCU callback or
-@@ -393,7 +387,7 @@ void ovs_flow_tbl_destroy(struct flow_table *table)
- 
- 	free_percpu(table->mask_cache);
- 	kfree_rcu(rcu_dereference_raw(table->mask_array), rcu);
--	table_instance_destroy(table, ti, ufid_ti, false);
-+	table_instance_destroy(ti, ufid_ti);
- }
- 
- struct sw_flow *ovs_flow_tbl_dump_next(struct table_instance *ti,
-@@ -511,7 +505,8 @@ int ovs_flow_tbl_flush(struct flow_table *flow_table)
- 	flow_table->count = 0;
- 	flow_table->ufid_count = 0;
- 
--	table_instance_destroy(flow_table, old_ti, old_ufid_ti, true);
-+	table_instance_flow_flush(flow_table, old_ti, old_ufid_ti);
-+	table_instance_destroy(old_ti, old_ufid_ti);
- 	return 0;
- 
- err_free_ti:
-diff --git a/net/openvswitch/flow_table.h b/net/openvswitch/flow_table.h
-index 8a5cea6ae1116..8ea8fc9573776 100644
---- a/net/openvswitch/flow_table.h
-+++ b/net/openvswitch/flow_table.h
-@@ -86,4 +86,7 @@ bool ovs_flow_cmp(const struct sw_flow *, const struct sw_flow_match *);
- 
- void ovs_flow_mask_key(struct sw_flow_key *dst, const struct sw_flow_key *src,
- 		       bool full, const struct sw_flow_mask *mask);
-+void table_instance_flow_flush(struct flow_table *table,
-+			       struct table_instance *ti,
-+			       struct table_instance *ufid_ti);
- #endif /* flow_table.h */
--- 
-2.25.1
-
-
-
+> +
+>         BUG_ON(!PageLocked(page));
+>         mapping = page->mapping;
+>         index = page->index;
+>
