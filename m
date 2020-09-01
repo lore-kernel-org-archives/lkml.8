@@ -2,160 +2,103 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE31C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4789DC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B205207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHuuu2pz"
+	by mail.kernel.org (Postfix) with ESMTP id 24845206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:20:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598977229;
+	bh=mHJBKvhnUJ/S+3nxeAcbt10YL0vWVfmMtJO8E7cMELs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=CYBbm0gAo6Ad+MB7UFVpx7n/MBDnshVPc9+sgJbdOdE/kuX+64YhG8FuTC0lktsO9
+	 Z8ARjMkxfeqpNLRGT9nSp99dGZ/OBCraGl8U924jgnI/VIoK10myBnlGnHxfIGLML0
+	 cYlD5iWUKqxhCMcjY4eICEchlOUby1eUWvgpugqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgIAQUT (ORCPT
+        id S1728441AbgIAQU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729190AbgIAPcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:32:48 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D36CCC061244;
-        Tue,  1 Sep 2020 08:32:47 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id d11so2240705ejt.13;
-        Tue, 01 Sep 2020 08:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4y5+uILsrYEyrll+p0CQ1799yDtGVcYn/QLXWN/UkVA=;
-        b=EHuuu2pzBr1VfUBw4YoRiSfvSUiZeM+77kGjAP5zTLHasH7nR9vXXYvwCrbZU6c2jd
-         4seupK2oQl7hy/pRNHsPIqGejkRNxOtFMlnhfBZDpAiMkHr5pZB6BzPT4m+xJPonISe1
-         HNL48Aq235dCBlPMhV8inHNlZDOIrbnOh1JBXPfbeG8+sj6XuyqKsj94Gpd9ONs14vLu
-         deSYvLYAn6bVnvmYKfnhfxtYq2kvw0toScDDKCc1SxRZHd8XQ+4rc2te9/bh4pe/QeAl
-         lQCzapBnm6XmP/Hk7wQ5e2G3zy3d5GlwxxTvtVvi1NsTwVz1Ra28amh4VKBfVkpE2OfS
-         5CZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4y5+uILsrYEyrll+p0CQ1799yDtGVcYn/QLXWN/UkVA=;
-        b=Ym+mzSh5cdCJNDMZabqt1Xrre+C7S3QscthrKgYreDVxXYNKGitSweOAqTCszH3Box
-         tg2GwzbbYbuz6bWiK0UT2SkMzycRnGizC+LLShGqrmbNsLXDpnhDuXy6P2MAJW7i494m
-         Bf9/xLDB51yHKQCySoacOKDet30xcUatIACt2+wqEinE5mz8FqWKEPiUOIJYcjLRsmMu
-         jLQo8fy1ahFTDX9CXwxy1hFrhHomRBM1wf11hM1Pvz6tzMqYwyKu0RiEcFTd2Ew17obQ
-         l8XbRq9n8NJ8zXbkBZr6a5IBRUE2Pemfg84uPXXhf50uZ3uHOGM8rYnDO0alxs4QjKs4
-         01Yw==
-X-Gm-Message-State: AOAM531JT8P+b4s9qR1KvH8fzdyjEfWspmuoGKlpS0wpbgBFpzGXZTSk
-        jly3t9ZNjz+nzdQTTm1ViHsmOjk1Urj/cDPx0CE=
-X-Google-Smtp-Source: ABdhPJzjka1igjLabnL5+FLiBQxxm/UurFtkX4pyV20hzOcltWvHAgjxNxAU2zE5rwt6/lT63IqZjcdxApMAe3KOB6I=
-X-Received: by 2002:a17:906:3a85:: with SMTP id y5mr1900924ejd.507.1598974366460;
- Tue, 01 Sep 2020 08:32:46 -0700 (PDT)
+        Tue, 1 Sep 2020 12:20:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36514 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728009AbgIAPcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:47 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E1C120866;
+        Tue,  1 Sep 2020 15:32:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974366;
+        bh=mHJBKvhnUJ/S+3nxeAcbt10YL0vWVfmMtJO8E7cMELs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wNmK28yFIAbcIOiNRSboQBJhjWX7LRLT9PrmesQhYDE4WwJ24oF+gr/sGjyNG9zdR
+         zsQ2QMlBpp6ZA5+gVFKOS8sUWsuIEsN2MoLO/hXSVuRwLy4mFDnQJR+jr7QtNgOfHH
+         Tjiz1vmHfDRtcO0l9wCW0qTPpT2saeLalMb2bCW0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 148/214] arm64: Allow booting of late CPUs affected by erratum 1418040
+Date:   Tue,  1 Sep 2020 17:10:28 +0200
+Message-Id: <20200901151000.062847132@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190812222911.2364802-1-guro@fb.com> <20190812222911.2364802-2-guro@fb.com>
- <20190813142752.35807b6070db795674f86feb@linux-foundation.org> <20190813214643.GA20632@tower.DHCP.thefacebook.com>
-In-Reply-To: <20190813214643.GA20632@tower.DHCP.thefacebook.com>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Tue, 1 Sep 2020 08:32:33 -0700
-Message-ID: <CAHbLzkrEWnfgUT7gEPvKR9uz+NkANzKUMOd17GEAoe-dHTjF_g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mm: memcontrol: flush percpu vmstats before releasing memcg
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This report is kind of late, hope everyone still remembers the context.
+From: Marc Zyngier <maz@kernel.org>
 
-I just happened to see a similar problem on our v4.19 kernel, please
-see the below output from memory.stat:
+[ Upstream commit bf87bb0881d0f59181fe3bbcf29c609f36483ff8 ]
 
-total_cache 7361626112
-total_rss 8268165120
-total_rss_huge 0
-total_shmem 0
-total_mapped_file 4154929152
-total_dirty 389689344
-total_writeback 101376000
-...
-[snip]
-...
-total_inactive_anon 4096
-total_active_anon 1638400
-total_inactive_file 208990208
-total_active_file 275030016
+As we can now switch from a system that isn't affected by 1418040
+to a system that globally is affected, let's allow affected CPUs
+to come in at a later time.
 
-And memory.usage_in_bytes:
-1248215040
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Link: https://lore.kernel.org/r/20200731173824.107480-3-maz@kernel.org
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/kernel/cpu_errata.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-The total_* counters are way bigger than the counters of LRUs and usage.
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index 0b2830379fe03..51462c59ab5da 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -917,6 +917,8 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ 		.desc = "ARM erratum 1418040",
+ 		.capability = ARM64_WORKAROUND_1418040,
+ 		ERRATA_MIDR_RANGE_LIST(erratum_1418040_list),
++		.type = (ARM64_CPUCAP_SCOPE_LOCAL_CPU |
++			 ARM64_CPUCAP_PERMITTED_FOR_LATE_CPU),
+ 	},
+ #endif
+ #ifdef CONFIG_ARM64_ERRATUM_1165522
+-- 
+2.25.1
 
-Some ephemeral cgroups were created/deleted frequently under this
-problematic cgroup. And this host has been up for more than 200 days.
-I didn't see such problems on shorter uptime hosts (the other 4.19
-host is up for 19 days) and v5.4 hosts.
 
-v4.19 also updates stats from per-cpu caches, and total_* sum all sub
-cgroups together. So it seems this is the same problem.
 
-Anyway this is not a significant problem since we can get the correct
-numbers from other counters, i.e. LRUs, but just confusing. Not sure
-if it is worth backporting the fix to v4.19.
-
-On Tue, Aug 13, 2019 at 2:46 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Tue, Aug 13, 2019 at 02:27:52PM -0700, Andrew Morton wrote:
-> > On Mon, 12 Aug 2019 15:29:10 -0700 Roman Gushchin <guro@fb.com> wrote:
-> >
-> > > Percpu caching of local vmstats with the conditional propagation
-> > > by the cgroup tree leads to an accumulation of errors on non-leaf
-> > > levels.
-> > >
-> > > Let's imagine two nested memory cgroups A and A/B. Say, a process
-> > > belonging to A/B allocates 100 pagecache pages on the CPU 0.
-> > > The percpu cache will spill 3 times, so that 32*3=96 pages will be
-> > > accounted to A/B and A atomic vmstat counters, 4 pages will remain
-> > > in the percpu cache.
-> > >
-> > > Imagine A/B is nearby memory.max, so that every following allocation
-> > > triggers a direct reclaim on the local CPU. Say, each such attempt
-> > > will free 16 pages on a new cpu. That means every percpu cache will
-> > > have -16 pages, except the first one, which will have 4 - 16 = -12.
-> > > A/B and A atomic counters will not be touched at all.
-> > >
-> > > Now a user removes A/B. All percpu caches are freed and corresponding
-> > > vmstat numbers are forgotten. A has 96 pages more than expected.
-> > >
-> > > As memory cgroups are created and destroyed, errors do accumulate.
-> > > Even 1-2 pages differences can accumulate into large numbers.
-> > >
-> > > To fix this issue let's accumulate and propagate percpu vmstat
-> > > values before releasing the memory cgroup. At this point these
-> > > numbers are stable and cannot be changed.
-> > >
-> > > Since on cpu hotplug we do flush percpu vmstats anyway, we can
-> > > iterate only over online cpus.
-> > >
-> > > Fixes: 42a300353577 ("mm: memcontrol: fix recursive statistics correctness & scalabilty")
-> >
-> > Is this not serious enough for a cc:stable?
->
-> I hope the "Fixes" tag will work, but yeah, my bad, cc:stable is definitely
-> a good idea here.
->
-> Added stable@ to cc.
->
-> Thanks!
->
