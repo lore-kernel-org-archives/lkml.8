@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22622C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9FFC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6C442067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DD912067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978672;
-	bh=MJa/bBstqhgiUjANJkL9eFucASQAE47gKRqxka/23Ko=;
+	s=default; t=1598978684;
+	bh=wWypa74ApxnbJrtT25Hj2RfEkG8HY3F1rSeh2fTUozo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s4sVC0zDNd6bv5Yip8lUb/sOo3pye+EjB6MN7g22swSedwY0NDG4bRG+lx/9cCP8J
-	 FbowY0pNL9SIj63ETR39zWSF7fqIebZV6uPLF1r3h6+B52jxbllZHsXuUKWXR8tMgo
-	 9fcx56YQpegQXKgL3BMlZ7OoGoH7A/SH1IkMzenA=
+	b=CFnqTDswAd6OeQ30E4wZR+HClFiK6jabXghWgdyZv04P4lfkeYw0Q+bP2N6prBX3N
+	 JSgzAvg5bAs/+nBD4sLpccNsCfUZ5ohO6Dsoulw3R3egvWXSML5V7L0ocfDvWGbzvN
+	 BdYeHp1hJnRHu63deIFSVj14D3jZoGZAFmL3ZKpo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgIAP1k (ORCPT
+        id S1730225AbgIAP1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:27:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47876 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729241AbgIAPYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:24:12 -0400
+        id S1729877AbgIAPX7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:59 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E4332078B;
-        Tue,  1 Sep 2020 15:24:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16CF62078B;
+        Tue,  1 Sep 2020 15:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973851;
-        bh=MJa/bBstqhgiUjANJkL9eFucASQAE47gKRqxka/23Ko=;
+        s=default; t=1598973839;
+        bh=wWypa74ApxnbJrtT25Hj2RfEkG8HY3F1rSeh2fTUozo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1bzXFnRG9rkcF4YO6rD08mEN4E1jarlIfpUI4jo7B44shrvo3VJ6lKhgIUSQTFhNR
-         qwQEVepH1dWvTQj/pq22JJajtWRXrC3pbxRTXU49hmeBclVFzlelvowEA4fYjAqJtP
-         j718nYqhFTBn9NmHDtMZXWOhMrdCgCZ1goP7MCbA=
+        b=dF939gj1QrR1xUKiBqf5M+iDi/yFkOB8bFVJRqtP1Mzvby26kngKd7yLYzei+imle
+         7k/cAfWkJXYA9jlJ9mm8u7WU72sFVNTbE4IDjN1O/1xuT/Nk76hqGzwODOaNSV3DRn
+         dw7H5GCC+TnrwbZDSx237M11oBuazcLLp0zcxucs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Can Guo <cang@codeaurora.org>,
-        Avri Altman <avri.altman@wdc.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bean Huo <beanhuo@micron.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Li Guifu <bluce.liguifu@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 073/125] scsi: ufs: Clean up completed request without interrupt notification
-Date:   Tue,  1 Sep 2020 17:10:28 +0200
-Message-Id: <20200901150938.154200496@linuxfoundation.org>
+Subject: [PATCH 4.19 037/125] f2fs: fix use-after-free issue
+Date:   Tue,  1 Sep 2020 17:09:52 +0200
+Message-Id: <20200901150936.376893944@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -63,54 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanley Chu <stanley.chu@mediatek.com>
+From: Li Guifu <bluce.liguifu@huawei.com>
 
-[ Upstream commit b10178ee7fa88b68a9e8adc06534d2605cb0ec23 ]
+[ Upstream commit 99c787cfd2bd04926f1f553b30bd7dcea2caaba1 ]
 
-If somehow no interrupt notification is raised for a completed request and
-its doorbell bit is cleared by host, UFS driver needs to cleanup its
-outstanding bit in ufshcd_abort(). Otherwise, system may behave abnormally
-in the following scenario:
+During umount, f2fs_put_super() unregisters procfs entries after
+f2fs_destroy_segment_manager(), it may cause use-after-free
+issue when umount races with procfs accessing, fix it by relocating
+f2fs_unregister_sysfs().
 
-After ufshcd_abort() returns, this request will be requeued by SCSI layer
-with its outstanding bit set. Any future completed request will trigger
-ufshcd_transfer_req_compl() to handle all "completed outstanding bits". At
-this time the "abnormal outstanding bit" will be detected and the "requeued
-request" will be chosen to execute request post-processing flow. This is
-wrong because this request is still "alive".
+[Chao Yu: change commit title/message a bit]
 
-Link: https://lore.kernel.org/r/20200811141859.27399-2-huobean@gmail.com
-Reviewed-by: Can Guo <cang@codeaurora.org>
-Acked-by: Avri Altman <avri.altman@wdc.com>
-Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-Signed-off-by: Bean Huo <beanhuo@micron.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/ufs/ufshcd.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index d8c6fd2012757..eb10a5cacd90c 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -5930,7 +5930,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 			/* command completed already */
- 			dev_err(hba->dev, "%s: cmd at tag %d successfully cleared from DB.\n",
- 				__func__, tag);
--			goto out;
-+			goto cleanup;
- 		} else {
- 			dev_err(hba->dev,
- 				"%s: no response from device. tag = %d, err %d\n",
-@@ -5964,6 +5964,7 @@ static int ufshcd_abort(struct scsi_cmnd *cmd)
- 		goto out;
- 	}
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 9782250c98156..161ce0eb8891a 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1004,6 +1004,9 @@ static void f2fs_put_super(struct super_block *sb)
+ 	int i;
+ 	bool dropped;
  
-+cleanup:
- 	scsi_dma_unmap(cmd);
++	/* unregister procfs/sysfs entries in advance to avoid race case */
++	f2fs_unregister_sysfs(sbi);
++
+ 	f2fs_quota_off_umount(sb);
  
- 	spin_lock_irqsave(host->host_lock, flags);
+ 	/* prevent remaining shrinker jobs */
+@@ -1067,8 +1070,6 @@ static void f2fs_put_super(struct super_block *sb)
+ 
+ 	kfree(sbi->ckpt);
+ 
+-	f2fs_unregister_sysfs(sbi);
+-
+ 	sb->s_fs_info = NULL;
+ 	if (sbi->s_chksum_driver)
+ 		crypto_free_shash(sbi->s_chksum_driver);
 -- 
 2.25.1
 
