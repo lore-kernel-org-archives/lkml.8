@@ -2,203 +2,245 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8280BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A956CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C632206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:42:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8159C206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:45:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fe5vKm8n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728193AbgIAMmv (ORCPT
+        id S1728035AbgIAMpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:42:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47044 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728031AbgIAMmb (ORCPT
+        Tue, 1 Sep 2020 08:45:15 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54197 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728067AbgIAMN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:42:31 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1kD5bW-0002LN-Fa; Tue, 01 Sep 2020 12:41:38 +0000
-Date:   Tue, 1 Sep 2020 14:41:36 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Lokesh Gidra <lokeshgidra@google.com>
-Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        James Morris <jmorris@namei.org>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Daniel Colascione <dancol@dancol.org>,
-        Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        KP Singh <kpsingh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Thomas Cedeno <thomascedeno@google.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Matthew Garrett <matthewgarrett@google.com>,
-        Aaron Goidel <acgoide@tycho.nsa.gov>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Adrian Reber <areber@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        kaleshsingh@google.com, calin@google.com, surenb@google.com,
-        nnk@google.com, jeffv@google.com, kernel-team@android.com,
-        Daniel Colascione <dancol@google.com>, jannh@google.com
-Subject: Re: [PATCH v8 1/3] Add a new LSM-supporting anonymous inode interface
-Message-ID: <20200901124136.r3krb2p23343licq@wittgenstein>
-References: <20200827063522.2563293-1-lokeshgidra@google.com>
- <20200827063522.2563293-2-lokeshgidra@google.com>
+        Tue, 1 Sep 2020 08:13:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598962389;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=rdmHH/b1jYUmUDSGEjwkqQ1FjyPV/N1Xn4edTd1na+o=;
+        b=Fe5vKm8nVBInMf1hV7rb3lVDRl9O/ZUBZwxBx4H/07LN42Xo72SUjDatb72DFbicdkDzhp
+        hQ6LMlekbp1G4RmVHC45274JIpY9JS2OiwSPyxqnGEt6vl82AAEY3ldWm/CKGBy1OGG69+
+        RhrwTx/ZjY+Oh6eoRXPCM6d+lPGU9fs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-247-taBQ7Gf-Ooq5NVTApcU-Uw-1; Tue, 01 Sep 2020 08:13:07 -0400
+X-MC-Unique: taBQ7Gf-Ooq5NVTApcU-Uw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7EF9D1888A3E;
+        Tue,  1 Sep 2020 12:13:05 +0000 (UTC)
+Received: from [10.36.112.51] (ovpn-112-51.ams2.redhat.com [10.36.112.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1077747B0;
+        Tue,  1 Sep 2020 12:13:01 +0000 (UTC)
+Subject: Re: [PATCH v2 4/9] iommu/ioasid: Add reference couting functions
+To:     Jacob Pan <jacob.pan.linux@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>, Wu Hao <hao.wu@intel.com>
+References: <1598070918-21321-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1598070918-21321-5-git-send-email-jacob.jun.pan@linux.intel.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <fed6c93b-8538-662c-2273-19ae2f2f7464@redhat.com>
+Date:   Tue, 1 Sep 2020 14:13:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <1598070918-21321-5-git-send-email-jacob.jun.pan@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200827063522.2563293-2-lokeshgidra@google.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 26, 2020 at 11:35:20PM -0700, Lokesh Gidra wrote:
-> From: Daniel Colascione <dancol@google.com>
+Hi Jacob,
+
+On 8/22/20 6:35 AM, Jacob Pan wrote:
+> There can be multiple users of an IOASID, each user could have hardware
+> contexts associated with the IOASID. In order to align lifecycles,
+> reference counting is introduced in this patch. It is expected that when
+> an IOASID is being freed, each user will drop a reference only after its
+> context is cleared.
 > 
-> This change adds a new function, anon_inode_getfd_secure, that creates
-> anonymous-node file with individual non-S_PRIVATE inode to which security
-> modules can apply policy. Existing callers continue using the original
-> singleton-inode kind of anonymous-inode file. We can transition anonymous
-> inode users to the new kind of anonymous inode in individual patches for
-> the sake of bisection and review.
-> 
-> The new function accepts an optional context_inode parameter that
-> callers can use to provide additional contextual information to
-> security modules for granting/denying permission to create an anon inode
-> of the same type.
-> 
-> For example, in case of userfaultfd, the created inode is a
-> 'logical child' of the context_inode (userfaultfd inode of the
-> parent process) in the sense that it provides the security context
-> required during creation of the child process' userfaultfd inode.
-> 
-> Signed-off-by: Daniel Colascione <dancol@google.com>
-> 
-> [Fix comment documenting return values of inode_init_security_anon()]
-> [Add context_inode description in comments to anon_inode_getfd_secure()]
-> [Remove definition of anon_inode_getfile_secure() as there are no callers]
-> [Make _anon_inode_getfile() static]
-> [Use correct error cast in _anon_inode_getfile()]
-> [Fix error handling in _anon_inode_getfile()]
-> 
-> Signed-off-by: Lokesh Gidra <lokeshgidra@google.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  fs/anon_inodes.c              | 147 +++++++++++++++++++++++++---------
->  include/linux/anon_inodes.h   |   8 ++
->  include/linux/lsm_hook_defs.h |   2 +
->  include/linux/lsm_hooks.h     |   9 +++
->  include/linux/security.h      |  10 +++
->  security/security.c           |   8 ++
->  6 files changed, 144 insertions(+), 40 deletions(-)
+>  drivers/iommu/ioasid.c | 113 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/ioasid.h |   4 ++
+>  2 files changed, 117 insertions(+)
 > 
-> diff --git a/fs/anon_inodes.c b/fs/anon_inodes.c
-> index 89714308c25b..c3f16deda211 100644
-> --- a/fs/anon_inodes.c
-> +++ b/fs/anon_inodes.c
-> @@ -55,61 +55,79 @@ static struct file_system_type anon_inode_fs_type = {
->  	.kill_sb	= kill_anon_super,
->  };
+> diff --git a/drivers/iommu/ioasid.c b/drivers/iommu/ioasid.c
+> index f73b3dbfc37a..5f31d63c75b1 100644
+> --- a/drivers/iommu/ioasid.c
+> +++ b/drivers/iommu/ioasid.c
+> @@ -717,6 +717,119 @@ int ioasid_set_for_each_ioasid(struct ioasid_set *set,
+>  EXPORT_SYMBOL_GPL(ioasid_set_for_each_ioasid);
 >  
-> -/**
-> - * anon_inode_getfile - creates a new file instance by hooking it up to an
-> - *                      anonymous inode, and a dentry that describe the "class"
-> - *                      of the file
-> - *
-> - * @name:    [in]    name of the "class" of the new file
-> - * @fops:    [in]    file operations for the new file
-> - * @priv:    [in]    private data for the new file (will be file's private_data)
-> - * @flags:   [in]    flags
-> - *
-> - * Creates a new file by hooking it on a single inode. This is useful for files
-> - * that do not need to have a full-fledged inode in order to operate correctly.
-> - * All the files created with anon_inode_getfile() will share a single inode,
-> - * hence saving memory and avoiding code duplication for the file/inode/dentry
-> - * setup.  Returns the newly created file* or an error pointer.
-> - */
-> -struct file *anon_inode_getfile(const char *name,
-> -				const struct file_operations *fops,
-> -				void *priv, int flags)
-> +static struct inode *anon_inode_make_secure_inode(
-> +	const char *name,
-> +	const struct inode *context_inode)
->  {
-> -	struct file *file;
-> +	struct inode *inode;
-> +	const struct qstr qname = QSTR_INIT(name, strlen(name));
-> +	int error;
+>  /**
+> + * IOASID refcounting rules
+> + * - ioasid_alloc() set initial refcount to 1
+> + *
+> + * - ioasid_free() decrement and test refcount.
+> + *     If refcount is 0, ioasid will be freed. Deleted from the system-wide
+> + *     xarray as well as per set xarray. The IOASID will be returned to the
+> + *     pool and available for new allocations.
+> + *
+> + *     If recount is non-zero, mark IOASID as IOASID_STATE_FREE_PENDING.
+s/recount/refcount
+> + *     No new reference can be added. The IOASID is not returned to the pool
+can be taken
+> + *     for reuse.
+> + *     After free, ioasid_get() will return error but ioasid_find() and other
+> + *     non refcount adding APIs will continue to work until the last reference
+> + *     is dropped
+> + *
+> + * - ioasid_get() get a reference on an active IOASID
+> + *
+> + * - ioasid_put() decrement and test refcount of the IOASID.
+> + *     If refcount is 0, ioasid will be freed. Deleted from the system-wide
+> + *     xarray as well as per set xarray. The IOASID will be returned to the
+> + *     pool and available for new allocations.
+> + *     Do nothing if refcount is non-zero.
+I would drop this last sentence
+> + *
+> + * - ioasid_find() does not take reference, caller must hold reference
+So can you use ioasid_find() once the state is
+IOASID_STATE_FREE_PENDING? According to Jean's reply, the "IOASID may be
+freed once ioasid_find() returns but not the returned data." So holding
+a ref is not mandated right?
+> + *
+> + * ioasid_free() can be called multiple times without error until all refs are
+> + * dropped.
+> + */
 > +
-> +	inode = alloc_anon_inode(anon_inode_mnt->mnt_sb);
-> +	if (IS_ERR(inode))
-> +		return inode;
-> +	inode->i_flags &= ~S_PRIVATE;
-> +	error =	security_inode_init_security_anon(inode, &qname, context_inode);
-> +	if (error) {
-> +		iput(inode);
-> +		return ERR_PTR(error);
+> +int ioasid_get_locked(struct ioasid_set *set, ioasid_t ioasid)
+> +{
+> +	struct ioasid_data *data;
+> +
+> +	data = xa_load(&active_allocator->xa, ioasid);
+> +	if (!data) {
+> +		pr_err("Trying to get unknown IOASID %u\n", ioasid);
+> +		return -EINVAL;
 > +	}
-> +	return inode;
+> +	if (data->state == IOASID_STATE_FREE_PENDING) {
+> +		pr_err("Trying to get IOASID being freed%u\n", ioasid);
+> +		return -EBUSY;
+> +	}
+> +
+> +	if (set && data->set != set) {
+> +		pr_err("Trying to get IOASID not in set%u\n", ioasid);
+maybe try to normalize your traces using always the same formatting for
+ioasids and ioasid sets. Also we can understand %u is the id of the set.
+> +		/* data found but does not belong to the set */
+you can get rid of this comment
+> +		return -EACCES;
+> +	}
+> +	refcount_inc(&data->users);
+> +
+> +	return 0;
 > +}
+> +EXPORT_SYMBOL_GPL(ioasid_get_locked);
+> +
+> +/**
+> + * ioasid_get - Obtain a reference of an ioasid
+> + * @set
+> + * @ioasid
+> + *
+> + * Check set ownership if @set is non-null.
+> + */
+> +int ioasid_get(struct ioasid_set *set, ioasid_t ioasid)
+> +{
+> +	int ret = 0;
+> +
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ret = ioasid_get_locked(set, ioasid);
+> +	spin_unlock(&ioasid_allocator_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_get);
+> +
+> +void ioasid_put_locked(struct ioasid_set *set, ioasid_t ioasid)
+> +{
+> +	struct ioasid_data *data;
+> +
+> +	data = xa_load(&active_allocator->xa, ioasid);
+> +	if (!data) {
+> +		pr_err("Trying to put unknown IOASID %u\n", ioasid);
+> +		return;
+> +	}
+> +
+> +	if (set && data->set != set) {
+> +		pr_err("Trying to drop IOASID not in the set %u\n", ioasid);
+was set%u above
+> +		return;
+> +	}
+> +
+> +	if (!refcount_dec_and_test(&data->users)) {
+> +		pr_debug("%s: IOASID %d has %d remainning users\n",
+> +			__func__, ioasid, refcount_read(&data->users));
+> +		return;
+> +	}
+> +	ioasid_do_free(data);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_put_locked);
+> +
+> +/**
+> + * ioasid_put - Drop a reference of an ioasid
+> + * @set
+> + * @ioasid
+> + *
+> + * Check set ownership if @set is non-null.
+> + */
+> +void ioasid_put(struct ioasid_set *set, ioasid_t ioasid)
+> +{
+> +	spin_lock(&ioasid_allocator_lock);
+> +	ioasid_put_locked(set, ioasid);
+> +	spin_unlock(&ioasid_allocator_lock);
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_put);
+> +
+> +/**
+>   * ioasid_find - Find IOASID data
+>   * @set: the IOASID set
+>   * @ioasid: the IOASID to find
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index 412d025d440e..310abe4187a3 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -76,6 +76,10 @@ int ioasid_attach_data(ioasid_t ioasid, void *data);
+>  int ioasid_register_allocator(struct ioasid_allocator_ops *allocator);
+>  void ioasid_unregister_allocator(struct ioasid_allocator_ops *allocator);
+>  void ioasid_is_in_set(struct ioasid_set *set, ioasid_t ioasid);
+> +int ioasid_get(struct ioasid_set *set, ioasid_t ioasid);
+> +int ioasid_get_locked(struct ioasid_set *set, ioasid_t ioasid);
+> +void ioasid_put(struct ioasid_set *set, ioasid_t ioasid);
+> +void ioasid_put_locked(struct ioasid_set *set, ioasid_t ioasid);
+>  int ioasid_set_for_each_ioasid(struct ioasid_set *sdata,
+>  			       void (*fn)(ioasid_t id, void *data),
+>  			       void *data);
+> 
+Thanks
 
-Hey,
+Eric
 
-Iiuc, this makes each newly created anon inode fd correspond to a unique
-file and to a unique inode:
-
-fd1 -> file1 -> inode1
-fd2 -> file2 -> inode2
-
-Whereas before we had every anon inode fd correspond to a unique file
-but all files map to the _same_ inode:
-
-fd1 -> file1 -> inode
-fd2 -> file2 -> inode
-
-The old behavior of hooking up a each anon inode fd to the same inode
-prevented having an evict method attached to the inode. Because it was
-shared that wasn't possible but also simply because that inode never got
-evicted anyway. That surely was intended but it's a bummer to some
-extent.
-With the new model you also can't have an evict method because now you
-have a separate inode for each file.
-
-I'm probably going to get killed for suggesting this but:
-If we're going to expand the anonymous inode infrastructure anyway is
-there a way we can make it so that we have a way to allocate a single
-inode for multiple anonymous inode fds and have callers opt-in to this
-behavior. We'd need a way to find this inode again, obviously.
-
-This would allow for some features on top of anonymous inode fds that
-can refer to the same object, i.e. anonymous inode fds that currently
-stash away the same object in f->private_data.
-In such a model we could allow such anonymous inode fds to stash away
-objects in inode->i_private instead of f->private_data and attach an
-evict method to it. This would e.g. allow a process to be killed when
-the last pidfd to it is closed or a seccomp notifier fd to notify when
-the filter is released without having to do separate reference counting.
-
-This would need a way to lookup that inode by the object that is stashed
-away in it of course which could probably be done by an idr or an
-xarray or something cleverer. It would obviously only affect a subset of
-anonymous inode fds so any other anonymous inode fds wouldn't be
-impacted since they can still use the single-anon-inode interface.
-
-Christian
