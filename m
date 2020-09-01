@@ -2,103 +2,143 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B82C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A19C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF2722065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C9B2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598977332;
+	bh=fSPWza8l+zESXd86vjXQT1c6kprk0xJPXAcbNaimApE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cqJh0upL0VFkP8zUKL3ifDK/oUJo/mP1EgXcd5tXF3MbdIL/6CmxD41vTTUURPTbZ
+	 ecKTMSbSn/pd1Vi5Ak6Jv4nJpi/FCiIRmK164zW90ZnymPt64IFEjK5y8ExvApt+Qr
+	 UJWtBRdjHCzcEmeTkdDsv9AdDFcBRNh/z/K1TUKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731832AbgIAQWC (ORCPT
+        id S1731034AbgIAPcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:22:02 -0400
-Received: from elvis.franken.de ([193.175.24.41]:45872 "EHLO elvis.franken.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731021AbgIAPcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:32:24 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1kD8Gf-0002rq-00; Tue, 01 Sep 2020 17:32:17 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 92E50C0E4C; Tue,  1 Sep 2020 17:22:09 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 17:22:09 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-mm@kvack.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 22/28] sgiseeq: convert from dma_cache_sync to
- dma_sync_single_for_device
-Message-ID: <20200901152209.GA14288@alpha.franken.de>
-References: <20200819065555.1802761-1-hch@lst.de>
- <20200819065555.1802761-23-hch@lst.de>
+Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730672AbgIAPbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:31:11 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 54AC72078B;
+        Tue,  1 Sep 2020 15:31:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974270;
+        bh=fSPWza8l+zESXd86vjXQT1c6kprk0xJPXAcbNaimApE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=x+IYwjENkjwOT06XQGYS5QKCP9J3SzYawsoLfCADOduyPHRLq9iTVUERrKcmWSyS5
+         rOcbVsqn5gaNd3lGrGEj5pswYhwxRSanw96OV1gqwrXWesi7Zeo0VzTZU7hPjld90V
+         rIuQKbkPezF85WD69WPB7yB3OGTH5fLAM9m+kpIw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>,
+        Ansuel Smith <ansuelsmth@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Rob Herring <robh@kernel.org>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 094/214] PCI: qcom: Change duplicate PCI reset to phy reset
+Date:   Tue,  1 Sep 2020 17:09:34 +0200
+Message-Id: <20200901150957.496498826@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819065555.1802761-23-hch@lst.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 08:55:49AM +0200, Christoph Hellwig wrote:
-> Use the proper modern API to transfer cache ownership for incoherent DMA.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/net/ethernet/seeq/sgiseeq.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/seeq/sgiseeq.c b/drivers/net/ethernet/seeq/sgiseeq.c
-> index 39599bbb5d45b6..f91dae16d69a19 100644
-> --- a/drivers/net/ethernet/seeq/sgiseeq.c
-> +++ b/drivers/net/ethernet/seeq/sgiseeq.c
-> @@ -112,14 +112,18 @@ struct sgiseeq_private {
->  
->  static inline void dma_sync_desc_cpu(struct net_device *dev, void *addr)
->  {
-> -	dma_cache_sync(dev->dev.parent, addr, sizeof(struct sgiseeq_rx_desc),
-> -		       DMA_FROM_DEVICE);
-> +	struct sgiseeq_private *sp = netdev_priv(dev);
-> +
-> +	dma_sync_single_for_cpu(dev->dev.parent, VIRT_TO_DMA(sp, addr),
-> +			sizeof(struct sgiseeq_rx_desc), DMA_BIDIRECTIONAL);
->  }
->  
->  static inline void dma_sync_desc_dev(struct net_device *dev, void *addr)
->  {
-> -	dma_cache_sync(dev->dev.parent, addr, sizeof(struct sgiseeq_rx_desc),
-> -		       DMA_TO_DEVICE);
-> +	struct sgiseeq_private *sp = netdev_priv(dev);
-> +
-> +	dma_sync_single_for_device(dev->dev.parent, VIRT_TO_DMA(sp, addr),
-> +			sizeof(struct sgiseeq_rx_desc), DMA_BIDIRECTIONAL);
->  }
+From: Abhishek Sahu <absahu@codeaurora.org>
 
-this breaks ethernet on IP22 completely, but I haven't figured out why, yet.
+[ Upstream commit dd58318c019f10bc94db36df66af6c55d4c0cbba ]
 
-Thomas.
+The deinit issues reset_control_assert for PCI twice and does not contain
+phy reset.
 
+Link: https://lore.kernel.org/r/20200615210608.21469-4-ansuelsmth@gmail.com
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+index 380a77a914fa0..9cf7599a198c4 100644
+--- a/drivers/pci/controller/dwc/pcie-qcom.c
++++ b/drivers/pci/controller/dwc/pcie-qcom.c
+@@ -287,14 +287,14 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+ {
+ 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 
++	clk_disable_unprepare(res->phy_clk);
+ 	reset_control_assert(res->pci_reset);
+ 	reset_control_assert(res->axi_reset);
+ 	reset_control_assert(res->ahb_reset);
+ 	reset_control_assert(res->por_reset);
+-	reset_control_assert(res->pci_reset);
++	reset_control_assert(res->phy_reset);
+ 	clk_disable_unprepare(res->iface_clk);
+ 	clk_disable_unprepare(res->core_clk);
+-	clk_disable_unprepare(res->phy_clk);
+ 	clk_disable_unprepare(res->aux_clk);
+ 	clk_disable_unprepare(res->ref_clk);
+ 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
+@@ -333,12 +333,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		goto err_clk_core;
+ 	}
+ 
+-	ret = clk_prepare_enable(res->phy_clk);
+-	if (ret) {
+-		dev_err(dev, "cannot prepare/enable phy clock\n");
+-		goto err_clk_phy;
+-	}
+-
+ 	ret = clk_prepare_enable(res->aux_clk);
+ 	if (ret) {
+ 		dev_err(dev, "cannot prepare/enable aux clock\n");
+@@ -411,6 +405,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ 		return ret;
+ 	}
+ 
++	ret = clk_prepare_enable(res->phy_clk);
++	if (ret) {
++		dev_err(dev, "cannot prepare/enable phy clock\n");
++		goto err_deassert_ahb;
++	}
++
+ 	/* wait for clock acquisition */
+ 	usleep_range(1000, 1500);
+ 
+@@ -428,8 +428,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
+ err_clk_ref:
+ 	clk_disable_unprepare(res->aux_clk);
+ err_clk_aux:
+-	clk_disable_unprepare(res->phy_clk);
+-err_clk_phy:
+ 	clk_disable_unprepare(res->core_clk);
+ err_clk_core:
+ 	clk_disable_unprepare(res->iface_clk);
 -- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+2.25.1
+
+
+
