@@ -2,73 +2,86 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 578A9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C32D5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:52:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33549206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F78206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:52:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgIANvI (ORCPT
+        id S1728185AbgIANwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:51:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35534 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728020AbgIANau (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:30:50 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B247C061245;
-        Tue,  1 Sep 2020 06:30:03 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id B2BB7391; Tue,  1 Sep 2020 15:29:52 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 15:29:51 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 48/76] x86/entry/64: Add entry code for #VC handler
-Message-ID: <20200901132951.GD22385@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-49-joro@8bytes.org>
- <20200831113002.GH27517@zn.tnic>
+        Tue, 1 Sep 2020 09:52:07 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:35572 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728064AbgIANav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:30:51 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 3C02F361D37743339AAB;
+        Tue,  1 Sep 2020 21:28:54 +0800 (CST)
+Received: from [127.0.0.1] (10.174.176.211) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
+ 21:28:48 +0800
+Subject: Re: [PATCH v3] PCI: Add pci_iounmap
+To:     George Cherian <george.cherian@marvell.com>,
+        <linux-kernel@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>
+CC:     <kbuild-all@lists.01.org>, <bhelgaas@google.com>, <arnd@arndb.de>,
+        <mst@redhat.com>
+References: <20200824132046.3114383-1-george.cherian@marvell.com>
+ <202008250903.G0uQ5UZk%lkp@intel.com>
+From:   Yang Yingliang <yangyingliang@huawei.com>
+Message-ID: <13af6d70-7de4-e86f-5db0-f42159c5b4a5@huawei.com>
+Date:   Tue, 1 Sep 2020 21:28:48 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831113002.GH27517@zn.tnic>
+In-Reply-To: <202008250903.G0uQ5UZk%lkp@intel.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Originating-IP: [10.174.176.211]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 01:30:02PM +0200, Borislav Petkov wrote:
-> AFAICT, that STACK_TYPE_UNKNOWN gets set only by the plain
-> get_stack_info() function - not by the _noinstr() variant so you'd need
-> to check the return value of latter...
 
-You are right, it needs to check the return value of
-get_stack_info_noinstr() instead of STACK_TYPE_UNKNOWN. Fixed that now.
+On 2020/8/25 9:25, kernel test robot wrote:
+> Hi George,
+>
+> I love your patch! Yet something to improve:
+>
+> [auto build test ERROR on pci/next]
+> [also build test ERROR on linux/master linus/master asm-generic/master v5.9-rc2 next-20200824]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch]
+>
+> url:    https://github.com/0day-ci/linux/commits/George-Cherian/PCI-Add-pci_iounmap/20200824-212149
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+> config: powerpc-allyesconfig (attached as .config)
+> compiler: powerpc64-linux-gcc (GCC) 9.3.0
+> reproduce (this is a W=1 build):
+>          wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>          chmod +x ~/bin/make.cross
+>          # save the attached .config to linux build tree
+>          COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=powerpc
+>
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+>
+> All errors (new ones prefixed by >>):
+>
+>     powerpc64-linux-ld: lib/pci_iomap.o: in function `__crc_pci_iounmap':
+>>> (.rodata+0x10): multiple definition of `__crc_pci_iounmap'; lib/iomap.o:(.rodata+0x68): first defined here
+EXPORT_SYMBOL(pci_iounmap) in lib/iomap.c need be removed.
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-
-Regards,
-
-	Joerg
