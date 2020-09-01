@@ -2,135 +2,106 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07A8C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5F6206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79088206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CpAGYNbF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Nv5cPcLs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729239AbgIASRv (ORCPT
+        id S1729901AbgIASSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:17:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:28658 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726126AbgIASRt (ORCPT
+        Tue, 1 Sep 2020 14:18:46 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:43662 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726377AbgIASSo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:17:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598984267;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=xRx7F9H7ZUnV1Tk9T9gZ3S6OyItYjcc54MDMYPipm7o=;
-        b=CpAGYNbF7gSPT00zwC8l3yONuZyfyNITDeG7v6/nVqdO2AfBd8XwsS7bMOrm3lap3yshwF
-        VeowAnxXsAZOVNuRzFY5SCkSj825uLw+J2wli9gp5+dChk1JKbJkzsWrVhXRGD+Tbm2DCN
-        VU5TqMJSU7lf0TvyHBiFcAd+WL8JN6Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-NkNJeA5tOReQGAd9lgnT0Q-1; Tue, 01 Sep 2020 14:17:43 -0400
-X-MC-Unique: NkNJeA5tOReQGAd9lgnT0Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 114128015C5;
-        Tue,  1 Sep 2020 18:17:40 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-113-228.ams2.redhat.com [10.36.113.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6AB677C558;
-        Tue,  1 Sep 2020 18:17:28 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
-        <20200825002540.3351-26-yu-cheng.yu@intel.com>
-        <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
-        <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
-        <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
-        <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
-        <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
-        <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
-        <20200826164604.GW6642@arm.com>
-        <87ft892vvf.fsf@oldenburg2.str.redhat.com>
-        <20200826170841.GX6642@arm.com>
-        <87tuwow7kg.fsf@oldenburg2.str.redhat.com>
-        <CAMe9rOrhjLSaMNABnzd=Kp5UeVot1Qkx0_PnMng=sT+wd9Xubw@mail.gmail.com>
-        <873648w6qr.fsf@oldenburg2.str.redhat.com>
-        <CAMe9rOqpLyWR+Ek7aBiRY+Kr6sRxkSHAo2Sc6h0YCv3X3-3TuQ@mail.gmail.com>
-        <CAMe9rOpuwZesJqY_2wYhdRXMhd7g0a+MRqPtXKh7wX5B5-OSbA@mail.gmail.com>
-        <3c12b6ee-7c93-dcf4-fbf7-2698003386dd@intel.com>
-        <87o8mpqtcn.fsf@oldenburg2.str.redhat.com>
-        <b84e6fae-5d51-b0a0-d917-76f86b3186b7@intel.com>
-Date:   Tue, 01 Sep 2020 20:17:26 +0200
-In-Reply-To: <b84e6fae-5d51-b0a0-d917-76f86b3186b7@intel.com> (Yu-cheng Yu's
-        message of "Tue, 1 Sep 2020 10:58:25 -0700")
-Message-ID: <87k0xdqs3t.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
+        Tue, 1 Sep 2020 14:18:44 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 081IIJdU129290;
+        Tue, 1 Sep 2020 13:18:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598984299;
+        bh=Lwpr36EMeIo7RDKJYQQHBLgJIbAH7X9PlRGuW+DsCBQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=Nv5cPcLsgioS5l1vrTLAQ+yInCx63q4E/uw+foNS11imZzE67XLunt4AJWeeeeUzW
+         Jtus+jTOvtXAaCrLYM5KCWGtIw3OZt3XvFrnzlIsvclMwOG6cQHFR6aETXbjEIa+Fy
+         i18faZTQjyZfSB6udGu/r1zRI93LQI8eGKyuOSC0=
+Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 081IIJJ9029682;
+        Tue, 1 Sep 2020 13:18:19 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Sep
+ 2020 13:18:19 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 1 Sep 2020 13:18:18 -0500
+Received: from [10.250.38.37] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 081IIIUY000741;
+        Tue, 1 Sep 2020 13:18:18 -0500
+Subject: Re: [PATCH v2] can: m_can: Set device to software init mode before
+ closing
+To:     Faiz Abbas <faiz_abbas@ti.com>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-can@vger.kernel.org>
+CC:     <kuba@kernel.org>, <davem@davemloft.net>, <mkl@pengutronix.de>,
+        <wg@grandegger.com>, <sriram.dash@samsung.com>
+References: <20200825055442.16994-1-faiz_abbas@ti.com>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <3ec0825f-9963-3687-c9f2-8280176c58aa@ti.com>
+Date:   Tue, 1 Sep 2020 13:18:13 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <20200825055442.16994-1-faiz_abbas@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Yu-cheng Yu:
+Faiz
 
-> On 9/1/2020 10:50 AM, Florian Weimer wrote:
->> * Yu-cheng Yu:
->> 
->>> Like other arch_prctl()'s, this parameter was 'unsigned long'
->>> earlier. The idea was, since this arch_prctl is only implemented for
->>> the 64-bit kernel, we wanted it to look as 64-bit only.  I will change
->>> it back to 'unsigned long'.
->> What about x32?  In general, long is rather problematic for x32.
+On 8/25/20 12:54 AM, Faiz Abbas wrote:
+> There might be some requests pending in the buffer when the
+> interface close sequence occurs. In some devices, these
+> pending requests might lead to the module not shutting down
+> properly when m_can_clk_stop() is called.
 >
-> The problem is the size of 'long', right?
-> Because this parameter is passed in a register, and only the lower
-> bits are used, x32 works as well.
-
-The userspace calling convention leaves the upper 32-bit undefined.
-Therefore, this only works by accident if the kernel does not check that
-the upper 32-bit are zero, which is probably a kernel bug.
-
-It's unclear to me what you are trying to accomplish.  Why do you want
-to use unsigned long here?  The correct type appears to be unsigned int.
-This correctly expresses that the upper 32 bits of the register do not
-matter.
-
-Thanks,
-Florian
-
+> Therefore, move the device to init state before potentially
+> powering it down.
+>
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>
+> changes since v1: Rebased to latest mainline
+>
+>   drivers/net/can/m_can/m_can.c | 3 +++
+>   1 file changed, 3 insertions(+)
+>
+> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.c
+> index 02c5795b7393..d0c458f7f6e1 100644
+> --- a/drivers/net/can/m_can/m_can.c
+> +++ b/drivers/net/can/m_can/m_can.c
+> @@ -1414,6 +1414,9 @@ static void m_can_stop(struct net_device *dev)
+>   	/* disable all interrupts */
+>   	m_can_disable_all_interrupts(cdev);
+>   
+> +	/* Set init mode to disengage from the network */
+> +	m_can_config_endisable(cdev, true);
+> +
+>   	/* set the state as STOPPED */
+>   	cdev->can.state = CAN_STATE_STOPPED;
+>   }
+Acked-by: Dan Murphy <dmurphy@ti.com>
