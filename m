@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7341CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3501C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:59:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 442EC206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8764206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979583;
-	bh=NkviXZabKc7iFhX/vqHIbkD73UcvwozSI9FXuyesmq8=;
+	s=default; t=1598979587;
+	bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y1I9EiFfdt6fOTkWYMBz7nUIgBymRbv/OyVkys7FW7AC66Twurei2YayxukYxw3B9
-	 6JoMrDiA0e+kXRiCIm5+hwxXArQDF0LcigvKfXko1rdx9a/RlmnhSRARVfsDWwwo0r
-	 cybH9NxjadFD0tUL1mVzbkiykR1YM7o4JAA+REvM=
+	b=OipxkV6W0PB6t4UtGBclFYwAOJdPPatLMlftasQEh2IEs0xEjmO34rjjY3rk2ve1S
+	 G7L1YKLc8mqOjyh4YSpJrYWHyB9daoxhlc5+bvl41fKFtfxnS40cPxhrT6bvD+NaPP
+	 pIs8cncqVadpgtpdC5i6ULaeyZKwgFaYPYVKEn9U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729674AbgIAPVe (ORCPT
+        id S1732492AbgIAQ7p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37730 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:59:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729532AbgIAPTD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:03 -0400
+        id S1729685AbgIAPVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:21:41 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0B4206FA;
-        Tue,  1 Sep 2020 15:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 560CB207D3;
+        Tue,  1 Sep 2020 15:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973542;
-        bh=NkviXZabKc7iFhX/vqHIbkD73UcvwozSI9FXuyesmq8=;
+        s=default; t=1598973699;
+        bh=ySY7r+XvByWG/h02YkSpizvqYnRnOEsqEYmyDA8cBmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pH7YnOlHwbtb+0GNRNyVzFfavRaiZ8N9lHH/pUKsPF1Jp2JW2Q/93T1zKtczTcHWO
-         fdAs6kYTP8WSXDHj4PPMB6zILULnkN6y7CXZYh53DJ4yyWFlpcFUjzUbMCV5041/Qx
-         Voe6iD6y4smt35HqOZxgFW4DZ1pfpX6V8NJXt7ZU=
+        b=TbKaNU7W2ZnFIf6MEYWmSQWr1kGsksGPzwxz6I5JxoskEZkvj1EpkVlRPs0WxnAf/
+         GttBb4Tf9ppCvFRWmqCt3cL1RkMMWi1l+UmAEB9Imm8o9pGB4OOEX3Yel8CAeRNP/N
+         FtbbAFe93MpbE5hz1pgkVzvhFiVKHu+KWIFWOoUM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 41/91] Revert "ath10k: fix DMA related firmware crashes on multiple devices"
-Date:   Tue,  1 Sep 2020 17:10:15 +0200
-Message-Id: <20200901150930.186537005@linuxfoundation.org>
+Subject: [PATCH 4.19 012/125] ASoC: tegra: Fix reference count leaks.
+Date:   Tue,  1 Sep 2020 17:09:27 +0200
+Message-Id: <20200901150935.191211232@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-References: <20200901150928.096174795@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,49 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhi Chen <zhichen@codeaurora.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit a1769bb68a850508a492e3674ab1e5e479b11254 ]
+[ Upstream commit deca195383a6085be62cb453079e03e04d618d6e ]
 
-This reverts commit 76d164f582150fd0259ec0fcbc485470bcd8033e.
-PCIe hung issue was observed on multiple platforms. The issue was reproduced
-when DUT was configured as AP and associated with 50+ STAs.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count if pm_runtime_put is not called in
+error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
 
-For QCA9984/QCA9888, the DMA_BURST_SIZE register controls the AXI burst size
-of the RD/WR access to the HOST MEM.
-0 - No split , RAW read/write transfer size from MAC is put out on bus
-    as burst length
-1 - Split at 256 byte boundary
-2,3 - Reserved
-
-With PCIe protocol analyzer, we can see DMA Read crossing 4KB boundary when
-issue happened. It broke PCIe spec and caused PCIe stuck. So revert
-the default value from 0 to 1.
-
-Tested:  IPQ8064 + QCA9984 with firmware 10.4-3.10-00047
-         QCS404 + QCA9984 with firmware 10.4-3.9.0.2--00044
-         Synaptics AS370 + QCA9888  with firmware 10.4-3.9.0.2--00040
-
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/20200613204422.24484-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/hw.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/tegra/tegra30_ahub.c | 4 +++-
+ sound/soc/tegra/tegra30_i2s.c  | 4 +++-
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
-index 0c089f6dd3d92..6a8c5f71787ad 100644
---- a/drivers/net/wireless/ath/ath10k/hw.h
-+++ b/drivers/net/wireless/ath/ath10k/hw.h
-@@ -702,7 +702,7 @@ ath10k_rx_desc_get_l3_pad_bytes(struct ath10k_hw_params *hw,
+diff --git a/sound/soc/tegra/tegra30_ahub.c b/sound/soc/tegra/tegra30_ahub.c
+index 43679aeeb12be..88e838ac937dc 100644
+--- a/sound/soc/tegra/tegra30_ahub.c
++++ b/sound/soc/tegra/tegra30_ahub.c
+@@ -655,8 +655,10 @@ static int tegra30_ahub_resume(struct device *dev)
+ 	int ret;
  
- #define TARGET_10_4_TX_DBG_LOG_SIZE		1024
- #define TARGET_10_4_NUM_WDS_ENTRIES		32
--#define TARGET_10_4_DMA_BURST_SIZE		0
-+#define TARGET_10_4_DMA_BURST_SIZE		1
- #define TARGET_10_4_MAC_AGGR_DELIM		0
- #define TARGET_10_4_RX_SKIP_DEFRAG_TIMEOUT_DUP_DETECTION_CHECK 1
- #define TARGET_10_4_VOW_CONFIG			0
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(ahub->regmap_ahub);
+ 	ret |= regcache_sync(ahub->regmap_apbif);
+ 	pm_runtime_put(dev);
+diff --git a/sound/soc/tegra/tegra30_i2s.c b/sound/soc/tegra/tegra30_i2s.c
+index 0b176ea24914b..bf155c5092f06 100644
+--- a/sound/soc/tegra/tegra30_i2s.c
++++ b/sound/soc/tegra/tegra30_i2s.c
+@@ -551,8 +551,10 @@ static int tegra30_i2s_resume(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 	ret = regcache_sync(i2s->regmap);
+ 	pm_runtime_put(dev);
+ 
 -- 
 2.25.1
 
