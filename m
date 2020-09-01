@@ -2,84 +2,144 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91720C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE25C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:47:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5C5C02071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC01207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K+VeHmUM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CWzyYuoB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731913AbgIAToU (ORCPT
+        id S1732070AbgIATrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:44:20 -0400
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124]:43164 "EHLO
-        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726936AbgIAToU (ORCPT
+        Tue, 1 Sep 2020 15:47:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbgIATrP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:44:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598989458;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=nTHlq3Kl2GCIO7zccVhN6JeQ5RlCQEu/xPuuaep77Qk=;
-        b=K+VeHmUMuGySv/GBtZ5hngff1skKlnluIGzkGzbgyLtQf7aBO8rcLqvPPRjSvFMczFB2hC
-        EBg45NCQ/gsXuVtQLuGRV54M3PORZjHwnfUnAdRgvlqltQX1ZCL+lSGbeut8Lcal9rioxM
-        H5Cf12h4yzLtsaqjQHCeyWrNEHz7lx8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-402-j-YWKZGfMaSROuVIV8aAKg-1; Tue, 01 Sep 2020 15:44:17 -0400
-X-MC-Unique: j-YWKZGfMaSROuVIV8aAKg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 247FE425D1;
-        Tue,  1 Sep 2020 19:44:16 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-113-231.rdu2.redhat.com [10.10.113.231])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 25FEC78B29;
-        Tue,  1 Sep 2020 19:44:15 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200901164827.GQ14765@casper.infradead.org>
-References: <20200901164827.GQ14765@casper.infradead.org> <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/7] mm: Make more use of readahead_control
+        Tue, 1 Sep 2020 15:47:15 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D2CC061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 12:47:15 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id lo4so3374635ejb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 12:47:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kTur4TszHq9523qD6iPQQf45ohXDEUrbbOabBCfKuUw=;
+        b=CWzyYuoBpHyopcW6UGJzCRrbzhPmoxUBaCxI7bRNujUqWrF5to/QhuZqjrS7nxWu0W
+         jAbOrW/VUjLw5eCygcxnnz4+H4WcP4zPwj0aufjfMcS7bjx3wkayFffr7Z6u5k2s8TFD
+         8tXV8kM+VzEYM9fO8VnSzWieJ5cQoi7lXniCotDInsAEJFLJ7zfDy2L/kUH4emO0IlvH
+         gpqmf3HLFgBRudRPyT4CD2lBOGN0UFZiJ0WwVcUE7jm9LSNP+IE3hPw9g59DEqCzfSEL
+         THiflFVqtJ+7m5QY2g3VNZ5cZdTzYUjw1h86UqHsaXiHTetSrbuY9+PWlnuAGvW1/UM7
+         Af1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kTur4TszHq9523qD6iPQQf45ohXDEUrbbOabBCfKuUw=;
+        b=kZOvoeb96PUtM2COatqg7KzF48btOEiVH4WQD0mXMQOLQztPN+8N0mfcFSOE+HwWge
+         2Rdcem2DVD5r7C8h2XOBkFuA/xpVmWNKnjo155T6ccFIAwnAJ3XHcmQJWkcKZgA7kj0T
+         DJSB5gC1oUbbZPEYeunVWMrzIeYbXrxZl5bGjYwmH6x086d0LgkZcjfgoqOquhhe34yc
+         NuTBCCk+YKpjrZvEjPkPx0JzFuvaR2tQz8TubAhneZVTlJvycTXtWsNOzSy7S8W7zAUP
+         Ct9dvus94XYL2xh97I2pUJXE3hr1t5t0+PTUSceBrzQ+ahNf5JQWUMjkv8Qp7Raw5Qax
+         jW3g==
+X-Gm-Message-State: AOAM533rxV3ghfY1kYr4h7HTtJPnE9loqj8SqJ7Cr/DRdflXhSsziEdc
+        xsH5BlZoYPLpJrqAs2zIwgSQpPZkaa19/4LFOr7zyw==
+X-Google-Smtp-Source: ABdhPJzf8T7FXtY0Q7Fx2epgXAQyimHZxDg5Mh5UyXW9wn394/QoJXCbMs9CPXEix3VkOUNcTb7yISndZZ2r4JYr/AI=
+X-Received: by 2002:a17:906:a209:: with SMTP id r9mr3270866ejy.413.1598989633789;
+ Tue, 01 Sep 2020 12:47:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <423538.1598989454.1@warthog.procyon.org.uk>
-Date:   Tue, 01 Sep 2020 20:44:14 +0100
-Message-ID: <423539.1598989454@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-9-haoluo@google.com>
+ <CAEf4BzYC0JRQusCxTrmraYQC7SZdkVjdy8DMUNECKwCbXP9-dw@mail.gmail.com>
+ <CA+khW7jYWNT5aVe5vCinw5qwKKoB0w386qz2g+0ndv1LeeoGGg@mail.gmail.com> <CAEf4Bza5+m72JQ1Q3a2GRetGB7C-Zemvd-ib0u_VKC2nrYkgdQ@mail.gmail.com>
+In-Reply-To: <CAEf4Bza5+m72JQ1Q3a2GRetGB7C-Zemvd-ib0u_VKC2nrYkgdQ@mail.gmail.com>
+From:   Hao Luo <haoluo@google.com>
+Date:   Tue, 1 Sep 2020 12:47:02 -0700
+Message-ID: <CA+khW7iP+BsXnNg0E-K3npR74FqV0b+oHo9j27ymKWobi-QBVw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v1 8/8] bpf/selftests: Test for bpf_per_cpu_ptr()
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
+        Jakub Sitnicki <jakub@cloudflare.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matthew Wilcox <willy@infradead.org> wrote:
+On Tue, Sep 1, 2020 at 11:12 AM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Thu, Aug 27, 2020 at 8:42 PM Hao Luo <haoluo@google.com> wrote:
+> >
+[...]
+> > > >
+> > > > -extern const struct rq runqueues __ksym; /* struct type global var. */
+> > > > +extern const struct rq runqueues __ksym; /* struct type percpu var. */
+> > > >  extern const int bpf_prog_active __ksym; /* int type global var. */
+> > > > +extern const unsigned long process_counts __ksym; /* int type percpu var. */
+> > > >
+> > > >  SEC("raw_tp/sys_enter")
+> > > >  int handler(const void *ctx)
+> > > >  {
+> > > > +       struct rq *rq;
+> > > > +       unsigned long *count;
+> > > > +
+> > > >         out__runqueues = (__u64)&runqueues;
+> > > >         out__bpf_prog_active = (__u64)&bpf_prog_active;
+> > > >
+> > > > +       rq = (struct rq *)bpf_per_cpu_ptr(&runqueues, 1);
+> > > > +       if (rq)
+> > > > +               out__rq_cpu = rq->cpu;
+> > >
+> > > this is awesome!
+> > >
+> > > Are there any per-cpu variables that are arrays? Would be nice to test
+> > > those too.
+> > >
+> > >
+> >
+> > There are currently per-cpu arrays, but not common. There is a
+> > 'pmc_prev_left' in arch/x86, I can add that in this test.
+>
+> arch-specific variables are bad, because selftests will be failing on
+> other architectures; let's not do this then.
+>
 
-> > Note that I've been
-> > passing the number of pages to read in rac->_nr_pages, and then saving it
-> > and changing it certain points, e.g. page_cache_readahead_unbounded().
-> 
-> I do not like this.  You're essentially mutating the meaning of _nr_pages
-> as the ractl moves down the stack, and that's going to lead to bugs.
-> I'd keep it as a separate argument.
+Yeah, no problem. Though not going to add this arch-specific variable
+in the posted patches, I tried array-typed ksyms locally in my test
+environment. It worked fine, except that the array size is not
+checked. For instance, if there is a percpu array in kernel as
 
-The meaning isn't specified in linux/pagemap.h.  Can you adjust the comments
-on the struct and on readahead_count() to make it more clear what the value
-represents?
+DEFINE_PER_CPU(u32[64], foo);
 
-Thanks,
-David
+we can declare a ksym of different size and it passes libbpf checks
+and kernel verification.
 
+extern u32 foo[128] __ksyms;
+
+It seems that bpf_core_types_are_compat() doesn't check nr_elem. But
+it seems the kernel verifier does check out-of-bounds accesses, so
+this may not be a real problem. Just want to list what I saw.
+
+> >
+> > [...]
