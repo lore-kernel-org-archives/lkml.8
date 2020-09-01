@@ -5,47 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4C18C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A129C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74EB82064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 663F4206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975737;
-	bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
+	s=default; t=1598975744;
+	bh=kRqf6eaOCcK65OnImDGdlXk8P0aZqsLV1CBPAX5RI4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FKx6UuVWP3d5ctwA476FHPVBYesxLWTDb1dJ5FsxYRrYgypINgzBXMkoyInH0fVlg
-	 fiH4+V2BvqUt/ToDcSUE6DUcuVmSBukmldrVnivldb5RHFJBeHxIxPdP5RkMM3tVxv
-	 sifP3haafYIudSyG9YCePgGUQyeYZmyleo9UYwqM=
+	b=k76zW5uEFEBK3YqtGwG2rvsExXPh7rnjr6QeajPqwNp6duLrAPjjYhgugsYGiUaPJ
+	 3gFb9GN/bLwmDmvhKgS9Icr/WOjGrKSxVaf2U+fM6sZwuWwGp5nKrGqBf+Sr7Emckb
+	 ZADKZo+hb9AiKPGAjYv4TI+hWV2zW6vFsiuXVuUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732140AbgIAPzf (ORCPT
+        id S1732151AbgIAPzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:55:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34020 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:55:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731880AbgIAPpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:34 -0400
+        id S1731872AbgIAPpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:31 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AF19206EB;
-        Tue,  1 Sep 2020 15:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80634206FA;
+        Tue,  1 Sep 2020 15:45:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975133;
-        bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
+        s=default; t=1598975131;
+        bh=kRqf6eaOCcK65OnImDGdlXk8P0aZqsLV1CBPAX5RI4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f8oZmMhDco41949ldwX2kW7yc9M90Vblk0Efh5J/5MxH7qv1gxF8v21UhmWMnEEDL
-         b72WoBz7qsDVK5do9lrpUCHBhiKss9yCa9AdF2Hy/bx39ypTD8eqSXz6cVAaqKMWTH
-         A7Q6G1RGZm5X/KncVoA/C1vNrJLIt2QwJi925k8M=
+        b=eX2se8c7ftj08TEUH3ti3+03PGF7Wo6JafkQtrpoEnzbZNN+EcNLsmJcUMe2DWC+e
+         /EADV0xDa3EO+wzhWX9Vpy5dY1+/57PmzxHt6e/qN3tbu8KE0xOzl15VWBqeYMxFTi
+         5elv5AhpVTjExeN07PobrES04CJsrfUEh4W+5xw8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>
-Subject: [PATCH 5.8 223/255] usb: uas: Add quirk for PNY Pro Elite
-Date:   Tue,  1 Sep 2020 17:11:19 +0200
-Message-Id: <20200901151011.446626164@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.8 214/255] drm/amdgpu: Fix buffer overflow in INFO ioctl
+Date:   Tue,  1 Sep 2020 17:11:10 +0200
+Message-Id: <20200901151010.957910511@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -58,39 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 9a469bc9f32dd33c7aac5744669d21a023a719cd upstream.
+commit b5b97cab55eb71daba3283c8b1d2cce456d511a1 upstream.
 
-PNY Pro Elite USB 3.1 Gen 2 device (SSD) doesn't respond to ATA_12
-pass-through command (i.e. it just hangs). If it doesn't support this
-command, it should respond properly to the host. Let's just add a quirk
-to be able to move forward with other operations.
+The values for "se_num" and "sh_num" come from the user in the ioctl.
+They can be in the 0-255 range but if they're more than
+AMDGPU_GFX_MAX_SE (4) or AMDGPU_GFX_MAX_SH_PER_SE (2) then it results in
+an out of bounds read.
 
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Link: https://lore.kernel.org/r/2b0585228b003eedcc82db84697b31477df152e0.1597803605.git.thinhn@synopsys.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -80,6 +80,13 @@ UNUSUAL_DEV(0x152d, 0x0578, 0x0000, 0x99
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_BROKEN_FUA),
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -663,8 +663,12 @@ static int amdgpu_info_ioctl(struct drm_
+ 		 * in the bitfields */
+ 		if (se_num == AMDGPU_INFO_MMR_SE_INDEX_MASK)
+ 			se_num = 0xffffffff;
++		else if (se_num >= AMDGPU_GFX_MAX_SE)
++			return -EINVAL;
+ 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
+ 			sh_num = 0xffffffff;
++		else if (sh_num >= AMDGPU_GFX_MAX_SH_PER_SE)
++			return -EINVAL;
  
-+/* Reported-by: Thinh Nguyen <thinhn@synopsys.com> */
-+UNUSUAL_DEV(0x154b, 0xf00d, 0x0000, 0x9999,
-+		"PNY",
-+		"Pro Elite SSD",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_ATA_1X),
-+
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x2109, 0x0711, 0x0000, 0x9999,
- 		"VIA",
+ 		if (info->read_mmr_reg.count > 128)
+ 			return -EINVAL;
 
 
