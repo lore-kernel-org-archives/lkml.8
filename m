@@ -2,87 +2,240 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F42BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9449C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9D19208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977749;
-	bh=2TOcs6pEYZ/R2ZwIOWWycu5Eesv8Cv5fL5GCe6HBCDY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dQnLJUD5q67G3ZUTisqqjcGLxZS+5qDz1e2KIelD5A3YJ8wsWILlU4E1+vT/I9gJo
-	 M4ASMKSMVasgOrNvGlkImluzyilbdEvLgGOO36YBffwU2DKGHxQB0xXs4AqayfVll/
-	 2NoAvZ8IgGxJvjpP59Xl+IUFphQC12kahnP1ilBo=
+	by mail.kernel.org (Postfix) with ESMTP id AE832206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ddqACsE/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbgIAQ3H (ORCPT
+        id S1730837AbgIAQ3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:29:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730828AbgIAPb7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:31:59 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 1 Sep 2020 12:29:15 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:48651 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731080AbgIAQ3C (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:29:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598977740;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sChPbft+Yjw8rk61mHgyqBrpWiSpcftbFDciQ4tpAS4=;
+        b=ddqACsE/Yi3rMvbbDkoLIdDEJZ2AYPzSfcEfl94RDSYA8X3HazFbaabyYHlB7Ic7NMpnM3
+        9mnEkFsUqnO/A8iB3iNOXTmSRgSxzppSKa3HUF1qphJsdCfHhoCXD0kI/EwzzuynG53fQq
+        inCvsm0HwmXyFlbki288bSSPKtXmrEY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-463-_kh1rbyIPdafDI3y-0tX2A-1; Tue, 01 Sep 2020 12:28:55 -0400
+X-MC-Unique: _kh1rbyIPdafDI3y-0tX2A-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 473702158C;
-        Tue,  1 Sep 2020 15:31:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974319;
-        bh=2TOcs6pEYZ/R2ZwIOWWycu5Eesv8Cv5fL5GCe6HBCDY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4OLORC3rltkj827+yJajf2QcHJtT2oxnZTQsXi20OKUSQHgCT+wj0aGLff3EXq8i
-         nEtnJJJa63q1o7Dh3ts6vf1NyQn+wMbbX2s3okILwikBh4T+1xFOKTcxCDVWp69XFe
-         iaF2jvzo7AN1Rq3uyWHZ/QXW/iMUcTnYKzbB4/dw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/3] watchdog: davinci: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 17:31:40 +0200
-Message-Id: <20200901153141.18960-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901153141.18960-1-krzk@kernel.org>
-References: <20200901153141.18960-1-krzk@kernel.org>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8753110ABDA1;
+        Tue,  1 Sep 2020 16:28:54 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-231.rdu2.redhat.com [10.10.113.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 632785D9D3;
+        Tue,  1 Sep 2020 16:28:53 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+Subject: [RFC PATCH 5/7] mm: Make __do_page_cache_readahead() use
+ rac->_nr_pages
+From:   David Howells <dhowells@redhat.com>
+To:     willy@infradead.org
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Tue, 01 Sep 2020 17:28:52 +0100
+Message-ID: <159897773253.405783.7186877407321511610.stgit@warthog.procyon.org.uk>
+In-Reply-To: <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
+References: <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/0.23
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+Make __do_page_cache_readahead() use rac->_nr_pages rather than passing in
+nr_to_read argument.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: David Howells <dhowells@redhat.com>
 ---
- drivers/watchdog/davinci_wdt.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
-index 2b3f3cd382ef..e6eaba6bae5b 100644
---- a/drivers/watchdog/davinci_wdt.c
-+++ b/drivers/watchdog/davinci_wdt.c
-@@ -206,12 +206,9 @@ static int davinci_wdt_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+ fs/ext4/verity.c        |    8 +++++---
+ fs/f2fs/verity.c        |    8 +++++---
+ include/linux/pagemap.h |    3 +--
+ mm/internal.h           |    6 +++---
+ mm/readahead.c          |   20 +++++++++++---------
+ 5 files changed, 25 insertions(+), 20 deletions(-)
+
+diff --git a/fs/ext4/verity.c b/fs/ext4/verity.c
+index 6fc2dbc87c0b..3d377110e839 100644
+--- a/fs/ext4/verity.c
++++ b/fs/ext4/verity.c
+@@ -356,10 +356,12 @@ static struct page *ext4_read_merkle_tree_page(struct inode *inode,
  
- 	davinci_wdt->clk = devm_clk_get(dev, NULL);
--
--	if (IS_ERR(davinci_wdt->clk)) {
--		if (PTR_ERR(davinci_wdt->clk) != -EPROBE_DEFER)
--			dev_err(dev, "failed to get clock node\n");
--		return PTR_ERR(davinci_wdt->clk);
--	}
-+	if (IS_ERR(davinci_wdt->clk))
-+		return dev_err_probe(dev, PTR_ERR(davinci_wdt->clk),
-+				     "failed to get clock node\n");
+ 	page = find_get_page_flags(inode->i_mapping, index, FGP_ACCESSED);
+ 	if (!page || !PageUptodate(page)) {
+-		if (page)
++		if (page) {
+ 			put_page(page);
+-		else if (num_ra_pages > 1)
+-			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
++		} else if (num_ra_pages > 1) {
++			rac._nr_pages = num_ra_pages;
++			page_cache_readahead_unbounded(&rac, 0);
++		}
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/fs/f2fs/verity.c b/fs/f2fs/verity.c
+index 392dd07f4214..8445eed5a1bc 100644
+--- a/fs/f2fs/verity.c
++++ b/fs/f2fs/verity.c
+@@ -235,10 +235,12 @@ static struct page *f2fs_read_merkle_tree_page(struct inode *inode,
  
- 	ret = clk_prepare_enable(davinci_wdt->clk);
- 	if (ret) {
--- 
-2.17.1
+ 	page = find_get_page_flags(inode->i_mapping, index, FGP_ACCESSED);
+ 	if (!page || !PageUptodate(page)) {
+-		if (page)
++		if (page) {
+ 			put_page(page);
+-		else if (num_ra_pages > 1)
+-			page_cache_readahead_unbounded(&rac, num_ra_pages, 0);
++		} else if (num_ra_pages > 1) {
++			rac._nr_pages = num_ra_pages;
++			page_cache_readahead_unbounded(&rac, 0);
++		}
+ 		page = read_mapping_page(inode->i_mapping, index, NULL);
+ 	}
+ 	return page;
+diff --git a/include/linux/pagemap.h b/include/linux/pagemap.h
+index cd7bde29d4cc..72e9c44d62bb 100644
+--- a/include/linux/pagemap.h
++++ b/include/linux/pagemap.h
+@@ -772,8 +772,7 @@ void delete_from_page_cache_batch(struct address_space *mapping,
+ void page_cache_sync_readahead(struct readahead_control *, struct file_ra_state *);
+ void page_cache_async_readahead(struct readahead_control *, struct file_ra_state *,
+ 				struct page *);
+-void page_cache_readahead_unbounded(struct readahead_control *,
+-		unsigned long nr_to_read, unsigned long lookahead_count);
++void page_cache_readahead_unbounded(struct readahead_control *, unsigned long);
+ 
+ /*
+  * Like add_to_page_cache_locked, but used to add newly allocated pages:
+diff --git a/mm/internal.h b/mm/internal.h
+index 2eb9f7f5f134..e1d296e76fb0 100644
+--- a/mm/internal.h
++++ b/mm/internal.h
+@@ -50,8 +50,7 @@ void unmap_page_range(struct mmu_gather *tlb,
+ 			     struct zap_details *details);
+ 
+ void force_page_cache_readahead(struct readahead_control *);
+-void __do_page_cache_readahead(struct readahead_control *,
+-		unsigned long nr_to_read, unsigned long lookahead_size);
++void __do_page_cache_readahead(struct readahead_control *, unsigned long);
+ 
+ /*
+  * Submit IO for the read-ahead request in file_ra_state.
+@@ -60,7 +59,8 @@ static inline void ra_submit(struct file_ra_state *ra,
+ 		struct address_space *mapping, struct file *file)
+ {
+ 	DEFINE_READAHEAD(rac, file, mapping, ra->start);
+-	__do_page_cache_readahead(&rac, ra->size, ra->async_size);
++	rac._nr_pages = ra->size;
++	__do_page_cache_readahead(&rac, ra->async_size);
+ }
+ 
+ /**
+diff --git a/mm/readahead.c b/mm/readahead.c
+index 7114246b4e41..28ff80304a21 100644
+--- a/mm/readahead.c
++++ b/mm/readahead.c
+@@ -172,10 +172,11 @@ static void read_pages(struct readahead_control *rac, struct list_head *pages,
+  * May sleep, but will not reenter filesystem to reclaim memory.
+  */
+ void page_cache_readahead_unbounded(struct readahead_control *rac,
+-		unsigned long nr_to_read, unsigned long lookahead_size)
++				    unsigned long lookahead_size)
+ {
+ 	struct address_space *mapping = rac->mapping;
+ 	unsigned long index = readahead_index(rac);
++	unsigned long nr_to_read = readahead_count(rac);
+ 	LIST_HEAD(page_pool);
+ 	gfp_t gfp_mask = readahead_gfp_mask(mapping);
+ 	unsigned long i;
+@@ -195,6 +196,7 @@ void page_cache_readahead_unbounded(struct readahead_control *rac,
+ 	/*
+ 	 * Preallocate as many pages as we will need.
+ 	 */
++	rac->_nr_pages = 0;
+ 	for (i = 0; i < nr_to_read; i++) {
+ 		struct page *page = xa_load(&mapping->i_pages, index + i);
+ 
+@@ -247,7 +249,7 @@ EXPORT_SYMBOL_GPL(page_cache_readahead_unbounded);
+  * We really don't want to intermingle reads and writes like that.
+  */
+ void __do_page_cache_readahead(struct readahead_control *rac,
+-		unsigned long nr_to_read, unsigned long lookahead_size)
++			       unsigned long lookahead_size)
+ {
+ 	struct inode *inode = rac->mapping->host;
+ 	unsigned long index = readahead_index(rac);
+@@ -261,10 +263,10 @@ void __do_page_cache_readahead(struct readahead_control *rac,
+ 	if (index > end_index)
+ 		return;
+ 	/* Don't read past the page containing the last byte of the file */
+-	if (nr_to_read > end_index - index)
+-		nr_to_read = end_index - index + 1;
++	if (readahead_count(rac) > end_index - index)
++		rac->_nr_pages = end_index - index + 1;
+ 
+-	page_cache_readahead_unbounded(rac, nr_to_read, lookahead_size);
++	page_cache_readahead_unbounded(rac, lookahead_size);
+ }
+ 
+ /*
+@@ -297,8 +299,7 @@ void force_page_cache_readahead(struct readahead_control *rac)
+ 
+ 		rac->_index = index;
+ 		rac->_nr_pages = this_chunk;
+-		// Do I need to modify rac->_batch_count?
+-		__do_page_cache_readahead(rac, this_chunk, 0);
++		__do_page_cache_readahead(rac, 0);
+ 
+ 		index += this_chunk;
+ 		nr_to_read -= this_chunk;
+@@ -601,7 +602,7 @@ static void ondemand_readahead(struct readahead_control *rac,
+ 	 * standalone, small random read
+ 	 * Read as is, and do not pollute the readahead state.
+ 	 */
+-	__do_page_cache_readahead(rac, req_size, 0);
++	__do_page_cache_readahead(rac, 0);
+ 	return;
+ 
+ initial_readahead:
+@@ -630,7 +631,8 @@ static void ondemand_readahead(struct readahead_control *rac,
+ 	rac->_index = ra->start;
+ 	if (page && page_cache_readahead_order(rac, ra, thp_order(page)))
+ 		return;
+-	__do_page_cache_readahead(rac, ra->size, ra->async_size);
++	rac->_nr_pages = ra->size;
++	__do_page_cache_readahead(rac, ra->async_size);
+ }
+ 
+ /**
+
 
