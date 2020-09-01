@@ -5,53 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EAAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 427F0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 563512067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:46:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 177CF2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978771;
-	bh=KgBhFEvDd4HhOIDlllG/eGKY+sri+AR5ajXaMJEUJ+w=;
+	s=default; t=1598978779;
+	bh=9GAM1JHzIGSIwGdTlGYAZyH2tlkRvjrRR++SfcBfyMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MD7fsSpmhqqUCzotmwK06PBsCHpMi7SOWFQQrIojbnsJ84+NRl3ZmfM3YoyjWXCoE
-	 +Ma44L0SE6sUa1K6+U78ExpjJGfLEeONx0DfgU20VkDqkkoaEKoicPUI2bNva2e5pR
-	 SIrEoMYr5X5JKphBLR7p8dMx4+fjbj5a1Az7oSsc=
+	b=LOqcJtiq8xIHvDMev+ULXHRciSjGVeWEOfrKUTsgwUCvsuR+MR1S+T/MuT9WChgAK
+	 G2OD/D6MH8Y1vFG2NtjGtlQ2F+9Q8WXNf/6IS4jBofoj2wCm1Esc+TLUKfUWwBqSCS
+	 Zfky4aaJooRstu6rU4RMbovFA5LjO1AludGbEpP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732165AbgIAQqH (ORCPT
+        id S1730192AbgIAP1U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:46:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730190AbgIAP1U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:27:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728772AbgIAPXj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BCBA206FA;
-        Tue,  1 Sep 2020 15:27:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E4822100A;
+        Tue,  1 Sep 2020 15:23:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974039;
-        bh=KgBhFEvDd4HhOIDlllG/eGKY+sri+AR5ajXaMJEUJ+w=;
+        s=default; t=1598973817;
+        bh=9GAM1JHzIGSIwGdTlGYAZyH2tlkRvjrRR++SfcBfyMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KYEsh8DaFoXPX6M+2qjDpGnROzjgfqjak90iF9hGiqTBpMofJXUz7LRsiGTX49lkm
-         UmOTpCk+CUxLgy1lXxwPkgx2SjQGgIFgTvojlyNITPDcjFeUjv16KLnjO1LeV40kTB
-         Rpa8V/3DM0UkehZ7lM5Q1MtWBI9O2GMDOgIBNeqo=
+        b=pTij4m6ut12vw7XsqfAwv3QPhq8j6n/d0o7OfgJsOr8xvqUECMWXbrKfmBw7xH2T4
+         L+2+ZBkKyhoO5XWDjP1V5iyr1z+oECu6VPe1TiMvONmeecB224iyGg1QKUXB04r2nb
+         drdA9Eu1myHGMdIyul+syShxB7CwKSlQ18X97dl0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Lee Jones <lee.jones@linaro.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 020/214] mfd: intel-lpss: Add Intel Emmitsburg PCH PCI IDs
-Date:   Tue,  1 Sep 2020 17:08:20 +0200
-Message-Id: <20200901150953.936263152@linuxfoundation.org>
+Subject: [PATCH 4.19 031/125] PCI: Fix pci_create_slot() reference count leak
+Date:   Tue,  1 Sep 2020 17:09:46 +0200
+Message-Id: <20200901150936.086735627@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,34 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 3ea2e4eab64cefa06055bb0541fcdedad4b48565 ]
+[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
 
-Intel Emmitsburg PCH has the same LPSS than Intel Ice Lake.
-Add the new IDs to the list of supported devices.
+kobject_init_and_add() takes a reference even when it fails.  If it returns
+an error, kobject_put() must be called to clean up the memory associated
+with the object.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+When kobject_init_and_add() fails, call kobject_put() instead of kfree().
+
+b8eb718348b8 ("net-sysfs: Fix reference count leak in
+rx|netdev_queue_add_kobject") fixed a similar problem.
+
+Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/intel-lpss-pci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/pci/slot.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mfd/intel-lpss-pci.c b/drivers/mfd/intel-lpss-pci.c
-index b33030e3385c7..bc0f3c22021b7 100644
---- a/drivers/mfd/intel-lpss-pci.c
-+++ b/drivers/mfd/intel-lpss-pci.c
-@@ -196,6 +196,9 @@ static const struct pci_device_id intel_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x1ac4), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1ac6), (kernel_ulong_t)&bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x1aee), (kernel_ulong_t)&bxt_uart_info },
-+	/* EBG */
-+	{ PCI_VDEVICE(INTEL, 0x1bad), (kernel_ulong_t)&bxt_uart_info },
-+	{ PCI_VDEVICE(INTEL, 0x1bae), (kernel_ulong_t)&bxt_uart_info },
- 	/* GLK */
- 	{ PCI_VDEVICE(INTEL, 0x31ac), (kernel_ulong_t)&glk_i2c_info },
- 	{ PCI_VDEVICE(INTEL, 0x31ae), (kernel_ulong_t)&glk_i2c_info },
+diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
+index a32897f83ee51..fb7478b6c4f9d 100644
+--- a/drivers/pci/slot.c
++++ b/drivers/pci/slot.c
+@@ -303,13 +303,16 @@ placeholder:
+ 	slot_name = make_slot_name(name);
+ 	if (!slot_name) {
+ 		err = -ENOMEM;
++		kfree(slot);
+ 		goto err;
+ 	}
+ 
+ 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
+ 				   "%s", slot_name);
+-	if (err)
++	if (err) {
++		kobject_put(&slot->kobj);
+ 		goto err;
++	}
+ 
+ 	INIT_LIST_HEAD(&slot->list);
+ 	list_add(&slot->list, &parent->slots);
+@@ -328,7 +331,6 @@ out:
+ 	mutex_unlock(&pci_slot_mutex);
+ 	return slot;
+ err:
+-	kfree(slot);
+ 	slot = ERR_PTR(err);
+ 	goto out;
+ }
 -- 
 2.25.1
 
