@@ -2,106 +2,155 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19DBC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B26CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D44B20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:26:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gPX0CY04"
+	by mail.kernel.org (Postfix) with ESMTP id 5B5ED208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:26:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598977618;
+	bh=oQD0mEIsmXocGaiBEYTuH4ifCk0o/+jHnrYlvKhgxZM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LLmBMBsvBBn/pxwZ/H+5rkny+onepMnQxW6o77+L9W1uh8kq33goyOsRwZnNCgtva
+	 CMc8/SImViC5jRERSUeEX6pdihRQEQKIdQ7riX4eywBBbixBfOQm5pX0yVfkHVT8UV
+	 1k/oPAjCeTenGPr0P5VdEDoZGrjFuc3yfQ8SEloo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbgIAQ0a (ORCPT
+        id S1731382AbgIAQ0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:26:30 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:12014 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731094AbgIAQZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:25:20 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4e75c20000>; Tue, 01 Sep 2020 09:24:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 01 Sep 2020 09:25:20 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 01 Sep 2020 09:25:20 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 1 Sep
- 2020 16:25:16 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 1 Sep 2020 16:25:16 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.173.243]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4e75eb0001>; Tue, 01 Sep 2020 09:25:16 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <adrian.hunter@intel.com>, <ulf.hansson@linaro.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <robh+dt@kernel.org>
-CC:     <skomatineni@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <stable@vger.kernel.org>
-Subject: [PATCH v2 4.19 2/7] sdhci: tegra: Remove SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK for Tegra186
-Date:   Tue, 1 Sep 2020 09:24:45 -0700
-Message-ID: <1598977490-1826-3-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598977490-1826-1-git-send-email-skomatineni@nvidia.com>
-References: <1598977490-1826-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 1 Sep 2020 12:26:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730889AbgIAPcF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:05 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED02E20866;
+        Tue,  1 Sep 2020 15:32:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974325;
+        bh=oQD0mEIsmXocGaiBEYTuH4ifCk0o/+jHnrYlvKhgxZM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wT/0GhSFxBA9oC/hz1KqHjAqRzdWz0ZhuOThlH3e5oPJiv5mla3hJRNkwfl7ON0wh
+         t/IUIX5ASkqVF382wKAH/I5ol2Jn55YEeKtow5cTrB45JYWtV25GslDRePemrEMDIT
+         EyQZdvb8YVRjmI4rrO3xUEMndqBMes2Xjnp7eG6k=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Gabriele Paoloni <gabriele.paoloni@intel.com>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 092/214] EDAC/{i7core,sb,pnd2,skx}: Fix error event severity
+Date:   Tue,  1 Sep 2020 17:09:32 +0200
+Message-Id: <20200901150957.398269550@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1598977474; bh=P0TrqOSX/pFm1lSj+n+CWI62xwQfg7mnTl7pkIHmHwM=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=gPX0CY04TYC5dcz7cP4dcDZIW2ljFO6twxuS8UP8g10rzBsBzD8eovrpzNh1gIebt
-         PPalEP7WIgAC4L1oRdiYsi8Kao48Bj51FxmRGqAWtjeHK6GcG03iSUZdqMOnTTsOJk
-         Twl9B9ZenLhCNWrai67DxKHd2WUCRQS/HxUlQ+t/AHwMAg6pF71N9RrhyFRKD4i1bn
-         1rpKKnOcdT0sqEzthEjbSVTio1xnbdva8h9qYVTxOx9K6X94pEPOSfmr1r1Edyc43X
-         XKuf6vSFqW0YA9oyLTbpJkSK66dh79m438BHFNybX0orrISn55HUCzYK/Uu1jru0sQ
-         EET64Okvty7Hw==
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK has been set on Tegra186
-ever since Tegra186 support was added to the driver in commit
-4346b7c7941d ("mmc: tegra: Add Tegra186 support").
+From: Tony Luck <tony.luck@intel.com>
 
-Tegra186 SDMMC hardware by default uses timeout clock (TMCLK) instead
-of SDCLK and this quirk should not be set.
+[ Upstream commit 45bc6098a3e279d8e391d22428396687562797e2 ]
 
-So, this patch remove this quirk for Tegra186.
+IA32_MCG_STATUS.RIPV indicates whether the return RIP value pushed onto
+the stack as part of machine check delivery is valid or not.
 
-Fixes: 4346b7c7941d ("mmc: tegra: Add Tegra186 support")
-Cc: stable <stable@vger.kernel.org> # 4.19
-Tested-by: Jon Hunter <jonathanh@nvidia.com>
-Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Various drivers copied a code fragment that uses the RIPV bit to
+determine the severity of the error as either HW_EVENT_ERR_UNCORRECTED
+or HW_EVENT_ERR_FATAL, but this check is reversed (marking errors where
+RIPV is set as "FATAL").
+
+Reverse the tests so that the error is marked fatal when RIPV is not set.
+
+Reported-by: Gabriele Paoloni <gabriele.paoloni@intel.com>
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20200707194324.14884-1-tony.luck@intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-tegra.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/edac/i7core_edac.c | 4 ++--
+ drivers/edac/pnd2_edac.c   | 2 +-
+ drivers/edac/sb_edac.c     | 4 ++--
+ drivers/edac/skx_common.c  | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-index 731956e..5a7c032 100644
---- a/drivers/mmc/host/sdhci-tegra.c
-+++ b/drivers/mmc/host/sdhci-tegra.c
-@@ -437,7 +437,6 @@ static const struct sdhci_tegra_soc_data soc_data_tegra210 = {
+diff --git a/drivers/edac/i7core_edac.c b/drivers/edac/i7core_edac.c
+index a71cca6eeb333..6be7e65f7389d 100644
+--- a/drivers/edac/i7core_edac.c
++++ b/drivers/edac/i7core_edac.c
+@@ -1711,9 +1711,9 @@ static void i7core_mce_output_error(struct mem_ctl_info *mci,
+ 	if (uncorrected_error) {
+ 		core_err_cnt = 1;
+ 		if (ripv)
+-			tp_event = HW_EVENT_ERR_FATAL;
+-		else
+ 			tp_event = HW_EVENT_ERR_UNCORRECTED;
++		else
++			tp_event = HW_EVENT_ERR_FATAL;
+ 	} else {
+ 		tp_event = HW_EVENT_ERR_CORRECTED;
+ 	}
+diff --git a/drivers/edac/pnd2_edac.c b/drivers/edac/pnd2_edac.c
+index b1193be1ef1d8..dac45e2071b3f 100644
+--- a/drivers/edac/pnd2_edac.c
++++ b/drivers/edac/pnd2_edac.c
+@@ -1155,7 +1155,7 @@ static void pnd2_mce_output_error(struct mem_ctl_info *mci, const struct mce *m,
+ 	u32 optypenum = GET_BITFIELD(m->status, 4, 6);
+ 	int rc;
  
- static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
- 	.quirks = SDHCI_QUIRK_BROKEN_TIMEOUT_VAL |
--		  SDHCI_QUIRK_DATA_TIMEOUT_USES_SDCLK |
- 		  SDHCI_QUIRK_SINGLE_POWER_WRITE |
- 		  SDHCI_QUIRK_NO_HISPD_BIT |
- 		  SDHCI_QUIRK_BROKEN_ADMA_ZEROLEN_DESC |
+-	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_FATAL : HW_EVENT_ERR_UNCORRECTED) :
++	tp_event = uc_err ? (ripv ? HW_EVENT_ERR_UNCORRECTED : HW_EVENT_ERR_FATAL) :
+ 						 HW_EVENT_ERR_CORRECTED;
+ 
+ 	/*
+diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
+index a2fd39d330d67..b557a53c75c46 100644
+--- a/drivers/edac/sb_edac.c
++++ b/drivers/edac/sb_edac.c
+@@ -2982,9 +2982,9 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
+ 	if (uncorrected_error) {
+ 		core_err_cnt = 1;
+ 		if (ripv) {
+-			tp_event = HW_EVENT_ERR_FATAL;
+-		} else {
+ 			tp_event = HW_EVENT_ERR_UNCORRECTED;
++		} else {
++			tp_event = HW_EVENT_ERR_FATAL;
+ 		}
+ 	} else {
+ 		tp_event = HW_EVENT_ERR_CORRECTED;
+diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
+index 4ca87723dcdcd..99dea4f66b5e9 100644
+--- a/drivers/edac/skx_common.c
++++ b/drivers/edac/skx_common.c
+@@ -490,9 +490,9 @@ static void skx_mce_output_error(struct mem_ctl_info *mci,
+ 	if (uncorrected_error) {
+ 		core_err_cnt = 1;
+ 		if (ripv) {
+-			tp_event = HW_EVENT_ERR_FATAL;
+-		} else {
+ 			tp_event = HW_EVENT_ERR_UNCORRECTED;
++		} else {
++			tp_event = HW_EVENT_ERR_FATAL;
+ 		}
+ 	} else {
+ 		tp_event = HW_EVENT_ERR_CORRECTED;
 -- 
-2.7.4
+2.25.1
+
+
 
