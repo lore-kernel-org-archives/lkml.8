@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFCEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A5F7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6B62206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECE19206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977803;
-	bh=wqiPS/njTifRp78ETs4+N3VbYQwZ1mRSJAWeWRnEt0A=;
+	s=default; t=1598977810;
+	bh=ruq5kshuWTRTFeOWoXMJfwIyv19Lf6HI+P4YcFiPdoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dTv8KQQ32d+m2Vzjmyaifc/ujBjDyDW27QycvFvaLpHlLUtt3gF2HmtGr2b2vTmvY
-	 gDsggZVrTB61s18k/7hTajoPaGfHZKDIa24CzjFK4hWwKStChGxO5oJto5mJLxyqjw
-	 zwktHZO3fE+Aedr06ndk7TtsTKLGpO8Owvluy6FA=
+	b=f1wVD+fqFPQeRymhKNmujULIj0M/Bf9M2yrwdQqgotoiJFU3ff7i1UvF4St6fIW6T
+	 ryxwbD1uaZDdf2UZZWt3LT6pC874FBpn3me0AwCDidlED7uEG0PYJBYzXXZOagC5HV
+	 L+CjTgpRIxO1LZETSXzlCs0fPHJI2cWOuagvqtJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730879AbgIAQaC (ORCPT
+        id S1730800AbgIAPbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35316 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730803AbgIAPbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:31:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58264 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730502AbgIAP3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6DD820866;
-        Tue,  1 Sep 2020 15:31:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0686E2078B;
+        Tue,  1 Sep 2020 15:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974315;
-        bh=wqiPS/njTifRp78ETs4+N3VbYQwZ1mRSJAWeWRnEt0A=;
+        s=default; t=1598974149;
+        bh=ruq5kshuWTRTFeOWoXMJfwIyv19Lf6HI+P4YcFiPdoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e8dfLBFd/q+VzDGIpRkFZcKQP1POg+m7Pll+vxEMEkypLIjrgBqueNaOI02EA5j5h
-         Hr6qfsITFUC8Mq9SQ6iFbiB78hSSN3rmp/EAK8ejvK64S17ivsFk+m30UHj97w/Cdn
-         5u13QuiOn28K1pduQ90ZUzBjI80xQK3/8HLblcuc=
+        b=2ti57cBVDHkPKTXiUyjHVzJ80XrKBgh0LxRockWAYAR7xG+9Ivb1X3b4DvXkBHMuI
+         Lziw/Kxet5qWW5dSLATrgnJeoY68cs4UM/wFjzFb2CXm3096Lx7uiqIl9DdlusUhgT
+         XfnvGBhJckwN5tMLQOtXIZSlkD3oCjUk1YU1BieY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 098/214] media: gpio-ir-tx: improve precision of transmitted signal due to scheduling
-Date:   Tue,  1 Sep 2020 17:09:38 +0200
-Message-Id: <20200901150957.692445334@linuxfoundation.org>
+Subject: [PATCH 5.4 033/214] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
+Date:   Tue,  1 Sep 2020 17:08:33 +0200
+Message-Id: <20200901150954.551919552@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,40 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit ea8912b788f8144e7d32ee61e5ccba45424bef83 ]
+[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
 
-usleep_range() may take longer than the max argument due to scheduling,
-especially under load. This is causing random errors in the transmitted
-IR. Remove the usleep_range() in favour of busy-looping with udelay().
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/rc/gpio-ir-tx.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/media/rc/gpio-ir-tx.c b/drivers/media/rc/gpio-ir-tx.c
-index 18ca12d78314c..66703989ae185 100644
---- a/drivers/media/rc/gpio-ir-tx.c
-+++ b/drivers/media/rc/gpio-ir-tx.c
-@@ -79,13 +79,8 @@ static int gpio_ir_tx(struct rc_dev *dev, unsigned int *txbuf,
- 			// space
- 			edge = ktime_add_us(edge, txbuf[i]);
- 			delta = ktime_us_delta(edge, ktime_get());
--			if (delta > 10) {
--				spin_unlock_irqrestore(&gpio_ir->lock, flags);
--				usleep_range(delta, delta + 10);
--				spin_lock_irqsave(&gpio_ir->lock, flags);
--			} else if (delta > 0) {
-+			if (delta > 0)
- 				udelay(delta);
--			}
- 		} else {
- 			// pulse
- 			ktime_t last = ktime_add_us(edge, txbuf[i]);
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+index ece55c8fa6733..cda0a76a733d3 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+@@ -719,8 +719,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (encoder) {
+@@ -857,8 +859,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	encoder = amdgpu_connector_best_single_encoder(connector);
+@@ -980,8 +984,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+@@ -1330,8 +1336,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
 -- 
 2.25.1
 
