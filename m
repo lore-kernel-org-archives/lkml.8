@@ -2,180 +2,141 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8199C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D53C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:34:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29BD2073A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:28:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1EE22073A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:34:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Mb0W21sA"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="h4hzz+LL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgIAA2J (ORCPT
+        id S1726102AbgIAAeO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 20:28:09 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:48898 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgIAA2J (ORCPT
+        Mon, 31 Aug 2020 20:34:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57082 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgIAAeN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 20:28:09 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20200901002803epoutp04a4e6cd37163acbdc6c8e1da96983483f~wgVhKpbu82000120001epoutp04C
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:28:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20200901002803epoutp04a4e6cd37163acbdc6c8e1da96983483f~wgVhKpbu82000120001epoutp04C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598920083;
-        bh=OF1Pv++QhXZYlFTml4PQgnKmM92CjP4TjcSJp36bjlQ=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=Mb0W21sAzpiW/X8VtyBgpRWEtnd638SG1T0MW1FjtWBt5GHu18kIONSPVeAztoIBj
-         FfzDVQZnRqGPsQuDzR7KeG9gfFz+w6+pYAjvgxiha/Zpdei8NApxCZA9miXw9gni4e
-         6SCV/NnDjxg7r/m9PPdQ81z3x765h3TqkTM630Aw=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200901002802epcas1p331f2e1e6a83c76992b163b522132e121~wgVf98voU2184021840epcas1p3j;
-        Tue,  1 Sep 2020 00:28:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: Re: [PATCH v9 2/4] scsi: ufs: Introduce HPB feature
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <93f1cf18-30da-4482-9a0d-c46d2f70bd15@acm.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <963815509.21598920082632.JavaMail.epsvc@epcpadp2>
-Date:   Tue, 01 Sep 2020 09:24:29 +0900
-X-CMS-MailID: 20200901002429epcms2p392aaaa25de16b387c15ed4387a0321dd
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200828070950epcms2p5470bd43374be18d184dd802da09e73c8
-References: <93f1cf18-30da-4482-9a0d-c46d2f70bd15@acm.org>
-        <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
-        <231786897.01598601302183.JavaMail.epsvc@epcpadp1>
-        <CGME20200828070950epcms2p5470bd43374be18d184dd802da09e73c8@epcms2p3>
+        Mon, 31 Aug 2020 20:34:13 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74354C061575
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:34:13 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id d20so5211637qka.5
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:34:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jLafwiC2xQNKUVCHdLUQQvDtsC6khh4yCLYOGaMsDWc=;
+        b=h4hzz+LL2wmWO8VdqfAqx/UHSd1YE5o9wpRi/+hRRkQTNduf7/9zNCMExEk8b+xamH
+         bZ7M0RuVDaXOFnhujxEqPr7ZD8EG5xtzl/rMkN4+dDTj9NVbWTY4ag5ddyL/fwtmFCZM
+         OERDDO7JFtLGWeSx9VPlC+Fw+GrJzDeb5eG4JNPFtTEgPh0U4bBUGkjQBMmR8GctTMrL
+         lbdUAVUQDlQ0xy5SxNeY41orwXKRCy4fRzvXiXV4ggd9t4X8DVIm1LOwtzTdNKv0HPdq
+         QQ9B4CN+uoau2pc5Qpdie8o0F4DpQR8Zx9EwPGQ2+Gr+/h3XT9OiLKod/fc0C2+8mRGm
+         Vmrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jLafwiC2xQNKUVCHdLUQQvDtsC6khh4yCLYOGaMsDWc=;
+        b=sNh8MRrDC193N0Lb/i4/vrjBhgaRePVCl0cOa6pYudvziaIbazyhuuWu2R8/B48Qgn
+         xmS2hSz/DsCiUSDL/PR/MBud/kkUbVIsQxXFAkIBIQiiXvh4B94AhMpf8mH9Uf21WpDx
+         t9F7pj8fudh8Pv6JWrHDuJ2n0kBC24doP/3VCFT2FLoDwanMzs9ibM8HB7ZYmha0eJHO
+         qvWYr3NXI3RlhHihqh/O/G82L2/O6/HbgDoBVTn2F9Xqo9dCKFlVAn8HTC1rWQ8uywku
+         eHymnNCPQyW+vD+r8gMF5rURalRAmx2IMHh32zomMcgGeXqThp8YDaFDpw2XZZyJHSkB
+         Df8A==
+X-Gm-Message-State: AOAM530Pen96aT/f17MLSK5fyUhF1ferk4O2aLa6Wg2BfInTdD2SN7g1
+        JnY6EYgTaAZ3hJnm9IUx10I4PA==
+X-Google-Smtp-Source: ABdhPJw9tUjyIucH5cZED4lzBJee/JgSOGBP0NzmRVA3Y7tmYxKdfrwyxqGClPCje078VfJuMEc6uA==
+X-Received: by 2002:a37:9b8f:: with SMTP id d137mr3922530qke.459.1598920452229;
+        Mon, 31 Aug 2020 17:34:12 -0700 (PDT)
+Received: from localhost.localdomain ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id i14sm12189491qkn.53.2020.08.31.17.34.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 17:34:11 -0700 (PDT)
+From:   Jonathan Marek <jonathan@marek.ca>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] misc: fastrpc: add ioctl for attaching to sensors pd
+Date:   Mon, 31 Aug 2020 20:32:59 -0400
+Message-Id: <20200901003300.11985-1-jonathan@marek.ca>
+X-Mailer: git-send-email 2.26.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Bart
+Initializing sensors requires attaching to pd 2. Add an ioctl for that.
 
-> > diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> > index 618b253e5ec8..df30622a2b67 100644
-> > --- a/drivers/scsi/ufs/ufshcd.h
-> > +++ b/drivers/scsi/ufs/ufshcd.h
-> > @@ -588,6 +588,24 @@ struct ufs_hba_variant_params {
-> >  	u16 hba_enable_delay_us;
-> >  	u32 wb_flush_threshold;
-> >  };
-> > +#ifdef CONFIG_SCSI_UFS_HPB
-> > +/**
-> > + * struct ufshpb_dev_info - UFSHPB device related info
-> > + * @num_lu: the number of user logical unit to check whether all lu finished
-> > + *          initialization
-> > + * @rgn_size: device reported HPB region size
-> > + * @srgn_size: device reported HPB sub-region size
-> > + * @slave_conf_cnt: counter to check all lu finished initialization
-> > + * @hpb_disabled: flag to check if HPB is disabled
-> > + */
-> > +struct ufshpb_dev_info {
-> > +	int num_lu;
-> > +	int rgn_size;
-> > +	int srgn_size;
-> > +	atomic_t slave_conf_cnt;
-> > +	bool hpb_disabled;
-> > +};
-> > +#endif
-> 
-> Please insert a blank line above "#ifdef CONFIG_SCSI_UFS_HPB"
+This corresponds to FASTRPC_INIT_ATTACH_SENSORS in the downstream driver.
 
-OK, I will insert a blank line.
+Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+---
+ drivers/misc/fastrpc.c      | 9 ++++++---
+ include/uapi/misc/fastrpc.h | 5 +++--
+ 2 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
+index 7939c55daceb..ea5e9ca0d705 100644
+--- a/drivers/misc/fastrpc.c
++++ b/drivers/misc/fastrpc.c
+@@ -1276,7 +1276,7 @@ static int fastrpc_dmabuf_alloc(struct fastrpc_user *fl, char __user *argp)
+ 	return 0;
+ }
  
-> > +/* HPB enabled lu list */
-> > +static LIST_HEAD(lh_hpb_lu);
-> 
-> Is it necessary to maintain this list? Or in other words, is it possible to
-> change all list_for_each_entry(hpb, &lh_hpb_lu, list_hpb_lu) calls into
-> shost_for_each_device() calls?
+-static int fastrpc_init_attach(struct fastrpc_user *fl)
++static int fastrpc_init_attach(struct fastrpc_user *fl, int pd)
+ {
+ 	struct fastrpc_invoke_args args[1];
+ 	int tgid = fl->tgid;
+@@ -1287,7 +1287,7 @@ static int fastrpc_init_attach(struct fastrpc_user *fl)
+ 	args[0].fd = -1;
+ 	args[0].reserved = 0;
+ 	sc = FASTRPC_SCALARS(FASTRPC_RMID_INIT_ATTACH, 1, 0);
+-	fl->pd = 0;
++	fl->pd = pd;
+ 
+ 	return fastrpc_internal_invoke(fl, true, FASTRPC_INIT_HANDLE,
+ 				       sc, &args[0]);
+@@ -1477,7 +1477,10 @@ static long fastrpc_device_ioctl(struct file *file, unsigned int cmd,
+ 		err = fastrpc_invoke(fl, argp);
+ 		break;
+ 	case FASTRPC_IOCTL_INIT_ATTACH:
+-		err = fastrpc_init_attach(fl);
++		err = fastrpc_init_attach(fl, 0);
++		break;
++	case FASTRPC_IOCTL_INIT_ATTACH_SNS:
++		err = fastrpc_init_attach(fl, 2);
+ 		break;
+ 	case FASTRPC_IOCTL_INIT_CREATE:
+ 		err = fastrpc_init_create_process(fl, argp);
+diff --git a/include/uapi/misc/fastrpc.h b/include/uapi/misc/fastrpc.h
+index 07de2b7aac85..0a89f95463f6 100644
+--- a/include/uapi/misc/fastrpc.h
++++ b/include/uapi/misc/fastrpc.h
+@@ -10,8 +10,9 @@
+ #define FASTRPC_IOCTL_INVOKE		_IOWR('R', 3, struct fastrpc_invoke)
+ #define FASTRPC_IOCTL_INIT_ATTACH	_IO('R', 4)
+ #define FASTRPC_IOCTL_INIT_CREATE	_IOWR('R', 5, struct fastrpc_init_create)
+-#define FASTRPC_IOCTL_MMAP              _IOWR('R', 6, struct fastrpc_req_mmap)
+-#define FASTRPC_IOCTL_MUNMAP            _IOWR('R', 7, struct fastrpc_req_munmap)
++#define FASTRPC_IOCTL_MMAP		_IOWR('R', 6, struct fastrpc_req_mmap)
++#define FASTRPC_IOCTL_MUNMAP		_IOWR('R', 7, struct fastrpc_req_munmap)
++#define FASTRPC_IOCTL_INIT_ATTACH_SNS	_IO('R', 8)
+ 
+ struct fastrpc_invoke_args {
+ 	__u64 ptr;
+-- 
+2.26.1
 
-OK, I will remove lh_hpb_lu.
-
-> > +/* SYSFS functions */
-> > +#define ufshpb_sysfs_attr_show_func(__name)				\
-> > +static ssize_t __name##_show(struct device *dev,			\
-> > +	struct device_attribute *attr, char *buf)			\
-> > +{									\
-> > +	struct scsi_device *sdev = to_scsi_device(dev);			\
-> > +	struct ufshpb_lu *hpb = sdev->hostdata;				\
-> > +	if (!hpb)							\
-> > +		return -ENOENT;						\
-> > +	return snprintf(buf, PAGE_SIZE, "%d\n",				\
-> > +			atomic_read(&hpb->stats.__name));		\
-> > +}									\
-> > +static DEVICE_ATTR_RO(__name)
-> 
-> Please leave a blank line after declarations (between the "hpb" declaration
-> and "if (!hpb)").
-
-OK, I will add a blank line.
-
-> > +#ifndef CONFIG_SCSI_UFS_HPB
-> > +[...]
-> > +static struct attribute *hpb_dev_attrs[] = { NULL,};
-> > +static struct attribute_group ufs_sysfs_hpb_stat_group = {.attrs = hpb_dev_attrs,};
-> > +#else
-> > +[...]
-> > +extern struct attribute_group ufs_sysfs_hpb_stat_group;
-> > +#endif
-> 
-> Defining static variables or arrays in header files is questionable because
-> the definition of these variables will be duplicated in each source file that
-> header file is included in. Although the general rule for kernel code is to
-> confine #ifdefs to header files, for ufs_sysfs_hpb_stat_group I think that
-> it is better to surround its use with #ifndef CONFIG_SCSI_UFS_HPB / #endif
-> instead of defining a dummy structure as static variable in a header file if
-> HPB support is disabled.
-
-OK, I added #ifdef in ufshcd.c.
-
-static const struct attribute_group *ufshcd_driver_groups[] = {
-	&ufs_sysfs_unit_descriptor_group,
-	&ufs_sysfs_lun_attributes_group,
-#ifdef CONFIG_SCSI_UFS_HPB
-	&ufs_sysfs_hpb_stat_group,
-#endif
-	NULL,
-};
-
-Thanks,
-Daejun
