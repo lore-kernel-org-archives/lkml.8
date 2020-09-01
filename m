@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C03C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16643C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0558C206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAA69206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975829;
-	bh=DxqAMXBtBi+lpyycBbxEJvoY8NTVhAWr+ZxGejRWmXA=;
+	s=default; t=1598975832;
+	bh=jQ+lvqk8m21u94r+IH23YkPMdq4xCdiRLIOoDC8ASpw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qR7kXbsQ8SBQuHbfEfG8kxyuzoXsqlQd0JNTbyU8UnNA8hVsJPzUpxOpv8ZhPMBHb
-	 p9AqnXioslru9zXYr8p4sCQhyFx85IaBtweiJwvX9CBD4vXGMhE+U2Bl5pnq60VU+3
-	 7tOgt+I8V3jKrMqWwxQ4zGve6MZs5r8MJ3wjXYIc=
+	b=LM6Lb6VDrZmovLFI+K7wmjqw1C/V1W+Mi0hVIg5FJy9vvoaM+GiZJYeIj3WzLFUhK
+	 Qj0tdpLa0NaP7mMiZrFaem6ReVIIjGt9pQ9XtmtMFx9zGvMnXWrIbu6qsxfjtQpax6
+	 t70pKfNnb3W8lJnHO1jI4Hn0HuW6h2CUXXed2UEA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731656AbgIAP5H (ORCPT
+        id S1732073AbgIAP5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60550 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:57:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60402 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbgIAPop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:45 -0400
+        id S1731793AbgIAPon (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:44:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5126C2078B;
-        Tue,  1 Sep 2020 15:44:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7464206EB;
+        Tue,  1 Sep 2020 15:44:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975084;
-        bh=DxqAMXBtBi+lpyycBbxEJvoY8NTVhAWr+ZxGejRWmXA=;
+        s=default; t=1598975082;
+        bh=jQ+lvqk8m21u94r+IH23YkPMdq4xCdiRLIOoDC8ASpw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UEeXud6wlBAuS8lwAlVyAVreyc4uGz72iGXfN+pkULHMVL8Hr94MECmwGWRKwOmB8
-         oqAEPbw5dNv9MG4K0juNDDTWKSs6o0Angw3epf+yA3z0muxaMQ/TW7ZHNXm8ENPMns
-         yt0MR5uYjuC7bnF3b5uozSWl1fH3TWjaHWVuPmpw=
+        b=RkT4ryxyHhP0md8Ob6jP7ZEKbiOiUQyR10BQ4INfYVdHoTTuKmEZBv0UQv0tNU5X5
+         Lr6P4vRfcTBpTNA/eJ9vHNB2fXtw9ONn3gcUAkWtC12OlSbq68evGZ12I8QG3NsQzT
+         qmTplpk75/yjU18ONJgyKwmgW5l5rrtqpAVI46lk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.8 203/255] device property: Fix the secondary firmware node handling in set_primary_fwnode()
-Date:   Tue,  1 Sep 2020 17:10:59 +0200
-Message-Id: <20200901151010.425011611@linuxfoundation.org>
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.8 202/255] powerpc/perf: Fix crashes with generic_compat_pmu & BHRB
+Date:   Tue,  1 Sep 2020 17:10:58 +0200
+Message-Id: <20200901151010.375799862@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,59 +60,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-commit c15e1bdda4365a5f17cdadf22bf1c1df13884a9e upstream.
+commit b460b512417ae9c8b51a3bdcc09020cd6c60ff69 upstream.
 
-When the primary firmware node pointer is removed from a
-device (set to NULL) the secondary firmware node pointer,
-when it exists, is made the primary node for the device.
-However, the secondary firmware node pointer of the original
-primary firmware node is never cleared (set to NULL).
+The bhrb_filter_map ("The Branch History Rolling Buffer") callback is
+only defined in raw CPUs' power_pmu structs. The "architected" CPUs
+use generic_compat_pmu, which does not have this callback, and crashes
+occur if a user tries to enable branch stack for an event.
 
-To avoid situation where the secondary firmware node pointer
-is pointing to a non-existing object, clearing it properly
-when the primary node is removed from a device in
-set_primary_fwnode().
+This add a NULL pointer check for bhrb_filter_map() which behaves as
+if the callback returned an error.
 
-Fixes: 97badf873ab6 ("device property: Make it possible to use secondary firmware nodes")
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This does not add the same check for config_bhrb() as the only caller
+checks for cpuhw->bhrb_users which remains zero if bhrb_filter_map==0.
+
+Fixes: be80e758d0c2 ("powerpc/perf: Add generic compat mode pmu driver")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200602025612.62707-1-aik@ozlabs.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/core.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ arch/powerpc/perf/core-book3s.c |   19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -3988,9 +3988,9 @@ static inline bool fwnode_is_primary(str
-  */
- void set_primary_fwnode(struct device *dev, struct fwnode_handle *fwnode)
- {
--	if (fwnode) {
--		struct fwnode_handle *fn = dev->fwnode;
-+	struct fwnode_handle *fn = dev->fwnode;
- 
-+	if (fwnode) {
- 		if (fwnode_is_primary(fn))
- 			fn = fn->secondary;
- 
-@@ -4000,8 +4000,12 @@ void set_primary_fwnode(struct device *d
- 		}
- 		dev->fwnode = fwnode;
- 	} else {
--		dev->fwnode = fwnode_is_primary(dev->fwnode) ?
--			dev->fwnode->secondary : NULL;
-+		if (fwnode_is_primary(fn)) {
-+			dev->fwnode = fn->secondary;
-+			fn->secondary = NULL;
-+		} else {
-+			dev->fwnode = NULL;
+--- a/arch/powerpc/perf/core-book3s.c
++++ b/arch/powerpc/perf/core-book3s.c
+@@ -1517,9 +1517,16 @@ nocheck:
+ 	ret = 0;
+  out:
+ 	if (has_branch_stack(event)) {
+-		power_pmu_bhrb_enable(event);
+-		cpuhw->bhrb_filter = ppmu->bhrb_filter_map(
+-					event->attr.branch_sample_type);
++		u64 bhrb_filter = -1;
++
++		if (ppmu->bhrb_filter_map)
++			bhrb_filter = ppmu->bhrb_filter_map(
++				event->attr.branch_sample_type);
++
++		if (bhrb_filter != -1) {
++			cpuhw->bhrb_filter = bhrb_filter;
++			power_pmu_bhrb_enable(event);
 +		}
  	}
- }
- EXPORT_SYMBOL_GPL(set_primary_fwnode);
+ 
+ 	perf_pmu_enable(event->pmu);
+@@ -1841,7 +1848,6 @@ static int power_pmu_event_init(struct p
+ 	int n;
+ 	int err;
+ 	struct cpu_hw_events *cpuhw;
+-	u64 bhrb_filter;
+ 
+ 	if (!ppmu)
+ 		return -ENOENT;
+@@ -1947,7 +1953,10 @@ static int power_pmu_event_init(struct p
+ 	err = power_check_constraints(cpuhw, events, cflags, n + 1);
+ 
+ 	if (has_branch_stack(event)) {
+-		bhrb_filter = ppmu->bhrb_filter_map(
++		u64 bhrb_filter = -1;
++
++		if (ppmu->bhrb_filter_map)
++			bhrb_filter = ppmu->bhrb_filter_map(
+ 					event->attr.branch_sample_type);
+ 
+ 		if (bhrb_filter == -1) {
 
 
