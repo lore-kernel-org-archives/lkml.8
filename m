@@ -2,186 +2,160 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F4EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ABEC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0928E206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598971993;
-	bh=d9M///x+pLXFY3usF7TVu3R9BQQHkwl5H+Bd6UsB36Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2HJp+oYRX2tW71qxjSanvkq7B95qS3RkXk8iQhGMarDpJFi6HJ4BjFmeplq6JSODx
-	 WdGA2/3i/hH/a8T9iiu+2/uUN9RWNyqJ8O5Acu218xLOdrz0+Qx+4Wx92ZH8uNS6rn
-	 lv/iOgYq+nXDlBMQmXEvqq2jA8nZBlGKBYDcXvKQ=
+	by mail.kernel.org (Postfix) with ESMTP id 46634206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="15tSL2fb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728817AbgIAOxF (ORCPT
+        id S1728847AbgIAOxQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:53:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36360 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbgIAOuv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:50:51 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91DC5206EB;
-        Tue,  1 Sep 2020 14:50:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598971850;
-        bh=d9M///x+pLXFY3usF7TVu3R9BQQHkwl5H+Bd6UsB36Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b+d7ydhJQNG/H0W5Q/dmrGtjd6y9csY6mztdWdzcrSBM34BzD/Og3eWdxF00VyOWK
-         2vfSIfiiLRcnZigxeyAxQ5McZMF3jvhM5wEuiiex1bYmNW82caCWRL9cNz+NZUx7Ch
-         ntk5wpqHufMu8cbHm6MiQayzf2ettysxIKNpMDrA=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kD7Ve-008IQP-8r; Tue, 01 Sep 2020 15:43:42 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Saravana Kannan <saravanak@google.com>,
-        kernel-team@android.com,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH v3 15/16] ARM: Kill __smp_cross_call and co
-Date:   Tue,  1 Sep 2020 15:43:23 +0100
-Message-Id: <20200901144324.1071694-16-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200901144324.1071694-1-maz@kernel.org>
-References: <20200901144324.1071694-1-maz@kernel.org>
+        Tue, 1 Sep 2020 10:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728803AbgIAOwy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:52:54 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30D67C061246
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 07:52:54 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id t11so653275plr.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 07:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=PeEvLT3ZeLb9RUi+PCRykN+cW6hUGCxRkYbA2o4fn5k=;
+        b=15tSL2fbI1s+CH/9pPU2MqmXgB6/4QeX47wS7112qGbNIbllC+VReFbU8PMENPfa7/
+         YhGkLVV/NXqToUlWR0dd5cqj5i3+LuRzFuOPA2r14lrGeui0AUsFompldgpWid5xQ5Qt
+         lxx4Ps1ygDasjk4UWEGYex/Aa0Rt1VQUz6m5E5Ux0If38eFA4DRnntq/uWf22C1WDHTs
+         MsFL0FWJnsM+uB1OHGOi+CNI2lgFfhcM3K0BiFMfnGHECt5FJ6gHT1ZOuB4t+U1X57/e
+         ip5MwuUoB0mJQZVWNLDb5YCy/njsBdpgLKqf+2KOOvlXgI5cJjBF8LR4VKor3XhENude
+         3x2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PeEvLT3ZeLb9RUi+PCRykN+cW6hUGCxRkYbA2o4fn5k=;
+        b=ULQje0LNdwGaNHl7ynzd3YwWPeSQAnBE0D2sAtHmaiyHV9Ughpj/d4gXvgw8xu+I9W
+         fyDwa+wnGoDxDg+lStTCaHr8L0YOd6P7nEZhTejvPQT5SPeUSuqMJ7PH8/Oqt9gxINgm
+         TnkeXuEAXtzlL+O/cyPSohW0ZrXoHSyn7f/ZvM882NZupR8guIO9UB5ojuFVUsjSR+Q9
+         RVRqaXZZdb3ZZfOGGSJD7FdwnnC3iDClm6IxvTCWKneL2rwEyAyeB9N15BxRTNzWxIpX
+         Mjzuc1Xj/c1JaG6gPEmXdegMxOoEm/lrRalex7TlPYFTvzz31Rt2mwqIyF88bIfyfb21
+         MrGA==
+X-Gm-Message-State: AOAM532STA+vKvaANnOT/yU493yWZNqTfEnnaenJAnxD8LumtpQpx8Gb
+        RmqIHVVkjZUqWLvNikG1I2PvcQXH3i3f+T00
+X-Google-Smtp-Source: ABdhPJx9iVsy84SXSpOJhrRsgO11zARscHkukzKgfd1qNsRoO9jOB5lRdzHX9yX/AlMI0IMgj0mLqQ==
+X-Received: by 2002:a17:90a:a583:: with SMTP id b3mr1941881pjq.127.1598971973129;
+        Tue, 01 Sep 2020 07:52:53 -0700 (PDT)
+Received: from [192.168.1.187] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id e124sm2351945pfa.87.2020.09.01.07.52.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 07:52:52 -0700 (PDT)
+Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in
+ io_sq_wq_submit_work()
+To:     yinxin_1989 <yinxin_1989@aliyun.com>,
+        viro <viro@zeniv.linux.org.uk>
+Cc:     linux-block <linux-block@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200901015442.44831-1-yinxin_1989@aliyun.com>
+ <ae9f3887-5205-8aa8-afa7-4e01d03921bc@kernel.dk>
+ <67f27d17-81fa-43a8-baa9-429b1ccd65d0.yinxin_1989@aliyun.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <4eeefb43-488c-dc90-f47c-10defe6f9278@kernel.dk>
+Date:   Tue, 1 Sep 2020 08:52:51 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, Valentin.Schneider@arm.com, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, saravanak@google.com, kernel-team@android.com, valentin.schneider@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <67f27d17-81fa-43a8-baa9-429b1ccd65d0.yinxin_1989@aliyun.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The old IPI registration interface is now unused on arm, so let's
-get rid of it.
+On 8/31/20 10:59 PM, yinxin_1989 wrote:
+> 
+>>On 8/31/20 7:54 PM, Xin Yin wrote:
+>>> the commit <1c4404efcf2c0> ("<io_uring: make sure async workqueue
+>>> is canceled on exit>") caused a crash in io_sq_wq_submit_work().
+>>> when io_ring-wq get a req form async_list, which may not have been
+>>> added to task_list. Then try to delete the req from task_list will caused
+>>> a "NULL pointer dereference".
+>>
+>>Hmm, do you have a reproducer for this?
+> 
+> I update code to linux5.4.y , and I can reproduce this issue on an arm
+> board and my x86 pc by fio tools.
 
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- arch/arm/include/asm/smp.h |  6 ------
- arch/arm/kernel/smp.c      | 26 +++++++-------------------
- 2 files changed, 7 insertions(+), 25 deletions(-)
+Right, I figured this was 5.4 stable, as that's the only version that
+has this patch.
 
-diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
-index 0e29730295ca..0ca55a607d0a 100644
---- a/arch/arm/include/asm/smp.h
-+++ b/arch/arm/include/asm/smp.h
-@@ -39,12 +39,6 @@ void handle_IPI(int ipinr, struct pt_regs *regs);
-  */
- extern void smp_init_cpus(void);
- 
--
--/*
-- * Provide a function to raise an IPI cross call on CPUs in callmap.
-- */
--extern void set_smp_cross_call(void (*)(const struct cpumask *, unsigned int));
--
- /*
-  * Register IPI interrupts with the arch SMP code
-  */
-diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
-index f21f78483353..d51e64955a26 100644
---- a/arch/arm/kernel/smp.c
-+++ b/arch/arm/kernel/smp.c
-@@ -511,14 +511,6 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
- 	}
- }
- 
--static void (*__smp_cross_call)(const struct cpumask *, unsigned int);
--
--void __init set_smp_cross_call(void (*fn)(const struct cpumask *, unsigned int))
--{
--	if (!__smp_cross_call)
--		__smp_cross_call = fn;
--}
--
- static const char *ipi_types[NR_IPI] __tracepoint_string = {
- #define S(x,s)	[x] = s
- 	S(IPI_WAKEUP, "CPU wakeup interrupts"),
-@@ -530,11 +522,7 @@ static const char *ipi_types[NR_IPI] __tracepoint_string = {
- 	S(IPI_COMPLETION, "completion interrupts"),
- };
- 
--static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
--{
--	trace_ipi_raise_rcuidle(target, ipi_types[ipinr]);
--	__smp_cross_call(target, ipinr);
--}
-+static void smp_cross_call(const struct cpumask *target, unsigned int ipinr);
- 
- void show_ipi_list(struct seq_file *p, int prec)
- {
-@@ -713,16 +701,17 @@ static irqreturn_t ipi_handler(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
--static void ipi_send(const struct cpumask *target, unsigned int ipi)
-+static void smp_cross_call(const struct cpumask *target, unsigned int ipinr)
- {
--	__ipi_send_mask(ipi_desc[ipi], target);
-+	trace_ipi_raise_rcuidle(target, ipi_types[ipinr]);
-+	__ipi_send_mask(ipi_desc[ipinr], target);
- }
- 
- static void ipi_setup(int cpu)
- {
- 	int i;
- 
--	if (!ipi_irq_base)
-+	if (WARN_ON_ONCE(!ipi_irq_base))
- 		return;
- 
- 	for (i = 0; i < nr_ipi; i++)
-@@ -733,7 +722,7 @@ static void ipi_teardown(int cpu)
- {
- 	int i;
- 
--	if (!ipi_irq_base)
-+	if (WARN_ON_ONCE(!ipi_irq_base))
- 		return;
- 
- 	for (i = 0; i < nr_ipi; i++)
-@@ -759,7 +748,6 @@ void __init set_smp_ipi_range(int ipi_base, int n)
- 	}
- 
- 	ipi_irq_base = ipi_base;
--	set_smp_cross_call(ipi_send);
- 
- 	/* Setup the boot CPU immediately */
- 	ipi_setup(smp_processor_id());
-@@ -872,7 +860,7 @@ core_initcall(register_cpufreq_notifier);
- 
- static void raise_nmi(cpumask_t *mask)
- {
--	__smp_cross_call(mask, IPI_CPU_BACKTRACE);
-+	__ipi_send_mask(ipi_desc[IPI_CPU_BACKTRACE], mask);
- }
- 
- void arch_trigger_cpumask_backtrace(const cpumask_t *mask, bool exclude_self)
+> fio -filename=/home/yinxin/testfile -direct=0 -ioengine=io_uring -iodepth 128 -rw=read -bs=16K -size=1G -numjobs=1 -runtime=60 -group_reporting -name=iops
+
+Gotcha, thanks!
+
+>>> @@ -2356,9 +2358,11 @@ static void io_sq_wq_submit_work(struct work_struct *work)
+>>>   * running. We currently only allow this if the new request is sequential
+>>>   * to the previous one we punted.
+>>>   */
+>>> -static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
+>>> +static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req,
+>>> +       struct io_ring_ctx *ctx)
+>>>  {
+>>>   bool ret;
+>>> + unsigned long flags;
+>>>  
+>>>   if (!list)
+>>>    return false;
+>>> @@ -2378,6 +2382,13 @@ static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
+>>>    list_del_init(&req->list);
+>>>    ret = false;
+>>>   }
+>>> +
+>>> + if (ret) {
+>>> +  spin_lock_irqsave(&ctx->task_lock, flags);
+>>> +  list_add(&req->task_list, &ctx->task_list);
+>>> +  req->work_task = NULL;
+>>> +  spin_unlock_irqrestore(&ctx->task_lock, flags);
+>>> + }
+>>>   spin_unlock(&list->lock);
+>>>   return ret;
+>>>  }
+>>> @@ -2454,7 +2465,7 @@ static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+>>>     s->sqe = sqe_copy;
+>>>     memcpy(&req->submit, s, sizeof(*s));
+>>>     list = io_async_list_from_req(ctx, req);
+>>> -   if (!io_add_to_prev_work(list, req)) {
+>>> +   if (!io_add_to_prev_work(list, req, ctx)) {
+>>>      if (list)
+>>>       atomic_inc(&list->cnt);
+>>>      INIT_WORK(&req->work, io_sq_wq_submit_work);
+>>> 
+>>ctx == req->ctx, so you should not need that change.
+> 
+> In my test , the req have not been add to req->task_list(maybe waiting
+> for the ctx->task_lock) , and in io_sq_wq_submit_work() try to delete
+> it from req->task_list ,which will cause this issue.
+
+Sure, but req->ctx is set when the req is initialized. If req->ctx !=
+ctx here, then that would be pretty disastrous... So you can drop that
+part of the patch.
+
+Care to send with that changed? Then I'm fine with queueing this up for
+5.4-stable. Thanks!
+
 -- 
-2.27.0
+Jens Axboe
 
