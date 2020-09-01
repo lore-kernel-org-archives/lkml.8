@@ -2,158 +2,146 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2B1C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD5EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:53:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 215F8206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:53:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2625920FC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:53:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTXFwaaO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="y2lJnKsF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bj85h0Q4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727923AbgIALw5 (ORCPT
+        id S1727947AbgIALxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:52:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47086 "EHLO
+        Tue, 1 Sep 2020 07:53:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgIALlz (ORCPT
+        with ESMTP id S1727822AbgIALs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:41:55 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8D7C061245;
-        Tue,  1 Sep 2020 04:41:48 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id y6so396465plk.10;
-        Tue, 01 Sep 2020 04:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:message-id:date:user-agent:mime-version
-         :content-language:content-transfer-encoding;
-        bh=vL68VqqvBOJpmK0bclLXd33KppmDO85K8QP95o8vC+4=;
-        b=WTXFwaaOARSwB1lRXSnt3qJua0sM84oKQHSk1MVVav7KFevKHkgOdVWkOgVmbGz2HQ
-         rOSCUGNLXUF2a8hQ0U/7QnO8Ut6haIUxfAkW5QbrydpqnMTrL8ChApB111FHedpghk8M
-         qL9gl2Ulk1g7MaEOr5xX2SyOZw1fR0QrhePKuJPUmk3yXIlrBwk10NRgah5ptx0EJxo6
-         6o/Lre/7Qwt0vZzwavPXFv5c5Cj/9n3WZI4zh9PQWuTw/TX4z4mIt+8u2qonXS8i8BLt
-         q5gNIiVOa2LIDasdDEjPtxZloIkYI3TBp/TlgO+Myw8AincTMRjubtIaOiNIW3fiiVE9
-         J3EQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
-         :mime-version:content-language:content-transfer-encoding;
-        bh=vL68VqqvBOJpmK0bclLXd33KppmDO85K8QP95o8vC+4=;
-        b=FBroC7xRngotSnK1Dg5LhfFeH3+sIwPHAk7ag9A7RZsGzazI0AmCNv4VzE4eA62QGn
-         LS0q++/BpxXJmAueBLaW5jkP1+GM8ZKrCHGtUl2K2NwX6SiZw7dKEpS26PRvylclTyiD
-         L11Xl4qWveGko/vqZGUMuf4smMTTHm1VHU1OnbepJvVjwM7BSM5yyf3GTfrwX+ezuJkw
-         WVMPQVSbGpUtl2rxpMo062OJpyhqkw9vVhS0slMXIhpMVzGUz6g3F5kmYitqOfIim57/
-         b69HjScrmCRsURgTzB5C5E5WUkNvQQhzJev0PFE4hhdWv+8fW5Kt+VTO2V1oaIFquL3+
-         81Mg==
-X-Gm-Message-State: AOAM531ytOHDJV7zyxw/ipVL+zjrTqP0MT2tABq3gyER5BYVALd7HB2n
-        NB4e/RyhckTv1/xL8LbtLQ==
-X-Google-Smtp-Source: ABdhPJw7j2QWldkxD7fX4qizVyKuseP3QD5Bv0/o1MGNiCfFzJZRsol9XRm13ns3zWHLLlrlzysLUw==
-X-Received: by 2002:a17:90a:8909:: with SMTP id u9mr1207128pjn.119.1598960507698;
-        Tue, 01 Sep 2020 04:41:47 -0700 (PDT)
-Received: from [127.0.0.1] ([103.7.29.7])
-        by smtp.gmail.com with ESMTPSA id 142sm1799131pgf.68.2020.09.01.04.41.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 04:41:46 -0700 (PDT)
-From:   Haiwei Li <lihaiwei.kernel@gmail.com>
-Subject: [PATCH] KVM: Check the allocation of pv cpu mask
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Cc:     "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
-        "mingo@redhat.com" <mingo@redhat.com>, tglx@linutronix.de,
-        joro@8bytes.org, jmattson@google.com,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        vkuznets@redhat.com,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>
-Message-ID: <d59f05df-e6d3-3d31-a036-cc25a2b2f33f@gmail.com>
-Date:   Tue, 1 Sep 2020 19:41:37 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.11.0
+        Tue, 1 Sep 2020 07:48:26 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1768C061249;
+        Tue,  1 Sep 2020 04:48:00 -0700 (PDT)
+Date:   Tue, 01 Sep 2020 11:47:55 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598960876;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IKz2dGX6e3Y6/XXFTZl5HUybdot3NjxnC/Wq+WnaoPA=;
+        b=y2lJnKsFm2wEOHIBNhA21u9xrkqQd+8FlGwW0QYh73bhKfLByO5RZU/wALtZQXlEwBaFmM
+        IvW6KXCIM+IIShpAARrwsJRL8lHQfhxD2//52YNKfIg6/tDkLKRIa7XAp9txSpdCPGXyjW
+        6/rPe75TUNEXJm7JsC/F+xNTEjqEFDU3GKhGSXYWZuJpc7ZOL92/KzO/Qo2Ubzq3yLiZiD
+        aw4CI0jhoaOMYDt/Fte2Hgjgu8FB0D/viVgQUj2FTevnNMT805fnF/eWpM8KoFRrma1hHf
+        YUng4eFCNA0z9xDGa1ZLN9cYHaMnIIS4R+Do1KorH0uLhTif9ukfZW8Bs5fKNQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598960876;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=IKz2dGX6e3Y6/XXFTZl5HUybdot3NjxnC/Wq+WnaoPA=;
+        b=bj85h0Q4AGdqoML/vEs8tCQRPXlqtvtkyASyFgkfegOiWOERzj3sZuXv8R24J7858pLG6t
+        mrJXkjvNwW1tzhAQ==
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/build] arm/build: Explicitly keep .ARM.attributes sections
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Fangrui Song <maskray@google.com>,
+        Russell King <linux@armlinux.org.uk>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200821194310.3089815-17-keescook@chromium.org>
+References: <20200821194310.3089815-17-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Message-ID: <159896087591.20229.4965158961256673819.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiwei Li <lihaiwei@tencent.com>
+The following commit has been merged into the core/build branch of tip:
 
-check the allocation of per-cpu __pv_cpu_mask. Initialize ops only when
-successful.
+Commit-ID:     3b14aefb84320ac430cecbdc87b680317916b2bd
+Gitweb:        https://git.kernel.org/tip/3b14aefb84320ac430cecbdc87b680317916b2bd
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Fri, 21 Aug 2020 12:42:57 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 01 Sep 2020 10:03:18 +02:00
 
-Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+arm/build: Explicitly keep .ARM.attributes sections
+
+In preparation for adding --orphan-handling=warn, explicitly keep the
+.ARM.attributes section (at address 0[1]) by expanding the existing
+ELF_DETAILS macro into ARM_DETAILS.
+
+[1] https://reviews.llvm.org/D85867
+
+Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Link: https://lore.kernel.org/lkml/CAKwvOdk-racgq5pxsoGS6Vtifbtrk5fmkmnoLxrQMaOvV0nPWw@mail.gmail.com/
+Link: https://lore.kernel.org/r/20200821194310.3089815-17-keescook@chromium.org
 ---
-  arch/x86/kernel/kvm.c | 23 +++++++++++++++++++----
-  1 file changed, 19 insertions(+), 4 deletions(-)
+ arch/arm/include/asm/vmlinux.lds.h | 4 ++++
+ arch/arm/kernel/vmlinux-xip.lds.S  | 2 +-
+ arch/arm/kernel/vmlinux.lds.S      | 2 +-
+ 3 files changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 08320b0b2b27..a64b894eaac0 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -555,7 +555,6 @@ static void kvm_send_ipi_mask_allbutself(const 
-struct cpumask *mask, int vector)
-  static void kvm_setup_pv_ipi(void)
-  {
-  	apic->send_IPI_mask = kvm_send_ipi_mask;
--	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
-  	pr_info("setup PV IPIs\n");
-  }
-
-@@ -654,7 +653,6 @@ static void __init kvm_guest_init(void)
-  	}
-
-  	if (pv_tlb_flush_supported()) {
--		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-  		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-  		pr_info("KVM setup pv remote TLB flush\n");
-  	}
-@@ -767,6 +765,14 @@ static __init int activate_jump_labels(void)
-  }
-  arch_initcall(activate_jump_labels);
-
-+static void kvm_free_pv_cpu_mask(void)
-+{
-+	unsigned int cpu;
+diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
+index a08f430..c4af518 100644
+--- a/arch/arm/include/asm/vmlinux.lds.h
++++ b/arch/arm/include/asm/vmlinux.lds.h
+@@ -52,6 +52,10 @@
+ 		ARM_MMU_DISCARD(*(__ex_table))				\
+ 		COMMON_DISCARDS
+ 
++#define ARM_DETAILS							\
++		ELF_DETAILS						\
++		.ARM.attributes 0 : { *(.ARM.attributes) }
 +
-+	for_each_possible_cpu(cpu)
-+		free_cpumask_var(per_cpu(__pv_cpu_mask, cpu));
-+}
-+
-  static __init int kvm_alloc_cpumask(void)
-  {
-  	int cpu;
-@@ -785,11 +791,20 @@ static __init int kvm_alloc_cpumask(void)
-
-  	if (alloc)
-  		for_each_possible_cpu(cpu) {
--			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
--				GFP_KERNEL, cpu_to_node(cpu));
-+			if (!zalloc_cpumask_var_node(
-+				per_cpu_ptr(&__pv_cpu_mask, cpu),
-+				GFP_KERNEL, cpu_to_node(cpu))) {
-+				goto zalloc_cpumask_fail;
-+			}
-  		}
-
-+	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
-+	pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-  	return 0;
-+
-+zalloc_cpumask_fail:
-+	kvm_free_pv_cpu_mask();
-+	return -ENOMEM;
-  }
-  arch_initcall(kvm_alloc_cpumask);
-
---
-2.18.4
-
+ #define ARM_STUBS_TEXT							\
+ 		*(.gnu.warning)						\
+ 		*(.glue_7)						\
+diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
+index 904c31f..57fcbf5 100644
+--- a/arch/arm/kernel/vmlinux-xip.lds.S
++++ b/arch/arm/kernel/vmlinux-xip.lds.S
+@@ -150,7 +150,7 @@ SECTIONS
+ 	_end = .;
+ 
+ 	STABS_DEBUG
+-	ELF_DETAILS
++	ARM_DETAILS
+ }
+ 
+ /*
+diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
+index bb950c8..1d3d3b5 100644
+--- a/arch/arm/kernel/vmlinux.lds.S
++++ b/arch/arm/kernel/vmlinux.lds.S
+@@ -149,7 +149,7 @@ SECTIONS
+ 	_end = .;
+ 
+ 	STABS_DEBUG
+-	ELF_DETAILS
++	ARM_DETAILS
+ }
+ 
+ #ifdef CONFIG_STRICT_KERNEL_RWX
