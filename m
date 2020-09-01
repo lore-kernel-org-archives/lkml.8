@@ -5,48 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F2C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B47C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B9A1206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6318206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980305;
-	bh=7/WCKlMTvBR7YmWfYFwJp9dRNVnCi7LtZNSvGah06qg=;
+	s=default; t=1598980311;
+	bh=wZYcmCEmIqGYnq6Min8mgzatzLhIO07/7HKSNXgnsWs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WhRmph8bQFfiTmTiK0/ZStmz77PXQ42He2mdrRj6lWRJVNczSyo4Sc2viz536FHUC
-	 TI2ktFoscV1j8VTbSqtQmoZEAi4j3h+1PlpQK32Iv7V0l+g9wKRy264GxoPE5qaFId
-	 iAt3DIeHSC/WuHVffmu8gaVz7lh+3GGPG19IwPz0=
+	b=i+d2ao+Z5xPufirpp6BBlokWHP1DtBYUWGN7IO4OIQdaHhB0UOJdFdpA4V6t63OYN
+	 5vYJyyd0jrZIJXsqGkDo/NSFq/9xHVsMJhDuoz4l+rqGu/7zcRAiMqwBh0xSzKAjw8
+	 kP12ZTEJvmFHMUHyEtNPSVZmF8OdOfKcauP0eeQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbgIAPQN (ORCPT
+        id S1729768AbgIARLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:16:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59348 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:11:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729185AbgIAPPJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:15:09 -0400
+        id S1729278AbgIAPQN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:16:13 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CC1206FA;
-        Tue,  1 Sep 2020 15:15:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB46E206EB;
+        Tue,  1 Sep 2020 15:16:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973308;
-        bh=7/WCKlMTvBR7YmWfYFwJp9dRNVnCi7LtZNSvGah06qg=;
+        s=default; t=1598973373;
+        bh=wZYcmCEmIqGYnq6Min8mgzatzLhIO07/7HKSNXgnsWs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQtQPnYsP0rLd9WQEy+KUWrLxkEwyTAiK3QprMs07CAUCsbrNPyDbG1SW+sI+XfzT
-         lvwEyGZSnrJQ4zIqFGAtimuvLc5QlKD4rr1lDPlHAm0fI0PEkl39ywcQNHmxdPgxe0
-         xwAbM67SiH99dbLZ8das6DgR1blUNN4rrnwN/wM0=
+        b=waWWXiS6o3GXLKbTAOwZge0FQA/FfbjJZKlL8RwCK7ihwXREaP8MVnFRA1JEMmfwW
+         qNDC11NBI3azzDFo/gA8t9tHZh8z99EYZ5jdyHi5Vufi1BYIwrUYtaTRAtC2kPdaZ6
+         5SRLTYHR5TebJMq4vkY588FNuN0/HFjIP3y28VIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miaohe Lin <linmiaohe@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 03/78] net: Fix potential wrong skb->protocol in skb_vlan_untag()
-Date:   Tue,  1 Sep 2020 17:09:39 +0200
-Message-Id: <20200901150924.884408213@linuxfoundation.org>
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>
+Subject: [PATCH 4.9 52/78] USB: lvtest: return proper error code in probe
+Date:   Tue,  1 Sep 2020 17:10:28 +0200
+Message-Id: <20200901150927.352710759@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -59,34 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-[ Upstream commit 55eff0eb7460c3d50716ed9eccf22257b046ca92 ]
+commit 531412492ce93ea29b9ca3b4eb5e3ed771f851dd upstream.
 
-We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). So
-we should pull VLAN_HLEN + sizeof(unsigned short) in skb_vlan_untag() or
-we may access the wrong data.
+lvs_rh_probe() can return some nonnegative value from usb_control_msg()
+when it is less than "USB_DT_HUB_NONVAR_SIZE + 2" that is considered as
+a failure. Make lvs_rh_probe() return -EINVAL in this case.
 
-Fixes: 0d5501c1c828 ("net: Always untag vlan-tagged traffic on input.")
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Found by Linux Driver Verification project (linuxtesting.org).
+
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200805090643.3432-1-novikov@ispras.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/skbuff.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -4591,8 +4591,8 @@ struct sk_buff *skb_vlan_untag(struct sk
- 	skb = skb_share_check(skb, GFP_ATOMIC);
- 	if (unlikely(!skb))
- 		goto err_free;
--
--	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN)))
-+	/* We may access the two bytes after vlan_hdr in vlan_set_encap_proto(). */
-+	if (unlikely(!pskb_may_pull(skb, VLAN_HLEN + sizeof(unsigned short))))
- 		goto err_free;
+---
+ drivers/usb/misc/lvstest.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/usb/misc/lvstest.c
++++ b/drivers/usb/misc/lvstest.c
+@@ -392,7 +392,7 @@ static int lvs_rh_probe(struct usb_inter
+ 			USB_DT_SS_HUB_SIZE, USB_CTRL_GET_TIMEOUT);
+ 	if (ret < (USB_DT_HUB_NONVAR_SIZE + 2)) {
+ 		dev_err(&hdev->dev, "wrong root hub descriptor read %d\n", ret);
+-		return ret;
++		return ret < 0 ? ret : -EINVAL;
+ 	}
  
- 	vhdr = (struct vlan_hdr *)skb->data;
+ 	/* submit urb to poll interrupt endpoint */
 
 
