@@ -2,100 +2,100 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67CA2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C91C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5A62078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:25:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598981106;
-	bh=mR6oGR+NyHCaBD7rYApwSslo3Nk/GcTOScozNAXPbPE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fvdSEBP7cGEszXUF/E63UdBM3qYjoL0kLSYAyUxgKv10I0mGErmcJNB7YqecyLKHt
-	 8x1fzvklA776Vbo9Ou+bAnaeft5Al9UfqlN9YzSmNtjbYDWCzTBQngWBiWCPZxLQkg
-	 38Jeb7Dk14MWviPr2XqWddk9SCR5clj1FH2DcIiY=
+	by mail.kernel.org (Postfix) with ESMTP id 883352078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:25:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K6U6qqw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732736AbgIARYA (ORCPT
+        id S1726307AbgIARZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:24:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54050 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbgIAPL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:11:58 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 1 Sep 2020 13:25:13 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:27833 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726771AbgIARZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:25:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598981099;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8PqT0EakorR2gsUjc/WrDrlcsD1OTR+SxQRxSKs2oGQ=;
+        b=K6U6qqw4W5EXo36ba9g8GAtdfaWIE/2GIYq4DS0yhPjeMT9gHmIUoZiAeQEPcIemwi7mYk
+        N/DPtrGEUCm3Fn4et3c8ED4XR59a7jax4qW3MbRmovEPpXWzto9VhYIDoO+51/p7YvbGUv
+        iZAERVc/jQL+Ue75tXCKdUOrRg5D750=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-397-Ubgxi10CMnChTxIDXzvLyw-1; Tue, 01 Sep 2020 13:24:55 -0400
+X-MC-Unique: Ubgxi10CMnChTxIDXzvLyw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2B12078B;
-        Tue,  1 Sep 2020 15:11:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973117;
-        bh=mR6oGR+NyHCaBD7rYApwSslo3Nk/GcTOScozNAXPbPE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YF1+/XKVysIXcGYHbn0FPyKKVI7cZQIKH4kPIVituN/cebfdEUQh4uLNnnhSU7so3
-         kmIxVDD8a+l775QVJFbE+xEExuznwuQwrHSY1Ee4CD+4gjjEIyVs0b70y+WddsgWQH
-         sNMO3WYnJ7ns+ZUFP9ysNino+vWAeyLHCbHHugD4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 14/62] drm/amd/display: fix ref count leak in amdgpu_drm_ioctl
-Date:   Tue,  1 Sep 2020 17:09:57 +0200
-Message-Id: <20200901150921.414625994@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
-References: <20200901150920.697676718@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DD3810ABDB2;
+        Tue,  1 Sep 2020 17:24:54 +0000 (UTC)
+Received: from treble (ovpn-113-168.rdu2.redhat.com [10.10.113.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B97F95C1BB;
+        Tue,  1 Sep 2020 17:24:53 +0000 (UTC)
+Date:   Tue, 1 Sep 2020 12:24:51 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH] Revert "kbuild: use -flive-patching when
+ CONFIG_LIVEPATCH is enabled"
+Message-ID: <20200901172451.uckohkruradfhd6g@treble>
+References: <696262e997359666afa053fe7d1a9fb2bb373964.1595010490.git.jpoimboe@redhat.com>
+ <alpine.LSU.2.21.2007211316410.31851@pobox.suse.cz>
+ <20200806092426.GL24529@alley>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200806092426.GL24529@alley>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+On Thu, Aug 06, 2020 at 11:24:26AM +0200, Petr Mladek wrote:
+> On Tue 2020-07-21 13:17:00, Miroslav Benes wrote:
+> > On Fri, 17 Jul 2020, Josh Poimboeuf wrote:
+> > 
+> > > Use of the new -flive-patching flag was introduced with the following
+> > > commit:
+> > > 
+> > >   43bd3a95c98e ("kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled")
+> > > 
+> > > This reverts commit 43bd3a95c98e1a86b8b55d97f745c224ecff02b9.
+> > > 
+> > > Fixes: 43bd3a95c98e ("kbuild: use -flive-patching when CONFIG_LIVEPATCH is enabled")
+> > > Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > 
+> > Acked-by: Miroslav Benes <mbenes@suse.cz>
+> 
+> Acked-by: Petr Mladek <pmladek@suse.com>
+> 
+> Hmm, the patch has not been pushed into livepatching.git and is not
+> available in the pull request for 5.9.
+> 
+> Is it OK to leave it for 5.10?
+> Or would you prefer to get it into 5.9 even on this stage?
+> 
+> I personally do not mind. It depends how urgent it is for others.
 
-[ Upstream commit 5509ac65f2fe5aa3c0003237ec629ca55024307c ]
+Sorry for leaving this question hanging.  Let's go with 5.10 ;-)
 
-in amdgpu_drm_ioctl the call to pm_runtime_get_sync increments the
-counter even in case of failure, leading to incorrect
-ref count. In case of failure, decrement the ref count before returning.
-
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index 8d6668cedf6db..eb3c54e1f1ca8 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -443,11 +443,12 @@ long amdgpu_drm_ioctl(struct file *filp,
- 	dev = file_priv->minor->dev;
- 	ret = pm_runtime_get_sync(dev->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	ret = drm_ioctl(filp, cmd, arg);
- 
- 	pm_runtime_mark_last_busy(dev->dev);
-+out:
- 	pm_runtime_put_autosuspend(dev->dev);
- 	return ret;
- }
 -- 
-2.25.1
-
-
+Josh
 
