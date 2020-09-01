@@ -2,113 +2,114 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55E7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA84C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A1E93206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:48:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598968104;
-	bh=guT/B9fm9Ax+xhrDZqhYNKmIiJEYV14+wiZXb20HXnI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=h08kJtKQ+do7EBTPnWyok+jCQHAm30WTKnK9d8nR5/1pOgbIogHlVc+molP9ofuUF
-	 Py9Tf+pF8vAYFJexkAExL/KAy4SJALCsdOZ74zmR08mQZSyhKrKnTdeQnhFj2oynOY
-	 XPncYjiQy7Ldc5AGoSfCT8hlks0SRzCMXwDRS44o=
+	by mail.kernel.org (Postfix) with ESMTP id DE124206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:49:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=veeam.com header.i=@veeam.com header.b="UgcD+Wup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbgIANr3 (ORCPT
+        id S1728300AbgIANs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:47:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38692 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 09:48:57 -0400
+Received: from mx2.veeam.com ([12.182.39.6]:40438 "EHLO mx2.veeam.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728249AbgIANpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:45:43 -0400
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727906AbgIANbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:31:08 -0400
+Received: from mail.veeam.com (prgmbx01.amust.local [172.24.0.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FCD4207D3;
-        Tue,  1 Sep 2020 13:45:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598967913;
-        bh=guT/B9fm9Ax+xhrDZqhYNKmIiJEYV14+wiZXb20HXnI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hudO0/H+uQAeOGPA+ktyBcHnLqVX2dyLBCxEt+ywj0UIO1YSNwOhHCVAcYZEPv9EY
-         1D5/bzVAS5GlVN0xalWvRoOkhw5BOA3bOtnpLlmlTFAPeaBVUC6l/5EvetxKRFGc+I
-         ACbDt2katkMN2P6321ZbpXOSsHy4GwMsPYuffik0=
-Received: by mail-ej1-f50.google.com with SMTP id m22so1702052eje.10;
-        Tue, 01 Sep 2020 06:45:13 -0700 (PDT)
-X-Gm-Message-State: AOAM530B4eaYFD/DyGbYe7FKsqjO5dDSpFsuWoSRUkW4JbnaszM9ynsU
-        2AHrYHHIJ0qizXGxTnDsorJuqBsN5k2neSJQrg8=
-X-Google-Smtp-Source: ABdhPJz6uIBMsaYsaaZUhy+VeyCk3/2LqThr6HHemeSXoOexn5BStaqskVKcLfb/AYO3ekqe9civ7FgwssrPQoIa3ps=
-X-Received: by 2002:a17:906:9356:: with SMTP id p22mr1481115ejw.119.1598967912146;
- Tue, 01 Sep 2020 06:45:12 -0700 (PDT)
+        by mx2.veeam.com (Postfix) with ESMTPS id 1A91341364;
+        Tue,  1 Sep 2020 09:30:18 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=veeam.com; s=mx2;
+        t=1598967018; bh=umHfvOL0J1ZkxkzjujOKSRjD07bmjbQWixfcQCpw0uI=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To:From;
+        b=UgcD+WupLi7EW3I9d/5JdtcO3zzYeAgEio3FVeuj2Xsy58gMNQRGq2C/0g1Fl7sz6
+         yV0tX8ohZs6DqYVLjwth3GJ9i6RTpYyZkcy5FtyBPcHRo5TRXrzCoKyFWWsQRFv0hU
+         9ZHXkSqf0HzwAOVHLLyEC+QkxsD2lX5SLAArkE58=
+Received: from veeam.com (172.24.14.5) by prgmbx01.amust.local (172.24.0.171)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.595.3; Tue, 1 Sep 2020
+ 15:30:15 +0200
+Date:   Tue, 1 Sep 2020 16:29:57 +0300
+From:   Sergei Shtepa <sergei.shtepa@veeam.com>
+To:     Jens Axboe <axboe@kernel.dk>
+CC:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "koct9i@gmail.com" <koct9i@gmail.com>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "damien.lemoal@wdc.com" <damien.lemoal@wdc.com>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "steve@sk2.org" <steve@sk2.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Subject: Re: [PATCH 0/1] block io layer filters api
+Message-ID: <20200901132957.GA18251@veeam.com>
+References: <1598555619-14792-1-git-send-email-sergei.shtepa@veeam.com>
+ <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
 MIME-Version: 1.0
-References: <267a81e550a0b5d479c82b5908e2a2caa4c9c874.1597061474.git.guillaume.tucker@collabora.com>
- <c0509b5f-a064-2e73-7e04-51f41a56d222@collabora.com>
-In-Reply-To: <c0509b5f-a064-2e73-7e04-51f41a56d222@collabora.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Tue, 1 Sep 2020 15:45:00 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPczS_RpSFpjGygZ_1MCYxJ_cUDRjriZvrHd6+zhmq=c8Q@mail.gmail.com>
-Message-ID: <CAJKOXPczS_RpSFpjGygZ_1MCYxJ_cUDRjriZvrHd6+zhmq=c8Q@mail.gmail.com>
-Subject: Re: [PATCH v2 1/4] ARM: exynos: clear L310_AUX_CTRL_NS_LOCKDOWN in
- default l2c_aux_val
-To:     Guillaume Tucker <guillaume.tucker@collabora.com>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Kukjin Kim <kgene@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
+X-Originating-IP: [172.24.14.5]
+X-ClientProxiedBy: prgmbx02.amust.local (172.24.0.172) To prgmbx01.amust.local
+ (172.24.0.171)
+X-EsetResult: clean, is OK
+X-EsetId: 37303A29C604D26B63716B
+X-Veeam-MMEX: True
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx2.veeam.com [172.18.16.6]); Tue, 01 Sep 2020 09:30:18 -0400 (EDT)
+X-Veeam-MailScanner-Information: Please contact email@veeam.com if you have any problems
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 at 15:34, Guillaume Tucker
-<guillaume.tucker@collabora.com> wrote:
+The 08/28/2020 16:54, Jens Axboe wrote:
+> On 8/27/20 1:13 PM, Sergei Shtepa wrote:
+> > Hello everyone! Requesting for your comments and suggestions.
+> > 
+> > We propose new kernel API that should be beneficial for out-of-tree
+> > kernel modules of multiple backup vendors: block layer filter API.
+> 
+> That's just a non-starter, I'm afraid. We generally don't carry
+> infrastructure in the kernel for out-of-tree modules, that includes
+> even exports of existing code.
+> 
+> If there's a strong use case *in* the kernel, then such functionality
+> could be entertained.
+> 
+> -- 
+> Jens Axboe
 >
-> Hi Krzysztof, Russell,
->
-> On 10/08/2020 13:22, Guillaume Tucker wrote:
-> > The L310_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
-> > sequence.  There is no need to set it in the default register value,
-> > this was done before support for it was implemented in the code.  It
-> > is not set in the hardware initial value either.
-> >
-> > Clean this up by removing this flag from the default l2c_aux_val, and
-> > add it to the l2c_aux_mask to print an alert message if it was already
-> > set before the kernel initialisation.
-> >
-> > Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
-> > ---
-> >
-> > Notes:
-> >     v2: fix flag name L310_AUX_CTRL_NS_LOCKDOWN
-> >
-> >  arch/arm/mach-exynos/exynos.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> I believe this v2 series has addressed all previous comments and
-> you were waiting for the 5.9 merge window to end.  The patches
-> all still apply cleanly on v5.9-rc3.  Do you want me to resend
-> the series anyway or is there anything else needed at this point?
->
-> Maybe one thing that wasn't completely clear in v1 was whether
-> patch 2/4 was the right approach.  I've explained the reason
-> behind it but didn't get a final reply from Russell[1].
 
-I am sorry, my bad. I already applied this one and 3/4 (dts).
-Apparently I forgot to reply with confirmation and Patchwork did not
-notify you for some reason.
+To be honest, we've always dreamed to include our out-of-tree module into
+the kernel itself - so if you're open to that, that is great news indeed!
 
-Patch 2/4 does not look like one for me so I would need ack from
-Russell to take. Did you submit it to the ARM patches queue?
-Patch 4/4 will wait for v5.10-rc1 as it depends on 1/4 and it is DTS patch.
+We've spent some time before responding to estimate how long it will take
+us to update the current source code to meet coding requirements.
+It looks like we will need 2-4 months of development and QC, and possibly
+much more to work on your feedback thereafter.
+This is much work, but we are fully committed to this if you are willing
+to include this module into the kernel.
 
-Best regards,
-Krzysztof
+However, the same time requirement also presents a big immediate problem -
+as until this is done, over a hundred thousands of Linux users will not be
+able to protect their servers running the impacted kernels
+(our backup agent is free).
+They will be forced to stop using the new version of the kernel
+(or take a risk of data loss).
+
+Given that, is there any chance that you accept the proposed patch now, to
+restore the ability to protect their Linux machines - and buy us time to 
+deliver the compliant module for inclusion into the kernel?
+
+-- 
+Sergei Shtepa
+Veeam Software developer.
