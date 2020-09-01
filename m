@@ -2,51 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB17C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D70EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0457F2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 775AE2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:18:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980694;
-	bh=0iBNqcd3/8EujZbfEt9NqeL+sCYR8qd6j4X6CfM5O9Q=;
+	s=default; t=1598980697;
+	bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MRzReDBl2CN8uYNjELRJ97AEOC85bwz8fOiSyj3NJ+ZM8PaHzLYn+HJkOXFh/Tg8u
-	 8BQBAq2DArEbudMMnDmFM8kdpvk/R7bSAHOGgbzxA79nZGlHAaIXiw0UNjJpldjKtU
-	 l63bFBxtsd3jj1rX9m+YVNGz898yhizqLdO5/mfs=
+	b=u5L4DqA7rS0zVLMvgVUsHgxOpMRQNn3gSPBx8cJQ+mpgk/jIZBB8eYtD9oWq7S1Yy
+	 7SwlPFuPQ6JsC7DJ9mSEkALxsERaGko0IMvSqon3Yue5BP3kGNvGJO7HO69Y+bzJsJ
+	 MVdEwEGHh2nh12qwUU87iSoKKNbbvTx6He6UJ3CU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728993AbgIARSL (ORCPT
+        id S1732647AbgIARSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:18:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57454 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:18:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728925AbgIAPN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:57 -0400
+        id S1728994AbgIAPNy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:13:54 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A927206FA;
-        Tue,  1 Sep 2020 15:13:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2CEC20BED;
+        Tue,  1 Sep 2020 15:13:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973237;
-        bh=0iBNqcd3/8EujZbfEt9NqeL+sCYR8qd6j4X6CfM5O9Q=;
+        s=default; t=1598973234;
+        bh=hHlrvVv6ZvQQkb3Q7+JMMIw0qSxNayamM1etArGofpc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oCMZbSzLgaP6V+jkAM0hr9BqZK6zp7LdqczTERrmUzZPhzb/cqv5UA2pCyzS/H2a8
-         8EDCFkSxhM4v72hSUH61cWrv0ZK23Yo2/keOxl7+wuv2lOioMIXAeACcx71YXCFNCs
-         Uzxy2L2/AJlu1SOqfJ2FtGUkBSueVs50dMDTxgnA=
+        b=l2e2mbUMrYagGrAMc+LFi7/4o8Va4XiWIWMc5SnGfmX6ys3PQyfWsWbjjiKziD2R/
+         tTQfumSKnU3v0L1c6ng2FDZBUk+ZDAX1hBJ7U1t7Qa6qHgHIcJX0joWHj43YFT6g6U
+         FVqhM7AKI+Fd+eobq/XKjgiKYxFsxIvwat6RMbMs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 54/62] USB: yurex: Fix bad gfp argument
-Date:   Tue,  1 Sep 2020 17:10:37 +0200
-Message-Id: <20200901150923.460492636@linuxfoundation.org>
+        stable@vger.kernel.org, Peng Fan <fanpeng@loongson.cn>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 21/62] mips/vdso: Fix resource leaks in genvdso.c
+Date:   Tue,  1 Sep 2020 17:10:04 +0200
+Message-Id: <20200901150921.800205386@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -59,72 +61,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Peng Fan <fanpeng@loongson.cn>
 
-commit f176ede3a3bde5b398a6777a7f9ff091baa2d3ff upstream.
+[ Upstream commit a859647b4e6bfeb192284d27d24b6a0c914cae1d ]
 
-The syzbot fuzzer identified a bug in the yurex driver: It passes
-GFP_KERNEL as a memory-allocation flag to usb_submit_urb() at a time
-when its state is TASK_INTERRUPTIBLE, not TASK_RUNNING:
+Close "fd" before the return of map_vdso() and close "out_file"
+in main().
 
-do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000370c7c68>] prepare_to_wait+0xb1/0x2a0 kernel/sched/wait.c:247
-WARNING: CPU: 1 PID: 340 at kernel/sched/core.c:7253 __might_sleep+0x135/0x190
-kernel/sched/core.c:7253
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 340 Comm: syz-executor677 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google
-01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- panic+0x2aa/0x6e1 kernel/panic.c:231
- __warn.cold+0x20/0x50 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x41/0x80 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:7253
-Code: 65 48 8b 1c 25 40 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06 00 75
-2b 48 8b 73 10 48 c7 c7 e0 9e 06 86 e8 ed 12 f6 ff <0f> 0b e9 46 ff ff ff e8 1f
-b2 4b 00 e9 29 ff ff ff e8 15 b2 4b 00
-RSP: 0018:ffff8881cdb77a28 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8881c6458000 RCX: 0000000000000000
-RDX: ffff8881c6458000 RSI: ffffffff8129ec93 RDI: ffffed1039b6ef37
-RBP: ffffffff86fdade2 R08: 0000000000000001 R09: ffff8881db32f54f
-R10: 0000000000000000 R11: 0000000030343354 R12: 00000000000001f2
-R13: 0000000000000000 R14: 0000000000000068 R15: ffffffff83c1b1aa
- slab_pre_alloc_hook.constprop.0+0xea/0x200 mm/slab.h:498
- slab_alloc_node mm/slub.c:2816 [inline]
- slab_alloc mm/slub.c:2900 [inline]
- kmem_cache_alloc_trace+0x46/0x220 mm/slub.c:2917
- kmalloc include/linux/slab.h:554 [inline]
- dummy_urb_enqueue+0x7a/0x880 drivers/usb/gadget/udc/dummy_hcd.c:1251
- usb_hcd_submit_urb+0x2b2/0x22d0 drivers/usb/core/hcd.c:1547
- usb_submit_urb+0xb4e/0x13e0 drivers/usb/core/urb.c:570
- yurex_write+0x3ea/0x820 drivers/usb/misc/yurex.c:495
-
-This patch changes the call to use GFP_ATOMIC instead of GFP_KERNEL.
-
-Reported-and-tested-by: syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200810182954.GB307778@rowland.harvard.edu
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Peng Fan <fanpeng@loongson.cn>
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/yurex.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/vdso/genvdso.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -510,7 +510,7 @@ static ssize_t yurex_write(struct file *
- 	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
- 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
- 		dev->cntl_buffer[0]);
--	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
-+	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
- 	if (retval >= 0)
- 		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
- 	finish_wait(&dev->waitq, &wait);
+diff --git a/arch/mips/vdso/genvdso.c b/arch/mips/vdso/genvdso.c
+index 530a36f465ced..afcc86726448e 100644
+--- a/arch/mips/vdso/genvdso.c
++++ b/arch/mips/vdso/genvdso.c
+@@ -126,6 +126,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (fstat(fd, &stat) != 0) {
+ 		fprintf(stderr, "%s: Failed to stat '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -134,6 +135,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (addr == MAP_FAILED) {
+ 		fprintf(stderr, "%s: Failed to map '%s': %s\n", program_name,
+ 			path, strerror(errno));
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -143,6 +145,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	if (memcmp(ehdr->e_ident, ELFMAG, SELFMAG) != 0) {
+ 		fprintf(stderr, "%s: '%s' is not an ELF file\n", program_name,
+ 			path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -154,6 +157,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF class\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -165,6 +169,7 @@ static void *map_vdso(const char *path, size_t *_size)
+ 	default:
+ 		fprintf(stderr, "%s: '%s' has invalid ELF data order\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+@@ -172,15 +177,18 @@ static void *map_vdso(const char *path, size_t *_size)
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF machine (expected EM_MIPS)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	} else if (swap_uint16(ehdr->e_type) != ET_DYN) {
+ 		fprintf(stderr,
+ 			"%s: '%s' has invalid ELF type (expected ET_DYN)\n",
+ 			program_name, path);
++		close(fd);
+ 		return NULL;
+ 	}
+ 
+ 	*_size = stat.st_size;
++	close(fd);
+ 	return addr;
+ }
+ 
+@@ -284,10 +292,12 @@ int main(int argc, char **argv)
+ 	/* Calculate and write symbol offsets to <output file> */
+ 	if (!get_symbols(dbg_vdso_path, dbg_vdso)) {
+ 		unlink(out_path);
++		fclose(out_file);
+ 		return EXIT_FAILURE;
+ 	}
+ 
+ 	fprintf(out_file, "};\n");
++	fclose(out_file);
+ 
+ 	return EXIT_SUCCESS;
+ }
+-- 
+2.25.1
+
 
 
