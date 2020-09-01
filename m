@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4737C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D5DAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C38720767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7135420767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978312;
-	bh=z7HQxv9VSgRcd7nBu9ujYpFT8TnEHBX4hITSL08r+ps=;
+	s=default; t=1598978321;
+	bh=EypvJmI80cOBcFHKPawHti9nNSIPxfesQkbtnpmuuts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B9TNHN0Sh6tTDwWtrMuRtSLqTR7lBqfRjCUNwUvVukQzZj2Nf9qnO8AcW0iO+wZ/Q
-	 h9br7lfqaHBsEbeZdir57vp0E6B4jxbFD7Yqu+ieTSbmlgJBLcRxd2QAk5l/Ee+Yge
-	 X9ckncld7nd4g8KHankDpQ083TNI5OSB6UXT0tsI=
+	b=r0qoGlKTRRt38zxHQ7/MDZdA87Vz3EyV5yCh1JTqBE7lbmVnobVmvFNsX1pTRhSu/
+	 WbhfihPknH3rhKd21m0V6FThybAgTvj8MEtpElbgQ4EBiDRVgz8Sp4XX5N13sjK9KT
+	 c8rwQ66cG/lKQLg6iNOvr6LJrOelYvlvVeTDuoKo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbgIAP2r (ORCPT
+        id S1730416AbgIAQik (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49762 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:38:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730029AbgIAPZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:20 -0400
+        id S1730410AbgIAP2r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:47 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A26B206FA;
-        Tue,  1 Sep 2020 15:25:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1DF02078B;
+        Tue,  1 Sep 2020 15:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973919;
-        bh=z7HQxv9VSgRcd7nBu9ujYpFT8TnEHBX4hITSL08r+ps=;
+        s=default; t=1598974127;
+        bh=EypvJmI80cOBcFHKPawHti9nNSIPxfesQkbtnpmuuts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0niYYpJ0LRiNMW1WKGFR0hdV/JVFlbIWUh158q9N1Q/vwBVlHdlZ1Fbqrj94v8uY
-         yk2xK0KvBYZWA0i1Yvd27ud/U9PHDqnaEVGnIE0Qxpcf1o2XhTVJx9klvFbCsmVOH7
-         BVvXk+ZJtA4GyRivyjO4fEnQbKRFtVMZJEoT79Lc=
+        b=X2M84IN/+f47DtPEScsB3qNiocGtmaW6FqfBgfHuzbDMYC3bAA80WfcBpqzLQIEsM
+         jh3xPB2nYLJjmoWefGMPkEcSchxpBYj1AmMlnxFv/rMo45Xc1QMDK8YpK+l1wr/5q4
+         K74S70tutCTl1pu3n4Uzow8LJKNNGpvTLfx+AKDY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Mark Brown <broonie@kernel.org>,
+        Mike Christie <michael.christie@oracle.com>,
+        Jing Xiangfeng <jingxiangfeng@huawei.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/125] ASoC: wm8994: Avoid attempts to read unreadable registers
-Date:   Tue,  1 Sep 2020 17:10:24 +0200
-Message-Id: <20200901150937.959924308@linuxfoundation.org>
+Subject: [PATCH 5.4 054/214] scsi: iscsi: Do not put host in iscsi_set_flashnode_param()
+Date:   Tue,  1 Sep 2020 17:08:54 +0200
+Message-Id: <20200901150955.569709263@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,50 +62,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Jing Xiangfeng <jingxiangfeng@huawei.com>
 
-[ Upstream commit f082bb59b72039a2326ec1a44496899fb8aa6d0e ]
+[ Upstream commit 68e12e5f61354eb42cfffbc20a693153fc39738e ]
 
-The driver supports WM1811, WM8994, WM8958 devices but according to
-documentation and the regmap definitions the WM8958_DSP2_* registers
-are only available on WM8958. In current code these registers are
-being accessed as if they were available on all the three chips.
+If scsi_host_lookup() fails we will jump to put_host which may cause a
+panic. Jump to exit_set_fnode instead.
 
-When starting playback on WM1811 CODEC multiple errors like:
-"wm8994-codec wm8994-codec: ASoC: error at soc_component_read_no_lock on wm8994-codec: -5"
-can be seen, which is caused by attempts to read an unavailable
-WM8958_DSP2_PROGRAM register. The issue has been uncovered by recent
-commit "e2329ee ASoC: soc-component: add soc_component_err()".
-
-This patch adds a check in wm8958_aif_ev() callback so the DSP2 handling
-is only done for WM8958.
-
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20200731173834.23832-1-s.nawrocki@samsung.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20200615081226.183068-1-jingxiangfeng@huawei.com
+Reviewed-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Jing Xiangfeng <jingxiangfeng@huawei.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/codecs/wm8958-dsp2.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/scsi_transport_iscsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/wm8958-dsp2.c b/sound/soc/codecs/wm8958-dsp2.c
-index 108e8bf42a346..f0a409504a13b 100644
---- a/sound/soc/codecs/wm8958-dsp2.c
-+++ b/sound/soc/codecs/wm8958-dsp2.c
-@@ -419,8 +419,12 @@ int wm8958_aif_ev(struct snd_soc_dapm_widget *w,
- 		  struct snd_kcontrol *kcontrol, int event)
- {
- 	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
-+	struct wm8994 *control = dev_get_drvdata(component->dev->parent);
- 	int i;
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index a5c78b38d3022..dbad926e8f87f 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -3174,7 +3174,7 @@ static int iscsi_set_flashnode_param(struct iscsi_transport *transport,
+ 		pr_err("%s could not find host no %u\n",
+ 		       __func__, ev->u.set_flashnode.host_no);
+ 		err = -ENODEV;
+-		goto put_host;
++		goto exit_set_fnode;
+ 	}
  
-+	if (control->type != WM8958)
-+		return 0;
-+
- 	switch (event) {
- 	case SND_SOC_DAPM_POST_PMU:
- 	case SND_SOC_DAPM_PRE_PMU:
+ 	idx = ev->u.set_flashnode.flashnode_idx;
 -- 
 2.25.1
 
