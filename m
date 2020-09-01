@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1E1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF677C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D85F82100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5BB420FC3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973318;
-	bh=oBFg0rBg/sQw2NyIxsMEgd5WK4ZKpgUp2jCfMzfh8RI=;
+	s=default; t=1598973330;
+	bh=LXT+0zSYJyxAEU4f+ObSmkBhBntuegr0Bk9OT2PL9Y4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sv0IhHLnUbKkZrxQefGQRbd66f0PFVQoZwpePmVAktMQaz3bT/3eyo7sgx9Qy542T
-	 SOUlvJ5qOHW7yBrZh/LacacmcUumJEnFE9w5bDkM3uEC682J8Kztg+id8LYn/STtBx
-	 NkD04M4vNTUUcvwUbmdOVHTN4CNYemFpaatBbgIE=
+	b=B4gScEipYshVkaSQt/oETAL6LwPpkz/kcojeK8twXgVtQSeEkTHdv3r5lhyp2m88n
+	 SlFLXI1EGjlfSW33H3W90wLcbn6Kpa62ODWWR8yFUqwc7MuAB2R7srA6TzaeMwA5Jw
+	 VHuA+wy5VYhHAMHDiAn/n+Utgn2V2dkHH82D2gO0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729190AbgIAPPP (ORCPT
+        id S1728473AbgIAPPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:15:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58642 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:15:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729055AbgIAPOo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:44 -0400
+        id S1729104AbgIAPOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:48 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80659206FA;
-        Tue,  1 Sep 2020 15:14:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1072320BED;
+        Tue,  1 Sep 2020 15:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973284;
-        bh=oBFg0rBg/sQw2NyIxsMEgd5WK4ZKpgUp2jCfMzfh8RI=;
+        s=default; t=1598973286;
+        bh=LXT+0zSYJyxAEU4f+ObSmkBhBntuegr0Bk9OT2PL9Y4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbZM2MXrWvUwWyYv88BmR9+pu00ClsovjaoWZBDtsDy7J13k3kPR76BQgX9WL8phc
-         xpFjkr6X1qIzQlmaWSPMlZ8rGDKCWVowZi8AoX9mdQ/0uSx5lTfQIIG5bdbbjgBude
-         qUtSzMc+dcJmKg5EmLN//GrruNnTxivCDc5m8sJA=
+        b=TPIHlhvfjT0MgSE3V0trppg5Qhz4NKWLYmIZQgN/Bvcp8NO9fC6eh0m4ajeL2haN2
+         Qbbd44mirt5EoSSwtuKJpWNDfG0D9FMhOtiT/CunMLTnO6qd2tZmDTptXCLusW+85p
+         TMtQA+twPoo2m5MyXT0PWomC6YPjfeiW2b/GXRbQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 18/78] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
-Date:   Tue,  1 Sep 2020 17:09:54 +0200
-Message-Id: <20200901150925.649832984@linuxfoundation.org>
+Subject: [PATCH 4.9 19/78] scsi: lpfc: Fix shost refcount mismatch when deleting vport
+Date:   Tue,  1 Sep 2020 17:09:55 +0200
+Message-Id: <20200901150925.702408742@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -61,73 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Dick Kennedy <dick.kennedy@broadcom.com>
 
-[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
+[ Upstream commit 03dbfe0668e6692917ac278883e0586cd7f7d753 ]
 
-The call to pm_runtime_get_sync increments the counter even in case of
-failure, leading to incorrect ref count.
-In case of failure, decrement the ref count before returning.
+When vports are deleted, it is observed that there is memory/kthread
+leakage as the vport isn't fully being released.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+There is a shost reference taken in scsi_add_host_dma that is not released
+during scsi_remove_host. It was noticed that other drivers resolve this by
+doing a scsi_host_put after calling scsi_remove_host.
+
+The vport_delete routine is taking two references one that corresponds to
+an access to the scsi_host in the vport_delete routine and another that is
+released after the adapter mailbox command completes that destroys the VPI
+that corresponds to the vport.
+
+Remove one of the references taken such that the second reference that is
+put will complete the missing scsi_add_host_dma reference and the shost
+will be terminated.
+
+Link: https://lore.kernel.org/r/20200630215001.70793-8-jsmart2021@gmail.com
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_vport.c | 26 ++++++++------------------
+ 1 file changed, 8 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-index e9311eb7b8d9f..694f631d9c90d 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
-@@ -734,8 +734,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
+diff --git a/drivers/scsi/lpfc/lpfc_vport.c b/drivers/scsi/lpfc/lpfc_vport.c
+index e18bbc66e83b1..77cb16d8dfd35 100644
+--- a/drivers/scsi/lpfc/lpfc_vport.c
++++ b/drivers/scsi/lpfc/lpfc_vport.c
+@@ -624,27 +624,16 @@ lpfc_vport_delete(struct fc_vport *fc_vport)
+ 		    vport->port_state < LPFC_VPORT_READY)
+ 			return -EAGAIN;
  	}
++
+ 	/*
+-	 * This is a bit of a mess.  We want to ensure the shost doesn't get
+-	 * torn down until we're done with the embedded lpfc_vport structure.
+-	 *
+-	 * Beyond holding a reference for this function, we also need a
+-	 * reference for outstanding I/O requests we schedule during delete
+-	 * processing.  But once we scsi_remove_host() we can no longer obtain
+-	 * a reference through scsi_host_get().
+-	 *
+-	 * So we take two references here.  We release one reference at the
+-	 * bottom of the function -- after delinking the vport.  And we
+-	 * release the other at the completion of the unreg_vpi that get's
+-	 * initiated after we've disposed of all other resources associated
+-	 * with the port.
++	 * Take early refcount for outstanding I/O requests we schedule during
++	 * delete processing for unreg_vpi.  Always keep this before
++	 * scsi_remove_host() as we can no longer obtain a reference through
++	 * scsi_host_get() after scsi_host_remove as shost is set to SHOST_DEL.
+ 	 */
+ 	if (!scsi_host_get(shost))
+ 		return VPORT_INVAL;
+-	if (!scsi_host_get(shost)) {
+-		scsi_host_put(shost);
+-		return VPORT_INVAL;
+-	}
++
+ 	lpfc_free_sysfs_attr(vport);
  
- 	if (encoder) {
-@@ -872,8 +874,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
+ 	lpfc_debugfs_terminate(vport);
+@@ -792,8 +781,9 @@ skip_logo:
+ 		if (!(vport->vpi_state & LPFC_VPI_REGISTERED) ||
+ 				lpfc_mbx_unreg_vpi(vport))
+ 			scsi_host_put(shost);
+-	} else
++	} else {
+ 		scsi_host_put(shost);
++	}
  
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	encoder = amdgpu_connector_best_single_encoder(connector);
-@@ -996,8 +1000,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
-@@ -1371,8 +1377,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
- 
- 	if (!drm_kms_helper_is_poll_worker()) {
- 		r = pm_runtime_get_sync(connector->dev->dev);
--		if (r < 0)
-+		if (r < 0) {
-+			pm_runtime_put_autosuspend(connector->dev->dev);
- 			return connector_status_disconnected;
-+		}
- 	}
- 
- 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+ 	lpfc_free_vpi(phba, vport->vpi);
+ 	vport->work_port_events = 0;
 -- 
 2.25.1
 
