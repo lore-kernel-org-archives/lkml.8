@@ -2,105 +2,113 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC967C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55E7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88E9206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1E93206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:48:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598968104;
+	bh=guT/B9fm9Ax+xhrDZqhYNKmIiJEYV14+wiZXb20HXnI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=h08kJtKQ+do7EBTPnWyok+jCQHAm30WTKnK9d8nR5/1pOgbIogHlVc+molP9ofuUF
+	 Py9Tf+pF8vAYFJexkAExL/KAy4SJALCsdOZ74zmR08mQZSyhKrKnTdeQnhFj2oynOY
+	 XPncYjiQy7Ldc5AGoSfCT8hlks0SRzCMXwDRS44o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbgIANrt (ORCPT
+        id S1727004AbgIANr3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:47:49 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2725 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728241AbgIANrG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:47:06 -0400
-Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id AA6FADA0A00693C13AF8;
-        Tue,  1 Sep 2020 14:46:57 +0100 (IST)
-Received: from localhost (10.52.122.233) by lhreml710-chm.china.huawei.com
- (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 1 Sep 2020
- 14:46:57 +0100
-Date:   Tue, 1 Sep 2020 14:45:20 +0100
-From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To:     Stephen Boyd <swboyd@chromium.org>
-CC:     Doug Anderson <dianders@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Daniel Campello <campello@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        "Lars-Peter Clausen" <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dtor@chromium.org>
-Subject: Re: [PATCH] iio: sx9310: Prefer async probe
-Message-ID: <20200901144520.0000576c@Huawei.com>
-In-Reply-To: <159894383586.334488.2938301456606601581@swboyd.mtv.corp.google.com>
-References: <20200828170052.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
-        <20200829161230.398e0051@archlinux>
-        <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com>
-        <20200829181754.52d3cc3b@archlinux>
-        <CAD=FV=VWrXwDwoxBK9y2ZeFEoG-edO4WktdSW0MFZLfbcS2hLQ@mail.gmail.com>
-        <159894383586.334488.2938301456606601581@swboyd.mtv.corp.google.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
+        Tue, 1 Sep 2020 09:47:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728249AbgIANpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:45:43 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FCD4207D3;
+        Tue,  1 Sep 2020 13:45:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598967913;
+        bh=guT/B9fm9Ax+xhrDZqhYNKmIiJEYV14+wiZXb20HXnI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hudO0/H+uQAeOGPA+ktyBcHnLqVX2dyLBCxEt+ywj0UIO1YSNwOhHCVAcYZEPv9EY
+         1D5/bzVAS5GlVN0xalWvRoOkhw5BOA3bOtnpLlmlTFAPeaBVUC6l/5EvetxKRFGc+I
+         ACbDt2katkMN2P6321ZbpXOSsHy4GwMsPYuffik0=
+Received: by mail-ej1-f50.google.com with SMTP id m22so1702052eje.10;
+        Tue, 01 Sep 2020 06:45:13 -0700 (PDT)
+X-Gm-Message-State: AOAM530B4eaYFD/DyGbYe7FKsqjO5dDSpFsuWoSRUkW4JbnaszM9ynsU
+        2AHrYHHIJ0qizXGxTnDsorJuqBsN5k2neSJQrg8=
+X-Google-Smtp-Source: ABdhPJz6uIBMsaYsaaZUhy+VeyCk3/2LqThr6HHemeSXoOexn5BStaqskVKcLfb/AYO3ekqe9civ7FgwssrPQoIa3ps=
+X-Received: by 2002:a17:906:9356:: with SMTP id p22mr1481115ejw.119.1598967912146;
+ Tue, 01 Sep 2020 06:45:12 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.52.122.233]
-X-ClientProxiedBy: lhreml710-chm.china.huawei.com (10.201.108.61) To
- lhreml710-chm.china.huawei.com (10.201.108.61)
-X-CFilter-Loop: Reflected
+References: <267a81e550a0b5d479c82b5908e2a2caa4c9c874.1597061474.git.guillaume.tucker@collabora.com>
+ <c0509b5f-a064-2e73-7e04-51f41a56d222@collabora.com>
+In-Reply-To: <c0509b5f-a064-2e73-7e04-51f41a56d222@collabora.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Tue, 1 Sep 2020 15:45:00 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPczS_RpSFpjGygZ_1MCYxJ_cUDRjriZvrHd6+zhmq=c8Q@mail.gmail.com>
+Message-ID: <CAJKOXPczS_RpSFpjGygZ_1MCYxJ_cUDRjriZvrHd6+zhmq=c8Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] ARM: exynos: clear L310_AUX_CTRL_NS_LOCKDOWN in
+ default l2c_aux_val
+To:     Guillaume Tucker <guillaume.tucker@collabora.com>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Kukjin Kim <kgene@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, kernel@collabora.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 00:03:55 -0700
-Stephen Boyd <swboyd@chromium.org> wrote:
+On Tue, 1 Sep 2020 at 15:34, Guillaume Tucker
+<guillaume.tucker@collabora.com> wrote:
+>
+> Hi Krzysztof, Russell,
+>
+> On 10/08/2020 13:22, Guillaume Tucker wrote:
+> > The L310_AUX_CTRL_NS_LOCKDOWN flag is set during the L2C enable
+> > sequence.  There is no need to set it in the default register value,
+> > this was done before support for it was implemented in the code.  It
+> > is not set in the hardware initial value either.
+> >
+> > Clean this up by removing this flag from the default l2c_aux_val, and
+> > add it to the l2c_aux_mask to print an alert message if it was already
+> > set before the kernel initialisation.
+> >
+> > Signed-off-by: Guillaume Tucker <guillaume.tucker@collabora.com>
+> > ---
+> >
+> > Notes:
+> >     v2: fix flag name L310_AUX_CTRL_NS_LOCKDOWN
+> >
+> >  arch/arm/mach-exynos/exynos.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> I believe this v2 series has addressed all previous comments and
+> you were waiting for the 5.9 merge window to end.  The patches
+> all still apply cleanly on v5.9-rc3.  Do you want me to resend
+> the series anyway or is there anything else needed at this point?
+>
+> Maybe one thing that wasn't completely clear in v1 was whether
+> patch 2/4 was the right approach.  I've explained the reason
+> behind it but didn't get a final reply from Russell[1].
 
-> Quoting Doug Anderson (2020-08-31 11:59:37)
-> > On Sat, Aug 29, 2020 at 10:18 AM Jonathan Cameron <jic23@kernel.org> wrote:  
-> > > Agreed. However, I'd like a comment next to the place we turn it on
-> > > saying what delays we are trying to mitigate by enabling it in this
-> > > driver.  
-> > 
-> > OK, I used function graph to get a trace.  Some of the time is simply
-> > i2c transfers, which we do A LOT of during initialization (and i2c
-> > transfers aren't known for being instant).  However, that's not the
-> > big problem.  Check out the regmap_read_poll_timeout() in
-> > sx9310_init_compensation().  20 ms per sleep with a 2 second timeout.
-> > This seems to eat over around 220 ms of the time on my system.
-> > 
-> > So how do you want to do this?  Do you want me to re-post the patch
-> > and mention the regmap_read_poll_timeout() in the commit message?  Do
-> > you want to just add that to the commit message yourself?
-> >   
-> 
-> I think the suggestion is to put a comment next to the
-> PROBE_PREFER_ASYNCHRONOUS flag indicating that
-> sx9310_init_compensation() can take a while. 
+I am sorry, my bad. I already applied this one and 3/4 (dts).
+Apparently I forgot to reply with confirmation and Patchwork did not
+notify you for some reason.
 
-Yup. That's what I meant. Sorry for lack of clarity.
-A comment in the code stops others copying it without making sure they
-understand whether it is relevant in their case.  No one is going
-to look in commit messages.
+Patch 2/4 does not look like one for me so I would need ack from
+Russell to take. Did you submit it to the ARM patches queue?
+Patch 4/4 will wait for v5.10-rc1 as it depends on 1/4 and it is DTS patch.
 
-> Should the compensation be
-> delayed even further though to some time when userspace opens the device
-> node?
-
-It's tricky because we may hit it on an individual sysfs read.
-We could spin off a thread to do it I suppose, though that would be
-more or less the same as allowing async probe.
-
-Jonathan
-
-
+Best regards,
+Krzysztof
