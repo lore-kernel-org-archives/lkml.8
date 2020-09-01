@@ -2,62 +2,56 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE6BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C24AFC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B73A7206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DA26214F1
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973292;
-	bh=GJJPdSkny/5XoFP8yqKRzTNzBrHdn7FiGouB1ZnnFas=;
+	s=default; t=1598973298;
+	bh=EC0gZpwbVWyRCJJFNNRf8jvNqjXRs7By//WD6ow1/qg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nCY/W7QwwOlwQDR+7At1kVR7nxAxseBjnYskhbCnp8mLwZ58FYc/Yy/EILxTCJESp
-	 TCTwQnR7NPvLb5cPi9RLb8zs4F7JdP9xSB8++wpClTkBjM5NDXEWwjRtPTXLStWQyh
-	 fQqiOkpwaR3hH0eh4KhWXTD17sQBbxjgmEoN239Q=
+	b=B34W1Cf3uJFtZ2GjzoKmwLT8REh5BzL6F8frsLTttJILboAIzF+3bUodNU3zdE0pf
+	 oYtfVRTxm4IUnY8W/HTDapKWUzn1JXNCbNnkVXgMcvpCfjuL9pwJJj1xU9pAj9H3Ux
+	 t0LVT0QYZU6dZQINlkSrZcWeoO0P8I90A9hxrw8s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbgIAPOv (ORCPT
+        id S1728717AbgIAPOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:14:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58022 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:14:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbgIAPOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:22 -0400
+        id S1729045AbgIAPO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:29 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52C35206FA;
-        Tue,  1 Sep 2020 15:14:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2D1D20BED;
+        Tue,  1 Sep 2020 15:14:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973261;
-        bh=GJJPdSkny/5XoFP8yqKRzTNzBrHdn7FiGouB1ZnnFas=;
+        s=default; t=1598973269;
+        bh=EC0gZpwbVWyRCJJFNNRf8jvNqjXRs7By//WD6ow1/qg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdCpnnisWAQ5ELQfKBj2r+MXSJwulZPXb4eKbENxcYsh4L23PFL2QizBpA1FNIU8I
-         ecLBXW74DtX2666potWFe446S6ZdZWsQOiM8h/ojZI1UdF8EQ+ihQvRYqIioORxyEG
-         +d9DTQCkQ8ifmF9TpdCeD6YZ7lR2N9M7CJL/ne6I=
+        b=dglZEr2Bg9rS4++EUO2G5DR8S/6cttEJn95LDDk82yabPqfkhBFjKekHsgf9FavKM
+         nBS/7abMgWAx/fuCM6H9/+oJ+nhy9D6g60M8H4BKvCayFpEq+G1B5oHMU2ZN567Akx
+         zo1blnkkKppLq0nOBOH0qm2oND1Rhxiqzqi79Opw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        Jay Vosburgh <j.vosburgh@gmail.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 01/78] bonding: fix a potential double-unregister
-Date:   Tue,  1 Sep 2020 17:09:37 +0200
-Message-Id: <20200901150924.768910776@linuxfoundation.org>
+        stable@vger.kernel.org, Prakash Gupta <guptap@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 12/78] iommu/iova: Dont BUG on invalid PFNs
+Date:   Tue,  1 Sep 2020 17:09:48 +0200
+Message-Id: <20200901150925.346875694@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -66,43 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-[ Upstream commit 832707021666411d04795c564a4adea5d6b94f17 ]
+[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
 
-When we tear down a network namespace, we unregister all
-the netdevices within it. So we may queue a slave device
-and a bonding device together in the same unregister queue.
+Unlike the other instances which represent a complete loss of
+consistency within the rcache mechanism itself, or a fundamental
+and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
+iova_magazine_free_pfns() can be provoked at more or less any time
+in a "spooky action-at-a-distance" manner by any old device driver
+passing nonsense to dma_unmap_*() which then propagates through to
+queue_iova().
 
-If the only slave device is non-ethernet, it would
-automatically unregister the bonding device as well. Thus,
-we may end up unregistering the bonding device twice.
+Not only is this well outside the IOVA layer's control, it's also
+nowhere near fatal enough to justify panicking anyway - all that
+really achieves is to make debugging the offending driver more
+difficult. Let's simply WARN and otherwise ignore bogus PFNs.
 
-Workaround this special case by checking reg_state.
-
-Fixes: 9b5e383c11b0 ("net: Introduce unregister_netdevice_many()")
-Reported-by: syzbot+af23e7f3e0a7e10c8b67@syzkaller.appspotmail.com
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: Andy Gospodarek <andy@greyhouse.net>
-Cc: Jay Vosburgh <j.vosburgh@gmail.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Prakash Gupta <guptap@codeaurora.org>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
+Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/bonding/bond_main.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/iommu/iova.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -1985,7 +1985,8 @@ static int  bond_release_and_destroy(str
- 	int ret;
+diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
+index f106fd9782bfb..99c36a5438a75 100644
+--- a/drivers/iommu/iova.c
++++ b/drivers/iommu/iova.c
+@@ -676,7 +676,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
+ 	for (i = 0 ; i < mag->size; ++i) {
+ 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
  
- 	ret = bond_release(bond_dev, slave_dev);
--	if (ret == 0 && !bond_has_slaves(bond)) {
-+	if (ret == 0 && !bond_has_slaves(bond) &&
-+	    bond_dev->reg_state != NETREG_UNREGISTERING) {
- 		bond_dev->priv_flags |= IFF_DISABLE_NETPOLL;
- 		netdev_info(bond_dev, "Destroying bond %s\n",
- 			    bond_dev->name);
+-		BUG_ON(!iova);
++		if (WARN_ON(!iova))
++			continue;
++
+ 		private_free_iova(iovad, iova);
+ 	}
+ 
+-- 
+2.25.1
+
 
 
