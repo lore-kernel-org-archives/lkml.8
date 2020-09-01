@@ -2,135 +2,202 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81CA2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5F9C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:56:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52212207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3107B207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:56:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Qy/69CR4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R8IE3Y0B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732781AbgIATyc (ORCPT
+        id S1732723AbgIAT4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:54:32 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:55216 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731958AbgIATy1 (ORCPT
+        Tue, 1 Sep 2020 15:56:40 -0400
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124]:22693 "EHLO
+        us-smtp-delivery-124.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727107AbgIAT4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:54:27 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 081JsIOa023999;
-        Tue, 1 Sep 2020 14:54:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1598990058;
-        bh=Lu82WDTZtjgRfPM+Iobl8OMuRMAy5grVMfYKmRhJHkc=;
-        h=From:To:Subject:Date:In-Reply-To:References;
-        b=Qy/69CR4Lnh5s2BRaQCJZadpJEDdCF81X+g3R2ZmnXHHjOaSobDTJyzZ/6X5xnABf
-         iPAXTqSbX+RqJbLKlqaB7rizAUdmPZjp7UZyYoksCQb5u9ttaE7jjY9knewy6x8iYN
-         zHSrWAhj+P96bperfKPRA9le0EcaeYrCw0P8TQeA=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 081JsIEg079055
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Sep 2020 14:54:18 -0500
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Sep
- 2020 14:54:18 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 1 Sep 2020 14:54:18 -0500
-Received: from uda0868495.fios-router.home (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 081JsFZl093195;
-        Tue, 1 Sep 2020 14:54:17 -0500
-From:   Murali Karicheri <m-karicheri2@ti.com>
-To:     <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <nsekhar@ti.com>,
-        <grygorii.strashko@ti.com>
-Subject: [PATCH net-next 1/1] net: hsr/prp: add vlan support
-Date:   Tue, 1 Sep 2020 15:54:15 -0400
-Message-ID: <20200901195415.4840-2-m-karicheri2@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901195415.4840-1-m-karicheri2@ti.com>
-References: <20200901195415.4840-1-m-karicheri2@ti.com>
+        Tue, 1 Sep 2020 15:56:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598990195;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=orAsHObun3zJ3OofKpu/i01XLLE0xJQF3S9VG2aFo2Q=;
+        b=R8IE3Y0BluOVezp5Blm0kmBdC/IXIi9zLpgKUciFjgIx8dGHfCqM4gx14EI4HBGEeOEs/v
+        KnMBDZqM+lG5L5EMonzY1qFwhpKfXgxjoHqxgVCCg1rnL2S+Dr07cr56GoYBjFn6Wzskts
+        +Tss7Lmo3H5IWIPHUqwAgD7Iys5h2rs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-315-nnuTM77NNyyfYq_8vjMACg-1; Tue, 01 Sep 2020 15:56:33 -0400
+X-MC-Unique: nnuTM77NNyyfYq_8vjMACg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5DDFC2FD00;
+        Tue,  1 Sep 2020 19:56:32 +0000 (UTC)
+Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AE8665C5BB;
+        Tue,  1 Sep 2020 19:56:31 +0000 (UTC)
+Subject: Re: [PATCH] module: Add more error message for failed kernel module
+ loading
+To:     Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Qu Wenruo <wqu@suse.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        linux-modules <linux-modules@vger.kernel.org>,
+        Rusty Russell <rusty@rustcorp.com.au>
+References: <20200829111437.96334-1-wqu@suse.com>
+ <CAKi4VAJ_nZ9DT1Tm=uufbJPGgZJu+4j+DVVA9otv6oGXuD3jxg@mail.gmail.com>
+From:   Prarit Bhargava <prarit@redhat.com>
+Message-ID: <df13d885-6f9d-dc8a-b850-8aa6ae6993eb@redhat.com>
+Date:   Tue, 1 Sep 2020 15:56:30 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <CAKi4VAJ_nZ9DT1Tm=uufbJPGgZJu+4j+DVVA9otv6oGXuD3jxg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for creating vlan interfaces
-over hsr/prp interface.
 
-Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
----
- net/hsr/hsr_device.c  |  4 ----
- net/hsr/hsr_forward.c | 16 +++++++++++++---
- 2 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/net/hsr/hsr_device.c b/net/hsr/hsr_device.c
-index ab953a1a0d6c..e1951579a3ad 100644
---- a/net/hsr/hsr_device.c
-+++ b/net/hsr/hsr_device.c
-@@ -477,10 +477,6 @@ void hsr_dev_setup(struct net_device *dev)
- 
- 	/* Prevent recursive tx locking */
- 	dev->features |= NETIF_F_LLTX;
--	/* VLAN on top of HSR needs testing and probably some work on
--	 * hsr_header_create() etc.
--	 */
--	dev->features |= NETIF_F_VLAN_CHALLENGED;
- 	/* Not sure about this. Taken from bridge code. netdev_features.h says
- 	 * it means "Does not change network namespaces".
- 	 */
-diff --git a/net/hsr/hsr_forward.c b/net/hsr/hsr_forward.c
-index cadfccd7876e..de21df30b0d9 100644
---- a/net/hsr/hsr_forward.c
-+++ b/net/hsr/hsr_forward.c
-@@ -208,6 +208,7 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
- 				    struct hsr_port *port, u8 proto_version)
- {
- 	struct hsr_ethhdr *hsr_ethhdr;
-+	unsigned char *pc;
- 	int lsdu_size;
- 
- 	/* pad to minimum packet size which is 60 + 6 (HSR tag) */
-@@ -218,7 +219,18 @@ static struct sk_buff *hsr_fill_tag(struct sk_buff *skb,
- 	if (frame->is_vlan)
- 		lsdu_size -= 4;
- 
--	hsr_ethhdr = (struct hsr_ethhdr *)skb_mac_header(skb);
-+	pc = skb_mac_header(skb);
-+	if (frame->is_vlan)
-+		/* This 4-byte shift (size of a vlan tag) does not
-+		 * mean that the ethhdr starts there. But rather it
-+		 * provides the proper environment for accessing
-+		 * the fields, such as hsr_tag etc., just like
-+		 * when the vlan tag is not there. This is because
-+		 * the hsr tag is after the vlan tag.
-+		 */
-+		hsr_ethhdr = (struct hsr_ethhdr *)(pc + VLAN_HLEN);
-+	else
-+		hsr_ethhdr = (struct hsr_ethhdr *)pc;
- 
- 	hsr_set_path_id(hsr_ethhdr, port);
- 	set_hsr_tag_LSDU_size(&hsr_ethhdr->hsr_tag, lsdu_size);
-@@ -511,8 +523,6 @@ static int fill_frame_info(struct hsr_frame_info *frame,
- 	if (frame->is_vlan) {
- 		vlan_hdr = (struct hsr_vlan_ethhdr *)ethhdr;
- 		proto = vlan_hdr->vlanhdr.h_vlan_encapsulated_proto;
--		/* FIXME: */
--		netdev_warn_once(skb->dev, "VLAN not yet supported");
- 	}
- 
- 	frame->is_from_san = false;
--- 
-2.17.1
+On 9/1/20 2:50 PM, Lucas De Marchi wrote:
+> On Sat, Aug 29, 2020 at 4:15 AM Qu Wenruo <wqu@suse.com> wrote:
+>>
+>> When kernel module loading failed, user space only get one of the
+>> following error messages:
+>> - -ENOEXEC
+>>   This is the most confusing one. From corrupted ELF header to bad
+>>   WRITE|EXEC flags check introduced by in module_enforce_rwx_sections()
+>>   all returns this error number.
+>>
+>> - -EPERM
+>>   This is for blacklisted modules. But mod doesn't do extra explain
+>>   on this error either.
+>>
+>> - -ENOMEM
+>>   The only error which needs no explain.
+>>
+>> This means, if a user got "Exec format error" from modprobe, it provides
+>> no meaningful way for the user to debug, and will take extra time
+>> communicating to get extra info.
+>>
+>> So this patch will add extra error messages for -ENOEXEC and -EPERM
+>> errors, allowing user to do better debugging and reporting.
+>>
+>> Signed-off-by: Qu Wenruo <wqu@suse.com>
+>> ---
+>>  kernel/module.c | 11 +++++++++--
+>>  1 file changed, 9 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kernel/module.c b/kernel/module.c
+>> index 1c5cff34d9f2..9f748c6eeb48 100644
+>> --- a/kernel/module.c
+>> +++ b/kernel/module.c
+>> @@ -2096,8 +2096,12 @@ static int module_enforce_rwx_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
+>>         int i;
+>>
+>>         for (i = 0; i < hdr->e_shnum; i++) {
+>> -               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx)
+>> +               if ((sechdrs[i].sh_flags & shf_wx) == shf_wx) {
+>> +                       pr_err(
+>> +                       "Module %s section %d has invalid WRITE|EXEC flags\n",
+>> +                               mod->name, i);
+>>                         return -ENOEXEC;
+>> +               }
+>>         }
+>>
+>>         return 0;
+>> @@ -3825,8 +3829,10 @@ static int load_module(struct load_info *info, const char __user *uargs,
+>>         char *after_dashes;
+>>
+>>         err = elf_header_check(info);
+>> -       if (err)
+>> +       if (err) {
+>> +               pr_err("Module has invalid ELF header\n");
+>>                 goto free_copy;
+>> +       }
+>>
+>>         err = setup_load_info(info, flags);
+>>         if (err)
+>> @@ -3834,6 +3840,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
+>>
+>>         if (blacklisted(info->name)) {
+>>                 err = -EPERM;
+>> +               pr_err("Module %s is blacklisted\n", info->name);
+> 
+> I wonder why would anyone actually add the blacklist to the command
+> line like this and have no
+> way to revert that back. This was introduced in
+
+Debug.  Debug.  Debug. ;)  The parameter was added to debug broken installations
+and kernel boots.
+
+> be7de5f91fdc modules: Add kernel parameter to blacklist modules
+> as a way to overcome broken initrd generation afaics.
+
+Not the generation of the initramfs, but blocking a module loaded during the
+boot.  The installation may have failed and there's no easy way to then debug
+what module was responsible for the failure.
+
+ Either kernel
+> command line (using modprobe.blacklist)
+> or /etc/modprobe.d options are honoured by libkmod and allow a
+> sufficiently privileged user to bypass it.
+> 
+
+Both of those options only work if the filesystem is mounted IIRC.  It could be
+the case that modprobe.blacklist now works earlier in the boot, however, I've
+never used it because module_blacklist is the biggest and best hammer that I can
+use to get through a broken installation or boot.
+
+In any case you're incorrectly assuming that the system has a filesystem on it.
+That's not necessarily the case as I'll explain below.
+
+> +Rusty, +Prarit: is there anything this module parameter is covering
+> that I'm missing?
+
+This is the situation I have repeatedly come across :  A system at a remote site
+will not boot any flavor of Linux.  Since the system would not install the only
+way to debug was to provide install images to workaround a module load failure.
+As you can imagine that is a time consuming process as well as a bad end user
+experience.
+
+I got so sick of it that I wrote the code above (well similar to it anyway --
+thanks for the review Randy ;)) to add the module_blacklist parameter to make
+debugging an uninstallable "bricked" system easier.
+
+It's come in handy in some unexpected ways.  We've had situations where modules
+have loaded and corrupted memory and blacklisting them revealed that the modules
+were responsible for the memory corruption.
+
+P.
+
+> 
+> For the changes here,
+> 
+> Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
+> 
+> thanks
+> Lucas De Marchi
+> 
+>>                 goto free_copy;
+>>         }
+>>
+>> --
+>> 2.27.0
+>>
+> 
 
