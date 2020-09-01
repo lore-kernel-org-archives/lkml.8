@@ -2,36 +2,39 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 966BCC28E83
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B228C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BBBA2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A2102071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730363AbgIARkD (ORCPT
+        id S1729337AbgIARj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:40:03 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:59394 "EHLO
+        Tue, 1 Sep 2020 13:39:56 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59386 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729385AbgIARj5 (ORCPT
+        with ESMTP id S1728192AbgIARjy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:39:57 -0400
+        Tue, 1 Sep 2020 13:39:54 -0400
 Received: from 89-64-88-247.dynamic.chello.pl (89.64.88.247) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.459)
- id 17a99e8a40e6e1df; Tue, 1 Sep 2020 19:39:55 +0200
+ id 4763ca42f0cd1aa2; Tue, 1 Sep 2020 19:39:52 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Linux PM <linux-pm@vger.kernel.org>
 Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
         LKML <linux-kernel@vger.kernel.org>,
         Doug Smythies <dsmythies@telus.net>,
         Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Subject: [PATCH v4 0/5] cpufreq: intel_pstate: Address some HWP-related oddities
-Date:   Tue, 01 Sep 2020 19:23:06 +0200
-Message-ID: <3748218.V0HrpZKF9g@kreacher>
+Subject: [PATCH v4 3/5] cpufreq: intel_pstate: Tweak the EPP sysfs interface
+Date:   Tue, 01 Sep 2020 19:29:55 +0200
+Message-ID: <5280698.oOqPgdve7T@kreacher>
+In-Reply-To: <3748218.V0HrpZKF9g@kreacher>
+References: <3748218.V0HrpZKF9g@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -40,32 +43,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-The last two patches in the v3 needed to be updated to take re-enabling of HWP
-after an ACPI S3 suspend/resume cycle into account appropriately.  The first
-three patches are the same as before.
+Modify the EPP sysfs interface to reject attempts to change the EPP
+to values different from 0 ("performance") in the active mode with
+the "performance" policy (ie. scaling_governor set to "performance"),
+to avoid situations in which the kernel appears to discard data
+passed to it via the EPP sysfs attribute.
 
-The purpose of this series is to address some peculiarities related to
-taking CPUs offline/online and switching between different operation
-modes with HWP enabled that have become visible after allowing the
-driver to work in the passive mode with HWP enabled in 5.9-rc1 (and
-one that was there earlier, but can be addressed easily after the
-changes made in 5.9-rc1).
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Reviewed-by: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+---
 
-Please refer to the patch changelogs for details.
+v2 -> v3: New patch
 
-For easier testing/review, the series is available from the git branch at:
+v3 -> v4: Add the R-by from Artem
 
- git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
- intel_pstate-testing
+---
+ Documentation/admin-guide/pm/intel_pstate.rst | 4 +++-
+ drivers/cpufreq/intel_pstate.c                | 8 ++++++++
+ 2 files changed, 11 insertions(+), 1 deletion(-)
 
-I've done my best to address all of the possible corner cases, but the test
-matrix is quite extensive and I may have missed something, so go ahead
-and test.
+diff --git a/Documentation/admin-guide/pm/intel_pstate.rst b/Documentation/admin-guide/pm/intel_pstate.rst
+index cdd1a9a7f9a2..5072e7064d13 100644
+--- a/Documentation/admin-guide/pm/intel_pstate.rst
++++ b/Documentation/admin-guide/pm/intel_pstate.rst
+@@ -123,7 +123,9 @@ Energy-Performance Bias (EPB) knob (otherwise), which means that the processor's
+ internal P-state selection logic is expected to focus entirely on performance.
+ 
+ This will override the EPP/EPB setting coming from the ``sysfs`` interface
+-(see `Energy vs Performance Hints`_ below).
++(see `Energy vs Performance Hints`_ below).  Moreover, any attempts to change
++the EPP/EPB to a value different from 0 ("performance") via ``sysfs`` in this
++configuration will be rejected.
+ 
+ Also, in this configuration the range of P-states available to the processor's
+ internal P-state selection logic is always restricted to the upper boundary
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index e540448e0bd0..b308c39b6204 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -684,6 +684,14 @@ static int intel_pstate_set_energy_pref_index(struct cpudata *cpu_data,
+ 		else if (epp == -EINVAL)
+ 			epp = epp_values[pref_index - 1];
+ 
++		/*
++		 * To avoid confusion, refuse to set EPP to any values different
++		 * from 0 (performance) if the current policy is "performance",
++		 * because those values would be overridden.
++		 */
++		if (epp > 0 && cpu_data->policy == CPUFREQ_POLICY_PERFORMANCE)
++			return -EBUSY;
++
+ 		ret = intel_pstate_set_epp(cpu_data, epp);
+ 	} else {
+ 		if (epp == -EINVAL)
+-- 
+2.26.2
 
-Thanks,
-Rafael
 
 
 
