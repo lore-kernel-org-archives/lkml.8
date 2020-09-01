@@ -2,111 +2,76 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D32BC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F2A6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0BA6206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B263206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975707;
-	bh=Qj7JQS+ohLx5lQJpKyzZQKyNdacmCCnN1LoA2xLvZVU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SU48ZafWYJ7j+cf6dXTzKj4bb+kmHyT7EjrlXiTJHNfLmDUv47y06FVjKwf1w+Pw1
-	 FLxyEjOzafV7KNOCzL4GeX4TS39Qt+bCPDs//uS9sejH0ZZvRL5pIHbDaDOPeN1hYa
-	 EoO7kzGcR/C46QHd6M+SNR12tz6PBgeODm7AH05Q=
+	s=default; t=1598975712;
+	bh=c72suyWJTM1eYoxx7QLiNfPBmiXGbRlTMglmLBFCYXs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c+uV7BzjGiOWjr4sCzWzuCPxHa8QVLvAFozM02Xk+7AMnrlVC6EQspljA6FuQPbw1
+	 +IIehV+YoWsc628JxDP85hS7C66EefvYdOFbynq0Unf6HnzZHi4n2CZpJ7xJQG1v+/
+	 s9nm/soz23Q1xEvB/n+pIHyXaSL7DjxQ5wzWF2vA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732077AbgIAPzG (ORCPT
+        id S1732096AbgIAPzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:55:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:55:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731907AbgIAPpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:52 -0400
+        id S1732029AbgIAPzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:55:02 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE50206FA;
-        Tue,  1 Sep 2020 15:45:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A6F520767;
+        Tue,  1 Sep 2020 15:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975152;
-        bh=Qj7JQS+ohLx5lQJpKyzZQKyNdacmCCnN1LoA2xLvZVU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H6Et77B6ryxLhtgMmKDyvoQ9jkSfCNzawBn4tYX+AWIGNiHmBC8lwfLP8UC3jlsoI
-         iUXic9T7M2QWY1uRnVkUCwymnHywXqLaWPX6iuCNaVgfp081E4PHlNMY1S5c3iBL2+
-         mIE7rpwOyKzh5A1HeTwsem0vN9dbNzCeAY+apWDk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Brooke Basile <brookebasile@gmail.com>,
-        stable <stable@kernel.org>
-Subject: [PATCH 5.8 230/255] USB: gadget: u_f: Unbreak offset calculation in VLAs
-Date:   Tue,  1 Sep 2020 17:11:26 +0200
-Message-Id: <20200901151011.770892111@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1598975702;
+        bh=c72suyWJTM1eYoxx7QLiNfPBmiXGbRlTMglmLBFCYXs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b+BCiaQCdhLoQd8WoHRmzLOuGFVrquwVacZHjDmOwPkQpdOlYpjRKv5NUAIxCr6gp
+         mF2GgyjFFo9AAJTcGAX8+aj8qP095+8aRF404LqDwCCgrkLhsgsDk6mndUCbgcj3e9
+         1gRaQn4iWnvdPoFo450gtR/NDTh/HXTBHIfONsTU=
+Date:   Tue, 1 Sep 2020 17:31:03 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Oded Gabbay <oded.gabbay@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [git pull] habanalabs fixes pull request for kernel 5.9-rc4
+Message-ID: <20200901153103.GK1399403@kroah.com>
+References: <20200831125829.GA29862@ogabbay-VM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831125829.GA29862@ogabbay-VM>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+On Mon, Aug 31, 2020 at 03:58:29PM +0300, Oded Gabbay wrote:
+> Hello Greg,
+> 
+> This is the pull request for habanalabs driver fixes for 5.9-rc4.
+> Two small fixes, details are in the tag.
+> 
+> Thanks,
+> Oded
+> 
+> The following changes since commit f75aef392f869018f78cfedf3c320a6b3fcfda6b:
+> 
+>   Linux 5.9-rc3 (2020-08-30 16:01:54 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2020-08-31
 
-commit bfd08d06d978d0304eb6f7855b548aa2cd1c5486 upstream.
+Pulled and pushed out, thanks.
 
-Inadvertently the commit b1cd1b65afba ("USB: gadget: u_f: add overflow checks
-to VLA macros") makes VLA macros to always return 0 due to different scope of
-two variables of the same name. Obviously we need to have only one.
-
-Fixes: b1cd1b65afba ("USB: gadget: u_f: add overflow checks to VLA macros")
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Brooke Basile <brookebasile@gmail.com>
-Cc: stable <stable@kernel.org>
-Link: https://lore.kernel.org/r/20200826192119.56450-1-andriy.shevchenko@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/usb/gadget/u_f.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
---- a/drivers/usb/gadget/u_f.h
-+++ b/drivers/usb/gadget/u_f.h
-@@ -25,9 +25,9 @@
- 		size_t offset = 0;					       \
- 		if (groupname##__next != SIZE_MAX) {			       \
- 			size_t align_mask = __alignof__(type) - 1;	       \
--			size_t offset = (groupname##__next + align_mask)       \
--					 & ~align_mask;			       \
- 			size_t size = array_size(n, sizeof(type));	       \
-+			offset = (groupname##__next + align_mask) &	       \
-+				  ~align_mask;				       \
- 			if (check_add_overflow(offset, size,		       \
- 					       &groupname##__next)) {          \
- 				groupname##__next = SIZE_MAX;		       \
-@@ -43,8 +43,8 @@
- 		size_t offset = 0;						\
- 		if (groupname##__next != SIZE_MAX) {				\
- 			size_t align_mask = __alignof__(type) - 1;		\
--			size_t offset = (groupname##__next + align_mask)	\
--					 & ~align_mask;				\
-+			offset = (groupname##__next + align_mask) &		\
-+				  ~align_mask;					\
- 			if (check_add_overflow(offset, groupname##_##name##__sz,\
- 							&groupname##__next)) {	\
- 				groupname##__next = SIZE_MAX;			\
-
-
+greg k-h
