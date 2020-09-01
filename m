@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B741C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B4DAC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5720B20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17AFF2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977427;
-	bh=WdnpDlkzTQsxN4919At8IGyxFiDcqFVjfe6E6UOUb4Y=;
+	s=default; t=1598977434;
+	bh=UAEfanVHMcu0t1YDn0lkH/w2zKBrI7FIzTNrxj2b8V8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sTps0SZC+tqKm121mqmgUJGAdoZgI4/stVZ7VdWOhlFr6uWNDRXx4yvaGOih793Zk
-	 uwgLPDiglP+Eglr36GLfxC4VZg/eEG0ZkL84e0MLbTZ2AV5GJ5jtqIQ4TI15JtkP0t
-	 VWbVU6xXxp5xDh6oFWas+yhnDH2H1NxTH7wYrafw=
+	b=cIAcF9oLyH/Dbt/QMCdPubnZafEHMxcIggLKbogIGWr130EN7QRfTE7P5GO0SNF5Y
+	 Isbz9eRJTKQXp5On/QceL2VxnPAhJP1Kvt74IUvrQgfz6lQvqgc6C7sZxbi6plmHqQ
+	 1BAsOtYdrB2N3kADdyM/5H0yUwf803dLKuqjUlaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730976AbgIAPcU (ORCPT
+        id S1732071AbgIAQXw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33036 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:23:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35812 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgIAPap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:45 -0400
+        id S1730958AbgIAPcT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:32:19 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F09C207D3;
-        Tue,  1 Sep 2020 15:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BE42205F4;
+        Tue,  1 Sep 2020 15:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974244;
-        bh=WdnpDlkzTQsxN4919At8IGyxFiDcqFVjfe6E6UOUb4Y=;
+        s=default; t=1598974338;
+        bh=UAEfanVHMcu0t1YDn0lkH/w2zKBrI7FIzTNrxj2b8V8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zl0xKS1tKwe2wODF9uR94n6h83xocOd3L11Emzvx5Ek3R05/pqny+1jrpsEc5fVk5
-         gXWOYzP0nm0bUNrQW9vP8ZoW1JLi6Rvk95o8VP3HJpPKDT+fp443oGoAUKVT6Udnla
-         6YZe4MYFaP0kJG2+dYtyOYO4+fbSoxnnesIThVgY=
+        b=ThG9g8NC4eUVMUOG21lH7jN356O0lv6RoAmALG6iQ7O53ZaxkNFmOcxKM1jjMe0Qh
+         7OebNPHcvoww3QDBtHydn+e2+xytPrOgMLvnKrV4j33iLpgX7/SaYNwypKm6ybDoWt
+         p44gy0JIRSuEkKJu+gmL35G/Oyq2U/MX0/5KfyOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 102/214] block: Fix page_is_mergeable() for compound pages
-Date:   Tue,  1 Sep 2020 17:09:42 +0200
-Message-Id: <20200901150957.887959537@linuxfoundation.org>
+Subject: [PATCH 5.4 138/214] scsi: ufs: Improve interrupt handling for shared interrupts
+Date:   Tue,  1 Sep 2020 17:10:18 +0200
+Message-Id: <20200901150959.591462610@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,52 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Wilcox (Oracle) <willy@infradead.org>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit d81665198b83e55a28339d1f3e4890ed8a434556 ]
+[ Upstream commit 127d5f7c4b653b8be5eb3b2c7bbe13728f9003ff ]
 
-If we pass in an offset which is larger than PAGE_SIZE, then
-page_is_mergeable() thinks it's not mergeable with the previous bio_vec,
-leading to a large number of bio_vecs being used.  Use a slightly more
-obvious test that the two pages are compatible with each other.
+For shared interrupts, the interrupt status might be zero, so check that
+first.
 
-Fixes: 52d52d1c98a9 ("block: only allow contiguous page structs in a bio_vec")
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20200811133936.19171-2-adrian.hunter@intel.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/bio.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/block/bio.c b/block/bio.c
-index 94d697217887a..87505a93bcff6 100644
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -683,8 +683,8 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
- 		struct page *page, unsigned int len, unsigned int off,
- 		bool *same_page)
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 336cf72397e50..b51ccbf6cc59c 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5612,7 +5612,7 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+  */
+ static irqreturn_t ufshcd_intr(int irq, void *__hba)
  {
--	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) +
--		bv->bv_offset + bv->bv_len - 1;
-+	size_t bv_end = bv->bv_offset + bv->bv_len;
-+	phys_addr_t vec_end_addr = page_to_phys(bv->bv_page) + bv_end - 1;
- 	phys_addr_t page_addr = page_to_phys(page);
+-	u32 intr_status, enabled_intr_status;
++	u32 intr_status, enabled_intr_status = 0;
+ 	irqreturn_t retval = IRQ_NONE;
+ 	struct ufs_hba *hba = __hba;
+ 	int retries = hba->nutrs;
+@@ -5626,7 +5626,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 	 * read, make sure we handle them by checking the interrupt status
+ 	 * again in a loop until we process all of the reqs before returning.
+ 	 */
+-	do {
++	while (intr_status && retries--) {
+ 		enabled_intr_status =
+ 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 		if (intr_status)
+@@ -5637,7 +5637,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		}
  
- 	if (vec_end_addr + 1 != page_addr + off)
-@@ -693,9 +693,9 @@ static inline bool page_is_mergeable(const struct bio_vec *bv,
- 		return false;
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	} while (intr_status && --retries);
++	}
  
- 	*same_page = ((vec_end_addr & PAGE_MASK) == page_addr);
--	if (!*same_page && pfn_to_page(PFN_DOWN(vec_end_addr)) + 1 != page)
--		return false;
--	return true;
-+	if (*same_page)
-+		return true;
-+	return (bv->bv_page + bv_end / PAGE_SIZE) == (page + off / PAGE_SIZE);
- }
- 
- static bool bio_try_merge_pc_page(struct request_queue *q, struct bio *bio,
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
 -- 
 2.25.1
 
