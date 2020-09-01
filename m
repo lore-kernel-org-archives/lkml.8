@@ -2,415 +2,176 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B52AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:44:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA313C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC94F208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E1CA206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:49:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="Fx87Y38B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgIAEoJ (ORCPT
+        id S1726112AbgIAEty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 00:44:09 -0400
-Received: from mga18.intel.com ([134.134.136.126]:24057 "EHLO mga18.intel.com"
+        Tue, 1 Sep 2020 00:49:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:47357 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726455AbgIAEoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 00:44:01 -0400
-IronPort-SDR: BJjhNeX+QmKHj+mBztoAaiqDGpH+iKXoc1HKmfNXaZ255hDtJrGPe7QVJdsRXVbz3mOUdPrcN8
- 85p62GjyuL2Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="144793087"
+        id S1725930AbgIAEtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 00:49:53 -0400
+IronPort-SDR: ww/a0pG0504si7PYb812+nYb2y3QalE7TteIYWTLkHJiq/Or1DCs45SafOHz6MACnot6g/m2gE
+ 2DdTwUOvCNGw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="218658241"
 X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="144793087"
+   d="scan'208";a="218658241"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 21:44:00 -0700
-IronPort-SDR: 7kIsUVC0B2XtwCAo3D1fgpEV3JzzIR+ErdBGhymWHhTv6hlOysVK+ecSGffEIUgbxX3+nSf5s5
- TDoWn/nzw7QA==
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 21:49:52 -0700
+IronPort-SDR: DFV3ri+NETpGNt+y003w/cL+Zx2O/7HPU8ecgTLFqqsiiLsE2eSKsp2jdcqIidv7Go0rTnWItC
+ EFrcsP+W0YGA==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
-   d="scan'208";a="314599683"
-Received: from wwanmoha-ilbpg2.png.intel.com ([10.88.227.42])
-  by orsmga002.jf.intel.com with ESMTP; 31 Aug 2020 21:43:57 -0700
-From:   Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-To:     kishon@ti.com, vkoul@kernel.org, robh+dt@kernel.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com,
-        vadivel.muruganx.ramuthevar@linux.intel.com,
-        eswara.kota@linux.intel.com,
-        lakshmi.bai.raja.subramanian@intel.com,
-        wan.ahmad.zainie.wan.mohamad@intel.com
-Subject: [PATCH v8 3/3] phy: intel: Add Keem Bay eMMC PHY support
-Date:   Tue,  1 Sep 2020 12:42:01 +0800
-Message-Id: <20200901044201.20978-4-wan.ahmad.zainie.wan.mohamad@intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901044201.20978-1-wan.ahmad.zainie.wan.mohamad@intel.com>
-References: <20200901044201.20978-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+   d="scan'208";a="325196879"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Aug 2020 21:49:52 -0700
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 31 Aug 2020 21:49:29 -0700
+Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 31 Aug 2020 21:49:29 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (104.47.36.53) by
+ edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.1713.5; Mon, 31 Aug 2020 21:49:27 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T3BB4fFT10NKk7QJKPjBJuHitywIVJXuDOgBCAR8r4Yq2KP8DcotwI9zosscMoXUU8axC46oNHJGZjqZz+NCKdVVVy8/EbaFEELvXYbFA7fBC80k41aEJ/SxEBTrW1kTw1jdyHMi/ALTcwYyu3axxksYzJVFPUFDoGD8X13o0LUTMZkC0BIxV1En8K9gxQKQCXqPUe2nlXIRuyI8ireg5+pzJeBbVolysqme7MPrS3v9QwGVku4QG60fXgn+PW+Ui47EOROJ5ohleHomctWCLGhof2zPg/f+pIqKvUD/a7Tki4cJYTjO8D7oZpF70y0IHlmW97YmgDf2Hkb5Rtp4gA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nt2q0w+Ue6Uj5BuuTYXkdLCLTf8PCTMmdeZy/CleXKs=;
+ b=G50UPPGTvRNgnAViJ+4vrtX/JO2OSlC2PMrKPbClRp7pTvq262wB/Q8MqO4rg6XQGC6BIJCwwneMcY+M+rc+Zcd9NyPumbhaESwgRbo/ncXr2p0/tjAGTwZLJ6gfCSn8zXh/sssAS41TpF5I3d/rnFi3nBss0p1aE+0CS4GMyCcX+9PBYOVRb881XhtVvPPKP5cIrOKiroGeFg1lpFc/JHd54ObwBSd18VigqMKFEWaDrd3igy/d8Jbgw1jTEp5+/KTWGsfH0ZnrRjr4bifYQxSbp833otYJM5/m1QLia2hLxEGB5pKYpQF0FjY3haEVu0/9bF+r1DVHcKoz9JqWvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nt2q0w+Ue6Uj5BuuTYXkdLCLTf8PCTMmdeZy/CleXKs=;
+ b=Fx87Y38BYXCE7YkNUbTPYp/7hT8/rdSynkoqWgT4qbJWZMnRcUXo44er78EeXiHrMyMvQ7BdQSV08TTdtOyBwP0HCC1Nl7yi0PwaJNnKejxcWo0Gi6W1jIaXwmv2ZlLfuYF2VDhHRQIF50hdgTCtDS6uvTfZWcRxaErlmuV2gVs=
+Received: from DM6PR11MB3721.namprd11.prod.outlook.com (2603:10b6:5:142::10)
+ by DM6PR11MB4628.namprd11.prod.outlook.com (2603:10b6:5:28f::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Tue, 1 Sep
+ 2020 04:49:25 +0000
+Received: from DM6PR11MB3721.namprd11.prod.outlook.com
+ ([fe80::7883:72bf:ad85:5166]) by DM6PR11MB3721.namprd11.prod.outlook.com
+ ([fe80::7883:72bf:ad85:5166%6]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
+ 04:49:25 +0000
+From:   "Wan Mohamad, Wan Ahmad Zainie" 
+        <wan.ahmad.zainie.wan.mohamad@intel.com>
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     "kishon@ti.com" <kishon@ti.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "eswara.kota@linux.intel.com" <eswara.kota@linux.intel.com>,
+        "vadivel.muruganx.ramuthevar@linux.intel.com" 
+        <vadivel.muruganx.ramuthevar@linux.intel.com>,
+        "Raja Subramanian, Lakshmi Bai" 
+        <lakshmi.bai.raja.subramanian@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v7 3/3] phy: intel: Add Keem Bay eMMC PHY support
+Thread-Topic: [PATCH v7 3/3] phy: intel: Add Keem Bay eMMC PHY support
+Thread-Index: AQHWf3fYgpT7j7ykyEyv+5f3vsznaKlTNxFw
+Date:   Tue, 1 Sep 2020 04:49:25 +0000
+Message-ID: <DM6PR11MB37212B71B26A9642CDEBC320DD2E0@DM6PR11MB3721.namprd11.prod.outlook.com>
+References: <20200821113747.2912-1-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200821113747.2912-4-wan.ahmad.zainie.wan.mohamad@intel.com>
+ <20200831091936.GM2639@vkoul-mobl>
+In-Reply-To: <20200831091936.GM2639@vkoul-mobl>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.5.1.3
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [14.1.227.224]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 2048ddd3-5dce-45d1-8326-08d84e3266c1
+x-ms-traffictypediagnostic: DM6PR11MB4628:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM6PR11MB4628D888EA4C51CC355617FFDD2E0@DM6PR11MB4628.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dNvkbn/wFbIMPoW3CJUH6isbuxevezPIdKOJx9YFzg3rdCjQ2S7wEKSVdvn3NoN1KNCd3JNqmogJl2hMSK6+QG5Kr4Dp7FDFYLCiY4Bg5NW1mfvbu8crEelS1DJqZ0lthx0FA3cHIqYu1aWrhUgftynoFSTbkNdS97fRw9rJzaSAZcvneVe+A1uMqe5xR+KdMaF586LpqT8ruairR5TCnTb9iXraRqPG17hS+DmjkkPzC6Ou5hgqiw2OOPQrqrf8DleTyn8e1KrW1fNo3+WR41tLw2i3sdx3Wvo9zOUkZxZA5hN3YYpZ8ZEXjIlSk3AqUYwJ6guW1fm3ZaF9kf6f9w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3721.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(376002)(396003)(39860400002)(366004)(136003)(6506007)(5660300002)(83380400001)(66946007)(66476007)(7696005)(33656002)(8936002)(19627235002)(9686003)(76116006)(64756008)(52536014)(53546011)(2906002)(316002)(86362001)(8676002)(66556008)(26005)(6916009)(55016002)(4326008)(71200400001)(186003)(478600001)(66446008)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: CBdG48IyveYLZRigj4dp+8oAaXPo804ZOm/tAgvkrZmDz9QDJiw5Jmj5puCG9gmARWJADsCdeM7kQbaIt6LnvPuAFl2YbftOo9NWDPiCrSiO0NeLfz5cHcZ5MMOyUuPughSEwA+tTwslT4PwlbfrgvG01uJp6eYl7X6nPd3XCuUn4KUgrPgyArRo7L8g0zfXvAeh+NJHqT8nXQEWbT4lg4cAr4+JnM+go2aDFlPusAoG9ZH2GxuXGrImLhTuiZn//8HNRQbiJ64qzVxpGpHFnYIBWwi77ri+ME4gocBZ5q2OTq+UcHJYtyOOdeQmjKyVWA9ocK66JhqyekBSwi4Fae1JVY0iWSP6Oz+tWz7TsGUrwTdeB0Gn8cIzJCQ9y1dD2Z6MTtP/sPBqKkjSttBFLDzmzxZIhp2YbmvyEQynIm+n71JWMtV3ejrMKQ48lqBsu3NWkVCjJFYGt22GNUzAAMRNJSXKoeUwvfrlzwttNJgBSpd7+wl2PlBImqA5vufOEmMRRC7DLZDfPuNNzeSP+8+411tpEjStn4Mf4ckECkuVQgl3o12NfgyODFARbvtkOsILXRHlILheMdrIvXOZaESNwb6b0W9nq8RX1XfdgWy8OWWIWZbtLoitZ73D/21UArUoageRObLLQuqg0W8WVg==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3721.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2048ddd3-5dce-45d1-8326-08d84e3266c1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2020 04:49:25.1105
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: AFoV/6r88SWeDOVgns0TdPMg5vqvlaYs2JyhiMLHkMrNRuiSsaq5wgxIdYudiWfLp7t8ME6yFCtmVKsJ+MASU5pOOK3GdTN+H+Xq82tFELu+A22Q0AWdtTJmrpVi6x/d
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB4628
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for eMMC PHY on Intel Keem Bay SoC.
+Hi Vinod.
 
-Signed-off-by: Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/phy/intel/Kconfig                  |  12 +
- drivers/phy/intel/Makefile                 |   1 +
- drivers/phy/intel/phy-intel-keembay-emmc.c | 307 +++++++++++++++++++++
- 3 files changed, 320 insertions(+)
- create mode 100644 drivers/phy/intel/phy-intel-keembay-emmc.c
+Thanks for the review.
 
-diff --git a/drivers/phy/intel/Kconfig b/drivers/phy/intel/Kconfig
-index db8586c3eed8..58ec695c92ec 100644
---- a/drivers/phy/intel/Kconfig
-+++ b/drivers/phy/intel/Kconfig
-@@ -2,6 +2,18 @@
- #
- # Phy drivers for Intel platforms
- #
-+config PHY_INTEL_KEEMBAY_EMMC
-+	tristate "Intel Keem Bay EMMC PHY driver"
-+	depends on (OF && ARM64) || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	select GENERIC_PHY
-+	select REGMAP_MMIO
-+	help
-+	  Choose this option if you have an Intel Keem Bay SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called phy-keembay-emmc.ko.
-+
- config PHY_INTEL_LGM_COMBO
- 	bool "Intel Lightning Mountain ComboPHY driver"
- 	depends on X86 || COMPILE_TEST
-diff --git a/drivers/phy/intel/Makefile b/drivers/phy/intel/Makefile
-index 662385d0a366..a5e0af5ccd75 100644
---- a/drivers/phy/intel/Makefile
-+++ b/drivers/phy/intel/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0
-+obj-$(CONFIG_PHY_INTEL_KEEMBAY_EMMC)	+= phy-intel-keembay-emmc.o
- obj-$(CONFIG_PHY_INTEL_LGM_COMBO)	+= phy-intel-lgm-combo.o
- obj-$(CONFIG_PHY_INTEL_LGM_EMMC)	+= phy-intel-lgm-emmc.o
-diff --git a/drivers/phy/intel/phy-intel-keembay-emmc.c b/drivers/phy/intel/phy-intel-keembay-emmc.c
-new file mode 100644
-index 000000000000..eb7c635ed89a
---- /dev/null
-+++ b/drivers/phy/intel/phy-intel-keembay-emmc.c
-@@ -0,0 +1,307 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Intel Keem Bay eMMC PHY driver
-+ * Copyright (C) 2020 Intel Corporation
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+/* eMMC/SD/SDIO core/phy configuration registers */
-+#define PHY_CFG_0		0x24
-+#define  SEL_DLY_TXCLK_MASK	BIT(29)
-+#define  OTAP_DLY_ENA_MASK	BIT(27)
-+#define  OTAP_DLY_SEL_MASK	GENMASK(26, 23)
-+#define  DLL_EN_MASK		BIT(10)
-+#define  PWR_DOWN_MASK		BIT(0)
-+
-+#define PHY_CFG_2		0x2c
-+#define  SEL_FREQ_MASK		GENMASK(12, 10)
-+
-+#define PHY_STAT		0x40
-+#define  CAL_DONE_MASK		BIT(6)
-+#define  IS_CALDONE(x)		((x) & CAL_DONE_MASK)
-+#define  DLL_RDY_MASK		BIT(5)
-+#define  IS_DLLRDY(x)		((x) & DLL_RDY_MASK)
-+
-+/* From ACS_eMMC51_16nFFC_RO1100_Userguide_v1p0.pdf p17 */
-+#define FREQSEL_200M_170M	0x0
-+#define FREQSEL_170M_140M	0x1
-+#define FREQSEL_140M_110M	0x2
-+#define FREQSEL_110M_80M	0x3
-+#define FREQSEL_80M_50M		0x4
-+
-+struct keembay_emmc_phy {
-+	struct regmap *syscfg;
-+	struct clk *emmcclk;
-+};
-+
-+static const struct regmap_config keembay_regmap_config = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = 4,
-+};
-+
-+static int keembay_emmc_phy_power(struct phy *phy, bool on_off)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	unsigned int caldone;
-+	unsigned int dllrdy;
-+	unsigned int freqsel;
-+	unsigned int mhz;
-+	int ret;
-+
-+	/*
-+	 * Keep phyctrl_pdb and phyctrl_endll low to allow
-+	 * initialization of CALIO state M/C DFFs
-+	 */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 FIELD_PREP(PWR_DOWN_MASK, 0));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 FIELD_PREP(DLL_EN_MASK, 0));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn off the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Already finish power off above */
-+	if (!on_off)
-+		return 0;
-+
-+	mhz = DIV_ROUND_CLOSEST(clk_get_rate(priv->emmcclk), 1000000);
-+	if (mhz <= 200 && mhz >= 170)
-+		freqsel = FREQSEL_200M_170M;
-+	else if (mhz <= 170 && mhz >= 140)
-+		freqsel = FREQSEL_170M_140M;
-+	else if (mhz <= 140 && mhz >= 110)
-+		freqsel = FREQSEL_140M_110M;
-+	else if (mhz <= 110 && mhz >= 80)
-+		freqsel = FREQSEL_110M_80M;
-+	else if (mhz <= 80 && mhz >= 50)
-+		freqsel = FREQSEL_80M_50M;
-+	else
-+		freqsel = 0x0;
-+
-+	if (mhz < 50 || mhz > 200)
-+		dev_warn(&phy->dev, "Unsupported rate: %d MHz\n", mhz);
-+
-+	/*
-+	 * According to the user manual, calpad calibration
-+	 * cycle takes more than 2us without the minimal recommended
-+	 * value, so we may need a little margin here
-+	 */
-+	udelay(5);
-+
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, PWR_DOWN_MASK,
-+				 FIELD_PREP(PWR_DOWN_MASK, 1));
-+	if (ret) {
-+		dev_err(&phy->dev, "CALIO power down bar failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * According to the user manual, it asks driver to wait 5us for
-+	 * calpad busy trimming. However it is documented that this value is
-+	 * PVT(A.K.A. process, voltage and temperature) relevant, so some
-+	 * failure cases are found which indicates we should be more tolerant
-+	 * to calpad busy trimming.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       caldone, IS_CALDONE(caldone),
-+				       0, 50);
-+	if (ret) {
-+		dev_err(&phy->dev, "caldone failed, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Set the frequency of the DLL operation */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_2, SEL_FREQ_MASK,
-+				 FIELD_PREP(SEL_FREQ_MASK, freqsel));
-+	if (ret) {
-+		dev_err(&phy->dev, "set the frequency of dll failed:%d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Turn on the DLL */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, DLL_EN_MASK,
-+				 FIELD_PREP(DLL_EN_MASK, 1));
-+	if (ret) {
-+		dev_err(&phy->dev, "turn on the dll failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * We turned on the DLL even though the rate was 0 because we the
-+	 * clock might be turned on later.  ...but we can't wait for the DLL
-+	 * to lock when the rate is 0 because it will never lock with no
-+	 * input clock.
-+	 *
-+	 * Technically we should be checking the lock later when the clock
-+	 * is turned on, but for now we won't.
-+	 */
-+	if (mhz == 0)
-+		return 0;
-+
-+	/*
-+	 * After enabling analog DLL circuits docs say that we need 10.2 us if
-+	 * our source clock is at 50 MHz and that lock time scales linearly
-+	 * with clock speed. If we are powering on the PHY and the card clock
-+	 * is super slow (like 100kHz) this could take as long as 5.1 ms as
-+	 * per the math: 10.2 us * (50000000 Hz / 100000 Hz) => 5.1 ms
-+	 * hopefully we won't be running at 100 kHz, but we should still make
-+	 * sure we wait long enough.
-+	 *
-+	 * NOTE: There appear to be corner cases where the DLL seems to take
-+	 * extra long to lock for reasons that aren't understood. In some
-+	 * extreme cases we've seen it take up to over 10ms (!). We'll be
-+	 * generous and give it 50ms.
-+	 */
-+	ret = regmap_read_poll_timeout(priv->syscfg, PHY_STAT,
-+				       dllrdy, IS_DLLRDY(dllrdy),
-+				       0, 50 * USEC_PER_MSEC);
-+	if (ret)
-+		dev_err(&phy->dev, "dllrdy failed, ret=%d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int keembay_emmc_phy_init(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	/*
-+	 * We purposely get the clock here and not in probe to avoid the
-+	 * circular dependency problem. We expect:
-+	 * - PHY driver to probe
-+	 * - SDHCI driver to start probe
-+	 * - SDHCI driver to register it's clock
-+	 * - SDHCI driver to get the PHY
-+	 * - SDHCI driver to init the PHY
-+	 *
-+	 * The clock is optional, so upon any error just return it like
-+	 * any other error to user.
-+	 */
-+	priv->emmcclk = clk_get_optional(&phy->dev, "emmcclk");
-+
-+	return PTR_ERR_OR_ZERO(priv->emmcclk);
-+}
-+
-+static int keembay_emmc_phy_exit(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+
-+	clk_put(priv->emmcclk);
-+
-+	return 0;
-+};
-+
-+static int keembay_emmc_phy_power_on(struct phy *phy)
-+{
-+	struct keembay_emmc_phy *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	/* Delay chain based txclk: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, SEL_DLY_TXCLK_MASK,
-+				 FIELD_PREP(SEL_DLY_TXCLK_MASK, 1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: delay chain txclk set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay: enable */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_ENA_MASK,
-+				 FIELD_PREP(OTAP_DLY_ENA_MASK, 1));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay set: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Output tap delay */
-+	ret = regmap_update_bits(priv->syscfg, PHY_CFG_0, OTAP_DLY_SEL_MASK,
-+				 FIELD_PREP(OTAP_DLY_SEL_MASK, 2));
-+	if (ret) {
-+		dev_err(&phy->dev, "ERROR: output tap delay select: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Power up eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, true);
-+}
-+
-+static int keembay_emmc_phy_power_off(struct phy *phy)
-+{
-+	/* Power down eMMC phy analog blocks */
-+	return keembay_emmc_phy_power(phy, false);
-+}
-+
-+static const struct phy_ops ops = {
-+	.init		= keembay_emmc_phy_init,
-+	.exit		= keembay_emmc_phy_exit,
-+	.power_on	= keembay_emmc_phy_power_on,
-+	.power_off	= keembay_emmc_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int keembay_emmc_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
-+	struct keembay_emmc_phy *priv;
-+	struct phy *generic_phy;
-+	struct phy_provider *phy_provider;
-+	void __iomem *base;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	priv->syscfg = devm_regmap_init_mmio(dev, base, &keembay_regmap_config);
-+	if (IS_ERR(priv->syscfg))
-+		return PTR_ERR(priv->syscfg);
-+
-+	generic_phy = devm_phy_create(dev, np, &ops);
-+	if (IS_ERR(generic_phy))
-+		return dev_err_probe(dev, PTR_ERR(generic_phy),
-+				     "failed to create PHY\n");
-+
-+	phy_set_drvdata(generic_phy, priv);
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static const struct of_device_id keembay_emmc_phy_dt_ids[] = {
-+	{ .compatible = "intel,keembay-emmc-phy" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, keembay_emmc_phy_dt_ids);
-+
-+static struct platform_driver keembay_emmc_phy_driver = {
-+	.probe		= keembay_emmc_phy_probe,
-+	.driver		= {
-+		.name	= "keembay-emmc-phy",
-+		.of_match_table = keembay_emmc_phy_dt_ids,
-+	},
-+};
-+module_platform_driver(keembay_emmc_phy_driver);
-+
-+MODULE_AUTHOR("Wan Ahmad Zainie <wan.ahmad.zainie.wan.mohamad@intel.com>");
-+MODULE_DESCRIPTION("Intel Keem Bay eMMC PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.17.1
+> -----Original Message-----
+> From: Vinod Koul <vkoul@kernel.org>
+> Sent: Monday, August 31, 2020 5:20 PM
+> To: Wan Mohamad, Wan Ahmad Zainie
+> <wan.ahmad.zainie.wan.mohamad@intel.com>
+> Cc: kishon@ti.com; robh+dt@kernel.org; Shevchenko, Andriy
+> <andriy.shevchenko@intel.com>; eswara.kota@linux.intel.com;
+> vadivel.muruganx.ramuthevar@linux.intel.com; Raja Subramanian, Lakshmi
+> Bai <lakshmi.bai.raja.subramanian@intel.com>; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org
+> Subject: Re: [PATCH v7 3/3] phy: intel: Add Keem Bay eMMC PHY support
+>=20
+> On 21-08-20, 19:37, Wan Ahmad Zainie wrote:
+>=20
+> > +/* From ACS_eMMC51_16nFFC_RO1100_Userguide_v1p0.pdf p17 */
+> > +#define FREQSEL_200M_170M	0x0
+> > +#define FREQSEL_170M_140M	0x1
+> > +#define FREQSEL_140M_110M	0x2
+> > +#define FREQSEL_110M_80M	0x3
+> > +#define FREQSEL_80M_50M		0x4
+> > +
+> > +#define maskval(mask, val)	(((val) << (ffs(mask) - 1)) & mask)
+>=20
+> Kernel has a macro do this for you, please use FIELD_PREP instead of
 
+I have updated to v8, to remove this macro and use FIELD_PREP.
+I also add changes based on Andy's comments.
+
+>=20
+> your own macro
+> --
+> ~Vinod
+
+Best regards,
+Zainie
