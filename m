@@ -2,133 +2,198 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8695AC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C13C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62822206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 377EA2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:56:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IERvtppr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbgIAO42 convert rfc822-to-8bit (ORCPT
+        id S1728832AbgIAO4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:56:28 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2723 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726770AbgIALdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:33:32 -0400
-Received: from lhreml722-chm.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 3C539C7BD780D3CB7BE4;
-        Tue,  1 Sep 2020 12:17:15 +0100 (IST)
-Received: from dggemi761-chm.china.huawei.com (10.1.198.147) by
- lhreml722-chm.china.huawei.com (10.201.108.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
- 15.1.1913.5; Tue, 1 Sep 2020 12:17:13 +0100
-Received: from dggemi761-chm.china.huawei.com ([10.9.49.202]) by
- dggemi761-chm.china.huawei.com ([10.9.49.202]) with mapi id 15.01.1913.007;
- Tue, 1 Sep 2020 19:17:12 +0800
-From:   "Song Bao Hua (Barry Song)" <song.bao.hua@hisilicon.com>
-To:     John Garry <john.garry@huawei.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "maz@kernel.org" <maz@kernel.org>, Linuxarm <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        John Garry <john.garry@huawei.com>
-Subject: RE: [PATCH v2 0/2] iommu/arm-smmu-v3: Improve cmdq lock efficiency
-Thread-Topic: [PATCH v2 0/2] iommu/arm-smmu-v3: Improve cmdq lock efficiency
-Thread-Index: AQHWd8Ms2A2NyKB6nU+JQ9N/rJ8/HalTsKGw
-Date:   Tue, 1 Sep 2020 11:17:11 +0000
-Message-ID: <1e2f9669220c4a8d91f08329a46dac00@hisilicon.com>
-References: <1598018062-175608-1-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1598018062-175608-1-git-send-email-john.garry@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.126.202.239]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 1 Sep 2020 10:56:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbgIALbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:31:00 -0400
+Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 504A6C061247;
+        Tue,  1 Sep 2020 04:29:57 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id d27so550478qtg.4;
+        Tue, 01 Sep 2020 04:29:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
+        b=IERvtpprRpsI2hed0dHnnYBJc2bTsfXDoVwNNjG0Ec1Sz8CRuOUarz+Porf5yRfHFu
+         30cRoDkuZP41QRrigZa6y9lS/Q9+jFle0rPTgtwQN4bp84V8ocprAVuzMQ9FqTehBEzY
+         4MDJIPAYpDQqg5MZ+6ZUTXTmOnuGZXEK8IgCV4orCkGUrRtsYcj/Ywc1ICPwnctC/GyI
+         dJzhbEYwl61cZTl24h34xARkW2Zaqa/kOmK3OayGekDtkeFds1gFNQRmSyQ/QvyDfdw+
+         OEnwNuiuobwmd/AEPMOV6cmL4S085Ju8J83/4o3yZA4u2o3mkHjbyG61560pFu+G2c5p
+         TvfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Bmg6XgtUWDx4HuERt6+WNca9MkrxDIzUrFEsZ8s0eNY=;
+        b=G71dvjwIu488zUUjmMoWDTLeZ/wY1GVSDhux2sTucSujqYmKot2Nq0A7QY/g/nSguk
+         /2MnBBotSaK6dVANc/725/FqCJ76wRfpBHGaoIQpdxZboGa8QSBikS/eS7DotIMV2Lpx
+         pEokqnWf1EyBjlovce/6LFBQ3llUYbjDuc5giQkAmfxyAggVnhdEsMWUvidyqlE3Fd3y
+         UDfTeqfiWixrCUALqrS1wMQOuD08ftGEfcq+JpnG/SM6w/3+Oj7sYZNQ6HLBn6eheGwt
+         AYPQFxmmu6mwzEpbar+V42Lj/Trs6OQ6qurh7R/AmS/xm1yJIBrnGIKCFrSGA6j5jkSv
+         RqYw==
+X-Gm-Message-State: AOAM533xxmhHTiJ3mQLWUvys/hzohLIhit6UpntJGSYOiftYuztVxs46
+        oApsWFtjQW14glwe6JoEiU9T3HzlHpIhxU9GPEArsfF1lf43xA==
+X-Google-Smtp-Source: ABdhPJwVT407rq1wSU6XLfBx35x7TqzLfOV0jdufGiWqhxHXDja0Uvn0+tpPRWaGd0lmv1UnRMyszboqVwIOVOloAYU=
+X-Received: by 2002:ac8:7741:: with SMTP id g1mr1183471qtu.28.1598959796622;
+ Tue, 01 Sep 2020 04:29:56 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200831182239.480317-1-masahiroy@kernel.org>
+In-Reply-To: <20200831182239.480317-1-masahiroy@kernel.org>
+From:   Greentime Hu <green.hu@gmail.com>
+Date:   Tue, 1 Sep 2020 19:29:19 +0800
+Message-ID: <CAEbi=3cqogHs=p_y=_jfcC+D5a9e5=Nic=ECr_YvJ9p-DZEAJQ@mail.gmail.com>
+Subject: Re: [PATCH] arch: vdso: add vdso linker script to 'targets' instead
+ of extra-y
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nick Hu <nickhu@andestech.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Masahiro Yamada <masahiroy@kernel.org> =E6=96=BC 2020=E5=B9=B49=E6=9C=881=
+=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8A=E5=8D=882:23=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> The vdso linker script is preprocessed on demand.
+> Adding it to 'targets' is enough to include the .cmd file.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  arch/arm64/kernel/vdso/Makefile     | 2 +-
+>  arch/arm64/kernel/vdso32/Makefile   | 2 +-
+>  arch/nds32/kernel/vdso/Makefile     | 2 +-
+>  arch/powerpc/kernel/vdso32/Makefile | 2 +-
+>  arch/powerpc/kernel/vdso64/Makefile | 2 +-
+>  arch/s390/kernel/vdso64/Makefile    | 2 +-
+>  6 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm64/kernel/vdso/Makefile b/arch/arm64/kernel/vdso/Mak=
+efile
+> index 45d5cfe46429..7cd8aafbe96e 100644
+> --- a/arch/arm64/kernel/vdso/Makefile
+> +++ b/arch/arm64/kernel/vdso/Makefile
+> @@ -54,7 +54,7 @@ endif
+>  GCOV_PROFILE :=3D n
+>
+>  obj-y +=3D vdso.o
+> -extra-y +=3D vdso.lds
+> +targets +=3D vdso.lds
+>  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32=
+/Makefile
+> index d6adb4677c25..572475b7b7ed 100644
+> --- a/arch/arm64/kernel/vdso32/Makefile
+> +++ b/arch/arm64/kernel/vdso32/Makefile
+> @@ -155,7 +155,7 @@ asm-obj-vdso :=3D $(addprefix $(obj)/, $(asm-obj-vdso=
+))
+>  obj-vdso :=3D $(c-obj-vdso) $(c-obj-vdso-gettimeofday) $(asm-obj-vdso)
+>
+>  obj-y +=3D vdso.o
+> -extra-y +=3D vdso.lds
+> +targets +=3D vdso.lds
+>  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency (vdso.s includes vdso.so through incbin)
+> diff --git a/arch/nds32/kernel/vdso/Makefile b/arch/nds32/kernel/vdso/Mak=
+efile
+> index 7c3c1ccb196e..55df25ef0057 100644
+> --- a/arch/nds32/kernel/vdso/Makefile
+> +++ b/arch/nds32/kernel/vdso/Makefile
+> @@ -20,7 +20,7 @@ GCOV_PROFILE :=3D n
+>
+>
+>  obj-y +=3D vdso.o
+> -extra-y +=3D vdso.lds
+> +targets +=3D vdso.lds
+>  CPPFLAGS_vdso.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency
+> diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vd=
+so32/Makefile
+> index 87ab1152d5ce..fd5072a4c73c 100644
+> --- a/arch/powerpc/kernel/vdso32/Makefile
+> +++ b/arch/powerpc/kernel/vdso32/Makefile
+> @@ -29,7 +29,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
+ib \
+>  asflags-y :=3D -D__VDSO32__ -s
+>
+>  obj-y +=3D vdso32_wrapper.o
+> -extra-y +=3D vdso32.lds
+> +targets +=3D vdso32.lds
+>  CPPFLAGS_vdso32.lds +=3D -P -C -Upowerpc
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vd=
+so64/Makefile
+> index 38c317f25141..c737b3ea3207 100644
+> --- a/arch/powerpc/kernel/vdso64/Makefile
+> +++ b/arch/powerpc/kernel/vdso64/Makefile
+> @@ -17,7 +17,7 @@ ccflags-y :=3D -shared -fno-common -fno-builtin -nostdl=
+ib \
+>  asflags-y :=3D -D__VDSO64__ -s
+>
+>  obj-y +=3D vdso64_wrapper.o
+> -extra-y +=3D vdso64.lds
+> +targets +=3D vdso64.lds
+>  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
+>
+>  # Force dependency (incbin is bad)
+> diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/M=
+akefile
+> index 4a66a1cb919b..d0d406cfffa9 100644
+> --- a/arch/s390/kernel/vdso64/Makefile
+> +++ b/arch/s390/kernel/vdso64/Makefile
+> @@ -25,7 +25,7 @@ $(targets:%=3D$(obj)/%.dbg): KBUILD_CFLAGS =3D $(KBUILD=
+_CFLAGS_64)
+>  $(targets:%=3D$(obj)/%.dbg): KBUILD_AFLAGS =3D $(KBUILD_AFLAGS_64)
+>
+>  obj-y +=3D vdso64_wrapper.o
+> -extra-y +=3D vdso64.lds
+> +targets +=3D vdso64.lds
+>  CPPFLAGS_vdso64.lds +=3D -P -C -U$(ARCH)
+>
+>  # Disable gcov profiling, ubsan and kasan for VDSO code
 
+For nds32:
 
-> -----Original Message-----
-> From: linux-kernel-owner@vger.kernel.org
-> [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of John Garry
-> Sent: Saturday, August 22, 2020 1:54 AM
-> To: will@kernel.org; robin.murphy@arm.com
-> Cc: joro@8bytes.org; linux-arm-kernel@lists.infradead.org;
-> iommu@lists.linux-foundation.org; maz@kernel.org; Linuxarm
-> <linuxarm@huawei.com>; linux-kernel@vger.kernel.org; John Garry
-> <john.garry@huawei.com>
-> Subject: [PATCH v2 0/2] iommu/arm-smmu-v3: Improve cmdq lock efficiency
-> 
-> As mentioned in [0], the CPU may consume many cycles processing
-> arm_smmu_cmdq_issue_cmdlist(). One issue we find is the cmpxchg() loop to
-> get space on the queue takes a lot of time once we start getting many CPUs
-> contending - from experiment, for 64 CPUs contending the cmdq, success rate
-> is ~ 1 in 12, which is poor, but not totally awful.
-> 
-> This series removes that cmpxchg() and replaces with an atomic_add, same as
-> how the actual cmdq deals with maintaining the prod pointer.
-> 
-> For my NVMe test with 3x NVMe SSDs, I'm getting a ~24% throughput
-> increase:
-> Before: 1250K IOPs
-> After: 1550K IOPs
-> 
-> I also have a test harness to check the rate of DMA map+unmaps we can
-> achieve:
-> 
-> CPU count	8	16	32	64
-> Before:		282K	115K	36K	11K
-> After:		302K	193K	80K	30K
-> 
-> (unit is map+unmaps per CPU per second)
-
-I have seen performance improvement on hns3 network by sending UDP with 1-32 threads:
-
-Threads number        1        4           8         16       32
-Before patch(TX Mbps)  7636.05  16444.36  21694.48  25746.40   25295.93
-After  patch(TX Mbps)  7711.60  16478.98  26561.06  32628.75   33764.56
-
-As you can see, for 8,16,32 threads, network TX throughput improve much. For 1 and 4 threads,
-Tx throughput is almost seem before and after patch. This should be sensible as this patch
-is mainly for decreasing the lock contention.
-
-> 
-> [0]
-> https://lore.kernel.org/linux-iommu/B926444035E5E2439431908E3842AFD2
-> 4B86DB@DGGEMI525-MBS.china.huawei.com/T/#ma02e301c38c3e94b7725e
-> 685757c27e39c7cbde3
-> 
-> Differences to v1:
-> - Simplify by dropping patch to always issue a CMD_SYNC
-> - Use 64b atomic add, keeping prod in a separate 32b field
-> 
-> John Garry (2):
->   iommu/arm-smmu-v3: Calculate max commands per batch
->   iommu/arm-smmu-v3: Remove cmpxchg() in
-> arm_smmu_cmdq_issue_cmdlist()
-> 
->  drivers/iommu/arm/arm-smmu-v3/arm-smmu-v3.c | 166
-> ++++++++++++++------
->  1 file changed, 114 insertions(+), 52 deletions(-)
-> 
-> --
-> 2.26.2
-
-Thanks
-Barry
-
+Acked-by: Greentime Hu <green.hu@gmail.com>
