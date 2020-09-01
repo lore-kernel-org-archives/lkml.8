@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60161C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B502BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:15:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 39C6720767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F7FE20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:15:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980493;
-	bh=CGGdsJ2H5kO5v3D0cot/JhPxv9c1Ld2cWVkvsJDfE2Y=;
+	s=default; t=1598980504;
+	bh=pEBxRSw3TqO7gZcYEZTN6mdPju5fZa/dT5DRrcxV4UQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hj+QVtYCVXPiq5kfQEYab4pdS8du+NYsUnjG+LwLsWbzJJTwbymOGWSow6Tk/Sqxn
-	 8whnCSvkaiQov0uafQBDRr/CUJbPGADG874F1UTF2jDAa5l2yAPQZeFt3pBUw1/k+D
-	 6hkmHD2BhDHJ+AcVuNTxFcJ5uxbqCaO9gD1OZaTc=
+	b=FFr6jwW8dRPWf8BQPFP+MaZqF8A2KYMGf7dGdH69SEtg7R4wWJgOQQEhQWU2qrBwX
+	 ZfSAQhuDV5ppOUWlRNNKO3zj/npAjdpcCiJh4RTxqmPbegCyb3rR4+0J19ZTG08gii
+	 Mu6LMMZrtpwk+Ue1D8Ei3wn3Jo63V6/RnSKwWQDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgIAROu (ORCPT
+        id S1728880AbgIARPC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:14:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59418 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:15:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728761AbgIAPPO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:15:14 -0400
+        id S1729188AbgIAPPL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:15:11 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D88F20FC3;
-        Tue,  1 Sep 2020 15:15:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C465F20BED;
+        Tue,  1 Sep 2020 15:15:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973313;
-        bh=CGGdsJ2H5kO5v3D0cot/JhPxv9c1Ld2cWVkvsJDfE2Y=;
+        s=default; t=1598973311;
+        bh=pEBxRSw3TqO7gZcYEZTN6mdPju5fZa/dT5DRrcxV4UQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jX02jeLfX1DeGgPWj+gKesd5rZ9yjR1TwRq3GnCk5dJfagAtX9Lc2NODjgEyfl94c
-         ct6MFJkxn7IYkK9tzpxd9TEJlw/txGobTO/QHpBzLLj5vG4dAgBNob6za9EWvN8lfA
-         bD3d/tmtL+KLGjR0Sh/Y/vaLeSthFEnrP9C0a/iU=
+        b=nnAWP+ofQfhmgqZoVonzmS2tFeEEZnpDRXkCpq+TnWrpsqaYtQ6mZ9B/Ecu23oAzY
+         4O8lMn5A89NUEuJRSXU0Q3/6JWpFVPIdqwLCO4HoHJ9BO6AOqtn7C/qkC/EESK+ey+
+         RgfIB8dQsyEi3ac95pTArJhZPj5hpQq6n70Pb2Dw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 05/78] ipvlan: fix device features
-Date:   Tue,  1 Sep 2020 17:09:41 +0200
-Message-Id: <20200901150925.006168186@linuxfoundation.org>
+        stable@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
+        Ying Xue <ying.xue@windriver.com>,
+        Richard Alpe <richard.alpe@ericsson.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+0e7181deafa7e0b79923@syzkaller.appspotmail.com
+Subject: [PATCH 4.9 04/78] tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
+Date:   Tue,  1 Sep 2020 17:09:40 +0200
+Message-Id: <20200901150924.936560986@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -60,107 +63,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit d0f5c7076e01fef6fcb86988d9508bf3ce258bd4 ]
+[ Upstream commit 47733f9daf4fe4f7e0eb9e273f21ad3a19130487 ]
 
-Processing NETDEV_FEAT_CHANGE causes IPvlan links to lose
-NETIF_F_LLTX feature because of the incorrect handling of
-features in ipvlan_fix_features().
+__tipc_nl_compat_dumpit() has two callers, and it expects them to
+pass a valid nlmsghdr via arg->data. This header is artificial and
+crafted just for __tipc_nl_compat_dumpit().
 
---before--
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~# ethtool -K ipvl0 tso off
-Cannot change tcp-segmentation-offload
-Actual changes:
-vlan-challenged: off [fixed]
-tx-lockless: off [fixed]
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: off [fixed]
-lpaa10:~#
+tipc_nl_compat_publ_dump() does so by putting a genlmsghdr as well
+as some nested attribute, TIPC_NLA_SOCK. But the other caller
+tipc_nl_compat_dumpit() does not, this leaves arg->data uninitialized
+on this call path.
 
---after--
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~# ethtool -K ipvl0 tso off
-Cannot change tcp-segmentation-offload
-Could not change any device features
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~#
+Fix this by just adding a similar nlmsghdr without any payload in
+tipc_nl_compat_dumpit().
 
-Fixes: 2ad7bf363841 ("ipvlan: Initial check-in of the IPVLAN driver.")
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
+This bug exists since day 1, but the recent commit 6ea67769ff33
+("net: tipc: prepare attrs in __tipc_nl_compat_dumpit()") makes it
+easier to appear.
+
+Reported-and-tested-by: syzbot+0e7181deafa7e0b79923@syzkaller.appspotmail.com
+Fixes: d0796d1ef63d ("tipc: convert legacy nl bearer dump to nl compat")
+Cc: Jon Maloy <jmaloy@redhat.com>
+Cc: Ying Xue <ying.xue@windriver.com>
+Cc: Richard Alpe <richard.alpe@ericsson.com>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Acked-by: Ying Xue <ying.xue@windriver.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ipvlan/ipvlan_main.c |   25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ net/tipc/netlink_compat.c |   12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -168,12 +168,21 @@ static void ipvlan_port_destroy(struct n
- 	kfree_rcu(port, rcu);
- }
- 
-+#define IPVLAN_ALWAYS_ON_OFLOADS \
-+	(NETIF_F_SG | NETIF_F_HW_CSUM | \
-+	 NETIF_F_GSO_ROBUST | NETIF_F_GSO_SOFTWARE | NETIF_F_GSO_ENCAP_ALL)
-+
-+#define IPVLAN_ALWAYS_ON \
-+	(IPVLAN_ALWAYS_ON_OFLOADS | NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED)
-+
- #define IPVLAN_FEATURES \
- 	(NETIF_F_SG | NETIF_F_HW_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
- 	 NETIF_F_GSO | NETIF_F_TSO | NETIF_F_UFO | NETIF_F_GSO_ROBUST | \
- 	 NETIF_F_TSO_ECN | NETIF_F_TSO6 | NETIF_F_GRO | NETIF_F_RXCSUM | \
- 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
- 
-+	/* NETIF_F_GSO_ENCAP_ALL NETIF_F_GSO_SOFTWARE Newly added */
-+
- #define IPVLAN_STATE_MASK \
- 	((1<<__LINK_STATE_NOCARRIER) | (1<<__LINK_STATE_DORMANT))
- 
-@@ -186,7 +195,9 @@ static int ipvlan_init(struct net_device
- 	dev->state = (dev->state & ~IPVLAN_STATE_MASK) |
- 		     (phy_dev->state & IPVLAN_STATE_MASK);
- 	dev->features = phy_dev->features & IPVLAN_FEATURES;
--	dev->features |= NETIF_F_LLTX;
-+	dev->features |= IPVLAN_ALWAYS_ON;
-+	dev->vlan_features = phy_dev->vlan_features & IPVLAN_FEATURES;
-+	dev->vlan_features |= IPVLAN_ALWAYS_ON_OFLOADS;
- 	dev->gso_max_size = phy_dev->gso_max_size;
- 	dev->gso_max_segs = phy_dev->gso_max_segs;
- 	dev->hard_header_len = phy_dev->hard_header_len;
-@@ -274,7 +285,14 @@ static netdev_features_t ipvlan_fix_feat
+--- a/net/tipc/netlink_compat.c
++++ b/net/tipc/netlink_compat.c
+@@ -250,8 +250,9 @@ err_out:
+ static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
+ 				 struct tipc_nl_compat_msg *msg)
  {
- 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+-	int err;
++	struct nlmsghdr *nlh;
+ 	struct sk_buff *arg;
++	int err;
  
--	return features & (ipvlan->sfeatures | ~IPVLAN_FEATURES);
-+	features |= NETIF_F_ALL_FOR_ALL;
-+	features &= (ipvlan->sfeatures | ~IPVLAN_FEATURES);
-+	features = netdev_increment_features(ipvlan->phy_dev->features,
-+					     features, features);
-+	features |= IPVLAN_ALWAYS_ON;
-+	features &= (IPVLAN_FEATURES | IPVLAN_ALWAYS_ON);
+ 	if (msg->req_type && (!msg->req_size ||
+ 			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
+@@ -280,6 +281,15 @@ static int tipc_nl_compat_dumpit(struct
+ 		return -ENOMEM;
+ 	}
+ 
++	nlh = nlmsg_put(arg, 0, 0, tipc_genl_family.id, 0, NLM_F_MULTI);
++	if (!nlh) {
++		kfree_skb(arg);
++		kfree_skb(msg->rep);
++		msg->rep = NULL;
++		return -EMSGSIZE;
++	}
++	nlmsg_end(arg, nlh);
 +
-+	return features;
- }
- 
- static void ipvlan_change_rx_flags(struct net_device *dev, int change)
-@@ -675,10 +693,9 @@ static int ipvlan_device_event(struct no
- 
- 	case NETDEV_FEAT_CHANGE:
- 		list_for_each_entry(ipvlan, &port->ipvlans, pnode) {
--			ipvlan->dev->features = dev->features & IPVLAN_FEATURES;
- 			ipvlan->dev->gso_max_size = dev->gso_max_size;
- 			ipvlan->dev->gso_max_segs = dev->gso_max_segs;
--			netdev_features_change(ipvlan->dev);
-+			netdev_update_features(ipvlan->dev);
- 		}
- 		break;
- 
+ 	err = __tipc_nl_compat_dumpit(cmd, msg, arg);
+ 	if (err) {
+ 		kfree_skb(msg->rep);
 
 
