@@ -2,120 +2,105 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A662BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12D3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8807220767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598986401;
-	bh=/brCaO/lw2gEHN1TNYiu+hJjRhZnzAnyVHw4C3WRqkQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BIBuFE6KT4LF5hlBYJ3Bp0FY14H4ENUgG1XK9DL4m+CDsVFPhjgW3mO4AWxp3Ew+6
-	 D10YfXJ+4tRqcaLp1rLgndOoHp8BOV8F4GhuqsNBW2dcM9FucfHb5zbiyE4iEb1grt
-	 nzh9uszDEwfVxMjvjDVMUtZDFfEvNyoZsipP4n1E=
+	by mail.kernel.org (Postfix) with ESMTP id 7D42720767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iu/mivde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbgIASxR (ORCPT
+        id S1731511AbgIASxZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57384 "EHLO
+        Tue, 1 Sep 2020 14:53:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728971AbgIASxG (ORCPT
+        with ESMTP id S1728761AbgIASxC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:53:06 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43D57C061249;
-        Tue,  1 Sep 2020 11:53:06 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id b3so1722916qtg.13;
-        Tue, 01 Sep 2020 11:53:06 -0700 (PDT)
+        Tue, 1 Sep 2020 14:53:02 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D292C061246
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 11:53:02 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u128so1334364pfb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 11:53:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=V69TM0TXJZV6Ph3DQcWjjVMFJyyhsm9AOvCWZiY6Tfg=;
-        b=npTqPcLDLPp9IG+8hih3s0n1i8HE84G+rEqAq7/0mzOvX4YAHvQawMoRbgGBQt3Yig
-         2eneUEERH+HTyLTzXLB4YL2RGRONA0RTWYNtrj47yF3wKaXG1SvQcwpDJCy21eZ5Jsca
-         sZEjiM8Q8sRrkCSCdh7obp3ZwzFnJGVNkTOhuz/R6vNzBKji4+ZPo5x3PfxZMyNd2OBO
-         M4MTsGJ65P64qH13pbf0vQEUgLCZYCKSqoDEAtJXuzOVPMrbIWAIgJY6kryL066yazx7
-         Vx3KNiFq7vpMib+dcpa+l8yunUwdH0plUmX8yPgAs/DeFZ1XTCDGXi3fKIOkg1FtiVS1
-         14Ng==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=DW1zJLlrp+b/X5DsaUJywWHpm9f8YdypCEJotWWzal8=;
+        b=iu/mivdeQ6AWpfUigREEipYqDA+JBPragzl35o9Nu9ycwxuP1pT/n/GUj28IBjGlJy
+         tASUZD6UQpFduus8RxIUHnWDo/ii2QxBTb8+/rddFmc7Q2BvQtdvriL4oOcAbvX3fTik
+         a3CX0t1k/eCXUbO98m4G5hAHF2rr9hmEGAwHw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=V69TM0TXJZV6Ph3DQcWjjVMFJyyhsm9AOvCWZiY6Tfg=;
-        b=cnJZo/Dt72HBDE5s+8d5RYjwUgpq3tGYuLztZuckz2LwqW3SEmNbiRgdrcQf0k9VS5
-         s/JvjUO8npffcxcGN6JtQsxr/ERjjj43+ga0WxU9msqKNsm1UbkpOx/9CNeIu7Nl83bZ
-         ukDTkvYazFamr6/3xZn0glhCwAdaG2klSme9sKgKgjpn1H+0ynzB7LVHYaL4F7ooMoxX
-         0xVZSxqFutfo6MlkbkYMQDEtcFMq1dBleU+Kdx5LV0R+lI1/Poi2aOe9UuYbyqvJc1KC
-         z7yMzSB8sDlyZdzx9zijgssyK8YsQWQF+SFumFRvX/n8U9e4mzwJnO39Cjttd7y9Bmgr
-         Ge1Q==
-X-Gm-Message-State: AOAM532soo0nFo2HYG+vuUNTJEdIY89ZGrLmfgl5YEUC3GXOlhx9jrnw
-        TOIk0crfFD+dYxSdoQ+nII0=
-X-Google-Smtp-Source: ABdhPJyrnP9lJ/BIih++V+RCRNXE1ATUVDvzcPOodkJQX4aRSSsI0GgfivjUcfbZX/LofdivzaRlEg==
-X-Received: by 2002:ac8:5303:: with SMTP id t3mr3360197qtn.159.1598986385416;
-        Tue, 01 Sep 2020 11:53:05 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id x26sm2262245qtr.78.2020.09.01.11.53.04
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DW1zJLlrp+b/X5DsaUJywWHpm9f8YdypCEJotWWzal8=;
+        b=WbDGwxrd3f9MQ++XytOkgWgxrXjk2hOkSmQOLn3cTGX/i40qP8TGRsjkdvftaBwFnz
+         cYk0toDrmj5cBU3T/BzwB5E3tmdd3CSrcFsBJdOE1nSie/fF/J1k5FUTacGFCyhmWmhQ
+         Wc1aN7CPArFGjEdwz9PkDxlOP8L1ioo2IWX3E0ij1xg+uGZwj6YnJaH025diwxOSDOvL
+         lnbOd4k0Rwa73fcBXAs3PKPxn5piu7CRRsfvvnYq0+7Se+G+dpmX5Lq3xTj3SH7NK37p
+         uv59mkgscdB8l8sSKt+tB6vkauqW/SXbum95xnv+rc1N8dAuiLPZPsqTPiWqh48iHrK2
+         Gszg==
+X-Gm-Message-State: AOAM531x0eujrFujf2BZgswUqYx6RsAjAH2ElL0ztuwtU8vvVbv5rA3z
+        qlYUnwv/BBM6xbMYdSC0ZCwKgQ==
+X-Google-Smtp-Source: ABdhPJw/YsKunmr1Z0dpXo1/zK3rMUMV+IlY1oP54bh4p+BaEO8LJP6shIZse5erSoELJy0YDj4+Gg==
+X-Received: by 2002:a65:4187:: with SMTP id a7mr2642045pgq.102.1598986382061;
+        Tue, 01 Sep 2020 11:53:02 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m19sm2192249pjq.18.2020.09.01.11.53.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:53:04 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
-        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH 01/27] blk-iocost: ioc_pd_free() shouldn't assume irq disabled
-Date:   Tue,  1 Sep 2020 14:52:31 -0400
-Message-Id: <20200901185257.645114-2-tj@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
-References: <20200901185257.645114-1-tj@kernel.org>
+        Tue, 01 Sep 2020 11:53:01 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 11:52:59 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH 05/10] lkdtm: disable set_fs-based tests for
+ !CONFIG_SET_FS
+Message-ID: <202009011152.335EE467@keescook>
+References: <20200827150030.282762-1-hch@lst.de>
+ <20200827150030.282762-6-hch@lst.de>
+ <CAHk-=wipbWD66sU7etETXwDW5NRsU2vnbDpXXQ5i94hiTcawyw@mail.gmail.com>
+ <20200829092406.GB8833@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829092406.GB8833@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ioc_pd_free() grabs irq-safe ioc->lock without ensuring that irq is disabled
-when it can be called with irq disabled or enabled. This has a small chance
-of causing A-A deadlocks and triggers lockdep splats. Use irqsave operations
-instead.
+On Sat, Aug 29, 2020 at 11:24:06AM +0200, Christoph Hellwig wrote:
+> On Thu, Aug 27, 2020 at 11:06:28AM -0700, Linus Torvalds wrote:
+> > On Thu, Aug 27, 2020 at 8:00 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > Once we can't manipulate the address limit, we also can't test what
+> > > happens when the manipulation is abused.
+> > 
+> > Just remove these tests entirely.
+> > 
+> > Once set_fs() doesn't exist on x86, the tests no longer make any sense
+> > what-so-ever, because test coverage will be basically zero.
+> > 
+> > So don't make the code uglier just to maintain a fiction that
+> > something is tested when it isn't really.
+> 
+> Sure fine with me unless Kees screams.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: 7caa47151ab2 ("blkcg: implement blk-iocost")
-Cc: stable@vger.kernel.org # v5.4+
----
- block/blk-iocost.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+If we don't have set_fs, we don't need the tests. :)
 
-diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 413e0b5c8e6b..d37b55db2409 100644
---- a/block/blk-iocost.c
-+++ b/block/blk-iocost.c
-@@ -2092,14 +2092,15 @@ static void ioc_pd_free(struct blkg_policy_data *pd)
- {
- 	struct ioc_gq *iocg = pd_to_iocg(pd);
- 	struct ioc *ioc = iocg->ioc;
-+	unsigned long flags;
- 
- 	if (ioc) {
--		spin_lock(&ioc->lock);
-+		spin_lock_irqsave(&ioc->lock, flags);
- 		if (!list_empty(&iocg->active_list)) {
- 			propagate_active_weight(iocg, 0, 0);
- 			list_del_init(&iocg->active_list);
- 		}
--		spin_unlock(&ioc->lock);
-+		spin_unlock_irqrestore(&ioc->lock, flags);
- 
- 		hrtimer_cancel(&iocg->waitq_timer);
- 		hrtimer_cancel(&iocg->delay_timer);
 -- 
-2.26.2
-
+Kees Cook
