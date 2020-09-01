@@ -2,111 +2,77 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D08C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:15:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E542C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8782C20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:15:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="uNIBFhx1"
+	by mail.kernel.org (Postfix) with ESMTP id 3CCCA20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:16:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726311AbgIAJPo (ORCPT
+        id S1726355AbgIAJQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:15:44 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:51947 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725848AbgIAJPn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:15:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598951743; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=gKLR5YQP1vuukFEnkzMGvPLi7tNNyUCzrmI4vA0NnFg=;
- b=uNIBFhx18GoAsXKrxdFZ8F6jJnuQ2hCkSyp4n53N6TfxmsbrIH0ujxLLwHj9YYGxDmA1xDsq
- jEn0fmZDLdNCVJ3/aDsceB9AKlBHqhSLRSG5cFEahOdv9OUirgR+YTbzmhDZkwW6z48DgOR0
- piZ78914q05K05JPE8jHsl7bs1Y=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
- 5f4e113d4ba82a82fd7fceea (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:15:41
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3974FC433C6; Tue,  1 Sep 2020 09:15:41 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 85550C433CA;
-        Tue,  1 Sep 2020 09:15:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 85550C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 01/32] wireless: marvell: mwifiex: sdio: Move 'static
- const
- struct's into their own header file
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200821071644.109970-2-lee.jones@linaro.org>
-References: <20200821071644.109970-2-lee.jones@linaro.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     davem@davemloft.net, kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
-        Xinming Hu <huxinming820@gmail.com>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901091541.3974FC433C6@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 09:15:41 +0000 (UTC)
+        Tue, 1 Sep 2020 05:16:58 -0400
+Received: from mga18.intel.com ([134.134.136.126]:43991 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbgIAJQ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:16:57 -0400
+IronPort-SDR: zrGLjmyPgckUoXn88l/bZVn14Cr5dlIayoGO5fjPXxNj3F5kkVAWMMN6eFBL4GjoVOToFpdLqG
+ oPiZHkR9ZbAw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="144822918"
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="144822918"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 02:16:56 -0700
+IronPort-SDR: Oz1m7qzTotfs0rTVoLBMxMajC8WpaVm2W+PN5ACwHrBpXuZ47pQlLayhVgtMcESdrVo6YKUvGx
+ DO3qptCGP9zA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="283343284"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by fmsmga008.fm.intel.com with ESMTP; 01 Sep 2020 02:16:54 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     peterz@infradead.org, rostedt@goodmis.org
+Cc:     mingo@redhat.com, mhiramat@kernel.org, mbenes@suse.cz,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] ftrace: Fix missing synchronize_rcu() removing trampoline from kallsyms
+Date:   Tue,  1 Sep 2020 12:16:17 +0300
+Message-Id: <20200901091617.31837-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lee Jones <lee.jones@linaro.org> wrote:
+Add synchronize_rcu() after list_del_rcu() in
+ftrace_remove_trampoline_from_kallsyms() to protect readers of
+ftrace_ops_trampoline_list (in ftrace_get_trampoline_kallsym)
+which is used when kallsyms is read.
 
-> Only include these tables in the 1 source file they are used.
-> 
-> Fixes hundreds of W=1 warnings!
-> 
-> Fixes the following W=1 kernel build warning(s):
-> 
->  In file included from drivers/net/wireless/marvell/mwifiex/main.h:59,
->  from drivers/net/wireless/marvell/mwifiex/main.c:22:
->  drivers/net/wireless/marvell/mwifiex/sdio.h:705:41: warning: ‘mwifiex_sdio_sd8801’ defined but not used [-Wunused-const-variable=]
->  705 | static const struct mwifiex_sdio_device mwifiex_sdio_sd8801 = {
->  | ^~~~~~~~~~~~~~~~~~~
-> 
->  NB: There were 100's of these - snipped for brevity.
-> 
-> Cc: Amitkumar Karwar <amitkarwar@gmail.com>
-> Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
-> Cc: Xinming Hu <huxinming820@gmail.com>
-> Cc: Kalle Valo <kvalo@codeaurora.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Jakub Kicinski <kuba@kernel.org>
-> Cc: linux-wireless@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: fc0ea795f53c8d ("ftrace: Add symbols for ftrace trampolines")
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ kernel/trace/ftrace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-I don't think static const variables should be in a .h file. Wouldn't
-sdio.c be the right place for these? At least from a quick look I got
-that impression.
-
-Patch set to Changes Requested.
-
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 275441254bb5..4e64367c9774 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2782,6 +2782,7 @@ static void ftrace_remove_trampoline_from_kallsyms(struct ftrace_ops *ops)
+ {
+ 	lockdep_assert_held(&ftrace_lock);
+ 	list_del_rcu(&ops->list);
++	synchronize_rcu();
+ }
+ 
+ /*
 -- 
-https://patchwork.kernel.org/patch/11728301/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.17.1
 
