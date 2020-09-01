@@ -2,223 +2,123 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 630DAC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 546ACC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3D7992071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:47:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n6smDPuH"
+	by mail.kernel.org (Postfix) with ESMTP id 29934206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599004181;
+	bh=8I2/6S4NA8g5BwcpaqIkpbR2yNhiDL7XvOsIWSi4uO8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OQ1iMN2pDxlAV5gt0PuAuJrSMLk8qZpdXlDobFKP0w5iqzCOP0ujjgPnP/yJtbBn/
+	 QGiFPES5gfYwGZ0Xn0g6hW0ZAUVYzgibGWPy06vDVQq7L/77AGqC6hnvFFt5wkW5aj
+	 g/wxf86jnaesjxFpFpsmPp+5Q5pv4x8KiehceOp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726323AbgIAXrm (ORCPT
+        id S1726386AbgIAXtj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 19:47:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46300 "EHLO
+        Tue, 1 Sep 2020 19:49:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgIAXrk (ORCPT
+        with ESMTP id S1725949AbgIAXti (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 19:47:40 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30559C061244;
-        Tue,  1 Sep 2020 16:47:39 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id t10so2461991wrv.1;
-        Tue, 01 Sep 2020 16:47:39 -0700 (PDT)
+        Tue, 1 Sep 2020 19:49:38 -0400
+Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2E1C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 16:49:38 -0700 (PDT)
+Received: by mail-il1-x142.google.com with SMTP id p13so3393384ils.3
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 16:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3jRTuoyd0aXcHbT1FCJs9RFpBaj1SWDBNdxNAjLow6A=;
-        b=n6smDPuHIimNu776vQSUaS1qsggoBq5uOTSwHLd5/IFbSMz5ED44hhXce9aEMpeJru
-         ManD+gIWuESONyAVptU2MIj71LebpM14JXLMctKVe3L7glTMP7lE6BlnTos3LRqxZFJz
-         SkQdY/SFu1A8/Bg2V80/DqvuAzb5I9Yv314kmaQWCQSdgMIJtsL4NnqeHmXR69SPWsWu
-         p1YgYYiUZkPpVuwVgPsRk6EUe0dyUoHKEFpZN84ZR/hvpPcIKVDLW9lokYaoulBwmIe8
-         NfOxsHq5MfAHB2qdlxxb9AEdjh7/kQscnsIEboSN5Nc575xjVgRk3CqpnChZQkrIUX9m
-         yAQA==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oaGFlzegAhzhObOl5ystm/DE+ZWlJnH7f4raEDT5VgA=;
+        b=SYmu3CGwjJrXjtImMPUk+qehy+oczAv8rFWqya5Pc7ywWZ122YhrlfyszAcdOkl8bO
+         ARjvWrPrOaVCNrIEM8gT8YFImQ3Ll4mLGgvkXlKBPCM3Y+jzQKeb52QUFfsP1FmF1EcQ
+         g/3axD9+hchplrqSOZhYZBY8slu8yCA9SvLeY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3jRTuoyd0aXcHbT1FCJs9RFpBaj1SWDBNdxNAjLow6A=;
-        b=mKknEWz5y0zKEHTCimn8jvx5pj8F/ShabhwIYfz+XjnF/BOnx45rrKTshajop4OxaY
-         DaQfvbLKW5KZ+u3Hpb2xumUhl8FAFx3HmaB3B+TOmUdrZtb2o0Z+IXt9ITDImqHUSyHm
-         QxRaZYkTyMQjubuyL0i8clWS4l1CTzsHXysk86kNwU+I3BvqsF3PrLNJuhjZ5ZqZJ2Iu
-         mSpakKAtP2vhEQT2gFr6P/pr+DpRACyKWwi7BO8THVEHoXnNYR1bL7ZcEv0KOmp5bvq7
-         suI+FUdgGNB0RUWElf+QTKOOzquPbHfMUtem6AWM40zMEDlrvxZ4JAkglsZhglKEkIyl
-         Eqaw==
-X-Gm-Message-State: AOAM531oXNEHJqfldcBUv3EOEVmvhI3jfb3SD2tww9eOIvhRqxb4B315
-        hR6R3WFg6aaHOTiP6KO/X4M98qGeyPeeRshY67I=
-X-Google-Smtp-Source: ABdhPJyxKRxrKYP38mwrpz7T/Q77cJAyI6CywuVy5qABpdgIdnJCw1QbCXjLLTX9MPIVNAtteXyldSgHtVE6jFLWLVA=
-X-Received: by 2002:a5d:4bc6:: with SMTP id l6mr4572138wrt.132.1599004058403;
- Tue, 01 Sep 2020 16:47:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oaGFlzegAhzhObOl5ystm/DE+ZWlJnH7f4raEDT5VgA=;
+        b=NPJit9F65AblTcq9Z0I9fNTBwaXKzREmZb+KHAPpSg+9X9FuhGZmGzkzk5Sy/9H2Ix
+         uZf98cTXktEDkmd/2h8GJ94eC5VELutbBqm+OwjBD2Fa+Ip34/DkHWPHqfFAak7v91mC
+         qqEg8+kNztq2t3wYwzIoVTHxHQcuA0oIuf45atS9suNXqU9+Vki9lJDPUzoHM4NaEAxf
+         sZbtFTDqIoCLXWQ4NK22X/48kbb5a9mk2QpNML+DtNLRDRgF282OpC5Vs/zTL2hF8xMj
+         415ceYJzklUBtFz+MzNNlVxk8YkZBGcfeFUA0v/Xl7GP0D+jiCl5KHe/N+F80RkWPbjW
+         2ieA==
+X-Gm-Message-State: AOAM533ZUzaGVTPgDKiXK0fkWdrhPCYygqpqKn9j2qFKMVuvlLtWwBTs
+        FxK4x3wiSJl4pD8JVh4lAlmE9Q==
+X-Google-Smtp-Source: ABdhPJyUI6z8e3EY6AvQ136Y4DXv1DRlvrvUJufRVcDnL/aQih9dHa1XpfJaqO4k0jFJo64Vv3sZMA==
+X-Received: by 2002:a92:dac1:: with SMTP id o1mr1427220ilq.86.1599004177375;
+        Tue, 01 Sep 2020 16:49:37 -0700 (PDT)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id k18sm1253713ils.42.2020.09.01.16.49.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 16:49:36 -0700 (PDT)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kernel: events: Use scnprintf() in show_pmu_*() instead of snprintf()
+Date:   Tue,  1 Sep 2020 17:49:29 -0600
+Message-Id: <20200901234930.359126-1-skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063535eucas1p10cef37d8364216cf57c97e96d3959dd2@eucas1p1.samsung.com>
- <20200826063316.23486-13-m.szyprowski@samsung.com> <fe224152-b621-d96e-b432-bf837d320210@arm.com>
-In-Reply-To: <fe224152-b621-d96e-b432-bf837d320210@arm.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 1 Sep 2020 16:48:25 -0700
-Message-ID: <CAF6AEGscE4tdzugs75gFD+D43Un1DcKf8_=CwiPG2uHrytzwcQ@mail.gmail.com>
-Subject: Re: [PATCH v9 12/32] drm: msm: fix common struct sg_table related issues
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linaro-mm-sig@lists.linaro.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 12:14 PM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> On 2020-08-26 07:32, Marek Szyprowski wrote:
-> > The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> > returns the number of the created entries in the DMA address space.
-> > However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> > dma_unmap_sg must be called with the original number of the entries
-> > passed to the dma_map_sg().
-> >
-> > struct sg_table is a common structure used for describing a non-contiguous
-> > memory buffer, used commonly in the DRM and graphics subsystems. It
-> > consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> > as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> > and DMA mapped pages (nents entry).
-> >
-> > It turned out that it was a common mistake to misuse nents and orig_nents
-> > entries, calling DMA-mapping functions with a wrong number of entries or
-> > ignoring the number of mapped entries returned by the dma_map_sg()
-> > function.
-> >
-> > To avoid such issues, lets use a common dma-mapping wrappers operating
-> > directly on the struct sg_table objects and use scatterlist page
-> > iterators where possible. This, almost always, hides references to the
-> > nents and orig_nents entries, making the code robust, easier to follow
-> > and copy/paste safe.
-> >
-> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> > Acked-by: Rob Clark <robdclark@gmail.com>
-> > ---
-> >   drivers/gpu/drm/msm/msm_gem.c    | 13 +++++--------
-> >   drivers/gpu/drm/msm/msm_gpummu.c | 14 ++++++--------
-> >   drivers/gpu/drm/msm/msm_iommu.c  |  2 +-
-> >   3 files changed, 12 insertions(+), 17 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
-> > index b2f49152b4d4..8c7ae812b813 100644
-> > --- a/drivers/gpu/drm/msm/msm_gem.c
-> > +++ b/drivers/gpu/drm/msm/msm_gem.c
-> > @@ -53,11 +53,10 @@ static void sync_for_device(struct msm_gem_object *msm_obj)
-> >       struct device *dev = msm_obj->base.dev->dev;
-> >
-> >       if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
-> > -             dma_sync_sg_for_device(dev, msm_obj->sgt->sgl,
-> > -                     msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-> > +             dma_sync_sgtable_for_device(dev, msm_obj->sgt,
-> > +                                         DMA_BIDIRECTIONAL);
-> >       } else {
-> > -             dma_map_sg(dev, msm_obj->sgt->sgl,
-> > -                     msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-> > +             dma_map_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
-> >       }
-> >   }
-> >
-> > @@ -66,11 +65,9 @@ static void sync_for_cpu(struct msm_gem_object *msm_obj)
-> >       struct device *dev = msm_obj->base.dev->dev;
-> >
-> >       if (get_dma_ops(dev) && IS_ENABLED(CONFIG_ARM64)) {
-> > -             dma_sync_sg_for_cpu(dev, msm_obj->sgt->sgl,
-> > -                     msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-> > +             dma_sync_sgtable_for_cpu(dev, msm_obj->sgt, DMA_BIDIRECTIONAL);
-> >       } else {
-> > -             dma_unmap_sg(dev, msm_obj->sgt->sgl,
-> > -                     msm_obj->sgt->nents, DMA_BIDIRECTIONAL);
-> > +             dma_unmap_sgtable(dev, msm_obj->sgt, DMA_BIDIRECTIONAL, 0);
-> >       }
-> >   }
-> >
-> > diff --git a/drivers/gpu/drm/msm/msm_gpummu.c b/drivers/gpu/drm/msm/msm_gpummu.c
-> > index 310a31b05faa..319f06c28235 100644
-> > --- a/drivers/gpu/drm/msm/msm_gpummu.c
-> > +++ b/drivers/gpu/drm/msm/msm_gpummu.c
-> > @@ -30,21 +30,19 @@ static int msm_gpummu_map(struct msm_mmu *mmu, uint64_t iova,
-> >   {
-> >       struct msm_gpummu *gpummu = to_msm_gpummu(mmu);
-> >       unsigned idx = (iova - GPUMMU_VA_START) / GPUMMU_PAGE_SIZE;
-> > -     struct scatterlist *sg;
-> > +     struct sg_dma_page_iter dma_iter;
-> >       unsigned prot_bits = 0;
-> > -     unsigned i, j;
-> >
-> >       if (prot & IOMMU_WRITE)
-> >               prot_bits |= 1;
-> >       if (prot & IOMMU_READ)
-> >               prot_bits |= 2;
-> >
-> > -     for_each_sg(sgt->sgl, sg, sgt->nents, i) {
-> > -             dma_addr_t addr = sg->dma_address;
-> > -             for (j = 0; j < sg->length / GPUMMU_PAGE_SIZE; j++, idx++) {
-> > -                     gpummu->table[idx] = addr | prot_bits;
-> > -                     addr += GPUMMU_PAGE_SIZE;
-> > -             }
-> > +     for_each_sgtable_dma_page(sgt, &dma_iter, 0) {
-> > +             dma_addr_t addr = sg_page_iter_dma_address(&dma_iter);
-> > +
-> > +             BUILD_BUG_ON(GPUMMU_PAGE_SIZE != PAGE_SIZE);
-> > +             gpummu->table[idx++] = addr | prot_bits;
->
-> Given that the BUILD_BUG_ON might prevent valid arm64 configs from
-> building, how about a simple tweak like:
->
->                 for (i = 0; i < PAGE_SIZE; i += GPUMMU_PAGE_SIZE)
->                         gpummu->table[idx++] = i + addr | prot_bits;
-> ?
->
-> Or alternatively perhaps some more aggressive #ifdefs or makefile tweaks
-> to prevent the GPUMMU code building for arm64 at all if it's only
-> relevant to 32-bit platforms (which I believe might be the case).
+Since snprintf() returns would-be-output size instead of the actual
+output size, replace it with scnprintf(), so the nr_addr_filters_show(),
+type_show(), and perf_event_mux_interval_ms_show() routines return the
+actual size.
 
-yes, the gpummu path is only used on older armv7 snapdragon and imx5
-platforms.. I suppose maybe the easy thing would be to add a stub for
-msm_gpummu_new() and msm_gpummu_params() and then only build it on
-arm64?
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+---
+ kernel/events/core.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-BR,
--R
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 7ed5248f0445..5f4236c84940 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10571,7 +10571,7 @@ static ssize_t nr_addr_filters_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return snprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
++	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
+ }
+ DEVICE_ATTR_RO(nr_addr_filters);
+ 
+@@ -10582,7 +10582,7 @@ type_show(struct device *dev, struct device_attribute *attr, char *page)
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->type);
++	return scnprintf(page, PAGE_SIZE-1, "%d\n", pmu->type);
+ }
+ static DEVICE_ATTR_RO(type);
+ 
+@@ -10593,7 +10593,7 @@ perf_event_mux_interval_ms_show(struct device *dev,
+ {
+ 	struct pmu *pmu = dev_get_drvdata(dev);
+ 
+-	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->hrtimer_interval_ms);
++	return scnprintf(page, PAGE_SIZE-1, "%d\n", pmu->hrtimer_interval_ms);
+ }
+ 
+ static DEFINE_MUTEX(mux_interval_mutex);
+-- 
+2.25.1
 
-
-> Robin.
->
-> >       }
-> >
-> >       /* we can improve by deferring flush for multiple map() */
-> > diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-> > index 3a381a9674c9..6c31e65834c6 100644
-> > --- a/drivers/gpu/drm/msm/msm_iommu.c
-> > +++ b/drivers/gpu/drm/msm/msm_iommu.c
-> > @@ -36,7 +36,7 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
-> >       struct msm_iommu *iommu = to_msm_iommu(mmu);
-> >       size_t ret;
-> >
-> > -     ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
-> > +     ret = iommu_map_sgtable(iommu->domain, iova, sgt, prot);
-> >       WARN_ON(!ret);
-> >
-> >       return (ret == len) ? 0 : -EINVAL;
-> >
