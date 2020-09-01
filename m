@@ -2,54 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA9DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9129C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E36DA206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2679206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979440;
-	bh=BetL4iDdxppC0ILG6yUltd+ERcIHNCATMi10OVK3mVs=;
+	s=default; t=1598979442;
+	bh=AJxNCwJ6+PHBrRYEj/sLrEtcip7g+O9YK+Oac/lIGR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rc6/vUVKvZxPQdDiip3NZBc0UGecnXNk6jzVt92FgLkGI0IIBjyzVAkl6hI6KnE6+
-	 Y1HcPXBAOX5j6CbMCAb0y/xoKnJ9dgZICwsumUUD9//VxUeKJyb/ggEBAgzjRR4Lxk
-	 NGDdwFdZyO8D/DWOgsNw7Ou2pq/iwtBINtLLB5L0=
+	b=gSgix2YZyJtgWZRsnIBAeTthRakRx17Lb9yBI2DKZBKrm1+M1dFng4vDB0baATOYO
+	 1ZCK+EE7dn7+WgXMf0T9YeTqRQAht+31exF+cGBXixultWG9MNx+uT147mBfl571I1
+	 TNaIK4kYO6qxN/Bgzw32nwBDWJPj/hfmmbWPkivI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729861AbgIAQ5S (ORCPT
+        id S1729682AbgIAPX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:57:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46650 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729636AbgIAPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:32 -0400
+        id S1729272AbgIAPUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:39 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4B9420BED;
-        Tue,  1 Sep 2020 15:23:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFAFF2078B;
+        Tue,  1 Sep 2020 15:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973812;
-        bh=BetL4iDdxppC0ILG6yUltd+ERcIHNCATMi10OVK3mVs=;
+        s=default; t=1598973639;
+        bh=AJxNCwJ6+PHBrRYEj/sLrEtcip7g+O9YK+Oac/lIGR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SRIsx03wlw1A5I9C9WrMt0DJeRawYEW0gIBwsWArXRyHKRh3/HWVtidygFViVV7TF
-         vfna/62KosYC8agu/JIyZ0/v2WdDsqtGM70DOCSWrqeWX8Whv1Ifx7S+h8IRCC5URt
-         /mYAvgx7NhNn7dtskT4gAEFjum06Aix6EJHbGvJo=
+        b=q52LzeDcdsAA4faa+ljcS2qi/+7VJllSQgzKOA381uQa+qCdIThS9iO8U1L1IViGT
+         Z3kvRZFG0lVOd3o/5G2qcY6TA0OuUej9Xd4NMPES7XcsFkXskz6XYNIlsY10JN2eei
+         bpsxPxJZRCil5sq4iobZszSKMZtfNS5ClA2DLZSE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Pu <houpu@bytedance.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 056/125] null_blk: fix passing of REQ_FUA flag in null_handle_rq
-Date:   Tue,  1 Sep 2020 17:10:11 +0200
-Message-Id: <20200901150937.302556240@linuxfoundation.org>
+        stable@vger.kernel.org, Brice Goglin <brice.goglin@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Cyril Roelandt <tipecaml@gmail.com>
+Subject: [PATCH 4.14 80/91] USB: Ignore UAS for JMicron JMS567 ATA/ATAPI Bridge
+Date:   Tue,  1 Sep 2020 17:10:54 +0200
+Message-Id: <20200901150932.155815658@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
+References: <20200901150928.096174795@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,35 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hou Pu <houpu@bytedance.com>
+From: Cyril Roelandt <tipecaml@gmail.com>
 
-[ Upstream commit 2d62e6b038e729c3e4bfbfcfbd44800ef0883680 ]
+commit 9aa37788e7ebb3f489fb4b71ce07adadd444264a upstream.
 
-REQ_FUA should be checked using rq->cmd_flags instead of req_op().
+This device does not support UAS properly and a similar entry already
+exists in drivers/usb/storage/unusual_uas.h. Without this patch,
+storage_probe() defers the handling of this device to UAS, which cannot
+handle it either.
 
-Fixes: deb78b419dfda ("nullb: emulate cache")
-Signed-off-by: Hou Pu <houpu@bytedance.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested-by: Brice Goglin <brice.goglin@gmail.com>
+Fixes: bc3bdb12bbb3 ("usb-storage: Disable UAS on JMicron SATA enclosure")
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+CC: <stable@vger.kernel.org>
+Signed-off-by: Cyril Roelandt <tipecaml@gmail.com>
+Link: https://lore.kernel.org/r/20200825212231.46309-1-tipecaml@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/block/null_blk_main.c | 2 +-
+ drivers/usb/storage/unusual_devs.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
-index d2d7dc9cd58d2..4fef1fb918ece 100644
---- a/drivers/block/null_blk_main.c
-+++ b/drivers/block/null_blk_main.c
-@@ -1086,7 +1086,7 @@ static int null_handle_rq(struct nullb_cmd *cmd)
- 		len = bvec.bv_len;
- 		err = null_transfer(nullb, bvec.bv_page, len, bvec.bv_offset,
- 				     op_is_write(req_op(rq)), sector,
--				     req_op(rq) & REQ_FUA);
-+				     rq->cmd_flags & REQ_FUA);
- 		if (err) {
- 			spin_unlock_irq(&nullb->lock);
- 			return err;
--- 
-2.25.1
-
+--- a/drivers/usb/storage/unusual_devs.h
++++ b/drivers/usb/storage/unusual_devs.h
+@@ -2347,7 +2347,7 @@ UNUSUAL_DEV(  0x357d, 0x7788, 0x0114, 0x
+ 		"JMicron",
+ 		"USB to ATA/ATAPI Bridge",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
+-		US_FL_BROKEN_FUA ),
++		US_FL_BROKEN_FUA | US_FL_IGNORE_UAS ),
+ 
+ /* Reported by Andrey Rahmatullin <wrar@altlinux.org> */
+ UNUSUAL_DEV(  0x4102, 0x1020, 0x0100,  0x0100,
 
 
