@@ -2,144 +2,63 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE25C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8712AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC01207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:47:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CWzyYuoB"
+	by mail.kernel.org (Postfix) with ESMTP id 52A492071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:48:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732070AbgIATrU (ORCPT
+        id S1732153AbgIATsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:47:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37538 "EHLO
+        Tue, 1 Sep 2020 15:48:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgIATrP (ORCPT
+        with ESMTP id S1726936AbgIATsN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:47:15 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53D2CC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 12:47:15 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id lo4so3374635ejb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 12:47:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kTur4TszHq9523qD6iPQQf45ohXDEUrbbOabBCfKuUw=;
-        b=CWzyYuoBpHyopcW6UGJzCRrbzhPmoxUBaCxI7bRNujUqWrF5to/QhuZqjrS7nxWu0W
-         jAbOrW/VUjLw5eCygcxnnz4+H4WcP4zPwj0aufjfMcS7bjx3wkayFffr7Z6u5k2s8TFD
-         8tXV8kM+VzEYM9fO8VnSzWieJ5cQoi7lXniCotDInsAEJFLJ7zfDy2L/kUH4emO0IlvH
-         gpqmf3HLFgBRudRPyT4CD2lBOGN0UFZiJ0WwVcUE7jm9LSNP+IE3hPw9g59DEqCzfSEL
-         THiflFVqtJ+7m5QY2g3VNZ5cZdTzYUjw1h86UqHsaXiHTetSrbuY9+PWlnuAGvW1/UM7
-         Af1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kTur4TszHq9523qD6iPQQf45ohXDEUrbbOabBCfKuUw=;
-        b=kZOvoeb96PUtM2COatqg7KzF48btOEiVH4WQD0mXMQOLQztPN+8N0mfcFSOE+HwWge
-         2Rdcem2DVD5r7C8h2XOBkFuA/xpVmWNKnjo155T6ccFIAwnAJ3XHcmQJWkcKZgA7kj0T
-         DJSB5gC1oUbbZPEYeunVWMrzIeYbXrxZl5bGjYwmH6x086d0LgkZcjfgoqOquhhe34yc
-         NuTBCCk+YKpjrZvEjPkPx0JzFuvaR2tQz8TubAhneZVTlJvycTXtWsNOzSy7S8W7zAUP
-         Ct9dvus94XYL2xh97I2pUJXE3hr1t5t0+PTUSceBrzQ+ahNf5JQWUMjkv8Qp7Raw5Qax
-         jW3g==
-X-Gm-Message-State: AOAM533rxV3ghfY1kYr4h7HTtJPnE9loqj8SqJ7Cr/DRdflXhSsziEdc
-        xsH5BlZoYPLpJrqAs2zIwgSQpPZkaa19/4LFOr7zyw==
-X-Google-Smtp-Source: ABdhPJzf8T7FXtY0Q7Fx2epgXAQyimHZxDg5Mh5UyXW9wn394/QoJXCbMs9CPXEix3VkOUNcTb7yISndZZ2r4JYr/AI=
-X-Received: by 2002:a17:906:a209:: with SMTP id r9mr3270866ejy.413.1598989633789;
- Tue, 01 Sep 2020 12:47:13 -0700 (PDT)
+        Tue, 1 Sep 2020 15:48:13 -0400
+X-Greylist: delayed 366 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 01 Sep 2020 12:48:13 PDT
+Received: from mail.itouring.de (mail.itouring.de [IPv6:2a01:4f8:a0:4463::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C811C061244;
+        Tue,  1 Sep 2020 12:48:13 -0700 (PDT)
+Received: from tux.applied-asynchrony.com (p5ddd7bcc.dip0.t-ipconnect.de [93.221.123.204])
+        by mail.itouring.de (Postfix) with ESMTPSA id EDBD33E15;
+        Tue,  1 Sep 2020 21:42:03 +0200 (CEST)
+Received: from [192.168.100.223] (ragnarok.applied-asynchrony.com [192.168.100.223])
+        by tux.applied-asynchrony.com (Postfix) with ESMTP id A9FD1F01603;
+        Tue,  1 Sep 2020 21:42:00 +0200 (CEST)
+Subject: Re: [PATCH 5.8 000/255] 5.8.6-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+References: <20200901151000.800754757@linuxfoundation.org>
+From:   =?UTF-8?Q?Holger_Hoffst=c3=a4tte?= <holger@applied-asynchrony.com>
+Organization: Applied Asynchrony, Inc.
+Message-ID: <5a6083e7-1ec2-4643-83dd-667bc4ea3251@applied-asynchrony.com>
+Date:   Tue, 1 Sep 2020 21:42:00 +0200
 MIME-Version: 1.0
-References: <20200819224030.1615203-1-haoluo@google.com> <20200819224030.1615203-9-haoluo@google.com>
- <CAEf4BzYC0JRQusCxTrmraYQC7SZdkVjdy8DMUNECKwCbXP9-dw@mail.gmail.com>
- <CA+khW7jYWNT5aVe5vCinw5qwKKoB0w386qz2g+0ndv1LeeoGGg@mail.gmail.com> <CAEf4Bza5+m72JQ1Q3a2GRetGB7C-Zemvd-ib0u_VKC2nrYkgdQ@mail.gmail.com>
-In-Reply-To: <CAEf4Bza5+m72JQ1Q3a2GRetGB7C-Zemvd-ib0u_VKC2nrYkgdQ@mail.gmail.com>
-From:   Hao Luo <haoluo@google.com>
-Date:   Tue, 1 Sep 2020 12:47:02 -0700
-Message-ID: <CA+khW7iP+BsXnNg0E-K3npR74FqV0b+oHo9j27ymKWobi-QBVw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 8/8] bpf/selftests: Test for bpf_per_cpu_ptr()
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Quentin Monnet <quentin@isovalent.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, Andrey Ignatov <rdna@fb.com>,
-        Jakub Sitnicki <jakub@cloudflare.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 11:12 AM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Thu, Aug 27, 2020 at 8:42 PM Hao Luo <haoluo@google.com> wrote:
-> >
-[...]
-> > > >
-> > > > -extern const struct rq runqueues __ksym; /* struct type global var. */
-> > > > +extern const struct rq runqueues __ksym; /* struct type percpu var. */
-> > > >  extern const int bpf_prog_active __ksym; /* int type global var. */
-> > > > +extern const unsigned long process_counts __ksym; /* int type percpu var. */
-> > > >
-> > > >  SEC("raw_tp/sys_enter")
-> > > >  int handler(const void *ctx)
-> > > >  {
-> > > > +       struct rq *rq;
-> > > > +       unsigned long *count;
-> > > > +
-> > > >         out__runqueues = (__u64)&runqueues;
-> > > >         out__bpf_prog_active = (__u64)&bpf_prog_active;
-> > > >
-> > > > +       rq = (struct rq *)bpf_per_cpu_ptr(&runqueues, 1);
-> > > > +       if (rq)
-> > > > +               out__rq_cpu = rq->cpu;
-> > >
-> > > this is awesome!
-> > >
-> > > Are there any per-cpu variables that are arrays? Would be nice to test
-> > > those too.
-> > >
-> > >
-> >
-> > There are currently per-cpu arrays, but not common. There is a
-> > 'pmc_prev_left' in arch/x86, I can add that in this test.
->
-> arch-specific variables are bad, because selftests will be failing on
-> other architectures; let's not do this then.
->
+On 2020-09-01 17:07, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.8.6 release.
 
-Yeah, no problem. Though not going to add this arch-specific variable
-in the posted patches, I tried array-typed ksyms locally in my test
-environment. It worked fine, except that the array size is not
-checked. For instance, if there is a percpu array in kernel as
+This one has a bunch of things I care about, so I gave it a try
+on both my server & desktop (Gentoo, x86_64). Applies & builds cleanly,
+everything working fine: no spontaneous fires or unexpected screams
+from the underworld.
 
-DEFINE_PER_CPU(u32[64], foo);
-
-we can declare a ksym of different size and it passes libbpf checks
-and kernel verification.
-
-extern u32 foo[128] __ksyms;
-
-It seems that bpf_core_types_are_compat() doesn't check nr_elem. But
-it seems the kernel verifier does check out-of-bounds accesses, so
-this may not be a real problem. Just want to list what I saw.
-
-> >
-> > [...]
+Cheers!
+Holger
