@@ -2,151 +2,106 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F4D5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 549BAC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1E742065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598986620;
-	bh=HbKlxLoyNfuJ+PYxw3pGmdfgMjFnR8bPA42Ap6SI98Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NYWwenKHdSVT1QApgvW5H5hZxiadoQrUx4IjJ8Fki8fp7oFuUogdHP9YsB7tj78Qd
-	 29eD5p4BzWGrXEHXrctYxX5IQNwI9MyIRN4GM8O0d+/vPNU0tZbWe4tExlA1E/U0Ak
-	 /PRAsbpisH9jjSvT9oauEIXXF63nbhu39jl7bM2c=
+	by mail.kernel.org (Postfix) with ESMTP id 367892071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:57:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ebiQOl0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731649AbgIAS44 (ORCPT
+        id S1731930AbgIAS5p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57396 "EHLO
+        Tue, 1 Sep 2020 14:57:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731245AbgIASxJ (ORCPT
+        with ESMTP id S1728638AbgIAS5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:53:09 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71775C06124F;
-        Tue,  1 Sep 2020 11:53:08 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id d20so1996903qka.5;
-        Tue, 01 Sep 2020 11:53:08 -0700 (PDT)
+        Tue, 1 Sep 2020 14:57:39 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B66BBC061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 11:57:39 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q1so1064291pjd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 11:57:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uLHwGiWfWkP5kcHSnqjONlJj/O0Qbx60l9TYb+oGkco=;
-        b=B3K+LIBrV807PBKY6u2wypELmyggq3KtY8cxZwTKZ8RQA/n1e71fVHCy4sRQklcUtr
-         CREI/4x1mQ+mcdi46kL6S9vLmtbUlnz9bBxhQWCYyCv2fc8NYLI9HGzXRFS12nQnr/7r
-         ClhF+3BwIXFLZqWPw7pfXSiCSun3gZx/vd+gKCAmgcbETNSruJmVVwEXokDYSM3piiJU
-         Kl96VzKmr+GcZYj7+ZLR+PoPVmd0WtAM4O/uxMk5okGAOPNdjr14YsIo2gBwdDgqKjIQ
-         2rly3BSMOKkL/pVu0MvnbEvXy4n1PpK9mIplhN1bpK56tpdiUGmth5nbGN49e2UaWbtV
-         H2aA==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=myAjLsXJJ5WrIyplttBLOJrb3cYFWSnfDJgomMmHBsY=;
+        b=ebiQOl0HdWb1qsZ8K4nAaddfFhbr3U7deevLOcXXTD6OLvfKSnSROhSsCjgZ7mCdSU
+         KEk3JPhKcmdeA0QtKKnHHoNdav2XUrlVbf6RKDK+ixxHf+lELn4fBRXQcE7RzE2wmQCF
+         jhg7c/3b8g07wxtC6uK6VnR8kOyuLPgRU1LbY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=uLHwGiWfWkP5kcHSnqjONlJj/O0Qbx60l9TYb+oGkco=;
-        b=aprzarl+XOLn8Qco4ucUL0vr0zoMclLak5/hCgl2GzVytxAA9zntJ/bXBBpQAk4e1C
-         2/XjeS+SZELUOxIZx/OFw4UUINx5kICmIM7wRrLOgebeuN4fOVxxlqLqr+OeopoiqN/p
-         I6SPWVlKAKivwGEwE7jzuCEz/63HDBbQ2m5k3/YF3tRqnE8RRDFucs1YGgRxR0viLLFH
-         V6ag8iEZQDFBFuZoCaPeFcfpbV+1SMqjqOSbiwmXQl571g5zEaXZ6Yk1oUEe2aX2BmyN
-         v1p6760MVwJ13iUf2Bk6dur6O4ZCatH23hZRnh3nJ/IaRa3QnINC4tpUvmxjC0Y0KM6l
-         m5EQ==
-X-Gm-Message-State: AOAM531XskOITEueK6O9l7++jIjCJ87XdNRj+wlZ/5FDLrrCjTmN8D8k
-        uDV0BsESOB4m++aMfO4kGRM9hl7hlMxSFg==
-X-Google-Smtp-Source: ABdhPJz/FzbNt/DYQEKFdJtI4ZeTtPEVzwUyDfGj2haKHEtcgF8tR5a76OyunS6WmzWCcMJ5geoj4w==
-X-Received: by 2002:a37:9d4d:: with SMTP id g74mr3064979qke.422.1598986387528;
-        Tue, 01 Sep 2020 11:53:07 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id b13sm1675828qkl.46.2020.09.01.11.53.06
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=myAjLsXJJ5WrIyplttBLOJrb3cYFWSnfDJgomMmHBsY=;
+        b=NjHCpTB2hmthyBjs6IIHVU4fW1swrRaYOmCq5ilebebQEIIMVQgjc7SDWXwt9loGZB
+         bXED9puYVx5tNwhN6ToB0kKL4KRQ/dEiUp5JvzBBY/VT1c4MEOgnusmlwWERs9mQ5yR2
+         bH1rXc/Sqhw3yoTb0KXGVFwPSKndV/S+6l4B1uqzaje374zYR15NSbkpjWeEcJEbe1HK
+         9pFORcOT/mFWnc5VvACS4kUqNitYF5JpfCumQ2dm7z9hwuFR+8i5g9NCkuuDYLLw7nIK
+         6Gyc1Hf6Nn7aOO93tuw4ENtSa6AoJy7X5hc/lyXgBKeea8yRkbkE7zcufXDkje1wm7eJ
+         N7+Q==
+X-Gm-Message-State: AOAM532+PGH9qm+LrgqFE797HVrsdRT+QCAfdJ0f5s1StLN2X5Pca4eT
+        gXDH8KFOxtBEtErNYzjqZe8kFw==
+X-Google-Smtp-Source: ABdhPJxM7CI6ObOTA/dAnpNqk4c7bPseM/evKd+pRwbVQYq3IOIRkOFgQb1ors7cvRWIw5JowuZv0w==
+X-Received: by 2002:a17:90a:450d:: with SMTP id u13mr2718413pjg.99.1598986659307;
+        Tue, 01 Sep 2020 11:57:39 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b10sm1613877pff.85.2020.09.01.11.57.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:53:07 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk
-Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
-        Tejun Heo <tj@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH 02/27] blk-stat: make q->stats->lock irqsafe
-Date:   Tue,  1 Sep 2020 14:52:32 -0400
-Message-Id: <20200901185257.645114-3-tj@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
-References: <20200901185257.645114-1-tj@kernel.org>
+        Tue, 01 Sep 2020 11:57:38 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 11:57:37 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH 05/10] lkdtm: disable set_fs-based tests for
+ !CONFIG_SET_FS
+Message-ID: <202009011156.0F49882@keescook>
+References: <20200827150030.282762-1-hch@lst.de>
+ <20200827150030.282762-6-hch@lst.de>
+ <CAHk-=wipbWD66sU7etETXwDW5NRsU2vnbDpXXQ5i94hiTcawyw@mail.gmail.com>
+ <20200829092406.GB8833@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200829092406.GB8833@lst.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blk-iocost calls blk_stat_enable_accounting() while holding an irqsafe lock
-which triggers a lockdep splat because q->stats->lock isn't irqsafe. Let's
-make it irqsafe.
+On Sat, Aug 29, 2020 at 11:24:06AM +0200, Christoph Hellwig wrote:
+> On Thu, Aug 27, 2020 at 11:06:28AM -0700, Linus Torvalds wrote:
+> > On Thu, Aug 27, 2020 at 8:00 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > Once we can't manipulate the address limit, we also can't test what
+> > > happens when the manipulation is abused.
+> > 
+> > Just remove these tests entirely.
+> > 
+> > Once set_fs() doesn't exist on x86, the tests no longer make any sense
+> > what-so-ever, because test coverage will be basically zero.
+> > 
+> > So don't make the code uglier just to maintain a fiction that
+> > something is tested when it isn't really.
+> 
+> Sure fine with me unless Kees screams.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Fixes: cd006509b0a9 ("blk-iocost: account for IO size when testing latencies")
-Cc: stable@vger.kernel.org # v5.8+
----
- block/blk-stat.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+To clarify: if any of x86, arm64, arm, powerpc, riscv, and s390 are
+using set_fs(), I want to keep this test. "ugly" is fine in lkdtm. :)
 
-diff --git a/block/blk-stat.c b/block/blk-stat.c
-index 7da302ff88d0..ae3dd1fb8e61 100644
---- a/block/blk-stat.c
-+++ b/block/blk-stat.c
-@@ -137,6 +137,7 @@ void blk_stat_add_callback(struct request_queue *q,
- 			   struct blk_stat_callback *cb)
- {
- 	unsigned int bucket;
-+	unsigned long flags;
- 	int cpu;
- 
- 	for_each_possible_cpu(cpu) {
-@@ -147,20 +148,22 @@ void blk_stat_add_callback(struct request_queue *q,
- 			blk_rq_stat_init(&cpu_stat[bucket]);
- 	}
- 
--	spin_lock(&q->stats->lock);
-+	spin_lock_irqsave(&q->stats->lock, flags);
- 	list_add_tail_rcu(&cb->list, &q->stats->callbacks);
- 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
--	spin_unlock(&q->stats->lock);
-+	spin_unlock_irqrestore(&q->stats->lock, flags);
- }
- 
- void blk_stat_remove_callback(struct request_queue *q,
- 			      struct blk_stat_callback *cb)
- {
--	spin_lock(&q->stats->lock);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&q->stats->lock, flags);
- 	list_del_rcu(&cb->list);
- 	if (list_empty(&q->stats->callbacks) && !q->stats->enable_accounting)
- 		blk_queue_flag_clear(QUEUE_FLAG_STATS, q);
--	spin_unlock(&q->stats->lock);
-+	spin_unlock_irqrestore(&q->stats->lock, flags);
- 
- 	del_timer_sync(&cb->timer);
- }
-@@ -183,10 +186,12 @@ void blk_stat_free_callback(struct blk_stat_callback *cb)
- 
- void blk_stat_enable_accounting(struct request_queue *q)
- {
--	spin_lock(&q->stats->lock);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&q->stats->lock, flags);
- 	q->stats->enable_accounting = true;
- 	blk_queue_flag_set(QUEUE_FLAG_STATS, q);
--	spin_unlock(&q->stats->lock);
-+	spin_unlock_irqrestore(&q->stats->lock, flags);
- }
- EXPORT_SYMBOL_GPL(blk_stat_enable_accounting);
- 
 -- 
-2.26.2
-
+Kees Cook
