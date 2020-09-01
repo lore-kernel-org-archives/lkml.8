@@ -3,92 +3,171 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD0EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD8BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A63D206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87CB206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976164;
-	bh=2+/pO2FWS81LBJUUa126UILD7S9Fn08gFTclDXknYgU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nRY+vRZWw4Ys3VWsbfLgBe2XBDZ5yz24Gokus35piXDcK9qguzJXWVLr5dlUukqZo
-	 5+N8l8UTIQfgmSINZHhetjbLFWYQnd9XqMkkLG2S2p+ZU4M/zV9mzhUo9a/I5xGE+4
-	 AQFCtecwfCqbuYuqNs6ZOuvo7wdhP1WG4fVQXHwg=
+	s=default; t=1598976169;
+	bh=QQmK0YgX6jTfA/hhW+0BDjtr3e/de+VhR6umLQnHSfs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bnNIYmRWWLRuWSJ2etZRkP/VWfzLdRyYLv9z6oAwtQACYvCc9iqVe1VT7bcamyAZp
+	 zzCV1FQZvRdA+KQ1cG6fxaVbezPNJs5RI8nQXV8QtX3q2kevnhXd3ovZV35Vlvc2ha
+	 RI1Qx9iAmemn3g4seEmd4aVTICc4osNQHgvjH7DI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbgIAQCm (ORCPT
+        id S1729042AbgIAQCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60304 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:02:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57192 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgIAQCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:02:34 -0400
+        id S1731465AbgIAPnR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:43:17 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BF662078B;
-        Tue,  1 Sep 2020 16:02:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C67C2078B;
+        Tue,  1 Sep 2020 15:43:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598976154;
-        bh=2+/pO2FWS81LBJUUa126UILD7S9Fn08gFTclDXknYgU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1jIkHsMSqW3UsOOAygtQ2L1XMBVEgDBQkJNtrcUMyHbql1/5KZbvBIeMfwCdPd22j
-         gHLj0W03Aa+uljsP+wXGybKlYsXuFVDjSdH9nViohuQfc24zsQIqpNXZwF+J1tIOJR
-         zkoXAO8guA2XTadgkg0c0CIPMf9tATVtDDglgFq0=
-Date:   Tue, 1 Sep 2020 18:03:01 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Antoni Przybylik <antoni.przybylik@wp.pl>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gdm724x: gdm_tty: replaced macro with an inline
- function
-Message-ID: <20200901160301.GA1454403@kroah.com>
-References: <20200901154437.110056-1-antoni.przybylik@wp.pl>
+        s=default; t=1598974996;
+        bh=QQmK0YgX6jTfA/hhW+0BDjtr3e/de+VhR6umLQnHSfs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eJXgTS31uEwy+L833uM6hsxxg7+f4xOXWzgjUiIUnkAPeJkdnYs62afpqgi7oeZEY
+         fXMvzVFJFArfQJwbVuThCfyUS3J4Oo7G28FdLWA7FoBJedQGfpqkIDcC8dGGO1cKIg
+         yvQGmdi01NgwxeAdZwo3oGfSR5DAxNg5FyTDMxv0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Coly Li <colyli@suse.de>,
+        Hannes Reinecke <hare@suse.com>, Xiao Ni <xni@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Evan Green <evgreen@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.8 169/255] block: loop: set discard granularity and alignment for block device backed loop
+Date:   Tue,  1 Sep 2020 17:10:25 +0200
+Message-Id: <20200901151008.792032374@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901154437.110056-1-antoni.przybylik@wp.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 05:44:37PM +0200, Antoni Przybylik wrote:
-> This approach is more elegant and prevents some problems related to
-> macros such as operator precedence in expanded  expression.
-> 
-> Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
-> ---
->  drivers/staging/gdm724x/gdm_tty.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
-> index 6e813693a766..e789b7348dee 100644
-> --- a/drivers/staging/gdm724x/gdm_tty.c
-> +++ b/drivers/staging/gdm724x/gdm_tty.c
-> @@ -27,8 +27,6 @@
->  
->  #define MUX_TX_MAX_SIZE 2048
->  
-> -#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
-> -
->  static struct tty_driver *gdm_driver[TTY_MAX_COUNT];
->  static struct gdm *gdm_table[TTY_MAX_COUNT][GDM_TTY_MINOR];
->  static DEFINE_MUTEX(gdm_table_lock);
-> @@ -36,6 +34,11 @@ static DEFINE_MUTEX(gdm_table_lock);
->  static const char *DRIVER_STRING[TTY_MAX_COUNT] = {"GCTATC", "GCTDM"};
->  static char *DEVICE_STRING[TTY_MAX_COUNT] = {"GCT-ATC", "GCT-DM"};
->  
-> +inline int gdm_tty_ready(gdm *gdm)
+From: Ming Lei <ming.lei@redhat.com>
 
-Why is this a global function?
+commit bcb21c8cc9947286211327d663ace69f07d37a76 upstream.
 
-And really, no need to make it inline, just make it a normal function
-and the compiler will inline it if needed.
+In case of block device backend, if the backend supports write zeros, the
+loop device will set queue flag of QUEUE_FLAG_DISCARD. However,
+limits.discard_granularity isn't setup, and this way is wrong,
+see the following description in Documentation/ABI/testing/sysfs-block:
 
-thanks,
+	A discard_granularity of 0 means that the device does not support
+	discard functionality.
 
-greg k-h
+Especially 9b15d109a6b2 ("block: improve discard bio alignment in
+__blkdev_issue_discard()") starts to take q->limits.discard_granularity
+for computing max discard sectors. And zero discard granularity may cause
+kernel oops, or fail discard request even though the loop queue claims
+discard support via QUEUE_FLAG_DISCARD.
+
+Fix the issue by setup discard granularity and alignment.
+
+Fixes: c52abf563049 ("loop: Better discard support for block devices")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Coly Li <colyli@suse.de>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Xiao Ni <xni@redhat.com>
+Cc: Martin K. Petersen <martin.petersen@oracle.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Gwendal Grignou <gwendal@chromium.org>
+Cc: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Cc: Andrzej Pietrasiewicz <andrzej.p@collabora.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/block/loop.c |   33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
+
+--- a/drivers/block/loop.c
++++ b/drivers/block/loop.c
+@@ -877,6 +877,7 @@ static void loop_config_discard(struct l
+ 	struct file *file = lo->lo_backing_file;
+ 	struct inode *inode = file->f_mapping->host;
+ 	struct request_queue *q = lo->lo_queue;
++	u32 granularity, max_discard_sectors;
+ 
+ 	/*
+ 	 * If the backing device is a block device, mirror its zeroing
+@@ -889,11 +890,10 @@ static void loop_config_discard(struct l
+ 		struct request_queue *backingq;
+ 
+ 		backingq = bdev_get_queue(inode->i_bdev);
+-		blk_queue_max_discard_sectors(q,
+-			backingq->limits.max_write_zeroes_sectors);
+ 
+-		blk_queue_max_write_zeroes_sectors(q,
+-			backingq->limits.max_write_zeroes_sectors);
++		max_discard_sectors = backingq->limits.max_write_zeroes_sectors;
++		granularity = backingq->limits.discard_granularity ?:
++			queue_physical_block_size(backingq);
+ 
+ 	/*
+ 	 * We use punch hole to reclaim the free space used by the
+@@ -902,23 +902,26 @@ static void loop_config_discard(struct l
+ 	 * useful information.
+ 	 */
+ 	} else if (!file->f_op->fallocate || lo->lo_encrypt_key_size) {
+-		q->limits.discard_granularity = 0;
+-		q->limits.discard_alignment = 0;
+-		blk_queue_max_discard_sectors(q, 0);
+-		blk_queue_max_write_zeroes_sectors(q, 0);
++		max_discard_sectors = 0;
++		granularity = 0;
+ 
+ 	} else {
+-		q->limits.discard_granularity = inode->i_sb->s_blocksize;
+-		q->limits.discard_alignment = 0;
+-
+-		blk_queue_max_discard_sectors(q, UINT_MAX >> 9);
+-		blk_queue_max_write_zeroes_sectors(q, UINT_MAX >> 9);
++		max_discard_sectors = UINT_MAX >> 9;
++		granularity = inode->i_sb->s_blocksize;
+ 	}
+ 
+-	if (q->limits.max_write_zeroes_sectors)
++	if (max_discard_sectors) {
++		q->limits.discard_granularity = granularity;
++		blk_queue_max_discard_sectors(q, max_discard_sectors);
++		blk_queue_max_write_zeroes_sectors(q, max_discard_sectors);
+ 		blk_queue_flag_set(QUEUE_FLAG_DISCARD, q);
+-	else
++	} else {
++		q->limits.discard_granularity = 0;
++		blk_queue_max_discard_sectors(q, 0);
++		blk_queue_max_write_zeroes_sectors(q, 0);
+ 		blk_queue_flag_clear(QUEUE_FLAG_DISCARD, q);
++	}
++	q->limits.discard_alignment = 0;
+ }
+ 
+ static void loop_unprepare_queue(struct loop_device *lo)
+
+
