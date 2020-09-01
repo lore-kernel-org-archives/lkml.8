@@ -2,141 +2,244 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F3C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58090C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:24:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 831ED20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:23:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598963011;
-	bh=p4M/L1yz/ek8/chpzyAF+xMHJfMK5wQCHUgID8EQdmE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q1CguhUWHUZmLCO4HJbcUKjnICy81DLI1EeHbwE045N48kDvuZPj+K9J7vqscoEO7
-	 RstfM4eqPAGTmLv0+dPRM5miKxHEm0j7HvGavcFhudCa/pOhkPuj+uNXDtzbO7nsO7
-	 3E39ZbaTkdkqm6MsO462s1gaZVhL8j8T5ALKS/w4=
+	by mail.kernel.org (Postfix) with ESMTP id 31EEE20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:24:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="MMcndQqW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbgIAMXQ (ORCPT
+        id S1727951AbgIAMYg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:23:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59694 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728177AbgIAMLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:11:36 -0400
-Received: from kernel.org (unknown [77.127.89.201])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EDE9206EF;
-        Tue,  1 Sep 2020 12:11:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598962296;
-        bh=p4M/L1yz/ek8/chpzyAF+xMHJfMK5wQCHUgID8EQdmE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dEqOWpAz2kvlKimlO8dARzBFcrklfu8cSe+2aBF7CkJogzpcFaPoSG4sCMG8qyzbm
-         ZMT4ghik9IujpTvBZZvnOyJQ3FEHNmSceRhtvrncuQUYwdh1STPOtZ5hDvRfEgtVCc
-         sCotdF9hRvqJ/eYyBX3v/Yw22a9waEHIR0NqLKK4=
-Date:   Tue, 1 Sep 2020 15:11:30 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Stafford Horne <shorne@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        openrisc@lists.librecores.org
-Subject: Re: [PATCH] openrisc: Reserve memblock for initrd
-Message-ID: <20200901121130.GA698558@kernel.org>
-References: <20200831212102.4014642-1-shorne@gmail.com>
- <20200901055924.GC432455@kernel.org>
- <20200901102044.GB3562056@lianli.shorne-pla.net>
+        Tue, 1 Sep 2020 08:24:36 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:58710 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728134AbgIAML4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 08:11:56 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 081CBeeM129244;
+        Tue, 1 Sep 2020 07:11:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1598962300;
+        bh=ZPmfc3tbXFxNZBsIdxF9wSsTNTax2dCj/lPCTR7IpIM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=MMcndQqW8HAc+L/7lnPJ+PtCj97/3WF7HraTRUIyZ4S2dhJB5Xd3+4KnBZ6GT2Mfv
+         oDYCISZHNWk1r7VwJ0zsmPI93bmOw6M66W5PETczpfrp8LEty3X39bfrDdDmQOiG2Y
+         2AWFlnkZesAiLPDPCdzNtzDXiZH9fB/CA4s4Vdqg=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 081CBeN0026303
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 1 Sep 2020 07:11:40 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Sep
+ 2020 07:11:40 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 1 Sep 2020 07:11:39 -0500
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 081CBc0B077801;
+        Tue, 1 Sep 2020 07:11:38 -0500
+Subject: Re: [PATCH v3 -next] memory: omap-gpmc: Fix -Wunused-function
+ warnings
+To:     YueHaibing <yuehaibing@huawei.com>, <tony@atomide.com>,
+        <krzk@kernel.org>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200901035642.22772-1-yuehaibing@huawei.com>
+ <20200901112832.3084-1-yuehaibing@huawei.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <616e2369-13d1-b120-d1c2-bf8fea7f52b7@ti.com>
+Date:   Tue, 1 Sep 2020 15:11:37 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901102044.GB3562056@lianli.shorne-pla.net>
+In-Reply-To: <20200901112832.3084-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 07:20:44PM +0900, Stafford Horne wrote:
-> On Tue, Sep 01, 2020 at 08:59:24AM +0300, Mike Rapoport wrote:
-> > On Tue, Sep 01, 2020 at 06:21:01AM +0900, Stafford Horne wrote:
-> > > Recently OpenRISC added support for external initrd images, but I found
-> > > some instability when using larger buildroot initrd images. It turned
-> > > out that I forgot to reserve the memblock space for the initrd image.
-> > > 
-> > > This patch fixes the instability issue by reserving memblock space.
-> > > 
-> > > Fixes: ff6c923dbec3 ("openrisc: Add support for external initrd images")
-> > > Signed-off-by: Stafford Horne <shorne@gmail.com>
-> > > ---
-> > >  arch/openrisc/kernel/setup.c | 9 +++++++++
-> > >  1 file changed, 9 insertions(+)
-> > > 
-> > > diff --git a/arch/openrisc/kernel/setup.c b/arch/openrisc/kernel/setup.c
-> > > index b18e775f8be3..2c8aa53cc7ba 100644
-> > > --- a/arch/openrisc/kernel/setup.c
-> > > +++ b/arch/openrisc/kernel/setup.c
-> > > @@ -80,6 +80,15 @@ static void __init setup_memory(void)
-> > >  	 */
-> > >  	memblock_reserve(__pa(_stext), _end - _stext);
-> > >  
-> > > +#ifdef CONFIG_BLK_DEV_INITRD
-> > > +	/* Then reserve the initrd, if any */
-> > > +	if (initrd_start && (initrd_end > initrd_start)) {
-> > > + 	memblock_reserve(ALIGN_DOWN(__pa(initrd_start), PAGE_SIZE),
-> > > +		ALIGN(initrd_end, PAGE_SIZE) -
-> > > +		ALIGN_DOWN(initrd_start, PAGE_SIZE));
-> > > +	}
-> > 
-> > The core mm takes care of reserving the entrire pages for the memory
-> > reserved with memblock, so it is not necessary to do it here.
+
+
+On 01/09/2020 14:28, YueHaibing wrote:
+> If CONFIG_OF is not set, make W=1 warns:
 > 
-> Thanks for the pointer
+> drivers/memory/omap-gpmc.c:987:12: warning: ‘gpmc_cs_remap’ defined but not used [-Wunused-function]
+>   static int gpmc_cs_remap(int cs, u32 base)
+>              ^~~~~~~~~~~~~
+> drivers/memory/omap-gpmc.c:926:20: warning: ‘gpmc_cs_get_name’ defined but not used [-Wunused-function]
+>   static const char *gpmc_cs_get_name(int cs)
+>                      ^~~~~~~~~~~~~~~~
+> drivers/memory/omap-gpmc.c:919:13: warning: ‘gpmc_cs_set_name’ defined but not used [-Wunused-function]
+>   static void gpmc_cs_set_name(int cs, const char *name)
+>               ^~~~~~~~~~~~~~~~
+> Move them to #ifdef CONFIG_OF block to fix this.
 > 
-> I guess what you mean is it is not required to do the page alignment.
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Right. 
+Acked-by: Roger Quadros <rogerq@ti.com>
 
-> I used other architectures as an example and most do the alignment, I
-> think for most architectures this can be pulled out to generic code.
-
-You are more than welcome :)
-We already have a generic free_initrd_mem(), maybe it's time to have a
-generic reserve_initrd_mem().
-
-I'm ok with openrisc doing the alignment, but I think using local
-variables would make the core more readable, e.g
-
-	if (initd_start && (initrd_end)) {
-		unsigned long aligned_start = ALIGN_DOWN(initrd_start, PAGE_SIZE);
-		unsigned long aligned_end = ALIGN(end, PAGE_SIZE);
-
-		memblock_reserve(aligned_start, aligned_end);
-	}
-
-What do you say?
-
-> -Stafford
+> ---
+> v3: move the functions to #ifdef block
+> v2: update commit log
+> ---
+>   drivers/memory/omap-gpmc.c | 114 ++++++++++++++++++-------------------
+>   1 file changed, 57 insertions(+), 57 deletions(-)
 > 
-> > > +#endif /* CONFIG_BLK_DEV_INITRD */
-> > > +
-> > >  	early_init_fdt_reserve_self();
-> > >  	early_init_fdt_scan_reserved_mem();
-> > >  
-> > > -- 
-> > > 2.26.2
-> > > 
-> > 
-> > -- 
-> > Sincerely yours,
-> > Mike.
+> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+> index ac0f577a51a1..cfa730cfd145 100644
+> --- a/drivers/memory/omap-gpmc.c
+> +++ b/drivers/memory/omap-gpmc.c
+> @@ -916,20 +916,6 @@ static bool gpmc_cs_reserved(int cs)
+>   	return gpmc->flags & GPMC_CS_RESERVED;
+>   }
+>   
+> -static void gpmc_cs_set_name(int cs, const char *name)
+> -{
+> -	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+> -
+> -	gpmc->name = name;
+> -}
+> -
+> -static const char *gpmc_cs_get_name(int cs)
+> -{
+> -	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+> -
+> -	return gpmc->name;
+> -}
+> -
+>   static unsigned long gpmc_mem_align(unsigned long size)
+>   {
+>   	int order;
+> @@ -975,49 +961,6 @@ static int gpmc_cs_delete_mem(int cs)
+>   	return r;
+>   }
+>   
+> -/**
+> - * gpmc_cs_remap - remaps a chip-select physical base address
+> - * @cs:		chip-select to remap
+> - * @base:	physical base address to re-map chip-select to
+> - *
+> - * Re-maps a chip-select to a new physical base address specified by
+> - * "base". Returns 0 on success and appropriate negative error code
+> - * on failure.
+> - */
+> -static int gpmc_cs_remap(int cs, u32 base)
+> -{
+> -	int ret;
+> -	u32 old_base, size;
+> -
+> -	if (cs >= gpmc_cs_num) {
+> -		pr_err("%s: requested chip-select is disabled\n", __func__);
+> -		return -ENODEV;
+> -	}
+> -
+> -	/*
+> -	 * Make sure we ignore any device offsets from the GPMC partition
+> -	 * allocated for the chip select and that the new base confirms
+> -	 * to the GPMC 16MB minimum granularity.
+> -	 */
+> -	base &= ~(SZ_16M - 1);
+> -
+> -	gpmc_cs_get_memconf(cs, &old_base, &size);
+> -	if (base == old_base)
+> -		return 0;
+> -
+> -	ret = gpmc_cs_delete_mem(cs);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	ret = gpmc_cs_insert_mem(cs, base, size);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	ret = gpmc_cs_set_memconf(cs, base, size);
+> -
+> -	return ret;
+> -}
+> -
+>   int gpmc_cs_request(int cs, unsigned long size, unsigned long *base)
+>   {
+>   	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+> @@ -1941,6 +1884,63 @@ static const struct of_device_id gpmc_dt_ids[] = {
+>   	{ }
+>   };
+>   
+> +static void gpmc_cs_set_name(int cs, const char *name)
+> +{
+> +	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+> +
+> +	gpmc->name = name;
+> +}
+> +
+> +static const char *gpmc_cs_get_name(int cs)
+> +{
+> +	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+> +
+> +	return gpmc->name;
+> +}
+> +
+> +/**
+> + * gpmc_cs_remap - remaps a chip-select physical base address
+> + * @cs:		chip-select to remap
+> + * @base:	physical base address to re-map chip-select to
+> + *
+> + * Re-maps a chip-select to a new physical base address specified by
+> + * "base". Returns 0 on success and appropriate negative error code
+> + * on failure.
+> + */
+> +static int gpmc_cs_remap(int cs, u32 base)
+> +{
+> +	int ret;
+> +	u32 old_base, size;
+> +
+> +	if (cs >= gpmc_cs_num) {
+> +		pr_err("%s: requested chip-select is disabled\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	/*
+> +	 * Make sure we ignore any device offsets from the GPMC partition
+> +	 * allocated for the chip select and that the new base confirms
+> +	 * to the GPMC 16MB minimum granularity.
+> +	 */
+> +	base &= ~(SZ_16M - 1);
+> +
+> +	gpmc_cs_get_memconf(cs, &old_base, &size);
+> +	if (base == old_base)
+> +		return 0;
+> +
+> +	ret = gpmc_cs_delete_mem(cs);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = gpmc_cs_insert_mem(cs, base, size);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = gpmc_cs_set_memconf(cs, base, size);
+> +
+> +	return ret;
+> +}
+> +
+>   /**
+>    * gpmc_read_settings_dt - read gpmc settings from device-tree
+>    * @np:		pointer to device-tree node for a gpmc child device
+> 
 
 -- 
-Sincerely yours,
-Mike.
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
