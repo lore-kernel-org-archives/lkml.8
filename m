@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA16C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AB5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 14A6B2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BC442098B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980917;
-	bh=5GNgPTtfXVvMA6ocoAn2mDIL7i+Q7oAG+au7SI1IFGI=;
+	s=default; t=1598980924;
+	bh=lPuRvbuP4YWG81d4Jjr40/ThGhB4llkkUYjH6HigtVA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GBnmcyuCNdqM/turPNsc6vJvo6JCyOhZ8k73g/ExMBSpZdLYrnblcSnSBJExuThqZ
-	 dbmkhW0q+WwC2DvpvICvAuUW6USslmQNcYb3fwSEdHMDtjwisBq/HVHQeZwErbjKtH
-	 SOFY3dtXfA9TwLC3ZJkUW1csD8eif32eZlD4K6do=
+	b=uCHBfdY8Kw0mYq7K1gMYFM9gz9FvIddDvGFHaHvh6FcpwFLO7I+kHPbzzUvbNPGr5
+	 5I8leTML9ByG+2h1kR6Z/a5eL4dRufln4+ly5P4Ksm+aXTfw/pOtG8h+9hvpiWMnCq
+	 RnRMptAITqQNPF5OXZAQejnmjZ2fJvrusgHTjzhY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732703AbgIARVz (ORCPT
+        id S1732651AbgIARWC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:21:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54654 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:22:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727997AbgIAPMV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:21 -0400
+        id S1728678AbgIAPMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:18 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4368D2078B;
-        Tue,  1 Sep 2020 15:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 820FE206FA;
+        Tue,  1 Sep 2020 15:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973140;
-        bh=5GNgPTtfXVvMA6ocoAn2mDIL7i+Q7oAG+au7SI1IFGI=;
+        s=default; t=1598973138;
+        bh=lPuRvbuP4YWG81d4Jjr40/ThGhB4llkkUYjH6HigtVA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQL495QJSvNoKT0ikRti2AfZT6PwI+WZJNMljvmJWWUib1X5MCncAVvxi1+v1yiQv
-         BtcOrUygYNu46Z3Np6kNCCPlYB+SYzusgngF032Rk0Ai8+Fq4owQNpIZfB0DzJUHzd
-         yLmKF71KXJ1X03XcjcxzWe8J3UpVSk3e1MLJYO9g=
+        b=U4Ra2b68/AwMgmVaNvHNF7krniSDU6hWOhUIHYJnm3d/y1P8qaJazw/JnRfSgbJF4
+         Gpw2gi/z5/gKF/4AzWFFkanvdzDEGw4TP5YXqkfm3BTfgt+z9mDBukRXkqZZbbnNiR
+         FM9jQ6IC3xRHRrco+Tal8i0ZHTCkuO0YyeRRB+uQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jay Vosburgh <j.vosburgh@gmail.com>,
-        Veaceslav Falico <vfalico@gmail.com>,
-        Andy Gospodarek <andy@greyhouse.net>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Jay Vosburgh <jay.vosburgh@canonical.com>,
-        Jarod Wilson <jarod@redhat.com>
-Subject: [PATCH 4.4 04/62] bonding: show saner speed for broadcast mode
-Date:   Tue,  1 Sep 2020 17:09:47 +0200
-Message-Id: <20200901150920.936373256@linuxfoundation.org>
+        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 03/62] ipvlan: fix device features
+Date:   Tue,  1 Sep 2020 17:09:46 +0200
+Message-Id: <20200901150920.884790983@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -63,74 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jarod Wilson <jarod@redhat.com>
+From: Mahesh Bandewar <maheshb@google.com>
 
-[ Upstream commit 4ca0d9ac3fd8f9f90b72a15d8da2aca3ffb58418 ]
+[ Upstream commit d0f5c7076e01fef6fcb86988d9508bf3ce258bd4 ]
 
-Broadcast mode bonds transmit a copy of all traffic simultaneously out of
-all interfaces, so the "speed" of the bond isn't really the aggregate of
-all interfaces, but rather, the speed of the slowest active interface.
+Processing NETDEV_FEAT_CHANGE causes IPvlan links to lose
+NETIF_F_LLTX feature because of the incorrect handling of
+features in ipvlan_fix_features().
 
-Also, the type of the speed field is u32, not unsigned long, so adjust
-that accordingly, as required to make min() function here without
-complaining about mismatching types.
+--before--
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~# ethtool -K ipvl0 tso off
+Cannot change tcp-segmentation-offload
+Actual changes:
+vlan-challenged: off [fixed]
+tx-lockless: off [fixed]
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: off [fixed]
+lpaa10:~#
 
-Fixes: bb5b052f751b ("bond: add support to read speed and duplex via ethtool")
-CC: Jay Vosburgh <j.vosburgh@gmail.com>
-CC: Veaceslav Falico <vfalico@gmail.com>
-CC: Andy Gospodarek <andy@greyhouse.net>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Acked-by: Jay Vosburgh <jay.vosburgh@canonical.com>
-Signed-off-by: Jarod Wilson <jarod@redhat.com>
+--after--
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~# ethtool -K ipvl0 tso off
+Cannot change tcp-segmentation-offload
+Could not change any device features
+lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
+tx-lockless: on [fixed]
+lpaa10:~#
+
+Fixes: 2ad7bf363841 ("ipvlan: Initial check-in of the IPVLAN driver.")
+Signed-off-by: Mahesh Bandewar <maheshb@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/bonding/bond_main.c |   21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ drivers/net/ipvlan/ipvlan_main.c |   25 +++++++++++++++++++++----
+ 1 file changed, 21 insertions(+), 4 deletions(-)
 
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -4057,13 +4057,23 @@ static netdev_tx_t bond_start_xmit(struc
- 	return ret;
+--- a/drivers/net/ipvlan/ipvlan_main.c
++++ b/drivers/net/ipvlan/ipvlan_main.c
+@@ -87,12 +87,21 @@ static void ipvlan_port_destroy(struct n
+ static struct lock_class_key ipvlan_netdev_xmit_lock_key;
+ static struct lock_class_key ipvlan_netdev_addr_lock_key;
+ 
++#define IPVLAN_ALWAYS_ON_OFLOADS \
++	(NETIF_F_SG | NETIF_F_HW_CSUM | \
++	 NETIF_F_GSO_ROBUST | NETIF_F_GSO_SOFTWARE | NETIF_F_GSO_ENCAP_ALL)
++
++#define IPVLAN_ALWAYS_ON \
++	(IPVLAN_ALWAYS_ON_OFLOADS | NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED)
++
+ #define IPVLAN_FEATURES \
+ 	(NETIF_F_SG | NETIF_F_ALL_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
+ 	 NETIF_F_GSO | NETIF_F_TSO | NETIF_F_UFO | NETIF_F_GSO_ROBUST | \
+ 	 NETIF_F_TSO_ECN | NETIF_F_TSO6 | NETIF_F_GRO | NETIF_F_RXCSUM | \
+ 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
+ 
++	/* NETIF_F_GSO_ENCAP_ALL NETIF_F_GSO_SOFTWARE Newly added */
++
+ #define IPVLAN_STATE_MASK \
+ 	((1<<__LINK_STATE_NOCARRIER) | (1<<__LINK_STATE_DORMANT))
+ 
+@@ -117,7 +126,9 @@ static int ipvlan_init(struct net_device
+ 	dev->state = (dev->state & ~IPVLAN_STATE_MASK) |
+ 		     (phy_dev->state & IPVLAN_STATE_MASK);
+ 	dev->features = phy_dev->features & IPVLAN_FEATURES;
+-	dev->features |= NETIF_F_LLTX;
++	dev->features |= IPVLAN_ALWAYS_ON;
++	dev->vlan_features = phy_dev->vlan_features & IPVLAN_FEATURES;
++	dev->vlan_features |= IPVLAN_ALWAYS_ON_OFLOADS;
+ 	dev->gso_max_size = phy_dev->gso_max_size;
+ 	dev->hard_header_len = phy_dev->hard_header_len;
+ 
+@@ -201,7 +212,14 @@ static netdev_features_t ipvlan_fix_feat
+ {
+ 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+ 
+-	return features & (ipvlan->sfeatures | ~IPVLAN_FEATURES);
++	features |= NETIF_F_ALL_FOR_ALL;
++	features &= (ipvlan->sfeatures | ~IPVLAN_FEATURES);
++	features = netdev_increment_features(ipvlan->phy_dev->features,
++					     features, features);
++	features |= IPVLAN_ALWAYS_ON;
++	features &= (IPVLAN_FEATURES | IPVLAN_ALWAYS_ON);
++
++	return features;
  }
  
-+static u32 bond_mode_bcast_speed(struct slave *slave, u32 speed)
-+{
-+	if (speed == 0 || speed == SPEED_UNKNOWN)
-+		speed = slave->speed;
-+	else
-+		speed = min(speed, slave->speed);
-+
-+	return speed;
-+}
-+
- static int bond_ethtool_get_settings(struct net_device *bond_dev,
- 				     struct ethtool_cmd *ecmd)
- {
- 	struct bonding *bond = netdev_priv(bond_dev);
--	unsigned long speed = 0;
- 	struct list_head *iter;
- 	struct slave *slave;
-+	u32 speed = 0;
+ static void ipvlan_change_rx_flags(struct net_device *dev, int change)
+@@ -590,9 +608,8 @@ static int ipvlan_device_event(struct no
  
- 	ecmd->duplex = DUPLEX_UNKNOWN;
- 	ecmd->port = PORT_OTHER;
-@@ -4075,8 +4085,13 @@ static int bond_ethtool_get_settings(str
- 	 */
- 	bond_for_each_slave(bond, slave, iter) {
- 		if (bond_slave_can_tx(slave)) {
--			if (slave->speed != SPEED_UNKNOWN)
--				speed += slave->speed;
-+			if (slave->speed != SPEED_UNKNOWN) {
-+				if (BOND_MODE(bond) == BOND_MODE_BROADCAST)
-+					speed = bond_mode_bcast_speed(slave,
-+								      speed);
-+				else
-+					speed += slave->speed;
-+			}
- 			if (ecmd->duplex == DUPLEX_UNKNOWN &&
- 			    slave->duplex != DUPLEX_UNKNOWN)
- 				ecmd->duplex = slave->duplex;
+ 	case NETDEV_FEAT_CHANGE:
+ 		list_for_each_entry(ipvlan, &port->ipvlans, pnode) {
+-			ipvlan->dev->features = dev->features & IPVLAN_FEATURES;
+ 			ipvlan->dev->gso_max_size = dev->gso_max_size;
+-			netdev_features_change(ipvlan->dev);
++			netdev_update_features(ipvlan->dev);
+ 		}
+ 		break;
+ 
 
 
