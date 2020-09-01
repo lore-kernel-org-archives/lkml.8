@@ -2,175 +2,126 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0DAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7FFC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9CF0F2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:19:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977178;
-	bh=THWH1v0CuJQR382D5Dz1VXHW0bnehbkIYH4LQiHo1kA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VTDYKwjW1rhT36IiTvgEagluL5597thZ37im5Rh70vd85nq9b8xxcTvGtbD7Spr1C
-	 wO9ZCNx2bi3lx9s0qryvi7UnECXRwNHifdj3BQFbrKVso4Pa2KbhqEbBeE/RtHiJ6x
-	 iexIlAouEYfwC7XVUDVJ/TICqTsdsFZt9eNgYYEY=
+	by mail.kernel.org (Postfix) with ESMTP id 313512065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:19:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="qRUydLAf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731694AbgIAQSl (ORCPT
+        id S1726400AbgIAQTl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:18:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:19:41 -0400
+Received: from mx4.wp.pl ([212.77.101.12]:39859 "EHLO mx4.wp.pl"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731159AbgIAPdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:33:16 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE311205F4;
-        Tue,  1 Sep 2020 15:33:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974395;
-        bh=THWH1v0CuJQR382D5Dz1VXHW0bnehbkIYH4LQiHo1kA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XCzZdEs465FzTeIo2tSBapZnG+vgQDdTRj/KlQHFnkvd6fJvRJJbMIlm1DKg37vxO
-         QcFoxfSmJZDQOTP/8p1f4X+UAXPJ/ubtasBuJVkKapTtASnz2ok0SzxHGpG4JIxePI
-         TBqNJhrB1CuNItsw5Mv83qYVswv9uToHDJ4Cf0mA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakov Petrina <jakov.petrina@sartura.hr>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 129/214] libbpf: Handle GCC built-in types for Arm NEON
-Date:   Tue,  1 Sep 2020 17:10:09 +0200
-Message-Id: <20200901150959.162854747@linuxfoundation.org>
+        id S1731843AbgIAQSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:18:52 -0400
+Received: (wp-smtpd smtp.wp.pl 3688 invoked from network); 1 Sep 2020 18:18:50 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
+          t=1598977130; bh=bRRXZ9zEebGS55d1yTbvxveQzuUz/SLo7FYLLNKiwCQ=;
+          h=From:To:Cc:Subject;
+          b=qRUydLAf/Ok/Rb1fL/kzJAmPy0MhUcxoRGGvUxViA5TLckKTfNaGIbQI0gyVT+g1S
+           2qeq8KQoVgkwBfAjvGiEl4G8nTmbNlpPdWsM2Vb3jKTSDsetMUWIaR666RnDL6maMT
+           XYa2WF1lzmbx4jDJOfGxBBsj9u+SksQ5avMLm+SU=
+Received: from 188.146.109.197.nat.umts.dynamic.t-mobile.pl (HELO localhost) (antoni.przybylik@wp.pl@[188.146.109.197])
+          (envelope-sender <antoni.przybylik@wp.pl>)
+          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
+          for <gregkh@linuxfoundation.org>; 1 Sep 2020 18:18:50 +0200
+From:   Antoni Przybylik <antoni.przybylik@wp.pl>
+To:     gregkh@linuxfoundation.org
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Antoni Przybylik <antoni.przybylik@wp.pl>
+Subject: [PATCH] staging: gdm724x: gdm_tty: replaced macro with a function
+Date:   Tue,  1 Sep 2020 18:18:46 +0200
+Message-Id: <20200901161846.111486-1-antoni.przybylik@wp.pl>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-WP-DKIM-Status: good (id: wp.pl)                                      
+X-WP-MailID: 9251091d3f6526f767815a022d7d0293
+X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
+X-WP-SPAM: NO 0000002 [wREB]                               
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+This approach is more elegant and prevents some problems related to
+macros such as operator precedence in expanded expression.
 
-[ Upstream commit 702eddc77a905782083b14ccd05b23840675fd18 ]
-
-When building Arm NEON (SIMD) code from lib/raid6/neon.uc, GCC emits
-DWARF information using a base type "__Poly8_t", which is internal to
-GCC and not recognized by Clang. This causes build failures when
-building with Clang a vmlinux.h generated from an arm64 kernel that was
-built with GCC.
-
-	vmlinux.h:47284:9: error: unknown type name '__Poly8_t'
-	typedef __Poly8_t poly8x16_t[16];
-	        ^~~~~~~~~
-
-The polyX_t types are defined as unsigned integers in the "Arm C
-Language Extension" document (101028_Q220_00_en). Emit typedefs based on
-standard integer types for the GCC internal types, similar to those
-emitted by Clang.
-
-Including linux/kernel.h to use ARRAY_SIZE() incidentally redefined
-max(), causing a build bug due to different types, hence the seemingly
-unrelated change.
-
-Reported-by: Jakov Petrina <jakov.petrina@sartura.hr>
-Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20200812143909.3293280-1-jean-philippe@linaro.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
 ---
- tools/lib/bpf/btf_dump.c | 35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ drivers/staging/gdm724x/gdm_tty.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
-index d9e386b8f47ed..07fcc8e79662d 100644
---- a/tools/lib/bpf/btf_dump.c
-+++ b/tools/lib/bpf/btf_dump.c
-@@ -13,6 +13,7 @@
- #include <errno.h>
- #include <linux/err.h>
- #include <linux/btf.h>
-+#include <linux/kernel.h>
- #include "btf.h"
- #include "hashmap.h"
- #include "libbpf.h"
-@@ -543,6 +544,9 @@ static int btf_dump_order_type(struct btf_dump *d, __u32 id, bool through_ptr)
- 	}
- }
+diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
+index 6e813693a766..a7db0672e81d 100644
+--- a/drivers/staging/gdm724x/gdm_tty.c
++++ b/drivers/staging/gdm724x/gdm_tty.c
+@@ -27,8 +27,6 @@
  
-+static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
-+					  const struct btf_type *t);
-+
- static void btf_dump_emit_struct_fwd(struct btf_dump *d, __u32 id,
- 				     const struct btf_type *t);
- static void btf_dump_emit_struct_def(struct btf_dump *d, __u32 id,
-@@ -665,6 +669,9 @@ static void btf_dump_emit_type(struct btf_dump *d, __u32 id, __u32 cont_id)
+ #define MUX_TX_MAX_SIZE 2048
  
- 	switch (kind) {
- 	case BTF_KIND_INT:
-+		/* Emit type alias definitions if necessary */
-+		btf_dump_emit_missing_aliases(d, id, t);
-+
- 		tstate->emit_state = EMITTED;
- 		break;
- 	case BTF_KIND_ENUM:
-@@ -899,7 +906,7 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
- 			btf_dump_printf(d, ": %d", m_sz);
- 			off = m_off + m_sz;
- 		} else {
--			m_sz = max(0, btf__resolve_size(d->btf, m->type));
-+			m_sz = max(0LL, btf__resolve_size(d->btf, m->type));
- 			off = m_off + m_sz * 8;
- 		}
- 		btf_dump_printf(d, ";");
-@@ -919,6 +926,32 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
- 		btf_dump_printf(d, " __attribute__((packed))");
- }
+-#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
+-
+ static struct tty_driver *gdm_driver[TTY_MAX_COUNT];
+ static struct gdm *gdm_table[TTY_MAX_COUNT][GDM_TTY_MINOR];
+ static DEFINE_MUTEX(gdm_table_lock);
+@@ -36,6 +34,11 @@ static DEFINE_MUTEX(gdm_table_lock);
+ static const char *DRIVER_STRING[TTY_MAX_COUNT] = {"GCTATC", "GCTDM"};
+ static char *DEVICE_STRING[TTY_MAX_COUNT] = {"GCT-ATC", "GCT-DM"};
  
-+static const char *missing_base_types[][2] = {
-+	/*
-+	 * GCC emits typedefs to its internal __PolyX_t types when compiling Arm
-+	 * SIMD intrinsics. Alias them to standard base types.
-+	 */
-+	{ "__Poly8_t",		"unsigned char" },
-+	{ "__Poly16_t",		"unsigned short" },
-+	{ "__Poly64_t",		"unsigned long long" },
-+	{ "__Poly128_t",	"unsigned __int128" },
-+};
-+
-+static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
-+					  const struct btf_type *t)
++static int gdm_tty_ready(gdm *gdm)
 +{
-+	const char *name = btf_dump_type_name(d, id);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(missing_base_types); i++) {
-+		if (strcmp(name, missing_base_types[i][0]) == 0) {
-+			btf_dump_printf(d, "typedef %s %s;\n\n",
-+					missing_base_types[i][1], name);
-+			break;
-+		}
-+	}
++	return (gdm && gdm->tty_dev && gdm->port.count);
 +}
 +
- static void btf_dump_emit_enum_fwd(struct btf_dump *d, __u32 id,
- 				   const struct btf_type *t)
+ static void gdm_port_destruct(struct tty_port *port)
  {
+ 	struct gdm *gdm = container_of(port, struct gdm, port);
+@@ -119,7 +122,7 @@ static int gdm_tty_recv_complete(void *data,
+ {
+ 	struct gdm *gdm = tty_dev->gdm[index];
+ 
+-	if (!GDM_TTY_READY(gdm)) {
++	if (!gdm_tty_ready(gdm)) {
+ 		if (complete == RECV_PACKET_PROCESS_COMPLETE)
+ 			gdm->tty_dev->recv_func(gdm->tty_dev->priv_dev,
+ 						gdm_tty_recv_complete);
+@@ -146,7 +149,7 @@ static void gdm_tty_send_complete(void *arg)
+ {
+ 	struct gdm *gdm = arg;
+ 
+-	if (!GDM_TTY_READY(gdm))
++	if (!gdm_tty_ready(gdm))
+ 		return;
+ 
+ 	tty_port_tty_wakeup(&gdm->port);
+@@ -160,7 +163,7 @@ static int gdm_tty_write(struct tty_struct *tty, const unsigned char *buf,
+ 	int sent_len = 0;
+ 	int sending_len = 0;
+ 
+-	if (!GDM_TTY_READY(gdm))
++	if (!gdm_tty_ready(gdm))
+ 		return -ENODEV;
+ 
+ 	if (!len)
+@@ -187,7 +190,7 @@ static int gdm_tty_write_room(struct tty_struct *tty)
+ {
+ 	struct gdm *gdm = tty->driver_data;
+ 
+-	if (!GDM_TTY_READY(gdm))
++	if (!gdm_tty_ready(gdm))
+ 		return -ENODEV;
+ 
+ 	return WRITE_SIZE;
 -- 
-2.25.1
-
-
+2.28.0
 
