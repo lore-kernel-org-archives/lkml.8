@@ -5,50 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7286C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D83E4C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF5C2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33682064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975360;
-	bh=oX8ApIi0k5X6UEuGO37U34c3eMFNvHUXh3JOga1C+tk=;
+	s=default; t=1598975365;
+	bh=Y5zoPBOA/xMCtTOnx3pSck5cOG0QFwVJ7NuEgCZTuPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ec4nkSHJfzB0Mtb+q7eTr0cNYs0Qts8kQ6D4TUpAuZleP8BJtnIsJVHF16eWz55kF
-	 p/79nWA2Mpqow2BhrFk8XBFUvDEuB1Jpbfyf+/peZ688jZXVM+MUxsU8+64KcG0KkE
-	 a5hJCMtpPhpMaEx4Qyi6C8rs5MyqPkM94Y2ML/MU=
+	b=dCEtrB1nrzBe77B7poHyCRciGiEDn2ufQFt4BE7vY6f139dF21IyDPDZx1wWnB9uh
+	 RMB8MALexQE/J1+F3IdsoieHrIo/LCPBxE2xuj/0GCnmeXZMCO80rr7bQbR4Nl0k6X
+	 hvv1y6V4qOxIHYBordV0kS2yfYlpWk9GvwMH5pMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732105AbgIAPtT (ORCPT
+        id S1732111AbgIAPtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:49:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34726 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:49:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731902AbgIAPpu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:50 -0400
+        id S1731911AbgIAPp6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB312098B;
-        Tue,  1 Sep 2020 15:45:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B86A2078B;
+        Tue,  1 Sep 2020 15:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975149;
-        bh=oX8ApIi0k5X6UEuGO37U34c3eMFNvHUXh3JOga1C+tk=;
+        s=default; t=1598975157;
+        bh=Y5zoPBOA/xMCtTOnx3pSck5cOG0QFwVJ7NuEgCZTuPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DU/NrQc9cGjcpTqoN/fEcEevipmwduEHXEsBx/lryAnDGcUqPaq5fhk3iN1fZgZh2
-         l3ugzmc/ovyJ874G+3iJOKJ7HYZ3ZYNoZGGi+VkEG0dWO5Wjd7mzTHPMDhE/HhMcxg
-         /4ZP1Fjad74NwKFWU+U89X+MM83+OKJW+PvWMNsw=
+        b=BrlkUVC6HglgmO1iwM0EX+9MM8hjJdIrmEpCMUkAXALyzzkorvi1RUzChaRAkuMvL
+         r18fm/vLxaA4czYaRRJpudfvSWGS1QYcxtdfJvaoTTVLw4WOtT1WmgJSFfRrAPWIE9
+         dUcOZjgu27xadF5cTdH+mk8+g9iNkpen/SCiOAfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Brooke Basile <brookebasile@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>, stable <stable@kernel.org>
-Subject: [PATCH 5.8 229/255] USB: gadget: f_ncm: add bounds checks to ncm_unwrap_ntb()
-Date:   Tue,  1 Sep 2020 17:11:25 +0200
-Message-Id: <20200901151011.731595437@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.8 232/255] usb: dwc3: gadget: Fix handling ZLP
+Date:   Tue,  1 Sep 2020 17:11:28 +0200
+Message-Id: <20200901151011.866295207@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,178 +59,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brooke Basile <brookebasile@gmail.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 2b74b0a04d3e9f9f08ff026e5663dce88ff94e52 upstream.
+commit d2ee3ff79e6a3d4105e684021017d100524dc560 upstream.
 
-Some values extracted by ncm_unwrap_ntb() could possibly lead to several
-different out of bounds reads of memory.  Specifically the values passed
-to netdev_alloc_skb_ip_align() need to be checked so that memory is not
-overflowed.
+The usb_request->zero doesn't apply for isoc. Also, if we prepare a
+0-length (ZLP) TRB for the OUT direction, we need to prepare an extra
+TRB to pad up to the MPS alignment. Use the same bounce buffer for the
+ZLP TRB and the extra pad TRB.
 
-Resolve this by applying bounds checking to a number of different
-indexes and lengths of the structure parsing logic.
-
-Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-Signed-off-by: Brooke Basile <brookebasile@gmail.com>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@kernel.org>
+Cc: <stable@vger.kernel.org> # v4.5+
+Fixes: d6e5a549cc4d ("usb: dwc3: simplify ZLP handling")
+Fixes: 04c03d10e507 ("usb: dwc3: gadget: handle request->zero")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_ncm.c |   81 ++++++++++++++++++++++++++++++------
- 1 file changed, 69 insertions(+), 12 deletions(-)
+ drivers/usb/dwc3/gadget.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -1181,12 +1181,15 @@ static int ncm_unwrap_ntb(struct gether
- 	int		ndp_index;
- 	unsigned	dg_len, dg_len2;
- 	unsigned	ndp_len;
-+	unsigned	block_len;
- 	struct sk_buff	*skb2;
- 	int		ret = -EINVAL;
--	unsigned	max_size = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
-+	unsigned	ntb_max = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
-+	unsigned	frame_max = le16_to_cpu(ecm_desc.wMaxSegmentSize);
- 	const struct ndp_parser_opts *opts = ncm->parser_opts;
- 	unsigned	crc_len = ncm->is_crc ? sizeof(uint32_t) : 0;
- 	int		dgram_counter;
-+	bool		ndp_after_header;
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1199,6 +1199,7 @@ static void dwc3_prepare_one_trb_linear(
+ 				req->request.no_interrupt,
+ 				req->request.is_last);
+ 	} else if (req->request.zero && req->request.length &&
++		   !usb_endpoint_xfer_isoc(dep->endpoint.desc) &&
+ 		   (IS_ALIGNED(req->request.length, maxp))) {
+ 		struct dwc3	*dwc = dep->dwc;
+ 		struct dwc3_trb	*trb;
+@@ -1208,14 +1209,25 @@ static void dwc3_prepare_one_trb_linear(
+ 		/* prepare normal TRB */
+ 		dwc3_prepare_one_trb(dep, req, length, true, 0);
  
- 	/* dwSignature */
- 	if (get_unaligned_le32(tmp) != opts->nth_sign) {
-@@ -1205,25 +1208,37 @@ static int ncm_unwrap_ntb(struct gether
+-		/* Now prepare one extra TRB to handle ZLP */
++		/* Prepare one extra TRB to handle ZLP */
+ 		trb = &dep->trb_pool[dep->trb_enqueue];
+ 		req->num_trbs++;
+ 		__dwc3_prepare_one_trb(dep, trb, dwc->bounce_addr, 0,
+-				false, 1, req->request.stream_id,
++				!req->direction, 1, req->request.stream_id,
+ 				req->request.short_not_ok,
+ 				req->request.no_interrupt,
+ 				req->request.is_last);
++
++		/* Prepare one more TRB to handle MPS alignment for OUT */
++		if (!req->direction) {
++			trb = &dep->trb_pool[dep->trb_enqueue];
++			req->num_trbs++;
++			__dwc3_prepare_one_trb(dep, trb, dwc->bounce_addr, maxp,
++					       false, 1, req->request.stream_id,
++					       req->request.short_not_ok,
++					       req->request.no_interrupt,
++					       req->request.is_last);
++		}
+ 	} else {
+ 		dwc3_prepare_one_trb(dep, req, length, false, 0);
  	}
- 	tmp++; /* skip wSequence */
+@@ -2668,8 +2680,17 @@ static int dwc3_gadget_ep_cleanup_comple
+ 				status);
  
-+	block_len = get_ncm(&tmp, opts->block_length);
- 	/* (d)wBlockLength */
--	if (get_ncm(&tmp, opts->block_length) > max_size) {
-+	if (block_len > ntb_max) {
- 		INFO(port->func.config->cdev, "OUT size exceeded\n");
- 		goto err;
+ 	if (req->needs_extra_trb) {
++		unsigned int maxp = usb_endpoint_maxp(dep->endpoint.desc);
++
+ 		ret = dwc3_gadget_ep_reclaim_trb_linear(dep, req, event,
+ 				status);
++
++		/* Reclaim MPS padding TRB for ZLP */
++		if (!req->direction && req->request.zero && req->request.length &&
++		    !usb_endpoint_xfer_isoc(dep->endpoint.desc) &&
++		    (IS_ALIGNED(req->request.length, maxp)))
++			ret = dwc3_gadget_ep_reclaim_trb_linear(dep, req, event, status);
++
+ 		req->needs_extra_trb = false;
  	}
- 
- 	ndp_index = get_ncm(&tmp, opts->ndp_index);
-+	ndp_after_header = false;
- 
- 	/* Run through all the NDP's in the NTB */
- 	do {
--		/* NCM 3.2 */
--		if (((ndp_index % 4) != 0) &&
--				(ndp_index < opts->nth_size)) {
-+		/*
-+		 * NCM 3.2
-+		 * dwNdpIndex
-+		 */
-+		if (((ndp_index % 4) != 0) ||
-+				(ndp_index < opts->nth_size) ||
-+				(ndp_index > (block_len -
-+					      opts->ndp_size))) {
- 			INFO(port->func.config->cdev, "Bad index: %#X\n",
- 			     ndp_index);
- 			goto err;
- 		}
-+		if (ndp_index == opts->nth_size)
-+			ndp_after_header = true;
- 
--		/* walk through NDP */
-+		/*
-+		 * walk through NDP
-+		 * dwSignature
-+		 */
- 		tmp = (void *)(skb->data + ndp_index);
- 		if (get_unaligned_le32(tmp) != ncm->ndp_sign) {
- 			INFO(port->func.config->cdev, "Wrong NDP SIGN\n");
-@@ -1234,14 +1249,15 @@ static int ncm_unwrap_ntb(struct gether
- 		ndp_len = get_unaligned_le16(tmp++);
- 		/*
- 		 * NCM 3.3.1
-+		 * wLength
- 		 * entry is 2 items
- 		 * item size is 16/32 bits, opts->dgram_item_len * 2 bytes
- 		 * minimal: struct usb_cdc_ncm_ndpX + normal entry + zero entry
- 		 * Each entry is a dgram index and a dgram length.
- 		 */
- 		if ((ndp_len < opts->ndp_size
--				+ 2 * 2 * (opts->dgram_item_len * 2))
--				|| (ndp_len % opts->ndplen_align != 0)) {
-+				+ 2 * 2 * (opts->dgram_item_len * 2)) ||
-+				(ndp_len % opts->ndplen_align != 0)) {
- 			INFO(port->func.config->cdev, "Bad NDP length: %#X\n",
- 			     ndp_len);
- 			goto err;
-@@ -1258,8 +1274,21 @@ static int ncm_unwrap_ntb(struct gether
- 
- 		do {
- 			index = index2;
-+			/* wDatagramIndex[0] */
-+			if ((index < opts->nth_size) ||
-+					(index > block_len - opts->dpe_size)) {
-+				INFO(port->func.config->cdev,
-+				     "Bad index: %#X\n", index);
-+				goto err;
-+			}
-+
- 			dg_len = dg_len2;
--			if (dg_len < 14 + crc_len) { /* ethernet hdr + crc */
-+			/*
-+			 * wDatagramLength[0]
-+			 * ethernet hdr + crc or larger than max frame size
-+			 */
-+			if ((dg_len < 14 + crc_len) ||
-+					(dg_len > frame_max)) {
- 				INFO(port->func.config->cdev,
- 				     "Bad dgram length: %#X\n", dg_len);
- 				goto err;
-@@ -1283,6 +1312,37 @@ static int ncm_unwrap_ntb(struct gether
- 			index2 = get_ncm(&tmp, opts->dgram_item_len);
- 			dg_len2 = get_ncm(&tmp, opts->dgram_item_len);
- 
-+			if (index2 == 0 || dg_len2 == 0)
-+				break;
-+
-+			/* wDatagramIndex[1] */
-+			if (ndp_after_header) {
-+				if (index2 < opts->nth_size + opts->ndp_size) {
-+					INFO(port->func.config->cdev,
-+					     "Bad index: %#X\n", index2);
-+					goto err;
-+				}
-+			} else {
-+				if (index2 < opts->nth_size + opts->dpe_size) {
-+					INFO(port->func.config->cdev,
-+					     "Bad index: %#X\n", index2);
-+					goto err;
-+				}
-+			}
-+			if (index2 > block_len - opts->dpe_size) {
-+				INFO(port->func.config->cdev,
-+				     "Bad index: %#X\n", index2);
-+				goto err;
-+			}
-+
-+			/* wDatagramLength[1] */
-+			if ((dg_len2 < 14 + crc_len) ||
-+					(dg_len2 > frame_max)) {
-+				INFO(port->func.config->cdev,
-+				     "Bad dgram length: %#X\n", dg_len);
-+				goto err;
-+			}
-+
- 			/*
- 			 * Copy the data into a new skb.
- 			 * This ensures the truesize is correct
-@@ -1299,9 +1359,6 @@ static int ncm_unwrap_ntb(struct gether
- 			ndp_len -= 2 * (opts->dgram_item_len * 2);
- 
- 			dgram_counter++;
--
--			if (index2 == 0 || dg_len2 == 0)
--				break;
- 		} while (ndp_len > 2 * (opts->dgram_item_len * 2));
- 	} while (ndp_index);
  
 
 
