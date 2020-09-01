@@ -2,77 +2,66 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2235C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FB9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCCD8206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:14:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598948060;
-	bh=cvvx6pMHEUqt1jAoCrPznLjt+GLoFLr866bA7ElvqFc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AJb2ZBxTk0xDwyHLFI1z32LI3AjoPlHwIywVVo+B7dyiHqZW36bR8fYXi0Ozr3uU7
-	 2CIDAQ0FeLBpiVClJpNjoIEWLOjiYlJYFZDnJ0Eg3I4Qam0WV57uzTMsmkCFG9g/3U
-	 lgYh4umsCvVbzm2RKOW56u8/y/v4VLCR6kq+2Bnc=
+	by mail.kernel.org (Postfix) with ESMTP id 1A40A2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:15:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726139AbgIAIOT (ORCPT
+        id S1726247AbgIAIPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33820 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbgIAIOS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:14:18 -0400
-Received: from pobox.suse.cz (nat1.prg.suse.com [195.250.132.148])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 051B6206CD;
-        Tue,  1 Sep 2020 08:14:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598948058;
-        bh=cvvx6pMHEUqt1jAoCrPznLjt+GLoFLr866bA7ElvqFc=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=yGEv2I3JcTia1x43JmcS0QzPA7kfpoZYSu/R3oNmscAtk8LUkB6uouZC8neuN7z7A
-         nl20gA5HnBru5GzCZTz6Re0CLOkIKiXqEPcnfU7RJ4LnPPVOwzCQM+Es/B96ANKeon
-         +QWtzqJb8Q98YlC4A28q5ZWPxNawXKjf2UtLrCcs=
-Date:   Tue, 1 Sep 2020 10:14:15 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Marc Zyngier <maz@kernel.org>
-cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH] HID: core: Correctly handle ReportSize being zero
-In-Reply-To: <20200829112601.1060527-1-maz@kernel.org>
-Message-ID: <nycvar.YFH.7.76.2009011013400.4671@cbobk.fhfr.pm>
-References: <20200829112601.1060527-1-maz@kernel.org>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 1 Sep 2020 04:15:37 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10746 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725848AbgIAIPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:15:36 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 02F76D09C7582586E238;
+        Tue,  1 Sep 2020 16:15:34 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.253) by
+ DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 1 Sep 2020 16:15:26 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Oliver O'Halloran <oohall@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        "Dave Jiang" <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v4 0/1] libnvdimm: fix memory leaks in of_pmem.c
+Date:   Tue, 1 Sep 2020 16:14:49 +0800
+Message-ID: <20200901081450.1969-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 29 Aug 2020, Marc Zyngier wrote:
+v3 --> v4
+1. Merge patch 1 and 2 into one:
+   https://lkml.org/lkml/2020/8/19/1464		Patch 1
+   https://lkml.org/lkml/2020/8/19/1468		Patch 2
+2. The part from patch 1 was reviewed by Oliver O'Halloran <oohall@gmail.com>
 
-> It appears that a ReportSize value of zero is legal, even if a bit
-> non-sensical. Most of the HID code seems to handle that gracefully,
-> except when computing the total size in bytes. When fed as input to
-> memset, this leads to some funky outcomes.
-> 
-> Detect the corner case and correctly compute the size.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
+Zhen Lei (1):
+  libnvdimm: fix memory leaks in of_pmem.c
 
-Thanks Marc; Benjamin will be pushing this patch through his regression 
-testing machinery, and if all is good, I'll push it for 5.9-rc still.
+ drivers/nvdimm/of_pmem.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 -- 
-Jiri Kosina
-SUSE Labs
+1.8.3
+
 
