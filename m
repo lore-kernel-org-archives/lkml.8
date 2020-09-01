@@ -2,101 +2,266 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BBFC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84642C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:38:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF98206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55023206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:38:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yk/K5bvk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgIAMhm (ORCPT
+        id S1727903AbgIAMiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:37:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55290 "EHLO
+        Tue, 1 Sep 2020 08:38:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728117AbgIAMfP (ORCPT
+        with ESMTP id S1728198AbgIAMga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:35:15 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B778C061244;
-        Tue,  1 Sep 2020 05:34:54 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD5Ut-008fhS-6Y; Tue, 01 Sep 2020 12:34:47 +0000
-Date:   Tue, 1 Sep 2020 13:34:47 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+c282923e5da93549fa27@syzkaller.appspotmail.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        maz@kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KASAN: use-after-free Read in __fput (3)
-Message-ID: <20200901123447.GG1236603@ZenIV.linux.org.uk>
-References: <000000000000438ab305ae347ac4@google.com>
- <20200901023547.14976-1-hdanton@sina.com>
- <20200901084309.9528-1-hdanton@sina.com>
+        Tue, 1 Sep 2020 08:36:30 -0400
+Received: from mail-vk1-xa42.google.com (mail-vk1-xa42.google.com [IPv6:2607:f8b0:4864:20::a42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46F7DC061246
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 05:36:30 -0700 (PDT)
+Received: by mail-vk1-xa42.google.com with SMTP id q124so283656vkb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 05:36:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JIq7XVpK3n6IBrRKcWvFGTeHUzpcAgzGWVIVAICj3Vw=;
+        b=yk/K5bvkVu6dpLU+EByoft625JzFjIlUFkj77MwfRCan3R8sS+dMvuUbzn6rywTJGs
+         iffFySQOWlRfGKtOa4kVQHY1P74S00plVslJTmkbEN+8Kx2A0n/6+MbpmDdab3yp5QH4
+         fSSgnVv8M1wOx0tigIzAf5yDDIm8Q8vXngOgq/IUbIOu0wR1zqUztmJxsAkI+gSq91rN
+         1lTJLBnRdnRWCeYPGVKOSB4iAvjK8jDB30lI1nVq0EMJ5nf2h0aFj817QIkeeN7uBCo/
+         IQjUZPPR6Wp9zCr/SUbsu+stAhgACz5wlQgb0EKpQu2iuo+rUiPBo6HcwxHaL5ptRzL8
+         9ahg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JIq7XVpK3n6IBrRKcWvFGTeHUzpcAgzGWVIVAICj3Vw=;
+        b=GCcMoRT9Nh1jHvQ7KNgu13E6kScjOs9qdV6j30QSIZV+0fRUndSFdjtN95Ur1c5+4m
+         FVd9rf79VKAwccYK8rkx84VnyoecNSYxJmOegzIBdT9kN2Wh6A7tD7zfGjwT1tibo/dw
+         B+2sqP8CZxsd5yKYYdVlkto3zM2Fz3wtYb/WE/rarRLUCgfxlmWKbU7pzqVrKks/ft24
+         JCgagVS8IxCBfF+7WItHn1s/s0fO6IjjjXp0Qv8Vx1oSMdF5vcE8ISfM3ZaYvJ+AJ3SJ
+         OfcO3NN6lE3sbFpeKZjhLZ56Z+JJZaA7sowwoJwE9Z5GBRNVTTvridC0kgl6zJvvDQ2v
+         0BTw==
+X-Gm-Message-State: AOAM532P9kOECeUrJsVW/vtBnNyA8kLbeFIGc0CIzTBYo1EiF71aVriL
+        aV4hM/+TM7vMFoTtaubACilJG6eMwDFCLbR/dfj7FQ==
+X-Google-Smtp-Source: ABdhPJwgDqe0N+qK4Dxfh8JARoblxSy7BIomJtM3LlAM2rhyqVXOSEqkoHbXjfzB2zezVXHyj84O0k/kJJV4+UFhw5s=
+X-Received: by 2002:a1f:4392:: with SMTP id q140mr1012387vka.0.1598963788944;
+ Tue, 01 Sep 2020 05:36:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200901084309.9528-1-hdanton@sina.com>
+References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
+ <20200831194402.GD2855@paulmck-ThinkPad-P72> <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
+ <CAPDyKFrTERjpLrPOFtkqLyNsk2T_58Ye2FQ1mPf-0u78aWW=Xw@mail.gmail.com> <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 1 Sep 2020 14:35:52 +0200
+Message-ID: <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
+ OF driver helper
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     paulmck@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Saravana Kannan <saravanak@google.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-mmc <linux-mmc@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lars Povlsen <lars.povlsen@microchip.com>,
+        madhuparnabhowmik10@gmail.com,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 04:43:09PM +0800, Hillf Danton wrote:
+On Tue, 1 Sep 2020 at 12:42, <peterz@infradead.org> wrote:
+>
+> On Tue, Sep 01, 2020 at 08:50:57AM +0200, Ulf Hansson wrote:
+> > On Tue, 1 Sep 2020 at 08:46, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+> > > On Mon, 31 Aug 2020 at 21:44, Paul E. McKenney <paulmck@kernel.org> wrote:
+>
+> > > > > [    5.308588] =============================
+> > > > > [    5.308593] WARNING: suspicious RCU usage
+> > > > > [    5.316628] sdhci-pltfm: SDHCI platform and OF driver helper
+> > > > > [    5.320052] 5.9.0-rc3 #1 Not tainted
+> > > > > [    5.320057] -----------------------------
+> > > > > [    5.320063] /usr/src/kernel/include/trace/events/lock.h:37 suspicious rcu_dereference_check() usage!
+> > > > > [    5.320068]
+> > > > > [    5.320068] other info that might help us debug this:
+> > > > > [    5.320068]
+> > > > > [    5.320074]
+> > > > > [    5.320074] rcu_scheduler_active = 2, debug_locks = 1
+> > > > > [    5.320078] RCU used illegally from extended quiescent state!
+> > > > > [    5.320084] no locks held by swapper/0/0.
+> > > > > [    5.320089]
+> > > > > [    5.320089] stack backtrace:
+> > > > > [    5.320098] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.9.0-rc3 #1
+> > > > > [    5.346354] sdhci_msm 7864900.sdhci: Got CD GPIO
+> > > > > [    5.346446] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> > > > > [    5.346452] Call trace:
+> > > > > [    5.346463]  dump_backtrace+0x0/0x1f8
+> > > > > [    5.346471]  show_stack+0x2c/0x38
+> > > > > [    5.346480]  dump_stack+0xec/0x15c
+> > > > > [    5.346490]  lockdep_rcu_suspicious+0xd4/0xf8
+> > > > > [    5.346499]  lock_acquire+0x3d0/0x440
+> > > > > [    5.346510]  _raw_spin_lock_irqsave+0x80/0xb0
+> > > > > [    5.413118]  __pm_runtime_suspend+0x34/0x1d0
+> > > > > [    5.417457]  psci_enter_domain_idle_state+0x4c/0xb0
+> > > > > [    5.421795]  cpuidle_enter_state+0xc8/0x610
+> > > > > [    5.426392]  cpuidle_enter+0x3c/0x50
+> > > > > [    5.430561]  call_cpuidle+0x44/0x80
+> > > > > [    5.434378]  do_idle+0x240/0x2a0
+>
+> > > > Note also that Peter Zijlstra (CCed) is working to shrink the portion
+> > > > of the idle loop that RCU ignores.  Not sure that it covers your
+> > > > case, but it is worth checking.
+>
+> Right, so I think I 'caused' this by making the lock tracepoints
+> visible. That is, the error always existed, now we actually warn about
+> it.
+>
+> > > Thanks for letting me know. Let's see what Peter thinks about this then.
+> > >
+> > > Apologize for my ignorance, but from a cpuidle point of view, what
+> > > does it mean using RCU_NONIDLE()? I guess we should avoid RCU_NONIDLE
+> > > on bigger code paths?
+> > >
+> > > I could add RCU_NONIDLE for the calls to pm_runtime_put_sync_suspend()
+> > > and pm_runtime_get_sync() in psci_enter_domain_idle_state(). Perhaps
+> > > that's the easiest approach, at least to start with.
+> > >
+> > > Or do you have any other ideas?
+>
+> So IMO trace_*_rcuidle() and RCU_NONIDLE() are bugs, they just mean we
+> got the ordering wrong and are papering over it. That said, that's been
+> the modus operandi for a while now, just make it shut up and don't think
+> about it :-/
+>
+> That said; I pushed the rcu_idle_enter() about as deep as it goes into
+> generic code in commit 1098582a0f6c ("sched,idle,rcu: Push rcu_idle
+> deeper into the idle path")
 
-> Below is my 2c for making it safe to access the rbtree entry and the
-> file tucked in it by bumping up the file count before adding epi into
-> rbtree.
+Aha, that commit should fix this problem, I think. Looks like that
+commit was sent as a fix and included in the recent v5.9-rc3.
 
-NAK.  epitems, by design, do *NOT* pin files down.  That's what
-eventpoll_release() is about - those references are not counting and
-epitems can be taken out by the final close.
+Naresh, can you try with the above commit?
 
-It's a user-visible aspect of API.  And the problem Marc's patch was
-trying to solve had nothing to do with that - at the root it's
-the lack of suitable exclusion and the atrocious way loop prevention
-and reverse path count checks are done on watch insertion.
+>
+> I suppose the next step is pushing it into individual driver when
+> needed, something like the below perhaps. I realize the coupled idle
+> state stuff is more complicated that most, but it's also not an area
+> I've looked at in detail, so perhaps I've just made a bigger mess, but
+> it ought to give you enough to get going I think.
 
-What happens there is that files that would have paths added by
-EPOLL_CTL_ADD (including those via several intermediate epoll files)
-are collected into a temporary list and then checked for excessive
-reverse paths.  The list is emptied before epoll_ctl() returns.
+These aren't coupled states. Instead, in cpuidle-psci, we are using PM
+domains through genpd and runtime PM to manage "shared idle states"
+between CPUs.
 
-And that's _the_ list - if epoll_ctl decides to go there in the
-first place, it grabs a system-wide mutex and holds it as long as
-it's playing around.  Everything would've worked, if not for the
-fact that
-	* the bloody list goes through struct file instances.  It's
-a bad decision, for a lot of reasons.
-	* in particular, files can go away while epoll_ctl() is playing
-around.  The same system-wide mutex would've blocked their freeing (modulo
-a narrow race in eventpoll_release()) *IF* they remained attached to
-epitems.  However, explicit EPOLL_CTL_DEL removing such a beast
-in the middle of EPOLL_CTL_ADD checks will remove such epitems without
-touching the same mutex.
+Kind regards
+Uffe
 
-Marc's patch tried to brute-force the protection of files in that
-temporary list; what it had missed was the fact that a file on it could
-have already been committed to getting killed - f_count already zero,
-just hadn't gotten through the __fput() yet.  In such cases we don't
-want to do any reverse path checks for that sucker - it *is* going
-away, so there's no point considering it.  We can't blindly bump the
-refcount, though, for obvious reasons.
-
-That struct file can't get freed right under the code inserting it into
-the list - the locks held at the moment (ep->mtx) are more than enough.
-It's what can happen to it while on the list that is a problem.
-
-Of course, as a long-term solution we want to have that crap with
-temporary list going through struct file instances taken out and
-moved to epitems themselves; the check does scan all epitems for
-every file in the set and we bloody well could gather those into
-the list at once.  Then we'd only need to protect the list walking
-vs. removals (with a spinlock, for all we care).
-
-It's too invasive a change for -stable, though, and I'm still digging
-through fs/eventpoll.c locking - it's much too convoluted and it
-got no attention for a decade ;-/
+>
+> Rafael?
+>
+> ---
+> diff --git a/drivers/cpuidle/cpuidle-psci.c b/drivers/cpuidle/cpuidle-psci.c
+> index 74463841805f..617bbef316e6 100644
+> --- a/drivers/cpuidle/cpuidle-psci.c
+> +++ b/drivers/cpuidle/cpuidle-psci.c
+> @@ -49,6 +49,9 @@ static inline u32 psci_get_domain_state(void)
+>
+>  static inline int psci_enter_state(int idx, u32 state)
+>  {
+> +       /*
+> +        * XXX push rcu_idle_enter into the coupled code
+> +        */
+>         return CPU_PM_CPU_IDLE_ENTER_PARAM(psci_cpu_suspend_enter, idx, state);
+>  }
+>
+> @@ -72,7 +75,9 @@ static int psci_enter_domain_idle_state(struct cpuidle_device *dev,
+>         if (!state)
+>                 state = states[idx];
+>
+> +       rcu_idle_enter();
+>         ret = psci_cpu_suspend_enter(state) ? -1 : idx;
+> +       rcu_idle_exit();
+>
+>         pm_runtime_get_sync(pd_dev);
+>
+> @@ -125,8 +130,13 @@ static int psci_enter_idle_state(struct cpuidle_device *dev,
+>                                 struct cpuidle_driver *drv, int idx)
+>  {
+>         u32 *state = __this_cpu_read(psci_cpuidle_data.psci_states);
+> +       int ret;
+>
+> -       return psci_enter_state(idx, state[idx]);
+> +       rcu_idle_enter();
+> +       ret = psci_enter_state(idx, state[idx]);
+> +       rcu_idle_exit();
+> +
+> +       return ret;
+>  }
+>
+>  static const struct of_device_id psci_idle_state_match[] = {
+> @@ -170,6 +180,7 @@ static int psci_dt_cpu_init_topology(struct cpuidle_driver *drv,
+>          * deeper states.
+>          */
+>         drv->states[state_count - 1].enter = psci_enter_domain_idle_state;
+> +       drv->states[state_count - 1].flags = CPUIDLE_FLAG_RCU_IDLE;
+>         psci_cpuidle_use_cpuhp = true;
+>
+>         return 0;
+> @@ -285,6 +296,7 @@ static int psci_idle_init_cpu(struct device *dev, int cpu)
+>          * state index 0.
+>          */
+>         drv->states[0].enter = psci_enter_idle_state;
+> +       drv->states[0].flags = CPUIDLE_FLAG_RCU_IDLE;
+>         drv->states[0].exit_latency = 1;
+>         drv->states[0].target_residency = 1;
+>         drv->states[0].power_usage = UINT_MAX;
+> diff --git a/drivers/cpuidle/cpuidle.c b/drivers/cpuidle/cpuidle.c
+> index 04becd70cc41..3dbac3bb761b 100644
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -239,9 +239,11 @@ int cpuidle_enter_state(struct cpuidle_device *dev, struct cpuidle_driver *drv,
+>         time_start = ns_to_ktime(local_clock());
+>
+>         stop_critical_timings();
+> -       rcu_idle_enter();
+> +       if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
+> +               rcu_idle_enter();
+>         entered_state = target_state->enter(dev, drv, index);
+> -       rcu_idle_exit();
+> +       if (!(target_state->flags & CPUIDLE_FLAG_RCU_IDLE))
+> +               rcu_idle_exit();
+>         start_critical_timings();
+>
+>         sched_clock_idle_wakeup_event();
+> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
+> index 75895e6363b8..47f686131a54 100644
+> --- a/include/linux/cpuidle.h
+> +++ b/include/linux/cpuidle.h
+> @@ -82,6 +82,7 @@ struct cpuidle_state {
+>  #define CPUIDLE_FLAG_UNUSABLE          BIT(3) /* avoid using this state */
+>  #define CPUIDLE_FLAG_OFF               BIT(4) /* disable this state by default */
+>  #define CPUIDLE_FLAG_TLB_FLUSHED       BIT(5) /* idle-state flushes TLBs */
+> +#define CPUIDLE_FLAG_RCU_IDLE          BIT(6) /* driver will do RCU-idle */
+>
+>  struct cpuidle_device_kobj;
+>  struct cpuidle_state_kobj;
