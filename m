@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16A5BC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 862F4C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8963207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54420207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:22:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973717;
-	bh=fH37D9OBwg8FmwnXoMpWvRvm003f6JYQBo7oh5pvM90=;
+	s=default; t=1598973723;
+	bh=oQ82eBlwdtaiJIXm1vXHm/8aSdi5ZiNCVhA1SlGsb4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RzEsM7CR5Hk1ayQrWb3DbJnd7slTxbkCN//todKE90vq9BtavMkBgXg/iD5fX7PnV
-	 +ZrRs0nnxeM5d5RmFLFpLMsRJu3lfzz7rL5rjZMBxELr/DW0u9wa1qyUbLkPjtWIQM
-	 y5tQ+3+CVEzXFhip9bYkeilPI9q3Qb2KCU64Twqg=
+	b=shlIQ+N8BzcfmCI+3BzAIt+XMzSxVGmCKRAAt0yDZ4IdEWGpLYtCSYwsKVzjzP/WR
+	 IUDagHkbnhg5RJzhWOaZ293/X4hrvDMlxavYHjM4yFtkPYWz9pBGns3z1BtHW0b89h
+	 WHInZNQ/Vf5TYFc3Sxau/yY5c4UQZh7/O+jsO3BY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgIAPV4 (ORCPT
+        id S1729394AbgIAPWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:21:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:22:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729271AbgIAPT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:29 -0400
+        id S1729291AbgIAPTh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:19:37 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39AB22100A;
-        Tue,  1 Sep 2020 15:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4122721548;
+        Tue,  1 Sep 2020 15:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973559;
-        bh=fH37D9OBwg8FmwnXoMpWvRvm003f6JYQBo7oh5pvM90=;
+        s=default; t=1598973564;
+        bh=oQ82eBlwdtaiJIXm1vXHm/8aSdi5ZiNCVhA1SlGsb4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KqKoggsvtTuEpBo2b3S3g8Pe76XhuGVk/OX1pTiTIE7H+i/JRWHNNsUJ80uSJ7x4g
-         wkj6Dw+RMB3myU4nc4qLKXwvuBQlGEEa/B5mMomMlJuDegTZfQH+0i5bDHm2QlfKBK
-         wTG58pXAjkUAb7LVRo8z3b2zWGyOMlpMN6KqmoFE=
+        b=ivhgpyGpicFG69DWrjYsFysSogW50zEGBdkwVSapjVgZDBC9SN0T+jGw0djjadBM8
+         hLgOPdY6rQD6h2F18Cj/vWoSQGtob13Mp+nGmm87/xxbvIqgjRsSG8L0nMydfn16jb
+         JI8OU2C65vY92/F9Y+vWrqXRR0c6zBOjV6xhPj34=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 30/91] drm/nouveau: Fix reference count leak in nouveau_connector_detect
-Date:   Tue,  1 Sep 2020 17:10:04 +0200
-Message-Id: <20200901150929.645450097@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 49/91] jbd2: abort journal if free a async write error metadata buffer
+Date:   Tue,  1 Sep 2020 17:10:23 +0200
+Message-Id: <20200901150930.573212789@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -60,37 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 990a1162986e8eff7ca18cc5a0e03b4304392ae2 ]
+[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
 
-nouveau_connector_detect() calls pm_runtime_get_sync and in turn
-increments the reference count. In case of failure, decrement the
-ref count before returning the error.
+If we free a metadata buffer which has been failed to async write out
+in the background, the jbd2 checkpoint procedure will not detect this
+failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
+inconsistency after cleanup journal tail. This patch abort the journal
+if free a buffer has write_io_error flag to prevent potential further
+inconsistency.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/nouveau_connector.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/jbd2/transaction.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
-index 4a7d50a96d36f..b5c8219c54557 100644
---- a/drivers/gpu/drm/nouveau/nouveau_connector.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
-@@ -580,8 +580,10 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
- 		pm_runtime_get_noresume(dev->dev);
- 	} else {
- 		ret = pm_runtime_get_sync(dev->dev);
--		if (ret < 0 && ret != -EACCES)
-+		if (ret < 0 && ret != -EACCES) {
-+			pm_runtime_put_autosuspend(dev->dev);
- 			return conn_status;
-+		}
- 	}
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index b4bde0ae10948..3311b1e684def 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2008,6 +2008,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ {
+ 	struct buffer_head *head;
+ 	struct buffer_head *bh;
++	bool has_write_io_error = false;
+ 	int ret = 0;
  
- 	nv_encoder = nouveau_connector_ddc_detect(connector);
+ 	J_ASSERT(PageLocked(page));
+@@ -2032,11 +2033,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ 		jbd_unlock_bh_state(bh);
+ 		if (buffer_jbd(bh))
+ 			goto busy;
++
++		/*
++		 * If we free a metadata buffer which has been failed to
++		 * write out, the jbd2 checkpoint procedure will not detect
++		 * this failure and may lead to filesystem inconsistency
++		 * after cleanup journal tail.
++		 */
++		if (buffer_write_io_error(bh)) {
++			pr_err("JBD2: Error while async write back metadata bh %llu.",
++			       (unsigned long long)bh->b_blocknr);
++			has_write_io_error = true;
++		}
+ 	} while ((bh = bh->b_this_page) != head);
+ 
+ 	ret = try_to_free_buffers(page);
+ 
+ busy:
++	if (has_write_io_error)
++		jbd2_journal_abort(journal, -EIO);
++
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
