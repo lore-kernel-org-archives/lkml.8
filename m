@@ -2,109 +2,197 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
-	DKIM_ADSP_CUSTOM_MED,DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B82FBC2BB4D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 324C2C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9681B2100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:07:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="Rp5RQjtH"
+	by mail.kernel.org (Postfix) with ESMTP id DB9F42145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:07:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598918870;
+	bh=UAKH+2Ki7UQHzmNdMUOs3Mizg8SQX2bqSgPR7dHvNmA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=IUKtFrUqvaxUeR7mqN4FKEqvGCPW442kS7BrGLHKia5J7GggShk+QjmleVrDBBlTS
+	 M4VfQcWqVIzL/FHZwEjDymDFugpP70IcoHm6vO94eSBfCj4OKmxYuSWiWAlOCiekHa
+	 lLVObO1F6k0kLza/NHWBi/HECWRVyBxCaIHhZJWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgIAACe (ORCPT
+        id S1726117AbgIAAHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 20:02:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52236 "EHLO
+        Mon, 31 Aug 2020 20:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726020AbgIAACe (ORCPT
+        with ESMTP id S1725872AbgIAAHr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 20:02:34 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A35DBC061573
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:02:33 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id r1so11156761ybg.4
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:02:33 -0700 (PDT)
+        Mon, 31 Aug 2020 20:07:47 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 511ABC061573;
+        Mon, 31 Aug 2020 17:07:47 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id w7so1632276pfi.4;
+        Mon, 31 Aug 2020 17:07:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=sender:date:message-id:mime-version:subject:from:to:cc;
-        bh=/WK1I/ZsCqLXTjRuojbNjOezx7X+DvJD8ltypu8xs/g=;
-        b=Rp5RQjtHdrOV9oOAdw+rlYP2b8FmTtHIgndUhzBsN6m2ht3rZ2dwnn8NuxI3w4UGT8
-         0J1LvrZkq4Lbr+l2dtcWKk+8RLUmXANtSDp10Uj9+GdaIMrkQu8TnpXfaQgWMcg93dej
-         MIqACyfGvzUbrr5quNyAz+OwT49UB7EXJMfC91936uBlOeeDzjZkjTxvE7fXXhyhYhcX
-         liBOmUqrs7fmCKcXilVo1NsHB6vvjsU2Kuy60NsXLe4saEIomU1vLqMoDK9cdIor/P0M
-         iuTlHQW0c8U+yeM0rjV0VZ0otUkH4w/kl/1e/P8iES0nrVbuhU3CW1EEwdMGB2btJGoI
-         gSug==
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Qhlsr+suuDkN/ZVkq37k+a1bP/C6TH/jBPPik3MNM3E=;
+        b=VBhEdOAw9J6tfskz+U2eNtrKbJi9CZSc9QFc49BdI8wskdNqDi3UDJc7R2gQkJGA2k
+         ZXVCADlVT2TJgZ1mxBun3T0kTRN03VOgEyK4RBqFS7TmdU/TUfFxKtHslManRVHqJEjQ
+         ADI3FUK+jFBYtHyOVD//c5KVHMgqy5ZdfDwT2rnTwqjFgUD6Fzzv1RY7m24RIxh/QM0X
+         FrjsdzDX7No/55e5OXCdOCBe8Gh0Dfqo/zgePKKEk9S1rn0lmrGCuQrpQTKvx6PUN0s3
+         me9PTx/goe1rFzqvjXcfEKJdKJCZ8yHmcxzWQCV48Wv+Sjt3FeA5p61D90tmorZC/S4v
+         eYyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
-         :to:cc;
-        bh=/WK1I/ZsCqLXTjRuojbNjOezx7X+DvJD8ltypu8xs/g=;
-        b=f3+oKEfwoZyKoPMm/CSgVypywVXuYowNgVaGayifsh90u4iq5kJFRO6bSC0t5ts315
-         0dUNqch70UlPgUJ40cdykye0abXjFyZwESgPq0qe9CL9ByDPqsyvHZG/BprMF9L9NJze
-         hZjgJrrdxep/WwNDAn0dc+lYUmc0EEYu8An2Ctt3BZf1DMYJdiU7JMAL1vxlnMns9G98
-         O8l2bzKMxmyMHFJavytsFaImjSbLSVX6Apz/bhjMZQJ2sHc4miuXHbe9ZJvn6yABDvq6
-         r73YQNpTohzt+auJ24bs2G5xfHZr6yTcMM61MomB9WlnzIHE9JAXjioAyXHu5aX5i8iy
-         IsPA==
-X-Gm-Message-State: AOAM533kL1phurHtiuTRIZIbLBqQAXT4EoLZTuKOB4RiQweQ/1qhTxjb
-        f+KiDIeJvdB8oSyXMY1dMexa1AgWjQ==
-X-Google-Smtp-Source: ABdhPJwa8OHde2lQYnBK4sl7X9zvZNhHYLqhFJDFsng0d53MBPOB6RRRkl9jFfyBnOl/wZCGnBHzMaDZTg==
-X-Received: from jannh2.zrh.corp.google.com ([2a00:79e0:1b:201:1a60:24ff:fea6:bf44])
- (user=jannh job=sendgmr) by 2002:a25:40cb:: with SMTP id n194mr6162269yba.7.1598918552892;
- Mon, 31 Aug 2020 17:02:32 -0700 (PDT)
-Date:   Tue,  1 Sep 2020 02:01:43 +0200
-Message-Id: <20200901000143.207585-1-jannh@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH] mm/mmu_notifier: Fix mmget() assert in __mmu_interval_notifier_insert
-From:   Jann Horn <jannh@google.com>
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=Qhlsr+suuDkN/ZVkq37k+a1bP/C6TH/jBPPik3MNM3E=;
+        b=jldyPYSZvqnCwAWZxjUj0nFiVSQn6tr6Owai1/MKIjiHkxuXomrBrUiCYWMUA8kUbW
+         1GI1IZ5Pd4o4O5sZ7lUzqmHu/yGoRRiaYgf0jERlAEz7uFdblSmXH2twVXM39kWMHqzG
+         PN+nMfU88nGeGMwnKmfjT4EQHPoYw4c4I//7nTYLfGx93aa0SLOdbego/6/4UAc//6Qa
+         3S9CKUL+5noJA7m+S6/6dCTmHxMvegorOw/K4Z7Zt1CYX9Bbw5Gn6zz6hWFOhR0nO/7t
+         /cunVYLRNEzJw4bzqwaINOQQFT/2yjPwUeTmamDF6m5jRukBLCnhFQOJPgXJDw8ScjuS
+         Gg3Q==
+X-Gm-Message-State: AOAM533QXWz/1bCRB5ckxDzmFbFjytuPJaAjONL3Zqjfp6Ia8kz+ebPP
+        NNScIHz7BkMa6kjarmGe5EDByOau/f8=
+X-Google-Smtp-Source: ABdhPJwTkw89fLl8yoCut62uET3njozAyscjbC1KEVyOrdhZDCNO99/4q/7r9iDjxjBzWeu/IF2zvA==
+X-Received: by 2002:aa7:9910:: with SMTP id z16mr3322533pff.120.1598918866562;
+        Mon, 31 Aug 2020 17:07:46 -0700 (PDT)
+Received: from bbox-1.mtv.corp.google.com ([2620:15c:211:1:7220:84ff:fe09:5e58])
+        by smtp.gmail.com with ESMTPSA id k5sm769777pjq.5.2020.08.31.17.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 17:07:45 -0700 (PDT)
+From:   Minchan Kim <minchan@kernel.org>
 To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        "=?UTF-8?q?Christian=20K=C3=B6nig?=" <christian.koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jann Horn <jannh@google.com>,
+        alexander.h.duyck@linux.intel.com, sj38.park@gmail.com,
+        David Rientjes <rientjes@google.com>,
+        Arjun Roy <arjunroy@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Minchan Kim <minchan@kernel.org>
+Subject: [PATCH v9 0/3] introduce memory hinting API for external process
+Date:   Mon, 31 Aug 2020 17:06:30 -0700
+Message-Id: <20200901000633.1920247-1-minchan@kernel.org>
+X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The comment talks about having to hold mmget() (which means mm_users), but
-the actual check is on mm_count (which would be mmgrab()).
+Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+application could give hints to kernel what memory range are preferred to be
+reclaimed. However, in some platform(e.g., Android), the information
+required to make the hinting decision is not known to the app.
+Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+and that daemon must be able to initiate reclaim on its own without any app
+involvement.
 
-Given that MMU notifiers are torn down in
-mmput() -> __mmput() -> exit_mmap() -> mmu_notifier_release(),
-I believe that the comment is correct and the check should be on
-mm->mm_users. Fix it up accordingly.
+To solve the concern, this patch introduces new syscall - process_madvise(2).
+Bascially, it's same with madvise(2) syscall but it has some differences.
 
-Fixes: 99cb252f5e68 ("mm/mmu_notifier: add an interval tree notifier")
-Signed-off-by: Jann Horn <jannh@google.com>
----
-Can someone please double-check this? I'm like 90% sure that I fixed
-this the right way around, but it'd be good if someone more familiar
-with mmu notifiers could confirm.
+1. It needs pidfd of target process to provide the hint
+2. It supports only MADV_{COLD|PAGEOUT} at this moment.
+   Other hints in madvise will be opened when there are explicit requests from
+   community to prevent unexpected bugs we couldn't support.
+3. Only privileged processes can do something for other process's address
+   space.
 
- mm/mmu_notifier.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For more detail of the new API, please see "mm: introduce external memory hinting API"
+description in this patchset.
 
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 4fc918163dd3..5654dd19addc 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -913,7 +913,7 @@ static int __mmu_interval_notifier_insert(
- 		return -EOVERFLOW;
- 
- 	/* Must call with a mmget() held */
--	if (WARN_ON(atomic_read(&mm->mm_count) <= 0))
-+	if (WARN_ON(atomic_read(&mm->mm_users) <= 0))
- 		return -EINVAL;
- 
- 	/* pairs with mmdrop in mmu_interval_notifier_remove() */
+* from v8 - https://lore.kernel.org/linux-api/20200622192900.22757-1-minchan@kernel.org/
+  * drop passing task_struct to do_madvise - Linus
+  * remove compat syscall entry - Christian
+  * drop mmget_still_valid since we don't need any longer
+    * https://patchwork.kernel.org/patch/11740595/
 
-base-commit: 15bc20c6af4ceee97a1f90b43c0e386643c071b4
+* from v7 -  http://lore.kernel.org/r/20200302193630.68771-1-minchan@kernel.org
+  * dropping pid support from new syscall and fold releated patches into syscall patch
+  * dropping KSM patch by discussion - Oleksandr, I lost the discussion.
+    Please resend the single patch against of the patchset if you resolves the discussion.
+    https://lore.kernel.org/linux-api/20200302193630.68771-8-minchan@kernel.org/
+
+* from v6 - https://lore.kernel.org/linux-api/20200219014433.88424-1-minchan@kernel.org/
+  * fix comments and descriptions - Suren
+  * Add Reviewed-by - Suren
+  * fix build break reported by 0-day
+
+* from v5 - https://lore.kernel.org/linux-mm/20200214170520.160271-1-minchan@kernel.org/
+  * use null task and requestor's mm for io_madvise - Jann and Jens
+  * use right commit description for moving pidfd_get_pid - Christian
+
+* from v4 - https://lore.kernel.org/linux-mm/20200212233946.246210-1-minchan@kernel.org/
+  * pass mm down to functions, not accessing task->mm - Jann
+  * clean up - Alexander
+  * add Reviewed-by - Alexander, SeongJae
+  * patch reordering
+
+* from v3 - https://lore.kernel.org/linux-mm/20200128001641.5086-1-minchan@kernel.org/
+  * verify task->mm aftere access_mm - Oleg
+  * split some patches for easy review - Alexander
+  * clean up fatal signal checking - Suren
+
+* from v2 - https://lore.kernel.org/linux-mm/20200116235953.163318-1-minchan@kernel.org/
+  * check signal callee and caller to bail out - Kirill Tkhai
+  * put more clarification for justification of new API
+
+* from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
+  * fix syscall number - SeongJae
+  * use get_pid_task - Kirill Tkhai
+  * extend API to support pid as well as pidfd - Kirill Tkhai
+
+This patchset is against on v5.9-rc2-mmots-2020-08-30-18-40.
+
+Minchan Kim (3):
+  mm/madvise: pass mm to do_madvise
+  pid: move pidfd_get_pid() to pid.c
+  mm/madvise: introduce process_madvise() syscall: an external memory
+    hinting API
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+ arch/arm/tools/syscall.tbl                  |   1 +
+ arch/arm64/include/asm/unistd.h             |   2 +-
+ arch/arm64/include/asm/unistd32.h           |   2 +
+ arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |   1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+ fs/io_uring.c                               |   2 +-
+ include/linux/mm.h                          |   2 +-
+ include/linux/pid.h                         |   1 +
+ include/linux/syscalls.h                    |   2 +
+ include/uapi/asm-generic/unistd.h           |   4 +-
+ kernel/exit.c                               |  17 ---
+ kernel/pid.c                                |  17 +++
+ kernel/sys_ni.c                             |   1 +
+ mm/madvise.c                                | 141 ++++++++++++++++++--
+ 26 files changed, 171 insertions(+), 35 deletions(-)
+
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
