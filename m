@@ -2,105 +2,160 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 472E0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C323DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F91E206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90854206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:50:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v1c8+MHc";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fCDc60mX"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="CMipeE03"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbgIAOud (ORCPT
+        id S1728703AbgIAOuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:50:33 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:39532 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727825AbgIALs1 (ORCPT
+        Tue, 1 Sep 2020 10:50:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47932 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbgIAOtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:48:27 -0400
-Date:   Tue, 01 Sep 2020 11:47:58 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598960879;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oB6k2PvT9OMecc0/+DNkcBt9qNitv8S8etsaj8Hbzus=;
-        b=v1c8+MHczK2BdtrJEfDp+zuWme1i7KC4C0Zk7a4ZNrzXXDhHclmYUjzjCixiSWCGTVKjDn
-        aF8ia+t/+SmWcN5+b930rtPnHk0I/bab/+yz943BsbnnQStuVZPTR4JrTZoY3Nb/B2EB2K
-        /gi2TzHHqJZkgk1ADH3AtT77cISgtLCfPmFCKdUI71D1wE4Ft7L2nzFuTy0hH7mPlbCoe5
-        MGEHup2iVIIBonullwZKRRBU+bVUXl+GqZFhtLHU207ML9dgGLP4U5/aN19y0jpiiehmy4
-        UByKTdNLfpPZvyqeMIgEoZfMhFL822tvwQdBTDLHwIbRz0ReEbPBjOKvL7YH5Q==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598960879;
-        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oB6k2PvT9OMecc0/+DNkcBt9qNitv8S8etsaj8Hbzus=;
-        b=fCDc60mXof710qvin5wTUE1gY91qvHdhRylsJ/GZQJSaTZrOzOZnNCzH8LUJHYS8s3J7t3
-        ayK+UngLO4WUKXBw==
-From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: core/build] arm64/mm: Remove needless section quotes
-Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200821194310.3089815-9-keescook@chromium.org>
-References: <20200821194310.3089815-9-keescook@chromium.org>
+        Tue, 1 Sep 2020 10:49:51 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B1D2C061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 07:49:50 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id c15so649204plq.4
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 07:49:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Bv5b6EVobqUNVIF87/DhH+cY3Q1HWbgPFf0dl3Olwio=;
+        b=CMipeE03VR2QYd8nNYYHCTHPEJ1IdeFQMtTtnIpV/ee4MfCFYBft28C9Z4GIQo5zBV
+         QK2gfzj3Lpql1P1iBv4jZiYTXLyHgovXgqQQLVy76+locmo3vFm7G8IW78U6hSLjWo7C
+         TmvExCXdwMAaqW+bR3RRmdaQKZIoFbMkIauAd4Zew6KCdayaeAjIDHW6XrU23yriK2g2
+         5Q89cEUh6IL2lzZJX+Qf7KP7yzHzSFg6msQOEJiQKJLe5dli7EmEZ2MIJzwXeCgPjFMv
+         f5rmHep1MxFV7CqvQH9xpVPyf7UJMS2PB90qgeGaBr0u7DCp24xr/+nuCabqF2zMIkui
+         Rk1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bv5b6EVobqUNVIF87/DhH+cY3Q1HWbgPFf0dl3Olwio=;
+        b=rUqqqg2bJNsPsm0WRokYj9SjJT1Myjs1JcsQGvHNVX7QRiWMJ0wgcMaP4Uu5KXQYUv
+         0t+TvZ7/G1eBbtbe9Iy8+Ve53lCUkjF8VhmxQic40+cfnEA2Mtb+JdOGo7CjvHUI7VTP
+         XThmlyBOwJ2qpR6qL37uW/wLmeVM3ERVSDkd8B5lmeUWe/oT4NT/TOD0fi0DdMuXTsvY
+         zZlyE/L52bXAwL/DfhrSn8EK54pgQVsgBOsLOq5ZAlAzkNAUrYio7bk2ZaLkdD8HK+pQ
+         XbRypX/epS2NQbzROHkEqlvyd0thCy2cpfxExh07Hb8bdX/z+KwW3E6EpmWJKFZMLwY5
+         BzsQ==
+X-Gm-Message-State: AOAM532r60kT8bFC6L6mPInA4FnLj3Hv1WYRgFpocWWRE//ezmn/sDQE
+        GthqoEQHAeM7d3WoS050D9gR+A==
+X-Google-Smtp-Source: ABdhPJwJT6OaFInhGXji8NM/sg0H1Gpqx+OhIP3Jac20+0b+pSpDpPp7UHpR6y/5tKsCNyF4pj13sg==
+X-Received: by 2002:a17:90a:c086:: with SMTP id o6mr1911513pjs.224.1598971789688;
+        Tue, 01 Sep 2020 07:49:49 -0700 (PDT)
+Received: from [192.168.1.187] ([66.219.217.173])
+        by smtp.gmail.com with ESMTPSA id s67sm2304633pfs.117.2020.09.01.07.49.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 07:49:49 -0700 (PDT)
+Subject: Re: [PATCH 0/1] block io layer filters api
+To:     Sergei Shtepa <sergei.shtepa@veeam.com>
+Cc:     "masahiroy@kernel.org" <masahiroy@kernel.org>,
+        "michal.lkml@markovi.net" <michal.lkml@markovi.net>,
+        "koct9i@gmail.com" <koct9i@gmail.com>,
+        "jack@suse.cz" <jack@suse.cz>,
+        "damien.lemoal@wdc.com" <damien.lemoal@wdc.com>,
+        "ming.lei@redhat.com" <ming.lei@redhat.com>,
+        "steve@sk2.org" <steve@sk2.org>,
+        "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+References: <1598555619-14792-1-git-send-email-sergei.shtepa@veeam.com>
+ <7a517822-6be2-7d0d-fae3-31472c85f543@kernel.dk>
+ <20200901132957.GA18251@veeam.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <722e85ac-f494-2cb3-4caf-d903d79a5645@kernel.dk>
+Date:   Tue, 1 Sep 2020 08:49:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Message-ID: <159896087863.20229.1161280648421991515.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200901132957.GA18251@veeam.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the core/build branch of tip:
+On 9/1/20 7:29 AM, Sergei Shtepa wrote:
+> The 08/28/2020 16:54, Jens Axboe wrote:
+>> On 8/27/20 1:13 PM, Sergei Shtepa wrote:
+>>> Hello everyone! Requesting for your comments and suggestions.
+>>>
+>>> We propose new kernel API that should be beneficial for out-of-tree
+>>> kernel modules of multiple backup vendors: block layer filter API.
+>>
+>> That's just a non-starter, I'm afraid. We generally don't carry
+>> infrastructure in the kernel for out-of-tree modules, that includes
+>> even exports of existing code.
+>>
+>> If there's a strong use case *in* the kernel, then such functionality
+>> could be entertained.
+>>
+>> -- 
+>> Jens Axboe
+>>
+> 
+> To be honest, we've always dreamed to include our out-of-tree module
+> into the kernel itself - so if you're open to that, that is great news
+> indeed!
 
-Commit-ID:     b4ca91027d8226ae423ce498f03f5b348cf84e36
-Gitweb:        https://git.kernel.org/tip/b4ca91027d8226ae423ce498f03f5b348cf84e36
-Author:        Kees Cook <keescook@chromium.org>
-AuthorDate:    Fri, 21 Aug 2020 12:42:49 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 01 Sep 2020 09:50:36 +02:00
+We're always open to that, provided that a promise is made to maintain
+the in-kernel version. Sometimes we see submissions that end up being an
+over-the-wall kind of dump, and then the vendor only maintains their own
+out-of-tree version after the fact and point customers at that one too.
+For those cases we don't want the driver, as it just becomes a
+maintenance hassle for us.
 
-arm64/mm: Remove needless section quotes
+So if you are serious about this, it's important to set and manage
+internal expectations on how the driver is developed and maintained
+going forward. The upstream driver *must* be the canonical version, and
+if you want and need to have versions for older kernels available, then
+it should be based on backports of the current in-tree driver.
 
-Fix a case of needless quotes in __section(), which Clang doesn't like.
+> We've spent some time before responding to estimate how long it will
+> take us to update the current source code to meet coding requirements.
+> It looks like we will need 2-4 months of development and QC, and
+> possibly much more to work on your feedback thereafter. This is much
+> work, but we are fully committed to this if you are willing to include
+> this module into the kernel.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Acked-by: Will Deacon <will@kernel.org>
-Link: https://lore.kernel.org/r/20200821194310.3089815-9-keescook@chromium.org
----
- arch/arm64/mm/mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Honestly I don't think that is that much work, and I wouldn't personally
+be too worried about that being succesful. Complications are generally
+mostly around APIs, since an in-tree driver might need to change how you
+communicate with the driver. So yes, it'll be some work, but the
+important part is how we treat the maintenance of it after all that is
+said and done.
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 75df62f..e43c805 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -43,7 +43,7 @@
- u64 idmap_t0sz = TCR_T0SZ(VA_BITS);
- u64 idmap_ptrs_per_pgd = PTRS_PER_PGD;
- 
--u64 __section(".mmuoff.data.write") vabits_actual;
-+u64 __section(.mmuoff.data.write) vabits_actual;
- EXPORT_SYMBOL(vabits_actual);
- 
- u64 kimage_voffset __ro_after_init;
+> However, the same time requirement also presents a big immediate
+> problem - as until this is done, over a hundred thousands of Linux
+> users will not be able to protect their servers running the impacted
+> kernels (our backup agent is free). They will be forced to stop using
+> the new version of the kernel (or take a risk of data loss).
+
+You have plenty of time to get this done before it becomes a problem.
+It's not like the current patches are going to -stable.
+
+> Given that, is there any chance that you accept the proposed patch
+> now, to restore the ability to protect their Linux machines - and buy
+> us time to deliver the compliant module for inclusion into the kernel?
+
+I'm afraid not, we simply cannot allow exposing internals like that for
+a use case that isn't currently covered by existing in-tree drivers.
+
+-- 
+Jens Axboe
+
