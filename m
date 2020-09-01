@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8B3C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 02:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C50EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B5D2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 02:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2AE820C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="JEYnWOYQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="ERD9V7gy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbgIAC7x (ORCPT
+        id S1727825AbgIAC77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 22:59:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51218 "EHLO
+        Mon, 31 Aug 2020 22:59:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725993AbgIAC7i (ORCPT
+        with ESMTP id S1727115AbgIAC7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 22:59:38 -0400
-Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A225C06136D
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:37 -0700 (PDT)
-Received: by mail-qk1-x749.google.com with SMTP id 196so7601036qkn.6
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:37 -0700 (PDT)
+        Mon, 31 Aug 2020 22:59:53 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0375C06137B
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:52 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id v11so11398137ybm.22
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=YMdKxgp/ypLtEnd4viDdyZTg0ysmMpLgXStTpt9Ak68=;
-        b=JEYnWOYQ3h6zljGhK0HJKcDxcPo4mEIiSjSRZNzxkdndwwuaJWXp0mcXUZDFSQ6in3
-         frbp3hEASK2UN01GoP9NvJZdHJeeLBg4c8gjn3dkBfLyTpQhohGDBz4+Ej1SdM4eHzcE
-         EDyy+rPstNyttgyHHfjMtEm4g7/mPxZk6QTDWGP6bXFgG/TrW1gSBj/8DhB8ntSHFXEq
-         BguM1U5Y2BtHM+PkqzsJ3LxhOw+VxTbRzW66NiwLwFJ5nwWr+L5kY1ywGwGKVNzAoCXP
-         1/0a8e1fwQFrHdEgzD2RoeNqXOlGUT2MmkUYQykuUD0jEsZbMEg7R/1lBM+jwPlOQRSp
-         FNxA==
+        bh=VSpQ0YX3bKyUlkQKFI7ZHqKsrWBz5JA4kim0dUzXG7A=;
+        b=ERD9V7gyga2yEuFuhqx4bi4TCRgcY15pnqAFbl9BppGXAcR11+fQDrlavIwKmQcPtQ
+         3TRDZ0nqLP8ejh53ug2pojdrWA50OJsFcLnkvEP8Pk60v69mr8Gk7q57NDReE49wKb75
+         nJakp6+I+NT1S6b4k8PhaaRX7Omvp8kPmWI5i1A2whMbAXd/8iPFC4HnHIeLLm2pi8Lg
+         RgipkOxs1eV1IRPPgNY0BJG+cTQ/b++QzVDmybQrM2D+yFhxqXhr524DJxne7UkqgYg+
+         fBVuFf8h2HNg3fHplilbHrmlSP7KcHC6pM0dqHvS91vOYeUaBHWbkmZ/pA15oHWl9Rh/
+         4R6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=YMdKxgp/ypLtEnd4viDdyZTg0ysmMpLgXStTpt9Ak68=;
-        b=DobuQn5WRF3Qm2dq22oCD4FG0C9q0ZY6Ycorc0uioea9apqAICGFhk317NUMxwvbT3
-         /WQtr6jxvWZTtt91iQbBgQWT5mv7DxtW2/eupH8k10fMVBltmoObsVQWNzayAJttkDdY
-         MLh9lj7RluWmI2NycLmu1JnOS9P3KSymadQ3YLwsf266TFcHXRsPp1eK+2UOC69YE8VF
-         O1rI7ofPAH9d3E+6i+SJA3xydFFmDAcxD+f4gFtYYubslBsIemq1kPj7tg7Xie5X/08v
-         I7ZtYjjbF11kryFh1nrLPy7JNc1jlnmUyhOTWBuwmCKfB38licazH/g1r9TPLJaSZYPt
-         5GjQ==
-X-Gm-Message-State: AOAM532G4y43BjAlSV9eOwV8xn1iCFNN8KopFwS0oA/DDxijawhCrecV
-        ujobFbRDCDRbAzoHIeCj+dqwo1X0Utc=
-X-Google-Smtp-Source: ABdhPJypibf5wBpNvtYlxpfMzNAO8uqcLQhPEl8G0KxcPk07KYikGDG1tp3uzefzyH5FK1wHheOuuOejCM0=
+        bh=VSpQ0YX3bKyUlkQKFI7ZHqKsrWBz5JA4kim0dUzXG7A=;
+        b=OC3OrxkPgG8ikNqidOyBrcDgxAIpbhRN/ppxGMGpKfuP6PFJMXhx7drrs1yanGRMk7
+         UvR04xFs7TSGm1Nge1Iz0nP1j91+fqvoP5zcrLbGXV6RtjN0DsJ6k+/PYV5TVNGy45uw
+         oQlNGcCko+/rLxEPEtGviwZnLfkACElaBvYrW67bw2EiZwee1b93IAxDSs5G4F5tMuPO
+         QllFNgAo6VnS/7ZFpCHUGrFrHjVYCrMOWREnA79x/YDURrHSyNOII4sOShUhse70+UiH
+         JvgURK/idQ2s0YqISagG6QolNojia20lO2hvtH674uaLH30uhHGXGHcaPNl+q5/GTQdH
+         zkNw==
+X-Gm-Message-State: AOAM532iVkxUG95vNV/YcOQ5W0328buuMWUTZ2y0zArS0KJzQ1PNQaXy
+        pQeqJJBXunejQ7l2S8imo38ZvZvlPDY=
+X-Google-Smtp-Source: ABdhPJwRQjxnSR1b09vQ3Gct5a9ZNZF9H0pSfv0XwIehdlhkRXi9tdNLg53YBRo73FJHXY8wodTAXJug3qk=
 X-Received: from badhri.mtv.corp.google.com ([2620:15c:211:1:f292:1cff:fee0:66cf])
- (user=badhri job=sendgmr) by 2002:a05:6214:2a:: with SMTP id
- b10mr313595qvr.0.1598929176432; Mon, 31 Aug 2020 19:59:36 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 19:59:16 -0700
+ (user=badhri job=sendgmr) by 2002:a25:f20c:: with SMTP id i12mr6913334ybe.406.1598929191912;
+ Mon, 31 Aug 2020 19:59:51 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 19:59:24 -0700
 In-Reply-To: <20200901025927.3596190-1-badhri@google.com>
-Message-Id: <20200901025927.3596190-4-badhri@google.com>
+Message-Id: <20200901025927.3596190-12-badhri@google.com>
 Mime-Version: 1.0
 References: <20200901025927.3596190-1-badhri@google.com>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH v6 03/14] usb: typec: tcpci: update ROLE_CONTROL for DRP
+Subject: [PATCH v6 11/14] usb: typec: tcpci_maxim: Add support for Sink FRS
 From:   Badhri Jagan Sridharan <badhri@google.com>
 To:     Guenter Roeck <linux@roeck-us.net>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -75,74 +75,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ROLE_CONTROL register would not have the actual CC terminations
-unless the port does not set ROLE_CONTROL.DRP. For DRP ports,
-CC_STATUS.cc1/cc2 indicates the final terminations applied
-when TCPC enters potential_connect_as_source/_sink.
-For DRP ports, infer port role from CC_STATUS and set corresponding
-CC terminations before setting the orientation.
+Upon receiving ALERT_EXTENDED.TCPC_SINK_FAST_ROLE_SWAP signal
+tcpm to start Sink fast role swap signal.
+
+Inform when TCPM is sourcing vbus.
 
 Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
 Changes since v1:
- - Changing patch version to v6 to fix version number confusion.
+- Changing patch version to v6 to fix version number confusion.
 ---
- drivers/usb/typec/tcpm/tcpci.c | 37 +++++++++++++++++++++++++++++++++-
- 1 file changed, 36 insertions(+), 1 deletion(-)
+ drivers/usb/typec/tcpm/tcpci_maxim.c | 50 +++++++++++++++++++++++++---
+ 1 file changed, 46 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/typec/tcpm/tcpci.c b/drivers/usb/typec/tcpm/tcpci.c
-index 7d36d5e2d3f7..7d9491ba62fb 100644
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -191,12 +191,47 @@ static int tcpci_set_polarity(struct tcpc_dev *tcpc,
- 	struct tcpci *tcpci = tcpc_to_tcpci(tcpc);
- 	unsigned int reg;
- 	int ret;
-+	enum typec_cc_status cc1, cc2;
+diff --git a/drivers/usb/typec/tcpm/tcpci_maxim.c b/drivers/usb/typec/tcpm/tcpci_maxim.c
+index b61f290a8f96..6ba808ad901a 100644
+--- a/drivers/usb/typec/tcpm/tcpci_maxim.c
++++ b/drivers/usb/typec/tcpm/tcpci_maxim.c
+@@ -106,13 +106,22 @@ static void max_tcpci_init_regs(struct max_tcpci_chip *chip)
+ 		return;
+ 	}
  
--	/* Keep the disconnect cc line open */
-+	/* Obtain Rp setting from role control */
- 	ret = regmap_read(tcpci->regmap, TCPC_ROLE_CTRL, &reg);
- 	if (ret < 0)
- 		return ret;
++	ret = max_tcpci_write8(chip, TCPC_ALERT_EXTENDED, 0xff);
++	if (ret < 0) {
++		dev_err(chip->dev, "Unable to clear TCPC_ALERT_EXTENDED ret:%d\n", ret);
++		return;
++	}
++
+ 	alert_mask = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_TX_FAILED |
+ 		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_RX_STATUS | TCPC_ALERT_CC_STATUS |
+-		TCPC_ALERT_VBUS_DISCNCT | TCPC_ALERT_RX_BUF_OVF | TCPC_ALERT_POWER_STATUS;
++		TCPC_ALERT_VBUS_DISCNCT | TCPC_ALERT_RX_BUF_OVF | TCPC_ALERT_POWER_STATUS |
++		/* Enable Extended alert for detecting Fast Role Swap Signal */
++		TCPC_ALERT_EXTND;
  
-+	ret = tcpci_get_cc(tcpc, &cc1, &cc2);
+ 	ret = max_tcpci_write16(chip, TCPC_ALERT_MASK, alert_mask);
+ 	if (ret < 0) {
+-		dev_err(chip->dev, "Error writing to TCPC_ALERT_MASK ret:%d\n", ret);
++		dev_err(chip->dev,
++			"Error enabling TCPC_ALERT: TCPC_ALERT_MASK write failed ret:%d\n", ret);
+ 		return;
+ 	}
+ 
+@@ -122,6 +131,10 @@ static void max_tcpci_init_regs(struct max_tcpci_chip *chip)
+ 		dev_err(chip->dev, "Error writing to TCPC_POWER_CTRL ret:%d\n", ret);
+ 		return;
+ 	}
++
++	ret = max_tcpci_write8(chip, TCPC_ALERT_EXTENDED_MASK, TCPC_SINK_FAST_ROLE_SWAP);
 +	if (ret < 0)
-+		return ret;
++		return;
+ }
+ 
+ static void process_rx(struct max_tcpci_chip *chip, u16 status)
+@@ -225,10 +238,23 @@ static void process_power_status(struct max_tcpci_chip *chip)
+ 	if (ret < 0)
+ 		return;
+ 
+-	if (pwr_status == 0xff)
++	if (pwr_status == 0xff) {
+ 		max_tcpci_init_regs(chip);
+-	else
++	} else if (pwr_status & TCPC_POWER_STATUS_SOURCING_VBUS) {
++		tcpm_sourcing_vbus(chip->port);
++		/*
++		 * Alawys re-enable boost here.
++		 * In normal case, when say an headset is attached, TCPM would
++		 * have instructed to TCPC to enable boost, so the call is a
++		 * no-op.
++		 * But for Fast Role Swap case, Boost turns on autonomously without
++		 * AP intervention, but, needs AP to enable source mode explicitly
++		 * for AP to regain control.
++		 */
++		max_tcpci_set_vbus(chip->tcpci, &chip->data, true, false);
++	} else {
+ 		tcpm_vbus_change(chip->port);
++	}
+ }
+ 
+ static void process_tx(struct max_tcpci_chip *chip, u16 status)
+@@ -249,6 +275,7 @@ static irqreturn_t _max_tcpci_irq(struct max_tcpci_chip *chip, u16 status)
+ {
+ 	u16 mask;
+ 	int ret;
++	u8 reg_status;
+ 
+ 	/*
+ 	 * Clear alert status for everything except RX_STATUS, which shouldn't
+@@ -274,6 +301,21 @@ static irqreturn_t _max_tcpci_irq(struct max_tcpci_chip *chip, u16 status)
+ 		}
+ 	}
+ 
++	if (status & TCPC_ALERT_EXTND) {
++		ret = max_tcpci_read8(chip, TCPC_ALERT_EXTENDED, &reg_status);
++		if (ret < 0)
++			return ret;
 +
-+	/*
-+	 * When port has drp toggling enabled, ROLE_CONTROL would only have the initial
-+	 * terminations for the toggling and does not indicate the final cc
-+	 * terminations when ConnectionResult is 0 i.e. drp toggling stops and
-+	 * the connection is resolbed. Infer port role from TCPC_CC_STATUS based on the
-+	 * terminations seen. The port role is then used to set the cc terminations.
-+	 */
-+	if (reg & TCPC_ROLE_CTRL_DRP) {
-+		/* Disable DRP for the OPEN setting to take effect */
-+		reg = reg & ~TCPC_ROLE_CTRL_DRP;
++		ret = max_tcpci_write8(chip, TCPC_ALERT_EXTENDED, reg_status);
++		if (ret < 0)
++			return ret;
 +
-+		if (polarity == TYPEC_POLARITY_CC2) {
-+			reg &= ~(TCPC_ROLE_CTRL_CC2_MASK << TCPC_ROLE_CTRL_CC2_SHIFT);
-+			/* Local port is source */
-+			if (cc2 == TYPEC_CC_RD)
-+				/* Role control would have the Rp setting when DRP was enabled */
-+				reg |= TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC2_SHIFT;
-+			else
-+				reg |= TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC2_SHIFT;
-+		} else {
-+			reg &= ~(TCPC_ROLE_CTRL_CC1_MASK << TCPC_ROLE_CTRL_CC1_SHIFT);
-+			/* Local port is source */
-+			if (cc1 == TYPEC_CC_RD)
-+				/* Role control would have the Rp setting when DRP was enabled */
-+				reg |= TCPC_ROLE_CTRL_CC_RP << TCPC_ROLE_CTRL_CC1_SHIFT;
-+			else
-+				reg |= TCPC_ROLE_CTRL_CC_RD << TCPC_ROLE_CTRL_CC1_SHIFT;
++		if (reg_status & TCPC_SINK_FAST_ROLE_SWAP) {
++			dev_info(chip->dev, "FRS Signal");
++			tcpm_sink_frs(chip->port);
 +		}
 +	}
 +
- 	if (polarity == TYPEC_POLARITY_CC2)
- 		reg |= TCPC_ROLE_CTRL_CC_OPEN << TCPC_ROLE_CTRL_CC1_SHIFT;
- 	else
+ 	if (status & TCPC_ALERT_RX_STATUS)
+ 		process_rx(chip, status);
+ 
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
