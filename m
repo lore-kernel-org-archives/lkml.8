@@ -2,81 +2,111 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B566EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C7BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72DDC20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A27207BC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="ulJCHIZz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="NX9yaFTU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgIAMQd (ORCPT
+        id S1727048AbgIAMSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:16:33 -0400
-Received: from mx4.wp.pl ([212.77.101.12]:55054 "EHLO mx4.wp.pl"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728054AbgIAMGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:06:33 -0400
-Received: (wp-smtpd smtp.wp.pl 16579 invoked from network); 1 Sep 2020 14:06:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1598961984; bh=3huBavgT4ySq87VOuq/vV16pJjwKJIO2mPQe6DkFArk=;
-          h=Subject:To:From;
-          b=ulJCHIZzbqTaf7Nrq0fSSwY1A/u/o+MEC31Yw73+O4/jXjUrB4j0LgL/NKm+907pr
-           PXBYn3SZhaNbilaYkxTeefodZUu0dCTG6fL2FMeeFKl0LLTjV1Ze6y94RWHtBeG7f5
-           2NRmgdtCt2JJqKV0htUPTzZvC+9gPGCQwmMaa5jA=
-Received: from 188.146.234.2.nat.umts.dynamic.t-mobile.pl (HELO [192.168.1.110]) (antoni.przybylik@wp.pl@[188.146.234.2])
-          (envelope-sender <antoni.przybylik@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <devel@driverdev.osuosl.org>; 1 Sep 2020 14:06:24 +0200
-Subject: Fwd: Re: [PATCH] staging: gdm724x: gdm_tty: corrected macro by adding
- brackets
-References: <e11b8f5e-1b85-fe24-36d5-c8d707ce4e66@wp.pl>
-To:     Greg KH <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org
-From:   "antoni.przybylik@wp.pl" <antoni.przybylik@wp.pl>
-X-Forwarded-Message-Id: <e11b8f5e-1b85-fe24-36d5-c8d707ce4e66@wp.pl>
-Message-ID: <15764d01-0602-18c6-e2b1-089b71a2061d@wp.pl>
-Date:   Tue, 1 Sep 2020 14:06:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 08:18:15 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:32111 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728031AbgIAMGi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 08:06:38 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598961998; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=ZxeLT4MW4DxY+rjg8qHyVNjzZt9/BxvL8nAh3ydoWAU=;
+ b=NX9yaFTUL66zSVgfh8t0oL5hYfXd+WlIox3naaZw9AYVG32Xqzwv4IXgz7aGMQA9Es4LoqCr
+ FiugQv9BIJd9DlfA/U3FyIay3RnZyu5Xas4TgbcDvEC3Rfipn0r6Zm/B6c3Fp9i2h5hRF4Px
+ ekrc4/upLGdKxmmU7TKCLqDgKBQ=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5f4e392dbe06707b34638bb8 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 12:06:05
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EBCDEC433A1; Tue,  1 Sep 2020 12:06:04 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 51E7CC433CA;
+        Tue,  1 Sep 2020 12:06:01 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 51E7CC433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <e11b8f5e-1b85-fe24-36d5-c8d707ce4e66@wp.pl>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-WP-MailID: 612e0fd7c75c72b6c399a159ae2e4411
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000000 [oYPU]                               
+Subject: Re: [PATCH v2 1/2] ath10k: Keep track of which interrupts fired,
+ don't poll them
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20200709082024.v2.1.I4d2f85ffa06f38532631e864a3125691ef5ffe06@changeid>
+References: <20200709082024.v2.1.I4d2f85ffa06f38532631e864a3125691ef5ffe06@changeid>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     ath10k@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        briannorris@chromium.org, saiprakash.ranjan@codeaurora.org,
+        linux-wireless@vger.kernel.org, pillair@codeaurora.org,
+        kuabhs@google.com, Douglas Anderson <dianders@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200901120604.EBCDEC433A1@smtp.codeaurora.org>
+Date:   Tue,  1 Sep 2020 12:06:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01.09.2020 13:08, Greg KH wrote:
-> On Tue, Sep 01, 2020 at 12:43:11PM +0200, antoniprzybylik wrote:
->> Such macros are dangerous. Consider following example:
->> 	#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
->> 	GDM_TTY_READY(a + b)
->> This macro will be expanded in such a way:
->> 	(a + b && a + b->tty_dev && a + b->port.count)
->> And it will lead to errors.
-> This is for a pointer, no one would ever do that :)
+Douglas Anderson <dianders@chromium.org> wrote:
 
-Nobody adds a pointer to a pointer, but it's common to add to it some 
-value like that:
+> If we have a per CE (Copy Engine) IRQ then we have no summary
+> register.  Right now the code generates a summary register by
+> iterating over all copy engines and seeing if they have an interrupt
+> pending.
+> 
+> This has a problem.  Specifically if _none_ if the Copy Engines have
+> an interrupt pending then they might go into low power mode and
+> reading from their address space will cause a full system crash.  This
+> was seen to happen when two interrupts went off at nearly the same
+> time.  Both were handled by a single call of ath10k_snoc_napi_poll()
+> but, because there were two interrupts handled and thus two calls to
+> napi_schedule() there was still a second call to
+> ath10k_snoc_napi_poll() which ran with no interrupts pending.
+> 
+> Instead of iterating over all the copy engines, let's just keep track
+> of the IRQs that fire.  Then we can effectively generate our own
+> summary without ever needing to read the Copy Engines.
+> 
+> Tested-on: WCN3990 SNOC WLAN.HL.3.2.2-00490-QCAHLSWMTPL-1
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Reviewed-by: Rakesh Pillai <pillair@codeaurora.org>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-GDM_TTY_READY(myptr + 0x1000)
+2 patches applied to ath-next branch of ath.git, thanks.
 
-> But, if you really worry about this, turn it into an inline function,
-> that way you get the proper typedef safety, which is what something like
-> this should really be, not a macro.
+d66d24ac300c ath10k: Keep track of which interrupts fired, don't poll them
+7f8655166512 ath10k: Get rid of "per_ce_irq" hw param
 
-How to do it? Do I need to send another patch?
+-- 
+https://patchwork.kernel.org/patch/11654625/
 
-Antoni Przybylik
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
 
