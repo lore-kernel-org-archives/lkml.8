@@ -4,74 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059A6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8F3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:55:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB85920767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:55:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFC852065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598986539;
-	bh=OsHfp158sxgAtGhavZFa9zfVqH8rzD+JJu1z3y7uhA0=;
+	s=default; t=1598986550;
+	bh=jvJdrpAAo40Nsx3hqA1wXCNYFE9ZPHATEN5rd1230to=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LNORGYi91t6TRq3ptz0SsTO+rJby+V3qzFr8obj8ILBpHytxQFzRNAHUBa+mL8663
-	 VzEqOUkMxoxwPdQw1mVLCPB5NmOnpbEueBVmFBf6tYh5vfGF1qw092yfmoUV9yLFYJ
-	 Na2lnkcca/DoASJyPzXn+D+cfPURuJU4gqZtPKdo=
+	b=FhvG/aAKzG7NICUub2dpsTXg8992PQTi2vQwTxwC/0sD9StP8n3t31yxzUbQK74uV
+	 QKvajEEZScjr2Yv0iIXB0D+GeMvV8refxNPrylPMsh7IeW+cUKomdEC+gkUrNpCA9s
+	 J8zYdpgnULlci//PjXgVq8OKjPBnCAEu4Zvgt2ok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732168AbgIASzR (ORCPT
+        id S1731612AbgIASxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:55:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57596 "EHLO
+        Tue, 1 Sep 2020 14:53:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731874AbgIASyL (ORCPT
+        with ESMTP id S1731366AbgIASxR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:54:11 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 221C7C061249;
-        Tue,  1 Sep 2020 11:54:11 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id b3so1725696qtg.13;
-        Tue, 01 Sep 2020 11:54:11 -0700 (PDT)
+        Tue, 1 Sep 2020 14:53:17 -0400
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E52BC061245;
+        Tue,  1 Sep 2020 11:53:16 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id b14so1999428qkn.4;
+        Tue, 01 Sep 2020 11:53:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5UgoIrVUcwXACuCYd1cS80ywOzFHs5fY3NlOJo1IMJU=;
-        b=d1BhVmQ+r2vM4ZCGNxytJ6sRkOxhcAKI98OMingTJiqDnyz/j5a9XSe3ok/dAbNH8j
-         zms8uyQjXMnVVyYKZmWiZJ/wwTwlWWMHi7oRRHbYjLWdpvWXwjZopKrHfX5uWkT8Zwig
-         mumwXLMcBAI+BvcJeUndRamVFjKVe1LXz+uh+oG3dzhGgPfCgL2fOzuuA2sZwrUNMKSG
-         LdN/T0/Ju6ECBbJvIEotRusbWmhFZ4EbC0SeALRLGI92iqaHDWoAk7dvbICAybxD8Hnl
-         3SxwcS+7fl31WP1yOefToo777+sEBmsgaDfe2mKJMBa3Rs6l7LhMjN0OQU05F+Dbf7DP
-         wy2Q==
+        bh=Abijl0OmP6VYSflgQEhNpTgXbVq6GxdxWWrhkCH99jc=;
+        b=BYrK0zSLvPdaANXkzCXqODMBDKe5h7ipVdn2xiRVWxu7y4qoGlbLsat7aKgGV2NzAX
+         uA9xTg2W43pbV3T1KFcjp4McIbz8C7Z9y+4lVi0pNw5/4LtQdhb95BWCEs+uWaml2W9j
+         QvwuHJONksBt2KE09l+I1qkK15+vvKFyOd6venv28WwjFQaNa1WW0wUIiCKkvCB1qLG7
+         MIWBSC3WrHgH3Wa2mh62XUb7i74iR0JuJMWm91KrNQIIlLW7d/CPJhKqVvICdX41A4eB
+         UjHfd1CFFydEXixQ5tAReP0xL5GurO/+lMrr530F1YkcYn1cpAO3ght+hgZFzYk4wj5x
+         xFGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=5UgoIrVUcwXACuCYd1cS80ywOzFHs5fY3NlOJo1IMJU=;
-        b=NaZww3sdLTXAg95eoABSPbIMuZq+X6OfA8pR2UR7sPyOt8vSslj03lHZfeFXzDvCl5
-         Wj0wzBNpaMO1smCP8/M0+F9FAPTBCzCkthemhVWIQMCOmWgkQWys08//EKxQqpM2tAij
-         XBcu1OQevUwlxO/scylmjX8dGo9SUu1FIy9xoIOnZv01ydR67ocQ50uEGYkIk6De/nSJ
-         NRN5nbVZ4xdRefvb6v27pH/0EaeNyD7Z4d1RIKEu93UJaV8FhT/hC79zdvqD8BVcYNoy
-         ZU2osnrD63JSh/Kt1sA3++Q6N+vvDy0Snz+JBYCRoh21zNIrBbMKARkfXYOojrikDExa
-         4rRA==
-X-Gm-Message-State: AOAM5303maDPu2/mCK8ngyGPqVjXgireERo7qRm8votSOxWO8W3NnmCs
-        VcogYRdhlIp6adO+w1Q4MkM=
-X-Google-Smtp-Source: ABdhPJxABrzIUmgvWAorSCTnHRblbapB7DxnIVnpOiQDJC/nlppjqKOVL++gwwuXfD1p/qGd2DadvA==
-X-Received: by 2002:ac8:67d2:: with SMTP id r18mr3343177qtp.179.1598986450224;
-        Tue, 01 Sep 2020 11:54:10 -0700 (PDT)
+        bh=Abijl0OmP6VYSflgQEhNpTgXbVq6GxdxWWrhkCH99jc=;
+        b=LEAWWam4DJRaLQDfj+KeAmzDBzEb3g0wtqDmIuTZLCam26ei5a7mrFORjU4Z8KcVqA
+         U+8+LbF8f+koQIYyFFZ1rOrPdgjmp76iDmHk6OW8jSNeidwFxigCdxVssSxzaDtNkivF
+         J7udIkFEdgzsQyclInZYcYeevuNu1hHh/lD3D7ALyxmHb+Ji29o45J/fFLeXbYwgaKRn
+         /U3RSfO6fkWkacY2Cx18UD9dzUPxw0XCbwFD0D+0UcptQBSUEiOQyEM4lI5n+Brxlnze
+         3/7Z/CCYhjM4NB+PC551uTNM+xtp6glykFzUtuWNWr6EE4pbiScr0Nk/Rx3sRsloBNND
+         39eQ==
+X-Gm-Message-State: AOAM533kUB5osBHtYdwTWt4Z1nZ0uttLrKQon9+zFCIjN42I9uJdwsX+
+        H8EjjD8vyatAQcSX2rwuRTFUjcz/UK84CQ==
+X-Google-Smtp-Source: ABdhPJzlYRM4F4sUXjrbVokCMMwmBNVn4u2vGXfHZMYyyB+m9IRWMAArmA9lx0GWSsYbD7bh8ienXQ==
+X-Received: by 2002:a37:9a13:: with SMTP id c19mr3185912qke.48.1598986395712;
+        Tue, 01 Sep 2020 11:53:15 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id k185sm2545673qkd.94.2020.09.01.11.54.09
+        by smtp.gmail.com with ESMTPSA id k6sm1864377qti.23.2020.09.01.11.53.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:54:09 -0700 (PDT)
+        Tue, 01 Sep 2020 11:53:14 -0700 (PDT)
 From:   Tejun Heo <tj@kernel.org>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
         Tejun Heo <tj@kernel.org>
-Subject: [PATCH 23/27] blk-iocost: halve debts if device stays idle
-Date:   Tue,  1 Sep 2020 14:52:53 -0400
-Message-Id: <20200901185257.645114-24-tj@kernel.org>
+Subject: [PATCH 04/27] blk-iocost: rename propagate_active_weights() to propagate_weights()
+Date:   Tue,  1 Sep 2020 14:52:34 -0400
+Message-Id: <20200901185257.645114-5-tj@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
 References: <20200901185257.645114-1-tj@kernel.org>
@@ -82,125 +82,155 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A low weight iocg can amass a large amount of debt, for example, when
-anonymous memory gets reclaimed aggressively. If the system has a lot of
-memory paired with a slow IO device, the debt can span multiple seconds or
-more. If there are no other subsequent IO issuers, the in-debt iocg may end
-up blocked paying its debt while the IO device is idle.
+It already propagates two weights - active and inuse - and there will be
+another soon. Let's drop the confusing misnomers. Rename
+[__]propagate_active_weights() to [__]propagate_weights() and
+commit_active_weights() to commit_weights().
 
-This patch implements a mechanism to protect against such pathological
-cases. If the device has been sufficiently idle for a substantial amount of
-time, the debts are halved. The criteria are on the conservative side as we
-want to resolve the rare extreme cases without impacting regular operation
-by forgiving debts too readily.
+This is pure rename.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- block/blk-iocost.c | 49 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 48 insertions(+), 1 deletion(-)
+ block/blk-iocost.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
 diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 9cb8f29f01f5..2a95a081cf44 100644
+index e2266e7692b4..78e6919153d8 100644
 --- a/block/blk-iocost.c
 +++ b/block/blk-iocost.c
-@@ -295,6 +295,13 @@ enum {
- 	MIN_DELAY		= 250,
- 	MAX_DELAY		= 250 * USEC_PER_MSEC,
+@@ -479,7 +479,7 @@ struct ioc_gq {
+ 	atomic64_t			active_period;
+ 	struct list_head		active_list;
  
-+	/*
-+	 * Halve debts if total usage keeps staying under 25% w/o any shortages
-+	 * for over 100ms.
-+	 */
-+	DEBT_BUSY_USAGE_PCT	= 25,
-+	DEBT_REDUCTION_IDLE_DUR	= 100 * USEC_PER_MSEC,
-+
- 	/* don't let cmds which take a very long time pin lagging for too long */
- 	MAX_LAGGING_PERIODS	= 10,
+-	/* see __propagate_active_weight() and current_hweight() for details */
++	/* see __propagate_weights() and current_hweight() for details */
+ 	u64				child_active_sum;
+ 	u64				child_inuse_sum;
+ 	int				hweight_gen;
+@@ -890,7 +890,7 @@ static void ioc_start_period(struct ioc *ioc, struct ioc_now *now)
+  * Update @iocg's `active` and `inuse` to @active and @inuse, update level
+  * weight sums and propagate upwards accordingly.
+  */
+-static void __propagate_active_weight(struct ioc_gq *iocg, u32 active, u32 inuse)
++static void __propagate_weights(struct ioc_gq *iocg, u32 active, u32 inuse)
+ {
+ 	struct ioc *ioc = iocg->ioc;
+ 	int lvl;
+@@ -935,7 +935,7 @@ static void __propagate_active_weight(struct ioc_gq *iocg, u32 active, u32 inuse
+ 	ioc->weights_updated = true;
+ }
  
-@@ -436,6 +443,9 @@ struct ioc {
- 	bool				weights_updated;
- 	atomic_t			hweight_gen;	/* for lazy hweights */
+-static void commit_active_weights(struct ioc *ioc)
++static void commit_weights(struct ioc *ioc)
+ {
+ 	lockdep_assert_held(&ioc->lock);
  
-+	/* the last time debt cancel condition wasn't met */
-+	u64				debt_busy_at;
-+
- 	u64				autop_too_fast_at;
- 	u64				autop_too_slow_at;
- 	int				autop_idx;
-@@ -1216,6 +1226,7 @@ static bool iocg_activate(struct ioc_gq *iocg, struct ioc_now *now)
- 
- 	if (ioc->running == IOC_IDLE) {
- 		ioc->running = IOC_RUNNING;
-+		ioc->debt_busy_at = now->now;
- 		ioc_start_period(ioc, now);
+@@ -947,10 +947,10 @@ static void commit_active_weights(struct ioc *ioc)
  	}
+ }
  
-@@ -1896,7 +1907,8 @@ static void ioc_timer_fn(struct timer_list *timer)
- 	struct ioc_gq *iocg, *tiocg;
- 	struct ioc_now now;
- 	LIST_HEAD(surpluses);
--	int nr_shortages = 0, nr_lagging = 0;
-+	int nr_debtors = 0, nr_shortages = 0, nr_lagging = 0;
-+	u64 usage_us_sum = 0;
- 	u32 ppm_rthr = MILLION - ioc->params.qos[QOS_RPPM];
- 	u32 ppm_wthr = MILLION - ioc->params.qos[QOS_WPPM];
- 	u32 missed_ppm[2], rq_wait_pct;
-@@ -1936,6 +1948,8 @@ static void ioc_timer_fn(struct timer_list *timer)
- 		    iocg->delay) {
- 			/* might be oversleeping vtime / hweight changes, kick */
- 			iocg_kick_waitq(iocg, true, &now);
-+			if (iocg->abs_vdebt)
-+				nr_debtors++;
+-static void propagate_active_weight(struct ioc_gq *iocg, u32 active, u32 inuse)
++static void propagate_weights(struct ioc_gq *iocg, u32 active, u32 inuse)
+ {
+-	__propagate_active_weight(iocg, active, inuse);
+-	commit_active_weights(iocg->ioc);
++	__propagate_weights(iocg, active, inuse);
++	commit_weights(iocg->ioc);
+ }
+ 
+ static void current_hweight(struct ioc_gq *iocg, u32 *hw_activep, u32 *hw_inusep)
+@@ -966,9 +966,9 @@ static void current_hweight(struct ioc_gq *iocg, u32 *hw_activep, u32 *hw_inusep
+ 		goto out;
+ 
+ 	/*
+-	 * Paired with wmb in commit_active_weights().  If we saw the
+-	 * updated hweight_gen, all the weight updates from
+-	 * __propagate_active_weight() are visible too.
++	 * Paired with wmb in commit_weights(). If we saw the updated
++	 * hweight_gen, all the weight updates from __propagate_weights() are
++	 * visible too.
+ 	 *
+ 	 * We can race with weight updates during calculation and get it
+ 	 * wrong.  However, hweight_gen would have changed and a future
+@@ -1018,7 +1018,7 @@ static void weight_updated(struct ioc_gq *iocg)
+ 
+ 	weight = iocg->cfg_weight ?: iocc->dfl_weight;
+ 	if (weight != iocg->weight && iocg->active)
+-		propagate_active_weight(iocg, weight,
++		propagate_weights(iocg, weight,
+ 			DIV64_U64_ROUND_UP(iocg->inuse * weight, iocg->weight));
+ 	iocg->weight = weight;
+ }
+@@ -1090,8 +1090,8 @@ static bool iocg_activate(struct ioc_gq *iocg, struct ioc_now *now)
+ 	 */
+ 	iocg->hweight_gen = atomic_read(&ioc->hweight_gen) - 1;
+ 	list_add(&iocg->active_list, &ioc->active_iocgs);
+-	propagate_active_weight(iocg, iocg->weight,
+-				iocg->last_inuse ?: iocg->weight);
++	propagate_weights(iocg, iocg->weight,
++			  iocg->last_inuse ?: iocg->weight);
+ 
+ 	TRACE_IOCG_PATH(iocg_activate, iocg, now,
+ 			last_period, cur_period, vtime);
+@@ -1384,13 +1384,13 @@ static void ioc_timer_fn(struct timer_list *timer)
  		} else if (iocg_is_idle(iocg)) {
  			/* no waiter and idle, deactivate */
- 			__propagate_weights(iocg, 0, 0, false, &now);
-@@ -1978,6 +1992,7 @@ static void ioc_timer_fn(struct timer_list *timer)
- 		 * high-latency completions appearing as idle.
- 		 */
- 		usage_us = iocg->usage_delta_us;
-+		usage_us_sum += usage_us;
+ 			iocg->last_inuse = iocg->inuse;
+-			__propagate_active_weight(iocg, 0, 0);
++			__propagate_weights(iocg, 0, 0);
+ 			list_del_init(&iocg->active_list);
+ 		}
  
- 		if (vdone != vtime) {
- 			u64 inflight_us = DIV64_U64_ROUND_UP(
-@@ -2036,6 +2051,38 @@ static void ioc_timer_fn(struct timer_list *timer)
- 	list_for_each_entry_safe(iocg, tiocg, &surpluses, surplus_list)
- 		list_del_init(&iocg->surplus_list);
+ 		spin_unlock(&iocg->waitq.lock);
+ 	}
+-	commit_active_weights(ioc);
++	commit_weights(ioc);
  
-+	/*
-+	 * A low weight iocg can amass a large amount of debt, for example, when
-+	 * anonymous memory gets reclaimed aggressively. If the system has a lot
-+	 * of memory paired with a slow IO device, the debt can span multiple
-+	 * seconds or more. If there are no other subsequent IO issuers, the
-+	 * in-debt iocg may end up blocked paying its debt while the IO device
-+	 * is idle.
-+	 *
-+	 * The following protects against such pathological cases. If the device
-+	 * has been sufficiently idle for a substantial amount of time, the
-+	 * debts are halved. The criteria are on the conservative side as we
-+	 * want to resolve the rare extreme cases without impacting regular
-+	 * operation by forgiving debts too readily.
-+	 */
-+	if (nr_shortages ||
-+	    div64_u64(100 * usage_us_sum, now.now - ioc->period_at) >=
-+	    DEBT_BUSY_USAGE_PCT)
-+		ioc->debt_busy_at = now.now;
-+
-+	if (nr_debtors &&
-+	    now.now - ioc->debt_busy_at >= DEBT_REDUCTION_IDLE_DUR) {
-+		list_for_each_entry(iocg, &ioc->active_iocgs, active_list) {
-+			if (iocg->abs_vdebt) {
-+				spin_lock(&iocg->waitq.lock);
-+				iocg->abs_vdebt /= 2;
-+				iocg_kick_waitq(iocg, true, &now);
-+				spin_unlock(&iocg->waitq.lock);
-+			}
-+		}
-+		ioc->debt_busy_at = now.now;
-+	}
-+
+ 	/* calc usages and see whether some weights need to be moved around */
+ 	list_for_each_entry(iocg, &ioc->active_iocgs, active_list) {
+@@ -1483,8 +1483,8 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 				TRACE_IOCG_PATH(inuse_takeback, iocg, &now,
+ 						iocg->inuse, new_inuse,
+ 						hw_inuse, new_hwi);
+-				__propagate_active_weight(iocg, iocg->weight,
+-							  new_inuse);
++				__propagate_weights(iocg, iocg->weight,
++						    new_inuse);
+ 			}
+ 		} else {
+ 			/* genuninely out of vtime */
+@@ -1524,11 +1524,11 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 			TRACE_IOCG_PATH(inuse_giveaway, iocg, &now,
+ 					iocg->inuse, new_inuse,
+ 					hw_inuse, new_hwi);
+-			__propagate_active_weight(iocg, iocg->weight, new_inuse);
++			__propagate_weights(iocg, iocg->weight, new_inuse);
+ 		}
+ 	}
+ skip_surplus_transfers:
+-	commit_active_weights(ioc);
++	commit_weights(ioc);
+ 
  	/*
  	 * If q is getting clogged or we're missing too much, we're issuing
- 	 * too much IO and should lower vtime rate.  If we're not missing
+@@ -1753,7 +1753,7 @@ static void ioc_rqos_throttle(struct rq_qos *rqos, struct bio *bio)
+ 		TRACE_IOCG_PATH(inuse_reset, iocg, &now,
+ 				iocg->inuse, iocg->weight, hw_inuse, hw_active);
+ 		spin_lock_irq(&ioc->lock);
+-		propagate_active_weight(iocg, iocg->weight, iocg->weight);
++		propagate_weights(iocg, iocg->weight, iocg->weight);
+ 		spin_unlock_irq(&ioc->lock);
+ 		current_hweight(iocg, &hw_active, &hw_inuse);
+ 	}
+@@ -2114,7 +2114,7 @@ static void ioc_pd_free(struct blkg_policy_data *pd)
+ 	if (ioc) {
+ 		spin_lock_irqsave(&ioc->lock, flags);
+ 		if (!list_empty(&iocg->active_list)) {
+-			propagate_active_weight(iocg, 0, 0);
++			propagate_weights(iocg, 0, 0);
+ 			list_del_init(&iocg->active_list);
+ 		}
+ 		spin_unlock_irqrestore(&ioc->lock, flags);
 -- 
 2.26.2
 
