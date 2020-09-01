@@ -2,83 +2,101 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D333FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F10C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:52:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2DCF206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:50:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wp.pl header.i=@wp.pl header.b="pNzrpKUh"
+	by mail.kernel.org (Postfix) with ESMTP id 1C12D206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:52:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598957557;
+	bh=bWvYKwlpWZO5Zw1aWUwfX5i8uZ3+gv1jjP96lc2FIvU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lCs+hG00B5paZWIzKz3d/bjlEqkOuv13N733FGtJWEqNUhYrUEcMmfX/FYVAmWzQh
+	 z9UA11Mdi7mkHdERg6GPGrwVURWUEiRppPhsRVuYIIL2t/V5okfBDlKTViqqrLtuoQ
+	 kVzAU9cAuhMKXtN0rta4AfcCLoOpFg1wPa+h2igY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgIAKuP (ORCPT
+        id S1726237AbgIAKwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 06:50:15 -0400
-Received: from mx4.wp.pl ([212.77.101.11]:10711 "EHLO mx4.wp.pl"
+        Tue, 1 Sep 2020 06:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725949AbgIAKuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 06:50:12 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Sep 2020 06:50:11 EDT
-Received: (wp-smtpd smtp.wp.pl 1278 invoked from network); 1 Sep 2020 12:43:29 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wp.pl; s=1024a;
-          t=1598957009; bh=hJLVzwJxQjp6xNbh/PRsnQBA0RhTN8F3VaKPJKZHWJI=;
-          h=From:To:Cc:Subject;
-          b=pNzrpKUhsmvR9HVI306H4velU08K/Awdo4R0V2b9N0uNo4zMx7vNIo3Z63N6YtNVm
-           LKkSRFWKPw5O8YrQbHGQ66R7NZRwEN8s9IemxLcYigh117QRmvJz+yntJMuv5lRPVh
-           a7hSoa9XGyCt2Vld84088H/ncwI37zUjlSR6K4xU=
-Received: from 188.146.234.2.nat.umts.dynamic.t-mobile.pl (HELO localhost) (antoni.przybylik@wp.pl@[188.146.234.2])
-          (envelope-sender <antoni.przybylik@wp.pl>)
-          by smtp.wp.pl (WP-SMTPD) with ECDHE-RSA-AES256-GCM-SHA384 encrypted SMTP
-          for <gregkh@linuxfoundation.org>; 1 Sep 2020 12:43:29 +0200
-From:   antoniprzybylik <antoni.przybylik@wp.pl>
-To:     gregkh@linuxfoundation.org
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        antoniprzybylik <antoni.przybylik@wp.pl>
-Subject: [PATCH] staging: gdm724x: gdm_tty: corrected macro by adding brackets
-Date:   Tue,  1 Sep 2020 12:43:11 +0200
-Message-Id: <20200901104311.17270-1-antoni.przybylik@wp.pl>
-X-Mailer: git-send-email 2.28.0
+        id S1725949AbgIAKwU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 06:52:20 -0400
+Received: from coco.lan (ip5f5ad5cf.dynamic.kabel-deutschland.de [95.90.213.207])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F398D206C0;
+        Tue,  1 Sep 2020 10:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598957540;
+        bh=bWvYKwlpWZO5Zw1aWUwfX5i8uZ3+gv1jjP96lc2FIvU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ajCANOr80wiHcf/hz3lTLyY6Z7Ly9mYNkjIKiEh6+J3DrAPJc7EkPgOowRlAumh7i
+         s0lPEGM8kAQm4+kV44O+jlbTJSVNGEmw6gP7wxjLjgcIRgDAvwrmn9Js8jcr8/jzmW
+         q6QWwaPRSxAsaOuiq/6/yXe4FxrqlOjf62c+uO18=
+Date:   Tue, 1 Sep 2020 12:52:16 +0200
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Julia Lawall <julia.lawall@inria.fr>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: linux-next: Signed-off-by missing for commits in the v4l-dvb
+ tree
+Message-ID: <20200901125216.5ae2ecbf@coco.lan>
+In-Reply-To: <alpine.DEB.2.22.394.2009011205090.2533@hadrien>
+References: <20200901190354.38b0d16c@canb.auug.org.au>
+        <alpine.DEB.2.22.394.2009011205090.2533@hadrien>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-WP-DKIM-Status: good (id: wp.pl)                                      
-X-WP-MailID: 489ef85a83f588acd1f26eadb7be658c
-X-WP-AV: skaner antywirusowy Poczty Wirtualnej Polski
-X-WP-SPAM: NO 0000002 [0YFx]                               
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Such macros are dangerous. Consider following example:
-	#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
-	GDM_TTY_READY(a + b)
-This macro will be expanded in such a way:
-	(a + b && a + b->tty_dev && a + b->port.count)
-And it will lead to errors.
+Hi Julia,
 
-Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
----
- drivers/staging/gdm724x/gdm_tty.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Em Tue, 1 Sep 2020 12:05:51 +0200 (CEST)
+Julia Lawall <julia.lawall@inria.fr> escreveu:
 
-diff --git a/drivers/staging/gdm724x/gdm_tty.c b/drivers/staging/gdm724x/gdm_tty.c
-index 6e813693a766..eab5c75ee5b1 100644
---- a/drivers/staging/gdm724x/gdm_tty.c
-+++ b/drivers/staging/gdm724x/gdm_tty.c
-@@ -27,7 +27,7 @@
- 
- #define MUX_TX_MAX_SIZE 2048
- 
--#define GDM_TTY_READY(gdm) (gdm && gdm->tty_dev && gdm->port.count)
-+#define GDM_TTY_READY(gdm) ((gdm) && (gdm)->tty_dev && (gdm)->port.count)
- 
- static struct tty_driver *gdm_driver[TTY_MAX_COUNT];
- static struct gdm *gdm_table[TTY_MAX_COUNT][GDM_TTY_MINOR];
--- 
-2.28.0
+> On Tue, 1 Sep 2020, Stephen Rothwell wrote:
+> 
+> > Hi all,
+> >
+> > Commits
+> >
+> >   063a27cb9820 ("media: tm6000: drop unnecessary list_empty")
+> >   1c047c859965 ("media: saa7134: drop unnecessary list_empty")
+> >   3fdcea7c763a ("media: cx231xx: drop unnecessary list_empty")
+> >
+> > are missing a Signed-off-by from their author.  
+> 
+> My record of these patches all have their Signed-off-bys.  Mauro, do you
+> want me to send them again?
 
+No need. Yeah, I received them with your SoB, at least on my e-mail.
+
+The one I applied came from this pull request:
+
+	https://patchwork.linuxtv.org/project/linux-media/patch/87327e52-44cc-a2b8-c3fe-619bd6022264@xs4all.nl/
+
+Unfortunately, it sounds that Hans already dropped the original tag:
+
+	https://git.linuxtv.org/hverkuil/media_tree.git/refs/tags
+
+So, hard to know where the SoB got dropped. It could be due to some
+bug on my scripts - or it can be due to some issue when Hans picked
+them.
+
+In any case, I'll rewrite the git history with your SoB properly
+added.
+
+Thanks,
+Mauro
