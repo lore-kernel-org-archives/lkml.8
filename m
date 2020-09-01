@@ -7,62 +7,63 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CD1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA10C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3FD042083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7A62083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="gwC8vZGc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="GvZJyzMF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgIADAa (ORCPT
+        id S1727957AbgIADA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 23:00:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51260 "EHLO
+        Mon, 31 Aug 2020 23:00:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727058AbgIAC7p (ORCPT
+        with ESMTP id S1727066AbgIAC7r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 22:59:45 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DA32C06137B
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:45 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id o8so11427358ybg.16
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:45 -0700 (PDT)
+        Mon, 31 Aug 2020 22:59:47 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA6AC0612A2
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:46 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id l67so11445356ybb.7
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 19:59:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=6cpzKiKB3XSd5+eDWhLx5CxcS598DpKh+JK82gD7/3s=;
-        b=gwC8vZGcrekfJzHg8uqNrP42vQ9ahegy2HsrW++p4jnuRcba7BH7zFvo2OgS+Rj4J7
-         0plmg9NgWbv8rI+c0Bz+3HYuyT8lC/NgF5I66fK0bgFTsTz9P6/4q2xIuTqwVWw00cbd
-         FXNo4rEUu6+uCzbhDxSk00N+hwINRCstcoyexCo5o0zX4N+AOv6gLsPMwX5IJk90BBea
-         0hap0ajxcuKrjkhlcgp3lA1L5HM/O9lXVr1OcoQlH/RvR2sLiP0FbXw9uJ+SLXvTqtgd
-         G0KHRb7MxmrtjKa6q7Ng4Pbb35evp4DS41FU1U2FO63G6MfqAanJSQ4jvGoWwVF1274J
-         PoQA==
+        bh=aJlOKC3hW4TW/X0iCdOkLgiLq9MlB3vzF4+uO1T8GYY=;
+        b=GvZJyzMF2+pJ49MA30QzjoSnnwWG8aBqQIwv4MgS3h5VqAkU4AYdlR9zQ2p0o9TFfa
+         PFS2kVOFHF4lrVnCRfwKOu7dP2Vl1AtrxxqfRJ4jmFlWKv/1Q1LY+BaJv9JqwlzdOLj4
+         /beazYNZ5Db85eJATJOtfYUiMn3/l8j7vgLA0uq6nJTTTY37lk/m/2cXcENiZQjBvBzO
+         ulbWS8mKmu5gzJRr8nXPhOMXyuP26E1gtsGJnTwWPmwHTFahUOYQqCFhWxa49rSg0Tf2
+         6WCcQ8/ACHwLdwz2PwoLaDlyCF5aimbcNOOgM0GLkWEOAkBRw7WRY0JIIScm/IafdqRV
+         o60w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=6cpzKiKB3XSd5+eDWhLx5CxcS598DpKh+JK82gD7/3s=;
-        b=sNQGbOkrEAQf81otNDqBxuLgNX1XhmIZVMpYqJAHKOV6yUInk0h1VuWagKrUTlqRpo
-         g+SiSETOyMV+fc4QdXKbshf+Oq9/dhLza2Fmv8MCgIKGPa7lxRDrXqmDK29FFFNM0Dps
-         3MBgG2zZeAa+MFoeZZknDaPbScYYMvN1ulxVyrgz0InsxeMI6foeYsTOgf2n9hpGQFnV
-         x1GMkDaKV1pMBYNBtDLiItozrukxpir0ES3Hh37dAvcjB44HxJlkOAWEboAdMbHpE6ds
-         yAkBU/Qy1g9D+sBHrW83OCj2UA6FfG589v6tp34Sdtk7oiiNheiqrrOSzRQsQYDHV3/W
-         kxXw==
-X-Gm-Message-State: AOAM5300p/jny6D5aKOg3dys0HsBbHAlrobj+IT/NW4rJCWRO5Z4zMiy
-        VUSB/dEbpgIyZQdxBJc2zZhQVp/oeaM=
-X-Google-Smtp-Source: ABdhPJwCmtGoUGzEXp5Kw5h3exhotWsxL7ENNJKEfs9dSJoZyaPqMHGuTCZlYnJdL/T+muY9YYck1BJM4Q0=
+        bh=aJlOKC3hW4TW/X0iCdOkLgiLq9MlB3vzF4+uO1T8GYY=;
+        b=trbyRDDnBWbxLAnNnIwUSqElsClk6ChrH/6NkIqfUUuL6L5liA26lN8iI0kmfVVfm9
+         oH2ZCbaY2HlcKDd+ot2oeNykLadbsfHL4IXuAvz2G72eutAVkV2KAkm8Xd5AYO3njWVM
+         jB3kQ4LXjrhp4dAqC5gqHhA/0YSy3wOr2ohkwcYfTiCTmnq6J/i0r6K+wOhcSmAV7tHR
+         d9m1JlZ/Db8wFQZsX0eKCxT+5WzqAlwIer+a0e9n7rlF2P7XAQwtD4beTbpln5gMf7B+
+         spQyEUWiAazkwpyviDTgUST4F8N23fpKGjTztZKTUj528ceWtAdhW9AWIbxks8UBohPW
+         imCA==
+X-Gm-Message-State: AOAM533R9Df7nMX5LU+8VjT2eGVqHmOYh/3TBTdI6v3LkW2WDvsfwZgk
+        kMOwnJDVVW+YyzXRFqNHy/cLLzztzig=
+X-Google-Smtp-Source: ABdhPJzN1tbeA0Lkpr3Pdc2Spcyr/kxQ/bGyrC0ldaeV/6rZQciSp6ybWDl7OnGV2wgtMx9h9ecz7eb9om0=
 X-Received: from badhri.mtv.corp.google.com ([2620:15c:211:1:f292:1cff:fee0:66cf])
- (user=badhri job=sendgmr) by 2002:a25:2b89:: with SMTP id r131mr6867369ybr.131.1598929184262;
- Mon, 31 Aug 2020 19:59:44 -0700 (PDT)
-Date:   Mon, 31 Aug 2020 19:59:20 -0700
+ (user=badhri job=sendgmr) by 2002:a25:e782:: with SMTP id e124mr7061981ybh.92.1598929186119;
+ Mon, 31 Aug 2020 19:59:46 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 19:59:21 -0700
 In-Reply-To: <20200901025927.3596190-1-badhri@google.com>
-Message-Id: <20200901025927.3596190-8-badhri@google.com>
+Message-Id: <20200901025927.3596190-9-badhri@google.com>
 Mime-Version: 1.0
 References: <20200901025927.3596190-1-badhri@google.com>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH v6 07/14] usb: typec: tcpci_maxim: Chip level TCPC driver
+Subject: [PATCH v6 08/14] dt-bindings: connector: Add property to set initial
+ current cap for FRS
 From:   Badhri Jagan Sridharan <badhri@google.com>
 To:     Guenter Roeck <linux@roeck-us.net>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
@@ -75,553 +76,175 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Chip level TCPC driver for Maxim's TCPCI implementation.
-This TCPC implementation does not support the following
-commands: COMMAND.SinkVbus, COMMAND.SourceVbusDefaultVoltage,
-COMMAND.SourceVbusHighVoltage. Instead the sinking and sourcing
-from vbus is supported by writes to custom registers.
+This change adds frs-typec-current which allows setting the initial current
+capability of the new source when vSafe5V is applied during PD3.0
+sink Fast Role Swap.
 
 Signed-off-by: Badhri Jagan Sridharan <badhri@google.com>
 ---
 Changes since v1:
 - Changing patch version to v6 to fix version number confusion.
-- Removed setting USB_PSY and terminating description with period as
-  suggested by Randy.
 ---
- drivers/usb/typec/tcpm/Kconfig       |   5 +
- drivers/usb/typec/tcpm/Makefile      |  13 +-
- drivers/usb/typec/tcpm/tcpci.h       |   1 +
- drivers/usb/typec/tcpm/tcpci_maxim.c | 474 +++++++++++++++++++++++++++
- 4 files changed, 487 insertions(+), 6 deletions(-)
- create mode 100644 drivers/usb/typec/tcpm/tcpci_maxim.c
+ .../bindings/connector/usb-connector.txt      | 128 ++++++++++++++++++
+ include/dt-bindings/usb/pd.h                  |  10 ++
+ 2 files changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
 
-diff --git a/drivers/usb/typec/tcpm/Kconfig b/drivers/usb/typec/tcpm/Kconfig
-index fa3f39336246..dd0d446a4613 100644
---- a/drivers/usb/typec/tcpm/Kconfig
-+++ b/drivers/usb/typec/tcpm/Kconfig
-@@ -27,6 +27,11 @@ config TYPEC_RT1711H
- 	  Type-C Port Controller Manager to provide USB PD and USB
- 	  Type-C functionalities.
- 
-+config TYPEC_TCPCI_MAXIM
-+	tristate "Maxim TCPCI based Type-C chip driver"
-+	help
-+	  MAXIM TCPCI based Type-C chip driver.
-+
- endif # TYPEC_TCPCI
- 
- config TYPEC_FUSB302
-diff --git a/drivers/usb/typec/tcpm/Makefile b/drivers/usb/typec/tcpm/Makefile
-index a5ff6c8eb892..58d001cf0dd2 100644
---- a/drivers/usb/typec/tcpm/Makefile
-+++ b/drivers/usb/typec/tcpm/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
--obj-$(CONFIG_TYPEC_TCPM)	+= tcpm.o
--obj-$(CONFIG_TYPEC_FUSB302)	+= fusb302.o
--obj-$(CONFIG_TYPEC_WCOVE)	+= typec_wcove.o
--typec_wcove-y			:= wcove.o
--obj-$(CONFIG_TYPEC_TCPCI)	+= tcpci.o
--obj-$(CONFIG_TYPEC_RT1711H)	+= tcpci_rt1711h.o
-+obj-$(CONFIG_TYPEC_TCPM)		+= tcpm.o
-+obj-$(CONFIG_TYPEC_FUSB302)		+= fusb302.o
-+obj-$(CONFIG_TYPEC_WCOVE)		+= typec_wcove.o
-+typec_wcove-y				:= wcove.o
-+obj-$(CONFIG_TYPEC_TCPCI)		+= tcpci.o
-+obj-$(CONFIG_TYPEC_RT1711H)		+= tcpci_rt1711h.o
-+obj-$(CONFIG_TYPEC_TCPCI_MAXIM)		+= tcpci_maxim.o
-diff --git a/drivers/usb/typec/tcpm/tcpci.h b/drivers/usb/typec/tcpm/tcpci.h
-index 4d441bdf24d5..82f021a82456 100644
---- a/drivers/usb/typec/tcpm/tcpci.h
-+++ b/drivers/usb/typec/tcpm/tcpci.h
-@@ -109,6 +109,7 @@
- 
- #define TCPC_RX_BYTE_CNT		0x30
- #define TCPC_RX_BUF_FRAME_TYPE		0x31
-+#define TCPC_RX_BUF_FRAME_TYPE_SOP	0
- #define TCPC_RX_HDR			0x32
- #define TCPC_RX_DATA			0x34 /* through 0x4f */
- 
-diff --git a/drivers/usb/typec/tcpm/tcpci_maxim.c b/drivers/usb/typec/tcpm/tcpci_maxim.c
+diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
 new file mode 100644
-index 000000000000..b61f290a8f96
+index 000000000000..e2f6e0f07d00
 --- /dev/null
-+++ b/drivers/usb/typec/tcpm/tcpci_maxim.c
-@@ -0,0 +1,474 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020, Google LLC
-+ *
-+ * MAXIM TCPCI based TCPC driver
-+ */
++++ b/Documentation/devicetree/bindings/connector/usb-connector.txt
+@@ -0,0 +1,128 @@
++USB Connector
++=============
 +
-+#include <linux/gpio.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/interrupt.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/regmap.h>
-+#include <linux/usb/pd.h>
-+#include <linux/usb/tcpm.h>
-+#include <linux/usb/typec.h>
++USB connector node represents physical USB connector. It should be
++a child of USB interface controller.
 +
-+#include "tcpci.h"
++Required properties:
++- compatible: describes type of the connector, must be one of:
++    "usb-a-connector",
++    "usb-b-connector",
++    "usb-c-connector".
 +
-+#define PD_ACTIVITY_TIMEOUT_MS				10000
++Optional properties:
++- label: symbolic name for the connector,
++- type: size of the connector, should be specified in case of USB-A, USB-B
++  non-fullsize connectors: "mini", "micro".
 +
-+#define TCPC_VENDOR_ALERT				0x80
++Optional properties for usb-c-connector:
++- power-role: should be one of "source", "sink" or "dual"(DRP) if typec
++  connector has power support.
++- try-power-role: preferred power role if "dual"(DRP) can support Try.SNK
++  or Try.SRC, should be "sink" for Try.SNK or "source" for Try.SRC.
++- data-role: should be one of "host", "device", "dual"(DRD) if typec
++  connector supports USB data.
++- frs-typec-current - Initial current capability of the new source when vSafe5V
++  is applied during PD3.0 Fast Role Swap. "Table 6-14 Fixed Supply PDO - Sink"
++  of "USB Power Delivery Specification Revision 3.0, Version 1.2" provides the
++  different power levels and "6.4.1.3.1.6 Fast Role Swap USB Type-C Current"
++  provides a detailed description of the field.
++  0: Fast role swap not supported
++  1: Default USB Power
++  2: 1.5A @ 5V
++  3: 3A @ 5V.
 +
-+#define TCPC_RECEIVE_BUFFER_COUNT_OFFSET		0
-+#define TCPC_RECEIVE_BUFFER_FRAME_TYPE_OFFSET		1
-+#define TCPC_RECEIVE_BUFFER_RX_BYTE_BUF_OFFSET		2
++Required properties for usb-c-connector with power delivery support:
++- source-pdos: An array of u32 with each entry providing supported power
++  source data object(PDO), the detailed bit definitions of PDO can be found
++  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
++  Source_Capabilities Message, the order of each entry(PDO) should follow
++  the PD spec chapter 6.4.1. Required for power source and power dual role.
++  User can specify the source PDO array via PDO_FIXED/BATT/VAR/PPS_APDO()
++  defined in dt-bindings/usb/pd.h.
++- sink-pdos: An array of u32 with each entry providing supported power
++  sink data object(PDO), the detailed bit definitions of PDO can be found
++  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
++  Sink Capabilities Message, the order of each entry(PDO) should follow
++  the PD spec chapter 6.4.1. Required for power sink and power dual role.
++  User can specify the sink PDO array via PDO_FIXED/BATT/VAR/PPS_APDO() defined
++  in dt-bindings/usb/pd.h.
++- op-sink-microwatt: Sink required operating power in microwatt, if source
++  can't offer the power, Capability Mismatch is set. Required for power
++  sink and power dual role.
 +
-+/*
-+ * LongMessage not supported, hence 32 bytes for buf to be read from RECEIVE_BUFFER.
-+ * DEVICE_CAPABILITIES_2.LongMessage = 0, the value in READABLE_BYTE_COUNT reg shall be
-+ * less than or equal to 31. Since, RECEIVE_BUFFER len = 31 + 1(READABLE_BYTE_COUNT).
-+ */
-+#define TCPC_RECEIVE_BUFFER_LEN				32
++Required nodes:
++- any data bus to the connector should be modeled using the OF graph bindings
++  specified in bindings/graph.txt, unless the bus is between parent node and
++  the connector. Since single connector can have multpile data buses every bus
++  has assigned OF graph port number as follows:
++    0: High Speed (HS), present in all connectors,
++    1: Super Speed (SS), present in SS capable connectors,
++    2: Sideband use (SBU), present in USB-C.
 +
-+#define MAX_BUCK_BOOST_SID				0x69
-+#define MAX_BUCK_BOOST_OP				0xb9
-+#define MAX_BUCK_BOOST_OFF				0
-+#define MAX_BUCK_BOOST_SOURCE				0xa
-+#define MAX_BUCK_BOOST_SINK				0x5
++Examples
++--------
 +
-+struct max_tcpci_chip {
-+	struct tcpci_data data;
-+	struct tcpci *tcpci;
-+	struct device *dev;
-+	struct i2c_client *client;
-+	struct tcpm_port *port;
-+};
++1. Micro-USB connector with HS lines routed via controller (MUIC):
 +
-+static const struct regmap_range max_tcpci_tcpci_range[] = {
-+	regmap_reg_range(0x00, 0x95)
-+};
-+
-+const struct regmap_access_table max_tcpci_tcpci_write_table = {
-+	.yes_ranges = max_tcpci_tcpci_range,
-+	.n_yes_ranges = ARRAY_SIZE(max_tcpci_tcpci_range),
-+};
-+
-+static const struct regmap_config max_tcpci_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0x95,
-+	.wr_table = &max_tcpci_tcpci_write_table,
-+};
-+
-+static struct max_tcpci_chip *tdata_to_max_tcpci(struct tcpci_data *tdata)
-+{
-+	return container_of(tdata, struct max_tcpci_chip, data);
-+}
-+
-+static int max_tcpci_read16(struct max_tcpci_chip *chip, unsigned int reg, u16 *val)
-+{
-+	return regmap_raw_read(chip->data.regmap, reg, val, sizeof(u16));
-+}
-+
-+static int max_tcpci_write16(struct max_tcpci_chip *chip, unsigned int reg, u16 val)
-+{
-+	return regmap_raw_write(chip->data.regmap, reg, &val, sizeof(u16));
-+}
-+
-+static int max_tcpci_read8(struct max_tcpci_chip *chip, unsigned int reg, u8 *val)
-+{
-+	return regmap_raw_read(chip->data.regmap, reg, val, sizeof(u8));
-+}
-+
-+static int max_tcpci_write8(struct max_tcpci_chip *chip, unsigned int reg, u8 val)
-+{
-+	return regmap_raw_write(chip->data.regmap, reg, &val, sizeof(u8));
-+}
-+
-+static void max_tcpci_init_regs(struct max_tcpci_chip *chip)
-+{
-+	u16 alert_mask = 0;
-+	int ret;
-+
-+	ret = max_tcpci_write16(chip, TCPC_ALERT, 0xffff);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Error writing to TCPC_ALERT ret:%d\n", ret);
-+		return;
-+	}
-+
-+	ret = max_tcpci_write16(chip, TCPC_VENDOR_ALERT, 0xffff);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Error writing to TCPC_VENDOR_ALERT ret:%d\n", ret);
-+		return;
-+	}
-+
-+	alert_mask = TCPC_ALERT_TX_SUCCESS | TCPC_ALERT_TX_DISCARDED | TCPC_ALERT_TX_FAILED |
-+		TCPC_ALERT_RX_HARD_RST | TCPC_ALERT_RX_STATUS | TCPC_ALERT_CC_STATUS |
-+		TCPC_ALERT_VBUS_DISCNCT | TCPC_ALERT_RX_BUF_OVF | TCPC_ALERT_POWER_STATUS;
-+
-+	ret = max_tcpci_write16(chip, TCPC_ALERT_MASK, alert_mask);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Error writing to TCPC_ALERT_MASK ret:%d\n", ret);
-+		return;
-+	}
-+
-+	/* Enable vbus voltage monitoring and voltage alerts */
-+	ret = max_tcpci_write8(chip, TCPC_POWER_CTRL, 0);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Error writing to TCPC_POWER_CTRL ret:%d\n", ret);
-+		return;
-+	}
-+}
-+
-+static void process_rx(struct max_tcpci_chip *chip, u16 status)
-+{
-+	struct pd_message msg;
-+	u8 count, frame_type, rx_buf[TCPC_RECEIVE_BUFFER_LEN];
-+	int ret, payload_index;
-+	u8 *rx_buf_ptr;
-+
-+	/*
-+	 * READABLE_BYTE_COUNT: Indicates the number of bytes in the RX_BUF_BYTE_x registers
-+	 * plus one (for the RX_BUF_FRAME_TYPE) Table 4-36.
-+	 * Read the count and frame type.
-+	 */
-+	ret = regmap_raw_read(chip->data.regmap, TCPC_RX_BYTE_CNT, rx_buf, 2);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "TCPC_RX_BYTE_CNT read failed ret:%d", ret);
-+		return;
-+	}
-+
-+	count = rx_buf[TCPC_RECEIVE_BUFFER_COUNT_OFFSET];
-+	frame_type = rx_buf[TCPC_RECEIVE_BUFFER_FRAME_TYPE_OFFSET];
-+
-+	if (count == 0 || frame_type != TCPC_RX_BUF_FRAME_TYPE_SOP) {
-+		max_tcpci_write16(chip, TCPC_ALERT, TCPC_ALERT_RX_STATUS);
-+		dev_err(chip->dev, "%s", count ==  0 ? "error: count is 0" :
-+			"error frame_type is not SOP");
-+		return;
-+	}
-+
-+	if (count > sizeof(struct pd_message) || count + 1 > TCPC_RECEIVE_BUFFER_LEN) {
-+		dev_err(chip->dev, "Invalid TCPC_RX_BYTE_CNT %d", count);
-+		return;
-+	}
-+
-+	/*
-+	 * Read count + 1 as RX_BUF_BYTE_x is hidden and can only be read through
-+	 * TCPC_RX_BYTE_CNT
-+	 */
-+	count += 1;
-+	ret = regmap_raw_read(chip->data.regmap, TCPC_RX_BYTE_CNT, rx_buf, count);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "Error: TCPC_RX_BYTE_CNT read failed: %d", ret);
-+		return;
-+	}
-+
-+	rx_buf_ptr = rx_buf + TCPC_RECEIVE_BUFFER_RX_BYTE_BUF_OFFSET;
-+	msg.header = cpu_to_le16(*(u16 *)rx_buf_ptr);
-+	rx_buf_ptr = rx_buf_ptr + sizeof(msg.header);
-+	for (payload_index = 0; payload_index < pd_header_cnt_le(msg.header); payload_index++,
-+	     rx_buf_ptr += sizeof(msg.payload[0]))
-+		msg.payload[payload_index] = cpu_to_le32(*(u32 *)rx_buf_ptr);
-+
-+	/*
-+	 * Read complete, clear RX status alert bit.
-+	 * Clear overflow as well if set.
-+	 */
-+	ret = max_tcpci_write16(chip, TCPC_ALERT, status & TCPC_ALERT_RX_BUF_OVF ?
-+				TCPC_ALERT_RX_STATUS | TCPC_ALERT_RX_BUF_OVF :
-+				TCPC_ALERT_RX_STATUS);
-+	if (ret < 0)
-+		return;
-+
-+	tcpm_pd_receive(chip->port, &msg);
-+}
-+
-+static int max_tcpci_set_vbus(struct tcpci *tcpci, struct tcpci_data *tdata, bool source, bool sink)
-+{
-+	struct max_tcpci_chip *chip = tdata_to_max_tcpci(tdata);
-+	u8 buffer_source[2] = {MAX_BUCK_BOOST_OP, MAX_BUCK_BOOST_SOURCE};
-+	u8 buffer_sink[2] = {MAX_BUCK_BOOST_OP, MAX_BUCK_BOOST_SINK};
-+	u8 buffer_none[2] = {MAX_BUCK_BOOST_OP, MAX_BUCK_BOOST_OFF};
-+	struct i2c_client *i2c = chip->client;
-+	int ret;
-+
-+	struct i2c_msg msgs[] = {
-+		{
-+			.addr = MAX_BUCK_BOOST_SID,
-+			.flags = i2c->flags & I2C_M_TEN,
-+			.len = 2,
-+			.buf = source ? buffer_source : sink ? buffer_sink : buffer_none,
-+		},
++muic-max77843@66 {
++	...
++	usb_con: connector {
++		compatible = "usb-b-connector";
++		label = "micro-USB";
++		type = "micro";
 +	};
-+
-+	if (source && sink) {
-+		dev_err(chip->dev, "Both source and sink set\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = i2c_transfer(i2c->adapter, msgs, 1);
-+
-+	return  ret < 0 ? ret : 1;
-+}
-+
-+static void process_power_status(struct max_tcpci_chip *chip)
-+{
-+	u8 pwr_status;
-+	int ret;
-+
-+	ret = max_tcpci_read8(chip, TCPC_POWER_STATUS, &pwr_status);
-+	if (ret < 0)
-+		return;
-+
-+	if (pwr_status == 0xff)
-+		max_tcpci_init_regs(chip);
-+	else
-+		tcpm_vbus_change(chip->port);
-+}
-+
-+static void process_tx(struct max_tcpci_chip *chip, u16 status)
-+{
-+	if (status & TCPC_ALERT_TX_SUCCESS)
-+		tcpm_pd_transmit_complete(chip->port, TCPC_TX_SUCCESS);
-+	else if (status & TCPC_ALERT_TX_DISCARDED)
-+		tcpm_pd_transmit_complete(chip->port, TCPC_TX_DISCARDED);
-+	else if (status & TCPC_ALERT_TX_FAILED)
-+		tcpm_pd_transmit_complete(chip->port, TCPC_TX_FAILED);
-+
-+	/* Reinit regs as Hard reset sets them to default value */
-+	if ((status & TCPC_ALERT_TX_SUCCESS) && (status & TCPC_ALERT_TX_FAILED))
-+		max_tcpci_init_regs(chip);
-+}
-+
-+static irqreturn_t _max_tcpci_irq(struct max_tcpci_chip *chip, u16 status)
-+{
-+	u16 mask;
-+	int ret;
-+
-+	/*
-+	 * Clear alert status for everything except RX_STATUS, which shouldn't
-+	 * be cleared until we have successfully retrieved message.
-+	 */
-+	if (status & ~TCPC_ALERT_RX_STATUS) {
-+		mask = status & TCPC_ALERT_RX_BUF_OVF ?
-+			status & ~(TCPC_ALERT_RX_STATUS | TCPC_ALERT_RX_BUF_OVF) :
-+			status & ~TCPC_ALERT_RX_STATUS;
-+		ret = max_tcpci_write16(chip, TCPC_ALERT, mask);
-+		if (ret < 0) {
-+			dev_err(chip->dev, "ALERT clear failed\n");
-+			return ret;
-+		}
-+	}
-+
-+	if (status & TCPC_ALERT_RX_BUF_OVF && !(status & TCPC_ALERT_RX_STATUS)) {
-+		ret = max_tcpci_write16(chip, TCPC_ALERT, (TCPC_ALERT_RX_STATUS |
-+							  TCPC_ALERT_RX_BUF_OVF));
-+		if (ret < 0) {
-+			dev_err(chip->dev, "ALERT clear failed\n");
-+			return ret;
-+		}
-+	}
-+
-+	if (status & TCPC_ALERT_RX_STATUS)
-+		process_rx(chip, status);
-+
-+	if (status & TCPC_ALERT_TX_DISCARDED)
-+		dev_info(chip->dev, "TX_DISCARDED");
-+
-+	if (status & TCPC_ALERT_VBUS_DISCNCT)
-+		tcpm_vbus_change(chip->port);
-+
-+	if (status & TCPC_ALERT_CC_STATUS)
-+		tcpm_cc_change(chip->port);
-+
-+	if (status & TCPC_ALERT_POWER_STATUS)
-+		process_power_status(chip);
-+
-+	if (status & TCPC_ALERT_RX_HARD_RST) {
-+		tcpm_pd_hard_reset(chip->port);
-+		max_tcpci_init_regs(chip);
-+	}
-+
-+	if (status & TCPC_ALERT_TX_SUCCESS || status & TCPC_ALERT_TX_DISCARDED || status &
-+	    TCPC_ALERT_TX_FAILED)
-+		process_tx(chip, status);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t max_tcpci_irq(int irq, void *dev_id)
-+{
-+	struct max_tcpci_chip *chip = dev_id;
-+	u16 status;
-+	irqreturn_t irq_return;
-+	int ret;
-+
-+	if (!chip->port)
-+		return IRQ_HANDLED;
-+
-+	ret = max_tcpci_read16(chip, TCPC_ALERT, &status);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "ALERT read failed\n");
-+		return ret;
-+	}
-+	while (status) {
-+		irq_return = _max_tcpci_irq(chip, status);
-+		/* Do not return if the ALERT is already set. */
-+		ret = max_tcpci_read16(chip, TCPC_ALERT, &status);
-+		if (ret < 0)
-+			break;
-+	}
-+
-+	return irq_return;
-+}
-+
-+static irqreturn_t max_tcpci_isr(int irq, void *dev_id)
-+{
-+	struct max_tcpci_chip *chip = dev_id;
-+
-+	pm_wakeup_event(chip->dev, PD_ACTIVITY_TIMEOUT_MS);
-+
-+	if (!chip->port)
-+		return IRQ_HANDLED;
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static int max_tcpci_init_alert(struct max_tcpci_chip *chip, struct i2c_client *client)
-+{
-+	int ret, irq_gpio;
-+
-+	irq_gpio = of_get_named_gpio(client->dev.of_node, "usbpd,usbpd_int", 0);
-+	client->irq = gpio_to_irq(irq_gpio);
-+	if (!client->irq)
-+		return -ENODEV;
-+
-+	ret = devm_request_threaded_irq(chip->dev, client->irq, max_tcpci_isr, max_tcpci_irq,
-+					(IRQF_TRIGGER_LOW | IRQF_ONESHOT), dev_name(chip->dev),
-+					chip);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	enable_irq_wake(client->irq);
-+	return 0;
-+}
-+
-+static int max_tcpci_start_toggling(struct tcpci *tcpci, struct tcpci_data *tdata,
-+				    enum typec_cc_status cc)
-+{
-+	struct max_tcpci_chip *chip = tdata_to_max_tcpci(tdata);
-+
-+	max_tcpci_init_regs(chip);
-+
-+	return 0;
-+}
-+
-+static int tcpci_init(struct tcpci *tcpci, struct tcpci_data *data)
-+{
-+	/*
-+	 * Generic TCPCI overwrites the regs once this driver initializes
-+	 * them. Prevent this by returning -1.
-+	 */
-+	return -1;
-+}
-+
-+static int max_tcpci_probe(struct i2c_client *client, const struct i2c_device_id *i2c_id)
-+{
-+	int ret;
-+	struct max_tcpci_chip *chip;
-+	u8 power_status;
-+
-+	chip = devm_kzalloc(&client->dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->client = client;
-+	chip->data.regmap = devm_regmap_init_i2c(client, &max_tcpci_regmap_config);
-+	if (IS_ERR(chip->data.regmap)) {
-+		dev_err(&client->dev, "Regmap init failed\n");
-+		return PTR_ERR(chip->data.regmap);
-+	}
-+
-+	chip->dev = &client->dev;
-+	i2c_set_clientdata(client, chip);
-+
-+	ret = max_tcpci_read8(chip, TCPC_POWER_STATUS, &power_status);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (power_status & TCPC_POWER_STATUS_UNINIT) {
-+		dev_err(&client->dev, "TCPC not ready!");
-+		return -EPROBE_DEFER;
-+	}
-+
-+	/* Chip level tcpci callbacks */
-+	chip->data.set_vbus = max_tcpci_set_vbus;
-+	chip->data.start_drp_toggling = max_tcpci_start_toggling;
-+	chip->data.TX_BUF_BYTE_x_hidden = true;
-+	chip->data.init = tcpci_init;
-+
-+	max_tcpci_init_regs(chip);
-+	chip->tcpci = tcpci_register_port(chip->dev, &chip->data);
-+	if (IS_ERR_OR_NULL(chip->tcpci)) {
-+		dev_err(&client->dev, "TCPCI port registration failed");
-+		ret = PTR_ERR(chip->tcpci);
-+		return PTR_ERR(chip->tcpci);
-+	}
-+	chip->port = tcpci_get_tcpm_port(chip->tcpci);
-+	ret = max_tcpci_init_alert(chip, client);
-+	if (ret < 0)
-+		goto unreg_port;
-+
-+	device_init_wakeup(chip->dev, true);
-+	return 0;
-+
-+unreg_port:
-+	tcpci_unregister_port(chip->tcpci);
-+
-+	return ret;
-+}
-+
-+static int max_tcpci_remove(struct i2c_client *client)
-+{
-+	struct max_tcpci_chip *chip = i2c_get_clientdata(client);
-+
-+	if (!IS_ERR_OR_NULL(chip->tcpci))
-+		tcpci_unregister_port(chip->tcpci);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id max_tcpci_id[] = {
-+	{ "maxtcpc", 0 },
-+	{ }
 +};
-+MODULE_DEVICE_TABLE(i2c, max_tcpci_id);
 +
-+#ifdef CONFIG_OF
-+static const struct of_device_id max_tcpci_of_match[] = {
-+	{ .compatible = "maxim,tcpc", },
-+	{},
++2. USB-C connector attached to CC controller (s2mm005), HS lines routed
++to companion PMIC (max77865), SS lines to USB3 PHY and SBU to DisplayPort.
++DisplayPort video lines are routed to the connector via SS mux in USB3 PHY.
++
++ccic: s2mm005@33 {
++	...
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				usb_con_hs: endpoint {
++					remote-endpoint = <&max77865_usbc_hs>;
++				};
++			};
++			port@1 {
++				reg = <1>;
++				usb_con_ss: endpoint {
++					remote-endpoint = <&usbdrd_phy_ss>;
++				};
++			};
++			port@2 {
++				reg = <2>;
++				usb_con_sbu: endpoint {
++					remote-endpoint = <&dp_aux>;
++				};
++			};
++		};
++	};
 +};
-+MODULE_DEVICE_TABLE(of, max_tcpci_of_match);
-+#endif
 +
-+static struct i2c_driver max_tcpci_i2c_driver = {
-+	.driver = {
-+		.name = "maxtcpc",
-+		.of_match_table = of_match_ptr(max_tcpci_of_match),
-+	},
-+	.probe = max_tcpci_probe,
-+	.remove = max_tcpci_remove,
-+	.id_table = max_tcpci_id,
++3. USB-C connector attached to a typec port controller(ptn5110), which has
++power delivery support and enables drp.
++
++typec: ptn5110@50 {
++	...
++	usb_con: connector {
++		compatible = "usb-c-connector";
++		label = "USB-C";
++		power-role = "dual";
++		try-power-role = "sink";
++		source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
++		sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
++			     PDO_VAR(5000, 12000, 2000)>;
++		op-sink-microwatt = <10000000>;
++	};
 +};
-+module_i2c_driver(max_tcpci_i2c_driver);
+diff --git a/include/dt-bindings/usb/pd.h b/include/dt-bindings/usb/pd.h
+index 985f2bbd4d24..db1ad4532197 100644
+--- a/include/dt-bindings/usb/pd.h
++++ b/include/dt-bindings/usb/pd.h
+@@ -35,6 +35,16 @@
+ 
+ #define VSAFE5V 5000 /* mv units */
+ 
++/*
++ * Based on "Table 6-14 Fixed Supply PDO - Sink" of "USB Power Delivery Specification Revision 3.0,
++ * Version 1.2"
++ * Initial current capability of the new source when vSafe5V is applied.
++ */
++#define FRS_NOT_SUPPORTED	0
++#define FRS_DEFAULT_POWER	1
++#define FRS_5V_1P5A		2
++#define FRS_5V_3A		3
 +
-+MODULE_AUTHOR("Badhri Jagan Sridharan <badhri@google.com>");
-+MODULE_DESCRIPTION("Maxim TCPCI based USB Type-C Port Controller Interface Driver");
-+MODULE_LICENSE("GPL v2");
+ #define PDO_BATT_MAX_VOLT_SHIFT	20	/* 50mV units */
+ #define PDO_BATT_MIN_VOLT_SHIFT	10	/* 50mV units */
+ #define PDO_BATT_MAX_PWR_SHIFT	0	/* 250mW units */
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
