@@ -2,57 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.2 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9422C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C71C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4C9E214F1
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B92A214F1
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598941628;
-	bh=t7ox/qrbbbkL2ZtqqsEYnR1uZk9hfzbSyMJhMHAqzQ0=;
+	s=default; t=1598941656;
+	bh=vQRDkJyojcuTd04BSfsdD23ZJb7l6n5sNRdUCsmf2cs=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=slCMMh01yRFrJxWf33LO3AXbz+AXVZ744uLztMhr8mg8HsEcBnwS85iXD0Dm1tWpu
-	 Cw2O7rg1Uee1GIxPEWE269G7LcL8ZhQkg8HR738InleGPJinZzRP2V6kZ5Ut+Vmr1r
-	 fontona6+7qg8t8c4p75+2VqxsUke+PlhdT2LLXI=
+	b=HWTdJaBw+CWb50N6LuGsuTmetJQwkhdqYQqfJXLHQPIXyJASab9gNvSh8XyL88dgR
+	 6Qb08X74oxsEYlyMvKPce6+IEZCvpgzvAX4HiaXAydonaA+h6KKOlOLbeij8Gxxtgw
+	 uBgNpuKWNfoY6hc0sxPLaBYukMHFWR63LHSst1lU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726226AbgIAG1H (ORCPT
+        id S1726512AbgIAG1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:27:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42084 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 02:27:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgIAG1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:27:06 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        id S1726044AbgIAG1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:27:33 -0400
+Received: from coco.lan (ip5f5ad5cf.dynamic.kabel-deutschland.de [95.90.213.207])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1A692071B;
-        Tue,  1 Sep 2020 06:27:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824342098B;
+        Tue,  1 Sep 2020 06:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598941625;
-        bh=t7ox/qrbbbkL2ZtqqsEYnR1uZk9hfzbSyMJhMHAqzQ0=;
+        s=default; t=1598941653;
+        bh=vQRDkJyojcuTd04BSfsdD23ZJb7l6n5sNRdUCsmf2cs=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OJqNmTYapOpO2MDGn5WrVTXLtNQIoF4NdyT4gOwfLhJufZdWwqHDTjvmCAxOGvenH
-         tyg8oe0E43OHauo5AaCXhZ0DRizwxeH7vuArLk/hT4Umnr5oNUQtCz+m2UNhV6tdQr
-         fGtc2ca23M6v8clXdGQzZSUhrwFPHTltbw+vPsw8=
-Date:   Tue, 1 Sep 2020 15:27:01 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     kernel test robot <lkp@intel.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Jonathan Corbet <corbet@lwn.net>, kbuild-all@lists.01.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH 1/6] kprobes: tracing/kprobes: Fix to kill kprobes on
- initmem after boot
-Message-Id: <20200901152701.bd1899670b00388313b4b7e2@kernel.org>
-In-Reply-To: <202009010046.S8OcDNX5%lkp@intel.com>
-References: <159887793377.1330989.1807362919167072561.stgit@devnote2>
-        <202009010046.S8OcDNX5%lkp@intel.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        b=yvDgvoVju9G9ODuA094i3jquBkzguo+LxrkgiGFFMFfbzAziJtG6VeEIsaf1m1m1d
+         1hF9sY3RAOezm9xb2RnSmLVT5ZiDKOGAUS5Xj5DJKyrRVhuapd2nXYZjgibfMfAhKp
+         U3c/RS0SnzJGuP5c9yPZEIWcSRYKHzh5/iBajJq4=
+Date:   Tue, 1 Sep 2020 08:27:28 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] staging: spmi: hisi-spmi-controller: Use proper
+ format in call to dev_err()
+Message-ID: <20200901082728.5ce6eda1@coco.lan>
+In-Reply-To: <20200901035722.9324-1-yuehaibing@huawei.com>
+References: <20200901035722.9324-1-yuehaibing@huawei.com>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,43 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 1 Sep 2020 00:25:58 +0800
-kernel test robot <lkp@intel.com> wrote:
+Em Tue, 1 Sep 2020 11:57:22 +0800
+YueHaibing <yuehaibing@huawei.com> escreveu:
 
-> Hi Masami,
+> The correct format string for a size_t argument should be %zu.
 > 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on tip/perf/core]
-> [also build test ERROR on trace/for-next lwn/docs-next linus/master v5.9-rc3 next-20200828]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Masami-Hiramatsu/tracing-boot-Add-new-options-for-tracing-specific-period/20200831-204738
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git 2cb5383b30d47c446ec7d884cd80f93ffcc31817
-> config: arc-defconfig (attached as .config)
-> compiler: arc-elf-gcc (GCC) 9.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=arc 
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    arc-elf-ld: init/main.o: in function `kernel_init':
-> >> main.c:(.ref.text+0xa6): undefined reference to `kprobe_free_init_mem'
-> >> arc-elf-ld: main.c:(.ref.text+0xa6): undefined reference to `kprobe_free_init_mem'
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-OK, I missed to put the kprobe_free_init_mem() in the code
-depends on CONFIG_DEBUG_FS. I'll move this out.
+Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Thank you,
+> ---
+>  drivers/staging/hikey9xx/hisi-spmi-controller.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> index 66a0b296e06f..34c690da09e3 100644
+> --- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
+> @@ -121,7 +121,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+>  
+>  	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+>  		dev_err(&ctrl->dev,
+> -			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+> +			"spmi_controller supports 1..%d bytes per trans, but:%zu requested\n",
+>  			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+>  		return  -EINVAL;
+>  	}
+> @@ -175,7 +175,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
+>  	spin_unlock_irqrestore(&spmi_controller->lock, flags);
+>  	if (rc)
+>  		dev_err(&ctrl->dev,
+> -			"spmi read wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%ld\n",
+> +			"spmi read wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%zu\n",
+>  			opc, slave_id, slave_addr, bc + 1);
+>  	else
+>  		dev_dbg(&ctrl->dev, "%s: id:%d slave_addr:0x%x, read value: %*ph\n",
+> @@ -197,7 +197,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+>  
+>  	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
+>  		dev_err(&ctrl->dev,
+> -			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
+> +			"spmi_controller supports 1..%d bytes per trans, but:%zu requested\n",
+>  			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
+>  		return  -EINVAL;
+>  	}
+> @@ -251,7 +251,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
+>  	spin_unlock_irqrestore(&spmi_controller->lock, flags);
+>  
+>  	if (rc)
+> -		dev_err(&ctrl->dev, "spmi write wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%ld\n",
+> +		dev_err(&ctrl->dev, "spmi write wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%zu\n",
+>  			opc, slave_id, slave_addr, bc);
+>  	else
+>  		dev_dbg(&ctrl->dev, "%s: id:%d slave_addr:0x%x, wrote value: %*ph\n",
 
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks,
+Mauro
