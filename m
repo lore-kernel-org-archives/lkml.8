@@ -2,177 +2,131 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A3CC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FFBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C364206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="wObSEMiI";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="aKMifmu3"
+	by mail.kernel.org (Postfix) with ESMTP id 6FC3B2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598972025;
+	bh=HpWZik1j9+sfkS0/wxDG2E/McFvOr29VTlfELilXyDk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=u5nnMndLT1bbnW1oLT2fL1+D6w8/71ELOpnRhLjDn4OOQlbjVYywJfPn2GHXq2bKn
+	 3o4tv598ccGul+x6AQztXy3CUwTVfLc29Gql3PeBWGB/SWLcfTqvf2PRIrh8ftEk0M
+	 POmRlT8eMntbv9HtkM+nVlQUNBiEhFc0LmMyn0nE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728597AbgIAOx0 (ORCPT
+        id S1728865AbgIAOxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:53:26 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:42334 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728454AbgIAOwp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:52:45 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 2FA1E8EE112;
-        Tue,  1 Sep 2020 07:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1598971964;
-        bh=5QgiJp1XQuU8WeasWKUrByXxrzK/9M/xvKJovjxtOSE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=wObSEMiIFiMQqpuLxaCfGj6fWwMB1SR5uR3WpqveV9O4eMPwCERYxZe+pGeu45B1s
-         Hh0lHOhPmaDzTL+z1MwoTQwce39LAcI0HTI6j6IhhJYI3h5nKO0TMp801H3LPYpAS2
-         cAlNurtUenHcZUudnTaoIqyV7yZakslR9e7UqKeA=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0Zy3Ukh5UkrA; Tue,  1 Sep 2020 07:52:44 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
+        Tue, 1 Sep 2020 10:53:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728386AbgIAOxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:53:35 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id C9BD38EE0F5;
-        Tue,  1 Sep 2020 07:52:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1598971963;
-        bh=5QgiJp1XQuU8WeasWKUrByXxrzK/9M/xvKJovjxtOSE=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=aKMifmu3auQ6FWaycnVm58I6hz9G+D25US7ZBIQmKPWtl/OO3oAlisEasTKoEqxvs
-         l6ihGgc23PPx6Vjc2Wtc/36E47y53pW7IPIx5bd2ov50jG73PyojCzhwq4i11ZzTyB
-         Dg3UC/gKa12A9sw0Wl45QN34rTiyU/vUbrJxeAio=
-Message-ID: <1598971960.4238.5.camel@HansenPartnership.com>
-Subject: Re: [PATCH 07/28] 53c700: improve non-coherent DMA handling
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Christoph Hellwig <hch@lst.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        iommu@lists.linux-foundation.org
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, nouveau@lists.freedesktop.org,
-        netdev@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-scsi@vger.kernel.org, linux-mm@kvack.org,
-        alsa-devel@alsa-project.org
-Date:   Tue, 01 Sep 2020 07:52:40 -0700
-In-Reply-To: <20200819065555.1802761-8-hch@lst.de>
-References: <20200819065555.1802761-1-hch@lst.de>
-         <20200819065555.1802761-8-hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id BF05B206FA;
+        Tue,  1 Sep 2020 14:53:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598972014;
+        bh=HpWZik1j9+sfkS0/wxDG2E/McFvOr29VTlfELilXyDk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s2M6tw5X2FLoO+ZaIl4ZPFNPkHUGNWOZL/zyWY1eneiNGh28OmxjMRbVMiAcof+Vu
+         soAAVcPhNf9jBLHjBnIkLm7/FpfSyEQbLb5MSfeXD1GZDCA9LOU6C50kbyo4bVmRds
+         gUQavtUt0yb/rahYnLHiF2bYNhddSHACmA+oW5A4=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 4446840D3D; Tue,  1 Sep 2020 11:53:31 -0300 (-03)
+Date:   Tue, 1 Sep 2020 11:53:31 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Mike Leach <mike.leach@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        AAl Grant <al.grant@arm.com>
+Subject: Re: [PATCH 2/2] perf intel-pt: Fix corrupt data after perf inject
+ from
+Message-ID: <20200901145331.GA1422817@kernel.org>
+References: <20200819084751.17686-1-leo.yan@linaro.org>
+ <20200819084751.17686-2-leo.yan@linaro.org>
+ <20200831203832.GA120995@xps15>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831203832.GA120995@xps15>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-08-19 at 08:55 +0200, Christoph Hellwig wrote:
-> Switch the 53c700 driver to only use non-coherent descriptor memory
-> if it really has to because dma_alloc_coherent fails.  This doesn't
-> matter for any of the platforms it runs on currently, but that will
-> change soon.
+Em Mon, Aug 31, 2020 at 02:38:32PM -0600, Mathieu Poirier escreveu:
+> On Wed, Aug 19, 2020 at 04:47:51PM +0800, Leo Yan wrote:
+> > From: Al Grant <al.grant@arm.com>
+> > 
+> > Commit 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
+> > changed the format of branch stacks in perf samples. When samples use
+> > this new format, a flag must be set in the corresponding event.
+> > Synthesized branch stacks generated from Intel PT were using the new
+> > format, but not setting the event attribute, leading to consumers
+> > seeing corrupt data. This patch fixes the issue by setting the event
+> > attribute to indicate use of the new format.
+> > 
+> > Fixes: 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
+> > Signed-off-by: Al Grant <al.grant@arm.com>
+> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
 > 
-> To help with this two new helpers to transfer ownership to and from
-> the device are added that abstract the syncing of the non-coherent
-> memory. The two current bidirectional cases are mapped to transfers
-> to the device, as that appears to what they are used for.  Note that
-> for parisc, which is the only architecture this driver needs to use
-> non-coherent memory on, the direction argument of dma_cache_sync is
-> ignored, so this will not change behavior in any way.
+> Arnaldo, please consider.
+> 
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-I think this looks mostly OK, except for one misnamed parameter below. 
-Unfortunately, the last non-coherent parisc was the 700 series and I no
-longer own a box, so I can't test that part of it (I can fire up the
-C360 to test it on a coherent arch).
+Thanks, applied, and 1/2 too.
 
-[...]
-> diff --git a/drivers/scsi/53c700.h b/drivers/scsi/53c700.h
-> index 05fe439b66afe5..0f545b05fe611d 100644
-> --- a/drivers/scsi/53c700.h
-> +++ b/drivers/scsi/53c700.h
-> @@ -209,6 +209,7 @@ struct NCR_700_Host_Parameters {
->  #endif
->  	__u32	chip710:1;	/* set if really a 710 not
-> 700 */
->  	__u32	burst_length:4;	/* set to 0 to disable
-> 710 bursting */
-> +	__u32	noncoherent:1;	/* needs to use non-
-> coherent DMA */
->  
->  	/* NOTHING BELOW HERE NEEDS ALTERING */
->  	__u32	fast:1;		/* if we can alter the
-> SCSI bus clock
-> @@ -429,7 +430,7 @@ struct NCR_700_Host_Parameters {
->  	for(i=0; i< (sizeof(A_##symbol##_used) / sizeof(__u32));
-> i++) { \
->  		__u32 val =
-> bS_to_cpu((script)[A_##symbol##_used[i]]) + da; \
->  		(script)[A_##symbol##_used[i]] = bS_to_host(val); \
-> -		dma_cache_sync((dev),
-> &(script)[A_##symbol##_used[i]], 4, DMA_TO_DEVICE); \
-> +		dma_sync_to_dev((dev),
-> &(script)[A_##symbol##_used[i]], 4); \
->  		DEBUG((" script, patching %s at %d to %pad\n", \
->  		       #symbol, A_##symbol##_used[i], &da)); \
->  	} \
-> @@ -441,7 +442,7 @@ struct NCR_700_Host_Parameters {
->  	dma_addr_t da = value; \
->  	for(i=0; i< (sizeof(A_##symbol##_used) / sizeof(__u32));
-> i++) { \
->  		(script)[A_##symbol##_used[i]] = bS_to_host(da); \
-> -		dma_cache_sync((dev),
-> &(script)[A_##symbol##_used[i]], 4, DMA_TO_DEVICE); \
-> +		dma_sync_to_dev((dev),
-> &(script)[A_##symbol##_used[i]], 4); \
->  		DEBUG((" script, patching %s at %d to %pad\n", \
->  		       #symbol, A_##symbol##_used[i], &da)); \
->  	} \
-> @@ -456,7 +457,7 @@ struct NCR_700_Host_Parameters {
->  		val &= 0xff00ffff; \
->  		val |= ((value) & 0xff) << 16; \
->  		(script)[A_##symbol##_used[i]] = bS_to_host(val); \
-> -		dma_cache_sync((dev),
-> &(script)[A_##symbol##_used[i]], 4, DMA_TO_DEVICE); \
-> +		dma_sync_to_dev((dev),
-> &(script)[A_##symbol##_used[i]], 4); \
->  		DEBUG((" script, patching ID field %s at %d to
-> 0x%x\n", \
->  		       #symbol, A_##symbol##_used[i], val)); \
->  	} \
-> @@ -470,7 +471,7 @@ struct NCR_700_Host_Parameters {
->  		val &= 0xffff0000; \
->  		val |= ((value) & 0xffff); \
->  		(script)[A_##symbol##_used[i]] = bS_to_host(val); \
-> -		dma_cache_sync((dev),
-> &(script)[A_##symbol##_used[i]], 4, DMA_TO_DEVICE); \
-> +		dma_sync_to_dev((dev),
-> &(script)[A_##symbol##_used[i]], 4); \
->  		DEBUG((" script, patching short field %s at %d to
-> 0x%x\n", \
->  		       #symbol, A_##symbol##_used[i], val)); \
->  	} \
+- Arnaldo
+ 
+> > ---
+> >  tools/perf/util/intel-pt.c | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> > index 2a8d245351e7..0af4e81c46e2 100644
+> > --- a/tools/perf/util/intel-pt.c
+> > +++ b/tools/perf/util/intel-pt.c
+> > @@ -3017,8 +3017,15 @@ static int intel_pt_synth_events(struct intel_pt *pt,
+> >  
+> >  	if (pt->synth_opts.callchain)
+> >  		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
+> > -	if (pt->synth_opts.last_branch)
+> > +	if (pt->synth_opts.last_branch) {
+> >  		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
+> > +		/*
+> > +		 * We don't use the hardware index, but the sample generation
+> > +		 * code uses the new format branch_stack with this field,
+> > +		 * so the event attributes must indicate that it's present.
+> > +		 */
+> > +		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
+> > +	}
+> >  
+> >  	if (pt->synth_opts.instructions) {
+> >  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
+> > -- 
+> > 2.17.1
+> > 
 
-These macro arguments need updating.  Since you changed the input from
-hostdata->dev to hostdata, leaving the macro argument as dev is simply
-misleading.  It needs to become hostdata or h.
+-- 
 
-James
-
+- Arnaldo
