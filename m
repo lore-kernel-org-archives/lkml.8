@@ -2,54 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA9DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B0F720767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E36DA206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979432;
-	bh=wQJh5oefg0jJJ1oQVcAo/I9Wd+i3NyiIy03FoMCF264=;
+	s=default; t=1598979440;
+	bh=BetL4iDdxppC0ILG6yUltd+ERcIHNCATMi10OVK3mVs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RAXOiBttv7wSVasviY294lzj1i1t/qb0YJZdDa9rsRoxyTOn2bGQL3jVdErqTKfYZ
-	 dzFD7f2l2/FNECidmhodJgOjtfV9IFF0RNW330cV7eL8lOlRUZ0nKvHcDRTfT7C+8Z
-	 o+cjqHnz+kaI8FRPd3ZZN7/2lvTvwjWr7N5tucjw=
+	b=rc6/vUVKvZxPQdDiip3NZBc0UGecnXNk6jzVt92FgLkGI0IIBjyzVAkl6hI6KnE6+
+	 Y1HcPXBAOX5j6CbMCAb0y/xoKnJ9dgZICwsumUUD9//VxUeKJyb/ggEBAgzjRR4Lxk
+	 NGDdwFdZyO8D/DWOgsNw7Ou2pq/iwtBINtLLB5L0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729810AbgIAPXa (ORCPT
+        id S1729861AbgIAQ5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:23:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41026 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:57:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729630AbgIAPUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:47 -0400
+        id S1729636AbgIAPXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:32 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 271F820767;
-        Tue,  1 Sep 2020 15:20:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4B9420BED;
+        Tue,  1 Sep 2020 15:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973646;
-        bh=wQJh5oefg0jJJ1oQVcAo/I9Wd+i3NyiIy03FoMCF264=;
+        s=default; t=1598973812;
+        bh=BetL4iDdxppC0ILG6yUltd+ERcIHNCATMi10OVK3mVs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qe/asu1jK/6kwg30tZYWWMdaVLxqOMpTH1WcuqhGFQVXU9Siz9JoRED1LFKUkDf/H
-         mhLDk1mEJINXcyffdvsXNJnkFGo/S2xabyv7o9wLRBO96hsGa0EjOwWUyBenSkwuiY
-         FPgkYw2PpPqRW/N4BcnMolcGojxReibErxL6t56k=
+        b=SRIsx03wlw1A5I9C9WrMt0DJeRawYEW0gIBwsWArXRyHKRh3/HWVtidygFViVV7TF
+         vfna/62KosYC8agu/JIyZ0/v2WdDsqtGM70DOCSWrqeWX8Whv1Ifx7S+h8IRCC5URt
+         /mYAvgx7NhNn7dtskT4gAEFjum06Aix6EJHbGvJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <mawilcox@microsoft.com>
-Subject: [PATCH 4.14 82/91] overflow.h: Add allocation size calculation helpers
-Date:   Tue,  1 Sep 2020 17:10:56 +0200
-Message-Id: <20200901150932.248573619@linuxfoundation.org>
+        stable@vger.kernel.org, Hou Pu <houpu@bytedance.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 056/125] null_blk: fix passing of REQ_FUA flag in null_handle_rq
+Date:   Tue,  1 Sep 2020 17:10:11 +0200
+Message-Id: <20200901150937.302556240@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-References: <20200901150928.096174795@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,141 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Hou Pu <houpu@bytedance.com>
 
-commit 610b15c50e86eb1e4b77274fabcaea29ac72d6a8 upstream.
+[ Upstream commit 2d62e6b038e729c3e4bfbfcfbd44800ef0883680 ]
 
-In preparation for replacing unchecked overflows for memory allocations,
-this creates helpers for the 3 most common calculations:
+REQ_FUA should be checked using rq->cmd_flags instead of req_op().
 
-array_size(a, b): 2-dimensional array
-array3_size(a, b, c): 3-dimensional array
-struct_size(ptr, member, n): struct followed by n-many trailing members
-
-Each of these return SIZE_MAX on overflow instead of wrapping around.
-
-(Additionally renames a variable named "array_size" to avoid future
-collision.)
-
-Co-developed-by: Matthew Wilcox <mawilcox@microsoft.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: deb78b419dfda ("nullb: emulate cache")
+Signed-off-by: Hou Pu <houpu@bytedance.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-table.c    |   10 +++---
- include/linux/overflow.h |   73 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 78 insertions(+), 5 deletions(-)
+ drivers/block/null_blk_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -547,14 +547,14 @@ static int adjoin(struct dm_table *table
-  * On the other hand, dm-switch needs to process bulk data using messages and
-  * excessive use of GFP_NOIO could cause trouble.
-  */
--static char **realloc_argv(unsigned *array_size, char **old_argv)
-+static char **realloc_argv(unsigned *size, char **old_argv)
- {
- 	char **argv;
- 	unsigned new_size;
- 	gfp_t gfp;
- 
--	if (*array_size) {
--		new_size = *array_size * 2;
-+	if (*size) {
-+		new_size = *size * 2;
- 		gfp = GFP_KERNEL;
- 	} else {
- 		new_size = 8;
-@@ -562,8 +562,8 @@ static char **realloc_argv(unsigned *arr
- 	}
- 	argv = kmalloc(new_size * sizeof(*argv), gfp);
- 	if (argv) {
--		memcpy(argv, old_argv, *array_size * sizeof(*argv));
--		*array_size = new_size;
-+		memcpy(argv, old_argv, *size * sizeof(*argv));
-+		*size = new_size;
- 	}
- 
- 	kfree(old_argv);
---- a/include/linux/overflow.h
-+++ b/include/linux/overflow.h
-@@ -233,4 +233,77 @@
- 		(*_d >> _to_shift) != _a);				\
- })
- 
-+/**
-+ * array_size() - Calculate size of 2-dimensional array.
-+ *
-+ * @a: dimension one
-+ * @b: dimension two
-+ *
-+ * Calculates size of 2-dimensional array: @a * @b.
-+ *
-+ * Returns: number of bytes needed to represent the array or SIZE_MAX on
-+ * overflow.
-+ */
-+static inline __must_check size_t array_size(size_t a, size_t b)
-+{
-+	size_t bytes;
-+
-+	if (check_mul_overflow(a, b, &bytes))
-+		return SIZE_MAX;
-+
-+	return bytes;
-+}
-+
-+/**
-+ * array3_size() - Calculate size of 3-dimensional array.
-+ *
-+ * @a: dimension one
-+ * @b: dimension two
-+ * @c: dimension three
-+ *
-+ * Calculates size of 3-dimensional array: @a * @b * @c.
-+ *
-+ * Returns: number of bytes needed to represent the array or SIZE_MAX on
-+ * overflow.
-+ */
-+static inline __must_check size_t array3_size(size_t a, size_t b, size_t c)
-+{
-+	size_t bytes;
-+
-+	if (check_mul_overflow(a, b, &bytes))
-+		return SIZE_MAX;
-+	if (check_mul_overflow(bytes, c, &bytes))
-+		return SIZE_MAX;
-+
-+	return bytes;
-+}
-+
-+static inline __must_check size_t __ab_c_size(size_t n, size_t size, size_t c)
-+{
-+	size_t bytes;
-+
-+	if (check_mul_overflow(n, size, &bytes))
-+		return SIZE_MAX;
-+	if (check_add_overflow(bytes, c, &bytes))
-+		return SIZE_MAX;
-+
-+	return bytes;
-+}
-+
-+/**
-+ * struct_size() - Calculate size of structure with trailing array.
-+ * @p: Pointer to the structure.
-+ * @member: Name of the array member.
-+ * @n: Number of elements in the array.
-+ *
-+ * Calculates size of memory needed for structure @p followed by an
-+ * array of @n @member elements.
-+ *
-+ * Return: number of bytes needed or SIZE_MAX on overflow.
-+ */
-+#define struct_size(p, member, n)					\
-+	__ab_c_size(n,							\
-+		    sizeof(*(p)->member) + __must_be_array((p)->member),\
-+		    sizeof(*(p)))
-+
- #endif /* __LINUX_OVERFLOW_H */
+diff --git a/drivers/block/null_blk_main.c b/drivers/block/null_blk_main.c
+index d2d7dc9cd58d2..4fef1fb918ece 100644
+--- a/drivers/block/null_blk_main.c
++++ b/drivers/block/null_blk_main.c
+@@ -1086,7 +1086,7 @@ static int null_handle_rq(struct nullb_cmd *cmd)
+ 		len = bvec.bv_len;
+ 		err = null_transfer(nullb, bvec.bv_page, len, bvec.bv_offset,
+ 				     op_is_write(req_op(rq)), sector,
+-				     req_op(rq) & REQ_FUA);
++				     rq->cmd_flags & REQ_FUA);
+ 		if (err) {
+ 			spin_unlock_irq(&nullb->lock);
+ 			return err;
+-- 
+2.25.1
+
 
 
