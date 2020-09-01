@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FF5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE143C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E999D2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4062065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978138;
-	bh=629+49mpM0RMi+i39YNvE37+uGnqLXIa4iJPk9vUMew=;
+	s=default; t=1598978144;
+	bh=n+NKooXWrnmWSdjBy9zyPt1qKPuk9N41ZK2fyF+GGaU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YV+qLj1QvHxgAApsIJqwQy4ZOCRagVnhd8sUHtuW9GDA8CsZMmsL8Tit4Sw6UpgF8
-	 yr571n/Hxtn8Uf7vAcD4V4gh5tjRliWsgKr75fOyODiZiUnp9nfcmNPtAojOavUl3m
-	 ANDE6FHt136LhrFgCDLH+oCe7dfK55LCvL5J3aak=
+	b=PjgvHr/TgrE8oLQ06f+yA5DRbmrM7PcJ7vdAAPBXZsMnJQnWmRF/QbAepiwZ7/Gpv
+	 Oz+mi6yGnDsIbC1xHdEclM7n3P5zuVmyeVHrEUk6vdyIh+p0JLD4K+LmdIBu3QYYi3
+	 GDwVl45fet3dz2r36ilrc+ljITob7lfkZh97ppHg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731011AbgIAQfg (ORCPT
+        id S1731069AbgIAQfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:35:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60518 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60174 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730597AbgIAPaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:20 -0400
+        id S1730586AbgIAPaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:30:14 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6333D20684;
-        Tue,  1 Sep 2020 15:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD01E2100A;
+        Tue,  1 Sep 2020 15:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974219;
-        bh=629+49mpM0RMi+i39YNvE37+uGnqLXIa4iJPk9vUMew=;
+        s=default; t=1598974207;
+        bh=n+NKooXWrnmWSdjBy9zyPt1qKPuk9N41ZK2fyF+GGaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BmhQatE4cyyvSdOJsvA8aSfk4LdGlpiu/0SvebG04YvVZJQR5HuBG+oW4eoZ77STT
-         vaYkv+Kz6v4ksQaHE9FkNyd8WCVuoihbUgX9lf4hnQz+eX5BgVjrKLojF8rU8yJNCv
-         0YFrcZ8cFFqj6m8X+yBkyH/SIJeIOo/Bb3+vw1mU=
+        b=ebhAfLQZ3p+dP00RJEBbrzU6TVRxFTieaLg8nUUzSsSYy5P5cRL9slqAggtyGVhdI
+         vzZ3Duikl7zBZfOxp3OEpFvY10EgtWUgVTXvgSt0gs+72pr/nQygB0O+6FKMlpPh1o
+         GNP9mbOt0fllUZ06TUMEe7XRQe1Bf7GD+0ISA4vE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Borislav Petkov <bp@alien8.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Lyude Paul <lyude@redhat.com>,
+        David Francis <David.Francis@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/214] EDAC: sb_edac: get rid of unused vars
-Date:   Tue,  1 Sep 2020 17:09:30 +0200
-Message-Id: <20200901150957.306703857@linuxfoundation.org>
+Subject: [PATCH 5.4 086/214] drm/amd/display: Trigger modesets on MST DSC connectors
+Date:   Tue,  1 Sep 2020 17:09:26 +0200
+Message-Id: <20200901150957.110923732@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,128 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+From: Mikita Lipski <mikita.lipski@amd.com>
 
-[ Upstream commit 323014d85d2699b2879ecb15cd06a15408e3e801 ]
+[ Upstream commit 44be939ff7ac5858f0dbd8a2a4af1fe198e14db1 ]
 
-There are several vars unused on this driver, probably because
-it was a modified copy of another driver. Get rid of them.
+Whenever a connector on an MST network is attached, detached, or
+undergoes a modeset, the DSC configs for each stream on that
+topology will be recalculated. This can change their required
+bandwidth, requiring a full reprogramming, as though a modeset
+was performed, even if that stream did not change timing.
 
-	drivers/edac/sb_edac.c: In function ‘knl_get_dimm_capacity’:
-	drivers/edac/sb_edac.c:1343:16: warning: variable ‘sad_size’ set but not used [-Wunused-but-set-variable]
-	 1343 |  u64 sad_base, sad_size, sad_limit = 0;
-	      |                ^~~~~~~~
-	drivers/edac/sb_edac.c: In function ‘sbridge_mce_output_error’:
-	drivers/edac/sb_edac.c:2955:8: warning: variable ‘type’ set but not used [-Wunused-but-set-variable]
-	 2955 |  char *type, *optype, msg[256];
-	      |        ^~~~
-	drivers/edac/sb_edac.c: In function ‘sbridge_unregister_mci’:
-	drivers/edac/sb_edac.c:3203:22: warning: variable ‘pvt’ set but not used [-Wunused-but-set-variable]
-	 3203 |  struct sbridge_pvt *pvt;
-	      |                      ^~~
-	At top level:
-	drivers/edac/sb_edac.c:266:18: warning: ‘correrrthrsld’ defined but not used [-Wunused-const-variable=]
-	  266 | static const u32 correrrthrsld[] = {
-	      |                  ^~~~~~~~~~~~~
-	drivers/edac/sb_edac.c:257:18: warning: ‘correrrcnt’ defined but not used [-Wunused-const-variable=]
-	  257 | static const u32 correrrcnt[] = {
-	      |                  ^~~~~~~~~~
+Therefore, whenever a crtc has drm_atomic_crtc_needs_modeset,
+for each crtc that shares a MST topology with that stream and
+supports DSC, add that crtc (and all affected connectors and
+planes) to the atomic state and set mode_changed on its state
 
-Acked-by: Borislav Petkov <bp@alien8.de>
-Acked-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+v2: Do this check only on Navi and before adding connectors
+and planes on modesetting crtcs
+
+v3: Call the drm_dp_mst_add_affected_dsc_crtcs() to update
+all affected CRTCs
+
+Reviewed-by: Lyude Paul <lyude@redhat.com>
+Signed-off-by: David Francis <David.Francis@amd.com>
+Signed-off-by: Mikita Lipski <mikita.lipski@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/edac/sb_edac.c | 21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/drivers/edac/sb_edac.c b/drivers/edac/sb_edac.c
-index f743502ca9b72..a2fd39d330d67 100644
---- a/drivers/edac/sb_edac.c
-+++ b/drivers/edac/sb_edac.c
-@@ -254,18 +254,20 @@ static const u32 rir_offset[MAX_RIR_RANGES][MAX_RIR_WAY] = {
-  * FIXME: Implement the error count reads directly
-  */
+diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+index 2c0eb7140ca0e..5bde49a13f8c7 100644
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -7230,6 +7230,29 @@ dm_determine_update_type_for_commit(struct amdgpu_display_manager *dm,
+ 	return ret;
+ }
  
--static const u32 correrrcnt[] = {
--	0x104, 0x108, 0x10c, 0x110,
--};
--
- #define RANK_ODD_OV(reg)		GET_BITFIELD(reg, 31, 31)
- #define RANK_ODD_ERR_CNT(reg)		GET_BITFIELD(reg, 16, 30)
- #define RANK_EVEN_OV(reg)		GET_BITFIELD(reg, 15, 15)
- #define RANK_EVEN_ERR_CNT(reg)		GET_BITFIELD(reg,  0, 14)
- 
-+#if 0 /* Currently unused*/
-+static const u32 correrrcnt[] = {
-+	0x104, 0x108, 0x10c, 0x110,
-+};
++static int add_affected_mst_dsc_crtcs(struct drm_atomic_state *state, struct drm_crtc *crtc)
++{
++	struct drm_connector *connector;
++	struct drm_connector_state *conn_state;
++	struct amdgpu_dm_connector *aconnector = NULL;
++	int i;
++	for_each_new_connector_in_state(state, connector, conn_state, i) {
++		if (conn_state->crtc != crtc)
++			continue;
 +
- static const u32 correrrthrsld[] = {
- 	0x11c, 0x120, 0x124, 0x128,
- };
-+#endif
++		aconnector = to_amdgpu_dm_connector(connector);
++		if (!aconnector->port || !aconnector->mst_port)
++			aconnector = NULL;
++		else
++			break;
++	}
++
++	if (!aconnector)
++		return 0;
++
++	return drm_dp_mst_add_affected_dsc_crtcs(state, &aconnector->mst_port->mst_mgr);
++}
++
+ /**
+  * amdgpu_dm_atomic_check() - Atomic check implementation for AMDgpu DM.
+  * @dev: The DRM device
+@@ -7282,6 +7305,16 @@ static int amdgpu_dm_atomic_check(struct drm_device *dev,
+ 	if (ret)
+ 		goto fail;
  
- #define RANK_ODD_ERR_THRSLD(reg)	GET_BITFIELD(reg, 16, 30)
- #define RANK_EVEN_ERR_THRSLD(reg)	GET_BITFIELD(reg,  0, 14)
-@@ -1340,7 +1342,7 @@ static void knl_show_mc_route(u32 reg, char *s)
-  */
- static int knl_get_dimm_capacity(struct sbridge_pvt *pvt, u64 *mc_sizes)
- {
--	u64 sad_base, sad_size, sad_limit = 0;
-+	u64 sad_base, sad_limit = 0;
- 	u64 tad_base, tad_size, tad_limit, tad_deadspace, tad_livespace;
- 	int sad_rule = 0;
- 	int tad_rule = 0;
-@@ -1427,7 +1429,6 @@ static int knl_get_dimm_capacity(struct sbridge_pvt *pvt, u64 *mc_sizes)
- 		edram_only = KNL_EDRAM_ONLY(dram_rule);
- 
- 		sad_limit = pvt->info.sad_limit(dram_rule)+1;
--		sad_size = sad_limit - sad_base;
- 
- 		pci_read_config_dword(pvt->pci_sad0,
- 			pvt->info.interleave_list[sad_rule], &interleave_reg);
-@@ -2952,7 +2953,7 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
- 	struct mem_ctl_info *new_mci;
- 	struct sbridge_pvt *pvt = mci->pvt_info;
- 	enum hw_event_mc_err_type tp_event;
--	char *type, *optype, msg[256];
-+	char *optype, msg[256];
- 	bool ripv = GET_BITFIELD(m->mcgstatus, 0, 0);
- 	bool overflow = GET_BITFIELD(m->status, 62, 62);
- 	bool uncorrected_error = GET_BITFIELD(m->status, 61, 61);
-@@ -2981,14 +2982,11 @@ static void sbridge_mce_output_error(struct mem_ctl_info *mci,
- 	if (uncorrected_error) {
- 		core_err_cnt = 1;
- 		if (ripv) {
--			type = "FATAL";
- 			tp_event = HW_EVENT_ERR_FATAL;
- 		} else {
--			type = "NON_FATAL";
- 			tp_event = HW_EVENT_ERR_UNCORRECTED;
- 		}
- 	} else {
--		type = "CORRECTED";
- 		tp_event = HW_EVENT_ERR_CORRECTED;
- 	}
- 
-@@ -3200,7 +3198,6 @@ static struct notifier_block sbridge_mce_dec = {
- static void sbridge_unregister_mci(struct sbridge_dev *sbridge_dev)
- {
- 	struct mem_ctl_info *mci = sbridge_dev->mci;
--	struct sbridge_pvt *pvt;
- 
- 	if (unlikely(!mci || !mci->pvt_info)) {
- 		edac_dbg(0, "MC: dev = %p\n", &sbridge_dev->pdev[0]->dev);
-@@ -3209,8 +3206,6 @@ static void sbridge_unregister_mci(struct sbridge_dev *sbridge_dev)
- 		return;
- 	}
- 
--	pvt = mci->pvt_info;
--
- 	edac_dbg(0, "MC: mci = %p, dev = %p\n",
- 		 mci, &sbridge_dev->pdev[0]->dev);
- 
++	if (adev->asic_type >= CHIP_NAVI10) {
++		for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
++			if (drm_atomic_crtc_needs_modeset(new_crtc_state)) {
++				ret = add_affected_mst_dsc_crtcs(state, crtc);
++				if (ret)
++					goto fail;
++			}
++		}
++	}
++
+ 	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
+ 		if (!drm_atomic_crtc_needs_modeset(new_crtc_state) &&
+ 		    !new_crtc_state->color_mgmt_changed &&
 -- 
 2.25.1
 
