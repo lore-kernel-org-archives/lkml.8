@@ -5,49 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82638C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F329BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0C12064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD822064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:47:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975272;
-	bh=mPEqlj27l02zl4hF8/RWJWTcIbCMhAiGMGRoFN0XgXQ=;
+	s=default; t=1598975275;
+	bh=Hy/SOJSKymP9hZrqWCp1kQC+Gkk7VLhfV597FCeJXOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0WZbKrIYqUO2L0fP3hoGU/yJi3+Osi8tq5gL7O+kUj96dDHVYNirsxcdjPu44gFJe
-	 JEsmy8jf6GkKGtvd5PQFOJGocf6/w8qfZud44BqpLQIaN1pJ0ZC7e649LkGDKSxV5f
-	 jhm01JO52JKHdLotoggOZWeT279wRDjJnMKcx9oY=
+	b=G3YfmPzxlQVjU7u4RbW6dTh2qKrB3dHs4dMgPVzXidfHPvM8vY1i2sGhx1BGD6rsZ
+	 P45sqKbC882C/TyHnP4fPPfrznkO+3D1HF27j0OgMq5Kkm6AMhPS17Mg7DKSOIQs9b
+	 JrU5pEu5dcZ1R3Bt068zUOxE4V0VTI3ABg1k2M0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbgIAPrv (ORCPT
+        id S1731991AbgIAPrz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:47:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59200 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:47:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59410 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731771AbgIAPoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:10 -0400
+        id S1731765AbgIAPoP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:44:15 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F37F92078B;
-        Tue,  1 Sep 2020 15:44:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 349ED2078B;
+        Tue,  1 Sep 2020 15:44:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975049;
-        bh=mPEqlj27l02zl4hF8/RWJWTcIbCMhAiGMGRoFN0XgXQ=;
+        s=default; t=1598975054;
+        bh=Hy/SOJSKymP9hZrqWCp1kQC+Gkk7VLhfV597FCeJXOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OtXe0Jk8kcOOd3JQmTFgmdPU6BwitLOAmJpxi6l6aHVDYDmSeqrwkVFoP3KvDbLIh
-         n3aGeLCK+NKNw2UmVZDz0QX4cTqpU+rXlnTInRVaorwsMJI38DrQFRbPFw7FPMW00C
-         SG02p39QQXeOd6gQPrqUIi97jD77KWJmZxyZq04A=
+        b=u1X0emPxxjJhSryCqw7LOE7TVdQ9BO8uA3+/uPhf63S7TgeGDzgMh2oXjeCOHV+k+
+         R0S9bbYvlsgbbT0TJ10BcYVjV9M2WPp3AZVD3byIP4eTgqsqKswqW7yFx4XhcN1Iv0
+         xRWLsKl53yEHmAL4eobedgBAQGoqPq2gwnIaZD58=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Shaposhnik <roman@zededa.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 5.8 190/255] XEN uses irqdesc::irq_data_common::handler_data to store a per interrupt XEN data pointer which contains XEN specific information.
-Date:   Tue,  1 Sep 2020 17:10:46 +0200
-Message-Id: <20200901151009.791345685@linuxfoundation.org>
+        stable@vger.kernel.org, JC Kuo <jckuo@nvidia.com>
+Subject: [PATCH 5.8 192/255] usb: host: xhci-tegra: otg usb2/usb3 port init
+Date:   Tue,  1 Sep 2020 17:10:48 +0200
+Message-Id: <20200901151009.888468229@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,107 +58,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: JC Kuo <jckuo@nvidia.com>
 
-commit c330fb1ddc0a922f044989492b7fcca77ee1db46 upstream.
+commit 316a2868bc269be8c6e69ccc3a1f902a3f518eb9 upstream.
 
-handler data is meant for interrupt handlers and not for storing irq chip
-specific information as some devices require handler data to store internal
-per interrupt information, e.g. pinctrl/GPIO chained interrupt handlers.
+tegra_xusb_init_usb_phy() should initialize "otg_usb2_port" and
+"otg_usb3_port" with -EINVAL because "0" is a valid value
+represents usb2 port 0 or usb3 port 0.
 
-This obviously creates a conflict of interests and crashes the machine
-because the XEN pointer is overwritten by the driver pointer.
-
-As the XEN data is not handler specific it should be stored in
-irqdesc::irq_data::chip_data instead.
-
-A simple sed s/irq_[sg]et_handler_data/irq_[sg]et_chip_data/ cures that.
-
-Cc: stable@vger.kernel.org
-Reported-by: Roman Shaposhnik <roman@zededa.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Roman Shaposhnik <roman@zededa.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/87lfi2yckt.fsf@nanos.tec.linutronix.de
-Signed-off-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: JC Kuo <jckuo@nvidia.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200811093143.699541-1-jckuo@nvidia.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/events/events_base.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/usb/host/xhci-tegra.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -156,7 +156,7 @@ int get_evtchn_to_irq(evtchn_port_t evtc
- /* Get info for IRQ */
- struct irq_info *info_for_irq(unsigned irq)
- {
--	return irq_get_handler_data(irq);
-+	return irq_get_chip_data(irq);
- }
+--- a/drivers/usb/host/xhci-tegra.c
++++ b/drivers/usb/host/xhci-tegra.c
+@@ -1258,6 +1258,8 @@ static int tegra_xusb_init_usb_phy(struc
  
- /* Constructors for packed IRQ information. */
-@@ -377,7 +377,7 @@ static void xen_irq_init(unsigned irq)
- 	info->type = IRQT_UNBOUND;
- 	info->refcnt = -1;
+ 	INIT_WORK(&tegra->id_work, tegra_xhci_id_work);
+ 	tegra->id_nb.notifier_call = tegra_xhci_id_notify;
++	tegra->otg_usb2_port = -EINVAL;
++	tegra->otg_usb3_port = -EINVAL;
  
--	irq_set_handler_data(irq, info);
-+	irq_set_chip_data(irq, info);
- 
- 	list_add_tail(&info->list, &xen_irq_list_head);
- }
-@@ -426,14 +426,14 @@ static int __must_check xen_allocate_irq
- 
- static void xen_free_irq(unsigned irq)
- {
--	struct irq_info *info = irq_get_handler_data(irq);
-+	struct irq_info *info = irq_get_chip_data(irq);
- 
- 	if (WARN_ON(!info))
- 		return;
- 
- 	list_del(&info->list);
- 
--	irq_set_handler_data(irq, NULL);
-+	irq_set_chip_data(irq, NULL);
- 
- 	WARN_ON(info->refcnt > 0);
- 
-@@ -603,7 +603,7 @@ EXPORT_SYMBOL_GPL(xen_irq_from_gsi);
- static void __unbind_from_irq(unsigned int irq)
- {
- 	evtchn_port_t evtchn = evtchn_from_irq(irq);
--	struct irq_info *info = irq_get_handler_data(irq);
-+	struct irq_info *info = irq_get_chip_data(irq);
- 
- 	if (info->refcnt > 0) {
- 		info->refcnt--;
-@@ -1108,7 +1108,7 @@ int bind_ipi_to_irqhandler(enum ipi_vect
- 
- void unbind_from_irqhandler(unsigned int irq, void *dev_id)
- {
--	struct irq_info *info = irq_get_handler_data(irq);
-+	struct irq_info *info = irq_get_chip_data(irq);
- 
- 	if (WARN_ON(!info))
- 		return;
-@@ -1142,7 +1142,7 @@ int evtchn_make_refcounted(evtchn_port_t
- 	if (irq == -1)
- 		return -ENOENT;
- 
--	info = irq_get_handler_data(irq);
-+	info = irq_get_chip_data(irq);
- 
- 	if (!info)
- 		return -ENOENT;
-@@ -1170,7 +1170,7 @@ int evtchn_get(evtchn_port_t evtchn)
- 	if (irq == -1)
- 		goto done;
- 
--	info = irq_get_handler_data(irq);
-+	info = irq_get_chip_data(irq);
- 
- 	if (!info)
- 		goto done;
+ 	for (i = 0; i < tegra->num_usb_phys; i++) {
+ 		struct phy *phy = tegra_xusb_get_phy(tegra, "usb2", i);
 
 
