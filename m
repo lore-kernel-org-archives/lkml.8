@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B91D7C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70026C28E83
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98A7620BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:18:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E57D207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973500;
-	bh=Pk1j2qWhzTS6QEG7IBMEiNngbhmF5UqUq4eXu9KMYxc=;
+	s=default; t=1598973517;
+	bh=Lryw0f1Nbw9zOBSfGU+aYbC7z1GWIMz3wMR7aAvU97E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fRDWzFvHqHgJb00nmZC+1UBmmRZvJepjV4GAycdGUgP/PyC5noCROG8BCoLlZ8J03
-	 hDRPatZZHvmppecQjq5VxxSQKJugXPowmqtoXHj5i9vZ1Vv07Fy/A1ZTTp3QaSkDM9
-	 YP0mt6TXPUVXaHxTmC9JzVr0GlhO4y6YW6iYGVic=
+	b=ideEuRE99CkA4oAOrpOx+DdWgctFbAFJDc0uHiq6JT6Yoe3PjXwa78kkXncpnONKk
+	 LHjTpyxfynmc/A4MchRUH+hamOZsRKllJOftBMLCkkxzWhWRBb2lGCfXJO4vBfHIWK
+	 3FFxLsVEKXY2mOjrCtWLvk9+AFIj/DV3cxfZBzoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729480AbgIAPST (ORCPT
+        id S1729232AbgIAPSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:18:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34226 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729004AbgIAPRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:17:03 -0400
+        id S1729397AbgIAPRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:17:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F1CD206FA;
-        Tue,  1 Sep 2020 15:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D01E820767;
+        Tue,  1 Sep 2020 15:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973422;
-        bh=Pk1j2qWhzTS6QEG7IBMEiNngbhmF5UqUq4eXu9KMYxc=;
+        s=default; t=1598973440;
+        bh=Lryw0f1Nbw9zOBSfGU+aYbC7z1GWIMz3wMR7aAvU97E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YpJKpvao3WDSxWDF3k85bRArCUboenXF6kjBBoSloRNiFbQR0pAHafgyeZrtSJik8
-         gkDOV2xkoq4J8k4fW3eckhKAEx3JaYwv9/p2XGW5/thMdhd8AXHWp/eb192XRBMto0
-         kFLabV8jyZ6oMLmZ38zcyC66EIm15o+hTVYN79N4=
+        b=qCaqX0Ok2T6tOSAVDI03qKxERsAu25x0Gogr6GEjsmvA/gWegMHPvlAQinay0RuyQ
+         teB7soXMJka9HOzsGa0oM8QimDwaQvM7X5fOv7PHwcUvxcTcximdbCzTYPpnoeLlMH
+         uissGZhuJE/EAkbafQwJDpWLYfQ5VnroEd/a/0oY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ilja Van Sprundel <ivansprundel@ioactive.com>,
-        Kees Cook <keescook@chromium.org>,
-        Brooke Basile <brookebasile@gmail.com>,
-        Felipe Balbi <balbi@kernel.org>, stable <stable@kernel.org>
-Subject: [PATCH 4.9 72/78] USB: gadget: u_f: add overflow checks to VLA macros
-Date:   Tue,  1 Sep 2020 17:10:48 +0200
-Message-Id: <20200901150928.374303683@linuxfoundation.org>
+        stable@vger.kernel.org, Roman Shaposhnik <roman@zededa.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 4.9 62/78] XEN uses irqdesc::irq_data_common::handler_data to store a per interrupt XEN data pointer which contains XEN specific information.
+Date:   Tue,  1 Sep 2020 17:10:38 +0200
+Message-Id: <20200901150927.881584554@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -62,85 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brooke Basile <brookebasile@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit b1cd1b65afba95971fa457dfdb2c941c60d38c5b upstream.
+commit c330fb1ddc0a922f044989492b7fcca77ee1db46 upstream.
 
-size can potentially hold an overflowed value if its assigned expression
-is left unchecked, leading to a smaller than needed allocation when
-vla_group_size() is used by callers to allocate memory.
-To fix this, add a test for saturation before declaring variables and an
-overflow check to (n) * sizeof(type).
-If the expression results in overflow, vla_group_size() will return SIZE_MAX.
+handler data is meant for interrupt handlers and not for storing irq chip
+specific information as some devices require handler data to store internal
+per interrupt information, e.g. pinctrl/GPIO chained interrupt handlers.
 
-Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
-Suggested-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Brooke Basile <brookebasile@gmail.com>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Cc: stable <stable@kernel.org>
+This obviously creates a conflict of interests and crashes the machine
+because the XEN pointer is overwritten by the driver pointer.
+
+As the XEN data is not handler specific it should be stored in
+irqdesc::irq_data::chip_data instead.
+
+A simple sed s/irq_[sg]et_handler_data/irq_[sg]et_chip_data/ cures that.
+
+Cc: stable@vger.kernel.org
+Reported-by: Roman Shaposhnik <roman@zededa.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Roman Shaposhnik <roman@zededa.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Link: https://lore.kernel.org/r/87lfi2yckt.fsf@nanos.tec.linutronix.de
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/u_f.h |   38 +++++++++++++++++++++++++++-----------
- 1 file changed, 27 insertions(+), 11 deletions(-)
+ drivers/xen/events/events_base.c |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/gadget/u_f.h
-+++ b/drivers/usb/gadget/u_f.h
-@@ -17,6 +17,7 @@
- #define __U_F_H__
+--- a/drivers/xen/events/events_base.c
++++ b/drivers/xen/events/events_base.c
+@@ -155,7 +155,7 @@ int get_evtchn_to_irq(unsigned evtchn)
+ /* Get info for IRQ */
+ struct irq_info *info_for_irq(unsigned irq)
+ {
+-	return irq_get_handler_data(irq);
++	return irq_get_chip_data(irq);
+ }
  
- #include <linux/usb/gadget.h>
-+#include <linux/overflow.h>
+ /* Constructors for packed IRQ information. */
+@@ -384,7 +384,7 @@ static void xen_irq_init(unsigned irq)
+ 	info->type = IRQT_UNBOUND;
+ 	info->refcnt = -1;
  
- /* Variable Length Array Macros **********************************************/
- #define vla_group(groupname) size_t groupname##__next = 0
-@@ -24,21 +25,36 @@
+-	irq_set_handler_data(irq, info);
++	irq_set_chip_data(irq, info);
  
- #define vla_item(groupname, type, name, n) \
- 	size_t groupname##_##name##__offset = ({			       \
--		size_t align_mask = __alignof__(type) - 1;		       \
--		size_t offset = (groupname##__next + align_mask) & ~align_mask;\
--		size_t size = (n) * sizeof(type);			       \
--		groupname##__next = offset + size;			       \
-+		size_t offset = 0;					       \
-+		if (groupname##__next != SIZE_MAX) {			       \
-+			size_t align_mask = __alignof__(type) - 1;	       \
-+			size_t offset = (groupname##__next + align_mask)       \
-+					 & ~align_mask;			       \
-+			size_t size = array_size(n, sizeof(type));	       \
-+			if (check_add_overflow(offset, size,		       \
-+					       &groupname##__next)) {          \
-+				groupname##__next = SIZE_MAX;		       \
-+				offset = 0;				       \
-+			}						       \
-+		}							       \
- 		offset;							       \
- 	})
+ 	list_add_tail(&info->list, &xen_irq_list_head);
+ }
+@@ -433,14 +433,14 @@ static int __must_check xen_allocate_irq
  
- #define vla_item_with_sz(groupname, type, name, n) \
--	size_t groupname##_##name##__sz = (n) * sizeof(type);		       \
--	size_t groupname##_##name##__offset = ({			       \
--		size_t align_mask = __alignof__(type) - 1;		       \
--		size_t offset = (groupname##__next + align_mask) & ~align_mask;\
--		size_t size = groupname##_##name##__sz;			       \
--		groupname##__next = offset + size;			       \
--		offset;							       \
-+	size_t groupname##_##name##__sz = array_size(n, sizeof(type));	        \
-+	size_t groupname##_##name##__offset = ({			        \
-+		size_t offset = 0;						\
-+		if (groupname##__next != SIZE_MAX) {				\
-+			size_t align_mask = __alignof__(type) - 1;		\
-+			size_t offset = (groupname##__next + align_mask)	\
-+					 & ~align_mask;				\
-+			if (check_add_overflow(offset, groupname##_##name##__sz,\
-+							&groupname##__next)) {	\
-+				groupname##__next = SIZE_MAX;			\
-+				offset = 0;					\
-+			}							\
-+		}								\
-+		offset;								\
- 	})
+ static void xen_free_irq(unsigned irq)
+ {
+-	struct irq_info *info = irq_get_handler_data(irq);
++	struct irq_info *info = irq_get_chip_data(irq);
  
- #define vla_ptr(ptr, groupname, name) \
+ 	if (WARN_ON(!info))
+ 		return;
+ 
+ 	list_del(&info->list);
+ 
+-	irq_set_handler_data(irq, NULL);
++	irq_set_chip_data(irq, NULL);
+ 
+ 	WARN_ON(info->refcnt > 0);
+ 
+@@ -610,7 +610,7 @@ EXPORT_SYMBOL_GPL(xen_irq_from_gsi);
+ static void __unbind_from_irq(unsigned int irq)
+ {
+ 	int evtchn = evtchn_from_irq(irq);
+-	struct irq_info *info = irq_get_handler_data(irq);
++	struct irq_info *info = irq_get_chip_data(irq);
+ 
+ 	if (info->refcnt > 0) {
+ 		info->refcnt--;
+@@ -1114,7 +1114,7 @@ int bind_ipi_to_irqhandler(enum ipi_vect
+ 
+ void unbind_from_irqhandler(unsigned int irq, void *dev_id)
+ {
+-	struct irq_info *info = irq_get_handler_data(irq);
++	struct irq_info *info = irq_get_chip_data(irq);
+ 
+ 	if (WARN_ON(!info))
+ 		return;
+@@ -1148,7 +1148,7 @@ int evtchn_make_refcounted(unsigned int
+ 	if (irq == -1)
+ 		return -ENOENT;
+ 
+-	info = irq_get_handler_data(irq);
++	info = irq_get_chip_data(irq);
+ 
+ 	if (!info)
+ 		return -ENOENT;
+@@ -1176,7 +1176,7 @@ int evtchn_get(unsigned int evtchn)
+ 	if (irq == -1)
+ 		goto done;
+ 
+-	info = irq_get_handler_data(irq);
++	info = irq_get_chip_data(irq);
+ 
+ 	if (!info)
+ 		goto done;
 
 
