@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE491C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C4DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A430206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CFEB206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977686;
-	bh=kPvXC1q2GmkliQciWKKb/LdEJYKqO3ID4Wsv5KP+0Z4=;
+	s=default; t=1598977692;
+	bh=NaOaH8glx58DCiI54aiOO/XM6TC+fQSKdJlxtVmi+T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cBc8ujlf83syBxvOx3M+EBOKKNQE/PSKWph83HWiWhK1uJPPWJ5XdkJDzl/Hem5/2
-	 yOLYmadNSrSGjZQvy/3yrC3LUgxFVa/jPHPSKoOUL9BzIYB8Eq9uCjdtfYYQskHKbv
-	 gnUn0P+L4fmaMYsIIsxB5YMATXxzxJyRxHBLrRUc=
+	b=vBtM3mX5G0vvUAAFRY+S7O2OozHe6fnf+0F39aB4FcL6GRx5iN/XY8PYxTwVRVGmj
+	 /K2wI3rhe+n5RzLiMJfDS/Och7utEidlgh4UeLk2Pr6+7x43BrI8IzOWN/s59Oz8aK
+	 0Lujo1dv4SrPz2epoIpoX4Wz4x/1aqpmGqffUu24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730851AbgIAPcC (ORCPT
+        id S1730844AbgIAPcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 1 Sep 2020 11:32:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:59588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730567AbgIAP35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:29:57 -0400
+        id S1730556AbgIAP3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:51 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AB752078B;
-        Tue,  1 Sep 2020 15:29:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92BD52158C;
+        Tue,  1 Sep 2020 15:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974197;
-        bh=kPvXC1q2GmkliQciWKKb/LdEJYKqO3ID4Wsv5KP+0Z4=;
+        s=default; t=1598974190;
+        bh=NaOaH8glx58DCiI54aiOO/XM6TC+fQSKdJlxtVmi+T8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FJOAwYpX/aj79Ax9quO/wk+jbX60ITBMR5GJTGf8/Zmyebw7RfCeoSRvNcG/M156y
-         9wOvwZJ5X1OYssld/lPfJaEMTmuf+OwHaG+oger94G3jYgqCRqVdei4itoTOwkwXzs
-         FSUp5D67D6gk+bChaFB7sPA4/Z8sfcFKqar1qWZY=
+        b=vHJbwauFp6DyeJL6Mqa8P7dxowf42+yUnUzMOC0xZNKQfvcoS2mSIWLqffxCIjJtF
+         hQg0ClkiypekKAEiIH2JmUXchYZUKi4graqWXyWtZu05P8IEhSCQjZJgv8JKe8YXVO
+         FQsgwkToSYu4lV4XqQG3/d0E9ACZUl/MhQIl0vu0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>, Yue Hu <huyue2@yulong.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Ryohei Suzuki <ryh.szk.cmnty@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Doug Berger <opendmb@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 082/214] mm/cma.c: switch to bitmap_zalloc() for cma bitmap allocation
-Date:   Tue,  1 Sep 2020 17:09:22 +0200
-Message-Id: <20200901150956.926570179@linuxfoundation.org>
+Subject: [PATCH 5.4 079/214] btrfs: only commit delayed items at fsync if we are logging a directory
+Date:   Tue,  1 Sep 2020 17:09:19 +0200
+Message-Id: <20200901150956.768833483@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -68,59 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfeng Ye <yeyunfeng@huawei.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit 2184f9928ab52f26c2ae5e9ba37faf29c78f50b8 ]
+[ Upstream commit 5aa7d1a7f4a2f8ca6be1f32415e9365d026e8fa7 ]
 
-kzalloc() is used for cma bitmap allocation in cma_activate_area(),
-switch to bitmap_zalloc() for clarity.
+When logging an inode we are committing its delayed items if either the
+inode is a directory or if it is a new inode, created in the current
+transaction.
 
-Link: http://lkml.kernel.org/r/895d4627-f115-c77a-d454-c0a196116426@huawei.com
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Yue Hu <huyue2@yulong.com>
-Cc: Peng Fan <peng.fan@nxp.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Ryohei Suzuki <ryh.szk.cmnty@gmail.com>
-Cc: Andrey Konovalov <andreyknvl@google.com>
-Cc: Doug Berger <opendmb@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+We need to do it for directories, since new directory indexes are stored
+as delayed items of the inode and when logging a directory we need to be
+able to access all indexes from the fs/subvolume tree in order to figure
+out which index ranges need to be logged.
+
+However for new inodes that are not directories, we do not need to do it
+because the only type of delayed item they can have is the inode item, and
+we are guaranteed to always log an up to date version of the inode item:
+
+*) for a full fsync we do it by committing the delayed inode and then
+   copying the item from the fs/subvolume tree with
+   copy_inode_items_to_log();
+
+*) for a fast fsync we always log the inode item based on the contents of
+   the in-memory struct btrfs_inode. We guarantee this is always done since
+   commit e4545de5b035c7 ("Btrfs: fix fsync data loss after append write").
+
+So stop running delayed items for a new inodes that are not directories,
+since that forces committing the delayed inode into the fs/subvolume tree,
+wasting time and adding contention to the tree when a full fsync is not
+required. We will only do it in case a fast fsync is needed.
+
+This patch is part of a series that has the following patches:
+
+1/4 btrfs: only commit the delayed inode when doing a full fsync
+2/4 btrfs: only commit delayed items at fsync if we are logging a directory
+3/4 btrfs: stop incremening log_batch for the log root tree when syncing log
+4/4 btrfs: remove no longer needed use of log_writers for the log root tree
+
+After the entire patchset applied I saw about 12% decrease on max latency
+reported by dbench. The test was done on a qemu vm, with 8 cores, 16Gb of
+ram, using kvm and using a raw NVMe device directly (no intermediary fs on
+the host). The test was invoked like the following:
+
+  mkfs.btrfs -f /dev/sdk
+  mount -o ssd -o nospace_cache /dev/sdk /mnt/sdk
+  dbench -D /mnt/sdk -t 300 8
+  umount /mnt/dsk
+
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/cma.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/btrfs/tree-log.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/mm/cma.c b/mm/cma.c
-index 7fe0b8356775f..be55d1988c675 100644
---- a/mm/cma.c
-+++ b/mm/cma.c
-@@ -95,13 +95,11 @@ static void cma_clear_bitmap(struct cma *cma, unsigned long pfn,
- 
- static int __init cma_activate_area(struct cma *cma)
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index 0525b191843e1..709026698d915 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -5147,7 +5147,6 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
+ 			   const loff_t end,
+ 			   struct btrfs_log_ctx *ctx)
  {
--	int bitmap_size = BITS_TO_LONGS(cma_bitmap_maxno(cma)) * sizeof(long);
- 	unsigned long base_pfn = cma->base_pfn, pfn = base_pfn;
- 	unsigned i = cma->count >> pageblock_order;
- 	struct zone *zone;
+-	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct btrfs_path *path;
+ 	struct btrfs_path *dst_path;
+ 	struct btrfs_key min_key;
+@@ -5190,15 +5189,17 @@ static int btrfs_log_inode(struct btrfs_trans_handle *trans,
+ 	max_key.offset = (u64)-1;
  
--	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
--
-+	cma->bitmap = bitmap_zalloc(cma_bitmap_maxno(cma), GFP_KERNEL);
- 	if (!cma->bitmap) {
- 		cma->count = 0;
- 		return -ENOMEM;
-@@ -139,7 +137,7 @@ static int __init cma_activate_area(struct cma *cma)
- 
- not_in_zone:
- 	pr_err("CMA area %s could not be activated\n", cma->name);
--	kfree(cma->bitmap);
-+	bitmap_free(cma->bitmap);
- 	cma->count = 0;
- 	return -EINVAL;
- }
+ 	/*
+-	 * Only run delayed items if we are a dir or a new file.
++	 * Only run delayed items if we are a directory. We want to make sure
++	 * all directory indexes hit the fs/subvolume tree so we can find them
++	 * and figure out which index ranges have to be logged.
++	 *
+ 	 * Otherwise commit the delayed inode only if the full sync flag is set,
+ 	 * as we want to make sure an up to date version is in the subvolume
+ 	 * tree so copy_inode_items_to_log() / copy_items() can find it and copy
+ 	 * it to the log tree. For a non full sync, we always log the inode item
+ 	 * based on the in-memory struct btrfs_inode which is always up to date.
+ 	 */
+-	if (S_ISDIR(inode->vfs_inode.i_mode) ||
+-	    inode->generation > fs_info->last_trans_committed)
++	if (S_ISDIR(inode->vfs_inode.i_mode))
+ 		ret = btrfs_commit_inode_delayed_items(trans, inode);
+ 	else if (test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags))
+ 		ret = btrfs_commit_inode_delayed_inode(inode);
 -- 
 2.25.1
 
