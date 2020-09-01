@@ -2,208 +2,163 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A558C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:26:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C458BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36E8D2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF8E2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 01:29:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FDQ1rQhu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgIAB0y (ORCPT
+        id S1726204AbgIAB31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 21:26:54 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47226 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725993AbgIAB0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 21:26:53 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1453E38070FB3E0FDC7E;
-        Tue,  1 Sep 2020 09:26:51 +0800 (CST)
-Received: from [127.0.0.1] (10.65.95.32) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
- 09:26:45 +0800
-Subject: Re: [RFC PATCH v2] coresight: etm4x: Modify core-commit of cpu to
- avoid the overflow of HiSilicon ETM
-To:     Al Grant <Al.Grant@arm.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-References: <1597824397-29894-1-git-send-email-liuqi115@huawei.com>
- <20200827204426.GD22307@xps15>
- <DB7PR08MB3355B59AE058823AEE3B372E86520@DB7PR08MB3355.eurprd08.prod.outlook.com>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "coresight@lists.linaro.org" <coresight@lists.linaro.org>,
-        "linuxarm@huawei.com" <linuxarm@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mike.leach@linaro.org" <mike.leach@linaro.org>
-From:   Qi Liu <liuqi115@huawei.com>
-Message-ID: <5e10018f-bd1e-7fa5-db96-68dc88c34618@huawei.com>
-Date:   Tue, 1 Sep 2020 09:26:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 31 Aug 2020 21:29:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725987AbgIAB30 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 21:29:26 -0400
+Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C93F9C061757;
+        Mon, 31 Aug 2020 18:29:25 -0700 (PDT)
+Received: by mail-il1-x143.google.com with SMTP id h11so2873564ilj.11;
+        Mon, 31 Aug 2020 18:29:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oZzvSv3INTtQ3ilXht2L8FPuTMljS06aolPhjRvrCfY=;
+        b=FDQ1rQhukSmRUNM8XZlkAvSqe63LJVbWQ4EF3OKcMjHhJ/5WVO6w6unpV8LiaWhvmb
+         hdfyAlOhuXcfIq3DJygell1i44RaNl/xV+651kWJOzLxXT7LkzOcSHHFbBQtfKkd39Bl
+         yQ5AWXHq00gXij4C8wZ5lUOft/o6xuOh192U4/2LreYGcW0mugUyDGe9W3u/0ii5I3HS
+         Ty3+mXNg4i932k6iiDoqD3UXU8/H6P8MgCTcGuwLBZ/J8aAnesxk3wbzfjFWnKEKmwEM
+         K8kwJ7brhcWd7B+jnVCkWZ0hJjhYU80mnub0zaOytHvkrym3yMj4XCgWCQsJhsVDmLni
+         QnVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oZzvSv3INTtQ3ilXht2L8FPuTMljS06aolPhjRvrCfY=;
+        b=fleElEfn+tH2gi9QsjiMVdk2KFIeIs5oTiLCf/uC2OmA0ZwSqkidDrWmFalRgwJJLn
+         ryQ4gYz4dhSg7WFnnGnt/zBYYT2AVaWt98fdIKUFKMjBmd73U3B7YQxVZdwhpOXOunaB
+         j+qqpYaPBqN6vOvszSrW5UJ6pJLsxASWt5kYTaR2jUPZ1UI7myEQyig1I+JtbzlkrE1J
+         5vH7wqv52Y9PiKM/jWhT/ISGZAOyHfeYKhBiK177iUU+zBFyW6+cCzTBOAqIriiYpbDE
+         QZ1fczEYQPvNpVvJwwzOoWiJL6bNzNO94S1C5NMP7c0UdkoLNml4UJveOCDIo9qxpGkx
+         B/Wg==
+X-Gm-Message-State: AOAM532Y+UI3oU6xhzbRACthSEmxMM73SM2sEtghyxa6AARcWU7q2sbq
+        SwC0ewBECrUHRQcndBkNpEWhwgU1pn5MTkFgTh8=
+X-Google-Smtp-Source: ABdhPJzOSNzFPSecQoYsAY+49p7Kl4uFD1pNqj9fnvFVi9blc54Naj+ZT8YKDp98L/pB9UWEBLq/Ze60UN616hRySmc=
+X-Received: by 2002:a92:bad9:: with SMTP id t86mr3592955ill.308.1598923764953;
+ Mon, 31 Aug 2020 18:29:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <DB7PR08MB3355B59AE058823AEE3B372E86520@DB7PR08MB3355.eurprd08.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.65.95.32]
-X-CFilter-Loop: Reflected
+References: <20200824101825.4106-1-jiangshanlai@gmail.com> <CAJhGHyC1Ykq5V_2nFPLRz9JmtAiQu6aw4fCKo1LO7Qwzjvfg2g@mail.gmail.com>
+ <875z8zx8qs.fsf@vitty.brq.redhat.com>
+In-Reply-To: <875z8zx8qs.fsf@vitty.brq.redhat.com>
+From:   Lai Jiangshan <jiangshanlai@gmail.com>
+Date:   Tue, 1 Sep 2020 09:29:13 +0800
+Message-ID: <CAJhGHyCLF4+5LV8Zwu5kczL48imKPDHJKizVd+VZwVha0U8BaQ@mail.gmail.com>
+Subject: Re: [PATCH] kvm x86/mmu: use KVM_REQ_MMU_SYNC to sync when needed
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Lai Jiangshan <laijs@linux.alibaba.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        X86 ML <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        kvm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
+On Mon, Aug 31, 2020 at 9:09 PM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Lai Jiangshan <jiangshanlai@gmail.com> writes:
+>
+> > Ping @Sean Christopherson
+> >
+>
+> Let's try 'Beetlejuice' instead :-)
+>
+> > On Mon, Aug 24, 2020 at 5:18 PM Lai Jiangshan <jiangshanlai@gmail.com> wrote:
+> >>
+> >> From: Lai Jiangshan <laijs@linux.alibaba.com>
+> >>
+> >> 8c8560b83390("KVM: x86/mmu: Use KVM_REQ_TLB_FLUSH_CURRENT for MMU specific flushes)
+> >> changed it without giving any reason in the changelog.
+> >>
+> >> In theory, the syncing is needed, and need to be fixed by reverting
+> >> this part of change.
+>
+> Even if the original commit is not wordy enough this is hardly
+> better.
 
-On 2020/8/28 17:00, Al Grant wrote:
-> Hi Mathieu and CS maintainers,
->
->> Hi Liu,
->>
->> On Wed, Aug 19, 2020 at 04:06:37PM +0800, Qi Liu wrote:
->>> When too much trace information is generated on-chip, the ETM will
->>> overflow, and cause data loss. This is a common phenomenon on ETM
->>> devices.
->>>
->>> But sometimes we do not want to lose performance trace data, so we
->>> suppress the speed of instructions sent from CPU core to ETM to avoid
->>> the overflow of ETM.
->>>
->>> Signed-off-by: Qi Liu <liuqi115@huawei.com>
->>> ---
->>>
->>> Changes since v1:
->>> - ETM on HiSilicon Hip09 platform supports backpressure, so does not
->>> need to modify core commit.
->>>
->>>  drivers/hwtracing/coresight/coresight-etm4x.c | 43
->>> +++++++++++++++++++++++++++
->>>  1 file changed, 43 insertions(+)
->>>
->>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c
->>> b/drivers/hwtracing/coresight/coresight-etm4x.c
->>> index 7797a57..7641f89 100644
->>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
->>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
->>> @@ -43,6 +43,10 @@ MODULE_PARM_DESC(boot_enable, "Enable tracing
->> on boot");
->>>  #define PARAM_PM_SAVE_NEVER	  1 /* never save any state */
->>>  #define PARAM_PM_SAVE_SELF_HOSTED 2 /* save self-hosted state only */
->>>
->>> +#define CORE_COMMIT_CLEAR	0x3000
->>> +#define CORE_COMMIT_SHIFT	12
->>> +#define HISI_ETM_AMBA_ID_V1	0x000b6d01
->>> +
->>>  static int pm_save_enable = PARAM_PM_SAVE_FIRMWARE;
->>> module_param(pm_save_enable, int, 0444);
->>> MODULE_PARM_DESC(pm_save_enable, @@ -104,11 +108,40 @@ struct
->>> etm4_enable_arg {
->>>  	int rc;
->>>  };
->>>
->>> +static void etm4_cpu_actlr1_cfg(void *info) {
->>> +	struct etm4_enable_arg *arg = (struct etm4_enable_arg *)info;
->>> +	u64 val;
->>> +
->>> +	asm volatile("mrs %0,s3_1_c15_c2_5" : "=r"(val));
->>> +	val &= ~CORE_COMMIT_CLEAR;
->>> +	val |= arg->rc << CORE_COMMIT_SHIFT;
->>> +	asm volatile("msr s3_1_c15_c2_5,%0" : : "r"(val)); }
->>> +
->>> +static void etm4_config_core_commit(int cpu, int val) {
->>> +	struct etm4_enable_arg arg = {0};
->>> +
->>> +	arg.rc = val;
->>> +	smp_call_function_single(cpu, etm4_cpu_actlr1_cfg, &arg, 1);
->> Function etm4_enable/disable_hw() are already running on the CPU they are
->> supposed to so no need to call smp_call_function_single().
->>
->>> +}
->>> +
->>>  static int etm4_enable_hw(struct etmv4_drvdata *drvdata)  {
->>>  	int i, rc;
->>> +	struct amba_device *adev;
->>>  	struct etmv4_config *config = &drvdata->config;
->>>  	struct device *etm_dev = &drvdata->csdev->dev;
->>> +	struct device *dev = drvdata->csdev->dev.parent;
->>> +
->>> +	adev = container_of(dev, struct amba_device, dev);
->>> +	/*
->>> +	 * If ETM device is HiSilicon ETM device, reduce the
->>> +	 * core-commit to avoid ETM overflow.
->>> +	 */
->>> +	if (adev->periphid == HISI_ETM_AMBA_ID_V1)
->> Do you have any documentation on this back pressure feature?  I doubt this is
->> specific to Hip09 platform and as such would prefer to have a more generic
->> approach that works on any platform that supports it.
-> It's not a standard Arm architecture feature, this is a model-specific register.
-> Some cores may be able to throttle throughput under user control,
-> but this isn't standardized. It may (as in this case) be something that you
-> want to enable whenever you enable ETM - and, I guess, disable whenever
-> you disable ETM. It's a bit unclean to have model-specific code in the main
-> ETM driver, and names like CORE_COMMIT_CLEAR really ought to be more
-> specific, but I don't see that it's more ugly than the model-specific code in
-> e.g. arch/arm64/kernel/perf_event.c or its equivalent on other architectures.
-Thanks for the review. 
-Yes, this core commit is a specific feature to reduce commit rate and let ETM keep up
-with core pipeline. Considering this, I'll change a more specific name for the macro
-definition and send a new version.
+Hello,
+Thank you for reviewing it.
 
-Qi
-> Ideally, a core that has an inherent difficulty generating ETM at full speed,
-> i.e. where the ETM can't keep up with the core pipeline, would reduce
-> commit rate automatically, and some already do. So if this core needs it
-> to be done manually via a system register, we might allow that in the
-> same way as we might allow other core-specific actions that need to be
-> done to enable ETM.
->
-> There are of course issues with trace overflow at all stages up to and
-> including harvesting trace from buffers into perf.data (for which solutions
-> might involve DVFS, trace strobing, scheduling etc.), and I am assuming
-> this patch is not addressing those but dealing with a very specific concern
-> about overflow within the core and its ETM.
->
-> Al
->
->
->> Anyone on the CS mailing list that knows what this is about?
->>
->> Thanks,
->> Mathieu
->>
->>> +		etm4_config_core_commit(drvdata->cpu, 1);
->>>
->>>  	CS_UNLOCK(drvdata->base);
->>>
->>> @@ -472,10 +505,20 @@ static void etm4_disable_hw(void *info)  {
->>>  	u32 control;
->>>  	struct etmv4_drvdata *drvdata = info;
->>> +	struct device *dev = drvdata->csdev->dev.parent;
->>>  	struct etmv4_config *config = &drvdata->config;
->>>  	struct device *etm_dev = &drvdata->csdev->dev;
->>> +	struct amba_device *adev;
->>>  	int i;
->>>
->>> +	adev = container_of(dev, struct amba_device, dev);
->>> +	/*
->>> +	 * If ETM device is HiSilicon ETM device, resume the
->>> +	 * core-commit after ETM trace is complete.
->>> +	 */
->>> +	if (adev->periphid == HISI_ETM_AMBA_ID_V1)
->>> +		etm4_config_core_commit(drvdata->cpu, 0);
->>> +
->>>  	CS_UNLOCK(drvdata->base);
->>>
->>>  	if (!drvdata->skip_power_up) {
->>> --
->>> 2.8.1
->>>
->> _______________________________________________
->> CoreSight mailing list
->> CoreSight@lists.linaro.org
->> https://lists.linaro.org/mailman/listinfo/coresight
+I'm sorry that when I said "reverting this part of change",
+I meant "reverting this line of code". This line of code itself
+is quite clear that it is not related to the original commit
+according to its changelog.
 
+> Are you seeing a particular scenario when a change in current
+> vCPU's MMU requires flushing TLB entries for *other* contexts, ... (see
+> below)
 
+So I don't think the patch needs to explain this because the patch
+does not change/revert anything about it.
+
+Anyway, using a "revert" in the changelog is misleading, when it
+is not really reverting the whole targeted commit. I would
+remove this wording.
+
+For the change in my patch, when kvm_mmu_get_page() gets a
+page with unsync children, the host side pagetable is
+unsynchronized with the guest side pagedtable, and the
+guest might not issue a "flush" operation on it. It is
+all about the host's emulation of the pagetable. So the host
+has the responsibility to synchronize the pagetables.
+
+Thanks
+Lai
+
+> >>
+> >> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+> >> ---
+> >>  arch/x86/kvm/mmu/mmu.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+> >> index 4e03841f053d..9a93de921f2b 100644
+> >> --- a/arch/x86/kvm/mmu/mmu.c
+> >> +++ b/arch/x86/kvm/mmu/mmu.c
+> >> @@ -2468,7 +2468,7 @@ static struct kvm_mmu_page *kvm_mmu_get_page(struct kvm_vcpu *vcpu,
+> >>                 }
+> >>
+> >>                 if (sp->unsync_children)
+> >> -                       kvm_make_request(KVM_REQ_TLB_FLUSH_CURRENT, vcpu);
+> >> +                       kvm_make_request(KVM_REQ_MMU_SYNC, vcpu);
+>
+> ... in particular, why are you reverting only this hunk? Please elaborate.
+>
+> >>
+> >>                 __clear_sp_write_flooding_count(sp);
+> >>
+> >> --
+> >> 2.19.1.6.gb485710b
+> >>
+> >
+>
+> --
+> Vitaly
+>
