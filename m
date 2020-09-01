@@ -2,109 +2,127 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7913CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1878AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56718206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA01B206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727792AbgIANdx (ORCPT
+        id S1728231AbgIANcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:33:53 -0400
-Received: from elvis.franken.de ([193.175.24.41]:45627 "EHLO elvis.franken.de"
+        Tue, 1 Sep 2020 09:32:43 -0400
+Received: from mga12.intel.com ([192.55.52.136]:45739 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728129AbgIANby (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:31:54 -0400
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1kD6NY-0001cg-00; Tue, 01 Sep 2020 15:31:16 +0200
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id A31F7C0E44; Tue,  1 Sep 2020 15:29:05 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 15:29:05 +0200
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Joonyoung Shim <jy0922.shim@samsung.com>,
-        Seung-Woo Kim <sw0312.kim@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        Pawel Osciak <pawel@osciak.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Matt Porter <mporter@kernel.crashing.org>,
-        iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        nouveau@lists.freedesktop.org, netdev@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-scsi@vger.kernel.org,
-        linux-mm@kvack.org, alsa-devel@alsa-project.org
-Subject: Re: [PATCH 06/28] lib82596: move DMA allocation into the callers of
- i82596_probe
-Message-ID: <20200901132905.GA11506@alpha.franken.de>
-References: <20200819065555.1802761-1-hch@lst.de>
- <20200819065555.1802761-7-hch@lst.de>
+        id S1727930AbgIANbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:31:44 -0400
+IronPort-SDR: wUNd+JOqiJ8eiDvFzP4qwfJ6RfzN0l2DRRinJvo5GqLck4AU3mD3gBCDFQNgkexBegw4sLeBE9
+ gCbyOr1qZozA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="136681369"
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="136681369"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 06:31:22 -0700
+IronPort-SDR: AGXl7TqFyYMzY+0nDQFWipcPsAWD9PripkK5s9uET5CINDhTMhqK+2b+R0jdg2W+iA9o5DbvLv
+ ExDHSdugl+QA==
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="446127414"
+Received: from dlabricc-mobl.amr.corp.intel.com (HELO [10.212.239.51]) ([10.212.239.51])
+  by orsmga004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 06:31:21 -0700
+Subject: Re: [PATCH 09/11] soundwire: intel: add dynamic debug trace for
+ clock-stop invalid configs
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com, sanyog.r.kale@intel.com,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200829110047.GC2639@vkoul-mobl>
+ <051afb2d-dd2e-0ea4-d8a9-980f5df136b7@linux.intel.com>
+ <20200901110716.GA2639@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <101ce54e-a368-d25f-c849-48aeb2bc14c0@linux.intel.com>
+Date:   Tue, 1 Sep 2020 08:31:19 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200819065555.1802761-7-hch@lst.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200901110716.GA2639@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Aug 19, 2020 at 08:55:33AM +0200, Christoph Hellwig wrote:
-> This allows us to get rid of the LIB82596_DMA_ATTR defined and prepare
-> for untangling the coherent vs non-coherent DMA allocation API.
+
+
+On 9/1/20 6:07 AM, Vinod Koul wrote:
+> On 31-08-20, 10:15, Pierre-Louis Bossart wrote:
+>>
+>>>>>>>> Detect cases where the clock is assumed to be stopped but the IP is
+>>>>>>>> not in the relevant state, and add a dynamic debug trace.
+>>>>>>>
+>>>>>>> you meant a debug print..and it looks like error print below (also in title).
+>>>>>>
+>>>>>> I don't understand the comment. Is the 'trace' confusing and are you asking
+>>>>>> to e.g. change the commit message to 'add dynamic debug log'?
+>>>>>
+>>>>> Question is what is dynamic about this?
+>>>> dev_dbg() is part of the kernel dynamic debug capability...
+>>>>
+>>>> https://www.kernel.org/doc/html/latest/admin-guide/dynamic-debug-howto.html
+>>>>
+>>>> Not sure what you are asking here?
+>>>
+>>> :-| where is dev_dbg() ?
+>>>
+>>> See [1]
+>>
+>>>
+>>> [1]
+>>>
+>>>> +			dev_err(dev, "%s invalid configuration, clock was not stopped", __func__);
+>>>
+>>>                           ^^^^^^^
+>>
+>> it's still a log using the "dynamic debug" framework.
+>>
+>> Again, what are you asking us to fix?
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/net/ethernet/i825xx/lasi_82596.c | 24 ++++++++++------
->  drivers/net/ethernet/i825xx/lib82596.c   | 36 ++++++++----------------
->  drivers/net/ethernet/i825xx/sni_82596.c  | 19 +++++++++----
->  3 files changed, 40 insertions(+), 39 deletions(-)
+> Ah you are really testing my patience!
+
+I was asking a question, not making a statement.
+
+There is no need to blow a fuse or yell via exclamation marks at people 
+who provide 90% of the patches for the subsystem you maintain, or 
+provide fixes for your own patches.
+
+> The title says "dynamic debug" and then you use a dev_err which is *not*
+> part of dynamic debug as it is printed always and cannot be dynamically
+> enabled and disabled!
+
+I accept the argument, I just didn't understand what the issue was.
+
+> See Documentation/admin-guide/dynamic-debug-howto.rst:
 > 
-> [...]
-> diff --git a/drivers/net/ethernet/i825xx/sni_82596.c b/drivers/net/ethernet/i825xx/sni_82596.c
-> index 22f5887578b2bd..e80e790ffbd4d4 100644
-> --- a/drivers/net/ethernet/i825xx/sni_82596.c
-> +++ b/drivers/net/ethernet/i825xx/sni_82596.c
-> @@ -24,8 +24,6 @@
->  
->  static const char sni_82596_string[] = "snirm_82596";
->  
-> -#define LIB82596_DMA_ATTR	0
-> -
->  #define DMA_WBACK(priv, addr, len)     do { } while (0)
->  #define DMA_INV(priv, addr, len)       do { } while (0)
->  #define DMA_WBACK_INV(priv, addr, len) do { } while (0)
-> @@ -134,10 +132,19 @@ static int sni_82596_probe(struct platform_device *dev)
->  	lp->ca = ca_addr;
->  	lp->mpu_port = mpu_addr;
->  
-> +	lp->dma = dma_alloc_coherent(dev->dev.parent, sizeof(struct i596_dma),
-> +				     &lp->dma_addr, GFP_KERNEL);
+> "Dynamic debug is designed to allow you to dynamically enable/disable
+> kernel code to obtain additional kernel information.  Currently, if
+> ``CONFIG_DYNAMIC_DEBUG`` is set, then all ``pr_debug()``/``dev_dbg()`` and
+> ``print_hex_dump_debug()``/``print_hex_dump_bytes()`` calls can be dynamically
+> enabled per-callsite."
+> 
+> No dev_err here!
 
-this needs to use &dev->dev as device argument otherwise I get a
+ok, so we will change the title to 'soundwire: intel: add error log for 
+clock-stop invalid config'.
 
-WARNING: CPU: 0 PID: 1 at linux/kernel/dma/mapping.c:416 dma_alloc_attrs+0x64/0x98
-
-(coherent_dma_mask is set correctly).
-
-dev->dev.parent was correct when going from netdevice to underlying device,
-but now allocation is done via platform_device probe. I wonder why this works
-for parisc.
-
-Thomas.
-
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Thanks
+-Pierre
