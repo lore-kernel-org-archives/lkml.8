@@ -2,137 +2,99 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F188FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A84DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:34:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CB2207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8712065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:34:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978083;
-	bh=DcBlB18rbAsmyBD9sb9dDR94iJ5BAmzF5Xo0e4RxksY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=lOfaUzT5etcNkap9YwFanvpbySdMwUDNofHxJxzGPYRwFJ8KTPhpry8yxdu4H5hLg
-	 Ypjs/74im2VXTC9ZlIfeCrCqjB+7R3cRJGqKXdD0CFmfg0faMA+2m7ecYQ5Sx5I30U
-	 XxiiBY3mxRbBP3vnlfVV03UyYUIuI8HV8nO+P7Xw=
+	s=default; t=1598978089;
+	bh=fbGa6hXFYDUx0qQvVLBElXseSMxRIENuGCkKMVoNJdE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=O1pIoHk+0CN3OP18rO+gZICwd89G3jmLIEn3nAkhTai40OAznQstCNhArdrAGz61Y
+	 lLS596rXc3lya2SUev0pmIPtEVBq1nUENB1095RFiz+yLyOsv9DJ0U4l7IkTNwhYB7
+	 xmbmI7DVoIFucRy+PlRm+uY7BJKyECx5JHyEVXP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730862AbgIAQed (ORCPT
+        id S1730651AbgIAPbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:34:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33878 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53748 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730671AbgIAPbK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:31:10 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730149AbgIAP1K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:10 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B96C21527;
-        Tue,  1 Sep 2020 15:31:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 40D83206FA;
+        Tue,  1 Sep 2020 15:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974269;
-        bh=DcBlB18rbAsmyBD9sb9dDR94iJ5BAmzF5Xo0e4RxksY=;
-        h=From:To:Cc:Subject:Date:From;
-        b=sBJjxRcFa7GzT6SamUEOBeBB4W2Ofp99PojRb8SLlckVfMyokPt9uatH0MnbBHXpD
-         E8Z30W3gjJKJ6u338nbOuu0x4gUCBRo2RSLnm9eEEDESkEIjVomd8K6GYBjLpdEsuM
-         NxbukGKI9+I10NsKUnvx2pFV+yCHg7r7Zm3Assm8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Lukas Wunner <lukas@wunner.de>, linux-serial@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/2] serial: 8250: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 17:30:59 +0200
-Message-Id: <20200901153100.18827-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1598974029;
+        bh=fbGa6hXFYDUx0qQvVLBElXseSMxRIENuGCkKMVoNJdE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZPOlqkCsxnxL4S/AgjTFEoDeFgBAmjbCvVpjaHK+CA4IYmDVFjK+nuest6z6J1JnT
+         pmsiHspjB9IjqdXA49u/lzvlG8h4Eo10nLDFqoigW0y2R0Y3WxkY889sh4Y0v1TOrA
+         p1IJR0PpsDG8OhJyMbcmd0BCWq3n9av5chEgXwJQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 017/214] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
+Date:   Tue,  1 Sep 2020 17:08:17 +0200
+Message-Id: <20200901150953.793095535@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+From: Qiushi Wu <wu000273@umn.edu>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
+
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code, causing incorrect ref count if
+pm_runtime_put_noidle() is not called in error handling paths.
+Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_bcm2835aux.c | 12 +++---------
- drivers/tty/serial/8250/8250_ingenic.c    | 20 ++++++--------------
- 2 files changed, 9 insertions(+), 23 deletions(-)
+ sound/soc/img/img-i2s-in.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
-index 12d03e678295..fd95860cd661 100644
---- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-+++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-@@ -110,12 +110,8 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
+diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
+index 869fe0068cbd3..bb668551dd4b2 100644
+--- a/sound/soc/img/img-i2s-in.c
++++ b/sound/soc/img/img-i2s-in.c
+@@ -343,8 +343,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
  
- 	/* get the clock - this also enables the HW */
- 	data->clk = devm_clk_get(&pdev->dev, NULL);
--	ret = PTR_ERR_OR_ZERO(data->clk);
--	if (ret) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev, "could not get clk: %d\n", ret);
--		return ret;
--	}
-+	if (IS_ERR(data->clk))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(data->clk), "could not get clk\n");
+ 	ret = pm_runtime_get_sync(i2s->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(i2s->dev);
+ 		return ret;
++	}
  
- 	/* get the interrupt */
- 	ret = platform_get_irq(pdev, 0);
-@@ -155,9 +151,7 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
- 	/* register the port */
- 	ret = serial8250_register_8250_port(&up);
- 	if (ret < 0) {
--		if (ret != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"unable to register 8250 port - %d\n", ret);
-+		dev_err_probe(&pdev->dev, ret, "unable to register 8250 port\n");
- 		goto dis_clk;
- 	}
- 	data->line = ret;
-diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
-index dde766fa465f..988bf6bcce42 100644
---- a/drivers/tty/serial/8250/8250_ingenic.c
-+++ b/drivers/tty/serial/8250/8250_ingenic.c
-@@ -259,22 +259,14 @@ static int ingenic_uart_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	data->clk_module = devm_clk_get(&pdev->dev, "module");
--	if (IS_ERR(data->clk_module)) {
--		err = PTR_ERR(data->clk_module);
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"unable to get module clock: %d\n", err);
--		return err;
--	}
-+	if (IS_ERR(data->clk_module))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(data->clk_module),
-+				     "unable to get module clock\n");
- 
- 	data->clk_baud = devm_clk_get(&pdev->dev, "baud");
--	if (IS_ERR(data->clk_baud)) {
--		err = PTR_ERR(data->clk_baud);
--		if (err != -EPROBE_DEFER)
--			dev_err(&pdev->dev,
--				"unable to get baud clock: %d\n", err);
--		return err;
--	}
-+	if (IS_ERR(data->clk_baud))
-+		return dev_err_probe(&pdev->dev, PTR_ERR(data->clk_baud),
-+				     "unable to get baud clock\n");
- 
- 	err = clk_prepare_enable(data->clk_module);
- 	if (err) {
+ 	for (i = 0; i < i2s->active_channels; i++)
+ 		img_i2s_in_ch_disable(i2s, i);
 -- 
-2.17.1
+2.25.1
+
+
 
