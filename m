@@ -2,137 +2,151 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEB97C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE276C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:49:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC54E207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:49:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B2E207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:49:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598982581;
+	bh=EQLNAMxkmTDyb5sNsTlYm1ZYeU+slvP9jlY01JuWhxE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=HrAuzLMH7TKhdISJAKLIe9V9eVXcOgZSJ08oAHhWQE2Kouq0pgmkUJs71A9u8zVya
+	 ctgCx2UT2/VTA4iRuOg3gj7OtvrvZ4PGOFEnyq2CbofE8rzsyoxSTJ7vGyniJwDM1u
+	 Lp18j3Iqf1AGntlsi6q2fMu97Y5Kw/wNx4S7T4bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbgIARtK (ORCPT
+        id S1728758AbgIARtk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:49:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:25772 "EHLO mga01.intel.com"
+        Tue, 1 Sep 2020 13:49:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726102AbgIARtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:49:05 -0400
-IronPort-SDR: 8xYUkwzS5RGQxRNpzA4TfvXqpHFnHkKLean5tJoO5sRxZnFGn4UFyrIEqJvjS6r++DOKZszxTU
- O0uiuVpY2hsA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="175279019"
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="175279019"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:49:04 -0700
-IronPort-SDR: r00JZG/t68wMPpNfXe75+DLGZCVTowqwBSk2AwAfB6zDiW3JoLhHW2vWrhS7SndNyloTjPKNse
- 74BX/suNlhDg==
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="477291046"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.241.30]) ([10.212.241.30])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:49:02 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     "H.J. Lu" <hjl.tools@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
- <20200825002540.3351-26-yu-cheng.yu@intel.com>
- <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
- <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
- <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
- <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <20200826170841.GX6642@arm.com> <87tuwow7kg.fsf@oldenburg2.str.redhat.com>
- <CAMe9rOrhjLSaMNABnzd=Kp5UeVot1Qkx0_PnMng=sT+wd9Xubw@mail.gmail.com>
- <873648w6qr.fsf@oldenburg2.str.redhat.com>
- <CAMe9rOqpLyWR+Ek7aBiRY+Kr6sRxkSHAo2Sc6h0YCv3X3-3TuQ@mail.gmail.com>
- <CAMe9rOpuwZesJqY_2wYhdRXMhd7g0a+MRqPtXKh7wX5B5-OSbA@mail.gmail.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <3c12b6ee-7c93-dcf4-fbf7-2698003386dd@intel.com>
-Date:   Tue, 1 Sep 2020 10:49:01 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1728079AbgIARtj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:49:39 -0400
+Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF45F207D3;
+        Tue,  1 Sep 2020 17:49:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598982578;
+        bh=EQLNAMxkmTDyb5sNsTlYm1ZYeU+slvP9jlY01JuWhxE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=CPjMH1spEHC/EXgkSnX/sTmsb1QFWaxN618Ysa6Es7zmc7gHFLbijarh3EehqAsDa
+         sm3iQsk0HTNdqAUwdNZx/w4X2MZ2EptSvFq0BKPPmTZJ4P1e1DmI/zPwP1fddox6+Y
+         6TMScjdZvKLsB6IAgkvpj/u5Idy7DAN0xmbMwJow=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id AF1F73523091; Tue,  1 Sep 2020 10:49:38 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 10:49:38 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     peterz@infradead.org, mingo@redhat.com, will@kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Question on task_blocks_on_rt_mutex()
+Message-ID: <20200901174938.GA8158@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200831224911.GA13114@paulmck-ThinkPad-P72>
+ <20200831232130.GA28456@paulmck-ThinkPad-P72>
 MIME-Version: 1.0
-In-Reply-To: <CAMe9rOpuwZesJqY_2wYhdRXMhd7g0a+MRqPtXKh7wX5B5-OSbA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831232130.GA28456@paulmck-ThinkPad-P72>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/27/2020 7:08 AM, H.J. Lu wrote:
-> On Thu, Aug 27, 2020 at 7:07 AM H.J. Lu <hjl.tools@gmail.com> wrote:
->>
->> On Thu, Aug 27, 2020 at 6:36 AM Florian Weimer <fweimer@redhat.com> wrote:
->>>
->>> * H. J. Lu:
->>>
->>>> On Thu, Aug 27, 2020 at 6:19 AM Florian Weimer <fweimer@redhat.com> wrote:
->>>>>
->>>>> * Dave Martin:
->>>>>
->>>>>> You're right that this has implications: for i386, libc probably pulls
->>>>>> more arguments off the stack than are really there in some situations.
->>>>>> This isn't a new problem though.  There are already generic prctls with
->>>>>> fewer than 4 args that are used on x86.
->>>>>
->>>>> As originally posted, glibc prctl would have to know that it has to pull
->>>>> an u64 argument off the argument list for ARCH_X86_CET_DISABLE.  But
->>>>> then the u64 argument is a problem for arch_prctl as well.
->>>>>
->>>>
->>>> Argument of ARCH_X86_CET_DISABLE is int and passed in register.
->>>
->>> The commit message and the C source say otherwise, I think (not sure
->>> about the C source, not a kernel hacker).
->>
->> It should read:
->>
->> arch_prctl(ARCH_X86_CET_DISABLE, unsigned long features)
->>
+On Mon, Aug 31, 2020 at 04:21:30PM -0700, Paul E. McKenney wrote:
+> On Mon, Aug 31, 2020 at 03:49:11PM -0700, Paul E. McKenney wrote:
+> > Hello!
+> > 
+> > The task_blocks_on_rt_mutex() function uses rt_mutex_owner() to
+> > take a snapshot of the lock owner right up front.  At this point,
+> > the ->wait_lock is held, which at first glance prevents the owner
+> > from leaving.  Except that if there are not yet any waiters (that is,
+> > the low-order bit of ->owner is zero), rt_mutex_fastunlock() might
+> > locklessly clear the ->owner field.  And in that case, it looks like
+> > task_blocks_on_rt_mutex() will blithely continue using the ex-owner's
+> > task_struct structure, without anything that I can see that prevents
+> > the ex-owner from exiting.
+> > 
+> > What am I missing here?
 > 
-> Or
+> One thing I missed is that the low-order bit of ->owner would already
+> be set by this point.
 > 
-> arch_prctl(ARCH_X86_CET_DISABLE, unsigned int features)
+> > The reason that I am looking into this is that locktorture scenario LOCK05
+> > hangs, and does so leaving the torture_rtmutex.waiters field equal to 0x1.
+> > This is of course a legal transitional state, but I would not expect it
+> > to persist for more than three minutes.  Yet it often does.
+> > 
+> > This leads me to believe that there is a way for an unlock to fail to wake
+> > up a task concurrently acquiring the lock.  This seems to be repaired
+> > by later lock acquisitions, and in fact setting the locktorture.stutter
+> > module parameter to zero avoids the hang.  Except that I first found the
+> > above apparently unprotected access to what was recently the owner task.
+> > 
+> > Thoughts?
 > 
+> Some breakage elsewhere, presumably...
 
-Like other arch_prctl()'s, this parameter was 'unsigned long' earlier. 
-The idea was, since this arch_prctl is only implemented for the 64-bit 
-kernel, we wanted it to look as 64-bit only.  I will change it back to 
-'unsigned long'.
+And it might be a lost wakeup, given that ->locktorture_wake_up is equal
+to 1 for one of the locktorture writer tasks given the patch below.
+Yes, this is a virtual environment.  Except that none of the other
+locktorture scenarios make this happen, nor the rcutorture scenario,
+nor the scftorture scenarios.  Maybe just the wrong timing?  Who knows,
+looking further.
 
-Yu-cheng
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 93ecd93..054b6f8 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -720,6 +720,7 @@ struct task_struct {
+ 	struct list_head		rcu_node_entry;
+ 	struct rcu_node			*rcu_blocked_node;
+ #endif /* #ifdef CONFIG_PREEMPT_RCU */
++	u8				locktorture_wake_up;
+ 
+ #ifdef CONFIG_TASKS_RCU
+ 	unsigned long			rcu_tasks_nvcsw;
+diff --git a/kernel/locking/locktorture.c b/kernel/locking/locktorture.c
+index 316531d..7f183be 100644
+--- a/kernel/locking/locktorture.c
++++ b/kernel/locking/locktorture.c
+@@ -617,6 +617,7 @@ static int lock_torture_writer(void *arg)
+ 
+ 	VERBOSE_TOROUT_STRING("lock_torture_writer task started");
+ 	set_user_nice(current, MAX_NICE);
++	current->locktorture_wake_up = 0;
+ 
+ 	do {
+ 		if ((torture_random(&rand) & 0xfffff) == 0)
+@@ -635,6 +636,7 @@ static int lock_torture_writer(void *arg)
+ 		lock_is_write_held = false;
+ 		WRITE_ONCE(last_lock_release, jiffies);
+ 		cxt.cur_ops->writeunlock();
++		current->locktorture_wake_up = 0;
+ 
+ 		stutter_wait("lock_torture_writer");
+ 	} while (!torture_must_stop());
+diff --git a/kernel/locking/rtmutex.c b/kernel/locking/rtmutex.c
+index cfdd5b9..4a0b046 100644
+--- a/kernel/locking/rtmutex.c
++++ b/kernel/locking/rtmutex.c
+@@ -1053,6 +1053,7 @@ static void mark_wakeup_next_waiter(struct wake_q_head *wake_q,
+ 	 */
+ 	preempt_disable();
+ 	wake_q_add(wake_q, waiter->task);
++	waiter->task->locktorture_wake_up = 1;
+ 	raw_spin_unlock(&current->pi_lock);
+ }
+ 
