@@ -2,108 +2,159 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-18.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D579FC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A189AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEFE32071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GcLmuGSJ"
+	by mail.kernel.org (Postfix) with ESMTP id 74F212071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgIAHEC (ORCPT
+        id S1727052AbgIAHEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:04:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgIAHD7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:03:59 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4C6C0612AC
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:03:59 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id g29so204492pgl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 00:03:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=yt2/uuzJefKJes8DuYxR0BUPgeMCP8QxYbisa2vpogM=;
-        b=GcLmuGSJUeWmTAXBiL86j+aUB1GdEuPM+DXtZrMF567L9Ld8A1nbpQLTCshAzMzzqi
-         apZO6aIlaInhmpaAIHCKBTuu2lt9KXzHl3eoOMybotovWlNG169L3M4C/2yFtBPAHxDm
-         uOku83ScHQ7nSaeAuff8b8oVvo1Fu2ciMH8SI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=yt2/uuzJefKJes8DuYxR0BUPgeMCP8QxYbisa2vpogM=;
-        b=oAuEovr+Qg8ilTinEdM3yTLj5HTLROH+Jt+Qb1NnT0BLaUx4sakMbiTOz7OFgNCvRU
-         bXd6DBbuq/JS3lNh2idQ5slXLV//C2gO97Y477GM90nSQKrgj9mIvim7YKUOuJqpceRA
-         62fBLsOxUbhkUErI48/8Wv2yH1+mL5c4alXCzUFxWyeLiPl+Fl4oSqDTNhaO09ZOEtIX
-         IxQ/nNxjZ8wkyuYqC9fIf07+/YV1aNaeISfxsF0WjMwiofiNr4NNWyW6hsrzPJaAlpq1
-         oY9cBIMnd2mtR7BeZx9nr1fG+qHJ+cS0CzyAa7MRxz7Z2JCHuQpPncYh6rPNaP+4t/4b
-         8OmQ==
-X-Gm-Message-State: AOAM531mqVmqhkeDrxDy6U4Q3bPAn4PAwob3Uqjet48xcYycLMmaMkXY
-        7oWYMDpfucvDqMwyQuif7aAu+A==
-X-Google-Smtp-Source: ABdhPJw2vSZ55ft3u0C6inxDIBpYawyYF+bsrmkuFF946I/Pa+kkKz3JD1d88pKLbb743Flov3K+SQ==
-X-Received: by 2002:a63:4a1d:: with SMTP id x29mr319979pga.317.1598943837907;
-        Tue, 01 Sep 2020 00:03:57 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id hg16sm378729pjb.37.2020.09.01.00.03.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 00:03:57 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Sep 2020 03:04:13 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31873 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726122AbgIAHEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:04:11 -0400
+IronPort-SDR: ZMtPtc26BJ17MpnKYf/1RKl5SyDtCW7td/N0GiokmpGeugIH+tkfknZ12NYQH0KwceYhh5F1jY
+ uc2kbXMt+Kig==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175163124"
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="175163124"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 00:04:09 -0700
+IronPort-SDR: efF1CteDSvGUjeuCqyhMEUNm9cFV4TnP7lq8jUVXOjIXznGnws6g1EdUdV4PMWcoPSQL7jVqCX
+ 5ZCmFbREJVsw==
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="502140536"
+Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 00:04:06 -0700
+Subject: Re: [LKP] Re: [rcuperf] 4e88ec4a9e:
+ UBSAN:division-overflow_in_arch/x86/include/asm/div64.h
+To:     paulmck@kernel.org, kernel test robot <lkp@intel.com>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org
+References: <20200831120122.GH4299@shao2-debian>
+ <20200831155037.GZ2855@paulmck-ThinkPad-P72>
+From:   Rong Chen <rong.a.chen@intel.com>
+Message-ID: <649fd850-602f-7f0d-d286-73a8dd88ad6d@intel.com>
+Date:   Tue, 1 Sep 2020 15:03:28 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <CAD=FV=VWrXwDwoxBK9y2ZeFEoG-edO4WktdSW0MFZLfbcS2hLQ@mail.gmail.com>
-References: <20200828170052.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid> <20200829161230.398e0051@archlinux> <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com> <20200829181754.52d3cc3b@archlinux> <CAD=FV=VWrXwDwoxBK9y2ZeFEoG-edO4WktdSW0MFZLfbcS2hLQ@mail.gmail.com>
-Subject: Re: [PATCH] iio: sx9310: Prefer async probe
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Daniel Campello <campello@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio <linux-iio@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dtor@chromium.org>
-To:     Doug Anderson <dianders@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Date:   Tue, 01 Sep 2020 00:03:55 -0700
-Message-ID: <159894383586.334488.2938301456606601581@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+In-Reply-To: <20200831155037.GZ2855@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Doug Anderson (2020-08-31 11:59:37)
-> On Sat, Aug 29, 2020 at 10:18 AM Jonathan Cameron <jic23@kernel.org> wrot=
-e:
-> > Agreed. However, I'd like a comment next to the place we turn it on
-> > saying what delays we are trying to mitigate by enabling it in this
-> > driver.
->=20
-> OK, I used function graph to get a trace.  Some of the time is simply
-> i2c transfers, which we do A LOT of during initialization (and i2c
-> transfers aren't known for being instant).  However, that's not the
-> big problem.  Check out the regmap_read_poll_timeout() in
-> sx9310_init_compensation().  20 ms per sleep with a 2 second timeout.
-> This seems to eat over around 220 ms of the time on my system.
->=20
-> So how do you want to do this?  Do you want me to re-post the patch
-> and mention the regmap_read_poll_timeout() in the commit message?  Do
-> you want to just add that to the commit message yourself?
->=20
 
-I think the suggestion is to put a comment next to the
-PROBE_PREFER_ASYNCHRONOUS flag indicating that
-sx9310_init_compensation() can take a while. Should the compensation be
-delayed even further though to some time when userspace opens the device
-node?
+
+On 8/31/20 11:50 PM, Paul E. McKenney wrote:
+> On Mon, Aug 31, 2020 at 08:01:22PM +0800, kernel test robot wrote:
+>> Greeting,
+>>
+>> FYI, we noticed the following commit (built with gcc-9):
+>>
+>> commit: 4e88ec4a9eb17527e640b063f79e5b875733eb53 ("rcuperf: Change rcuperf to rcuscale")
+>> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git master
+>>
+>>
+>> in testcase: trinity
+>> with following parameters:
+>>
+>> 	runtime: 300s
+>>
+>> test-description: Trinity is a linux system call fuzz tester.
+>> test-url: http://codemonkey.org.uk/projects/trinity/
+>>
+>>
+>> on test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 8G
+>>
+>> caused below changes (please refer to attached dmesg/kmsg for entire log/backtrace):
+>>
+>>
+>> +---------------------------------------------------------+------------+------------+
+>> |                                                         | 65bd77f554 | 4e88ec4a9e |
+>> +---------------------------------------------------------+------------+------------+
+>> | boot_successes                                          | 13         | 0          |
+>> | boot_failures                                           | 0          | 14         |
+>> | UBSAN:division-overflow_in_arch/x86/include/asm/div64.h | 0          | 14         |
+>> | error:#[##]                                             | 0          | 14         |
+>> | EIP:main_func.cold                                      | 0          | 14         |
+>> | Kernel_panic-not_syncing:Fatal_exception                | 0          | 14         |
+>> +---------------------------------------------------------+------------+------------+
+>>
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kernel test robot <lkp@intel.com>
+> Does the patch below fix this for you?
+
+Yes, this patch can fix the issue, and nreaders was adjusted to 1:
+
+[    5.953645] The force parameter has not been set to 1. The Iris 
+poweroff handler will not be installed.
+[   12.546587] rcu-ref-scale: --- Start of test:  verbose=0 shutdown=1 
+holdoff=10 loops=10000 nreaders=-1 nruns=30 readdelay=0
+[   12.561495] ------------[ cut here ]------------
+[   12.562016] ref_scale_init: nreaders = 0, adjusted to 1
+[   12.562601] WARNING: CPU: 0 PID: 1 at kernel/rcu/refscale.c:684 
+ref_scale_init+0x653/0x80
+
+Best Regards,
+Rong Chen
+
+>
+> 							Thanx, Paul
+>
+> ------------------------------------------------------------------------
+>
+> commit d301e320e952e2e604d83d9540e52510b0eb3d94
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Thu Aug 27 09:58:19 2020 -0700
+>
+>      refscale: Bounds-check module parameters
+>      
+>      The default value for refscale.nreaders is -1, which results in the code
+>      setting the value to three-quarters of the number of CPUs.  On single-CPU
+>      systems, this results in three-quarters of the value one, which the C
+>      language's integer arithmetic rounds to zero.  This in turn results in
+>      a divide-by-zero error.
+>      
+>      This commit therefore adds bounds checking to the refscale module
+>      parameters, so that if they are less than one, they are set to the
+>      value one.
+>      
+>      Reported-by: kernel test robot <lkp@intel.com>
+>      Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+>
+> diff --git a/kernel/rcu/refscale.c b/kernel/rcu/refscale.c
+> index 952595c..fb5f20d 100644
+> --- a/kernel/rcu/refscale.c
+> +++ b/kernel/rcu/refscale.c
+> @@ -681,6 +681,12 @@ ref_scale_init(void)
+>   	// Reader tasks (default to ~75% of online CPUs).
+>   	if (nreaders < 0)
+>   		nreaders = (num_online_cpus() >> 1) + (num_online_cpus() >> 2);
+> +	if (WARN_ONCE(loops <= 0, "%s: loops = %ld, adjusted to 1\n", __func__, loops))
+> +		loops = 1;
+> +	if (WARN_ONCE(nreaders <= 0, "%s: nreaders = %d, adjusted to 1\n", __func__, nreaders))
+> +		nreaders = 1;
+> +	if (WARN_ONCE(nruns <= 0, "%s: nruns = %d, adjusted to 1\n", __func__, nruns))
+> +		nruns = 1;
+>   	reader_tasks = kcalloc(nreaders, sizeof(reader_tasks[0]),
+>   			       GFP_KERNEL);
+>   	if (!reader_tasks) {
+> _______________________________________________
+> LKP mailing list -- lkp@lists.01.org
+> To unsubscribe send an email to lkp-leave@lists.01.org
+
