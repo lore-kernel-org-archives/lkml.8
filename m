@@ -2,100 +2,284 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA8CFC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA39C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA032078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 356322078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:27:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598981174;
-	bh=fEW6oJfvn5Ucjhclk7f4qerwSkmRvaGzBLRUjhSJGCg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e33ndg0GF3WmNEj6MK+4PvRm2pFLCv8YDGsKpE106oLubbIbf1pZLpKmKfX803N10
-	 E57KFU/x6NGNAqV/5RMIp7BeTkEKBsB7NMDdXvCfkkSC2xG+Xsn7D2sOu6dQ1T+92+
-	 rNZzUFSr0XT9xM8jabnaAi+JJk6P91WQR31fPgNU=
+	s=default; t=1598981260;
+	bh=0MvMgowgO4wUGjb12rwuT/GAZ5YwAxDSOL62thxz3nk=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=xaL3QQSd1+X3/WsS1WbdcHgcxC0ldJeQxLoPqzXOCFzUvOQKrs5qchuBmP3nHAeH0
+	 9SNZ8zsCyH2V0DX8Pf28aveopFUOS8fLU7QGxSthvJGMC2cTZF8vhHXuVjwu+6OLwK
+	 V08jB2iDv0Dza24D+5nhVziWPLBk1aZLAtPh06pw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgIAR0N (ORCPT
+        id S1729137AbgIAR1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57388 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728454AbgIAR0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:26:12 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
+        id S1728622AbgIAR1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:27:34 -0400
+Received: from embeddedor (187-162-31-110.static.axtel.net [187.162.31.110])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BA652078B;
-        Tue,  1 Sep 2020 17:26:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21ABC2078B;
+        Tue,  1 Sep 2020 17:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598981171;
-        bh=fEW6oJfvn5Ucjhclk7f4qerwSkmRvaGzBLRUjhSJGCg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LykNUrVs3FSPdq/7Cys5tJ+kyZbOsgPy32lcNp8gZ3IFPvkRPuCF3SPnhYeGvltE/
-         VmSlzT5sDAUshbgs88HAmlibM+C1/yJZNnE3IZI6xWtHl9vCAiz4HrUdqsOjJZ5ufH
-         3JKDbb7gKEJS8G3jZo0pomhsjNQPwsiHa6EwJ0nU=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id C146740D3D; Tue,  1 Sep 2020 14:26:08 -0300 (-03)
-Date:   Tue, 1 Sep 2020 14:26:08 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Al Grant <al.grant@foss.arm.com>
-Cc:     linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org,
-        acme@redhat.com
-Subject: Re: [PATCH] perf inject: correct event attribute sizes
-Message-ID: <20200901172608.GE1424523@kernel.org>
-References: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
+        s=default; t=1598981252;
+        bh=0MvMgowgO4wUGjb12rwuT/GAZ5YwAxDSOL62thxz3nk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ICjLM0YCR71fx1CTkItZi9wZVytF4ifg5MJMqlMTNdg/ZkArwkWuI+Ve1F3l+VO18
+         Y+z8MrK7bBN9ADpZMYmffeQOktUJCFrL+y5Xrp2ixowlDqSThBOaDUbuqE1ynSp5vK
+         fUUOK+kewd9Q0zSA/N5KG2DUiYN/lg2iXIeaq1+M=
+Date:   Tue, 1 Sep 2020 12:33:41 -0500
+From:   "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To:     Felix Fietkau <nbd@nbd.name>,
+        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Subject: [PATCH][next] mt76: Use fallthrough pseudo-keyword
+Message-ID: <20200901173341.GA2527@embeddedor>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b5f9e19c-6adb-ccdd-3dbd-df8e1b82ee93@foss.arm.com>
-X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Aug 26, 2020 at 10:42:04AM +0100, Al Grant escreveu:
-> When perf inject reads a perf.data file from an older version of perf,
-> it writes event attributes into the output with the original size field,
-> but lays them out as if they had the size currently used. Readers see
-> a corrupt file. Update the size field to match the layout.
-> 
-> From: Denis Nikitin <denik@google.com>
-> Signed-off-by: Al Grant <al.grant@foss.arm.com>
+Replace the existing /* fall through */ comments and its variants with
+the new pseudo-keyword macro fallthrough[1]. Also, remove unnecessary
+fall-through markings when it is the case.
 
-Ok, so the author is Denis, has he provided his Signed-off-by?
+[1] https://www.kernel.org/doc/html/v5.7/process/deprecated.html?highlight=fallthrough#implicit-switch-case-fall-through
 
-- Arnaldo
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/net/wireless/mediatek/mt76/mt7603/dma.c     | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c     | 4 ++--
+ drivers/net/wireless/mediatek/mt76/mt7615/mac.c     | 6 +++---
+ drivers/net/wireless/mediatek/mt76/mt7615/mcu.c     | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x0/phy.c     | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x02_mac.c    | 6 +++---
+ drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c | 1 -
+ drivers/net/wireless/mediatek/mt76/mt7915/dma.c     | 2 +-
+ drivers/net/wireless/mediatek/mt76/mt7915/mac.c     | 4 ++--
+ drivers/net/wireless/mediatek/mt76/mt7915/mcu.c     | 2 +-
+ drivers/net/wireless/mediatek/mt76/usb.c            | 2 +-
+ 11 files changed, 16 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
+index a08b85281170..1dfcd7407535 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/dma.c
+@@ -123,7 +123,7 @@ void mt7603_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
+ 			mt76_rx(&dev->mt76, q, skb);
+ 			return;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		dev_kfree_skb(skb);
+ 		break;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+index 8060c1514396..95602cbef3c3 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7603/mac.c
+@@ -592,7 +592,7 @@ mt7603_mac_fill_rx(struct mt7603_dev *dev, struct sk_buff *skb)
+ 		switch (FIELD_GET(MT_RXV1_TX_MODE, rxdg0)) {
+ 		case MT_PHY_TYPE_CCK:
+ 			cck = true;
+-			/* fall through */
++			fallthrough;
+ 		case MT_PHY_TYPE_OFDM:
+ 			i = mt76_get_rate(&dev->mt76, sband, i, cck);
+ 			break;
+@@ -1161,7 +1161,7 @@ mt7603_fill_txs(struct mt7603_dev *dev, struct mt7603_sta *sta,
+ 	switch (FIELD_GET(MT_TX_RATE_MODE, final_rate)) {
+ 	case MT_PHY_TYPE_CCK:
+ 		cck = true;
+-		/* fall through */
++		fallthrough;
+ 	case MT_PHY_TYPE_OFDM:
+ 		if (dev->mphy.chandef.chan->band == NL80211_BAND_5GHZ)
+ 			sband = &dev->mphy.sband_5g.sband;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+index 3dd8dd28690e..60be7f409470 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mac.c
+@@ -378,7 +378,7 @@ static int mt7615_mac_fill_rx(struct mt7615_dev *dev, struct sk_buff *skb)
+ 		switch (FIELD_GET(MT_RXV1_TX_MODE, rxdg0)) {
+ 		case MT_PHY_TYPE_CCK:
+ 			cck = true;
+-			/* fall through */
++			fallthrough;
+ 		case MT_PHY_TYPE_OFDM:
+ 			i = mt76_get_rate(&dev->mt76, sband, i, cck);
+ 			break;
+@@ -1271,7 +1271,7 @@ static bool mt7615_fill_txs(struct mt7615_dev *dev, struct mt7615_sta *sta,
+ 	switch (FIELD_GET(MT_TX_RATE_MODE, final_rate)) {
+ 	case MT_PHY_TYPE_CCK:
+ 		cck = true;
+-		/* fall through */
++		fallthrough;
+ 	case MT_PHY_TYPE_OFDM:
+ 		mphy = &dev->mphy;
+ 		if (sta->wcid.ext_phy && dev->mt76.phy2)
+@@ -1478,7 +1478,7 @@ void mt7615_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
+ 			mt76_rx(&dev->mt76, q, skb);
+ 			return;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		dev_kfree_skb(skb);
+ 		break;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+index 7781530fb3e6..7128c6082142 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7615/mcu.c
+@@ -3279,7 +3279,7 @@ static int mt7615_dcoc_freq_idx(u16 freq, u8 bw)
+ 			freq = freq_bw40[idx];
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	case NL80211_CHAN_WIDTH_40:
+ 		idx = mt7615_find_freq_idx(freq_bw40, ARRAY_SIZE(freq_bw40),
+ 					   freq);
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
+index 09f34deb6ba1..3de33aadf794 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
+@@ -734,7 +734,7 @@ mt76x0_phy_get_delta_power(struct mt76x02_dev *dev, u8 tx_mode,
+ 	case 1:
+ 		if (chan->band == NL80211_BAND_2GHZ)
+ 			tssi_target += 29491; /* 3.6 * 8192 */
+-		/* fall through */
++		fallthrough;
+ 	case 0:
+ 		break;
+ 	default:
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c b/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
+index e4e03beabe43..11900bcc1be0 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x02_mac.c
+@@ -300,7 +300,7 @@ mt76x02_mac_process_tx_rate(struct ieee80211_tx_rate *txrate, u16 rate,
+ 		return 0;
+ 	case MT_PHY_TYPE_HT_GF:
+ 		txrate->flags |= IEEE80211_TX_RC_GREEN_FIELD;
+-		/* fall through */
++		fallthrough;
+ 	case MT_PHY_TYPE_HT:
+ 		txrate->flags |= IEEE80211_TX_RC_MCS;
+ 		txrate->idx = idx;
+@@ -462,7 +462,7 @@ mt76x02_tx_rate_fallback(struct ieee80211_tx_rate *rates, int idx, int phy)
+ 			rates[1].idx = 0;
+ 			break;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		rates[1].idx = max_t(int, rates[0].idx - 1, 0);
+ 		break;
+@@ -677,7 +677,7 @@ mt76x02_mac_process_rate(struct mt76x02_dev *dev,
+ 		return 0;
+ 	case MT_PHY_TYPE_HT_GF:
+ 		status->enc_flags |= RX_ENC_FLAG_HT_GF;
+-		/* fall through */
++		fallthrough;
+ 	case MT_PHY_TYPE_HT:
+ 		status->encoding = RX_ENC_HT;
+ 		status->rate_idx = idx;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
+index 38f473d587c9..e7febc982930 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/debugfs.c
+@@ -21,7 +21,6 @@ static int mt7915_ser_trigger_set(void *data, u64 val)
+ 	switch (val) {
+ 	case SER_SET_RECOVER_L1:
+ 	case SER_SET_RECOVER_L2:
+-		/* fall through */
+ 		ret = mt7915_mcu_set_ser(dev, SER_ENABLE, BIT(val), 0);
+ 		if (ret)
+ 			return ret;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/dma.c b/drivers/net/wireless/mediatek/mt76/mt7915/dma.c
+index a8832c5e6004..12e5a4988d70 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/dma.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/dma.c
+@@ -72,7 +72,7 @@ void mt7915_queue_rx_skb(struct mt76_dev *mdev, enum mt76_rxq_id q,
+ 			mt76_rx(&dev->mt76, q, skb);
+ 			return;
+ 		}
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		dev_kfree_skb(skb);
+ 		break;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mac.c b/drivers/net/wireless/mediatek/mt76/mt7915/mac.c
+index 036207f828f3..ab65315a509a 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/mac.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/mac.c
+@@ -468,7 +468,7 @@ int mt7915_mac_fill_rx(struct mt7915_dev *dev, struct sk_buff *skb)
+ 			switch (mode) {
+ 			case MT_PHY_TYPE_CCK:
+ 				cck = true;
+-				/* fall through */
++				fallthrough;
+ 			case MT_PHY_TYPE_OFDM:
+ 				i = mt76_get_rate(&dev->mt76, sband, i, cck);
+ 				break;
+@@ -487,7 +487,7 @@ int mt7915_mac_fill_rx(struct mt7915_dev *dev, struct sk_buff *skb)
+ 				break;
+ 			case MT_PHY_TYPE_HE_MU:
+ 				status->flag |= RX_FLAG_RADIOTAP_HE_MU;
+-				/* fall through */
++				fallthrough;
+ 			case MT_PHY_TYPE_HE_SU:
+ 			case MT_PHY_TYPE_HE_EXT_SU:
+ 			case MT_PHY_TYPE_HE_TB:
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+index ac8ec257da03..98953f7469ee 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7915/mcu.c
+@@ -1407,7 +1407,7 @@ mt7915_mcu_sta_he_tlv(struct sk_buff *skb, struct ieee80211_sta *sta)
  
->  tools/perf/util/header.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-> index 9cf4efdcbbbd..762eb94bd532 100644
-> --- a/tools/perf/util/header.c
-> +++ b/tools/perf/util/header.c
-> @@ -3326,6 +3326,14 @@ int perf_session__write_header(struct
-> perf_session *session,
->         attr_offset = lseek(ff.fd, 0, SEEK_CUR);
-> 
->         evlist__for_each_entry(evlist, evsel) {
-> +               if (evsel->core.attr.size < sizeof(evsel->core.attr)) {
-> +                       /*
-> +                        * We are likely in "perf inject" and have read +
-> * from an older file. Update attr size so that
-> +                        * reader gets the right offset to the ids.
-> +                        */
-> +                       evsel->core.attr.size = sizeof(evsel->core.attr);
-> +               }
->                 f_attr = (struct perf_file_attr){
->                         .attr = evsel->core.attr,
->                         .ids  = {
-
+ 		he->max_nss_mcs[CMD_HE_MCS_BW160] =
+ 				he_cap->he_mcs_nss_supp.rx_mcs_160;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		he->max_nss_mcs[CMD_HE_MCS_BW80] =
+ 				he_cap->he_mcs_nss_supp.rx_mcs_80;
+diff --git a/drivers/net/wireless/mediatek/mt76/usb.c b/drivers/net/wireless/mediatek/mt76/usb.c
+index dcab5993763a..aa44b10f69e8 100644
+--- a/drivers/net/wireless/mediatek/mt76/usb.c
++++ b/drivers/net/wireless/mediatek/mt76/usb.c
+@@ -616,7 +616,7 @@ static void mt76u_complete_rx(struct urb *urb)
+ 	default:
+ 		dev_err_ratelimited(dev->dev, "rx urb failed: %d\n",
+ 				    urb->status);
+-		/* fall through */
++		fallthrough;
+ 	case 0:
+ 		break;
+ 	}
 -- 
+2.27.0
 
-- Arnaldo
