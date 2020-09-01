@@ -5,250 +5,134 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F025AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5660C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD88D206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2ABC206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:32:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OyU/urzG"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="pXwfFcp7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726107AbgIANaN (ORCPT
+        id S1727822AbgIANbk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:30:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33600 "EHLO
+        Tue, 1 Sep 2020 09:31:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727930AbgIANR3 (ORCPT
+        with ESMTP id S1728047AbgIAN1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:17:29 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 943E3C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 06:17:22 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id o21so1140935wmc.0
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 06:17:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=c3ehO3Z+4dyEui9duwbWXkBuxAPi9sIxZfZ/t7dGf3I=;
-        b=OyU/urzG49mJdQ3AnaIDnTvpCzw5xBNB4XxzD9Saqqw8M87ad+NF+DQWSMR7eK1/Br
-         v2LI9B+QPcsiYIeXLqPtInIyxPXUO0EoMt/yq2GRJY4DRbPgZQ7g/8B+NjEkysGSpvkv
-         p1/xJWtT+TPwOtWeUiTYQGiHysAfMAYjTQSfw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to;
-        bh=c3ehO3Z+4dyEui9duwbWXkBuxAPi9sIxZfZ/t7dGf3I=;
-        b=DTn8hdOow7mIOShjOMCIgoJ160jkdTOwjzb2OZPg/IStTMQ9mZrMpuxe+SIsTA0DVY
-         lsiVdJlS1WptkZbU+OjzCrJyN6a+XDyNF2WMv5rA4YMlShmHKqzgh7Rk5kCAIi9sbUcp
-         e4UfDRZKh7iphGiXamkYobSFP5fci0PxZq1V3JhIfxzcxh1ynL46ozAG4Un50t1kfPlT
-         1i8DEQoXYrshdEbcEi5fdm5X15HbB3R3UfgHnrdgf+J/nsBNEqobTCbNQo4xbF8ahzO+
-         xK86eAETMoS9mpA4y2wY7pdV9agMyh5U+J0xOUYMcPZq7aqul2QAxrYoMgGtneWdGBOn
-         QkwA==
-X-Gm-Message-State: AOAM531K71JWbD4/HjI2BOKNkGh4f0ymhbJojFsck4uyCa8OL36dqOAu
-        StmI454Udme0UD70NJw5HjCzlA==
-X-Google-Smtp-Source: ABdhPJw+AQsqZrPQ3vQ9+70MwHoh5ZeVUw4BIUBh98gguv7snZc20xCl9526zEZ1g2PhOuxe2JBKBw==
-X-Received: by 2002:a1c:e912:: with SMTP id q18mr1765942wmc.130.1598966241324;
-        Tue, 01 Sep 2020 06:17:21 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id i3sm2316965wrs.4.2020.09.01.06.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 06:17:20 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 15:17:18 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     crj <algea.cao@rock-chips.com>
-Cc:     Ville =?iso-8859-1?Q?Syrj=E4l=E4?= 
-        <ville.syrjala@linux.intel.com>, mripard@kernel.org,
-        tzimmermann@suse.de, linux-kernel@vger.kernel.org,
-        airlied@linux.ie, dri-devel@lists.freedesktop.org,
-        maarten.lankhorst@linux.intel.com, daniel@ffwll.ch,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH] drm: Parse Colorimetry data block from EDID
-Message-ID: <20200901131718.GC2352366@phenom.ffwll.local>
-Mail-Followup-To: crj <algea.cao@rock-chips.com>,
-        Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>,
-        mripard@kernel.org, tzimmermann@suse.de,
-        linux-kernel@vger.kernel.org, airlied@linux.ie,
-        dri-devel@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
-        linux-rockchip@lists.infradead.org
-References: <20200826142328.131144-1-algea.cao@rock-chips.com>
- <20200827105701.GS6112@intel.com>
- <4cadf318-cfc3-92d6-6219-170166db94ce@rock-chips.com>
- <20200831195316.GC6112@intel.com>
- <7a800d9f-2679-73a6-f3d3-dd6cfa829790@rock-chips.com>
+        Tue, 1 Sep 2020 09:27:53 -0400
+Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FD23C061245;
+        Tue,  1 Sep 2020 06:27:52 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4Bgntf72DLz9sTN;
+        Tue,  1 Sep 2020 23:27:38 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1598966866;
+        bh=b8fBMPirmgEDaVPbjXdRIYPwIrTUtQaTXRmfGBF/egk=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=pXwfFcp7DEZhdSaVT5PD8DrmDNJcZnA4u3LePXbs+Xb49cAmRXaxJrmXg/VJlWIzR
+         Q9Z+EfZBm7r6mhEVXxyXQhUmW0fa5OWGfrmOVAZI3itGQAU61ebluXbCJK+AIc60vF
+         1lpEQtozskWFVBMd7eJLB6Kr3ed2+dixG5IYLvugFo8ywj0S6XpgkfnAthm3BhrzXv
+         8D0og0Lq9pFYRuwgHyCnfhfBZXrYFBGSojjeGeHhiOdKVVtQpLLH9UWs9qF4OuV5Cr
+         KzxdsR4L7qCBMFnd1HxBtLQKZU2Du8AyMTHI6pRxfwvNsOSSUSd9mxXbEuet6K+c7h
+         OfGS3/kjMeThw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>, benh@kernel.crashing.org,
+        paulus@samba.org, rth@twiddle.net, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, tony.luck@intel.com, fenghua.yu@intel.com,
+        schnelle@linux.ibm.com, gerald.schaefer@linux.ibm.com,
+        hca@linux.ibm.com, gor@linux.ibm.com, borntraeger@de.ibm.com,
+        davem@davemloft.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        James.Bottomley@HansenPartnership.com, deller@gmx.de
+Cc:     sfr@canb.auug.org.au, hch@lst.de, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-parisc@vger.kernel.org
+Subject: Re: [RESEND][PATCH 1/7] powerpc/iommu: Avoid overflow at boundary_size
+In-Reply-To: <20200831203811.8494-2-nicoleotsuka@gmail.com>
+References: <20200831203811.8494-1-nicoleotsuka@gmail.com> <20200831203811.8494-2-nicoleotsuka@gmail.com>
+Date:   Tue, 01 Sep 2020 23:27:36 +1000
+Message-ID: <87lfht1vav.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <7a800d9f-2679-73a6-f3d3-dd6cfa829790@rock-chips.com>
-X-Operating-System: Linux phenom 5.7.0-1-amd64 
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 03:30:17PM +0800, crj wrote:
-> Hi,
-> 
-> 在 2020/9/1 3:53, Ville Syrjälä 写道:
-> > On Fri, Aug 28, 2020 at 09:07:13AM +0800, crj wrote:
-> > > Hi Ville Syrjälä,
-> > > 
-> > > 在 2020/8/27 18:57, Ville Syrjälä 写道:
-> > > > On Wed, Aug 26, 2020 at 10:23:28PM +0800, Algea Cao wrote:
-> > > > > CEA 861.3 spec adds colorimetry data block for HDMI.
-> > > > > Parsing the block to get the colorimetry data from
-> > > > > panel.
-> > > > And what exactly do you want to do with that data?
-> > > 
-> > > We can get colorimetry data block from edid then support
-> > > 
-> > > HDMI colorimetry such as BT2020.
-> > But what do you want to do with it? The patch does nothing
-> > functional.
-> 
-> If we want to output BT2020 in HDMI driver, we can know whether TV support
-> BT2020
-> 
-> via connector->display_info.hdmi.colorimetry. If TV don't support BT2020,
-> HDMI shouldn't
-> 
-> ouput in BT2020.
+Nicolin Chen <nicoleotsuka@gmail.com> writes:
+> The boundary_size might be as large as ULONG_MAX, which means
+> that a device has no specific boundary limit. So either "+ 1"
+> or passing it to ALIGN() would potentially overflow.
+>
+> According to kernel defines:
+>     #define ALIGN_MASK(x, mask) (((x) + (mask)) & ~(mask))
+>     #define ALIGN(x, a)	ALIGN_MASK(x, (typeof(x))(a) - 1)
+>
+> We can simplify the logic here:
+>   ALIGN(boundary + 1, 1 << shift) >> shift
+> = ALIGN_MASK(b + 1, (1 << s) - 1) >> s
+> = {[b + 1 + (1 << s) - 1] & ~[(1 << s) - 1]} >> s
+> = [b + 1 + (1 << s) - 1] >> s
+> = [b + (1 << s)] >> s
+> = (b >> s) + 1
+>
+> So fixing a potential overflow with the safer shortcut.
+>
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/powerpc/kernel/iommu.c | 11 +++++------
+>  1 file changed, 5 insertions(+), 6 deletions(-)
 
-You need to include these driver patches in your series, not just the core
-changes. We don't review/merge just core enabling patches, we need an
-entire functional slice.
--Daniel
+Are you asking for acks, or for maintainers to merge the patches
+individually?
 
-> 
-> > > > > Signed-off-by: Algea Cao <algea.cao@rock-chips.com>
-> > > > > ---
-> > > > > 
-> > > > >    drivers/gpu/drm/drm_edid.c  | 45 +++++++++++++++++++++++++++++++++++++
-> > > > >    include/drm/drm_connector.h |  3 +++
-> > > > >    include/drm/drm_edid.h      | 14 ++++++++++++
-> > > > >    3 files changed, 62 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
-> > > > > index 31496b6cfc56..67e607c04492 100644
-> > > > > --- a/drivers/gpu/drm/drm_edid.c
-> > > > > +++ b/drivers/gpu/drm/drm_edid.c
-> > > > > @@ -3223,6 +3223,7 @@ add_detailed_modes(struct drm_connector *connector, struct edid *edid,
-> > > > >    #define VIDEO_BLOCK     0x02
-> > > > >    #define VENDOR_BLOCK    0x03
-> > > > >    #define SPEAKER_BLOCK	0x04
-> > > > > +#define COLORIMETRY_DATA_BLOCK		0x5
-> > > > >    #define HDR_STATIC_METADATA_BLOCK	0x6
-> > > > >    #define USE_EXTENDED_TAG 0x07
-> > > > >    #define EXT_VIDEO_CAPABILITY_BLOCK 0x00
-> > > > > @@ -4309,6 +4310,48 @@ static void fixup_detailed_cea_mode_clock(struct drm_display_mode *mode)
-> > > > >    	mode->clock = clock;
-> > > > >    }
-> > > > > +static bool cea_db_is_hdmi_colorimetry_data_block(const u8 *db)
-> > > > > +{
-> > > > > +	if (cea_db_tag(db) != USE_EXTENDED_TAG)
-> > > > > +		return false;
-> > > > > +
-> > > > > +	if (db[1] != COLORIMETRY_DATA_BLOCK)
-> > > > > +		return false;
-> > > > > +
-> > > > > +	if (cea_db_payload_len(db) < 2)
-> > > > > +		return false;
-> > > > > +
-> > > > > +	return true;
-> > > > > +}
-> > > > > +
-> > > > > +static void
-> > > > > +drm_parse_colorimetry_data_block(struct drm_connector *connector, const u8 *db)
-> > > > > +{
-> > > > > +	struct drm_hdmi_info *info = &connector->display_info.hdmi;
-> > > > > +
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_601)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_601;
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_xvYCC_709)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_xvYCC_709;
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_sYCC_601)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_sYCC_601;
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_ADBYCC_601)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_ADBYCC_601;
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_ADB_RGB)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_ADB_RGB;
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_CYCC)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_CYCC;
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_YCC)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_YCC;
-> > > > > +	if (db[2] & DRM_EDID_CLRMETRY_BT2020_RGB)
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_BT2020_RGB;
-> > > > > +	/* Byte 4 Bit 7: DCI-P3 */
-> > > > > +	if (db[3] & BIT(7))
-> > > > > +		info->colorimetry |= DRM_EDID_CLRMETRY_DCI_P3;
-> > > > > +
-> > > > > +	DRM_DEBUG_KMS("Supported Colorimetry 0x%x\n", info->colorimetry);
-> > > > > +}
-> > > > > +
-> > > > >    static bool cea_db_is_hdmi_hdr_metadata_block(const u8 *db)
-> > > > >    {
-> > > > >    	if (cea_db_tag(db) != USE_EXTENDED_TAG)
-> > > > > @@ -4994,6 +5037,8 @@ static void drm_parse_cea_ext(struct drm_connector *connector,
-> > > > >    			drm_parse_vcdb(connector, db);
-> > > > >    		if (cea_db_is_hdmi_hdr_metadata_block(db))
-> > > > >    			drm_parse_hdr_metadata_block(connector, db);
-> > > > > +		if (cea_db_is_hdmi_colorimetry_data_block(db))
-> > > > > +			drm_parse_colorimetry_data_block(connector, db);
-> > > > >    	}
-> > > > >    }
-> > > > > diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> > > > > index af145608b5ed..d599c3b9e881 100644
-> > > > > --- a/include/drm/drm_connector.h
-> > > > > +++ b/include/drm/drm_connector.h
-> > > > > @@ -207,6 +207,9 @@ struct drm_hdmi_info {
-> > > > >    	/** @y420_dc_modes: bitmap of deep color support index */
-> > > > >    	u8 y420_dc_modes;
-> > > > > +
-> > > > > +	/* @colorimetry: bitmap of supported colorimetry modes */
-> > > > > +	u16 colorimetry;
-> > > > >    };
-> > > > >    /**
-> > > > > diff --git a/include/drm/drm_edid.h b/include/drm/drm_edid.h
-> > > > > index cfa4f5af49af..98fa78c2f82d 100644
-> > > > > --- a/include/drm/drm_edid.h
-> > > > > +++ b/include/drm/drm_edid.h
-> > > > > @@ -229,6 +229,20 @@ struct detailed_timing {
-> > > > >    				    DRM_EDID_YCBCR420_DC_36 | \
-> > > > >    				    DRM_EDID_YCBCR420_DC_30)
-> > > > > +/*
-> > > > > + * Supported Colorimetry from colorimetry data block
-> > > > > + * as per CEA 861-G spec
-> > > > > + */
-> > > > > +#define DRM_EDID_CLRMETRY_xvYCC_601   (1 << 0)
-> > > > > +#define DRM_EDID_CLRMETRY_xvYCC_709   (1 << 1)
-> > > > > +#define DRM_EDID_CLRMETRY_sYCC_601    (1 << 2)
-> > > > > +#define DRM_EDID_CLRMETRY_ADBYCC_601  (1 << 3)
-> > > > > +#define DRM_EDID_CLRMETRY_ADB_RGB     (1 << 4)
-> > > > > +#define DRM_EDID_CLRMETRY_BT2020_CYCC (1 << 5)
-> > > > > +#define DRM_EDID_CLRMETRY_BT2020_YCC  (1 << 6)
-> > > > > +#define DRM_EDID_CLRMETRY_BT2020_RGB  (1 << 7)
-> > > > > +#define DRM_EDID_CLRMETRY_DCI_P3      (1 << 15)
-> > > > > +
-> > > > >    /* ELD Header Block */
-> > > > >    #define DRM_ELD_HEADER_BLOCK_SIZE	4
-> > > > > -- 
-> > > > > 2.25.1
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > _______________________________________________
-> > > > > dri-devel mailing list
-> > > > > dri-devel@lists.freedesktop.org
-> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> 
-> 
+> diff --git a/arch/powerpc/kernel/iommu.c b/arch/powerpc/kernel/iommu.c
+> index 9704f3f76e63..c01ccbf8afdd 100644
+> --- a/arch/powerpc/kernel/iommu.c
+> +++ b/arch/powerpc/kernel/iommu.c
+> @@ -236,15 +236,14 @@ static unsigned long iommu_range_alloc(struct device *dev,
+>  		}
+>  	}
+>  
+> -	if (dev)
+> -		boundary_size = ALIGN(dma_get_seg_boundary(dev) + 1,
+> -				      1 << tbl->it_page_shift);
+> -	else
+> -		boundary_size = ALIGN(1UL << 32, 1 << tbl->it_page_shift);
+>  	/* 4GB boundary for iseries_hv_alloc and iseries_hv_map */
+> +	boundary_size = dev ? dma_get_seg_boundary(dev) : U32_MAX;
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Is there any path that passes a NULL dev anymore?
+
+Both iseries_hv_alloc() and iseries_hv_map() were removed years ago.
+See:
+  8ee3e0d69623 ("powerpc: Remove the main legacy iSerie platform code")
+
+
+So maybe we should do a lead-up patch that drops the NULL dev support,
+which will then make this patch simpler.
+
+cheers
+
+
+> +	/* Overflow-free shortcut for: ALIGN(b + 1, 1 << s) >> s */
+> +	boundary_size = (boundary_size >> tbl->it_page_shift) + 1;
+>  
+>  	n = iommu_area_alloc(tbl->it_map, limit, start, npages, tbl->it_offset,
+> -			     boundary_size >> tbl->it_page_shift, align_mask);
+> +			     boundary_size, align_mask);
+>  	if (n == -1) {
+>  		if (likely(pass == 0)) {
+>  			/* First try the pool from the start */
+> -- 
+> 2.17.1
