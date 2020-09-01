@@ -2,184 +2,116 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FFAC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35824C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:04:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFD89206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12B4C206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:04:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aquQ1r2i"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CKAmennB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727842AbgIAW74 (ORCPT
+        id S1726244AbgIAXEV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:59:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38952 "EHLO
+        Tue, 1 Sep 2020 19:04:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgIAW7V (ORCPT
+        with ESMTP id S1726050AbgIAXET (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:59:21 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8511EC061244;
-        Tue,  1 Sep 2020 15:59:21 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id l191so1506170pgd.5;
-        Tue, 01 Sep 2020 15:59:21 -0700 (PDT)
+        Tue, 1 Sep 2020 19:04:19 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 995DAC061244;
+        Tue,  1 Sep 2020 16:04:19 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id z15so1318556plo.7;
+        Tue, 01 Sep 2020 16:04:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1Capl7CE1BoBl1tfXP6GUSFZ6V4y5GZrTYTnU4/p5G8=;
-        b=aquQ1r2imoAafGDgtP1uDrWFO+WZHgX6dYvKKJ0djcZzmFRt5QxyeX4mtCo2WRXp0b
-         bU8ViqrVKZq1ebCWjX0nHZnkFwEoaNoWxxW4RGQDgpx6tLuDmZaMoJ2kmTcJ8l+oFBMo
-         rOLThioRL6BSGF0lucJMc0aTyLfF8H1WiEr690ubApt0UFx1PztFF4pdtKrSAGrm58O0
-         WucJRvXnoQrw4yMDa74XOGWUfULG24wHKLMtlsHHylPUdfeAgLShUsP6+9gmI/hbMvLm
-         xWRwLGUGW8jDAyhdkPtGVkiSCsvInkHErM6bz9qjZzfXl/9GzuPuNJHmU+3jdjfblgjL
-         Nw3w==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=0fSZJUxiqJof83RkUahqF8Xv7vH8SKKWXcceMWzjGHM=;
+        b=CKAmennBR0rRU7kotj7sTJdSJC7DsKDJKXVbgPY/QktvjKbLxJH5uwvwW6CKCMLP5q
+         Fyoo/Qb80A5cQoMcdbqKn2/KlNuSvCclPUEvcqRamLZ18nSoYVhCAgLOE3uKkDk78PfM
+         575x0f8XdtyhpXuj7Di2rTE0zlvPKBqrljvU/xQc3KDQrjdluGV8QVlg0y03U5pCtL64
+         ExjZjA0FM6VXF22wLSX0K1IqeG/Z5gylKfoZqXuZpyNkWGX8Ozcp5HX+Q+roJVkfoxef
+         3fRtu15pso3vvj16tHIoeWZ+TLr5FK/IDnXGmG0LYRsY0L0F3l+62WKVsnco+Gk1PS9u
+         pnig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1Capl7CE1BoBl1tfXP6GUSFZ6V4y5GZrTYTnU4/p5G8=;
-        b=QJsP5QLNk4SjUowoSzV+qsyEj9mHr3RReWWmCfe2iKcFEPGltOcmBv5Ov8KCLNqEEI
-         jY4zvrDjJt7CrqH53euZ+tSr7cL5/n1uTSrBuJNSHMWkodgTHH67cHYdhPRjxCqE+Hsz
-         EPnWxPfkbo6Hfgt6gvactNl6z6rKkMI2vFDuXyrCrLRDC1Qs/iyUDqNEhQhgUl2dca8H
-         ccGGUongy4dBxr297V5gCZhpsvJNULzLQqwyBb1C75+7qYeM9KA4IWOhJXw3WTA2Qo+g
-         h+gtCxnwHXR2NP2SwWPjlAvUD/CG8fU/4noWebR12Lj4Qc6/gE1Wp5PWCfCS/n0ncU+i
-         QvIw==
-X-Gm-Message-State: AOAM531SiQu8WZlg+UqRw0aPpn0L1oeEAS21ZLdogVyecpWjTA6mnsDq
-        gUXoQ2xB3byQawG3DhMjBR4y4xhnt7o=
-X-Google-Smtp-Source: ABdhPJz4esZZ5tEpXvTY8CYviED/LtDqd9scXVJgTmOmeQLElohb5s/wa3sKzo2o9GShAcpWYN/4XQ==
-X-Received: by 2002:a63:ab43:: with SMTP id k3mr3513902pgp.426.1599001160671;
-        Tue, 01 Sep 2020 15:59:20 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m188sm2952750pfm.220.2020.09.01.15.59.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 15:59:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0fSZJUxiqJof83RkUahqF8Xv7vH8SKKWXcceMWzjGHM=;
+        b=r1324pYo5kRTCJZElGkLfPboruRP8RKfVoduC1P6/DCrTOUPMurvB4DyF1LfyXq7BU
+         TdgMKNfBi2aF5UUZc39wT6GeHsIaqpK4K1S/2LsOEMER/z3sgi2BCJBwUsXI+hTYpEB7
+         suM8vL/sz+KnH7JuyeXFOftIpxUGdHk4KuU1eSvDE4hpfmPjfvNgBFDtNcCdBvR/Q5sb
+         CTC6ghw2PRJXRIcO7tFYWsv89jYTJXiOJZg+rPTd+ge3ulAybt5ZV/qncT0vZbIqY4W8
+         qxTpkCVgux7rBNilPg+UuBY39zVz0HzFpFgoVsWO8613ApB47WkMrVW5lJ9z309Uuh1E
+         44YA==
+X-Gm-Message-State: AOAM532Nv5tV9ta37H+sPsuBd9qvCI+jH/DXQnEi8znzC5z3Xyx+zQFU
+        /LJe+2E5ms8hj2sBtW2nQA4=
+X-Google-Smtp-Source: ABdhPJydWYEkD7wS07elWV4L+tBP+R0/2Ehs0rnPIjLnLCg8M7rO+gQNbJguN+UwAimlQdgXBsomHg==
+X-Received: by 2002:a17:902:aa4c:: with SMTP id c12mr3368983plr.183.1599001458882;
+        Tue, 01 Sep 2020 16:04:18 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id k20sm3314851pfu.197.2020.09.01.16.04.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 16:04:17 -0700 (PDT)
+Subject: Re: [PATCH v2 3/6] ARM: dts: NSP: Fix SP804 compatible node
+To:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andre Przywara <andre.przywara@arm.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+References: <20200828142018.43298-1-andre.przywara@arm.com>
+ <20200828142018.43298-4-andre.przywara@arm.com>
+ <73b35bcd-0e8c-0f62-ed2b-e0c64261f930@gmail.com>
 From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 2/3] net: dsa: bcm_sf2: request and handle clocks
-Date:   Tue,  1 Sep 2020 15:59:12 -0700
-Message-Id: <20200901225913.1587628-3-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200901225913.1587628-1-f.fainelli@gmail.com>
-References: <20200901225913.1587628-1-f.fainelli@gmail.com>
+Message-ID: <c97c1472-c308-27e2-ce68-30bc82b96aae@gmail.com>
+Date:   Tue, 1 Sep 2020 16:04:09 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <73b35bcd-0e8c-0f62-ed2b-e0c64261f930@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fetch the corresponding clock resource and enable/disable it during
-suspend/resume if and only if we have no ports defined for Wake-on-LAN.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/dsa/bcm_sf2.c | 20 ++++++++++++++++++--
- drivers/net/dsa/bcm_sf2.h |  2 ++
- 2 files changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index bafddb35f3a9..b8fa0a46c5c9 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -14,6 +14,7 @@
- #include <linux/phy_fixed.h>
- #include <linux/phylink.h>
- #include <linux/mii.h>
-+#include <linux/clk.h>
- #include <linux/of.h>
- #include <linux/of_irq.h>
- #include <linux/of_address.h>
-@@ -750,6 +751,9 @@ static int bcm_sf2_sw_suspend(struct dsa_switch *ds)
- 			bcm_sf2_port_disable(ds, port);
- 	}
- 
-+	if (!priv->wol_ports_mask)
-+		clk_disable_unprepare(priv->clk);
-+
- 	return 0;
- }
- 
-@@ -758,6 +762,9 @@ static int bcm_sf2_sw_resume(struct dsa_switch *ds)
- 	struct bcm_sf2_priv *priv = bcm_sf2_to_priv(ds);
- 	int ret;
- 
-+	if (!priv->wol_ports_mask)
-+		clk_prepare_enable(priv->clk);
-+
- 	ret = bcm_sf2_sw_rst(priv);
- 	if (ret) {
- 		pr_err("%s: failed to software reset switch\n", __func__);
-@@ -1189,10 +1196,16 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 		base++;
- 	}
- 
-+	priv->clk = devm_clk_get_optional(&pdev->dev, "sw_switch");
-+	if (IS_ERR(priv->clk))
-+		return PTR_ERR(priv->clk);
-+
-+	clk_prepare_enable(priv->clk);
-+
- 	ret = bcm_sf2_sw_rst(priv);
- 	if (ret) {
- 		pr_err("unable to software reset switch: %d\n", ret);
--		return ret;
-+		goto out_clk;
- 	}
- 
- 	bcm_sf2_gphy_enable_set(priv->dev->ds, true);
-@@ -1200,7 +1213,7 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 	ret = bcm_sf2_mdio_register(ds);
- 	if (ret) {
- 		pr_err("failed to register MDIO bus\n");
--		return ret;
-+		goto out_clk;
- 	}
- 
- 	bcm_sf2_gphy_enable_set(priv->dev->ds, false);
-@@ -1267,6 +1280,8 @@ static int bcm_sf2_sw_probe(struct platform_device *pdev)
- 
- out_mdio:
- 	bcm_sf2_mdio_unregister(priv);
-+out_clk:
-+	clk_disable_unprepare(priv->clk);
- 	return ret;
- }
- 
-@@ -1280,6 +1295,7 @@ static int bcm_sf2_sw_remove(struct platform_device *pdev)
- 	dsa_unregister_switch(priv->dev->ds);
- 	bcm_sf2_cfp_exit(priv->dev->ds);
- 	bcm_sf2_mdio_unregister(priv);
-+	clk_disable_unprepare(priv->clk);
- 	if (priv->type == BCM7278_DEVICE_ID && !IS_ERR(priv->rcdev))
- 		reset_control_assert(priv->rcdev);
- 
-diff --git a/drivers/net/dsa/bcm_sf2.h b/drivers/net/dsa/bcm_sf2.h
-index de386dd96d66..6dd69922e3f6 100644
---- a/drivers/net/dsa/bcm_sf2.h
-+++ b/drivers/net/dsa/bcm_sf2.h
-@@ -93,6 +93,8 @@ struct bcm_sf2_priv {
- 	/* Mask of ports enabled for Wake-on-LAN */
- 	u32				wol_ports_mask;
- 
-+	struct clk			*clk;
-+
- 	/* MoCA port location */
- 	int				moca_port;
- 
+On 8/28/2020 10:12 AM, Florian Fainelli wrote:
+> On 8/28/20 7:20 AM, Andre Przywara wrote:
+>> The DT binding for SP804 requires to have an "arm,primecell" compatible
+>> string.
+>> Add this string so that the Linux primecell bus driver picks the device
+>> up and activates the clock.
+>>
+>> Fixes: a0efb0d28b77 ("ARM: dts: NSP: Add SP804 Support to DT")
+>> Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+>> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> 
+> This looks fine, however there is a ccbtimer1 instance that you missed,
+> can you resubmit with it included?
+> 
+> With that:
+> 
+> Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
+Andre are you going to resubmit a patch with the second instance 
+(ccbtimer1) fixed as well, or should I take care of that while applying 
+the patch? Either way is fine, just let me know.
 -- 
-2.25.1
-
+Florian
