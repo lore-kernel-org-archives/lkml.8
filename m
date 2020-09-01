@@ -2,97 +2,147 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB4C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:08:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB77C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5853204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:08:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D931F204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:08:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOWb9jTr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726174AbgIAHIe (ORCPT
+        id S1726794AbgIAHIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:08:34 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10744 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726006AbgIAHIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:08:32 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 20D41AA7CFA4EA010863;
-        Tue,  1 Sep 2020 15:08:30 +0800 (CST)
-Received: from localhost (10.174.179.108) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
- 15:08:23 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>
-CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] memory: omap-gpmc: Fix -Wunused-function warnings
-Date:   Tue, 1 Sep 2020 15:07:53 +0800
-Message-ID: <20200901070753.24328-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200901035642.22772-1-yuehaibing@huawei.com>
-References: <20200901035642.22772-1-yuehaibing@huawei.com>
+        Tue, 1 Sep 2020 03:08:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726006AbgIAHIm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:08:42 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F9B2C0612AC;
+        Tue,  1 Sep 2020 00:08:41 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id e7so169745qtj.11;
+        Tue, 01 Sep 2020 00:08:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GmXuUYU+0Jf5IK/tkXEzwkvIda53kaFZm8Sq7KP0sFU=;
+        b=JOWb9jTrRxl2PkSgSC8c9FlfkpWDLq5/Lhaml4xlqzfc3Un+/SGCfHVvyBP3CWgtjS
+         xPEzVDX7bb38uAwHm2qhJ/KNWWCKhGE4T8jWDULYrB8EhTXJNa8ZjVXTS10UokqP0Z/0
+         tWN0XysiJmkXbW3ZFovPFiSn4TP10N07s0iZhh6d0BCOcX5LAtnCq81WCMxwPJ6AQZaJ
+         /xcqz6qo42a8SYeLtXX3IaprSv02eawXA/LKiqSrrRoCaOo7NeNeOnoJwu571jIKO+nV
+         yFcOPttd1LWlld8MKdGnSwhDKYYv4/6ZrHMO69luWoY1bj/FDLkLT5jtRFcZ1qNkeIV/
+         i7QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GmXuUYU+0Jf5IK/tkXEzwkvIda53kaFZm8Sq7KP0sFU=;
+        b=lW0rFykP4SOtLM3Zy0OphaA5EcyHEcjqO7LHB1ZCvLq8nBArKhlxMspthTQOu/Iw6d
+         KBTpGWPbejKNpgwAdc7+MVZ9zFTjNiV5ohzaFUrL0y3FW79Sl4Q5DATvu4GR5d49HZD2
+         zoCTznxGmJv5D1gtHhGn5+XVSzjidaMj8PddWa/ezRu5RIiux/0tzXt4v26MXKD9dUU4
+         Xj53U8bFO+9tDdKQhdq6Xzwmq+W0VnsiNObdU+SOFIUXmY6S7ribfYn+nbBSXDqy4vkg
+         fFPqj9b4PaNcooJK4u2gpRoDCIfK+nPr6QWyiJEPZPswwHjXsCW9dyxqd6VD/I08O5GK
+         +a5Q==
+X-Gm-Message-State: AOAM5331EOQByRlGRXgqLl8LVH/CaI9EGOas25NgIi32rkwX/xT7t9HC
+        7ynAOPOY6fN8iS+hmsCsgX8=
+X-Google-Smtp-Source: ABdhPJzf3KOZbzItfgAW+zC8vk2ksm2e5eC805X9mt3sL0983IgO1KRkKb1qurFhVMGIZwSz2J+tIQ==
+X-Received: by 2002:ac8:72d3:: with SMTP id o19mr379699qtp.190.1598944120846;
+        Tue, 01 Sep 2020 00:08:40 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:45d1:2600::1])
+        by smtp.gmail.com with ESMTPSA id l64sm570996qkc.21.2020.09.01.00.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 00:08:39 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Amitkumar Karwar <amitkarwar@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Andy Lavr <andy.lavr@gmail.com>
+Subject: [PATCH] mwifiex: Remove unnecessary braces from HostCmd_SET_SEQ_NO_BSS_INFO
+Date:   Tue,  1 Sep 2020 00:08:34 -0700
+Message-Id: <20200901070834.1015754-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.28.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.179.108]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/memory/omap-gpmc.c:987:12: warning: ‘gpmc_cs_remap’ defined but not used [-Wunused-function]
- static int gpmc_cs_remap(int cs, u32 base)
-            ^~~~~~~~~~~~~
-drivers/memory/omap-gpmc.c:926:20: warning: ‘gpmc_cs_get_name’ defined but not used [-Wunused-function]
- static const char *gpmc_cs_get_name(int cs)
-                    ^~~~~~~~~~~~~~~~
-drivers/memory/omap-gpmc.c:919:13: warning: ‘gpmc_cs_set_name’ defined but not used [-Wunused-function]
- static void gpmc_cs_set_name(int cs, const char *name)
-             ^~~~~~~~~~~~~~~~
-Make them as  __maybe_unused to fix this.
+A new warning in clang points out when macro expansion might result in a
+GNU C statement expression. There is an instance of this in the mwifiex
+driver:
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+drivers/net/wireless/marvell/mwifiex/cmdevt.c:217:34: warning: '}' and
+')' tokens terminating statement expression appear in different macro
+expansion contexts [-Wcompound-token-split-by-macro]
+        host_cmd->seq_num = cpu_to_le16(HostCmd_SET_SEQ_NO_BSS_INFO
+                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/net/wireless/marvell/mwifiex/fw.h:519:46: note: expanded from
+macro 'HostCmd_SET_SEQ_NO_BSS_INFO'
+        (((type) & 0x000f) << 12);                  }
+                                                    ^
+
+This does not appear to be a real issue. Removing the braces and
+replacing them with parentheses will fix the warning and not change the
+meaning of the code.
+
+Fixes: 5e6e3a92b9a4 ("wireless: mwifiex: initial commit for Marvell mwifiex driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1146
+Reported-by: Andy Lavr <andy.lavr@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
- drivers/memory/omap-gpmc.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/cmdevt.c | 4 ++--
+ drivers/net/wireless/marvell/mwifiex/fw.h     | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-index ac0f577a51a1..24372254986e 100644
---- a/drivers/memory/omap-gpmc.c
-+++ b/drivers/memory/omap-gpmc.c
-@@ -916,14 +916,14 @@ static bool gpmc_cs_reserved(int cs)
- 	return gpmc->flags & GPMC_CS_RESERVED;
- }
+diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+index d068b9075c32..3a11342a6bde 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
++++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+@@ -322,9 +322,9 @@ static int mwifiex_dnld_sleep_confirm_cmd(struct mwifiex_adapter *adapter)
  
--static void gpmc_cs_set_name(int cs, const char *name)
-+static void __maybe_unused gpmc_cs_set_name(int cs, const char *name)
- {
- 	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+ 	adapter->seq_num++;
+ 	sleep_cfm_buf->seq_num =
+-		cpu_to_le16((HostCmd_SET_SEQ_NO_BSS_INFO
++		cpu_to_le16(HostCmd_SET_SEQ_NO_BSS_INFO
+ 					(adapter->seq_num, priv->bss_num,
+-					 priv->bss_type)));
++					 priv->bss_type));
  
- 	gpmc->name = name;
- }
+ 	mwifiex_dbg(adapter, CMD,
+ 		    "cmd: DNLD_CMD: %#x, act %#x, len %d, seqno %#x\n",
+diff --git a/drivers/net/wireless/marvell/mwifiex/fw.h b/drivers/net/wireless/marvell/mwifiex/fw.h
+index 8047e307892e..1f02c5058aed 100644
+--- a/drivers/net/wireless/marvell/mwifiex/fw.h
++++ b/drivers/net/wireless/marvell/mwifiex/fw.h
+@@ -513,10 +513,10 @@ enum mwifiex_channel_flags {
  
--static const char *gpmc_cs_get_name(int cs)
-+static const __maybe_unused char *gpmc_cs_get_name(int cs)
- {
- 	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+ #define RF_ANTENNA_AUTO                 0xFFFF
  
-@@ -984,7 +984,7 @@ static int gpmc_cs_delete_mem(int cs)
-  * "base". Returns 0 on success and appropriate negative error code
-  * on failure.
-  */
--static int gpmc_cs_remap(int cs, u32 base)
-+static int __maybe_unused gpmc_cs_remap(int cs, u32 base)
- {
- 	int ret;
- 	u32 old_base, size;
+-#define HostCmd_SET_SEQ_NO_BSS_INFO(seq, num, type) {   \
+-	(((seq) & 0x00ff) |                             \
+-	 (((num) & 0x000f) << 8)) |                     \
+-	(((type) & 0x000f) << 12);                  }
++#define HostCmd_SET_SEQ_NO_BSS_INFO(seq, num, type) \
++	((((seq) & 0x00ff) |                        \
++	 (((num) & 0x000f) << 8)) |                 \
++	(((type) & 0x000f) << 12))
+ 
+ #define HostCmd_GET_SEQ_NO(seq)       \
+ 	((seq) & HostCmd_SEQ_NUM_MASK)
 -- 
-2.17.1
-
+2.28.0
 
