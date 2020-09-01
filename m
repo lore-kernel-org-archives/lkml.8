@@ -2,53 +2,56 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B36C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E44AEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC7EF2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B51AA207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978450;
-	bh=da5mPe30nUcNOQoq1fIwPodXLiDIbUHj0tXBSloG9us=;
+	s=default; t=1598978456;
+	bh=cOs6hkEis3MMWFlqoXr5LZziZMthQpLZImQjdLCdOCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JrLhgyNAltFAKAxU7tUNCzxZoaOrEcwX0stq2QbDCJXwC8ny3lYhkUzUaWUjJ2kbt
-	 H5lLdrXixjdGAa/9xYW5ONPHT+KlBW5recbOZs0yjCvMmhgnNcAjxWThCD89/lX4jc
-	 YM46tJHVqI3FIRf9MdMITkgi1JygYAfKfORAeRhI=
+	b=JG0lFF1O1eE6EzOk71aE3NUoTyFZ5UWU8TZ3pG49oN7/ASwaIxxAc0tbgkqK1yctD
+	 iq14Ym4JBeVmFM8LP9wnJLEiSe+CB7CB120PG1i19W/wYP1umTNgK/pRsN0G70BaBA
+	 0+AD80Eno0CXHGSQ62GmuNF3CAsBS/JiF5nCyER8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgIAP2L (ORCPT
+        id S1732140AbgIAQkx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:28:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49270 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:40:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729305AbgIAPZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:05 -0400
+        id S1730357AbgIAP2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:12 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 656032137B;
-        Tue,  1 Sep 2020 15:25:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F29F2100A;
+        Tue,  1 Sep 2020 15:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973904;
-        bh=da5mPe30nUcNOQoq1fIwPodXLiDIbUHj0tXBSloG9us=;
+        s=default; t=1598974091;
+        bh=cOs6hkEis3MMWFlqoXr5LZziZMthQpLZImQjdLCdOCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H10mamebhSHwk0hKEgNxPjzc4XxsgpJOg3W45fa2SjXs+GV7PfIOiFRWCnzqty9tm
-         VZ3CPyGX2XaQi89P7PxMTEVEhSPfdZ6nSJ+jE2m1TIoMAZjYzcXdXvr0UKPtWflQ8r
-         /RveOJXckB8Cay+XcqHVHT3F8dS1E42WAoZDmc1c=
+        b=Clwvq4rEXsoh3FT6AGBQfZUxNBKNOo7jvikWRz/f5NXUhnCiTB0t5nmbet96WilNR
+         wsDow2k+v7gAAlJ16tKImbBjvl53HPzqI5vUcsECDVT18J+GHQ7JDHGoPtFtO7+7cM
+         aYhOi0kGjto3rXst9XmzXAKT07GPHrL1ZQyJGPUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Valmer Huhn <valmer.huhn@concurrent-rt.com>
-Subject: [PATCH 4.19 092/125] serial: 8250_exar: Fix number of ports for Commtech PCIe cards
-Date:   Tue,  1 Sep 2020 17:10:47 +0200
-Message-Id: <20200901150939.097722773@linuxfoundation.org>
+        stable@vger.kernel.org, Yangbo Lu <yangbo.lu@nxp.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 041/214] ARM: dts: ls1021a: output PPS signal on FIPER2
+Date:   Tue,  1 Sep 2020 17:08:41 +0200
+Message-Id: <20200901150954.931991391@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,79 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valmer Huhn <valmer.huhn@concurrent-rt.com>
+From: Yangbo Lu <yangbo.lu@nxp.com>
 
-commit c6b9e95dde7b54e6a53c47241201ab5a4035c320 upstream.
+[ Upstream commit 5656bb3857c4904d1dec6e1b8f876c1c0337274e ]
 
-The following in 8250_exar.c line 589 is used to determine the number
-of ports for each Exar board:
+The timer fixed interval period pulse generator register
+is used to generate periodic pulses. The down count
+register loads the value programmed in the fixed period
+interval (FIPER). At every tick of the timer accumulator
+overflow, the counter decrements by the value of
+TMR_CTRL[TCLK_PERIOD]. It generates a pulse when the down
+counter value reaches zero. It reloads the down counter
+in the cycle following a pulse.
 
-nr_ports = board->num_ports ? board->num_ports : pcidev->device & 0x0f;
+To use the TMR_FIPER register to generate desired periodic
+pulses. The value should programmed is,
+desired_period - tclk_period
 
-If the number of ports a card has is not explicitly specified, it defaults
-to the rightmost 4 bits of the PCI device ID. This is prone to error since
-not all PCI device IDs contain a number which corresponds to the number of
-ports that card provides.
+Current tmr-fiper2 value is to generate 100us periodic pulses.
+(But the value should have been 99995, not 99990. The tclk_period is 5.)
+This patch is to generate 1 second periodic pulses with value
+999999995 programmed which is more desired by user.
 
-This particular case involves COMMTECH_4222PCIE, COMMTECH_4224PCIE and
-COMMTECH_4228PCIE cards with device IDs 0x0022, 0x0020 and 0x0021.
-Currently the multiport cards receive 2, 0 and 1 port instead of 2, 4 and
-8 ports respectively.
-
-To fix this, each Commtech Fastcom PCIe card is given a struct where the
-number of ports is explicitly specified. This ensures 'board->num_ports'
-is used instead of the default 'pcidev->device & 0x0f'.
-
-Fixes: d0aeaa83f0b0 ("serial: exar: split out the exar code from 8250_pci")
-Signed-off-by: Valmer Huhn <valmer.huhn@concurrent-rt.com>
-Tested-by: Valmer Huhn <valmer.huhn@concurrent-rt.com>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200813165255.GC345440@icarus.concurrent-rt.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
+Acked-by: Richard Cochran <richardcochran@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/8250/8250_exar.c |   24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/ls1021a.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/8250/8250_exar.c
-+++ b/drivers/tty/serial/8250/8250_exar.c
-@@ -638,6 +638,24 @@ static const struct exar8250_board pbn_e
- 	.exit		= pci_xr17v35x_exit,
- };
- 
-+static const struct exar8250_board pbn_fastcom35x_2 = {
-+	.num_ports	= 2,
-+	.setup		= pci_xr17v35x_setup,
-+	.exit		= pci_xr17v35x_exit,
-+};
-+
-+static const struct exar8250_board pbn_fastcom35x_4 = {
-+	.num_ports	= 4,
-+	.setup		= pci_xr17v35x_setup,
-+	.exit		= pci_xr17v35x_exit,
-+};
-+
-+static const struct exar8250_board pbn_fastcom35x_8 = {
-+	.num_ports	= 8,
-+	.setup		= pci_xr17v35x_setup,
-+	.exit		= pci_xr17v35x_exit,
-+};
-+
- static const struct exar8250_board pbn_exar_XR17V4358 = {
- 	.num_ports	= 12,
- 	.setup		= pci_xr17v35x_setup,
-@@ -708,9 +726,9 @@ static const struct pci_device_id exar_p
- 	EXAR_DEVICE(EXAR, EXAR_XR17V358, pbn_exar_XR17V35x),
- 	EXAR_DEVICE(EXAR, EXAR_XR17V4358, pbn_exar_XR17V4358),
- 	EXAR_DEVICE(EXAR, EXAR_XR17V8358, pbn_exar_XR17V8358),
--	EXAR_DEVICE(COMMTECH, COMMTECH_4222PCIE, pbn_exar_XR17V35x),
--	EXAR_DEVICE(COMMTECH, COMMTECH_4224PCIE, pbn_exar_XR17V35x),
--	EXAR_DEVICE(COMMTECH, COMMTECH_4228PCIE, pbn_exar_XR17V35x),
-+	EXAR_DEVICE(COMMTECH, COMMTECH_4222PCIE, pbn_fastcom35x_2),
-+	EXAR_DEVICE(COMMTECH, COMMTECH_4224PCIE, pbn_fastcom35x_4),
-+	EXAR_DEVICE(COMMTECH, COMMTECH_4228PCIE, pbn_fastcom35x_8),
- 
- 	EXAR_DEVICE(COMMTECH, COMMTECH_4222PCI335, pbn_fastcom335_2),
- 	EXAR_DEVICE(COMMTECH, COMMTECH_4224PCI335, pbn_fastcom335_4),
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 63d9f4a066e38..5a8e58b663420 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -753,7 +753,7 @@
+ 			fsl,tmr-prsc    = <2>;
+ 			fsl,tmr-add     = <0xaaaaaaab>;
+ 			fsl,tmr-fiper1  = <999999995>;
+-			fsl,tmr-fiper2  = <99990>;
++			fsl,tmr-fiper2  = <999999995>;
+ 			fsl,max-adj     = <499999999>;
+ 			fsl,extts-fifo;
+ 		};
+-- 
+2.25.1
+
 
 
