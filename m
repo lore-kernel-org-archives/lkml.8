@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 245E9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2167AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EAA142078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4A5E214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975179;
-	bh=Tyu91bH63gG6nmgdD1zZbuSXVaxKlvW0YzojL9UrOcA=;
+	s=default; t=1598975186;
+	bh=ukAhhZLGcZJgPOHbIw4D9BthzjRJ0aN9j3wuwKiRUL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L8PA2hibgBWFWYfuMu1vkRl3CbuAQf+PvmtD4/fGhDr9EjmfeQoxGLgeoBdFuqpeV
-	 vp1VqfXpG7rBYaWcIZAXR2gyLHeMNnHo4DWdCu6Iw0WU3tEF6ueMOnoMN+wsmQ4/eF
-	 j1YcSUEOdyPn4XhFnMlpJQZdK1IqX7h5QoXTUjXE=
+	b=DzBfZOT8PBfwlBPirloHGODPpFB/1g7MNChQEprsiYjAdjIhlOmRLOgCzvalAwH47
+	 PTsNcREqnpE2O2dfTGrsk+QsaGErSsl3+mxN0VqYUjBKMmmQsZSm67BAMOB+FrMT8u
+	 dfOE1DrpFNY48ORu4Oy52a4z6tvG/MkEZh+iNmx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbgIAPqR (ORCPT
+        id S1726377AbgIAPqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:46:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57360 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:46:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731659AbgIAPnX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:43:23 -0400
+        id S1731662AbgIAPnZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:43:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B39F9206EB;
-        Tue,  1 Sep 2020 15:43:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6ECD02064B;
+        Tue,  1 Sep 2020 15:43:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975002;
-        bh=Tyu91bH63gG6nmgdD1zZbuSXVaxKlvW0YzojL9UrOcA=;
+        s=default; t=1598975005;
+        bh=ukAhhZLGcZJgPOHbIw4D9BthzjRJ0aN9j3wuwKiRUL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZWhjIEb7B4HjzxiFZBqykuoi7Mg/9906cchD1DEtBrt8kM4/U1tv30cNQ+XlIArp/
-         WYLxnIS1KpIAwYY7A50O5/ZciM7aFyWFBW2RYPN8qA59QoJQq5oFENoy+IxjZkDru2
-         FA1TJFD6bOZl6Oi9jNKPn2zbm0bxBWnXfmt1QHBY=
+        b=YOvm8VuugKE9cC+j8Z+jcTAsBgtq9fJJUGE6R4pCVniNhB6dMIkI8SO/JoOljdN75
+         tMB5uqpi6yAG3gFVlm88zL6U9GxJ73fcPg9bqsvxUaxycHuBBPUf8qk7YGGB9mwW14
+         n5nkxnHC+BZ+wFVVGL29JVukusPVSprxdc5Finp0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        David Jeffery <djeffery@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.8 171/255] blk-mq: order adding requests to hctx->dispatch and checking SCHED_RESTART
-Date:   Tue,  1 Sep 2020 17:10:27 +0200
-Message-Id: <20200901151008.889544975@linuxfoundation.org>
+        stable@vger.kernel.org, Marcos Paulo de Souza <mpdesouza@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 172/255] btrfs: reset compression level for lzo on remount
+Date:   Tue,  1 Sep 2020 17:10:28 +0200
+Message-Id: <20200901151008.936048011@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -62,92 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Marcos Paulo de Souza <mpdesouza@suse.com>
 
-commit d7d8535f377e9ba87edbf7fbbd634ac942f3f54f upstream.
+commit 282dd7d7718444679b046b769d872b188818ca35 upstream.
 
-SCHED_RESTART code path is relied to re-run queue for dispatch requests
-in hctx->dispatch. Meantime the SCHED_RSTART flag is checked when adding
-requests to hctx->dispatch.
+Currently a user can set mount "-o compress" which will set the
+compression algorithm to zlib, and use the default compress level for
+zlib (3):
 
-memory barriers have to be used for ordering the following two pair of OPs:
+  relatime,compress=zlib:3,space_cache
 
-1) adding requests to hctx->dispatch and checking SCHED_RESTART in
-blk_mq_dispatch_rq_list()
+If the user remounts the fs using "-o compress=lzo", then the old
+compress_level is used:
 
-2) clearing SCHED_RESTART and checking if there is request in hctx->dispatch
-in blk_mq_sched_restart().
+  relatime,compress=lzo:3,space_cache
 
-Without the added memory barrier, either:
+But lzo does not expose any tunable compression level. The same happens
+if we set any compress argument with different level, also with zstd.
 
-1) blk_mq_sched_restart() may miss requests added to hctx->dispatch meantime
-blk_mq_dispatch_rq_list() observes SCHED_RESTART, and not run queue in
-dispatch side
+Fix this by resetting the compress_level when compress=lzo is
+specified.  With the fix applied, lzo is shown without compress level:
 
-or
+  relatime,compress=lzo,space_cache
 
-2) blk_mq_dispatch_rq_list still sees SCHED_RESTART, and not run queue
-in dispatch side, meantime checking if there is request in
-hctx->dispatch from blk_mq_sched_restart() is missed.
-
-IO hang in ltp/fs_fill test is reported by kernel test robot:
-
-	https://lkml.org/lkml/2020/7/26/77
-
-Turns out it is caused by the above out-of-order OPs. And the IO hang
-can't be observed any more after applying this patch.
-
-Fixes: bd166ef183c2 ("blk-mq-sched: add framework for MQ capable IO schedulers")
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Bart Van Assche <bvanassche@acm.org>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: David Jeffery <djeffery@redhat.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Marcos Paulo de Souza <mpdesouza@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/blk-mq-sched.c |    9 +++++++++
- block/blk-mq.c       |    9 +++++++++
- 2 files changed, 18 insertions(+)
+ fs/btrfs/super.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -77,6 +77,15 @@ void blk_mq_sched_restart(struct blk_mq_
- 		return;
- 	clear_bit(BLK_MQ_S_SCHED_RESTART, &hctx->state);
- 
-+	/*
-+	 * Order clearing SCHED_RESTART and list_empty_careful(&hctx->dispatch)
-+	 * in blk_mq_run_hw_queue(). Its pair is the barrier in
-+	 * blk_mq_dispatch_rq_list(). So dispatch code won't see SCHED_RESTART,
-+	 * meantime new request added to hctx->dispatch is missed to check in
-+	 * blk_mq_run_hw_queue().
-+	 */
-+	smp_mb();
-+
- 	blk_mq_run_hw_queue(hctx, true);
- }
- 
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1324,6 +1324,15 @@ bool blk_mq_dispatch_rq_list(struct requ
- 		spin_unlock(&hctx->lock);
- 
- 		/*
-+		 * Order adding requests to hctx->dispatch and checking
-+		 * SCHED_RESTART flag. The pair of this smp_mb() is the one
-+		 * in blk_mq_sched_restart(). Avoid restart code path to
-+		 * miss the new added requests to hctx->dispatch, meantime
-+		 * SCHED_RESTART is observed here.
-+		 */
-+		smp_mb();
-+
-+		/*
- 		 * If SCHED_RESTART was set by the caller of this function and
- 		 * it is no longer set that means that it was cleared by another
- 		 * thread and hence that a queue rerun is needed.
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -558,6 +558,7 @@ int btrfs_parse_options(struct btrfs_fs_
+ 			} else if (strncmp(args[0].from, "lzo", 3) == 0) {
+ 				compress_type = "lzo";
+ 				info->compress_type = BTRFS_COMPRESS_LZO;
++				info->compress_level = 0;
+ 				btrfs_set_opt(info->mount_opt, COMPRESS);
+ 				btrfs_clear_opt(info->mount_opt, NODATACOW);
+ 				btrfs_clear_opt(info->mount_opt, NODATASUM);
 
 
