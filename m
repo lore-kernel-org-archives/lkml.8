@@ -2,188 +2,145 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C50AC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB51C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 263AA206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975848;
-	bh=k9EA6Yz5BlgytRW2iMDZ8yHVhMkyTP3Gu35nJjpBIVE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b46CERr50I0dBjQShyJQFCOJeJvbT/dRwLMDb9y9oyVAxlvHtZeRmCnfZDRb6pg55
-	 uLB1DNDYFoF+KxeMjCj5+DNl+PerHKPAuceIrqjIewLQCXRJjtyIR4ZcFvN3fhcOW1
-	 bcY7spy5k0ayQQ/Mhmq62TLCSTBF8HTPlMaZ62dQ=
+	by mail.kernel.org (Postfix) with ESMTP id 629F5206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5Ah/xy7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731787AbgIAPoZ (ORCPT
+        id S1731748AbgIAP5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:44:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731332AbgIAPlp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:45 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B92B206EB;
-        Tue,  1 Sep 2020 15:41:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974903;
-        bh=k9EA6Yz5BlgytRW2iMDZ8yHVhMkyTP3Gu35nJjpBIVE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=USxCQrECCtBGKw/lNM4bfndliUb26S1M/nSkYXjI9cn8jtXRzyhTl52uty4x9WmwC
-         yqagkuU481MwtoM22ud3B6Ar7ES57pjqjFZxgCKmMjzyc3Z+Qu9SP+Xc8861Unah3A
-         8dAI3EXXQCzlrcc7RFTvQbzt4waNll4B2zJtwJNg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xianting Tian <xianting_tian@126.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 117/255] fs: prevent BUG_ON in submit_bh_wbc()
-Date:   Tue,  1 Sep 2020 17:09:33 +0200
-Message-Id: <20200901151006.334908948@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 11:57:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58440 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731507AbgIAP5a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:57:30 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1F38C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:57:28 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id i26so2361405ejb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:57:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ja1Ngj7NH47x40mFJlmmy6/fspeTMYwfVXDFlvDZIns=;
+        b=R5Ah/xy7z0CYa/cOPWoKydl55+5AZx0X0xQJSi7oXsefEDGnUWoEmUvrBgHDB6qi9M
+         /0BqPFsX1uD16ZqQrlqlFY/brxotDPaHIoOx5hvvLGC7lSE/Rn1VXNwev5SZpYADEWZW
+         xGNROhES6O3tp7K9FtFb1rbn1WTcgV36Lmdx4vC4Z9L++ntjEsM9CkS30Xkv7gD8IL23
+         xj71aaX3htYZQSlf+C1O1oREaf7eGZp+A5SifAfa3S5foT+pHlv7zElngZUgc2r/DNbI
+         3ceu3otruVt5OiOnce89EX+sGUkJIuxUfOEGdYo8PjqYYHV/c0UHcQUPFJI8vhhJiyUW
+         Uyvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ja1Ngj7NH47x40mFJlmmy6/fspeTMYwfVXDFlvDZIns=;
+        b=PhXA+m9Yy3s282lhu/WpyNXMLv88oBE0fw0WiezpZAu1zA752w6MGeYeYv+kQBCu5C
+         SBjN/D2Cwpi2fdH2v3zZ6xsmJ+2lajHHg5U6lfLQ/Kg/gFEeeauohUBE6wfTtaOZ+bCa
+         GrU5pIP0VwFdnDoMQs/6gbtYM34pMjK7me0xxOIGbTraNDWiUl2Xgphc2Hln1x48GT2O
+         9cXXVxA/rG12JAqBPzH8YoVmMpdTiS7hjSNQYI7A7H9uA2PZTv+SRsczDWFrFnpL178x
+         jp8/m3mj0KBJWuxaIElc4IMRuFcTve61soqaLZdrehIQBDi2T70p+iYUFFF8wWVKlteH
+         9cEw==
+X-Gm-Message-State: AOAM533e+xXXZBhZRfi/bB1XNR0woJrC+nflWq/LUgsDBVfSllRMweJW
+        EZT9H6fpRDUyya5VWnErwDjcAVhgxrEfVhtg36I=
+X-Google-Smtp-Source: ABdhPJyuNoXmSK9kdaNb5NJmH/3HsU8fUsgYikM66A4Np4f+RaqiTJn5bkqn7polwbuP2ipcbL+X4LqpsmkGVqFyETs=
+X-Received: by 2002:a17:906:edd6:: with SMTP id sb22mr1911092ejb.499.1598975847689;
+ Tue, 01 Sep 2020 08:57:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <alpine.LSU.2.11.2008301343270.5954@eggly.anvils> <alpine.LSU.2.11.2008301405000.5954@eggly.anvils>
+In-Reply-To: <alpine.LSU.2.11.2008301405000.5954@eggly.anvils>
+From:   Yang Shi <shy828301@gmail.com>
+Date:   Tue, 1 Sep 2020 08:57:15 -0700
+Message-ID: <CAHbLzkrJ-E1LVbjfTAmoZ37Hw68SWjnUovvcedFVHfsLecp2Mw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] mm: fix check_move_unevictable_pages() on THP
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Kuo-Hsin Yang <vovoy@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xianting Tian <xianting_tian@126.com>
+On Sun, Aug 30, 2020 at 2:08 PM Hugh Dickins <hughd@google.com> wrote:
+>
+> check_move_unevictable_pages() is used in making unevictable shmem pages
+> evictable: by shmem_unlock_mapping(), drm_gem_check_release_pagevec() and
+> i915/gem check_release_pagevec().  Those may pass down subpages of a huge
+> page, when /sys/kernel/mm/transparent_hugepage/shmem_enabled is "force".
+>
+> That does not crash or warn at present, but the accounting of vmstats
+> unevictable_pgs_scanned and unevictable_pgs_rescued is inconsistent:
+> scanned being incremented on each subpage, rescued only on the head
+> (since tails already appear evictable once the head has been updated).
+>
+> 5.8 commit 5d91f31faf8e ("mm: swap: fix vmstats for huge page") has
+> established that vm_events in general (and unevictable_pgs_rescued in
+> particular) should count every subpage: so follow that precedent here.
+>
+> Do this in such a way that if mem_cgroup_page_lruvec() is made stricter
+> (to check page->mem_cgroup is always set), no problem: skip the tails
+> before calling it, and add thp_nr_pages() to vmstats on the head.
+>
+> Signed-off-by: Hugh Dickins <hughd@google.com>
 
-[ Upstream commit 377254b2cd2252c7c3151b113cbdf93a7736c2e9 ]
+Acked-by: Yang Shi <shy828301@gmail.com>
 
-If a device is hot-removed --- for example, when a physical device is
-unplugged from pcie slot or a nbd device's network is shutdown ---
-this can result in a BUG_ON() crash in submit_bh_wbc().  This is
-because the when the block device dies, the buffer heads will have
-their Buffer_Mapped flag get cleared, leading to the crash in
-submit_bh_wbc.
-
-We had attempted to work around this problem in commit a17712c8
-("ext4: check superblock mapped prior to committing").  Unfortunately,
-it's still possible to hit the BUG_ON(!buffer_mapped(bh)) if the
-device dies between when the work-around check in ext4_commit_super()
-and when submit_bh_wbh() is finally called:
-
-Code path:
-ext4_commit_super
-    judge if 'buffer_mapped(sbh)' is false, return <== commit a17712c8
-          lock_buffer(sbh)
-          ...
-          unlock_buffer(sbh)
-               __sync_dirty_buffer(sbh,...
-                    lock_buffer(sbh)
-                        judge if 'buffer_mapped(sbh))' is false, return <== added by this patch
-                            submit_bh(...,sbh)
-                                submit_bh_wbc(...,sbh,...)
-
-[100722.966497] kernel BUG at fs/buffer.c:3095! <== BUG_ON(!buffer_mapped(bh))' in submit_bh_wbc()
-[100722.966503] invalid opcode: 0000 [#1] SMP
-[100722.966566] task: ffff8817e15a9e40 task.stack: ffffc90024744000
-[100722.966574] RIP: 0010:submit_bh_wbc+0x180/0x190
-[100722.966575] RSP: 0018:ffffc90024747a90 EFLAGS: 00010246
-[100722.966576] RAX: 0000000000620005 RBX: ffff8818a80603a8 RCX: 0000000000000000
-[100722.966576] RDX: ffff8818a80603a8 RSI: 0000000000020800 RDI: 0000000000000001
-[100722.966577] RBP: ffffc90024747ac0 R08: 0000000000000000 R09: ffff88207f94170d
-[100722.966578] R10: 00000000000437c8 R11: 0000000000000001 R12: 0000000000020800
-[100722.966578] R13: 0000000000000001 R14: 000000000bf9a438 R15: ffff88195f333000
-[100722.966580] FS:  00007fa2eee27700(0000) GS:ffff88203d840000(0000) knlGS:0000000000000000
-[100722.966580] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[100722.966581] CR2: 0000000000f0b008 CR3: 000000201a622003 CR4: 00000000007606e0
-[100722.966582] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[100722.966583] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[100722.966583] PKRU: 55555554
-[100722.966583] Call Trace:
-[100722.966588]  __sync_dirty_buffer+0x6e/0xd0
-[100722.966614]  ext4_commit_super+0x1d8/0x290 [ext4]
-[100722.966626]  __ext4_std_error+0x78/0x100 [ext4]
-[100722.966635]  ? __ext4_journal_get_write_access+0xca/0x120 [ext4]
-[100722.966646]  ext4_reserve_inode_write+0x58/0xb0 [ext4]
-[100722.966655]  ? ext4_dirty_inode+0x48/0x70 [ext4]
-[100722.966663]  ext4_mark_inode_dirty+0x53/0x1e0 [ext4]
-[100722.966671]  ? __ext4_journal_start_sb+0x6d/0xf0 [ext4]
-[100722.966679]  ext4_dirty_inode+0x48/0x70 [ext4]
-[100722.966682]  __mark_inode_dirty+0x17f/0x350
-[100722.966686]  generic_update_time+0x87/0xd0
-[100722.966687]  touch_atime+0xa9/0xd0
-[100722.966690]  generic_file_read_iter+0xa09/0xcd0
-[100722.966694]  ? page_cache_tree_insert+0xb0/0xb0
-[100722.966704]  ext4_file_read_iter+0x4a/0x100 [ext4]
-[100722.966707]  ? __inode_security_revalidate+0x4f/0x60
-[100722.966709]  __vfs_read+0xec/0x160
-[100722.966711]  vfs_read+0x8c/0x130
-[100722.966712]  SyS_pread64+0x87/0xb0
-[100722.966716]  do_syscall_64+0x67/0x1b0
-[100722.966719]  entry_SYSCALL64_slow_path+0x25/0x25
-
-To address this, add the check of 'buffer_mapped(bh)' to
-__sync_dirty_buffer().  This also has the benefit of fixing this for
-other file systems.
-
-With this addition, we can drop the workaround in ext4_commit_supper().
-
-[ Commit description rewritten by tytso. ]
-
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
-Link: https://lore.kernel.org/r/1596211825-8750-1-git-send-email-xianting_tian@126.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/buffer.c     | 9 +++++++++
- fs/ext4/super.c | 7 -------
- 2 files changed, 9 insertions(+), 7 deletions(-)
-
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 64fe82ec65ff1..75a8849abb5d2 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3160,6 +3160,15 @@ int __sync_dirty_buffer(struct buffer_head *bh, int op_flags)
- 	WARN_ON(atomic_read(&bh->b_count) < 1);
- 	lock_buffer(bh);
- 	if (test_clear_buffer_dirty(bh)) {
-+		/*
-+		 * The bh should be mapped, but it might not be if the
-+		 * device was hot-removed. Not much we can do but fail the I/O.
-+		 */
-+		if (!buffer_mapped(bh)) {
-+			unlock_buffer(bh);
-+			return -EIO;
-+		}
-+
- 		get_bh(bh);
- 		bh->b_end_io = end_buffer_write_sync;
- 		ret = submit_bh(REQ_OP_WRITE, op_flags, bh);
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 4c8253188d8df..f3614299ffd09 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -5204,13 +5204,6 @@ static int ext4_commit_super(struct super_block *sb, int sync)
- 	if (!sbh || block_device_ejected(sb))
- 		return error;
- 
--	/*
--	 * The superblock bh should be mapped, but it might not be if the
--	 * device was hot-removed. Not much we can do but fail the I/O.
--	 */
--	if (!buffer_mapped(sbh))
--		return error;
--
- 	/*
- 	 * If the file system is mounted read-only, don't update the
- 	 * superblock write time.  This avoids updating the superblock
--- 
-2.25.1
-
-
-
+> ---
+> Nothing here worth going to stable, since it's just a testing config
+> that is fixed, whose event numbers are not very important; but this
+> will be needed before Alex Shi's warning, and might as well go in now.
+>
+> The callers of check_move_unevictable_pages() could be optimized,
+> to skip over tails: but Matthew Wilcox has other changes in flight
+> there, so let's skip the optimization for now.
+>
+>  mm/vmscan.c |   10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> --- 5.9-rc2/mm/vmscan.c 2020-08-16 17:32:50.721507348 -0700
+> +++ linux/mm/vmscan.c   2020-08-28 17:47:10.595580876 -0700
+> @@ -4260,8 +4260,14 @@ void check_move_unevictable_pages(struct
+>         for (i = 0; i < pvec->nr; i++) {
+>                 struct page *page = pvec->pages[i];
+>                 struct pglist_data *pagepgdat = page_pgdat(page);
+> +               int nr_pages;
+> +
+> +               if (PageTransTail(page))
+> +                       continue;
+> +
+> +               nr_pages = thp_nr_pages(page);
+> +               pgscanned += nr_pages;
+>
+> -               pgscanned++;
+>                 if (pagepgdat != pgdat) {
+>                         if (pgdat)
+>                                 spin_unlock_irq(&pgdat->lru_lock);
+> @@ -4280,7 +4286,7 @@ void check_move_unevictable_pages(struct
+>                         ClearPageUnevictable(page);
+>                         del_page_from_lru_list(page, lruvec, LRU_UNEVICTABLE);
+>                         add_page_to_lru_list(page, lruvec, lru);
+> -                       pgrescued++;
+> +                       pgrescued += nr_pages;
+>                 }
+>         }
+>
+>
