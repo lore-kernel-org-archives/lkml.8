@@ -5,47 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C717CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC66C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B44D206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB9120BED
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:13:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973222;
-	bh=0IHfMM1s3befRcEn9mSaFSTKf4HKZA9VqVK3eO/CPXs=;
+	s=default; t=1598973226;
+	bh=vyX6KFhLDPQYWOhNZKHtYhMGbJn531QYcAQCxQwkDKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ihxNyIWGrJshv9bpf0cI/8h11TQWC3NhpQAgyhBDxdv/pmronDpz1phovKR6P5xVV
-	 STPPYNxj61xwx6J/AVtSJ5a/GWylELC5sLnsvROPev2EcfL6SM/9GUkcnONkOQQu+R
-	 XqPQlzba2erpKFU5NAPISZYMhK4usJ7HFhXQIlDs=
+	b=gQ9/HbbiJtWGOga6L6qFpuW/vBoDLB8pWaVWsEYeGpORJquqexb/yT/Jq2w8z6Ef4
+	 9xorwzs3mYtFENAIWruoalg6XHEHWVHFpwbQF3Ez6i/HCSqC+ioczq9yqmDLGqKzYJ
+	 R2Xe9CpdMJENqxZks6o9Kipc3k4O70PBQWAfBcN8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbgIAPNk (ORCPT
+        id S1728957AbgIAPNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:13:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55970 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:13:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728861AbgIAPNH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:07 -0400
+        id S1728871AbgIAPNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:13:10 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3BDA2078B;
-        Tue,  1 Sep 2020 15:13:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ED3F206FA;
+        Tue,  1 Sep 2020 15:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973187;
-        bh=0IHfMM1s3befRcEn9mSaFSTKf4HKZA9VqVK3eO/CPXs=;
+        s=default; t=1598973189;
+        bh=vyX6KFhLDPQYWOhNZKHtYhMGbJn531QYcAQCxQwkDKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q3ZCXnOdggcAUXwtaMr5BXzALKFEyqAbQlT32pumxV+clVlleHvOji2xJPQl1y9SY
-         5dIcKhe3HzcYewUWo1zKLqT3ShUpRmkGAhFbsUTQJgIgj+Uxp5qpouOGm919u3ET4X
-         CgwkzY9QJkvto5RMB03t9fq088kdqjX174pXXKOY=
+        b=ofsZaN5eyIeZpW0+ru0jDFAUb9Y0E0gVBaBLcVrMj2HHMexrMoNKIRtJxlRfzILew
+         EiuzCcsOKD7I2EmZd8o/WlVmCJok+V26I8T43YDDcLZK/fbA8KHyPUWKZdQs4Pdb1v
+         VwG4bNZm1q3B9MtWFBWlPx3FlpVeDMC4qsdQGrVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>
-Subject: [PATCH 4.4 41/62] USB: lvtest: return proper error code in probe
-Date:   Tue,  1 Sep 2020 17:10:24 +0200
-Message-Id: <20200901150922.799754719@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+Subject: [PATCH 4.4 42/62] vt: defer kfree() of vc_screenbuf in vc_do_resize()
+Date:   Tue,  1 Sep 2020 17:10:25 +0200
+Message-Id: <20200901150922.848353509@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -58,35 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 
-commit 531412492ce93ea29b9ca3b4eb5e3ed771f851dd upstream.
+commit f8d1653daec02315e06d30246cff4af72e76e54e upstream.
 
-lvs_rh_probe() can return some nonnegative value from usb_control_msg()
-when it is less than "USB_DT_HUB_NONVAR_SIZE + 2" that is considered as
-a failure. Make lvs_rh_probe() return -EINVAL in this case.
+syzbot is reporting UAF bug in set_origin() from vc_do_resize() [1], for
+vc_do_resize() calls kfree(vc->vc_screenbuf) before calling set_origin().
 
-Found by Linux Driver Verification project (linuxtesting.org).
+Unfortunately, in set_origin(), vc->vc_sw->con_set_origin() might access
+vc->vc_pos when scroll is involved in order to manipulate cursor, but
+vc->vc_pos refers already released vc->vc_screenbuf until vc->vc_pos gets
+updated based on the result of vc->vc_sw->con_set_origin().
 
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
+Preserving old buffer and tolerating outdated vc members until set_origin()
+completes would be easier than preventing vc->vc_sw->con_set_origin() from
+accessing outdated vc members.
+
+[1] https://syzkaller.appspot.com/bug?id=6649da2081e2ebdc65c0642c214b27fe91099db3
+
+Reported-by: syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>
+Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200805090643.3432-1-novikov@ispras.ru
+Link: https://lore.kernel.org/r/1596034621-4714-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/lvstest.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/vt/vt.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/misc/lvstest.c
-+++ b/drivers/usb/misc/lvstest.c
-@@ -396,7 +396,7 @@ static int lvs_rh_probe(struct usb_inter
- 			USB_DT_SS_HUB_SIZE, USB_CTRL_GET_TIMEOUT);
- 	if (ret < (USB_DT_HUB_NONVAR_SIZE + 2)) {
- 		dev_err(&hdev->dev, "wrong root hub descriptor read %d\n", ret);
--		return ret;
-+		return ret < 0 ? ret : -EINVAL;
- 	}
+--- a/drivers/tty/vt/vt.c
++++ b/drivers/tty/vt/vt.c
+@@ -864,7 +864,7 @@ static int vc_do_resize(struct tty_struc
+ 	unsigned int old_rows, old_row_size;
+ 	unsigned int new_cols, new_rows, new_row_size, new_screen_size;
+ 	unsigned int user;
+-	unsigned short *newscreen;
++	unsigned short *oldscreen, *newscreen;
  
- 	/* submit urb to poll interrupt endpoint */
+ 	WARN_CONSOLE_UNLOCKED();
+ 
+@@ -946,10 +946,11 @@ static int vc_do_resize(struct tty_struc
+ 	if (new_scr_end > new_origin)
+ 		scr_memsetw((void *)new_origin, vc->vc_video_erase_char,
+ 			    new_scr_end - new_origin);
+-	kfree(vc->vc_screenbuf);
++	oldscreen = vc->vc_screenbuf;
+ 	vc->vc_screenbuf = newscreen;
+ 	vc->vc_screenbuf_size = new_screen_size;
+ 	set_origin(vc);
++	kfree(oldscreen);
+ 
+ 	/* do part of a reset_terminal() */
+ 	vc->vc_top = 0;
 
 
