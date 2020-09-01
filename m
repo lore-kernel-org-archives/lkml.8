@@ -2,109 +2,135 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292CFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474B1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13555208CA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F7302071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgIAR6b (ORCPT
+        id S1729795AbgIAR70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:58:31 -0400
-Received: from mga18.intel.com ([134.134.136.126]:21068 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIAR63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:58:29 -0400
-IronPort-SDR: tsaXhVb5DH2Pqio5lfj0Dj4oJhOMtQMkHO/iirC3pO/QCkzQ1DxXAJobuqs34X4DY9dRa1Mcc8
- IukZZxe/vxKw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="144922321"
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="144922321"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:58:27 -0700
-IronPort-SDR: XwMESqPFxr04kLMfyQaui9VPnLF/D1itQuPP2/9KGJduUhBwiqOg07SfbLgLhc4VMmOKQNhS4d
- WGuXhXSy4f2Q==
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="477293602"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.241.30]) ([10.212.241.30])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:58:25 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Dave Martin <Dave.Martin@arm.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <20200825002540.3351-1-yu-cheng.yu@intel.com>
- <20200825002540.3351-26-yu-cheng.yu@intel.com>
- <CALCETrVpLnZGfWWLpJO+aZ9aBbx5KGaCskejXiCXF1GtsFFoPg@mail.gmail.com>
- <2d253891-9393-44d0-35e0-4b9a2da23cec@intel.com>
- <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
- <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <20200826170841.GX6642@arm.com> <87tuwow7kg.fsf@oldenburg2.str.redhat.com>
- <CAMe9rOrhjLSaMNABnzd=Kp5UeVot1Qkx0_PnMng=sT+wd9Xubw@mail.gmail.com>
- <873648w6qr.fsf@oldenburg2.str.redhat.com>
- <CAMe9rOqpLyWR+Ek7aBiRY+Kr6sRxkSHAo2Sc6h0YCv3X3-3TuQ@mail.gmail.com>
- <CAMe9rOpuwZesJqY_2wYhdRXMhd7g0a+MRqPtXKh7wX5B5-OSbA@mail.gmail.com>
- <3c12b6ee-7c93-dcf4-fbf7-2698003386dd@intel.com>
- <87o8mpqtcn.fsf@oldenburg2.str.redhat.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <b84e6fae-5d51-b0a0-d917-76f86b3186b7@intel.com>
-Date:   Tue, 1 Sep 2020 10:58:25 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 13:59:26 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:45828 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729209AbgIAR7Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:59:24 -0400
+Received: by mail-io1-f70.google.com with SMTP id q5so1503127ion.12
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 10:59:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=nZLkmS+xZx8+jzu46vFdG46awGaN/cvwGNUAIfRPZ/w=;
+        b=bErCmz4roaOh7y3hOMqlgu4UJRZj/ll5Ln7miMtaFWIbRT08LjDCZFQvaudTlr7DnN
+         pPqZBWrBJO1bbP7NqK+3/WVXPwQJVMgE1tPsmL+UfFxD5ik0EIxW+s8gtYScaBVMpFxG
+         tka03KHo3Fg7uti1TwoCqU4YdsUy1MweH39bNkIi36DLEBH/zAuemmaok8YW/BHEtFT5
+         AvWU48AnjeT7dj1//Orcd+23mqk7NNwCzk4zxx+CE4NvR1dMGLi2DQygNkCqwC3D4yeR
+         Jg++9ILOdhPmv3jnAvqfdQ0LhONfR64OX1wN0eia78/WXLdYSuF5Uz1Y/K7qqIKDAML+
+         2oRQ==
+X-Gm-Message-State: AOAM531vL68zIGWL3dKCOtpStKu7/AqczrQYwXaz5Xqvwg7sjrKufFBW
+        ghHR+iQYLo80v8TWkJnjvFvqkUHANYxW72tbiylB1gDxgJpt
+X-Google-Smtp-Source: ABdhPJzOLLXElESGbYVDbjp0rrW7e7TzzKRRGzu3yO+Tn0qvwcah9P+5PLNviPSZl2KIUKbYRDFCch4vzJb0JFjYw1W/wcgbK1JZ
 MIME-Version: 1.0
-In-Reply-To: <87o8mpqtcn.fsf@oldenburg2.str.redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6638:d95:: with SMTP id l21mr2394825jaj.98.1598983162854;
+ Tue, 01 Sep 2020 10:59:22 -0700 (PDT)
+Date:   Tue, 01 Sep 2020 10:59:22 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006c834505ae44475b@google.com>
+Subject: INFO: task can't die in irqentry_exit
+From:   syzbot <syzbot+c4af95386364bc59b13e@syzkaller.appspotmail.com>
+To:     keescook@chromium.org, linux-kernel@vger.kernel.org,
+        mingo@kernel.org, paulmck@kernel.org,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/2020 10:50 AM, Florian Weimer wrote:
-> * Yu-cheng Yu:
-> 
->> Like other arch_prctl()'s, this parameter was 'unsigned long'
->> earlier. The idea was, since this arch_prctl is only implemented for
->> the 64-bit kernel, we wanted it to look as 64-bit only.  I will change
->> it back to 'unsigned long'.
-> 
-> What about x32?  In general, long is rather problematic for x32.
+Hello,
 
-The problem is the size of 'long', right?
-Because this parameter is passed in a register, and only the lower bits 
-are used, x32 works as well.
+syzbot found the following issue on:
+
+HEAD commit:    b36c9697 Add linux-next specific files for 20200828
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=118ca625900000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5e3cf99580b5542c
+dashboard link: https://syzkaller.appspot.com/bug?extid=c4af95386364bc59b13e
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c4af95386364bc59b13e@syzkaller.appspotmail.com
+
+INFO: task syz-executor.0:5956 can't die for more than 143 seconds.
+task:syz-executor.0  state:R  running task     stack:25424 pid: 5956 ppid: 14284 flags:0x00004004
+Call Trace:
+ context_switch kernel/sched/core.c:3778 [inline]
+ __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
+ preempt_schedule_irq+0xb0/0x150 kernel/sched/core.c:4785
+ irqentry_exit_cond_resched kernel/entry/common.c:333 [inline]
+ irqentry_exit_cond_resched kernel/entry/common.c:325 [inline]
+ irqentry_exit+0x65/0x90 kernel/entry/common.c:363
+ asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:581
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:653 [inline]
+RIP: 0010:lock_acquire+0x27b/0xad0 kernel/locking/lockdep.c:5008
+Code: 00 00 00 00 fc ff df 48 c1 e8 03 80 3c 10 00 0f 85 f8 06 00 00 48 83 3d 6a d1 5b 08 00 0f 84 a6 05 00 00 48 8b 7c 24 08 57 9d <0f> 1f 44 00 00 48 b8 00 00 00 00 00 fc ff df 48 03 44 24 10 48 c7
+RSP: 0018:ffffc900088477c0 EFLAGS: 00000286
+RAX: 1ffffffff136c7d9 RBX: ffff88808766c200 RCX: 000000005603e267
+RDX: dffffc0000000000 RSI: 0000000000000001 RDI: 0000000000000286
+RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffff8c6a59e7
+R10: fffffbfff18d4b3c R11: 0000000000000001 R12: 0000000000000002
+R13: ffffffff89c67640 R14: 0000000000000000 R15: ffff88808766c200
+ rcu_lock_acquire include/linux/rcupdate.h:248 [inline]
+ rcu_read_lock include/linux/rcupdate.h:641 [inline]
+ inet_twsk_purge+0x112/0x7c0 net/ipv4/inet_timewait_sock.c:268
+ ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
+ setup_net+0x508/0x850 net/core/net_namespace.c:364
+ copy_net_ns+0x31e/0x760 net/core/net_namespace.c:482
+ create_new_namespaces+0x3f6/0xb20 kernel/nsproxy.c:110
+ copy_namespaces+0x385/0x470 kernel/nsproxy.c:179
+ copy_process+0x293d/0x6bf0 kernel/fork.c:2090
+ _do_fork+0xe8/0xb10 kernel/fork.c:2448
+ __do_sys_clone+0xc8/0x110 kernel/fork.c:2565
+ do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45d5b9
+Code: Bad RIP value.
+RSP: 002b:00007fda8e0a3c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000038
+RAX: ffffffffffffffda RBX: 0000000000001f40 RCX: 000000000045d5b9
+RDX: 9999999999999999 RSI: 0000000000000000 RDI: 00000000e1004d7c
+RBP: 000000000118cf90 R08: ffffffffffffffff R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
+R13: 00007ffe7d457dcf R14: 00007fda8e0a49c0 R15: 000000000118cf4c
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1169:
+ #0: ffffffff89c67640 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5825
+1 lock held by in:imklog/6579:
+ #0: ffff8880a166e430 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
+3 locks held by kworker/u4:2/15395:
+1 lock held by syz-executor.0/5956:
+3 locks held by syz-executor.1/12814:
+ #0: ffff8880ae635f98 (&rq->lock){-.-.}-{2:2}, at: rq_lock kernel/sched/sched.h:1292 [inline]
+ #0: ffff8880ae635f98 (&rq->lock){-.-.}-{2:2}, at: __schedule+0x232/0x21e0 kernel/sched/core.c:4445
+ #1: ffff8880ae620ec8 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x2fb/0x400 kernel/sched/psi.c:833
+ #2: ffff888090a82438 (&sig->wait_chldexit){....}-{2:2}, at: __wake_up_common_lock+0xb4/0x130 kernel/sched/wait.c:122
+
+=============================================
+
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
