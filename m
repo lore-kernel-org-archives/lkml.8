@@ -2,163 +2,223 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E9AC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:58:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 415F4C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D9EC2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:58:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="02H760kZ"
+	by mail.kernel.org (Postfix) with ESMTP id 293FD206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:03:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgIAU6r (ORCPT
+        id S1728752AbgIAVDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:58:47 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38807 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbgIAU6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:58:46 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 87A5684488;
-        Wed,  2 Sep 2020 08:58:41 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1598993921;
-        bh=pwwOTo4HjFxEhPfVBMM5/92LuLyxOWSNLA1cU8rOBYo=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=02H760kZKDvRLVPFCyqHZKQ1hg4g2He0ETd5//0atDfRwCsuEkBt/HLXAGpOYegP0
-         k+xsnhise8JrnjMMaWO8lSBhqVVnSNiVPcoC4ClRKo+UGG51daZFNELt8UNPsEagWG
-         tk2TO2y0jDcaOekRE6AmhDTVEj/aSpNH3ngyhfgi6vP71xgwrmzTPC489NvDv9835l
-         wYfDGaYF7Q2J/Egbh0n/3u8y86ISKPH0CkyjXM799srXJ42ZQc5VrevBYSXjyp+Zfq
-         DDDgZMHbQDySR8umg7n2098kb2IZRO2x821q0p0vbzzBiOqPzV3rrx2GcykJkyVSpd
-         6NPpyUAvaBU9Q==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5f4eb5ff0001>; Wed, 02 Sep 2020 08:58:39 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1497.2; Wed, 2 Sep 2020 08:58:41 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1497.006; Wed, 2 Sep 2020 08:58:41 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     Evan Nimmo <Evan.Nimmo@alliedtelesis.co.nz>,
-        "wsa@kernel.org" <wsa@kernel.org>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "jdelvare@suse.de" <jdelvare@suse.de>,
-        "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>
-CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
-Thread-Topic: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
-Thread-Index: AQHWf/rlsLodCzGj+0ymaR+eTrtgJqlTfDYA
-Date:   Tue, 1 Sep 2020 20:58:41 +0000
-Message-ID: <842bf7c4-3677-4182-4def-89f198e81fb7@alliedtelesis.co.nz>
-References: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
-In-Reply-To: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.32.1.11]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C0679069F136714B85EA9B9BBDDDDE1B@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Tue, 1 Sep 2020 17:03:37 -0400
+Received: from mga18.intel.com ([134.134.136.126]:37428 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726167AbgIAVDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 17:03:30 -0400
+IronPort-SDR: ohtC0OP3vDbFvCCCpRzwN0IdJaexH0q8O3XwDKIsbKVpKejk8XjaHvk1A2Jg7ev5A4W2r3+h2c
+ CiS4rV2MwWaA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="144956898"
+X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
+   d="scan'208";a="144956898"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 14:03:29 -0700
+IronPort-SDR: KxUPh/KtbUa7rCLdTFnD930pO4G4SfLCgZZBfMOdw+s6C8QUx8eOOlPOzeEilNLITotaTmDQjS
+ mKcn3mvILQAQ==
+X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
+   d="scan'208";a="297450122"
+Received: from paasikivi.fi.intel.com ([10.237.72.42])
+  by orsmga003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 14:03:26 -0700
+Received: from punajuuri.localdomain (punajuuri.localdomain [192.168.240.130])
+        by paasikivi.fi.intel.com (Postfix) with ESMTP id 9098022845;
+        Wed,  2 Sep 2020 00:03:24 +0300 (EEST)
+Received: from sailus by punajuuri.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@linux.intel.com>)
+        id 1kDDRF-0002DU-Ec; Wed, 02 Sep 2020 00:03:33 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        rajmohan.mani@intel.com, Tomasz Figa <tfiga@chromium.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Bingbu Cao <bingbu.cao@intel.com>,
+        Chiranjeevi Rapolu <chiranjeevi.rapolu@intel.com>,
+        Hyungwoo Yang <hyungwoo.yang@intel.com>,
+        linux-media@vger.kernel.org
+Subject: [PATCH v7 4/6] media: i2c: imx319: Support probe while the device is off
+Date:   Wed,  2 Sep 2020 00:03:31 +0300
+Message-Id: <20200901210333.8462-5-sakari.ailus@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200901210333.8462-1-sakari.ailus@linux.intel.com>
+References: <20200901210333.8462-1-sakari.ailus@linux.intel.com>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRXZhbiwNCg0KT25lIG1pbm9yIGNvbW1lbnQgZnJvbSBtZSBiZWxvdy4gV2l0aCB0aGF0DQoN
-ClJldmlld2VkLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMu
-Y28ubno+DQoNCk9uIDEvMDkvMjAgMTI6NTcgcG0sIEV2YW4gTmltbW8gd3JvdGU6DQo+IElmIHNv
-bWV0aGluZyBnb2VzIHdyb25nIChzdWNoIGFzIHRoZSBTQ0wgYmVpbmcgc3R1Y2sgbG93KSB0aGVu
-IHdlIG5lZWQNCj4gdG8gcmVzZXQgdGhlIHBjYSBjaGlwLiBUaGUgaXNzdWUgd2l0aCB0aGlzIGlz
-IHRoYXQgb24gcmVzZXQgd2UgbG9zZSBhbGwNCj4gY29uZmlnIHNldHRpbmdzIGFuZCB0aGUgY2hp
-cCBlbmRzIHVwIGluIGEgZGlzYWJsZWQgc3RhdGUgd2hpY2ggcmVzdWx0cw0KPiBpbiBhIGxvY2sg
-dXAvaGlnaCBjcHUgdXNhZ2UuIFdlIG5lZWQgdG8gcmUtYXBwbHkgYW55IGNvbmZpZ3VyYXRpb24g
-dGhhdA0KPiBoYWQgcHJldmlvdXNseSBiZWVuIHNldCBhbmQgcmUtZW5hYmxlIHRoZSBjaGlwLg0K
-Pg0KPiBTaWduZWQtb2ZmLWJ5OiBFdmFuIE5pbW1vIDxldmFuLm5pbW1vQGFsbGllZHRlbGVzaXMu
-Y28ubno+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvaTJjL2FsZ29zL2kyYy1hbGdvLXBjYS5jIHwgMzYg
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gICBpbmNsdWRlL2xpbnV4L2kyYy1h
-bGdvLXBjYS5oICAgICB8IDE1ICsrKysrKysrKysrKysNCj4gICAyIGZpbGVzIGNoYW5nZWQsIDM5
-IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9pMmMvYWxnb3MvaTJjLWFsZ28tcGNhLmMgYi9kcml2ZXJzL2kyYy9hbGdvcy9pMmMtYWxnby1w
-Y2EuYw0KPiBpbmRleCA3MTBmYmVmOWE5YzIuLjJlNGUyNzA3M2Y0MCAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9pMmMvYWxnb3MvaTJjLWFsZ28tcGNhLmMNCj4gKysrIGIvZHJpdmVycy9pMmMvYWxn
-b3MvaTJjLWFsZ28tcGNhLmMNCj4gQEAgLTQxLDggKzQxLDIyIEBAIHN0YXRpYyB2b2lkIHBjYV9y
-ZXNldChzdHJ1Y3QgaTJjX2FsZ29fcGNhX2RhdGEgKmFkYXApDQo+ICAgCQlwY2Ffb3V0dyhhZGFw
-LCBJMkNfUENBX0lORFBUUiwgSTJDX1BDQV9JUFJFU0VUKTsNCj4gICAJCXBjYV9vdXR3KGFkYXAs
-IEkyQ19QQ0FfSU5ELCAweEE1KTsNCj4gICAJCXBjYV9vdXR3KGFkYXAsIEkyQ19QQ0FfSU5ELCAw
-eDVBKTsNCj4gKw0KPiArCQkvKiBXZSBuZWVkIHRvIGFwcGx5IGFueSBjb25maWd1cmF0aW9uIHNl
-dHRpbmdzIHRoYXQNCj4gKwkJICogd2VyZSBjYWxjdWxhdGVkIGluIHRoZSBwY2FfaW5pdCBmdW5j
-dGlvbi4gVGhlIHJlc2V0DQo+ICsJCSAqIHJlc3VsdHMgaW4gdGhlc2UgY2hhbmdlcyBiZWluZyBz
-ZXQgYmFjayB0byBkZWZhdWx0cy4NCj4gKwkJICovDQoNCiJ0aGVzZSBjaGFuZ2VzIiBkb2Vzbid0
-IHJlYWQgd2VsbC4gSG93IGFib3V0DQoNCi8qDQogwqAqIEFmdGVyIGEgcmVzZXQgd2UgbmVlZCB0
-byByZS1hcHBseSBhbnkgY29uZmlndXJhdGlvbiAoY2FsY3VsYXRlZCBpbiANCnBjYV9pbml0KQ0K
-IMKgKiB0byBnZXQgdGhlIGJ1cyBpbiBhIHdvcmtpbmcgc3RhdGUuDQogwqAqLw0KDQo+ICsJCXBj
-YV9vdXR3KGFkYXAsIEkyQ19QQ0FfSU5EUFRSLCBJMkNfUENBX0lNT0RFKTsNCj4gKwkJcGNhX291
-dHcoYWRhcCwgSTJDX1BDQV9JTkQsIGFkYXAtPmJ1c19zZXR0aW5ncy5tb2RlKTsNCj4gKwkJcGNh
-X291dHcoYWRhcCwgSTJDX1BDQV9JTkRQVFIsIEkyQ19QQ0FfSVNDTEwpOw0KPiArCQlwY2Ffb3V0
-dyhhZGFwLCBJMkNfUENBX0lORCwgYWRhcC0+YnVzX3NldHRpbmdzLnRsb3cpOw0KPiArCQlwY2Ff
-b3V0dyhhZGFwLCBJMkNfUENBX0lORFBUUiwgSTJDX1BDQV9JU0NMSCk7DQo+ICsJCXBjYV9vdXR3
-KGFkYXAsIEkyQ19QQ0FfSU5ELCBhZGFwLT5idXNfc2V0dGluZ3MudGhpKTsNCj4gKw0KPiArCQlw
-Y2Ffc2V0X2NvbihhZGFwLCBJMkNfUENBX0NPTl9FTlNJTyk7DQo+ICAgCX0gZWxzZSB7DQo+ICAg
-CQlhZGFwLT5yZXNldF9jaGlwKGFkYXAtPmRhdGEpOw0KPiArCQlwY2Ffc2V0X2NvbihhZGFwLCBJ
-MkNfUENBX0NPTl9FTlNJTyB8IGFkYXAtPmJ1c19zZXR0aW5ncy5jbG9ja19mcmVxKTsNCj4gICAJ
-fQ0KPiAgIH0NCj4gICANCj4gQEAgLTQyMywxMyArNDM3LDE1IEBAIHN0YXRpYyBpbnQgcGNhX2lu
-aXQoc3RydWN0IGkyY19hZGFwdGVyICphZGFwKQ0KPiAgIAkJCQkiIFVzZSB0aGUgbm9taW5hbCBm
-cmVxdWVuY3kuXG4iLCBhZGFwLT5uYW1lKTsNCj4gICAJCX0NCj4gICANCj4gKwkJY2xvY2sgPSBw
-Y2FfY2xvY2socGNhX2RhdGEpOw0KPiArDQo+ICsJCS8qIFN0b3JlIHNldHRpbmdzIGFzIHRoZXNl
-IHdpbGwgYmUgbmVlZGVkIHdoZW4gdGhlIHBjYSBjaGlwIGlzIHJlc2V0ICovDQo+ICsJCXBjYV9k
-YXRhLT5idXNfc2V0dGluZ3MuY2xvY2tfZnJlcSA9IGNsb2NrOw0KPiArDQo+ICAgCQlwY2FfcmVz
-ZXQocGNhX2RhdGEpOw0KPiAgIA0KPiAtCQljbG9jayA9IHBjYV9jbG9jayhwY2FfZGF0YSk7DQo+
-ICAgCQlwcmludGsoS0VSTl9JTkZPICIlczogQ2xvY2sgZnJlcXVlbmN5IGlzICVka0h6XG4iLA0K
-PiAgIAkJICAgICBhZGFwLT5uYW1lLCBmcmVxc1tjbG9ja10pOw0KPiAtDQo+IC0JCXBjYV9zZXRf
-Y29uKHBjYV9kYXRhLCBJMkNfUENBX0NPTl9FTlNJTyB8IGNsb2NrKTsNCj4gICAJfSBlbHNlIHsN
-Cj4gICAJCWludCBjbG9jazsNCj4gICAJCWludCBtb2RlOw0KPiBAQCAtNDk2LDE5ICs1MTIsMTUg
-QEAgc3RhdGljIGludCBwY2FfaW5pdChzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXApDQo+ICAgCQkJ
-dGhpID0gdGxvdyAqIG1pbl90aGkgLyBtaW5fdGxvdzsNCj4gICAJCX0NCj4gICANCj4gKwkJLyog
-U3RvcmUgc2V0dGluZ3MgYXMgdGhlc2Ugd2lsbCBiZSBuZWVkZWQgd2hlbiB0aGUgcGNhIGNoaXAg
-aXMgcmVzZXQgKi8NCj4gKwkJcGNhX2RhdGEtPmJ1c19zZXR0aW5ncy5tb2RlID0gbW9kZTsNCj4g
-KwkJcGNhX2RhdGEtPmJ1c19zZXR0aW5ncy50bG93ID0gdGxvdzsNCj4gKwkJcGNhX2RhdGEtPmJ1
-c19zZXR0aW5ncy50aGkgPSB0aGk7DQo+ICsNCj4gICAJCXBjYV9yZXNldChwY2FfZGF0YSk7DQo+
-ICAgDQo+ICAgCQlwcmludGsoS0VSTl9JTkZPDQo+ICAgCQkgICAgICIlczogQ2xvY2sgZnJlcXVl
-bmN5IGlzICVkSHpcbiIsIGFkYXAtPm5hbWUsIGNsb2NrICogMTAwKTsNCj4gLQ0KPiAtCQlwY2Ff
-b3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9JTkRQVFIsIEkyQ19QQ0FfSU1PREUpOw0KPiAtCQlwY2Ff
-b3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9JTkQsIG1vZGUpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0
-YSwgSTJDX1BDQV9JTkRQVFIsIEkyQ19QQ0FfSVNDTEwpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0
-YSwgSTJDX1BDQV9JTkQsIHRsb3cpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9J
-TkRQVFIsIEkyQ19QQ0FfSVNDTEgpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9J
-TkQsIHRoaSk7DQo+IC0NCj4gLQkJcGNhX3NldF9jb24ocGNhX2RhdGEsIEkyQ19QQ0FfQ09OX0VO
-U0lPKTsNCj4gICAJfQ0KPiAgIAl1ZGVsYXkoNTAwKTsgLyogNTAwIHVzIGZvciBvc2NpbGxhdG9y
-IHRvIHN0YWJpbGlzZSAqLw0KPiAgIA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9pMmMt
-YWxnby1wY2EuaCBiL2luY2x1ZGUvbGludXgvaTJjLWFsZ28tcGNhLmgNCj4gaW5kZXggZDAzMDcx
-NzMyZGI0Li5lYmVhZGI4MGM3OTcgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvaTJjLWFs
-Z28tcGNhLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9pMmMtYWxnby1wY2EuaA0KPiBAQCAtNTMs
-NiArNTMsMjAgQEANCj4gICAjZGVmaW5lIEkyQ19QQ0FfQ09OX1NJCQkweDA4IC8qIFNlcmlhbCBJ
-bnRlcnJ1cHQgKi8NCj4gICAjZGVmaW5lIEkyQ19QQ0FfQ09OX0NSCQkweDA3IC8qIENsb2NrIFJh
-dGUgKE1BU0spICovDQo+ICAgDQo+ICsvKioNCj4gKyAqIHN0cnVjdCBpMmNfYnVzX3NldHRpbmdz
-IC0gVGhlIGNvbmZpZ3VyZWQgaTJjIGJ1cyBzZXR0aW5ncw0KPiArICogQG1vZGU6IENvbmZpZ3Vy
-ZWQgaTJjIGJ1cyBtb2RlIChQQ0E5NjY1KQ0KPiArICogQHRsb3c6IENvbmZpZ3VyZWQgU0NMIExP
-VyBwZXJpb2QgKFBDQTk2NjUpDQo+ICsgKiBAdGhpOiBDb25maWd1cmVkIFNDTCBISUdIIHBlcmlv
-ZCAoUENBOTY2NSkNCj4gKyAqIEBjbG9ja19mcmVxOiBUaGUgY29uZmlndXJlZCBjbG9jayBmcmVx
-dWVuY3kgKFBDQTk1NjQpDQo+ICsgKi8NCj4gK3N0cnVjdCBpMmNfYnVzX3NldHRpbmdzIHsNCj4g
-KwlpbnQgbW9kZTsNCj4gKwlpbnQgdGxvdzsNCj4gKwlpbnQgdGhpOw0KPiArCWludCBjbG9ja19m
-cmVxOw0KPiArfTsNCj4gKw0KPiAgIHN0cnVjdCBpMmNfYWxnb19wY2FfZGF0YSB7DQo+ICAgCXZv
-aWQgCQkJCSpkYXRhOwkvKiBwcml2YXRlIGxvdyBsZXZlbCBkYXRhICovDQo+ICAgCXZvaWQgKCp3
-cml0ZV9ieXRlKQkJKHZvaWQgKmRhdGEsIGludCByZWcsIGludCB2YWwpOw0KPiBAQCAtNjQsNiAr
-NzgsNyBAQCBzdHJ1Y3QgaTJjX2FsZ29fcGNhX2RhdGEgew0KPiAgIAkgKiBGb3IgUENBOTY2NSwg
-dXNlIHRoZSBmcmVxdWVuY3kgeW91IHdhbnQgaGVyZS4gKi8NCj4gICAJdW5zaWduZWQgaW50CQkJ
-aTJjX2Nsb2NrOw0KPiAgIAl1bnNpZ25lZCBpbnQJCQljaGlwOw0KPiArCXN0cnVjdCBpMmNfYnVz
-X3NldHRpbmdzCQlidXNfc2V0dGluZ3M7DQo+ICAgfTsNCj4gICANCj4gICBpbnQgaTJjX3BjYV9h
-ZGRfYnVzKHN0cnVjdCBpMmNfYWRhcHRlciAqKTs=
+From: Rajmohan Mani <rajmohan.mani@intel.com>
+
+Tell ACPI device PM code that the driver supports the device being powered
+off when the driver's probe function is entered.
+
+Signed-off-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+ drivers/media/i2c/imx319.c | 74 +++++++++++++++++++++++---------------
+ 1 file changed, 45 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/media/i2c/imx319.c b/drivers/media/i2c/imx319.c
+index 17c2e4b41221e..6b63bb0abb138 100644
+--- a/drivers/media/i2c/imx319.c
++++ b/drivers/media/i2c/imx319.c
+@@ -140,6 +140,8 @@ struct imx319 {
+ 
+ 	/* Streaming on/off */
+ 	bool streaming;
++	/* True if the device has been identified */
++	bool identified;
+ };
+ 
+ static const struct imx319_reg imx319_global_regs[] = {
+@@ -2084,6 +2086,31 @@ imx319_set_pad_format(struct v4l2_subdev *sd,
+ 	return 0;
+ }
+ 
++/* Verify chip ID */
++static int imx319_identify_module(struct imx319 *imx319)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(&imx319->sd);
++	int ret;
++	u32 val;
++
++	if (imx319->identified)
++		return 0;
++
++	ret = imx319_read_reg(imx319, IMX319_REG_CHIP_ID, 2, &val);
++	if (ret)
++		return ret;
++
++	if (val != IMX319_CHIP_ID) {
++		dev_err(&client->dev, "chip id mismatch: %x!=%x",
++			IMX319_CHIP_ID, val);
++		return -EIO;
++	}
++
++	imx319->identified = true;
++
++	return 0;
++}
++
+ /* Start streaming */
+ static int imx319_start_streaming(struct imx319 *imx319)
+ {
+@@ -2091,6 +2118,10 @@ static int imx319_start_streaming(struct imx319 *imx319)
+ 	const struct imx319_reg_list *reg_list;
+ 	int ret;
+ 
++	ret = imx319_identify_module(imx319);
++	if (ret)
++		return ret;
++
+ 	/* Global Setting */
+ 	reg_list = &imx319_global_setting;
+ 	ret = imx319_write_regs(imx319, reg_list->regs, reg_list->num_of_regs);
+@@ -2210,26 +2241,6 @@ static int __maybe_unused imx319_resume(struct device *dev)
+ 	return ret;
+ }
+ 
+-/* Verify chip ID */
+-static int imx319_identify_module(struct imx319 *imx319)
+-{
+-	struct i2c_client *client = v4l2_get_subdevdata(&imx319->sd);
+-	int ret;
+-	u32 val;
+-
+-	ret = imx319_read_reg(imx319, IMX319_REG_CHIP_ID, 2, &val);
+-	if (ret)
+-		return ret;
+-
+-	if (val != IMX319_CHIP_ID) {
+-		dev_err(&client->dev, "chip id mismatch: %x!=%x",
+-			IMX319_CHIP_ID, val);
+-		return -EIO;
+-	}
+-
+-	return 0;
+-}
+-
+ static const struct v4l2_subdev_core_ops imx319_subdev_core_ops = {
+ 	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
+ 	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+@@ -2424,6 +2435,7 @@ static struct imx319_hwcfg *imx319_get_hwcfg(struct device *dev)
+ static int imx319_probe(struct i2c_client *client)
+ {
+ 	struct imx319 *imx319;
++	bool low_power;
+ 	int ret;
+ 	u32 i;
+ 
+@@ -2436,11 +2448,14 @@ static int imx319_probe(struct i2c_client *client)
+ 	/* Initialize subdev */
+ 	v4l2_i2c_subdev_init(&imx319->sd, client, &imx319_subdev_ops);
+ 
+-	/* Check module identity */
+-	ret = imx319_identify_module(imx319);
+-	if (ret) {
+-		dev_err(&client->dev, "failed to find sensor: %d", ret);
+-		goto error_probe;
++	low_power = acpi_dev_state_low_power(&client->dev);
++	if (!low_power) {
++		/* Check module identity */
++		ret = imx319_identify_module(imx319);
++		if (ret) {
++			dev_err(&client->dev, "failed to find sensor: %d", ret);
++			goto error_probe;
++		}
+ 	}
+ 
+ 	imx319->hwcfg = imx319_get_hwcfg(&client->dev);
+@@ -2493,10 +2508,10 @@ static int imx319_probe(struct i2c_client *client)
+ 		goto error_media_entity;
+ 
+ 	/*
+-	 * Device is already turned on by i2c-core with ACPI domain PM.
+-	 * Enable runtime PM and turn off the device.
++	 * Don't set the device's state to active if it's in a low power state.
+ 	 */
+-	pm_runtime_set_active(&client->dev);
++	if (!low_power)
++		pm_runtime_set_active(&client->dev);
+ 	pm_runtime_enable(&client->dev);
+ 	pm_runtime_idle(&client->dev);
+ 
+@@ -2536,7 +2551,7 @@ static const struct dev_pm_ops imx319_pm_ops = {
+ };
+ 
+ static const struct acpi_device_id imx319_acpi_ids[] = {
+-	{ "SONY319A" },
++	{ "SONY319A", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(acpi, imx319_acpi_ids);
+@@ -2549,6 +2564,7 @@ static struct i2c_driver imx319_i2c_driver = {
+ 	},
+ 	.probe_new = imx319_probe,
+ 	.remove = imx319_remove,
++	.flags = I2C_DRV_FL_ALLOW_LOW_POWER_PROBE,
+ };
+ module_i2c_driver(imx319_i2c_driver);
+ 
+-- 
+2.20.1
+
