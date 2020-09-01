@@ -2,104 +2,119 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAD87C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E416DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 779B6204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976546;
-	bh=VKgDTcJEVJkXNweGm1k2v0p1QcJy2uODm4rk7Clru80=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k+mOUkQpCO7p4yqS1lLHa7rXLMuoVlzhSAJeIk/q6GLPlNV9yqnSOKbTrWhEikya2
-	 uqXszgUdfmi68e2Rik56nCAXI2GUh9KRWE79HGa42yNHWmB9lwn7xFOVHlHgTfaXrI
-	 eY4875X7gevcm4eKmuBtOD7Zr59otGu3rkqdMFMY=
+	by mail.kernel.org (Postfix) with ESMTP id B21F6204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gGijq2cv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728474AbgIAQJA (ORCPT
+        id S1730535AbgIAQJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:09:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48428 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731287AbgIAPjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:39:00 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99D0120866;
-        Tue,  1 Sep 2020 15:38:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974739;
-        bh=VKgDTcJEVJkXNweGm1k2v0p1QcJy2uODm4rk7Clru80=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xWM+bxp3rinqYchMiOOw74VGSdkCnB+jvyD+ORpRCsVEoPmjiWch7HFZHb3SsVxfJ
-         PO8b6xmoTZZYjRXiY2kqeAHJ1Kd1yFnMX0LkC66AUY68q6VM4QOXjA0DJ4H87AIDSo
-         DhKkr2h6VuZoZ0wnWv/91gRnKiw//8SjqACG0tbM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
-        Sean Wang <sean.wang@kernel.org>,
-        linux-mediatek@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 075/255] pinctrl: mediatek: fix build for tristate changes
-Date:   Tue,  1 Sep 2020 17:08:51 +0200
-Message-Id: <20200901151004.326270183@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 12:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729790AbgIAQIu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:08:50 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB476C061244;
+        Tue,  1 Sep 2020 09:08:48 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id k13so743871plk.13;
+        Tue, 01 Sep 2020 09:08:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=XCC1MeRo0BRoasyj+5VGbw00gjoW3R7USmRQ2Ubh6Bk=;
+        b=gGijq2cvjjnFqOBtVFVOUecKydlvZdUDmdEShkPQtQDERDF4peXrJgChqPs84f9ckP
+         b9dFKbatiQXXJdwfBqjlgmu2mdiy6xjOhtUqfe0G/V909ePxhCpK9gRe5baQbfZehm7W
+         zWVz+4iD1vAJFTJh9wRVk6cSj8CpV5DUfj4HOSOZl3tCOZN/4hdQVnjor8LnrINRnw6x
+         TVVTz1PQ4v6wLqrpKv66juerPGmzJKRbdWniVq+0xnmFe3KXd9X3SA51YaCvc+0b4PAx
+         9XqDu2Bg+nZ/EGO3CsDwVmCW9HcbyX07tAn62Vbkq6VX4JguDhyqh4E8aziGpxBusjyN
+         xTxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XCC1MeRo0BRoasyj+5VGbw00gjoW3R7USmRQ2Ubh6Bk=;
+        b=Df2nzwe+1BRnFVVmM3RVPPKa//CTXqDAKP0FZ1/PK5Go15Y1BcEKwJ7W6FxU1U92CF
+         vdKnrjUbFflF1PdWPr2VnnFbpLmvu9xJLkD2omFI3SZr84XODZvH4onuXudKnzivBFGR
+         ZycAA2ait93F4wkCCtq4T1WJmCIn606BqLKM0oFmUSY3ZFwx6Q1+2OB/wFCiwHgKNOwU
+         i368DMgJw4T1SrhlTvCYr/C7vpbGfoJZ0NEt6LLoxVLsxpt3zmKosHB7wY4ZHG/VoJqN
+         7CEA7vIDayzBnPDbOeb+qb42n8RzKLjhy/8Eyn025hdaR1ortkKsfOK4yrkyhpxTF1YP
+         UJTw==
+X-Gm-Message-State: AOAM530jWnYYQdQ7ueSWXrao4gBVsxVCykcm7ZrQedKN01KgoLNrKXvf
+        wPgwqcakCPgS9RMe1K4qP8dheCzVih4=
+X-Google-Smtp-Source: ABdhPJzMJlB1p6o9YUqwWsudQKNUJlMRUAuSiBfxFfepp8AQHGZU1/+/y1JGrTe2lZw+V7k8QgJFng==
+X-Received: by 2002:a17:90b:4a07:: with SMTP id kk7mr2316459pjb.125.1598976527418;
+        Tue, 01 Sep 2020 09:08:47 -0700 (PDT)
+Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
+        by smtp.gmail.com with ESMTPSA id d15sm2497723pfr.143.2020.09.01.09.08.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 09:08:46 -0700 (PDT)
+Subject: Re: [PATCH 04/11] spi: bcm2835: Simplify with dev_err_probe()
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+References: <20200901152713.18629-1-krzk@kernel.org>
+ <20200901152713.18629-4-krzk@kernel.org>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <2fefe978-c91c-7c87-e342-32287c674a8f@gmail.com>
+Date:   Tue, 1 Sep 2020 09:08:43 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
+ Firefox/78.0 Thunderbird/78.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200901152713.18629-4-krzk@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 047cd9a6bd8a2a73e8d92eb97a1b50c7bcd59279 ]
 
-Export mtk_is_virt_gpio() for the case when
-CONFIG_PINCTRL_MTK=y
-CONFIG_PINCTRL_MTK_V2=y
-CONFIG_PINCTRL_MTK_MOORE=y
-CONFIG_PINCTRL_MTK_PARIS=m
+On 9/1/2020 8:27 AM, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-to fix this build error:
-
-ERROR: modpost: "mtk_is_virt_gpio" [drivers/pinctrl/mediatek/pinctrl-paris.ko] undefined!
-
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Sean Wang <sean.wang@kernel.org>
-Cc: linux-mediatek@lists.infradead.org
-Link: https://lore.kernel.org/r/d15827a3-d0c8-e231-9f61-8507b3d7be3a@infradead.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-index c53e2c391e32b..2f3dfb56c3fa4 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-@@ -264,6 +264,7 @@ bool mtk_is_virt_gpio(struct mtk_pinctrl *hw, unsigned int gpio_n)
- 
- 	return virt_gpio;
- }
-+EXPORT_SYMBOL_GPL(mtk_is_virt_gpio);
- 
- static int mtk_xt_get_gpio_n(void *data, unsigned long eint_n,
- 			     unsigned int *gpio_n,
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.25.1
-
-
-
+Florian
