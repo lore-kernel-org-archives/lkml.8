@@ -2,150 +2,140 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBD6C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AAE1B2158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A3820866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974268;
-	bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
+	s=default; t=1598974273;
+	bh=TxQu2yA10K+9lWq+TKY2JDeXUOfkOFu5YajYPSCGs6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sp6WXvzTXmKv9bXyFrLrfW5OSS4fV26dfl5Yc7qAifDXYP9VpvwKHBWpZ2K3RK0oU
-	 oycsRWiNK/n+CFCLHLuIFHQDPJvVNGS28Yh36LmMcd+wEkpHKvh1LlrzVFAvr5lJuk
-	 CBOmCBO6RAaiP+f5gwx4fdtPKSNNTJ2Gd20VR+YE=
+	b=XUKmSeCxdnt8LoDXj0JK5ONtIMFgAtdhRdceNV2mBoXd9Ckyk+Bi/tJ+78Y7Zc+J6
+	 3EJb3siPl67i/JBeVv8EijdZXX94bEVRsXiNoH8u5yhr+rU8D89yRqrQ4zJ/vNzhN5
+	 MTp2zHqGL8SfnVLSupN/mw3YYWgnZG+nPS94ai3s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730668AbgIAPbG (ORCPT
+        id S1729584AbgIAPbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54108 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730188AbgIAP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:18 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730218AbgIAP1g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:36 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0F52207D3;
-        Tue,  1 Sep 2020 15:27:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B670214D8;
+        Tue,  1 Sep 2020 15:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974037;
-        bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
+        s=default; t=1598974055;
+        bh=TxQu2yA10K+9lWq+TKY2JDeXUOfkOFu5YajYPSCGs6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0eG3BRWnuB7PiB3IQ2SCQEiDOCmjO2IwQD8uSIpsHKw7T4WLEYU6MRm0996P8gkw9
-         pYJPXHG3t/qinz4qtkSB50ET/DbZFDb7oJOa/Sv6Vbkvlf5fbSDdvo3IX02m9DSCZd
-         e6zcmEBnyF4b/+DHnk1K9J5AMSI1ZzETCUrp/uQM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>
-Subject: [PATCH 5.4 002/214] binfmt_flat: revert "binfmt_flat: dont offset the data start"
-Date:   Tue,  1 Sep 2020 17:08:02 +0200
-Message-Id: <20200901150953.075216023@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=m7pW1hFOu4r/Fytp0mI7U9/5laqm05C7C7LoNdZtlVyfJN5SIplvnI1LbdIAphqIz
+         Lge21VQ7IK84PLBBEwenFUelYGUjkQ6/NV12f63lsHVZeoYeXz1wpW4g/eUYqq9H5u
+         1k3xqQnrBL5NW4PO6e9tFmmxZIf80aj7JkW+mEcw=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 02/11] spi: sprd: Simplify with dev_err_probe()
+Date:   Tue,  1 Sep 2020 17:27:04 +0200
+Message-Id: <20200901152713.18629-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901152713.18629-1-krzk@kernel.org>
+References: <20200901152713.18629-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-commit 2217b982624680d19a80ebb4600d05c8586c4f96 upstream.
-
-binfmt_flat loader uses the gap between text and data to store data
-segment pointers for the libraries. Even in the absence of shared
-libraries it stores at least one pointer to the executable's own data
-segment. Text and data can go back to back in the flat binary image and
-without offsetting data segment last few instructions in the text
-segment may get corrupted by the data segment pointer.
-
-Fix it by reverting commit a2357223c50a ("binfmt_flat: don't offset the
-data start").
-
-Cc: stable@vger.kernel.org
-Fixes: a2357223c50a ("binfmt_flat: don't offset the data start")
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- fs/binfmt_flat.c |   20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ drivers/spi/spi-sprd-adi.c |  5 +----
+ drivers/spi/spi-sprd.c     | 17 +++++------------
+ 2 files changed, 6 insertions(+), 16 deletions(-)
 
---- a/fs/binfmt_flat.c
-+++ b/fs/binfmt_flat.c
-@@ -571,7 +571,7 @@ static int load_flat_file(struct linux_b
- 			goto err;
- 		}
- 
--		len = data_len + extra;
-+		len = data_len + extra + MAX_SHARED_LIBS * sizeof(unsigned long);
- 		len = PAGE_ALIGN(len);
- 		realdatastart = vm_mmap(NULL, 0, len,
- 			PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE, 0);
-@@ -585,7 +585,9 @@ static int load_flat_file(struct linux_b
- 			vm_munmap(textpos, text_len);
- 			goto err;
- 		}
--		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart +
-+				MAX_SHARED_LIBS * sizeof(unsigned long),
-+				FLAT_DATA_ALIGN);
- 
- 		pr_debug("Allocated data+bss+stack (%u bytes): %lx\n",
- 			 data_len + bss_len + stack_len, datapos);
-@@ -615,7 +617,7 @@ static int load_flat_file(struct linux_b
- 		memp_size = len;
- 	} else {
- 
--		len = text_len + data_len + extra;
-+		len = text_len + data_len + extra + MAX_SHARED_LIBS * sizeof(u32);
- 		len = PAGE_ALIGN(len);
- 		textpos = vm_mmap(NULL, 0, len,
- 			PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE, 0);
-@@ -630,7 +632,9 @@ static int load_flat_file(struct linux_b
- 		}
- 
- 		realdatastart = textpos + ntohl(hdr->data_start);
--		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
-+		datapos = ALIGN(realdatastart +
-+				MAX_SHARED_LIBS * sizeof(u32),
-+				FLAT_DATA_ALIGN);
- 
- 		reloc = (__be32 __user *)
- 			(datapos + (ntohl(hdr->reloc_start) - text_len));
-@@ -647,9 +651,8 @@ static int load_flat_file(struct linux_b
- 					 (text_len + full_data
- 						  - sizeof(struct flat_hdr)),
- 					 0);
--			if (datapos != realdatastart)
--				memmove((void *)datapos, (void *)realdatastart,
--						full_data);
-+			memmove((void *) datapos, (void *) realdatastart,
-+					full_data);
- #else
- 			/*
- 			 * This is used on MMU systems mainly for testing.
-@@ -705,7 +708,8 @@ static int load_flat_file(struct linux_b
- 		if (IS_ERR_VALUE(result)) {
- 			ret = result;
- 			pr_err("Unable to read code+data+bss, errno %d\n", ret);
--			vm_munmap(textpos, text_len + data_len + extra);
-+			vm_munmap(textpos, text_len + data_len + extra +
-+				MAX_SHARED_LIBS * sizeof(u32));
- 			goto err;
+diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
+index 127b8bd25831..392ec5cfa3d6 100644
+--- a/drivers/spi/spi-sprd-adi.c
++++ b/drivers/spi/spi-sprd-adi.c
+@@ -504,10 +504,7 @@ static int sprd_adi_probe(struct platform_device *pdev)
+ 			dev_info(&pdev->dev, "no hardware spinlock supplied\n");
+ 			break;
+ 		default:
+-			dev_err(&pdev->dev,
+-				"failed to find hwlock id, %d\n", ret);
+-			fallthrough;
+-		case -EPROBE_DEFER:
++			dev_err_probe(&pdev->dev, ret, "failed to find hwlock id\n");
+ 			goto put_ctlr;
  		}
  	}
-
+diff --git a/drivers/spi/spi-sprd.c b/drivers/spi/spi-sprd.c
+index 0443fec3a6ab..635738f54c73 100644
+--- a/drivers/spi/spi-sprd.c
++++ b/drivers/spi/spi-sprd.c
+@@ -553,22 +553,15 @@ static int sprd_spi_dma_tx_config(struct sprd_spi *ss, struct spi_transfer *t)
+ static int sprd_spi_dma_request(struct sprd_spi *ss)
+ {
+ 	ss->dma.dma_chan[SPRD_SPI_RX] = dma_request_chan(ss->dev, "rx_chn");
+-	if (IS_ERR_OR_NULL(ss->dma.dma_chan[SPRD_SPI_RX])) {
+-		if (PTR_ERR(ss->dma.dma_chan[SPRD_SPI_RX]) == -EPROBE_DEFER)
+-			return PTR_ERR(ss->dma.dma_chan[SPRD_SPI_RX]);
+-
+-		dev_err(ss->dev, "request RX DMA channel failed!\n");
+-		return PTR_ERR(ss->dma.dma_chan[SPRD_SPI_RX]);
+-	}
++	if (IS_ERR_OR_NULL(ss->dma.dma_chan[SPRD_SPI_RX]))
++		return dev_err_probe(ss->dev, PTR_ERR(ss->dma.dma_chan[SPRD_SPI_RX]),
++				     "request RX DMA channel failed!\n");
+ 
+ 	ss->dma.dma_chan[SPRD_SPI_TX]  = dma_request_chan(ss->dev, "tx_chn");
+ 	if (IS_ERR_OR_NULL(ss->dma.dma_chan[SPRD_SPI_TX])) {
+ 		dma_release_channel(ss->dma.dma_chan[SPRD_SPI_RX]);
+-		if (PTR_ERR(ss->dma.dma_chan[SPRD_SPI_TX]) == -EPROBE_DEFER)
+-			return PTR_ERR(ss->dma.dma_chan[SPRD_SPI_TX]);
+-
+-		dev_err(ss->dev, "request TX DMA channel failed!\n");
+-		return PTR_ERR(ss->dma.dma_chan[SPRD_SPI_TX]);
++		return dev_err_probe(ss->dev, PTR_ERR(ss->dma.dma_chan[SPRD_SPI_TX]),
++				     "request TX DMA channel failed!\n");
+ 	}
+ 
+ 	return 0;
+-- 
+2.17.1
 
