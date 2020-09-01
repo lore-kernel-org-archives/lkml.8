@@ -4,70 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A197C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 939B7C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3892100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 563A8206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598971907;
-	bh=yqmMFIpZEbRaW5ShU6QJoTFWzap3EWFgiYQp3JYn0pc=;
+	s=default; t=1598971911;
+	bh=anuuC+nyOp49gnlHHAG1/TrEkpLdDC9qf98Nwn4rs3s=;
 	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
-	b=sGiwU9xY3g4GgGlPFSBnMxFGroKdx/ckFDfh/LPwsHwSjrBzVPtw8eRC251SOxTOh
-	 u/5fL9b5EELyldly5SP0XrUWUapjkC9s1apGIoIO21i9tkregbu1o9uM9ScZtU4fM9
-	 aH/ztKg+e5Shh7Mwc8SzXLyjQcK19YYaWNm6VM58=
+	b=M60c96agqxxcCceUB2q4OrW3Mn24r/QljzeHHflXJFzKcc2eSHuE1OFCjMx+rjbN7
+	 kZUJO/3Hs+WAQpZaLrBTyioJb3hG206I34bT7OliWt9O5Cvjh37ljAhanPZHONX8Hf
+	 jnFp+R6SEewUwJzSglvfF012Mu3KIz7YRZO3a6E0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728783AbgIAOvp (ORCPT
+        id S1728216AbgIAOvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:51:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 10:51:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728755AbgIAOvS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:51:18 -0400
+        id S1728745AbgIAOvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:51:13 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B6D2078B;
-        Tue,  1 Sep 2020 14:51:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B3362078B;
+        Tue,  1 Sep 2020 14:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598971878;
-        bh=yqmMFIpZEbRaW5ShU6QJoTFWzap3EWFgiYQp3JYn0pc=;
+        s=default; t=1598971872;
+        bh=anuuC+nyOp49gnlHHAG1/TrEkpLdDC9qf98Nwn4rs3s=;
         h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=Xt1B/YItZAkINRQXe+/atByGgbv97z7vWjumtGawq9UZa0QIS/H71DObD7qXix9V8
-         5rkoPihkw7M0HNHHXI2ZrUQzo2t2txOMA7XvEAvGjuuz5KoB/7zhiQufBC6lwAIjT4
-         7M2bDv5SCl2sFTQheqc9xyAIG+V1vz633wC2edLU=
-Date:   Tue, 01 Sep 2020 15:50:38 +0100
+        b=YfbDWAJVGN1SmpC3e39BG5KOauWOSh9drKQX26b7xgcJ5ha74rdQMvaUYIXmMdc02
+         fvUSYQqi4grDxZyW6Gv0x6rhU2Ki3Bh+h48QnunrmrzdJsJwZz/m5RQFHa464ocCzA
+         vbT3AnopW/phaGT3fICSivalHthTEUKZMFvnmxj8=
+Date:   Tue, 01 Sep 2020 15:50:33 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
-        linux-omap@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
-In-Reply-To: <20200829221104.20870-1-rikard.falkeborn@gmail.com>
-References: <20200829221104.20870-1-rikard.falkeborn@gmail.com>
-Subject: Re: [PATCH 0/8] regulator/tps*: Constify static regulator ops
-Message-Id: <159897183313.47900.16357469471615056811.b4-ty@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Liam Girdwood <lgirdwood@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+In-Reply-To: <20200831204335.19489-1-digetx@gmail.com>
+References: <20200831204335.19489-1-digetx@gmail.com>
+Subject: Re: [PATCH v1] regulator: core: Fix slab-out-of-bounds in regulator_unlock_recursive()
+Message-Id: <159897183313.47900.9927134230098775732.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 30 Aug 2020 00:10:56 +0200, Rikard Falkeborn wrote:
-> Constify static instances of struct regulator_ops to allow the compiler
-> to put them in read-only memory. Patches are independent. Compile-tested
-> only.
-> 
-> Rikard Falkeborn (8):
->   regulator: tps51632: Constify tps51632_dcdc_ops
->   regulator: tps6105x: Constify tps6105x_regulator_ops
->   regulator: tps62360: Constify tps62360_dcdc_ops
->   regulator: tps65086: Constify static regulator_ops
->   regulator: tps65090: constify static regulator_ops
->   regulator: tps6586x: Constify static regulator_ops
->   regulator: tps65912: Constify static regulator_ops
->   regulator: tps65910: Constify static regulator_ops
-> 
-> [...]
+On Mon, 31 Aug 2020 23:43:35 +0300, Dmitry Osipenko wrote:
+> The recent commit 7d8196641ee1 ("regulator: Remove pointer table
+> overallocation") changed the size of coupled_rdevs and now KASAN is able
+> to detect slab-out-of-bounds problem in regulator_unlock_recursive(),
+> which is a legit problem caused by a typo in the code. The recursive
+> unlock function uses n_coupled value of a parent regulator for unlocking
+> supply regulator, while supply's n_coupled should be used. In practice
+> problem may only affect platforms that use coupled regulators.
 
 Applied to
 
@@ -75,22 +67,8 @@ Applied to
 
 Thanks!
 
-[1/8] regulator: tps51632: Constify tps51632_dcdc_ops
-      commit: dcb97c10f967c2cfea4c6316f026bc4a4a165f1e
-[2/8] regulator: tps6105x: Constify tps6105x_regulator_ops
-      commit: 55c81934e7040c1e0c26b72ee752203ccf190b51
-[3/8] regulator: tps62360: Constify tps62360_dcdc_ops
-      commit: 01167e88e9372f9748e94a7322b0d43ccb980d9f
-[4/8] regulator: tps65086: Constify static regulator_ops
-      commit: 2e6d9db83ac7c65b986d3037620dc735dee7383f
-[5/8] regulator: tps65090: constify static regulator_ops
-      commit: 7d844ac3b5a8a97ae4a05d9f545346a4fca77cea
-[6/8] regulator: tps6586x: Constify static regulator_ops
-      commit: 25c8044502ca9fb684fe7a0612985069e27e01eb
-[7/8] regulator: tps65912: Constify static regulator_ops
-      commit: e92b8ef87a8a4a95056d6b5852bd4b5288f34540
-[8/8] regulator: tps65910: Constify static regulator_ops
-      commit: 385d41d7edbc37d6b30197672b744021ce3baccf
+[1/1] regulator: core: Fix slab-out-of-bounds in regulator_unlock_recursive()
+      commit: 0a7416f94707c60b9f66b01c0a505b7e41375f3a
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
