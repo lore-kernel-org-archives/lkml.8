@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7C7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6440DC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51D82206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7D420767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973441;
-	bh=/0x0y/GQrcn63gNTrSWw+xV5AuBbNyfSInGmLAJtQMw=;
+	s=default; t=1598973449;
+	bh=WlnXmUHGuYq4iNIMFlkeAyHlr815/ppfPqBXrqYHCuI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UJLS70LK1SRsHrnA0GrvmxkkbtCLjwRlv5NIAt5dTra4eXmlgy5oL0uO4sAtoMDlj
-	 /XGsi12bavEaIep4oh6RiOdYlrEXdONlkLhW9ydpPevZHzmCBdoFdit1ZnDHKllJKg
-	 RdWX2GUMnuZgZ2UHEXhoF+M1MnG4MuyDjnxvJS1w=
+	b=YjrPJ7KZ27szJte1/lvXCL3eJ8JoA8dx3BiM4iwxwNaDelcRLOYfv/ZjWcCJarWnZ
+	 J6q5b040lqTkCruZGpeuRF/dFgtbEzO8Gsk2DldNEAXI7uP5rkUt/49Z9yGnJY9a1A
+	 el4K5uqn/GJirk0n4F+ZB08VBqyLBz7dg+Tw4JFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbgIAPRT (ORCPT
+        id S1729406AbgIAPRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:17:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32948 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729301AbgIAPQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:16:19 -0400
+        id S1729315AbgIAPQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:16:30 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17649206FA;
-        Tue,  1 Sep 2020 15:16:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22B5206FA;
+        Tue,  1 Sep 2020 15:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973378;
-        bh=/0x0y/GQrcn63gNTrSWw+xV5AuBbNyfSInGmLAJtQMw=;
+        s=default; t=1598973389;
+        bh=WlnXmUHGuYq4iNIMFlkeAyHlr815/ppfPqBXrqYHCuI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NYcHaov/fV4JBQkDoOM5BLv2XTSO9PM3zEsmN3DpTKQI5lC7FCkRZyPpOfJbtuOHJ
-         EOL8NonfNQfJL4qhjfh89RL71yOzfl2e6VuFmDz3Hfx5bOyZH+KasFgAvRImdtXEYk
-         3VIE1nUXG6sVF/HbnFOpMzsNkw2FqY6uy/tQPmpg=
+        b=Xo07oMkJpmHXJk7S/MvLIp3tgu/hV7AzHN8KHplfjJGr2jvuHa/zf+uL0uxpC+pGN
+         eFGDkjgU3fjKLbLtENnchbwnmaKErDu4+uOl0ZGqR4jN0cuzctlH4q9wi9xhqKVrBf
+         VF1bab+WcdgPFE3q24hAtNorl3Bcn0WRG8S4voqA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
-        syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
-Subject: [PATCH 4.9 54/78] vt_ioctl: change VT_RESIZEX ioctl to check for error return from vc_resize()
-Date:   Tue,  1 Sep 2020 17:10:30 +0200
-Message-Id: <20200901150927.463655379@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH 4.9 57/78] serial: pl011: Dont leak amba_ports entry on driver register error
+Date:   Tue,  1 Sep 2020 17:10:33 +0200
+Message-Id: <20200901150927.620470818@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -59,49 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: George Kennedy <george.kennedy@oracle.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit bc5269ca765057a1b762e79a1cfd267cd7bf1c46 upstream.
+commit 89efbe70b27dd325d8a8c177743a26b885f7faec upstream.
 
-vc_resize() can return with an error after failure. Change VT_RESIZEX ioctl
-to save struct vc_data values that are modified and restore the original
-values in case of error.
+pl011_probe() calls pl011_setup_port() to reserve an amba_ports[] entry,
+then calls pl011_register_port() to register the uart driver with the
+tty layer.
 
-Signed-off-by: George Kennedy <george.kennedy@oracle.com>
-Cc: stable <stable@vger.kernel.org>
-Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/1596213192-6635-2-git-send-email-george.kennedy@oracle.com
+If registration of the uart driver fails, the amba_ports[] entry is not
+released.  If this happens 14 times (value of UART_NR macro), then all
+amba_ports[] entries will have been leaked and driver probing is no
+longer possible.  (To be fair, that can only happen if the DeviceTree
+doesn't contain alias IDs since they cause the same entry to be used for
+a given port.)   Fix it.
+
+Fixes: ef2889f7ffee ("serial: pl011: Move uart_register_driver call to device")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.15+
+Cc: Tushar Behera <tushar.behera@linaro.org>
+Link: https://lore.kernel.org/r/138f8c15afb2f184d8102583f8301575566064a6.1597316167.git.lukas@wunner.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt_ioctl.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/tty/serial/amba-pl011.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/vt/vt_ioctl.c
-+++ b/drivers/tty/vt/vt_ioctl.c
-@@ -896,12 +896,22 @@ int vt_ioctl(struct tty_struct *tty,
- 			console_lock();
- 			vcp = vc_cons[i].d;
- 			if (vcp) {
-+				int ret;
-+				int save_scan_lines = vcp->vc_scan_lines;
-+				int save_font_height = vcp->vc_font.height;
-+
- 				if (v.v_vlin)
- 					vcp->vc_scan_lines = v.v_vlin;
- 				if (v.v_clin)
- 					vcp->vc_font.height = v.v_clin;
- 				vcp->vc_resize_user = 1;
--				vc_resize(vcp, v.v_cols, v.v_rows);
-+				ret = vc_resize(vcp, v.v_cols, v.v_rows);
-+				if (ret) {
-+					vcp->vc_scan_lines = save_scan_lines;
-+					vcp->vc_font.height = save_font_height;
-+					console_unlock();
-+					return ret;
-+				}
- 			}
- 			console_unlock();
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2532,7 +2532,7 @@ static int pl011_setup_port(struct devic
+ 
+ static int pl011_register_port(struct uart_amba_port *uap)
+ {
+-	int ret;
++	int ret, i;
+ 
+ 	/* Ensure interrupts from this UART are masked and cleared */
+ 	pl011_write(0, uap, REG_IMSC);
+@@ -2543,6 +2543,9 @@ static int pl011_register_port(struct ua
+ 		if (ret < 0) {
+ 			dev_err(uap->port.dev,
+ 				"Failed to register AMBA-PL011 driver\n");
++			for (i = 0; i < ARRAY_SIZE(amba_ports); i++)
++				if (amba_ports[i] == uap)
++					amba_ports[i] = NULL;
+ 			return ret;
  		}
+ 	}
 
 
