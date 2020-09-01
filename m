@@ -2,141 +2,154 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 537D6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD1EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE3220767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:00:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="OATQFdU2"
+	by mail.kernel.org (Postfix) with ESMTP id 989EC207EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732009AbgIAUAg (ORCPT
+        id S1732648AbgIAUBJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:00:36 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:55672 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726936AbgIAUAd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:00:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1598990432;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vc3R4m+8MTjsRaa5gUjV4LA0oqfm1u6CW8ImByjlE7A=;
-        b=OATQFdU2ghR72FVMuoJTeAM8fgO8hDXPKLHGnh7zIi921kJMJ6KpQdibH7qlMI+RxEVkeQ
-        cKUQwHXPylsKNNBmQa/LD/Y3S+bvL8GuVMPyRdZNctadImggpDIFca/bGXJUCMa4qrNmFI
-        mLYmuTIJLkJL/ADVMaANzJfyb9yoKVw=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-519--suZiAPwPaW7dGLnV3NBPg-1; Tue, 01 Sep 2020 16:00:28 -0400
-X-MC-Unique: -suZiAPwPaW7dGLnV3NBPg-1
-Received: by mail-qt1-f197.google.com with SMTP id w15so1879610qtv.11
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 13:00:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Vc3R4m+8MTjsRaa5gUjV4LA0oqfm1u6CW8ImByjlE7A=;
-        b=WJRaySDl58bMqJsiV/+9JFzSHRwdgc/S7IJwBv756QFwhhlu13VtsGnAJmsRHdK7Iq
-         ATLLz7bPRMNFUpAfYt94vv/SSf7/uXeSjdouSufiq7bcoAJ8OWLhn9vDoDpDm6fLel/C
-         PLerH8pjY9QvFuKgdfD0+hhhfunzEvTTya9rgFFxxMrkWFhlpXQtt5v0Sbm9/qQKIrqc
-         +bTBhsyl4CEyJH8rPnKf8esaFMrjA7DSVJPA+tejSYbHFldnNruf7GOzwrdzOKDi2Ilv
-         rMGI8CigZ1fCVKcJ1yo5Y2t3Of/tR4QH1m2SrRADPtHM7JEDHjzNIaMKdBWBKopDeB8c
-         0T4g==
-X-Gm-Message-State: AOAM530n5S61qKw3yHT6//DidvJF9npGGVmwtPGAUCQGDupZ2ZHAqR5E
-        8+PKMjE0g/bMFrlh+255VO7J+O25imAOzPj1xju6oWP0UYFzRnklWI1hhbM5n2OYtx3bVEu7/Kq
-        8fNpWm67XA+lpAjila7HCfqEw
-X-Received: by 2002:a37:64d4:: with SMTP id y203mr3623671qkb.359.1598990424706;
-        Tue, 01 Sep 2020 13:00:24 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJyu0YmC5kC1aUFd9w+Ovk9eAmNQQBT7X2Nm9TKQFxFHF2t+4Nd1e2v1kCKNfsvGi8l6orS7/A==
-X-Received: by 2002:a37:64d4:: with SMTP id y203mr3623648qkb.359.1598990424405;
-        Tue, 01 Sep 2020 13:00:24 -0700 (PDT)
-Received: from xz-x1 (bras-vprn-toroon474qw-lp130-11-70-53-122-15.dsl.bell.ca. [70.53.122.15])
-        by smtp.gmail.com with ESMTPSA id x126sm2733262qkb.101.2020.09.01.13.00.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 13:00:22 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 16:00:21 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Michael Tsirkin <mst@redhat.com>,
-        Julia Suvorova <jsuvorov@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Jones <drjones@redhat.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/3] KVM: x86: KVM_MEM_PCI_HOLE memory
-Message-ID: <20200901200021.GB3053@xz-x1>
-References: <20200807141232.402895-1-vkuznets@redhat.com>
- <20200825212526.GC8235@xz-x1>
- <87eenlwoaa.fsf@vitty.brq.redhat.com>
+        Tue, 1 Sep 2020 16:01:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:49270 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726936AbgIAUBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 16:01:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C75DA1FB;
+        Tue,  1 Sep 2020 13:01:02 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CE313F66F;
+        Tue,  1 Sep 2020 13:01:00 -0700 (PDT)
+Subject: Re: [PATCH v9 17/32] drm: rockchip: fix common struct sg_table
+ related issues
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sandy Huang <hjc@rock-chips.com>,
+        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+ <CGME20200826063537eucas1p2d9a362f619920ad84c46f36cd13ec362@eucas1p2.samsung.com>
+ <20200826063316.23486-18-m.szyprowski@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <d69bd263-c628-170d-3992-d717423196a2@arm.com>
+Date:   Tue, 1 Sep 2020 21:00:59 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <87eenlwoaa.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20200826063316.23486-18-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 04:43:25PM +0200, Vitaly Kuznetsov wrote:
-> Peter Xu <peterx@redhat.com> writes:
+On 2020-08-26 07:33, Marek Szyprowski wrote:
+> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
+> returns the number of the created entries in the DMA address space.
+> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
+> dma_unmap_sg must be called with the original number of the entries
+> passed to the dma_map_sg().
 > 
-> > On Fri, Aug 07, 2020 at 04:12:29PM +0200, Vitaly Kuznetsov wrote:
-> >> When testing Linux kernel boot with QEMU q35 VM and direct kernel boot
-> >> I observed 8193 accesses to PCI hole memory. When such exit is handled
-> >> in KVM without exiting to userspace, it takes roughly 0.000001 sec.
-> >> Handling the same exit in userspace is six times slower (0.000006 sec) so
-> >> the overal; difference is 0.04 sec. This may be significant for 'microvm'
-> >> ideas.
-> >
-> > Sorry to comment so late, but just curious... have you looked at what's those
-> > 8000+ accesses to PCI holes and what they're used for?  What I can think of are
-> > some port IO reads (e.g. upon vendor ID field) during BIOS to scan the devices
-> > attached.  Though those should be far less than 8000+, and those should also be
-> > pio rather than mmio.
+> struct sg_table is a common structure used for describing a non-contiguous
+> memory buffer, used commonly in the DRM and graphics subsystems. It
+> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
+> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
+> and DMA mapped pages (nents entry).
 > 
-> And sorry for replying late)
+> It turned out that it was a common mistake to misuse nents and orig_nents
+> entries, calling DMA-mapping functions with a wrong number of entries or
+> ignoring the number of mapped entries returned by the dma_map_sg()
+> function.
 > 
-> We explicitly want MMIO instead of PIO to speed things up, afaiu PIO
-> requires two exits per device (and we exit all the way to
-> QEMU). Julia/Michael know better about the size of the space.
+> To avoid such issues, lets use a common dma-mapping wrappers operating
+> directly on the struct sg_table objects and use scatterlist page
+> iterators where possible. This, almost always, hides references to the
+> nents and orig_nents entries, making the code robust, easier to follow
+> and copy/paste safe.
+
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+(Until now I hadn't noticed the crimes against the API that 
+rockchip_gem_get_pages() is committing, but it's not this patch's 
+fault... I'll have to take a closer look at that)
+
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>   drivers/gpu/drm/rockchip/rockchip_drm_gem.c | 23 +++++++++------------
+>   1 file changed, 10 insertions(+), 13 deletions(-)
 > 
-> >
-> > If this is only an overhead for virt (since baremetal mmios should be fast),
-> > I'm also thinking whether we can make it even better to skip those pci hole
-> > reads.  Because we know we're virt, so it also gives us possibility that we may
-> > provide those information in a better way than reading PCI holes in the guest?
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+> index 2970e534e2bb..cb50f2ba2e46 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
+> @@ -36,8 +36,8 @@ static int rockchip_gem_iommu_map(struct rockchip_gem_object *rk_obj)
+>   
+>   	rk_obj->dma_addr = rk_obj->mm.start;
+>   
+> -	ret = iommu_map_sg(private->domain, rk_obj->dma_addr, rk_obj->sgt->sgl,
+> -			   rk_obj->sgt->nents, prot);
+> +	ret = iommu_map_sgtable(private->domain, rk_obj->dma_addr, rk_obj->sgt,
+> +				prot);
+>   	if (ret < rk_obj->base.size) {
+>   		DRM_ERROR("failed to map buffer: size=%zd request_size=%zd\n",
+>   			  ret, rk_obj->base.size);
+> @@ -98,11 +98,10 @@ static int rockchip_gem_get_pages(struct rockchip_gem_object *rk_obj)
+>   	 * TODO: Replace this by drm_clflush_sg() once it can be implemented
+>   	 * without relying on symbols that are not exported.
+>   	 */
+> -	for_each_sg(rk_obj->sgt->sgl, s, rk_obj->sgt->nents, i)
+> +	for_each_sgtable_sg(rk_obj->sgt, s, i)
+>   		sg_dma_address(s) = sg_phys(s);
+>   
+> -	dma_sync_sg_for_device(drm->dev, rk_obj->sgt->sgl, rk_obj->sgt->nents,
+> -			       DMA_TO_DEVICE);
+> +	dma_sync_sgtable_for_device(drm->dev, rk_obj->sgt, DMA_TO_DEVICE);
+>   
+>   	return 0;
+>   
+> @@ -350,8 +349,8 @@ void rockchip_gem_free_object(struct drm_gem_object *obj)
+>   		if (private->domain) {
+>   			rockchip_gem_iommu_unmap(rk_obj);
+>   		} else {
+> -			dma_unmap_sg(drm->dev, rk_obj->sgt->sgl,
+> -				     rk_obj->sgt->nents, DMA_BIDIRECTIONAL);
+> +			dma_unmap_sgtable(drm->dev, rk_obj->sgt,
+> +					  DMA_BIDIRECTIONAL, 0);
+>   		}
+>   		drm_prime_gem_destroy(obj, rk_obj->sgt);
+>   	} else {
+> @@ -476,15 +475,13 @@ rockchip_gem_dma_map_sg(struct drm_device *drm,
+>   			struct sg_table *sg,
+>   			struct rockchip_gem_object *rk_obj)
+>   {
+> -	int count = dma_map_sg(drm->dev, sg->sgl, sg->nents,
+> -			       DMA_BIDIRECTIONAL);
+> -	if (!count)
+> -		return -EINVAL;
+> +	int err = dma_map_sgtable(drm->dev, sg, DMA_BIDIRECTIONAL, 0);
+> +	if (err)
+> +		return err;
+>   
+>   	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
+>   		DRM_ERROR("failed to map sg_table to contiguous linear address.\n");
+> -		dma_unmap_sg(drm->dev, sg->sgl, sg->nents,
+> -			     DMA_BIDIRECTIONAL);
+> +		dma_unmap_sgtable(drm->dev, sg, DMA_BIDIRECTIONAL, 0);
+>   		return -EINVAL;
+>   	}
+>   
 > 
-> This means let's invent a PV interface and if we decide to go down this
-> road, I'd even argue for abandoning PCI completely. E.g. we can do
-> something similar to Hyper-V's Vmbus.
-
-My whole point was more about trying to understand the problem behind.
-Providing a fast path for reading pci holes seems to be reasonable as is,
-however it's just that I'm confused on why there're so many reads on the pci
-holes after all.  Another important question is I'm wondering how this series
-will finally help the use case of microvm.  I'm not sure I get the whole point
-of it, but... if microvm is the major use case of this, it would be good to
-provide some quick numbers on those if possible.
-
-For example, IIUC microvm uses qboot (as a better alternative than seabios) for
-fast boot, and qboot has:
-
-https://github.com/bonzini/qboot/blob/master/pci.c#L20
-
-I'm kind of curious whether qboot will still be used when this series is used
-with microvm VMs?  Since those are still at least PIO based.
-
-Thanks,
-
--- 
-Peter Xu
-
