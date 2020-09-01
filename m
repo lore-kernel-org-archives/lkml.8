@@ -2,369 +2,282 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BB4C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43DC3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA31B2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 123392071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:40:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="BzCIAFKx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730505AbgIARkV (ORCPT
+        id S1730643AbgIARkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:40:21 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44346 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728027AbgIARjz (ORCPT
+        Tue, 1 Sep 2020 13:40:32 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52298 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726116AbgIARkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:39:55 -0400
-Received: from 89-64-88-247.dynamic.chello.pl (89.64.88.247) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.459)
- id fc74d08505d9edea; Tue, 1 Sep 2020 19:39:51 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Tue, 1 Sep 2020 13:40:32 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 081HWgbH144338;
+        Tue, 1 Sep 2020 13:40:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : to : cc :
+ subject : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=txXV2LkfEo8PniSoj6d8lbzpZ8u5aDLvCN1vaGh0B4M=;
+ b=BzCIAFKxUFSDUtMQTJuVqvc40fVbiCKJmU3Ba72s6bjPE8sANS2+agRF5d2zZGDHH4Tw
+ pqTA7rlot602p/24340jh7eTXuQ0hCigzrL12kuLKVIxHbtxqSYRnXMMc4JKpJ3l4nVm
+ cx0S38MKHqmDTXA8k4JPUhh3SyQtr73ybMurpDfmnz6D0g7IwGeE9EbJ1gKInGosbyeT
+ Q8TcHNUkgH7wbR7gouKSNQ1SeG3PGwn+4gY5o/wnYKV6bYsqm4CMuOkDYpDtPVNbI58E
+ JZePcqguJ/cB1zDk72Zug0R59zwNoX6yDuPA0wztoX6Qjr+MCmg4aUdLZpAYxtTx9tfV 0w== 
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 339smjadvn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 13:40:27 -0400
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+        by ppma06ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 081Hb8fJ005423;
+        Tue, 1 Sep 2020 17:40:25 GMT
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
+        by ppma06ams.nl.ibm.com with ESMTP id 337e9gupwa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 01 Sep 2020 17:40:25 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 081HeM3c11207004
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Sep 2020 17:40:22 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF96411C05B;
+        Tue,  1 Sep 2020 17:40:21 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7A7AA11C054;
+        Tue,  1 Sep 2020 17:40:21 +0000 (GMT)
+Received: from thinkpad (unknown [9.171.39.228])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Tue,  1 Sep 2020 17:40:21 +0000 (GMT)
+Date:   Tue, 1 Sep 2020 19:40:20 +0200
+From:   Gerald Schaefer <gerald.schaefer@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Subject: [PATCH v4 4/5] cpufreq: intel_pstate: Add ->offline and ->online callbacks
-Date:   Tue, 01 Sep 2020 19:37:38 +0200
-Message-ID: <2066734.hWJzf1n7kE@kreacher>
-In-Reply-To: <3748218.V0HrpZKF9g@kreacher>
-References: <3748218.V0HrpZKF9g@kreacher>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [RFC PATCH 0/2] mm/gup: fix gup_fast with dynamic page table
+ folding
+Message-ID: <20200901194020.418da486@thinkpad>
+In-Reply-To: <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
+References: <20200828140314.8556-1-gerald.schaefer@linux.ibm.com>
+        <9071c9fa-ba6a-90dc-2d7a-8b155141d890@de.ibm.com>
+        <20200831121553.8be5dcdbdbc5256846ac513e@linux-foundation.org>
+X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-01_10:2020-09-01,2020-09-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ mlxscore=0 spamscore=0 priorityscore=1501 lowpriorityscore=0 clxscore=1011
+ bulkscore=0 suspectscore=0 adultscore=0 impostorscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009010147
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+On Mon, 31 Aug 2020 12:15:53 -0700
+Andrew Morton <akpm@linux-foundation.org> wrote:
 
-Add ->offline and ->online driver callbacks to prepare for taking a
-CPU offline and to restore its working configuration when it goes
-back online, respectively, to avoid invoking the ->init callback on
-every CPU online which is quite a bit of unnecessary overhead.
+> On Mon, 31 Aug 2020 13:53:36 +0200 Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+> 
+> > 
+> > 
+> > On 28.08.20 16:03, Gerald Schaefer wrote:
+> > have some feedback soon if option 1 or option 2 would be acceptable 
+> > from a common code perspective. Andrew, who of the mm people would 
+> > be the right one to decide?
+> 
+> Jason and John Hubbard are doing most of the work in there at present,
+> 
+> Both patches look OK to me from a non-s390 perspective.  Unless we plan
+> to implement Jason's more-general approach this time, I'd be inclined
+> to defer to the s390 people as to the preferred implementation.
 
-Define ->offline and ->online so that they can be used in the
-passive mode as well as in the active mode and because ->offline
-will do the majority of ->stop_cpu work, the passive mode does
-not need that callback any more, so drop it from there.
+My gut feeling would say that the gup_pXd_addr_end approach makes
+us behave more like other archs, at least for gup_fast, which cannot
+be so bad.
 
-Also modify the active mode ->suspend and ->resume callbacks to
-prevent them from interfering with the new ->offline and ->online
-ones in case the latter are invoked withing the system-wide suspend
-and resume code flow and make the passive mode use them too.
+Regarding generalization, both approaches would introduce some specific
+helpers for this "page table walking w/o lock using READ_ONCE", currently
+only used by gup_fast. What we initially had in mind wrt generalization
+was replacing e.g. the pXd_addr_end() completely, with the new version that
+takes the additional pXd value parameter. That would of course be quite
+intrusive, also affecting other arch code, so it is probably not what we
+want to do in the first step.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+To make it a bit more generic and also usable for future paths in
+mm/pagewalk.c for example, we could however at least name the new helpers
+differently, e.g. pXd_addr_end_folded instead of gup_pXd_addr_end, and
+also add some comment on why / where they should be used, like this
+(will send again as proper patch with description if agreed):
+
 ---
+ arch/s390/include/asm/pgtable.h | 49 +++++++++++++++++++++++++++++++++
+ include/linux/pgtable.h         | 32 +++++++++++++++++++++
+ mm/gup.c                        |  8 +++---
+ 3 files changed, 85 insertions(+), 4 deletions(-)
 
--> v2: Rearrange intel_pstate_init_cpu() to restore some of the previous
-       behavior of it to retain the current active-mode EPP management.
-
-v2 -> v3:
-   * Fold the previous [5/5] in, rework intel_pstate_resume(), add
-     intel_pstate_suspend().
-   * Drop intel_pstate_hwp_save_state() and drop epp_saved from struct cpudata.
-   * Update the changelog.
-
-v3 -> v4:
-   * Re-enable HWP in "online" and "resume" (if "online" didn't do that).
-
----
- drivers/cpufreq/intel_pstate.c | 143 ++++++++++++++++++++++-----------
- 1 file changed, 94 insertions(+), 49 deletions(-)
-
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index b308c39b6204..8181a1f1dc79 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -219,14 +219,13 @@ struct global_params {
-  * @epp_policy:		Last saved policy used to set EPP/EPB
-  * @epp_default:	Power on default HWP energy performance
-  *			preference/bias
-- * @epp_saved:		Saved EPP/EPB during system suspend or CPU offline
-- *			operation
-  * @epp_cached		Cached HWP energy-performance preference value
-  * @hwp_req_cached:	Cached value of the last HWP Request MSR
-  * @hwp_cap_cached:	Cached value of the last HWP Capabilities MSR
-  * @last_io_update:	Last time when IO wake flag was set
-  * @sched_flags:	Store scheduler flags for possible cross CPU update
-  * @hwp_boost_min:	Last HWP boosted min performance
-+ * @suspended:		Whether or not the driver has been suspended.
-  *
-  * This structure stores per CPU instance data for all CPUs.
-  */
-@@ -258,13 +257,13 @@ struct cpudata {
- 	s16 epp_powersave;
- 	s16 epp_policy;
- 	s16 epp_default;
--	s16 epp_saved;
- 	s16 epp_cached;
- 	u64 hwp_req_cached;
- 	u64 hwp_cap_cached;
- 	u64 last_io_update;
- 	unsigned int sched_flags;
- 	u32 hwp_boost_min;
-+	bool suspended;
- };
- 
- static struct cpudata **all_cpu_data;
-@@ -871,12 +870,6 @@ static void intel_pstate_hwp_set(unsigned int cpu)
- 
- 	cpu_data->epp_policy = cpu_data->policy;
- 
--	if (cpu_data->epp_saved >= 0) {
--		epp = cpu_data->epp_saved;
--		cpu_data->epp_saved = -EINVAL;
--		goto update_epp;
--	}
--
- 	if (cpu_data->policy == CPUFREQ_POLICY_PERFORMANCE) {
- 		epp = intel_pstate_get_epp(cpu_data, value);
- 		cpu_data->epp_powersave = epp;
-@@ -903,7 +896,6 @@ static void intel_pstate_hwp_set(unsigned int cpu)
- 
- 		epp = cpu_data->epp_powersave;
- 	}
--update_epp:
- 	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
- 		value &= ~GENMASK_ULL(31, 24);
- 		value |= (u64)epp << 24;
-@@ -915,14 +907,24 @@ static void intel_pstate_hwp_set(unsigned int cpu)
- 	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 7eb01a5459cd..d74257f2cb5b 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -512,6 +512,55 @@ static inline bool mm_pmd_folded(struct mm_struct *mm)
  }
+ #define mm_pmd_folded(mm) mm_pmd_folded(mm)
  
--static void intel_pstate_hwp_force_min_perf(int cpu)
-+static void intel_pstate_hwp_offline(struct cpudata *cpu)
- {
--	u64 value;
-+	u64 value = READ_ONCE(cpu->hwp_req_cached);
- 	int min_perf;
- 
--	value = all_cpu_data[cpu]->hwp_req_cached;
-+	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
-+		/*
-+		 * In case the EPP has been set to "performance" by the
-+		 * active mode "performance" scaling algorithm, replace that
-+		 * temporary value with the cached EPP one.
-+		 */
-+		value &= ~GENMASK_ULL(31, 24);
-+		value |= HWP_ENERGY_PERF_PREFERENCE(cpu->epp_cached);
-+		WRITE_ONCE(cpu->hwp_req_cached, value);
-+	}
-+
- 	value &= ~GENMASK_ULL(31, 0);
--	min_perf = HWP_LOWEST_PERF(all_cpu_data[cpu]->hwp_cap_cached);
-+	min_perf = HWP_LOWEST_PERF(cpu->hwp_cap_cached);
- 
- 	/* Set hwp_max = hwp_min */
- 	value |= HWP_MAX_PERF(min_perf);
-@@ -932,19 +934,7 @@ static void intel_pstate_hwp_force_min_perf(int cpu)
- 	if (boot_cpu_has(X86_FEATURE_HWP_EPP))
- 		value |= HWP_ENERGY_PERF_PREFERENCE(HWP_EPP_POWERSAVE);
- 
--	wrmsrl_on_cpu(cpu, MSR_HWP_REQUEST, value);
--}
--
--static int intel_pstate_hwp_save_state(struct cpufreq_policy *policy)
--{
--	struct cpudata *cpu_data = all_cpu_data[policy->cpu];
--
--	if (!hwp_active)
--		return 0;
--
--	cpu_data->epp_saved = intel_pstate_get_epp(cpu_data, 0);
--
--	return 0;
-+	wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, value);
- }
- 
- #define POWER_CTL_EE_ENABLE	1
-@@ -971,8 +961,28 @@ static void set_power_ctl_ee_state(bool input)
- 
- static void intel_pstate_hwp_enable(struct cpudata *cpudata);
- 
-+static void intel_pstate_hwp_reenable(struct cpudata *cpu)
++static inline unsigned long rste_addr_end_folded(unsigned long rste,
++						unsigned long addr, unsigned long end)
 +{
-+	intel_pstate_hwp_enable(cpu);
-+	wrmsrl_on_cpu(cpu->cpu, MSR_HWP_REQUEST, READ_ONCE(cpu->hwp_req_cached));
++	unsigned int type = rste & _REGION_ENTRY_TYPE_MASK;
++	unsigned long size, mask, boundary;
++
++	switch (type) {
++	case _REGION_ENTRY_TYPE_R1:
++		size = PGDIR_SIZE;
++		mask = PGDIR_MASK;
++		break;
++	case _REGION_ENTRY_TYPE_R2:
++		size = P4D_SIZE;
++		mask = P4D_MASK;
++		break;
++	case _REGION_ENTRY_TYPE_R3:
++		size = PUD_SIZE;
++		mask = PUD_MASK;
++		break;
++	default:
++		BUG();
++	};
++
++	boundary = (addr + size) & mask;
++
++	return (boundary - 1) < (end - 1) ? boundary : end;
 +}
 +
-+static int intel_pstate_suspend(struct cpufreq_policy *policy)
++#define pgd_addr_end_folded pgd_addr_end_folded
++static inline unsigned long pgd_addr_end_folded(pgd_t pgd, unsigned long addr,
++						unsigned long end)
 +{
-+	struct cpudata *cpu = all_cpu_data[policy->cpu];
-+
-+	pr_debug("CPU %d suspending\n", cpu->cpu);
-+
-+	cpu->suspended = true;
-+
-+	return 0;
++	return rste_addr_end_folded(pgd_val(pgd), addr, end);
 +}
 +
- static int intel_pstate_resume(struct cpufreq_policy *policy)
- {
-+	struct cpudata *cpu = all_cpu_data[policy->cpu];
-+
-+	pr_debug("CPU %d resuming\n", cpu->cpu);
- 
- 	/* Only restore if the system default is changed */
- 	if (power_ctl_ee_state == POWER_CTL_EE_ENABLE)
-@@ -980,18 +990,16 @@ static int intel_pstate_resume(struct cpufreq_policy *policy)
- 	else if (power_ctl_ee_state == POWER_CTL_EE_DISABLE)
- 		set_power_ctl_ee_state(false);
- 
--	if (!hwp_active)
--		return 0;
-+	if (cpu->suspended && hwp_active) {
-+		mutex_lock(&intel_pstate_limits_lock);
- 
--	mutex_lock(&intel_pstate_limits_lock);
--
--	if (policy->cpu == 0)
--		intel_pstate_hwp_enable(all_cpu_data[policy->cpu]);
-+		/* Re-enable HWP, because "online" has not done that. */
-+		intel_pstate_hwp_reenable(cpu);
- 
--	all_cpu_data[policy->cpu]->epp_policy = 0;
--	intel_pstate_hwp_set(policy->cpu);
-+		mutex_unlock(&intel_pstate_limits_lock);
-+	}
- 
--	mutex_unlock(&intel_pstate_limits_lock);
-+	cpu->suspended = false;
- 
- 	return 0;
- }
-@@ -1440,7 +1448,6 @@ static void intel_pstate_hwp_enable(struct cpudata *cpudata)
- 		wrmsrl_on_cpu(cpudata->cpu, MSR_HWP_INTERRUPT, 0x00);
- 
- 	wrmsrl_on_cpu(cpudata->cpu, MSR_PM_ENABLE, 0x1);
--	cpudata->epp_policy = 0;
- 	if (cpudata->epp_default == -EINVAL)
- 		cpudata->epp_default = intel_pstate_get_epp(cpudata, 0);
- }
-@@ -2111,7 +2118,6 @@ static int intel_pstate_init_cpu(unsigned int cpunum)
- 
- 		cpu->epp_default = -EINVAL;
- 		cpu->epp_powersave = -EINVAL;
--		cpu->epp_saved = -EINVAL;
- 	}
- 
- 	cpu = all_cpu_data[cpunum];
-@@ -2122,6 +2128,7 @@ static int intel_pstate_init_cpu(unsigned int cpunum)
- 		const struct x86_cpu_id *id;
- 
- 		intel_pstate_hwp_enable(cpu);
-+		cpu->epp_policy = 0;
- 
- 		id = x86_match_cpu(intel_pstate_hwp_boost_ids);
- 		if (id && intel_pstate_acpi_pm_profile_server())
-@@ -2308,28 +2315,61 @@ static int intel_pstate_verify_policy(struct cpufreq_policy_data *policy)
- 	return 0;
- }
- 
--static void intel_cpufreq_stop_cpu(struct cpufreq_policy *policy)
-+static int intel_pstate_cpu_offline(struct cpufreq_policy *policy)
- {
-+	struct cpudata *cpu = all_cpu_data[policy->cpu];
-+
-+	pr_debug("CPU %d going offline\n", cpu->cpu);
-+
-+	if (cpu->suspended)
-+		return 0;
-+
-+	/*
-+	 * If the CPU is an SMT thread and it goes offline with the performance
-+	 * settings different from the minimum, it will prevent its sibling
-+	 * from getting to lower performance levels, so force the minimum
-+	 * performance on CPU offline to prevent that from happening.
-+	 */
- 	if (hwp_active)
--		intel_pstate_hwp_force_min_perf(policy->cpu);
-+		intel_pstate_hwp_offline(cpu);
- 	else
--		intel_pstate_set_min_pstate(all_cpu_data[policy->cpu]);
-+		intel_pstate_set_min_pstate(cpu);
-+
-+	intel_pstate_exit_perf_limits(policy);
-+
-+	return 0;
++#define p4d_addr_end_folded p4d_addr_end_folded
++static inline unsigned long p4d_addr_end_folded(p4d_t p4d, unsigned long addr,
++						unsigned long end)
++{
++	return rste_addr_end_folded(p4d_val(p4d), addr, end);
 +}
 +
-+static int intel_pstate_cpu_online(struct cpufreq_policy *policy)
++#define pud_addr_end_folded pud_addr_end_folded
++static inline unsigned long pud_addr_end_folded(pud_t pud, unsigned long addr,
++						unsigned long end)
 +{
-+	struct cpudata *cpu = all_cpu_data[policy->cpu];
++	return rste_addr_end_folded(pud_val(pud), addr, end);
++}
 +
-+	pr_debug("CPU %d going online\n", cpu->cpu);
-+
-+	intel_pstate_init_acpi_perf_limits(policy);
-+
-+	if (hwp_active) {
-+		/*
-+		 * Re-enable HWP and clear the "suspended" flag to let "resume"
-+		 * know that it need not do that.
-+		 */
-+		intel_pstate_hwp_reenable(cpu);
-+		cpu->suspended = false;
-+	}
-+
-+	return 0;
- }
- 
- static void intel_pstate_stop_cpu(struct cpufreq_policy *policy)
+ static inline int mm_has_pgste(struct mm_struct *mm)
  {
--	pr_debug("CPU %d exiting\n", policy->cpu);
-+	pr_debug("CPU %d stopping\n", policy->cpu);
+ #ifdef CONFIG_PGSTE
+diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+index e8cbc2e795d5..43dacbce823f 100644
+--- a/include/linux/pgtable.h
++++ b/include/linux/pgtable.h
+@@ -681,6 +681,38 @@ static inline int arch_unmap_one(struct mm_struct *mm,
+ })
+ #endif
  
- 	intel_pstate_clear_update_util_hook(policy->cpu);
--	if (hwp_active)
--		intel_pstate_hwp_save_state(policy);
--
--	intel_cpufreq_stop_cpu(policy);
- }
++/*
++ * With dynamic page table levels on s390, the static pXd_addr_end() functions
++ * will not return corresponding dynamic boundaries. This is no problem as long
++ * as only pXd pointers are passed down during page table walk, because
++ * pXd_offset() will simply return the given pointer for folded levels, and the
++ * pointer iteration over a range simply happens at the correct page table
++ * level.
++ * It is however a problem with gup_fast, or other places walking the page
++ * tables w/o locks using READ_ONCE(), and passing down the pXd values instead
++ * of pointers. In this case, the pointer given to pXd_offset() is a pointer to
++ * a stack variable, which cannot be used for pointer iteration at the correct
++ * level. Instead, the iteration then has to happen by going up to pgd level
++ * again. To allow this, provide pXd_addr_end_folded() functions with an
++ * additional pXd value parameter, which can be used on s390 to determine the
++ * folding level and return the corresponding boundary.
++ */
++#ifndef pgd_addr_end_folded
++#define pgd_addr_end_folded(pgd, addr, end)	pgd_addr_end(addr, end)
++#endif
++
++#ifndef p4d_addr_end_folded
++#define p4d_addr_end_folded(p4d, addr, end)	p4d_addr_end(addr, end)
++#endif
++
++#ifndef pud_addr_end_folded
++#define pud_addr_end_folded(pud, addr, end)	pud_addr_end(addr, end)
++#endif
++
++#ifndef pmd_addr_end_folded
++#define pmd_addr_end_folded(pmd, addr, end)	pmd_addr_end(addr, end)
++#endif
++
+ /*
+  * When walking page tables, we usually want to skip any p?d_none entries;
+  * and any p?d_bad entries - reporting the error before resetting to none.
+diff --git a/mm/gup.c b/mm/gup.c
+index ae096ea7583f..3157bc5ede24 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -2510,7 +2510,7 @@ static int gup_pmd_range(pud_t pud, unsigned long addr, unsigned long end,
+ 	do {
+ 		pmd_t pmd = READ_ONCE(*pmdp);
  
- static int intel_pstate_cpu_exit(struct cpufreq_policy *policy)
- {
--	intel_pstate_exit_perf_limits(policy);
-+	pr_debug("CPU %d exiting\n", policy->cpu);
+-		next = pmd_addr_end(addr, end);
++		next = pmd_addr_end_folded(pmd, addr, end);
+ 		if (!pmd_present(pmd))
+ 			return 0;
  
- 	policy->fast_switch_possible = false;
+@@ -2553,7 +2553,7 @@ static int gup_pud_range(p4d_t p4d, unsigned long addr, unsigned long end,
+ 	do {
+ 		pud_t pud = READ_ONCE(*pudp);
  
-@@ -2403,11 +2443,13 @@ static struct cpufreq_driver intel_pstate = {
- 	.flags		= CPUFREQ_CONST_LOOPS,
- 	.verify		= intel_pstate_verify_policy,
- 	.setpolicy	= intel_pstate_set_policy,
--	.suspend	= intel_pstate_hwp_save_state,
-+	.suspend	= intel_pstate_suspend,
- 	.resume		= intel_pstate_resume,
- 	.init		= intel_pstate_cpu_init,
- 	.exit		= intel_pstate_cpu_exit,
- 	.stop_cpu	= intel_pstate_stop_cpu,
-+	.offline	= intel_pstate_cpu_offline,
-+	.online		= intel_pstate_cpu_online,
- 	.update_limits	= intel_pstate_update_limits,
- 	.name		= "intel_pstate",
- };
-@@ -2662,7 +2704,10 @@ static struct cpufreq_driver intel_cpufreq = {
- 	.fast_switch	= intel_cpufreq_fast_switch,
- 	.init		= intel_cpufreq_cpu_init,
- 	.exit		= intel_cpufreq_cpu_exit,
--	.stop_cpu	= intel_cpufreq_stop_cpu,
-+	.offline	= intel_pstate_cpu_offline,
-+	.online		= intel_pstate_cpu_online,
-+	.suspend	= intel_pstate_suspend,
-+	.resume		= intel_pstate_resume,
- 	.update_limits	= intel_pstate_update_limits,
- 	.name		= "intel_cpufreq",
- };
--- 
-2.26.2
-
-
-
-
+-		next = pud_addr_end(addr, end);
++		next = pud_addr_end_folded(pud, addr, end);
+ 		if (unlikely(!pud_present(pud)))
+ 			return 0;
+ 		if (unlikely(pud_huge(pud))) {
+@@ -2581,7 +2581,7 @@ static int gup_p4d_range(pgd_t pgd, unsigned long addr, unsigned long end,
+ 	do {
+ 		p4d_t p4d = READ_ONCE(*p4dp);
+ 
+-		next = p4d_addr_end(addr, end);
++		next = p4d_addr_end_folded(p4d, addr, end);
+ 		if (p4d_none(p4d))
+ 			return 0;
+ 		BUILD_BUG_ON(p4d_huge(p4d));
+@@ -2606,7 +2606,7 @@ static void gup_pgd_range(unsigned long addr, unsigned long end,
+ 	do {
+ 		pgd_t pgd = READ_ONCE(*pgdp);
+ 
+-		next = pgd_addr_end(addr, end);
++		next = pgd_addr_end_folded(pgd, addr, end);
+ 		if (pgd_none(pgd))
+ 			return;
+ 		if (unlikely(pgd_huge(pgd))) {
