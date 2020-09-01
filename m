@@ -7,70 +7,72 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546ACC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06121C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:49:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 29934206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:49:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D64D12151B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599004181;
-	bh=8I2/6S4NA8g5BwcpaqIkpbR2yNhiDL7XvOsIWSi4uO8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=OQ1iMN2pDxlAV5gt0PuAuJrSMLk8qZpdXlDobFKP0w5iqzCOP0ujjgPnP/yJtbBn/
-	 QGiFPES5gfYwGZ0Xn0g6hW0ZAUVYzgibGWPy06vDVQq7L/77AGqC6hnvFFt5wkW5aj
-	 g/wxf86jnaesjxFpFpsmPp+5Q5pv4x8KiehceOp4=
+	s=default; t=1599004184;
+	bh=dfcpHebh1zisjZHusBLDM0il2QaGm8evd9hzuKeAFbY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VsHyuRbsQuJkqxdkZ9pwotNn62DATO/cZHco97M3lFQVJp7IrJR5TRU/NdPz0fMZ/
+	 cfszbHceEYMPBpMmMfz7k7/a/qJLk7etua/K0+iL5mnAubABfXem1uVSKuzCi+EDby
+	 9EcS0NYhjkGe3C/7Jd3h8nH8tVzPe8FmVcVHGda4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726386AbgIAXtj (ORCPT
+        id S1726510AbgIAXtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 19:49:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46600 "EHLO
+        Tue, 1 Sep 2020 19:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46612 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725949AbgIAXti (ORCPT
+        with ESMTP id S1725949AbgIAXtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 19:49:38 -0400
-Received: from mail-il1-x142.google.com (mail-il1-x142.google.com [IPv6:2607:f8b0:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A2E1C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 16:49:38 -0700 (PDT)
-Received: by mail-il1-x142.google.com with SMTP id p13so3393384ils.3
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 16:49:38 -0700 (PDT)
+        Tue, 1 Sep 2020 19:49:41 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96C48C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 16:49:41 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id c6so3375057ilo.13
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 16:49:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oaGFlzegAhzhObOl5ystm/DE+ZWlJnH7f4raEDT5VgA=;
-        b=SYmu3CGwjJrXjtImMPUk+qehy+oczAv8rFWqya5Pc7ywWZ122YhrlfyszAcdOkl8bO
-         ARjvWrPrOaVCNrIEM8gT8YFImQ3Ll4mLGgvkXlKBPCM3Y+jzQKeb52QUFfsP1FmF1EcQ
-         g/3axD9+hchplrqSOZhYZBY8slu8yCA9SvLeY=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=QEs0aJjvLRofvx5BLuIuaM2VIGLLqoZwRYQsqipmaUY=;
+        b=Fi0YMKU/Yzlm+ZK1SVYMLYJ1Fa7bnWrky4iZ65Z36cmAU6HCh7iQ6pY5lGmNZs0yaa
+         SRV6fWWBHk99sp/7uQxmhd7/ek/w58sRfw1lBja7+s411QU+rj577gfSIl6H4X4Kwh4k
+         fXxyNITpBXrEmLcAYZQ/jeVxZyT8+ZfFeyutU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oaGFlzegAhzhObOl5ystm/DE+ZWlJnH7f4raEDT5VgA=;
-        b=NPJit9F65AblTcq9Z0I9fNTBwaXKzREmZb+KHAPpSg+9X9FuhGZmGzkzk5Sy/9H2Ix
-         uZf98cTXktEDkmd/2h8GJ94eC5VELutbBqm+OwjBD2Fa+Ip34/DkHWPHqfFAak7v91mC
-         qqEg8+kNztq2t3wYwzIoVTHxHQcuA0oIuf45atS9suNXqU9+Vki9lJDPUzoHM4NaEAxf
-         sZbtFTDqIoCLXWQ4NK22X/48kbb5a9mk2QpNML+DtNLRDRgF282OpC5Vs/zTL2hF8xMj
-         415ceYJzklUBtFz+MzNNlVxk8YkZBGcfeFUA0v/Xl7GP0D+jiCl5KHe/N+F80RkWPbjW
-         2ieA==
-X-Gm-Message-State: AOAM533ZUzaGVTPgDKiXK0fkWdrhPCYygqpqKn9j2qFKMVuvlLtWwBTs
-        FxK4x3wiSJl4pD8JVh4lAlmE9Q==
-X-Google-Smtp-Source: ABdhPJyUI6z8e3EY6AvQ136Y4DXv1DRlvrvUJufRVcDnL/aQih9dHa1XpfJaqO4k0jFJo64Vv3sZMA==
-X-Received: by 2002:a92:dac1:: with SMTP id o1mr1427220ilq.86.1599004177375;
-        Tue, 01 Sep 2020 16:49:37 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=QEs0aJjvLRofvx5BLuIuaM2VIGLLqoZwRYQsqipmaUY=;
+        b=G7nRoc5G27Ne5sEOhTY2+7gREYoQo8zO10qh14Ol11FQLs2KFEY0Q9811cwJdQFk+7
+         r2WYXnI0I83dlpLjNpblV5FWdBU+3kwdpyGPbkMEoeR0qMWXwSsgbrOODrEKz3gtlQ+y
+         XLWlkPgSwEm727gsuocIn2go6Yao8P8ky/D8XuiE8FVwZpbTIc7+HV9kmYJ0srQ4EiIg
+         JG7izSiy+Uv+NSBA2VvpjSBLa3fqBbks6sEtCzee03+/vyUI0J70T+waLYJCxX6KTsKQ
+         4YQVf911q4CUiqipcsfOV1elSc9S/SdSgNN48X+QrPhZZfajvIXdiF50zs0b+Eo2ZeQb
+         lDVA==
+X-Gm-Message-State: AOAM531TkPBOD92Yc6o3zuGp6rJQR2i7P46o1NBJ/Q6Q8OPNDAhcp5NS
+        apvgldef4Po3uincSVA8B3jJ2+7owPsQfA==
+X-Google-Smtp-Source: ABdhPJwzA9Q59GddExipXURfjpgwoNSLVRSJzMim8GrUh8kYwPedesNNjr7EtpHAXYi756sX4Y5mqA==
+X-Received: by 2002:a92:6f0a:: with SMTP id k10mr1287002ilc.5.1599004180682;
+        Tue, 01 Sep 2020 16:49:40 -0700 (PDT)
 Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id k18sm1253713ils.42.2020.09.01.16.49.35
+        by smtp.gmail.com with ESMTPSA id k18sm1253713ils.42.2020.09.01.16.49.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 16:49:36 -0700 (PDT)
+        Tue, 01 Sep 2020 16:49:40 -0700 (PDT)
 From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org
+To:     tglx@linutronix.de, qais.yousef@arm.com, peterz@infradead.org,
+        cai@lca.pw, mingo@kernel.org, ethp@qq.com, tyhicks@canonical.com,
+        arnd@arndb.de
 Cc:     Shuah Khan <skhan@linuxfoundation.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] kernel: events: Use scnprintf() in show_pmu_*() instead of snprintf()
-Date:   Tue,  1 Sep 2020 17:49:29 -0600
-Message-Id: <20200901234930.359126-1-skhan@linuxfoundation.org>
+Subject: [PATCH] kernel: Use scnprintf() in show_smt_*() instead of snprintf()
+Date:   Tue,  1 Sep 2020 17:49:30 -0600
+Message-Id: <20200901234930.359126-2-skhan@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200901234930.359126-1-skhan@linuxfoundation.org>
+References: <20200901234930.359126-1-skhan@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,46 +81,36 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Since snprintf() returns would-be-output size instead of the actual
-output size, replace it with scnprintf(), so the nr_addr_filters_show(),
-type_show(), and perf_event_mux_interval_ms_show() routines return the
-actual size.
+output size, replace it with scnprintf(), so the show_smt_control(),
+and show_smt_active() routines return the actual size.
 
 Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 ---
- kernel/events/core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ kernel/cpu.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 7ed5248f0445..5f4236c84940 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -10571,7 +10571,7 @@ static ssize_t nr_addr_filters_show(struct device *dev,
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 6ff2578ecf17..29a5ceb93cda 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2334,7 +2334,7 @@ show_smt_control(struct device *dev, struct device_attribute *attr, char *buf)
  {
- 	struct pmu *pmu = dev_get_drvdata(dev);
+ 	const char *state = smt_states[cpu_smt_control];
  
--	return snprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
-+	return scnprintf(page, PAGE_SIZE - 1, "%d\n", pmu->nr_addr_filters);
- }
- DEVICE_ATTR_RO(nr_addr_filters);
- 
-@@ -10582,7 +10582,7 @@ type_show(struct device *dev, struct device_attribute *attr, char *page)
- {
- 	struct pmu *pmu = dev_get_drvdata(dev);
- 
--	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->type);
-+	return scnprintf(page, PAGE_SIZE-1, "%d\n", pmu->type);
- }
- static DEVICE_ATTR_RO(type);
- 
-@@ -10593,7 +10593,7 @@ perf_event_mux_interval_ms_show(struct device *dev,
- {
- 	struct pmu *pmu = dev_get_drvdata(dev);
- 
--	return snprintf(page, PAGE_SIZE-1, "%d\n", pmu->hrtimer_interval_ms);
-+	return scnprintf(page, PAGE_SIZE-1, "%d\n", pmu->hrtimer_interval_ms);
+-	return snprintf(buf, PAGE_SIZE - 2, "%s\n", state);
++	return scnprintf(buf, PAGE_SIZE - 2, "%s\n", state);
  }
  
- static DEFINE_MUTEX(mux_interval_mutex);
+ static ssize_t
+@@ -2348,7 +2348,7 @@ static DEVICE_ATTR(control, 0644, show_smt_control, store_smt_control);
+ static ssize_t
+ show_smt_active(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+-	return snprintf(buf, PAGE_SIZE - 2, "%d\n", sched_smt_active());
++	return scnprintf(buf, PAGE_SIZE - 2, "%d\n", sched_smt_active());
+ }
+ static DEVICE_ATTR(active, 0444, show_smt_active, NULL);
+ 
 -- 
 2.25.1
 
