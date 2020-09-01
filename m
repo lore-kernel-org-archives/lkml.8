@@ -2,52 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AB5C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B61DEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BC442098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893B72087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980924;
-	bh=lPuRvbuP4YWG81d4Jjr40/ThGhB4llkkUYjH6HigtVA=;
+	s=default; t=1598980928;
+	bh=XOFKqE2Z3iI+JlFOgoGr5lcrEyfuPTUWY1ELOCaJWts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCHBfdY8Kw0mYq7K1gMYFM9gz9FvIddDvGFHaHvh6FcpwFLO7I+kHPbzzUvbNPGr5
-	 5I8leTML9ByG+2h1kR6Z/a5eL4dRufln4+ly5P4Ksm+aXTfw/pOtG8h+9hvpiWMnCq
-	 RnRMptAITqQNPF5OXZAQejnmjZ2fJvrusgHTjzhY=
+	b=mhzm2lHqH6ahYyZOmpxpCCL59isG2heUttdYeMlFMrPoxuUJXCW6u0sRD5eOUCIsB
+	 jLTfr9Qvh5Pfo+yJuSow8Rwx66m+/3POif3R6t/cAkJ3b4xiTToxGHnbMgMtI3CWkk
+	 SEnI3EZNrWmWZ2lZ3/IIo3VEAqQKQ2n7S+saKEXA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732651AbgIARWC (ORCPT
+        id S1728660AbgIAPMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:22:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54582 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:12:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728678AbgIAPMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:18 -0400
+        id S1728452AbgIAPMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:08 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 820FE206FA;
-        Tue,  1 Sep 2020 15:12:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 515902078B;
+        Tue,  1 Sep 2020 15:12:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973138;
-        bh=lPuRvbuP4YWG81d4Jjr40/ThGhB4llkkUYjH6HigtVA=;
+        s=default; t=1598973127;
+        bh=XOFKqE2Z3iI+JlFOgoGr5lcrEyfuPTUWY1ELOCaJWts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U4Ra2b68/AwMgmVaNvHNF7krniSDU6hWOhUIHYJnm3d/y1P8qaJazw/JnRfSgbJF4
-         Gpw2gi/z5/gKF/4AzWFFkanvdzDEGw4TP5YXqkfm3BTfgt+z9mDBukRXkqZZbbnNiR
-         FM9jQ6IC3xRHRrco+Tal8i0ZHTCkuO0YyeRRB+uQ=
+        b=xPrfaEidBTDHEWm40HwKFKbBfCE3UnSlFbgnFObbyJJRtlJl7znB3PqqZLEwo+Emf
+         b+5//CY4vDW6DT4N9hKEkXLusTEjlDih4OaXUnzhHFXHAxF2zysPuVXKVKwRg4+fkf
+         /Skv+DX3KcZnkZG2jzpyWH7KgEKdq9XXoaVNZOtI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mahesh Bandewar <maheshb@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 03/62] ipvlan: fix device features
-Date:   Tue,  1 Sep 2020 17:09:46 +0200
-Message-Id: <20200901150920.884790983@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 18/62] selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
+Date:   Tue,  1 Sep 2020 17:10:01 +0200
+Message-Id: <20200901150921.655799413@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -60,106 +62,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mahesh Bandewar <maheshb@google.com>
+From: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
 
-[ Upstream commit d0f5c7076e01fef6fcb86988d9508bf3ce258bd4 ]
+[ Upstream commit 3337bf41e0dd70b4064cdf60acdfcdc2d050066c ]
 
-Processing NETDEV_FEAT_CHANGE causes IPvlan links to lose
-NETIF_F_LLTX feature because of the incorrect handling of
-features in ipvlan_fix_features().
+An extra count on ebb_state.stats.pmc_count[PMC_INDEX(pmc)] is being per-
+formed when count_pmc() is used to reset PMCs on a few selftests. This
+extra pmc_count can occasionally invalidate results, such as the ones from
+cycles_test shown hereafter. The ebb_check_count() failed with an above
+the upper limit error due to the extra value on ebb_state.stats.pmc_count.
 
---before--
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~# ethtool -K ipvl0 tso off
-Cannot change tcp-segmentation-offload
-Actual changes:
-vlan-challenged: off [fixed]
-tx-lockless: off [fixed]
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: off [fixed]
-lpaa10:~#
+Furthermore, this extra count is also indicated by extra PMC1 trace_log on
+the output of the cycle test (as well as on pmc56_overflow_test):
 
---after--
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~# ethtool -K ipvl0 tso off
-Cannot change tcp-segmentation-offload
-Could not change any device features
-lpaa10:~# ethtool -k ipvl0 | grep tx-lockless
-tx-lockless: on [fixed]
-lpaa10:~#
+==========
+   ...
+   [21]: counter = 8
+   [22]: register SPRN_MMCR0 = 0x0000000080000080
+   [23]: register SPRN_PMC1  = 0x0000000080000004
+   [24]: counter = 9
+   [25]: register SPRN_MMCR0 = 0x0000000080000080
+   [26]: register SPRN_PMC1  = 0x0000000080000004
+   [27]: counter = 10
+   [28]: register SPRN_MMCR0 = 0x0000000080000080
+   [29]: register SPRN_PMC1  = 0x0000000080000004
+>> [30]: register SPRN_PMC1  = 0x000000004000051e
+PMC1 count (0x280000546) above upper limit 0x2800003e8 (+0x15e)
+[FAIL] Test FAILED on line 52
+failure: cycles
+==========
 
-Fixes: 2ad7bf363841 ("ipvlan: Initial check-in of the IPVLAN driver.")
-Signed-off-by: Mahesh Bandewar <maheshb@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200626164737.21943-1-desnesn@linux.ibm.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ipvlan/ipvlan_main.c |   25 +++++++++++++++++++++----
- 1 file changed, 21 insertions(+), 4 deletions(-)
+ .../selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c     | 2 --
+ tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c      | 2 --
+ .../selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c    | 2 --
+ .../selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c     | 2 --
+ tools/testing/selftests/powerpc/pmu/ebb/ebb.c              | 2 --
+ .../selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c  | 2 --
+ .../selftests/powerpc/pmu/ebb/lost_exception_test.c        | 1 -
+ .../testing/selftests/powerpc/pmu/ebb/multi_counter_test.c | 7 -------
+ .../selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c       | 2 --
+ .../testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c | 2 --
+ .../selftests/powerpc/pmu/ebb/pmc56_overflow_test.c        | 2 --
+ 11 files changed, 26 deletions(-)
 
---- a/drivers/net/ipvlan/ipvlan_main.c
-+++ b/drivers/net/ipvlan/ipvlan_main.c
-@@ -87,12 +87,21 @@ static void ipvlan_port_destroy(struct n
- static struct lock_class_key ipvlan_netdev_xmit_lock_key;
- static struct lock_class_key ipvlan_netdev_addr_lock_key;
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
+index 94110b1dcd3d8..031baa43646fb 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
+@@ -91,8 +91,6 @@ int back_to_back_ebbs(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
-+#define IPVLAN_ALWAYS_ON_OFLOADS \
-+	(NETIF_F_SG | NETIF_F_HW_CSUM | \
-+	 NETIF_F_GSO_ROBUST | NETIF_F_GSO_SOFTWARE | NETIF_F_GSO_ENCAP_ALL)
-+
-+#define IPVLAN_ALWAYS_ON \
-+	(IPVLAN_ALWAYS_ON_OFLOADS | NETIF_F_LLTX | NETIF_F_VLAN_CHALLENGED)
-+
- #define IPVLAN_FEATURES \
- 	(NETIF_F_SG | NETIF_F_ALL_CSUM | NETIF_F_HIGHDMA | NETIF_F_FRAGLIST | \
- 	 NETIF_F_GSO | NETIF_F_TSO | NETIF_F_UFO | NETIF_F_GSO_ROBUST | \
- 	 NETIF_F_TSO_ECN | NETIF_F_TSO6 | NETIF_F_GRO | NETIF_F_RXCSUM | \
- 	 NETIF_F_HW_VLAN_CTAG_FILTER | NETIF_F_HW_VLAN_STAG_FILTER)
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
-+	/* NETIF_F_GSO_ENCAP_ALL NETIF_F_GSO_SOFTWARE Newly added */
-+
- #define IPVLAN_STATE_MASK \
- 	((1<<__LINK_STATE_NOCARRIER) | (1<<__LINK_STATE_DORMANT))
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
+index 7c57a8d79535d..361e0be9df9ae 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
+@@ -42,8 +42,6 @@ int cycles(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
-@@ -117,7 +126,9 @@ static int ipvlan_init(struct net_device
- 	dev->state = (dev->state & ~IPVLAN_STATE_MASK) |
- 		     (phy_dev->state & IPVLAN_STATE_MASK);
- 	dev->features = phy_dev->features & IPVLAN_FEATURES;
--	dev->features |= NETIF_F_LLTX;
-+	dev->features |= IPVLAN_ALWAYS_ON;
-+	dev->vlan_features = phy_dev->vlan_features & IPVLAN_FEATURES;
-+	dev->vlan_features |= IPVLAN_ALWAYS_ON_OFLOADS;
- 	dev->gso_max_size = phy_dev->gso_max_size;
- 	dev->hard_header_len = phy_dev->hard_header_len;
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
-@@ -201,7 +212,14 @@ static netdev_features_t ipvlan_fix_feat
- {
- 	struct ipvl_dev *ipvlan = netdev_priv(dev);
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
+index ecf5ee3283a3e..fe7d0dc2a1a26 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
+@@ -99,8 +99,6 @@ int cycles_with_freeze(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
--	return features & (ipvlan->sfeatures | ~IPVLAN_FEATURES);
-+	features |= NETIF_F_ALL_FOR_ALL;
-+	features &= (ipvlan->sfeatures | ~IPVLAN_FEATURES);
-+	features = netdev_increment_features(ipvlan->phy_dev->features,
-+					     features, features);
-+	features |= IPVLAN_ALWAYS_ON;
-+	features &= (IPVLAN_FEATURES | IPVLAN_ALWAYS_ON);
-+
-+	return features;
- }
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
- static void ipvlan_change_rx_flags(struct net_device *dev, int change)
-@@ -590,9 +608,8 @@ static int ipvlan_device_event(struct no
+ 	printf("EBBs while frozen %d\n", ebbs_while_frozen);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
+index c0faba520b35c..b9b30f974b5ea 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
+@@ -71,8 +71,6 @@ int cycles_with_mmcr2(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
- 	case NETDEV_FEAT_CHANGE:
- 		list_for_each_entry(ipvlan, &port->ipvlans, pnode) {
--			ipvlan->dev->features = dev->features & IPVLAN_FEATURES;
- 			ipvlan->dev->gso_max_size = dev->gso_max_size;
--			netdev_features_change(ipvlan->dev);
-+			netdev_update_features(ipvlan->dev);
- 		}
- 		break;
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
+index 9729d9f902187..4154498bc5dc5 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
+@@ -398,8 +398,6 @@ int ebb_child(union pipe read_pipe, union pipe write_pipe)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
+index a991d2ea8d0a1..174e4f4dae6c0 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
+@@ -38,8 +38,6 @@ static int victim_child(union pipe read_pipe, union pipe write_pipe)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	FAIL_IF(ebb_state.stats.ebb_count == 0);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
+index eb8acb78bc6c1..531083accfcad 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
+@@ -75,7 +75,6 @@ static int test_body(void)
+ 	ebb_freeze_pmcs();
+ 	ebb_global_disable();
+ 
+-	count_pmc(4, sample_period);
+ 	mtspr(SPRN_PMC4, 0xdead);
+ 
+ 	dump_summary_ebb_state();
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
+index 6ff8c8ff27d66..035c02273cd49 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
+@@ -70,13 +70,6 @@ int multi_counter(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-	count_pmc(2, sample_period);
+-	count_pmc(3, sample_period);
+-	count_pmc(4, sample_period);
+-	count_pmc(5, sample_period);
+-	count_pmc(6, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	for (i = 0; i < 6; i++)
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
+index 037cb6154f360..3e9d4ac965c85 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
+@@ -61,8 +61,6 @@ static int cycles_child(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-
+ 	dump_summary_ebb_state();
+ 
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
+index c5fa64790c22e..d90891fe96a32 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
+@@ -82,8 +82,6 @@ static int test_body(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	if (mmcr0_mismatch)
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
+index 30e1ac62e8cb4..8ca92b9ee5b01 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
+@@ -76,8 +76,6 @@ int pmc56_overflow(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(2, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	printf("PMC5/6 overflow %d\n", pmc56_overflowed);
+-- 
+2.25.1
+
 
 
