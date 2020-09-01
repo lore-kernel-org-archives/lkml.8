@@ -8,151 +8,192 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 579A6C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D368C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C56920693
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184E720693
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:42:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CWrOGraZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t1D6JI7b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbgIADmN (ORCPT
+        id S1726537AbgIADmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 23:42:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
+        Mon, 31 Aug 2020 23:42:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726112AbgIADmM (ORCPT
+        with ESMTP id S1726112AbgIADmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 23:42:12 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A243C0612FE;
-        Mon, 31 Aug 2020 20:42:11 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id w5so7904936wrp.8;
-        Mon, 31 Aug 2020 20:42:11 -0700 (PDT)
+        Mon, 31 Aug 2020 23:42:51 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0693C0612FE;
+        Mon, 31 Aug 2020 20:42:50 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id q6so2668514ild.12;
+        Mon, 31 Aug 2020 20:42:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gEP+l6VmZ2AQhT9y6MxnJyCmEVijpcWpEhbN/rykvcE=;
-        b=CWrOGraZ3/zNXixoJEwLA3hwBYU2PWVJEJ6ylxVJux52OFGXCCNEGTUhC6mkNsNKpA
-         i1TXATaF9rTSGwMaVqrUu1Zz/Y1O9y1drCGCIQXqHRHg9tOaU+j7fvsU/CuvZxVlMMw5
-         jVxSR6ue24PPOYOWBejC9MloKJqqT/iDlRnzo7+6cRlhm0s17nQW9Gh2F7FrU9ZfvUxp
-         kAj8AgciZRjeU/IJPsUe/joigfP+Mc6xw8KC+pdmtDdlV3fkmAR0oIVELnk2GPlk1ru0
-         iqtKfLijhcQEQ37e9PwlNuKupuMgl1u6xVjd2ZRO3vozd8LXzB4Mr45MwWeEmJ4j6Osg
-         kkIA==
+         :cc:content-transfer-encoding;
+        bh=yC+DH8F9S1noAz2kEtZOwWN5TObh7PkAv1zYBcxxwps=;
+        b=t1D6JI7beEGd68zuDhYxtqcNutXRrlXIqf5K3TyohjpULva3QujiVHfNE8TbbX2IKN
+         bOuaz55uCGQN6PQGZk2w9hWayXKyyL3X5ymDezSx6u3KXGnv1xzADtto0/i7uX25TyTF
+         5Qhr8vng+zqwMhq2MO16LDolITQHuFK2tJRL2o16Jv3y79CQY4ZQJydOJOtJQoyv0sW3
+         AOM8Y6G3zNJqgpt17R7CVCEBtZJiDaYToIk7s7xQkE0MNos7b1vUVkJCezp36ADiFuiW
+         YCVyoQRqFan+RLMVsZVpxYQFmO4JfzMEaJMaCAFk2/hWTc8ahQuU99Vz2rQWwtQcihnb
+         Sfrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gEP+l6VmZ2AQhT9y6MxnJyCmEVijpcWpEhbN/rykvcE=;
-        b=EweFKDjX+clP5mxkMY0DlaoNwLVBNJILyvXJReUJD49WiHllT60lCeDlLkD+/agiSA
-         zE+90OUpJmDgwN+w+yz6Jo2FKR8XrwQf+HCJDZRS7xCssR8E34/06jgUurOuKvpKGelG
-         xjHb7H3a1RPM3vCBEpTL+18kTNE3h+Dyb8aAY4LdadWmSx8JP8mo4mGnI9KmLhnUydAi
-         t6fXwdTHRl392S0pSYnoJhy7KO8JGoZ2w5rCcvBQ9+36Z2yEGUoOxHfnd4u+psjKFb5L
-         NLVQHgFb0BNPuLNEnjte4XP9BJRwWiMbjTf0CFJck4POvkfKRsxNhiXtPfhxDVwELS72
-         w59A==
-X-Gm-Message-State: AOAM530elihLRNX3YUSBPug59E9c7/Y+QSm/cATVi/aCwKRTx8Irw+Aj
-        +t6vxjiTW2hOkB2UPXCr9fWB1cqUZOIBQb6qm1w=
-X-Google-Smtp-Source: ABdhPJyAYV0Dm0qLaL1mXbuG+PPAW1SP8BjwTCx+mqZtIG0Clr3g+Jy+4HR4m6cw7nu44h9gRxaSIWDuskrjmVwm3j8=
-X-Received: by 2002:adf:e6c7:: with SMTP id y7mr4030589wrm.147.1598931729990;
- Mon, 31 Aug 2020 20:42:09 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=yC+DH8F9S1noAz2kEtZOwWN5TObh7PkAv1zYBcxxwps=;
+        b=F3rVIWZMuQNKVP1/U/zRqGKvSHxosu/8qLjovyiKuFaGg7fj1dPUIl85k9CCxLpCEh
+         OIr+g23QNCXBpEF65FFlK/0CCJY9x8qN07HMrKCMSmz/wRHHCg3pUVd9y6qKLH44XCwQ
+         czuLT/48SDf99XAWKKa4bvHYHVO+3dnMa1bv6EqkJpaIDSS4C2j18zpVmub1yd5AUjlz
+         Gsv9DLyIlQVJYv88YhHYEkX3VXU5ibeqO9sdJm6xcDuUa/2lttE+3kE6Kcr6SW+cnVQA
+         dp8MO8S1ohTB4sVHIix/E8RTG/t4JSs+Xv0u+ozHmPD3jtoPMqKN0bn3SllqWe0aeWJ7
+         xw6w==
+X-Gm-Message-State: AOAM530p+UsECmme2AsGZ+TOU6u39qhvb0HvgBfoICFTF7xdR/gz0ibF
+        6HNO2YiXlb4qkcGANKd8kLcz6+gw1BQWQgdVgrMtCTl6IBo=
+X-Google-Smtp-Source: ABdhPJzGnO6lLr7vGuK0BxTdFGzUKAQhk59XmWw6DxwYqiLR1hIz6LPOTbQpHMykz9ksV3rJNVz8mDaK8sZiNFdBQJw=
+X-Received: by 2002:a92:6902:: with SMTP id e2mr3871563ilc.127.1598931769747;
+ Mon, 31 Aug 2020 20:42:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
- <20200814024114.1177553-2-robdclark@gmail.com> <20200901023517.GA54956@uller>
-In-Reply-To: <20200901023517.GA54956@uller>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 31 Aug 2020 20:42:57 -0700
-Message-ID: <CAF6AEGsx5mmUCuNApP692L-rS3wEbn4UqJBXuSr-38MAcVfoBw@mail.gmail.com>
-Subject: Re: [PATCH 01/19] drm/msm: remove dangling submitqueue references
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Will Deacon <will@kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
+References: <1598441840-15226-1-git-send-email-gene.chen.richtek@gmail.com>
+ <1598441840-15226-3-git-send-email-gene.chen.richtek@gmail.com> <06b19a38-6850-01b1-7a43-b61aec4079b8@ti.com>
+In-Reply-To: <06b19a38-6850-01b1-7a43-b61aec4079b8@ti.com>
+From:   Gene Chen <gene.chen.richtek@gmail.com>
+Date:   Tue, 1 Sep 2020 11:42:38 +0800
+Message-ID: <CAE+NS35UiKHP62gSskmX0A3YM+GDq-snq6j52iO32qnN+mT8ag@mail.gmail.com>
+Subject: Re: [PATCH 2/2] dt-bindings: leds: Add bindings for MT6360 LED
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-leds@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Gene Chen <gene_chen@richtek.com>, Wilma.Wu@mediatek.com,
+        shufan_lee@richtek.com, cy_huang@richtek.com,
+        benjamin.chao@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 7:35 PM Bjorn Andersson
-<bjorn.andersson@linaro.org> wrote:
+Dan Murphy <dmurphy@ti.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=8826=E6=97=A5 =
+=E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=887:54=E5=AF=AB=E9=81=93=EF=BC=9A
 >
-> On Fri 14 Aug 02:40 UTC 2020, Rob Clark wrote:
+> Gene
 >
-> > From: Rob Clark <robdclark@chromium.org>
+> On 8/26/20 6:37 AM, Gene Chen wrote:
+> > From: Gene Chen <gene_chen@richtek.com>
 > >
-> > Currently it doesn't matter, since we free the ctx immediately.  But
-> > when we start refcnt'ing the ctx, we don't want old dangling list
-> > entries to hang around.
-> >
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > Add bindings document for LED support on MT6360 PMIC
+>
+> Usually bindings are 1/x in the patchset.
+>
+
+ACK
+
+> And you should cc Rob Herring and the Device tree mail list other wise
+> the maintainer will not apply this patch without their ACKs
+>
+>
+
+ACK
+
+> > Signed-off-by: Gene Chen <gene_chen@richtek.com>
 > > ---
-> >  drivers/gpu/drm/msm/msm_submitqueue.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >   .../devicetree/bindings/leds/leds-mt6360.yaml      | 50 +++++++++++++=
++++++++++
+> >   1 file changed, 50 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/leds/leds-mt6360=
+.yaml
 > >
-> > diff --git a/drivers/gpu/drm/msm/msm_submitqueue.c b/drivers/gpu/drm/msm/msm_submitqueue.c
-> > index a1d94be7883a..90c9d84e6155 100644
-> > --- a/drivers/gpu/drm/msm/msm_submitqueue.c
-> > +++ b/drivers/gpu/drm/msm/msm_submitqueue.c
-> > @@ -49,8 +49,10 @@ void msm_submitqueue_close(struct msm_file_private *ctx)
-> >        * No lock needed in close and there won't
-> >        * be any more user ioctls coming our way
-> >        */
-> > -     list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node)
-> > +     list_for_each_entry_safe(entry, tmp, &ctx->submitqueues, node) {
-> > +             list_del(&entry->node);
+> > diff --git a/Documentation/devicetree/bindings/leds/leds-mt6360.yaml b/=
+Documentation/devicetree/bindings/leds/leds-mt6360.yaml
+> > new file mode 100644
+> > index 0000000..4598be5
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/leds-mt6360.yaml
+> > @@ -0,0 +1,50 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/leds/leds-mt6360.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: LED driver for MT6360 PMIC from MediaTek Integrated.
+> > +
+> > +maintainers:
+> > +  - Gene Chen <gene_chen@richtek.com>
+> > +
+> > +description: |
+> > +  This module is part of the MT6360 MFD device. For more details
+> > +  see Documentation/devicetree/bindings/mfd/mt6360.yaml.
 >
-> If you refcount ctx, what does that do for the entries in the submit
-> queue?
+> I think you need to include this yaml using allof tag
 >
-> "entry" here is kref'ed, but you're popping it off the list regardless
-> of the put ends up freeing the object or not - which afaict would mean
-> leaking the object.
 >
 
-What ends up happening is the submit has reference to submit-queue,
-which has reference to the ctx.. the submitqueue could be alive still
-pending in-flight submits (in a later patch), but dead from the PoV of
-userspace interface.
+I try add allOf tag
+allOf:
+ - $ref: "../mfd/mt6360.yaml"
 
-We aren't relying (or at least aren't in the end, and I *think* I
-didn't miss anything in the middle) relying on ctx->submitqueues list
-to clean anything up in the end, just track what is still a valid
-submitqueue from userspace PoV
+then the required property contains mt6360.yaml, which leads to build dt er=
+ror.
+/media/gene_chen/WD/upstream/linux/Documentation/devicetree/bindings/leds/l=
+eds-mt6360.example.dt.yaml:
+led-controller: 'reg' is a required property
+/media/gene_chen/WD/upstream/linux/Documentation/devicetree/bindings/leds/l=
+eds-mt6360.example.dt.yaml:
+led-controller: 'interrupt-controller' is a required property
+/media/gene_chen/WD/upstream/linux/Documentation/devicetree/bindings/leds/l=
+eds-mt6360.example.dt.yaml:
+led-controller: '#interrupt-cells' is a required property
+/media/gene_chen/WD/upstream/linux/Documentation/devicetree/bindings/leds/l=
+eds-mt6360.example.dt.yaml:
+led-controller: compatible:0: 'mediatek,mt6360' was expected
 
-BR,
--R
+I think I can remove this description for misread.
 
+> > +
+> > +  The LED controller is represented as a sub-node of the PMIC node on
+> > +  the device tree.
+> > +
+> > +  This device has six current sinks.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: mediatek,mt6360-led
+> > +
+> > +  "#address-cells":
+> > +    const: 1
+> > +
+> > +  "#size-cells":
+> > +    const: 0
+> > +
+> > +patternProperties:
+> > +  "^led@[0-5]$":
+> > +    type: object
+> > +    description: |
+> > +      Properties for a single LED.
+> > +
+> > +    properties:
+> > +      reg:
+> > +        description:
+> > +          Index of the LED.
+> > +        minimum: 0
+> > +        maximum: 5
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#address-cells"
+> > +  - "#size-cells"
+> > +additionalProperties: false
+> > +
+> Need a new line
 >
-> On the other hand, with the current implementation an object with higher
-> refcount with adjacent objects of single refcount would end up with
-> dangling pointers after the put. So in itself this change seems like a
-> net gain, but I'm wondering about the plan described in the commit
-> message.
 >
-> Regards,
-> Bjorn
+> And an example
 >
-> >               msm_submitqueue_put(entry);
-> > +     }
-> >  }
-> >
-> >  int msm_submitqueue_create(struct drm_device *drm, struct msm_file_private *ctx,
-> > --
-> > 2.26.2
-> >
+> > +...
