@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ECBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484F3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 095E02158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 107F82067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978633;
-	bh=2lroPYKvHDnCdHwfqA2E7nbTMTuzp4zdCEnhzGfJip8=;
+	s=default; t=1598978637;
+	bh=jJzN0qvUgOE1cdUaazlXbpW9jjzT4Ui/+dJXl3ovzjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZwrlubG4J/pGBJurVQnDilorVNGpSNtqzenp/U36e4m254DHvu8q/88B36cWigYuZ
-	 6OK7mcOTgAz7xUnUEBZp9Mjj6U9shaZiDAvYUsLQuevwiN9+eK1X99MbRBGszBjOPB
-	 yu9OC3UHKPyRaYWZbeVYVEOHiK2RAWOtEpJbCE/w=
+	b=UJYll2n++R8v2Ra/xYyVW2LGyU70UZAiOOz2RTjIPh71w8v46XfLkXlUT27pgtWOX
+	 Zz9bAd3+ylY7kb0NbiaHg5sPpdqtGigXKVrAbOYFqn5ca29ngUuyFJpraAfI56mvO3
+	 J0AzPrlZFM6svRjZEFHvEdW0p57+ctQNWvlvxNr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbgIAP1p (ORCPT
+        id S1730272AbgIAP1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 1 Sep 2020 11:27:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48056 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:47698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbgIAPYS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:24:18 -0400
+        id S1729201AbgIAPYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 325122078B;
-        Tue,  1 Sep 2020 15:24:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 367B92100A;
+        Tue,  1 Sep 2020 15:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973856;
-        bh=2lroPYKvHDnCdHwfqA2E7nbTMTuzp4zdCEnhzGfJip8=;
+        s=default; t=1598973844;
+        bh=jJzN0qvUgOE1cdUaazlXbpW9jjzT4Ui/+dJXl3ovzjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z9cnxbOxpCcaHS2Yh6uFQC5fgz6ZZZFT8p82muza9GCcfkyA9QUYm4bC9CJ/dAOu+
-         +/hV/lt1kNxcri9gptv2XCGeQoBMbyyI3I3qqxNpt/lReesoShXD0gudGdlY4uPpX6
-         Eh7nlwDZBgTW94R92n5sgDSdwokUQAzc3iBLpQOg=
+        b=DBSTd633kkcAEJT8+SyfE6IoI/DdtpYXW4mxw04BSfnR2Dr4oGAX70+0fVq1OZGW0
+         wujUup4queHN0hM/qG2jOoPKvSDyDZRzhM2S1KN6e7ysKyAbjaJx9isiJPVTNwK+7C
+         B5E7CEMFsPIWGZ+BiCjz5qeQWU/tHQ7//fxcK+xA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Himanshu Madhani <himanshu.madhani@oracle.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Nilesh Javali <njavali@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 075/125] scsi: qla2xxx: Fix null pointer access during disconnect from subsystem
-Date:   Tue,  1 Sep 2020 17:10:30 +0200
-Message-Id: <20200901150938.261417049@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 062/125] jbd2: abort journal if free a async write error metadata buffer
+Date:   Tue,  1 Sep 2020 17:10:17 +0200
+Message-Id: <20200901150937.613171075@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -63,73 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 83949613fac61e8e37eadf8275bf072342302f4e ]
+[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
 
-NVMEAsync command is being submitted to QLA while the same NVMe controller
-is in the middle of reset. The reset path has deleted the association and
-freed aen_op->fcp_req.private. Add a check for this private pointer before
-issuing the command.
+If we free a metadata buffer which has been failed to async write out
+in the background, the jbd2 checkpoint procedure will not detect this
+failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
+inconsistency after cleanup journal tail. This patch abort the journal
+if free a buffer has write_io_error flag to prevent potential further
+inconsistency.
 
-...
- 6 [ffffb656ca11fce0] page_fault at ffffffff8c00114e
-    [exception RIP: qla_nvme_post_cmd+394]
-    RIP: ffffffffc0d012ba  RSP: ffffb656ca11fd98  RFLAGS: 00010206
-    RAX: ffff8fb039eda228  RBX: ffff8fb039eda200  RCX: 00000000000da161
-    RDX: ffffffffc0d4d0f0  RSI: ffffffffc0d26c9b  RDI: ffff8fb039eda220
-    RBP: 0000000000000013   R8: ffff8fb47ff6aa80   R9: 0000000000000002
-    R10: 0000000000000000  R11: ffffb656ca11fdc8  R12: ffff8fb27d04a3b0
-    R13: ffff8fc46dd98a58  R14: 0000000000000000  R15: ffff8fc4540f0000
-    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
- 7 [ffffb656ca11fe08] nvme_fc_start_fcp_op at ffffffffc0241568 [nvme_fc]
- 8 [ffffb656ca11fe50] nvme_fc_submit_async_event at ffffffffc0241901 [nvme_fc]
- 9 [ffffb656ca11fe68] nvme_async_event_work at ffffffffc014543d [nvme_core]
-10 [ffffb656ca11fe98] process_one_work at ffffffff8b6cd437
-11 [ffffb656ca11fed8] worker_thread at ffffffff8b6cdcef
-12 [ffffb656ca11ff10] kthread at ffffffff8b6d3402
-13 [ffffb656ca11ff50] ret_from_fork at ffffffff8c000255
-
---
-PID: 37824  TASK: ffff8fb033063d80  CPU: 20  COMMAND: "kworker/u97:451"
- 0 [ffffb656ce1abc28] __schedule at ffffffff8be629e3
- 1 [ffffb656ce1abcc8] schedule at ffffffff8be62fe8
- 2 [ffffb656ce1abcd0] schedule_timeout at ffffffff8be671ed
- 3 [ffffb656ce1abd70] wait_for_completion at ffffffff8be639cf
- 4 [ffffb656ce1abdd0] flush_work at ffffffff8b6ce2d5
- 5 [ffffb656ce1abe70] nvme_stop_ctrl at ffffffffc0144900 [nvme_core]
- 6 [ffffb656ce1abe80] nvme_fc_reset_ctrl_work at ffffffffc0243445 [nvme_fc]
- 7 [ffffb656ce1abe98] process_one_work at ffffffff8b6cd437
- 8 [ffffb656ce1abed8] worker_thread at ffffffff8b6cdb50
- 9 [ffffb656ce1abf10] kthread at ffffffff8b6d3402
-10 [ffffb656ce1abf50] ret_from_fork at ffffffff8c000255
-
-Link: https://lore.kernel.org/r/20200806111014.28434-10-njavali@marvell.com
-Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Nilesh Javali <njavali@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qla2xxx/qla_nvme.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/jbd2/transaction.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
-index 5590d6e8b5762..3e2f8ce1d9a97 100644
---- a/drivers/scsi/qla2xxx/qla_nvme.c
-+++ b/drivers/scsi/qla2xxx/qla_nvme.c
-@@ -477,6 +477,11 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
- 	struct nvme_private *priv = fd->private;
- 	struct qla_nvme_rport *qla_rport = rport->private;
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 5a0de78a5d71a..8c305593fb51f 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -2009,6 +2009,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ {
+ 	struct buffer_head *head;
+ 	struct buffer_head *bh;
++	bool has_write_io_error = false;
+ 	int ret = 0;
  
-+	if (!priv) {
-+		/* nvme association has been torn down */
-+		return rval;
-+	}
+ 	J_ASSERT(PageLocked(page));
+@@ -2033,11 +2034,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ 		jbd_unlock_bh_state(bh);
+ 		if (buffer_jbd(bh))
+ 			goto busy;
 +
- 	fcport = qla_rport->fcport;
++		/*
++		 * If we free a metadata buffer which has been failed to
++		 * write out, the jbd2 checkpoint procedure will not detect
++		 * this failure and may lead to filesystem inconsistency
++		 * after cleanup journal tail.
++		 */
++		if (buffer_write_io_error(bh)) {
++			pr_err("JBD2: Error while async write back metadata bh %llu.",
++			       (unsigned long long)bh->b_blocknr);
++			has_write_io_error = true;
++		}
+ 	} while ((bh = bh->b_this_page) != head);
  
- 	vha = fcport->vha;
+ 	ret = try_to_free_buffers(page);
+ 
+ busy:
++	if (has_write_io_error)
++		jbd2_journal_abort(journal, -EIO);
++
+ 	return ret;
+ }
+ 
 -- 
 2.25.1
 
