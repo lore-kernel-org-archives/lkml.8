@@ -2,115 +2,108 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A32AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D579FC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49BA92071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFE32071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:04:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GcLmuGSJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgIAHEE (ORCPT
+        id S1726131AbgIAHEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:04:04 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:37875 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726122AbgIAHEA (ORCPT
+        Tue, 1 Sep 2020 03:04:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60672 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgIAHD7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:04:00 -0400
-Received: by mail-ot1-f65.google.com with SMTP id 37so304916oto.4;
-        Tue, 01 Sep 2020 00:03:59 -0700 (PDT)
+        Tue, 1 Sep 2020 03:03:59 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E4C6C0612AC
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:03:59 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g29so204492pgl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 00:03:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=yt2/uuzJefKJes8DuYxR0BUPgeMCP8QxYbisa2vpogM=;
+        b=GcLmuGSJUeWmTAXBiL86j+aUB1GdEuPM+DXtZrMF567L9Ld8A1nbpQLTCshAzMzzqi
+         apZO6aIlaInhmpaAIHCKBTuu2lt9KXzHl3eoOMybotovWlNG169L3M4C/2yFtBPAHxDm
+         uOku83ScHQ7nSaeAuff8b8oVvo1Fu2ciMH8SI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+UCqMpoxNkc8HR8b48PCCPouXs4GQ+iFq6WKu3/gPA=;
-        b=HckLls99BmQHfpV4zTbZRYJd4QNX0Ujw2QGAhBeQMLlHzXOaHXIIrU9r8EdF1Lr54C
-         c727ScohG9M+ZeRidtTHE+DEuOFDpYRr8FrDUOXYfXviX6smdKWwDVVfLKC9HCYD6fsg
-         2zwGKJUKMjEeGYLPovTAS0UyHF5SeDsFZQayLzfvD2pMRtVroaMsPSJqFpWXWUMrnK7p
-         aUO+i+d2wGXqN261zbu9/KH6tTBkAJBftwlW0U/Ps3XLamBxSaYfp02ijeC7LT2Awgfb
-         c93/pJCJq6XxCNSsswc7OnvHIUiXgKSUl27gg1YQOkksd5TaIgzD0BoBkHDd/SEP2RtA
-         geNA==
-X-Gm-Message-State: AOAM533mp0Lo2GJj3p7zozeo/CuoUIoXI/VzWHnDCtp1NAWsMB2SP1qO
-        6U34SaEzXXX9M26CB4AFxllrbLbT7ryDkg2Ge7m67LDTa/4=
-X-Google-Smtp-Source: ABdhPJw+W75f7LvhKPJmBkANHigTowv41ATseQQVo1zrxnPwXtFSjat/hlrHbRc7rhVmMPWs0LwXP4Ln8wspP9PRVow=
-X-Received: by 2002:a9d:32e5:: with SMTP id u92mr373423otb.107.1598943839340;
- Tue, 01 Sep 2020 00:03:59 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=yt2/uuzJefKJes8DuYxR0BUPgeMCP8QxYbisa2vpogM=;
+        b=oAuEovr+Qg8ilTinEdM3yTLj5HTLROH+Jt+Qb1NnT0BLaUx4sakMbiTOz7OFgNCvRU
+         bXd6DBbuq/JS3lNh2idQ5slXLV//C2gO97Y477GM90nSQKrgj9mIvim7YKUOuJqpceRA
+         62fBLsOxUbhkUErI48/8Wv2yH1+mL5c4alXCzUFxWyeLiPl+Fl4oSqDTNhaO09ZOEtIX
+         IxQ/nNxjZ8wkyuYqC9fIf07+/YV1aNaeISfxsF0WjMwiofiNr4NNWyW6hsrzPJaAlpq1
+         oY9cBIMnd2mtR7BeZx9nr1fG+qHJ+cS0CzyAa7MRxz7Z2JCHuQpPncYh6rPNaP+4t/4b
+         8OmQ==
+X-Gm-Message-State: AOAM531mqVmqhkeDrxDy6U4Q3bPAn4PAwob3Uqjet48xcYycLMmaMkXY
+        7oWYMDpfucvDqMwyQuif7aAu+A==
+X-Google-Smtp-Source: ABdhPJw2vSZ55ft3u0C6inxDIBpYawyYF+bsrmkuFF946I/Pa+kkKz3JD1d88pKLbb743Flov3K+SQ==
+X-Received: by 2002:a63:4a1d:: with SMTP id x29mr319979pga.317.1598943837907;
+        Tue, 01 Sep 2020 00:03:57 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id hg16sm378729pjb.37.2020.09.01.00.03.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 00:03:57 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20200826145249.745432-1-npiggin@gmail.com> <20200826145249.745432-10-npiggin@gmail.com>
- <CAMuHMdX5qo+2XpEm5QNbuwWRn508Ewee9rHYtmCBadj0x=3VnA@mail.gmail.com> <1598941313.t5y1w43jgl.astroid@bobo.none>
-In-Reply-To: <1598941313.t5y1w43jgl.astroid@bobo.none>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 1 Sep 2020 09:03:48 +0200
-Message-ID: <CAMuHMdWfACYhp8434GOx0qx2oHSBTX3Tq+=gtqNtYahnP-t1JQ@mail.gmail.com>
-Subject: Re: [PATCH v2 09/23] m68k: use asm-generic/mmu_context.h for no-op implementations
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAD=FV=VWrXwDwoxBK9y2ZeFEoG-edO4WktdSW0MFZLfbcS2hLQ@mail.gmail.com>
+References: <20200828170052.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid> <20200829161230.398e0051@archlinux> <CAD=FV=W3=kRFH0TzEAX0DWS7jb113LuWUJqVS686EyRzexvoRA@mail.gmail.com> <20200829181754.52d3cc3b@archlinux> <CAD=FV=VWrXwDwoxBK9y2ZeFEoG-edO4WktdSW0MFZLfbcS2hLQ@mail.gmail.com>
+Subject: Re: [PATCH] iio: sx9310: Prefer async probe
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Daniel Campello <campello@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio <linux-iio@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Torokhov <dtor@chromium.org>
+To:     Doug Anderson <dianders@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>
+Date:   Tue, 01 Sep 2020 00:03:55 -0700
+Message-ID: <159894383586.334488.2938301456606601581@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+Quoting Doug Anderson (2020-08-31 11:59:37)
+> On Sat, Aug 29, 2020 at 10:18 AM Jonathan Cameron <jic23@kernel.org> wrot=
+e:
+> > Agreed. However, I'd like a comment next to the place we turn it on
+> > saying what delays we are trying to mitigate by enabling it in this
+> > driver.
+>=20
+> OK, I used function graph to get a trace.  Some of the time is simply
+> i2c transfers, which we do A LOT of during initialization (and i2c
+> transfers aren't known for being instant).  However, that's not the
+> big problem.  Check out the regmap_read_poll_timeout() in
+> sx9310_init_compensation().  20 ms per sleep with a 2 second timeout.
+> This seems to eat over around 220 ms of the time on my system.
+>=20
+> So how do you want to do this?  Do you want me to re-post the patch
+> and mention the regmap_read_poll_timeout() in the commit message?  Do
+> you want to just add that to the commit message yourself?
+>=20
 
-On Tue, Sep 1, 2020 at 8:23 AM Nicholas Piggin <npiggin@gmail.com> wrote:
-> Excerpts from Geert Uytterhoeven's message of August 27, 2020 7:33 pm:
-> > On Wed, Aug 26, 2020 at 4:53 PM Nicholas Piggin <npiggin@gmail.com> wrote:
-> >> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> >> Cc: linux-m68k@lists.linux-m68k.org
-> >> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> >
-> > With the below fixed:
-> > Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> >
-> >> --- a/arch/m68k/include/asm/mmu_context.h
-> >> +++ b/arch/m68k/include/asm/mmu_context.h
-> >> @@ -79,19 +76,6 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
-> >>         set_context(tsk->mm->context, next->pgd);
-> >>  }
-> >>
-> >> -/*
-> >> - * After we have set current->mm to a new value, this activates
-> >> - * the context for the new mm so we see the new mappings.
-> >> - */
-> >> -static inline void activate_mm(struct mm_struct *active_mm,
-> >> -       struct mm_struct *mm)
-> >> -{
-> >> -       get_mmu_context(mm);
-> >> -       set_context(mm->context, mm->pgd);
-> >> -}
-> >
-> > Assumed switch_mm() in [PATCH v2 01/23] is revived with the above body.
->
-> I'm not sure what you mean here. We can remove this because it's a copy
-> of switch_mm above, and that's what the new header defaults to if you
-> don't provide an active_mm.
-
-IC.  I thought it started relying on <asm-generic/mmu_context.h> for this,
-where you removed switch_mm().
-
-Seems I missed the definition above.
-
-> Patch 1 should not have changed that, it should only affect the nommu
-> architectures (and actually didn't touch m68k because it was not using
-> the asm-generic/mmu_context.h header).
-
-OK. Sorry for the noise.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I think the suggestion is to put a comment next to the
+PROBE_PREFER_ASYNCHRONOUS flag indicating that
+sx9310_init_compensation() can take a while. Should the compensation be
+delayed even further though to some time when userspace opens the device
+node?
