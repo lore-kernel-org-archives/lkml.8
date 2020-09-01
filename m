@@ -7,53 +7,50 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCB2AC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9610C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 904F5206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5CD206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980167;
-	bh=Ltr/3vGVaMTyXTjP45tQiAyg7242z7/wrBrsLCFjBBQ=;
+	s=default; t=1598980174;
+	bh=FCRS7UzzFIMUcGKQQlyoII6eAdm6mOgLSsskEiSt7xs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xC9p/eRsEAqHifBDN036nk2hREWmIDL6zt0NL81dKPND9rYQAbKKFwMzL/ypXOQK1
-	 ulOMr9Qo4ZOgaTkPphHjinQBeZsDZ1sf3CfTKv073nBbT8A+Fyqr2eFbnR7yzlUcn9
-	 w/SHpvlVzeUFR8y9v5YPrdT8n6q925wAy5r1lDpo=
+	b=aLwrr3sHfqChlDOKs1vNiQjbaaxicw87Geca/Vr0uVKa65xpabYpzwrpqWy1MAAb3
+	 ShcVOn95428WNbm8UsM2mL3HUrVqM0oPHIFh/f32WuerNUkdGnKnxmB5PtWae7nsdK
+	 tVC04pXiDZ/nWLpGgfNN9EcVHJ26IjLS5k8CGvXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbgIARJW (ORCPT
+        id S1729517AbgIARJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35308 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729041AbgIAPRn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:17:43 -0400
+        id S1729429AbgIAPRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:17:41 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D080206EB;
-        Tue,  1 Sep 2020 15:17:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D874A206FA;
+        Tue,  1 Sep 2020 15:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973462;
-        bh=Ltr/3vGVaMTyXTjP45tQiAyg7242z7/wrBrsLCFjBBQ=;
+        s=default; t=1598973460;
+        bh=FCRS7UzzFIMUcGKQQlyoII6eAdm6mOgLSsskEiSt7xs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LLfD2o9qn696nn5u+5wMYPFyDhetbC2RIv/Du2AIqzxAIrZF5tU+IbmmyfCIS1Rra
-         eLXYvS68Dhv9xfflSMiF/izqTzvSXWZ/UrTVFt2ecaD8cWlQdFr8IqNN8Y9Znc2tr6
-         FaWIOTnrcSsrhzplBfPrp900TgRJ+xFkeLxqFZws=
+        b=cu7EdjRQl0F3Pmm32HvALQu+Y/bMnDBpZBC69FE39UdUtrm/Ri8BE1yhXfyB72zTv
+         gX9RViiRCjPwa/hTJvvaO6yIOHrakLZpBbfhDW/o2t4r75D++DL+ZxUSMkhivCab5q
+         rrQCvmqVYSdhZwhMgsaJW3bopmVdq/uayzftGlvQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Alistair Popple <alistair@popple.id.au>,
-        Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Subject: [PATCH 4.14 01/91] powerpc/64s: Dont init FSCR_DSCR in __init_FSCR()
-Date:   Tue,  1 Sep 2020 17:09:35 +0200
-Message-Id: <20200901150928.189143079@linuxfoundation.org>
+        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
+Subject: [PATCH 4.9 60/78] writeback: Avoid skipping inode writeback
+Date:   Tue,  1 Sep 2020 17:10:36 +0200
+Message-Id: <20200901150927.794380135@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-References: <20200901150928.096174795@linuxfoundation.org>
+In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
+References: <20200901150924.680106554@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,79 +59,146 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Jan Kara <jack@suse.cz>
 
-commit 0828137e8f16721842468e33df0460044a0c588b upstream.
+commit 5afced3bf28100d81fb2fe7e98918632a08feaf5 upstream.
 
-__init_FSCR() was added originally in commit 2468dcf641e4 ("powerpc:
-Add support for context switching the TAR register") (Feb 2013), and
-only set FSCR_TAR.
+Inode's i_io_list list head is used to attach inode to several different
+lists - wb->{b_dirty, b_dirty_time, b_io, b_more_io}. When flush worker
+prepares a list of inodes to writeback e.g. for sync(2), it moves inodes
+to b_io list. Thus it is critical for sync(2) data integrity guarantees
+that inode is not requeued to any other writeback list when inode is
+queued for processing by flush worker. That's the reason why
+writeback_single_inode() does not touch i_io_list (unless the inode is
+completely clean) and why __mark_inode_dirty() does not touch i_io_list
+if I_SYNC flag is set.
 
-At that point FSCR (Facility Status and Control Register) was not
-context switched, so the setting was permanent after boot.
+However there are two flaws in the current logic:
 
-Later we added initialisation of FSCR_DSCR to __init_FSCR(), in commit
-54c9b2253d34 ("powerpc: Set DSCR bit in FSCR setup") (Mar 2013), again
-that was permanent after boot.
+1) When inode has only I_DIRTY_TIME set but it is already queued in b_io
+list due to sync(2), concurrent __mark_inode_dirty(inode, I_DIRTY_SYNC)
+can still move inode back to b_dirty list resulting in skipping
+writeback of inode time stamps during sync(2).
 
-Then commit 2517617e0de6 ("powerpc: Fix context switch DSCR on
-POWER8") (Aug 2013) added a limited context switch of FSCR, just the
-FSCR_DSCR bit was context switched based on thread.dscr_inherit. That
-commit said "This clears the H/FSCR DSCR bit initially", but it
-didn't, it left the initialisation of FSCR_DSCR in __init_FSCR().
-However the initial context switch from init_task to pid 1 would clear
-FSCR_DSCR because thread.dscr_inherit was 0.
+2) When inode is on b_dirty_time list and writeback_single_inode() races
+with __mark_inode_dirty() like:
 
-That commit also introduced the requirement that FSCR_DSCR be clear
-for user processes, so that we can take the facility unavailable
-interrupt in order to manage dscr_inherit.
+writeback_single_inode()		__mark_inode_dirty(inode, I_DIRTY_PAGES)
+  inode->i_state |= I_SYNC
+  __writeback_single_inode()
+					  inode->i_state |= I_DIRTY_PAGES;
+					  if (inode->i_state & I_SYNC)
+					    bail
+  if (!(inode->i_state & I_DIRTY_ALL))
+  - not true so nothing done
 
-Then in commit 152d523e6307 ("powerpc: Create context switch helpers
-save_sprs() and restore_sprs()") (Dec 2015) FSCR was added to
-thread_struct. However it still wasn't fully context switched, we just
-took the existing value and set FSCR_DSCR if the new thread had
-dscr_inherit set. FSCR was still initialised at boot to FSCR_DSCR |
-FSCR_TAR, but that value was not propagated into the thread_struct, so
-the initial context switch set FSCR_DSCR back to 0.
+We end up with I_DIRTY_PAGES inode on b_dirty_time list and thus
+standard background writeback will not writeback this inode leading to
+possible dirty throttling stalls etc. (thanks to Martijn Coenen for this
+analysis).
 
-Finally commit b57bd2de8c6c ("powerpc: Improve FSCR init and context
-switching") (Jun 2016) added a full context switch of the FSCR, and
-added an initialisation of init_task.thread.fscr to FSCR_TAR |
-FSCR_EBB, but omitted FSCR_DSCR.
+Fix these problems by tracking whether inode is queued in b_io or
+b_more_io lists in a new I_SYNC_QUEUED flag. When this flag is set, we
+know flush worker has queued inode and we should not touch i_io_list.
+On the other hand we also know that once flush worker is done with the
+inode it will requeue the inode to appropriate dirty list. When
+I_SYNC_QUEUED is not set, __mark_inode_dirty() can (and must) move inode
+to appropriate dirty list.
 
-The end result is that swapper runs with FSCR_DSCR set because of the
-initialisation in __init_FSCR(), but no other processes do, they use
-the value from init_task.thread.fscr.
-
-Having FSCR_DSCR set for swapper allows it to access SPR 3 from
-userspace, but swapper never runs userspace, so it has no useful
-effect. It's also confusing to have the value initialised in two
-places to two different values.
-
-So remove FSCR_DSCR from __init_FSCR(), this at least gets us to the
-point where there's a single value of FSCR, even if it's still set in
-two places.
-
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Tested-by: Alistair Popple <alistair@popple.id.au>
-Link: https://lore.kernel.org/r/20200527145843.2761782-1-mpe@ellerman.id.au
-Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Reported-by: Martijn Coenen <maco@android.com>
+Reviewed-by: Martijn Coenen <maco@android.com>
+Tested-by: Martijn Coenen <maco@android.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: 0ae45f63d4ef ("vfs: add support for a lazytime mount option")
+CC: stable@vger.kernel.org
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kernel/cpu_setup_power.S |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fs-writeback.c  |   17 ++++++++++++-----
+ include/linux/fs.h |    8 ++++++--
+ 2 files changed, 18 insertions(+), 7 deletions(-)
 
---- a/arch/powerpc/kernel/cpu_setup_power.S
-+++ b/arch/powerpc/kernel/cpu_setup_power.S
-@@ -189,7 +189,7 @@ __init_LPCR_ISA300:
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -162,6 +162,7 @@ static void inode_io_list_del_locked(str
+ 	assert_spin_locked(&wb->list_lock);
+ 	assert_spin_locked(&inode->i_lock);
  
- __init_FSCR:
- 	mfspr	r3,SPRN_FSCR
--	ori	r3,r3,FSCR_TAR|FSCR_DSCR|FSCR_EBB
-+	ori	r3,r3,FSCR_TAR|FSCR_EBB
- 	mtspr	SPRN_FSCR,r3
- 	blr
++	inode->i_state &= ~I_SYNC_QUEUED;
+ 	list_del_init(&inode->i_io_list);
+ 	wb_io_lists_depopulated(wb);
+ }
+@@ -1103,6 +1104,7 @@ static void redirty_tail_locked(struct i
+ 			inode->dirtied_when = jiffies;
+ 	}
+ 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
++	inode->i_state &= ~I_SYNC_QUEUED;
+ }
  
+ static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
+@@ -1178,8 +1180,11 @@ static int move_expired_inodes(struct li
+ 			break;
+ 		list_move(&inode->i_io_list, &tmp);
+ 		moved++;
++		spin_lock(&inode->i_lock);
+ 		if (flags & EXPIRE_DIRTY_ATIME)
+-			set_bit(__I_DIRTY_TIME_EXPIRED, &inode->i_state);
++			inode->i_state |= I_DIRTY_TIME_EXPIRED;
++		inode->i_state |= I_SYNC_QUEUED;
++		spin_unlock(&inode->i_lock);
+ 		if (sb_is_blkdev_sb(inode->i_sb))
+ 			continue;
+ 		if (sb && sb != inode->i_sb)
+@@ -1354,6 +1359,7 @@ static void requeue_inode(struct inode *
+ 	} else if (inode->i_state & I_DIRTY_TIME) {
+ 		inode->dirtied_when = jiffies;
+ 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
++		inode->i_state &= ~I_SYNC_QUEUED;
+ 	} else {
+ 		/* The inode is clean. Remove from writeback lists. */
+ 		inode_io_list_del_locked(inode, wb);
+@@ -2188,11 +2194,12 @@ void __mark_inode_dirty(struct inode *in
+ 		inode->i_state |= flags;
+ 
+ 		/*
+-		 * If the inode is being synced, just update its dirty state.
+-		 * The unlocker will place the inode on the appropriate
+-		 * superblock list, based upon its state.
++		 * If the inode is queued for writeback by flush worker, just
++		 * update its dirty state. Once the flush worker is done with
++		 * the inode it will place it on the appropriate superblock
++		 * list, based upon its state.
+ 		 */
+-		if (inode->i_state & I_SYNC)
++		if (inode->i_state & I_SYNC_QUEUED)
+ 			goto out_unlock_inode;
+ 
+ 		/*
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -1954,6 +1954,10 @@ static inline bool HAS_UNMAPPED_ID(struc
+  *			wb stat updates to grab mapping->tree_lock.  See
+  *			inode_switch_wb_work_fn() for details.
+  *
++ * I_SYNC_QUEUED	Inode is queued in b_io or b_more_io writeback lists.
++ *			Used to detect that mark_inode_dirty() should not move
++ * 			inode between dirty lists.
++ *
+  * Q: What is the difference between I_WILL_FREE and I_FREEING?
+  */
+ #define I_DIRTY_SYNC		(1 << 0)
+@@ -1971,9 +1975,9 @@ static inline bool HAS_UNMAPPED_ID(struc
+ #define I_DIO_WAKEUP		(1 << __I_DIO_WAKEUP)
+ #define I_LINKABLE		(1 << 10)
+ #define I_DIRTY_TIME		(1 << 11)
+-#define __I_DIRTY_TIME_EXPIRED	12
+-#define I_DIRTY_TIME_EXPIRED	(1 << __I_DIRTY_TIME_EXPIRED)
++#define I_DIRTY_TIME_EXPIRED	(1 << 12)
+ #define I_WB_SWITCH		(1 << 13)
++#define I_SYNC_QUEUED		(1 << 17)
+ 
+ #define I_DIRTY (I_DIRTY_SYNC | I_DIRTY_DATASYNC | I_DIRTY_PAGES)
+ #define I_DIRTY_ALL (I_DIRTY | I_DIRTY_TIME)
 
 
