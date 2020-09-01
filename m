@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A5EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A228FC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1395207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B829207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:19:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980771;
-	bh=fjmDARNuO3p8EyzzMXvS56Vf8PfN9ySp3dmgUpJE0JM=;
+	s=default; t=1598980781;
+	bh=BWK2hS0GdXLTqvn3LCDebg7pXZphF7c3VLKfxq34sFk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zLTf2D/sRk0WiouS8bWrbeqysj9CL1m3EnAt9Gk3uC8NDoGudxlfaTAd6HJWGh9pT
-	 s9w4tr7qsEGsJy1Unqv83zYbxX9tS5qKOpSBl78gFgPhCFlvBVKYUEV5Hf0XwcRWFs
-	 diqdLCYUTHh9Pe3yJE4i9ZXa2JWKZGANy7k3s7I0=
+	b=LbP5OzzPgtkS7J3aKKQ+tIM+0Rh0G9qb8Yt2X1FE9SeNgyisCZfkit+opd7Lyq0li
+	 FeLH3w6wHMnYPNKpS531B0QaXJtZo9YCYrqr8CC+JLxqgOeJri2PHgORL8+ddFoZLe
+	 YnIO+NS39GkoTguonf1PTUJ7Fsz418qO590/rL6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbgIART3 (ORCPT
+        id S1728272AbgIAPNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:19:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56960 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgIAPNm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:42 -0400
+        id S1728820AbgIAPMx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:53 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 944012078B;
-        Tue,  1 Sep 2020 15:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 354D42078B;
+        Tue,  1 Sep 2020 15:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973222;
-        bh=fjmDARNuO3p8EyzzMXvS56Vf8PfN9ySp3dmgUpJE0JM=;
+        s=default; t=1598973172;
+        bh=BWK2hS0GdXLTqvn3LCDebg7pXZphF7c3VLKfxq34sFk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=plhGvfKXxQR8UontRaPPHBxp8tyTEMq/L6DqB/vbnUgEJbzLC47wICx0JIgPpVH6h
-         7vrAGIMkCL/PVunJ1dxEPOVLW+FhzbVtcVfubMqbm/YRKY4kCzuydrXW/vesUvGMy6
-         9pXhAr3EI0FBT0e4F1GYj6bixsOmSakuUfM2h7S4=
+        b=zbZBpOFbvapX3/RF5Q+n2i6d4h8YGkxCuXQWDKWtP+xqRa1dQE2hh4xkg5KXCFXFL
+         YWoPOJfahju9kLjR8OkAl73hn//8lm+iyUOQ6tWi1TjEz/rDV+BS2CDbPytsG3xUJw
+         QiQxvLJtRJkXIUpES2r/h6LR4zIaikq8ahvhzFec=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 26/62] ceph: fix potential mdsc use-after-free crash
-Date:   Tue,  1 Sep 2020 17:10:09 +0200
-Message-Id: <20200901150922.039102547@linuxfoundation.org>
+Subject: [PATCH 4.4 36/62] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
+Date:   Tue,  1 Sep 2020 17:10:19 +0200
+Message-Id: <20200901150922.532967816@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -61,62 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Vineeth Vijayan <vneethv@linux.ibm.com>
 
-[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
+[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
 
-Make sure the delayed work stopped before releasing the resources.
+The scanning through subchannels during the time of an event could
+take significant amount of time in case of platforms with lots of
+known subchannels. This might result in higher scheduling latencies
+for other tasks especially on systems with a single CPU. Add
+cond_resched() call, as the loop in slow_eval_known_fn() can be
+executed for a longer duration.
 
-cancel_delayed_work_sync() will only guarantee that the work finishes
-executing if the work is already in the ->worklist.  That means after
-the cancel_delayed_work_sync() returns, it will leave the work requeued
-if it was rearmed at the end. That can lead to a use after free once the
-work struct is freed.
-
-Fix it by flushing the delayed work instead of trying to cancel it, and
-ensure that the work doesn't rearm if the mdsc is stopping.
-
-URL: https://tracker.ceph.com/issues/46293
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
+Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/mds_client.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/s390/cio/css.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index a5de8e22629ba..b7fd7d69be075 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3428,6 +3428,9 @@ static void delayed_work(struct work_struct *work)
- 	dout("mdsc delayed_work\n");
- 	ceph_check_delayed_caps(mdsc);
- 
-+	if (mdsc->stopping)
-+		return;
-+
- 	mutex_lock(&mdsc->mutex);
- 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
- 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
-@@ -3752,7 +3755,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
- static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
- {
- 	dout("stop\n");
--	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
-+	/*
-+	 * Make sure the delayed work stopped before releasing
-+	 * the resources.
-+	 *
-+	 * Because the cancel_delayed_work_sync() will only
-+	 * guarantee that the work finishes executing. But the
-+	 * delayed work will re-arm itself again after that.
-+	 */
-+	flush_delayed_work(&mdsc->delayed_work);
-+
- 	if (mdsc->mdsmap)
- 		ceph_mdsmap_destroy(mdsc->mdsmap);
- 	kfree(mdsc->sessions);
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index 8ecc956ecb59c..370a3a2c6de73 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -529,6 +529,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
+ 		rc = css_evaluate_known_subchannel(sch, 1);
+ 		if (rc == -EAGAIN)
+ 			css_schedule_eval(sch->schid);
++		/*
++		 * The loop might take long time for platforms with lots of
++		 * known devices. Allow scheduling here.
++		 */
++		cond_resched();
+ 	}
+ 	return 0;
+ }
 -- 
 2.25.1
 
