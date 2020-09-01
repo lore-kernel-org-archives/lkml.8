@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FD7C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9884AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E444C206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 780A02071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:12:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980373;
-	bh=p8BE7X+nZ6st4U/GVQwBf0Sc/g1a6v51AjLXWy+aJXQ=;
+	s=default; t=1598980377;
+	bh=t5q/JtrB15UxeV1+AIDqgKzNlNLMYrAqoVxVR2cCU1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d/Y8D/AvkXjbi2DTYmaTmSg1gbZ2jux28BvQ+WEPHRpQrr8Ykyu0LtJg2L5J4qtmf
-	 hiece6r1O/JQ2vC0st2RLeBMliAPOqedCuId5Oq7ri5liKNFS4yopczPMDP0ycOVdI
-	 PQUfeCGtByWgZB1N2MjSUA6W5EZIq4k4yysY96JE=
+	b=ipv4d+IXK8uOAL7o9HAFV8LNxRlxXc1fhnwhQDOq2SuQt7h5K3yX1wGy+N5XOHMLH
+	 Mpbd/h7fw5y8DvmZAUPNbznHl7MHlGjXy0crB1im9eFr+C755v3jy/09fg9Tmb86nC
+	 7Tj+SaiwwC+HMp84Zv8w/os+eopoAu9bGHXUsFh8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbgIARMv (ORCPT
+        id S1731263AbgIARMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:12:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60364 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:12:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729148AbgIAPPt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:15:49 -0400
+        id S1728760AbgIAPPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:15:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01A7F20767;
-        Tue,  1 Sep 2020 15:15:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4BD4206FA;
+        Tue,  1 Sep 2020 15:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973349;
-        bh=p8BE7X+nZ6st4U/GVQwBf0Sc/g1a6v51AjLXWy+aJXQ=;
+        s=default; t=1598973344;
+        bh=t5q/JtrB15UxeV1+AIDqgKzNlNLMYrAqoVxVR2cCU1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OEZqYXW8UbF4cn/VEbjD3crpCh5iDN568k850oFxgxtMlQtpzGN3A8qxFV49uhuiv
-         biQfk7hGIu/GaYpX3hHZL7G0TnWv4iESTZ7peRKrzy/hzYQstinnmBvblEs+5UJryy
-         oJFlCk62meAFk9vYkVBesrT4EDKPvIdAqdSb54G4=
+        b=ji7CqUEypWSmNhs+1QZ6oUxXOWCWEK9376pols+H4dDsTQcvFc1lNh+LF//uM8rEF
+         W3SbZz1c6FsEFc0R4nFrfuXHgZKQy7tQVYYMW7SQ3htGPwiq2BdReluJzeTp2aFy0X
+         VPPR9qLZbilDmcK6iWmVhHovzdGD8vJ/i4uT7rnk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vineeth Vijayan <vneethv@linux.ibm.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 44/78] s390/cio: add cond_resched() in the slow_eval_known_fn() loop
-Date:   Tue,  1 Sep 2020 17:10:20 +0200
-Message-Id: <20200901150926.958300203@linuxfoundation.org>
+        stable@vger.kernel.org, "zhangyi (F)" <yi.zhang@huawei.com>,
+        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 42/78] jbd2: abort journal if free a async write error metadata buffer
+Date:   Tue,  1 Sep 2020 17:10:18 +0200
+Message-Id: <20200901150926.863609570@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -62,41 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineeth Vijayan <vneethv@linux.ibm.com>
+From: zhangyi (F) <yi.zhang@huawei.com>
 
-[ Upstream commit 0b8eb2ee9da1e8c9b8082f404f3948aa82a057b2 ]
+[ Upstream commit c044f3d8360d2ecf831ba2cc9f08cf9fb2c699fb ]
 
-The scanning through subchannels during the time of an event could
-take significant amount of time in case of platforms with lots of
-known subchannels. This might result in higher scheduling latencies
-for other tasks especially on systems with a single CPU. Add
-cond_resched() call, as the loop in slow_eval_known_fn() can be
-executed for a longer duration.
+If we free a metadata buffer which has been failed to async write out
+in the background, the jbd2 checkpoint procedure will not detect this
+failure in jbd2_log_do_checkpoint(), so it may lead to filesystem
+inconsistency after cleanup journal tail. This patch abort the journal
+if free a buffer has write_io_error flag to prevent potential further
+inconsistency.
 
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Signed-off-by: Vineeth Vijayan <vneethv@linux.ibm.com>
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
+Signed-off-by: zhangyi (F) <yi.zhang@huawei.com>
+Link: https://lore.kernel.org/r/20200620025427.1756360-5-yi.zhang@huawei.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/css.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/jbd2/transaction.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 39a2b0cde9e42..d81fdcd6a1fe0 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -529,6 +529,11 @@ static int slow_eval_known_fn(struct subchannel *sch, void *data)
- 		rc = css_evaluate_known_subchannel(sch, 1);
- 		if (rc == -EAGAIN)
- 			css_schedule_eval(sch->schid);
+diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
+index 1478512ecab3e..cfbf5474bccab 100644
+--- a/fs/jbd2/transaction.c
++++ b/fs/jbd2/transaction.c
+@@ -1990,6 +1990,7 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ {
+ 	struct buffer_head *head;
+ 	struct buffer_head *bh;
++	bool has_write_io_error = false;
+ 	int ret = 0;
+ 
+ 	J_ASSERT(PageLocked(page));
+@@ -2014,11 +2015,26 @@ int jbd2_journal_try_to_free_buffers(journal_t *journal,
+ 		jbd_unlock_bh_state(bh);
+ 		if (buffer_jbd(bh))
+ 			goto busy;
++
 +		/*
-+		 * The loop might take long time for platforms with lots of
-+		 * known devices. Allow scheduling here.
++		 * If we free a metadata buffer which has been failed to
++		 * write out, the jbd2 checkpoint procedure will not detect
++		 * this failure and may lead to filesystem inconsistency
++		 * after cleanup journal tail.
 +		 */
-+		cond_resched();
- 	}
- 	return 0;
++		if (buffer_write_io_error(bh)) {
++			pr_err("JBD2: Error while async write back metadata bh %llu.",
++			       (unsigned long long)bh->b_blocknr);
++			has_write_io_error = true;
++		}
+ 	} while ((bh = bh->b_this_page) != head);
+ 
+ 	ret = try_to_free_buffers(page);
+ 
+ busy:
++	if (has_write_io_error)
++		jbd2_journal_abort(journal, -EIO);
++
+ 	return ret;
  }
+ 
 -- 
 2.25.1
 
