@@ -2,55 +2,56 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC650C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC69CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C549206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F53C20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979430;
-	bh=0T4zPC5JFeMjiOz5QfuMmWoz2MjWto/85jlqA8H2gUo=;
+	s=default; t=1598979431;
+	bh=EqPliGIz8LkLYmz7yNFkXSKHzPxpvzdAIlvfctSHUJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GoScM8WJ4PbGIh4bcy9S9V9iMF/TdTHaekBPccdm+e5uPnQGl7Osv1s/+6/dA6+NC
-	 G7inZWDzv0CKzh97WACgfo0V08ZRJNpeyCEfIBnL02+8ojN7+TyRlO1TzBHzpqS9dk
-	 Z6Zq4V2NvE93EElNCMShxdU18McnVfxq5Gr7621Q=
+	b=B3VNt+47gAc6cjnA9H3nvDpq9AqWDkYMe1Pc6c0tHg1eMtVePZT5e2QmC0JFPefAI
+	 2DJKJ6JSsgZfzku8IhESL/mlJyY3KZAM+iT9xMY72jvk9iZpWxT2dtxHSSj2zMM+4X
+	 KfvlaFhP9gXqxJoVZQURVTaD6nwYpgopSzNQIDuA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728149AbgIAQ5H (ORCPT
+        id S1729521AbgIAPXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:57:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46924 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:23:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729658AbgIAPXm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:42 -0400
+        id S1729635AbgIAPUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:52 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD68C20FC3;
-        Tue,  1 Sep 2020 15:23:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43F4E206EB;
+        Tue,  1 Sep 2020 15:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973822;
-        bh=0T4zPC5JFeMjiOz5QfuMmWoz2MjWto/85jlqA8H2gUo=;
+        s=default; t=1598973651;
+        bh=EqPliGIz8LkLYmz7yNFkXSKHzPxpvzdAIlvfctSHUJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q+DRM2pKRvge47mgzCaO9EloQeWrDtPA94F7wTLNU5gCLLH37Je4XIv+0ZUlCyPLd
-         iqHi+RLf2GZb1uI1UkPFHlV3YT9MSBd2lpT/dBGC3fDLSKOtdo3h2bV9n2GdK+/emx
-         3tLwG00gBReTmivgDJvcGSDx7QUxyP448L38mm7I=
+        b=sKsTbmbZc7FswZl790GhFf3a4S3e15qyxV/GFfmTh3puMvmHWXt6id0yZ/0eKlKQz
+         XHeS5QjstlSUXf4YdteRJTHnF87u4Gw290VXj50TU+dIFKPM9LTpOrsF5/v7M1r4Uf
+         J5FwcN1yo4wIt8JLniKv9LvEzO5ScVDfgDJUcwWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
-        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/125] jbd2: make sure jh have b_transaction set in refile/unfile_buffer
-Date:   Tue,  1 Sep 2020 17:10:14 +0200
-Message-Id: <20200901150937.471300783@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Brooke Basile <brookebasile@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>, stable <stable@kernel.org>
+Subject: [PATCH 4.14 84/91] USB: gadget: f_ncm: add bounds checks to ncm_unwrap_ntb()
+Date:   Tue,  1 Sep 2020 17:10:58 +0200
+Message-Id: <20200901150932.342721290@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
+References: <20200901150928.096174795@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,62 +61,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Czerner <lczerner@redhat.com>
+From: Brooke Basile <brookebasile@gmail.com>
 
-[ Upstream commit 24dc9864914eb5813173cfa53313fcd02e4aea7d ]
+commit 2b74b0a04d3e9f9f08ff026e5663dce88ff94e52 upstream.
 
-Callers of __jbd2_journal_unfile_buffer() and
-__jbd2_journal_refile_buffer() assume that the b_transaction is set. In
-fact if it's not, we can end up with journal_head refcounting errors
-leading to crash much later that might be very hard to track down. Add
-asserts to make sure that is the case.
+Some values extracted by ncm_unwrap_ntb() could possibly lead to several
+different out of bounds reads of memory.  Specifically the values passed
+to netdev_alloc_skb_ip_align() need to be checked so that memory is not
+overflowed.
 
-We also make sure that b_next_transaction is NULL in
-__jbd2_journal_unfile_buffer() since the callers expect that as well and
-we should not get into that stage in this state anyway, leading to
-problems later on if we do.
+Resolve this by applying bounds checking to a number of different
+indexes and lengths of the structure parsing logic.
 
-Tested with fstests.
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Signed-off-by: Brooke Basile <brookebasile@gmail.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Lukas Czerner <lczerner@redhat.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20200617092549.6712-1-lczerner@redhat.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/jbd2/transaction.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/usb/gadget/function/f_ncm.c |   81 ++++++++++++++++++++++++++++++------
+ 1 file changed, 69 insertions(+), 12 deletions(-)
 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 43693b6797105..5a0de78a5d71a 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -1915,6 +1915,9 @@ static void __jbd2_journal_temp_unlink_buffer(struct journal_head *jh)
-  */
- static void __jbd2_journal_unfile_buffer(struct journal_head *jh)
- {
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
-+	J_ASSERT_JH(jh, jh->b_next_transaction == NULL);
-+
- 	__jbd2_journal_temp_unlink_buffer(jh);
- 	jh->b_transaction = NULL;
- 	jbd2_journal_put_journal_head(jh);
-@@ -2462,6 +2465,13 @@ void __jbd2_journal_refile_buffer(struct journal_head *jh)
+--- a/drivers/usb/gadget/function/f_ncm.c
++++ b/drivers/usb/gadget/function/f_ncm.c
+@@ -1202,12 +1202,15 @@ static int ncm_unwrap_ntb(struct gether
+ 	int		ndp_index;
+ 	unsigned	dg_len, dg_len2;
+ 	unsigned	ndp_len;
++	unsigned	block_len;
+ 	struct sk_buff	*skb2;
+ 	int		ret = -EINVAL;
+-	unsigned	max_size = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
++	unsigned	ntb_max = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
++	unsigned	frame_max = le16_to_cpu(ecm_desc.wMaxSegmentSize);
+ 	const struct ndp_parser_opts *opts = ncm->parser_opts;
+ 	unsigned	crc_len = ncm->is_crc ? sizeof(uint32_t) : 0;
+ 	int		dgram_counter;
++	bool		ndp_after_header;
  
- 	was_dirty = test_clear_buffer_jbddirty(bh);
- 	__jbd2_journal_temp_unlink_buffer(jh);
+ 	/* dwSignature */
+ 	if (get_unaligned_le32(tmp) != opts->nth_sign) {
+@@ -1226,25 +1229,37 @@ static int ncm_unwrap_ntb(struct gether
+ 	}
+ 	tmp++; /* skip wSequence */
+ 
++	block_len = get_ncm(&tmp, opts->block_length);
+ 	/* (d)wBlockLength */
+-	if (get_ncm(&tmp, opts->block_length) > max_size) {
++	if (block_len > ntb_max) {
+ 		INFO(port->func.config->cdev, "OUT size exceeded\n");
+ 		goto err;
+ 	}
+ 
+ 	ndp_index = get_ncm(&tmp, opts->ndp_index);
++	ndp_after_header = false;
+ 
+ 	/* Run through all the NDP's in the NTB */
+ 	do {
+-		/* NCM 3.2 */
+-		if (((ndp_index % 4) != 0) &&
+-				(ndp_index < opts->nth_size)) {
++		/*
++		 * NCM 3.2
++		 * dwNdpIndex
++		 */
++		if (((ndp_index % 4) != 0) ||
++				(ndp_index < opts->nth_size) ||
++				(ndp_index > (block_len -
++					      opts->ndp_size))) {
+ 			INFO(port->func.config->cdev, "Bad index: %#X\n",
+ 			     ndp_index);
+ 			goto err;
+ 		}
++		if (ndp_index == opts->nth_size)
++			ndp_after_header = true;
+ 
+-		/* walk through NDP */
++		/*
++		 * walk through NDP
++		 * dwSignature
++		 */
+ 		tmp = (void *)(skb->data + ndp_index);
+ 		if (get_unaligned_le32(tmp) != ncm->ndp_sign) {
+ 			INFO(port->func.config->cdev, "Wrong NDP SIGN\n");
+@@ -1255,14 +1270,15 @@ static int ncm_unwrap_ntb(struct gether
+ 		ndp_len = get_unaligned_le16(tmp++);
+ 		/*
+ 		 * NCM 3.3.1
++		 * wLength
+ 		 * entry is 2 items
+ 		 * item size is 16/32 bits, opts->dgram_item_len * 2 bytes
+ 		 * minimal: struct usb_cdc_ncm_ndpX + normal entry + zero entry
+ 		 * Each entry is a dgram index and a dgram length.
+ 		 */
+ 		if ((ndp_len < opts->ndp_size
+-				+ 2 * 2 * (opts->dgram_item_len * 2))
+-				|| (ndp_len % opts->ndplen_align != 0)) {
++				+ 2 * 2 * (opts->dgram_item_len * 2)) ||
++				(ndp_len % opts->ndplen_align != 0)) {
+ 			INFO(port->func.config->cdev, "Bad NDP length: %#X\n",
+ 			     ndp_len);
+ 			goto err;
+@@ -1279,8 +1295,21 @@ static int ncm_unwrap_ntb(struct gether
+ 
+ 		do {
+ 			index = index2;
++			/* wDatagramIndex[0] */
++			if ((index < opts->nth_size) ||
++					(index > block_len - opts->dpe_size)) {
++				INFO(port->func.config->cdev,
++				     "Bad index: %#X\n", index);
++				goto err;
++			}
 +
-+	/*
-+	 * b_transaction must be set, otherwise the new b_transaction won't
-+	 * be holding jh reference
-+	 */
-+	J_ASSERT_JH(jh, jh->b_transaction != NULL);
+ 			dg_len = dg_len2;
+-			if (dg_len < 14 + crc_len) { /* ethernet hdr + crc */
++			/*
++			 * wDatagramLength[0]
++			 * ethernet hdr + crc or larger than max frame size
++			 */
++			if ((dg_len < 14 + crc_len) ||
++					(dg_len > frame_max)) {
+ 				INFO(port->func.config->cdev,
+ 				     "Bad dgram length: %#X\n", dg_len);
+ 				goto err;
+@@ -1304,6 +1333,37 @@ static int ncm_unwrap_ntb(struct gether
+ 			index2 = get_ncm(&tmp, opts->dgram_item_len);
+ 			dg_len2 = get_ncm(&tmp, opts->dgram_item_len);
+ 
++			if (index2 == 0 || dg_len2 == 0)
++				break;
 +
- 	/*
- 	 * We set b_transaction here because b_next_transaction will inherit
- 	 * our jh reference and thus __jbd2_journal_file_buffer() must not
--- 
-2.25.1
-
++			/* wDatagramIndex[1] */
++			if (ndp_after_header) {
++				if (index2 < opts->nth_size + opts->ndp_size) {
++					INFO(port->func.config->cdev,
++					     "Bad index: %#X\n", index2);
++					goto err;
++				}
++			} else {
++				if (index2 < opts->nth_size + opts->dpe_size) {
++					INFO(port->func.config->cdev,
++					     "Bad index: %#X\n", index2);
++					goto err;
++				}
++			}
++			if (index2 > block_len - opts->dpe_size) {
++				INFO(port->func.config->cdev,
++				     "Bad index: %#X\n", index2);
++				goto err;
++			}
++
++			/* wDatagramLength[1] */
++			if ((dg_len2 < 14 + crc_len) ||
++					(dg_len2 > frame_max)) {
++				INFO(port->func.config->cdev,
++				     "Bad dgram length: %#X\n", dg_len);
++				goto err;
++			}
++
+ 			/*
+ 			 * Copy the data into a new skb.
+ 			 * This ensures the truesize is correct
+@@ -1320,9 +1380,6 @@ static int ncm_unwrap_ntb(struct gether
+ 			ndp_len -= 2 * (opts->dgram_item_len * 2);
+ 
+ 			dgram_counter++;
+-
+-			if (index2 == 0 || dg_len2 == 0)
+-				break;
+ 		} while (ndp_len > 2 * (opts->dgram_item_len * 2));
+ 	} while (ndp_index);
+ 
 
 
