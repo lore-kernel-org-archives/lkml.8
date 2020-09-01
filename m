@@ -4,74 +4,74 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A196C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B3EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1593C20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00ED920866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598986428;
-	bh=WmkvbDJV3kLEMgwSnIJuHS45TOkt8O7tRuqHH2svG/w=;
+	s=default; t=1598986432;
+	bh=BGvj/EP9LSFIYvBUYSS3dsIKkhtKnXvRzA4OfqOEjK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zEyvZi//nFAdQMd38EN35ta9ITS8WblRG2mFssS7bK4GlBsJqitMGsLDMpyEmfYHg
-	 pjEPCMJCG/Gao0Zu5LwqBY5tCL2Y7xWIyJnGFrhFy8KyDCdf1L7i9P3BvtWHrYtKEc
-	 E8fqr7dU3rkgoYLqxtH10PeksJ49IiFMRuoA07SA=
+	b=ZKm5LDA6ZSnS6DUQ0jrgNwfW08Brb9ht6oqH5eY57gH4GY+S4qKPT3nyGKT5i+4aQ
+	 V+2O+uc6o/ly7lG/Ti7fCT+Xy8DAnbxTU3DRFwXzqw4mhnOTNPhgyxLJyPd/esvUUo
+	 iSvKQ9gQ+MFUWGbVb5hxQp+a17yfs7MUkHl5nTMA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730872AbgIASxp (ORCPT
+        id S1731570AbgIASxs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:53:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
+        Tue, 1 Sep 2020 14:53:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57466 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731390AbgIASxV (ORCPT
+        with ESMTP id S1731563AbgIASxh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:53:21 -0400
-Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A106C061246;
-        Tue,  1 Sep 2020 11:53:21 -0700 (PDT)
-Received: by mail-qk1-x741.google.com with SMTP id u3so1991228qkd.9;
-        Tue, 01 Sep 2020 11:53:21 -0700 (PDT)
+        Tue, 1 Sep 2020 14:53:37 -0400
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34EDAC061245;
+        Tue,  1 Sep 2020 11:53:32 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id d27so1739689qtg.4;
+        Tue, 01 Sep 2020 11:53:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=a96NqVhWlH/6rbnaJHsSXmoP7NyH4YVeyS7xAuR4Ue8=;
-        b=Rl00dssZUwB0VlBF0vtS3UAVh028ZEmyWDony//gcOYbkr1LyexfkGRr2AguBVNakR
-         K9Ebkf/f1WXdvNiuOuHTGxQxRLnqr3R8Fm7YHS1XMUOlsM758If3x29KbUASRlcqgw30
-         vqtyL+ENveuwJjS5jDfPnVcikKUUEnxCOzWM6HwXiVJ/CZPghydNweK9CflK1x5ZGzrk
-         V2fj/o0wnwORTQvSZYBc3FYl5UTbNxX5tZhJvvqbb3rFrh3GCGYCrH9CnrGOi2q5PrwO
-         d6ktGCGprgljvf9/VpsSttymMRC1kzi+LXId7l4BQgp7cA1tElxDRWhoJafqSIslJER8
-         K1BQ==
+        bh=b9CT/Pfaa29kbHcQyFjwoJj23rZzAWWYwFA5TYGSz5M=;
+        b=i/BXrQkgkv7QT7qjcqY0KSGlDoxBJwW4KpDXH82QhKpbGtbdebLOUTjaCUe5b5/nZw
+         rCODKcxJIXdNwj42TeSpSGUushKooNwe0n3mlchxpiyPl8W3/5+zspLkQF/OyPcgR5RS
+         FJV+btITXYPBoXMt3anyJhpBxeVwd5xHqtJEcBZFZK4HWZkN4xQDvh9WMz59KryVmlt5
+         +sAX8KZrcybC1/u2MZn457a/XmuZ2TgsX5GmhJtNKYvATshK2VL+GZPE3iQg/N23x0Fx
+         MLfIT9ZwD1/JbrvEZZaHDcKyfCDIuOLNTUPy0ERi4n1tVf3flcadR1IiAx/rpA1ZZ9rj
+         XjUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=a96NqVhWlH/6rbnaJHsSXmoP7NyH4YVeyS7xAuR4Ue8=;
-        b=aO+ONcOMMKxR8La9MLubJs5cqAn5tX3bbrL2CLWpJ/36L/ABI4hIoCTJKrAG1PNC4C
-         kcHj/UvilOQ4duWZlY00I9D4doI4gWegNmWZrgMdUdlT8sxe4uNe2pCi90n6MnVZXdOj
-         EnrIr038IJ41JXab3kVckZ33ewv2ZOmc9H7lH09TvvNyzrmeulDjrAht13KXKgMDz0wa
-         uCrN6+OYJ5XNxrbmUNo7I9xHIFImLlrZYLjTYCEfY1Kgo31LM1xaRHmY+A+La+ufJBhN
-         DQzN+aeHb93eKbJiFZySK6TN4MnEk71R7yoBsxOB1xG4O3ecewAIPv4Py7yEo5K+OVF8
-         EJtg==
-X-Gm-Message-State: AOAM533AyeJy4XMpAR0Jwfq0h8Acr5zlr35IvtsCCWOt2KB+yuo5wvVe
-        YcbjiEEOioWzg7PSInQf3mY=
-X-Google-Smtp-Source: ABdhPJzqAoMxEp76tyJMpXipznNzMrv+5slAYR8k+HgXrrZ63L+r8iQLKkluRa2/I3WVYJuB3DYV7g==
-X-Received: by 2002:a37:9a13:: with SMTP id c19mr3186201qke.48.1598986400192;
-        Tue, 01 Sep 2020 11:53:20 -0700 (PDT)
+        bh=b9CT/Pfaa29kbHcQyFjwoJj23rZzAWWYwFA5TYGSz5M=;
+        b=cqsCcjHb5mhsuQuz+oYHGXC+ny2Si/C37i1dlC+DTot7YAHHVKf0od563E/j6mi4Vo
+         c80UB3hpabjYXPfZ7XAGJ40jbm0zzHmLnf9H17rcNqGvU7RXryRpbKVjNhQtm7zdDBaF
+         5zkmuUV7ItNxTer4uMTg0eVWlz9p5zNL12IFhwsxIBo9R7wCN8INWr87A3xnDuoRQiTQ
+         cZjDtNhWrTlC3xy9XwGZJBPeKm1uLPOv3izfyDNOFCHLw9XUi/gLerUPl0VBCveEse2M
+         egsa/rC/1Ad+c6cYJBMTn/v4RdhrTRBVFZryotbcqgin67m6tSrjl+SnTwE7zmIxucDJ
+         KYCg==
+X-Gm-Message-State: AOAM530cIrS9kQ4v+0MueOt/kjfz7DvKCpgw6Tg4Q6XisDJpevLdYBZ6
+        TnyNGYSno/FBmBtzVc3e9u86+WTv9tZhCQ==
+X-Google-Smtp-Source: ABdhPJwE7t2uWDiypDRMlzVcJMFvJe6QxLN4rRdw6ZVCIo8dU3IItrGwF39QORSjPGAbfwD9lV5b9g==
+X-Received: by 2002:ac8:c8c:: with SMTP id n12mr3300144qti.226.1598986411316;
+        Tue, 01 Sep 2020 11:53:31 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id k3sm2317260qkb.95.2020.09.01.11.53.18
+        by smtp.gmail.com with ESMTPSA id i1sm2585368qkd.58.2020.09.01.11.53.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:53:19 -0700 (PDT)
+        Tue, 01 Sep 2020 11:53:30 -0700 (PDT)
 From:   Tejun Heo <tj@kernel.org>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
         Tejun Heo <tj@kernel.org>
-Subject: [PATCH 05/27] blk-iocost: clamp inuse and skip noops in __propagate_weights()
-Date:   Tue,  1 Sep 2020 14:52:35 -0400
-Message-Id: <20200901185257.645114-6-tj@kernel.org>
+Subject: [PATCH 09/27] blk-iocost: use WEIGHT_ONE based fixed point number for weights
+Date:   Tue,  1 Sep 2020 14:52:39 -0400
+Message-Id: <20200901185257.645114-10-tj@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
 References: <20200901185257.645114-1-tj@kernel.org>
@@ -82,35 +82,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__propagate_weights() currently expects the callers to clamp inuse within
-[1, active], which is needlessly fragile. The inuse adjustment logic is
-going to be revamped, in preparation, let's make __propagate_weights() clamp
-inuse on entry.
+To improve weight donations, we want to able to scale inuse with a greater
+accuracy and down below 1. Let's make non-hierarchical weights to use
+WEIGHT_ONE based fixed point numbers too like hierarchical ones.
 
-Also, make it avoid weight updates altogether if neither active or inuse is
-changed.
+This doesn't cause any behavior changes yet.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- block/blk-iocost.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ block/blk-iocost.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
 diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index 78e6919153d8..8dfe73dde2a8 100644
+index 5e6d56eec1c9..00c5a3ad2b5b 100644
 --- a/block/blk-iocost.c
 +++ b/block/blk-iocost.c
-@@ -897,7 +897,10 @@ static void __propagate_weights(struct ioc_gq *iocg, u32 active, u32 inuse)
- 
- 	lockdep_assert_held(&ioc->lock);
- 
--	inuse = min(active, inuse);
-+	inuse = clamp_t(u32, inuse, 1, active);
-+
-+	if (active == iocg->active && inuse == iocg->inuse)
-+		return;
- 
- 	for (lvl = iocg->level - 1; lvl >= 0; lvl--) {
+@@ -984,8 +984,8 @@ static void current_hweight(struct ioc_gq *iocg, u32 *hw_activep, u32 *hw_inusep
+ 	for (lvl = 0; lvl <= iocg->level - 1; lvl++) {
  		struct ioc_gq *parent = iocg->ancestors[lvl];
+ 		struct ioc_gq *child = iocg->ancestors[lvl + 1];
+-		u32 active_sum = READ_ONCE(parent->child_active_sum);
+-		u32 inuse_sum = READ_ONCE(parent->child_inuse_sum);
++		u64 active_sum = READ_ONCE(parent->child_active_sum);
++		u64 inuse_sum = READ_ONCE(parent->child_inuse_sum);
+ 		u32 active = READ_ONCE(child->active);
+ 		u32 inuse = READ_ONCE(child->inuse);
+ 
+@@ -993,11 +993,11 @@ static void current_hweight(struct ioc_gq *iocg, u32 *hw_activep, u32 *hw_inusep
+ 		if (!active_sum || !inuse_sum)
+ 			continue;
+ 
+-		active_sum = max(active, active_sum);
+-		hwa = hwa * active / active_sum;	/* max 16bits * 10000 */
++		active_sum = max_t(u64, active, active_sum);
++		hwa = div64_u64((u64)hwa * active, active_sum);
+ 
+-		inuse_sum = max(inuse, inuse_sum);
+-		hwi = hwi * inuse / inuse_sum;		/* max 16bits * 10000 */
++		inuse_sum = max_t(u64, inuse, inuse_sum);
++		hwi = div64_u64((u64)hwi * inuse, inuse_sum);
+ 	}
+ 
+ 	iocg->hweight_active = max_t(u32, hwa, 1);
+@@ -1022,7 +1022,8 @@ static void weight_updated(struct ioc_gq *iocg)
+ 	weight = iocg->cfg_weight ?: iocc->dfl_weight;
+ 	if (weight != iocg->weight && iocg->active)
+ 		propagate_weights(iocg, weight,
+-			DIV64_U64_ROUND_UP(iocg->inuse * weight, iocg->weight));
++				  DIV64_U64_ROUND_UP((u64)iocg->inuse * weight,
++						     iocg->weight));
+ 	iocg->weight = weight;
+ }
+ 
+@@ -2050,7 +2051,7 @@ static struct blkcg_policy_data *ioc_cpd_alloc(gfp_t gfp)
+ 	if (!iocc)
+ 		return NULL;
+ 
+-	iocc->dfl_weight = CGROUP_WEIGHT_DFL;
++	iocc->dfl_weight = CGROUP_WEIGHT_DFL * WEIGHT_ONE;
+ 	return &iocc->cpd;
+ }
+ 
+@@ -2136,7 +2137,7 @@ static u64 ioc_weight_prfill(struct seq_file *sf, struct blkg_policy_data *pd,
+ 	struct ioc_gq *iocg = pd_to_iocg(pd);
+ 
+ 	if (dname && iocg->cfg_weight)
+-		seq_printf(sf, "%s %u\n", dname, iocg->cfg_weight);
++		seq_printf(sf, "%s %u\n", dname, iocg->cfg_weight / WEIGHT_ONE);
+ 	return 0;
+ }
+ 
+@@ -2146,7 +2147,7 @@ static int ioc_weight_show(struct seq_file *sf, void *v)
+ 	struct blkcg *blkcg = css_to_blkcg(seq_css(sf));
+ 	struct ioc_cgrp *iocc = blkcg_to_iocc(blkcg);
+ 
+-	seq_printf(sf, "default %u\n", iocc->dfl_weight);
++	seq_printf(sf, "default %u\n", iocc->dfl_weight / WEIGHT_ONE);
+ 	blkcg_print_blkgs(sf, blkcg, ioc_weight_prfill,
+ 			  &blkcg_policy_iocost, seq_cft(sf)->private, false);
+ 	return 0;
+@@ -2172,7 +2173,7 @@ static ssize_t ioc_weight_write(struct kernfs_open_file *of, char *buf,
+ 			return -EINVAL;
+ 
+ 		spin_lock(&blkcg->lock);
+-		iocc->dfl_weight = v;
++		iocc->dfl_weight = v * WEIGHT_ONE;
+ 		hlist_for_each_entry(blkg, &blkcg->blkg_list, blkcg_node) {
+ 			struct ioc_gq *iocg = blkg_to_iocg(blkg);
+ 
+@@ -2203,7 +2204,7 @@ static ssize_t ioc_weight_write(struct kernfs_open_file *of, char *buf,
+ 	}
+ 
+ 	spin_lock(&iocg->ioc->lock);
+-	iocg->cfg_weight = v;
++	iocg->cfg_weight = v * WEIGHT_ONE;
+ 	weight_updated(iocg);
+ 	spin_unlock(&iocg->ioc->lock);
+ 
 -- 
 2.26.2
 
