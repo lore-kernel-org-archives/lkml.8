@@ -5,47 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E092CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35264C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8FC2168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8835216C4
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974543;
-	bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
+	s=default; t=1598974549;
+	bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gZgLgWyqHggevKjbNM6j7AXCugWC+70C1OU4RqHZmRlsLRhLfp8ymc/8azQl64M8x
-	 0lXiiVcOq9qnPiQmAVYZOnXiVwAtzDPFjFKx2fCe9zvm0CUN5+G7JP4DedcVWwiumk
-	 wxlmKJDN/x7AWjkjZ6GW8gBUc4BJktC3tIKuv0DQ=
+	b=B8wqMyZ6m4xups/3RdIJjM/7ZyR+5xP9sRb/rj+K34FFLninpObVR/yUakvrCLGMe
+	 8Rg/q6q/YQVllaXwolF2GHmxlKGYaQX4LT4Wr9uQqfe24yYGo1bMURwuUefHFFIQ/B
+	 JJy6pM7N2hGRa9L4DSY+qNoqL8JNOc/meq67EJRQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731165AbgIAPfl (ORCPT
+        id S1731229AbgIAPfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39706 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:35:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726733AbgIAPei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:38 -0400
+        id S1728387AbgIAPen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:43 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FBC720866;
-        Tue,  1 Sep 2020 15:34:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B42A20866;
+        Tue,  1 Sep 2020 15:34:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974477;
-        bh=nLJ+6B4bgisxIzyhAjXdfAcpFlxAgiJfxV7qDHHQ0pk=;
+        s=default; t=1598974483;
+        bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nqBK/F5AUmvdSx91n/a3IXMndycNLSIB8bWYk6GG/eK+t6YTsefDpYB16Rfe/dWMk
-         2xXGioIEA8PJJcEW4uuLRB2MkbMkL6HfqWhXZb6NdTC1WJHYj9KNluPtC+cns87Zzv
-         p8Kx6ivEMnBhf6i3hRMBiuuNPF8WqJsBoXSHhoSQ=
+        b=vF23FAoSqvCZnBbDo+FZbMGnRXGFlziVXOioVKOqphkZMNWgzjm748mRAj8tLZjRx
+         TnYBUxuHpgvDM7ZdL5NBwUYBH8/nHj0/T1PH/K+P9czWiQWf6U3JL1QXnLsJohTdSU
+         GtQRdXnMI4WaWu+cRdMMwudmOXoGSljxBTHxcOfE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>
-Subject: [PATCH 5.4 190/214] usb: uas: Add quirk for PNY Pro Elite
-Date:   Tue,  1 Sep 2020 17:11:10 +0200
-Message-Id: <20200901151002.050829426@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH 5.4 163/214] serial: pl011: Dont leak amba_ports entry on driver register error
+Date:   Tue,  1 Sep 2020 17:10:43 +0200
+Message-Id: <20200901151000.785511843@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -58,39 +59,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-commit 9a469bc9f32dd33c7aac5744669d21a023a719cd upstream.
+commit 89efbe70b27dd325d8a8c177743a26b885f7faec upstream.
 
-PNY Pro Elite USB 3.1 Gen 2 device (SSD) doesn't respond to ATA_12
-pass-through command (i.e. it just hangs). If it doesn't support this
-command, it should respond properly to the host. Let's just add a quirk
-to be able to move forward with other operations.
+pl011_probe() calls pl011_setup_port() to reserve an amba_ports[] entry,
+then calls pl011_register_port() to register the uart driver with the
+tty layer.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Link: https://lore.kernel.org/r/2b0585228b003eedcc82db84697b31477df152e0.1597803605.git.thinhn@synopsys.com
+If registration of the uart driver fails, the amba_ports[] entry is not
+released.  If this happens 14 times (value of UART_NR macro), then all
+amba_ports[] entries will have been leaked and driver probing is no
+longer possible.  (To be fair, that can only happen if the DeviceTree
+doesn't contain alias IDs since they cause the same entry to be used for
+a given port.)   Fix it.
+
+Fixes: ef2889f7ffee ("serial: pl011: Move uart_register_driver call to device")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v3.15+
+Cc: Tushar Behera <tushar.behera@linaro.org>
+Link: https://lore.kernel.org/r/138f8c15afb2f184d8102583f8301575566064a6.1597316167.git.lukas@wunner.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_uas.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/tty/serial/amba-pl011.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/storage/unusual_uas.h
-+++ b/drivers/usb/storage/unusual_uas.h
-@@ -80,6 +80,13 @@ UNUSUAL_DEV(0x152d, 0x0578, 0x0000, 0x99
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
- 		US_FL_BROKEN_FUA),
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2593,7 +2593,7 @@ static int pl011_setup_port(struct devic
  
-+/* Reported-by: Thinh Nguyen <thinhn@synopsys.com> */
-+UNUSUAL_DEV(0x154b, 0xf00d, 0x0000, 0x9999,
-+		"PNY",
-+		"Pro Elite SSD",
-+		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
-+		US_FL_NO_ATA_1X),
-+
- /* Reported-by: Hans de Goede <hdegoede@redhat.com> */
- UNUSUAL_DEV(0x2109, 0x0711, 0x0000, 0x9999,
- 		"VIA",
+ static int pl011_register_port(struct uart_amba_port *uap)
+ {
+-	int ret;
++	int ret, i;
+ 
+ 	/* Ensure interrupts from this UART are masked and cleared */
+ 	pl011_write(0, uap, REG_IMSC);
+@@ -2604,6 +2604,9 @@ static int pl011_register_port(struct ua
+ 		if (ret < 0) {
+ 			dev_err(uap->port.dev,
+ 				"Failed to register AMBA-PL011 driver\n");
++			for (i = 0; i < ARRAY_SIZE(amba_ports); i++)
++				if (amba_ports[i] == uap)
++					amba_ports[i] = NULL;
+ 			return ret;
+ 		}
+ 	}
 
 
