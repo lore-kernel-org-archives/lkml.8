@@ -2,110 +2,59 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71E9DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7790C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52C6620767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980611;
-	bh=cUGyqRoLKLvxQhBGrRQhHCN2eGOlJljyoYCfi1tGecU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRwCBwo0d92tOVqgStout4aEbQkf29FLwcSGtoTXmYiesaFIx3G7QoTRX/M4uZI4Y
-	 3eHnzWw+JGX31rQd5hc3g8Th3wxR9HkHPd/fZeyX8wkCp5nUNmBe9buhToe+GIto2z
-	 MbZsgazQzHwc1xCGsn36L1X/XLBC6221jYcShPI8=
+	by mail.kernel.org (Postfix) with ESMTP id AB319208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732501AbgIARQt (ORCPT
+        id S1731490AbgIARQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:16:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58102 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:16:56 -0400
+Received: from verein.lst.de ([213.95.11.211]:53770 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727864AbgIAPOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:14:24 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1B0120BED;
-        Tue,  1 Sep 2020 15:14:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973264;
-        bh=cUGyqRoLKLvxQhBGrRQhHCN2eGOlJljyoYCfi1tGecU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zL7s7jJH4dGf3r8voSQcvOuWC7WQCTJ/kJYRpZrsUYXaj5cxoBXi42LjT592CHgw+
-         R6ENIZGAJP16SvGsMrISZPGavHEMXZlmQod8+js5BrjQH/wubdN8z5AY1Kb5oVAg7W
-         LXRNxTjBrDC8M/XJ0CNXowqBjweb1ZOsBkeKj/Gc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 10/78] media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
-Date:   Tue,  1 Sep 2020 17:09:46 +0200
-Message-Id: <20200901150925.249121062@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
-References: <20200901150924.680106554@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728585AbgIAPOX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:14:23 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0183E68B05; Tue,  1 Sep 2020 17:14:21 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 17:14:20 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     hch@lst.de, viro@ZenIV.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, willy@infradead.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 1/6] proc: use vmalloc for our kernel buffer
+Message-ID: <20200901151420.GA30709@lst.de>
+References: <20200813210411.905010-1-josef@toxicpanda.com> <20200813210411.905010-2-josef@toxicpanda.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200813210411.905010-2-josef@toxicpanda.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+On Thu, Aug 13, 2020 at 05:04:06PM -0400, Josef Bacik wrote:
+> Since
+> 
+>   sysctl: pass kernel pointers to ->proc_handler
+> 
+> we have been pre-allocating a buffer to copy the data from the proc
+> handlers into, and then copying that to userspace.  The problem is this
+> just blind kmalloc()'s the buffer size passed in from the read, which in
+> the case of our 'cat' binary was 64kib.  Order-4 allocations are not
+> awesome, and since we can potentially allocate up to our maximum order,
+> use vmalloc for these buffers.
 
-[ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+Maybe the subject should read ".. also use vmalloc" as we still default
+to kmalloc for small allocations?
 
-The value av7110->debi_virt is stored in DMA memory, and it is assigned
-to data, and thus data[0] can be modified at any time by malicious
-hardware. In this case, "if (data[0] < 2)" can be passed, but then
-data[0] can be changed into a large number, which may cause buffer
-overflow when the code "av7110->ci_slot[data[0]]" is used.
+Otherwise looks good:
 
-To fix this possible bug, data[0] is assigned to a local variable, which
-replaces the use of data[0].
-
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/pci/ttpci/av7110.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
-index 382caf200ba16..c313f51688f44 100644
---- a/drivers/media/pci/ttpci/av7110.c
-+++ b/drivers/media/pci/ttpci/av7110.c
-@@ -426,14 +426,15 @@ static void debiirq(unsigned long cookie)
- 	case DATA_CI_GET:
- 	{
- 		u8 *data = av7110->debi_virt;
-+		u8 data_0 = data[0];
- 
--		if ((data[0] < 2) && data[2] == 0xff) {
-+		if (data_0 < 2 && data[2] == 0xff) {
- 			int flags = 0;
- 			if (data[5] > 0)
- 				flags |= CA_CI_MODULE_PRESENT;
- 			if (data[5] > 5)
- 				flags |= CA_CI_MODULE_READY;
--			av7110->ci_slot[data[0]].flags = flags;
-+			av7110->ci_slot[data_0].flags = flags;
- 		} else
- 			ci_get_data(&av7110->ci_rbuffer,
- 				    av7110->debi_virt,
--- 
-2.25.1
-
-
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
