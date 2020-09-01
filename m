@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C0AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F65C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4DF9C206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9EF206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979235;
-	bh=nMiUbtiD3nYXYSkO+Ot20R5VrvcgfqXTe/FDnXweDlg=;
+	s=default; t=1598979240;
+	bh=f6lO3xg2CEAK8IFQzL3VVhnmLwv5uiETfBxCMqaaiKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tUOS6SIfxkR1VIORYdy63hnV33LEktLwcWIB5/WgW7SvJu5D3YcnFEqVcJlYk5htC
-	 RME5dF9Pnel5W6DKBM4ZxnFxAelotETt4ZEKPXucPPWVVvjIKzeCXSumaA01wsErxA
-	 3R8MBUpqUcbAyeQ/sX2eztceJuU0O5oHNmKCRHpc=
+	b=Crj1vim7fTXtefGfD6+EjbEe0TD87JyFf//XKDqGQnCTWt/DUCS+MaMduHR6WfWxF
+	 I3e1Rte/0jn5uf64PrSqKLz4g+pmuYAGr0EjO9OUWzJLWzbpyt1EEepzeDR+mnXwRC
+	 FNFi7xrbZCkxFmdat088CvmpoMvhUIjVX7KLfSAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732352AbgIAQxt (ORCPT
+        id S1732229AbgIAQx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:53:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48962 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:53:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgIAPYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:24:55 -0400
+        id S1729978AbgIAPYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:51 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0996A20BED;
-        Tue,  1 Sep 2020 15:24:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 551432137B;
+        Tue,  1 Sep 2020 15:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973894;
-        bh=nMiUbtiD3nYXYSkO+Ot20R5VrvcgfqXTe/FDnXweDlg=;
+        s=default; t=1598973886;
+        bh=f6lO3xg2CEAK8IFQzL3VVhnmLwv5uiETfBxCMqaaiKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jqlfs1WEeJwuM6oJSXWoWEXnmtcuexdkPXckBxhMYqh17/g2M2am0c9Xm4w5fQWSa
-         PvnIvvGkMUpyzXd1CD1CbQMXmal/bY3akEiYUY5kcC1yNPeqNl+4BqFoogDftmWOff
-         s7qXEX2fiOdbFjm8CvkRCw4pJhIcd52roUcU0LRg=
+        b=JJQUlxVTHSpEluvuUAti7eL/XZSLP7+1IuwNdYJRAf0A/L+ISeYtz5IDARX2hKnMV
+         qsRWxZ0iiTv5HUzqxw/O8w2XW4p/wmIbeC/Njdm19a5mD/jYpn/p1uBI6zUIGWcnGY
+         sIpXJlQtkFNqg5RlFYKEshsYlE5DUm1GYz8dI63Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Tamseel Shams <m.shams@samsung.com>
-Subject: [PATCH 4.19 089/125] serial: samsung: Removes the IRQ not found warning
-Date:   Tue,  1 Sep 2020 17:10:44 +0200
-Message-Id: <20200901150938.942179490@linuxfoundation.org>
+        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>
+Subject: [PATCH 4.19 086/125] USB: lvtest: return proper error code in probe
+Date:   Tue,  1 Sep 2020 17:10:41 +0200
+Message-Id: <20200901150938.791800840@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -61,50 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tamseel Shams <m.shams@samsung.com>
+From: Evgeny Novikov <novikov@ispras.ru>
 
-commit 8c6c378b0cbe0c9f1390986b5f8ffb5f6ff7593b upstream.
+commit 531412492ce93ea29b9ca3b4eb5e3ed771f851dd upstream.
 
-In few older Samsung SoCs like s3c2410, s3c2412
-and s3c2440, UART IP is having 2 interrupt lines.
-However, in other SoCs like s3c6400, s5pv210,
-exynos5433, and exynos4210 UART is having only 1
-interrupt line. Due to this, "platform_get_irq(platdev, 1)"
-call in the driver gives the following false-positive error:
-"IRQ index 1 not found" on newer SoC's.
+lvs_rh_probe() can return some nonnegative value from usb_control_msg()
+when it is less than "USB_DT_HUB_NONVAR_SIZE + 2" that is considered as
+a failure. Make lvs_rh_probe() return -EINVAL in this case.
 
-This patch adds the condition to check for Tx interrupt
-only for the those SoC's which have 2 interrupt lines.
+Found by Linux Driver Verification project (linuxtesting.org).
 
-Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
 Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200810030021.45348-1-m.shams@samsung.com
+Link: https://lore.kernel.org/r/20200805090643.3432-1-novikov@ispras.ru
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/samsung.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/usb/misc/lvstest.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/samsung.c
-+++ b/drivers/tty/serial/samsung.c
-@@ -1755,9 +1755,11 @@ static int s3c24xx_serial_init_port(stru
- 		ourport->tx_irq = ret + 1;
+--- a/drivers/usb/misc/lvstest.c
++++ b/drivers/usb/misc/lvstest.c
+@@ -429,7 +429,7 @@ static int lvs_rh_probe(struct usb_inter
+ 			USB_DT_SS_HUB_SIZE, USB_CTRL_GET_TIMEOUT);
+ 	if (ret < (USB_DT_HUB_NONVAR_SIZE + 2)) {
+ 		dev_err(&hdev->dev, "wrong root hub descriptor read %d\n", ret);
+-		return ret;
++		return ret < 0 ? ret : -EINVAL;
  	}
  
--	ret = platform_get_irq(platdev, 1);
--	if (ret > 0)
--		ourport->tx_irq = ret;
-+	if (!s3c24xx_serial_has_interrupt_mask(port)) {
-+		ret = platform_get_irq(platdev, 1);
-+		if (ret > 0)
-+			ourport->tx_irq = ret;
-+	}
- 	/*
- 	 * DMA is currently supported only on DT platforms, if DMA properties
- 	 * are specified.
+ 	/* submit urb to poll interrupt endpoint */
 
 
