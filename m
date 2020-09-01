@@ -2,75 +2,181 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD08C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:01:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD9EC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 495DC206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B3B72067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:05:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lKxgZz62"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgIANBX (ORCPT
+        id S1727901AbgIANEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:01:23 -0400
-Received: from 8bytes.org ([81.169.241.247]:40302 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727943AbgIANAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:00:03 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 06AD2391; Tue,  1 Sep 2020 14:59:23 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 14:59:22 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     x86@kernel.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Juergen Gross <jgross@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        David Rientjes <rientjes@google.com>,
-        Cfir Cohen <cfir@google.com>,
-        Erdem Aktas <erdemaktas@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mike Stunes <mstunes@vmware.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Martin Radev <martin.b.radev@gmail.com>,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 42/76] x86/sev-es: Setup early #VC handler
-Message-ID: <20200901125922.GC22385@8bytes.org>
-References: <20200824085511.7553-1-joro@8bytes.org>
- <20200824085511.7553-43-joro@8bytes.org>
- <20200831094541.GD27517@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831094541.GD27517@zn.tnic>
+        Tue, 1 Sep 2020 09:04:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49190 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbgIALzS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:55:18 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52B1CC061244;
+        Tue,  1 Sep 2020 04:55:09 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id o20so638518pfp.11;
+        Tue, 01 Sep 2020 04:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=A6+zZK0PRKc1I+vce+8JY6xxs7Mg0NJgZr5FU/ZHS1w=;
+        b=lKxgZz62BU3j99HgKaMmS/kCvom0NQclIiW3BMeCVMOx546mVt7GmWi2yH1oYB2+0C
+         gQcDgTHmMr27FGuNwZzHoJFeZofywU7V1kFwbSTY90VH9LNAZYU/jXdcTNfp/ViWmz2/
+         KxqR2zXOuyX2hsRiv19TGMVtaVaWrn1onLTxaFyk5QddY2wzCTbhRAtQHEyc8Ub0p/qu
+         GaE64kRyCCDlg3rBf9f5mXSATnbtYB7B1uShIoOLX2PycNd1X0PBoLNqxUrONjN5lpio
+         J+rSHfLBE5fqPt47o0lwRGKxOMLMLzbamV9uKurjgVsP7z3KIrHeCKL/3YGL8Bg1gXsv
+         UuDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=A6+zZK0PRKc1I+vce+8JY6xxs7Mg0NJgZr5FU/ZHS1w=;
+        b=cIzFQUXMLO3ZEkGn2TZnDJxtc+mvi5MH6rtrSnuSyY2H/VtHI8/nikfsrHal0o6i6L
+         v5UIAACze8JrcvYQPFYTB8iXzWkMDGSNVMCkbt2txkrkVmOKF8IMR8Q/4F2I2O+ZGmZK
+         WB6EDBm0Q5pMBzoZJDsCJoZzAlOAV/+8CzZhzBHQ71ic+4ZJEAhN7B7BOu6mQLATo2Bq
+         T+PvtpDLqXtKli65G2GOngAeq192WWXj8LpSxTQf9SBHsWi7cwKmhSbS6Zxe1CAwdLB6
+         UZ5BLpqNS74Mxn1Q406d7qIhFk+XkRe4kTRwj5bnfbqiX/xoEqoN03x2RzOtX14VTqBF
+         DxOg==
+X-Gm-Message-State: AOAM533KnytxOWY8H1zfTquDTbPR8oerxhfLHUL3j45VvK7HsR54BtQI
+        IfglCo1zuGKhPOoOlKK1xh3MM4LrFIE=
+X-Google-Smtp-Source: ABdhPJzv9nDY12Kx6kNi2WR6XHoPB47fiHDLEBw9WzZGmJXBQV1jqv719wSs1cSwwcVUSJhPfOoWyA==
+X-Received: by 2002:a62:6503:: with SMTP id z3mr1497322pfb.132.1598961308884;
+        Tue, 01 Sep 2020 04:55:08 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.53])
+        by smtp.gmail.com with ESMTPSA id z17sm1737531pfq.38.2020.09.01.04.55.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 04:55:07 -0700 (PDT)
+From:   yulei.kernel@gmail.com
+X-Google-Original-From: yuleixzhang@tencent.com
+To:     pbonzini@redhat.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        junaids@google.com, bgardon@google.com, vkuznets@redhat.com,
+        xiaoguangrong.eric@gmail.com, kernellwp@gmail.com,
+        lihaiwei.kernel@gmail.com, Yulei Zhang <yulei.kernel@gmail.com>,
+        Yulei Zhang <yuleixzhang@tencent.com>
+Subject: [RFC V2 5/9] Modify the page fault path to meet the direct build EPT requirement
+Date:   Tue,  1 Sep 2020 19:56:02 +0800
+Message-Id: <4a5c67fea73a18661cf4918860606e5a19f11b78.1598868204.git.yulei.kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1598868203.git.yulei.kernel@gmail.com>
+References: <cover.1598868203.git.yulei.kernel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Aug 31, 2020 at 11:45:41AM +0200, Borislav Petkov wrote:
-> On Mon, Aug 24, 2020 at 10:54:37AM +0200, Joerg Roedel wrote:
-> > +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> > +	/* VMM Communication Exception */
-> > +	handler = fixup_pointer(vc_no_ghcb, physbase);
-> > +	set_early_idt_handler(idt, X86_TRAP_VC, handler);
-> 
-> This function is used only once AFAICT - you might just as well add its
-> three-lined body here and save yourself the function definition and
-> ifdeffery above...
+From: Yulei Zhang <yulei.kernel@gmail.com>
 
-True, but having a separate function might be handy when support for #VE
-and #HV is developed. Those might also need to setup their early
-handlers here, no?
+Refine the fast page fault code so that it can be used in either
+normal ept mode or direct build EPT mode.
 
-Regards,
+Signed-off-by: Yulei Zhang <yuleixzhang@tencent.com>
+---
+ arch/x86/kvm/mmu/mmu.c | 28 ++++++++++++++++++++--------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-	Joerg
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index f2124f52b286..fda6c4196854 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3443,12 +3443,13 @@ static bool page_fault_can_be_fast(u32 error_code)
+  * someone else modified the SPTE from its original value.
+  */
+ static bool
+-fast_pf_fix_direct_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
++fast_pf_fix_direct_spte(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 			u64 *sptep, u64 old_spte, u64 new_spte)
+ {
+ 	gfn_t gfn;
+ 
+-	WARN_ON(!sp->role.direct);
++	WARN_ON(!vcpu->arch.direct_build_tdp &&
++		(!sptep_to_sp(sptep)->role.direct));
+ 
+ 	/*
+ 	 * Theoretically we could also set dirty bit (and flush TLB) here in
+@@ -3470,7 +3471,8 @@ fast_pf_fix_direct_spte(struct kvm_vcpu *vcpu, struct kvm_mmu_page *sp,
+ 		 * The gfn of direct spte is stable since it is
+ 		 * calculated by sp->gfn.
+ 		 */
+-		gfn = kvm_mmu_page_get_gfn(sp, sptep - sp->spt);
++
++		gfn = gpa >> PAGE_SHIFT;
+ 		kvm_vcpu_mark_page_dirty(vcpu, gfn);
+ 	}
+ 
+@@ -3498,10 +3500,10 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 			    u32 error_code)
+ {
+ 	struct kvm_shadow_walk_iterator iterator;
+-	struct kvm_mmu_page *sp;
+ 	bool fault_handled = false;
+ 	u64 spte = 0ull;
+ 	uint retry_count = 0;
++	int pte_level = 0;
+ 
+ 	if (!page_fault_can_be_fast(error_code))
+ 		return false;
+@@ -3515,8 +3517,15 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 			if (!is_shadow_present_pte(spte))
+ 				break;
+ 
+-		sp = sptep_to_sp(iterator.sptep);
+-		if (!is_last_spte(spte, sp->role.level))
++		if (iterator.level < PG_LEVEL_4K)
++			pte_level  = PG_LEVEL_4K;
++		else
++			pte_level = iterator.level;
++
++		WARN_ON(!vcpu->arch.direct_build_tdp &&
++			(pte_level != sptep_to_sp(iterator.sptep)->role.level));
++
++		if (!is_last_spte(spte, pte_level))
+ 			break;
+ 
+ 		/*
+@@ -3559,7 +3568,7 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 			 *
+ 			 * See the comments in kvm_arch_commit_memory_region().
+ 			 */
+-			if (sp->role.level > PG_LEVEL_4K)
++			if (pte_level > PG_LEVEL_4K)
+ 				break;
+ 		}
+ 
+@@ -3573,7 +3582,7 @@ static bool fast_page_fault(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 		 * since the gfn is not stable for indirect shadow page. See
+ 		 * Documentation/virt/kvm/locking.rst to get more detail.
+ 		 */
+-		fault_handled = fast_pf_fix_direct_spte(vcpu, sp,
++		fault_handled = fast_pf_fix_direct_spte(vcpu, cr2_or_gpa,
+ 							iterator.sptep, spte,
+ 							new_spte);
+ 		if (fault_handled)
+@@ -4106,6 +4115,9 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
+ 	if (fast_page_fault(vcpu, gpa, error_code))
+ 		return RET_PF_RETRY;
+ 
++	if (vcpu->arch.direct_build_tdp)
++		return RET_PF_EMULATE;
++
+ 	r = mmu_topup_memory_caches(vcpu, false);
+ 	if (r)
+ 		return r;
+-- 
+2.17.1
+
