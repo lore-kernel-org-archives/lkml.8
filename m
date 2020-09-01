@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E463BC433E2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD0DAC433E6
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B98C82078B
+	by mail.kernel.org (Postfix) with ESMTP id 9CF0F2065F
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:19:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1598977178;
-	bh=cRTNBOTMIj2+KE/0u9AQCGRWTxUSPaOiR+upbYr0eV0=;
+	bh=THWH1v0CuJQR382D5Dz1VXHW0bnehbkIYH4LQiHo1kA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aEytQ3K3kQRehgTSpZdZznPSas9kFtspFCu23vVJaUi0ZZe5/YSoCn1P9z7F7YYmt
-	 b0SghhcQMHhNt8LHT/kTDodoufYoQ9J1li6MXPnXHTWyXI1vcqLYBosOi+1tOu5IMi
-	 pKxxO2VGhIyUH9u0LF6FU1jznRvKxMZtrsPHbwUs=
+	b=VTDYKwjW1rhT36IiTvgEagluL5597thZ37im5Rh70vd85nq9b8xxcTvGtbD7Spr1C
+	 wO9ZCNx2bi3lx9s0qryvi7UnECXRwNHifdj3BQFbrKVso4Pa2KbhqEbBeE/RtHiJ6x
+	 iexIlAouEYfwC7XVUDVJ/TICqTsdsFZt9eNgYYEY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731488AbgIAQSh (ORCPT
+        id S1731694AbgIAQSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:18:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37574 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:18:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731166AbgIAPdX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:33:23 -0400
+        id S1731159AbgIAPdQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:33:16 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6C1621582;
-        Tue,  1 Sep 2020 15:33:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE311205F4;
+        Tue,  1 Sep 2020 15:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974403;
-        bh=cRTNBOTMIj2+KE/0u9AQCGRWTxUSPaOiR+upbYr0eV0=;
+        s=default; t=1598974395;
+        bh=THWH1v0CuJQR382D5Dz1VXHW0bnehbkIYH4LQiHo1kA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jtOvV4N+YTja0FIAMaJr9d3t4QIRQh7wPgTNleJrJtDJzGffR+beVeF6zrzZL9p08
-         JLS8TgwuZ+GTaPjtLATbvn/9liqznJX7TdoHn8suqhK3V4Ttamn4rOst0iRlcuNLyw
-         TMlx68UsYMpTQLNaibKPuhu+IXDbHbfykyyaUV3E=
+        b=XCzZdEs465FzTeIo2tSBapZnG+vgQDdTRj/KlQHFnkvd6fJvRJJbMIlm1DKg37vxO
+         QcFoxfSmJZDQOTP/8p1f4X+UAXPJ/ubtasBuJVkKapTtASnz2ok0SzxHGpG4JIxePI
+         TBqNJhrB1CuNItsw5Mv83qYVswv9uToHDJ4Cf0mA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Pozulp <pozulp.kernel@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 132/214] ALSA: hda/realtek: Add model alc298-samsung-headphone
-Date:   Tue,  1 Sep 2020 17:10:12 +0200
-Message-Id: <20200901150959.309280448@linuxfoundation.org>
+        stable@vger.kernel.org, Jakov Petrina <jakov.petrina@sartura.hr>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 129/214] libbpf: Handle GCC built-in types for Arm NEON
+Date:   Tue,  1 Sep 2020 17:10:09 +0200
+Message-Id: <20200901150959.162854747@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,35 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Pozulp <pozulp.kernel@gmail.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit 23dc958689449be85e39351a8c809c3d344b155b ]
+[ Upstream commit 702eddc77a905782083b14ccd05b23840675fd18 ]
 
-The very quiet and distorted headphone output bug that afflicted my
-Samsung Notebook 9 is appearing in many other Samsung laptops. Expose
-the quirk which fixed my laptop as a model so other users can try it.
+When building Arm NEON (SIMD) code from lib/raid6/neon.uc, GCC emits
+DWARF information using a base type "__Poly8_t", which is internal to
+GCC and not recognized by Clang. This causes build failures when
+building with Clang a vmlinux.h generated from an arm64 kernel that was
+built with GCC.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=207423
-Signed-off-by: Mike Pozulp <pozulp.kernel@gmail.com>
-Link: https://lore.kernel.org/r/20200817043219.458889-1-pozulp.kernel@gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+	vmlinux.h:47284:9: error: unknown type name '__Poly8_t'
+	typedef __Poly8_t poly8x16_t[16];
+	        ^~~~~~~~~
+
+The polyX_t types are defined as unsigned integers in the "Arm C
+Language Extension" document (101028_Q220_00_en). Emit typedefs based on
+standard integer types for the GCC internal types, similar to those
+emitted by Clang.
+
+Including linux/kernel.h to use ARRAY_SIZE() incidentally redefined
+max(), causing a build bug due to different types, hence the seemingly
+unrelated change.
+
+Reported-by: Jakov Petrina <jakov.petrina@sartura.hr>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200812143909.3293280-1-jean-philippe@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ tools/lib/bpf/btf_dump.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 3c7bc398c0cbc..d1b74c7cacd76 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7939,6 +7939,7 @@ static const struct hda_model_fixup alc269_fixup_models[] = {
- 	{.id = ALC299_FIXUP_PREDATOR_SPK, .name = "predator-spk"},
- 	{.id = ALC298_FIXUP_HUAWEI_MBX_STEREO, .name = "huawei-mbx-stereo"},
- 	{.id = ALC256_FIXUP_MEDION_HEADSET_NO_PRESENCE, .name = "alc256-medion-headset"},
-+	{.id = ALC298_FIXUP_SAMSUNG_HEADPHONE_VERY_QUIET, .name = "alc298-samsung-headphone"},
- 	{}
- };
- #define ALC225_STANDARD_PINS \
+diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+index d9e386b8f47ed..07fcc8e79662d 100644
+--- a/tools/lib/bpf/btf_dump.c
++++ b/tools/lib/bpf/btf_dump.c
+@@ -13,6 +13,7 @@
+ #include <errno.h>
+ #include <linux/err.h>
+ #include <linux/btf.h>
++#include <linux/kernel.h>
+ #include "btf.h"
+ #include "hashmap.h"
+ #include "libbpf.h"
+@@ -543,6 +544,9 @@ static int btf_dump_order_type(struct btf_dump *d, __u32 id, bool through_ptr)
+ 	}
+ }
+ 
++static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
++					  const struct btf_type *t);
++
+ static void btf_dump_emit_struct_fwd(struct btf_dump *d, __u32 id,
+ 				     const struct btf_type *t);
+ static void btf_dump_emit_struct_def(struct btf_dump *d, __u32 id,
+@@ -665,6 +669,9 @@ static void btf_dump_emit_type(struct btf_dump *d, __u32 id, __u32 cont_id)
+ 
+ 	switch (kind) {
+ 	case BTF_KIND_INT:
++		/* Emit type alias definitions if necessary */
++		btf_dump_emit_missing_aliases(d, id, t);
++
+ 		tstate->emit_state = EMITTED;
+ 		break;
+ 	case BTF_KIND_ENUM:
+@@ -899,7 +906,7 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
+ 			btf_dump_printf(d, ": %d", m_sz);
+ 			off = m_off + m_sz;
+ 		} else {
+-			m_sz = max(0, btf__resolve_size(d->btf, m->type));
++			m_sz = max(0LL, btf__resolve_size(d->btf, m->type));
+ 			off = m_off + m_sz * 8;
+ 		}
+ 		btf_dump_printf(d, ";");
+@@ -919,6 +926,32 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
+ 		btf_dump_printf(d, " __attribute__((packed))");
+ }
+ 
++static const char *missing_base_types[][2] = {
++	/*
++	 * GCC emits typedefs to its internal __PolyX_t types when compiling Arm
++	 * SIMD intrinsics. Alias them to standard base types.
++	 */
++	{ "__Poly8_t",		"unsigned char" },
++	{ "__Poly16_t",		"unsigned short" },
++	{ "__Poly64_t",		"unsigned long long" },
++	{ "__Poly128_t",	"unsigned __int128" },
++};
++
++static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
++					  const struct btf_type *t)
++{
++	const char *name = btf_dump_type_name(d, id);
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(missing_base_types); i++) {
++		if (strcmp(name, missing_base_types[i][0]) == 0) {
++			btf_dump_printf(d, "typedef %s %s;\n\n",
++					missing_base_types[i][1], name);
++			break;
++		}
++	}
++}
++
+ static void btf_dump_emit_enum_fwd(struct btf_dump *d, __u32 id,
+ 				   const struct btf_type *t)
+ {
 -- 
 2.25.1
 
