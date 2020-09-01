@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BD00C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE972C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB85F207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DB2121548
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:22:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973730;
-	bh=HcQS+VMvWdRoEZwki/4Ya7RkFs+DvHo1w0eac91M6eo=;
+	s=default; t=1598973761;
+	bh=VASL87ppPiboOQq6qJXQxxe2/VsGTwKQP8c1PE8NMyg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RxNP0FbUkV5VqtpCEsy8zlUzpC144zoyO82ZLodlKuobLvbU/E/k8Ifr9vZHOVA33
-	 wQoyaywnt5aVyMMIPaD8j3YqqRIjdKN4gjPdc6i5rOQIvKVsoPvAWUfWI/Z5G6dUaT
-	 k7W/VQL4m30kZu2wYZFCQqc9iI6D9845andeJRM8=
+	b=RkUAt2S2g5eXkoWH9+v/UYja0jfc4F+R9lHqpleuuvFdT9oL2U5aRv2BLY2arQ+6N
+	 k39t2eyeZ0yJ3b8DYApT4TjqSCbLkYS5gKAZauxBz5k0UUvAuUh7a0oIedwdrzz2E3
+	 Kv4RgoY1+b5zX08dudr7C9MOfv+RjF+nZD4K1XBA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbgIAPWI (ORCPT
+        id S1729450AbgIAPWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38754 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:22:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729020AbgIAPTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:42 -0400
+        id S1729256AbgIAPTs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:19:48 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E95B3206EB;
-        Tue,  1 Sep 2020 15:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3D0E207D3;
+        Tue,  1 Sep 2020 15:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973582;
-        bh=HcQS+VMvWdRoEZwki/4Ya7RkFs+DvHo1w0eac91M6eo=;
+        s=default; t=1598973587;
+        bh=VASL87ppPiboOQq6qJXQxxe2/VsGTwKQP8c1PE8NMyg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pmiZTCOPJObB+8GNtcIdYslCOBrLOIL5NHi+jctjKiKSA1c2RVs2omjAUgnoG5G1N
-         rmftDSz8SDfTxc11KcHc09AjwWx/WI3rIVTrV0HXNiq/QDbU7j7tbp4O9UhBVXn/lb
-         Pm5g11q1OnX79+COjJ2yIQgBvSZyT89wXDpZuZ9w=
+        b=X9r7vYY9Q9ZJjq1EvmeXccqzV9mKjlSmtdRhuy6DCX3aq8yvol0eIdhGPPnfBtG8O
+         fuj8Y126FyAkqUw+lyesilZIxuWcDg5bY4NlIR/8DtG5rAgabQOP6Yt/Rjp7T/MhXU
+         7Sh4875SGInz+rysZo5lQRGzk+AVGgBVT7OO+t8M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sumera Priyadarsini <sylphrenadin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 56/91] net: gianfar: Add of_node_put() before goto statement
-Date:   Tue,  1 Sep 2020 17:10:30 +0200
-Message-Id: <20200901150930.898406813@linuxfoundation.org>
+Subject: [PATCH 4.14 31/91] locking/lockdep: Fix overflow in presentation of average lock-time
+Date:   Tue,  1 Sep 2020 17:10:05 +0200
+Message-Id: <20200901150929.697107049@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,44 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sumera Priyadarsini <sylphrenadin@gmail.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 989e4da042ca4a56bbaca9223d1a93639ad11e17 ]
+[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
 
-Every iteration of for_each_available_child_of_node() decrements
-reference count of the previous node, however when control
-is transferred from the middle of the loop, as in the case of
-a return or break or goto, there is no decrement thus ultimately
-resulting in a memory leak.
+Though the number of lock-acquisitions is tracked as unsigned long, this
+is passed as the divisor to div_s64() which interprets it as a s32,
+giving nonsense values with more than 2 billion acquisitons. E.g.
 
-Fix a potential memory leak in gianfar.c by inserting of_node_put()
-before the goto statement.
+  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+  -------------------------------------------------------------------------
+    2350439395           0.07         353.38   649647067.36          0.-32
 
-Issue found with Coccinelle.
-
-Signed-off-by: Sumera Priyadarsini <sylphrenadin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/freescale/gianfar.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/locking/lockdep_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/freescale/gianfar.c b/drivers/net/ethernet/freescale/gianfar.c
-index e4a2c74a9b47e..6b95334e172d1 100644
---- a/drivers/net/ethernet/freescale/gianfar.c
-+++ b/drivers/net/ethernet/freescale/gianfar.c
-@@ -844,8 +844,10 @@ static int gfar_of_init(struct platform_device *ofdev, struct net_device **pdev)
- 				continue;
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 8b2ef15e35524..06c02cd0ff577 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -430,7 +430,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
+ 	seq_time(m, lt->min);
+ 	seq_time(m, lt->max);
+ 	seq_time(m, lt->total);
+-	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
++	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
+ }
  
- 			err = gfar_parse_group(child, priv, model);
--			if (err)
-+			if (err) {
-+				of_node_put(child);
- 				goto err_grp_init;
-+			}
- 		}
- 	} else { /* SQ_SG_MODE */
- 		err = gfar_parse_group(np, priv, model);
+ static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
 -- 
 2.25.1
 
