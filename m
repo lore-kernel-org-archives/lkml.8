@@ -2,89 +2,91 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C8DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EF1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C7AE1206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979103;
-	bh=iZRokT/LvXKNu2UX1Yb/TKfow/L5EMf/GiV8BC/Qzd4=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=UoPz4vSQ9I5ZKI5bZKGnrMt7hQBBfefU8CvycyvWoordKdmQcbLDUnm0CMhGnKzXj
-	 hiJ2grELhUud3RVglzV5ikBGGvPKwldwdm+rERuy5zRXxAKLmyI3wx+Z9hb8riyFr2
-	 VYClR+kg0L9HNwrc7WQq7kCMm3yvLQlLc1jugdbg=
+	by mail.kernel.org (Postfix) with ESMTP id 90E512087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sEZr7yNR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732387AbgIAQvk (ORCPT
+        id S1732289AbgIAQvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:51:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730068AbgIAPZ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:25:59 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 904D620BED;
-        Tue,  1 Sep 2020 15:25:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973959;
-        bh=iZRokT/LvXKNu2UX1Yb/TKfow/L5EMf/GiV8BC/Qzd4=;
-        h=From:To:Cc:Subject:Date:From;
-        b=B+rmydmoDRrQML/RdSKE568dtNtwlYkX47MCkTwC1WwxV3RyIRMaMUYIQBmn426PA
-         fZbb36fPUQn29OkEmMkOmoYYdWCA4abcNOWWx5vkolnzIUbSv6cshrN7mL6QufCw1R
-         jSHLBjWdVwBCqvyjYreyYuG5ackDdKuVVVhLA5Cc=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Han Xu <han.xu@nxp.com>, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/6] mtd: onenand: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 16:25:30 +0200
-Message-Id: <20200901142535.12819-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 1 Sep 2020 12:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38614 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732269AbgIAQvg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:51:36 -0400
+Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25A0C061244;
+        Tue,  1 Sep 2020 09:51:35 -0700 (PDT)
+Received: by mail-ej1-x641.google.com with SMTP id h4so2682818ejj.0;
+        Tue, 01 Sep 2020 09:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7wmhqZFH/qn9LDILgIA8ChHwbJC43R72DMR15uZTThk=;
+        b=sEZr7yNRdN4XLqfS6kDyAxYMdSBUX91Lrvi8DIlpUfVVpd3J5MGuriq05qiGIsFfOS
+         1nG7p40rnY/7KgeLHd2mSz2SaSPiph2LzX2zQveYL+gCSwfsUOJ91ylYKxowQstupoHr
+         rTphTq7xjbalXBUO2YQtmYt1+/rlilxOjz44ZxPiHsE/E9HlrOzR3z8qcqtpWuQYlS6f
+         C72bqQSR5JUMMlaYJCm9P0yK2PoKq9jpweruEfjJfyxZs3Q7AjjqPIpWmXwmsvQVaqwi
+         xUReZMYW49QhZObiQuohBS57V2gw1dNeD/DJGMAANfTuhSdeg5KqD3YcCm0fRUMMsosd
+         DJrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7wmhqZFH/qn9LDILgIA8ChHwbJC43R72DMR15uZTThk=;
+        b=rGbtnm5wyev0yrompjZ4mcQjoJsY07xpAea3aB7QE+8Px9mmWL0Vc2tgtFiSMIJrkx
+         oR1rWLcUlhCVuzzGxD8d93sK6SPJzrZ00uh5BCDE/tIX5H+PaUC5C50iqbT94X5ynW7v
+         ix4bWOzkqjPf4F3yY8gN7bV60Vadj2+q2gvJZg5XVOfb8rFYqfYZexIHAMJ5vrtEmIYA
+         rMthkCD3M6hEj86ZqYuUe4WYgsB0byqHw8a9/cVn6mjH7jZiDP3SNljiA6BLpUFDUPd9
+         6X/qlYuuYCKLFJIccwP42Ox7w/FueX6CZUcIPumsjJBPSAIF71ZigOM75ONF3BlOgxmp
+         5VdA==
+X-Gm-Message-State: AOAM531DKTgthJFXt6EqgWRlQVzyrTi5bwOLUK+b9DOscQ4O7tQ2n4QP
+        RTGALpYbJ+LiiMeCU/DDnTHUGaY7P4Q5S09Gkgx13T9veaU=
+X-Google-Smtp-Source: ABdhPJyfEptOql4F89GlhX35Na6O9a4L6VSc/7rNTm6swT5iiAwRTcUEckrtJm7Tp6jErL0lAjQgG7Kb0J2UsEAk9/w=
+X-Received: by 2002:a17:907:264c:: with SMTP id ar12mr2444569ejc.80.1598979094509;
+ Tue, 01 Sep 2020 09:51:34 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200901141539.1757549-1-npiggin@gmail.com> <20200901141539.1757549-3-npiggin@gmail.com>
+In-Reply-To: <20200901141539.1757549-3-npiggin@gmail.com>
+From:   Matt Turner <mattst88@gmail.com>
+Date:   Tue, 1 Sep 2020 09:51:22 -0700
+Message-ID: <CAEdQ38Em+s7e50Z+z+frwT8xHc=cHG70rjSmAPo+9RmJcCwTGw@mail.gmail.com>
+Subject: Re: [PATCH v3 02/23] alpha: use asm-generic/mmu_context.h for no-op implementations
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Linux-Arch <linux-arch@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        linux-alpha <linux-alpha@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+On Tue, Sep 1, 2020 at 7:15 AM Nicholas Piggin <npiggin@gmail.com> wrote:
+>
+> Cc: Richard Henderson <rth@twiddle.net>
+> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: linux-alpha@vger.kernel.org
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>
+> Please ack or nack if you object to this being mered via
+> Arnd's tree.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/mtd/nand/onenand/onenand_omap2.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+That would be great.
 
-diff --git a/drivers/mtd/nand/onenand/onenand_omap2.c b/drivers/mtd/nand/onenand/onenand_omap2.c
-index aa9368bf7a0c..d8c0bd002c2b 100644
---- a/drivers/mtd/nand/onenand/onenand_omap2.c
-+++ b/drivers/mtd/nand/onenand/onenand_omap2.c
-@@ -494,11 +494,8 @@ static int omap2_onenand_probe(struct platform_device *pdev)
- 
- 	c->int_gpiod = devm_gpiod_get_optional(dev, "int", GPIOD_IN);
- 	if (IS_ERR(c->int_gpiod)) {
--		r = PTR_ERR(c->int_gpiod);
- 		/* Just try again if this happens */
--		if (r != -EPROBE_DEFER)
--			dev_err(dev, "error getting gpio: %d\n", r);
--		return r;
-+		return dev_err_probe(dev, PTR_ERR(c->int_gpiod), "error getting gpio\n");
- 	}
- 
- 	if (c->int_gpiod) {
--- 
-2.17.1
-
+Acked-by: Matt Turner <mattst88@gmail.com>
