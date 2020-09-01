@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C12FC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080EDC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E68802064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7C84206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975195;
-	bh=7PxdQSp7lSNb+KASYZBkuwWI+2CA2MDHV9DG5GoBWNg=;
+	s=default; t=1598975203;
+	bh=Sjr8/goA5SUDV5EHxnPLgivfSrAg7FA/YC3bRLX7zfQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iKWp1ZjEE8qHG5jWGjXtBLCZUTuNNpB0Q9pvufu+FXMMKyabAEXrtPyXnpmYYrH/u
-	 49ve+4ovDon4FxgQyQKGMg5Bv+D3V/c0tqGJ5OvqDGFrRHRDlYVei/c9TMuuZxA4gK
-	 fxEXlYmR3mxIWLA9gVP6jZbn4mmGr+l+o5DO34NM=
+	b=TmSZe1NFubjeb2arA5eKfqlDZzTwWCm3s62k+ghZURYVTUw7zScQP7JfsEbKmEmmg
+	 eqMBl98EMQx114Vu6PyMYmOwa9RvIi/oEzhutmAjD26I86+DWxttaxMby2TzfH3i+c
+	 Ul+uTlQ40fC2Nvnc/ff8J/KH0OmRtZTkTaIhZ9Zo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbgIAPqe (ORCPT
+        id S1731949AbgIAPqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57656 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:46:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57752 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728980AbgIAPnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:43:31 -0400
+        id S1731667AbgIAPne (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:43:34 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C95B82064B;
-        Tue,  1 Sep 2020 15:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77383206FA;
+        Tue,  1 Sep 2020 15:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975010;
-        bh=7PxdQSp7lSNb+KASYZBkuwWI+2CA2MDHV9DG5GoBWNg=;
+        s=default; t=1598975013;
+        bh=Sjr8/goA5SUDV5EHxnPLgivfSrAg7FA/YC3bRLX7zfQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QDxaUTkqRafAdthQZ+dS0Ze2ao6Bwg8bXB8rX2KioYa94trhMG0wQucv8qLOYCkZa
-         pl2/lSEV/gp2XyV30JKs2Wg3+XrJZeOUnB+o2PSke33FOESVnRw5FiCOwXZ5Pz6XGU
-         kOLW0EgV3fXsARHFYtOZtDSJA+HwGph6cWhixKP8=
+        b=VVV6lKCES+ebxf3pSDEXFPGNJqVTB8ohn7uiU31E+v3tc7OkeqMftNIWzdnIUONqJ
+         b8COcua1e5kPIGZBzHomzfCiHD9HbrdacEmoaHOSUPuPK/P3QqXowT8Y/yeOGvm1AE
+         gvO+Y7OMcSw9XmXg/ruVJ+JlZVNP6+ZJ15DackGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.8 174/255] btrfs: fix space cache memory leak after transaction abort
-Date:   Tue,  1 Sep 2020 17:10:30 +0200
-Message-Id: <20200901151009.031885911@linuxfoundation.org>
+        stable@vger.kernel.org, Omar Sandoval <osandov@osandov.com>,
+        Boris Burkov <boris@bur.io>, David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.8 175/255] btrfs: detect nocow for swap after snapshot delete
+Date:   Tue,  1 Sep 2020 17:10:31 +0200
+Message-Id: <20200901151009.080285230@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,125 +59,181 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Boris Burkov <boris@bur.io>
 
-commit bbc37d6e475eee8ffa2156ec813efc6bbb43c06d upstream.
+commit a84d5d429f9eb56f81b388609841ed993f0ddfca upstream.
 
-If a transaction aborts it can cause a memory leak of the pages array of
-a block group's io_ctl structure. The following steps explain how that can
-happen:
+can_nocow_extent and btrfs_cross_ref_exist both rely on a heuristic for
+detecting a must cow condition which is not exactly accurate, but saves
+unnecessary tree traversal. The incorrect assumption is that if the
+extent was created in a generation smaller than the last snapshot
+generation, it must be referenced by that snapshot. That is true, except
+the snapshot could have since been deleted, without affecting the last
+snapshot generation.
 
-1) Transaction N is committing, currently in state TRANS_STATE_UNBLOCKED
-   and it's about to start writing out dirty extent buffers;
+The original patch claimed a performance win from this check, but it
+also leads to a bug where you are unable to use a swapfile if you ever
+snapshotted the subvolume it's in. Make the check slower and more strict
+for the swapon case, without modifying the general cow checks as a
+compromise. Turning swap on does not seem to be a particularly
+performance sensitive operation, so incurring a possibly unnecessary
+btrfs_search_slot seems worthwhile for the added usability.
 
-2) Transaction N + 1 already started and another task, task A, just called
-   btrfs_commit_transaction() on it;
+Note: Until the snapshot is competely cleaned after deletion,
+check_committed_refs will still cause the logic to think that cow is
+necessary, so the user must until 'btrfs subvolu sync' finished before
+activating the swapfile swapon.
 
-3) Block group B was dirtied (extents allocated from it) by transaction
-   N + 1, so when task A calls btrfs_start_dirty_block_groups(), at the
-   very beginning of the transaction commit, it starts writeback for the
-   block group's space cache by calling btrfs_write_out_cache(), which
-   allocates the pages array for the block group's io_ctl with a call to
-   io_ctl_init(). Block group A is added to the io_list of transaction
-   N + 1 by btrfs_start_dirty_block_groups();
-
-4) While transaction N's commit is writing out the extent buffers, it gets
-   an IO error and aborts transaction N, also setting the file system to
-   RO mode;
-
-5) Task A has already returned from btrfs_start_dirty_block_groups(), is at
-   btrfs_commit_transaction() and has set transaction N + 1 state to
-   TRANS_STATE_COMMIT_START. Immediately after that it checks that the
-   filesystem was turned to RO mode, due to transaction N's abort, and
-   jumps to the "cleanup_transaction" label. After that we end up at
-   btrfs_cleanup_one_transaction() which calls btrfs_cleanup_dirty_bgs().
-   That helper finds block group B in the transaction's io_list but it
-   never releases the pages array of the block group's io_ctl, resulting in
-   a memory leak.
-
-In fact at the point when we are at btrfs_cleanup_dirty_bgs(), the pages
-array points to pages that were already released by us at
-__btrfs_write_out_cache() through the call to io_ctl_drop_pages(). We end
-up freeing the pages array only after waiting for the ordered extent to
-complete through btrfs_wait_cache_io(), which calls io_ctl_free() to do
-that. But in the transaction abort case we don't wait for the space cache's
-ordered extent to complete through a call to btrfs_wait_cache_io(), so
-that's why we end up with a memory leak - we wait for the ordered extent
-to complete indirectly by shutting down the work queues and waiting for
-any jobs in them to complete before returning from close_ctree().
-
-We can solve the leak simply by freeing the pages array right after
-releasing the pages (with the call to io_ctl_drop_pages()) at
-__btrfs_write_out_cache(), since we will never use it anymore after that
-and the pages array points to already released pages at that point, which
-is currently not a problem since no one will use it after that, but not a
-good practice anyway since it can easily lead to use-after-free issues.
-
-So fix this by freeing the pages array right after releasing the pages at
-__btrfs_write_out_cache().
-
-This issue can often be reproduced with test case generic/475 from fstests
-and kmemleak can detect it and reports it with the following trace:
-
-unreferenced object 0xffff9bbf009fa600 (size 512):
-  comm "fsstress", pid 38807, jiffies 4298504428 (age 22.028s)
-  hex dump (first 32 bytes):
-    00 a0 7c 4d 3d ed ff ff 40 a0 7c 4d 3d ed ff ff  ..|M=...@.|M=...
-    80 a0 7c 4d 3d ed ff ff c0 a0 7c 4d 3d ed ff ff  ..|M=.....|M=...
-  backtrace:
-    [<00000000f4b5cfe2>] __kmalloc+0x1a8/0x3e0
-    [<0000000028665e7f>] io_ctl_init+0xa7/0x120 [btrfs]
-    [<00000000a1f95b2d>] __btrfs_write_out_cache+0x86/0x4a0 [btrfs]
-    [<00000000207ea1b0>] btrfs_write_out_cache+0x7f/0xf0 [btrfs]
-    [<00000000af21f534>] btrfs_start_dirty_block_groups+0x27b/0x580 [btrfs]
-    [<00000000c3c23d44>] btrfs_commit_transaction+0xa6f/0xe70 [btrfs]
-    [<000000009588930c>] create_subvol+0x581/0x9a0 [btrfs]
-    [<000000009ef2fd7f>] btrfs_mksubvol+0x3fb/0x4a0 [btrfs]
-    [<00000000474e5187>] __btrfs_ioctl_snap_create+0x119/0x1a0 [btrfs]
-    [<00000000708ee349>] btrfs_ioctl_snap_create_v2+0xb0/0xf0 [btrfs]
-    [<00000000ea60106f>] btrfs_ioctl+0x12c/0x3130 [btrfs]
-    [<000000005c923d6d>] __x64_sys_ioctl+0x83/0xb0
-    [<0000000043ace2c9>] do_syscall_64+0x33/0x80
-    [<00000000904efbce>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
+CC: stable@vger.kernel.org # 5.4+
+Suggested-by: Omar Sandoval <osandov@osandov.com>
+Signed-off-by: Boris Burkov <boris@bur.io>
 Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/disk-io.c          |    1 +
- fs/btrfs/free-space-cache.c |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ fs/btrfs/ctree.h       |    4 ++--
+ fs/btrfs/extent-tree.c |   17 +++++++++++------
+ fs/btrfs/file.c        |    2 +-
+ fs/btrfs/inode.c       |   16 +++++++++-------
+ 4 files changed, 23 insertions(+), 16 deletions(-)
 
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -4574,6 +4574,7 @@ static void btrfs_cleanup_bg_io(struct b
- 		cache->io_ctl.inode = NULL;
- 		iput(inode);
- 	}
-+	ASSERT(cache->io_ctl.pages == NULL);
- 	btrfs_put_block_group(cache);
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -2468,7 +2468,7 @@ int btrfs_pin_extent_for_log_replay(stru
+ 				    u64 bytenr, u64 num_bytes);
+ int btrfs_exclude_logged_extents(struct extent_buffer *eb);
+ int btrfs_cross_ref_exist(struct btrfs_root *root,
+-			  u64 objectid, u64 offset, u64 bytenr);
++			  u64 objectid, u64 offset, u64 bytenr, bool strict);
+ struct extent_buffer *btrfs_alloc_tree_block(struct btrfs_trans_handle *trans,
+ 					     struct btrfs_root *root,
+ 					     u64 parent, u64 root_objectid,
+@@ -2854,7 +2854,7 @@ struct extent_map *btrfs_get_extent_fiem
+ 					   u64 start, u64 len);
+ noinline int can_nocow_extent(struct inode *inode, u64 offset, u64 *len,
+ 			      u64 *orig_start, u64 *orig_block_len,
+-			      u64 *ram_bytes);
++			      u64 *ram_bytes, bool strict);
+ 
+ void __btrfs_del_delalloc_inode(struct btrfs_root *root,
+ 				struct btrfs_inode *inode);
+--- a/fs/btrfs/extent-tree.c
++++ b/fs/btrfs/extent-tree.c
+@@ -2306,7 +2306,8 @@ static noinline int check_delayed_ref(st
+ 
+ static noinline int check_committed_ref(struct btrfs_root *root,
+ 					struct btrfs_path *path,
+-					u64 objectid, u64 offset, u64 bytenr)
++					u64 objectid, u64 offset, u64 bytenr,
++					bool strict)
+ {
+ 	struct btrfs_fs_info *fs_info = root->fs_info;
+ 	struct btrfs_root *extent_root = fs_info->extent_root;
+@@ -2348,9 +2349,13 @@ static noinline int check_committed_ref(
+ 	    btrfs_extent_inline_ref_size(BTRFS_EXTENT_DATA_REF_KEY))
+ 		goto out;
+ 
+-	/* If extent created before last snapshot => it's definitely shared */
+-	if (btrfs_extent_generation(leaf, ei) <=
+-	    btrfs_root_last_snapshot(&root->root_item))
++	/*
++	 * If extent created before last snapshot => it's shared unless the
++	 * snapshot has been deleted. Use the heuristic if strict is false.
++	 */
++	if (!strict &&
++	    (btrfs_extent_generation(leaf, ei) <=
++	     btrfs_root_last_snapshot(&root->root_item)))
+ 		goto out;
+ 
+ 	iref = (struct btrfs_extent_inline_ref *)(ei + 1);
+@@ -2375,7 +2380,7 @@ out:
  }
  
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -1186,7 +1186,6 @@ static int __btrfs_wait_cache_io(struct
- 	ret = update_cache_item(trans, root, inode, path, offset,
- 				io_ctl->entries, io_ctl->bitmaps);
- out:
--	io_ctl_free(io_ctl);
- 	if (ret) {
- 		invalidate_inode_pages2(inode->i_mapping);
- 		BTRFS_I(inode)->generation = 0;
-@@ -1346,6 +1345,7 @@ static int __btrfs_write_out_cache(struc
- 	 * them out later
- 	 */
- 	io_ctl_drop_pages(io_ctl);
-+	io_ctl_free(io_ctl);
+ int btrfs_cross_ref_exist(struct btrfs_root *root, u64 objectid, u64 offset,
+-			  u64 bytenr)
++			  u64 bytenr, bool strict)
+ {
+ 	struct btrfs_path *path;
+ 	int ret;
+@@ -2386,7 +2391,7 @@ int btrfs_cross_ref_exist(struct btrfs_r
  
- 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, 0,
- 			     i_size_read(inode) - 1, &cached_state);
+ 	do {
+ 		ret = check_committed_ref(root, path, objectid,
+-					  offset, bytenr);
++					  offset, bytenr, strict);
+ 		if (ret && ret != -ENOENT)
+ 			goto out;
+ 
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1568,7 +1568,7 @@ int btrfs_check_can_nocow(struct btrfs_i
+ 	}
+ 
+ 	ret = can_nocow_extent(&inode->vfs_inode, lockstart, &num_bytes,
+-			NULL, NULL, NULL);
++			NULL, NULL, NULL, false);
+ 	if (ret <= 0) {
+ 		ret = 0;
+ 		if (!nowait)
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -1611,7 +1611,7 @@ next_slot:
+ 				goto out_check;
+ 			ret = btrfs_cross_ref_exist(root, ino,
+ 						    found_key.offset -
+-						    extent_offset, disk_bytenr);
++						    extent_offset, disk_bytenr, false);
+ 			if (ret) {
+ 				/*
+ 				 * ret could be -EIO if the above fails to read
+@@ -6957,7 +6957,7 @@ static struct extent_map *btrfs_new_exte
+  */
+ noinline int can_nocow_extent(struct inode *inode, u64 offset, u64 *len,
+ 			      u64 *orig_start, u64 *orig_block_len,
+-			      u64 *ram_bytes)
++			      u64 *ram_bytes, bool strict)
+ {
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	struct btrfs_path *path;
+@@ -7035,8 +7035,9 @@ noinline int can_nocow_extent(struct ino
+ 	 * Do the same check as in btrfs_cross_ref_exist but without the
+ 	 * unnecessary search.
+ 	 */
+-	if (btrfs_file_extent_generation(leaf, fi) <=
+-	    btrfs_root_last_snapshot(&root->root_item))
++	if (!strict &&
++	    (btrfs_file_extent_generation(leaf, fi) <=
++	     btrfs_root_last_snapshot(&root->root_item)))
+ 		goto out;
+ 
+ 	backref_offset = btrfs_file_extent_offset(leaf, fi);
+@@ -7072,7 +7073,8 @@ noinline int can_nocow_extent(struct ino
+ 	 */
+ 
+ 	ret = btrfs_cross_ref_exist(root, btrfs_ino(BTRFS_I(inode)),
+-				    key.offset - backref_offset, disk_bytenr);
++				    key.offset - backref_offset, disk_bytenr,
++				    strict);
+ 	if (ret) {
+ 		ret = 0;
+ 		goto out;
+@@ -7293,7 +7295,7 @@ static int btrfs_get_blocks_direct_write
+ 		block_start = em->block_start + (start - em->start);
+ 
+ 		if (can_nocow_extent(inode, start, &len, &orig_start,
+-				     &orig_block_len, &ram_bytes) == 1 &&
++				     &orig_block_len, &ram_bytes, false) == 1 &&
+ 		    btrfs_inc_nocow_writers(fs_info, block_start)) {
+ 			struct extent_map *em2;
+ 
+@@ -10103,7 +10105,7 @@ static int btrfs_swap_activate(struct sw
+ 		free_extent_map(em);
+ 		em = NULL;
+ 
+-		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL);
++		ret = can_nocow_extent(inode, start, &len, NULL, NULL, NULL, true);
+ 		if (ret < 0) {
+ 			goto out;
+ 		} else if (ret) {
 
 
