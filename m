@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2AF8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E06AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC60206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6083206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976124;
-	bh=rMIaUkbwsXlDXRDktehm3F7/SiCBsyj9jRFyFLhGohk=;
+	s=default; t=1598976131;
+	bh=lFb2Q2xM9c4Y7D6VE/bsVUu/YFedlovtL8eR4vN3fhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cMJYFXU8brXuNYYb/fRbd2JJXPVbiHaZ2V2hiy/OtJNm5DGePfzOqSpoLyDsVx0um
-	 Aiyim70jU7ZERgFk+5At+woS+PjTBGdZaiam9qkJMVIjwcL/j6RWImjFCHor6kc+3r
-	 5+YEz+rp+IwVRXMGQ8f+comFpty3W6ydK8RnFf+c=
+	b=dHhiaOerhmnUWzr95uqCUDPfXZvTOY3m1NbakeJwg31IowXncDSGPDjg8SvhfLkH6
+	 R7V9idcqfboHeWi2Ht7YweA80zjgC1oFyo0NSifXyifZOUR0iU4i1sJhpf6finYxEV
+	 HUNhQFCCygpHhIKSduZpf5bcmCCti9o6YwGBho+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbgIAPnz (ORCPT
+        id S1731706AbgIAQCH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:43:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52946 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:02:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731230AbgIAPlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:10 -0400
+        id S1729998AbgIAPny (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:43:54 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE092207D3;
-        Tue,  1 Sep 2020 15:41:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 023122064B;
+        Tue,  1 Sep 2020 15:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974869;
-        bh=rMIaUkbwsXlDXRDktehm3F7/SiCBsyj9jRFyFLhGohk=;
+        s=default; t=1598975033;
+        bh=lFb2Q2xM9c4Y7D6VE/bsVUu/YFedlovtL8eR4vN3fhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2NDKWrmyLq7hrMqN09cdpNRj3LYkdt8pCAzLMWGfDFy9vZHTIVHogITOCZ6GRLrfF
-         INy6BfCWpYiNSYEr9uHYP9CO+JtMOaT4T86S5BA34qe9jZV39niFZYyu43CEdZDuXh
-         s8QZMJ2LpW2O5TYUFRq8PIOUj46lFHpTEFXqDscA=
+        b=cG1NJbwMzo621lVACqSys9OUKyi1JhJ54PbjCtEr2p5BuAeV826hAB603PLNV1WRa
+         JgxfKJPW1wM70AtTBUTP4avEH86QR3EIOxFxOPjgAO6V4+F72V/bsvM7aeE4B/2tlH
+         X7pm6QFnEuffS2O1H9WKm1bmwGjIMVwGOrjTfDaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 091/255] hwmon: (nct7904) Correct divide by 0
-Date:   Tue,  1 Sep 2020 17:09:07 +0200
-Message-Id: <20200901151005.085204957@linuxfoundation.org>
+Subject: [PATCH 5.8 153/255] scsi: qla2xxx: Fix null pointer access during disconnect from subsystem
+Date:   Tue,  1 Sep 2020 17:10:09 +0200
+Message-Id: <20200901151008.021403229@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,61 +63,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+From: Quinn Tran <qutran@marvell.com>
 
-[ Upstream commit 8aebbbb2d573d0b4afc08b90ac7d73dba2d9da97 ]
+[ Upstream commit 83949613fac61e8e37eadf8275bf072342302f4e ]
 
-We hit a kernel panic due to a divide by 0 in nct7904_read_fan() for
-the hwmon_fan_min case. Extend the check to hwmon_fan_input case as well
-for safety.
+NVMEAsync command is being submitted to QLA while the same NVMe controller
+is in the middle of reset. The reset path has deleted the association and
+freed aen_op->fcp_req.private. Add a check for this private pointer before
+issuing the command.
 
-[ 1656.545650] divide error: 0000 [#1] SMP PTI
-[ 1656.545779] CPU: 12 PID: 18010 Comm: sensors Not tainted 5.4.47 #1
-[ 1656.546065] RIP: 0010:nct7904_read+0x1e9/0x510 [nct7904]
 ...
-[ 1656.546549] RAX: 0000000000149970 RBX: ffffbd6b86bcbe08 RCX: 0000000000000000
-...
-[ 1656.547548] Call Trace:
-[ 1656.547665]  hwmon_attr_show+0x32/0xd0 [hwmon]
-[ 1656.547783]  dev_attr_show+0x18/0x50
-[ 1656.547898]  sysfs_kf_seq_show+0x99/0x120
-[ 1656.548013]  seq_read+0xd8/0x3e0
-[ 1656.548127]  vfs_read+0x89/0x130
-[ 1656.548234]  ksys_read+0x7d/0xb0
-[ 1656.548342]  do_syscall_64+0x48/0x110
-[ 1656.548451]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ 6 [ffffb656ca11fce0] page_fault at ffffffff8c00114e
+    [exception RIP: qla_nvme_post_cmd+394]
+    RIP: ffffffffc0d012ba  RSP: ffffb656ca11fd98  RFLAGS: 00010206
+    RAX: ffff8fb039eda228  RBX: ffff8fb039eda200  RCX: 00000000000da161
+    RDX: ffffffffc0d4d0f0  RSI: ffffffffc0d26c9b  RDI: ffff8fb039eda220
+    RBP: 0000000000000013   R8: ffff8fb47ff6aa80   R9: 0000000000000002
+    R10: 0000000000000000  R11: ffffb656ca11fdc8  R12: ffff8fb27d04a3b0
+    R13: ffff8fc46dd98a58  R14: 0000000000000000  R15: ffff8fc4540f0000
+    ORIG_RAX: ffffffffffffffff  CS: 0010  SS: 0018
+ 7 [ffffb656ca11fe08] nvme_fc_start_fcp_op at ffffffffc0241568 [nvme_fc]
+ 8 [ffffb656ca11fe50] nvme_fc_submit_async_event at ffffffffc0241901 [nvme_fc]
+ 9 [ffffb656ca11fe68] nvme_async_event_work at ffffffffc014543d [nvme_core]
+10 [ffffb656ca11fe98] process_one_work at ffffffff8b6cd437
+11 [ffffb656ca11fed8] worker_thread at ffffffff8b6cdcef
+12 [ffffb656ca11ff10] kthread at ffffffff8b6d3402
+13 [ffffb656ca11ff50] ret_from_fork at ffffffff8c000255
 
-Fixes: d65a5102a99f5 ("hwmon: (nct7904) Convert to use new hwmon registration API")
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Link: https://lore.kernel.org/r/1598026814-2604-1-git-send-email-jbaron@akamai.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+--
+PID: 37824  TASK: ffff8fb033063d80  CPU: 20  COMMAND: "kworker/u97:451"
+ 0 [ffffb656ce1abc28] __schedule at ffffffff8be629e3
+ 1 [ffffb656ce1abcc8] schedule at ffffffff8be62fe8
+ 2 [ffffb656ce1abcd0] schedule_timeout at ffffffff8be671ed
+ 3 [ffffb656ce1abd70] wait_for_completion at ffffffff8be639cf
+ 4 [ffffb656ce1abdd0] flush_work at ffffffff8b6ce2d5
+ 5 [ffffb656ce1abe70] nvme_stop_ctrl at ffffffffc0144900 [nvme_core]
+ 6 [ffffb656ce1abe80] nvme_fc_reset_ctrl_work at ffffffffc0243445 [nvme_fc]
+ 7 [ffffb656ce1abe98] process_one_work at ffffffff8b6cd437
+ 8 [ffffb656ce1abed8] worker_thread at ffffffff8b6cdb50
+ 9 [ffffb656ce1abf10] kthread at ffffffff8b6d3402
+10 [ffffb656ce1abf50] ret_from_fork at ffffffff8c000255
+
+Link: https://lore.kernel.org/r/20200806111014.28434-10-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct7904.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qla2xxx/qla_nvme.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index b0425694f7022..242ff8bee78dd 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -231,7 +231,7 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
- 		if (ret < 0)
- 			return ret;
- 		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
--		if (cnt == 0x1fff)
-+		if (cnt == 0 || cnt == 0x1fff)
- 			rpm = 0;
- 		else
- 			rpm = 1350000 / cnt;
-@@ -243,7 +243,7 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
- 		if (ret < 0)
- 			return ret;
- 		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
--		if (cnt == 0x1fff)
-+		if (cnt == 0 || cnt == 0x1fff)
- 			rpm = 0;
- 		else
- 			rpm = 1350000 / cnt;
+diff --git a/drivers/scsi/qla2xxx/qla_nvme.c b/drivers/scsi/qla2xxx/qla_nvme.c
+index fa695a4007f86..262dfd7635a48 100644
+--- a/drivers/scsi/qla2xxx/qla_nvme.c
++++ b/drivers/scsi/qla2xxx/qla_nvme.c
+@@ -536,6 +536,11 @@ static int qla_nvme_post_cmd(struct nvme_fc_local_port *lport,
+ 	struct nvme_private *priv = fd->private;
+ 	struct qla_nvme_rport *qla_rport = rport->private;
+ 
++	if (!priv) {
++		/* nvme association has been torn down */
++		return rval;
++	}
++
+ 	fcport = qla_rport->fcport;
+ 
+ 	if (!qpair || !fcport || (qpair && !qpair->fw_started) ||
 -- 
 2.25.1
 
