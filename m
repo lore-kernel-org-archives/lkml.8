@@ -2,107 +2,163 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8625BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E9AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:58:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B58D207EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D9EC2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:58:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="02H760kZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbgIAU6A (ORCPT
+        id S1728959AbgIAU6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:58:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:50462 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbgIAU6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:58:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50D011063;
-        Tue,  1 Sep 2020 13:57:59 -0700 (PDT)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E72AA3F66F;
-        Tue,  1 Sep 2020 13:57:58 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 21:57:57 +0100
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     rjw@rjwysocki.net, dietmar.eggemann@arm.com,
-        catalin.marinas@arm.com, sudeep.holla@arm.com, will@kernel.org,
-        valentin.schneider@arm.com, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/5] arch_topology: validate input frequencies to
- arch_set_freq_scale()
-Message-ID: <20200901205757.GA31302@arm.com>
-References: <20200828173303.11939-1-ionela.voinescu@arm.com>
- <20200828173303.11939-2-ionela.voinescu@arm.com>
- <20200831111308.h5j652dnpgys2doe@vireshk-i7>
+        Tue, 1 Sep 2020 16:58:47 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:38807 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbgIAU6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 16:58:46 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 87A5684488;
+        Wed,  2 Sep 2020 08:58:41 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1598993921;
+        bh=pwwOTo4HjFxEhPfVBMM5/92LuLyxOWSNLA1cU8rOBYo=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=02H760kZKDvRLVPFCyqHZKQ1hg4g2He0ETd5//0atDfRwCsuEkBt/HLXAGpOYegP0
+         k+xsnhise8JrnjMMaWO8lSBhqVVnSNiVPcoC4ClRKo+UGG51daZFNELt8UNPsEagWG
+         tk2TO2y0jDcaOekRE6AmhDTVEj/aSpNH3ngyhfgi6vP71xgwrmzTPC489NvDv9835l
+         wYfDGaYF7Q2J/Egbh0n/3u8y86ISKPH0CkyjXM799srXJ42ZQc5VrevBYSXjyp+Zfq
+         DDDgZMHbQDySR8umg7n2098kb2IZRO2x821q0p0vbzzBiOqPzV3rrx2GcykJkyVSpd
+         6NPpyUAvaBU9Q==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5f4eb5ff0001>; Wed, 02 Sep 2020 08:58:39 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.2; Wed, 2 Sep 2020 08:58:41 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1497.006; Wed, 2 Sep 2020 08:58:41 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Evan Nimmo <Evan.Nimmo@alliedtelesis.co.nz>,
+        "wsa@kernel.org" <wsa@kernel.org>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "jdelvare@suse.de" <jdelvare@suse.de>,
+        "jarkko.nikula@linux.intel.com" <jarkko.nikula@linux.intel.com>
+CC:     "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
+Thread-Topic: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
+Thread-Index: AQHWf/rlsLodCzGj+0ymaR+eTrtgJqlTfDYA
+Date:   Tue, 1 Sep 2020 20:58:41 +0000
+Message-ID: <842bf7c4-3677-4182-4def-89f198e81fb7@alliedtelesis.co.nz>
+References: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
+In-Reply-To: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.32.1.11]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C0679069F136714B85EA9B9BBDDDDE1B@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831111308.h5j652dnpgys2doe@vireshk-i7>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
-
-On Monday 31 Aug 2020 at 16:43:08 (+0530), Viresh Kumar wrote:
-> On 28-08-20, 18:32, Ionela Voinescu wrote:
-> > The current frequency passed to arch_set_freq_scale() could end up
-> > being 0, signaling an error in setting a new frequency. Also, if the
-> > maximum frequency in 0, this will result in a division by 0 error.
-> > 
-> > Therefore, validate these input values before using them for the
-> > setting of the frequency scale factor.
-> > 
-> > Signed-off-by: Ionela Voinescu <ionela.voinescu@arm.com>
-> > Cc: Sudeep Holla <sudeep.holla@arm.com>
-> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > ---
-> >  drivers/base/arch_topology.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> > index 75f72d684294..5708eb724790 100644
-> > --- a/drivers/base/arch_topology.c
-> > +++ b/drivers/base/arch_topology.c
-> > @@ -33,6 +33,11 @@ void arch_set_freq_scale(struct cpumask *cpus, unsigned long cur_freq,
-> >  	unsigned long scale;
-> >  	int i;
-> >  
-> > +	if (unlikely(!cur_freq || !max_freq)) {
-> > +		WARN_ON_ONCE(1);
-> > +		return;
-> > +	}
-> 
-> This can be written as:
-> 
->         if (WARN_ON_ONCE(!cur_freq || !max_freq))
->                 return;
-
-Yes, that's better.
-
-I've pushed v5 with this and your Acked-by.
-
-Thanks for all your reviews,
-Ionela.
-
-> 
-> With that.
-> 
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> > +
-> >  	/*
-> >  	 * If the use of counters for FIE is enabled, just return as we don't
-> >  	 * want to update the scale factor with information from CPUFREQ.
-> > -- 
-> > 2.17.1
-> 
-> -- 
-> viresh
+SGkgRXZhbiwNCg0KT25lIG1pbm9yIGNvbW1lbnQgZnJvbSBtZSBiZWxvdy4gV2l0aCB0aGF0DQoN
+ClJldmlld2VkLWJ5OiBDaHJpcyBQYWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMu
+Y28ubno+DQoNCk9uIDEvMDkvMjAgMTI6NTcgcG0sIEV2YW4gTmltbW8gd3JvdGU6DQo+IElmIHNv
+bWV0aGluZyBnb2VzIHdyb25nIChzdWNoIGFzIHRoZSBTQ0wgYmVpbmcgc3R1Y2sgbG93KSB0aGVu
+IHdlIG5lZWQNCj4gdG8gcmVzZXQgdGhlIHBjYSBjaGlwLiBUaGUgaXNzdWUgd2l0aCB0aGlzIGlz
+IHRoYXQgb24gcmVzZXQgd2UgbG9zZSBhbGwNCj4gY29uZmlnIHNldHRpbmdzIGFuZCB0aGUgY2hp
+cCBlbmRzIHVwIGluIGEgZGlzYWJsZWQgc3RhdGUgd2hpY2ggcmVzdWx0cw0KPiBpbiBhIGxvY2sg
+dXAvaGlnaCBjcHUgdXNhZ2UuIFdlIG5lZWQgdG8gcmUtYXBwbHkgYW55IGNvbmZpZ3VyYXRpb24g
+dGhhdA0KPiBoYWQgcHJldmlvdXNseSBiZWVuIHNldCBhbmQgcmUtZW5hYmxlIHRoZSBjaGlwLg0K
+Pg0KPiBTaWduZWQtb2ZmLWJ5OiBFdmFuIE5pbW1vIDxldmFuLm5pbW1vQGFsbGllZHRlbGVzaXMu
+Y28ubno+DQo+IC0tLQ0KPiAgIGRyaXZlcnMvaTJjL2FsZ29zL2kyYy1hbGdvLXBjYS5jIHwgMzYg
+KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gICBpbmNsdWRlL2xpbnV4L2kyYy1h
+bGdvLXBjYS5oICAgICB8IDE1ICsrKysrKysrKysrKysNCj4gICAyIGZpbGVzIGNoYW5nZWQsIDM5
+IGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KPg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9pMmMvYWxnb3MvaTJjLWFsZ28tcGNhLmMgYi9kcml2ZXJzL2kyYy9hbGdvcy9pMmMtYWxnby1w
+Y2EuYw0KPiBpbmRleCA3MTBmYmVmOWE5YzIuLjJlNGUyNzA3M2Y0MCAxMDA2NDQNCj4gLS0tIGEv
+ZHJpdmVycy9pMmMvYWxnb3MvaTJjLWFsZ28tcGNhLmMNCj4gKysrIGIvZHJpdmVycy9pMmMvYWxn
+b3MvaTJjLWFsZ28tcGNhLmMNCj4gQEAgLTQxLDggKzQxLDIyIEBAIHN0YXRpYyB2b2lkIHBjYV9y
+ZXNldChzdHJ1Y3QgaTJjX2FsZ29fcGNhX2RhdGEgKmFkYXApDQo+ICAgCQlwY2Ffb3V0dyhhZGFw
+LCBJMkNfUENBX0lORFBUUiwgSTJDX1BDQV9JUFJFU0VUKTsNCj4gICAJCXBjYV9vdXR3KGFkYXAs
+IEkyQ19QQ0FfSU5ELCAweEE1KTsNCj4gICAJCXBjYV9vdXR3KGFkYXAsIEkyQ19QQ0FfSU5ELCAw
+eDVBKTsNCj4gKw0KPiArCQkvKiBXZSBuZWVkIHRvIGFwcGx5IGFueSBjb25maWd1cmF0aW9uIHNl
+dHRpbmdzIHRoYXQNCj4gKwkJICogd2VyZSBjYWxjdWxhdGVkIGluIHRoZSBwY2FfaW5pdCBmdW5j
+dGlvbi4gVGhlIHJlc2V0DQo+ICsJCSAqIHJlc3VsdHMgaW4gdGhlc2UgY2hhbmdlcyBiZWluZyBz
+ZXQgYmFjayB0byBkZWZhdWx0cy4NCj4gKwkJICovDQoNCiJ0aGVzZSBjaGFuZ2VzIiBkb2Vzbid0
+IHJlYWQgd2VsbC4gSG93IGFib3V0DQoNCi8qDQogwqAqIEFmdGVyIGEgcmVzZXQgd2UgbmVlZCB0
+byByZS1hcHBseSBhbnkgY29uZmlndXJhdGlvbiAoY2FsY3VsYXRlZCBpbiANCnBjYV9pbml0KQ0K
+IMKgKiB0byBnZXQgdGhlIGJ1cyBpbiBhIHdvcmtpbmcgc3RhdGUuDQogwqAqLw0KDQo+ICsJCXBj
+YV9vdXR3KGFkYXAsIEkyQ19QQ0FfSU5EUFRSLCBJMkNfUENBX0lNT0RFKTsNCj4gKwkJcGNhX291
+dHcoYWRhcCwgSTJDX1BDQV9JTkQsIGFkYXAtPmJ1c19zZXR0aW5ncy5tb2RlKTsNCj4gKwkJcGNh
+X291dHcoYWRhcCwgSTJDX1BDQV9JTkRQVFIsIEkyQ19QQ0FfSVNDTEwpOw0KPiArCQlwY2Ffb3V0
+dyhhZGFwLCBJMkNfUENBX0lORCwgYWRhcC0+YnVzX3NldHRpbmdzLnRsb3cpOw0KPiArCQlwY2Ff
+b3V0dyhhZGFwLCBJMkNfUENBX0lORFBUUiwgSTJDX1BDQV9JU0NMSCk7DQo+ICsJCXBjYV9vdXR3
+KGFkYXAsIEkyQ19QQ0FfSU5ELCBhZGFwLT5idXNfc2V0dGluZ3MudGhpKTsNCj4gKw0KPiArCQlw
+Y2Ffc2V0X2NvbihhZGFwLCBJMkNfUENBX0NPTl9FTlNJTyk7DQo+ICAgCX0gZWxzZSB7DQo+ICAg
+CQlhZGFwLT5yZXNldF9jaGlwKGFkYXAtPmRhdGEpOw0KPiArCQlwY2Ffc2V0X2NvbihhZGFwLCBJ
+MkNfUENBX0NPTl9FTlNJTyB8IGFkYXAtPmJ1c19zZXR0aW5ncy5jbG9ja19mcmVxKTsNCj4gICAJ
+fQ0KPiAgIH0NCj4gICANCj4gQEAgLTQyMywxMyArNDM3LDE1IEBAIHN0YXRpYyBpbnQgcGNhX2lu
+aXQoc3RydWN0IGkyY19hZGFwdGVyICphZGFwKQ0KPiAgIAkJCQkiIFVzZSB0aGUgbm9taW5hbCBm
+cmVxdWVuY3kuXG4iLCBhZGFwLT5uYW1lKTsNCj4gICAJCX0NCj4gICANCj4gKwkJY2xvY2sgPSBw
+Y2FfY2xvY2socGNhX2RhdGEpOw0KPiArDQo+ICsJCS8qIFN0b3JlIHNldHRpbmdzIGFzIHRoZXNl
+IHdpbGwgYmUgbmVlZGVkIHdoZW4gdGhlIHBjYSBjaGlwIGlzIHJlc2V0ICovDQo+ICsJCXBjYV9k
+YXRhLT5idXNfc2V0dGluZ3MuY2xvY2tfZnJlcSA9IGNsb2NrOw0KPiArDQo+ICAgCQlwY2FfcmVz
+ZXQocGNhX2RhdGEpOw0KPiAgIA0KPiAtCQljbG9jayA9IHBjYV9jbG9jayhwY2FfZGF0YSk7DQo+
+ICAgCQlwcmludGsoS0VSTl9JTkZPICIlczogQ2xvY2sgZnJlcXVlbmN5IGlzICVka0h6XG4iLA0K
+PiAgIAkJICAgICBhZGFwLT5uYW1lLCBmcmVxc1tjbG9ja10pOw0KPiAtDQo+IC0JCXBjYV9zZXRf
+Y29uKHBjYV9kYXRhLCBJMkNfUENBX0NPTl9FTlNJTyB8IGNsb2NrKTsNCj4gICAJfSBlbHNlIHsN
+Cj4gICAJCWludCBjbG9jazsNCj4gICAJCWludCBtb2RlOw0KPiBAQCAtNDk2LDE5ICs1MTIsMTUg
+QEAgc3RhdGljIGludCBwY2FfaW5pdChzdHJ1Y3QgaTJjX2FkYXB0ZXIgKmFkYXApDQo+ICAgCQkJ
+dGhpID0gdGxvdyAqIG1pbl90aGkgLyBtaW5fdGxvdzsNCj4gICAJCX0NCj4gICANCj4gKwkJLyog
+U3RvcmUgc2V0dGluZ3MgYXMgdGhlc2Ugd2lsbCBiZSBuZWVkZWQgd2hlbiB0aGUgcGNhIGNoaXAg
+aXMgcmVzZXQgKi8NCj4gKwkJcGNhX2RhdGEtPmJ1c19zZXR0aW5ncy5tb2RlID0gbW9kZTsNCj4g
+KwkJcGNhX2RhdGEtPmJ1c19zZXR0aW5ncy50bG93ID0gdGxvdzsNCj4gKwkJcGNhX2RhdGEtPmJ1
+c19zZXR0aW5ncy50aGkgPSB0aGk7DQo+ICsNCj4gICAJCXBjYV9yZXNldChwY2FfZGF0YSk7DQo+
+ICAgDQo+ICAgCQlwcmludGsoS0VSTl9JTkZPDQo+ICAgCQkgICAgICIlczogQ2xvY2sgZnJlcXVl
+bmN5IGlzICVkSHpcbiIsIGFkYXAtPm5hbWUsIGNsb2NrICogMTAwKTsNCj4gLQ0KPiAtCQlwY2Ff
+b3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9JTkRQVFIsIEkyQ19QQ0FfSU1PREUpOw0KPiAtCQlwY2Ff
+b3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9JTkQsIG1vZGUpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0
+YSwgSTJDX1BDQV9JTkRQVFIsIEkyQ19QQ0FfSVNDTEwpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0
+YSwgSTJDX1BDQV9JTkQsIHRsb3cpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9J
+TkRQVFIsIEkyQ19QQ0FfSVNDTEgpOw0KPiAtCQlwY2Ffb3V0dyhwY2FfZGF0YSwgSTJDX1BDQV9J
+TkQsIHRoaSk7DQo+IC0NCj4gLQkJcGNhX3NldF9jb24ocGNhX2RhdGEsIEkyQ19QQ0FfQ09OX0VO
+U0lPKTsNCj4gICAJfQ0KPiAgIAl1ZGVsYXkoNTAwKTsgLyogNTAwIHVzIGZvciBvc2NpbGxhdG9y
+IHRvIHN0YWJpbGlzZSAqLw0KPiAgIA0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9pMmMt
+YWxnby1wY2EuaCBiL2luY2x1ZGUvbGludXgvaTJjLWFsZ28tcGNhLmgNCj4gaW5kZXggZDAzMDcx
+NzMyZGI0Li5lYmVhZGI4MGM3OTcgMTAwNjQ0DQo+IC0tLSBhL2luY2x1ZGUvbGludXgvaTJjLWFs
+Z28tcGNhLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9pMmMtYWxnby1wY2EuaA0KPiBAQCAtNTMs
+NiArNTMsMjAgQEANCj4gICAjZGVmaW5lIEkyQ19QQ0FfQ09OX1NJCQkweDA4IC8qIFNlcmlhbCBJ
+bnRlcnJ1cHQgKi8NCj4gICAjZGVmaW5lIEkyQ19QQ0FfQ09OX0NSCQkweDA3IC8qIENsb2NrIFJh
+dGUgKE1BU0spICovDQo+ICAgDQo+ICsvKioNCj4gKyAqIHN0cnVjdCBpMmNfYnVzX3NldHRpbmdz
+IC0gVGhlIGNvbmZpZ3VyZWQgaTJjIGJ1cyBzZXR0aW5ncw0KPiArICogQG1vZGU6IENvbmZpZ3Vy
+ZWQgaTJjIGJ1cyBtb2RlIChQQ0E5NjY1KQ0KPiArICogQHRsb3c6IENvbmZpZ3VyZWQgU0NMIExP
+VyBwZXJpb2QgKFBDQTk2NjUpDQo+ICsgKiBAdGhpOiBDb25maWd1cmVkIFNDTCBISUdIIHBlcmlv
+ZCAoUENBOTY2NSkNCj4gKyAqIEBjbG9ja19mcmVxOiBUaGUgY29uZmlndXJlZCBjbG9jayBmcmVx
+dWVuY3kgKFBDQTk1NjQpDQo+ICsgKi8NCj4gK3N0cnVjdCBpMmNfYnVzX3NldHRpbmdzIHsNCj4g
+KwlpbnQgbW9kZTsNCj4gKwlpbnQgdGxvdzsNCj4gKwlpbnQgdGhpOw0KPiArCWludCBjbG9ja19m
+cmVxOw0KPiArfTsNCj4gKw0KPiAgIHN0cnVjdCBpMmNfYWxnb19wY2FfZGF0YSB7DQo+ICAgCXZv
+aWQgCQkJCSpkYXRhOwkvKiBwcml2YXRlIGxvdyBsZXZlbCBkYXRhICovDQo+ICAgCXZvaWQgKCp3
+cml0ZV9ieXRlKQkJKHZvaWQgKmRhdGEsIGludCByZWcsIGludCB2YWwpOw0KPiBAQCAtNjQsNiAr
+NzgsNyBAQCBzdHJ1Y3QgaTJjX2FsZ29fcGNhX2RhdGEgew0KPiAgIAkgKiBGb3IgUENBOTY2NSwg
+dXNlIHRoZSBmcmVxdWVuY3kgeW91IHdhbnQgaGVyZS4gKi8NCj4gICAJdW5zaWduZWQgaW50CQkJ
+aTJjX2Nsb2NrOw0KPiAgIAl1bnNpZ25lZCBpbnQJCQljaGlwOw0KPiArCXN0cnVjdCBpMmNfYnVz
+X3NldHRpbmdzCQlidXNfc2V0dGluZ3M7DQo+ICAgfTsNCj4gICANCj4gICBpbnQgaTJjX3BjYV9h
+ZGRfYnVzKHN0cnVjdCBpMmNfYWRhcHRlciAqKTs=
