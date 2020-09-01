@@ -2,52 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 989A4C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D7CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70A5C206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 764A9206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973254;
-	bh=Lryw0f1Nbw9zOBSfGU+aYbC7z1GWIMz3wMR7aAvU97E=;
+	s=default; t=1598973260;
+	bh=FresQJ+8YrzQahGXKniizpkZbx4mcAjvUTHqjSRmheQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7oPFZxcewCZGaq8dHWhbT/mcct5Y9nGQ8cDicOBRWSLizVebgMWtA4UMv410Ujtf
-	 UMw7BoQHqslCKXaCnW16PS5vQb60T/pFn5R6YuRXU/Z6FD/JILz+yU7Dt5rdwROArs
-	 UkaCRqTsaRc42a8P/V6Vpo3klsHkkdL4ySG+RRnk=
+	b=VUnEPD7NQa/Gd2maxlnPV5fbLNS2QnAEN1ojXh34Mcnw/qGS8kddnHbMHtqP5fICq
+	 mG9+3v7W+n35lk25SDOhf11BejW+egTv6xyD4Bj3FnvgLhOTY0Z+JJFilNoGoVqS5S
+	 yhP88vrXgavEBtCBSs3Q/xyk8tua54dFWWNj08J0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbgIAPOK (ORCPT
+        id S1727992AbgIAPOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:14:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56586 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728820AbgIAPNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:13:30 -0400
+        id S1728894AbgIAPNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:13:33 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48EBE2100A;
-        Tue,  1 Sep 2020 15:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0A40206FA;
+        Tue,  1 Sep 2020 15:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973209;
-        bh=Lryw0f1Nbw9zOBSfGU+aYbC7z1GWIMz3wMR7aAvU97E=;
+        s=default; t=1598973212;
+        bh=FresQJ+8YrzQahGXKniizpkZbx4mcAjvUTHqjSRmheQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r4oWSbahtE37tMwQhnNVGqDHPpeQBCQuzepITKiBL+rPlZ5Bk+U2ji80szi+25n6v
-         GIrqqsxHR/HbHxuW1HfOWpm5S8W9BGL11CMRkB8PEKwH/y7OfjNrLUW2bSaU1VxpWq
-         mrGbviZ+F8V4drcgk3QcGVd3I8CJuCsZ4bHfIhaM=
+        b=zHHaR4cbC3NhsiwTdO6gQcGPAkWikuuTFIxVivN85AEYsZQKETibcyALce7Vl6+hT
+         U2LL18Q1hcrVE6NR0AKTMDdJVWiDwWgkxZ9rt/ZYMctP9fzyf7AYZJyiPJxEDKTCji
+         Vcytge+zt9clkIzJifthoj8hy5/O87hD9EQkr8tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Roman Shaposhnik <roman@zededa.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juergen Gross <jgross@suse.com>
-Subject: [PATCH 4.4 50/62] XEN uses irqdesc::irq_data_common::handler_data to store a per interrupt XEN data pointer which contains XEN specific information.
-Date:   Tue,  1 Sep 2020 17:10:33 +0200
-Message-Id: <20200901150923.247002384@linuxfoundation.org>
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 24/62] locking/lockdep: Fix overflow in presentation of average lock-time
+Date:   Tue,  1 Sep 2020 17:10:07 +0200
+Message-Id: <20200901150921.947389189@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -60,107 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit c330fb1ddc0a922f044989492b7fcca77ee1db46 upstream.
+[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
 
-handler data is meant for interrupt handlers and not for storing irq chip
-specific information as some devices require handler data to store internal
-per interrupt information, e.g. pinctrl/GPIO chained interrupt handlers.
+Though the number of lock-acquisitions is tracked as unsigned long, this
+is passed as the divisor to div_s64() which interprets it as a s32,
+giving nonsense values with more than 2 billion acquisitons. E.g.
 
-This obviously creates a conflict of interests and crashes the machine
-because the XEN pointer is overwritten by the driver pointer.
+  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+  -------------------------------------------------------------------------
+    2350439395           0.07         353.38   649647067.36          0.-32
 
-As the XEN data is not handler specific it should be stored in
-irqdesc::irq_data::chip_data instead.
-
-A simple sed s/irq_[sg]et_handler_data/irq_[sg]et_chip_data/ cures that.
-
-Cc: stable@vger.kernel.org
-Reported-by: Roman Shaposhnik <roman@zededa.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Roman Shaposhnik <roman@zededa.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Link: https://lore.kernel.org/r/87lfi2yckt.fsf@nanos.tec.linutronix.de
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/xen/events/events_base.c |   16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ kernel/locking/lockdep_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/xen/events/events_base.c
-+++ b/drivers/xen/events/events_base.c
-@@ -155,7 +155,7 @@ int get_evtchn_to_irq(unsigned evtchn)
- /* Get info for IRQ */
- struct irq_info *info_for_irq(unsigned irq)
- {
--	return irq_get_handler_data(irq);
-+	return irq_get_chip_data(irq);
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 35b34eccdd109..9484f934aa349 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -423,7 +423,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
+ 	seq_time(m, lt->min);
+ 	seq_time(m, lt->max);
+ 	seq_time(m, lt->total);
+-	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
++	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
  }
  
- /* Constructors for packed IRQ information. */
-@@ -384,7 +384,7 @@ static void xen_irq_init(unsigned irq)
- 	info->type = IRQT_UNBOUND;
- 	info->refcnt = -1;
- 
--	irq_set_handler_data(irq, info);
-+	irq_set_chip_data(irq, info);
- 
- 	list_add_tail(&info->list, &xen_irq_list_head);
- }
-@@ -433,14 +433,14 @@ static int __must_check xen_allocate_irq
- 
- static void xen_free_irq(unsigned irq)
- {
--	struct irq_info *info = irq_get_handler_data(irq);
-+	struct irq_info *info = irq_get_chip_data(irq);
- 
- 	if (WARN_ON(!info))
- 		return;
- 
- 	list_del(&info->list);
- 
--	irq_set_handler_data(irq, NULL);
-+	irq_set_chip_data(irq, NULL);
- 
- 	WARN_ON(info->refcnt > 0);
- 
-@@ -610,7 +610,7 @@ EXPORT_SYMBOL_GPL(xen_irq_from_gsi);
- static void __unbind_from_irq(unsigned int irq)
- {
- 	int evtchn = evtchn_from_irq(irq);
--	struct irq_info *info = irq_get_handler_data(irq);
-+	struct irq_info *info = irq_get_chip_data(irq);
- 
- 	if (info->refcnt > 0) {
- 		info->refcnt--;
-@@ -1114,7 +1114,7 @@ int bind_ipi_to_irqhandler(enum ipi_vect
- 
- void unbind_from_irqhandler(unsigned int irq, void *dev_id)
- {
--	struct irq_info *info = irq_get_handler_data(irq);
-+	struct irq_info *info = irq_get_chip_data(irq);
- 
- 	if (WARN_ON(!info))
- 		return;
-@@ -1148,7 +1148,7 @@ int evtchn_make_refcounted(unsigned int
- 	if (irq == -1)
- 		return -ENOENT;
- 
--	info = irq_get_handler_data(irq);
-+	info = irq_get_chip_data(irq);
- 
- 	if (!info)
- 		return -ENOENT;
-@@ -1176,7 +1176,7 @@ int evtchn_get(unsigned int evtchn)
- 	if (irq == -1)
- 		goto done;
- 
--	info = irq_get_handler_data(irq);
-+	info = irq_get_chip_data(irq);
- 
- 	if (!info)
- 		goto done;
+ static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
+-- 
+2.25.1
+
 
 
