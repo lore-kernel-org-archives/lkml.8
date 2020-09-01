@@ -7,22 +7,22 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7BF8C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B03C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88FCF2151B
+	by mail.kernel.org (Postfix) with ESMTP id F30AF208DB
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 05:00:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726355AbgIAFA2 (ORCPT
+        id S1726537AbgIAFA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 01:00:28 -0400
-Received: from aclms3.advantech.com.tw ([125.252.70.86]:12092 "EHLO
-        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgIAFA2 (ORCPT
+        Tue, 1 Sep 2020 01:00:29 -0400
+Received: from aclms1.advantech.com.tw ([61.58.41.199]:34011 "EHLO
+        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgIAFA2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 01:00:28 -0400
-Received: from taipei09.ADVANTECH.CORP (unverified [172.20.0.236]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Te15629d385ac1401c88d0@ACLMS3.advantech.com.tw>;
+Received: from taipei09.ADVANTECH.CORP (unverified [172.20.0.236]) by ACLMS1.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Te15629d267ac14014b1cfc@ACLMS1.advantech.com.tw>;
  Tue, 1 Sep 2020 13:00:23 +0800
 Received: from localhost (172.16.12.96) by taipei09.ADVANTECH.CORP
  (172.20.0.236) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 1 Sep
@@ -33,12 +33,10 @@ To:     Johan Hovold <johan@kernel.org>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         William Sung <william.sung@advantech.com.tw>,
         Campion Kang <campion.kang@advantech.com.tw>
-Subject: [PATCH 2/2] usb: serial: usb_wwan: Fix lackage for Quectel EG95 LTE modem support
-Date:   Tue, 1 Sep 2020 13:00:22 +0800
-Message-ID: <20200901050022.3319-2-william.sung@advantech.com.tw>
+Subject: [PATCH 1/2] usb: serial: option: Fix the lackage for Quectel EG95 LTE modem support
+Date:   Tue, 1 Sep 2020 13:00:21 +0800
+Message-ID: <20200901050022.3319-1-william.sung@advantech.com.tw>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901050022.3319-1-william.sung@advantech.com.tw>
-References: <20200901050022.3319-1-william.sung@advantech.com.tw>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [172.16.12.96]
@@ -50,47 +48,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As required by the USB protocol, add zero packet support for Quectel
-EG95 LTE modem module.
+* Add reset-resume callback for resetting USB devices after MCU exits
+from suspend/sleep mode.
 
-Fixes: f815dd5cf48b ("net: usb: qmi_wwan: add support for Quectel EG95
-LTE modem"
+* Because Quectel EG95 uses USB interface 4 as a USB network device, so
+return from option_startup() to prevent being used as a USB serial
+device.
+
+Fixes: da6902e5b6db ("USB: serial: option: add Quectel EG95 LTE modem"
 
 Signed-off-by: William Sung <william.sung@advantech.com.tw>
 ---
- drivers/usb/serial/usb_wwan.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/usb/serial/option.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/usb/serial/usb_wwan.c b/drivers/usb/serial/usb_wwan.c
-index 4b9845807bee..75495c939ac6 100644
---- a/drivers/usb/serial/usb_wwan.c
-+++ b/drivers/usb/serial/usb_wwan.c
-@@ -467,6 +467,7 @@ static struct urb *usb_wwan_setup_urb(struct usb_serial_port *port,
- 	struct usb_serial *serial = port->serial;
- 	struct usb_wwan_intf_private *intfdata = usb_get_serial_data(serial);
- 	struct urb *urb;
-+	struct usb_device_descriptor *desc = &serial->dev->descriptor;
+diff --git a/drivers/usb/serial/option.c b/drivers/usb/serial/option.c
+index 89b3192af326..9de8aec47e5e 100644
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -2069,6 +2069,7 @@ static struct usb_serial_driver option_1port_device = {
+ #ifdef CONFIG_PM
+ 	.suspend           = usb_wwan_suspend,
+ 	.resume            = usb_wwan_resume,
++	.reset_resume      = usb_wwan_resume,
+ #endif
+ };
  
- 	urb = usb_alloc_urb(0, GFP_KERNEL);	/* No ISO */
- 	if (!urb)
-@@ -476,8 +477,15 @@ static struct urb *usb_wwan_setup_urb(struct usb_serial_port *port,
- 			  usb_sndbulkpipe(serial->dev, endpoint) | dir,
- 			  buf, len, callback, ctx);
+@@ -2104,6 +2105,11 @@ static int option_probe(struct usb_serial *serial,
+ 	if (device_flags & NUMEP2 && iface_desc->bNumEndpoints != 2)
+ 		return -ENODEV;
  
--	if (intfdata->use_zlp && dir == USB_DIR_OUT)
--		urb->transfer_flags |= URB_ZERO_PACKET;
-+	if (dir == USB_DIR_OUT) {
-+		if (intfdata->use_zlp)
-+			urb->transfer_flags |= URB_ZERO_PACKET;
++	/* Quectel EC25 & EC21 & EG91 & EG95 ... interface 4 can be used as USB network device */
++	if (serial->dev->descriptor.idVendor == cpu_to_le16(0x2c7c) &&
++		serial->interface->cur_altsetting->desc.bInterfaceNumber >= 4)
++		return -ENODEV;
 +
-+		/* Add zero packet support for Quectel EG95 */
-+		if (desc->idVendor == cpu_to_le16(0x2C7C) &&
-+			desc->idProduct == cpu_to_le16(0x0195))
-+			urb->transfer_flags |= URB_ZERO_PACKET;
-+	}
+ 	/* Store the device flags so we can use them during attach. */
+ 	usb_set_serial_data(serial, (void *)device_flags);
  
- 	return urb;
- }
 -- 
 2.17.1
 
