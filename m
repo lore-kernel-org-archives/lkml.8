@@ -2,149 +2,115 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1141C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BCEC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4A9C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576C520767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978339;
-	bh=SDJyTNl9km4Ovqqcj2QEAXhf2ayIR8viGJpVgHB8K5g=;
+	s=default; t=1598978349;
+	bh=NaQTcz4Nx7tejgYOZkje1gbrDOO+iWUUqbxrXjzVwak=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=klbP9LQNLsTBPGVUoGMsu/azWaqDmPwIYie2XZNXwIFoZ0pI3dwrT5RwoPueLXpu2
-	 248NxA4OTIPEb4sS1Qkyh0VPXjTfZgnOK1g+KI2nfiXv7VlIygaWYL+DtRVQ93ziPV
-	 mrC0oj1FG2PvgR5zlBhN+M506sI8Lvu3mwAm5Nbk=
+	b=zOCZxE+8mUtsAmezbXWek2nAn+qT+nCEP0MphVk7EFmB5ZpCFcvDOi2Qvb4pBTURa
+	 73H3XxiQ+JMcSojOgiS/lYVmEkUzBfdZDfSnPuDhqEHTGWfLveX6smAuPd5JtfICMD
+	 QG+GlZkKlvhcwvUjF1DVMNj9mvnwRBKAECbKo+vY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbgIAQiy (ORCPT
+        id S1731119AbgIAQjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:38:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:39:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730096AbgIAP2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:45 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729702AbgIAP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:28:42 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 496F920BED;
-        Tue,  1 Sep 2020 15:28:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABB7D214D8;
+        Tue,  1 Sep 2020 15:28:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974124;
-        bh=SDJyTNl9km4Ovqqcj2QEAXhf2ayIR8viGJpVgHB8K5g=;
+        s=default; t=1598974117;
+        bh=NaQTcz4Nx7tejgYOZkje1gbrDOO+iWUUqbxrXjzVwak=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXEvZKDo1wvz2hvSwK/SHfYXbEUPW70H6e6SSiJdITSSrrEGYOtJpmBeRnKpMLde6
-         6Df1QTZPoGAamoh7c3qfgXFLDq8G7bjd9GOoA0Dk9yGgqTp3wuJUqcGp/fbl97RKZS
-         ulSZtwWaXcrY8ezvhtMMbifsOTfEcjJ7OEgYFfiI=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/214] btrfs: make btrfs_qgroup_check_reserved_leak take btrfs_inode
-Date:   Tue,  1 Sep 2020 17:08:53 +0200
-Message-Id: <20200901150955.521484537@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        b=ysl+WcfJY4JrmGMlfKduw86YoqyKEsHDVyFgGTtIScPzzBT8pfyFC3CEd0TkFQwCU
+         SLGsGIXMQSRI4a7MxNOyzQRog+SMTTGwNq3wLLPq18fHesHTWrj0k5lKNQ4reIlUCZ
+         cn1+8VuKHP+mw5xjf3WYuTg45e33rJenTaZhTKR8=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Mark Brown <broonie@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Ludovic Desroches <ludovic.desroches@microchip.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang7@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Masahisa Kojima <masahisa.kojima@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-tegra@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 10/11] spi: tegra114: Simplify with dev_err_probe()
+Date:   Tue,  1 Sep 2020 17:27:12 +0200
+Message-Id: <20200901152713.18629-10-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200901152713.18629-1-krzk@kernel.org>
+References: <20200901152713.18629-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-[ Upstream commit cfdd45921571eb24073e0737fa0bd44b4218f914 ]
-
-vfs_inode is used only for the inode number everything else requires
-btrfs_inode.
-
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-[ use btrfs_ino ]
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- fs/btrfs/inode.c  |  2 +-
- fs/btrfs/qgroup.c | 14 +++++++-------
- fs/btrfs/qgroup.h |  2 +-
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/spi/spi-tegra114.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index fa7f3a59813ea..411ec3e3a7dc1 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -9568,7 +9568,7 @@ void btrfs_destroy_inode(struct inode *inode)
- 			btrfs_put_ordered_extent(ordered);
- 		}
- 	}
--	btrfs_qgroup_check_reserved_leak(inode);
-+	btrfs_qgroup_check_reserved_leak(BTRFS_I(inode));
- 	inode_tree_del(inode);
- 	btrfs_drop_extent_cache(BTRFS_I(inode), 0, (u64)-1, 0);
- }
-diff --git a/fs/btrfs/qgroup.c b/fs/btrfs/qgroup.c
-index b94f6f99e90d0..04fd02e6124dd 100644
---- a/fs/btrfs/qgroup.c
-+++ b/fs/btrfs/qgroup.c
-@@ -3769,7 +3769,7 @@ void btrfs_qgroup_convert_reserved_meta(struct btrfs_root *root, int num_bytes)
-  * Check qgroup reserved space leaking, normally at destroy inode
-  * time
-  */
--void btrfs_qgroup_check_reserved_leak(struct inode *inode)
-+void btrfs_qgroup_check_reserved_leak(struct btrfs_inode *inode)
- {
- 	struct extent_changeset changeset;
- 	struct ulist_node *unode;
-@@ -3777,19 +3777,19 @@ void btrfs_qgroup_check_reserved_leak(struct inode *inode)
- 	int ret;
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index c2c58871a947..ca6886aaa519 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -664,16 +664,11 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
+ 	struct dma_chan *dma_chan;
+ 	u32 *dma_buf;
+ 	dma_addr_t dma_phys;
+-	int ret;
  
- 	extent_changeset_init(&changeset);
--	ret = clear_record_extent_bits(&BTRFS_I(inode)->io_tree, 0, (u64)-1,
-+	ret = clear_record_extent_bits(&inode->io_tree, 0, (u64)-1,
- 			EXTENT_QGROUP_RESERVED, &changeset);
+ 	dma_chan = dma_request_chan(tspi->dev, dma_to_memory ? "rx" : "tx");
+-	if (IS_ERR(dma_chan)) {
+-		ret = PTR_ERR(dma_chan);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(tspi->dev,
+-				"Dma channel is not available: %d\n", ret);
+-		return ret;
+-	}
++	if (IS_ERR(dma_chan))
++		return dev_err_probe(tspi->dev, PTR_ERR(dma_chan),
++				     "Dma channel is not available\n");
  
- 	WARN_ON(ret < 0);
- 	if (WARN_ON(changeset.bytes_changed)) {
- 		ULIST_ITER_INIT(&iter);
- 		while ((unode = ulist_next(&changeset.range_changed, &iter))) {
--			btrfs_warn(BTRFS_I(inode)->root->fs_info,
--				"leaking qgroup reserved space, ino: %lu, start: %llu, end: %llu",
--				inode->i_ino, unode->val, unode->aux);
-+			btrfs_warn(inode->root->fs_info,
-+		"leaking qgroup reserved space, ino: %llu, start: %llu, end: %llu",
-+				btrfs_ino(inode), unode->val, unode->aux);
- 		}
--		btrfs_qgroup_free_refroot(BTRFS_I(inode)->root->fs_info,
--				BTRFS_I(inode)->root->root_key.objectid,
-+		btrfs_qgroup_free_refroot(inode->root->fs_info,
-+				inode->root->root_key.objectid,
- 				changeset.bytes_changed, BTRFS_QGROUP_RSV_DATA);
- 
- 	}
-diff --git a/fs/btrfs/qgroup.h b/fs/btrfs/qgroup.h
-index 17e8ac992c502..b0420c4f5d0ef 100644
---- a/fs/btrfs/qgroup.h
-+++ b/fs/btrfs/qgroup.h
-@@ -399,7 +399,7 @@ void btrfs_qgroup_free_meta_all_pertrans(struct btrfs_root *root);
-  */
- void btrfs_qgroup_convert_reserved_meta(struct btrfs_root *root, int num_bytes);
- 
--void btrfs_qgroup_check_reserved_leak(struct inode *inode);
-+void btrfs_qgroup_check_reserved_leak(struct btrfs_inode *inode);
- 
- /* btrfs_qgroup_swapped_blocks related functions */
- void btrfs_qgroup_init_swapped_blocks(
+ 	dma_buf = dma_alloc_coherent(tspi->dev, tspi->dma_buf_size,
+ 				&dma_phys, GFP_KERNEL);
 -- 
-2.25.1
-
-
+2.17.1
 
