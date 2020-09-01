@@ -2,114 +2,150 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970A8C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A541C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6CBCB206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sKm24Z7I"
+	by mail.kernel.org (Postfix) with ESMTP id 42A75206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599001175;
+	bh=6+prf8hd/dD/hqUCmuKJ8TIy6p+8/B1mAtJifqlir+A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=j9aCF+mvOoFMRoRuTc2Ks8Nm/hlxiPZ8+iFGoNzuwSfQ7Ge50cnLXntEd+Nbiyjbr
+	 TejzFZR6L9DlzOm2L1gz5tgnmq3DWZM3LSTSr9DxLEbyC35LlJ9akGbTiMFZXQ0uzj
+	 E+Ul7YehftuHTO+AXg2p6OD7k2yoDlJAE8f7Dipo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbgIAW73 (ORCPT
+        id S1727103AbgIAW7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:59:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38944 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIAW7U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:59:20 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C69AC061245;
-        Tue,  1 Sep 2020 15:59:20 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id 67so1494643pgd.12;
-        Tue, 01 Sep 2020 15:59:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0M9UetfAtyeMCeUqpiMFChaJf92K3z/aC4o6AhbLFnE=;
-        b=sKm24Z7IFygpgjxRouogu4sZYcKtxkim1KdB8NbJ0WWJst/+CYXJ7lmwXEt77AlT/z
-         fzcmRR5XKX4MbSfYNYEpPWqNg73qtwP/AYSGWf7GS3Z+s55u1UacAzAbT1JTWW4uprsq
-         QT0GhV5bNr2estu2NqsJK6IufnvjXEi2azzFVPgLAOtN+zTsgoxRu/zV9SQcWohN8L25
-         DXZdcSWSWfNvK4xGiwxope8zT5HEgb9gNPrb3suhY0xFIxXzUuCTFahJGYtbEoFGQQBp
-         71O9Cu34EaNWK8pED9ou2A8xr6f6d0yw9PIkov95oFJvZwjip9HJ23RUtGxYL25yailx
-         mlLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0M9UetfAtyeMCeUqpiMFChaJf92K3z/aC4o6AhbLFnE=;
-        b=NkTQAwQIH3oyZDBQaw0MaQUApYqLcYYMBJls5FE2Cmt+ad2Pa7/8TyveeiIxxMc3L2
-         hlLJjX9t5S5b1kBvKGfb42vOMr1vLOOnK9jgPnYiqrYyI/kGsRzd9GnO2huTxNncLn6a
-         3LCwFQ0BSG+BhMp1bpNcMkNDeo54UdH5apiIwkC1Hubcq9aT1H1RT5e0BJLp1nulOwCa
-         ygDDbLcvImXgtbMQGXCtkqryP9sq8e8XSMlQv4lVZzjHykKrTnWu0S8dyfq3Ku9MP0Xm
-         wt1Q46W+YKoWkuYHpaS5KfqT0Em1nT5sEDb6Et9tijVR0BkzZ62HM5le3V0Cd4D2okC0
-         pcww==
-X-Gm-Message-State: AOAM531caR1b80V4JXpKCEa22d3brse7ULcK4FRLkiFmUbnCS/k3YHNO
-        0yTuc9w7SKQCtwU/o2xUUyr2R4aWfW4=
-X-Google-Smtp-Source: ABdhPJwsdOkCCs5Ww0v7HbLXOi9oSfmTT05zYk0y70mmVjVGED2748BA6ZvTTJc7J7BCWLmNYSXSoA==
-X-Received: by 2002:a63:354:: with SMTP id 81mr3535145pgd.216.1599001159128;
-        Tue, 01 Sep 2020 15:59:19 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id m188sm2952750pfm.220.2020.09.01.15.59.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 15:59:18 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     netdev@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net-next 1/3] dt-bindings: net: Document Broadcom SF2 switch clocks
-Date:   Tue,  1 Sep 2020 15:59:11 -0700
-Message-Id: <20200901225913.1587628-2-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200901225913.1587628-1-f.fainelli@gmail.com>
-References: <20200901225913.1587628-1-f.fainelli@gmail.com>
+        Tue, 1 Sep 2020 18:59:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727052AbgIAW72 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 18:59:28 -0400
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BC50207EA
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 22:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599001167;
+        bh=6+prf8hd/dD/hqUCmuKJ8TIy6p+8/B1mAtJifqlir+A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=w3AXvs40WAjhXqbXqQI1GI9Yf7hMmKxb/eEPBdI1ctXxmiKOG5KwrJHt7sbbu9Re4
+         4sgXHSx9tWBEQYbqv9Pjkq506kssAi0Zcp7Cv+il7ZTLRd/z6hHjzlDnpX/M0hpjIY
+         EmThNZ/vhzh/HMmvip5IgkrHvzr7gvSKWbKBXIAc=
+Received: by mail-ej1-f42.google.com with SMTP id d11so3916240ejt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 15:59:26 -0700 (PDT)
+X-Gm-Message-State: AOAM533q6l/yqgpVaOXEOFM5viND9qgodbmQ0cNuzzImoSNzoDOfCZno
+        j94Ki0DvY//cZfZL1wCDcYna6Sn/pgYuUoHkvA==
+X-Google-Smtp-Source: ABdhPJzjHDOXSGz7glhl+6OiZP2SWKZjyjWU9LL5WqhptcI1ntuiSPhKiGIOKRXMhN7HiiRtHc6HA76qv/dWjb/Q6CM=
+X-Received: by 2002:a17:906:7492:: with SMTP id e18mr3598885ejl.375.1599001165547;
+ Tue, 01 Sep 2020 15:59:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CGME20200826063533eucas1p1fad2f2afb117b026081468d2d840ab0f@eucas1p1.samsung.com>
+ <20200826063316.23486-1-m.szyprowski@samsung.com> <20200826063316.23486-11-m.szyprowski@samsung.com>
+In-Reply-To: <20200826063316.23486-11-m.szyprowski@samsung.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 2 Sep 2020 06:59:14 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9=GFMW2QQKjxWHeZLYTDo3+=j=wZ62t9LrSkfD79ji9A@mail.gmail.com>
+Message-ID: <CAAOTY_9=GFMW2QQKjxWHeZLYTDo3+=j=wZ62t9LrSkfD79ji9A@mail.gmail.com>
+Subject: Re: [PATCH v9 10/32] drm: mediatek: use common helper for a
+ scatterlist contiguity check
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
+        iommu@lists.linux-foundation.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Describe the two possible clocks feeding into the Broadcom SF2
-integrated Ethernet switch. BCM7445 systems have two clocks, one for the
-main switch core clock, and another for controlling the switch clock
-divider whereas BCM7278 systems only have the first kind.
+Hi, Marek:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt   | 7 +++++++
- 1 file changed, 7 insertions(+)
+Marek Szyprowski <m.szyprowski@samsung.com> =E6=96=BC 2020=E5=B9=B48=E6=9C=
+=8826=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=882:35=E5=AF=AB=E9=81=93=
+=EF=BC=9A
+>
+> Use common helper for checking the contiguity of the imported dma-buf and
+> do this check before allocating resources, so the error path is simpler.
+>
 
-diff --git a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-index 88b57b0ca1f4..97ca62b0e14d 100644
---- a/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-+++ b/Documentation/devicetree/bindings/net/brcm,bcm7445-switch-v4.0.txt
-@@ -50,6 +50,13 @@ Optional properties:
- - reset-names: If the "reset" property is specified, this property should have
-   the value "switch" to denote the switch reset line.
- 
-+- clocks: when provided, the first phandle is to the switch's main clock and
-+  is valid for both BCM7445 and BCM7278. The second phandle is only applicable
-+  to BCM7445 and is to support dividing the switch core clock.
-+
-+- clock-names: when provided, the first phandle must be "sw_switch", and the
-+  second must be named "sw_switch_mdiv".
-+
- Port subnodes:
- 
- Optional properties:
--- 
-2.25.1
+Acked-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_gem.c | 28 ++++++--------------------
+>  1 file changed, 6 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/med=
+iatek/mtk_drm_gem.c
+> index 6190cc3b7b0d..3654ec732029 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+> @@ -212,37 +212,21 @@ struct drm_gem_object *mtk_gem_prime_import_sg_tabl=
+e(struct drm_device *dev,
+>                         struct dma_buf_attachment *attach, struct sg_tabl=
+e *sg)
+>  {
+>         struct mtk_drm_gem_obj *mtk_gem;
+> -       int ret;
+> -       struct scatterlist *s;
+> -       unsigned int i;
+> -       dma_addr_t expected;
+>
+> -       mtk_gem =3D mtk_drm_gem_init(dev, attach->dmabuf->size);
+> +       /* check if the entries in the sg_table are contiguous */
+> +       if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
+> +               DRM_ERROR("sg_table is not contiguous");
+> +               return ERR_PTR(-EINVAL);
+> +       }
+>
+> +       mtk_gem =3D mtk_drm_gem_init(dev, attach->dmabuf->size);
+>         if (IS_ERR(mtk_gem))
+>                 return ERR_CAST(mtk_gem);
+>
+> -       expected =3D sg_dma_address(sg->sgl);
+> -       for_each_sg(sg->sgl, s, sg->nents, i) {
+> -               if (!sg_dma_len(s))
+> -                       break;
+> -
+> -               if (sg_dma_address(s) !=3D expected) {
+> -                       DRM_ERROR("sg_table is not contiguous");
+> -                       ret =3D -EINVAL;
+> -                       goto err_gem_free;
+> -               }
+> -               expected =3D sg_dma_address(s) + sg_dma_len(s);
+> -       }
+> -
+>         mtk_gem->dma_addr =3D sg_dma_address(sg->sgl);
+>         mtk_gem->sg =3D sg;
+>
+>         return &mtk_gem->base;
+> -
+> -err_gem_free:
+> -       kfree(mtk_gem);
+> -       return ERR_PTR(ret);
+>  }
+>
+>  void *mtk_drm_gem_prime_vmap(struct drm_gem_object *obj)
+> --
+> 2.17.1
+>
