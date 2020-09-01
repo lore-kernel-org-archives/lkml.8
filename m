@@ -2,157 +2,72 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F041C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02B9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5916206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:29:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HhHU3Nc6"
+	by mail.kernel.org (Postfix) with ESMTP id C0BA1206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:29:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728364AbgIAO3a (ORCPT
+        id S1728362AbgIAO3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:29:30 -0400
-Received: from crapouillou.net ([89.234.176.41]:45394 "EHLO crapouillou.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728289AbgIAO1r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:27:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1598970419; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=yU+G5wm9UV0/Lr0JJrsdPUDzSeYzX6a4lcXqh4c6G+0=;
-        b=HhHU3Nc6W8OyBdfECWVhQHZrKsN6YU67y7ugf5zT0hdIOTsbRpIry/YTQJY4IHt7pyqlgm
-        u3XKVUQJRz67Ja9q01KpglQXo9i7er1TVwlHD/6zvqAvba2zwPnjfuKNohZBYBw9pEU9jp
-        G9nm5SGShMU9AI9MOC87A5L/Rrrvr1A=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Nick Terrell <terrelln@fb.com>
-Cc:     od@zcrc.me, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 2/2] MIPS: Add support for ZSTD-compressed kernels
-Date:   Tue,  1 Sep 2020 16:26:51 +0200
-Message-Id: <20200901142651.1165237-3-paul@crapouillou.net>
-In-Reply-To: <20200901142651.1165237-1-paul@crapouillou.net>
-References: <20200901142651.1165237-1-paul@crapouillou.net>
+        Tue, 1 Sep 2020 10:29:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10752 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728297AbgIAO1t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:27:49 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 294A94EDE485CCBE6BD4;
+        Tue,  1 Sep 2020 22:10:39 +0800 (CST)
+Received: from localhost (10.174.179.108) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
+ 22:10:32 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <davem@davemloft.net>, <kuba@kernel.org>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH net-next] net: sungem: Remove unneeded cast from memory allocation
+Date:   Tue, 1 Sep 2020 22:10:28 +0800
+Message-ID: <20200901141028.25264-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for self-extracting kernels with a ZSTD compression.
+Remove dma_alloc_coherent return value cast.
+This is detected by coccinelle.
 
-Tested on a kernel for the GCW-Zero, it allows to reduce the size of the
-kernel file from 4.1 MiB with gzip to 3.5 MiB with ZSTD, and boots just
-as fast.
-
-Compressed kernels are now also compiled with -D__DISABLE_EXPORTS in
-order to disable the EXPORT_SYMBOL() macros inside of
-lib/zstd/decompress.c.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
+ drivers/net/ethernet/sun/sungem.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-Notes:
-    v2: Add -D__DISABLE_EXPORTS to CFLAGS and use zstd22
-    
-    v3: Make memmove __weak, since it is provided for other compression
-        schemes
-
- arch/mips/Kconfig                      |  1 +
- arch/mips/boot/compressed/Makefile     |  3 ++-
- arch/mips/boot/compressed/decompress.c |  4 ++++
- arch/mips/boot/compressed/string.c     | 17 +++++++++++++++++
- 4 files changed, 24 insertions(+), 1 deletion(-)
-
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index c95fa3a2484c..b9d7c4249dc9 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -1890,6 +1890,7 @@ config SYS_SUPPORTS_ZBOOT
- 	select HAVE_KERNEL_LZMA
- 	select HAVE_KERNEL_LZO
- 	select HAVE_KERNEL_XZ
-+	select HAVE_KERNEL_ZSTD
- 
- config SYS_SUPPORTS_ZBOOT_UART16550
- 	bool
-diff --git a/arch/mips/boot/compressed/Makefile b/arch/mips/boot/compressed/Makefile
-index 6e56caef69f0..9a9ba77b745e 100644
---- a/arch/mips/boot/compressed/Makefile
-+++ b/arch/mips/boot/compressed/Makefile
-@@ -22,7 +22,7 @@ KBUILD_CFLAGS := $(filter-out -pg, $(KBUILD_CFLAGS))
- 
- KBUILD_CFLAGS := $(filter-out -fstack-protector, $(KBUILD_CFLAGS))
- 
--KBUILD_CFLAGS := $(KBUILD_CFLAGS) -D__KERNEL__ \
-+KBUILD_CFLAGS := $(KBUILD_CFLAGS) -D__KERNEL__ -D__DISABLE_EXPORTS \
- 	-DBOOT_HEAP_SIZE=$(BOOT_HEAP_SIZE) -D"VMLINUX_LOAD_ADDRESS_ULL=$(VMLINUX_LOAD_ADDRESS)ull"
- 
- KBUILD_AFLAGS := $(KBUILD_AFLAGS) -D__ASSEMBLY__ \
-@@ -70,6 +70,7 @@ tool_$(CONFIG_KERNEL_LZ4)     = lz4
- tool_$(CONFIG_KERNEL_LZMA)    = lzma
- tool_$(CONFIG_KERNEL_LZO)     = lzo
- tool_$(CONFIG_KERNEL_XZ)      = xzkern
-+tool_$(CONFIG_KERNEL_ZSTD)    = zstd22
- 
- targets += vmlinux.bin.z
- $(obj)/vmlinux.bin.z: $(obj)/vmlinux.bin FORCE
-diff --git a/arch/mips/boot/compressed/decompress.c b/arch/mips/boot/compressed/decompress.c
-index 88f5d637b1c4..c61c641674e6 100644
---- a/arch/mips/boot/compressed/decompress.c
-+++ b/arch/mips/boot/compressed/decompress.c
-@@ -72,6 +72,10 @@ void error(char *x)
- #include "../../../../lib/decompress_unxz.c"
- #endif
- 
-+#ifdef CONFIG_KERNEL_ZSTD
-+#include "../../../../lib/decompress_unzstd.c"
-+#endif
-+
- const unsigned long __stack_chk_guard = 0x000a0dff;
- 
- void __stack_chk_fail(void)
-diff --git a/arch/mips/boot/compressed/string.c b/arch/mips/boot/compressed/string.c
-index 43beecc3587c..0b593b709228 100644
---- a/arch/mips/boot/compressed/string.c
-+++ b/arch/mips/boot/compressed/string.c
-@@ -5,6 +5,7 @@
-  * Very small subset of simple string routines
-  */
- 
-+#include <linux/compiler_attributes.h>
- #include <linux/types.h>
- 
- void *memcpy(void *dest, const void *src, size_t n)
-@@ -27,3 +28,19 @@ void *memset(void *s, int c, size_t n)
- 		ss[i] = c;
- 	return s;
- }
-+
-+void * __weak memmove(void *dest, const void *src, size_t n)
-+{
-+	unsigned int i;
-+	const char *s = src;
-+	char *d = dest;
-+
-+	if ((uintptr_t)dest < (uintptr_t)src) {
-+		for (i = 0; i < n; i++)
-+			d[i] = s[i];
-+	} else {
-+		for (i = n; i > 0; i--)
-+			d[i - 1] = s[i - 1];
-+	}
-+	return dest;
-+}
+diff --git a/drivers/net/ethernet/sun/sungem.c b/drivers/net/ethernet/sun/sungem.c
+index eeb8518c8a84..b7093975b14c 100644
+--- a/drivers/net/ethernet/sun/sungem.c
++++ b/drivers/net/ethernet/sun/sungem.c
+@@ -2965,9 +2965,8 @@ static int gem_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* It is guaranteed that the returned buffer will be at least
+ 	 * PAGE_SIZE aligned.
+ 	 */
+-	gp->init_block = (struct gem_init_block *)
+-		dma_alloc_coherent(&pdev->dev, sizeof(struct gem_init_block),
+-				   &gp->gblock_dvma, GFP_KERNEL);
++	gp->init_block = dma_alloc_coherent(&pdev->dev, sizeof(struct gem_init_block),
++					    &gp->gblock_dvma, GFP_KERNEL);
+ 	if (!gp->init_block) {
+ 		pr_err("Cannot allocate init block, aborting\n");
+ 		err = -ENOMEM;
 -- 
-2.28.0
+2.17.1
+
 
