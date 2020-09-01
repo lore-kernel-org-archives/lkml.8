@@ -2,139 +2,101 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93123C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB3B3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55AC5206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B04206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:05:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="n31IY9+1";
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="MQVRwKN0"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EVBdaelk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729279AbgIAVFB (ORCPT
+        id S1729348AbgIAVFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:05:01 -0400
-Received: from bedivere.hansenpartnership.com ([66.63.167.143]:48922 "EHLO
-        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726355AbgIAVFA (ORCPT
+        Tue, 1 Sep 2020 17:05:16 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37374 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbgIAVFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:05:00 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 254838EE112;
-        Tue,  1 Sep 2020 14:04:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1598994299;
-        bh=3yQ8KCRSQAxpdGZ/cPAEMssmlgc5FoQPkt68+FhXhxM=;
-        h=Subject:From:To:Cc:Date:From;
-        b=n31IY9+1uutwxiqCR+Tn4Q7rdAWPoY4rda8bR1HpKjiKLQ71Pjq5paIXO9dU/qqWH
-         h2+cln0tPXpxCNBL2bFq8WOBg02oM594M1bap9MPIIF+6ktR4mm0Z4UOIdY+oDQUVa
-         L+5lYiuklSFGaQtWVi4vTBRdDgGDr9S75cmbSo+g=
-Received: from bedivere.hansenpartnership.com ([127.0.0.1])
-        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lm76zS-PMhPO; Tue,  1 Sep 2020 14:04:58 -0700 (PDT)
-Received: from [153.66.254.174] (c-73-35-198-56.hsd1.wa.comcast.net [73.35.198.56])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 19FB08EE0F5;
-        Tue,  1 Sep 2020 14:04:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
-        s=20151216; t=1598994298;
-        bh=3yQ8KCRSQAxpdGZ/cPAEMssmlgc5FoQPkt68+FhXhxM=;
-        h=Subject:From:To:Cc:Date:From;
-        b=MQVRwKN0KxlkwKC6kn2YW9+cq2JmRRS8FKN/tYXwjUfniwiPB10V7c5WRUPuTpvz1
-         L3Q1S1yNsCSNfRwFmaBfLO538PQvBryfNrOv8kQXgXvVjJiewjOltdF/93XBYBAE0T
-         K7l2BURG6KZRQmJSXWENJChxKci82+hNAOlo45lU=
-Message-ID: <1598994296.4238.30.camel@HansenPartnership.com>
-Subject: [GIT PULL] SCSI fixes for 5.8-rc3
-From:   James Bottomley <James.Bottomley@HansenPartnership.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Date:   Tue, 01 Sep 2020 14:04:56 -0700
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Tue, 1 Sep 2020 17:05:13 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081L3Z2O178125;
+        Tue, 1 Sep 2020 21:05:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=nXG4/CL+hVOi2jIopJ0MFc0Agwfhg8ZWSwan1tEwxp4=;
+ b=EVBdaelk/wBjPsGKV4go/ME7XRFrsAWxDVSpr6FSNW5MF+HmUPfM8vRl4CVxcXQTdCTS
+ hiZkFOw2UUmRxkwUkvld8+313wUpezgN71VXwPIXV86uMGVKeRj7fqPQhkx84ZUVbZ3C
+ PKkC/j4VovMpniWbFPgUmN2g+q3DZsY9ZRFwzzow0YRir6SwXGWM7ix4jeY71SzIbJIf
+ Jv6umT0S65S50y1RF/dGJqe/gnwA22qtBxg+plfUgBFqPD6geKWGImQYU1ukWayiCIno
+ oIeJVO7lJf9gH0bhmMeVH+aQowLPEkeBylHwGPzukzV9lRbdR9ugEclJrKbZLms/Uy6z 5Q== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 339dmmwbu7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 01 Sep 2020 21:05:03 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 081L51n4054616;
+        Tue, 1 Sep 2020 21:05:03 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 3380ssjgr9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Sep 2020 21:05:03 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 081L51Uf014522;
+        Tue, 1 Sep 2020 21:05:02 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Sep 2020 14:05:01 -0700
+Subject: Re: [Patch v4 7/7] mm/hugetlb: take the free hpage during the
+ iteration directly
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, bhe@redhat.com
+References: <20200901014636.29737-1-richard.weiyang@linux.alibaba.com>
+ <20200901014636.29737-8-richard.weiyang@linux.alibaba.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <aa572a2a-6184-7317-8209-bf07dd05af5f@oracle.com>
+Date:   Tue, 1 Sep 2020 14:05:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
+MIME-Version: 1.0
+In-Reply-To: <20200901014636.29737-8-richard.weiyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
+ suspectscore=2 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010180
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 impostorscore=0 mlxscore=0 suspectscore=2
+ spamscore=0 clxscore=1015 malwarescore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Three minor fixes, all in drivers.
+On 8/31/20 6:46 PM, Wei Yang wrote:
+> Function dequeue_huge_page_node_exact() iterates the free list and
+> return the first valid free hpage.
+> 
+> Instead of break and check the loop variant, we could return in the loop
+> directly. This could reduce some redundant check.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
 
-The patch is available here:
+Thank you!
 
-git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
 
-The short changelog is:
-
-Dan Carpenter (1):
-      scsi: libcxgbi: Fix a use after free in cxgbi_conn_xmit_pdu()
-
-Niklas Cassel (1):
-      scsi: scsi_debug: Remove superfluous close zone in resp_open_zone()
-
-Ye Bin (1):
-      scsi: qedf: Fix null ptr reference in qedf_stag_change_work
-
-With the diffstat:
-
- drivers/scsi/cxgbi/libcxgbi.c | 2 +-
- drivers/scsi/qedf/qedf_main.c | 2 +-
- drivers/scsi/scsi_debug.c     | 2 --
- 3 files changed, 2 insertions(+), 4 deletions(-)
-
-And full diff below.
-
-James
-
----
-
-diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
-index 71aebaf533ea..0e8621a6956d 100644
---- a/drivers/scsi/cxgbi/libcxgbi.c
-+++ b/drivers/scsi/cxgbi/libcxgbi.c
-@@ -2457,10 +2457,10 @@ int cxgbi_conn_xmit_pdu(struct iscsi_task *task)
- 		return err;
- 	}
- 
--	__kfree_skb(skb);
- 	log_debug(1 << CXGBI_DBG_ISCSI | 1 << CXGBI_DBG_PDU_TX,
- 		  "itt 0x%x, skb 0x%p, len %u/%u, xmit err %d.\n",
- 		  task->itt, skb, skb->len, skb->data_len, err);
-+	__kfree_skb(skb);
- 	iscsi_conn_printk(KERN_ERR, task->conn, "xmit err %d.\n", err);
- 	iscsi_conn_failure(task->conn, ISCSI_ERR_XMIT_FAILED);
- 	return err;
-diff --git a/drivers/scsi/qedf/qedf_main.c b/drivers/scsi/qedf/qedf_main.c
-index 3f04f2c81366..5ca424df355c 100644
---- a/drivers/scsi/qedf/qedf_main.c
-+++ b/drivers/scsi/qedf/qedf_main.c
-@@ -3863,7 +3863,7 @@ void qedf_stag_change_work(struct work_struct *work)
- 	    container_of(work, struct qedf_ctx, stag_work.work);
- 
- 	if (!qedf) {
--		QEDF_ERR(&qedf->dbg_ctx, "qedf is NULL");
-+		QEDF_ERR(NULL, "qedf is NULL");
- 		return;
- 	}
- 	QEDF_ERR(&qedf->dbg_ctx, "Performing software context reset.\n");
-diff --git a/drivers/scsi/scsi_debug.c b/drivers/scsi/scsi_debug.c
-index 139f0073da37..1ad7260d4758 100644
---- a/drivers/scsi/scsi_debug.c
-+++ b/drivers/scsi/scsi_debug.c
-@@ -4482,8 +4482,6 @@ static int resp_open_zone(struct scsi_cmnd *scp, struct sdebug_dev_info *devip)
- 		goto fini;
- 	}
- 
--	if (zc == ZC2_IMPLICIT_OPEN)
--		zbc_close_zone(devip, zsp);
- 	zbc_open_zone(devip, zsp, true);
- fini:
- 	write_unlock(macc_lckp);
+-- 
+Mike Kravetz
