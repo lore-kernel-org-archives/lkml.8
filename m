@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60FEEC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE57C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F09E206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA5B206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975017;
-	bh=fIHIM0NwOWuvBqLrNo02Cp7DkkhrsMdirJnurd7PR9E=;
+	s=default; t=1598975023;
+	bh=oTARuwR/1mchUtNNkLCWoveYMMVPoNEEk5qgz+NHa2U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aBiwRrr1ji9BG5fU9FsjQHscRTqlgolQdV1BjyUhATI7e09wFt8XA4vtNULgi5Lui
-	 OQ+ij2z2EDQKA3cfKuzAoiKbLiORnf4CEDLjiUHE6q8zRBP+boveTuDwTQA9qZyCDg
-	 lHQQbUcZLwInMI5ITqAdjxW/LL+ZZgphhVtTZ1Ng=
+	b=QfEDGKs5n+iOjRy62YG8F4/ExkcEru6OWlGNbWMkLlnppQ3NoWJabKpkINL1iZTHU
+	 rtN3enJuO9jyI2aoSSZEuVgrfLlzyP1aKdAiIQzK0Ur4HLdWB4UrQre2OALiM1LZCu
+	 2owf/vY+7SF9ylt87av9p+7Wt/uB2ujGfoMcoSoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbgIAPne (ORCPT
+        id S1731682AbgIAPnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:43:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52588 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:43:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731516AbgIAPk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:40:58 -0400
+        id S1731522AbgIAPlX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:41:23 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32D55206EF;
-        Tue,  1 Sep 2020 15:40:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A201207D3;
+        Tue,  1 Sep 2020 15:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974857;
-        bh=fIHIM0NwOWuvBqLrNo02Cp7DkkhrsMdirJnurd7PR9E=;
+        s=default; t=1598974882;
+        bh=oTARuwR/1mchUtNNkLCWoveYMMVPoNEEk5qgz+NHa2U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZRGggsI/1nB6HuuvX8PyQryDuACLFlYfP5SSiI4fpgSvCL9izZIrm31ConDHgoNh
-         bjnIvUlevUe7PH1rFKCsWQl1xTUOZZCVCq0eN314jcKxPPoRT67xIXjCBGRhx38fI3
-         D630ZpY1mvIn57hy3hfHW7+XWB4V9JUiTaTv09PM=
+        b=2o3puX4LdfREOdIkju8FJpXmKEDIdLm46Uro/b2J06doTcgT6GqeiQtN5kCGugjek
+         w/2g1wA1nZnP7XBRkk6Sw5xGu/gP3NWRLFUh/Llctofa6cMmc6SQMdo/fH9StBgqJl
+         aEBHIqj9O2QBSdcnxB9ja4RN8odpI1GcjNzkFCrU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Changpeng Liu <changpeng.liu@intel.com>,
-        Daniel Verkamp <dverkamp@chromium.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 087/255] block: virtio_blk: fix handling single range discard request
-Date:   Tue,  1 Sep 2020 17:09:03 +0200
-Message-Id: <20200901151004.895777425@linuxfoundation.org>
+        stable@vger.kernel.org, Jakov Petrina <jakov.petrina@sartura.hr>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 127/255] libbpf: Handle GCC built-in types for Arm NEON
+Date:   Tue,  1 Sep 2020 17:09:43 +0200
+Message-Id: <20200901151006.813605878@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -65,80 +62,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
 
-[ Upstream commit af822aa68fbdf0a480a17462ed70232998127453 ]
+[ Upstream commit 702eddc77a905782083b14ccd05b23840675fd18 ]
 
-1f23816b8eb8 ("virtio_blk: add discard and write zeroes support") starts
-to support multi-range discard for virtio-blk. However, the virtio-blk
-disk may report max discard segment as 1, at least that is exactly what
-qemu is doing.
+When building Arm NEON (SIMD) code from lib/raid6/neon.uc, GCC emits
+DWARF information using a base type "__Poly8_t", which is internal to
+GCC and not recognized by Clang. This causes build failures when
+building with Clang a vmlinux.h generated from an arm64 kernel that was
+built with GCC.
 
-So far, block layer switches to normal request merge if max discard segment
-limit is 1, and multiple bios can be merged to single segment. This way may
-cause memory corruption in virtblk_setup_discard_write_zeroes().
+	vmlinux.h:47284:9: error: unknown type name '__Poly8_t'
+	typedef __Poly8_t poly8x16_t[16];
+	        ^~~~~~~~~
 
-Fix the issue by handling single max discard segment in straightforward
-way.
+The polyX_t types are defined as unsigned integers in the "Arm C
+Language Extension" document (101028_Q220_00_en). Emit typedefs based on
+standard integer types for the GCC internal types, similar to those
+emitted by Clang.
 
-Fixes: 1f23816b8eb8 ("virtio_blk: add discard and write zeroes support")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Changpeng Liu <changpeng.liu@intel.com>
-Cc: Daniel Verkamp <dverkamp@chromium.org>
-Cc: Michael S. Tsirkin <mst@redhat.com>
-Cc: Stefan Hajnoczi <stefanha@redhat.com>
-Cc: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Including linux/kernel.h to use ARRAY_SIZE() incidentally redefined
+max(), causing a build bug due to different types, hence the seemingly
+unrelated change.
+
+Reported-by: Jakov Petrina <jakov.petrina@sartura.hr>
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20200812143909.3293280-1-jean-philippe@linaro.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/virtio_blk.c | 31 +++++++++++++++++++++++--------
- 1 file changed, 23 insertions(+), 8 deletions(-)
+ tools/lib/bpf/btf_dump.c | 35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
-index 980df853ee497..99991b6a6f0ed 100644
---- a/drivers/block/virtio_blk.c
-+++ b/drivers/block/virtio_blk.c
-@@ -126,16 +126,31 @@ static int virtblk_setup_discard_write_zeroes(struct request *req, bool unmap)
- 	if (!range)
- 		return -ENOMEM;
- 
--	__rq_for_each_bio(bio, req) {
--		u64 sector = bio->bi_iter.bi_sector;
--		u32 num_sectors = bio->bi_iter.bi_size >> SECTOR_SHIFT;
--
--		range[n].flags = cpu_to_le32(flags);
--		range[n].num_sectors = cpu_to_le32(num_sectors);
--		range[n].sector = cpu_to_le64(sector);
--		n++;
-+	/*
-+	 * Single max discard segment means multi-range discard isn't
-+	 * supported, and block layer only runs contiguity merge like
-+	 * normal RW request. So we can't reply on bio for retrieving
-+	 * each range info.
-+	 */
-+	if (queue_max_discard_segments(req->q) == 1) {
-+		range[0].flags = cpu_to_le32(flags);
-+		range[0].num_sectors = cpu_to_le32(blk_rq_sectors(req));
-+		range[0].sector = cpu_to_le64(blk_rq_pos(req));
-+		n = 1;
-+	} else {
-+		__rq_for_each_bio(bio, req) {
-+			u64 sector = bio->bi_iter.bi_sector;
-+			u32 num_sectors = bio->bi_iter.bi_size >> SECTOR_SHIFT;
-+
-+			range[n].flags = cpu_to_le32(flags);
-+			range[n].num_sectors = cpu_to_le32(num_sectors);
-+			range[n].sector = cpu_to_le64(sector);
-+			n++;
-+		}
+diff --git a/tools/lib/bpf/btf_dump.c b/tools/lib/bpf/btf_dump.c
+index bbb4303172606..4edf76c5a7101 100644
+--- a/tools/lib/bpf/btf_dump.c
++++ b/tools/lib/bpf/btf_dump.c
+@@ -13,6 +13,7 @@
+ #include <errno.h>
+ #include <linux/err.h>
+ #include <linux/btf.h>
++#include <linux/kernel.h>
+ #include "btf.h"
+ #include "hashmap.h"
+ #include "libbpf.h"
+@@ -548,6 +549,9 @@ static int btf_dump_order_type(struct btf_dump *d, __u32 id, bool through_ptr)
  	}
+ }
  
-+	WARN_ON_ONCE(n != segments);
++static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
++					  const struct btf_type *t);
 +
- 	req->special_vec.bv_page = virt_to_page(range);
- 	req->special_vec.bv_offset = offset_in_page(range);
- 	req->special_vec.bv_len = sizeof(*range) * segments;
+ static void btf_dump_emit_struct_fwd(struct btf_dump *d, __u32 id,
+ 				     const struct btf_type *t);
+ static void btf_dump_emit_struct_def(struct btf_dump *d, __u32 id,
+@@ -670,6 +674,9 @@ static void btf_dump_emit_type(struct btf_dump *d, __u32 id, __u32 cont_id)
+ 
+ 	switch (kind) {
+ 	case BTF_KIND_INT:
++		/* Emit type alias definitions if necessary */
++		btf_dump_emit_missing_aliases(d, id, t);
++
+ 		tstate->emit_state = EMITTED;
+ 		break;
+ 	case BTF_KIND_ENUM:
+@@ -869,7 +876,7 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
+ 			btf_dump_printf(d, ": %d", m_sz);
+ 			off = m_off + m_sz;
+ 		} else {
+-			m_sz = max(0, btf__resolve_size(d->btf, m->type));
++			m_sz = max(0LL, btf__resolve_size(d->btf, m->type));
+ 			off = m_off + m_sz * 8;
+ 		}
+ 		btf_dump_printf(d, ";");
+@@ -889,6 +896,32 @@ static void btf_dump_emit_struct_def(struct btf_dump *d,
+ 		btf_dump_printf(d, " __attribute__((packed))");
+ }
+ 
++static const char *missing_base_types[][2] = {
++	/*
++	 * GCC emits typedefs to its internal __PolyX_t types when compiling Arm
++	 * SIMD intrinsics. Alias them to standard base types.
++	 */
++	{ "__Poly8_t",		"unsigned char" },
++	{ "__Poly16_t",		"unsigned short" },
++	{ "__Poly64_t",		"unsigned long long" },
++	{ "__Poly128_t",	"unsigned __int128" },
++};
++
++static void btf_dump_emit_missing_aliases(struct btf_dump *d, __u32 id,
++					  const struct btf_type *t)
++{
++	const char *name = btf_dump_type_name(d, id);
++	int i;
++
++	for (i = 0; i < ARRAY_SIZE(missing_base_types); i++) {
++		if (strcmp(name, missing_base_types[i][0]) == 0) {
++			btf_dump_printf(d, "typedef %s %s;\n\n",
++					missing_base_types[i][1], name);
++			break;
++		}
++	}
++}
++
+ static void btf_dump_emit_enum_fwd(struct btf_dump *d, __u32 id,
+ 				   const struct btf_type *t)
+ {
 -- 
 2.25.1
 
