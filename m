@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AE8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E218C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA950207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 381852065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978124;
-	bh=ZYFJL4b0C17ow2YomGesAH+ttcqwfDDVJAWxLjptZEY=;
+	s=default; t=1598978130;
+	bh=NdBB1CVnk72l6VeDYC6qxj6QBPSngtEdVgcByK/sIsc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pmwqcy+icqLVHay+R61MwepUG0qKnwgSGoSjrvCZ/1SJwry+3jLclRz9i/yocn2zi
-	 Gsu0Bo3KRsSf+w1fgspgg1jSleJv1LthNj7+v7nc7HhEOSXNgdiLG/W7+ld68tiQvi
-	 r51hl3MNs1AN/kHOQ4sk8Kex/0+2aYH+uzLcizHE=
+	b=ntlr9drXgZBfoFXIF9RtrMS6hw3dXpRT1rsWl+yl157lgE9uV4ICuz6F9eZmpKOFN
+	 QfO6ciV80b0JU3IVAJo0QUCDAqJ6EnupNruSpThwYPN0XW1qdJoJp+gbAG1v2f9Zmt
+	 StQGwOWz1RxzeYSQtHSii0HCi/Hl3Mc9NpRQHG54=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgIAQfT (ORCPT
+        id S1730989AbgIAQf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:35:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33250 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:35:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730629AbgIAPau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:50 -0400
+        id S1730609AbgIAPad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:30:33 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65A842137B;
-        Tue,  1 Sep 2020 15:30:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30A2C205F4;
+        Tue,  1 Sep 2020 15:30:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974249;
-        bh=ZYFJL4b0C17ow2YomGesAH+ttcqwfDDVJAWxLjptZEY=;
+        s=default; t=1598974232;
+        bh=NdBB1CVnk72l6VeDYC6qxj6QBPSngtEdVgcByK/sIsc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cFMTspqO6NEXGdJVo7Q3Wt8vdXUeHGSWA7l/CzCyvNIudaXHzyHGqCen3if68t76O
-         x7Tgj+SAeNCYWOpHvaKDpzRu0yuTh3m6EIjItaX3oVMmzCwKEaCurLOseqchCwn4MH
-         PnuW4eVeJJfWWUl+jkFa3GsirQMXRsTQJDGPZ4iw=
+        b=JU+Dkl5TvqSIqxlKxhJ71q6lP0OAmjPiwt8WlXYW7ey6AH0QjAFt/boYYhmn4i1PQ
+         ROuYvcTjtOStOo+XLxMvLMduJFQls0rM7hXJ8I34U6SeI9KwTPUgZvcyLHRY/xgLqa
+         0AE3YP96NcbLUu3dHOrJ349K18qoyiqwfmX23joM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Baron <jbaron@akamai.com>,
-        Guenter Roeck <linux@roeck-us.net>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 104/214] hwmon: (nct7904) Correct divide by 0
-Date:   Tue,  1 Sep 2020 17:09:44 +0200
-Message-Id: <20200901150957.977814932@linuxfoundation.org>
+Subject: [PATCH 5.4 066/214] arm64: Fix __cpu_logical_map undefined issue
+Date:   Tue,  1 Sep 2020 17:09:06 +0200
+Message-Id: <20200901150956.142096760@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,61 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Baron <jbaron@akamai.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit 8aebbbb2d573d0b4afc08b90ac7d73dba2d9da97 ]
+[ Upstream commit eaecca9e7710281be7c31d892c9f447eafd7ddd9 ]
 
-We hit a kernel panic due to a divide by 0 in nct7904_read_fan() for
-the hwmon_fan_min case. Extend the check to hwmon_fan_input case as well
-for safety.
+The __cpu_logical_map undefined issue occued when the new
+tegra194-cpufreq drvier building as a module.
 
-[ 1656.545650] divide error: 0000 [#1] SMP PTI
-[ 1656.545779] CPU: 12 PID: 18010 Comm: sensors Not tainted 5.4.47 #1
-[ 1656.546065] RIP: 0010:nct7904_read+0x1e9/0x510 [nct7904]
-...
-[ 1656.546549] RAX: 0000000000149970 RBX: ffffbd6b86bcbe08 RCX: 0000000000000000
-...
-[ 1656.547548] Call Trace:
-[ 1656.547665]  hwmon_attr_show+0x32/0xd0 [hwmon]
-[ 1656.547783]  dev_attr_show+0x18/0x50
-[ 1656.547898]  sysfs_kf_seq_show+0x99/0x120
-[ 1656.548013]  seq_read+0xd8/0x3e0
-[ 1656.548127]  vfs_read+0x89/0x130
-[ 1656.548234]  ksys_read+0x7d/0xb0
-[ 1656.548342]  do_syscall_64+0x48/0x110
-[ 1656.548451]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
 
-Fixes: d65a5102a99f5 ("hwmon: (nct7904) Convert to use new hwmon registration API")
-Signed-off-by: Jason Baron <jbaron@akamai.com>
-Link: https://lore.kernel.org/r/1598026814-2604-1-git-send-email-jbaron@akamai.com
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+The driver using cpu_logical_map() macro which will expand to
+__cpu_logical_map, we can't access it in a drvier. Let's turn
+cpu_logical_map() into a C wrapper and export it to fix the
+build issue.
+
+Also create a function set_cpu_logical_map(cpu, hwid) when assign
+a value to cpu_logical_map(cpu).
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hwmon/nct7904.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/smp.h | 7 ++++++-
+ arch/arm64/kernel/setup.c    | 8 +++++++-
+ arch/arm64/kernel/smp.c      | 6 +++---
+ 3 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index dfb122b5e1b76..b812b199e5e5b 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -197,7 +197,7 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
- 		if (ret < 0)
- 			return ret;
- 		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
--		if (cnt == 0x1fff)
-+		if (cnt == 0 || cnt == 0x1fff)
- 			rpm = 0;
- 		else
- 			rpm = 1350000 / cnt;
-@@ -209,7 +209,7 @@ static int nct7904_read_fan(struct device *dev, u32 attr, int channel,
- 		if (ret < 0)
- 			return ret;
- 		cnt = ((ret & 0xff00) >> 3) | (ret & 0x1f);
--		if (cnt == 0x1fff)
-+		if (cnt == 0 || cnt == 0x1fff)
- 			rpm = 0;
- 		else
- 			rpm = 1350000 / cnt;
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index a0c8a0b652593..0eadbf933e359 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -46,7 +46,12 @@ DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
+  * Logical CPU mapping.
+  */
+ extern u64 __cpu_logical_map[NR_CPUS];
+-#define cpu_logical_map(cpu)    __cpu_logical_map[cpu]
++extern u64 cpu_logical_map(int cpu);
++
++static inline void set_cpu_logical_map(int cpu, u64 hwid)
++{
++	__cpu_logical_map[cpu] = hwid;
++}
+ 
+ struct seq_file;
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 56f6645617548..d98987b82874f 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -85,7 +85,7 @@ u64 __cacheline_aligned boot_args[4];
+ void __init smp_setup_processor_id(void)
+ {
+ 	u64 mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
+-	cpu_logical_map(0) = mpidr;
++	set_cpu_logical_map(0, mpidr);
+ 
+ 	/*
+ 	 * clear __my_cpu_offset on boot CPU to avoid hang caused by
+@@ -276,6 +276,12 @@ arch_initcall(reserve_memblock_reserved_regions);
+ 
+ u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+ 
++u64 cpu_logical_map(int cpu)
++{
++	return __cpu_logical_map[cpu];
++}
++EXPORT_SYMBOL_GPL(cpu_logical_map);
++
+ void __init setup_arch(char **cmdline_p)
+ {
+ 	init_mm.start_code = (unsigned long) _text;
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index 993a4aedfd377..102dc3e7f2e1d 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -549,7 +549,7 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_interrupt *processor)
+ 		return;
+ 
+ 	/* map the logical cpu id to cpu MPIDR */
+-	cpu_logical_map(cpu_count) = hwid;
++	set_cpu_logical_map(cpu_count, hwid);
+ 
+ 	cpu_madt_gicc[cpu_count] = *processor;
+ 
+@@ -663,7 +663,7 @@ static void __init of_parse_and_init_cpus(void)
+ 			goto next;
+ 
+ 		pr_debug("cpu logical map 0x%llx\n", hwid);
+-		cpu_logical_map(cpu_count) = hwid;
++		set_cpu_logical_map(cpu_count, hwid);
+ 
+ 		early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
+ next:
+@@ -704,7 +704,7 @@ void __init smp_init_cpus(void)
+ 	for (i = 1; i < nr_cpu_ids; i++) {
+ 		if (cpu_logical_map(i) != INVALID_HWID) {
+ 			if (smp_cpu_setup(i))
+-				cpu_logical_map(i) = INVALID_HWID;
++				set_cpu_logical_map(i, INVALID_HWID);
+ 		}
+ 	}
+ }
 -- 
 2.25.1
 
