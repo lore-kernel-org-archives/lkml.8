@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B9C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FF7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 945BF204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A5A204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976341;
-	bh=JuLsNZjZqesuqcAnyc87ATn2vCVdmiJJkLFcGGjUi/0=;
+	s=default; t=1598976347;
+	bh=RYwLB6hsXqUVuuWOGpN+7Mj6mlUmyTGE+toBtsZAumU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DsUf8BOSA8ElqKjh4zZbKCN7M3Ll/jG9dNiRq2PgE9o/kCRXeUxZmGzXKCSq8JJIt
-	 mOFIiUZt6LXlSwTHCKtZLBLGDz5MZcOmEMbCsD5Qejy1uokgLbzTFWsEVJp2C45W/5
-	 o5b9cpXKA4NNBnCW9jwjJu7qGZi1yq+Bf74pTi3I=
+	b=Sz4Uhmkr+oA1XSPXutNKc7SaO0vwSlsMD3Xap0413GFgawx3ScDFzO9mm3zc4x5w2
+	 aU+O61iNRlM3E7ZAQNjLmf+vnxyV3GC7lE24QuRzBVGkd6y/vR7t7iSpmPg3vRLhMr
+	 3Z67skntreWafCE3D0OjfUCFlwlf/8l2teWBJu0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731571AbgIAQFj (ORCPT
+        id S1728157AbgIAPlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730544AbgIAPlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:18 -0400
+        id S1731330AbgIAPjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:39:12 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2AD032064B;
-        Tue,  1 Sep 2020 15:41:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEC7205F4;
+        Tue,  1 Sep 2020 15:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974877;
-        bh=JuLsNZjZqesuqcAnyc87ATn2vCVdmiJJkLFcGGjUi/0=;
+        s=default; t=1598974751;
+        bh=RYwLB6hsXqUVuuWOGpN+7Mj6mlUmyTGE+toBtsZAumU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lZoG3adGUuFmawNp1EJp6tpBN9HNcWHte7YBOeDM0A3Ifm58BdYPF1WqToB5RhZTg
-         VX5Ko4xfqUoN56HlK9dRM8vCfVGGae49vEPXtI4ytrPWGoAu8x438Snn3hsP+G/sQ5
-         33sC8hpb+IES+Mq/LvocwdmpG2XvHeE68Op2F4aY=
+        b=CtAdOvbuJYcs/ZOrvOaunzAnQZW31ONZdibVE4TFu8m0lDzHsDDvi4w9TUtcN4q9a
+         2L6ipzPhp/G7GYfkg6oldWgYZIlupeA3b7Rncdja7hJ4hRQlgQg9BDS/jsyL2BmFbZ
+         u4/3pTBDnt+ItVOTLJlYcc/wtAG9a0VwIzzKKwd8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
-        Ashley Thomas <Ashley.Thomas2@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 125/255] drm/amd/display: Switch to immediate mode for updating infopackets
-Date:   Tue,  1 Sep 2020 17:09:41 +0200
-Message-Id: <20200901151006.716983246@linuxfoundation.org>
+Subject: [PATCH 5.8 077/255] arm64: Fix __cpu_logical_map undefined issue
+Date:   Tue,  1 Sep 2020 17:08:53 +0200
+Message-Id: <20200901151004.422558958@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -63,112 +61,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Koo <Anthony.Koo@amd.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-[ Upstream commit abba907c7a20032c2d504fd5afe3af7d440a09d0 ]
+[ Upstream commit eaecca9e7710281be7c31d892c9f447eafd7ddd9 ]
 
-[Why]
-Using FRAME_UPDATE will result in infopacket to be potentially updated
-one frame late.
-In commit stream scenarios for previously active stream, some stale
-infopacket data from previous config might be erroneously sent out on
-initial frame after stream is re-enabled.
+The __cpu_logical_map undefined issue occued when the new
+tegra194-cpufreq drvier building as a module.
 
-[How]
-Switch to using IMMEDIATE_UPDATE mode
+ERROR: modpost: "__cpu_logical_map" [drivers/cpufreq/tegra194-cpufreq.ko] undefined!
 
-Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
-Reviewed-by: Ashley Thomas <Ashley.Thomas2@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+The driver using cpu_logical_map() macro which will expand to
+__cpu_logical_map, we can't access it in a drvier. Let's turn
+cpu_logical_map() into a C wrapper and export it to fix the
+build issue.
+
+Also create a function set_cpu_logical_map(cpu, hwid) when assign
+a value to cpu_logical_map(cpu).
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../amd/display/dc/dcn10/dcn10_stream_encoder.c  | 16 ++++++++--------
- .../amd/display/dc/dcn10/dcn10_stream_encoder.h  | 14 ++++++++++++++
- 2 files changed, 22 insertions(+), 8 deletions(-)
+ arch/arm64/include/asm/smp.h | 7 ++++++-
+ arch/arm64/kernel/setup.c    | 8 +++++++-
+ arch/arm64/kernel/smp.c      | 6 +++---
+ 3 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c
-index 07b2f9399671d..842abb4c475bc 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c
-@@ -121,35 +121,35 @@ void enc1_update_generic_info_packet(
- 	switch (packet_index) {
- 	case 0:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC0_FRAME_UPDATE, 1);
-+				AFMT_GENERIC0_IMMEDIATE_UPDATE, 1);
- 		break;
- 	case 1:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC1_FRAME_UPDATE, 1);
-+				AFMT_GENERIC1_IMMEDIATE_UPDATE, 1);
- 		break;
- 	case 2:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC2_FRAME_UPDATE, 1);
-+				AFMT_GENERIC2_IMMEDIATE_UPDATE, 1);
- 		break;
- 	case 3:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC3_FRAME_UPDATE, 1);
-+				AFMT_GENERIC3_IMMEDIATE_UPDATE, 1);
- 		break;
- 	case 4:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC4_FRAME_UPDATE, 1);
-+				AFMT_GENERIC4_IMMEDIATE_UPDATE, 1);
- 		break;
- 	case 5:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC5_FRAME_UPDATE, 1);
-+				AFMT_GENERIC5_IMMEDIATE_UPDATE, 1);
- 		break;
- 	case 6:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC6_FRAME_UPDATE, 1);
-+				AFMT_GENERIC6_IMMEDIATE_UPDATE, 1);
- 		break;
- 	case 7:
- 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
--				AFMT_GENERIC7_FRAME_UPDATE, 1);
-+				AFMT_GENERIC7_IMMEDIATE_UPDATE, 1);
- 		break;
- 	default:
- 		break;
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h
-index f9b9e221c698b..7507000a99ac4 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h
-@@ -273,7 +273,14 @@ struct dcn10_stream_enc_registers {
- 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC2_FRAME_UPDATE, mask_sh),\
- 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC3_FRAME_UPDATE, mask_sh),\
- 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC4_FRAME_UPDATE, mask_sh),\
-+	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC0_IMMEDIATE_UPDATE, mask_sh),\
-+	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC1_IMMEDIATE_UPDATE, mask_sh),\
-+	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC2_IMMEDIATE_UPDATE, mask_sh),\
-+	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC3_IMMEDIATE_UPDATE, mask_sh),\
- 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC4_IMMEDIATE_UPDATE, mask_sh),\
-+	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC5_IMMEDIATE_UPDATE, mask_sh),\
-+	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC6_IMMEDIATE_UPDATE, mask_sh),\
-+	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC7_IMMEDIATE_UPDATE, mask_sh),\
- 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC5_FRAME_UPDATE, mask_sh),\
- 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC6_FRAME_UPDATE, mask_sh),\
- 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC7_FRAME_UPDATE, mask_sh),\
-@@ -337,7 +344,14 @@ struct dcn10_stream_enc_registers {
- 	type AFMT_GENERIC2_FRAME_UPDATE;\
- 	type AFMT_GENERIC3_FRAME_UPDATE;\
- 	type AFMT_GENERIC4_FRAME_UPDATE;\
-+	type AFMT_GENERIC0_IMMEDIATE_UPDATE;\
-+	type AFMT_GENERIC1_IMMEDIATE_UPDATE;\
-+	type AFMT_GENERIC2_IMMEDIATE_UPDATE;\
-+	type AFMT_GENERIC3_IMMEDIATE_UPDATE;\
- 	type AFMT_GENERIC4_IMMEDIATE_UPDATE;\
-+	type AFMT_GENERIC5_IMMEDIATE_UPDATE;\
-+	type AFMT_GENERIC6_IMMEDIATE_UPDATE;\
-+	type AFMT_GENERIC7_IMMEDIATE_UPDATE;\
- 	type AFMT_GENERIC5_FRAME_UPDATE;\
- 	type AFMT_GENERIC6_FRAME_UPDATE;\
- 	type AFMT_GENERIC7_FRAME_UPDATE;\
+diff --git a/arch/arm64/include/asm/smp.h b/arch/arm64/include/asm/smp.h
+index a0c8a0b652593..0eadbf933e359 100644
+--- a/arch/arm64/include/asm/smp.h
++++ b/arch/arm64/include/asm/smp.h
+@@ -46,7 +46,12 @@ DECLARE_PER_CPU_READ_MOSTLY(int, cpu_number);
+  * Logical CPU mapping.
+  */
+ extern u64 __cpu_logical_map[NR_CPUS];
+-#define cpu_logical_map(cpu)    __cpu_logical_map[cpu]
++extern u64 cpu_logical_map(int cpu);
++
++static inline void set_cpu_logical_map(int cpu, u64 hwid)
++{
++	__cpu_logical_map[cpu] = hwid;
++}
+ 
+ struct seq_file;
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 93b3844cf4421..07b7940951e28 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -85,7 +85,7 @@ u64 __cacheline_aligned boot_args[4];
+ void __init smp_setup_processor_id(void)
+ {
+ 	u64 mpidr = read_cpuid_mpidr() & MPIDR_HWID_BITMASK;
+-	cpu_logical_map(0) = mpidr;
++	set_cpu_logical_map(0, mpidr);
+ 
+ 	/*
+ 	 * clear __my_cpu_offset on boot CPU to avoid hang caused by
+@@ -276,6 +276,12 @@ arch_initcall(reserve_memblock_reserved_regions);
+ 
+ u64 __cpu_logical_map[NR_CPUS] = { [0 ... NR_CPUS-1] = INVALID_HWID };
+ 
++u64 cpu_logical_map(int cpu)
++{
++	return __cpu_logical_map[cpu];
++}
++EXPORT_SYMBOL_GPL(cpu_logical_map);
++
+ void __init setup_arch(char **cmdline_p)
+ {
+ 	init_mm.start_code = (unsigned long) _text;
+diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+index e43a8ff19f0f6..8cd6316a0d833 100644
+--- a/arch/arm64/kernel/smp.c
++++ b/arch/arm64/kernel/smp.c
+@@ -567,7 +567,7 @@ acpi_map_gic_cpu_interface(struct acpi_madt_generic_interrupt *processor)
+ 		return;
+ 
+ 	/* map the logical cpu id to cpu MPIDR */
+-	cpu_logical_map(cpu_count) = hwid;
++	set_cpu_logical_map(cpu_count, hwid);
+ 
+ 	cpu_madt_gicc[cpu_count] = *processor;
+ 
+@@ -681,7 +681,7 @@ static void __init of_parse_and_init_cpus(void)
+ 			goto next;
+ 
+ 		pr_debug("cpu logical map 0x%llx\n", hwid);
+-		cpu_logical_map(cpu_count) = hwid;
++		set_cpu_logical_map(cpu_count, hwid);
+ 
+ 		early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
+ next:
+@@ -722,7 +722,7 @@ void __init smp_init_cpus(void)
+ 	for (i = 1; i < nr_cpu_ids; i++) {
+ 		if (cpu_logical_map(i) != INVALID_HWID) {
+ 			if (smp_cpu_setup(i))
+-				cpu_logical_map(i) = INVALID_HWID;
++				set_cpu_logical_map(i, INVALID_HWID);
+ 		}
+ 	}
+ }
 -- 
 2.25.1
 
