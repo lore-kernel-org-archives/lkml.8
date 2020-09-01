@@ -2,106 +2,163 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E81BC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:34:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA648C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD51206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:34:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1277206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:36:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="WSN1LTNm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgIATee (ORCPT
+        id S1731132AbgIATgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:34:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:48954 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbgIATed (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:34:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 63F041FB;
-        Tue,  1 Sep 2020 12:34:32 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D91FB3F71F;
-        Tue,  1 Sep 2020 12:34:29 -0700 (PDT)
-Subject: Re: [PATCH v9 16/32] drm: rockchip: use common helper for a
- scatterlist contiguity check
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063537eucas1p1462d4761c8eb6d762fe5ea0fbd3b6e3b@eucas1p1.samsung.com>
- <20200826063316.23486-17-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <263143f0-8b39-6daa-1d26-54ef32b54c27@arm.com>
-Date:   Tue, 1 Sep 2020 20:34:28 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 15:36:36 -0400
+Received: from mail-mw2nam10on2066.outbound.protection.outlook.com ([40.107.94.66]:42637
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728117AbgIATge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 15:36:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RGrf+u/qWUFnZSed13F3TgYDajRi5qgE3P254CBF3TBHu9JfIHLn82nAIHcIxB91hZLiZEY07Gu/zuMbCedDeM+F7SeK/db8wTQCzfnQmZzIGDijSgSZB0rWgdpXPJRG1d2Q4k5JlA7oizhJ6AXhc/jRFbsM4VrSnco3ezMrjMfYQ3nf72pJ+Tk3xqYmO8i+JpNUO6ILI2LUzC8Pd3zpAjw6Bu3TKcu6YBFkKp6uPzDV7CW5XkOC1ZwF5XtVLE5PnRzozftSkdiOTaQzh/1dw9YDaW4ef/HKcU5hIZPUTau7H8afKY3NeYzaKA0szvw3TWu2vozPC68i1eCtMOe1MA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nNd19dy8/IdiwIdZO+CH46S4dujPVG65h56Y/eFMdak=;
+ b=IBw28q9h8xHPNcLJdIwetEVrQ12fSMss7h98P+cJSnQqx0BS49Aej/meVP/tQ1YObvoTSBBgRGtDkjLnepaoFMF9sPrGpLWO4EO6XGz8JBeD0ZqtcOQfedJKF2GZ0eLLGoiBKDtTqtU95+Sz9ZbJoLZwqx7bN89fLl3D1NNAiBXlmqeynMtxTHO++EsYyh+HsCUpkS0A3+2frnkrCwAv1+mfj/sN1e1rDJ8BRrQv8ld8YraNv85cTWuojB114DSNU8RK1/VFThcG4OBOiKmiIfWYtSskRlG69cuzujgUsodNk1F6FlW+M80X/1FCo0di7Kc3Swg7o+Ro59SV8al28w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nNd19dy8/IdiwIdZO+CH46S4dujPVG65h56Y/eFMdak=;
+ b=WSN1LTNmTZvQ+58gxgWpb8+4LFoEozzcMp5SlUBhBWWhig/lzG4CTdVuxwMKcRaVLxUNvMiO/lkp5+fa8XyEGwwzoB1ggijK+AB5gsRggHGTWezc1HpPYzwV6QwCXWLJApniCjRhavD4FCXd/x0bAE1XOZVroVaJ3EVnNKbxYVk=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from DM6PR12MB3116.namprd12.prod.outlook.com (2603:10b6:5:38::12) by
+ DM5PR12MB1242.namprd12.prod.outlook.com (2603:10b6:3:6d::18) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.23; Tue, 1 Sep 2020 19:36:31 +0000
+Received: from DM6PR12MB3116.namprd12.prod.outlook.com
+ ([fe80::d950:4d1b:55d0:9720]) by DM6PR12MB3116.namprd12.prod.outlook.com
+ ([fe80::d950:4d1b:55d0:9720%5]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
+ 19:36:31 +0000
+Date:   Tue, 1 Sep 2020 14:36:24 -0500
+From:   Yazen Ghannam <yazen.ghannam@amd.com>
+To:     Smita Koralahalli <Smita.KoralahalliChannabasappa@amd.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-edac@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-acpi@vger.kernel.org,
+        devel@acpica.org, Borislav Petkov <bp@alien8.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>,
+        Ard Biesheuvel <ardb@kernel.org>
+Subject: Re: [PATCH v2 1/2] cper, apei, mce: Pass x86 CPER through the MCA
+ handling chain
+Message-ID: <20200901193624.GA3558296@yaz-nikka.amd.com>
+References: <20200828203332.11129-1-Smita.KoralahalliChannabasappa@amd.com>
+ <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200828203332.11129-2-Smita.KoralahalliChannabasappa@amd.com>
+X-ClientProxiedBy: DM5PR07CA0123.namprd07.prod.outlook.com
+ (2603:10b6:3:13e::13) To DM6PR12MB3116.namprd12.prod.outlook.com
+ (2603:10b6:5:38::12)
 MIME-Version: 1.0
-In-Reply-To: <20200826063316.23486-17-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by DM5PR07CA0123.namprd07.prod.outlook.com (2603:10b6:3:13e::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Tue, 1 Sep 2020 19:36:30 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3ec7343e-2549-4500-9ac0-08d84eae5427
+X-MS-TrafficTypeDiagnostic: DM5PR12MB1242:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB1242C8FB875BE4D60FE0DF23F82E0@DM5PR12MB1242.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: QZquAWb5osKduiKJss+Ov7P/nUFj4CUYkASj7JfFLMZRZWDHcjSoLoz5aU7SuzC35PY2hwN8efb95lEDTHj4YlkkrZGudjfdTI56wsCv5b1lNZ/qjFR7d/t2asf2gtyPqoEhzwEc6x0v2UXUdtcU25ncqWMVbVGDAZnrMcSgMaDcWCcZXii/Fxgg1gbu35jRGENXoikZFesfINHJYc6MAwXapSWeT0eTw5u/7igD2Cn4agD/luNlH//gcy4RNwC2yWodllf4toggNIJHPbwMbZpoAufdRs9f5EzFfrKRjDzm4MVEionQeGt5LPTtApyxHwTuNhvzRm3BdXkrAejx+g==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3116.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(396003)(366004)(376002)(83380400001)(7416002)(6666004)(186003)(4326008)(8936002)(8676002)(33656002)(1076003)(2906002)(478600001)(6862004)(52116002)(16576012)(44832011)(5660300002)(26005)(956004)(6636002)(66476007)(6486002)(54906003)(66556008)(66946007)(86362001)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: cucAVbATLQnv4CaEE4iT1ttOQZSYwWJjlfB7BOwakQVrDkjGNC2sk2mpIPUya4qvTxiF3lAwXcJ+ZrbW1j66WR1lr8SNW+PfgDRf61eenkuFL9YXgpOYRnQ/xNfOmK3rTTAI0qIK5y4TyRFxTsxV4tB2YlhyLqD2OruJoEf7n+5yY9kB8hGMR4LLNnmznSeEGH/HCHE7bn4oLOirbilNG07mvD8gqb3J1knhs4X5naH//LNi99q94RxAgVKjVbuKA8hiqlVpAxCVSii5Y57su1HV+GeQ49WspEb31KQGEDbfad8OZMC7MJHPjX5bZS6LPdMXidk315x221jxP5LNSYctt+6soJ9CHDfbcA73uTbSJVwYL9Oubc9dg+7yvp8saQWEZuwwH1SYIwgr4+kv+dk9jibLoaU4BqSToMFSGByyV39Hf5sV44rvii4JShTt/aDRNEHcn9VnirM9PGIT0KFs5JhtAjiTaPT0TO4Bf/mAw23z8jTJmwNh0e3Z+ng84ZrL47toSB/UPxD7/sZHTKiV/O/LGTmDphgGTqjuHTTLyhl3Xvkh79Sl973ReGrnxj/zAEWrGostwkVv+xXt5ku8N5Ar0+qprXSvelmN7e7jmKYYw0hhuQcfrd4gioiULjvlyeovYKR5yb0JITfVbg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3ec7343e-2549-4500-9ac0-08d84eae5427
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3116.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 19:36:31.7342
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 01AydhYxT/jyy0H3MZrR/myLBMvPEh21YGq7cXoTa0Wr29S3CDkDKqlGH7ac4j/RVPV14bNV39SyEknO58xb9w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 07:33, Marek Szyprowski wrote:
-> Use common helper for checking the contiguity of the imported dma-buf.
+On Fri, Aug 28, 2020 at 03:33:31PM -0500, Smita Koralahalli wrote:
+...
+> +int apei_mce_report_x86_error(struct cper_ia_proc_ctx *ctx_info, u64 lapic_id)
+> +{
+> +	const u64 *i_mce = ((const void *) (ctx_info + 1));
+> +	unsigned int cpu;
+> +	struct mce m;
+> +
+> +	if (!boot_cpu_has(X86_FEATURE_SMCA))
+> +		return -EINVAL;
+> +
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+This function is called on any context type, but it can only decode
+"MSR" types that follow the MCAX register layout used on Scalable MCA
+systems.
 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->   drivers/gpu/drm/rockchip/rockchip_drm_gem.c | 19 +------------------
->   1 file changed, 1 insertion(+), 18 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> index b9275ba7c5a5..2970e534e2bb 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> @@ -460,23 +460,6 @@ struct sg_table *rockchip_gem_prime_get_sg_table(struct drm_gem_object *obj)
->   	return sgt;
->   }
->   
-> -static unsigned long rockchip_sg_get_contiguous_size(struct sg_table *sgt,
-> -						     int count)
-> -{
-> -	struct scatterlist *s;
-> -	dma_addr_t expected = sg_dma_address(sgt->sgl);
-> -	unsigned int i;
-> -	unsigned long size = 0;
-> -
-> -	for_each_sg(sgt->sgl, s, count, i) {
-> -		if (sg_dma_address(s) != expected)
-> -			break;
-> -		expected = sg_dma_address(s) + sg_dma_len(s);
-> -		size += sg_dma_len(s);
-> -	}
-> -	return size;
-> -}
-> -
->   static int
->   rockchip_gem_iommu_map_sg(struct drm_device *drm,
->   			  struct dma_buf_attachment *attach,
-> @@ -498,7 +481,7 @@ rockchip_gem_dma_map_sg(struct drm_device *drm,
->   	if (!count)
->   		return -EINVAL;
->   
-> -	if (rockchip_sg_get_contiguous_size(sg, count) < attach->dmabuf->size) {
-> +	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
->   		DRM_ERROR("failed to map sg_table to contiguous linear address.\n");
->   		dma_unmap_sg(drm->dev, sg->sgl, sg->nents,
->   			     DMA_BIDIRECTIONAL);
-> 
+So I think there should be a couple of checks added:
+1) Context type is "MSR".
+2) Register layout follows what is expected below. There's no explict
+way to do this, since the data is implemenation-specific. But at least
+there can be a check that the starting MSR address matches the first
+expected register: Bank's MCA_STATUS in MCAX space (0xC0002XX1).
+
+For example:
+
+	(ctx_info->msr_addr & 0xC0002001) == 0xC0002001
+
+The raw value in the example should be defined with a name.
+
+> +	mce_setup(&m);
+> +
+> +	m.extcpu = -1;
+> +	m.socketid = -1;
+> +
+> +	for_each_possible_cpu(cpu) {
+> +		if (cpu_data(cpu).initial_apicid == lapic_id) {
+> +			m.extcpu = cpu;
+> +			m.socketid = cpu_data(m.extcpu).phys_proc_id;
+> +			break;
+> +		}
+> +	}
+> +
+> +	m.apicid = lapic_id;
+> +	m.bank = (ctx_info->msr_addr >> 4) & 0xFF;
+> +	m.status = *i_mce;
+> +	m.addr = *(i_mce + 1);
+> +	m.misc = *(i_mce + 2);
+> +	/* Skipping MCA_CONFIG */
+> +	m.ipid = *(i_mce + 4);
+> +	m.synd = *(i_mce + 5);
+> +
+> +	mce_log(&m);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(apei_mce_report_x86_error);
+> +
+
+Thanks,
+Yazen
