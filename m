@@ -2,83 +2,92 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC277C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 952C8C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88D99206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75E562100A
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:38:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726623AbgIAJiB (ORCPT
+        id S1726419AbgIAJih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:38:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56194 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726293AbgIAJhr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:37:47 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A621C061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 02:37:47 -0700 (PDT)
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1kD2jU-0003VQ-1d; Tue, 01 Sep 2020 11:37:40 +0200
-Received: from ore by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <ore@pengutronix.de>)
-        id 1kD2jT-0007e0-Kv; Tue, 01 Sep 2020 11:37:39 +0200
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-To:     Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Cc:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>
-Subject: [PATCH v1 2/3] dt-bindings: arm: fsl: add Plymovent M2M board
-Date:   Tue,  1 Sep 2020 11:37:34 +0200
-Message-Id: <20200901093736.29316-3-o.rempel@pengutronix.de>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901093736.29316-1-o.rempel@pengutronix.de>
-References: <20200901093736.29316-1-o.rempel@pengutronix.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: ore@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+        Tue, 1 Sep 2020 05:38:37 -0400
+Received: from mga01.intel.com ([192.55.52.88]:45308 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726091AbgIAJih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:38:37 -0400
+IronPort-SDR: sUTLlJjt70Takf/9LPA3XJWJXxqch3PBzwj72O4awNGRi2wXbEW9+eOE0LoYxpZEPFnUV7Xmii
+ frOayHZRGBag==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="175181490"
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="175181490"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 02:38:37 -0700
+IronPort-SDR: 7yFd2FX5pDlM2VuWchapDGnsG/YUIBvs1NB/OlBExH6zhiNrUyYmakyTu9rBz9xFLl2/++SMkE
+ H0vIIE3SPXrA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,378,1592895600"; 
+   d="scan'208";a="502181158"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by fmsmga005.fm.intel.com with ESMTP; 01 Sep 2020 02:38:35 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/6] perf tools: Enable AUX area tracing snapshots using a FIFO
+Date:   Tue,  1 Sep 2020 12:37:52 +0300
+Message-Id: <20200901093758.32293-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Plymovent Group BV M2M iMX6dl based board
+Hi
 
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Here are V2 patches to enable AUX area tracing snapshots using a FIFO.
+Presently SIGUSR2 can be used but the advantage of the FIFO is that access
+is governed by access to the FIFO.  Refer to the example in patch 5.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 6da9d734cdb7..5ecd3dd6ff23 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -176,6 +176,7 @@ properties:
-               - kontron,imx6dl-samx6i     # Kontron i.MX6 Solo SMARC Module
-               - prt,prtrvt                # Protonic RVT board
-               - prt,prtvt7                # Protonic VT7 board
-+              - ply,plym2m                # Plymovent M2M board
-               - technexion,imx6dl-pico-dwarf   # TechNexion i.MX6DL Pico-Dwarf
-               - technexion,imx6dl-pico-hobbit  # TechNexion i.MX6DL Pico-Hobbit
-               - technexion,imx6dl-pico-nymph   # TechNexion i.MX6DL Pico-Nymph
--- 
-2.28.0
+The first 4 patches are preparation, including patch 4 which enhances the
+--control option to accept file names.
 
+Patch 5 adds snapshot control command.
+
+The final patch updates Intel PT documentation.
+
+
+Changes in V2:
+	Use fifo: prefix in --control option
+
+
+Adrian Hunter (6):
+      perf tools: Consolidate --control option parsing into one function
+      perf tools: Handle read errors from ctl_fd
+      perf tools: Use AsciiDoc formatting for --control option documentation
+      perf tools: Add FIFO file names as alternative options to --control
+      perf record: Add 'snapshot' control command
+      perf intel-pt: Document snapshot control command
+
+ tools/perf/Documentation/perf-intel-pt.txt | 23 ++++++-
+ tools/perf/Documentation/perf-record.txt   | 56 ++++++++---------
+ tools/perf/Documentation/perf-stat.txt     | 48 ++++++++-------
+ tools/perf/builtin-record.c                | 74 +++++++++++++----------
+ tools/perf/builtin-stat.c                  | 35 +++++------
+ tools/perf/util/evlist.c                   | 96 +++++++++++++++++++++++++++---
+ tools/perf/util/evlist.h                   |  6 +-
+ tools/perf/util/record.h                   |  1 +
+ tools/perf/util/stat.h                     |  1 +
+ 9 files changed, 227 insertions(+), 113 deletions(-)
+
+
+Regards
+Adrian
