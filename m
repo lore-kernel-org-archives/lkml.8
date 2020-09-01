@@ -2,57 +2,56 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98951C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DEBC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6532320767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB782067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:44:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978657;
-	bh=PqrMqbBH0Z4mgkBMY6zCc7uImtlAmTC0nFywzlrEX6A=;
+	s=default; t=1598978660;
+	bh=VlWSxCahxGTsAg8riNAYQKzrPh8ni/S6sbuyR/BcenQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcQUwCecZgBTjDhhMuuaSAqVw2ZaiiwrEYw2/7pL/zWIDv9+xrCbZA7g4qRZIw+hu
-	 BOFJlAsjTxVEnPTmTI48xaUcrI8gqcZ/QxTrkYY8WcGXrdGaxz5R6ftYo0uuhm4dM9
-	 fsw0EC6ALAgxbebA1Yv7MAn+pKdyDyKdu+N5oW9s=
+	b=YEI/S75jCluwxU/dhAH+X9bm1xmlYADyMDByv8t/r/pqhPlNVDlrtWOvHIHQBZkSo
+	 yIsNe79YTuFqAmFpvRlaXVFGiwEYRiMFxqLCtINpYfdJ+m4/7aGsR/mo9QHWMrfKir
+	 GmAbbwx2XBC/xpGiPFAcywCEQHvPOb6/Xnk5iuoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbgIAQoP (ORCPT
+        id S1730255AbgIAP1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:44:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55100 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:27:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730259AbgIAP1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:43 -0400
+        id S1728378AbgIAPYJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:09 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CE72206FA;
-        Tue,  1 Sep 2020 15:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFB25207D3;
+        Tue,  1 Sep 2020 15:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974063;
-        bh=PqrMqbBH0Z4mgkBMY6zCc7uImtlAmTC0nFywzlrEX6A=;
+        s=default; t=1598973849;
+        bh=VlWSxCahxGTsAg8riNAYQKzrPh8ni/S6sbuyR/BcenQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1bbpehUXpj7vHZa0Nfy63ArP5NUGnzOchiXTQWbtUcdkl9Dk34vwBHm+c2Fw2RNMO
-         ZOmXkFZkRA1Fq8GbldT94WdmlmvvteTk8G8q4Wq+eMGp9AerOopYxXggaA+2ZBrt9o
-         kqwheu0h1G/RuMcjVueFNzOVrrV8aoaNf6GXTW+E=
+        b=o5BAIkaRm9Vqz0tfoHGa/5MdjVlsKU75gFvwsWIPxIXMOp1uNNyur1YVKR1Qu3ftc
+         KtvWgj0Ovau/ZfNii9cmy5fSnK+cBWSIA5+WJ/ovFZC0gQwxEdvN25e4kb8ZkUpU6s
+         EFpo5iLdGHhSBDFNgtFFDivf5WofJkJa/+xoKaxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com,
-        Necip Fazil Yildiran <necip@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 006/214] net: qrtr: fix usage of idr in port assignment to socket
-Date:   Tue,  1 Sep 2020 17:08:06 +0200
-Message-Id: <20200901150953.254936782@linuxfoundation.org>
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 072/125] scsi: ufs: Improve interrupt handling for shared interrupts
+Date:   Tue,  1 Sep 2020 17:10:27 +0200
+Message-Id: <20200901150938.111124787@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,64 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Necip Fazil Yildiran <necip@google.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 8dfddfb79653df7c38a9c8c4c034f242a36acee9 ]
+[ Upstream commit 127d5f7c4b653b8be5eb3b2c7bbe13728f9003ff ]
 
-Passing large uint32 sockaddr_qrtr.port numbers for port allocation
-triggers a warning within idr_alloc() since the port number is cast
-to int, and thus interpreted as a negative number. This leads to
-the rejection of such valid port numbers in qrtr_port_assign() as
-idr_alloc() fails.
+For shared interrupts, the interrupt status might be zero, so check that
+first.
 
-To avoid the problem, switch to idr_alloc_u32() instead.
-
-Fixes: bdabad3e363d ("net: Add Qualcomm IPC router")
-Reported-by: syzbot+f31428628ef672716ea8@syzkaller.appspotmail.com
-Signed-off-by: Necip Fazil Yildiran <necip@google.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200811133936.19171-2-adrian.hunter@intel.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/qrtr/qrtr.c |   20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ drivers/scsi/ufs/ufshcd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/net/qrtr/qrtr.c
-+++ b/net/qrtr/qrtr.c
-@@ -547,23 +547,25 @@ static void qrtr_port_remove(struct qrtr
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 747a2321b5f7d..d8c6fd2012757 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5605,7 +5605,7 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
   */
- static int qrtr_port_assign(struct qrtr_sock *ipc, int *port)
+ static irqreturn_t ufshcd_intr(int irq, void *__hba)
  {
-+	u32 min_port;
- 	int rc;
+-	u32 intr_status, enabled_intr_status;
++	u32 intr_status, enabled_intr_status = 0;
+ 	irqreturn_t retval = IRQ_NONE;
+ 	struct ufs_hba *hba = __hba;
+ 	int retries = hba->nutrs;
+@@ -5619,7 +5619,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 	 * read, make sure we handle them by checking the interrupt status
+ 	 * again in a loop until we process all of the reqs before returning.
+ 	 */
+-	do {
++	while (intr_status && retries--) {
+ 		enabled_intr_status =
+ 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 		if (intr_status)
+@@ -5630,7 +5630,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		}
  
- 	mutex_lock(&qrtr_port_lock);
- 	if (!*port) {
--		rc = idr_alloc(&qrtr_ports, ipc,
--			       QRTR_MIN_EPH_SOCKET, QRTR_MAX_EPH_SOCKET + 1,
--			       GFP_ATOMIC);
--		if (rc >= 0)
--			*port = rc;
-+		min_port = QRTR_MIN_EPH_SOCKET;
-+		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, QRTR_MAX_EPH_SOCKET, GFP_ATOMIC);
-+		if (!rc)
-+			*port = min_port;
- 	} else if (*port < QRTR_MIN_EPH_SOCKET && !capable(CAP_NET_ADMIN)) {
- 		rc = -EACCES;
- 	} else if (*port == QRTR_PORT_CTRL) {
--		rc = idr_alloc(&qrtr_ports, ipc, 0, 1, GFP_ATOMIC);
-+		min_port = 0;
-+		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, 0, GFP_ATOMIC);
- 	} else {
--		rc = idr_alloc(&qrtr_ports, ipc, *port, *port + 1, GFP_ATOMIC);
--		if (rc >= 0)
--			*port = rc;
-+		min_port = *port;
-+		rc = idr_alloc_u32(&qrtr_ports, ipc, &min_port, *port, GFP_ATOMIC);
-+		if (!rc)
-+			*port = min_port;
- 	}
- 	mutex_unlock(&qrtr_port_lock);
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	} while (intr_status && --retries);
++	}
  
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
+-- 
+2.25.1
+
 
 
