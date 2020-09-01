@@ -2,103 +2,133 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50065C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 550BEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E4EB21D93
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598971488;
-	bh=eUMkJe1k73nPIoAz/X/D0N27YRTVGNI5TV/RNN5n/Mk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K0yZPB50fixtnj8JEbo1nzRl3351DCb+WvVmcw+wQL8iwLy5TPXkv+P87w8WyMRLt
-	 QZuiX78hueIu6/PIMgDMioIr+fkWF1WLTRD7Mi2ytke/xsruZRtE6KbVgtwvyWK9uG
-	 Uk3xuhWxJdls3nWq+zSBWwjTaGMMlIzhHPXyZNdk=
+	by mail.kernel.org (Postfix) with ESMTP id 2BE1D22208
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:44:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GU7uDdqV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728428AbgIAOoW (ORCPT
+        id S1728586AbgIAOn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:44:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728564AbgIAOnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:43:39 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEEE721655;
-        Tue,  1 Sep 2020 14:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598971419;
-        bh=eUMkJe1k73nPIoAz/X/D0N27YRTVGNI5TV/RNN5n/Mk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yQONy3/N6yD6D4OMP0fQ/v5bcltE6OgQQGensQNNxGsJ+W/ROxvB2jwGae/TS72VW
-         78TV/iMRVfsuDoCuNaTZ6cw6Dn3XJGNXGha2K7LXbwp6p/0gp5ppnMxEkAAU/9V3Mx
-         PbaSkvLqUiPT4Q2yPaOI1QVIGAqKLZylaiBpTKmE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1kD7VZ-008IQP-60; Tue, 01 Sep 2020 15:43:37 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Valentin Schneider <Valentin.Schneider@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Saravana Kannan <saravanak@google.com>,
-        kernel-team@android.com,
-        Valentin Schneider <valentin.schneider@arm.com>
-Subject: [PATCH v3 09/16] irqchip/gic-common: Don't enable SGIs by default
-Date:   Tue,  1 Sep 2020 15:43:17 +0100
-Message-Id: <20200901144324.1071694-10-maz@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200901144324.1071694-1-maz@kernel.org>
-References: <20200901144324.1071694-1-maz@kernel.org>
+        Tue, 1 Sep 2020 10:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42774 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727961AbgIAOQg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:16:36 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02E73C06125E;
+        Tue,  1 Sep 2020 07:16:35 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s10so149277plp.1;
+        Tue, 01 Sep 2020 07:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=84583yIct+fNxRagU/I0oUzZetXb7oFAI3KOXHJQqUA=;
+        b=GU7uDdqVLUXKlAy3ozm0T+bJe+nzKjD23SlxSVkft4wTgJRBROxw7gJGPyomn8qCwH
+         u/cEKVj5SDdbQtMOphIetJLDAXtVhGEVZYMjphPH4q2SjibPLqfI6aH4tu0nWrhJfrVT
+         h+KHgrPqM9JGdcOd38ddmSABNGjq6eHsvwlZrukUBwxIQxqkW96szQrDOlrA0KEB1RxL
+         ATvyadvYsOzbc0e9JCQ2hxmfvjHCp286ulKqOps1nhFNRdnEZzxUukT/XiUyojXwTmCx
+         ip76YWxjruQL6DgAdQyS5JZwqmcfv7f07ZD11p6WJqYYcFCCGuMr6V4niCSWI5Ydk+yS
+         gd4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=84583yIct+fNxRagU/I0oUzZetXb7oFAI3KOXHJQqUA=;
+        b=VxrYEVSAhN9V8k6wYM3hYEuzXWmATtU8CHGFfg5NlCQPP/0rWEQCIMHA+xWkZ8tUND
+         Sfhhacxlkcibhos95u6jEgZiTX2hto6myBDO4AFh8qPtydoFKw8+BQv6hpUcNYXUv49s
+         rL1d2fogUQ9iKcTzNzaN/3RbRHQ1DCSmCjhWYmRNDktIbQcT8WLd85HMc552tTaH3cS+
+         Vs1reZTeNGyqeqbgBGjLMpBmk8TyL2zZQGdg2wmRnENXKRuEMaG6hUNf4aWZtoSHl6be
+         cs10KrQdWrjjUivNMQpKF8F7qvb6vhp5a957vks6gcg+4jad1+nNcQqUC/Rucm/QDopv
+         ziOQ==
+X-Gm-Message-State: AOAM530TbpH0EJMoviG1Ev1sarXkt/dtcs2twozNv4BleP/CCCq0v+Gl
+        1Q9o2GiOgk9RqpZffUQ/MNZbJxQw6tk=
+X-Google-Smtp-Source: ABdhPJwajm1nSgccZzMMxt7Yj7FhrjQ9hT6dRyc0q9bLokojEP4AQzrC4eZEP48WKDdjvYfQFasvFg==
+X-Received: by 2002:a17:90b:4b89:: with SMTP id lr9mr1848777pjb.126.1598969794412;
+        Tue, 01 Sep 2020 07:16:34 -0700 (PDT)
+Received: from bobo.ibm.com ([203.185.249.227])
+        by smtp.gmail.com with ESMTPSA id w9sm2212816pgg.76.2020.09.01.07.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 07:16:34 -0700 (PDT)
+From:   Nicholas Piggin <npiggin@gmail.com>
+To:     linux-arch@vger.kernel.org
+Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Hu <nickhu@andestech.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Greentime Hu <green.hu@gmail.com>
+Subject: [PATCH v3 12/23] nds32: use asm-generic/mmu_context.h for no-op implementations
+Date:   Wed,  2 Sep 2020 00:15:28 +1000
+Message-Id: <20200901141539.1757549-13-npiggin@gmail.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20200901141539.1757549-1-npiggin@gmail.com>
+References: <20200901141539.1757549-1-npiggin@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, Valentin.Schneider@arm.com, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, saravanak@google.com, kernel-team@android.com, valentin.schneider@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The architecture code now enables the IPIs as required, so no
-need to enable SGIs by default in the GIC code.
-
-Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: Nick Hu <nickhu@andestech.com>
+Cc: Vincent Chen <deanbo422@gmail.com>
+Acked-by: Greentime Hu <green.hu@gmail.com>
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
 ---
- drivers/irqchip/irq-gic-common.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/nds32/include/asm/mmu_context.h | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-common.c b/drivers/irqchip/irq-gic-common.c
-index 82520006195d..f47b41dfd023 100644
---- a/drivers/irqchip/irq-gic-common.c
-+++ b/drivers/irqchip/irq-gic-common.c
-@@ -152,9 +152,6 @@ void gic_cpu_config(void __iomem *base, int nr, void (*sync_access)(void))
- 		writel_relaxed(GICD_INT_DEF_PRI_X4,
- 					base + GIC_DIST_PRI + i * 4 / 4);
+diff --git a/arch/nds32/include/asm/mmu_context.h b/arch/nds32/include/asm/mmu_context.h
+index b8fd3d189fdc..c651bc8cacdc 100644
+--- a/arch/nds32/include/asm/mmu_context.h
++++ b/arch/nds32/include/asm/mmu_context.h
+@@ -9,6 +9,7 @@
+ #include <asm/proc-fns.h>
+ #include <asm-generic/mm_hooks.h>
  
--	/* Ensure all SGI interrupts are now enabled */
--	writel_relaxed(GICD_INT_EN_SET_SGI, base + GIC_DIST_ENABLE_SET);
--
- 	if (sync_access)
- 		sync_access();
++#define init_new_context init_new_context
+ static inline int
+ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ {
+@@ -16,8 +17,6 @@ init_new_context(struct task_struct *tsk, struct mm_struct *mm)
+ 	return 0;
  }
+ 
+-#define destroy_context(mm)	do { } while(0)
+-
+ #define CID_BITS	9
+ extern spinlock_t cid_lock;
+ extern unsigned int cpu_last_cid;
+@@ -47,10 +46,6 @@ static inline void check_context(struct mm_struct *mm)
+ 		__new_context(mm);
+ }
+ 
+-static inline void enter_lazy_tlb(struct mm_struct *mm, struct task_struct *tsk)
+-{
+-}
+-
+ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 			     struct task_struct *tsk)
+ {
+@@ -62,7 +57,6 @@ static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
+ 	}
+ }
+ 
+-#define deactivate_mm(tsk,mm)	do { } while (0)
+-#define activate_mm(prev,next)	switch_mm(prev, next, NULL)
++#include <asm-generic/mmu_context.h>
+ 
+ #endif
 -- 
-2.27.0
+2.23.0
 
