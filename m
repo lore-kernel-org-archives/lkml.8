@@ -2,53 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731D4C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF6FC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410FA206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C4F2206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980279;
-	bh=JcKkK6SjWJoKNYSJyFxdo3JBVP64FhLpgWA1lDUivaU=;
+	s=default; t=1598980283;
+	bh=W1ORujb5/xqtuO1rGmU0tZxlYYe49tnOPCCj3QgW8Uw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KyvKaUOsoZuTh12dHOaO4xYyrHZz4yHfNkDcrUpJ6sQuEKPDcYbSl7/5YHfMRZ4sn
-	 7/+UdPgiDKIxA7toUoUIeOhT17gTw9NIwAbYT4aS/en4JiIkV2hdqgUzxp9JC6XgQN
-	 0Q7us3LOvXudC4BOzzNPsLegBRRkg4eBtW2TRAJc=
+	b=YGYiCIRMopis1XWQ4zLMljcxAARZKjxQwU/Ow6xB8qaqToEW3NEKIB7bzCw3Se9z+
+	 VCpIoq3RDvFAFp+wkhDBVCEdKcU6KUwJGSk6zh2H5Qbi6i/cGEszECFBsdAwTo7V8K
+	 BKleuTZ6fxAVQplj9bpoDLwm6UEiSzMKf98wk/qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgIARLR (ORCPT
+        id S1732422AbgIARLV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:11:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33148 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:11:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbgIAPQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:16:27 -0400
+        id S1729311AbgIAPQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:16:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35FFE206EB;
-        Tue,  1 Sep 2020 15:16:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3B4206FA;
+        Tue,  1 Sep 2020 15:16:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973386;
-        bh=JcKkK6SjWJoKNYSJyFxdo3JBVP64FhLpgWA1lDUivaU=;
+        s=default; t=1598973383;
+        bh=W1ORujb5/xqtuO1rGmU0tZxlYYe49tnOPCCj3QgW8Uw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oI/3HZcRL+OxyuieevM9RH/2h87tzp+mvcPWZY3NSMshCGtdGav3mHYIz/Br/AKmU
-         5KCY9SgJOEc9jzJ1xaf5MX5m3ur4NjZD2CGKZRuorag0sG24O1l9rB2+3nUruzaV2H
-         XVj5NE16f+fzf9yP7wEWoL5VTgFY2lHgZqvlZKE4=
+        b=pW2c09wdbABSkbFugXA8KjVR/fPxFVoU3wqL+bjIPGQtOkT3Z0ssKnRQm11asfgez
+         81YWt+Oj7/sPUOfnheG74ehbjHgIA9mKtfu6c8e5jvLMc1avXKc5rFMb53JlPhdSEX
+         JbqeEWbsnlvS4KN0OEzq61g7WLR6rJQZhrtHMVgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 30/78] ceph: fix potential mdsc use-after-free crash
-Date:   Tue,  1 Sep 2020 17:10:06 +0200
-Message-Id: <20200901150926.247880633@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
+        Aleksey Makarov <amakarov@marvell.com>,
+        Peter Hurley <peter@hurleysoftware.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Christopher Covington <cov@codeaurora.org>
+Subject: [PATCH 4.9 56/78] serial: pl011: Fix oops on -EPROBE_DEFER
+Date:   Tue,  1 Sep 2020 17:10:32 +0200
+Message-Id: <20200901150927.566535277@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -61,64 +62,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Lukas Wunner <lukas@wunner.de>
 
-[ Upstream commit fa9967734227b44acb1b6918033f9122dc7825b9 ]
+commit 27afac93e3bd7fa89749cf11da5d86ac9cde4dba upstream.
 
-Make sure the delayed work stopped before releasing the resources.
+If probing of a pl011 gets deferred until after free_initmem(), an oops
+ensues because pl011_console_match() is called which has been freed.
 
-cancel_delayed_work_sync() will only guarantee that the work finishes
-executing if the work is already in the ->worklist.  That means after
-the cancel_delayed_work_sync() returns, it will leave the work requeued
-if it was rearmed at the end. That can lead to a use after free once the
-work struct is freed.
+Fix by removing the __init attribute from the function and those it
+calls.
 
-Fix it by flushing the delayed work instead of trying to cancel it, and
-ensure that the work doesn't rearm if the mdsc is stopping.
+Commit 10879ae5f12e ("serial: pl011: add console matching function")
+introduced pl011_console_match() not just for early consoles but
+regular preferred consoles, such as those added by acpi_parse_spcr().
+Regular consoles may be registered after free_initmem() for various
+reasons, one being deferred probing, another being dynamic enablement
+of serial ports using a DeviceTree overlay.
 
-URL: https://tracker.ceph.com/issues/46293
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Thus, pl011_console_match() must not be declared __init and the
+functions it calls mustn't either.
+
+Stack trace for posterity:
+
+Unable to handle kernel paging request at virtual address 80c38b58
+Internal error: Oops: 8000000d [#1] PREEMPT SMP ARM
+PC is at pl011_console_match+0x0/0xfc
+LR is at register_console+0x150/0x468
+[<80187004>] (register_console)
+[<805a8184>] (uart_add_one_port)
+[<805b2b68>] (pl011_register_port)
+[<805b3ce4>] (pl011_probe)
+[<80569214>] (amba_probe)
+[<805ca088>] (really_probe)
+[<805ca2ec>] (driver_probe_device)
+[<805ca5b0>] (__device_attach_driver)
+[<805c8060>] (bus_for_each_drv)
+[<805c9dfc>] (__device_attach)
+[<805ca630>] (device_initial_probe)
+[<805c90a8>] (bus_probe_device)
+[<805c95a8>] (deferred_probe_work_func)
+
+Fixes: 10879ae5f12e ("serial: pl011: add console matching function")
+Signed-off-by: Lukas Wunner <lukas@wunner.de>
+Cc: stable@vger.kernel.org # v4.10+
+Cc: Aleksey Makarov <amakarov@marvell.com>
+Cc: Peter Hurley <peter@hurleysoftware.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Christopher Covington <cov@codeaurora.org>
+Link: https://lore.kernel.org/r/f827ff09da55b8c57d316a1b008a137677b58921.1597315557.git.lukas@wunner.de
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ceph/mds_client.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+ drivers/tty/serial/amba-pl011.c |   11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ceph/mds_client.c b/fs/ceph/mds_client.c
-index 3139fbd4c34e3..4ec5a109df82b 100644
---- a/fs/ceph/mds_client.c
-+++ b/fs/ceph/mds_client.c
-@@ -3386,6 +3386,9 @@ static void delayed_work(struct work_struct *work)
- 	dout("mdsc delayed_work\n");
- 	ceph_check_delayed_caps(mdsc);
+--- a/drivers/tty/serial/amba-pl011.c
++++ b/drivers/tty/serial/amba-pl011.c
+@@ -2249,9 +2249,8 @@ pl011_console_write(struct console *co,
+ 	clk_disable(uap->clk);
+ }
  
-+	if (mdsc->stopping)
-+		return;
-+
- 	mutex_lock(&mdsc->mutex);
- 	renew_interval = mdsc->mdsmap->m_session_timeout >> 2;
- 	renew_caps = time_after_eq(jiffies, HZ*renew_interval +
-@@ -3717,7 +3720,16 @@ void ceph_mdsc_force_umount(struct ceph_mds_client *mdsc)
- static void ceph_mdsc_stop(struct ceph_mds_client *mdsc)
+-static void __init
+-pl011_console_get_options(struct uart_amba_port *uap, int *baud,
+-			     int *parity, int *bits)
++static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
++				      int *parity, int *bits)
  {
- 	dout("stop\n");
--	cancel_delayed_work_sync(&mdsc->delayed_work); /* cancel timer */
-+	/*
-+	 * Make sure the delayed work stopped before releasing
-+	 * the resources.
-+	 *
-+	 * Because the cancel_delayed_work_sync() will only
-+	 * guarantee that the work finishes executing. But the
-+	 * delayed work will re-arm itself again after that.
-+	 */
-+	flush_delayed_work(&mdsc->delayed_work);
-+
- 	if (mdsc->mdsmap)
- 		ceph_mdsmap_destroy(mdsc->mdsmap);
- 	kfree(mdsc->sessions);
--- 
-2.25.1
-
+ 	if (pl011_read(uap, REG_CR) & UART01x_CR_UARTEN) {
+ 		unsigned int lcr_h, ibrd, fbrd;
+@@ -2284,7 +2283,7 @@ pl011_console_get_options(struct uart_am
+ 	}
+ }
+ 
+-static int __init pl011_console_setup(struct console *co, char *options)
++static int pl011_console_setup(struct console *co, char *options)
+ {
+ 	struct uart_amba_port *uap;
+ 	int baud = 38400;
+@@ -2352,8 +2351,8 @@ static int __init pl011_console_setup(st
+  *
+  *	Returns 0 if console matches; otherwise non-zero to use default matching
+  */
+-static int __init pl011_console_match(struct console *co, char *name, int idx,
+-				      char *options)
++static int pl011_console_match(struct console *co, char *name, int idx,
++			       char *options)
+ {
+ 	unsigned char iotype;
+ 	resource_size_t addr;
 
 
