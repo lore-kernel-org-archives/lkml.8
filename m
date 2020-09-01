@@ -2,169 +2,150 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D60C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73665C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E983A206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:59:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D050206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:59:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="d8kwRe22"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mcHPPLl1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729489AbgIAV7Q (ORCPT
+        id S1729796AbgIAV7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:59:16 -0400
-Received: from mail-bn8nam12on2044.outbound.protection.outlook.com ([40.107.237.44]:46945
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728254AbgIAV7M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:59:12 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dc2+Or+S9qIIBRYhJeOEGztFmXtUgt5fjRrREIUCedqWWaqZOQxKPCelBvRMeJzBrPtlHggUvbkO735vYqTy2hdKX3y2EYmKitQ9/2WrjVGixVqresat4GLHiGoSABcZpCsL1U1tlDyo8DtIND5lyC5QfTTXKzrmUaUGT2EuePuJg69u0X4YXUMac8JdiOT20yQyj0mnpC9dhZZL64U+MkRJk1Eu7qD2Ln4oU84BgIctJKTuj3ovZLCZAxQPdNfdDqw8uPqF0ECeSAvIUkEtyOeSAr353RriAFurR59jxlGcbQianWM7wtMFF6PPCsHt63UsFor7NHTB4PWdcyYxQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y94mrMNxd7KSoxoBqStR/ovsAiSZkUXbO2OGwpJ5ods=;
- b=lNLXihuCUSmuvRyAkazvqtyJ3rGfM++yoIoArC2LcdxLz5WIn7Mfgm9dB+wlF7gg/ompTbJp4BlJkcP2djUmRwFbKoCAMZGdl4OASRCnRYbMerLbsn09XajwmtVL4F5c0kTXlZr0qUE2lB9i4w4Ya0Il48pa3ZcyIMTkVvQ4koh6HB/G8YpniM6eNLIvqDzwc2E+J9etyQF6zauDN6SvppxPd8AmA18sktIusZYKPyS5zNR7SY9xUIi43wHsPS0Q274KC/MMSclOf+Ij+BXKd4pgZmUCkTzcJHw9R2wrDbBQUYeeQEyfv9DWl5pXzikJn2/RnvieXz+mp8wi2+zfIg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 1 Sep 2020 17:59:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57958 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728254AbgIAV7p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 17:59:45 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53C25C061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 14:59:45 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id q1so1297995pjd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 14:59:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y94mrMNxd7KSoxoBqStR/ovsAiSZkUXbO2OGwpJ5ods=;
- b=d8kwRe22VxI02R0mEXTLvny+nKrfXWTsIERjhK98RqMQS5oS5qYvzXvHi9h+ls2N2rRQhn4Cx38mEU0uyeVPDwk+UaYvTxW2P3Rl3b4ppVpMKvLOr9SON9lnJcJgmmgqp7DEeteQe3+vgee1DP1K2Z8E2HQ62x2IUoO/c7nJYYs=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=amd.com;
-Received: from BN8PR12MB2946.namprd12.prod.outlook.com (2603:10b6:408:9d::13)
- by BN6PR1201MB0019.namprd12.prod.outlook.com (2603:10b6:405:4d::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Tue, 1 Sep
- 2020 21:59:05 +0000
-Received: from BN8PR12MB2946.namprd12.prod.outlook.com
- ([fe80::a92d:18c0:971b:48e6]) by BN8PR12MB2946.namprd12.prod.outlook.com
- ([fe80::a92d:18c0:971b:48e6%6]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
- 21:59:05 +0000
-From:   Kim Phillips <kim.phillips@amd.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Tony Jones <tonyj@suse.de>, Jin Yao <yao.jin@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>, linux-perf-users@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] perf record/stat: Explicitly call out event modifiers in the documentation
-Date:   Tue,  1 Sep 2020 16:58:53 -0500
-Message-Id: <20200901215853.276234-1-kim.phillips@amd.com>
-X-Mailer: git-send-email 2.27.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SN4PR0501CA0071.namprd05.prod.outlook.com
- (2603:10b6:803:41::48) To BN8PR12MB2946.namprd12.prod.outlook.com
- (2603:10b6:408:9d::13)
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mEANC8bA1AYbgYd33w7o7zlvFLzbGxcnZ/R/0LR11Po=;
+        b=mcHPPLl1tJgo1pjkRyl5UZfnK2CPwjRFWOAUfeR9WjY1yrGmK0kVnT9k6vfs0pdww/
+         pNZgTRL7n9fneMrcNwjJKBE0UagE9fHe1AM5x5GNnLbB57EGtq2c+GTKOgD9XsVVq1A4
+         tvgaUUw3YvhVlVY5UbTWPI2nngZb0OAeGZbfk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mEANC8bA1AYbgYd33w7o7zlvFLzbGxcnZ/R/0LR11Po=;
+        b=RTrPpBT+Pk7UQZzoPAmE0nCKunwHJ7mHfLc0GSfeuZID+1+CWKps7gH+4oWuyJ7QxR
+         kgfBSJ4lTetfwypxmzd9q5Kyz5RBuanoOHtEc2oCy6YpsNrenGV+tbGjeyr6PgQBkaFN
+         SOvIQMyaK3SGWY4Ix7GQDgC14oEvc8ujZtkXM/wFskbMYC4dG1QVv07BCWKjnvRyfOUR
+         CB797N4QSy1+b3HF9mvvYqJBigZLN0yIyQBKM9EaS5DM9SSIKyeoNkT8yLDoZvS3Elwc
+         qJ11KNDiVjtWHkq9Y0g9kEBhNaPZdcTY4mGoYZ++R5apJmq9xaiCTN7WVsGdd2Lr8n1k
+         PdIg==
+X-Gm-Message-State: AOAM531HDQD9X97wN615qFLEgLxAd0CwCUFFqmfa5bbntT/LgETh3znb
+        IGT6j6HuxxGU3+E0g2hhru5d0g==
+X-Google-Smtp-Source: ABdhPJz63bfH2BlH4Q6m23NnWgfqc24pUWHiyD6JlgU45wIroDyRBKQhRqJnp0qoa5/DZyjv1ZVlTA==
+X-Received: by 2002:a17:902:b714:: with SMTP id d20mr3178600pls.103.1598997584863;
+        Tue, 01 Sep 2020 14:59:44 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
+        by smtp.gmail.com with ESMTPSA id q5sm3044037pfu.16.2020.09.01.14.59.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 14:59:44 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        Sean Paul <sean@poorly.run>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>
+Subject: [PATCH 1/2] drm/msm: Avoid div-by-zero in dpu_crtc_atomic_check()
+Date:   Tue,  1 Sep 2020 14:59:41 -0700
+Message-Id: <20200901215942.2559119-2-swboyd@chromium.org>
+X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+In-Reply-To: <20200901215942.2559119-1-swboyd@chromium.org>
+References: <20200901215942.2559119-1-swboyd@chromium.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by SN4PR0501CA0071.namprd05.prod.outlook.com (2603:10b6:803:41::48) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.8 via Frontend Transport; Tue, 1 Sep 2020 21:59:03 +0000
-X-Mailer: git-send-email 2.27.0
-X-Originating-IP: [165.204.77.11]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: cae1b2fa-94db-4c40-c201-08d84ec23eb9
-X-MS-TrafficTypeDiagnostic: BN6PR1201MB0019:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BN6PR1201MB0019B3557E025E30B419A0FE872E0@BN6PR1201MB0019.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Fj4l9gZzxNabIAPtKAILYmSCLLMCusm0J6zokuO08FMJCuHXqA59fl6W1tDdZeLDTjjBk6vijs+CCFXKFsYV+i9VSYMM/Tf/sH/ayI4mm4HVwtgEwEcT+TKwvYUe2ewESWh7+X+WkkgNZaNOvCsU/E+CiJF71ONgqcLnK+AtL/bzCvnFYhvCaH4OrWM9ekUD6/gr9Md6wE8oSSVxvvqFORw/VAyX6354yvVWRZe6kSfna89Z02OTkFHAl7xGdVH7+tj7gMkelsDYWdXNcyngm32XEI+m0cqNI4iuyXIbWoWZucd4y9D33h16gpZ46Z61wY6jsOqr7uoB7DCLNINb5A==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BN8PR12MB2946.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(2616005)(66476007)(66946007)(4326008)(5660300002)(2906002)(186003)(956004)(26005)(16576012)(316002)(1076003)(8936002)(478600001)(52116002)(86362001)(66556008)(6666004)(44832011)(36756003)(8676002)(7416002)(54906003)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: CgCEz1ZOUa8UDWRPo3UeVWP+fa+l1FIq8czHvK137kIVq0lOiPAk7Ixjer8HNVex3Mlae1LjUh7opUGR2Ao3tD9eYw85z42+wlg9iKUhgu+QuyAkOhgBtWeaRNmPFaSmL3oPBNDMZoLuOHVUspDYiQ8PqpEvgGjY5RHOUPcnt4l08i8UHg9hS3OCSWWVUQO7c79eNhi38/dTTU2HfUOHv97MNZOUcsT8sqYovl9VcM42C2GU0Qj9CbakD464QKPHO9oEGOM2JvmZBhRCy6YHTY9JeQLIt/DUkJKjV3QoUtOi1CTHot98fsyteSxLoY4poAVhYfeW64VIZ2PvhL67sTyiw5LPshsCQ+15S7HXdWRWSEFMb3jOSLuJ5XERLM7uKIcL2yZYpF5blbmgwEawezaCY4o/tG2/nGnnuwVfSMQ5O4PWZKzSXkW1PMTD7lhyG2N/A5+6bdvj8BtlloW2u/PFVN1ldMUQs1Udbj5WiSLrRn/2mlcSXEc5eSOluILkcGEKu3hpkBTyDbtZSZ6glqBWuQAR3QAJQHfkkeWrZkrpzJckAv//6L524USpFegQkbw2yNHqxyus1XE4uJPd+ivAaKvVapUPMRv70ze+x+jUfPuRudhcrtpE4rDR+MfvzSXK2RNzskx/eqrh5c2uJg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cae1b2fa-94db-4c40-c201-08d84ec23eb9
-X-MS-Exchange-CrossTenant-AuthSource: BN8PR12MB2946.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 21:59:05.7617
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: UjJvm6SAI9sjvIKHnBr/lO1R/zl49obcvVsmDFJ7/ngWzyfW4xAwV0R8mzrbrNse+tTQ8roYVq9ECf3cAXBfDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1201MB0019
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Event modifiers are not mentioned in the perf record or perf stat
-manpages.  Add them to orient new users more effectively by pointing
-them to the perf list manpage for details.
+The cstate->num_mixers member is only set to a non-zero value once
+dpu_encoder_virt_mode_set() is called, but the atomic check function can
+be called by userspace before that. Let's avoid the div-by-zero here and
+inside _dpu_crtc_setup_lm_bounds() by skipping this part of the atomic
+check if dpu_encoder_virt_mode_set() hasn't been called yet. This fixes
+an UBSAN warning:
 
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
-Fixes: 2055fdaf8703 ("perf list: Document precise event sampling for AMD IBS")
-Cc: Peter Zijlstra <peterz@infradead.org> 
-Cc: Ingo Molnar <mingo@redhat.com> 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org> 
-Cc: Mark Rutland <mark.rutland@arm.com> 
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com> 
-Cc: Jiri Olsa <jolsa@redhat.com> 
-Cc: Namhyung Kim <namhyung@kernel.org> 
-Cc: Adrian Hunter <adrian.hunter@intel.com> 
-Cc: Stephane Eranian <eranian@google.com> 
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com> 
-Cc: Tony Jones <tonyj@suse.de> 
-Cc: Jin Yao <yao.jin@linux.intel.com> 
-Cc: Ian Rogers <irogers@google.com> 
-Cc: "Paul A. Clarke" <pc@us.ibm.com> 
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org
+ UBSAN: Undefined behaviour in drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c:860:31
+ division by zero
+ CPU: 7 PID: 409 Comm: frecon Tainted: G S                5.4.31 #128
+ Hardware name: Google Trogdor (rev0) (DT)
+ Call trace:
+  dump_backtrace+0x0/0x14c
+  show_stack+0x20/0x2c
+  dump_stack+0xa0/0xd8
+  __ubsan_handle_divrem_overflow+0xec/0x110
+  dpu_crtc_atomic_check+0x97c/0x9d4
+  drm_atomic_helper_check_planes+0x160/0x1c8
+  drm_atomic_helper_check+0x54/0xbc
+  drm_atomic_check_only+0x6a8/0x880
+  drm_atomic_commit+0x20/0x5c
+  drm_atomic_helper_set_config+0x98/0xa0
+  drm_mode_setcrtc+0x308/0x5dc
+  drm_ioctl_kernel+0x9c/0x114
+  drm_ioctl+0x2ac/0x4b0
+  drm_compat_ioctl+0xe8/0x13c
+  __arm64_compat_sys_ioctl+0x184/0x324
+  el0_svc_common+0xa4/0x154
+  el0_svc_compat_handler+0x
+
+Cc: Abhinav Kumar <abhinavk@codeaurora.org>
+Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
+Cc: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: Sean Paul <seanpaul@chromium.org>
+Fixes: 25fdd5933e4c ("drm/msm: Add SDM845 DPU support")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- tools/perf/Documentation/perf-record.txt | 4 ++++
- tools/perf/Documentation/perf-stat.txt   | 4 ++++
- 2 files changed, 8 insertions(+)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf-record.txt b/tools/perf/Documentation/perf-record.txt
-index 3f72d8e261f3..bd50cdff08a8 100644
---- a/tools/perf/Documentation/perf-record.txt
-+++ b/tools/perf/Documentation/perf-record.txt
-@@ -33,6 +33,10 @@ OPTIONS
-         - a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+index f272a8d0f95b..74294b5ed93f 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c
+@@ -881,7 +881,7 @@ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
+ 	struct drm_plane *plane;
+ 	struct drm_display_mode *mode;
  
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed PMU event like 'pmu/param1=0x3,param2/' where
- 	  'param1', 'param2', etc are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*.
-diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-index c9bfefc051fb..a4b1d11fefc8 100644
---- a/tools/perf/Documentation/perf-stat.txt
-+++ b/tools/perf/Documentation/perf-stat.txt
-@@ -39,6 +39,10 @@ report::
- 	- a raw PMU event (eventsel+umask) in the form of rNNN where NNN is a
- 	  hexadecimal event descriptor.
+-	int cnt = 0, rc = 0, mixer_width, i, z_pos;
++	int cnt = 0, rc = 0, mixer_width = 0, i, z_pos;
  
-+        - a symbolic or raw PMU event followed by an optional colon
-+	  and a list of event modifiers, e.g., cpu-cycles:p.  See the
-+	  linkperf:perf-list[1] man page for details on event modifiers.
-+
- 	- a symbolically formed event like 'pmu/param1=0x3,param2/' where
- 	  param1 and param2 are defined as formats for the PMU in
- 	  /sys/bus/event_source/devices/<pmu>/format/*
+ 	struct dpu_multirect_plane_states multirect_plane[DPU_STAGE_MAX * 2];
+ 	int multirect_count = 0;
+@@ -914,9 +914,11 @@ static int dpu_crtc_atomic_check(struct drm_crtc *crtc,
+ 
+ 	memset(pipe_staged, 0, sizeof(pipe_staged));
+ 
+-	mixer_width = mode->hdisplay / cstate->num_mixers;
++	if (cstate->num_mixers) {
++		mixer_width = mode->hdisplay / cstate->num_mixers;
+ 
+-	_dpu_crtc_setup_lm_bounds(crtc, state);
++		_dpu_crtc_setup_lm_bounds(crtc, state);
++	}
+ 
+ 	crtc_rect.x2 = mode->hdisplay;
+ 	crtc_rect.y2 = mode->vdisplay;
 -- 
-2.27.0
+Sent by a computer, using git, on the internet
 
