@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D11CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E25CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65AD72098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16B37207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974938;
-	bh=UZT3Fjd3XBpWhvlqFpTTLZmTGvD98yi612Mb9LH7YXQ=;
+	s=default; t=1598974944;
+	bh=vzNBNtq1DCoZBAIMujwwjrAo0CYY6LBrr9qeIlp0IQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ig+g4dEVLxaVw03wPf7CGWFvLiKgO01evCyD/yAy0W4/Egsyfh8tEGadTUA1lHM4n
-	 /y8ylbP8axJFlKmJtDvW2A1BDCuwImJdHNZzLlwg6ml97z0DQbDVcWGDXvn4YrH1Mq
-	 ZVF1GQodVWzMErT/UzxEmMFoh+k+wnjkE2r/oOLA=
+	b=tHla5Pj6LmXeQBKxY+aOwbPXZt6ZA0JRfrvaiibIv0IX9Rc931JhCPOqicfCD5eeL
+	 oV2ObyQiovJELAfobK6jr3JtHpYYnFrsI/5ramLmh0RCPd4+wAsoRbhnElpLiH3xs+
+	 D4nVSWYVwsTWcbr1vywy4UGwzZOmIDl8p8zfOJNU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731471AbgIAPmO (ORCPT
+        id S1731460AbgIAPmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:42:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50132 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:42:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731473AbgIAPjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:39:48 -0400
+        id S1731478AbgIAPju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:39:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A171620866;
-        Tue,  1 Sep 2020 15:39:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60C0C20866;
+        Tue,  1 Sep 2020 15:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974787;
-        bh=UZT3Fjd3XBpWhvlqFpTTLZmTGvD98yi612Mb9LH7YXQ=;
+        s=default; t=1598974790;
+        bh=vzNBNtq1DCoZBAIMujwwjrAo0CYY6LBrr9qeIlp0IQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NO08HuXbjSndDdrbgjUvVE79vYY1H+/8pTmxrojpieTShyLNNTUFp21/bUfFRRV+9
-         j43JkNc1j85IhVsO3wwBD7PffnaTq0hrn11prmDhRQNPgPhsxF6yEHsebXRMfIWQM5
-         3UcJSh0Q1ZiiaFU1NnTRwIhxlzcewRDVLd9JKRVs=
+        b=ZUO4eGge5TNFd1jxF4/JcJ0dopVFx9v3Moj2usxcLksIJQL2D10XEOTDmaIxIuDeI
+         eEdUYgzG6hYM0tvbP5WljXW8QOotd0mS8vBoF2PdV7vtFL/BMGcQhrwptSSVX/Wehk
+         vUrR0xlLoO/8MPyfRAbXYVx3u62XAgJ2rTwaou5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Francisco Jerez <currojerez@riseup.net>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 083/255] cpufreq: intel_pstate: Fix EPP setting via sysfs in active mode
-Date:   Tue,  1 Sep 2020 17:08:59 +0200
-Message-Id: <20200901151004.711360413@linuxfoundation.org>
+        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 092/255] blk-mq: insert request not through ->queue_rq into sw/scheduler queue
+Date:   Tue,  1 Sep 2020 17:09:08 +0200
+Message-Id: <20200901151005.133336204@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,77 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Ming Lei <ming.lei@redhat.com>
 
-[ Upstream commit de002c55cadfc2f6cdf0ed427526f6085d240238 ]
+[ Upstream commit db03f88fae8a2c8007caafa70287798817df2875 ]
 
-Because intel_pstate_set_energy_pref_index() reads and writes the
-MSR_HWP_REQUEST register without using the cached value of it used by
-intel_pstate_hwp_boost_up() and intel_pstate_hwp_boost_down(), those
-functions may overwrite the value written by it and so the EPP value
-set via sysfs may be lost.
+c616cbee97ae ("blk-mq: punt failed direct issue to dispatch list") supposed
+to add request which has been through ->queue_rq() to the hw queue dispatch
+list, however it adds request running out of budget or driver tag to hw queue
+too. This way basically bypasses request merge, and causes too many request
+dispatched to LLD, and system% is unnecessary increased.
 
-To avoid that, make intel_pstate_set_energy_pref_index() take the
-cached value of MSR_HWP_REQUEST just like the other two routines
-mentioned above and update it with the new EPP value coming from
-user space in addition to updating the MSR.
+Fixes this issue by adding request not through ->queue_rq into sw/scheduler
+queue, and this way is safe because no ->queue_rq is called on this request
+yet.
 
-Note that the MSR itself still needs to be updated too in case
-hwp_boost is unset or the boosting mechanism is not active at the
-EPP change time.
+High %system can be observed on Azure storvsc device, and even soft lock
+is observed. This patch reduces %system during heavy sequential IO,
+meantime decreases soft lockup risk.
 
-Fixes: e0efd5be63e8 ("cpufreq: intel_pstate: Add HWP boost utility and sched util hooks")
-Reported-by: Francisco Jerez <currojerez@riseup.net>
-Cc: 4.18+ <stable@vger.kernel.org> # 4.18+: 3da97d4db8ee cpufreq: intel_pstate: Rearrange ...
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Francisco Jerez <currojerez@riseup.net>
+Fixes: c616cbee97ae ("blk-mq: punt failed direct issue to dispatch list")
+Signed-off-by: Ming Lei <ming.lei@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/cpufreq/intel_pstate.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+ block/blk-mq.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
-index c7540ad28995b..8c730a47e0537 100644
---- a/drivers/cpufreq/intel_pstate.c
-+++ b/drivers/cpufreq/intel_pstate.c
-@@ -649,11 +649,12 @@ static int intel_pstate_set_energy_pref_index(struct cpudata *cpu_data,
- 	mutex_lock(&intel_pstate_limits_lock);
+diff --git a/block/blk-mq.c b/block/blk-mq.c
+index 4e0d173beaa35..e86ccfe377779 100644
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1909,7 +1909,8 @@ insert:
+ 	if (bypass_insert)
+ 		return BLK_STS_RESOURCE;
  
- 	if (boot_cpu_has(X86_FEATURE_HWP_EPP)) {
--		u64 value;
--
--		ret = rdmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, &value);
--		if (ret)
--			goto return_pref;
-+		/*
-+		 * Use the cached HWP Request MSR value, because the register
-+		 * itself may be updated by intel_pstate_hwp_boost_up() or
-+		 * intel_pstate_hwp_boost_down() at any time.
-+		 */
-+		u64 value = READ_ONCE(cpu_data->hwp_req_cached);
+-	blk_mq_request_bypass_insert(rq, false, run_queue);
++	blk_mq_sched_insert_request(rq, false, run_queue, false);
++
+ 	return BLK_STS_OK;
+ }
  
- 		value &= ~GENMASK_ULL(31, 24);
- 
-@@ -661,13 +662,18 @@ static int intel_pstate_set_energy_pref_index(struct cpudata *cpu_data,
- 			epp = epp_values[pref_index - 1];
- 
- 		value |= (u64)epp << 24;
-+		/*
-+		 * The only other updater of hwp_req_cached in the active mode,
-+		 * intel_pstate_hwp_set(), is called under the same lock as this
-+		 * function, so it cannot run in parallel with the update below.
-+		 */
-+		WRITE_ONCE(cpu_data->hwp_req_cached, value);
- 		ret = wrmsrl_on_cpu(cpu_data->cpu, MSR_HWP_REQUEST, value);
- 	} else {
- 		if (epp == -EINVAL)
- 			epp = (pref_index - 1) << 2;
- 		ret = intel_pstate_set_epb(cpu_data->cpu, epp);
- 	}
--return_pref:
- 	mutex_unlock(&intel_pstate_limits_lock);
- 
- 	return ret;
 -- 
 2.25.1
 
