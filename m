@@ -2,108 +2,106 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8414C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADC62C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB372206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:06:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76CBD206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:07:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yadro.com header.i=@yadro.com header.b="hv5Tpu+p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgIAOGI convert rfc822-to-8bit (ORCPT
+        id S1728273AbgIAOHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:06:08 -0400
-Received: from smtp.h3c.com ([60.191.123.50]:1764 "EHLO h3cspam02-ex.h3c.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728272AbgIAOEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:04:49 -0400
-Received: from DAG2EX10-IDC.srv.huawei-3com.com ([10.8.0.73])
-        by h3cspam02-ex.h3c.com with ESMTPS id 081E3IK3046769
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Sep 2020 22:03:19 +0800 (GMT-8)
-        (envelope-from tian.xianting@h3c.com)
-Received: from DAG2EX03-BASE.srv.huawei-3com.com (10.8.0.66) by
- DAG2EX10-IDC.srv.huawei-3com.com (10.8.0.73) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 1 Sep 2020 22:03:22 +0800
-Received: from DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074])
- by DAG2EX03-BASE.srv.huawei-3com.com ([fe80::5d18:e01c:bbbd:c074%7]) with
- mapi id 15.01.1713.004; Tue, 1 Sep 2020 22:03:22 +0800
-From:   Tianxianting <tian.xianting@h3c.com>
-To:     "axboe@kernel.dk" <axboe@kernel.dk>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] [v3] blk-mq: use BLK_MQ_NO_TAG for no tag
-Thread-Topic: [PATCH] [v3] blk-mq: use BLK_MQ_NO_TAG for no tag
-Thread-Index: AQHWfD0K8koEXAvdJUKfqbC/GaNLZ6lT1/Nw
-Date:   Tue, 1 Sep 2020 14:03:22 +0000
-Message-ID: <465ec9bf9b7b45fb98d7f21498328300@h3c.com>
-References: <20200827063417.35851-1-tian.xianting@h3c.com>
-In-Reply-To: <20200827063417.35851-1-tian.xianting@h3c.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.99.141.128]
-x-sender-location: DAG2
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 1 Sep 2020 10:07:22 -0400
+Received: from mta-02.yadro.com ([89.207.88.252]:49272 "EHLO mta-01.yadro.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728289AbgIAOEX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:04:23 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by mta-01.yadro.com (Postfix) with ESMTP id F272452195;
+        Tue,  1 Sep 2020 14:03:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=yadro.com; h=
+        content-transfer-encoding:mime-version:user-agent:content-type
+        :content-type:organization:references:in-reply-to:date:date:from
+        :from:subject:subject:message-id:received:received:received; s=
+        mta-01; t=1598969019; x=1600783420; bh=Cio/AuAeW0HBrdL9zokO5x1JI
+        loihymCKFdkc3tu5Rw=; b=hv5Tpu+pfEE+4TqMB+Tacv08S9E1AtZHx0I6ruCR/
+        9VTvOFvazAaOvNVY2lYLMmlDfYxFPuYIMoJi0aRcIp8IHzhss3UB5BQdxCQvnaB6
+        gYi5qWsqNv/jjrY6YRGBig+QP/e/B9VCTbSRcokU83k8yH4dNx25zrTTPuOHUOgz
+        FM=
+X-Virus-Scanned: amavisd-new at yadro.com
+Received: from mta-01.yadro.com ([127.0.0.1])
+        by localhost (mta-01.yadro.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id jTjqBeJ6JhO5; Tue,  1 Sep 2020 17:03:39 +0300 (MSK)
+Received: from T-EXCH-02.corp.yadro.com (t-exch-02.corp.yadro.com [172.17.10.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Postfix) with ESMTPS id 23F644C866;
+        Tue,  1 Sep 2020 17:03:39 +0300 (MSK)
+Received: from localhost.localdomain (10.199.1.70) by T-EXCH-02.corp.yadro.com
+ (172.17.10.102) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384_P384) id 15.1.669.32; Tue, 1 Sep
+ 2020 17:03:38 +0300
+Message-ID: <ceb27ac19cd66e9b8f1c95a27f4c92a3029eda0c.camel@yadro.com>
+Subject: Re: [PATCH 2/2] mtd: spi-nor: enable lock interface for macronix
+ chips
+From:   Ivan Mikhaylov <i.mikhaylov@yadro.com>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+CC:     Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        "Vignesh Raghavendra" <vigneshr@ti.com>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Date:   Tue, 1 Sep 2020 17:06:59 +0300
+In-Reply-To: <ae094597-e57e-dff1-f897-bf3cc75f5511@prevas.dk>
+References: <20200812151818.16699-1-i.mikhaylov@yadro.com>
+         <20200812151818.16699-3-i.mikhaylov@yadro.com>
+         <ae094597-e57e-dff1-f897-bf3cc75f5511@prevas.dk>
+Organization: YADRO
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-X-DNSRBL: 
-X-MAIL: h3cspam02-ex.h3c.com 081E3IK3046769
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.199.1.70]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-02.corp.yadro.com (172.17.10.102)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens
-Could I get the feedback from you whether this patch can be applied? 
-Thanks a lot.
+On Mon, 2020-08-31 at 12:55 +0200, Rasmus Villemoes wrote:
+> On 12/08/2020 17.18, Ivan Mikhaylov wrote:
+> > Add locks for whole macronix chip series with BP0-2 and BP0-3 bits.
+> > 
+> > Tested with mx25l51245g(BP0-3).
+> 
+> Hmm. I've tried adding support for locking on Macronix to U-Boot
+> (
+> https://patchwork.ozlabs.org/project/uboot/patch/20200326114257.1782-3-rasmus.villemoes@prevas.dk/
+> ),
+> but that was quite a bit more involved than this. Note in particular the
+> first part of my commit message:
+> 
+>   Macronix chips implements locking in (power-of-two multiple of) 64K
+>   blocks, not as a fraction of the chip's size.
+> 
+> At least, that was true for the chip I was interested in and the few
+> others whose data sheets I grabbed to double-check. So I'm a bit
+> skeptical that this can work out-of-the-box without introducing a new
+> struct spi_nor_locking_ops.
+> 
+> Rasmus
 
------Original Message-----
-From: tianxianting (RD) 
-Sent: Thursday, August 27, 2020 2:34 PM
-To: axboe@kernel.dk
-Cc: linux-block@vger.kernel.org; linux-kernel@vger.kernel.org; tianxianting (RD) <tian.xianting@h3c.com>
-Subject: [PATCH] [v3] blk-mq: use BLK_MQ_NO_TAG for no tag
+Rasmus, but there is already locking of power-of-two as I see from the code,
+I'll double check on hw. Also compared documentation n25q512ax3(micron, which
+HAS_LOCK) to mx25l25635e(macronix) and they have same block protection table
+bits for example. I'd be glad to hear from maintainers on this spot.
 
-Replace various magic -1 constants for tags with BLK_MQ_NO_TAG.
-
-Signed-off-by: Xianting Tian <tian.xianting@h3c.com>
----
- block/blk-core.c     | 4 ++--
- block/blk-mq-sched.c | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/block/blk-core.c b/block/blk-core.c index d9d632639..c7eaf7504 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -116,8 +116,8 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
- 	rq->__sector = (sector_t) -1;
- 	INIT_HLIST_NODE(&rq->hash);
- 	RB_CLEAR_NODE(&rq->rb_node);
--	rq->tag = -1;
--	rq->internal_tag = -1;
-+	rq->tag = BLK_MQ_NO_TAG;
-+	rq->internal_tag = BLK_MQ_NO_TAG;
- 	rq->start_time_ns = ktime_get_ns();
- 	rq->part = NULL;
- 	refcount_set(&rq->ref, 1);
-diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c index a19cdf159..439481f59 100644
---- a/block/blk-mq-sched.c
-+++ b/block/blk-mq-sched.c
-@@ -522,7 +522,7 @@ void blk_mq_sched_insert_request(struct request *rq, bool at_head,
- 		goto run;
- 	}
- 
--	WARN_ON(e && (rq->tag != -1));
-+	WARN_ON(e && (rq->tag != BLK_MQ_NO_TAG));
- 
- 	if (blk_mq_sched_bypass_insert(hctx, !!e, rq)) {
- 		/*
---
-2.17.1
+Thanks.
 
