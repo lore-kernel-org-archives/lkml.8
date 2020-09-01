@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2D8C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F678C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57A5F2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BAF2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:24:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598981085;
-	bh=ZaBMNIsh2vw+yV1I+VottfZQarJABVQjDGZJK+ZPxb0=;
+	s=default; t=1598981097;
+	bh=qNEvP+YxjN9cHUGvRDWTfOl1iZ6hTNDjEXd2QmD7820=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mxgPFcrlvwS7izWObzpakzUU6kEdiTFUkY5tuWL1thJnb+sJEnM4zcCBAXA4nCNAM
-	 AyfbIXXrw+NVaVa8cLXS0wSaBspt9DEQBxw/1ms9y2XXXRBl+INMrddJpWw3LOtbwQ
-	 GEdzQjyOnisjq886NYh9bcZPcSF8NBWtmfc0enpA=
+	b=sdtElwm5WzyQ+TeQawKj/K1GilOzCRR0nV1xunlkrsBJct0Z2n/FRFXy9BJ8NhAvX
+	 dWJmCUuDGKSAPyTfCwT5w84A4Eijh6JgKkFxLdVH2DWRFOKhGl7xfrJts3kfBVPRV0
+	 zvM5/nhGyXsrk+tIbp63uBp3o+4gqLole79vcDQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730936AbgIARYR (ORCPT
+        id S1732744AbgIARYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53850 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:24:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgIAPLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:11:50 -0400
+        id S1726771AbgIAPLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:11:53 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE77F20BED;
-        Tue,  1 Sep 2020 15:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59AC1206FA;
+        Tue,  1 Sep 2020 15:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973110;
-        bh=ZaBMNIsh2vw+yV1I+VottfZQarJABVQjDGZJK+ZPxb0=;
+        s=default; t=1598973112;
+        bh=qNEvP+YxjN9cHUGvRDWTfOl1iZ6hTNDjEXd2QmD7820=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QE0kn45OtnN24LsbAltnYVs586XfTezymZ3VJ3AGGYTXvuwSJIo73KW/sYJdPPJXc
-         gM2UW6GhNaP/NfbJ76UkIVxk9ZUpxDemwjL3a/Fm2HjexblCEsckbmbsREdjhosEc7
-         UefPGTm4TLGXdzOaGXXTl6PjW5BiKNrrFB+ogznw=
+        b=qxRPOq93RzcEAkR53z6SNFhS3FBcqDmqQ4Th+wTUcDa56jGyNFL/09TW8uNJ7Rj2G
+         vfo0mnSR7jXU9Lt62fPOgYNrtDJ31BoKyigUgxN5QlCxM66m3A7OQo60zfpqw8/7zP
+         aNYh5EcuMP6/s+J4YNAqDhVMJJ+5jFZjAtXfuw+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 11/62] drm/amdkfd: Fix reference count leaks.
-Date:   Tue,  1 Sep 2020 17:09:54 +0200
-Message-Id: <20200901150921.279696921@linuxfoundation.org>
+Subject: [PATCH 4.4 12/62] drm/radeon: fix multiple reference count leak
+Date:   Tue,  1 Sep 2020 17:09:55 +0200
+Message-Id: <20200901150921.317831987@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -61,87 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 20eca0123a35305e38b344d571cf32768854168c ]
+[ Upstream commit 6f2e8acdb48ed166b65d47837c31b177460491ec ]
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object.
+On calling pm_runtime_get_sync() the reference count of the device
+is incremented. In case of failure, decrement the
+reference count before returning the error.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
-Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdkfd/kfd_topology.c | 20 +++++++++++++++-----
+ drivers/gpu/drm/radeon/radeon_connectors.c | 20 +++++++++++++++-----
  1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-index 2acbd43f9a531..965489b20429c 100644
---- a/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-+++ b/drivers/gpu/drm/amd/amdkfd/kfd_topology.c
-@@ -841,8 +841,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
+diff --git a/drivers/gpu/drm/radeon/radeon_connectors.c b/drivers/gpu/drm/radeon/radeon_connectors.c
+index bebcef2ce6b88..a9f1d99bb6f99 100644
+--- a/drivers/gpu/drm/radeon/radeon_connectors.c
++++ b/drivers/gpu/drm/radeon/radeon_connectors.c
+@@ -886,8 +886,10 @@ radeon_lvds_detect(struct drm_connector *connector, bool force)
  
- 	ret = kobject_init_and_add(dev->kobj_node, &node_type,
- 			sys_props.kobj_nodes, "%d", id);
--	if (ret < 0)
-+	if (ret < 0) {
-+		kobject_put(dev->kobj_node);
- 		return ret;
-+	}
- 
- 	dev->kobj_mem = kobject_create_and_add("mem_banks", dev->kobj_node);
- 	if (!dev->kobj_mem)
-@@ -885,8 +887,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(mem->kobj, &mem_type,
- 				dev->kobj_mem, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(mem->kobj);
- 			return ret;
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
 +		}
+ 	}
  
- 		mem->attr.name = "properties";
- 		mem->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -904,8 +908,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(cache->kobj, &cache_type,
- 				dev->kobj_cache, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(cache->kobj);
- 			return ret;
+ 	if (encoder) {
+@@ -1021,8 +1023,10 @@ radeon_vga_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
 +		}
+ 	}
  
- 		cache->attr.name = "properties";
- 		cache->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -923,8 +929,10 @@ static int kfd_build_sysfs_node_entry(struct kfd_topology_device *dev,
- 			return -ENOMEM;
- 		ret = kobject_init_and_add(iolink->kobj, &iolink_type,
- 				dev->kobj_iolink, "%d", i);
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(iolink->kobj);
- 			return ret;
+ 	encoder = radeon_best_single_encoder(connector);
+@@ -1158,8 +1162,10 @@ radeon_tv_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
 +		}
+ 	}
  
- 		iolink->attr.name = "properties";
- 		iolink->attr.mode = KFD_SYSFS_FILE_MODE;
-@@ -976,8 +984,10 @@ static int kfd_topology_update_sysfs(void)
- 		ret = kobject_init_and_add(sys_props.kobj_topology,
- 				&sysprops_type,  &kfd_device->kobj,
- 				"topology");
--		if (ret < 0)
-+		if (ret < 0) {
-+			kobject_put(sys_props.kobj_topology);
- 			return ret;
+ 	encoder = radeon_best_single_encoder(connector);
+@@ -1241,8 +1247,10 @@ radeon_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
 +		}
+ 	}
  
- 		sys_props.kobj_nodes = kobject_create_and_add("nodes",
- 				sys_props.kobj_topology);
+ 	if (radeon_connector->detected_hpd_without_ddc) {
+@@ -1681,8 +1689,10 @@ radeon_dp_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && radeon_check_hpd_status_unchanged(connector)) {
 -- 
 2.25.1
 
