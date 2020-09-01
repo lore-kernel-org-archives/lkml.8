@@ -2,116 +2,99 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBD0C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E79B6C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEB3220678
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598944301;
-	bh=AgI2vQMQmRVR5QVweN2uYCX2DIFtFWUWcszday14f2w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rPpzTtG+olRrrkaQ9NmdnIRyhSVObFBvxVRU8jDlO463VWNPDp6IOA6Bto+qoGfQn
-	 Y9ZD0aVtoFNQIjCmGN9Dd0npwuy/GnR3tofDsPhciJHxwoEo0kXqGFtiYjyuYD/86R
-	 kNmc78ZGRQpZDqOn5FNtYAIu2OfepMaj5ua0EUpY=
+	by mail.kernel.org (Postfix) with ESMTP id C707B206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:11:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726489AbgIAHLj (ORCPT
+        id S1726966AbgIAHLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:11:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgIAHLi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:11:38 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D701CC0612AC;
-        Tue,  1 Sep 2020 00:11:37 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id w1so414677edr.3;
-        Tue, 01 Sep 2020 00:11:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xaw2TkC7UXssyjmtWIo7YhjBKV91Ck2RloWS+iSdWXc=;
-        b=LWm1kQ+715+4kihaUwCTWCj4/r1I8my2OcJ9/8iHMLXPsa66IZzNOUQJ98RPamhH/D
-         /NfmDPIOS5ufAOnWIja/4Po+C1xnHB5RmRDuPskUXbItWiLoGYDIjifxXG/VJzfOS8bE
-         RhcfCm2+lzFBK5mLU5oIkt04Ocas1Xlj1FVOBAkF2oz7AX7UQLaS3f84vesYoN12E2O3
-         Ehcz7xNsGKgp2ggLKFAlDzDdTOG5x5a3+QMDA8NDmU4g5iY8BrR0QNHmlOKAaPbXvU/w
-         FgJA8P96gsRdlANF3S/vKy95h87iwx4K9XzG5c4vo4OxDtv2fQgUQfwPe5ywayJwdpZ5
-         qchw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=xaw2TkC7UXssyjmtWIo7YhjBKV91Ck2RloWS+iSdWXc=;
-        b=K6nzVYN1csFfFn2qbA4/uHZ6DPqlvkIn7yj5b1Jzg1EZbQAqZJMfeU81o3FFR+wL0D
-         EacoTDxtwgMMDQhfPfBgyyxNgcVmD5F3x6EIPlDhFu3UJy7WuoOITVW3XJtTyvcR2jrW
-         +vWFvYj0uJnKdasrgsmazfEC7GkbiZjpxt4r8U2eIk1pxLDQeFZ2MjQoAyOonfe302Te
-         +OiK2JNCIXOaE+hlDX/YjVg+qW+TbC2mvoA9zk5a/Gp1E10m6pRTu24KNKl7jakHANjg
-         lv7Y9TNvYlADc69QTAmbGb5tvOn+wUScSpxhnx7NR7Wg5Xlni9hQHa4RWLdXB+VJGen5
-         wJgw==
-X-Gm-Message-State: AOAM533sL7SQStXqZMVQ3DIxfHVdCI7b7UKkQs6XH4rr8MNQlJ7njhem
-        iPCaupFzHvu2zn1PqIOzvvA=
-X-Google-Smtp-Source: ABdhPJx0qvXYdPyQkstDBAZ0EUVd7eiEkHXZ5xJaa6Mf7E3AgRl/qjEMovJBDm2HHa0MzUd5CApWfw==
-X-Received: by 2002:a50:fb15:: with SMTP id d21mr595347edq.150.1598944296562;
-        Tue, 01 Sep 2020 00:11:36 -0700 (PDT)
-Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
-        by smtp.gmail.com with ESMTPSA id i25sm303304edt.1.2020.09.01.00.11.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 00:11:35 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 09:11:33 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Borislav Petkov <bp@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 00/29] Warn on orphan section placement
-Message-ID: <20200901071133.GA3577996@gmail.com>
-References: <20200821194310.3089815-1-keescook@chromium.org>
- <202008311240.9F94A39@keescook>
+        Tue, 1 Sep 2020 03:11:48 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34802 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726006AbgIAHLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:11:47 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 4EA634177EED400AC60E;
+        Tue,  1 Sep 2020 15:11:45 +0800 (CST)
+Received: from [127.0.0.1] (10.174.179.108) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
+ 15:11:39 +0800
+Subject: Re: [PATCH -next] memory: omap-gpmc: Fix -Wunused-function warnings
+To:     <rogerq@ti.com>, <tony@atomide.com>, <krzk@kernel.org>
+References: <20200901035642.22772-1-yuehaibing@huawei.com>
+ <20200901070753.24328-1-yuehaibing@huawei.com>
+CC:     <linux-omap@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <5f8ae4a2-7d20-6621-67a9-4a47df2e3763@huawei.com>
+Date:   Tue, 1 Sep 2020 15:11:39 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202008311240.9F94A39@keescook>
+In-Reply-To: <20200901070753.24328-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.179.108]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Pls ignore this.
 
-* Kees Cook <keescook@chromium.org> wrote:
-
-> On Fri, Aug 21, 2020 at 12:42:41PM -0700, Kees Cook wrote:
-> > Hi Ingo,
-> > 
-> > Based on my testing, this is ready to go. I've reviewed the feedback on
-> > v5 and made a few small changes, noted below.
+On 2020/9/1 15:07, YueHaibing wrote:
+> drivers/memory/omap-gpmc.c:987:12: warning: ‘gpmc_cs_remap’ defined but not used [-Wunused-function]
+>  static int gpmc_cs_remap(int cs, u32 base)
+>             ^~~~~~~~~~~~~
+> drivers/memory/omap-gpmc.c:926:20: warning: ‘gpmc_cs_get_name’ defined but not used [-Wunused-function]
+>  static const char *gpmc_cs_get_name(int cs)
+>                     ^~~~~~~~~~~~~~~~
+> drivers/memory/omap-gpmc.c:919:13: warning: ‘gpmc_cs_set_name’ defined but not used [-Wunused-function]
+>  static void gpmc_cs_set_name(int cs, const char *name)
+>              ^~~~~~~~~~~~~~~~
+> Make them as  __maybe_unused to fix this.
 > 
-> If no one objects, I'll pop this into my tree for -next. I'd prefer it
-> go via -tip though! :)
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/memory/omap-gpmc.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> Thanks!
+> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+> index ac0f577a51a1..24372254986e 100644
+> --- a/drivers/memory/omap-gpmc.c
+> +++ b/drivers/memory/omap-gpmc.c
+> @@ -916,14 +916,14 @@ static bool gpmc_cs_reserved(int cs)
+>  	return gpmc->flags & GPMC_CS_RESERVED;
+>  }
+>  
+> -static void gpmc_cs_set_name(int cs, const char *name)
+> +static void __maybe_unused gpmc_cs_set_name(int cs, const char *name)
+>  {
+>  	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+>  
+>  	gpmc->name = name;
+>  }
+>  
+> -static const char *gpmc_cs_get_name(int cs)
+> +static const __maybe_unused char *gpmc_cs_get_name(int cs)
+>  {
+>  	struct gpmc_cs_data *gpmc = &gpmc_cs[cs];
+>  
+> @@ -984,7 +984,7 @@ static int gpmc_cs_delete_mem(int cs)
+>   * "base". Returns 0 on success and appropriate negative error code
+>   * on failure.
+>   */
+> -static int gpmc_cs_remap(int cs, u32 base)
+> +static int __maybe_unused gpmc_cs_remap(int cs, u32 base)
+>  {
+>  	int ret;
+>  	u32 old_base, size;
+> 
 
-I'll pick it up today, it all looks very good now!
-
-Thanks,
-
-	Ingo
