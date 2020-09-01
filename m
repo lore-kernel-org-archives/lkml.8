@@ -2,91 +2,237 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EF1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E61C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E512087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sEZr7yNR"
+	by mail.kernel.org (Postfix) with ESMTP id 67677206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:51:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598979108;
+	bh=FxowLbusYDR2zymEY5adH/FZFuXmtPQBFqYb2bvSphw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1VPcQ42dxX2CV2yWHkmOCTi55WT/yJbhrumkC3hRcyN57jdgo7jyY3JwFf6tT1TVm
+	 0QA2XfLfOUmlu31MPEl8Qd+8ueaO/HWGuHZyCayQDgyfNa7TKVv3ynfs8cBcNsEsQZ
+	 nqy2wX6P2ej80A2ky/kFTszQoXUi4bmq4Sz5vlSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732289AbgIAQvp (ORCPT
+        id S1732379AbgIAQve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:51:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38614 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732269AbgIAQvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:51:36 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C25A0C061244;
-        Tue,  1 Sep 2020 09:51:35 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id h4so2682818ejj.0;
-        Tue, 01 Sep 2020 09:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7wmhqZFH/qn9LDILgIA8ChHwbJC43R72DMR15uZTThk=;
-        b=sEZr7yNRdN4XLqfS6kDyAxYMdSBUX91Lrvi8DIlpUfVVpd3J5MGuriq05qiGIsFfOS
-         1nG7p40rnY/7KgeLHd2mSz2SaSPiph2LzX2zQveYL+gCSwfsUOJ91ylYKxowQstupoHr
-         rTphTq7xjbalXBUO2YQtmYt1+/rlilxOjz44ZxPiHsE/E9HlrOzR3z8qcqtpWuQYlS6f
-         C72bqQSR5JUMMlaYJCm9P0yK2PoKq9jpweruEfjJfyxZs3Q7AjjqPIpWmXwmsvQVaqwi
-         xUReZMYW49QhZObiQuohBS57V2gw1dNeD/DJGMAANfTuhSdeg5KqD3YcCm0fRUMMsosd
-         DJrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7wmhqZFH/qn9LDILgIA8ChHwbJC43R72DMR15uZTThk=;
-        b=rGbtnm5wyev0yrompjZ4mcQjoJsY07xpAea3aB7QE+8Px9mmWL0Vc2tgtFiSMIJrkx
-         oR1rWLcUlhCVuzzGxD8d93sK6SPJzrZ00uh5BCDE/tIX5H+PaUC5C50iqbT94X5ynW7v
-         ix4bWOzkqjPf4F3yY8gN7bV60Vadj2+q2gvJZg5XVOfb8rFYqfYZexIHAMJ5vrtEmIYA
-         rMthkCD3M6hEj86ZqYuUe4WYgsB0byqHw8a9/cVn6mjH7jZiDP3SNljiA6BLpUFDUPd9
-         6X/qlYuuYCKLFJIccwP42Ox7w/FueX6CZUcIPumsjJBPSAIF71ZigOM75ONF3BlOgxmp
-         5VdA==
-X-Gm-Message-State: AOAM531DKTgthJFXt6EqgWRlQVzyrTi5bwOLUK+b9DOscQ4O7tQ2n4QP
-        RTGALpYbJ+LiiMeCU/DDnTHUGaY7P4Q5S09Gkgx13T9veaU=
-X-Google-Smtp-Source: ABdhPJyfEptOql4F89GlhX35Na6O9a4L6VSc/7rNTm6swT5iiAwRTcUEckrtJm7Tp6jErL0lAjQgG7Kb0J2UsEAk9/w=
-X-Received: by 2002:a17:907:264c:: with SMTP id ar12mr2444569ejc.80.1598979094509;
- Tue, 01 Sep 2020 09:51:34 -0700 (PDT)
+        Tue, 1 Sep 2020 12:51:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730075AbgIAP0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:26:00 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25C9F2137B;
+        Tue,  1 Sep 2020 15:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973959;
+        bh=FxowLbusYDR2zymEY5adH/FZFuXmtPQBFqYb2bvSphw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=SLiUE8miXGq6t8MsCXiNW9FJWvJfJK8JHUC4Dq1QLf7lQmmHAoCe4/DboJl7SSTQz
+         D0iKi+srsBmXJc7Z212mbhPG+bOqlcGzfWjgmgSvihnIPyv0ryshBJQBozcDOlJLey
+         zRgBvmUPU42NzKocj9qf5XpDLdn0XmEnSgUTH+FM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Ilja Van Sprundel <ivansprundel@ioactive.com>,
+        Brooke Basile <brookebasile@gmail.com>,
+        Felipe Balbi <balbi@kernel.org>, stable <stable@kernel.org>
+Subject: [PATCH 4.19 115/125] USB: gadget: f_ncm: add bounds checks to ncm_unwrap_ntb()
+Date:   Tue,  1 Sep 2020 17:11:10 +0200
+Message-Id: <20200901150940.250736616@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200901141539.1757549-1-npiggin@gmail.com> <20200901141539.1757549-3-npiggin@gmail.com>
-In-Reply-To: <20200901141539.1757549-3-npiggin@gmail.com>
-From:   Matt Turner <mattst88@gmail.com>
-Date:   Tue, 1 Sep 2020 09:51:22 -0700
-Message-ID: <CAEdQ38Em+s7e50Z+z+frwT8xHc=cHG70rjSmAPo+9RmJcCwTGw@mail.gmail.com>
-Subject: Re: [PATCH v3 02/23] alpha: use asm-generic/mmu_context.h for no-op implementations
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Linux-Arch <linux-arch@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        linux-alpha <linux-alpha@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 1, 2020 at 7:15 AM Nicholas Piggin <npiggin@gmail.com> wrote:
->
-> Cc: Richard Henderson <rth@twiddle.net>
-> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-> Cc: Matt Turner <mattst88@gmail.com>
-> Cc: linux-alpha@vger.kernel.org
-> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
-> ---
->
-> Please ack or nack if you object to this being mered via
-> Arnd's tree.
+From: Brooke Basile <brookebasile@gmail.com>
 
-That would be great.
+commit 2b74b0a04d3e9f9f08ff026e5663dce88ff94e52 upstream.
 
-Acked-by: Matt Turner <mattst88@gmail.com>
+Some values extracted by ncm_unwrap_ntb() could possibly lead to several
+different out of bounds reads of memory.  Specifically the values passed
+to netdev_alloc_skb_ip_align() need to be checked so that memory is not
+overflowed.
+
+Resolve this by applying bounds checking to a number of different
+indexes and lengths of the structure parsing logic.
+
+Reported-by: Ilja Van Sprundel <ivansprundel@ioactive.com>
+Signed-off-by: Brooke Basile <brookebasile@gmail.com>
+Acked-by: Felipe Balbi <balbi@kernel.org>
+Cc: stable <stable@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/usb/gadget/function/f_ncm.c |   81 ++++++++++++++++++++++++++++++------
+ 1 file changed, 69 insertions(+), 12 deletions(-)
+
+--- a/drivers/usb/gadget/function/f_ncm.c
++++ b/drivers/usb/gadget/function/f_ncm.c
+@@ -1184,12 +1184,15 @@ static int ncm_unwrap_ntb(struct gether
+ 	int		ndp_index;
+ 	unsigned	dg_len, dg_len2;
+ 	unsigned	ndp_len;
++	unsigned	block_len;
+ 	struct sk_buff	*skb2;
+ 	int		ret = -EINVAL;
+-	unsigned	max_size = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
++	unsigned	ntb_max = le32_to_cpu(ntb_parameters.dwNtbOutMaxSize);
++	unsigned	frame_max = le16_to_cpu(ecm_desc.wMaxSegmentSize);
+ 	const struct ndp_parser_opts *opts = ncm->parser_opts;
+ 	unsigned	crc_len = ncm->is_crc ? sizeof(uint32_t) : 0;
+ 	int		dgram_counter;
++	bool		ndp_after_header;
+ 
+ 	/* dwSignature */
+ 	if (get_unaligned_le32(tmp) != opts->nth_sign) {
+@@ -1208,25 +1211,37 @@ static int ncm_unwrap_ntb(struct gether
+ 	}
+ 	tmp++; /* skip wSequence */
+ 
++	block_len = get_ncm(&tmp, opts->block_length);
+ 	/* (d)wBlockLength */
+-	if (get_ncm(&tmp, opts->block_length) > max_size) {
++	if (block_len > ntb_max) {
+ 		INFO(port->func.config->cdev, "OUT size exceeded\n");
+ 		goto err;
+ 	}
+ 
+ 	ndp_index = get_ncm(&tmp, opts->ndp_index);
++	ndp_after_header = false;
+ 
+ 	/* Run through all the NDP's in the NTB */
+ 	do {
+-		/* NCM 3.2 */
+-		if (((ndp_index % 4) != 0) &&
+-				(ndp_index < opts->nth_size)) {
++		/*
++		 * NCM 3.2
++		 * dwNdpIndex
++		 */
++		if (((ndp_index % 4) != 0) ||
++				(ndp_index < opts->nth_size) ||
++				(ndp_index > (block_len -
++					      opts->ndp_size))) {
+ 			INFO(port->func.config->cdev, "Bad index: %#X\n",
+ 			     ndp_index);
+ 			goto err;
+ 		}
++		if (ndp_index == opts->nth_size)
++			ndp_after_header = true;
+ 
+-		/* walk through NDP */
++		/*
++		 * walk through NDP
++		 * dwSignature
++		 */
+ 		tmp = (void *)(skb->data + ndp_index);
+ 		if (get_unaligned_le32(tmp) != ncm->ndp_sign) {
+ 			INFO(port->func.config->cdev, "Wrong NDP SIGN\n");
+@@ -1237,14 +1252,15 @@ static int ncm_unwrap_ntb(struct gether
+ 		ndp_len = get_unaligned_le16(tmp++);
+ 		/*
+ 		 * NCM 3.3.1
++		 * wLength
+ 		 * entry is 2 items
+ 		 * item size is 16/32 bits, opts->dgram_item_len * 2 bytes
+ 		 * minimal: struct usb_cdc_ncm_ndpX + normal entry + zero entry
+ 		 * Each entry is a dgram index and a dgram length.
+ 		 */
+ 		if ((ndp_len < opts->ndp_size
+-				+ 2 * 2 * (opts->dgram_item_len * 2))
+-				|| (ndp_len % opts->ndplen_align != 0)) {
++				+ 2 * 2 * (opts->dgram_item_len * 2)) ||
++				(ndp_len % opts->ndplen_align != 0)) {
+ 			INFO(port->func.config->cdev, "Bad NDP length: %#X\n",
+ 			     ndp_len);
+ 			goto err;
+@@ -1261,8 +1277,21 @@ static int ncm_unwrap_ntb(struct gether
+ 
+ 		do {
+ 			index = index2;
++			/* wDatagramIndex[0] */
++			if ((index < opts->nth_size) ||
++					(index > block_len - opts->dpe_size)) {
++				INFO(port->func.config->cdev,
++				     "Bad index: %#X\n", index);
++				goto err;
++			}
++
+ 			dg_len = dg_len2;
+-			if (dg_len < 14 + crc_len) { /* ethernet hdr + crc */
++			/*
++			 * wDatagramLength[0]
++			 * ethernet hdr + crc or larger than max frame size
++			 */
++			if ((dg_len < 14 + crc_len) ||
++					(dg_len > frame_max)) {
+ 				INFO(port->func.config->cdev,
+ 				     "Bad dgram length: %#X\n", dg_len);
+ 				goto err;
+@@ -1286,6 +1315,37 @@ static int ncm_unwrap_ntb(struct gether
+ 			index2 = get_ncm(&tmp, opts->dgram_item_len);
+ 			dg_len2 = get_ncm(&tmp, opts->dgram_item_len);
+ 
++			if (index2 == 0 || dg_len2 == 0)
++				break;
++
++			/* wDatagramIndex[1] */
++			if (ndp_after_header) {
++				if (index2 < opts->nth_size + opts->ndp_size) {
++					INFO(port->func.config->cdev,
++					     "Bad index: %#X\n", index2);
++					goto err;
++				}
++			} else {
++				if (index2 < opts->nth_size + opts->dpe_size) {
++					INFO(port->func.config->cdev,
++					     "Bad index: %#X\n", index2);
++					goto err;
++				}
++			}
++			if (index2 > block_len - opts->dpe_size) {
++				INFO(port->func.config->cdev,
++				     "Bad index: %#X\n", index2);
++				goto err;
++			}
++
++			/* wDatagramLength[1] */
++			if ((dg_len2 < 14 + crc_len) ||
++					(dg_len2 > frame_max)) {
++				INFO(port->func.config->cdev,
++				     "Bad dgram length: %#X\n", dg_len);
++				goto err;
++			}
++
+ 			/*
+ 			 * Copy the data into a new skb.
+ 			 * This ensures the truesize is correct
+@@ -1302,9 +1362,6 @@ static int ncm_unwrap_ntb(struct gether
+ 			ndp_len -= 2 * (opts->dgram_item_len * 2);
+ 
+ 			dgram_counter++;
+-
+-			if (index2 == 0 || dg_len2 == 0)
+-				break;
+ 		} while (ndp_len > 2 * (opts->dgram_item_len * 2));
+ 	} while (ndp_index);
+ 
+
+
