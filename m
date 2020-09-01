@@ -2,209 +2,187 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8CBC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:09:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4EEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BA378208A9
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:09:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hf8DGWlH"
+	by mail.kernel.org (Postfix) with ESMTP id A432B20719
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 04:11:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgIAEJU (ORCPT
+        id S1726192AbgIAELB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 00:09:20 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:48680 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726204AbgIAEI6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 00:08:58 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200901040855epoutp0116627f2db4168d2d380d8f031251a936~wjWWmly8F0623306233epoutp01h
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 04:08:55 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200901040855epoutp0116627f2db4168d2d380d8f031251a936~wjWWmly8F0623306233epoutp01h
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598933335;
-        bh=aV0x4n6wQckii0JDBHb/o4LkoOEhIHxl7xns9Eg3VhU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hf8DGWlHDtIiMeG73eyxSzFBAYzmoxTvY394InsdbfmJjaJ5f0t7J+sHrE5L2sryZ
-         TvpMQBjHNoj0o7RLAuSUfYZMn+gIPS5uRmc/juNazbFqunjeGc5bdjcHlTuvhLGbhN
-         lfJlb0UK9+CmGXZzVPhiNPy6CVBSEf/K3cE8sgOk=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200901040854epcas1p443d27e0bcaca9af33ddbfd8cfc4dff5c~wjWWE9Ni-3231032310epcas1p4a;
-        Tue,  1 Sep 2020 04:08:54 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.154]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4BgYTv4sNpzMqYkZ; Tue,  1 Sep
-        2020 04:08:51 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AB.E7.29173.359CD4F5; Tue,  1 Sep 2020 13:08:51 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20200901040851epcas1p3124094e38175758b2310bdae6d76793c~wjWSq0pmZ1717817178epcas1p3i;
-        Tue,  1 Sep 2020 04:08:51 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200901040851epsmtrp1d08ddbf21bbdc2721eaaf5d97955ed9e~wjWSpx1NR3200332003epsmtrp18;
-        Tue,  1 Sep 2020 04:08:51 +0000 (GMT)
-X-AuditID: b6c32a37-9b7ff700000071f5-92-5f4dc9532ba0
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5C.03.08382.359CD4F5; Tue,  1 Sep 2020 13:08:51 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.111.64]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200901040850epsmtip135477003d71b962546776499199b06ce~wjWSWXrx90868108681epsmtip1i;
-        Tue,  1 Sep 2020 04:08:50 +0000 (GMT)
-From:   Hoegeun Kwon <hoegeun.kwon@samsung.com>
-To:     nsaenzjulienne@suse.de, eric@anholt.net, maxime@cerno.tech,
-        stefan.wahren@i2se.com, dave.stevenson@raspberrypi.com
-Cc:     devicetree@vger.kernel.org, tim.gover@raspberrypi.com,
-        sboyd@kernel.org, mturquette@baylibre.com, kdasu.kdev@gmail.com,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-clk@vger.kernel.org, robh+dt@kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org, phil@raspberrypi.com,
-        linux-arm-kernel@lists.infradead.org, hoegeun.kwon@samsung.com
-Subject: [PATCH v2 2/4] drm/vc4: hdmi: Add pixel bvb clock control
-Date:   Tue,  1 Sep 2020 13:07:57 +0900
-Message-Id: <20200901040759.29992-3-hoegeun.kwon@samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901040759.29992-1-hoegeun.kwon@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLJsWRmVeSWpSXmKPExsWy7bCmvm7wSd94g3lz1CzW9h5lsXg7dzGL
-        xfwj51gtrnx9z2ZxoPEyo8X75V1sFjuvrGWx2PT4GqvFx557rBaXd81hs5h4ewO7xYwf/xgt
-        Lp5ytdg2azmbxbpbr9ksWvceYbf4d20jUMOKG2wWj6beZ3QQ9mh6f4zN4/2NVnaPWffPsnnc
-        OXeezWPnrLvsHltvmXpsWtXJ5nG/+ziTx+Yl9R6tR3+xePRtWcXosfl0tcfnTXIBvFHZNhmp
-        iSmpRQqpecn5KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlAbyoplCXmlAKF
-        AhKLi5X07WyK8ktLUhUy8otLbJVSC1JyCiwL9IoTc4tL89L1kvNzrQwNDIxMgQoTsjP+fVrN
-        VLBFtOL4jE7WBsZuoS5GTg4JAROJgy/2sXUxcnEICexglPjQ/4MdwvnEKLH02QeozDdGiWPf
-        pgE5HGAtO0/UQcT3MkpcmH6AFcL5zCgx5/55NpC5bAK6El97rjOB2CICFRL7nl9nBCliFpjK
-        LPF0zjKwhLCAk8TOLa0sIDaLgKrEokP/GUFsXgFbiWdTO5ggDpSXWL3hADOIzSlgJ3F9yVsW
-        kEESAlc4JLb/PM8McZKLxNOTXBD1whKvjm9hh7ClJF72t0HZxRJXZr6C6m1glOifOBsqYSyx
-        f+lkJpA5zAKaEut36UOEFSV2/p4Ldg+zAJ/Eu689rBCreCU62qBhpybxrAHkeRBbRuJU73Ko
-        kz0kbr47xwwJlImMEo8XX2WewCg3C2HDAkbGVYxiqQXFuempxYYFxshRtokRnI61zHcwTnv7
-        Qe8QIxMH4yFGCQ5mJRHeA7u844V4UxIrq1KL8uOLSnNSiw8xmgIDbyKzlGhyPjAj5JXEG5oa
-        GRsbW5gYmpkaGiqJ8z68pRAvJJCeWJKanZpakFoE08fEwSnVwJSXKPhw9+nkmm7PlK/zD5Yf
-        vcNR735Z5kR6wNdLsWJRLz0PFax7rOsqm5WnVSH5P9/txL2zoqdNvZufbFJwsbu71SxuxpWM
-        irdtZ2X6UnT3Kux/vitgQVggQ/yjQCadPZUp+9x+LajPWPnxcdHq2xrCLDO3J13kMzGbtyFD
-        dHrNkhnd8z0W6gX+XymioH8o/OvTs0u1kvJbmT/N7HQUeXg4iqF3jcyDVo4LGxb4M1/osNr6
-        TLrHaIe2/gIvPnf2JasVRV0WPftssvAAo4Jb6sZtnK5R73IaizqXi3330FZ/avvMfOnsTytS
-        nQ5MvvpSWC/hUPS5L33yfTtDVC9vdM5/t2Otp+5lXvG3lwKeciixFGckGmoxFxUnAgDyAImL
-        UAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSnG7wSd94g6d9HBZre4+yWLydu5jF
-        Yv6Rc6wWV76+Z7M40HiZ0eL98i42i51X1rJYbHp8jdXiY889VovLu+awWUy8vYHdYsaPf4wW
-        F0+5WmybtZzNYt2t12wWrXuPsFv8u7YRqGHFDTaLR1PvMzoIezS9P8bm8f5GK7vHrPtn2Tzu
-        nDvP5rFz1l12j623TD02repk87jffZzJY/OSeo/Wo79YPPq2rGL02Hy62uPzJrkA3igum5TU
-        nMyy1CJ9uwSujH+fVjMVbBGtOD6jk7WBsVuoi5GDQ0LARGLnibouRi4OIYHdjBIPp31h6WLk
-        BIrLSKzq38IKUSMscfhwMUTNR0aJnb/PMYLUsAnoSnztuc4EYosI1Ek86WgE62UWWMos0TJJ
-        AcQWFnCS2LmlFSzOIqAqsejQf7BeXgFbiWdTO5ggdslLrN5wgBnE5hSwk7i+5C1YvRBQzfE3
-        G9gmMPItYGRYxSiZWlCcm55bbFhgmJdarlecmFtcmpeul5yfu4kRHDNamjsYt6/6oHeIkYmD
-        8RCjBAezkgjvgV3e8UK8KYmVValF+fFFpTmpxYcYpTlYlMR5bxQujBMSSE8sSc1OTS1ILYLJ
-        MnFwSjUwuYs5+qStMyot2FV2r/mZUueJnrfXWq+YuwZY9zYz5FyI0TV9WanTtH9jHvfS2Z/f
-        sL0KjNC9/3rllQkb+/cXRZVuMzd+vNzDa6epmfJRCZfNMwW6GDcs6dsZnPPyy8M/q+pjua8a
-        FoWZTVFseRfLrJQ696uHgemU2nml+TtYNm1dUG5v5c/qufrFGRNVmT2lksdeFXufZP925Zjz
-        iRUKvAk/0jY/tlkZk7H+HX+0u77DmVv85068lX5+O/nyO9+VpU8CziqV7d6b/+lQzZ6sP7O+
-        tt64PmXpx5pgK5a1xlm7Zx2Ue3DActn+gONOW9+zVzwv+7/axTg9zfVLUeAfvgr/F9EMAX3r
-        H7Rq7z+3VomlOCPRUIu5qDgRAIXJgroIAwAA
-X-CMS-MailID: 20200901040851epcas1p3124094e38175758b2310bdae6d76793c
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200901040851epcas1p3124094e38175758b2310bdae6d76793c
-References: <20200901040759.29992-1-hoegeun.kwon@samsung.com>
-        <CGME20200901040851epcas1p3124094e38175758b2310bdae6d76793c@epcas1p3.samsung.com>
+        Tue, 1 Sep 2020 00:11:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:8899 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgIAELA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 00:11:00 -0400
+IronPort-SDR: NwubxJry0KTpn4dM8SS2fRmanmTtQHiDKETmuc6fO2yItJG6ylBQn8G++CYBL4b08zKn2RmWfR
+ JPWRtTtIQYtw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="156360290"
+X-IronPort-AV: E=Sophos;i="5.76,377,1592895600"; 
+   d="scan'208";a="156360290"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 21:10:56 -0700
+IronPort-SDR: 3Vr5g8NV+nJ2Vwb1nkWz9dxaxDkQGHfWYPFQi74ewYoTEPgHuItgHYaIhFoDvSVEm8nGzNFN3Y
+ k+lNgsGpK1rQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,377,1592895600"; 
+   d="scan'208";a="330934898"
+Received: from lkp-server02.sh.intel.com (HELO 713faec3b0e5) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 31 Aug 2020 21:10:55 -0700
+Received: from kbuild by 713faec3b0e5 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1kCxdG-0000Wa-Ie; Tue, 01 Sep 2020 04:10:54 +0000
+Date:   Tue, 01 Sep 2020 12:10:40 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: [gustavoars-linux:testing/fam0] BUILD SUCCESS
+ a56dbff00095f3fc2c3fcb71dab2e536d42a4ff5
+Message-ID: <5f4dc9c0.xY5yZXesL5ePuzmL%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a problem that the output does not work at a resolution
-exceeding FHD. To solve this, we need to adjust the bvb clock at a
-resolution exceeding FHD.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git  testing/fam0
+branch HEAD: a56dbff00095f3fc2c3fcb71dab2e536d42a4ff5  scsi: target: tcmu: Replace zero-length array with flexible-array member
 
-Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+elapsed time: 726m
+
+configs tested: 116
+configs skipped: 7
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+arm                                 defconfig
+arm64                            allyesconfig
+arm64                               defconfig
+arm                              allyesconfig
+arm                              allmodconfig
+arm                         hackkit_defconfig
+powerpc                     pq2fads_defconfig
+arm                           h3600_defconfig
+sh                           se7712_defconfig
+powerpc64                        alldefconfig
+openrisc                         alldefconfig
+m68k                            mac_defconfig
+powerpc                      pmac32_defconfig
+sh                          lboxre2_defconfig
+sh                           se7751_defconfig
+arm                           u8500_defconfig
+parisc                generic-32bit_defconfig
+m68k                        mvme147_defconfig
+powerpc                          allmodconfig
+m68k                         apollo_defconfig
+sh                          r7785rp_defconfig
+powerpc                     mpc83xx_defconfig
+powerpc                          allyesconfig
+csky                                defconfig
+arm                        mini2440_defconfig
+arm                        cerfcube_defconfig
+h8300                               defconfig
+arm                       spear13xx_defconfig
+arc                                 defconfig
+m68k                          sun3x_defconfig
+arm                            u300_defconfig
+parisc                           allyesconfig
+mips                       capcella_defconfig
+powerpc                      ppc6xx_defconfig
+sh                      rts7751r2d1_defconfig
+m68k                            q40_defconfig
+arm                           omap1_defconfig
+arm                   milbeaut_m10v_defconfig
+sh                        edosk7705_defconfig
+mips                      malta_kvm_defconfig
+sh                         microdev_defconfig
+mips                      bmips_stb_defconfig
+arm                            mps2_defconfig
+nios2                               defconfig
+arm                       imx_v6_v7_defconfig
+mips                           rs90_defconfig
+i386                             alldefconfig
+powerpc                      ppc64e_defconfig
+arm                            hisi_defconfig
+nios2                         3c120_defconfig
+powerpc                    adder875_defconfig
+sh                            titan_defconfig
+mips                           gcw0_defconfig
+arm                         bcm2835_defconfig
+arc                            hsdk_defconfig
+arm                         s5pv210_defconfig
+powerpc                         wii_defconfig
+sh                        sh7757lcr_defconfig
+sh                               alldefconfig
+arm                           stm32_defconfig
+mips                        jmr3927_defconfig
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                             allyesconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                             allyesconfig
+arc                              allyesconfig
+nds32                             allnoconfig
+c6x                              allyesconfig
+nds32                               defconfig
+nios2                            allyesconfig
+alpha                               defconfig
+alpha                            allyesconfig
+xtensa                           allyesconfig
+h8300                            allyesconfig
+sh                               allmodconfig
+parisc                              defconfig
+s390                             allyesconfig
+s390                                defconfig
+i386                             allyesconfig
+sparc                            allyesconfig
+sparc                               defconfig
+i386                                defconfig
+mips                             allyesconfig
+mips                             allmodconfig
+powerpc                           allnoconfig
+powerpc                             defconfig
+i386                 randconfig-a001-20200831
+i386                 randconfig-a002-20200831
+i386                 randconfig-a004-20200831
+i386                 randconfig-a006-20200831
+i386                 randconfig-a005-20200831
+i386                 randconfig-a003-20200831
+x86_64               randconfig-a012-20200831
+x86_64               randconfig-a015-20200831
+x86_64               randconfig-a014-20200831
+x86_64               randconfig-a011-20200831
+x86_64               randconfig-a016-20200831
+x86_64               randconfig-a013-20200831
+i386                 randconfig-a013-20200831
+i386                 randconfig-a011-20200831
+i386                 randconfig-a012-20200831
+i386                 randconfig-a015-20200831
+i386                 randconfig-a016-20200831
+i386                 randconfig-a014-20200831
+riscv                            allyesconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                            allmodconfig
+x86_64                                   rhel
+x86_64                           allyesconfig
+x86_64                    rhel-7.6-kselftests
+x86_64                              defconfig
+x86_64                               rhel-8.3
+x86_64                                  kexec
+
 ---
- drivers/gpu/drm/vc4/vc4_hdmi.c | 25 +++++++++++++++++++++++++
- drivers/gpu/drm/vc4/vc4_hdmi.h |  1 +
- 2 files changed, 26 insertions(+)
-
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_hdmi.c
-index 95ec5eedea39..eb3192d1fd86 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.c
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
-@@ -80,6 +80,7 @@
- # define VC4_HD_M_ENABLE			BIT(0)
- 
- #define CEC_CLOCK_FREQ 40000
-+#define VC4_HSM_MID_CLOCK 149985000
- 
- static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
- {
-@@ -380,6 +381,7 @@ static void vc4_hdmi_encoder_post_crtc_powerdown(struct drm_encoder *encoder)
- 	HDMI_WRITE(HDMI_VID_CTL,
- 		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
- 
-+	clk_disable_unprepare(vc4_hdmi->pixel_bvb_clock);
- 	clk_disable_unprepare(vc4_hdmi->hsm_clock);
- 	clk_disable_unprepare(vc4_hdmi->pixel_clock);
- 
-@@ -638,6 +640,23 @@ static void vc4_hdmi_encoder_pre_crtc_configure(struct drm_encoder *encoder)
- 		return;
- 	}
- 
-+	ret = clk_set_rate(vc4_hdmi->pixel_bvb_clock,
-+			(hsm_rate > VC4_HSM_MID_CLOCK ? 150000000 : 75000000));
-+	if (ret) {
-+		DRM_ERROR("Failed to set pixel bvb clock rate: %d\n", ret);
-+		clk_disable_unprepare(vc4_hdmi->hsm_clock);
-+		clk_disable_unprepare(vc4_hdmi->pixel_clock);
-+		return;
-+	}
-+
-+	ret = clk_prepare_enable(vc4_hdmi->pixel_bvb_clock);
-+	if (ret) {
-+		DRM_ERROR("Failed to turn on pixel bvb clock: %d\n", ret);
-+		clk_disable_unprepare(vc4_hdmi->hsm_clock);
-+		clk_disable_unprepare(vc4_hdmi->pixel_clock);
-+		return;
-+	}
-+
- 	if (vc4_hdmi->variant->reset)
- 		vc4_hdmi->variant->reset(vc4_hdmi);
- 
-@@ -1593,6 +1612,12 @@ static int vc5_hdmi_init_resources(struct vc4_hdmi *vc4_hdmi)
- 		return PTR_ERR(vc4_hdmi->audio_clock);
- 	}
- 
-+	vc4_hdmi->pixel_bvb_clock = devm_clk_get(dev, "bvb");
-+	if (IS_ERR(vc4_hdmi->pixel_bvb_clock)) {
-+		DRM_ERROR("Failed to get pixel bvb clock\n");
-+		return PTR_ERR(vc4_hdmi->pixel_bvb_clock);
-+	}
-+
- 	vc4_hdmi->reset = devm_reset_control_get(dev, NULL);
- 	if (IS_ERR(vc4_hdmi->reset)) {
- 		DRM_ERROR("Failed to get HDMI reset line\n");
-diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.h b/drivers/gpu/drm/vc4/vc4_hdmi.h
-index 0806c6d9f24e..63c6f8bddf1d 100644
---- a/drivers/gpu/drm/vc4/vc4_hdmi.h
-+++ b/drivers/gpu/drm/vc4/vc4_hdmi.h
-@@ -147,6 +147,7 @@ struct vc4_hdmi {
- 	struct clk *pixel_clock;
- 	struct clk *hsm_clock;
- 	struct clk *audio_clock;
-+	struct clk *pixel_bvb_clock;
- 
- 	struct reset_control *reset;
- 
--- 
-2.17.1
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
