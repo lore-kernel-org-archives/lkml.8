@@ -2,57 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-18.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F8CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3561BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6243921534
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F2820E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974681;
-	bh=W6/sS81Kud92Hldw3CjLGtIZQq/opZIQfLxRti9amqo=;
+	s=default; t=1598974686;
+	bh=cAA9DlpTrMCDJIGEUfaf/cn0vOGig3xNSRqqtLuzOrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ig5EpPzsZxogSJ8rE9vsXL5DK9uUGrA999c5wrrHoWR0nFnwODoNMLdfcvunDhBjJ
-	 45meZYues8fKXXRr5rsK53NbPn4JM5lQzXiw6CCE2Qhy7jixHozlfHkZkUIwMGZGjR
-	 IAQkt3jFEzcgQ8ts8abdUFPEokss9GvM58EB1UAY=
+	b=TagMgyZN/qx5ZCOrjBIILCz3Co9dG4+yZvDGmmrKCEQm/K6PNoifWHJSO0F+BNnk8
+	 9GbTJNXXVcBDU9BnRFNUezFjmOt2YaiP4ouaFnCWhtJqh+oaqH+qeK70fCQKcAtUzC
+	 Q4KhPc9NHyEQCywb0hy3MJkKs5cmnSnKE+JqnXWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728409AbgIAPh7 (ORCPT
+        id S1730044AbgIAPiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:37:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43172 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:38:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43338 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728789AbgIAPgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:36:19 -0400
+        id S1731271AbgIAPgZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:36:25 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF39120E65;
-        Tue,  1 Sep 2020 15:36:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E94020866;
+        Tue,  1 Sep 2020 15:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974579;
-        bh=W6/sS81Kud92Hldw3CjLGtIZQq/opZIQfLxRti9amqo=;
+        s=default; t=1598974584;
+        bh=cAA9DlpTrMCDJIGEUfaf/cn0vOGig3xNSRqqtLuzOrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G4LYO57u8LW01gEddAamsOQJI4aMF36c4K1q3XCvQxgC85swRKE8KKCfDr9zKm7Tq
-         NJBy9hoMkgx9fHZsd6xP1YakZKeyloTE76wLyx8fMmAjv9E6BKZmdAMiMD7MMuJhLI
-         zIohxc6G7qejC+A+kpmxuN4htSH4DZoNlFACogfI=
+        b=lgaqjo+ycnx/JzROnVc5yp+ETlqgJI/YUPDIeZaVgAephto/3v0PtLuw3bQcn9fpl
+         X0zAIK7pTPgXNc2S9DpmYlmG4N1DQ1Rt7iAMR6O67rfxF3mkbuSKo+/efIeTmZNnbL
+         yh6oJ9Td+DiUM8KnZpi2ekgRWtT2tsX+R31BJLMI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 002/255] ASoC: intel/skl/hda - fix probe regression on systems without i915
-Date:   Tue,  1 Sep 2020 17:07:38 +0200
-Message-Id: <20200901151000.926387143@linuxfoundation.org>
+        stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 004/255] ALSA: pci: delete repeated words in comments
+Date:   Tue,  1 Sep 2020 17:07:40 +0200
+Message-Id: <20200901151001.015270092@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -65,113 +59,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit ffc6d45d96f07a32700cb6b7be2d3459e63c255a ]
+[ Upstream commit c7fabbc51352f50cc58242a6dc3b9c1a3599849b ]
 
-Starting in commit cbc7a6b5a87a ("ASoC: soc-card: add
-snd_soc_card_add_dai_link()"), error value from ASoc add_dai_link() is
-no longer ignored.
+Drop duplicated words in sound/pci/.
+{and, the, at}
 
-The generic HDA machine driver relied on the old semantics to disable
-i915 HDMI/DP audio codec at runtime. If no display codec was present,
-add_dai_link() returned an error, but this was ignored and rest of the
-card was successfully probed.
-
-Fix the problem by changing the machine driver add_dai_link() to not
-return an error in this case.
-
-Fixes: cbc7a6b5a87a ("ASoC: soc-card: add snd_soc_card_add_dai_link()")
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-BugLink: https://github.com/thesofproject/linux/issues/2261
-Link: https://lore.kernel.org/r/20200714132804.3638221-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Link: https://lore.kernel.org/r/20200806021926.32418-1-rdunlap@infradead.org
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/intel/boards/skl_hda_dsp_common.h  |  1 +
- sound/soc/intel/boards/skl_hda_dsp_generic.c | 17 +++++++++++------
- 2 files changed, 12 insertions(+), 6 deletions(-)
+ sound/pci/cs46xx/cs46xx_lib.c       | 2 +-
+ sound/pci/cs46xx/dsp_spos_scb_lib.c | 2 +-
+ sound/pci/hda/hda_codec.c           | 2 +-
+ sound/pci/hda/hda_generic.c         | 2 +-
+ sound/pci/hda/patch_sigmatel.c      | 2 +-
+ sound/pci/ice1712/prodigy192.c      | 2 +-
+ sound/pci/oxygen/xonar_dg.c         | 2 +-
+ 7 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/sound/soc/intel/boards/skl_hda_dsp_common.h b/sound/soc/intel/boards/skl_hda_dsp_common.h
-index 507750ef67f30..4b0b3959182e5 100644
---- a/sound/soc/intel/boards/skl_hda_dsp_common.h
-+++ b/sound/soc/intel/boards/skl_hda_dsp_common.h
-@@ -33,6 +33,7 @@ struct skl_hda_private {
- 	int dai_index;
- 	const char *platform_name;
- 	bool common_hdmi_codec_drv;
-+	bool idisp_codec;
- };
+diff --git a/sound/pci/cs46xx/cs46xx_lib.c b/sound/pci/cs46xx/cs46xx_lib.c
+index a080d63a9b456..4490dd7469d99 100644
+--- a/sound/pci/cs46xx/cs46xx_lib.c
++++ b/sound/pci/cs46xx/cs46xx_lib.c
+@@ -766,7 +766,7 @@ static void snd_cs46xx_set_capture_sample_rate(struct snd_cs46xx *chip, unsigned
+ 		rate = 48000 / 9;
  
- extern struct snd_soc_dai_link skl_hda_be_dai_links[HDA_DSP_MAX_BE_DAI_LINKS];
-diff --git a/sound/soc/intel/boards/skl_hda_dsp_generic.c b/sound/soc/intel/boards/skl_hda_dsp_generic.c
-index 79c8947f840b9..ca4900036ead9 100644
---- a/sound/soc/intel/boards/skl_hda_dsp_generic.c
-+++ b/sound/soc/intel/boards/skl_hda_dsp_generic.c
-@@ -79,6 +79,9 @@ skl_hda_add_dai_link(struct snd_soc_card *card, struct snd_soc_dai_link *link)
- 	link->platforms->name = ctx->platform_name;
- 	link->nonatomic = 1;
+ 	/*
+-	 *  We can not capture at at rate greater than the Input Rate (48000).
++	 *  We can not capture at a rate greater than the Input Rate (48000).
+ 	 *  Return an error if an attempt is made to stray outside that limit.
+ 	 */
+ 	if (rate > 48000)
+diff --git a/sound/pci/cs46xx/dsp_spos_scb_lib.c b/sound/pci/cs46xx/dsp_spos_scb_lib.c
+index 6b536fc23ca62..1f90ca723f4df 100644
+--- a/sound/pci/cs46xx/dsp_spos_scb_lib.c
++++ b/sound/pci/cs46xx/dsp_spos_scb_lib.c
+@@ -1716,7 +1716,7 @@ int cs46xx_iec958_pre_open (struct snd_cs46xx *chip)
+ 	struct dsp_spos_instance * ins = chip->dsp_spos_instance;
  
-+	if (!ctx->idisp_codec)
-+		return 0;
-+
- 	if (strstr(link->name, "HDMI")) {
- 		ret = skl_hda_hdmi_add_pcm(card, ctx->pcm_count);
+ 	if ( ins->spdif_status_out & DSP_SPDIF_STATUS_OUTPUT_ENABLED ) {
+-		/* remove AsynchFGTxSCB and and PCMSerialInput_II */
++		/* remove AsynchFGTxSCB and PCMSerialInput_II */
+ 		cs46xx_dsp_disable_spdif_out (chip);
  
-@@ -118,19 +121,20 @@ static char hda_soc_components[30];
- static int skl_hda_fill_card_info(struct snd_soc_acpi_mach_params *mach_params)
- {
- 	struct snd_soc_card *card = &hda_soc_card;
-+	struct skl_hda_private *ctx = snd_soc_card_get_drvdata(card);
- 	struct snd_soc_dai_link *dai_link;
--	u32 codec_count, codec_mask, idisp_mask;
-+	u32 codec_count, codec_mask;
- 	int i, num_links, num_route;
+ 		/* save state */
+diff --git a/sound/pci/hda/hda_codec.c b/sound/pci/hda/hda_codec.c
+index 803978d69e3c4..ea7f16dd1f73c 100644
+--- a/sound/pci/hda/hda_codec.c
++++ b/sound/pci/hda/hda_codec.c
+@@ -3427,7 +3427,7 @@ EXPORT_SYMBOL_GPL(snd_hda_set_power_save);
+  * @nid: NID to check / update
+  *
+  * Check whether the given NID is in the amp list.  If it's in the list,
+- * check the current AMP status, and update the the power-status according
++ * check the current AMP status, and update the power-status according
+  * to the mute status.
+  *
+  * This function is supposed to be set or called from the check_power_status
+diff --git a/sound/pci/hda/hda_generic.c b/sound/pci/hda/hda_generic.c
+index f4e9d9445e18f..201a3b6b0b0f6 100644
+--- a/sound/pci/hda/hda_generic.c
++++ b/sound/pci/hda/hda_generic.c
+@@ -813,7 +813,7 @@ static void activate_amp_in(struct hda_codec *codec, struct nid_path *path,
+ 	}
+ }
  
- 	codec_mask = mach_params->codec_mask;
- 	codec_count = hweight_long(codec_mask);
--	idisp_mask = codec_mask & IDISP_CODEC_MASK;
-+	ctx->idisp_codec = !!(codec_mask & IDISP_CODEC_MASK);
+-/* sync power of each widget in the the given path */
++/* sync power of each widget in the given path */
+ static hda_nid_t path_power_update(struct hda_codec *codec,
+ 				   struct nid_path *path,
+ 				   bool allow_powerdown)
+diff --git a/sound/pci/hda/patch_sigmatel.c b/sound/pci/hda/patch_sigmatel.c
+index a608d0486ae49..2bea11d62d3e9 100644
+--- a/sound/pci/hda/patch_sigmatel.c
++++ b/sound/pci/hda/patch_sigmatel.c
+@@ -832,7 +832,7 @@ static int stac_auto_create_beep_ctls(struct hda_codec *codec,
+ 	static const struct snd_kcontrol_new beep_vol_ctl =
+ 		HDA_CODEC_VOLUME(NULL, 0, 0, 0);
  
- 	if (!codec_count || codec_count > 2 ||
--	    (codec_count == 2 && !idisp_mask))
-+	    (codec_count == 2 && !ctx->idisp_codec))
- 		return -EINVAL;
- 
--	if (codec_mask == idisp_mask) {
-+	if (codec_mask == IDISP_CODEC_MASK) {
- 		/* topology with iDisp as the only HDA codec */
- 		num_links = IDISP_DAI_COUNT + DMIC_DAI_COUNT;
- 		num_route = IDISP_ROUTE_COUNT;
-@@ -152,7 +156,7 @@ static int skl_hda_fill_card_info(struct snd_soc_acpi_mach_params *mach_params)
- 		num_route = ARRAY_SIZE(skl_hda_map);
- 		card->dapm_widgets = skl_hda_widgets;
- 		card->num_dapm_widgets = ARRAY_SIZE(skl_hda_widgets);
--		if (!idisp_mask) {
-+		if (!ctx->idisp_codec) {
- 			for (i = 0; i < IDISP_DAI_COUNT; i++) {
- 				skl_hda_be_dai_links[i].codecs = dummy_codec;
- 				skl_hda_be_dai_links[i].num_codecs =
-@@ -211,6 +215,8 @@ static int skl_hda_audio_probe(struct platform_device *pdev)
- 	if (!mach)
- 		return -EINVAL;
- 
-+	snd_soc_card_set_drvdata(&hda_soc_card, ctx);
-+
- 	ret = skl_hda_fill_card_info(&mach->mach_params);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "Unsupported HDAudio/iDisp configuration found\n");
-@@ -223,7 +229,6 @@ static int skl_hda_audio_probe(struct platform_device *pdev)
- 	ctx->common_hdmi_codec_drv = mach->mach_params.common_hdmi_codec_drv;
- 
- 	hda_soc_card.dev = &pdev->dev;
--	snd_soc_card_set_drvdata(&hda_soc_card, ctx);
- 
- 	if (mach->mach_params.dmic_num > 0) {
- 		snprintf(hda_soc_components, sizeof(hda_soc_components),
+-	/* check for mute support for the the amp */
++	/* check for mute support for the amp */
+ 	if ((caps & AC_AMPCAP_MUTE) >> AC_AMPCAP_MUTE_SHIFT) {
+ 		const struct snd_kcontrol_new *temp;
+ 		if (spec->anabeep_nid == nid)
+diff --git a/sound/pci/ice1712/prodigy192.c b/sound/pci/ice1712/prodigy192.c
+index 8df14f63b10df..096ec76f53046 100644
+--- a/sound/pci/ice1712/prodigy192.c
++++ b/sound/pci/ice1712/prodigy192.c
+@@ -32,7 +32,7 @@
+  *		  Experimentally I found out that only a combination of
+  *		  OCKS0=1, OCKS1=1 (128fs, 64fs output) and ice1724 -
+  *		  VT1724_MT_I2S_MCLK_128X=0 (256fs input) yields correct
+- *		  sampling rate. That means the the FPGA doubles the
++ *		  sampling rate. That means that the FPGA doubles the
+  *		  MCK01 rate.
+  *
+  *	Copyright (c) 2003 Takashi Iwai <tiwai@suse.de>
+diff --git a/sound/pci/oxygen/xonar_dg.c b/sound/pci/oxygen/xonar_dg.c
+index c3f8721624cd4..b90421a1d909a 100644
+--- a/sound/pci/oxygen/xonar_dg.c
++++ b/sound/pci/oxygen/xonar_dg.c
+@@ -29,7 +29,7 @@
+  *   GPIO 4 <- headphone detect
+  *   GPIO 5 -> enable ADC analog circuit for the left channel
+  *   GPIO 6 -> enable ADC analog circuit for the right channel
+- *   GPIO 7 -> switch green rear output jack between CS4245 and and the first
++ *   GPIO 7 -> switch green rear output jack between CS4245 and the first
+  *             channel of CS4361 (mechanical relay)
+  *   GPIO 8 -> enable output to speakers
+  *
 -- 
 2.25.1
 
