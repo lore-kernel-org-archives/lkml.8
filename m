@@ -2,108 +2,77 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5A7C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A2DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CB9520E65
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978562;
-	bh=VZu/xCLM/zvS86LzuuApCHR8B0eir2DgfJaLNqhOAVA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D7unwlqBopgYli052mgFms7kqOL7qDURlDyt7gHlg5WupHECWAy6Ziv86W8nffJrX
-	 apv0gyh6mYBbWrGsGgouYE2KPCD3KZUeuJGH17l2wPelaRDt1tlEhmIJEepzYuOY28
-	 6BIQiq7Fy9BGH/TyWTyigq2b7JWK3d9rQHwld+WY=
+	by mail.kernel.org (Postfix) with ESMTP id D6D112078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732254AbgIAQmk (ORCPT
+        id S1729651AbgIAQmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:42:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55696 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729832AbgIAP16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:58 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80379206FA;
-        Tue,  1 Sep 2020 15:27:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974076;
-        bh=VZu/xCLM/zvS86LzuuApCHR8B0eir2DgfJaLNqhOAVA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jnm3ZA+0qy8M2lo7zftZN5LHupWH/dvMCKMBvfi5JXL1o7mpDxoz3Wb576/861hHK
-         uawOe8UkKTSF6lQ5u8ggznSXrOYfjvQ0jHwLEKRYYx4ux6Yox3f/KkNhV2nvq0fGnd
-         GvKpf6SAhyffXKjj+wz/WVyfQfx1wz9inQzkYHLM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prakash Gupta <guptap@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 027/214] iommu/iova: Dont BUG on invalid PFNs
-Date:   Tue,  1 Sep 2020 17:08:27 +0200
-Message-Id: <20200901150954.270613348@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 12:42:45 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:54665 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731048AbgIAQmj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:42:39 -0400
+Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1kD9MS-00034e-78; Tue, 01 Sep 2020 16:42:20 +0000
+Date:   Tue, 1 Sep 2020 18:42:19 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Miaohe Lin <linmiaohe@huawei.com>, axboe@kernel.dk,
+        ebiederm@xmission.com, madhuparnabhowmik10@gmail.com,
+        gustavoars@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] signal: clean up codestyle
+Message-ID: <20200901164219.h7aqy6h7xjbj7mzc@wittgenstein>
+References: <20200901115800.7916-1-linmiaohe@huawei.com>
+ <20200901122047.7hzztrssvr72wb2d@wittgenstein>
+ <20200901163904.GC4386@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200901163904.GC4386@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+On Tue, Sep 01, 2020 at 06:39:05PM +0200, Oleg Nesterov wrote:
+> On 09/01, Christian Brauner wrote:
+> >
+> > On Tue, Sep 01, 2020 at 07:58:00AM -0400, Miaohe Lin wrote:
+> > > No functional change intended.
+> >
+> > Hey Miaohe,
+> >
+> > Thank you for the patch.
+> > I'm sure this is well-intended but afaict the whole file has more or
+> > less a consistent style already where e.g. sig-1 without spaces seems to
+> > be preferred. The same for the casts where most places use a single
+> > space.
+> >
+> > Now, I know CodingStyle.rst is on your side at least when it comes to
+> > the first point:
+> >
+> > Use one space around (on each side of) most binary and ternary operators,
+> > such as any of these::
+> >
+> > 	=  +  -  <  >  *  /  %  |  &  ^  <=  >=  ==  !=  ?  :
+> >
+> > but then you'd need to change each place in kernel/signal.c where that
+> > is currently not the case.
+> 
+> Or simply leave this code alone ;)
 
-[ Upstream commit d3e3d2be688b4b5864538de61e750721a311e4fc ]
+I was trying to imply that by pointing out that this would be
+file-global change. I was likely too subtle. ;)
 
-Unlike the other instances which represent a complete loss of
-consistency within the rcache mechanism itself, or a fundamental
-and obvious misconfiguration by an IOMMU driver, the BUG_ON() in
-iova_magazine_free_pfns() can be provoked at more or less any time
-in a "spooky action-at-a-distance" manner by any old device driver
-passing nonsense to dma_unmap_*() which then propagates through to
-queue_iova().
-
-Not only is this well outside the IOVA layer's control, it's also
-nowhere near fatal enough to justify panicking anyway - all that
-really achieves is to make debugging the offending driver more
-difficult. Let's simply WARN and otherwise ignore bogus PFNs.
-
-Reported-by: Prakash Gupta <guptap@codeaurora.org>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Reviewed-by: Prakash Gupta <guptap@codeaurora.org>
-Link: https://lore.kernel.org/r/acbd2d092b42738a03a21b417ce64e27f8c91c86.1591103298.git.robin.murphy@arm.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/iommu/iova.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
-index 0e6a9536eca62..612cbf668adf8 100644
---- a/drivers/iommu/iova.c
-+++ b/drivers/iommu/iova.c
-@@ -811,7 +811,9 @@ iova_magazine_free_pfns(struct iova_magazine *mag, struct iova_domain *iovad)
- 	for (i = 0 ; i < mag->size; ++i) {
- 		struct iova *iova = private_find_iova(iovad, mag->pfns[i]);
- 
--		BUG_ON(!iova);
-+		if (WARN_ON(!iova))
-+			continue;
-+
- 		private_free_iova(iovad, iova);
- 	}
- 
--- 
-2.25.1
-
-
-
+Christian
