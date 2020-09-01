@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8E63C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4809BC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96EFD2087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28CE12087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980879;
-	bh=dP9OWR2F7qWnMhX4Sx22XvrX3BkgvzRlHX2MWVWC4Gk=;
+	s=default; t=1598980882;
+	bh=KybOFCGDCwkwB7EpUhZBAkzFqWSShOO3eQjb3Z65DE4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i4lNgLFdps0BzGe/1rS073WQfiWRswauDwFD7KFFHtgBGrfKRMDD2ehb/V723G0lD
-	 pxE9pcRmSmXlB6MSR6F7ZApk3R9oFptZPp6SKTgUgFCDuvkCgNYTMIXJhC/yNMe4i6
-	 Z6KqPXBJAWHNwyRfa8CZhwTdOy4msQsTyHo8cp5U=
+	b=u/coVoiNA9STVnJLQfMwtQIB0DvxA0yqeTdOsWnKdvI75Uo0GX4QjP+dAbZbQQCpX
+	 cdtF1oqs59EQh7bWbB8hQr5TpySqUhi0SLKhUqGHG07iPMYTWrk5jxQxfIYWMOA41P
+	 B7vYkgK4JWzZRAlhT4VFQRlv1wUbAMR/VxN9KyXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732665AbgIARVQ (ORCPT
+        id S1732677AbgIARVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:21:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55282 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:21:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728693AbgIAPMn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:43 -0400
+        id S1728184AbgIAPMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C9CF20BED;
-        Tue,  1 Sep 2020 15:12:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA2B7208CA;
+        Tue,  1 Sep 2020 15:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973162;
-        bh=dP9OWR2F7qWnMhX4Sx22XvrX3BkgvzRlHX2MWVWC4Gk=;
+        s=default; t=1598973160;
+        bh=KybOFCGDCwkwB7EpUhZBAkzFqWSShOO3eQjb3Z65DE4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cTtr0AE2RW8mNYcieRqxKo0ME2U4ywFnTzax9YdZzVRqqO+DoTEeEmKSpkwLQi/fB
-         xovCp9WdoUnDIsBdelVsV6r2L7pb0ZuIL8MwGdFkgybvBYU0i//ZslwNTKa+0ZR0O8
-         TukGHrK3tMRii1JxCzagjRGvzZCtFTCpluGrtoZ8=
+        b=LqV1AqjgWfaGj9fKb91W62BaZN24vH9EvCUFGpry19BD0nqwIrRcj8sGObq/z3tG0
+         U5oT3B10CWIKCL/OOBBcLxly5dykh7AHUbuv0SRUjm4ZsurQ+5Wir5wch2NZXwLbiF
+         R1hufTnYGj0QPCPPWKStTHDM/KXv2tm8CgWEeKIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org,
+        Changming Liu <charley.ashbringer@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 32/62] Revert "ath10k: fix DMA related firmware crashes on multiple devices"
-Date:   Tue,  1 Sep 2020 17:10:15 +0200
-Message-Id: <20200901150922.332417901@linuxfoundation.org>
+Subject: [PATCH 4.4 31/62] USB: sisusbvga: Fix a potential UB casued by left shifting a negative value
+Date:   Tue,  1 Sep 2020 17:10:14 +0200
+Message-Id: <20200901150922.285365865@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -60,49 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhi Chen <zhichen@codeaurora.org>
+From: Changming Liu <charley.ashbringer@gmail.com>
 
-[ Upstream commit a1769bb68a850508a492e3674ab1e5e479b11254 ]
+[ Upstream commit 2b53a19284f537168fb506f2f40d7fda40a01162 ]
 
-This reverts commit 76d164f582150fd0259ec0fcbc485470bcd8033e.
-PCIe hung issue was observed on multiple platforms. The issue was reproduced
-when DUT was configured as AP and associated with 50+ STAs.
+The char buffer buf, receives data directly from user space,
+so its content might be negative and its elements are left
+shifted to form an unsigned integer.
 
-For QCA9984/QCA9888, the DMA_BURST_SIZE register controls the AXI burst size
-of the RD/WR access to the HOST MEM.
-0 - No split , RAW read/write transfer size from MAC is put out on bus
-    as burst length
-1 - Split at 256 byte boundary
-2,3 - Reserved
+Since left shifting a negative value is undefined behavior, thus
+change the char to u8 to elimintate this UB.
 
-With PCIe protocol analyzer, we can see DMA Read crossing 4KB boundary when
-issue happened. It broke PCIe spec and caused PCIe stuck. So revert
-the default value from 0 to 1.
-
-Tested:  IPQ8064 + QCA9984 with firmware 10.4-3.10-00047
-         QCS404 + QCA9984 with firmware 10.4-3.9.0.2--00044
-         Synaptics AS370 + QCA9888  with firmware 10.4-3.9.0.2--00040
-
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Changming Liu <charley.ashbringer@gmail.com>
+Link: https://lore.kernel.org/r/20200711043018.928-1-charley.ashbringer@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/hw.h | 2 +-
+ drivers/usb/misc/sisusbvga/sisusb.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
-index 713c2bcea1782..8ec5c579d7fa8 100644
---- a/drivers/net/wireless/ath/ath10k/hw.h
-+++ b/drivers/net/wireless/ath/ath10k/hw.h
-@@ -429,7 +429,7 @@ enum ath10k_hw_rate_cck {
+diff --git a/drivers/usb/misc/sisusbvga/sisusb.c b/drivers/usb/misc/sisusbvga/sisusb.c
+index 22da70fada5e5..971f1165dc4bb 100644
+--- a/drivers/usb/misc/sisusbvga/sisusb.c
++++ b/drivers/usb/misc/sisusbvga/sisusb.c
+@@ -790,7 +790,7 @@ static int sisusb_write_mem_bulk(struct sisusb_usb_data *sisusb, u32 addr,
+ 	u8   swap8, fromkern = kernbuffer ? 1 : 0;
+ 	u16  swap16;
+ 	u32  swap32, flag = (length >> 28) & 1;
+-	char buf[4];
++	u8 buf[4];
  
- #define TARGET_10_4_TX_DBG_LOG_SIZE		1024
- #define TARGET_10_4_NUM_WDS_ENTRIES		32
--#define TARGET_10_4_DMA_BURST_SIZE		0
-+#define TARGET_10_4_DMA_BURST_SIZE		1
- #define TARGET_10_4_MAC_AGGR_DELIM		0
- #define TARGET_10_4_RX_SKIP_DEFRAG_TIMEOUT_DUP_DETECTION_CHECK 1
- #define TARGET_10_4_VOW_CONFIG			0
+ 	/* if neither kernbuffer not userbuffer are given, assume
+ 	 * data in obuf
 -- 
 2.25.1
 
