@@ -2,191 +2,114 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E568FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8178C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BFB082064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975421;
-	bh=HAHOxMSHdU6rneTM5WbVyXyKK7cvJRLLgO2eLJdQCb0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WNZ2iBtOln/+tvKX03wn0EDfS51z/B0dIzw3hpHNnRLxvuXcGf9VSPZzl6rnIL7qd
-	 DId6l39T2LtagK3FghIQVLauU5k0LLfteUcEDG8JmZOerQIGZJaVlwl6rxuAgY3nwf
-	 mdhYwXIgWWMtJgar7yOIvlzKCz32gJZLt905lnSM=
+	by mail.kernel.org (Postfix) with ESMTP id A7C8E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:50:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sqYq5WtI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732198AbgIAPuT (ORCPT
+        id S1732204AbgIAPuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgIAPrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:47:00 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F88B206EB;
-        Tue,  1 Sep 2020 15:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975219;
-        bh=HAHOxMSHdU6rneTM5WbVyXyKK7cvJRLLgO2eLJdQCb0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LBANgDTH8o+PCjUOc8u4BXB7dPdWv3bz8Zyw43wmG7iWM+wAweWYb4X2QHCH9ZKwD
-         EQMDxZUFaSibY+dL3LUWaZiHne6q9cPwh71TeoRDz2IDSMuNgix0zZqHJsx9AlWIS2
-         L3ylWCTEiD7dyYUcIf/mF6noa5KzgA6V+uKoY9nY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+f36cfe60b1006a94f9dc@syzkaller.appspotmail.com,
-        Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Marco Elver <elver@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.8 248/255] mm/page_counter: fix various data races at memsw
-Date:   Tue,  1 Sep 2020 17:11:44 +0200
-Message-Id: <20200901151012.651156551@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 11:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57262 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732167AbgIAPuG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:50:06 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F50EC061244;
+        Tue,  1 Sep 2020 08:50:06 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m5so885692pgj.9;
+        Tue, 01 Sep 2020 08:50:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tvCRLYAyQWKkqKGKttpKhLQlN/6T9uJa0Fn4mM13fKc=;
+        b=sqYq5WtIm/TLWTlkZEO/dSBzKmYZH++45u7iU5u4C2tbERPBHIhxiaP7OkTywsLpNe
+         /zpuQlsrd4FJEVD95xDPTbRJlmnpOI18tvokDp7JgJyTCGli9EGg1wU/7LcGWW4RuB3L
+         i3JipCEnQo+JjYoJmR/9QPthSRVoYiyGSXQO2o4JxfzRlZ0RHAB+2FKyl6ZfuZI5On0L
+         lvqMNTf8NgV/dZHPZS7ZRc+K1+mfq7uNvo5uP4tRE3qTsmnLzfekHEXkOwTlikZyRxyR
+         Pypq3yijEotlP36SB2yncox6G9JfwDSd5+0nALPx9jLRcx76lKPrpbP/ZYAbcuNgerK6
+         FXXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tvCRLYAyQWKkqKGKttpKhLQlN/6T9uJa0Fn4mM13fKc=;
+        b=Sv/SK3oh0tItKElH1OWmnmSs//AITtkBnNKNj7PNhP6jZEZ5a/Ka4COjadcRzw27kA
+         k0+U5uEpK0rWWMIere0XOREiYtxtAB1f/YvjAcgBpVublOUibeoORlabv6rzOVkMkItX
+         7+NMGmCLYps9Vg4ZEigvVEpzYSksQnPxBJnDmRm2IvUUF5NAPST7MIH39WJKHgFZ/Bl2
+         NDQFUuNQae5/5OjxPCD295jCCHCnX3isnLfNyMbwlpXDjsVAM140AZ/h6UNhJmqc1jPx
+         ULJEsFkg0cStpTi4dRunEayg+ULA9jaOSACzkcqjK0zeEELS3YHs/9kwT7ciSMYc+DQb
+         ML/g==
+X-Gm-Message-State: AOAM530tODMI5N+BeVoOaIEstnp/rPrRXdzFHMTlhcFAUC5RuqQDl/9X
+        AWK4lLgdUizGTRaVOAbdg/FVdyBUQJQ=
+X-Google-Smtp-Source: ABdhPJxwuWDznI85eI7yiwwdGg0TFwDFrVOkrOhk+JBqxxr1Obtsvh/cGYxkl9jid0GdM7yqRvWo/Q==
+X-Received: by 2002:a63:4e10:: with SMTP id c16mr2033803pgb.54.1598975405984;
+        Tue, 01 Sep 2020 08:50:05 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q71sm2059375pjq.7.2020.09.01.08.50.05
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 01 Sep 2020 08:50:05 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 08:50:04 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] watchdog: davinci: Simplify with dev_err_probe()
+Message-ID: <20200901155004.GB106798@roeck-us.net>
+References: <20200901153141.18960-1-krzk@kernel.org>
+ <20200901153141.18960-2-krzk@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901153141.18960-2-krzk@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+On Tue, Sep 01, 2020 at 05:31:40PM +0200, Krzysztof Kozlowski wrote:
+> Common pattern of handling deferred probe can be simplified with
+> dev_err_probe().  Less code and the error value gets printed.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 6e4bd50f3888fa8fea8bc66a0ad4ad5f1c862961 upstream.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Commit 3e32cb2e0a12 ("mm: memcontrol: lockless page counters") could had
-memcg->memsw->watermark and memcg->memsw->failcnt been accessed
-concurrently as reported by KCSAN,
-
- BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
-
- read to 0xffff8fb18c4cd190 of 8 bytes by task 1081 on cpu 59:
-  page_counter_try_charge+0x4d/0x150 mm/page_counter.c:138
-  try_charge+0x131/0xd50 mm/memcontrol.c:2405
-  __memcg_kmem_charge_memcg+0x58/0x140
-  __memcg_kmem_charge+0xcc/0x280
-  __alloc_pages_nodemask+0x1e1/0x450
-  alloc_pages_current+0xa6/0x120
-  pte_alloc_one+0x17/0xd0
-  __pte_alloc+0x3a/0x1f0
-  copy_p4d_range+0xc36/0x1990
-  copy_page_range+0x21d/0x360
-  dup_mmap+0x5f5/0x7a0
-  dup_mm+0xa2/0x240
-  copy_process+0x1b3f/0x3460
-  _do_fork+0xaa/0xa20
-  __x64_sys_clone+0x13b/0x170
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
- write to 0xffff8fb18c4cd190 of 8 bytes by task 1153 on cpu 120:
-  page_counter_try_charge+0x5b/0x150 mm/page_counter.c:139
-  try_charge+0x131/0xd50 mm/memcontrol.c:2405
-  mem_cgroup_try_charge+0x159/0x460
-  mem_cgroup_try_charge_delay+0x3d/0xa0
-  wp_page_copy+0x14d/0x930
-  do_wp_page+0x107/0x7b0
-  __handle_mm_fault+0xce6/0xd40
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
-
- BUG: KCSAN: data-race in page_counter_try_charge / page_counter_try_charge
-
- write to 0xffff88809bbf2158 of 8 bytes by task 11782 on cpu 0:
-  page_counter_try_charge+0x100/0x170 mm/page_counter.c:129
-  try_charge+0x185/0xbf0 mm/memcontrol.c:2405
-  __memcg_kmem_charge_memcg+0x4a/0xe0 mm/memcontrol.c:2837
-  __memcg_kmem_charge+0xcf/0x1b0 mm/memcontrol.c:2877
-  __alloc_pages_nodemask+0x26c/0x310 mm/page_alloc.c:4780
-
- read to 0xffff88809bbf2158 of 8 bytes by task 11814 on cpu 1:
-  page_counter_try_charge+0xef/0x170 mm/page_counter.c:129
-  try_charge+0x185/0xbf0 mm/memcontrol.c:2405
-  __memcg_kmem_charge_memcg+0x4a/0xe0 mm/memcontrol.c:2837
-  __memcg_kmem_charge+0xcf/0x1b0 mm/memcontrol.c:2877
-  __alloc_pages_nodemask+0x26c/0x310 mm/page_alloc.c:4780
-
-Since watermark could be compared or set to garbage due to a data race
-which would change the code logic, fix it by adding a pair of READ_ONCE()
-and WRITE_ONCE() in those places.
-
-The "failcnt" counter is tolerant of some degree of inaccuracy and is only
-used to report stats, a data race will not be harmful, thus mark it as an
-intentional data race using the data_race() macro.
-
-Fixes: 3e32cb2e0a12 ("mm: memcontrol: lockless page counters")
-Reported-by: syzbot+f36cfe60b1006a94f9dc@syzkaller.appspotmail.com
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Marco Elver <elver@google.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Link: http://lkml.kernel.org/r/1581519682-23594-1-git-send-email-cai@lca.pw
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- mm/page_counter.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
-
---- a/mm/page_counter.c
-+++ b/mm/page_counter.c
-@@ -77,8 +77,8 @@ void page_counter_charge(struct page_cou
- 		 * This is indeed racy, but we can live with some
- 		 * inaccuracy in the watermark.
- 		 */
--		if (new > c->watermark)
--			c->watermark = new;
-+		if (new > READ_ONCE(c->watermark))
-+			WRITE_ONCE(c->watermark, new);
- 	}
- }
- 
-@@ -119,9 +119,10 @@ bool page_counter_try_charge(struct page
- 			propagate_protected_usage(c, new);
- 			/*
- 			 * This is racy, but we can live with some
--			 * inaccuracy in the failcnt.
-+			 * inaccuracy in the failcnt which is only used
-+			 * to report stats.
- 			 */
--			c->failcnt++;
-+			data_race(c->failcnt++);
- 			*fail = c;
- 			goto failed;
- 		}
-@@ -130,8 +131,8 @@ bool page_counter_try_charge(struct page
- 		 * Just like with failcnt, we can live with some
- 		 * inaccuracy in the watermark.
- 		 */
--		if (new > c->watermark)
--			c->watermark = new;
-+		if (new > READ_ONCE(c->watermark))
-+			WRITE_ONCE(c->watermark, new);
- 	}
- 	return true;
- 
-
-
+> ---
+>  drivers/watchdog/davinci_wdt.c | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
+> index 2b3f3cd382ef..e6eaba6bae5b 100644
+> --- a/drivers/watchdog/davinci_wdt.c
+> +++ b/drivers/watchdog/davinci_wdt.c
+> @@ -206,12 +206,9 @@ static int davinci_wdt_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	davinci_wdt->clk = devm_clk_get(dev, NULL);
+> -
+> -	if (IS_ERR(davinci_wdt->clk)) {
+> -		if (PTR_ERR(davinci_wdt->clk) != -EPROBE_DEFER)
+> -			dev_err(dev, "failed to get clock node\n");
+> -		return PTR_ERR(davinci_wdt->clk);
+> -	}
+> +	if (IS_ERR(davinci_wdt->clk))
+> +		return dev_err_probe(dev, PTR_ERR(davinci_wdt->clk),
+> +				     "failed to get clock node\n");
+>  
+>  	ret = clk_prepare_enable(davinci_wdt->clk);
+>  	if (ret) {
+> -- 
+> 2.17.1
+> 
