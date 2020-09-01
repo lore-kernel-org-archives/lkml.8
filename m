@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4324BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF0CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2992087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:54:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D8662071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 07:54:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598946881;
-	bh=Wzk6xLOgHb+dXZ9e8xdTgf21ZeEp2hdbShXIFp7iY5c=;
+	s=default; t=1598946887;
+	bh=o7UEqMqPPvvhiO414ovEcDlR1s0CegXtD3+46I/QY5U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DIhD1U9iE7WdjGxhhRhVeu9PJ5dpiOa5VSrCz6jmmfJtI8RSMlS0+cpEk+BgkVucw
-	 4iQobjbDOGWR6/DYC9uBp5U+lZwP8ut34wej0mRCvv07VsF8F9BjeyfCzQM354nXgV
-	 i3z+FrzHlC7HIHyuS6dLL0MFj4pLFpTQbYB4ScHE=
+	b=MmSKEt+N/mDFlOdD5ujDVQ/4RzvrnLOMUwoF4P+sSQq39UBzvYesy/IPhKGeOZ12A
+	 jE1t8nk3/2WJxoUhBldejQ45iGqW6/2DaBK4Xha/BPlJDTndQPtD91unk31gB8fYAB
+	 MlZkI5pUVCZtpcuTh8nsNtMGgskJ4N46VPf/G16Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbgIAHyj (ORCPT
+        id S1727839AbgIAHyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 03:54:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45060 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 03:54:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbgIAHyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 03:54:33 -0400
+        id S1727028AbgIAHyk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 03:54:40 -0400
 Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C59FB2083B;
-        Tue,  1 Sep 2020 07:54:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 111052083B;
+        Tue,  1 Sep 2020 07:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598946872;
-        bh=Wzk6xLOgHb+dXZ9e8xdTgf21ZeEp2hdbShXIFp7iY5c=;
+        s=default; t=1598946879;
+        bh=o7UEqMqPPvvhiO414ovEcDlR1s0CegXtD3+46I/QY5U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D0nacYYLsErONf/QrX1zO3CYTxtB/k6Yet4oEYUst5DcWQkzXfOCFkPZyH38zaXIx
-         AzXbW+lu7Ufu0jpBcuwNIEZlnUtAr5tesyNkRA359gaR822MHKADFx6Km03kLdYT4U
-         OVzX9fKJ/byrrhX0j9Q+xZ07XyjOfw0hLQ9LfDFU=
+        b=N4e/iUBkhVXbL8k2uAy8pqvV0jVkZoTWfROJb/CmnqEwFUXGdCGIaqSihqrTxu0r+
+         j1YPsV2RpmdOkkGndjdOYWuxZc56aDahCDpKsw+J5IwwDCe9cx/s4K1UShVbKwhe9p
+         ltnZ7N8n5mQ+EK9Qfk/tDM/IFc1fGcMk2cUAteOA=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
         Krzysztof Kozlowski <krzk@kernel.org>,
@@ -47,9 +47,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
 Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sylwester Nawrocki <snawrocki@kernel.org>
-Subject: [PATCH 01/13] ARM: dts: exynos: Correct compatible for Exynos5 GIC
-Date:   Tue,  1 Sep 2020 09:54:05 +0200
-Message-Id: <20200901075417.22481-2-krzk@kernel.org>
+Subject: [PATCH 03/13] ARM: dts: exynos: Remove unneeded address/size cells in Exynos5260 GIC
+Date:   Tue,  1 Sep 2020 09:54:07 +0200
+Message-Id: <20200901075417.22481-4-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200901075417.22481-1-krzk@kernel.org>
 References: <20200901075417.22481-1-krzk@kernel.org>
@@ -58,31 +58,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exynos5250 and Exynso54xx SoCs have ARM GIC 400.  Correct the
-compatibles to match dtschema and fix the dtbs_check warnings like:
+The Exynos5260 GIC node does not have any children so remove the address
+and size cells as they are not needed by DT bindings.  The size-cells of
+'0' were also incorrect.  This fixes dtbs_check warning:
 
-  arch/arm/boot/dts/exynos5420-peach-pit.dt.yaml: interrupt-controller@10481000:
-    compatible: ['arm,gic-400', 'arm,cortex-a15-gic', 'arm,cortex-a9-gic']
-    is not valid under any of the given schemas
+  arch/arm/boot/dts/exynos5260-xyref5260.dt.yaml: interrupt-controller@10481000: #size-cells:0:0: 1 was expected
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm/boot/dts/exynos5.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5260.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index 22eb951c614c..9660104be4c9 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -86,7 +86,7 @@
- 		};
- 
+diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
+index 9b45e052cca9..973448c4ad93 100644
+--- a/arch/arm/boot/dts/exynos5260.dtsi
++++ b/arch/arm/boot/dts/exynos5260.dtsi
+@@ -164,8 +164,6 @@
  		gic: interrupt-controller@10481000 {
--			compatible = "arm,gic-400", "arm,cortex-a15-gic", "arm,cortex-a9-gic";
-+			compatible = "arm,gic-400", "arm,cortex-a15-gic";
+ 			compatible = "arm,gic-400", "arm,cortex-a15-gic";
  			#interrupt-cells = <3>;
+-			#address-cells = <0>;
+-			#size-cells = <0>;
  			interrupt-controller;
- 			reg =	<0x10481000 0x1000>,
+ 			reg = <0x10481000 0x1000>,
+ 				<0x10482000 0x2000>,
 -- 
 2.17.1
 
