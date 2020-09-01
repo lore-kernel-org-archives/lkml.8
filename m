@@ -2,550 +2,148 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,NICE_REPLY_A,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684A6C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CA0AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32881206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11DD0206F0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 13:39:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JZei36oA"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LmfBjQaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728234AbgIANhq (ORCPT
+        id S1728269AbgIANix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 09:37:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36544 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728257AbgIANgl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 09:36:41 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D0A9C061245
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 06:36:40 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id s205so1541073lja.7
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 06:36:40 -0700 (PDT)
+        Tue, 1 Sep 2020 09:38:53 -0400
+Received: from mail-bn8nam11on2086.outbound.protection.outlook.com ([40.107.236.86]:56321
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728244AbgIANhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 09:37:45 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BMezK79wB7tpzd59BENeXb9r7Th4tWveE5WDhrCWkLobhhPuodsS6k1kgjRX6ljRghKZWJfCkJPJTPYVGsXIeN3fGfg26J8nzmB5uqcUv0Wth/K8tACpyLRllkajKhGFSGFbtQ2Ys9C2S49jipRGMXqWtUivJeJ2/ShaK2bJ1hZ/4wKwst7WhQmh5kk2xFqZPNldofGYp82bVPQQwWdLxlYQp5jeFaZnOblooeAvbkIKVRt4QqZQootFVMwNPD46clQCsyAYqxO8e4gMOUGxZkYPu0GHLrphP1b6vJKjjXt8hgOIeNsgtUCRSjsRjR2r3AzRCMAAHSeEw0Yrkg6WfQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3KagnyXdQMN2/Anw0GBWefhKxJdGB26CAdN+TKRRuGg=;
+ b=OWurUi7Ss1To0CpWCvsUs2+5EnfafdfRGSuacsWyQNmHUgbB0h0Sk6KFy/x43KHKsszs2anxpEtYgAWzIWgDukS2XXkQV4UOxgaXYICFGs7kYKOq8LCvw83Y4M0OnXuBmdzjo1lU9axYKoL5uDADrBKqgxxiY0W/wGC+vMEveKsGnX0zAWTi2aiuLrlOm00YaHWDF7Z6mp8RN9nnmn3C1ZX+kR1joKERRW9oIgku3B02baukcoN7IGz2DRtkPtGNUDEk+Hm43L4P640WuX2TwB129Ii1dMoqEvU0LgNvl8egi1S0yYhIs3hTsuKP8vPzdKFvDF3nHbBRBPx14ysKyw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ERwotwRVaCh127Fl5xc8ZsTGxKMf2gtwNcfbtjzLo9I=;
-        b=JZei36oAgZrw78tuNUlKIUsSmZz8VnIy9QhsqDcLmTtHb4pyw714VbapLJkDvGtl6t
-         LtI4kMfo+90lodD5yPxvWDGKEAoFOig9vhencKNDIbazsraQTASmGv49Fsu57CLbixjT
-         TCSfiui9l7w2GUTv9qlLEcGKa9t3XcDceD5xTeh4F0is+XYF8uZngUgSYj9voR6vxb6e
-         JQmuNnZe+Ery4exPB1IYr209Imu2YAPJNQx/oYJ+l4KZ9l0j4LpC8aO028XxKQlUEf8/
-         lWsBujvBvcohGbukqoKelRpnCZq6sNwEfryXOXCccoebLRb+OWrAKAGuBq9+GBYoui+G
-         Cq5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ERwotwRVaCh127Fl5xc8ZsTGxKMf2gtwNcfbtjzLo9I=;
-        b=N4PA9/wSKuBJzZMAtoqfagJOFw4w/Gtj5uAeNn1Lp4HXMAmbPrtj5U0XfkhQ6VjlSG
-         BBvjlNf6UK9qleLIOhnoevconMH46nD5s/YPXxvLcbc8hxuTZtu/Ny8GbNt0JMcagA21
-         RTlB1gu+j+p7QYlqLVmz0PGCMUF3nQBr89P1KqAnKYrRIUftGYciqH7dZOpYkXFydcYY
-         ww+kVCiItdTKxjilc30CJkmUx3bGmWmLH4qgly/LKqsO31jI65GWGJbVNBMGWMwY+C8X
-         DjSld9o0fj0vzePo7YXXPwUw1badEkzTffQPdri7m8e6zKwDiJESp0izh/djDhCMWof6
-         5G1A==
-X-Gm-Message-State: AOAM530lh05zqplFTBMaekr3zvHMA9//dV5EZPps1rIRB7wRcYbzF3WL
-        bXHrQxrFZpKFv/ishi+AGj+6fA==
-X-Google-Smtp-Source: ABdhPJz/+PmX2B/zDbvxl+5IrcI0dghVe9sbCXhQ2fxNUbk7GlLoe144nz9t6kA0jpgfvU9xgnElkQ==
-X-Received: by 2002:a2e:b53b:: with SMTP id z27mr619095ljm.441.1598967398680;
-        Tue, 01 Sep 2020 06:36:38 -0700 (PDT)
-Received: from [192.168.1.211] ([188.162.64.32])
-        by smtp.gmail.com with ESMTPSA id j7sm285445ljg.5.2020.09.01.06.36.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 06:36:37 -0700 (PDT)
-Subject: Re: [PATCH v1 6/9] phy: qcom-qmp: Add support for DP in USB3+DP combo
- phy
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Vinod Koul <vkoul@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Chandan Uddaraju <chandanu@codeaurora.org>,
-        Vara Reddy <varar@codeaurora.org>,
-        Tanmay Shah <tanmay@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Manu Gautam <mgautam@codeaurora.org>,
-        Sandeep Maheswaram <sanm@codeaurora.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sean Paul <seanpaul@chromium.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Rob Clark <robdclark@chromium.org>
-References: <20200826024711.220080-1-swboyd@chromium.org>
- <20200826024711.220080-7-swboyd@chromium.org>
-From:   Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Message-ID: <335a0660-40e1-0c1e-3f7d-87f7024de18a@linaro.org>
-Date:   Tue, 1 Sep 2020 16:36:34 +0300
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3KagnyXdQMN2/Anw0GBWefhKxJdGB26CAdN+TKRRuGg=;
+ b=LmfBjQaCUt0a3BBWv1RmMT1xUuae/TxyZI+u6pnjFgltzouHS6Kz9AjHrSLb5ju8c8/AWVjWrFuV3hmcwOqz3qKjpk001MTlgN7wTRjHfJ6D2EWuvNLRYd/RHluaFOCjsOoG8hI722LHCv1DX3mVgteU8DEEshIyVE1zS1rykjc=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+ by MN2PR12MB4047.namprd12.prod.outlook.com (2603:10b6:208:1de::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.22; Tue, 1 Sep
+ 2020 13:37:42 +0000
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::f8f7:7403:1c92:3a60]) by MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::f8f7:7403:1c92:3a60%6]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
+ 13:37:42 +0000
+Subject: Re: [PATCH] dma-buf: fix kernel-doc warning in dma-fence.c
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        Gustavo Padovan <gustavo@padovan.org>,
+        dri-devel@lists.freedesktop.org, linux-media@vger.kernel.org
+References: <20200831041713.12571-1-rdunlap@infradead.org>
+ <81dc0a34-90f6-401a-f846-924fdff4aaff@amd.com>
+ <20200901133200.GE2352366@phenom.ffwll.local>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <d057988a-7ba4-7e3b-1c36-e40e9a5a8d9a@amd.com>
+Date:   Tue, 1 Sep 2020 15:37:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <20200826024711.220080-7-swboyd@chromium.org>
+ Thunderbird/68.10.0
+In-Reply-To: <20200901133200.GE2352366@phenom.ffwll.local>
 Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM4PR07CA0011.eurprd07.prod.outlook.com
+ (2603:10a6:205:1::24) To MN2PR12MB3775.namprd12.prod.outlook.com
+ (2603:10b6:208:159::19)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by AM4PR07CA0011.eurprd07.prod.outlook.com (2603:10a6:205:1::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5 via Frontend Transport; Tue, 1 Sep 2020 13:37:38 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b1ec1d14-a131-4294-6133-08d84e7c3224
+X-MS-TrafficTypeDiagnostic: MN2PR12MB4047:
+X-Microsoft-Antispam-PRVS: <MN2PR12MB40470675FBE366BE32188FA0832E0@MN2PR12MB4047.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kTHMrM49Z867gCEjuDGoBrrZcboDoj30UMKuJwpElh0gK/QS9pRaTgKSyQKbTXHXM1urV1XisCflTOvsB3p7GvR3mfX8r8V8QHxZezCgqEXnQJ2VQGCbGhDKLMFJ49/c3t6fUwHsAoeVfTdwMZ6QYuYHJquNpdxRJrbb5OMN2k3IdqB35PIEhADmL/f67nEwvlEjWGQRO9yIIPYiOykkGNaNpSnbjVCr9iUVQZAkB3AvniLXEClj6xbBGVub7TgpYfj67a7twYvYx/5G4+FDSteYV0IMGz07JoFh81QNU9g+SPghDkhA6HidAtoV6JtkcpvAKkjCehk+MAC0T8eotTrFoSGtze5M1wKjzz9ofYnNv4qRjk8Nk7RAO9lkxU2GswjwM+5WaZDiF8fOhQ9RMTCHagGxo67hA/3bkrUr08I=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(396003)(346002)(136003)(39860400002)(86362001)(31696002)(2616005)(966005)(956004)(478600001)(6486002)(36756003)(6666004)(316002)(110136005)(66574015)(16576012)(83380400001)(8676002)(66946007)(186003)(52116002)(2906002)(66476007)(45080400002)(5660300002)(31686004)(8936002)(66556008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: mZRydIosolN29KQyRHWZbwGw3z7WvTVuuk/GxRDYI+U6A4bU/OHt5mJLr8jK1nQC6pvD/A5yxBr00l2pxsc9DI+adQvyTE1Iw7ZmIX2viYHrLQriutYwpFbfRlVCxRLCdmguGZ49VZ/dTIGcDGLM4TjdG6bVsWdLzyCnAh8LxzesX1p/Q4RYFgSRN5dmqiGENcOzzNMKC0rugwi1w4GU2cEo5Sxu6L7IRa52HdvhOFf/UTcZ4Jil+VzmiCVBxVGxPyjgIG0jCXoocZoSdrrrTnHJwZZp0NzTTrdKYF5ixiIMvm6/zT4+JdlqAOsI5IDJjQXJouv9iRnc7/rRa/doFs92w24rwGRF252I/sQLLt75bUx984OfgjjcHtZcIvxMpE3502PGmnhbaoe5dbfsbJruJrtJc3sOFCy9pmCk5/HbhZdxnkU0T6f7L7m81iG+x+alghW1ixB9HBPZ896Acql/NMhkVeyjWUsCQYNvN81rdnbeZ79RoU08A3ImTcVjDBa/ft0p4idSG+upHOBQE02sKzm654zvDyeNc1szUMFt68Vilvo5iGoSZwqebF7r0/KAH1JB87zF0hAGi3DBPC58iaTLGB/fP4OHO9gSqNvJGBveqoXBYlAOM3JZXnE5qfsVCxgmi2gJ0DOkKWXiqTb9xByCip2lQdkiAm4so5Z8bvl6JAfRoIIl91kCzzL3l++1peXCYykpTqqlBmnP0g==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b1ec1d14-a131-4294-6133-08d84e7c3224
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Sep 2020 13:37:42.5924
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 0QR7xaG1AUouuRPXLADhPWS+qImtfoTVNYo5PJUKzIEbwsEwjvc9Frm7kJjXnF6P
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 26/08/2020 05:47, Stephen Boyd wrote:
-> Add support for the USB3 + DisplayPort (DP) "combo" phy to the qmp phy
-> driver. We already have support for the USB3 part of the combo phy, so
-> most additions are for the DP phy.
-> 
-> Split up the qcom_qmp_phy{enable,disable}() functions into the phy init,
-> power on, power off, and exit functions that the common phy framework
-> expects so that the DP phy can add even more phy ops like
-> phy_calibrate() and phy_configure(). This allows us to initialize the DP
-> PHY and configure the AUX channel before powering on the PHY at the link
-> rate that was negotiated during link training.
-> 
-> The general design is as follows:
-> 
->    1) DP controller calls phy_init() to initialize the PHY and configure
->    the dp_com register region.
-> 
->    2) DP controller calls phy_configure() to tune the link rate and
->    voltage swing and pre-emphasis settings.
-> 
->    3) DP controller calls phy_power_on() to enable the PLL and power on
->    the phy.
-> 
->    4) DP controller calls phy_configure() again to tune the voltage swing
->    and pre-emphasis settings determind during link training.
-> 
->    5) DP controller calls phy_calibrate() some number of times to change
->    the aux settings if the aux channel times out during link training.
-> 
->    6) DP controller calls phy_power_off() if the link rate is to be
->    changed and goes back to step 2 to try again at a different link rate.
-> 
->    5) DP controller calls phy_power_off() and then phy_exit() to power
->    down the PHY when it is done.
-> 
-> The DP PHY contains a PLL that is different from the one used for the
-> USB3 PHY. Instead of a pipe clk there is a link clk and a pixel clk
-> output from the DP PLL after going through various dividers. Introduce
-> clk ops for these two clks that just tell the child clks what the
-> frequency of the pixel and link are. When the phy link rate is
-> configured we call clk_set_rate() to update the child clks in the
-> display clk controller on what rate is in use. The clk frequencies
-> always differ based on the link rate (i.e. 1.6Gb/s 2.7Gb/s, 5.4Gb/s, or
-> 8.1Gb/s corresponding to various transmission modes like HBR1, HBR2 or
-> HBR3) so we simply store the link rate and use that to calculate the clk
-> frequencies.
-> 
-> The PLL enable sequence is a little different from other QMP phy PLLs so
-> we power on the PLL in qcom_qmp_phy_configure_dp_phy() that gets called
-> from phy_power_on(). This should probably be split out better so that
-> each phy has a way to run the final PLL/PHY enable sequence.
-> 
-> This code is based on a submission of this phy and PLL in the drm
-> subsystem.
-> 
-> Cc: Jeykumar Sankaran <jsanka@codeaurora.org>
-> Cc: Chandan Uddaraju <chandanu@codeaurora.org>
-> Cc: Vara Reddy <varar@codeaurora.org>
-> Cc: Tanmay Shah <tanmay@codeaurora.org>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Manu Gautam <mgautam@codeaurora.org>
-> Cc: Sandeep Maheswaram <sanm@codeaurora.org>
-> Cc: Douglas Anderson <dianders@chromium.org>
-> Cc: Sean Paul <seanpaul@chromium.org>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Jonathan Marek <jonathan@marek.ca>
-> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> Cc: Rob Clark <robdclark@chromium.org>
-> Link: https://lore.kernel.org/r/20200609034623.10844-1-tanmay@codeaurora.org
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->   drivers/phy/qualcomm/phy-qcom-qmp.c | 935 +++++++++++++++++++++++++---
->   drivers/phy/qualcomm/phy-qcom-qmp.h |  80 +++
->   2 files changed, 926 insertions(+), 89 deletions(-)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-qmp.c b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> index 76d7a9e80f04..dd77c7dfa310 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-qmp.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-qmp.c
-> @@ -947,6 +947,130 @@ static const struct qmp_phy_init_tbl qmp_v3_usb3_tx_tbl[] = {
->   	QMP_PHY_INIT_CFG(QSERDES_V3_TX_RES_CODE_LANE_OFFSET_TX, 0x06),
->   };
->   
+Am 01.09.20 um 15:32 schrieb Daniel Vetter:
+> On Mon, Aug 31, 2020 at 12:02:03PM +0200, Christian König wrote:
+>> Am 31.08.20 um 06:17 schrieb Randy Dunlap:
+>>> Add @cookie to dma_fence_end_signalling() to prevent kernel-doc
+>>> warning in drivers/dma-buf/dma-fence.c:
+>>>
+>>> ../drivers/dma-buf/dma-fence.c:291: warning: Function parameter or member 'cookie' not described in 'dma_fence_end_signalling'
+>>>
+>>> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>>> Cc: Sumit Semwal <sumit.semwal@linaro.org>
+>>> Cc: Gustavo Padovan <gustavo@padovan.org>
+>>> Cc: Christian König <christian.koenig@amd.com>
+>>> Cc: linux-media@vger.kernel.org
+>>> Cc: dri-devel@lists.freedesktop.org
+>> Acked-by: Christian König <christian.koenig@amd.com>
+> Will you merge these two to drm-misc-fixes or should someone else?
 
-I'd suggest to split common part of the following tables into 
-dpphy_cfg->serdes_tbl and add the rest as "addon tables" 
-(serdes_tbl_rbr, serdes_rbl_hbr/2/3) into the same dpphy_cfg.
-It would ease V4 QMP DP PHY support.
+I was wondering the same thing and just waiting for Randy to reply with 
+please pick them up or I'm going to push them because I have commit access.
 
-> +static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_rbr[] = {
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x37),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x0e),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x06),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x0c),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x69),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x80),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x6f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x08),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_CTRL, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x1f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x36),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
-> +};
-> +
-> +static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr[] = {
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x37),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x0e),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x06),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x04),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x69),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x80),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x0f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x0e),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_CTRL, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x1f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x36),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
-> +};
-> +
-> +static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr2[] = {
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x37),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x0e),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x06),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x8c),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x1f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x1c),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_CTRL, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x1f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x36),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
-> +};
-> +
-> +static const struct qmp_phy_init_tbl qmp_v3_dp_serdes_tbl_hbr3[] = {
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SVS_MODE_CLK_SEL, 0x01),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_EN_SEL, 0x37),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYS_CLK_CTRL, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_ENABLE1, 0x0e),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_SYSCLK_BUF_ENABLE, 0x06),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CLK_SELECT, 0x30),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CMN_CONFIG, 0x02),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_HSCLK_SEL, 0x03),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DEC_START_MODE0, 0x69),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START2_MODE0, 0x80),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_DIV_FRAC_START3_MODE0, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN0_MODE0, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_INTEGLOOP_GAIN1_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_MAP, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP1_MODE0, 0x2f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP2_MODE0, 0x2a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP3_MODE0, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BG_TIMER, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORECLK_DIV_MODE0, 0x0a),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_VCO_TUNE_CTRL, 0x00),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN, 0x3f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CORE_CLK_EN, 0x1f),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_IVCO, 0x07),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_LOCK_CMP_EN, 0x08),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_CCTRL_MODE0, 0x36),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_PLL_RCTRL_MODE0, 0x16),
-> +	QMP_PHY_INIT_CFG(QSERDES_V3_COM_CP_CTRL_MODE0, 0x06),
-> +};
-> +
->   static const struct qmp_phy_init_tbl qmp_v3_usb3_rx_tbl[] = {
->   	QMP_PHY_INIT_CFG(QSERDES_V3_RX_UCDR_FASTLOCK_FO_GAIN, 0x0b),
->   	QMP_PHY_INIT_CFG(QSERDES_V3_RX_RX_EQU_ADAPTOR_CNTRL2, 0x0f),
-> @@ -1798,6 +1922,11 @@ struct qmp_phy_cfg {
->   	bool no_pcs_sw_reset;
->   };
->   
-> +struct qmp_phy_combo_cfg {
-> +	const struct qmp_phy_cfg *usb_cfg;
-> +	const struct qmp_phy_cfg *dp_cfg;
-> +};
-> +
->   /**
->    * struct qmp_phy - per-lane phy descriptor
->    *
-> @@ -1831,6 +1960,15 @@ struct qmp_phy {
->   	struct qcom_qmp *qmp;
->   	struct reset_control *lane_rst;
->   	enum phy_mode mode;
-> +	unsigned int dp_aux_cfg;
-> +	struct phy_configure_opts_dp dp_opts;
-> +	struct qmp_phy_dp_clks *dp_clks;
-> +};
-> +
-> +struct qmp_phy_dp_clks {
-> +	struct qmp_phy *qphy;
-> +	struct clk_hw dp_link_hw;
-> +	struct clk_hw dp_pixel_hw;
->   };
->   
->   /**
-> @@ -2475,6 +2613,329 @@ static void qcom_qmp_phy_configure(void __iomem *base,
->   	qcom_qmp_phy_configure_lane(base, regs, tbl, num, 0xff);
->   }
->   
-> +static int qcom_qmp_phy_serdes_init(struct qmp_phy *qphy)
-> +{
-> +	struct qcom_qmp *qmp = qphy->qmp;
-> +	const struct qmp_phy_cfg *cfg = qphy->cfg;
-> +	void __iomem *serdes = qphy->serdes;
-> +	const struct phy_configure_opts_dp *dp_opts = &qphy->dp_opts;
-> +	const struct qmp_phy_init_tbl *serdes_tbl;
-> +	int serdes_tbl_num;
-> +	int ret;
-> +
-> +	if (cfg->type == PHY_TYPE_DP) {
-> +		switch (dp_opts->link_rate) {
-> +		case 1620:
-> +			serdes_tbl = qmp_v3_dp_serdes_tbl_rbr;
-> +			serdes_tbl_num = ARRAY_SIZE(qmp_v3_dp_serdes_tbl_rbr);
-> +			break;
-> +		case 2700:
-> +			serdes_tbl = qmp_v3_dp_serdes_tbl_hbr;
-> +			serdes_tbl_num = ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr);
-> +			break;
-> +		case 5400:
-> +			serdes_tbl = qmp_v3_dp_serdes_tbl_hbr2;
-> +			serdes_tbl_num = ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr2);
-> +			break;
-> +		case 8100:
-> +			serdes_tbl = qmp_v3_dp_serdes_tbl_hbr3;
-> +			serdes_tbl_num = ARRAY_SIZE(qmp_v3_dp_serdes_tbl_hbr3);
-> +			break;
-> +		default:
-> +			/* Other link rates aren't supported */
-> +			return -EINVAL;
-> +		}
-> +	} else {
-> +		serdes_tbl = cfg->serdes_tbl;
-> +		serdes_tbl_num = cfg->serdes_tbl_num;
-> +	} > +
-> +	qcom_qmp_phy_configure(serdes, cfg->regs, serdes_tbl, serdes_tbl_num);
+Regards,
+Christian.
 
-If we split DP serdes tables, it would look lile:
-	qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl, 
-cfg->serdes_tbl_num);
-	if (cfg->type == PHY_TYPE_DP) {
-		switch (dp_opts->link_rate) {
-		case 1620:
-			qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl_rbr, 
-cfg->serdes_tbl_rbr_num);
-			break;
-		case 2700:
-			qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl_hbr, 
-cfg->serdes_tbl_hbr_num);
-			break;
-		case 5400:
-			qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl_hbr2, 
-cfg->serdes_tbl_hbr2_num);
-			break;
-		case 8100:
-			qcom_qmp_phy_configure(serdes, cfg->regs, cfg->serdes_tbl_hbr3, 
-cfg->serdes_tbl_hbr3_num);
-			break;
-		default:
-			/* Other link rates aren't supported */
-			return -EINVAL;
-		}
-	}
+>
+> Always a bit confusing when maintainers reply with acks/r-b but not what
+> they'll do with the patch :-)
+>
+> Cheers, Daniel
+>
+>>> ---
+>>>    drivers/dma-buf/dma-fence.c |    1 +
+>>>    1 file changed, 1 insertion(+)
+>>>
+>>> --- lnx-59-rc3.orig/drivers/dma-buf/dma-fence.c
+>>> +++ lnx-59-rc3/drivers/dma-buf/dma-fence.c
+>>> @@ -283,6 +283,7 @@ EXPORT_SYMBOL(dma_fence_begin_signalling
+>>>    /**
+>>>     * dma_fence_end_signalling - end a critical DMA fence signalling section
+>>> + * @cookie: opaque cookie from dma_fence_begin_signalling()
+>>>     *
+>>>     * Closes a critical section annotation opened by dma_fence_begin_signalling().
+>>>     */
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://nam11.safelinks.protection.outlook.com/?url=https%3A%2F%2Flists.freedesktop.org%2Fmailman%2Flistinfo%2Fdri-devel&amp;data=02%7C01%7Cchristian.koenig%40amd.com%7C4d8d43fbbb06475f964308d84e7b6a05%7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637345639254630346&amp;sdata=hxraBxca4oxH%2BsvRJaDT44kFp%2BAXlun2GaLYY6L6LdA%3D&amp;reserved=0
 
-
- > +	qcom_qmp_phy_configure(serdes, cfg->regs, serdes_tbl, serdes_tbl_num);
-
-
-> +
-> +	if (cfg->has_phy_com_ctrl) {
-> +		void __iomem *status;
-> +		unsigned int mask, val;
-> +
-> +		qphy_clrbits(serdes, cfg->regs[QPHY_COM_SW_RESET], SW_RESET);
-> +		qphy_setbits(serdes, cfg->regs[QPHY_COM_START_CONTROL],
-> +			     SERDES_START | PCS_START);
-> +
-> +		status = serdes + cfg->regs[QPHY_COM_PCS_READY_STATUS];
-> +		mask = cfg->mask_com_pcs_ready;
-> +
-> +		ret = readl_poll_timeout(status, val, (val & mask), 10,
-> +					 PHY_INIT_COMPLETE_TIMEOUT);
-> +		if (ret) {
-> +			dev_err(qmp->dev,
-> +				"phy common block init timed-out\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void qcom_qmp_phy_dp_aux_init(struct qmp_phy *qphy)
-> +{
-> +	writel(DP_PHY_PD_CTL_PWRDN | DP_PHY_PD_CTL_AUX_PWRDN |
-> +	       DP_PHY_PD_CTL_PLL_PWRDN | DP_PHY_PD_CTL_DP_CLAMP_EN,
-> +	       qphy->pcs + QSERDES_V3_DP_PHY_PD_CTL);
-> +
-> +	/* Turn on BIAS current for PHY/PLL */
-> +	writel(QSERDES_V3_COM_BIAS_EN | QSERDES_V3_COM_BIAS_EN_MUX |
-> +	       QSERDES_V3_COM_CLKBUF_L_EN | QSERDES_V3_COM_EN_SYSCLK_TX_SEL,
-> +	       qphy->serdes + QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN);
-> +
-> +	writel(DP_PHY_PD_CTL_PSR_PWRDN, qphy->pcs + QSERDES_V3_DP_PHY_PD_CTL);
-> +
-> +	/* Make sure that hardware is done with  PSR power down */
-> +	wmb();
-> +	writel(DP_PHY_PD_CTL_PWRDN | DP_PHY_PD_CTL_AUX_PWRDN |
-> +	       DP_PHY_PD_CTL_LANE_0_1_PWRDN |
-> +	       DP_PHY_PD_CTL_LANE_2_3_PWRDN | DP_PHY_PD_CTL_PLL_PWRDN |
-> +	       DP_PHY_PD_CTL_DP_CLAMP_EN,
-> +	       qphy->pcs + QSERDES_V3_DP_PHY_PD_CTL);
-> +
-> +	writel(QSERDES_V3_COM_BIAS_EN |
-> +	       QSERDES_V3_COM_BIAS_EN_MUX | QSERDES_V3_COM_CLKBUF_R_EN |
-> +	       QSERDES_V3_COM_CLKBUF_L_EN | QSERDES_V3_COM_EN_SYSCLK_TX_SEL |
-> +	       QSERDES_V3_COM_CLKBUF_RX_DRIVE_L,
-> +	       qphy->serdes + QSERDES_V3_COM_BIAS_EN_CLKBUFLR_EN);
-> +
-> +	writel(0x00, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG0);
-> +	writel(0x13, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG1);
-> +	writel(0x24, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG2);
-> +	writel(0x00, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG3);
-> +	writel(0x0a, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG4);
-> +	writel(0x26, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG5);
-> +	writel(0x0a, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG6);
-> +	writel(0x03, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG7);
-> +	writel(0xbb, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG8);
-> +	writel(0x03, qphy->pcs + QSERDES_V3_DP_PHY_AUX_CFG9);
-> +	qphy->dp_aux_cfg = 0;
-> +
-> +	writel(PHY_AUX_STOP_ERR_MASK | PHY_AUX_DEC_ERR_MASK |
-> +	       PHY_AUX_SYNC_ERR_MASK | PHY_AUX_ALIGN_ERR_MASK |
-> +	       PHY_AUX_REQ_ERR_MASK,
-> +	       qphy->pcs + QSERDES_V3_DP_PHY_AUX_INTERRUPT_MASK);
-> +}
-> +
-> +static const u8 vm_pre_emphasis[4][4] = {
-
-Could you please prefix with v3? V4 will use different tables here
-
-> +	{ 0x00, 0x0b, 0x12, 0xff },       /* pe0, 0 db */
-> +	{ 0x00, 0x0a, 0x12, 0xff },       /* pe1, 3.5 db */
-> +	{ 0x00, 0x0c, 0xff, 0xff },       /* pe2, 6.0 db */
-> +	{ 0xff, 0xff, 0xff, 0xff }        /* pe3, 9.5 db */
-> +};
-> +
-> +/* voltage swing, 0.2v and 1.0v are not support */
-> +static const u8 vm_voltage_swing[4][4] = {
-> +	{ 0x07, 0x0f, 0x14, 0xff }, /* sw0, 0.4v  */
-> +	{ 0x11, 0x1d, 0x1f, 0xff }, /* sw1, 0.6 v */
-> +	{ 0x18, 0x1f, 0xff, 0xff }, /* sw1, 0.8 v */
-> +	{ 0xff, 0xff, 0xff, 0xff }  /* sw1, 1.2 v, optional */
-> +};
-> +
-> +static const u8 vm_pre_emphasis_hbr3_hbr2[4][4] = {
-> +	{ 0x00, 0x0c, 0x15, 0x1a },
-> +	{ 0x02, 0x0e, 0x16, 0xff },
-> +	{ 0x02, 0x11, 0xff, 0xff },
-> +	{ 0x04, 0xff, 0xff, 0xff }
-> +};
-> +
-> +static const u8 vm_voltage_swing_hbr3_hbr2[4][4] = {
-> +	{ 0x02, 0x12, 0x16, 0x1a },
-> +	{ 0x09, 0x19, 0x1f, 0xff },
-> +	{ 0x10, 0x1f, 0xff, 0xff },
-> +	{ 0x1f, 0xff, 0xff, 0xff }
-> +};
-> +
-> +static const u8 vm_pre_emphasis_hbr_rbr[4][4] = {
-> +	{ 0x00, 0x0c, 0x14, 0x19 },
-> +	{ 0x00, 0x0b, 0x12, 0xff },
-> +	{ 0x00, 0x0b, 0xff, 0xff },
-> +	{ 0x04, 0xff, 0xff, 0xff }
-> +};
-> +
-> +static const u8 vm_voltage_swing_hbr_rbr[4][4] = {
-> +	{ 0x08, 0x0f, 0x16, 0x1f },
-> +	{ 0x11, 0x1e, 0x1f, 0xff },
-> +	{ 0x19, 0x1f, 0xff, 0xff },
-> +	{ 0x1f, 0xff, 0xff, 0xff }
-> +};
-> +
-> +static void qcom_qmp_phy_configure_dp_tx(struct qmp_phy *qphy)
-
-With these functions I'm struggling between introducing 
-PHY_TYPE_DP_V3/V4 and introducing callbacks into qmp_phy_cfg. What would 
-you prefer?
-
-What about the following struct?
-
-struct qmp_phy_dp_opts {
-	void (*dp_aux_init)(struct qmp_phy *qphy);
-	void (*dp_configure_tx)(struct qmp_phy *qphy);
-	void (*dp_configure_lanes)(struct qmp_phy *qphy);
-};
-
-I'm not sure about dp_calibrate().
-
-
-
--- 
-With best wishes
-Dmitry
