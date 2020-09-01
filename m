@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FA9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75E9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E2DB206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB4E12071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RZPDpwuu"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wa90BOim"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727924AbgIAIjP (ORCPT
+        id S1727939AbgIAIjR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:39:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47086 "EHLO
+        Tue, 1 Sep 2020 04:39:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbgIAIis (ORCPT
+        with ESMTP id S1727061AbgIAIiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:38:48 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D993C061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 01:38:48 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id k15so513606wrn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:38:48 -0700 (PDT)
+        Tue, 1 Sep 2020 04:38:46 -0400
+Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5ED8C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 01:38:45 -0700 (PDT)
+Received: by mail-wr1-x435.google.com with SMTP id k15so513473wrn.10
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:38:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=g6ETLd9bglqQpiac4Zb6z2Bmq6IptWFaePDp0F0oRHw=;
-        b=RZPDpwuuKedWB6h8a/uSbCCoLu0kxGmEAPkM0FticaRUfJpyXEkQbRvNXFKO53GFTt
-         fYPGobjfTXmmRTmgQ595FxVc4FPpIRNaiR5aAvsJuCvr9BEn76ZqMYJeraC+28I6Cc8q
-         T89maoq+rewEofygXL0/9vm1MKJgj244rbdxMvCoGfSw6R2e+T7ahiFf8o7BMKDOa70C
-         5KXJPwn9MXMdnfZiVhsoYiT1xshzyDqbqld8QFxCbup28w5Gby1VizwUBKs/kOKLjJAL
-         N5Vk20AkrbgCKJQA6wI4IkmeQ8Ml83Wu5mLSHDYKgdyTdDZ7OUQkiXxfAXW9jJIPjiYf
-         Qy/g==
+        bh=sBRnYjU064gEYAlNNyys3pbyfTYht326JQtzigEYeSY=;
+        b=Wa90BOimC+g5VzhDsBajpTWJUp6jgoHAbgz0lEBFy6wfs3RPSZ+P413Xi4NmvdkWd1
+         OEZtiyXb5O8f/XFO+kMC7LtwrCHJhq1/gHav2qhaqQ/5EjL6f6/sqZw0T5ckiSzSdNU/
+         nFfZDGlZLWo7lAyzDhgpYQY9r89oxkjrPAfb8QR/fa0Sd5mltnIh4+wYG1KsQQmEcMG9
+         zkOO12+POPOHagYpfXPxvPIoSRdrHDJk+OXNQUloHqSn/vKXZVtAScyXK8US/3dyyy6M
+         CtODS+30iXNmzeM9dJD56N1zs4PYsKfLVdm6H3MRfNGIVwAu3BeTn1Jovk5706db4vGg
+         Borw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=g6ETLd9bglqQpiac4Zb6z2Bmq6IptWFaePDp0F0oRHw=;
-        b=Q5eZSxBBlEAcGdoKRGYMQeisBTc8+Hhfqy66qGm6UaniXK+6Ncq2KJxBV8+BLaGYa3
-         OgNhskuWpoeEle/lyDqWg89gWPD+D9AuvHfSAKZ4S7EB49PZpvPI2eLbk0/PVwArTykE
-         Xm7LgNl8hLp1KHImjx3a4RUA5FBQo8enXgTa4DhT5opn1BAQvIWSBZDujQF5biRWPojx
-         IA5QVD5h7y9ZpN9gNIbgCmJ1Lr3WapV32Nh4ASCzhSgq4bYYmqZezWLnm6EuCCkEP4hl
-         sXyVvvEefiNpFhn9Q6TqmwfoVLeRdktKGS3xRlWTWVC6pJKkQh+B2cKsACb54sDAVXzU
-         EvAA==
-X-Gm-Message-State: AOAM530+M0/GN3pqjq5gWO2dWdeXVqj1pM/Qz6oVVrWJ5hyQa1oN3UAA
-        /AVuX3lFKihUqPEblU2IEQW5Sw==
-X-Google-Smtp-Source: ABdhPJzziQDCBVc7U7h2gz2c/fdXSLSHngZVg2NODT88W0TjPcG1Xj18d4EERKU7qIK4r0rSaCpgPg==
-X-Received: by 2002:adf:fd91:: with SMTP id d17mr653991wrr.234.1598949526674;
-        Tue, 01 Sep 2020 01:38:46 -0700 (PDT)
+        bh=sBRnYjU064gEYAlNNyys3pbyfTYht326JQtzigEYeSY=;
+        b=Od6DhrA69edO27VAtTpVl8tMAli0uOcr+4BX9LQdUlJ2QWxTKzMARPSs99bijKoqu/
+         sDhi3W4vWo0ajAaG1eEpzHu5VW2mmn2XeDg1GVld9w4BJ32Mi+Ni9A3/x7F7ofutg40w
+         vFKZHLyh8tsMSTThSgEfat8IzlnerjeIiq6ToXPUkrPxlSJTdKd2AX4GtNPpfPYuW6IZ
+         wPZp2oEN8gBSOaDf77YkDppM82Llr+HAwn4woDtX2/+XJx/KUaZTAgjlZGVCtx6R7VXs
+         eVgy4+Rjm4yQxapd6WFK9eTl8/5UPEF2uSy74WmX+BbZz3DjXmvkDrHlDxqepzoGMNmD
+         iFCQ==
+X-Gm-Message-State: AOAM532+5/D9qzEzItVJyW9L3a4/+pwzjjFzU6rHQuSgm6dFvj+xX57l
+        hLWwQA6NmchQxCpO33zti1HFGA==
+X-Google-Smtp-Source: ABdhPJxBHmyilpVCg56qL3/ZzIkl0024GckLEOpApFd0ZEUktkH38mkC6WYKNCEdAISK5DSZF9Kdeg==
+X-Received: by 2002:adf:9d44:: with SMTP id o4mr621874wre.361.1598949524317;
+        Tue, 01 Sep 2020 01:38:44 -0700 (PDT)
 Received: from hackbox2.linaro.org ([81.128.185.34])
-        by smtp.gmail.com with ESMTPSA id d190sm911260wmd.23.2020.09.01.01.38.45
+        by smtp.gmail.com with ESMTPSA id d190sm911260wmd.23.2020.09.01.01.38.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 01:38:46 -0700 (PDT)
+        Tue, 01 Sep 2020 01:38:43 -0700 (PDT)
 From:   Leo Yan <leo.yan@linaro.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
@@ -79,9 +79,9 @@ To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mike Leach <mike.leach@linaro.org>,
         linux-kernel@vger.kernel.org
 Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 12/14] perf arm-spe: Synthesize memory event
-Date:   Tue,  1 Sep 2020 09:38:13 +0100
-Message-Id: <20200901083815.13755-13-leo.yan@linaro.org>
+Subject: [PATCH v2 10/14] perf arm-spe: Store operation types in packet
+Date:   Tue,  1 Sep 2020 09:38:11 +0100
+Message-Id: <20200901083815.13755-11-leo.yan@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200901083815.13755-1-leo.yan@linaro.org>
 References: <20200901083815.13755-1-leo.yan@linaro.org>
@@ -90,99 +90,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is to synthesize memory event, it generates memory events for
-all memory levels.  The memory event can delivery two benefits for SPE:
-
-- The first benefit is the memory event can give out global view for
-  memory accessing, rather than using scatter mode to organize events
-  (such as L1 cache, last level cache, remote accessing, etc) which can
-  only display a single memory type, memory events contain all memory
-  accessing so it's easier to review the memory behaviour cross
-  different memory levels;
-
-- The second benefit is the samples generation might introduce big
-  overhead and need to wait for long time for Perf reporting, we can
-  specify itrace option '--itrace=M' to filter out other events and only
-  output memory events, this can significantly reduce the overhead
-  caused by generating samples.
+This patch is to store operation types into packet structure, this can
+be used by frontend to generate memory accessing info for samples.
 
 Signed-off-by: Leo Yan <leo.yan@linaro.org>
 ---
- tools/perf/util/arm-spe.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 11 +++++++++++
+ tools/perf/util/arm-spe-decoder/arm-spe-decoder.h |  6 ++++++
+ 2 files changed, 17 insertions(+)
 
-diff --git a/tools/perf/util/arm-spe.c b/tools/perf/util/arm-spe.c
-index 44e73e0ff4e7..7f44ef8c89f1 100644
---- a/tools/perf/util/arm-spe.c
-+++ b/tools/perf/util/arm-spe.c
-@@ -55,6 +55,7 @@ struct arm_spe {
- 	u8				sample_tlb;
- 	u8				sample_branch;
- 	u8				sample_remote_access;
-+	u8				sample_memory;
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+index 1c430657939f..7bf787c47f5b 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
+@@ -170,6 +170,17 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
+ 		case ARM_SPE_CONTEXT:
+ 			break;
+ 		case ARM_SPE_OP_TYPE:
++			/*
++			 * When operation type packet header's class equals 1,
++			 * the payload's least significant bit (LSB) indicates
++			 * the operation type: load/swap or store.
++			 */
++			if (idx == 1) {
++				if (payload & 0x1)
++					decoder->record.op = ARM_SPE_ST;
++				else
++					decoder->record.op = ARM_SPE_LD;
++			}
+ 			break;
+ 		case ARM_SPE_EVENTS:
+ 			if (payload & SPE_EVT_PKT_L1D_REFILL)
+diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+index 31d1776785de..3273cee95ea1 100644
+--- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
++++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
+@@ -24,9 +24,15 @@ enum arm_spe_sample_type {
+ 	ARM_SPE_REMOTE_ACCESS	= 1 << 7,
+ };
  
- 	u64				l1d_miss_id;
- 	u64				l1d_access_id;
-@@ -64,6 +65,7 @@ struct arm_spe {
- 	u64				tlb_access_id;
- 	u64				branch_miss_id;
- 	u64				remote_access_id;
-+	u64				memory_id;
- 
- 	u64				kernel_start;
- 
-@@ -296,6 +298,19 @@ static int arm_spe__synth_branch_sample(struct arm_spe_queue *speq,
- 	return arm_spe_deliver_synth_event(spe, speq, event, &sample);
- }
- 
-+static bool arm_spe__is_memory_event(enum arm_spe_sample_type type)
-+{
-+	int mem_type = ARM_SPE_L1D_ACCESS | ARM_SPE_L1D_MISS |
-+		       ARM_SPE_LLC_ACCESS | ARM_SPE_LLC_MISS |
-+		       ARM_SPE_TLB_ACCESS | ARM_SPE_TLB_MISS |
-+		       ARM_SPE_REMOTE_ACCESS;
++enum arm_spe_op_type {
++	ARM_SPE_LD		= 1 << 0,
++	ARM_SPE_ST		= 1 << 1,
++};
 +
-+	if (type & mem_type)
-+		return true;
-+
-+	return false;
-+}
-+
- static int arm_spe_sample(struct arm_spe_queue *speq)
- {
- 	const struct arm_spe_record *record = &speq->decoder->record;
-@@ -357,6 +372,12 @@ static int arm_spe_sample(struct arm_spe_queue *speq)
- 			return err;
- 	}
- 
-+	if (spe->sample_memory && arm_spe__is_memory_event(record->type)) {
-+		err = arm_spe__synth_mem_sample(speq, spe->memory_id);
-+		if (err)
-+			return err;
-+	}
-+
- 	return 0;
- }
- 
-@@ -924,6 +945,18 @@ arm_spe_synth_events(struct arm_spe *spe, struct perf_session *session)
- 		id += 1;
- 	}
- 
-+	if (spe->synth_opts.mem) {
-+		spe->sample_memory = true;
-+
-+		/* Remote access */
-+		err = arm_spe_synth_event(session, &attr, id);
-+		if (err)
-+			return err;
-+		spe->memory_id = id;
-+		arm_spe_set_event_name(evlist, id, "memory");
-+		id += 1;
-+	}
-+
- 	return 0;
- }
- 
+ struct arm_spe_record {
+ 	enum arm_spe_sample_type type;
+ 	int err;
++	u32 op;
+ 	u64 from_ip;
+ 	u64 to_ip;
+ 	u64 timestamp;
 -- 
 2.20.1
 
