@@ -2,87 +2,106 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1351C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AB7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A247C214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF044206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:59:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="kx9pMxba"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SEJiDRu/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726269AbgIAW5z (ORCPT
+        id S1726922AbgIAW7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:57:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38706 "EHLO
+        Tue, 1 Sep 2020 18:59:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726183AbgIAW5q (ORCPT
+        with ESMTP id S1726091AbgIAW7D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:57:46 -0400
-Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39054C061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 15:57:46 -0700 (PDT)
-Received: by mail-pf1-x429.google.com with SMTP id t9so1706332pfq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 15:57:46 -0700 (PDT)
+        Tue, 1 Sep 2020 18:59:03 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B638C061244;
+        Tue,  1 Sep 2020 15:59:03 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id f18so1707763pfa.10;
+        Tue, 01 Sep 2020 15:59:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=8SCB1R5S0rIlXAP1gD/42mN3rEFGnClEAzglzWI/f5A=;
-        b=kx9pMxbaG7HxeA/hSNOaElEvYF6zneOI88aycKG6Q8jpxb2w7bV344cmhdkTDMxzM8
-         s4owDu6/DO5Uv9cHyTnKBdmy+nqJhz7wwHz61yAXmFMMhK4Cu789DJwxYjlbPXe0s5+l
-         1eE7XdCSERl8fSlQzYXHj1ACbWfO6xdmj6kFMFBA+oZIO+F0oUEUFwv1qB4zVLOSf3Tb
-         cEm0nPav5qtkrw25Z04awrm9iRz2WofDvEuWX38Z7ApDCYln3CV04pw1ye/mPQ710zxe
-         cuHimPUl3H9I9rn9HJAOO2hqAuXJqTUInl3Y6aiY+aq7bLFN524E3gnv+652wfX5cgO4
-         qCzw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Wr253Z748sHRceyd8vWkesyq0DG6qp2MjOzIU3Wwnuk=;
+        b=SEJiDRu/6YAyQpWAbKS4neNa3BdtYl/IKL5eFshYfp/Wiyth00krcPyWQ2ZbbNLxnx
+         DxFzIJr3xawtY6DCNwrksGkgZ8jsBuYtYOK04kFApdyY3VgdZ/GV5mN+rQSxdv8UIqo/
+         sAgg1qia9JRoHi609Kr5Y69+8Fx7HanXtBbJRDTW7EuOlhdHKKzEsBdEM57XPlVY7c+q
+         m6d3h6Ic1Fvx7bvMwaAnFHW/2yPjV4YxBWqCm/PHwqcvPxhotHNDksUtth42q7veLslp
+         yGT7F2QCRzViLR0WR/U7tz9IHIX9mEACUP2qyxlG0FIfzg0iIFKEEiMows2ZMdBAgWGR
+         FJ5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=8SCB1R5S0rIlXAP1gD/42mN3rEFGnClEAzglzWI/f5A=;
-        b=heXzc1XSxf1A0VCrY8qtmoudEU2pxpczTHS+mG6WiVMQMlkIUSeCmiOwf4UZQel95b
-         VJNpw2raimXYo9zQh5EUdPEDN08PD5v+pQ8Y7ulgQFg/h/fox6CFKcMAweizUjJH1lsm
-         zMk9Qmy6NX1k3b1LpXd30HtxBbDPqes7YAdlk2ECpZ9oDxUL2s3k53PQ+fISlV17lyrO
-         /9znWk6c+zGw0KvX5ZHb8dBGtuCNo7TOkSD/YW3pcTApgAQMCocdx4Bf1/oQdUu+rnyS
-         f+uBSTytHJ1khj9BkXGqr0ghmhTezhC/8sT4k4ttfOJcuoM9dsicjHPPqIjINAqQwEUh
-         n+dg==
-X-Gm-Message-State: AOAM5334IAavFn73Ayrv/siEExYOKRBBiYs+oFSBRJ0ajXMne7FsYj/g
-        ZEqPd7HdBTMW8IpAJ2y2nOlsbCNfcXEYqjRQ
-X-Google-Smtp-Source: ABdhPJz7/PuTI6toqDV7Y9ZAOMNodGuUCNOHnU2Zfi3eqQltoMCij8HkSX98gsEIVX42xBTyba1VqA==
-X-Received: by 2002:a63:521c:: with SMTP id g28mr3479485pgb.247.1599001065304;
-        Tue, 01 Sep 2020 15:57:45 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id q5sm3122211pfu.16.2020.09.01.15.57.43
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 15:57:44 -0700 (PDT)
-Subject: Re: [PATCHSET for-5.10/block] blk-iocost: iocost: improve donation,
- debt and excess handling
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com
-References: <20200901185257.645114-1-tj@kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <cac016f9-ee13-9fd4-22b2-8be0d830f076@kernel.dk>
-Date:   Tue, 1 Sep 2020 16:57:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Wr253Z748sHRceyd8vWkesyq0DG6qp2MjOzIU3Wwnuk=;
+        b=DXx6q2p+TUFmBod4S5U2zPsmkSpSW8yG/qF1Weq6ZKoteWO7vGZDujiQVCjUwgPA6I
+         TV/xKO4QH4EXyZeMnZms/nreuTSOaQ0K+g3hd1fpfiiXJwvsBXTWbgGUJlony6yR56Fi
+         JgQfs4Ue5cY06Rff1Q+7hChnUlrubbIq0RBkGmBy72MeiD5GfMxGxshjlI9ueMWAIdBV
+         cJk883vgzzHWB94TVJyAI/ey31jH9JPe3Z9igIWr36sP43+C810FQJur18RIkwyIU+pq
+         uL3ZCafzQKJMtfEVUR6wvf4zsvW4dMJMCapK5bCibyEpqdk7JWSf25DfrQTThHJMmqOI
+         LcYQ==
+X-Gm-Message-State: AOAM533dfoDbWprm39+71nu9YYEtgwEkcZMRFju9/cthD35ZuWwsBHkb
+        OjWPKATHd8hE1eS5Q1NQvhWN74RU2EJAwg==
+X-Google-Smtp-Source: ABdhPJx8vSV8fCW15xCQqiM1kycSyZaJxBBEN2NciiKxlfyVvhkUa2V5lfzy8s8LLfgf/qzCylU+DQ==
+X-Received: by 2002:a63:1252:: with SMTP id 18mr3524344pgs.246.1599001142459;
+        Tue, 01 Sep 2020 15:59:02 -0700 (PDT)
+Received: from thinkpad (104.36.148.139.aurocloud.com. [104.36.148.139])
+        by smtp.gmail.com with ESMTPSA id w5sm3125624pgk.20.2020.09.01.15.59.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 15:59:02 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 15:59:44 -0700
+From:   Rustam Kovhaev <rkovhaev@gmail.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     kuba@kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH] veth: fix memory leak in veth_newlink()
+Message-ID: <20200901225944.GB239544@thinkpad>
+References: <20200830131336.275844-1-rkovhaev@gmail.com>
+ <20200901.130127.236989626732311083.davem@davemloft.net>
 MIME-Version: 1.0
-In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901.130127.236989626732311083.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1-2 applied for 5.9, and the rest for 5.10. Thanks Tejun.
+On Tue, Sep 01, 2020 at 01:01:27PM -0700, David Miller wrote:
+> From: Rustam Kovhaev <rkovhaev@gmail.com>
+> Date: Sun, 30 Aug 2020 06:13:36 -0700
+> 
+> > when register_netdevice(dev) fails we should check whether struct
+> > veth_rq has been allocated via ndo_init callback and free it, because,
+> > depending on the code path, register_netdevice() might not call
+> > priv_destructor() callback
+> > 
+> > Reported-and-tested-by: syzbot+59ef240dd8f0ed7598a8@syzkaller.appspotmail.com
+> > Link: https://syzkaller.appspot.com/bug?extid=59ef240dd8f0ed7598a8
+> > Signed-off-by: Rustam Kovhaev <rkovhaev@gmail.com>
+> 
+> I think I agree with Toshiaki here.  There is no reason why the
+> rollback_registered() path of register_netdevice() should behave
+> differently from the normal control flow.
+> 
+> Any code path that invokes ->ndo_uninit() should probably also
+> invoke the priv destructor.
+hi David, thank you for the review!
 
--- 
-Jens Axboe
+> 
+> The question is why does the err_uninit: label of register_netdevice
+> behave differently from rollback_registered()?  If there is a reason,
+> it should be documented in a comment or similar.  If it is wrong,
+> it should be corrected.
+good question, that i do not know, i'll review it
 
