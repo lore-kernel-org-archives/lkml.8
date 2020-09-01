@@ -2,57 +2,56 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D49E6C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FF0C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3B93206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CADDC206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979519;
-	bh=X06z0IObTq8JdZDLzGz+Qgu2K+Dl1MOmU8cHQlUWyUI=;
+	s=default; t=1598979526;
+	bh=6deX/TmUbsvm1tTU+C7Pa7u01gKIJUvlmIN2OgFCEIg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g1m4DaBe85DkJkVUw+jmDofz4PKfGZGSzYYuyogKx88b07t3J28TMz1n5Y++6/F5a
-	 8AgAqQ3DC9JPboHdV8Rq3tPK+nfn6X4HTaimbevdtE9P73hBr00eoqKWJqhHsIJCz8
-	 SV5lCnjggw5uDzsyYPZKGT+ZetN2cVQKo+A5FToE=
+	b=wkB9UTnvmYlbqX1asK0YuZuMeIUHgIkP6d7Hk0RtADvmWyX1MZMNaP3erOxUZY2GW
+	 7QhD+v09fTR04MkzNl49QWNiX29013n/1ZseTgiBwos/dagXWWKaf7IWDt304AgeMB
+	 PUgvo6wE1QCD7IHBJVHe0Ic3gLNtQF0eSr7Ozg4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729396AbgIAPWZ (ORCPT
+        id S1732468AbgIAQ6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:22:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39216 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:58:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43768 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729566AbgIAPTu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:50 -0400
+        id S1729748AbgIAPWR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:22:17 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 67464206EB;
-        Tue,  1 Sep 2020 15:19:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F6DD20FC3;
+        Tue,  1 Sep 2020 15:22:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973589;
-        bh=X06z0IObTq8JdZDLzGz+Qgu2K+Dl1MOmU8cHQlUWyUI=;
+        s=default; t=1598973735;
+        bh=6deX/TmUbsvm1tTU+C7Pa7u01gKIJUvlmIN2OgFCEIg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rCe0v7eNymVkwt1ivd/sS0se8UnQpg/7DJ0v8s7aVsCJ8B5aZz1jvwKuyhBWCAUMu
-         SyFATEBNK3vrWoha/JK1JCeSKLqQ73t6e4Nl5tUbb6Q7FcJIKd4pvjqeuWNyequQ/Q
-         lmpWtFmIVyyS1dzeuGCoSFd7qMuO6XAJc4HDlMy0=
+        b=p6YlObHghV08mRiR4n9z3l56L0VHK66A9GAxMEVteu7wCc4B3qIalcugbAanpYyb1
+         WTMHx61xkE2oCC1WIDioKQK8jbluRhVipNWC9WOZ9tLpFf0NupTD99Ow13GIUBH1KM
+         X0k6lm0NWb2zJYan2j/gu8Xuzo6L0a6C2isqB9Cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Andrea Borgia <andrea@borgia.bo.it>
-Subject: [PATCH 4.14 58/91] HID: i2c-hid: Always sleep 60ms after I2C_HID_PWR_ON commands
-Date:   Tue,  1 Sep 2020 17:10:32 +0200
-Message-Id: <20200901150930.995121541@linuxfoundation.org>
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 025/125] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
+Date:   Tue,  1 Sep 2020 17:09:40 +0200
+Message-Id: <20200901150935.792494856@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
-References: <20200901150928.096174795@linuxfoundation.org>
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,93 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit eef4016243e94c438f177ca8226876eb873b9c75 upstream.
+[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
 
-Before this commit i2c_hid_parse() consists of the following steps:
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-1. Send power on cmd
-2. usleep_range(1000, 5000)
-3. Send reset cmd
-4. Wait for reset to complete (device interrupt, or msleep(100))
-5. Send power on cmd
-6. Try to read HID descriptor
-
-Notice how there is an usleep_range(1000, 5000) after the first power-on
-command, but not after the second power-on command.
-
-Testing has shown that at least on the BMAX Y13 laptop's i2c-hid touchpad,
-not having a delay after the second power-on command causes the HID
-descriptor to read as all zeros.
-
-In case we hit this on other devices too, the descriptor being all zeros
-can be recognized by the following message being logged many, many times:
-
-hid-generic 0018:0911:5288.0002: unknown main item tag 0x0
-
-At the same time as the BMAX Y13's touchpad issue was debugged,
-Kai-Heng was working on debugging some issues with Goodix i2c-hid
-touchpads. It turns out that these need a delay after a PWR_ON command
-too, otherwise they stop working after a suspend/resume cycle.
-According to Goodix a delay of minimal 60ms is needed.
-
-Having multiple cases where we need a delay after sending the power-on
-command, seems to indicate that we should always sleep after the power-on
-command.
-
-This commit fixes the mentioned issues by moving the existing 1ms sleep to
-the i2c_hid_set_power() function and changing it to a 60ms sleep.
-
-Cc: stable@vger.kernel.org
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208247
-Reported-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reported-and-tested-by: Andrea Borgia <andrea@borgia.bo.it>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/i2c-hid-core.c |   22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -406,6 +406,19 @@ static int i2c_hid_set_power(struct i2c_
- 		dev_err(&client->dev, "failed to change power setting.\n");
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+index c770d73352a79..c15286858f0bf 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+@@ -718,8 +718,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
  
- set_pwr_exit:
-+
-+	/*
-+	 * The HID over I2C specification states that if a DEVICE needs time
-+	 * after the PWR_ON request, it should utilise CLOCK stretching.
-+	 * However, it has been observered that the Windows driver provides a
-+	 * 1ms sleep between the PWR_ON and RESET requests.
-+	 * According to Goodix Windows even waits 60 ms after (other?)
-+	 * PWR_ON requests. Testing has confirmed that several devices
-+	 * will not work properly without a delay after a PWR_ON request.
-+	 */
-+	if (!ret && power_state == I2C_HID_PWR_ON)
-+		msleep(60);
-+
- 	return ret;
- }
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
  
-@@ -427,15 +440,6 @@ static int i2c_hid_hwreset(struct i2c_cl
- 	if (ret)
- 		goto out_unlock;
+ 	if (encoder) {
+@@ -856,8 +858,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
  
--	/*
--	 * The HID over I2C specification states that if a DEVICE needs time
--	 * after the PWR_ON request, it should utilise CLOCK stretching.
--	 * However, it has been observered that the Windows driver provides a
--	 * 1ms sleep between the PWR_ON and RESET requests and that some devices
--	 * rely on this.
--	 */
--	usleep_range(1000, 5000);
--
- 	i2c_hid_dbg(ihid, "resetting...\n");
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
  
- 	ret = i2c_hid_command(client, &hid_reset_cmd, NULL, 0);
+ 	encoder = amdgpu_connector_best_single_encoder(connector);
+@@ -979,8 +983,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+@@ -1329,8 +1335,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+-- 
+2.25.1
+
 
 
