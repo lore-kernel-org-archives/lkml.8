@@ -2,95 +2,156 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47CDC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B558C2D0A7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 765DB20767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 225DE2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978271;
-	bh=dmuzdEMkWpJ2XunLy5TWSr/ChN5Y2eJJuRVReEFs1o8=;
+	s=default; t=1598978274;
+	bh=nen8rbwTQ4JvbkPLYxyfVe+jS2BIf74BjMDoianqLnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iw7oKwmZAkAT0RjoynUVndkbwGG1+FpBYvZhHOcTiNBBDMMUenVbPkzNwizafLP9c
-	 CdStva9EagOTLDg/AydwlIXquFgNKtVQqVtPCAyf+baYsw6EMPXZSsgB6d4zChRym1
-	 L5fNUU/IIiGID2eQqUDpedDClBxXeR11X1GjCb7s=
+	b=rIUbw247TBHveHKpGk77YWm1X0s2WUjAMnmR6yq1pRPtftlLD7HWQawTLMqdXSiSw
+	 th185IsaGOIvy8rR1fLh/8xAKoybG9CfXWgYz4fKjpQ3lYXSfARiXUNaXB6e9fpnd2
+	 bNIL63sGBNJVM7VRkiXqV7MRMPH97M05/cy50uZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgIAP3F (ORCPT
+        id S1730495AbgIAP3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:29:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51194 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:29:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbgIAP0E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:26:04 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730080AbgIAP0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:26:05 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABC482151B;
-        Tue,  1 Sep 2020 15:25:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99D9421527;
+        Tue,  1 Sep 2020 15:26:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973963;
-        bh=dmuzdEMkWpJ2XunLy5TWSr/ChN5Y2eJJuRVReEFs1o8=;
+        s=default; t=1598973965;
+        bh=nen8rbwTQ4JvbkPLYxyfVe+jS2BIf74BjMDoianqLnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y7+IM86krsVpZqXeWOsl7Hl53BXun2lQDzl3t/nJFFL0zhoFU5iuqUywOQoFtdv+v
-         AsGipIUi3I8al3evi43iyzt7mwxwg4hkociDaHxNk2OmDtv/9kL2rJ9dDmknQ5gl+8
-         vdQY/uMsVqSh1hpyvIzJ4WMdYp1phgli4sq3w7jA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kyungmin Park <kyungmin.park@samsung.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Han Xu <han.xu@nxp.com>, linux-mtd@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/6] mtd: rawnand: atmel: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 16:25:31 +0200
-Message-Id: <20200901142535.12819-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901142535.12819-1-krzk@kernel.org>
-References: <20200901142535.12819-1-krzk@kernel.org>
+        b=gOBsDX5fHcLqSBmYiQHCzgDZDlRMl8lWrw1ryOJu2fan7e3U7yOrwsKEBEi887DCI
+         OjNKzPAVWMeGipmexIWAhrNaTb4a6Ngli27MVqCzLSnl1snKifEDwwYsf/Po4fEqF8
+         HqpZWo1LxLjGY3350/d7VYWY4QbEwGXhXtoDd3EU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 4.19 117/125] USB: cdc-acm: rework notification_buffer resizing
+Date:   Tue,  1 Sep 2020 17:11:12 +0200
+Message-Id: <20200901150940.354233852@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+From: Tom Rix <trix@redhat.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+commit f4b9d8a582f738c24ebeabce5cc15f4b8159d74e upstream.
+
+Clang static analysis reports this error
+
+cdc-acm.c:409:3: warning: Use of memory after it is freed
+        acm_process_notification(acm, (unsigned char *)dr);
+
+There are three problems, the first one is that dr is not reset
+
+The variable dr is set with
+
+if (acm->nb_index)
+	dr = (struct usb_cdc_notification *)acm->notification_buffer;
+
+But if the notification_buffer is too small it is resized with
+
+		if (acm->nb_size) {
+			kfree(acm->notification_buffer);
+			acm->nb_size = 0;
+		}
+		alloc_size = roundup_pow_of_two(expected_size);
+		/*
+		 * kmalloc ensures a valid notification_buffer after a
+		 * use of kfree in case the previous allocation was too
+		 * small. Final freeing is done on disconnect.
+		 */
+		acm->notification_buffer =
+			kmalloc(alloc_size, GFP_ATOMIC);
+
+dr should point to the new acm->notification_buffer.
+
+The second problem is any data in the notification_buffer is lost
+when the pointer is freed.  In the normal case, the current data
+is accumulated in the notification_buffer here.
+
+	memcpy(&acm->notification_buffer[acm->nb_index],
+	       urb->transfer_buffer, copy_size);
+
+When a resize happens, anything before
+notification_buffer[acm->nb_index] is garbage.
+
+The third problem is the acm->nb_index is not reset on a
+resizing buffer error.
+
+So switch resizing to using krealloc and reassign dr and
+reset nb_index.
+
+Fixes: ea2583529cd1 ("cdc-acm: reassemble fragmented notifications")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20200801152154.20683-1-trix@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/mtd/nand/raw/atmel/nand-controller.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/usb/class/cdc-acm.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/atmel/nand-controller.c b/drivers/mtd/nand/raw/atmel/nand-controller.c
-index c9818f548d07..71e2b83485d7 100644
---- a/drivers/mtd/nand/raw/atmel/nand-controller.c
-+++ b/drivers/mtd/nand/raw/atmel/nand-controller.c
-@@ -1976,13 +1976,9 @@ static int atmel_nand_controller_init(struct atmel_nand_controller *nc,
- 	platform_set_drvdata(pdev, nc);
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -378,21 +378,19 @@ static void acm_ctrl_irq(struct urb *urb
+ 	if (current_size < expected_size) {
+ 		/* notification is transmitted fragmented, reassemble */
+ 		if (acm->nb_size < expected_size) {
+-			if (acm->nb_size) {
+-				kfree(acm->notification_buffer);
+-				acm->nb_size = 0;
+-			}
++			u8 *new_buffer;
+ 			alloc_size = roundup_pow_of_two(expected_size);
+-			/*
+-			 * kmalloc ensures a valid notification_buffer after a
+-			 * use of kfree in case the previous allocation was too
+-			 * small. Final freeing is done on disconnect.
+-			 */
+-			acm->notification_buffer =
+-				kmalloc(alloc_size, GFP_ATOMIC);
+-			if (!acm->notification_buffer)
++			/* Final freeing is done on disconnect. */
++			new_buffer = krealloc(acm->notification_buffer,
++					      alloc_size, GFP_ATOMIC);
++			if (!new_buffer) {
++				acm->nb_index = 0;
+ 				goto exit;
++			}
++
++			acm->notification_buffer = new_buffer;
+ 			acm->nb_size = alloc_size;
++			dr = (struct usb_cdc_notification *)acm->notification_buffer;
+ 		}
  
- 	nc->pmecc = devm_atmel_pmecc_get(dev);
--	if (IS_ERR(nc->pmecc)) {
--		ret = PTR_ERR(nc->pmecc);
--		if (ret != -EPROBE_DEFER)
--			dev_err(dev, "Could not get PMECC object (err = %d)\n",
--				ret);
--		return ret;
--	}
-+	if (IS_ERR(nc->pmecc))
-+		return dev_err_probe(dev, PTR_ERR(nc->pmecc),
-+				     "Could not get PMECC object\n");
- 
- 	if (nc->caps->has_dma && !atmel_nand_avoid_dma) {
- 		dma_cap_mask_t mask;
--- 
-2.17.1
+ 		copy_size = min(current_size,
+
 
