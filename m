@@ -2,51 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C565C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6B2EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 051902158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9606120E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974569;
-	bh=rz2Oi2jQqgJvOT8xPOfzKOVn/1wYqkHwox6glnoNiFs=;
+	s=default; t=1598974578;
+	bh=N/c5yeiWAqbETz9A0NoHBYtQzbVa9T8Z6VuIXPtmIKU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LNh7oPWcmfWOmdGpcpvd5fKsnB3G77MmcedXaLk6tAYXwfTJysAsdxSNQTvLStlGS
-	 KYy9jXV8T9QsZLz+j/cxYep2SGybHD8Z/JO8nCm1SbRnioWaYx8Tgb0L0IU78IP8Co
-	 nHABx6tUtEjGj+ADRR1kXZbGirsCPHDIdloWkTng=
+	b=JEC6ikBSoVPtCl+pi9RcmVDNbylLNvB8Pq5n3gwERSjhKEITI/je2GkejM6YnrC+s
+	 gszfKqwu856GBtuMbCBHQWGAwsF/aQEJrDAT5caoFfm2eI0ljhl+Z+yldMQaW36c8r
+	 TraQrz2lYNJy0szrLwSLAZo36gCQnsQYHaq+w8aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731245AbgIAPgH (ORCPT
+        id S1731255AbgIAPgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:36:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40194 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:36:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbgIAPey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:54 -0400
+        id S1730723AbgIAPfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:35:01 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94050214D8;
-        Tue,  1 Sep 2020 15:34:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5264121534;
+        Tue,  1 Sep 2020 15:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974493;
-        bh=rz2Oi2jQqgJvOT8xPOfzKOVn/1wYqkHwox6glnoNiFs=;
+        s=default; t=1598974500;
+        bh=N/c5yeiWAqbETz9A0NoHBYtQzbVa9T8Z6VuIXPtmIKU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P+keaZo3LeXGZCj5XQDP9inMSRPd5fleJKRSTT7bUpviGZWTN2mwQCOiyou7HjgaC
-         tS6wywHaWKen2KvrSJi2Xhk2o1LM55C0aoqKkaMFRG9RBXfJfQdWcWScm1ZnOpUum9
-         R2QTxEh7NISJb8xNUEllMSP9ArWDmkuyEIGna0RI=
+        b=gzDuaWLsK/p02x6yWC1fAv+8FLm1iOuES19QvQLoHy649XOpPceAUiHWAotb5UEnd
+         yR/HHT9w1QXiouCTHbmt1iDnikuO+tvI4ZJCOvU3NeT7b55iSwaxPe3PmN5wn5WwtM
+         v/TxxGEKEVhXtZViwOoMQR4rOuo1s9vqIJ1ESdz8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.4 167/214] writeback: Protect inode->i_io_list with inode->i_lock
-Date:   Tue,  1 Sep 2020 17:10:47 +0200
-Message-Id: <20200901151000.981348206@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 201/214] usb: dwc3: gadget: Dont setup more than requested
+Date:   Tue,  1 Sep 2020 17:11:21 +0200
+Message-Id: <20200901151002.569645292@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,107 +60,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit b35250c0816c7cf7d0a8de92f5fafb6a7508a708 upstream.
+[ Upstream commit 5d187c0454ef4c5e046a81af36882d4d515922ec ]
 
-Currently, operations on inode->i_io_list are protected by
-wb->list_lock. In the following patches we'll need to maintain
-consistency between inode->i_state and inode->i_io_list so change the
-code so that inode->i_lock protects also all inode's i_io_list handling.
+The SG list may be set up with entry size more than the requested
+length. Check the usb_request->length and make sure that we don't setup
+the TRBs to send/receive more than requested. This case may occur when
+the SG entry is allocated up to a certain minimum size, but the request
+length is less than that. It can also occur when the request is reused
+for a different request length.
 
-Reviewed-by: Martijn Coenen <maco@android.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-CC: stable@vger.kernel.org # Prerequisite for "writeback: Avoid skipping inode writeback"
-Signed-off-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: <stable@vger.kernel.org> # v4.18+
+Fixes: a31e63b608ff ("usb: dwc3: gadget: Correct handling of scattergather lists")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fs-writeback.c |   22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/usb/dwc3/gadget.c | 51 +++++++++++++++++++++++++++------------
+ 1 file changed, 35 insertions(+), 16 deletions(-)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -144,6 +144,7 @@ static void inode_io_list_del_locked(str
- 				     struct bdi_writeback *wb)
+diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
+index 17340864a5408..816216870a1bb 100644
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1017,26 +1017,24 @@ static void __dwc3_prepare_one_trb(struct dwc3_ep *dep, struct dwc3_trb *trb,
+  * dwc3_prepare_one_trb - setup one TRB from one request
+  * @dep: endpoint for which this request is prepared
+  * @req: dwc3_request pointer
++ * @trb_length: buffer size of the TRB
+  * @chain: should this TRB be chained to the next?
+  * @node: only for isochronous endpoints. First TRB needs different type.
+  */
+ static void dwc3_prepare_one_trb(struct dwc3_ep *dep,
+-		struct dwc3_request *req, unsigned chain, unsigned node)
++		struct dwc3_request *req, unsigned int trb_length,
++		unsigned chain, unsigned node)
  {
- 	assert_spin_locked(&wb->list_lock);
-+	assert_spin_locked(&inode->i_lock);
+ 	struct dwc3_trb		*trb;
+-	unsigned int		length;
+ 	dma_addr_t		dma;
+ 	unsigned		stream_id = req->request.stream_id;
+ 	unsigned		short_not_ok = req->request.short_not_ok;
+ 	unsigned		no_interrupt = req->request.no_interrupt;
  
- 	list_del_init(&inode->i_io_list);
- 	wb_io_lists_depopulated(wb);
-@@ -1123,7 +1124,9 @@ void inode_io_list_del(struct inode *ino
- 	struct bdi_writeback *wb;
+-	if (req->request.num_sgs > 0) {
+-		length = sg_dma_len(req->start_sg);
++	if (req->request.num_sgs > 0)
+ 		dma = sg_dma_address(req->start_sg);
+-	} else {
+-		length = req->request.length;
++	else
+ 		dma = req->request.dma;
+-	}
  
- 	wb = inode_to_wb_and_lock_list(inode);
-+	spin_lock(&inode->i_lock);
- 	inode_io_list_del_locked(inode, wb);
-+	spin_unlock(&inode->i_lock);
- 	spin_unlock(&wb->list_lock);
+ 	trb = &dep->trb_pool[dep->trb_enqueue];
+ 
+@@ -1048,7 +1046,7 @@ static void dwc3_prepare_one_trb(struct dwc3_ep *dep,
+ 
+ 	req->num_trbs++;
+ 
+-	__dwc3_prepare_one_trb(dep, trb, dma, length, chain, node,
++	__dwc3_prepare_one_trb(dep, trb, dma, trb_length, chain, node,
+ 			stream_id, short_not_ok, no_interrupt);
  }
  
-@@ -1172,8 +1175,10 @@ void sb_clear_inode_writeback(struct ino
-  * the case then the inode must have been redirtied while it was being written
-  * out and we don't reset its dirtied_when.
-  */
--static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+static void redirty_tail_locked(struct inode *inode, struct bdi_writeback *wb)
- {
-+	assert_spin_locked(&inode->i_lock);
+@@ -1058,16 +1056,27 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+ 	struct scatterlist *sg = req->start_sg;
+ 	struct scatterlist *s;
+ 	int		i;
+-
++	unsigned int length = req->request.length;
+ 	unsigned int remaining = req->request.num_mapped_sgs
+ 		- req->num_queued_sgs;
+ 
++	/*
++	 * If we resume preparing the request, then get the remaining length of
++	 * the request and resume where we left off.
++	 */
++	for_each_sg(req->request.sg, s, req->num_queued_sgs, i)
++		length -= sg_dma_len(s);
 +
- 	if (!list_empty(&wb->b_dirty)) {
- 		struct inode *tail;
+ 	for_each_sg(sg, s, remaining, i) {
+-		unsigned int length = req->request.length;
+ 		unsigned int maxp = usb_endpoint_maxp(dep->endpoint.desc);
+ 		unsigned int rem = length % maxp;
++		unsigned int trb_length;
+ 		unsigned chain = true;
  
-@@ -1184,6 +1189,13 @@ static void redirty_tail(struct inode *i
- 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
- }
- 
-+static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+{
-+	spin_lock(&inode->i_lock);
-+	redirty_tail_locked(inode, wb);
-+	spin_unlock(&inode->i_lock);
-+}
++		trb_length = min_t(unsigned int, length, sg_dma_len(s));
 +
- /*
-  * requeue inode for re-scanning after bdi->b_io list is exhausted.
-  */
-@@ -1394,7 +1406,7 @@ static void requeue_inode(struct inode *
- 		 * writeback is not making progress due to locked
- 		 * buffers. Skip this inode for now.
- 		 */
--		redirty_tail(inode, wb);
-+		redirty_tail_locked(inode, wb);
- 		return;
- 	}
- 
-@@ -1414,7 +1426,7 @@ static void requeue_inode(struct inode *
- 			 * retrying writeback of the dirty page/inode
- 			 * that cannot be performed immediately.
- 			 */
--			redirty_tail(inode, wb);
-+			redirty_tail_locked(inode, wb);
- 		}
- 	} else if (inode->i_state & I_DIRTY) {
++		length -= trb_length;
++
  		/*
-@@ -1422,7 +1434,7 @@ static void requeue_inode(struct inode *
- 		 * such as delayed allocation during submission or metadata
- 		 * updates after data IO completion.
+ 		 * IOMMU driver is coalescing the list of sgs which shares a
+ 		 * page boundary into one and giving it to USB driver. With
+@@ -1075,7 +1084,7 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+ 		 * sgs passed. So mark the chain bit to false if it isthe last
+ 		 * mapped sg.
  		 */
--		redirty_tail(inode, wb);
-+		redirty_tail_locked(inode, wb);
- 	} else if (inode->i_state & I_DIRTY_TIME) {
- 		inode->dirtied_when = jiffies;
- 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
-@@ -1669,8 +1681,8 @@ static long writeback_sb_inodes(struct s
- 		 */
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
-+			redirty_tail_locked(inode, wb);
- 			spin_unlock(&inode->i_lock);
--			redirty_tail(inode, wb);
- 			continue;
+-		if (i == remaining - 1)
++		if ((i == remaining - 1) || !length)
+ 			chain = false;
+ 
+ 		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
+@@ -1085,7 +1094,7 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+ 			req->needs_extra_trb = true;
+ 
+ 			/* prepare normal TRB */
+-			dwc3_prepare_one_trb(dep, req, true, i);
++			dwc3_prepare_one_trb(dep, req, trb_length, true, i);
+ 
+ 			/* Now prepare one extra TRB to align transfer size */
+ 			trb = &dep->trb_pool[dep->trb_enqueue];
+@@ -1096,7 +1105,7 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+ 					req->request.short_not_ok,
+ 					req->request.no_interrupt);
+ 		} else {
+-			dwc3_prepare_one_trb(dep, req, chain, i);
++			dwc3_prepare_one_trb(dep, req, trb_length, chain, i);
  		}
- 		if ((inode->i_state & I_SYNC) && wbc.sync_mode != WB_SYNC_ALL) {
+ 
+ 		/*
+@@ -1111,6 +1120,16 @@ static void dwc3_prepare_one_trb_sg(struct dwc3_ep *dep,
+ 
+ 		req->num_queued_sgs++;
+ 
++		/*
++		 * The number of pending SG entries may not correspond to the
++		 * number of mapped SG entries. If all the data are queued, then
++		 * don't include unused SG entries.
++		 */
++		if (length == 0) {
++			req->num_pending_sgs -= req->request.num_mapped_sgs - req->num_queued_sgs;
++			break;
++		}
++
+ 		if (!dwc3_calc_trbs_left(dep))
+ 			break;
+ 	}
+@@ -1130,7 +1149,7 @@ static void dwc3_prepare_one_trb_linear(struct dwc3_ep *dep,
+ 		req->needs_extra_trb = true;
+ 
+ 		/* prepare normal TRB */
+-		dwc3_prepare_one_trb(dep, req, true, 0);
++		dwc3_prepare_one_trb(dep, req, length, true, 0);
+ 
+ 		/* Now prepare one extra TRB to align transfer size */
+ 		trb = &dep->trb_pool[dep->trb_enqueue];
+@@ -1147,7 +1166,7 @@ static void dwc3_prepare_one_trb_linear(struct dwc3_ep *dep,
+ 		req->needs_extra_trb = true;
+ 
+ 		/* prepare normal TRB */
+-		dwc3_prepare_one_trb(dep, req, true, 0);
++		dwc3_prepare_one_trb(dep, req, length, true, 0);
+ 
+ 		/* Now prepare one extra TRB to handle ZLP */
+ 		trb = &dep->trb_pool[dep->trb_enqueue];
+@@ -1157,7 +1176,7 @@ static void dwc3_prepare_one_trb_linear(struct dwc3_ep *dep,
+ 				req->request.short_not_ok,
+ 				req->request.no_interrupt);
+ 	} else {
+-		dwc3_prepare_one_trb(dep, req, false, 0);
++		dwc3_prepare_one_trb(dep, req, length, false, 0);
+ 	}
+ }
+ 
+-- 
+2.25.1
+
 
 
