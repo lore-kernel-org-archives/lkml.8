@@ -2,66 +2,68 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D147EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFD2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F3F3207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D10D12078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 21:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EDFygNzg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vMze48wK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729486AbgIAVn7 (ORCPT
+        id S1729722AbgIAVoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 17:43:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55522 "EHLO
+        Tue, 1 Sep 2020 17:44:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbgIAVny (ORCPT
+        with ESMTP id S1728677AbgIAVn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 17:43:54 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D18BC061244;
-        Tue,  1 Sep 2020 14:43:52 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k13so1205106plk.13;
-        Tue, 01 Sep 2020 14:43:52 -0700 (PDT)
+        Tue, 1 Sep 2020 17:43:58 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87325C061244;
+        Tue,  1 Sep 2020 14:43:57 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id o68so1616168pfg.2;
+        Tue, 01 Sep 2020 14:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hETCVNkUFaz2ei22FHADF5D/531PuX9nxpBpFN0mSX0=;
-        b=EDFygNzgwGGqHq2IM2VzM32nO8EqO9S/2K1BVjlsJWm9xaaze7gY9ex06sZmEmgC+B
-         QTRy0cRQRzRbTdnGlDJulhvsc0hvtD+NH8CyR7vVsqEJy7w8ChllHEqJymReU2HYPCUo
-         KNrlMraJR8dJhx1QB4EhL+bNzv8j4iUt/iOB99VOHTTFX0SIM7wmAyNPyWGkYjUMp9Gf
-         gH8c+JWrs4Dz4ZEsIYOl4LaKspgS/ZasRD5kP1O0ljs4g8BiodvZe8A1dvCb871XJQ4P
-         4tRP0BjRelBoh42/SKi4mLpJK4zqehstuchXy8ts7553BS2p0+luWFDMmKD5IJYLiKjC
-         M8Ng==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wxoDaZ8UHHEQlvfwUILqE66J22AZX7CBjGhbO9+lAP8=;
+        b=vMze48wKQwuyKYU1aG6dAoBZ3pChYbJqqV8YZQK7QYyAHpBWIfiVRC8xJnWTsWhn/I
+         /G+WHvFyNHr7CKGs6vI3ZZVK1TjNwZ/3QXNgzF0rW6da8QLD7VvIXmb+pin9EWAULLGB
+         eE5VkYESLpu5sNfb66v027v5UWMGZL9ZmhjYACmjQ4pOpOPkDKRz5u/RQtTvzUZYHd25
+         8wQlF5XgR/KMD7anSJ86Adm7eRzOiZyMu6abV19eknVj5wWJiTmytQSxkjWHBR5b3N8G
+         munKz0Tr0YYLCj2SpYIKyHZdLIpnJg0lLP63Lw6pFNDAur1Yx1ObNsW2XpLmwPp4OjW2
+         nN0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=hETCVNkUFaz2ei22FHADF5D/531PuX9nxpBpFN0mSX0=;
-        b=Drd+CQGoA792w5E2MkNYDABN0Yw2jwjm/cIpGPE5TXfErGBNBkVdYUwByZRirn4cJN
-         DaBplML1LJQQo1tC1Ignsr/0xLm9uYwlvEnVmbbV4u9BDcFjkrmUZ2L74Eg9tTWSfpsj
-         0vCoHWlLEg1A93VPulkyD5B5dijQKVmcbZeUc62zIhyqIPsuYJ8qNL3Q7DKT4GnjMRYo
-         tQL4Ow5V20sidn7+FZ2Yz8IZ0x7knS4072fZ+w7TCztB1zJjAtMCipuY3XTyBaU1VvJ/
-         pTIVktL138qfLMFSCwCn3yJgW5hAnIyllbLKYTQxJUU2BEYJ4XUlL01uEga5AV26ypwD
-         sxbw==
-X-Gm-Message-State: AOAM533nYINWMnvh4IumpWbGIuFdy1MW5OKRCAo3QNOAeiErse14AHZO
-        mfLjrchspy7q15CcTYMxVdM2OLRI7Ys=
-X-Google-Smtp-Source: ABdhPJxQty9xHS4RTpNNNNe76LF7bg38cBLXP7gJPBEtr2RTZX4BLRb4PjPASRHJFYe7OWjVugi9HA==
-X-Received: by 2002:a17:90b:289:: with SMTP id az9mr3537548pjb.31.1598996631863;
-        Tue, 01 Sep 2020 14:43:51 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wxoDaZ8UHHEQlvfwUILqE66J22AZX7CBjGhbO9+lAP8=;
+        b=MrK0O8BekDgovXdtd4QbcIAAwboM4K6KsBjKJgU7SexS0R1ZvaBp0NNkilb0XaNOg/
+         8X4YchBN0vEnsntdWTedM/xl9CUXyVWgHSw0dqN4WS5WZba5E0hx9/KZRaO5XIgpVy7D
+         Dt9yPkthMFf5kANzq59aErBX4ZaGDkUHAM2yfNnwvybgTpj+mp0oz7FPiBzIDhiIyURy
+         UFgwbfI8sWcMEn7Gcr7LZqWrx70ZiJ/TOoRG6XhqQgdxh4G0wHArEXyDRWH4PxrzIA4r
+         IvP6xhub7akQYFvVhj/wUxrZEfg6d1/oPB4ZKqY1dx+RZMNGLrj09xnAllwnTO2zNIZ8
+         BieA==
+X-Gm-Message-State: AOAM533OAqYWDtmol5+tabCKzZgK4hiNmVavzB0hWv2398krwosNloXi
+        qA3ViaSCmgvfLdg3yVanvFBq8XSa0+c=
+X-Google-Smtp-Source: ABdhPJxNwuniEyTkzzYubwMHYOvUnazz975bfaZP0Z1jnZQtFQ9mWKuXNldMHS6Hknm7dxuvcbmc1w==
+X-Received: by 2002:a62:7a97:: with SMTP id v145mr182279pfc.19.1598996636655;
+        Tue, 01 Sep 2020 14:43:56 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id 131sm128663pfy.5.2020.09.01.14.43.50
+        by smtp.gmail.com with ESMTPSA id 131sm128663pfy.5.2020.09.01.14.43.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 14:43:50 -0700 (PDT)
+        Tue, 01 Sep 2020 14:43:55 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     netdev@vger.kernel.org
 Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Blair Prescott <blair.prescott@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>,
         Jakub Kicinski <kuba@kernel.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -69,10 +71,12 @@ Cc:     Florian Fainelli <f.fainelli@gmail.com>,
         DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list),
         bcm-kernel-feedback-list@broadcom.com (open list:BROADCOM SYSTEMPORT
         ETHERNET DRIVER)
-Subject: [PATCH net-next 0/3] net: systemport: Clock support
-Date:   Tue,  1 Sep 2020 14:43:45 -0700
-Message-Id: <20200901214348.1523403-1-f.fainelli@gmail.com>
+Subject: [PATCH net-next 3/3] net: systemport: Manage Wake-on-LAN clock
+Date:   Tue,  1 Sep 2020 14:43:48 -0700
+Message-Id: <20200901214348.1523403-4-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200901214348.1523403-1-f.fainelli@gmail.com>
+References: <20200901214348.1523403-1-f.fainelli@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -80,21 +84,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+It is necessary to manage the Wake-on-LAN clock to turn on the
+appropriate blocks for MPD or CFP-based packet matching to work
+otherwise we will not be able to reliably match packets during suspend.
 
-This patch series makes the SYSTEMPORT driver request and manage its
-main and Wake-on-LAN clocks appropriately.
+Reported-by: Blair Prescott <blair.prescott@broadcom.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/net/ethernet/broadcom/bcmsysport.c | 10 +++++++++-
+ drivers/net/ethernet/broadcom/bcmsysport.h |  1 +
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-Florian Fainelli (3):
-  dt-bindings: net: Document Broadcom SYSTEMPORT clocks
-  net: systemport: fetch and use clock resources
-  net: systemport: Manage Wake-on-LAN clock
-
- .../bindings/net/brcm,systemport.txt          |  5 +++
- drivers/net/ethernet/broadcom/bcmsysport.c    | 40 ++++++++++++++++++-
- drivers/net/ethernet/broadcom/bcmsysport.h    |  2 +
- 3 files changed, 45 insertions(+), 2 deletions(-)
-
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c b/drivers/net/ethernet/broadcom/bcmsysport.c
+index 91eadba5540c..b25c70b74c92 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2583,6 +2583,10 @@ static int bcm_sysport_probe(struct platform_device *pdev)
+ 	if (!ret)
+ 		device_set_wakeup_capable(&pdev->dev, 1);
+ 
++	priv->wol_clk = devm_clk_get_optional(&pdev->dev, "sw_sysportwol");
++	if (IS_ERR(priv->wol_clk))
++		return PTR_ERR(priv->wol_clk);
++
+ 	/* Set the needed headroom once and for all */
+ 	BUILD_BUG_ON(sizeof(struct bcm_tsb) != 8);
+ 	dev->needed_headroom += sizeof(struct bcm_tsb);
+@@ -2772,8 +2776,10 @@ static int __maybe_unused bcm_sysport_suspend(struct device *d)
+ 	bcm_sysport_fini_rx_ring(priv);
+ 
+ 	/* Get prepared for Wake-on-LAN */
+-	if (device_may_wakeup(d) && priv->wolopts)
++	if (device_may_wakeup(d) && priv->wolopts) {
++		clk_prepare_enable(priv->wol_clk);
+ 		ret = bcm_sysport_suspend_to_wol(priv);
++	}
+ 
+ 	clk_disable_unprepare(priv->clk);
+ 
+@@ -2791,6 +2797,8 @@ static int __maybe_unused bcm_sysport_resume(struct device *d)
+ 		return 0;
+ 
+ 	clk_prepare_enable(priv->clk);
++	if (priv->wolopts)
++		clk_disable_unprepare(priv->wol_clk);
+ 
+ 	umac_reset(priv);
+ 
+diff --git a/drivers/net/ethernet/broadcom/bcmsysport.h b/drivers/net/ethernet/broadcom/bcmsysport.h
+index 51800053e88c..3a5cb6f128f5 100644
+--- a/drivers/net/ethernet/broadcom/bcmsysport.h
++++ b/drivers/net/ethernet/broadcom/bcmsysport.h
+@@ -771,6 +771,7 @@ struct bcm_sysport_priv {
+ 	u8			sopass[SOPASS_MAX];
+ 	unsigned int		wol_irq_disabled:1;
+ 	struct clk		*clk;
++	struct clk		*wol_clk;
+ 
+ 	/* MIB related fields */
+ 	struct bcm_sysport_mib	mib;
 -- 
 2.25.1
 
