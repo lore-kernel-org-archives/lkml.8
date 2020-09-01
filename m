@@ -2,53 +2,54 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-15.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3057FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4254EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4B6206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D6D0215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:56:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975803;
-	bh=egYdHxOslH+8QDnQ9rF+B7othBClMSpijVyU4HNP1+o=;
+	s=default; t=1598975806;
+	bh=h20gwhi+ec5+XhdOH3pXAyexGBcuS6qPY0q8ACdgBgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MurKxjcdD+1MCfEWtpBr/2z1wSvIB7ebAkVSMe+WAZ7oV4FLBEG0nQU7UCtHuGXw8
-	 rABRjqVjTxI5JVqzYg1SyrCvfSUxrIWfCX1QXFSRhebCW8Yhb3aXY9p06T2eACks+V
-	 5VpIGPLx8pNMsEBoUFUGt1jEynQKcac/GHNy23Mk=
+	b=iRT1ekTkf+kagOpVno3XGR47v9xQAEqjyMI3hX2CU/bVDrVPpqiezEvBJYmVcsDg3
+	 NryUCbKrSYnN80n/6FWvMKNlWHxPSDLcraQTIqKITdYSgb5cbCw5QQJ+5FzfflZi+G
+	 D+c6CoYpk5pC3LcPyPDTcvCMGLqQ445OFm8EPV3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgIAP4l (ORCPT
+        id S1732099AbgIAP4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:56:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32880 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:56:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731845AbgIAPpA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:00 -0400
+        id S1731839AbgIAPou (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:44:50 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EB262064B;
-        Tue,  1 Sep 2020 15:44:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EC46206EB;
+        Tue,  1 Sep 2020 15:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975100;
-        bh=egYdHxOslH+8QDnQ9rF+B7othBClMSpijVyU4HNP1+o=;
+        s=default; t=1598975089;
+        bh=h20gwhi+ec5+XhdOH3pXAyexGBcuS6qPY0q8ACdgBgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qPfhJn9nCiqI0JaVn9GtMMHW6s1HRjQ4blGYZ3RAuwe9y2WJctz20tExZbZwoo8sL
-         xdycGzpY2Q0U5FYV8YSBSjGJRB2lvgz8PmW38F93KLjVdw55UznQemECdyBLD6XvBt
-         gYHsyBZu+rKcnaZ7FNM45iHYy+7s0WH0A1ec2A2Q=
+        b=X9mdfTFREPMsr9/3eLMJ7i37gisPGYpr5y93x0PHHG5K0OgnYI0Koiw4S57qEiANI
+         mJnjD0K2uzBz8TsNN1adn5tIrS+yLfPX3mWVT1w7HP/cH3aFVSnAilXRoKQKRKHG1C
+         UlRkMe/Nhf3qrXEFzXJur4/CuIhsATR5jG6Mwh6w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.8 209/255] x86/hotplug: Silence APIC only after all interrupts are migrated
-Date:   Tue,  1 Sep 2020 17:11:05 +0200
-Message-Id: <20200901151010.713743779@linuxfoundation.org>
+        stable@vger.kernel.org, "M. Vefa Bicakci" <m.v.b@runbox.com>,
+        Valentina Manea <valentina.manea.m@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Bastien Nocera <hadess@hadess.net>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.8 205/255] usbip: Implement a match function to fix usbip
+Date:   Tue,  1 Sep 2020 17:11:01 +0200
+Message-Id: <20200901151010.524599037@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,92 +62,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ashok Raj <ashok.raj@intel.com>
+From: M. Vefa Bicakci <m.v.b@runbox.com>
 
-commit 52d6b926aabc47643cd910c85edb262b7f44c168 upstream.
+commit 7a2f2974f26542b4e7b9b4321edb3cbbf3eeb91a upstream.
 
-There is a race when taking a CPU offline. Current code looks like this:
+Commit 88b7381a939d ("USB: Select better matching USB drivers when
+available") introduced the use of a "match" function to select a
+non-generic/better driver for a particular USB device. This
+unfortunately breaks the operation of usbip in general, as reported in
+the kernel bugzilla with bug 208267 (linked below).
 
-native_cpu_disable()
-{
-	...
-	apic_soft_disable();
-	/*
-	 * Any existing set bits for pending interrupt to
-	 * this CPU are preserved and will be sent via IPI
-	 * to another CPU by fixup_irqs().
-	 */
-	cpu_disable_common();
-	{
-		....
-		/*
-		 * Race window happens here. Once local APIC has been
-		 * disabled any new interrupts from the device to
-		 * the old CPU are lost
-		 */
-		fixup_irqs(); // Too late to capture anything in IRR.
-		...
-	}
-}
+Upon inspecting the aforementioned commit, one can observe that the
+original code in the usb_device_match function used to return 1
+unconditionally, but the aforementioned commit makes the usb_device_match
+function use identifier tables and "match" virtual functions, if either of
+them are available.
 
-The fix is to disable the APIC *after* cpu_disable_common().
+Hence, this commit implements a match function for usbip that
+unconditionally returns true to ensure that usbip is functional again.
 
-Testing was done with a USB NIC that provided a source of frequent
-interrupts. A script migrated interrupts to a specific CPU and
-then took that CPU offline.
+This change has been verified to restore usbip functionality, with a
+v5.7.y kernel on an up-to-date version of Qubes OS 4.0, which uses
+usbip to redirect USB devices between VMs.
 
-Fixes: 60dcaad5736f ("x86/hotplug: Silence APIC and NMI when CPU is dead")
-Reported-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Ashok Raj <ashok.raj@intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Tested-by: Evan Green <evgreen@chromium.org>
-Reviewed-by: Evan Green <evgreen@chromium.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/lkml/875zdarr4h.fsf@nanos.tec.linutronix.de/
-Link: https://lore.kernel.org/r/1598501530-45821-1-git-send-email-ashok.raj@intel.com
+Thanks to Jonathan Dieter for the effort in bisecting this issue down
+to the aforementioned commit.
+
+Fixes: 88b7381a939d ("USB: Select better matching USB drivers when available")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=208267
+Link: https://bugzilla.redhat.com/show_bug.cgi?id=1856443
+Link: https://github.com/QubesOS/qubes-issues/issues/5905
+Signed-off-by: M. Vefa Bicakci <m.v.b@runbox.com>
+Cc: <stable@vger.kernel.org> # 5.7
+Cc: Valentina Manea <valentina.manea.m@gmail.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Bastien Nocera <hadess@hadess.net>
+Reviewed-by: Shuah Khan <skhan@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200810160017.46002-1-m.v.b@runbox.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/smpboot.c |   26 ++++++++++++++++++++------
- 1 file changed, 20 insertions(+), 6 deletions(-)
+ drivers/usb/usbip/stub_dev.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -1604,14 +1604,28 @@ int native_cpu_disable(void)
- 	if (ret)
- 		return ret;
- 
--	/*
--	 * Disable the local APIC. Otherwise IPI broadcasts will reach
--	 * it. It still responds normally to INIT, NMI, SMI, and SIPI
--	 * messages.
--	 */
--	apic_soft_disable();
- 	cpu_disable_common();
- 
-+        /*
-+         * Disable the local APIC. Otherwise IPI broadcasts will reach
-+         * it. It still responds normally to INIT, NMI, SMI, and SIPI
-+         * messages.
-+         *
-+         * Disabling the APIC must happen after cpu_disable_common()
-+         * which invokes fixup_irqs().
-+         *
-+         * Disabling the APIC preserves already set bits in IRR, but
-+         * an interrupt arriving after disabling the local APIC does not
-+         * set the corresponding IRR bit.
-+         *
-+         * fixup_irqs() scans IRR for set bits so it can raise a not
-+         * yet handled interrupt on the new destination CPU via an IPI
-+         * but obviously it can't do so for IRR bits which are not set.
-+         * IOW, interrupts arriving after disabling the local APIC will
-+         * be lost.
-+         */
-+	apic_soft_disable();
-+
- 	return 0;
+--- a/drivers/usb/usbip/stub_dev.c
++++ b/drivers/usb/usbip/stub_dev.c
+@@ -461,6 +461,11 @@ static void stub_disconnect(struct usb_d
+ 	return;
  }
  
++static bool usbip_match(struct usb_device *udev)
++{
++	return true;
++}
++
+ #ifdef CONFIG_PM
+ 
+ /* These functions need usb_port_suspend and usb_port_resume,
+@@ -486,6 +491,7 @@ struct usb_device_driver stub_driver = {
+ 	.name		= "usbip-host",
+ 	.probe		= stub_probe,
+ 	.disconnect	= stub_disconnect,
++	.match		= usbip_match,
+ #ifdef CONFIG_PM
+ 	.suspend	= stub_suspend,
+ 	.resume		= stub_resume,
 
 
