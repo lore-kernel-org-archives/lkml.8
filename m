@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9399C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FB8C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80856206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A12C206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980152;
-	bh=VaX1+Ny6L+YXxWnugwcXEPKB6ewm/BTnTiDqgAWIiVQ=;
+	s=default; t=1598980156;
+	bh=OQzbnqReLKWAXFeJ31Qs4pL4CU0pTPEUgjVmHQ7LnW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SlEpSqFoETSQUWpnzbekvQswrF8rzxV7jxAkUQX/A+sIOaVX8Nwnr2iBQJ7XHfCj4
-	 /4Oom/0gGNkxal7lcnW/B5u+0FkxJdjlxZGHqsFmC9oJB4YfK+rLNQ0JW1WrqKUpSQ
-	 27LjR4sNpnCz1niPjdqxlJvnLadHpkujvig0wRCA=
+	b=Z5z1OsATvQyD2ddsl9wCNPuokbnq/YSquftxgjdrYVeE+xdISttU1yoOmFjxQbdWy
+	 eC2+bEA8utXo1qJ/zUxpIAmpVQRIgXD2heIzBr2bJA4yoh9AuYGq3eRUMiHyM1QQFf
+	 qmqu8AylpYrCBChg497fBykz1mqi7QeRFXQgWjyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729550AbgIARJI (ORCPT
+        id S1731499AbgIARJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35428 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:09:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728670AbgIAPRs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:17:48 -0400
+        id S1729434AbgIAPRp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:17:45 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1068820767;
-        Tue,  1 Sep 2020 15:17:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B9042100A;
+        Tue,  1 Sep 2020 15:17:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973467;
-        bh=VaX1+Ny6L+YXxWnugwcXEPKB6ewm/BTnTiDqgAWIiVQ=;
+        s=default; t=1598973465;
+        bh=OQzbnqReLKWAXFeJ31Qs4pL4CU0pTPEUgjVmHQ7LnW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UmBETSq3N0Rp9hw/xnVM61HhZSUje3V4oafbVsg0d53MopgSul3oyJ4DohESrGqAC
-         l1/Oac/F5Z3A+ba0MIb9k+xq+aAkRV696wq/zh+AFt44mdGLostZ3fmCo/iIj+RIP6
-         cdvCkahGFmTJMcisvquCZqMCEAFBtPvqu5CqO4jc=
+        b=IbhwXq/Cztc0UcbctIUsO2wMwFXsGT8OO35LvmcIWsENyBQghkSbCOl+z2ivUJZ6D
+         L/ur0Zo4ZteKFitEJ8Of9BIITgH/bJdsujMUkdB4dGTRocrvuk+BxjvJkVHiHtTO/l
+         FYR8fD5CZVZrDEdCB8JCXNbhRYIG+3MSS34DrKS8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        stable@vger.kernel.org, Alexey Kardashevskiy <aik@ozlabs.ru>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 11/91] media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
-Date:   Tue,  1 Sep 2020 17:09:45 +0200
-Message-Id: <20200901150928.666814366@linuxfoundation.org>
+Subject: [PATCH 4.14 10/91] powerpc/xive: Ignore kmemleak false positives
+Date:   Tue,  1 Sep 2020 17:09:44 +0200
+Message-Id: <20200901150928.614636143@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,49 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+From: Alexey Kardashevskiy <aik@ozlabs.ru>
 
-[ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+[ Upstream commit f0993c839e95dd6c7f054a1015e693c87e33e4fb ]
 
-The value av7110->debi_virt is stored in DMA memory, and it is assigned
-to data, and thus data[0] can be modified at any time by malicious
-hardware. In this case, "if (data[0] < 2)" can be passed, but then
-data[0] can be changed into a large number, which may cause buffer
-overflow when the code "av7110->ci_slot[data[0]]" is used.
+xive_native_provision_pages() allocates memory and passes the pointer to
+OPAL so kmemleak cannot find the pointer usage in the kernel memory and
+produces a false positive report (below) (even if the kernel did scan
+OPAL memory, it is unable to deal with __pa() addresses anyway).
 
-To fix this possible bug, data[0] is assigned to a local variable, which
-replaces the use of data[0].
+This silences the warning.
 
-Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+unreferenced object 0xc000200350c40000 (size 65536):
+  comm "qemu-system-ppc", pid 2725, jiffies 4294946414 (age 70776.530s)
+  hex dump (first 32 bytes):
+    02 00 00 00 50 00 00 00 00 00 00 00 00 00 00 00  ....P...........
+    01 00 08 07 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000081ff046c>] xive_native_alloc_vp_block+0x120/0x250
+    [<00000000d555d524>] kvmppc_xive_compute_vp_id+0x248/0x350 [kvm]
+    [<00000000d69b9c9f>] kvmppc_xive_connect_vcpu+0xc0/0x520 [kvm]
+    [<000000006acbc81c>] kvm_arch_vcpu_ioctl+0x308/0x580 [kvm]
+    [<0000000089c69580>] kvm_vcpu_ioctl+0x19c/0xae0 [kvm]
+    [<00000000902ae91e>] ksys_ioctl+0x184/0x1b0
+    [<00000000f3e68bd7>] sys_ioctl+0x48/0xb0
+    [<0000000001b2c127>] system_call_exception+0x124/0x1f0
+    [<00000000d2b2ee40>] system_call_common+0xe8/0x214
+
+Signed-off-by: Alexey Kardashevskiy <aik@ozlabs.ru>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200612043303.84894-1-aik@ozlabs.ru
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/pci/ttpci/av7110.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/sysdev/xive/native.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
-index f46947d8adf8f..fcc053d95ae49 100644
---- a/drivers/media/pci/ttpci/av7110.c
-+++ b/drivers/media/pci/ttpci/av7110.c
-@@ -423,14 +423,15 @@ static void debiirq(unsigned long cookie)
- 	case DATA_CI_GET:
- 	{
- 		u8 *data = av7110->debi_virt;
-+		u8 data_0 = data[0];
+diff --git a/arch/powerpc/sysdev/xive/native.c b/arch/powerpc/sysdev/xive/native.c
+index 30cdcbfa1c04e..b0e96f4b728c1 100644
+--- a/arch/powerpc/sysdev/xive/native.c
++++ b/arch/powerpc/sysdev/xive/native.c
+@@ -22,6 +22,7 @@
+ #include <linux/delay.h>
+ #include <linux/cpumask.h>
+ #include <linux/mm.h>
++#include <linux/kmemleak.h>
  
--		if ((data[0] < 2) && data[2] == 0xff) {
-+		if (data_0 < 2 && data[2] == 0xff) {
- 			int flags = 0;
- 			if (data[5] > 0)
- 				flags |= CA_CI_MODULE_PRESENT;
- 			if (data[5] > 5)
- 				flags |= CA_CI_MODULE_READY;
--			av7110->ci_slot[data[0]].flags = flags;
-+			av7110->ci_slot[data_0].flags = flags;
- 		} else
- 			ci_get_data(&av7110->ci_rbuffer,
- 				    av7110->debi_virt,
+ #include <asm/prom.h>
+ #include <asm/io.h>
+@@ -630,6 +631,7 @@ static bool xive_native_provision_pages(void)
+ 			pr_err("Failed to allocate provisioning page\n");
+ 			return false;
+ 		}
++		kmemleak_ignore(p);
+ 		opal_xive_donate_page(chip, __pa(p));
+ 	}
+ 	return true;
 -- 
 2.25.1
 
