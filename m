@@ -2,221 +2,111 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B30CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D32BC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 799972064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="VP/1kikV";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U37cTf9M"
+	by mail.kernel.org (Postfix) with ESMTP id D0BA6206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:55:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598975707;
+	bh=Qj7JQS+ohLx5lQJpKyzZQKyNdacmCCnN1LoA2xLvZVU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=SU48ZafWYJ7j+cf6dXTzKj4bb+kmHyT7EjrlXiTJHNfLmDUv47y06FVjKwf1w+Pw1
+	 FLxyEjOzafV7KNOCzL4GeX4TS39Qt+bCPDs//uS9sejH0ZZvRL5pIHbDaDOPeN1hYa
+	 EoO7kzGcR/C46QHd6M+SNR12tz6PBgeODm7AH05Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732032AbgIAPzF (ORCPT
+        id S1732077AbgIAPzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:55:05 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:40938 "EHLO
-        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbgIAPy6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:54:58 -0400
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1598975694;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iJrnfXL9MJK0GqyAyjy1syYpwoWFrgSGPnpgO+wpOec=;
-        b=VP/1kikV/8AKFtPilaT6pNf7MEgvtwKLV4WZ3o9koMZxJlNXMC4G38iM1HlgY05pNSYSO4
-        BBk7CRWh4t1wVUF+ydqjmj/4hNdurSbRnLUqUBMlH/9bOBRlptiOSJD0pr2PNLnEgCFtWV
-        WcE0l46+n9tetkUbzTzb5srEkvicZJXQgAIhfLm7XIp0CT7XSXF7nbrj74gZNntEHppC7H
-        UiCXJPyjV2vCDH/n64QHDw448CLycFhtekSTv0nPn67EDS0zpA7afj8Ku5YnlgKfuotMYi
-        VWJPaby68M1mi3I9FmoNcWUssn/cuRU0wyhJO4WJ01qiWNx7kU8TjyTYjONNfw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1598975694;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iJrnfXL9MJK0GqyAyjy1syYpwoWFrgSGPnpgO+wpOec=;
-        b=U37cTf9MQaxLi/ZTn73BHybc2CCmY78dGxrL72cv1NXuqLBID1vA6YEMNiY9S+ChnnFePf
-        a/AxOZOAkK8xDZDg==
-To:     Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vineeth Pillai <viremana@linux.microsoft.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Dhaval Giani <dhaval.giani@oracle.com>,
-        Chris Hyser <chris.hyser@oracle.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>
-Cc:     "Joel Fernandes \(Google\)" <joel@joelfernandes.org>,
-        mingo@kernel.org, pjt@google.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, vineeth@bitbyteword.org,
-        Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Agata Gruza <agata.gruza@intel.com>,
-        Antonio Gomez Iglesias <antonio.gomez.iglesias@intel.com>,
-        graf@amazon.com, konrad.wilk@oracle.com, dfaggioli@suse.com,
-        rostedt@goodmis.org, derkling@google.com, benbjiang@tencent.com,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Aubrey Li <aubrey.li@linux.intel.com>,
-        Tim Chen <tim.c.chen@intel.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [RFC PATCH v7 17/23] kernel/entry: Add support for core-wide protection of kernel-mode
-In-Reply-To: <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com>
-References: <cover.1598643276.git.jdesfossez@digitalocean.com> <2a4398b55fe258ea53fb1fbc727063298f7eea8f.1598643276.git.jdesfossez@digitalocean.com>
-Date:   Tue, 01 Sep 2020 17:54:53 +0200
-Message-ID: <87y2lth4qa.fsf@nanos.tec.linutronix.de>
+        Tue, 1 Sep 2020 11:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731907AbgIAPpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:52 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DE50206FA;
+        Tue,  1 Sep 2020 15:45:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598975152;
+        bh=Qj7JQS+ohLx5lQJpKyzZQKyNdacmCCnN1LoA2xLvZVU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=H6Et77B6ryxLhtgMmKDyvoQ9jkSfCNzawBn4tYX+AWIGNiHmBC8lwfLP8UC3jlsoI
+         iUXic9T7M2QWY1uRnVkUCwymnHywXqLaWPX6iuCNaVgfp081E4PHlNMY1S5c3iBL2+
+         mIE7rpwOyKzh5A1HeTwsem0vN9dbNzCeAY+apWDk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Brooke Basile <brookebasile@gmail.com>,
+        stable <stable@kernel.org>
+Subject: [PATCH 5.8 230/255] USB: gadget: u_f: Unbreak offset calculation in VLAs
+Date:   Tue,  1 Sep 2020 17:11:26 +0200
+Message-Id: <20200901151011.770892111@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28 2020 at 15:51, Julien Desfossez wrote:
-> @@ -112,59 +113,84 @@ static __always_inline void exit_to_user_mode(void)
->  /* Workaround to allow gradual conversion of architecture code */
->  void __weak arch_do_signal(struct pt_regs *regs) { }
->  
-> -static unsigned long exit_to_user_mode_loop(struct pt_regs *regs,
-> -					    unsigned long ti_work)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Can the rework of that code please be split out into a seperate patch
-and then adding that unsafe muck on top?
+commit bfd08d06d978d0304eb6f7855b548aa2cd1c5486 upstream.
 
-> +static inline bool exit_to_user_mode_work_pending(unsigned long ti_work)
->  {
-> -	/*
-> -	 * Before returning to user space ensure that all pending work
-> -	 * items have been completed.
-> -	 */
-> -	while (ti_work & EXIT_TO_USER_MODE_WORK) {
-> +	return (ti_work & EXIT_TO_USER_MODE_WORK);
-> +}
->  
-> -		local_irq_enable_exit_to_user(ti_work);
-> +static inline void exit_to_user_mode_work(struct pt_regs *regs,
-> +					  unsigned long ti_work)
-> +{
->  
-> -		if (ti_work & _TIF_NEED_RESCHED)
-> -			schedule();
-> +	local_irq_enable_exit_to_user(ti_work);
->  
-> -		if (ti_work & _TIF_UPROBE)
-> -			uprobe_notify_resume(regs);
-> +	if (ti_work & _TIF_NEED_RESCHED)
-> +		schedule();
->  
-> -		if (ti_work & _TIF_PATCH_PENDING)
-> -			klp_update_patch_state(current);
-> +	if (ti_work & _TIF_UPROBE)
-> +		uprobe_notify_resume(regs);
->  
-> -		if (ti_work & _TIF_SIGPENDING)
-> -			arch_do_signal(regs);
-> +	if (ti_work & _TIF_PATCH_PENDING)
-> +		klp_update_patch_state(current);
->  
-> -		if (ti_work & _TIF_NOTIFY_RESUME) {
-> -			clear_thread_flag(TIF_NOTIFY_RESUME);
-> -			tracehook_notify_resume(regs);
-> -			rseq_handle_notify_resume(NULL, regs);
-> -		}
-> +	if (ti_work & _TIF_SIGPENDING)
-> +		arch_do_signal(regs);
-> +
-> +	if (ti_work & _TIF_NOTIFY_RESUME) {
-> +		clear_thread_flag(TIF_NOTIFY_RESUME);
-> +		tracehook_notify_resume(regs);
-> +		rseq_handle_notify_resume(NULL, regs);
-> +	}
-> +
-> +	/* Architecture specific TIF work */
-> +	arch_exit_to_user_mode_work(regs, ti_work);
-> +
-> +	local_irq_disable_exit_to_user();
-> +}
->  
-> -		/* Architecture specific TIF work */
-> -		arch_exit_to_user_mode_work(regs, ti_work);
-> +static unsigned long exit_to_user_mode_loop(struct pt_regs *regs)
-> +{
-> +	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-> +
-> +	/*
-> +	 * Before returning to user space ensure that all pending work
-> +	 * items have been completed.
-> +	 */
-> +	while (1) {
-> +		/* Both interrupts and preemption could be enabled here. */
+Inadvertently the commit b1cd1b65afba ("USB: gadget: u_f: add overflow checks
+to VLA macros") makes VLA macros to always return 0 due to different scope of
+two variables of the same name. Obviously we need to have only one.
 
-   What? Preemption is enabled here, but interrupts are disabled.
+Fixes: b1cd1b65afba ("USB: gadget: u_f: add overflow checks to VLA macros")
+Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Brooke Basile <brookebasile@gmail.com>
+Cc: stable <stable@kernel.org>
+Link: https://lore.kernel.org/r/20200826192119.56450-1-andriy.shevchenko@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +		if (exit_to_user_mode_work_pending(ti_work))
-> +		    exit_to_user_mode_work(regs, ti_work);
-> +
-> +		/* Interrupts may be reenabled with preemption disabled. */
-> +		sched_core_unsafe_exit_wait(EXIT_TO_USER_MODE_WORK);
-> +
->  		/*
-> -		 * Disable interrupts and reevaluate the work flags as they
-> -		 * might have changed while interrupts and preemption was
-> -		 * enabled above.
-> +		 * Reevaluate the work flags as they might have changed
-> +		 * while interrupts and preemption were enabled.
+---
+ drivers/usb/gadget/u_f.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-What enables preemption and interrupts? Can you pretty please write
-comments which explain what's going on.
-
->  		 */
-> -		local_irq_disable_exit_to_user();
->  		ti_work = READ_ONCE(current_thread_info()->flags);
-> +
-> +		/*
-> +		 * We may be switching out to another task in kernel mode. That
-> +		 * process is responsible for exiting the "unsafe" kernel mode
-> +		 * when it returns to user or guest.
-> +		 */
-> +		if (exit_to_user_mode_work_pending(ti_work))
-> +			sched_core_unsafe_enter();
-> +		else
-> +			break;
->  	}
->  
-> -	/* Return the latest work state for arch_exit_to_user_mode() */
-> -	return ti_work;
-> +    return ti_work;
->  }
->  
->  static void exit_to_user_mode_prepare(struct pt_regs *regs)
->  {
-> -	unsigned long ti_work = READ_ONCE(current_thread_info()->flags);
-> +	unsigned long ti_work;
->  
->  	lockdep_assert_irqs_disabled();
->  
-> -	if (unlikely(ti_work & EXIT_TO_USER_MODE_WORK))
-> -		ti_work = exit_to_user_mode_loop(regs, ti_work);
-> +	ti_work = exit_to_user_mode_loop(regs);
-
-Why has the above loop to be invoked unconditionally even when that core
-scheduling muck is disabled? Just to make all return to user paths more
-expensive unconditionally, right?
-
-Thanks,
-
-        tglx
+--- a/drivers/usb/gadget/u_f.h
++++ b/drivers/usb/gadget/u_f.h
+@@ -25,9 +25,9 @@
+ 		size_t offset = 0;					       \
+ 		if (groupname##__next != SIZE_MAX) {			       \
+ 			size_t align_mask = __alignof__(type) - 1;	       \
+-			size_t offset = (groupname##__next + align_mask)       \
+-					 & ~align_mask;			       \
+ 			size_t size = array_size(n, sizeof(type));	       \
++			offset = (groupname##__next + align_mask) &	       \
++				  ~align_mask;				       \
+ 			if (check_add_overflow(offset, size,		       \
+ 					       &groupname##__next)) {          \
+ 				groupname##__next = SIZE_MAX;		       \
+@@ -43,8 +43,8 @@
+ 		size_t offset = 0;						\
+ 		if (groupname##__next != SIZE_MAX) {				\
+ 			size_t align_mask = __alignof__(type) - 1;		\
+-			size_t offset = (groupname##__next + align_mask)	\
+-					 & ~align_mask;				\
++			offset = (groupname##__next + align_mask) &		\
++				  ~align_mask;					\
+ 			if (check_add_overflow(offset, groupname##_##name##__sz,\
+ 							&groupname##__next)) {	\
+ 				groupname##__next = SIZE_MAX;			\
 
 
