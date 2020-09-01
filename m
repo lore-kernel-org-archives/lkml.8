@@ -2,117 +2,137 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0657C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C357C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BB7082087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980932;
-	bh=vf8P7knMKxAd8czp29JUejgGx8ytmQ5ofKwx9f36CKI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DMkwEWwH42hCs/lrTcLdjnfDlXUtV6R9lMazhh6j94l7HWm49Q3GLbk++sifB3eFs
-	 4CDHafyd2V+pXu+7gBknYnkbG5mONnKE2Oeo6uFR3LS3KzyRPoezySAAHsnS1ZQy7+
-	 1mUO8tzAuY9AVqvRG6NKLc7BR+10CyvWB25Z64Z0=
+	by mail.kernel.org (Postfix) with ESMTP id 6618E2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IIdq1oxI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbgIAPMP (ORCPT
+        id S1732620AbgIARWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:12:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54354 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728458AbgIAPMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:10 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        Tue, 1 Sep 2020 13:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51406 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728583AbgIAPMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:14 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7174C061244;
+        Tue,  1 Sep 2020 08:12:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=6unLGz/K0Xi97iOgvmL4jkedni3nkjF3cbJ5LtOhorw=; b=IIdq1oxI0R2/tVl44InM34VN2x
+        bSsHmh6hRGYBpebTvbeJNSycXTm1GJqhYFhsM3QpFOk8CUXmHdegyJANZ8Y5sj3s9mRqUERT82eXO
+        RdUW1qbjaHDOxPoVs7nYvIiM+RhPOCC4YHz23GgpVeHiD/ZbFwwwIzwP8XioglwMPsQxuAWApc4dx
+        BW9SZx/XxIc6Qutaf8qrAo9qmmVvVt5D6BHfvAdOCYIsqIC8gJ4Up8kxPw3NvXwFJ37c/ZCwV2/fv
+        O7OaZKOJleirX1ljS3VgMAAcxDfAIwqL+PknhgeQsBPttiqOMVsWMu9QBfF4JihcWr2YU+uPs3d88
+        qkT4uaNg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kD7x9-0000Kf-Ap; Tue, 01 Sep 2020 15:12:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC74620BED;
-        Tue,  1 Sep 2020 15:12:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973130;
-        bh=vf8P7knMKxAd8czp29JUejgGx8ytmQ5ofKwx9f36CKI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aPzdBGxv6p7yghBldCS90f5hIgai74pXWO0L0wIzUzmhhSY+TasXgoxPaY7tF1iTs
-         Xzt09RXK/R6P2ecbh4YSW8q1hmbjdu9hEnw0FQj8xwmibaOahTJyvjVjursCOh6Elr
-         7MWVcN6Txyy+1oLfTvcU/Eq0OhgpAIrADcyfWlFc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 19/62] PCI: Fix pci_create_slot() reference count leak
-Date:   Tue,  1 Sep 2020 17:10:02 +0200
-Message-Id: <20200901150921.706666833@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
-References: <20200901150920.697676718@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A0A9300F7A;
+        Tue,  1 Sep 2020 17:12:04 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 57CD820BEB3E2; Tue,  1 Sep 2020 17:12:04 +0200 (CEST)
+Date:   Tue, 1 Sep 2020 17:12:04 +0200
+From:   peterz@infradead.org
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Ingo Molnar <mingo@kernel.org>, Al Grant <al.grant@foss.arm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: correct SNOOPX field offset
+Message-ID: <20200901151204.GE2674@hirez.programming.kicks-ass.net>
+References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+ <20200825174043.GQ1509399@tassilo.jf.intel.com>
+ <20200826142631.GA5351@redhat.com>
+ <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
+ <20200901150225.GA1424523@kernel.org>
+ <20200901150630.GB1424523@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901150630.GB1424523@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+On Tue, Sep 01, 2020 at 12:06:30PM -0300, Arnaldo Carvalho de Melo wrote:
 
-[ Upstream commit 8a94644b440eef5a7b9c104ac8aa7a7f413e35e5 ]
+> Also you mixed up tools/ with include/ things, the perf part of the
+> kernel is maintained by Ingo, PeterZ.
 
-kobject_init_and_add() takes a reference even when it fails.  If it returns
-an error, kobject_put() must be called to clean up the memory associated
-with the object.
+Right, it helps if the right people are on Cc.
 
-When kobject_init_and_add() fails, call kobject_put() instead of kfree().
+> Peter, the patch is the one below, I'll collect the
+> tools/include/uapi/linux/perf_event.h bit as it fixes the tooling,
+> please consider taking the kernel part.
 
-b8eb718348b8 ("net-sysfs: Fix reference count leak in
-rx|netdev_queue_add_kobject") fixed a similar problem.
+Al, can you resend with the right people on Cc? Also see below.
 
-Link: https://lore.kernel.org/r/20200528021322.1984-1-wu000273@umn.edu
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pci/slot.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> ---
+> 
+> From:   Al Grant <al.grant@foss.arm.com>
+> Subject: [PATCH] perf: correct SNOOPX field offset
+> Message-ID: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+> Date:   Mon, 24 Aug 2020 10:28:34 +0100
+> 
+> perf_event.h has macros that define the field offsets in the
+> data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+> were both 37. These are distinct fields, and the bitfield layout
+> in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+> 
 
-diff --git a/drivers/pci/slot.c b/drivers/pci/slot.c
-index 429d34c348b9f..01a343ad7155c 100644
---- a/drivers/pci/slot.c
-+++ b/drivers/pci/slot.c
-@@ -303,13 +303,16 @@ placeholder:
- 	slot_name = make_slot_name(name);
- 	if (!slot_name) {
- 		err = -ENOMEM;
-+		kfree(slot);
- 		goto err;
- 	}
- 
- 	err = kobject_init_and_add(&slot->kobj, &pci_slot_ktype, NULL,
- 				   "%s", slot_name);
--	if (err)
-+	if (err) {
-+		kobject_put(&slot->kobj);
- 		goto err;
-+	}
- 
- 	INIT_LIST_HEAD(&slot->list);
- 	list_add(&slot->list, &parent->slots);
-@@ -328,7 +331,6 @@ out:
- 	mutex_unlock(&pci_slot_mutex);
- 	return slot;
- err:
--	kfree(slot);
- 	slot = ERR_PTR(err);
- 	goto out;
- }
--- 
-2.25.1
+This needs a Fixes: tag.
 
-
-
+> Signed-off-by: Al Grant <al.grant@arm.com>
+> 
+> ---
+> 
+>   include/uapi/linux/perf_event.h       | 2 +-
+>   tools/include/uapi/linux/perf_event.h | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> ---
+> 
+> diff --git a/include/uapi/linux/perf_event.h 
+> b/include/uapi/linux/perf_event.h
+> index 077e7ee69e3d..3e5dcdd48a49 100644
+> --- a/include/uapi/linux/perf_event.h
+> +++ b/include/uapi/linux/perf_event.h
+> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+> 
+>   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+>   /* 1 free */
+> -#define PERF_MEM_SNOOPX_SHIFT  37
+> +#define PERF_MEM_SNOOPX_SHIFT  38
+> 
+>   /* locked instruction */
+>   #define PERF_MEM_LOCK_NA       0x01 /* not available */
+> diff --git a/tools/include/uapi/linux/perf_event.h 
+> b/tools/include/uapi/linux/perf_event.h
+> index 077e7ee69e3d..3e5dcdd48a49 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -1196,7 +1196,7 @@ union perf_mem_data_src {
+> 
+>   #define PERF_MEM_SNOOPX_FWD    0x01 /* forward */
+>   /* 1 free */
+> -#define PERF_MEM_SNOOPX_SHIFT  37
+> +#define PERF_MEM_SNOOPX_SHIFT  38
+> 
+>   /* locked instruction */
+>   #define PERF_MEM_LOCK_NA       0x01 /* not available */
