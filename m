@@ -2,52 +2,52 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F950C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 730A1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56717206EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A8C0206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:57:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975844;
-	bh=B5SGLT9kmJSNYF+pS6zUNvQFeJVuh8MGUT2+LyRh5h0=;
+	s=default; t=1598975847;
+	bh=AAuVh8NhIbqqWMMFxEOADh7bUSWjy+xTniY3cUJ+4Rk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ycuo/33wYJWl0YWNo9Gz8wUzF/bW2jzxJS2uBFY7DaRfZxeuUJpv12osRjIz1hADf
-	 5l7RjetIGgDBCnTe/0vLftVxSYkE/zPH2A24jiJCAtj/8IINtpP006NCY3eDYSr/Zq
-	 j0eIuz5ptDr+ypIioDpzCDWY90wJJBZw6ha5DwFQ=
+	b=aeYGMK/Yr1bk9qQUqnrYgRH9RdpEdr2dh3T+i4vZj0g0iAkyPQ1ke/z89LODx83MO
+	 EdK0k8fhstVwVH3/5Emy7VJFywlLevHMf58EUUvgwxyynrdu6ZSYr1t35Jb9/KIWg7
+	 l4ufI0/x1WGhKi+KDWAJp1vPm/i/i7nzYF/WrL04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731811AbgIAP5W (ORCPT
+        id S1731792AbgIAPo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:57:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59946 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:44:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731794AbgIAPoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:30 -0400
+        id S1728446AbgIAPlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:41:49 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC16A206EB;
-        Tue,  1 Sep 2020 15:44:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86D442078B;
+        Tue,  1 Sep 2020 15:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975069;
-        bh=B5SGLT9kmJSNYF+pS6zUNvQFeJVuh8MGUT2+LyRh5h0=;
+        s=default; t=1598974909;
+        bh=AAuVh8NhIbqqWMMFxEOADh7bUSWjy+xTniY3cUJ+4Rk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KBlKehNVczSyHKf5cBCqn1Vk46QYAHd9MbbcCTx4/gY3bx23Pg9LmfQhPlW+0q5nZ
-         KlYbrkKNDMwFQHVqhXMBsohqkQCG83kuOP0rrz85/XpHcuA3TH5/JgWdWCIt//y3UE
-         UrPSFt+81yeyheRKQA54rr6YGAccZwEUk2w/kMLs=
+        b=vAhVWlnHPHa9CDx0/oVwX8zAYS2EENJECX5ODG+gHHo0allEnBWIQTR5pW+d+ncNP
+         zjx4xSBxk0ovJF0gbQ0gUfWIdtOr0+D3adyhW7HPbOll2iQNapX5RBCJYgvKHBLXRW
+         pL3Ty0hHzKS9MaHrpBpW9sIZBSsAMUHa8B1YIpbE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 5.8 198/255] KVM: arm64: Set HCR_EL2.PTW to prevent AT taking synchronous exception
-Date:   Tue,  1 Sep 2020 17:10:54 +0200
-Message-Id: <20200901151010.180111213@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 136/255] dma-pool: Only allocate from CMA when in same memory zone
+Date:   Tue,  1 Sep 2020 17:09:52 +0200
+Message-Id: <20200901151007.230785391@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,57 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Morse <james.morse@arm.com>
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 
-commit 71a7f8cb1ca4ca7214a700b1243626759b6c11d4 upstream.
+[ Upstream commit d7e673ec2c8e0ea39c4c70fc490d67d7fbda869d ]
 
-AT instructions do a translation table walk and return the result, or
-the fault in PAR_EL1. KVM uses these to find the IPA when the value is
-not provided by the CPU in HPFAR_EL1.
+There is no guarantee to CMA's placement, so allocating a zone specific
+atomic pool from CMA might return memory from a completely different
+memory zone. To get around this double check CMA's placement before
+allocating from it.
 
-If a translation table walk causes an external abort it is taken as an
-exception, even if it was due to an AT instruction. (DDI0487F.a's D5.2.11
-"Synchronous faults generated by address translation instructions")
-
-While we previously made KVM resilient to exceptions taken due to AT
-instructions, the device access causes mismatched attributes, and may
-occur speculatively. Prevent this, by forbidding a walk through memory
-described as device at stage2. Now such AT instructions will report a
-stage2 fault.
-
-Such a fault will cause KVM to restart the guest. If the AT instructions
-always walk the page tables, but guest execution uses the translation cached
-in the TLB, the guest can't make forward progress until the TLB entry is
-evicted. This isn't a problem, as since commit 5dcd0fdbb492 ("KVM: arm64:
-Defer guest entry when an asynchronous exception is pending"), KVM will
-return to the host to process IRQs allowing the rest of the system to keep
-running.
-
-Cc: stable@vger.kernel.org # <v5.3: 5dcd0fdbb492 ("KVM: arm64: Defer guest entry when an asynchronous exception is pending")
-Signed-off-by: James Morse <james.morse@arm.com>
-Reviewed-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/kvm_arm.h |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/dma/pool.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
---- a/arch/arm64/include/asm/kvm_arm.h
-+++ b/arch/arm64/include/asm/kvm_arm.h
-@@ -71,11 +71,12 @@
-  * IMO:		Override CPSR.I and enable signaling with VI
-  * FMO:		Override CPSR.F and enable signaling with VF
-  * SWIO:	Turn set/way invalidates into set/way clean+invalidate
-+ * PTW:		Take a stage2 fault if a stage1 walk steps in device memory
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+index 5d071d4a3cbaa..06582b488e317 100644
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -3,7 +3,9 @@
+  * Copyright (C) 2012 ARM Ltd.
+  * Copyright (C) 2020 Google LLC
   */
- #define HCR_GUEST_FLAGS (HCR_TSC | HCR_TSW | HCR_TWE | HCR_TWI | HCR_VM | \
- 			 HCR_BSU_IS | HCR_FB | HCR_TAC | \
- 			 HCR_AMO | HCR_SWIO | HCR_TIDCP | HCR_RW | HCR_TLOR | \
--			 HCR_FMO | HCR_IMO)
-+			 HCR_FMO | HCR_IMO | HCR_PTW )
- #define HCR_VIRT_EXCP_MASK (HCR_VSE | HCR_VI | HCR_VF)
- #define HCR_HOST_NVHE_FLAGS (HCR_RW | HCR_API | HCR_APK)
- #define HCR_HOST_VHE_FLAGS (HCR_RW | HCR_TGE | HCR_E2H)
++#include <linux/cma.h>
+ #include <linux/debugfs.h>
++#include <linux/dma-contiguous.h>
+ #include <linux/dma-direct.h>
+ #include <linux/dma-noncoherent.h>
+ #include <linux/init.h>
+@@ -55,6 +57,29 @@ static void dma_atomic_pool_size_add(gfp_t gfp, size_t size)
+ 		pool_size_kernel += size;
+ }
+ 
++static bool cma_in_zone(gfp_t gfp)
++{
++	unsigned long size;
++	phys_addr_t end;
++	struct cma *cma;
++
++	cma = dev_get_cma_area(NULL);
++	if (!cma)
++		return false;
++
++	size = cma_get_size(cma);
++	if (!size)
++		return false;
++
++	/* CMA can't cross zone boundaries, see cma_activate_area() */
++	end = cma_get_base(cma) + size - 1;
++	if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
++		return end <= DMA_BIT_MASK(zone_dma_bits);
++	if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
++		return end <= DMA_BIT_MASK(32);
++	return true;
++}
++
+ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+ 			      gfp_t gfp)
+ {
+@@ -68,7 +93,11 @@ static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+ 
+ 	do {
+ 		pool_size = 1 << (PAGE_SHIFT + order);
+-		page = alloc_pages(gfp, order);
++		if (cma_in_zone(gfp))
++			page = dma_alloc_from_contiguous(NULL, 1 << order,
++							 order, false);
++		if (!page)
++			page = alloc_pages(gfp, order);
+ 	} while (!page && order-- > 0);
+ 	if (!page)
+ 		goto out;
+-- 
+2.25.1
+
 
 
