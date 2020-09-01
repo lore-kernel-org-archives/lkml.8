@@ -2,210 +2,169 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.2 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A547C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF213C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC38820707
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:51:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC9F20C56
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgIALuG (ORCPT
+        id S1727094AbgIALvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:50:06 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:54224 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727051AbgIALl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:41:56 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D2EBBA84ABBB3ABEA869;
-        Tue,  1 Sep 2020 19:41:03 +0800 (CST)
-Received: from [127.0.0.1] (10.174.178.16) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
- 19:40:56 +0800
-Subject: Re: [Question] About SECCOMP issue for ILP32
-To:     Yury Norov <yury.norov@gmail.com>
-CC:     <bobo.shaobowang@huawei.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        Adam Borowski <kilobyte@angband.pl>,
-        "Alexander Graf" <agraf@suse.de>,
-        Alexey Klimov <klimov.linux@gmail.com>,
-        Andreas Schwab <schwab@suse.de>,
-        Andrew Pinski <pinskia@gmail.com>,
-        Bamvor Zhangjian <bamv2005@gmail.com>,
-        Chris Metcalf <cmetcalf@mellanox.com>,
-        "Christoph Muellner" <christoph.muellner@theobroma-systems.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        "Florian Weimer" <fweimer@redhat.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
-        James Hogan <james.hogan@imgtec.com>,
-        James Morse <james.morse@arm.com>,
-        Joseph Myers <joseph@codesourcery.com>,
-        Lin Yongting <linyongting@huawei.com>,
-        Manuel Montezelo <manuel.montezelo@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Maxim Kuvyrkov <maxim.kuvyrkov@linaro.org>,
-        Nathan_Lynch <Nathan_Lynch@mentor.com>,
-        "Philipp Tomsich" <philipp.tomsich@theobroma-systems.com>,
-        Prasun Kapoor <Prasun.Kapoor@caviumnetworks.com>,
-        Ramana Radhakrishnan <ramana.gcc@googlemail.com>,
-        Steve Ellcey <sellcey@caviumnetworks.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>
-References: <30b491ad-a7e1-f7b5-26b8-2cfffc81a080@huawei.com>
- <CAAH8bW_p3LJPgOoJgUHt6O0run+LB2RbjnAVpeLn_KCAZKNR+A@mail.gmail.com>
-From:   Xiongfeng Wang <wangxiongfeng2@huawei.com>
-Message-ID: <695fc573-25ce-b2e5-e61c-140d9ee241e2@huawei.com>
-Date:   Tue, 1 Sep 2020 19:40:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAAH8bW_p3LJPgOoJgUHt6O0run+LB2RbjnAVpeLn_KCAZKNR+A@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.174.178.16]
-X-CFilter-Loop: Reflected
+        Tue, 1 Sep 2020 07:51:39 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:55210 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727032AbgIALn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:43:58 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6EEEF1A006E;
+        Tue,  1 Sep 2020 13:07:11 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id BF7B11A004F;
+        Tue,  1 Sep 2020 13:07:06 +0200 (CEST)
+Received: from 10.192.242.69 (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id F32454024E;
+        Tue,  1 Sep 2020 13:07:00 +0200 (CEST)
+From:   Shengjiu Wang <shengjiu.wang@nxp.com>
+To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
+        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
+        tiwai@suse.com, alsa-devel@alsa-project.org, lgirdwood@gmail.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: fsl_sai: Support multiple data channel enable bits
+Date:   Tue,  1 Sep 2020 19:01:08 +0800
+Message-Id: <1598958068-10552-1-git-send-email-shengjiu.wang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+One data channel is one data line. From imx7ulp, the SAI IP is
+enhanced to support multiple data channels.
 
+If there is only two channels input and slots is 2, then enable one
+data channel is enough for data transfer. So enable the TCE/RCE and
+transmit/receive mask register according to the input channels and
+slots configuration.
 
-On 2020/9/1 2:15, Yury Norov wrote:
-> On Mon, Aug 31, 2020 at 5:48 AM Xiongfeng Wang
-> <wangxiongfeng2@huawei.com> wrote:
->>
->> Hi Yury,
->>
-> 
-> Hi Xiongfeng,
-> 
-> [restore CC list]
-> 
-> Haven't seen this before. What kernel / glibc / ltp do you use?
+Move the data channel enablement from startup() to hw_params().
 
-The kernel version is 4.19. I applied the ILP32 patches from
-https://github.com/norov/linux.git. The glibc version is 2.28 and I applyed the
-ILP32 patches.
-The ltp testsuite is from https://github.com/linux-test-project/ltp. I build it
-with '-mabi=ilp32'.
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+---
+ sound/soc/fsl/fsl_sai.c | 30 ++++++++++++------------------
+ sound/soc/fsl/fsl_sai.h |  2 +-
+ 2 files changed, 13 insertions(+), 19 deletions(-)
 
-> 
->> We were testing the ILP32 feature and came accross a problem. Very apperaciate
->> it if you could give us some help !
->>
->> We compile the LTP testsuite with '-mabi=ilp32' and run it on a machine with
->> kernel and glibc applied with ILP32 patches. But we failed on one testcase,
->> prctl04. It print the following error info.
->> 'prctl04.c:199: FAIL: SECCOMP_MODE_STRICT doesn't permit read(2) write(2) and
->> _exit(2)'
->>
->> The testcase is like below, syscall 'prctl' followed by a syscall 'write'.
->> prctl(PR_SET_SECCOMP, SECCOMP_MODE_STRICT);
->> SAFE_WRITE(1, fd, "a", 1);
->>
->> When we execute syscall 'write', we receive a SIGKILL. It's not as expected.
->> We track the kernel and found out it is because we failed the syscall_whitelist
->> check in '__secure_computing_strict'. Because flag 'TIF_32BIT_AARCH64' is set,
->> we falls into the 'in_compat_syscall()' branch. We compare the parameter
->> 'this_syscall' with return value of 'get_compat_model_syscalls()'
->> The syscall number of '__NR_write' for ilp32 application is 64, but it is 4 for
->> 'model_syscalls_32' returned from 'get_compat_model_syscalls()'
->> So '__secure_computing_strict' retuned with 'do_exit(SIGKILL)'. We have a
->> modification like below, but I am not sure if it correct or not.
->>
->> --- a/kernel/seccomp.c
->> +++ b/kernel/seccomp.c
->> @@ -618,7 +618,7 @@ static void __secure_computing_strict(int this_syscall)
->>  {
->>         const int *syscall_whitelist = mode1_syscalls;
->>  #ifdef CONFIG_COMPAT
->> -       if (in_compat_syscall())
->> +       if (is_a32_compat_task())
->>                 syscall_whitelist = get_compat_mode1_syscalls();
-> 
-> It calls the arch function from generic code. It may break build for
-> other arches.
-> This also looks dangerous because it treats ILP32 execution as non-compat.
-> 
-> The right approach would be implementing arch-specific
-> get_compat_mode1_syscalls()
-> in arch/arm64/include/asm/seccomp.h that returns an appropriate table.
-> Refer MIPS
-> code for this: arch/mips/include/asm/seccomp.h
-
-Thanks for your advice. Thanks a lot.
-I have written another version according to your advice.
-
---- a/arch/arm64/include/asm/seccomp.h
-+++ b/arch/arm64/include/asm/seccomp.h
-@@ -20,6 +20,36 @@
- #define __NR_seccomp_sigreturn_32      __NR_compat_rt_sigreturn
- #endif /* CONFIG_COMPAT */
-
-+#ifdef CONFIG_COMPAT
-+#ifndef __COMPAT_SYSCALL_NR
+diff --git a/sound/soc/fsl/fsl_sai.c b/sound/soc/fsl/fsl_sai.c
+index 62c5fdb678fc..38c7bcbb361d 100644
+--- a/sound/soc/fsl/fsl_sai.c
++++ b/sound/soc/fsl/fsl_sai.c
+@@ -443,6 +443,7 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 	u32 slots = (channels == 1) ? 2 : channels;
+ 	u32 slot_width = word_width;
+ 	int adir = tx ? RX : TX;
++	u32 pins;
+ 	int ret;
+ 
+ 	if (sai->slots)
+@@ -451,6 +452,8 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 	if (sai->slot_width)
+ 		slot_width = sai->slot_width;
+ 
++	pins = DIV_ROUND_UP(channels, slots);
 +
-+static inline const int *get_compat_mode1_syscalls(void)
-+{
-+#ifdef CONFIG_AARCH32_EL0
-+       static const int mode1_syscalls_a32[] = {
-+               __NR_compat_read, __NR_compat_write,
-+               __NR_compat_read, __NR_compat_sigreturn,
-+               0, /* null terminated */
-+       };
-+#endif
-+       static const int mode1_syscalls_ilp32[] = {
-+               __NR_read, __NR_write,
-+               __NR_exit, __NR_rt_sigreturn,
-+               0, /* null terminated */
-+       };
+ 	if (!sai->is_slave_mode) {
+ 		if (sai->bclk_ratio)
+ 			ret = fsl_sai_set_bclk(cpu_dai, tx,
+@@ -501,13 +504,17 @@ static int fsl_sai_hw_params(struct snd_pcm_substream *substream,
+ 				   FSL_SAI_CR5_FBT_MASK, val_cr5);
+ 	}
+ 
++	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
++			   FSL_SAI_CR3_TRCE_MASK,
++			   FSL_SAI_CR3_TRCE((1 << pins) - 1));
+ 	regmap_update_bits(sai->regmap, FSL_SAI_xCR4(tx, ofs),
+ 			   FSL_SAI_CR4_SYWD_MASK | FSL_SAI_CR4_FRSZ_MASK,
+ 			   val_cr4);
+ 	regmap_update_bits(sai->regmap, FSL_SAI_xCR5(tx, ofs),
+ 			   FSL_SAI_CR5_WNW_MASK | FSL_SAI_CR5_W0W_MASK |
+ 			   FSL_SAI_CR5_FBT_MASK, val_cr5);
+-	regmap_write(sai->regmap, FSL_SAI_xMR(tx), ~0UL - ((1 << channels) - 1));
++	regmap_write(sai->regmap, FSL_SAI_xMR(tx),
++		     ~0UL - ((1 << min(channels, slots)) - 1));
+ 
+ 	return 0;
+ }
+@@ -517,6 +524,10 @@ static int fsl_sai_hw_free(struct snd_pcm_substream *substream,
+ {
+ 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
++	unsigned int ofs = sai->soc_data->reg_offset;
 +
-+       if (is_ilp32_compat_task())
-+               return mode1_syscalls_ilp32;
-+#ifdef CONFIG_AARCH32_EL0
-+       return mode1_syscalls_a32;
-+#endif
-+}
-+
-+#define get_compat_mode1_syscalls get_compat_mode1_syscalls
-+
-+#endif
-+#endif
-+
- #include <asm-generic/seccomp.h>
-
- #endif /* _ASM_SECCOMP_H */
-
-
-Thanks,
-Xiongfeng
-
-> 
-> Thanks,
-> Yury
-> 
->>  #endif
->>         do {
->>
->>
->> Thanks,
->> Xiongfeng
->>
-> 
-> .
-> 
++	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
++			   FSL_SAI_CR3_TRCE_MASK, 0);
+ 
+ 	if (!sai->is_slave_mode &&
+ 			sai->mclk_streams & BIT(substream->stream)) {
+@@ -651,14 +662,9 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+ 		struct snd_soc_dai *cpu_dai)
+ {
+ 	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+-	unsigned int ofs = sai->soc_data->reg_offset;
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 	int ret;
+ 
+-	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
+-			   FSL_SAI_CR3_TRCE_MASK,
+-			   FSL_SAI_CR3_TRCE);
+-
+ 	/*
+ 	 * EDMA controller needs period size to be a multiple of
+ 	 * tx/rx maxburst
+@@ -675,17 +681,6 @@ static int fsl_sai_startup(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
+ 
+-static void fsl_sai_shutdown(struct snd_pcm_substream *substream,
+-		struct snd_soc_dai *cpu_dai)
+-{
+-	struct fsl_sai *sai = snd_soc_dai_get_drvdata(cpu_dai);
+-	unsigned int ofs = sai->soc_data->reg_offset;
+-	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+-
+-	regmap_update_bits(sai->regmap, FSL_SAI_xCR3(tx, ofs),
+-			   FSL_SAI_CR3_TRCE_MASK, 0);
+-}
+-
+ static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
+ 	.set_bclk_ratio	= fsl_sai_set_dai_bclk_ratio,
+ 	.set_sysclk	= fsl_sai_set_dai_sysclk,
+@@ -695,7 +690,6 @@ static const struct snd_soc_dai_ops fsl_sai_pcm_dai_ops = {
+ 	.hw_free	= fsl_sai_hw_free,
+ 	.trigger	= fsl_sai_trigger,
+ 	.startup	= fsl_sai_startup,
+-	.shutdown	= fsl_sai_shutdown,
+ };
+ 
+ static int fsl_sai_dai_probe(struct snd_soc_dai *cpu_dai)
+diff --git a/sound/soc/fsl/fsl_sai.h b/sound/soc/fsl/fsl_sai.h
+index 6aba7d28f5f3..5f630be74853 100644
+--- a/sound/soc/fsl/fsl_sai.h
++++ b/sound/soc/fsl/fsl_sai.h
+@@ -109,7 +109,7 @@
+ #define FSL_SAI_CR2_DIV_MASK	0xff
+ 
+ /* SAI Transmit and Receive Configuration 3 Register */
+-#define FSL_SAI_CR3_TRCE	BIT(16)
++#define FSL_SAI_CR3_TRCE(x)     ((x) << 16)
+ #define FSL_SAI_CR3_TRCE_MASK	GENMASK(23, 16)
+ #define FSL_SAI_CR3_WDFL(x)	(x)
+ #define FSL_SAI_CR3_WDFL_MASK	0x1f
+-- 
+2.27.0
 
