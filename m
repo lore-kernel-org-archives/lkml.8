@@ -2,215 +2,79 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5410BC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DEEC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:40:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCBD206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EBDF206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:40:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SquMm66G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgIATi7 convert rfc822-to-8bit (ORCPT
+        id S1729338AbgIATkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:38:59 -0400
-Received: from mga01.intel.com ([192.55.52.88]:35762 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgIATi7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:38:59 -0400
-IronPort-SDR: G4EtEQXoJ1+iBJO6jBXADBeVU43WbZ9p1OjlhNx5/IyKooO7JWrloWmpULhI8R2nqlG9lHbOqe
- b95zwuqF0XvQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="175307075"
-X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
-   d="scan'208";a="175307075"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 12:38:58 -0700
-IronPort-SDR: 61Amtlaes050RxB0qQH7XOzsM3bz8pU+DMPJXc2mdFfd5F2AgqumdZmYXriBmSvC/d2wlrasXC
- L7mwHzZZwUmg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.76,380,1592895600"; 
-   d="scan'208";a="404882026"
-Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
-  by fmsmga001.fm.intel.com with ESMTP; 01 Sep 2020 12:38:58 -0700
-Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
- ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 1 Sep 2020 12:38:58 -0700
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 1 Sep 2020 12:38:57 -0700
-Received: from orsmsx611.amr.corp.intel.com ([10.22.229.24]) by
- ORSMSX611.amr.corp.intel.com ([10.22.229.24]) with mapi id 15.01.1713.004;
- Tue, 1 Sep 2020 12:38:57 -0700
-From:   "Ruhl, Michael J" <michael.j.ruhl@intel.com>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [Intel-gfx] [PATCH v9 08/32] drm: i915: fix common struct
- sg_table related issues
-Thread-Topic: [Intel-gfx] [PATCH v9 08/32] drm: i915: fix common struct
- sg_table related issues
-Thread-Index: AQHWe3Ml/rRJPBw9lEWMq6REwJ0ovqlUN/gw
-Date:   Tue, 1 Sep 2020 19:38:57 +0000
-Message-ID: <259df561c4bb4ef484799e3776dbb402@intel.com>
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063532eucas1p2a9e0215f483104d45af0560d5dbfa8e0@eucas1p2.samsung.com>
- <20200826063316.23486-9-m.szyprowski@samsung.com>
-In-Reply-To: <20200826063316.23486-9-m.szyprowski@samsung.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.5.1.3
-x-originating-ip: [10.22.254.132]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 1 Sep 2020 15:40:33 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52530 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726936AbgIATkb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 15:40:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598989230;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=k7XoFpfF3zK9F/hjkpwRp6hPdDVo06E2ZLhjn5fGMkY=;
+        b=SquMm66GtVMqAZCMPI4sebTtMTxRrlnbINNeaRmC+aR/JDEwR+3Um79+dqXSVPAo0XRT7v
+        a3zfqZxigK4RtkOYfN3TnUtOHWgMlSGrvbIczt7RDUf6pYUYZPMyEdA1UjuuWoNaWR8Lwh
+        TpwKAxflBm4OyIgywWCZKQ86ESE6gWg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-501-NBhsF6_WMFSlQ5EdgLgVgQ-1; Tue, 01 Sep 2020 15:40:29 -0400
+X-MC-Unique: NBhsF6_WMFSlQ5EdgLgVgQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1B7A18B9EB6;
+        Tue,  1 Sep 2020 19:40:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-231.rdu2.redhat.com [10.10.113.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A21D05C1C4;
+        Tue,  1 Sep 2020 19:40:26 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200901164827.GQ14765@casper.infradead.org>
+References: <20200901164827.GQ14765@casper.infradead.org> <159897769535.405783.17587409235571100774.stgit@warthog.procyon.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/7] mm: Make more use of readahead_control
 MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <423218.1598989225.1@warthog.procyon.org.uk>
+Date:   Tue, 01 Sep 2020 20:40:25 +0100
+Message-ID: <423219.1598989225@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->-----Original Message-----
->From: Intel-gfx <intel-gfx-bounces@lists.freedesktop.org> On Behalf Of
->Marek Szyprowski
->Sent: Wednesday, August 26, 2020 2:33 AM
->To: dri-devel@lists.freedesktop.org; iommu@lists.linux-foundation.org;
->linaro-mm-sig@lists.linaro.org; linux-kernel@vger.kernel.org
->Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>; David Airlie
-><airlied@linux.ie>; intel-gfx@lists.freedesktop.org; Robin Murphy
-><robin.murphy@arm.com>; Christoph Hellwig <hch@lst.de>; linux-arm-
->kernel@lists.infradead.org; Marek Szyprowski
-><m.szyprowski@samsung.com>
->Subject: [Intel-gfx] [PATCH v9 08/32] drm: i915: fix common struct sg_table
->related issues
->
->The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg()
->function
->returns the number of the created entries in the DMA address space.
->However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
->dma_unmap_sg must be called with the original number of the entries
->passed to the dma_map_sg().
->
->struct sg_table is a common structure used for describing a non-contiguous
->memory buffer, used commonly in the DRM and graphics subsystems. It
->consists of a scatterlist with memory pages and DMA addresses (sgl entry),
->as well as the number of scatterlist entries: CPU pages (orig_nents entry)
->and DMA mapped pages (nents entry).
->
->It turned out that it was a common mistake to misuse nents and orig_nents
->entries, calling DMA-mapping functions with a wrong number of entries or
->ignoring the number of mapped entries returned by the dma_map_sg()
->function.
->
->This driver creatively uses sg_table->orig_nents to store the size of the
->allocated scatterlist and ignores the number of the entries returned by
->dma_map_sg function. The sg_table->orig_nents is (mis)used to properly
->free the (over)allocated scatterlist.
->
->This patch only introduces the common DMA-mapping wrappers operating
->directly on the struct sg_table objects to the dmabuf related functions,
->so the other drivers, which might share buffers with i915 could rely on
->the properly set nents and orig_nents values.
->
->Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->---
-> drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c       | 11 +++--------
-> drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c |  7 +++----
-> 2 files changed, 6 insertions(+), 12 deletions(-)
->
->diff --git a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
->b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
->index 2679380159fc..8a988592715b 100644
->--- a/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
->+++ b/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c
->@@ -48,12 +48,9 @@ static struct sg_table *i915_gem_map_dma_buf(struct
->dma_buf_attachment *attachme
-> 		src = sg_next(src);
-> 	}
->
->-	if (!dma_map_sg_attrs(attachment->dev,
->-			      st->sgl, st->nents, dir,
->-			      DMA_ATTR_SKIP_CPU_SYNC)) {
->-		ret = -ENOMEM;
+Matthew Wilcox <willy@infradead.org> wrote:
 
-You have dropped this error value.
+> > Also there's an apparent minor bug in khugepaged.c that I've included a
+> > patch for: page_cache_sync_readahead() looks to be given the wrong size in
+> > collapse_file().
+> 
+> This needs to go in as an independent fix.  But you didn't actually cc Song.
 
-Do you now if this is a benign loss?
+Bah.  I forgot to pass --auto to stgit.  No matter, he saw it anyway.
 
-M
+David
 
->+	ret = dma_map_sgtable(attachment->dev, st, dir,
->DMA_ATTR_SKIP_CPU_SYNC);
->+	if (ret)
-> 		goto err_free_sg;
->-	}
->
-> 	return st;
->
->@@ -73,9 +70,7 @@ static void i915_gem_unmap_dma_buf(struct
->dma_buf_attachment *attachment,
-> {
-> 	struct drm_i915_gem_object *obj = dma_buf_to_obj(attachment-
->>dmabuf);
->
->-	dma_unmap_sg_attrs(attachment->dev,
->-			   sg->sgl, sg->nents, dir,
->-			   DMA_ATTR_SKIP_CPU_SYNC);
->+	dma_unmap_sgtable(attachment->dev, sg, dir,
->DMA_ATTR_SKIP_CPU_SYNC);
-> 	sg_free_table(sg);
-> 	kfree(sg);
->
->diff --git a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
->b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
->index debaf7b18ab5..be30b27e2926 100644
->--- a/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
->+++ b/drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c
->@@ -28,10 +28,9 @@ static struct sg_table *mock_map_dma_buf(struct
->dma_buf_attachment *attachment,
-> 		sg = sg_next(sg);
-> 	}
->
->-	if (!dma_map_sg(attachment->dev, st->sgl, st->nents, dir)) {
->-		err = -ENOMEM;
->+	err = dma_map_sgtable(attachment->dev, st, dir, 0);
->+	if (err)
-> 		goto err_st;
->-	}
->
-> 	return st;
->
->@@ -46,7 +45,7 @@ static void mock_unmap_dma_buf(struct
->dma_buf_attachment *attachment,
-> 			       struct sg_table *st,
-> 			       enum dma_data_direction dir)
-> {
->-	dma_unmap_sg(attachment->dev, st->sgl, st->nents, dir);
->+	dma_unmap_sgtable(attachment->dev, st, dir, 0);
-> 	sg_free_table(st);
-> 	kfree(st);
-> }
->--
->2.17.1
->
->_______________________________________________
->Intel-gfx mailing list
->Intel-gfx@lists.freedesktop.org
->https://lists.freedesktop.org/mailman/listinfo/intel-gfx
