@@ -5,48 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6C3C433E6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CE2C433E2
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C3042064B
+	by mail.kernel.org (Postfix) with ESMTP id 8C9F52064B
 	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1598975333;
-	bh=px4bCdgldJNN2SrLtBSSsGhmQR2maebJ4rb7YVyyUBE=;
+	bh=JbFLvfjExjWOPOeRFdjCRvZoSadmNbaonpxOsDWk65w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zvymoh5NHOXfV3ClFeLrBiX+frg7gqV15mzb1RrG6g1iZjy4uGPHm2K1E4ImmQczE
-	 qriQaJAN/88TjSCLa2OaPZg6d/XX4ZcGQN6kdYnXedZxPFWx3vkZsLfYbS2m93K6Yh
-	 wap38dAFcS+FvHsxsLDtnIhxm6yHWcl+yGtNz+lU=
+	b=uQqSKwzmEdjr/vZ6D1suwCESXcF1NQAsSUuV9TrzVYP8Kirio0ewf/wrU9Cjc3j/W
+	 hvlAwdS6ZiOJnRYzkNj0uvC2BRRHgylOL83M2viDnDUYvTMAMRl1bYbOW80ziR2dlh
+	 egJluA67l13b5k75mupdO+HTr14J1Yo9yUa9NUYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731838AbgIAPsq (ORCPT
+        id S1732083AbgIAPsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:48:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60868 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731582AbgIAPoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:44:55 -0400
+        id S1731859AbgIAPpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:05 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F07D2078B;
-        Tue,  1 Sep 2020 15:44:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97D5C206FA;
+        Tue,  1 Sep 2020 15:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975095;
-        bh=px4bCdgldJNN2SrLtBSSsGhmQR2maebJ4rb7YVyyUBE=;
+        s=default; t=1598975105;
+        bh=JbFLvfjExjWOPOeRFdjCRvZoSadmNbaonpxOsDWk65w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AshxspGXOphG+4c5A4bdiEN97TKVN75+DX5hVOjThi2IQomLa+wCxFBpfi69EIfed
-         NeSPp0c+ehHxlyGv324jKEtht/Gq9ITewrTT48+NHSVoQSk/j9rI8sGbQSMD0EsWkv
-         AFrdIuRWrIjTtuo8Wffa5vEbwmiYh8OhdkGh+nVI=
+        b=FITfeFyWgUoyCFBA7eQDQ9bX1fiOHPOS2YvKf4N7h+5ekADphnj7W7vCv2hiB9+jP
+         +puKTZvApnT2nxYMFFjLVdVXrxQjOx3VkLcQ2hycCAUJZqHCWx6zndn0Jw760MfraQ
+         c2EIbgazEmjRj1PSCAwSqe7haML2huZAFhybwHiM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, qiuguorui1 <qiuguorui1@huawei.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.8 207/255] irqchip/stm32-exti: Avoid losing interrupts due to clearing pending bits by mistake
-Date:   Tue,  1 Sep 2020 17:11:03 +0200
-Message-Id: <20200901151010.618387021@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolai Stange <nstange@suse.de>,
+        Miroslav Benes <mbenes@suse.cz>, Takashi Iwai <tiwai@suse.de>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Jon Bloomfield <jon.bloomfield@intel.com>,
+        Chris Wilson <chris.p.wilson@intel.com>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.8 210/255] drm/i915: Fix cmd parser desc matching with masks
+Date:   Tue,  1 Sep 2020 17:11:06 +0200
+Message-Id: <20200901151010.761208181@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,72 +65,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: qiuguorui1 <qiuguorui1@huawei.com>
+From: Mika Kuoppala <mika.kuoppala@linux.intel.com>
 
-commit e579076ac0a3bebb440fab101aef3c42c9f4c709 upstream.
+commit e5f10d6385cda083037915c12b130887c8831d2b upstream.
 
-In the current code, when the eoi callback of the exti clears the pending
-bit of the current interrupt, it will first read the values of fpr and
-rpr, then logically OR the corresponding bit of the interrupt number,
-and finally write back to fpr and rpr.
+Our variety of defined gpu commands have the actual
+command id field and possibly length and flags applied.
 
-We found through experiments that if two exti interrupts,
-we call them int1/int2, arrive almost at the same time. in our scenario,
-the time difference is 30 microseconds, assuming int1 is triggered first.
+We did start to apply the mask during initialization of
+the cmd descriptors but forgot to also apply it on comparisons.
 
-there will be an extreme scenario: both int's pending bit are set to 1,
-the irq handle of int1 is executed first, and eoi handle is then executed,
-at this moment, all pending bits are cleared, but the int 2 has not
-finally been reported to the cpu yet, which eventually lost int2.
+Fix comparisons in order to properly deny access with
+associated commands.
 
-According to stm32's TRM description about rpr and fpr: Writing a 1 to this
-bit will trigger a rising edge event on event x, Writing 0 has no
-effect.
+v2: fix lri with correct mask (Chris)
 
-Therefore, when clearing the pending bit, we only need to clear the
-pending bit of the irq.
-
-Fixes: 927abfc4461e7 ("irqchip/stm32: Add stm32mp1 support with hierarchy domain")
-Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org # v4.18+
-Link: https://lore.kernel.org/r/20200820031629.15582-1-qiuguorui1@huawei.com
+Reported-by: Nicolai Stange <nstange@suse.de>
+Cc: stable@vger.kernel.org # v5.4+
+Cc: Miroslav Benes <mbenes@suse.cz>
+Cc: Takashi Iwai <tiwai@suse.de>
+Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: Jon Bloomfield <jon.bloomfield@intel.com>
+Cc: Chris Wilson <chris.p.wilson@intel.com>
+Signed-off-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200817195926.12671-1-mika.kuoppala@linux.intel.com
+(cherry picked from commit 3b4efa148da36f158cce3f662e831af2834b8e0f)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/irqchip/irq-stm32-exti.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/i915_cmd_parser.c |   14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -431,6 +431,16 @@ static void stm32_irq_ack(struct irq_dat
- 	irq_gc_unlock(gc);
+--- a/drivers/gpu/drm/i915/i915_cmd_parser.c
++++ b/drivers/gpu/drm/i915/i915_cmd_parser.c
+@@ -1204,6 +1204,12 @@ static u32 *copy_batch(struct drm_i915_g
+ 	return dst;
  }
  
-+/* directly set the target bit without reading first. */
-+static inline void stm32_exti_write_bit(struct irq_data *d, u32 reg)
++static inline bool cmd_desc_is(const struct drm_i915_cmd_descriptor * const desc,
++			       const u32 cmd)
 +{
-+	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-+	void __iomem *base = chip_data->host_data->base;
-+	u32 val = BIT(d->hwirq % IRQS_PER_BANK);
-+
-+	writel_relaxed(val, base + reg);
++	return desc->cmd.value == (cmd & desc->cmd.mask);
 +}
 +
- static inline u32 stm32_exti_set_bit(struct irq_data *d, u32 reg)
- {
- 	struct stm32_exti_chip_data *chip_data = irq_data_get_irq_chip_data(d);
-@@ -464,9 +474,9 @@ static void stm32_exti_h_eoi(struct irq_
+ static bool check_cmd(const struct intel_engine_cs *engine,
+ 		      const struct drm_i915_cmd_descriptor *desc,
+ 		      const u32 *cmd, u32 length)
+@@ -1242,19 +1248,19 @@ static bool check_cmd(const struct intel
+ 			 * allowed mask/value pair given in the whitelist entry.
+ 			 */
+ 			if (reg->mask) {
+-				if (desc->cmd.value == MI_LOAD_REGISTER_MEM) {
++				if (cmd_desc_is(desc, MI_LOAD_REGISTER_MEM)) {
+ 					DRM_DEBUG("CMD: Rejected LRM to masked register 0x%08X\n",
+ 						  reg_addr);
+ 					return false;
+ 				}
  
- 	raw_spin_lock(&chip_data->rlock);
+-				if (desc->cmd.value == MI_LOAD_REGISTER_REG) {
++				if (cmd_desc_is(desc, MI_LOAD_REGISTER_REG)) {
+ 					DRM_DEBUG("CMD: Rejected LRR to masked register 0x%08X\n",
+ 						  reg_addr);
+ 					return false;
+ 				}
  
--	stm32_exti_set_bit(d, stm32_bank->rpr_ofst);
-+	stm32_exti_write_bit(d, stm32_bank->rpr_ofst);
- 	if (stm32_bank->fpr_ofst != UNDEF_REG)
--		stm32_exti_set_bit(d, stm32_bank->fpr_ofst);
-+		stm32_exti_write_bit(d, stm32_bank->fpr_ofst);
+-				if (desc->cmd.value == MI_LOAD_REGISTER_IMM(1) &&
++				if (cmd_desc_is(desc, MI_LOAD_REGISTER_IMM(1)) &&
+ 				    (offset + 2 > length ||
+ 				     (cmd[offset + 1] & reg->mask) != reg->value)) {
+ 					DRM_DEBUG("CMD: Rejected LRI to masked register 0x%08X\n",
+@@ -1478,7 +1484,7 @@ int intel_engine_cmd_parser(struct intel
+ 			break;
+ 		}
  
- 	raw_spin_unlock(&chip_data->rlock);
- 
+-		if (desc->cmd.value == MI_BATCH_BUFFER_START) {
++		if (cmd_desc_is(desc, MI_BATCH_BUFFER_START)) {
+ 			ret = check_bbstart(cmd, offset, length, batch_length,
+ 					    batch_addr, shadow_addr,
+ 					    jump_whitelist);
 
 
