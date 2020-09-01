@@ -7,55 +7,49 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02F23C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C942C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5C172071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0014A2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:07:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980060;
-	bh=gZKSXz4K488sSQUNP9tt7FRY+poUQf263sSKt1BegBI=;
+	s=default; t=1598980065;
+	bh=8q7jpFrR7NzON+nIZSLEV/HXiwEd2JDxZmgzVD/bby0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sfg50ZeXKa1Ij7nd+C15OmdiBpULnL9azLHrfwraxVa5piSz+Hnt9ejWcO+ONLZmk
-	 5jvNk4NDgUF2HLx9Foz7e6nsbM4LeUEmmxIRnwAO6cvQKXtRa9SQQBrUd/8kg0GEwG
-	 cE79etTERwthbPrz3OPS5cY2lB5jHhQhY91mAMPM=
+	b=qdlwcvA2O4S86zucZlzjIi+7lBstwzcBzJBrxgFdQEH3eR/p8Hr5tn4s73hQ5lwxP
+	 1FoYTk2KiK84Y5R/0tGqHZP/z5HueA7KK+P/16njwlKKTAvTcSY3MNgxf+KVwBnw52
+	 xDOdodVJlzuZDqBUKpnL1jDCtITyGr32rbzzF3Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbgIARHj (ORCPT
+        id S1730022AbgIARHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:07:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36478 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:07:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729464AbgIAPSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:18:20 -0400
+        id S1729476AbgIAPSS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:18:18 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43399206FA;
-        Tue,  1 Sep 2020 15:18:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1277320FC3;
+        Tue,  1 Sep 2020 15:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973499;
-        bh=gZKSXz4K488sSQUNP9tt7FRY+poUQf263sSKt1BegBI=;
+        s=default; t=1598973497;
+        bh=8q7jpFrR7NzON+nIZSLEV/HXiwEd2JDxZmgzVD/bby0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MN12vu4zDdRCqCcESMggefWTzkr+sAC2GwrVO4jM/dVFK1zo4tPMX7JmsV3WoqUXg
-         C9m8Py4X7+oC8/jpBFTE8Q7TbUPLCSBSuqMYPRybSzxHS2gIaNaCXqYa9KbArTBeLH
-         tIhIpeZiTJtClB6yMGp+2Aq90pMb196v8soVfv1U=
+        b=cnxeL6GDpbYRdsdUIHomVi1s9O8vEjN5/gIKHN1cZ0PH39b7snkH2mKtaTRcMG8tM
+         wK0m9UGEQPg3vYXTZb32O6xu+kHqF8IN++GCQy3LF6F4DVRGskS5m4gl0xKCT0Un55
+         0vSIBfQKPlX3i3NSk0589QKpSVI666qEjd7rPcOY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        kjlu@umn.edu, wu000273@umn.edu,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Enrico Weigelt <info@metux.net>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Alexios Zavras <alexios.zavras@intel.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        stable@vger.kernel.org,
+        "Desnes A. Nunes do Rosario" <desnesn@linux.ibm.com>,
+        Sachin Sant <sachinp@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/91] omapfb: fix multiple reference count leaks due to pm_runtime_get_sync
-Date:   Tue,  1 Sep 2020 17:09:57 +0200
-Message-Id: <20200901150929.311136220@linuxfoundation.org>
+Subject: [PATCH 4.14 22/91] selftests/powerpc: Purge extra count_pmc() calls of ebb selftests
+Date:   Tue,  1 Sep 2020 17:09:56 +0200
+Message-Id: <20200901150929.259822936@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -68,143 +62,202 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
 
-[ Upstream commit 78c2ce9bde70be5be7e3615a2ae7024ed8173087 ]
+[ Upstream commit 3337bf41e0dd70b4064cdf60acdfcdc2d050066c ]
 
-On calling pm_runtime_get_sync() the reference count of the device
-is incremented. In case of failure, decrement the
-reference count before returning the error.
+An extra count on ebb_state.stats.pmc_count[PMC_INDEX(pmc)] is being per-
+formed when count_pmc() is used to reset PMCs on a few selftests. This
+extra pmc_count can occasionally invalidate results, such as the ones from
+cycles_test shown hereafter. The ebb_check_count() failed with an above
+the upper limit error due to the extra value on ebb_state.stats.pmc_count.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Cc: kjlu@umn.edu
-Cc: wu000273@umn.edu
-Cc: Allison Randal <allison@lohutok.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Enrico Weigelt <info@metux.net>
-cc: "Andrew F. Davis" <afd@ti.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Alexios Zavras <alexios.zavras@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200614030528.128064-1-pakki001@umn.edu
+Furthermore, this extra count is also indicated by extra PMC1 trace_log on
+the output of the cycle test (as well as on pmc56_overflow_test):
+
+==========
+   ...
+   [21]: counter = 8
+   [22]: register SPRN_MMCR0 = 0x0000000080000080
+   [23]: register SPRN_PMC1  = 0x0000000080000004
+   [24]: counter = 9
+   [25]: register SPRN_MMCR0 = 0x0000000080000080
+   [26]: register SPRN_PMC1  = 0x0000000080000004
+   [27]: counter = 10
+   [28]: register SPRN_MMCR0 = 0x0000000080000080
+   [29]: register SPRN_PMC1  = 0x0000000080000004
+>> [30]: register SPRN_PMC1  = 0x000000004000051e
+PMC1 count (0x280000546) above upper limit 0x2800003e8 (+0x15e)
+[FAIL] Test FAILED on line 52
+failure: cycles
+==========
+
+Signed-off-by: Desnes A. Nunes do Rosario <desnesn@linux.ibm.com>
+Tested-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200626164737.21943-1-desnesn@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dsi.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/dss.c   | 7 +++++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c | 5 +++--
- drivers/video/fbdev/omap2/omapfb/dss/venc.c  | 7 +++++--
- 6 files changed, 26 insertions(+), 12 deletions(-)
+ .../selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c     | 2 --
+ tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c      | 2 --
+ .../selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c    | 2 --
+ .../selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c     | 2 --
+ tools/testing/selftests/powerpc/pmu/ebb/ebb.c              | 2 --
+ .../selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c  | 2 --
+ .../selftests/powerpc/pmu/ebb/lost_exception_test.c        | 1 -
+ .../testing/selftests/powerpc/pmu/ebb/multi_counter_test.c | 7 -------
+ .../selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c       | 2 --
+ .../testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c | 2 --
+ .../selftests/powerpc/pmu/ebb/pmc56_overflow_test.c        | 2 --
+ 11 files changed, 26 deletions(-)
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-index 7a75dfda98457..00f5a54aaf9b7 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-@@ -531,8 +531,11 @@ int dispc_runtime_get(void)
- 	DSSDBG("dispc_runtime_get\n");
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
+index 94110b1dcd3d8..031baa43646fb 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/back_to_back_ebbs_test.c
+@@ -91,8 +91,6 @@ int back_to_back_ebbs(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
- 	r = pm_runtime_get_sync(&dispc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dispc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
- EXPORT_SYMBOL(dispc_runtime_get);
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-index 30d49f3800b33..2bfd9063cdfc3 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dsi.c
-@@ -1148,8 +1148,11 @@ static int dsi_runtime_get(struct platform_device *dsidev)
- 	DSSDBG("dsi_runtime_get\n");
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
+index 7c57a8d79535d..361e0be9df9ae 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_test.c
+@@ -42,8 +42,6 @@ int cycles(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
- 	r = pm_runtime_get_sync(&dsi->pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dsi->pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
- static void dsi_runtime_put(struct platform_device *dsidev)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-index 4429ad37b64cd..acecee5b1c102 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -778,8 +778,11 @@ int dss_runtime_get(void)
- 	DSSDBG("dss_runtime_get\n");
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
+index ecf5ee3283a3e..fe7d0dc2a1a26 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_freeze_test.c
+@@ -99,8 +99,6 @@ int cycles_with_freeze(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
- 	r = pm_runtime_get_sync(&dss.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&dss.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
- void dss_runtime_put(void)
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-index ec78d61bc5512..e2d571ca8590a 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi4.c
-@@ -50,9 +50,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
+ 	printf("EBBs while frozen %d\n", ebbs_while_frozen);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
+index c0faba520b35c..b9b30f974b5ea 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/cycles_with_mmcr2_test.c
+@@ -71,8 +71,6 @@ int cycles_with_mmcr2(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-index 2e2fcc3d6d4f7..13f3a5ce55294 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/hdmi5.c
-@@ -54,9 +54,10 @@ static int hdmi_runtime_get(void)
- 	DSSDBG("hdmi_runtime_get\n");
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
+index 46681fec549b8..2694ae161a84a 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb.c
+@@ -396,8 +396,6 @@ int ebb_child(union pipe read_pipe, union pipe write_pipe)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
- 	r = pm_runtime_get_sync(&hdmi.pdev->dev);
--	WARN_ON(r < 0);
--	if (r < 0)
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&hdmi.pdev->dev);
- 		return r;
-+	}
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
- 	return 0;
- }
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/venc.c b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-index 392464da12e41..96714b4596d2d 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/venc.c
-@@ -402,8 +402,11 @@ static int venc_runtime_get(void)
- 	DSSDBG("venc_runtime_get\n");
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
+index a991d2ea8d0a1..174e4f4dae6c0 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/ebb_on_willing_child_test.c
+@@ -38,8 +38,6 @@ static int victim_child(union pipe read_pipe, union pipe write_pipe)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
  
- 	r = pm_runtime_get_sync(&venc.pdev->dev);
--	WARN_ON(r < 0);
--	return r < 0 ? r : 0;
-+	if (WARN_ON(r < 0)) {
-+		pm_runtime_put_sync(&venc.pdev->dev);
-+		return r;
-+	}
-+	return 0;
- }
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
  
- static void venc_runtime_put(void)
+ 	FAIL_IF(ebb_state.stats.ebb_count == 0);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
+index eb8acb78bc6c1..531083accfcad 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/lost_exception_test.c
+@@ -75,7 +75,6 @@ static int test_body(void)
+ 	ebb_freeze_pmcs();
+ 	ebb_global_disable();
+ 
+-	count_pmc(4, sample_period);
+ 	mtspr(SPRN_PMC4, 0xdead);
+ 
+ 	dump_summary_ebb_state();
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
+index 6ff8c8ff27d66..035c02273cd49 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_counter_test.c
+@@ -70,13 +70,6 @@ int multi_counter(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-	count_pmc(2, sample_period);
+-	count_pmc(3, sample_period);
+-	count_pmc(4, sample_period);
+-	count_pmc(5, sample_period);
+-	count_pmc(6, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	for (i = 0; i < 6; i++)
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
+index 037cb6154f360..3e9d4ac965c85 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/multi_ebb_procs_test.c
+@@ -61,8 +61,6 @@ static int cycles_child(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-
+ 	dump_summary_ebb_state();
+ 
+ 	event_close(&event);
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
+index c5fa64790c22e..d90891fe96a32 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/pmae_handling_test.c
+@@ -82,8 +82,6 @@ static int test_body(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(1, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	if (mmcr0_mismatch)
+diff --git a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
+index 30e1ac62e8cb4..8ca92b9ee5b01 100644
+--- a/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
++++ b/tools/testing/selftests/powerpc/pmu/ebb/pmc56_overflow_test.c
+@@ -76,8 +76,6 @@ int pmc56_overflow(void)
+ 	ebb_global_disable();
+ 	ebb_freeze_pmcs();
+ 
+-	count_pmc(2, sample_period);
+-
+ 	dump_ebb_state();
+ 
+ 	printf("PMC5/6 overflow %d\n", pmc56_overflowed);
 -- 
 2.25.1
 
