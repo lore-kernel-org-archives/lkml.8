@@ -2,183 +2,175 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FCA2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B9C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0A40A204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvTcpkuW"
+	by mail.kernel.org (Postfix) with ESMTP id 945BF204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:05:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976341;
+	bh=JuLsNZjZqesuqcAnyc87ATn2vCVdmiJJkLFcGGjUi/0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=DsUf8BOSA8ElqKjh4zZbKCN7M3Ll/jG9dNiRq2PgE9o/kCRXeUxZmGzXKCSq8JJIt
+	 mOFIiUZt6LXlSwTHCKtZLBLGDz5MZcOmEMbCsD5Qejy1uokgLbzTFWsEVJp2C45W/5
+	 o5b9cpXKA4NNBnCW9jwjJu7qGZi1yq+Bf74pTi3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731540AbgIAQFh (ORCPT
+        id S1731571AbgIAQFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:05:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55902 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730547AbgIAPlT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:41:19 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18844C061247;
-        Tue,  1 Sep 2020 08:41:19 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id 7so868402pgm.11;
-        Tue, 01 Sep 2020 08:41:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7KqqN6K3kTsWHUwp2VvfDs43IyNlxmbh5Rz2H4DpXUY=;
-        b=MvTcpkuWrabD04S1aEsSpjZHdD73NAt33h8AERs424BwAOPPWupOWGhDL8C4WysYQZ
-         41ggRfkqK0UZfEMslBFKEbSzQSlVvulfxCMW2E8xy8hHHHhiiQGx3Ha3D1WYaa9sTc3X
-         s/YwgBWcXjCh81KUhuirw1ap/a5dJKqgzvFkBGWkqZUUiYltChmcA5pNtKY66JE0QK5j
-         C7fgThG8sVRMDUYVNo/tpLW7DsYRZkU8IHMcjqCStaOQdfkLIR/duqoLgVRLC3b+z595
-         rojXUfSiBvSTUXpOs/l0T8gTL9JwVkWdLEbzoXC0wAD///WBr4JCzivhk11lGUsGqCGU
-         C8IQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7KqqN6K3kTsWHUwp2VvfDs43IyNlxmbh5Rz2H4DpXUY=;
-        b=bJgK6gTn8kN+1apRo4M4KTLZ/S6HB4TOprVXEJLHuSN6eGnBRnP1emnE5jazXUixYn
-         AqqCvJsIEWljunczNIG2uzMX2WjW9B6jsKiSerJA+fYrQMby+cI83BopzBDHHSxnO3Bi
-         9x4IAzuF2gwTkcXu7JQdBnR9rhiDEnK67PVHuycGoXmF2yuRoGjtDrMcKCjbBp7SlRiO
-         hyZyuKsmKV6Uia4b2OGOlIIS2877cJIOs7zFwa7FFiU3mWvLno9P9Uu03yCFT4AhixAI
-         kUkiYEeIZtNXPgmVJGoRKTI4a0SNaeXAk61WD6y+Tlzd03EXCjiiSB1SWmt2VClpIcLj
-         Erxw==
-X-Gm-Message-State: AOAM532i0/ry0Kjb86st5waOC+XN954Ny+jJNuxunpc4KT8lXWo+KUKO
-        FhnGnQL/YD5dYUxattWcNLc=
-X-Google-Smtp-Source: ABdhPJx/KUf682r2Q/Pzf9hmQEXca9myE+iw7tLtWfLbi+QoMiwtNbP5nGWRrF9YVDIFr3rsJZy7dA==
-X-Received: by 2002:aa7:9556:: with SMTP id w22mr2393992pfq.245.1598974878560;
-        Tue, 01 Sep 2020 08:41:18 -0700 (PDT)
-Received: from localhost ([2601:1c0:5200:a6:307:a401:7b76:c6e5])
-        by smtp.gmail.com with ESMTPSA id w3sm2487343pff.56.2020.09.01.08.41.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 08:41:17 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Eric Anholt <eric@anholt.net>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        linux-arm-msm@vger.kernel.org (open list:DRM DRIVER FOR MSM ADRENO GPU),
-        freedreno@lists.freedesktop.org (open list:DRM DRIVER FOR MSM ADRENO
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH 3/3] drm/msm/gpu: Add suspend/resume tracepoints
-Date:   Tue,  1 Sep 2020 08:41:56 -0700
-Message-Id: <20200901154200.2451899-4-robdclark@gmail.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200901154200.2451899-1-robdclark@gmail.com>
-References: <20200901154200.2451899-1-robdclark@gmail.com>
+        Tue, 1 Sep 2020 12:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730544AbgIAPlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:41:18 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2AD032064B;
+        Tue,  1 Sep 2020 15:41:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974877;
+        bh=JuLsNZjZqesuqcAnyc87ATn2vCVdmiJJkLFcGGjUi/0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lZoG3adGUuFmawNp1EJp6tpBN9HNcWHte7YBOeDM0A3Ifm58BdYPF1WqToB5RhZTg
+         VX5Ko4xfqUoN56HlK9dRM8vCfVGGae49vEPXtI4ytrPWGoAu8x438Snn3hsP+G/sQ5
+         33sC8hpb+IES+Mq/LvocwdmpG2XvHeE68Op2F4aY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
+        Ashley Thomas <Ashley.Thomas2@amd.com>,
+        Qingqing Zhuo <qingqing.zhuo@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 125/255] drm/amd/display: Switch to immediate mode for updating infopackets
+Date:   Tue,  1 Sep 2020 17:09:41 +0200
+Message-Id: <20200901151006.716983246@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Anthony Koo <Anthony.Koo@amd.com>
 
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+[ Upstream commit abba907c7a20032c2d504fd5afe3af7d440a09d0 ]
+
+[Why]
+Using FRAME_UPDATE will result in infopacket to be potentially updated
+one frame late.
+In commit stream scenarios for previously active stream, some stale
+infopacket data from previous config might be erroneously sent out on
+initial frame after stream is re-enabled.
+
+[How]
+Switch to using IMMEDIATE_UPDATE mode
+
+Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
+Reviewed-by: Ashley Thomas <Ashley.Thomas2@amd.com>
+Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-I'm not sure if there is a better way to do no-arg tracepoints?  The
-trace framework seems to go out of it's way to make this difficult.
-Or maybe there is a more obvious thing that I'm not seeing.
+ .../amd/display/dc/dcn10/dcn10_stream_encoder.c  | 16 ++++++++--------
+ .../amd/display/dc/dcn10/dcn10_stream_encoder.h  | 14 ++++++++++++++
+ 2 files changed, 22 insertions(+), 8 deletions(-)
 
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c |  4 ++++
- drivers/gpu/drm/msm/msm_gpu.c         |  2 ++
- drivers/gpu/drm/msm/msm_gpu_trace.h   | 26 ++++++++++++++++++++++++++
- 3 files changed, 32 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index c5a3e4d4c007..2de280e45077 100644
---- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -923,6 +923,8 @@ static int a6xx_pm_resume(struct msm_gpu *gpu)
- 
- 	gpu->needs_hw_init = true;
- 
-+	trace_msm_gpu_resume(0);
-+
- 	ret = a6xx_gmu_resume(a6xx_gpu);
- 	if (ret)
- 		return ret;
-@@ -937,6 +939,8 @@ static int a6xx_pm_suspend(struct msm_gpu *gpu)
- 	struct adreno_gpu *adreno_gpu = to_adreno_gpu(gpu);
- 	struct a6xx_gpu *a6xx_gpu = to_a6xx_gpu(adreno_gpu);
- 
-+	trace_msm_gpu_suspend(0);
-+
- 	devfreq_suspend_device(gpu->devfreq.devfreq);
- 
- 	return a6xx_gmu_stop(a6xx_gpu);
-diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
-index b02866527386..5ceb2a966a87 100644
---- a/drivers/gpu/drm/msm/msm_gpu.c
-+++ b/drivers/gpu/drm/msm/msm_gpu.c
-@@ -202,6 +202,7 @@ int msm_gpu_pm_resume(struct msm_gpu *gpu)
- 	int ret;
- 
- 	DBG("%s", gpu->name);
-+	trace_msm_gpu_resume(0);
- 
- 	ret = enable_pwrrail(gpu);
- 	if (ret)
-@@ -227,6 +228,7 @@ int msm_gpu_pm_suspend(struct msm_gpu *gpu)
- 	int ret;
- 
- 	DBG("%s", gpu->name);
-+	trace_msm_gpu_suspend(0);
- 
- 	devfreq_suspend_device(gpu->devfreq.devfreq);
- 
-diff --git a/drivers/gpu/drm/msm/msm_gpu_trace.h b/drivers/gpu/drm/msm/msm_gpu_trace.h
-index 1079fe551279..03e0c2536b94 100644
---- a/drivers/gpu/drm/msm/msm_gpu_trace.h
-+++ b/drivers/gpu/drm/msm/msm_gpu_trace.h
-@@ -140,6 +140,32 @@ TRACE_EVENT(msm_gem_purge_vmaps,
- 		TP_printk("Purging %u vmaps", __entry->unmapped)
- );
- 
-+
-+TRACE_EVENT(msm_gpu_suspend,
-+		TP_PROTO(int dummy),
-+		TP_ARGS(dummy),
-+		TP_STRUCT__entry(
-+			__field(u32, dummy)
-+			),
-+		TP_fast_assign(
-+			__entry->dummy = dummy;
-+			),
-+		TP_printk("%u", __entry->dummy)
-+);
-+
-+
-+TRACE_EVENT(msm_gpu_resume,
-+		TP_PROTO(int dummy),
-+		TP_ARGS(dummy),
-+		TP_STRUCT__entry(
-+			__field(u32, dummy)
-+			),
-+		TP_fast_assign(
-+			__entry->dummy = dummy;
-+			),
-+		TP_printk("%u", __entry->dummy)
-+);
-+
- #endif
- 
- #undef TRACE_INCLUDE_PATH
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c
+index 07b2f9399671d..842abb4c475bc 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.c
+@@ -121,35 +121,35 @@ void enc1_update_generic_info_packet(
+ 	switch (packet_index) {
+ 	case 0:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC0_FRAME_UPDATE, 1);
++				AFMT_GENERIC0_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	case 1:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC1_FRAME_UPDATE, 1);
++				AFMT_GENERIC1_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	case 2:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC2_FRAME_UPDATE, 1);
++				AFMT_GENERIC2_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	case 3:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC3_FRAME_UPDATE, 1);
++				AFMT_GENERIC3_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	case 4:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC4_FRAME_UPDATE, 1);
++				AFMT_GENERIC4_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	case 5:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC5_FRAME_UPDATE, 1);
++				AFMT_GENERIC5_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	case 6:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC6_FRAME_UPDATE, 1);
++				AFMT_GENERIC6_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	case 7:
+ 		REG_UPDATE(AFMT_VBI_PACKET_CONTROL1,
+-				AFMT_GENERIC7_FRAME_UPDATE, 1);
++				AFMT_GENERIC7_IMMEDIATE_UPDATE, 1);
+ 		break;
+ 	default:
+ 		break;
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h
+index f9b9e221c698b..7507000a99ac4 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_stream_encoder.h
+@@ -273,7 +273,14 @@ struct dcn10_stream_enc_registers {
+ 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC2_FRAME_UPDATE, mask_sh),\
+ 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC3_FRAME_UPDATE, mask_sh),\
+ 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC4_FRAME_UPDATE, mask_sh),\
++	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC0_IMMEDIATE_UPDATE, mask_sh),\
++	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC1_IMMEDIATE_UPDATE, mask_sh),\
++	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC2_IMMEDIATE_UPDATE, mask_sh),\
++	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC3_IMMEDIATE_UPDATE, mask_sh),\
+ 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC4_IMMEDIATE_UPDATE, mask_sh),\
++	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC5_IMMEDIATE_UPDATE, mask_sh),\
++	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC6_IMMEDIATE_UPDATE, mask_sh),\
++	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC7_IMMEDIATE_UPDATE, mask_sh),\
+ 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC5_FRAME_UPDATE, mask_sh),\
+ 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC6_FRAME_UPDATE, mask_sh),\
+ 	SE_SF(DIG0_AFMT_VBI_PACKET_CONTROL1, AFMT_GENERIC7_FRAME_UPDATE, mask_sh),\
+@@ -337,7 +344,14 @@ struct dcn10_stream_enc_registers {
+ 	type AFMT_GENERIC2_FRAME_UPDATE;\
+ 	type AFMT_GENERIC3_FRAME_UPDATE;\
+ 	type AFMT_GENERIC4_FRAME_UPDATE;\
++	type AFMT_GENERIC0_IMMEDIATE_UPDATE;\
++	type AFMT_GENERIC1_IMMEDIATE_UPDATE;\
++	type AFMT_GENERIC2_IMMEDIATE_UPDATE;\
++	type AFMT_GENERIC3_IMMEDIATE_UPDATE;\
+ 	type AFMT_GENERIC4_IMMEDIATE_UPDATE;\
++	type AFMT_GENERIC5_IMMEDIATE_UPDATE;\
++	type AFMT_GENERIC6_IMMEDIATE_UPDATE;\
++	type AFMT_GENERIC7_IMMEDIATE_UPDATE;\
+ 	type AFMT_GENERIC5_FRAME_UPDATE;\
+ 	type AFMT_GENERIC6_FRAME_UPDATE;\
+ 	type AFMT_GENERIC7_FRAME_UPDATE;\
 -- 
-2.26.2
+2.25.1
+
+
 
