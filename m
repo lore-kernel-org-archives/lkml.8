@@ -2,296 +2,214 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F084C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D54C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F699206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99AE12065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598977389;
+	bh=KMaCEr9hIazVnaJX5NLqVXB6MyFYkILtr0umHanmixo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=okb0jEyuVKKW7mzU85KljsPmaOuuUoR8ksIFOEWFLPbjla7hoxLTAu8b6p8lfyqUs
+	 7L2QUqQZYAvW9z2G9oF5ANWbegjC+AURY+KFE1kmQn7wvdEWT/RjnDctGun5avFdMX
+	 pLPYHC8VVSv3UNJNXy5+SyOCJcYbHJQgX+D6jzdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731110AbgIAQXE (ORCPT
+        id S1730992AbgIAPcU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:23:04 -0400
-Received: from mga02.intel.com ([134.134.136.20]:8412 "EHLO mga02.intel.com"
+        Tue, 1 Sep 2020 11:32:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731010AbgIAQWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:22:49 -0400
-IronPort-SDR: oth7SmdM4LWlvWoSMDtaLXs4ICtDgN0vfK59zHUiYNrufjKpfyYIlyA+LKr4jMl/ZTrkUKWgn8
- Sx+uXhjvxu3Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="144939938"
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="144939938"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 09:22:48 -0700
-IronPort-SDR: gcTlRKT+t0+rvRkfxBAWei22o/SzbXv5nOP8dVZo/EjJddN2szPdqqCp9FSoprZ/NDWg3R2Cc+
- 9rMQ1DiNh4rw==
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="477261208"
-Received: from tracimsx-mobl5.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.252.140.215])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 09:22:47 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 3/3] regmap: sdw: add support for SoundWire 1.2 MBQ
-Date:   Tue,  1 Sep 2020 11:22:25 -0500
-Message-Id: <20200901162225.33343-4-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
-References: <20200901162225.33343-1-pierre-louis.bossart@linux.intel.com>
+        id S1730617AbgIAPar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:30:47 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC812205F4;
+        Tue,  1 Sep 2020 15:30:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974247;
+        bh=KMaCEr9hIazVnaJX5NLqVXB6MyFYkILtr0umHanmixo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=e253W+4rDWHr/x/CxkT4i7vshkjuhZ3adOWN2fCEapvmpRo/1kY0QwxfLvuZMi2Pr
+         p3Amg1pXLLHl/8KkBOl+ak13GMnwf4dmOadkQbwNn3A1MjZF8eKiAfIHtN5WdVpSu5
+         RA9rAOY0wU9n9CJ8sj2eVunLwqRyy3C1vOfyrz2A=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Oleksandr Natalenko <oleksandr@natalenko.name>,
+        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 103/214] bfq: fix blkio cgroup leakage v4
+Date:   Tue,  1 Sep 2020 17:09:43 +0200
+Message-Id: <20200901150957.939809582@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SoundWire 1.1 specification only allowed for reads and writes of
-bytes. The SoundWire 1.2 specification adds a new capability to
-transfer "Multi-Byte Quantities" (MBQ) across the bus. The transfers
-still happens one-byte-at-a-time, but the update is atomic.
+From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-For example when writing a 16-bit volume, the first byte transferred
-is only taken into account when the second byte is successfully
-transferred.
+[ Upstream commit 2de791ab4918969d8108f15238a701968375f235 ]
 
-The mechanism is symmetrical for read and writes:
-- On a read, the address of the last byte to be read is modified by
-setting the MBQ bit
-- On a write, the address of all but the last byte to be written are
-modified by setting the MBQ bit. The address for the last byte relies
-on the MBQ bit being cleared.
+Changes from v1:
+    - update commit description with proper ref-accounting justification
 
-The current definitions for MBQ-based controls in the SDCA draft
-standard are limited to 16 bits for volumes, so for now this is the
-only supported format. An update will be provided if and when support
-for 24-bit and 32-bit values is specified by the SDCA standard.
+commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
+introduce leak forbfq_group and blkcg_gq objects because of get/put
+imbalance.
+In fact whole idea of original commit is wrong because bfq_group entity
+can not dissapear under us because it is referenced by child bfq_queue's
+entities from here:
+ -> bfq_init_entity()
+    ->bfqg_and_blkg_get(bfqg);
+    ->entity->parent = bfqg->my_entity
 
-One possible objection is that this code could have been handled with
-regmap-sdw.c. However this is a new spec addition not handled by every
-SoundWire 1.1 and non-SDCA device, so there's no reason to load code
-that will never be used.
+ -> bfq_put_queue(bfqq)
+    FINAL_PUT
+    ->bfqg_and_blkg_put(bfqq_group(bfqq))
+    ->kmem_cache_free(bfq_pool, bfqq);
 
-Also in practice it's extremely unlikely that CONFIG_REGMAP would not
-be selected with CONFIG_REGMAP_MBQ selected. However there's no
-functional dependency between the two modules so they can be selected
-separately.
+So parent entity can not disappear while child entity is in tree,
+and child entities already has proper protection.
+This patch revert commit db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
 
-Reviewed-by: Rander Wang <rander.wang@linux.intel.com>
-Reviewed-by: Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Acked-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+bfq_group leak trace caused by bad commit:
+-> blkg_alloc
+   -> bfq_pq_alloc
+     -> bfqg_get (+1)
+->bfq_activate_bfqq
+  ->bfq_activate_requeue_entity
+    -> __bfq_activate_entity
+       ->bfq_get_entity
+         ->bfqg_and_blkg_get (+1)  <==== : Note1
+->bfq_del_bfqq_busy
+  ->bfq_deactivate_entity+0x53/0xc0 [bfq]
+    ->__bfq_deactivate_entity+0x1b8/0x210 [bfq]
+      -> bfq_forget_entity(is_in_service = true)
+	 entity->on_st_or_in_serv = false   <=== :Note2
+	 if (is_in_service)
+	     return;  ==> do not touch reference
+-> blkcg_css_offline
+ -> blkcg_destroy_blkgs
+  -> blkg_destroy
+   -> bfq_pd_offline
+    -> __bfq_deactivate_entity
+         if (!entity->on_st_or_in_serv) /* true, because (Note2)
+		return false;
+ -> bfq_pd_free
+    -> bfqg_put() (-1, byt bfqg->ref == 2) because of (Note2)
+So bfq_group and blkcg_gq  will leak forever, see test-case below.
+
+##TESTCASE_BEGIN:
+#!/bin/bash
+
+max_iters=${1:-100}
+#prep cgroup mounts
+mount -t tmpfs cgroup_root /sys/fs/cgroup
+mkdir /sys/fs/cgroup/blkio
+mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
+
+# Prepare blkdev
+grep blkio /proc/cgroups
+truncate -s 1M img
+losetup /dev/loop0 img
+echo bfq > /sys/block/loop0/queue/scheduler
+
+grep blkio /proc/cgroups
+for ((i=0;i<max_iters;i++))
+do
+    mkdir -p /sys/fs/cgroup/blkio/a
+    echo 0 > /sys/fs/cgroup/blkio/a/cgroup.procs
+    dd if=/dev/loop0 bs=4k count=1 of=/dev/null iflag=direct 2> /dev/null
+    echo 0 > /sys/fs/cgroup/blkio/cgroup.procs
+    rmdir /sys/fs/cgroup/blkio/a
+    grep blkio /proc/cgroups
+done
+##TESTCASE_END:
+
+Fixes: db37a34c563b ("block, bfq: get a ref to a group when adding it to a service tree")
+Tested-by: Oleksandr Natalenko <oleksandr@natalenko.name>
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/base/regmap/Kconfig          |   6 +-
- drivers/base/regmap/Makefile         |   1 +
- drivers/base/regmap/regmap-sdw-mbq.c | 101 +++++++++++++++++++++++++++
- include/linux/regmap.h               |  21 ++++++
- 4 files changed, 128 insertions(+), 1 deletion(-)
- create mode 100644 drivers/base/regmap/regmap-sdw-mbq.c
+ block/bfq-cgroup.c  |  2 +-
+ block/bfq-iosched.h |  1 -
+ block/bfq-wf2q.c    | 12 ++----------
+ 3 files changed, 3 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-index bcb90d8c3960..50b1e2d06a25 100644
---- a/drivers/base/regmap/Kconfig
-+++ b/drivers/base/regmap/Kconfig
-@@ -4,7 +4,7 @@
- # subsystems should select the appropriate symbols.
+diff --git a/block/bfq-cgroup.c b/block/bfq-cgroup.c
+index 12b707a4e52fd..342a1cfa48c57 100644
+--- a/block/bfq-cgroup.c
++++ b/block/bfq-cgroup.c
+@@ -332,7 +332,7 @@ static void bfqg_put(struct bfq_group *bfqg)
+ 		kfree(bfqg);
+ }
  
- config REGMAP
--	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SOUNDWIRE || REGMAP_SCCB || REGMAP_I3C || REGMAP_SPI_AVMM)
-+	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_SOUNDWIRE || REGMAP_SOUNDWIRE_MBQ || REGMAP_SCCB || REGMAP_I3C || REGMAP_SPI_AVMM)
- 	select IRQ_DOMAIN if REGMAP_IRQ
- 	bool
+-void bfqg_and_blkg_get(struct bfq_group *bfqg)
++static void bfqg_and_blkg_get(struct bfq_group *bfqg)
+ {
+ 	/* see comments in bfq_bic_update_cgroup for why refcounting bfqg */
+ 	bfqg_get(bfqg);
+diff --git a/block/bfq-iosched.h b/block/bfq-iosched.h
+index c0232975075d0..de98fdfe9ea17 100644
+--- a/block/bfq-iosched.h
++++ b/block/bfq-iosched.h
+@@ -980,7 +980,6 @@ struct bfq_group *bfq_find_set_group(struct bfq_data *bfqd,
+ struct blkcg_gq *bfqg_to_blkg(struct bfq_group *bfqg);
+ struct bfq_group *bfqq_group(struct bfq_queue *bfqq);
+ struct bfq_group *bfq_create_group_hierarchy(struct bfq_data *bfqd, int node);
+-void bfqg_and_blkg_get(struct bfq_group *bfqg);
+ void bfqg_and_blkg_put(struct bfq_group *bfqg);
  
-@@ -46,6 +46,10 @@ config REGMAP_SOUNDWIRE
- 	tristate
- 	depends on SOUNDWIRE
+ #ifdef CONFIG_BFQ_GROUP_IOSCHED
+diff --git a/block/bfq-wf2q.c b/block/bfq-wf2q.c
+index 44079147e396e..05f0bf4a1144d 100644
+--- a/block/bfq-wf2q.c
++++ b/block/bfq-wf2q.c
+@@ -536,9 +536,7 @@ static void bfq_get_entity(struct bfq_entity *entity)
+ 		bfqq->ref++;
+ 		bfq_log_bfqq(bfqq->bfqd, bfqq, "get_entity: %p %d",
+ 			     bfqq, bfqq->ref);
+-	} else
+-		bfqg_and_blkg_get(container_of(entity, struct bfq_group,
+-					       entity));
++	}
+ }
  
-+config REGMAP_SOUNDWIRE_MBQ
-+	tristate
-+	depends on SOUNDWIRE
-+
- config REGMAP_SCCB
- 	tristate
- 	depends on I2C
-diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefile
-index ac1b69ee4051..33f63adb5b3d 100644
---- a/drivers/base/regmap/Makefile
-+++ b/drivers/base/regmap/Makefile
-@@ -15,6 +15,7 @@ obj-$(CONFIG_REGMAP_MMIO) += regmap-mmio.o
- obj-$(CONFIG_REGMAP_IRQ) += regmap-irq.o
- obj-$(CONFIG_REGMAP_W1) += regmap-w1.o
- obj-$(CONFIG_REGMAP_SOUNDWIRE) += regmap-sdw.o
-+obj-$(CONFIG_REGMAP_SOUNDWIRE_MBQ) += regmap-sdw-mbq.o
- obj-$(CONFIG_REGMAP_SCCB) += regmap-sccb.o
- obj-$(CONFIG_REGMAP_I3C) += regmap-i3c.o
- obj-$(CONFIG_REGMAP_SPI_AVMM) += regmap-spi-avmm.o
-diff --git a/drivers/base/regmap/regmap-sdw-mbq.c b/drivers/base/regmap/regmap-sdw-mbq.c
-new file mode 100644
-index 000000000000..8ce30650b97c
---- /dev/null
-+++ b/drivers/base/regmap/regmap-sdw-mbq.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright(c) 2020 Intel Corporation.
-+
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/soundwire/sdw.h>
-+#include <linux/soundwire/sdw_registers.h>
-+#include "internal.h"
-+
-+static int regmap_sdw_mbq_write(void *context, unsigned int reg, unsigned int val)
-+{
-+	struct device *dev = context;
-+	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-+	int ret;
-+
-+	ret = sdw_write(slave, SDW_SDCA_MBQ_CTL(reg), (val >> 8) & 0xff);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sdw_write(slave, reg, val & 0xff);
-+}
-+
-+static int regmap_sdw_mbq_read(void *context, unsigned int reg, unsigned int *val)
-+{
-+	struct device *dev = context;
-+	struct sdw_slave *slave = dev_to_sdw_dev(dev);
-+	int read0;
-+	int read1;
-+
-+	read0 = sdw_read(slave, reg);
-+	if (read0 < 0)
-+		return read0;
-+
-+	read1 = sdw_read(slave, SDW_SDCA_MBQ_CTL(reg));
-+	if (read1 < 0)
-+		return read1;
-+
-+	*val = (read1 << 8) | read0;
-+
-+	return 0;
-+}
-+
-+static struct regmap_bus regmap_sdw_mbq = {
-+	.reg_read = regmap_sdw_mbq_read,
-+	.reg_write = regmap_sdw_mbq_write,
-+	.reg_format_endian_default = REGMAP_ENDIAN_LITTLE,
-+	.val_format_endian_default = REGMAP_ENDIAN_LITTLE,
-+};
-+
-+static int regmap_sdw_mbq_config_check(const struct regmap_config *config)
-+{
-+	/* MBQ-based controls are only 16-bits for now */
-+	if (config->val_bits != 16)
-+		return -ENOTSUPP;
-+
-+	/* Registers are 32 bits wide */
-+	if (config->reg_bits != 32)
-+		return -ENOTSUPP;
-+
-+	if (config->pad_bits != 0)
-+		return -ENOTSUPP;
-+
-+	return 0;
-+}
-+
-+struct regmap *__regmap_init_sdw_mbq(struct sdw_slave *sdw,
-+				     const struct regmap_config *config,
-+				     struct lock_class_key *lock_key,
-+				     const char *lock_name)
-+{
-+	int ret;
-+
-+	ret = regmap_sdw_mbq_config_check(config);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return __regmap_init(&sdw->dev, &regmap_sdw_mbq,
-+			&sdw->dev, config, lock_key, lock_name);
-+}
-+EXPORT_SYMBOL_GPL(__regmap_init_sdw_mbq);
-+
-+struct regmap *__devm_regmap_init_sdw_mbq(struct sdw_slave *sdw,
-+					  const struct regmap_config *config,
-+					  struct lock_class_key *lock_key,
-+					  const char *lock_name)
-+{
-+	int ret;
-+
-+	ret = regmap_sdw_mbq_config_check(config);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return __devm_regmap_init(&sdw->dev, &regmap_sdw_mbq,
-+			&sdw->dev, config, lock_key, lock_name);
-+}
-+EXPORT_SYMBOL_GPL(__devm_regmap_init_sdw_mbq);
-+
-+MODULE_DESCRIPTION("Regmap SoundWire MBQ Module");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-index d865d8fea535..a031ace22b6b 100644
---- a/include/linux/regmap.h
-+++ b/include/linux/regmap.h
-@@ -567,6 +567,10 @@ struct regmap *__regmap_init_sdw(struct sdw_slave *sdw,
- 				 const struct regmap_config *config,
- 				 struct lock_class_key *lock_key,
- 				 const char *lock_name);
-+struct regmap *__regmap_init_sdw_mbq(struct sdw_slave *sdw,
-+				     const struct regmap_config *config,
-+				     struct lock_class_key *lock_key,
-+				     const char *lock_name);
- struct regmap *__regmap_init_spi_avmm(struct spi_device *spi,
- 				      const struct regmap_config *config,
- 				      struct lock_class_key *lock_key,
-@@ -616,6 +620,10 @@ struct regmap *__devm_regmap_init_sdw(struct sdw_slave *sdw,
- 				 const struct regmap_config *config,
- 				 struct lock_class_key *lock_key,
- 				 const char *lock_name);
-+struct regmap *__devm_regmap_init_sdw_mbq(struct sdw_slave *sdw,
-+					  const struct regmap_config *config,
-+					  struct lock_class_key *lock_key,
-+					  const char *lock_name);
- struct regmap *__devm_regmap_init_slimbus(struct slim_device *slimbus,
- 				 const struct regmap_config *config,
- 				 struct lock_class_key *lock_key,
-@@ -814,6 +822,19 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
- 	__regmap_lockdep_wrapper(__regmap_init_sdw, #config,		\
- 				sdw, config)
- 
-+/**
-+ * regmap_init_sdw_mbq() - Initialise register map
-+ *
-+ * @sdw: Device that will be interacted with
-+ * @config: Configuration for register map
-+ *
-+ * The return value will be an ERR_PTR() on error or a valid pointer to
-+ * a struct regmap.
-+ */
-+#define regmap_init_sdw_mbq(sdw, config)					\
-+	__regmap_lockdep_wrapper(__regmap_init_sdw_mbq, #config,		\
-+				sdw, config)
-+
  /**
-  * regmap_init_spi_avmm() - Initialize register map for Intel SPI Slave
-  * to AVMM Bus Bridge
+@@ -652,14 +650,8 @@ static void bfq_forget_entity(struct bfq_service_tree *st,
+ 
+ 	entity->on_st = false;
+ 	st->wsum -= entity->weight;
+-	if (is_in_service)
+-		return;
+-
+-	if (bfqq)
++	if (bfqq && !is_in_service)
+ 		bfq_put_queue(bfqq);
+-	else
+-		bfqg_and_blkg_put(container_of(entity, struct bfq_group,
+-					       entity));
+ }
+ 
+ /**
 -- 
 2.25.1
+
+
 
