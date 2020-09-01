@@ -2,94 +2,112 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55382C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C379C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2132F206CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2E4206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:49:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HRvBFb5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgIAMsv (ORCPT
+        id S1728024AbgIAMti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:48:51 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3496 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727991AbgIAMKN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 08:10:13 -0400
-Received: from dggeml406-hub.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 89EA5ACF72CEEA37BECC;
-        Tue,  1 Sep 2020 20:10:06 +0800 (CST)
-Received: from DGGEML524-MBX.china.huawei.com ([169.254.1.71]) by
- dggeml406-hub.china.huawei.com ([10.3.17.50]) with mapi id 14.03.0487.000;
- Tue, 1 Sep 2020 20:09:58 +0800
-From:   "Maoming (maoming, Cloud Infrastructure Service Product Dept.)" 
-        <maoming.maoming@huawei.com>
-To:     Hugh Dickins <hughd@google.com>
-CC:     Matthew Wilcox <willy@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "Zhoujian (jay)" <jianjay.zhou@huawei.com>,
-        "Huangweidong (C)" <weidong.huang@huawei.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "aarcange@redhat.com" <aarcange@redhat.com>,
-        wangyunjian <wangyunjian@huawei.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIFYzXSB2ZmlvIGRtYV9tYXAvdW5tYXA6IG9wdGltaXpl?=
- =?gb2312?Q?d_for_hugetlbfs_pages?=
-Thread-Topic: [PATCH V3] vfio dma_map/unmap: optimized for hugetlbfs pages
-Thread-Index: AQHWfR1kmRi9Q8RQ4keHVlEcbZc2qalRRsGAgAIMtzA=
-Date:   Tue, 1 Sep 2020 12:09:58 +0000
-Message-ID: <8B561EC9A4D13649A62CF60D3A8E8CB28C2DC466@dggeml524-mbx.china.huawei.com>
-References: <20200828092649.853-1-maoming.maoming@huawei.com>
- <alpine.LSU.2.11.2008302332330.2382@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2008302332330.2382@eggly.anvils>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.174.151.129]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Tue, 1 Sep 2020 08:49:38 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:60811 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728057AbgIAMAt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 08:00:49 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1598961618; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=0jMDgX0W1BZ/pON/uohBkNZ0K8cxTtaj7bi4Iz5LFzw=;
+ b=HRvBFb5d4UOM45JsiQb2z6zuVWhcncd1jvUVHckJ6RJrBVFih+7AN8KFR0IhPSXFcD1thCoQ
+ pU534IJGwHfjzYVtxy+OA2zqO8Cm7BL6/AnpovXmaRRDMBFExH+ycx/6fiEaSfAePmKPakTh
+ EK1pS03CS3QTEeWt8x63GvY2ywg=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n05.prod.us-west-2.postgun.com with SMTP id
+ 5f4e37bf252c52244081a492 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 11:59:59
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B9E3EC433C6; Tue,  1 Sep 2020 11:59:59 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 126B1C433C9;
+        Tue,  1 Sep 2020 11:59:57 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 126B1C433C9
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] ath10k: Add interrupt summary based CE processing
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
+References: <1593193967-29897-1-git-send-email-pillair@codeaurora.org>
+To:     Rakesh Pillai <pillair@codeaurora.org>
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rakesh Pillai <pillair@codeaurora.org>
+User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
+Message-Id: <20200901115959.B9E3EC433C6@smtp.codeaurora.org>
+Date:   Tue,  1 Sep 2020 11:59:59 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IA0KPiA+IEluIHRoZSBvcmlnaW5hbCBwcm9jZXNzIG9mIGRtYV9tYXAvdW5tYXAgcGFnZXMg
-Zm9yIFZGSU8tZGV2aWNlcywgdG8NCj4gPiBtYWtlIHN1cmUgdGhlIHBhZ2VzIGFyZSBjb250aWd1
-b3VzLCB3ZSBoYXZlIHRvIGNoZWNrIHRoZW0gb25lIGJ5IG9uZS4NCj4gPiBBcyBhIHJlc3VsdCwg
-ZG1hX21hcC91bm1hcCBjb3VsZCBzcGVuZCBhIGxvbmcgdGltZS4NCj4gPiBVc2luZyB0aGUgaHVn
-ZXRsYiBwYWdlcywgd2UgY2FuIGF2b2lkIHRoaXMgcHJvYmxlbS4NCj4gPiBBbGwgcGFnZXMgaW4g
-aHVnZXRsYiBwYWdlcyBhcmUgY29udGlndW91cy5BbmQgdGhlIGh1Z2V0bGIgcGFnZSBzaG91bGQN
-Cj4gPiBub3QgYmUgc3BsaXQuU28gd2UgY2FuIGRlbGV0ZSB0aGUgZm9yIGxvb3BzLg0KPiANCj4g
-SSBrbm93IG5vdGhpbmcgYWJvdXQgVkZJTywgYnV0IEknbSBzdXJwcmlzZWQgdGhhdCB5b3UncmUg
-cGF5aW5nIHN1Y2ggYXR0ZW50aW9uDQo+IHRvIFBhZ2VIdWdlIGh1Z2V0bGJmcyBwYWdlcywgcmF0
-aGVyIHRoYW4gdG8gUGFnZUNvbXBvdW5kDQo+IHBhZ2VzOiB3aGljaCB3b3VsZCBhbHNvIGluY2x1
-ZGUgVHJhbnNwYXJlbnQgSHVnZSBQYWdlcywgb2YgdGhlIHRyYWRpdGlvbmFsDQo+IGFub255bW91
-cyBraW5kLCBvciB0aGUgaHVnZSB0bXBmcyBraW5kLCBvciB0aGUgbW9yZSBnZW5lcmFsIChub3Qg
-bmVjZXNzYXJpbHkNCj4gcG1kLXNpemVkKSBraW5kIHRoYXQgTWF0dGhldyBXaWxjb3ggaXMgY3Vy
-cmVudGx5IHdvcmtpbmcgb24uDQo+IA0KPiBJdCdzIHRydWUgdGhhdCBodWdldGxiZnMgaXMgcGVj
-dWxpYXIgZW5vdWdoIHRoYXQgd2hhdGV2ZXIgeW91IHdyaXRlIGZvciBpdCBtYXkNCj4gbmVlZCBz
-b21lIHR3ZWFrcyB0byBjb3ZlciB0aGUgVEhQIGNhc2UgdG9vLCBvciB2aWNlIHZlcnNhOyBidXQg
-d291bGRuJ3QgeW91cg0KPiBwYXRjaCBiZSBhIGxvdCBiZXR0ZXIgZm9yIGNvdmVyaW5nIGFsbCBj
-YXNlcz8NCj4gDQo+IFlvdSBtZW50aW9uIGFib3ZlIHRoYXQgInRoZSBodWdldGxiIHBhZ2Ugc2hv
-dWxkIG5vdCBiZSBzcGxpdCI6DQo+IHBlcmhhcHMgeW91IGhhdmUgYmVlbiB3b3JyaWVkIHRoYXQg
-YSBUSFAgY291bGQgYmUgc3BsaXQgYmVuZWF0aCB5b3U/DQo+IFRoYXQgdXNlZCB0byBiZSBhIHBv
-c3NpYmlsaXR5IHNvbWUgeWVhcnMgYWdvLCBidXQgbm93YWRheXMgYSBUSFAgY2Fubm90IGJlDQo+
-IHNwbGl0IHdoaWxlIGFueW9uZSBpcyBwaW5uaW5nIGl0IHdpdGggYW4gZXh0cmEgcmVmZXJlbmNl
-Lg0KPiANCj4gSHVnaA0KPiANCg0KDQpUaGFua3MgZm9yIHlvdXIgc3VnZ2VzdGlvbnMuDQpZb3Ug
-bWVudGlvbiB0aGF0IGEgVEhQIGNhbm5vdCBiZSBzcGxpdCB3aGlsZSBhbnlvbmUgaXMgcGlubmlu
-ZyBpdC4NCkRvIHlvdSBtZWFuIHRoZSBjaGVjayBvZiBjYW5fc3BsaXRfaHVnZV9wYWdlKCkoaW4g
-c3BsaXRfaHVnZV9wYWdlX3RvX2xpc3QoKSk/DQpXaGVuIHdlIHdhbnQgdG8gcGluIHBhZ2VzLCB2
-ZmlvX3Bpbl9wYWdlc19yZW1vdGUoKSBhbHdheXMgZ2V0cyBhIG5vcm1hbCBwYWdlIGZpcnN0Lg0K
-SW4gdGhpcyBjYXNlLCBhIFRIUCBjYW5ub3QgYmUgc3BsaXQgYmVjYXVzZSBvZiB0aGUgaW5jcmVh
-c2VkIHJlZmVyZW5jZS4NCklzIHRoaXMgcmlnaHQ/DQoNCk1heWJlIEkgY2FuIG9wdGltaXplIGZv
-ciBodWdldGxiIHBhZ2VzIGFzIGEgZmlyc3Qgc3RlcCwgYW5kIHRoZW4gY292ZXIgYWxsIGNvbXBv
-dW5kIHBhZ2VzLg0KDQoNCg0KDQoNCg==
+Rakesh Pillai <pillair@codeaurora.org> wrote:
+
+> Currently the NAPI processing loops through all
+> the copy engines and processes a particular copy
+> engine is the copy completion is set for that copy
+> engine. The host driver is not supposed to access
+> any copy engine register after clearing the interrupt
+> status register.
+> 
+> This might result in kernel crash like the one below
+> [ 1159.220143] Call trace:
+> [ 1159.220170]  ath10k_snoc_read32+0x20/0x40 [ath10k_snoc]
+> [ 1159.220193]  ath10k_ce_per_engine_service_any+0x78/0x130 [ath10k_core]
+> [ 1159.220203]  ath10k_snoc_napi_poll+0x38/0x8c [ath10k_snoc]
+> [ 1159.220270]  net_rx_action+0x100/0x3b0
+> [ 1159.220312]  __do_softirq+0x164/0x30c
+> [ 1159.220345]  run_ksoftirqd+0x2c/0x64
+> [ 1159.220380]  smpboot_thread_fn+0x1b0/0x288
+> [ 1159.220405]  kthread+0x11c/0x12c
+> [ 1159.220423]  ret_from_fork+0x10/0x18
+> 
+> To avoid such a scenario, we generate an interrupt
+> summary by reading the copy completion for all the
+> copy engine before actually processing any of them.
+> This will avoid reading the interrupt status register
+> for any CE after the interrupt status is cleared.
+> 
+> Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
+> 
+> Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> Tested-by: Douglas Anderson <dianders@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+
+Patch applied to ath-next branch of ath.git, thanks.
+
+b92aba35d39d ath10k: Add interrupt summary based CE processing
+
+-- 
+https://patchwork.kernel.org/patch/11628289/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
