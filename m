@@ -2,101 +2,148 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.8 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623BFC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FD6C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47FA72071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70EB9206CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:16:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598948215;
+	bh=nq//5mbCIbFadVRxS0ddgBioz/GjnGJSQmJETqu5qRg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=G+E/Jq10pR/4p6rlrR0EraMU0jBdkDn6LzSO6YcjVyl8i82TH2/ttfey/bxS61pce
+	 Zzrv2vgpUuXgEXPnw0B0E9DFbyCaOUicSIIotX467IiiZ8lYiG9WDsG14/P6Ed8We3
+	 og9Aul05Z1ugK7DroscJaMOMpI6F8zobBQD4HIPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726050AbgIAIPm (ORCPT
+        id S1726455AbgIAIQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:15:42 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10745 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725993AbgIAIPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:15:36 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id F25E4FE242909816455C;
-        Tue,  1 Sep 2020 16:15:33 +0800 (CST)
-Received: from thunder-town.china.huawei.com (10.174.177.253) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 1 Sep 2020 16:15:27 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Oliver O'Halloran <oohall@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Dave Jiang" <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v4 1/1] libnvdimm: fix memory leaks in of_pmem.c
-Date:   Tue, 1 Sep 2020 16:14:50 +0800
-Message-ID: <20200901081450.1969-2-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20200901081450.1969-1-thunder.leizhen@huawei.com>
-References: <20200901081450.1969-1-thunder.leizhen@huawei.com>
+        Tue, 1 Sep 2020 04:16:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgIAIQw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:16:52 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 017F8C061244;
+        Tue,  1 Sep 2020 01:16:51 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id c8so574692edv.5;
+        Tue, 01 Sep 2020 01:16:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=swNovB3+fcrt09IBXHVDolTV6/eIXMyoTVYnepRz3fU=;
+        b=pABpQ7tZu55e1f7KIWPfqDj7rsSVuHqj7SJd/BNyJtUBlGl3fCXeatZv2VT0Jd7GMy
+         CRWI47ko52llmTPN8DSc/qdPwBoeMA0kOw7DyMGgCxAkIFd6Da80nZoAGw17JUz/x6MT
+         gEp/23jWYkPvQGV8ouufw/AZF9MYGxg1UBsX0uZImngKkWcDopJtQJ31oT+y2oO6bhsM
+         EPbyUx3Go/apQcYolTzEse8P/AnQM2q8YWBROfWcWpGuuRT0kncwn2ORUu1OGGaK4IfZ
+         0Ky33sQw/xRKFZjyGNb4ePn/yWz/Digj/WlMevz33aRyx4Q+lqjX4Qx8xt6C+V+qE7Jw
+         0azg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=swNovB3+fcrt09IBXHVDolTV6/eIXMyoTVYnepRz3fU=;
+        b=EQ96BH/ZVLgRZBmrq7fNXQXDkZ5z75NrzuXy2a3gSuztAPdj7/G+9QXowatIN7jK28
+         i6EvRaSr7CLFOfmbnj8Xzck8fV5J4OpkGyWACTsCTwRHrelijOvAdNGxpnKaaFrtreck
+         1O/GH2An3CR2vpVstjdNE39ZKobura9V5A9/IbKIyx6JJmd/IXU7ZTSmQ61uW/0HjA+V
+         vhalr5sF8BuQoq6APoAiKmYjxdxwyl3jYGDeFG59relYgxfQqKWOVuYXJyfaAkd9OTIY
+         A/w6MlIBSb9Qc2Q5KNPXeblipftCPg8jNIwQ7SiINcLRIEoAX63EO6dc+7ESOtGduESA
+         mM1A==
+X-Gm-Message-State: AOAM530Y2jFYXBkbg5e0XitaxR5oIXGOtDvNggJkm2N3Zw82qDAy7iMI
+        h7FptDurSsMzuIn4Rd/Fpvc=
+X-Google-Smtp-Source: ABdhPJx2ptuL7kkygWDLtZF4JRxA4A4z1gr2neF5/3bsbYzIVwapfuJUGyH19AxYNzkhui1xtmfaiw==
+X-Received: by 2002:a50:d942:: with SMTP id u2mr802309edj.0.1598948210504;
+        Tue, 01 Sep 2020 01:16:50 -0700 (PDT)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id k10sm507731ejj.108.2020.09.01.01.16.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 01:16:49 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 10:16:47 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@suse.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 00/29] Warn on orphan section placement
+Message-ID: <20200901081647.GB3602433@gmail.com>
+References: <20200821194310.3089815-1-keescook@chromium.org>
+ <202008311240.9F94A39@keescook>
+ <20200901071133.GA3577996@gmail.com>
+ <20200901075937.GA3602433@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.177.253]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901075937.GA3602433@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, in the last error path of of_pmem_region_probe() and in
-of_pmem_region_remove(), free the memory allocated by kstrdup() is
-missing. Add kfree(priv->bus_desc.provider_name) to fix it.
 
-In addition, add a sanity check to kstrdup() to prevent a
-NULL-pointer dereference.
+* Ingo Molnar <mingo@kernel.org> wrote:
 
-Fixes: 49bddc73d15c ("libnvdimm/of_pmem: Provide a unique name for bus provider")
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Reviewed-by: Oliver O'Halloran <oohall@gmail.com>
----
- drivers/nvdimm/of_pmem.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+> 
+> * Ingo Molnar <mingo@kernel.org> wrote:
+> 
+> > 
+> > * Kees Cook <keescook@chromium.org> wrote:
+> > 
+> > > On Fri, Aug 21, 2020 at 12:42:41PM -0700, Kees Cook wrote:
+> > > > Hi Ingo,
+> > > > 
+> > > > Based on my testing, this is ready to go. I've reviewed the feedback on
+> > > > v5 and made a few small changes, noted below.
+> > > 
+> > > If no one objects, I'll pop this into my tree for -next. I'd prefer it
+> > > go via -tip though! :)
+> > > 
+> > > Thanks!
+> > 
+> > I'll pick it up today, it all looks very good now!
+> 
+> One thing I found in testing is that it doesn't handler older LD 
+> versions well enough:
+> 
+>   ld: unrecognized option '--orphan-handling=warn'
+> 
+> Could we just detect the availability of this flag, and emit a warning 
+> if it doesn't exist but otherwise not abort the build?
+> 
+> This is with:
+> 
+>   GNU ld version 2.25-17.fc23
 
-diff --git a/drivers/nvdimm/of_pmem.c b/drivers/nvdimm/of_pmem.c
-index 10dbdcdfb9ce913..13c4c274ca6ea88 100644
---- a/drivers/nvdimm/of_pmem.c
-+++ b/drivers/nvdimm/of_pmem.c
-@@ -31,11 +31,17 @@ static int of_pmem_region_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	priv->bus_desc.provider_name = kstrdup(pdev->name, GFP_KERNEL);
-+	if (!priv->bus_desc.provider_name) {
-+		kfree(priv);
-+		return -ENOMEM;
-+	}
-+
- 	priv->bus_desc.module = THIS_MODULE;
- 	priv->bus_desc.of_node = np;
- 
- 	priv->bus = bus = nvdimm_bus_register(&pdev->dev, &priv->bus_desc);
- 	if (!bus) {
-+		kfree(priv->bus_desc.provider_name);
- 		kfree(priv);
- 		return -ENODEV;
- 	}
-@@ -83,6 +89,7 @@ static int of_pmem_region_remove(struct platform_device *pdev)
- 	struct of_pmem_private *priv = platform_get_drvdata(pdev);
- 
- 	nvdimm_bus_unregister(priv->bus);
-+	kfree(priv->bus_desc.provider_name);
- 	kfree(priv);
- 
- 	return 0;
--- 
-1.8.3
+I've resolved this for now by not applying the 5 patches that add the 
+actual orphan section warnings:
 
+  arm64/build: Warn on orphan section placement
+  arm/build: Warn on orphan section placement
+  arm/boot: Warn on orphan section placement
+  x86/build: Warn on orphan section placement
+  x86/boot/compressed: Warn on orphan section placement
 
+The new asserts plus the actual fixes/enhancements are enough changes 
+to test for now in any case. :-)
+
+Thanks,
+
+	Ingo
