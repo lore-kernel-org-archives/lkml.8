@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E5AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AC1C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B97702064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C0621527
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974926;
-	bh=q80865g4cKNeUhpRJl0wdHIIh4zKgCeHakfCqEH55pw=;
+	s=default; t=1598974933;
+	bh=4P0E1TdwEUvHFMgvNrSm/DXS5S0ovHvkEWD5HGQ/MOA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T0jqCg1Z4otA+RcC3O5T7EnktfnOWKCzETaUFTzYNNniJT+hxCNOK8b9EijqtNeSR
-	 bX4IqynkEQqovoK8vZ1MRgRKs6/X3rRCKBSu7ADRWy0LkVGI1P49vgBwDku1RAkP5f
-	 jC90t9vwjWQGgSCwgDORcLeByWBmCqOFgqQ8v7p4=
+	b=Ij/OtRkVL9527YJzeYsCwU0d962sH3W5zlGsAaofhqutHrl7OF/cubPeniiCtPiFN
+	 vZmYdkpW6v/4lzjNuFMXzvydRjXP79l217Zzx48f4y1cw1qbbkSDAejXn6kwSWQm9j
+	 ogJzztDuHXUO7X+rL9xKwo2mb0MkjD7bqcIJTfFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgIAPmE (ORCPT
+        id S1731544AbgIAPmI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:42:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49890 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:42:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731325AbgIAPjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:39:40 -0400
+        id S1731471AbgIAPjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:39:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93B9D21534;
-        Tue,  1 Sep 2020 15:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1EC9F205F4;
+        Tue,  1 Sep 2020 15:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974779;
-        bh=q80865g4cKNeUhpRJl0wdHIIh4zKgCeHakfCqEH55pw=;
+        s=default; t=1598974784;
+        bh=4P0E1TdwEUvHFMgvNrSm/DXS5S0ovHvkEWD5HGQ/MOA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLXZaBZc/pyhf3xMGBPLbqyZbKOikv7TNe5f3oavb+ulyiUVSTsv9Rrlb3xmeYKB+
-         2quEqRPOdHK+AycO7HjpdtlXTgfC6TGaeHLG8iqhsT8nSYhfXFBeAuxgG0Wj7jlCKi
-         +bQDZFprBeGMtIK7T1c5CLRGEMyCtua0OoNnXmCY=
+        b=MNS+zAgbXOEB3KxCncMYw1o3fsomsiR+5GSYyIWJKIN688loTXMIdO4I/s+2fOQqM
+         jyK21DG8JiecDYLQQAFGOjfhTOkq/6JzINP8hfd17eXCRBfbVsLhw71wxdUzhIJAtS
+         Zs2GqoRtk/0ndBrEubBEGJ2MOATsq9xqkfgYR30o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Li Guifu <bluce.liguifu@huawei.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 057/255] netfilter: nf_tables: report EEXIST on overlaps
-Date:   Tue,  1 Sep 2020 17:08:33 +0200
-Message-Id: <20200901151003.454130312@linuxfoundation.org>
+Subject: [PATCH 5.8 049/255] f2fs: fix use-after-free issue
+Date:   Tue,  1 Sep 2020 17:08:25 +0200
+Message-Id: <20200901151003.082217220@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,101 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pablo Neira Ayuso <pablo@netfilter.org>
+From: Li Guifu <bluce.liguifu@huawei.com>
 
-[ Upstream commit 77a92189ecfd061616ad531d386639aab7baaad9 ]
+[ Upstream commit 99c787cfd2bd04926f1f553b30bd7dcea2caaba1 ]
 
-Replace EBUSY by EEXIST in the following cases:
+During umount, f2fs_put_super() unregisters procfs entries after
+f2fs_destroy_segment_manager(), it may cause use-after-free
+issue when umount races with procfs accessing, fix it by relocating
+f2fs_unregister_sysfs().
 
-- If the user adds a chain with a different configuration such as different
-  type, hook and priority.
+[Chao Yu: change commit title/message a bit]
 
-- If the user adds a non-base chain that clashes with an existing basechain.
-
-- If the user adds a { key : value } mapping element and the key exists
-  but the value differs.
-
-- If the device already belongs to an existing flowtable.
-
-User describe that this error reporting is confusing:
-
-- https://bugzilla.netfilter.org/show_bug.cgi?id=1176
-- https://bugzilla.netfilter.org/show_bug.cgi?id=1413
-
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Li Guifu <bluce.liguifu@huawei.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_tables_api.c | 16 +++++++---------
- 1 file changed, 7 insertions(+), 9 deletions(-)
+ fs/f2fs/super.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
-index 88325b264737f..d31832d32e028 100644
---- a/net/netfilter/nf_tables_api.c
-+++ b/net/netfilter/nf_tables_api.c
-@@ -2037,7 +2037,7 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 20e56b0fa46a9..0deb839da0a03 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1173,6 +1173,9 @@ static void f2fs_put_super(struct super_block *sb)
+ 	int i;
+ 	bool dropped;
  
- 	if (nla[NFTA_CHAIN_HOOK]) {
- 		if (!nft_is_base_chain(chain))
--			return -EBUSY;
-+			return -EEXIST;
++	/* unregister procfs/sysfs entries in advance to avoid race case */
++	f2fs_unregister_sysfs(sbi);
++
+ 	f2fs_quota_off_umount(sb);
  
- 		err = nft_chain_parse_hook(ctx->net, nla, &hook, ctx->family,
- 					   false);
-@@ -2047,21 +2047,21 @@ static int nf_tables_updchain(struct nft_ctx *ctx, u8 genmask, u8 policy,
- 		basechain = nft_base_chain(chain);
- 		if (basechain->type != hook.type) {
- 			nft_chain_release_hook(&hook);
--			return -EBUSY;
-+			return -EEXIST;
- 		}
+ 	/* prevent remaining shrinker jobs */
+@@ -1238,8 +1241,6 @@ static void f2fs_put_super(struct super_block *sb)
  
- 		if (ctx->family == NFPROTO_NETDEV) {
- 			if (!nft_hook_list_equal(&basechain->hook_list,
- 						 &hook.list)) {
- 				nft_chain_release_hook(&hook);
--				return -EBUSY;
-+				return -EEXIST;
- 			}
- 		} else {
- 			ops = &basechain->ops;
- 			if (ops->hooknum != hook.num ||
- 			    ops->priority != hook.priority) {
- 				nft_chain_release_hook(&hook);
--				return -EBUSY;
-+				return -EEXIST;
- 			}
- 		}
- 		nft_chain_release_hook(&hook);
-@@ -5160,10 +5160,8 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 			if (nft_set_ext_exists(ext, NFT_SET_EXT_DATA) ^
- 			    nft_set_ext_exists(ext2, NFT_SET_EXT_DATA) ||
- 			    nft_set_ext_exists(ext, NFT_SET_EXT_OBJREF) ^
--			    nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF)) {
--				err = -EBUSY;
-+			    nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF))
- 				goto err_element_clash;
--			}
- 			if ((nft_set_ext_exists(ext, NFT_SET_EXT_DATA) &&
- 			     nft_set_ext_exists(ext2, NFT_SET_EXT_DATA) &&
- 			     memcmp(nft_set_ext_data(ext),
-@@ -5171,7 +5169,7 @@ static int nft_add_set_elem(struct nft_ctx *ctx, struct nft_set *set,
- 			    (nft_set_ext_exists(ext, NFT_SET_EXT_OBJREF) &&
- 			     nft_set_ext_exists(ext2, NFT_SET_EXT_OBJREF) &&
- 			     *nft_set_ext_obj(ext) != *nft_set_ext_obj(ext2)))
--				err = -EBUSY;
-+				goto err_element_clash;
- 			else if (!(nlmsg_flags & NLM_F_EXCL))
- 				err = 0;
- 		} else if (err == -ENOTEMPTY) {
-@@ -6308,7 +6306,7 @@ static int nft_register_flowtable_net_hooks(struct net *net,
- 			list_for_each_entry(hook2, &ft->hook_list, list) {
- 				if (hook->ops.dev == hook2->ops.dev &&
- 				    hook->ops.pf == hook2->ops.pf) {
--					err = -EBUSY;
-+					err = -EEXIST;
- 					goto err_unregister_net_hooks;
- 				}
- 			}
+ 	kvfree(sbi->ckpt);
+ 
+-	f2fs_unregister_sysfs(sbi);
+-
+ 	sb->s_fs_info = NULL;
+ 	if (sbi->s_chksum_driver)
+ 		crypto_free_shash(sbi->s_chksum_driver);
 -- 
 2.25.1
 
