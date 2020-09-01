@@ -2,99 +2,134 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E34C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70128C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 36A2C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XjFnaTJZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3C7F9206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:02:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976143;
+	bh=Y6DJoX2DZcX0pjal8o/qkiugyWoFm/l5LEkEMpG+PAc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PkUCEgNu77c0jhVswo2xoyA1ryLQjkAAY8c5iX1O64B+N6u5MhLc9r6xZzU+pwef7
+	 CPa+igr6QMWymMJ5HmEolKWukKMKKozlp4NbQA837AkWYaf47UuXx/fZ8J/BpaqeXN
+	 oXI4VYIYoBCa/KhnmuaJfPMwdv4qkc2dRvB68Qjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729401AbgIAQCU (ORCPT
+        id S1731724AbgIAQCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:02:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731693AbgIAPns (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:43:48 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7511DC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:43:48 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l191so878331pgd.5
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:43:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:content-transfer-encoding:in-reply-to:references
-         :subject:from:cc:to:date:message-id:user-agent;
-        bh=x8Z9wFHU5eJIz7vYKW4wsTnm7g9XBK4yOanCvKB9vjM=;
-        b=XjFnaTJZmA5aVtH7IjnlxheI47kFzEJ4agCy9CFsFrJocEXppx1FX7tJFIC+Nsvz5C
-         iZskAozotXH0nF+KDwZpSo5ugtemrAbisn6hO6tSABZhue9FEmxd7W++zZ+KWuP5C8V2
-         z5x5QUtioFI85El89P/Hqu0++DQotdobhbtGo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:content-transfer-encoding
-         :in-reply-to:references:subject:from:cc:to:date:message-id
-         :user-agent;
-        bh=x8Z9wFHU5eJIz7vYKW4wsTnm7g9XBK4yOanCvKB9vjM=;
-        b=fbxK97cEBsjL+rHwixmpB34QVQ1Dk0HjZT5JHFUW/2U7VmALfD4BXCu9GQmWRhoadl
-         evmVdVn87doVmafEvvJj++PKw4bEqcLa/mAQOvLGZRpTF3U3+Wrn0LdFzC8wcZdJSsKU
-         TVddZOUagOF4gY2OKk+adk7b8+OxpAuWIH8vTUpkpJaqs4QPBBrFPA5jsiAhoPULKQP9
-         w07UfuTqXGQe2+hHQlAhuGfGT6QTpN5/mLAFSF6WOS8WhZN1H/qaBzNSFI83p9IsUdrv
-         I5vnEkPtm9q+vho6cEOtrRseS9Weh8fyAUWNjr+iesogoYx1Yqi7Da9uIO6EWMg1HCYu
-         V/0g==
-X-Gm-Message-State: AOAM531Gce8hcjhC9iG58f267q0LyAtbJH+bFJZLvGSQd/096fSbQwe/
-        w7qhwAX5t6sw8hXleFVLZvtyfA==
-X-Google-Smtp-Source: ABdhPJyNGI5kBf/qAyktQrVkh0MPvczLzRTDwPGSTM/NCSklPkckoC5nnaCi8Suu2jOejF/FpswMQA==
-X-Received: by 2002:aa7:9598:: with SMTP id z24mr2336329pfj.223.1598975028043;
-        Tue, 01 Sep 2020 08:43:48 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:3e52:82ff:fe6c:83ab])
-        by smtp.gmail.com with ESMTPSA id s68sm2421932pfb.91.2020.09.01.08.43.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 08:43:47 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Sep 2020 12:02:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58358 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730602AbgIAPnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:43:49 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76C3208CA;
+        Tue,  1 Sep 2020 15:43:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598975028;
+        bh=Y6DJoX2DZcX0pjal8o/qkiugyWoFm/l5LEkEMpG+PAc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=lGF+Oj/evuOeWr2SxW5++K12pUvm/ejuhDNMA+Bv16AUgYa5iqJlxP9SsYtgudgcY
+         GjieRgvB6t5+CdEsSjbXSgbMi0ge6ZkBkW7b1jNaaafungELKyJA1Qqj4AwNF0P5oX
+         yx8WZYJouinAQBh7oKbcnEGtTcUubffpS1ReUDOQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 151/255] scsi: qla2xxx: Fix login timeout
+Date:   Tue,  1 Sep 2020 17:10:07 +0200
+Message-Id: <20200901151007.924804046@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20200901081920.v2.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
-References: <20200901081920.v2.1.Id02b2f451b3eed71ddd580f4b8b44b3e33e84970@changeid>
-Subject: Re: [PATCH v2] iio: sx9310: Prefer async probe
-From:   Stephen Boyd <swboyd@chromium.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Daniel Campello <campello@chromium.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-To:     Douglas Anderson <dianders@chromium.org>,
-        Jonathan Cameron <jic23@kernel.org>
-Date:   Tue, 01 Sep 2020 08:43:46 -0700
-Message-ID: <159897502625.334488.7103007623601336114@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.9.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Douglas Anderson (2020-09-01 08:19:43)
-> On one board I found that:
->   probe of 5-0028 returned 1 after 259547 usecs
->=20
-> While some of this time is attributable to the pile of i2c transfers
-> that we do at probe time, the lion's share (over 200 ms) is sitting
-> waiting in the polling loop in sx9310_init_compensation() waiting for
-> the hardware to indicate that it's done.
->=20
-> There's no reason to block probe of all other devices on our probe.
-> Turn on async probe.
->=20
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> ---
+From: Quinn Tran <qutran@marvell.com>
 
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+[ Upstream commit abb31aeaa9b20680b0620b23fea5475ea4591e31 ]
+
+Multipath errors were seen during failback due to login timeout.  The
+remote device sent LOGO, the local host tore down the session and did
+relogin. The RSCN arrived indicates remote device is going through failover
+after which the relogin is in a 20s timeout phase.  At this point the
+driver is stuck in the relogin process.  Add a fix to delete the session as
+part of abort/flush the login.
+
+Link: https://lore.kernel.org/r/20200806111014.28434-5-njavali@marvell.com
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Nilesh Javali <njavali@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/scsi/qla2xxx/qla_gs.c     | 18 +++++++++++++++---
+ drivers/scsi/qla2xxx/qla_target.c |  2 +-
+ 2 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index 3bfb5678f6515..de9fd7f688d01 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -3538,10 +3538,22 @@ login_logout:
+ 		}
+ 
+ 		if (fcport->scan_state != QLA_FCPORT_FOUND) {
++			bool do_delete = false;
++
++			if (fcport->scan_needed &&
++			    fcport->disc_state == DSC_LOGIN_PEND) {
++				/* Cable got disconnected after we sent
++				 * a login. Do delete to prevent timeout.
++				 */
++				fcport->logout_on_delete = 1;
++				do_delete = true;
++			}
++
+ 			fcport->scan_needed = 0;
+-			if ((qla_dual_mode_enabled(vha) ||
+-				qla_ini_mode_enabled(vha)) &&
+-			    atomic_read(&fcport->state) == FCS_ONLINE) {
++			if (((qla_dual_mode_enabled(vha) ||
++			      qla_ini_mode_enabled(vha)) &&
++			    atomic_read(&fcport->state) == FCS_ONLINE) ||
++				do_delete) {
+ 				if (fcport->loop_id != FC_NO_LOOP_ID) {
+ 					if (fcport->flags & FCF_FCP2_DEVICE)
+ 						fcport->logout_on_delete = 0;
+diff --git a/drivers/scsi/qla2xxx/qla_target.c b/drivers/scsi/qla2xxx/qla_target.c
+index fbb80a043b4fe..90289162dbd4c 100644
+--- a/drivers/scsi/qla2xxx/qla_target.c
++++ b/drivers/scsi/qla2xxx/qla_target.c
+@@ -1270,7 +1270,7 @@ void qlt_schedule_sess_for_deletion(struct fc_port *sess)
+ 
+ 	qla24xx_chk_fcp_state(sess);
+ 
+-	ql_dbg(ql_dbg_tgt, sess->vha, 0xe001,
++	ql_dbg(ql_dbg_disc, sess->vha, 0xe001,
+ 	    "Scheduling sess %p for deletion %8phC\n",
+ 	    sess, sess->port_name);
+ 
+-- 
+2.25.1
+
+
+
