@@ -2,113 +2,119 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABA1C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2281AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:44:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F0F520767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1279020767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:44:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730546AbgIASnF (ORCPT
+        id S1730566AbgIASom (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:43:05 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:45336 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbgIASnC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:43:02 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 21B441C0B9B; Tue,  1 Sep 2020 20:43:00 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 20:42:58 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Evgeny Novikov <novikov@ispras.ru>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 047/125] media: davinci: vpif_capture: fix potential
- double free
-Message-ID: <20200901183912.GA5295@duo.ucw.cz>
-References: <20200901150934.576210879@linuxfoundation.org>
- <20200901150936.857115610@linuxfoundation.org>
+        Tue, 1 Sep 2020 14:44:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:48240 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbgIASol (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 14:44:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AAB81FB;
+        Tue,  1 Sep 2020 11:44:40 -0700 (PDT)
+Received: from [10.57.40.122] (unknown [10.57.40.122])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82E493F71F;
+        Tue,  1 Sep 2020 11:44:36 -0700 (PDT)
+Subject: Re: [PATCH v9 10/32] drm: mediatek: use common helper for a
+ scatterlist contiguity check
+To:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-mediatek@lists.infradead.org
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+ <CGME20200826063533eucas1p1fad2f2afb117b026081468d2d840ab0f@eucas1p1.samsung.com>
+ <20200826063316.23486-11-m.szyprowski@samsung.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0fda65b1-1755-9e18-7c84-3156f5124752@arm.com>
+Date:   Tue, 1 Sep 2020 19:44:34 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
-Content-Disposition: inline
-In-Reply-To: <20200901150936.857115610@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200826063316.23486-11-m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-08-26 07:32, Marek Szyprowski wrote:
+> Use common helper for checking the contiguity of the imported dma-buf and
+> do this check before allocating resources, so the error path is simpler.
 
---bCsyhTFzCvuiizWE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-Hi!
-
-> [ Upstream commit 602649eadaa0c977e362e641f51ec306bc1d365d ]
->=20
-> In case of errors vpif_probe_complete() releases memory for vpif_obj.sd
-> and unregisters the V4L2 device. But then this is done again by
-> vpif_probe() itself. The patch removes the cleaning from
-> vpif_probe_complete().
-
-> Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-> Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  drivers/media/platform/davinci/vpif_capture.c | 2 --
->  1 file changed, 2 deletions(-)
->=20
-> diff --git a/drivers/media/platform/davinci/vpif_capture.c b/drivers/medi=
-a/platform/davinci/vpif_capture.c
-> index a96f53ce80886..cf1d11e6dd8c4 100644
-> --- a/drivers/media/platform/davinci/vpif_capture.c
-> +++ b/drivers/media/platform/davinci/vpif_capture.c
-> @@ -1489,8 +1489,6 @@ probe_out:
->  		/* Unregister video device */
->  		video_unregister_device(&ch->video_dev);
->  	}
-> -	kfree(vpif_obj.sd);
-> -	v4l2_device_unregister(&vpif_obj.v4l2_dev);
-> =20
->  	return err;
->  }
-
-This one is wrong. Unlike mainline, 4.19 does check return value of
-vpif_probe_complete(), and thus it will lead to memory leak in 4.19.
-
-Furthermore, I believe mainline still has a problems after this
-patch. There is sync and async path where vpif_probe_complete(), and
-while this fixes the sync path in mainline, I believe it will cause
-memory leak on the async path.
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---bCsyhTFzCvuiizWE
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCX06WMgAKCRAw5/Bqldv6
-8oVYAJ0bhGBctKpJkKysPtiS8fIF7oACrwCgp0ZfdNdUxd0xmdcm83RhLUXGHk4=
-=Cn3J
------END PGP SIGNATURE-----
-
---bCsyhTFzCvuiizWE--
+>   drivers/gpu/drm/mediatek/mtk_drm_gem.c | 28 ++++++--------------------
+>   1 file changed, 6 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+> index 6190cc3b7b0d..3654ec732029 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+> @@ -212,37 +212,21 @@ struct drm_gem_object *mtk_gem_prime_import_sg_table(struct drm_device *dev,
+>   			struct dma_buf_attachment *attach, struct sg_table *sg)
+>   {
+>   	struct mtk_drm_gem_obj *mtk_gem;
+> -	int ret;
+> -	struct scatterlist *s;
+> -	unsigned int i;
+> -	dma_addr_t expected;
+>   
+> -	mtk_gem = mtk_drm_gem_init(dev, attach->dmabuf->size);
+> +	/* check if the entries in the sg_table are contiguous */
+> +	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
+> +		DRM_ERROR("sg_table is not contiguous");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+>   
+> +	mtk_gem = mtk_drm_gem_init(dev, attach->dmabuf->size);
+>   	if (IS_ERR(mtk_gem))
+>   		return ERR_CAST(mtk_gem);
+>   
+> -	expected = sg_dma_address(sg->sgl);
+> -	for_each_sg(sg->sgl, s, sg->nents, i) {
+> -		if (!sg_dma_len(s))
+> -			break;
+> -
+> -		if (sg_dma_address(s) != expected) {
+> -			DRM_ERROR("sg_table is not contiguous");
+> -			ret = -EINVAL;
+> -			goto err_gem_free;
+> -		}
+> -		expected = sg_dma_address(s) + sg_dma_len(s);
+> -	}
+> -
+>   	mtk_gem->dma_addr = sg_dma_address(sg->sgl);
+>   	mtk_gem->sg = sg;
+>   
+>   	return &mtk_gem->base;
+> -
+> -err_gem_free:
+> -	kfree(mtk_gem);
+> -	return ERR_PTR(ret);
+>   }
+>   
+>   void *mtk_drm_gem_prime_vmap(struct drm_gem_object *obj)
+> 
