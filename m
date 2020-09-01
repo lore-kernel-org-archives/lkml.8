@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61DEDC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5932C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC1F2064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8714021734
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975390;
-	bh=xfO1u2PPaS2QW8600aN9UjDU60PC4B7Dyb/0Idw7mcU=;
+	s=default; t=1598975394;
+	bh=kA71fcJpkNopAAf52LgGtHDj8v411drt7EX2rOGPScw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uDdeORjC4JIdkddPRAO3QOFVRpZ02yLxfjnimNXsKxQEY0YqqwgNgX7fEB7esCaOW
-	 SfXJca6wHRSdslaiaCQBE8bMRJI5L3G6tiQyZU96eM9rbXGUFyDVexoaQPkkRs3WIx
-	 Izl7+7TjrUGABpQJ3Le/Kor/roux7odVGRFS9+T4=
+	b=wKr/Z0OqmqXxfxjeOZ08+kKL+6fY8ztsFAkPiPNZt+wJBI2WIIHjjF56WFFWX0TXd
+	 bNz1yYx7QIFqEGsPVK+G4UakftP+OugUfmUzqSZwnTjdIrBYLObzTU9pwnypt04flO
+	 QVPfqoPxDHob+wMWRmmElFBa5aaG91Yt6RGVKdDQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732138AbgIAPtq (ORCPT
+        id S1731936AbgIAPtw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35788 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:49:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731694AbgIAPqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:46:16 -0400
+        id S1731939AbgIAPqV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:46:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB4D6206FA;
-        Tue,  1 Sep 2020 15:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC6B92078B;
+        Tue,  1 Sep 2020 15:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975175;
-        bh=xfO1u2PPaS2QW8600aN9UjDU60PC4B7Dyb/0Idw7mcU=;
+        s=default; t=1598975180;
+        bh=kA71fcJpkNopAAf52LgGtHDj8v411drt7EX2rOGPScw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iz1uZuC3OGqsff6teGrZhQrY6ya63R7+sJk5TKx18qRfXjdrA8rh98LDugQOV0fgL
-         7rotVEB5TeaC2lJCh/DSNV7+HDZhFqwK6wk4OWKviGJbeEfY0qcnjtyGeuLi+t05G4
-         pSGjc8mZW7Ocd8zQ49IzEr3lXjLO/OqRMcQH4TdM=
+        b=gJdE6Tls+4P0spW3VJrV3xtuXAlkCSj/7Vi8lV1a1OiJCA4CgpWa9uPIv2ba3yjCI
+         nRMafetBv8oX+N4gE7WRKNLNuSHyJm5QJWKUeZWXxSwXcdGhMlputwkprq61LMb0w9
+         I48z6+fkeOkBFMHKDtCm7nzhXn2GZij0AkkK9lPg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
         Heikki Krogerus <heikki.krogerus@linux.intel.com>,
         Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.8 238/255] usb: typec: ucsi: Fix AB BA lock inversion
-Date:   Tue,  1 Sep 2020 17:11:34 +0200
-Message-Id: <20200901151012.158111855@linuxfoundation.org>
+Subject: [PATCH 5.8 240/255] usb: typec: ucsi: Rework ppm_lock handling
+Date:   Tue,  1 Sep 2020 17:11:36 +0200
+Message-Id: <20200901151012.253319597@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -62,130 +62,186 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-commit 0ff0705a2ef2929e9326c95df48bdbebb0dafaad upstream.
-
-Lockdep reports an AB BA lock inversion between ucsi_init() and
-ucsi_handle_connector_change():
-
-AB order:
-
-1. ucsi_init takes ucsi->ppm_lock (it runs with that locked for the
-   duration of the function)
-2. usci_init eventually end up calling ucsi_register_displayport,
-   which takes ucsi_connector->lock
-
-BA order:
-
-1. ucsi_handle_connector_change work is started, takes ucsi_connector->lock
-2. ucsi_handle_connector_change calls ucsi_send_command which takes
-   ucsi->ppm_lock
+commit 25794e3079d2a98547b6bf5764ef0240aa89b798 upstream.
 
 The ppm_lock really only needs to be hold during 2 functions:
 ucsi_reset_ppm() and ucsi_run_command().
 
-This commit fixes the AB BA lock inversion by making ucsi_init drop the
-ucsi->ppm_lock before it starts registering ports; and replacing any
-ucsi_run_command() calls after this point with ucsi_send_command()
-(which is a wrapper around run_command taking the lock while handling
-the command).
+Push the taking of the lock down into these 2 functions, renaming
+ucsi_run_command() to ucsi_send_command() which was an existing
+wrapper already taking the lock for its callers.
 
-Some of the replacing of ucsi_run_command with ucsi_send_command
-in the helpers used during port registration also fixes a number of
-code paths after registration which call ucsi_run_command() without
-holding the ppm_lock:
-1. ucsi_altmode_update_active() call in ucsi/displayport.c
-2. ucsi_register_altmodes() call from ucsi_handle_connector_change()
-   (through ucsi_partner_change())
+This simplifies things for the callers and removes the difference
+between ucsi_send_command() and ucsi_run_command() which has led
+to various locking bugs in the past.
 
 Cc: stable@vger.kernel.org
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200809141904.4317-2-hdegoede@redhat.com
+Link: https://lore.kernel.org/r/20200809141904.4317-4-hdegoede@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/ucsi/ucsi.c |   18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ drivers/usb/typec/ucsi/ucsi.c |   56 ++++++++++++++++--------------------------
+ 1 file changed, 22 insertions(+), 34 deletions(-)
 
 --- a/drivers/usb/typec/ucsi/ucsi.c
 +++ b/drivers/usb/typec/ucsi/ucsi.c
-@@ -205,7 +205,7 @@ void ucsi_altmode_update_active(struct u
- 	int i;
+@@ -146,42 +146,33 @@ static int ucsi_exec_command(struct ucsi
+ 	return UCSI_CCI_LENGTH(cci);
+ }
  
- 	command = UCSI_GET_CURRENT_CAM | UCSI_CONNECTOR_NUMBER(con->num);
--	ret = ucsi_run_command(con->ucsi, command, &cur, sizeof(cur));
-+	ret = ucsi_send_command(con->ucsi, command, &cur, sizeof(cur));
- 	if (ret < 0) {
- 		if (con->ucsi->version > 0x0100) {
- 			dev_err(con->ucsi->dev,
-@@ -354,7 +354,7 @@ ucsi_register_altmodes_nvidia(struct ucs
- 		command |= UCSI_GET_ALTMODE_RECIPIENT(recipient);
- 		command |= UCSI_GET_ALTMODE_CONNECTOR_NUMBER(con->num);
- 		command |= UCSI_GET_ALTMODE_OFFSET(i);
--		len = ucsi_run_command(con->ucsi, command, &alt, sizeof(alt));
-+		len = ucsi_send_command(con->ucsi, command, &alt, sizeof(alt));
- 		/*
- 		 * We are collecting all altmodes first and then registering.
- 		 * Some type-C device will return zero length data beyond last
-@@ -431,7 +431,7 @@ static int ucsi_register_altmodes(struct
- 		command |= UCSI_GET_ALTMODE_RECIPIENT(recipient);
- 		command |= UCSI_GET_ALTMODE_CONNECTOR_NUMBER(con->num);
- 		command |= UCSI_GET_ALTMODE_OFFSET(i);
--		len = ucsi_run_command(con->ucsi, command, alt, sizeof(alt));
-+		len = ucsi_send_command(con->ucsi, command, alt, sizeof(alt));
- 		if (len <= 0)
- 			return len;
+-static int ucsi_run_command(struct ucsi *ucsi, u64 command,
+-			    void *data, size_t size)
++int ucsi_send_command(struct ucsi *ucsi, u64 command,
++		      void *data, size_t size)
+ {
+ 	u8 length;
+ 	int ret;
  
-@@ -904,7 +904,7 @@ static int ucsi_register_port(struct ucs
- 	/* Get connector capability */
- 	command = UCSI_GET_CONNECTOR_CAPABILITY;
- 	command |= UCSI_CONNECTOR_NUMBER(con->num);
--	ret = ucsi_run_command(ucsi, command, &con->cap, sizeof(con->cap));
-+	ret = ucsi_send_command(ucsi, command, &con->cap, sizeof(con->cap));
+-	WARN_ON(!mutex_is_locked(&ucsi->ppm_lock));
++	mutex_lock(&ucsi->ppm_lock);
+ 
+ 	ret = ucsi_exec_command(ucsi, command);
  	if (ret < 0)
- 		return ret;
+-		return ret;
++		goto out;
  
-@@ -953,8 +953,7 @@ static int ucsi_register_port(struct ucs
+ 	length = ret;
  
- 	/* Get the status */
- 	command = UCSI_GET_CONNECTOR_STATUS | UCSI_CONNECTOR_NUMBER(con->num);
--	ret = ucsi_run_command(ucsi, command, &con->status,
--			       sizeof(con->status));
-+	ret = ucsi_send_command(ucsi, command, &con->status, sizeof(con->status));
- 	if (ret < 0) {
- 		dev_err(ucsi->dev, "con%d: failed to get status\n", con->num);
- 		return 0;
-@@ -1044,6 +1043,8 @@ int ucsi_init(struct ucsi *ucsi)
- 		goto err_reset;
+ 	if (data) {
+ 		ret = ucsi->ops->read(ucsi, UCSI_MESSAGE_IN, data, size);
+ 		if (ret)
+-			return ret;
++			goto out;
  	}
  
-+	mutex_unlock(&ucsi->ppm_lock);
+ 	ret = ucsi_acknowledge_command(ucsi);
+ 	if (ret)
+-		return ret;
+-
+-	return length;
+-}
++		goto out;
+ 
+-int ucsi_send_command(struct ucsi *ucsi, u64 command,
+-		      void *retval, size_t size)
+-{
+-	int ret;
+-
+-	mutex_lock(&ucsi->ppm_lock);
+-	ret = ucsi_run_command(ucsi, command, retval, size);
++	ret = length;
++out:
+ 	mutex_unlock(&ucsi->ppm_lock);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ucsi_send_command);
+@@ -738,20 +729,24 @@ static int ucsi_reset_ppm(struct ucsi *u
+ 	u32 cci;
+ 	int ret;
+ 
++	mutex_lock(&ucsi->ppm_lock);
 +
- 	/* Register all connectors */
- 	for (i = 0; i < ucsi->cap.num_connectors; i++) {
- 		ret = ucsi_register_port(ucsi, i);
-@@ -1054,12 +1055,10 @@ int ucsi_init(struct ucsi *ucsi)
- 	/* Enable all notifications */
- 	ucsi->ntfy = UCSI_ENABLE_NTFY_ALL;
+ 	ret = ucsi->ops->async_write(ucsi, UCSI_CONTROL, &command,
+ 				     sizeof(command));
+ 	if (ret < 0)
+-		return ret;
++		goto out;
+ 
+ 	tmo = jiffies + msecs_to_jiffies(UCSI_TIMEOUT_MS);
+ 
+ 	do {
+-		if (time_is_before_jiffies(tmo))
+-			return -ETIMEDOUT;
++		if (time_is_before_jiffies(tmo)) {
++			ret = -ETIMEDOUT;
++			goto out;
++		}
+ 
+ 		ret = ucsi->ops->read(ucsi, UCSI_CCI, &cci, sizeof(cci));
+ 		if (ret)
+-			return ret;
++			goto out;
+ 
+ 		/* If the PPM is still doing something else, reset it again. */
+ 		if (cci & ~UCSI_CCI_RESET_COMPLETE) {
+@@ -759,13 +754,15 @@ static int ucsi_reset_ppm(struct ucsi *u
+ 						     &command,
+ 						     sizeof(command));
+ 			if (ret < 0)
+-				return ret;
++				goto out;
+ 		}
+ 
+ 		msleep(20);
+ 	} while (!(cci & UCSI_CCI_RESET_COMPLETE));
+ 
+-	return 0;
++out:
++	mutex_unlock(&ucsi->ppm_lock);
++	return ret;
+ }
+ 
+ static int ucsi_role_cmd(struct ucsi_connector *con, u64 command)
+@@ -777,9 +774,7 @@ static int ucsi_role_cmd(struct ucsi_con
+ 		u64 c;
+ 
+ 		/* PPM most likely stopped responding. Resetting everything. */
+-		mutex_lock(&con->ucsi->ppm_lock);
+ 		ucsi_reset_ppm(con->ucsi);
+-		mutex_unlock(&con->ucsi->ppm_lock);
+ 
+ 		c = UCSI_SET_NOTIFICATION_ENABLE | con->ucsi->ntfy;
+ 		ucsi_send_command(con->ucsi, c, NULL, 0);
+@@ -1010,8 +1005,6 @@ int ucsi_init(struct ucsi *ucsi)
+ 	int ret;
+ 	int i;
+ 
+-	mutex_lock(&ucsi->ppm_lock);
+-
+ 	/* Reset the PPM */
+ 	ret = ucsi_reset_ppm(ucsi);
+ 	if (ret) {
+@@ -1022,13 +1015,13 @@ int ucsi_init(struct ucsi *ucsi)
+ 	/* Enable basic notifications */
+ 	ucsi->ntfy = UCSI_ENABLE_NTFY_CMD_COMPLETE | UCSI_ENABLE_NTFY_ERROR;
  	command = UCSI_SET_NOTIFICATION_ENABLE | ucsi->ntfy;
 -	ret = ucsi_run_command(ucsi, command, NULL, 0);
 +	ret = ucsi_send_command(ucsi, command, NULL, 0);
  	if (ret < 0)
- 		goto err_unregister;
+ 		goto err_reset;
+ 
+ 	/* Get PPM capabilities */
+ 	command = UCSI_GET_CAPABILITY;
+-	ret = ucsi_run_command(ucsi, command, &ucsi->cap, sizeof(ucsi->cap));
++	ret = ucsi_send_command(ucsi, command, &ucsi->cap, sizeof(ucsi->cap));
+ 	if (ret < 0)
+ 		goto err_reset;
+ 
+@@ -1045,8 +1038,6 @@ int ucsi_init(struct ucsi *ucsi)
+ 		goto err_reset;
+ 	}
  
 -	mutex_unlock(&ucsi->ppm_lock);
 -
- 	return 0;
- 
- err_unregister:
-@@ -1071,6 +1070,7 @@ err_unregister:
+ 	/* Register all connectors */
+ 	for (i = 0; i < ucsi->cap.num_connectors; i++) {
+ 		ret = ucsi_register_port(ucsi, i);
+@@ -1072,12 +1063,9 @@ err_unregister:
  		con->port = NULL;
  	}
  
-+	mutex_lock(&ucsi->ppm_lock);
+-	mutex_lock(&ucsi->ppm_lock);
  err_reset:
  	ucsi_reset_ppm(ucsi);
  err:
+-	mutex_unlock(&ucsi->ppm_lock);
+-
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(ucsi_init);
 
 
