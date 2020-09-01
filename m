@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D47C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CA5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:25:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E22020578
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8023A20578
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:25:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="G1fcxj7N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="CgqVD+cU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgIAWZl (ORCPT
+        id S1728252AbgIAWZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:25:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33726 "EHLO
+        Tue, 1 Sep 2020 18:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726426AbgIAWZh (ORCPT
+        with ESMTP id S1727902AbgIAWZj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:25:37 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A9ABC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 15:25:37 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id v77so2861968ybi.2
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 15:25:37 -0700 (PDT)
+        Tue, 1 Sep 2020 18:25:39 -0400
+Received: from mail-qk1-x749.google.com (mail-qk1-x749.google.com [IPv6:2607:f8b0:4864:20::749])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8F3E5C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 15:25:39 -0700 (PDT)
+Received: by mail-qk1-x749.google.com with SMTP id z190so2017850qkc.5
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 15:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=sender:date:in-reply-to:message-id:mime-version:references:subject
          :from:to:cc;
-        bh=1Vm2QqyX/OUi6RR2IULKGjS+daCT8Blmd+/gKY17G40=;
-        b=G1fcxj7NZ2HKC3O3tMp7OaMWLaYHaeE9KsxbMa4zRsJJVBwflae1qaQvhTrD9ZrJKX
-         8uxzDbP9UDghqhvAq0e/p57waEeBVCZp7eZsU0L/Iil4/f58FCSkNr0QUELw0+sdJm6h
-         9hNL1cAJRg+9Lf6PDKIX25eLT/Cwx/RrCkrslPykkYujMCe+LxOhh8pzlUeaoInYxUfK
-         R9Sw0QwRRwHq9avL6LlzpI0vtTMG23d+i+ypHwy8d3KRRF3lB5tAK+UIImMkMCY4hCSr
-         3ys0h9VjnvAfa/z0G8Y7tXq9BSVMTq0jEtayzVpuu6d0aGlBultoPKdf8EDn+n0Wq7Hz
-         aoJQ==
+        bh=xFF5qxswQ8XcvkvdvfVY4/mMkz+/5Nm8uIdW/HNF4l0=;
+        b=CgqVD+cUWdzWbxzhIKI7RaHd9LEyOmQtSIfGxSeTZx3wjhQwa49KpJeXWTcaf02UaT
+         1t1h7E4GQ51bnUwDBSLFbqTvq29wGC4ct4Zyu8vgZtkM46eQJN1UsEKFm/8Of7YG8Kv5
+         A/r8lJXFwwttWKEbrul9OMFa6vSTWwUvt9OXf+wEX4A0aUKS8+RiOBiIr+8uA9ECs8bN
+         Vl03pCefqLV6Bj+L87/WKvPDlpeTmXl597+8SYhKOlLzzvbsd2ifJ5UoyxVWQbs3AK3v
+         u1F1qssZJ/KbKpGQp1c2MiRQlak+5cFS+kkOb5rIh5b0yPkY6YgNgyaHrOEJD4WpCq9p
+         3+Dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=1Vm2QqyX/OUi6RR2IULKGjS+daCT8Blmd+/gKY17G40=;
-        b=f+scgCn4Z7mrtWS2uVNHVi4WztDJecOMxDONO2Pkqmm6SfdIDVxAmaVpMOjTSXn9oB
-         vYYQ+609TpWvY/gdqtoX7pjVTE70OTFH6fZr9i7xgdSCGnVj4Vozo+2QxEsu3ZpNam0a
-         xmEAOv2lDsxv5BovrazOl9Tr9hTHyzdlW92/aShspNaMFgu6Bm74hwvERauzvWeNr/D+
-         BdVC8LPr5su7B+UYle41WKWQquZpHhDCBGYZidh8TICfTp43oaf59B42nHCez9q3sXJX
-         6Q3Z38SjMa441d7PToQc/HUwRwzhj32zO3AcV5OUyzTUHA89+P69hEjFBgcjR5YZTpkM
-         AoKg==
-X-Gm-Message-State: AOAM532EVWQA8pKaiGjIaxfF5+DoIDqQ5VhMheJqdjJMz4GcPmRe+SSP
-        FI3HCGd8JEg1uANwauo/wcGPTNfnWU6kNwMXbgk=
-X-Google-Smtp-Source: ABdhPJx5yf3WNW7Q5w2bD1WYoDV7Na2wjlaEIzL4kF+ReKd10GAYtHjsF7mnqYQo7KV+jgGCvau1EGlVhk8NOTuv0R4=
+        bh=xFF5qxswQ8XcvkvdvfVY4/mMkz+/5Nm8uIdW/HNF4l0=;
+        b=RP+AGbaNOrDBHDlrDnag3S4dneW3rzqBGdA8bPEaHTxV8RjERVejz91Xyky3hWn00R
+         bbL+vruKOeoFKt2HnJDmE898XLh8G2jYNZ+Apsh1aDzgpg2R006zL98Sw6Ie9i+WlEit
+         ZyrPU/nA6SIvN72OWmnFWi+bdTTXb+q1m9hzzj8COJtBciQ2M2x0hzNFnr9CILme+9zp
+         UGA3/cGtkd55F71k/m7M96hPk5BgABbzUDYwzmTx2xu4j8Rubcz9/J0kDzE+O5i4LS0E
+         qFXgKnhTai/RJyA1GiMu3qn61wD1XHkNmDvxXrN1y/1fwLngAvyCo0qMx5m6y93WnlO4
+         +t1w==
+X-Gm-Message-State: AOAM531MHwi1oihFaX5HPAmzeGZb4NM61NBmJTf2XyzEfWQuJHlbpByP
+        +neJN1zQyEQXCJUTUJLuHaobUtmjWbi0W4UtM/A=
+X-Google-Smtp-Source: ABdhPJxyzoZmVuOGUXyZqPhNEmq3n7shEn4qdfzq8u7nGZfUD+VJvMmXZlfbSSn7oT0RWF6YqEQvDoRsCL3W6Eb4Rbc=
 X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
- (user=ndesaulniers job=sendgmr) by 2002:a25:7509:: with SMTP id
- q9mr5300885ybc.317.1598999136478; Tue, 01 Sep 2020 15:25:36 -0700 (PDT)
-Date:   Tue,  1 Sep 2020 15:25:22 -0700
+ (user=ndesaulniers job=sendgmr) by 2002:a05:6214:10e8:: with SMTP id
+ q8mr4223437qvt.59.1598999138727; Tue, 01 Sep 2020 15:25:38 -0700 (PDT)
+Date:   Tue,  1 Sep 2020 15:25:23 -0700
 In-Reply-To: <20200901222523.1941988-1-ndesaulniers@google.com>
-Message-Id: <20200901222523.1941988-2-ndesaulniers@google.com>
+Message-Id: <20200901222523.1941988-3-ndesaulniers@google.com>
 Mime-Version: 1.0
 References: <20200901222523.1941988-1-ndesaulniers@google.com>
 X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
-Subject: [PATCH 1/2] powerpc/vdso64: link vdso64 with linker
+Subject: [PATCH 2/2] powerpc/vdso32: link vdso64 with linker
 From:   Nick Desaulniers <ndesaulniers@google.com>
 To:     Michael Ellerman <mpe@ellerman.id.au>,
         Nicholas Piggin <npiggin@gmail.com>
@@ -86,87 +86,74 @@ we can check --orphan-handling=warn support correctly, as cc-ldoption
 was removed in
 commit 055efab3120b ("kbuild: drop support for cc-ldoption").
 
-Painstakingly compared the output between `objdump -a` before and after
-this change. Now function symbols have the correct type of FUNC rather
-than NONE, and the entry is slightly different (which doesn't matter for
-the vdso). Binary size is the same.
+Requires dropping the .got section.  I couldn't find how it was used in
+the vdso32.
 
 Fixes: commit f2af201002a8 ("powerpc/build: vdso linker warning for orphan sections")
 Link: https://lore.kernel.org/lkml/CAKwvOdnn3wxYdJomvnveyD_njwRku3fABWT_bS92duihhywLJQ@mail.gmail.com/
 Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
- arch/powerpc/include/asm/vdso.h         | 17 ++---------------
- arch/powerpc/kernel/vdso64/Makefile     |  8 ++++++--
- arch/powerpc/kernel/vdso64/vdso64.lds.S |  1 -
- 3 files changed, 8 insertions(+), 18 deletions(-)
+Not sure removing .got is a good idea or not.  Otherwise I observe the
+following link error:
+powerpc-linux-gnu-ld: warning: orphan section `.got' from `arch/powerpc/kernel/vdso32/sigtramp.o' being placed in section `.got'
+powerpc-linux-gnu-ld: _GLOBAL_OFFSET_TABLE_ not defined in linker created .got
+powerpc-linux-gnu-ld: final link failed: bad value
 
-diff --git a/arch/powerpc/include/asm/vdso.h b/arch/powerpc/include/asm/vdso.h
-index 2ff884853f97..11b2ecf49f79 100644
---- a/arch/powerpc/include/asm/vdso.h
-+++ b/arch/powerpc/include/asm/vdso.h
-@@ -24,19 +24,7 @@ int vdso_getcpu_init(void);
- 
- #else /* __ASSEMBLY__ */
- 
--#ifdef __VDSO64__
--#define V_FUNCTION_BEGIN(name)		\
--	.globl name;			\
--	name:				\
--
--#define V_FUNCTION_END(name)		\
--	.size name,.-name;
--
--#define V_LOCAL_FUNC(name) (name)
--#endif /* __VDSO64__ */
--
--#ifdef __VDSO32__
--
-+#if defined(__VDSO32__) || defined (__VDSO64__)
- #define V_FUNCTION_BEGIN(name)		\
- 	.globl name;			\
- 	.type name,@function; 		\
-@@ -46,8 +34,7 @@ int vdso_getcpu_init(void);
- 	.size name,.-name;
- 
- #define V_LOCAL_FUNC(name) (name)
--
--#endif /* __VDSO32__ */
-+#endif /* __VDSO{32|64}__ */
- 
- #endif /* __ASSEMBLY__ */
- 
-diff --git a/arch/powerpc/kernel/vdso64/Makefile b/arch/powerpc/kernel/vdso64/Makefile
-index 38c317f25141..7ea3ce537d0a 100644
---- a/arch/powerpc/kernel/vdso64/Makefile
-+++ b/arch/powerpc/kernel/vdso64/Makefile
-@@ -32,9 +32,13 @@ $(obj)/%.so: OBJCOPYFLAGS := -S
- $(obj)/%.so: $(obj)/%.so.dbg FORCE
- 	$(call if_changed,objcopy)
- 
-+ldflags-y := -shared -soname linux-vdso64.so.1 \
+sigtramp.c doesn't mention anything from the GOT AFAICT, and doesn't
+look like it contains relocations that do, so I'm not sure where
+references to _GLOBAL_OFFSET_TABLE_ are coming from.
+
+ arch/powerpc/kernel/vdso32/Makefile     | 7 +++++--
+ arch/powerpc/kernel/vdso32/vdso32.lds.S | 3 ++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/kernel/vdso32/Makefile b/arch/powerpc/kernel/vdso32/Makefile
+index 87ab1152d5ce..611a5951945a 100644
+--- a/arch/powerpc/kernel/vdso32/Makefile
++++ b/arch/powerpc/kernel/vdso32/Makefile
+@@ -27,6 +27,9 @@ UBSAN_SANITIZE := n
+ ccflags-y := -shared -fno-common -fno-builtin -nostdlib \
+ 	-Wl,-soname=linux-vdso32.so.1 -Wl,--hash-style=both
+ asflags-y := -D__VDSO32__ -s
++ldflags-y := -shared -soname linux-vdso32.so.1 \
 +	$(call ld-option, --eh-frame-hdr) \
 +	$(call ld-option, --orphan-handling=warn) -T
-+
+ 
+ obj-y += vdso32_wrapper.o
+ extra-y += vdso32.lds
+@@ -49,8 +52,8 @@ $(obj-vdso32): %.o: %.S FORCE
+ 	$(call if_changed_dep,vdso32as)
+ 
  # actual build commands
--quiet_cmd_vdso64ld = VDSO64L $@
--      cmd_vdso64ld = $(CC) $(c_flags) -o $@ -Wl,-T$(filter %.lds,$^) $(filter %.o,$^) $(call cc-ldoption, -Wl$(comma)--orphan-handling=warn)
-+quiet_cmd_vdso64ld = LD      $@
-+      cmd_vdso64ld = $(cmd_ld)
+-quiet_cmd_vdso32ld = VDSO32L $@
+-      cmd_vdso32ld = $(VDSOCC) $(c_flags) $(CC32FLAGS) -o $@ $(call cc-ldoption, -Wl$(comma)--orphan-handling=warn) -Wl,-T$(filter %.lds,$^) $(filter %.o,$^)
++quiet_cmd_vdso32ld = LD      $@
++      cmd_vdso32ld = $(cmd_ld)
+ quiet_cmd_vdso32as = VDSO32A $@
+       cmd_vdso32as = $(VDSOCC) $(a_flags) $(CC32FLAGS) -c -o $@ $<
  
- # install commands for the unstripped file
- quiet_cmd_vdso_install = INSTALL $@
-diff --git a/arch/powerpc/kernel/vdso64/vdso64.lds.S b/arch/powerpc/kernel/vdso64/vdso64.lds.S
-index 4e3a8d4ee614..58c33b704b6a 100644
---- a/arch/powerpc/kernel/vdso64/vdso64.lds.S
-+++ b/arch/powerpc/kernel/vdso64/vdso64.lds.S
-@@ -11,7 +11,6 @@ OUTPUT_FORMAT("elf64-powerpcle", "elf64-powerpcle", "elf64-powerpcle")
- OUTPUT_FORMAT("elf64-powerpc", "elf64-powerpc", "elf64-powerpc")
- #endif
- OUTPUT_ARCH(powerpc:common64)
--ENTRY(_start)
+diff --git a/arch/powerpc/kernel/vdso32/vdso32.lds.S b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+index 4c985467a668..0ccdebad18b8 100644
+--- a/arch/powerpc/kernel/vdso32/vdso32.lds.S
++++ b/arch/powerpc/kernel/vdso32/vdso32.lds.S
+@@ -61,7 +61,6 @@ SECTIONS
+ 	.fixup		: { *(.fixup) }
  
- SECTIONS
- {
+ 	.dynamic	: { *(.dynamic) }		:text	:dynamic
+-	.got		: { *(.got) }			:text
+ 	.plt		: { *(.plt) }
+ 
+ 	_end = .;
+@@ -108,7 +107,9 @@ SECTIONS
+ 	.debug_varnames  0 : { *(.debug_varnames) }
+ 
+ 	/DISCARD/	: {
++		*(.got)
+ 		*(.note.GNU-stack)
++		*(.branch_lt)
+ 		*(.data .data.* .gnu.linkonce.d.* .sdata*)
+ 		*(.bss .sbss .dynbss .dynsbss)
+ 		*(.glink .iplt .plt .rela*)
 -- 
 2.28.0.402.g5ffc5be6b7-goog
 
