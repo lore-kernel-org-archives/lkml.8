@@ -2,153 +2,120 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F3EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A50C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4002073A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAD72145D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 00:23:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="cHKZlvbn"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=google.com header.i=@google.com header.b="rVVSYY3/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbgIAAXJ (ORCPT
+        id S1726173AbgIAAXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 20:23:09 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:11922 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgIAAXI (ORCPT
+        Mon, 31 Aug 2020 20:23:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55446 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgIAAXc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 20:23:08 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200901002303epoutp03fa99fc0e769e8343d266e0cde7f26cfb~wgRJUNkpn0184601846epoutp03D
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 00:23:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200901002303epoutp03fa99fc0e769e8343d266e0cde7f26cfb~wgRJUNkpn0184601846epoutp03D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598919783;
-        bh=Xok3Nc5LCZyof2XDbFEopewPALLd7WpbVK2fR8DHi7A=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=cHKZlvbnE7Yhmt6MJETeP7LFlzEpqKUiVBfn8eQKXmboUGdBtW2jl8eosFUySlv6P
-         NNBtC+nn47YAB9ETJlrdjZznwk5XdrRJdsmcVHpQZ9rmHtg5TRKE49FcZcO9QnWErF
-         /Wi9SuEp+4kSWDw1Wu8By+zHl9UBxJu1iykROizQ=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200901002302epcas1p2dbe898750695c35865068378905cad00~wgRI3fxbW0561905619epcas1p2c;
-        Tue,  1 Sep 2020 00:23:02 +0000 (GMT)
+        Mon, 31 Aug 2020 20:23:32 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7587CC061573
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:32 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id o16so179967ybe.8
+        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 17:23:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=sender:date:message-id:mime-version:subject:from:to:cc;
+        bh=NEi5SY5avnbdRDKWM6EkMbB9CYf2qgLLnorTM1MWHus=;
+        b=rVVSYY3/7bGkSisltWS7LTEuDoxZTUtYDTG6fiC1A2JdGxyVJcz25weD53cbc7nbhw
+         COqtL/ji6xKg+PjkWLuv2xh+LODFH2E4Q6oMlPn7I3ebDC3xVw7+rtqfV4WhK7aAekxx
+         OpN2iroTjKwbjk/7Eopfs8qqP/fSPd22wCzsUYRNN8BjGdWFTxRG5Ge3b3qJ2mbWTKwn
+         c2prJuXrfHRZP0f5v+N8WkC0rEw+0wAvh2n6M/HEYJdqVQd4noDC0yyMENwDVg1miLPU
+         YoEZWfqeykUK9//6AIRnoHLp2rak/P0mrVNYC4pFDP+ASatFXQiFIoigTQNlgodHlWPK
+         QGZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:message-id:mime-version:subject:from
+         :to:cc;
+        bh=NEi5SY5avnbdRDKWM6EkMbB9CYf2qgLLnorTM1MWHus=;
+        b=REm5JiHplpIkZONjSl1hsMnmDWYMCUuD8+kzl5kvPrMjoFaIrZIO8bLhEHRnJzCCIe
+         BfPMauew6y8ruxpIumY/S9CPZhQdonxj6obntUKpKEGo3BwVcp7FaraxQk9G5moHBLB9
+         eRhCdy3SJN2hLzWov75yOBEqn+DpSXA8FGNgbijIU7ownwnk8FHz7Gm0ESY3+Ccd/BDF
+         20AaULxVgkVbAuYqPSEVYdR1Eavayu7K2e0B4kxkuPc5bjRlaF1s5R3tjvIp0f621zJ7
+         A40U4jSfFAKvRYIr1RaChdCBYmqjVaHSkHMa9XGZ04X9/uCY7vYT2oQH/0cMAzQZwBAx
+         aaUw==
+X-Gm-Message-State: AOAM533UjMcFMFPpnRr9ObuRKCXD9kriETsT4cYgN1umQ0pEfvqzY2Ee
+        11iRMVgjtkq9ZIyFsxbIZ3/KlMwiFNEDPzGSJXc=
+X-Google-Smtp-Source: ABdhPJw5hScYOdiK6tdHyX+jSfRjvP8SrGOXGcVVoZitQU5liu210XuiGzC84PRxVEmbKYHp0iot1a0E52po9gC5FCI=
+X-Received: from ndesaulniers1.mtv.corp.google.com ([2620:15c:211:202:f693:9fff:fef4:4d25])
+ (user=ndesaulniers job=sendgmr) by 2002:a25:32c7:: with SMTP id
+ y190mr6412975yby.441.1598919811518; Mon, 31 Aug 2020 17:23:31 -0700 (PDT)
+Date:   Mon, 31 Aug 2020 17:23:19 -0700
+Message-Id: <20200901002326.1137289-1-ndesaulniers@google.com>
 Mime-Version: 1.0
-Subject: Re: [PATCH v9 3/4] scsi: ufs: L2P map management for HPB read
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <5587cf86-eeec-2c70-a47c-57149f00eb95@acm.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <1239183618.61598919782940.JavaMail.epsvc@epcpadp2>
-Date:   Tue, 01 Sep 2020 09:21:10 +0900
-X-CMS-MailID: 20200901002110epcms2p59e3e52812b12ab19f210bb5c1f7f7391
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200828070950epcms2p5470bd43374be18d184dd802da09e73c8
-References: <5587cf86-eeec-2c70-a47c-57149f00eb95@acm.org>
-        <963815509.21598598782155.JavaMail.epsvc@epcpadp2>
-        <1210830415.21598601302480.JavaMail.epsvc@epcpadp1>
-        <CGME20200828070950epcms2p5470bd43374be18d184dd802da09e73c8@epcms2p5>
+X-Mailer: git-send-email 2.28.0.402.g5ffc5be6b7-goog
+Subject: [PATCH v2 0/7] set clang minimum version to 10.0.1
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bart,
-> > +static unsigned int ufshpb_host_map_kbytes = 1024;
-> 
-> A comment that explains where this value comes from would be welcome.
+Adds a compile time #error to compiler-clang.h setting the effective
+minimum supported version to clang 10.0.1. A separate patch has already
+been picked up into the Documentation/ tree also confirming the version.
 
-I will add a follows comment and change defalut value 1024 to 2048. 
-"A cache size of 2MB can cache ppn in the 1GB range."
+Next are a series of reverts. One for 32b arm is a partial revert.
 
-> > +static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
-> > +					     struct ufshpb_subregion *srgn)
-> > +{
-> > +	struct ufshpb_req *map_req;
-> > +	struct request *req;
-> > +	struct bio *bio;
-> > +
-> > +	map_req = kmem_cache_alloc(hpb->map_req_cache, GFP_KERNEL);
-> > +	if (!map_req)
-> > +		return NULL;
-> > +
-> > +	req = blk_get_request(hpb->sdev_ufs_lu->request_queue,
-> > +			      REQ_OP_SCSI_IN, BLK_MQ_REQ_PREEMPT);
-> 
-> Why BLK_MQ_REQ_PREEMPT? Since this code is only executed while medium access
-> commands are processed and since none of these commands have the PREEMPT flag
-> set I think that the PREEMPT flag should be left out. Otherwise there probably
-> will be weird interactions with runtime suspended devices.
+Then Marco suggested fixes to KASAN docs.
 
-OK, I will remove BLK_MQ_REQ_PREEMPT flag.
+Finally, improve the warning for GCC too as per Kees.
 
-> Is it acceptable that the above blk_get_request() call blocks if a UFS device
-> has been runtime suspended? If not, consider using the flag BLK_MQ_REQ_NOWAIT
-> instead.
+Patches after 001 are new for v2.
 
-The map worker don't issue map requests when the UFS device is in 
-runtime suspend. So, I think BLK_MQ_REQ_NOWAIT flags is not needed.
+Marco Elver (1):
+  kasan: Remove mentions of unsupported Clang versions
 
-> > +	bio = bio_alloc(GFP_KERNEL, hpb->pages_per_srgn);
-> > +	if (!bio) {
-> > +		blk_put_request(req);
-> > +		goto free_map_req;
-> > +	}
-> 
-> If the blk_get_request() would be modified such that it doesn't wait, this
-> call may have to be modified too (GFP_NOWAIT?).
->
-> > +	if (rgn->rgn_state == HPB_RGN_INACTIVE) {
-> > +		if (atomic_read(&lru_info->active_cnt)
-> > +		    == lru_info->max_lru_active_cnt) {
-> 
-> When splitting a line, please put comparison operators at the end of the line
-> instead of at the start, e.g. as follows:
-> 
-> 		if (atomic_read(&lru_info->active_cnt) ==
-> 		    lru_info->max_lru_active_cnt) {
+Nick Desaulniers (6):
+  compiler-clang: add build check for clang 10.0.1
+  Revert "kbuild: disable clang's default use of -fmerge-all-constants"
+  Revert "arm64: bti: Require clang >= 10.0.1 for in-kernel BTI support"
+  Revert "arm64: vdso: Fix compilation with clang older than 8"
+  Partial revert "ARM: 8905/1: Emit __gnu_mcount_nc when using Clang
+    10.0.0 or newer"
+  compiler-gcc: improve version warning
 
-OK, I will change it.
- 
-> > +	pool_size = DIV_ROUND_UP(ufshpb_host_map_kbytes * 1024, PAGE_SIZE);
-> 
-> Please use PAGE_ALIGN() to align to the next page boundary.
+ Documentation/dev-tools/kasan.rst | 4 ++--
+ Makefile                          | 9 ---------
+ arch/arm/Kconfig                  | 2 +-
+ arch/arm64/Kconfig                | 2 --
+ arch/arm64/kernel/vdso/Makefile   | 7 -------
+ include/linux/compiler-clang.h    | 8 ++++++++
+ include/linux/compiler-gcc.h      | 2 +-
+ lib/Kconfig.kasan                 | 9 ++++-----
+ 8 files changed, 16 insertions(+), 27 deletions(-)
 
-OK, I will.
+-- 
+2.28.0.402.g5ffc5be6b7-goog
 
-Thanks,
-Daejun.
