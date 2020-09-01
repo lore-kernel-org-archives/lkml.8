@@ -2,117 +2,201 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C71C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9C7C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B92A214F1
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:27:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598941656;
-	bh=vQRDkJyojcuTd04BSfsdD23ZJb7l6n5sNRdUCsmf2cs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=HWTdJaBw+CWb50N6LuGsuTmetJQwkhdqYQqfJXLHQPIXyJASab9gNvSh8XyL88dgR
-	 6Qb08X74oxsEYlyMvKPce6+IEZCvpgzvAX4HiaXAydonaA+h6KKOlOLbeij8Gxxtgw
-	 uBgNpuKWNfoY6hc0sxPLaBYukMHFWR63LHSst1lU=
+	by mail.kernel.org (Postfix) with ESMTP id 6430C2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726512AbgIAG1f (ORCPT
+        id S1726377AbgIAGa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:27:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42540 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726044AbgIAG1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:27:33 -0400
-Received: from coco.lan (ip5f5ad5cf.dynamic.kabel-deutschland.de [95.90.213.207])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 824342098B;
-        Tue,  1 Sep 2020 06:27:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598941653;
-        bh=vQRDkJyojcuTd04BSfsdD23ZJb7l6n5sNRdUCsmf2cs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yvDgvoVju9G9ODuA094i3jquBkzguo+LxrkgiGFFMFfbzAziJtG6VeEIsaf1m1m1d
-         1hF9sY3RAOezm9xb2RnSmLVT5ZiDKOGAUS5Xj5DJKyrRVhuapd2nXYZjgibfMfAhKp
-         U3c/RS0SnzJGuP5c9yPZEIWcSRYKHzh5/iBajJq4=
-Date:   Tue, 1 Sep 2020 08:27:28 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <gregkh@linuxfoundation.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] staging: spmi: hisi-spmi-controller: Use proper
- format in call to dev_err()
-Message-ID: <20200901082728.5ce6eda1@coco.lan>
-In-Reply-To: <20200901035722.9324-1-yuehaibing@huawei.com>
-References: <20200901035722.9324-1-yuehaibing@huawei.com>
-X-Mailer: Claws Mail 3.17.6 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 1 Sep 2020 02:30:59 -0400
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:50413 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726050AbgIAGa6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:30:58 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R421e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04400;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U7VD5SL_1598941853;
+Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0U7VD5SL_1598941853)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 01 Sep 2020 14:30:53 +0800
+Subject: Re: [PATCH v3 3/3] mm/armv6: work around armv6 cmpxchg support issue
+From:   Alex Shi <alex.shi@linux.alibaba.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Russell King <linux@armlinux.org.uk>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <1598928612-68996-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1598928612-68996-3-git-send-email-alex.shi@linux.alibaba.com>
+Message-ID: <ffa89b09-995a-77d8-03c6-2c1234a5474a@linux.alibaba.com>
+Date:   Tue, 1 Sep 2020 14:30:51 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1598928612-68996-3-git-send-email-alex.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=gbk
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 1 Sep 2020 11:57:22 +0800
-YueHaibing <yuehaibing@huawei.com> escreveu:
+seems there are couples archs can not do cmpxchg1
+So update the patch here. And it's easy to fix if more arch issue find here.
 
-> The correct format string for a size_t argument should be %zu.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+From cdf98ae7b5e83bb7210c927d4749f62fee4ed115 Mon Sep 17 00:00:00 2001
+From: Alex Shi <alex.shi@linux.alibaba.com>
+Date: Mon, 31 Aug 2020 15:41:20 +0800
+Subject: [PATCH v4 3/3] mm/pageblock: work around multiple arch's cmpxchg
+ support issue
 
-Reviewed-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Armv6, sh2, sparc32 and xtensa can not do cmpxchg1, so we have to use
+cmpxchg4 on it.
 
-> ---
->  drivers/staging/hikey9xx/hisi-spmi-controller.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/staging/hikey9xx/hisi-spmi-controller.c b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> index 66a0b296e06f..34c690da09e3 100644
-> --- a/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> +++ b/drivers/staging/hikey9xx/hisi-spmi-controller.c
-> @@ -121,7 +121,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
->  
->  	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
->  		dev_err(&ctrl->dev,
-> -			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
-> +			"spmi_controller supports 1..%d bytes per trans, but:%zu requested\n",
->  			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
->  		return  -EINVAL;
->  	}
-> @@ -175,7 +175,7 @@ static int spmi_read_cmd(struct spmi_controller *ctrl,
->  	spin_unlock_irqrestore(&spmi_controller->lock, flags);
->  	if (rc)
->  		dev_err(&ctrl->dev,
-> -			"spmi read wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%ld\n",
-> +			"spmi read wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%zu\n",
->  			opc, slave_id, slave_addr, bc + 1);
->  	else
->  		dev_dbg(&ctrl->dev, "%s: id:%d slave_addr:0x%x, read value: %*ph\n",
-> @@ -197,7 +197,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
->  
->  	if (bc > SPMI_CONTROLLER_MAX_TRANS_BYTES) {
->  		dev_err(&ctrl->dev,
-> -			"spmi_controller supports 1..%d bytes per trans, but:%ld requested\n",
-> +			"spmi_controller supports 1..%d bytes per trans, but:%zu requested\n",
->  			SPMI_CONTROLLER_MAX_TRANS_BYTES, bc);
->  		return  -EINVAL;
->  	}
-> @@ -251,7 +251,7 @@ static int spmi_write_cmd(struct spmi_controller *ctrl,
->  	spin_unlock_irqrestore(&spmi_controller->lock, flags);
->  
->  	if (rc)
-> -		dev_err(&ctrl->dev, "spmi write wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%ld\n",
-> +		dev_err(&ctrl->dev, "spmi write wait timeout op:0x%x slave_id:%d slave_addr:0x%x bc:%zu\n",
->  			opc, slave_id, slave_addr, bc);
->  	else
->  		dev_dbg(&ctrl->dev, "%s: id:%d slave_addr:0x%x, wrote value: %*ph\n",
+arm-linux-gnueabi-ld: mm/page_alloc.o: in function `set_pfnblock_flags_mask':
+(.text+0x32b4): undefined reference to `__bad_cmpxchg'
+arm-linux-gnueabi-ld: (.text+0x32e0): undefined reference to `__bad_cmpxchg'
 
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ include/linux/mmzone.h | 20 +++++++++++++++++---
+ mm/page_alloc.c        | 24 ++++++++++++------------
+ 2 files changed, 29 insertions(+), 15 deletions(-)
 
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index be676e659fb7..364b29ed99b3 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -406,6 +406,20 @@ enum zone_type {
+ 
+ #ifndef __GENERATING_BOUNDS_H
+ 
++/*
++ * cmpxchg only support 32-bits operands on the following archs ARMv6, SPARC32
++ * sh2, XTENSA.
++ */
++#if defined(CONFIG_CPU_V6) || defined(CONFIG_CPU_SH2) || \
++	defined(CONFIG_SPARC32) || defined(CONFIG_XTENSA)
++
++#define BITS_PER_FLAGS	BITS_PER_LONG
++typedef unsigned long pageblockflags_t;
++#else
++#define BITS_PER_FLAGS	BITS_PER_BYTE
++typedef unsigned char pageblockflags_t;
++#endif
++
+ struct zone {
+ 	/* Read-mostly fields */
+ 
+@@ -437,7 +451,7 @@ struct zone {
+ 	 * Flags for a pageblock_nr_pages block. See pageblock-flags.h.
+ 	 * In SPARSEMEM, this map is stored in struct mem_section
+ 	 */
+-	unsigned char		*pageblock_flags;
++	pageblockflags_t	*pageblock_flags;
+ #endif /* CONFIG_SPARSEMEM */
+ 
+ 	/* zone_start_pfn == zone_start_paddr >> PAGE_SHIFT */
+@@ -1159,7 +1173,7 @@ struct mem_section_usage {
+ 	DECLARE_BITMAP(subsection_map, SUBSECTIONS_PER_SECTION);
+ #endif
+ 	/* See declaration of similar field in struct zone */
+-	unsigned char	pageblock_flags[0];
++	pageblockflags_t	pageblock_flags[0];
+ };
+ 
+ void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
+@@ -1212,7 +1226,7 @@ struct mem_section {
+ extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
+ #endif
+ 
+-static inline unsigned char *section_to_usemap(struct mem_section *ms)
++static inline pageblockflags_t *section_to_usemap(struct mem_section *ms)
+ {
+ 	return ms->usage->pageblock_flags;
+ }
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 60342e764090..9a41c5dc78eb 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -445,7 +445,7 @@ static inline bool defer_init(int nid, unsigned long pfn, unsigned long end_pfn)
+ #endif
+ 
+ /* Return a pointer to the bitmap storing bits affecting a block of pages */
+-static inline unsigned char *get_pageblock_bitmap(struct page *page,
++static inline pageblockflags_t *get_pageblock_bitmap(struct page *page,
+ 							unsigned long pfn)
+ {
+ #ifdef CONFIG_SPARSEMEM
+@@ -474,24 +474,24 @@ static inline int pfn_to_bitidx(struct page *page, unsigned long pfn)
+  * Return: pageblock_bits flags
+  */
+ static __always_inline
+-unsigned char __get_pfnblock_flags_mask(struct page *page,
++pageblockflags_t __get_pfnblock_flags_mask(struct page *page,
+ 					unsigned long pfn,
+ 					unsigned long mask)
+ {
+-	unsigned char *bitmap;
++	pageblockflags_t *bitmap;
+ 	unsigned long bitidx, byte_bitidx;
+-	unsigned char byte;
++	pageblockflags_t byte;
+ 
+ 	bitmap = get_pageblock_bitmap(page, pfn);
+ 	bitidx = pfn_to_bitidx(page, pfn);
+-	byte_bitidx = bitidx / BITS_PER_BYTE;
+-	bitidx &= (BITS_PER_BYTE-1);
++	byte_bitidx = bitidx / BITS_PER_FLAGS;
++	bitidx &= (BITS_PER_FLAGS - 1);
+ 
+ 	byte = bitmap[byte_bitidx];
+ 	return (byte >> bitidx) & mask;
+ }
+ 
+-unsigned char get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
++pageblockflags_t get_pfnblock_flags_mask(struct page *page, unsigned long pfn,
+ 					unsigned long mask)
+ {
+ 	return __get_pfnblock_flags_mask(page, pfn, mask);
+@@ -513,17 +513,17 @@ void set_pfnblock_flags_mask(struct page *page, unsigned long flags,
+ 					unsigned long pfn,
+ 					unsigned long mask)
+ {
+-	unsigned char *bitmap;
++	pageblockflags_t *bitmap;
+ 	unsigned long bitidx, byte_bitidx;
+-	unsigned char old_byte, byte;
++	pageblockflags_t old_byte, byte;
+ 
+-	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_BYTE);
++	BUILD_BUG_ON(NR_PAGEBLOCK_BITS != BITS_PER_FLAGS);
+ 	BUILD_BUG_ON(MIGRATE_TYPES > (1 << PB_migratetype_bits));
+ 
+ 	bitmap = get_pageblock_bitmap(page, pfn);
+ 	bitidx = pfn_to_bitidx(page, pfn);
+-	byte_bitidx = bitidx / BITS_PER_BYTE;
+-	bitidx &= (BITS_PER_BYTE-1);
++	byte_bitidx = bitidx / BITS_PER_FLAGS;
++	bitidx &= (BITS_PER_FLAGS - 1);
+ 
+ 	VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page);
+ 
+-- 
+1.8.3.1
 
-Thanks,
-Mauro
