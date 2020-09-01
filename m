@@ -2,47 +2,48 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78B0FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A208AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3E70F21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 697DF21655
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:43:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598971427;
-	bh=GHG8Q5LGBd/C87oXVQh9+PpSYGYMCoE7jrDiu2FaKCI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=e78D8oRAv6s6LJhBGpx2WdAkc5lUbdkJFUWycttPGkejhfHlB+GwK7cj95KhRwmkp
-	 8UFpDQLNthvdbt4eTURvkIEUJt62WjnJ0bV3EIdA80P5/vUyq9EmdYFxxyTgGIM4xw
-	 /wnnkWhJzxfxeFAOBQ1nik+xGZ/TDtu/CJbMvJG4=
+	s=default; t=1598971436;
+	bh=3rxcjUV6sUs2AFtAgaBty/HKQjO4Y+2HoU+weSwXQrA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1op7S0h7upEKbTHMn8l8D+aNwqi9wHdP3JTjMGWoOqtgOdgILVMEBFMkgV7Ig3t88
+	 1BNYtjF0BuqUa/zUViO79i1ORGQEU0/grrSCneBLf9uYXBpacdUKA2pWlYttTY2ZHw
+	 M7qt4ioazWCqt8n0YEnH2sEnIJ+fjpIdB0eUL/A8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728393AbgIAOnp (ORCPT
+        id S1728604AbgIAOnx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:43:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 10:43:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728310AbgIAOna (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:43:30 -0400
+        id S1728400AbgIAOnf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:43:35 -0400
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D08F4206EB;
-        Tue,  1 Sep 2020 14:43:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C9F821D6C;
+        Tue,  1 Sep 2020 14:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598971410;
-        bh=GHG8Q5LGBd/C87oXVQh9+PpSYGYMCoE7jrDiu2FaKCI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=aKYNGwPX5beYzRHU1P28m+loKhvDs9jL8wUyf/QDaLeZK/iFj9NllUfoyVSQdB8ZT
-         7ZEFTATUtFMGri7nhESL4aljhdXeu1AJYUY+HGpHswdBWeHYBJX31OcihTLhm/EVVC
-         4M6ZPySIR0NH9bFwUZ5XCbaOs9zWU6vBZl9VNCUA=
+        s=default; t=1598971414;
+        bh=3rxcjUV6sUs2AFtAgaBty/HKQjO4Y+2HoU+weSwXQrA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yCXdwa7h1udZqQIuS7hVfHbeaUtWG0cI6c2QjA7RnwWUv/Erg2qxKDCC94AdMRAnB
+         Ve6Fz1XumSaevJCit1qjcb4RNvXLHxygO0hBEnmMCZ5E6v0F3SiRUWhkIXewdh7565
+         RwEwebPEGmd54yJXUzMygDpZPE+JH+ZWi41vkD00=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1kD7VQ-008IQP-5n; Tue, 01 Sep 2020 15:43:28 +0100
+        id 1kD7VU-008IQP-Ou; Tue, 01 Sep 2020 15:43:32 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -55,15 +56,19 @@ Cc:     Will Deacon <will@kernel.org>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Gregory Clement <gregory.clement@bootlin.com>,
         Andrew Lunn <andrew@lunn.ch>,
-        Saravana Kannan <saravanak@google.com>, kernel-team@android.com
-Subject: [PATCH v3 00/16] arm/arm64: Turning IPIs into normal interrupts
-Date:   Tue,  1 Sep 2020 15:43:08 +0100
-Message-Id: <20200901144324.1071694-1-maz@kernel.org>
+        Saravana Kannan <saravanak@google.com>,
+        kernel-team@android.com,
+        Valentin Schneider <valentin.schneider@arm.com>
+Subject: [PATCH v3 04/16] ARM: Allow IPIs to be handled as normal interrupts
+Date:   Tue,  1 Sep 2020 15:43:12 +0100
+Message-Id: <20200901144324.1071694-5-maz@kernel.org>
 X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200901144324.1071694-1-maz@kernel.org>
+References: <20200901144324.1071694-1-maz@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, Valentin.Schneider@arm.com, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, saravanak@google.com, kernel-team@android.com
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, Valentin.Schneider@arm.com, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, saravanak@google.com, kernel-team@android.com, valentin.schneider@arm.com
 X-SA-Exim-Mail-From: maz@kernel.org
 X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,98 +76,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For as long as SMP ARM has existed, IPIs have been handled as
-something special. The arch code and the interrupt controller exchange
-a couple of hooks (one to generate an IPI, another to handle it).
+In order to deal with IPIs as normal interrupts, let's add
+a new way to register them with the architecture code.
 
-Although this is perfectly manageable, it prevents the use of features
-that we could use if IPIs were Linux IRQs (such as pseudo-NMIs). It
-also means that each interrupt controller driver has to follow an
-architecture-specific interface instead of just implementing the base
-irqchip functionalities. The arch code also duplicates a number of
-things that the core irq code already does (such as calling
-set_irq_regs(), irq_enter()...).
+set_smp_ipi_range() takes a range of interrupts, and allows
+the arch code to request them as if the were normal interrupts.
+A standard handler is then called by the core IRQ code to deal
+with the IPI.
 
-This series tries to remedy this on arm/arm64 by offering a new
-registration interface where the irqchip gives the arch code a range
-of interrupts to use for IPIs. The arch code requests these as normal
-per-cpu interrupts.
+This means that we don't need to call irq_enter/irq_exit, and
+that we don't need to deal with set_irq_regs either. So let's
+move the dispatcher into its own function, and leave handle_IPI()
+as a compatibility function.
 
-The bulk of the work is at the interrupt controller level, where all 5
-irqchips used on arm+SMP/arm64 get converted.
+On the sending side, let's make use of ipi_send_mask, which
+already exists for this purpose.
 
-Finally, we drop the legacy registration interface as well as the
-custom statistics accounting.
+One of the major difference is that we end up, in some cases
+(such as when performing IRQ time accounting on the scheduler
+IPI), end up with nested irq_enter()/irq_exit() pairs.
+Other than the (relatively small) overhead, there should be
+no consequences to it (these pairs are designed to nest
+correctly, and the accounting shouldn't be off).
 
-Note that I have had a look at providing a "generic" interface by
-expanding the kernel/irq/ipi.c bag of helpers, but so far all
-irqchips have very different requirements, so there is hardly anything
-to consolidate for now. Maybe some as hip04 and the Marvell horror get
-cleaned up (the latter certainly could do with a good dusting).
+Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
+ arch/arm/Kconfig           |  1 +
+ arch/arm/include/asm/smp.h |  5 ++
+ arch/arm/kernel/smp.c      | 99 ++++++++++++++++++++++++++++++++------
+ 3 files changed, 89 insertions(+), 16 deletions(-)
 
-This has been tested on a bunch of 32 and 64bit guests (GICv2, GICv3),
-as well as 64bit bare metal (GICv3). The RPi part has only been tested
-in QEMU as a 64bit guest, while the HiSi and Marvell parts have only
-been compile-tested.
-
-I'm aiming for 5.10 for this, so any comment would be appreciated.
-
-* From v2:
-  - Tidied up the arch code (__read_mostly for the IPI handling data,
-    WARN_ON_ONCE on setup and teardown), dropped spurious prototype
-    on 32bit
-  - Prevent IPIs from being forwarded to VCPUs
-  - Merged the GIC affinity fix, hence one less patch
-  - Added RBs from Valentin
-
-* From v1:
-  - Clarified the effect of nesting irq_enter/exit (Russell)
-  - Changed the point where we tear IPIs down on (Valentin)
-  - IPIs are no longer accessible from DT
-  - HIP04 and Armada 370-XP have been converted, but are untested
-  - arch-specific kstat accounting is removed
-  - ARM's legacy interface is dropped
-
-Marc Zyngier (16):
-  genirq: Add fasteoi IPI flow
-  genirq: Allow interrupts to be excluded from /proc/interrupts
-  arm64: Allow IPIs to be handled as normal interrupts
-  ARM: Allow IPIs to be handled as normal interrupts
-  irqchip/gic-v3: Describe the SGI range
-  irqchip/gic-v3: Configure SGIs as standard interrupts
-  irqchip/gic: Refactor SMP configuration
-  irqchip/gic: Configure SGIs as standard interrupts
-  irqchip/gic-common: Don't enable SGIs by default
-  irqchip/bcm2836: Configure mailbox interrupts as standard interrupts
-  irqchip/hip04: Configure IPIs as standard interrupts
-  irqchip/armada-370-xp: Configure IPIs as standard interrupts
-  arm64: Kill __smp_cross_call and co
-  arm64: Remove custom IRQ stat accounting
-  ARM: Kill __smp_cross_call and co
-  ARM: Remove custom IRQ stat accounting
-
- arch/arm/Kconfig                    |   1 +
- arch/arm/include/asm/hardirq.h      |  17 --
- arch/arm/include/asm/smp.h          |   5 +-
- arch/arm/kernel/smp.c               | 135 +++++++++-----
- arch/arm64/Kconfig                  |   1 +
- arch/arm64/include/asm/hardirq.h    |   9 -
- arch/arm64/include/asm/irq_work.h   |   4 +-
- arch/arm64/include/asm/smp.h        |   6 +-
- arch/arm64/kernel/smp.c             | 121 ++++++++-----
- drivers/irqchip/irq-armada-370-xp.c | 262 +++++++++++++++++++---------
- drivers/irqchip/irq-bcm2836.c       | 151 +++++++++++++---
- drivers/irqchip/irq-gic-common.c    |   3 -
- drivers/irqchip/irq-gic-v3.c        | 104 ++++++-----
- drivers/irqchip/irq-gic.c           | 177 +++++++++++--------
- drivers/irqchip/irq-hip04.c         |  89 +++++-----
- include/linux/irq.h                 |   5 +-
- kernel/irq/chip.c                   |  27 +++
- kernel/irq/debugfs.c                |   1 +
- kernel/irq/proc.c                   |   2 +-
- kernel/irq/settings.h               |   7 +
- 20 files changed, 720 insertions(+), 407 deletions(-)
-
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index e00d94b16658..e67ef15c800f 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -49,6 +49,7 @@ config ARM
+ 	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
+ 	select GENERIC_ATOMIC64 if CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI
+ 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
++	select GENERIC_IRQ_IPI if SMP
+ 	select GENERIC_CPU_AUTOPROBE
+ 	select GENERIC_EARLY_IOREMAP
+ 	select GENERIC_IDLE_POLL_SETUP
+diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
+index a91f21e3c5b5..0e29730295ca 100644
+--- a/arch/arm/include/asm/smp.h
++++ b/arch/arm/include/asm/smp.h
+@@ -45,6 +45,11 @@ extern void smp_init_cpus(void);
+  */
+ extern void set_smp_cross_call(void (*)(const struct cpumask *, unsigned int));
+ 
++/*
++ * Register IPI interrupts with the arch SMP code
++ */
++extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
++
+ /*
+  * Called from platform specific assembly code, this is the
+  * secondary CPU entry point.
+diff --git a/arch/arm/kernel/smp.c b/arch/arm/kernel/smp.c
+index 5d9da61eff62..f21f78483353 100644
+--- a/arch/arm/kernel/smp.c
++++ b/arch/arm/kernel/smp.c
+@@ -69,14 +69,22 @@ enum ipi_msg_type {
+ 	 * CPU_BACKTRACE is special and not included in NR_IPI
+ 	 * or tracable with trace_ipi_*
+ 	 */
+-	IPI_CPU_BACKTRACE,
++	IPI_CPU_BACKTRACE = NR_IPI,
+ 	/*
+ 	 * SGI8-15 can be reserved by secure firmware, and thus may
+ 	 * not be usable by the kernel. Please keep the above limited
+ 	 * to at most 8 entries.
+ 	 */
++	MAX_IPI
+ };
+ 
++static int ipi_irq_base __read_mostly;
++static int nr_ipi __read_mostly = NR_IPI;
++static struct irq_desc *ipi_desc[MAX_IPI] __read_mostly;
++
++static void ipi_setup(int cpu);
++static void ipi_teardown(int cpu);
++
+ static DECLARE_COMPLETION(cpu_running);
+ 
+ static struct smp_operations smp_ops __ro_after_init;
+@@ -247,6 +255,7 @@ int __cpu_disable(void)
+ 	 * and we must not schedule until we're ready to give up the cpu.
+ 	 */
+ 	set_cpu_online(cpu, false);
++	ipi_teardown(cpu);
+ 
+ 	/*
+ 	 * OK - migrate IRQs away from this CPU
+@@ -422,6 +431,8 @@ asmlinkage void secondary_start_kernel(void)
+ 
+ 	notify_cpu_starting(cpu);
+ 
++	ipi_setup(cpu);
++
+ 	calibrate_delay();
+ 
+ 	smp_store_cpu_info(cpu);
+@@ -627,10 +638,9 @@ asmlinkage void __exception_irq_entry do_IPI(int ipinr, struct pt_regs *regs)
+ 	handle_IPI(ipinr, regs);
+ }
+ 
+-void handle_IPI(int ipinr, struct pt_regs *regs)
++static void do_handle_IPI(int ipinr)
+ {
+ 	unsigned int cpu = smp_processor_id();
+-	struct pt_regs *old_regs = set_irq_regs(regs);
+ 
+ 	if ((unsigned)ipinr < NR_IPI) {
+ 		trace_ipi_entry_rcuidle(ipi_types[ipinr]);
+@@ -643,9 +653,7 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+ 	case IPI_TIMER:
+-		irq_enter();
+ 		tick_receive_broadcast();
+-		irq_exit();
+ 		break;
+ #endif
+ 
+@@ -654,36 +662,26 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 		break;
+ 
+ 	case IPI_CALL_FUNC:
+-		irq_enter();
+ 		generic_smp_call_function_interrupt();
+-		irq_exit();
+ 		break;
+ 
+ 	case IPI_CPU_STOP:
+-		irq_enter();
+ 		ipi_cpu_stop(cpu);
+-		irq_exit();
+ 		break;
+ 
+ #ifdef CONFIG_IRQ_WORK
+ 	case IPI_IRQ_WORK:
+-		irq_enter();
+ 		irq_work_run();
+-		irq_exit();
+ 		break;
+ #endif
+ 
+ 	case IPI_COMPLETION:
+-		irq_enter();
+ 		ipi_complete(cpu);
+-		irq_exit();
+ 		break;
+ 
+ 	case IPI_CPU_BACKTRACE:
+ 		printk_nmi_enter();
+-		irq_enter();
+-		nmi_cpu_backtrace(regs);
+-		irq_exit();
++		nmi_cpu_backtrace(get_irq_regs());
+ 		printk_nmi_exit();
+ 		break;
+ 
+@@ -695,9 +693,78 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+ 
+ 	if ((unsigned)ipinr < NR_IPI)
+ 		trace_ipi_exit_rcuidle(ipi_types[ipinr]);
++}
++
++/* Legacy version, should go away once all irqchips have been converted */
++void handle_IPI(int ipinr, struct pt_regs *regs)
++{
++	struct pt_regs *old_regs = set_irq_regs(regs);
++
++	irq_enter();
++	do_handle_IPI(ipinr);
++	irq_exit();
++
+ 	set_irq_regs(old_regs);
+ }
+ 
++static irqreturn_t ipi_handler(int irq, void *data)
++{
++	do_handle_IPI(irq - ipi_irq_base);
++	return IRQ_HANDLED;
++}
++
++static void ipi_send(const struct cpumask *target, unsigned int ipi)
++{
++	__ipi_send_mask(ipi_desc[ipi], target);
++}
++
++static void ipi_setup(int cpu)
++{
++	int i;
++
++	if (!ipi_irq_base)
++		return;
++
++	for (i = 0; i < nr_ipi; i++)
++		enable_percpu_irq(ipi_irq_base + i, 0);
++}
++
++static void ipi_teardown(int cpu)
++{
++	int i;
++
++	if (!ipi_irq_base)
++		return;
++
++	for (i = 0; i < nr_ipi; i++)
++		disable_percpu_irq(ipi_irq_base + i);
++}
++
++void __init set_smp_ipi_range(int ipi_base, int n)
++{
++	int i;
++
++	WARN_ON(n < MAX_IPI);
++	nr_ipi = min(n, MAX_IPI);
++
++	for (i = 0; i < nr_ipi; i++) {
++		int err;
++
++		err = request_percpu_irq(ipi_base + i, ipi_handler,
++					 "IPI", &irq_stat);
++		WARN_ON(err);
++
++		ipi_desc[i] = irq_to_desc(ipi_base + i);
++		irq_set_status_flags(ipi_base + i, IRQ_HIDDEN);
++	}
++
++	ipi_irq_base = ipi_base;
++	set_smp_cross_call(ipi_send);
++
++	/* Setup the boot CPU immediately */
++	ipi_setup(smp_processor_id());
++}
++
+ void smp_send_reschedule(int cpu)
+ {
+ 	smp_cross_call(cpumask_of(cpu), IPI_RESCHEDULE);
 -- 
 2.27.0
 
