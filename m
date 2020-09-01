@@ -2,147 +2,158 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C9DC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2B1C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22325206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:52:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 215F8206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="dK+g3nPb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WTXFwaaO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgIALwp (ORCPT
+        id S1727923AbgIALw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:52:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49042 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727048AbgIALl4 (ORCPT
+        Tue, 1 Sep 2020 07:52:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47086 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgIALlz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:41:56 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 081B2xXE021249;
-        Tue, 1 Sep 2020 07:05:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=xXWHJPjAJlz3TybqT9CscGwSEJpGhYi9Z4DQ9I5Cebw=;
- b=dK+g3nPbtCX+mi/9VqDIlKsayT5XBPcLexGA1J8R0Y6kEapzKyRghjRtxYVbmCjwgtXi
- /OAl65LQ7GLTOU+jRjV9ayjTXE/eVP0BLV9HT0Iw/FKVHgZodDUK1Y7VgEwXBV0/FsXh
- e0yc0K4PflokZ1/e+YTtNrzb++ouK87NeXYwMLkvp0lzxs3NeNtlOsV1k64Ml2HNqs8g
- DCs+Eodswe+cOAuCOl2d7dK6RPFr5TrwcVFmBVjiPMr3g/WmjYhqPBxwxMJLMCoMLUJT
- xTwMWYcZ09sxKM5OwAuKDYhGe6tflAw0WY806hxg+jgbEKOFP+kB6AUdCG+DEZ29NxhV 9A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 339m1qhqrk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 07:05:33 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 081B3nJr023217;
-        Tue, 1 Sep 2020 07:05:31 -0400
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 339m1qhqf6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 07:05:26 -0400
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 081B3XUH027732;
-        Tue, 1 Sep 2020 11:05:09 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-        by ppma03ams.nl.ibm.com with ESMTP id 337en8ba5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 01 Sep 2020 11:05:09 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 081B576Q17039682
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 1 Sep 2020 11:05:07 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 26B9BAE056;
-        Tue,  1 Sep 2020 11:05:07 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 10363AE05F;
-        Tue,  1 Sep 2020 11:05:06 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.160.77.139])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  1 Sep 2020 11:05:05 +0000 (GMT)
-Message-ID: <ae06c113ec91442e293f2466cae3dd1b81f241eb.camel@linux.ibm.com>
-Subject: Re: [PATCH 07/11] evm: Set IMA_CHANGE_XATTR/ATTR bit if
- EVM_ALLOW_METADATA_WRITES is set
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        "mjg59@google.com" <mjg59@google.com>
-Cc:     "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Silviu Vlasceanu <Silviu.Vlasceanu@huawei.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Date:   Tue, 01 Sep 2020 07:05:05 -0400
-In-Reply-To: <a5e6a5acf2274a6d844b275dacfbabb8@huawei.com>
-References: <20200618160329.1263-2-roberto.sassu@huawei.com>
-         <20200618160458.1579-7-roberto.sassu@huawei.com>
-         <67cafcf63daf8e418871eb5302e7327ba851e253.camel@linux.ibm.com>
-         <a5e6a5acf2274a6d844b275dacfbabb8@huawei.com>
-Content-Type: text/plain; charset="ISO-8859-15"
-X-Mailer: Evolution 3.28.5 (3.28.5-12.el8) 
-Mime-Version: 1.0
+        Tue, 1 Sep 2020 07:41:55 -0400
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E8D7C061245;
+        Tue,  1 Sep 2020 04:41:48 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id y6so396465plk.10;
+        Tue, 01 Sep 2020 04:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=vL68VqqvBOJpmK0bclLXd33KppmDO85K8QP95o8vC+4=;
+        b=WTXFwaaOARSwB1lRXSnt3qJua0sM84oKQHSk1MVVav7KFevKHkgOdVWkOgVmbGz2HQ
+         rOSCUGNLXUF2a8hQ0U/7QnO8Ut6haIUxfAkW5QbrydpqnMTrL8ChApB111FHedpghk8M
+         qL9gl2Ulk1g7MaEOr5xX2SyOZw1fR0QrhePKuJPUmk3yXIlrBwk10NRgah5ptx0EJxo6
+         6o/Lre/7Qwt0vZzwavPXFv5c5Cj/9n3WZI4zh9PQWuTw/TX4z4mIt+8u2qonXS8i8BLt
+         q5gNIiVOa2LIDasdDEjPtxZloIkYI3TBp/TlgO+Myw8AincTMRjubtIaOiNIW3fiiVE9
+         J3EQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=vL68VqqvBOJpmK0bclLXd33KppmDO85K8QP95o8vC+4=;
+        b=FBroC7xRngotSnK1Dg5LhfFeH3+sIwPHAk7ag9A7RZsGzazI0AmCNv4VzE4eA62QGn
+         LS0q++/BpxXJmAueBLaW5jkP1+GM8ZKrCHGtUl2K2NwX6SiZw7dKEpS26PRvylclTyiD
+         L11Xl4qWveGko/vqZGUMuf4smMTTHm1VHU1OnbepJvVjwM7BSM5yyf3GTfrwX+ezuJkw
+         WVMPQVSbGpUtl2rxpMo062OJpyhqkw9vVhS0slMXIhpMVzGUz6g3F5kmYitqOfIim57/
+         b69HjScrmCRsURgTzB5C5E5WUkNvQQhzJev0PFE4hhdWv+8fW5Kt+VTO2V1oaIFquL3+
+         81Mg==
+X-Gm-Message-State: AOAM531ytOHDJV7zyxw/ipVL+zjrTqP0MT2tABq3gyER5BYVALd7HB2n
+        NB4e/RyhckTv1/xL8LbtLQ==
+X-Google-Smtp-Source: ABdhPJw7j2QWldkxD7fX4qizVyKuseP3QD5Bv0/o1MGNiCfFzJZRsol9XRm13ns3zWHLLlrlzysLUw==
+X-Received: by 2002:a17:90a:8909:: with SMTP id u9mr1207128pjn.119.1598960507698;
+        Tue, 01 Sep 2020 04:41:47 -0700 (PDT)
+Received: from [127.0.0.1] ([103.7.29.7])
+        by smtp.gmail.com with ESMTPSA id 142sm1799131pgf.68.2020.09.01.04.41.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 01 Sep 2020 04:41:46 -0700 (PDT)
+From:   Haiwei Li <lihaiwei.kernel@gmail.com>
+Subject: [PATCH] KVM: Check the allocation of pv cpu mask
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "hpa@zytor.com" <hpa@zytor.com>, "bp@alien8.de" <bp@alien8.de>,
+        "mingo@redhat.com" <mingo@redhat.com>, tglx@linutronix.de,
+        joro@8bytes.org, jmattson@google.com,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        vkuznets@redhat.com,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>
+Message-ID: <d59f05df-e6d3-3d31-a036-cc25a2b2f33f@gmail.com>
+Date:   Tue, 1 Sep 2020 19:41:37 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.11.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-01_08:2020-09-01,2020-09-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 spamscore=0 bulkscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009010091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-09-01 at 09:08 +0000, Roberto Sassu wrote:
-> > From: Mimi Zohar [mailto:zohar@linux.ibm.com]
-> > Sent: Monday, August 24, 2020 2:18 PM
-> > On Thu, 2020-06-18 at 18:04 +0200, Roberto Sassu wrote:
-> > > When EVM_ALLOW_METADATA_WRITES is set, EVM allows any operation
-> > on
-> > > metadata. Its main purpose is to allow users to freely set metadata when
-> > > they are protected by a portable signature, until the HMAC key is loaded.
-> > >
-> > > However, IMA is not notified about metadata changes and, after the first
-> > > appraisal, always allows access to the files without checking metadata
-> > > again.
-> > 
-> > ^after the first successful appraisal
-> > >
-> > > This patch checks in evm_reset_status() if EVM_ALLOW_METADATA
-> > WRITES is
-> > > enabled and if it is, sets the IMA_CHANGE_XATTR/ATTR bits depending on
-> > the
-> > > operation performed. At the next appraisal, metadata are revalidated.
-> > 
-> > EVM modifying IMA bits crosses the boundary between EVM and IMA.
-> > There
-> > is already an IMA post_setattr hook.  IMA could reset its own bit
-> > there.  If necessary EVM could export as a function it's status info.
-> 
-> I wouldn't try to guess in IMA when EVM resets its status. We would have
-> to duplicate the logic to check if an EVM key is loaded, if the passed xattr
-> is a POSIX ACL, ...
+From: Haiwei Li <lihaiwei@tencent.com>
 
-Agreed, but IMA could call an EVM function.
+check the allocation of per-cpu __pv_cpu_mask. Initialize ops only when
+successful.
 
-> 
-> I think it is better to set a flag, maybe a new one, directly in EVM, to notify
-> the integrity subsystem that iint->evm_status is no longer valid.
-> 
-> If the EVM flag is set, IMA would reset the appraisal flags, as it uses
-> iint->evm_status for appraisal. We can consider to reset also the measure
-> flags when we have a template that includes file metadata.
+Signed-off-by: Haiwei Li <lihaiwei@tencent.com>
+---
+  arch/x86/kernel/kvm.c | 23 +++++++++++++++++++----
+  1 file changed, 19 insertions(+), 4 deletions(-)
 
-When would IMA read the EVM flag?   Who would reset the flag?  At what
-point would it be reset?   Just as EVM shouldn't be resetting the IMA
-flag, IMA shouldn't be resetting the EVM flag.
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 08320b0b2b27..a64b894eaac0 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -555,7 +555,6 @@ static void kvm_send_ipi_mask_allbutself(const 
+struct cpumask *mask, int vector)
+  static void kvm_setup_pv_ipi(void)
+  {
+  	apic->send_IPI_mask = kvm_send_ipi_mask;
+-	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
+  	pr_info("setup PV IPIs\n");
+  }
 
-Mimi
+@@ -654,7 +653,6 @@ static void __init kvm_guest_init(void)
+  	}
+
+  	if (pv_tlb_flush_supported()) {
+-		pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+  		pv_ops.mmu.tlb_remove_table = tlb_remove_table;
+  		pr_info("KVM setup pv remote TLB flush\n");
+  	}
+@@ -767,6 +765,14 @@ static __init int activate_jump_labels(void)
+  }
+  arch_initcall(activate_jump_labels);
+
++static void kvm_free_pv_cpu_mask(void)
++{
++	unsigned int cpu;
++
++	for_each_possible_cpu(cpu)
++		free_cpumask_var(per_cpu(__pv_cpu_mask, cpu));
++}
++
+  static __init int kvm_alloc_cpumask(void)
+  {
+  	int cpu;
+@@ -785,11 +791,20 @@ static __init int kvm_alloc_cpumask(void)
+
+  	if (alloc)
+  		for_each_possible_cpu(cpu) {
+-			zalloc_cpumask_var_node(per_cpu_ptr(&__pv_cpu_mask, cpu),
+-				GFP_KERNEL, cpu_to_node(cpu));
++			if (!zalloc_cpumask_var_node(
++				per_cpu_ptr(&__pv_cpu_mask, cpu),
++				GFP_KERNEL, cpu_to_node(cpu))) {
++				goto zalloc_cpumask_fail;
++			}
+  		}
+
++	apic->send_IPI_mask_allbutself = kvm_send_ipi_mask_allbutself;
++	pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
+  	return 0;
++
++zalloc_cpumask_fail:
++	kvm_free_pv_cpu_mask();
++	return -ENOMEM;
+  }
+  arch_initcall(kvm_alloc_cpumask);
+
+--
+2.18.4
 
