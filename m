@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E4EFC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991B6C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01E5921534
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABB620E65
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974663;
-	bh=wfyP6ErZoZxY7ltPAxt9V2YaYyKjCJkU6bza5vC6jfQ=;
+	s=default; t=1598974672;
+	bh=SF7cbSp+8aJt7HKiEK1+h754VI5LCsyUECgtetCo9QU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ziCkLOssxV086A1D5eqjZzMnfJWQN/iW1P4hET4jLxcEhhyO1QrqztY1IxfXr2ehy
-	 FHrAu5YH64jbmq04yGIeM4nuwfk/nPr0MhNRhBp4T/LibaZiSFQX0pGuJVo8ZqWW62
-	 KyeDBqpCniRQYZKY5PI2XPz+xKHoPP7gm+QHj+L4=
+	b=UeyjMR6BtRo3JtihvJP57hDqb/eGME7Hf6S6eyOP27jg7HK1iIXez1CcUQc1kerPU
+	 JF0g7tApYTlhHvMxfAv44H5OnIdXT7nKZqid7NF2CTbnc1PRU/DPDOowkI40z43Zyj
+	 yaNJSkz/5CVQ37mp2p5c3BOAuiREXanriuWCp0DY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731351AbgIAPhl (ORCPT
+        id S1731364AbgIAPhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:37:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42608 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:37:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731213AbgIAPgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:36:04 -0400
+        id S1731252AbgIAPgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:36:17 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D62621707;
-        Tue,  1 Sep 2020 15:36:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7669120866;
+        Tue,  1 Sep 2020 15:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974563;
-        bh=wfyP6ErZoZxY7ltPAxt9V2YaYyKjCJkU6bza5vC6jfQ=;
+        s=default; t=1598974577;
+        bh=SF7cbSp+8aJt7HKiEK1+h754VI5LCsyUECgtetCo9QU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jIIhs7BP5W3kzSt6EDZx2/HfBbbW6gZU2bI5/QonSlSdRNPGNo3QrXzSRVhT0Kuo8
-         KbP2Y63ujBabAN5XSLSAABEjrie6ao8oyqkedESsP6eDc0Q7MDD9VOzFpIXHiOG4p1
-         6euKJ9Du4NJyPtOe2BVFyN5Hnj0o7OOuC+QsbL3c=
+        b=EFabxefKhmPEr00TWsXzIMDVQyobFrGj0P+u747II8QCu4qorV/ROqegFkPf3HnX6
+         Inb9wqyLOhCDb39l6U8wgELYX3e2ApTas8u8wCqBR3tm/0zgGij3TR0sTf5WldYUM8
+         egKjk2HZ1qZ+kJOdZMNNf9YPJh++z1vcLla+ck/U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
+        Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 010/255] ASoC: img-parallel-out: Fix a reference count leak
-Date:   Tue,  1 Sep 2020 17:07:46 +0200
-Message-Id: <20200901151001.301606736@linuxfoundation.org>
+Subject: [PATCH 5.8 015/255] media: pci: ttpci: av7110: fix possible buffer overflow caused by bad DMA value in debiirq()
+Date:   Tue,  1 Sep 2020 17:07:51 +0200
+Message-Id: <20200901151001.522065077@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,39 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
 
-[ Upstream commit 6b9fbb073636906eee9fe4d4c05a4f445b9e2a23 ]
+[ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+The value av7110->debi_virt is stored in DMA memory, and it is assigned
+to data, and thus data[0] can be modified at any time by malicious
+hardware. In this case, "if (data[0] < 2)" can be passed, but then
+data[0] can be changed into a large number, which may cause buffer
+overflow when the code "av7110->ci_slot[data[0]]" is used.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200614033344.1814-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To fix this possible bug, data[0] is assigned to a local variable, which
+replaces the use of data[0].
+
+Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/img/img-parallel-out.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/pci/ttpci/av7110.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/img/img-parallel-out.c b/sound/soc/img/img-parallel-out.c
-index 5ddbe3a31c2e9..4da49a42e8547 100644
---- a/sound/soc/img/img-parallel-out.c
-+++ b/sound/soc/img/img-parallel-out.c
-@@ -163,8 +163,10 @@ static int img_prl_out_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
- 	}
+diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
+index d0cdee1c6eb0b..bf36b1e22b635 100644
+--- a/drivers/media/pci/ttpci/av7110.c
++++ b/drivers/media/pci/ttpci/av7110.c
+@@ -406,14 +406,15 @@ static void debiirq(unsigned long cookie)
+ 	case DATA_CI_GET:
+ 	{
+ 		u8 *data = av7110->debi_virt;
++		u8 data_0 = data[0];
  
- 	ret = pm_runtime_get_sync(prl->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(prl->dev);
- 		return ret;
-+	}
- 
- 	reg = img_prl_out_readl(prl, IMG_PRL_OUT_CTL);
- 	reg = (reg & ~IMG_PRL_OUT_CTL_EDGE_MASK) | control_set;
+-		if ((data[0] < 2) && data[2] == 0xff) {
++		if (data_0 < 2 && data[2] == 0xff) {
+ 			int flags = 0;
+ 			if (data[5] > 0)
+ 				flags |= CA_CI_MODULE_PRESENT;
+ 			if (data[5] > 5)
+ 				flags |= CA_CI_MODULE_READY;
+-			av7110->ci_slot[data[0]].flags = flags;
++			av7110->ci_slot[data_0].flags = flags;
+ 		} else
+ 			ci_get_data(&av7110->ci_rbuffer,
+ 				    av7110->debi_virt,
 -- 
 2.25.1
 
