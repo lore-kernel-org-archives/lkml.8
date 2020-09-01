@@ -2,171 +2,243 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C847DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A13C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 950E32083B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F16FD2083B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IvR0Q+6R"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="MJkvAFab";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="HBBaWnBs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbgIAJpQ (ORCPT
+        id S1726293AbgIAJpV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:45:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57350 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbgIAJpN (ORCPT
+        Tue, 1 Sep 2020 05:45:21 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:43019 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726174AbgIAJpO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:45:13 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3010AC061246
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 02:45:13 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id k15so467822pfc.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 02:45:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r1NoCkHudRDLJveRbNuO/HjyuaNHKWaeWYMVpiMNyLI=;
-        b=IvR0Q+6R6bFcaOGfuAMDKMmO6ZeAoUIfwg+n23hk0JrEEpQxvl0zLdpxOQ967DVww8
-         ep2XmHnFf/UnBsHnlO1c9M41B8rETWmZJPb2H6THueHtpVcJP/TJFU/a/fEBSCzSYs1L
-         KMP3BnvN+MfqLh7gEOjnz1wKAM9K/E+VR6LIa6j0+XmyNk47wkMKaLgLrxgCNq4AYApA
-         boLaV+rCCvE4iU33jx8Vq9IToQGThKVB2jAFd4wJbAw/YhsQTyEX1z5yuPjyrlVSWTmq
-         oYsl6RSOT8X81avhmYHL6QsvUN6z+7oXpHBTHeppkxokaG3gjumNx8PLLLKwPtzMD+87
-         RmjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r1NoCkHudRDLJveRbNuO/HjyuaNHKWaeWYMVpiMNyLI=;
-        b=MWBiNVC4VvxI+8j3CchrcsEZYhNjEjOQf0cNLdxNt51LVj3WBLfBo/qYpuBFhVuz3Q
-         HNy1r2UnMB5FZwo2MEhpZAeJHKFyVCSQZS+l5pMhuH0m2fKmpS1qbalyHMTu54uBaXzm
-         kJ5Tp0C8mHN16aw4j9oCExXZEBWKSWzjOgYkhj1YJ5ZO60tBRss4/yPu/O82l6ziHZqo
-         o0O9k6od57WY1QIgpRxX6LAMe5mpxRvHqczBHSNVYVzm6AJsObh+/ZwKwE8+avA+GRkO
-         y7XmFUhqU9COu4HiRmAfbijmZeclJYT0iY2DWwPVolLpNwvidpRs0Z9SlPJKdlCTfpla
-         LLHQ==
-X-Gm-Message-State: AOAM532B2+++7F4ExZ+c71JoMAtL1zUQTbLRLbmYry+1c++rp8zm0jko
-        gLDLLGV+/PIT26xZvVK49VLTZg==
-X-Google-Smtp-Source: ABdhPJyaoSDKbwx6GB0/73NFH4JHGbgiFworG2T6RlMQNUOY1ihOxi09F8vrmeYZExwUoAfBHvxZ7w==
-X-Received: by 2002:a63:348d:: with SMTP id b135mr754836pga.89.1598953512567;
-        Tue, 01 Sep 2020 02:45:12 -0700 (PDT)
-Received: from localhost ([122.167.135.199])
-        by smtp.gmail.com with ESMTPSA id n1sm1241495pfq.123.2020.09.01.02.45.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Sep 2020 02:45:11 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 15:15:08 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     ulf.hansson@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>, Nishanth Menon <nm@ti.com>,
-        nks@flawful.org, georgi.djakov@linaro.org,
-        Stephan Gerhold <stephan@gerhold.net>,
-        linux-kernel@vger.kernel.org,
-        'Linux Samsung SOC' <linux-samsung-soc@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH V2 2/2] cpufreq: dt: Refactor initialization to handle
- probe deferral properly
-Message-ID: <20200901094508.4sgyfv3yj575wlzp@vireshk-i7>
-References: <24ff92dd1b0ee1b802b45698520f2937418f8094.1598260050.git.viresh.kumar@linaro.org>
- <f75c61f193f396608d592ae2a9938264d582c038.1598260050.git.viresh.kumar@linaro.org>
- <CGME20200901085708eucas1p231ccacd7b41685ece92ee21e3b726f28@eucas1p2.samsung.com>
- <00a87bad-f750-b08c-4ccb-545b90dd87fc@samsung.com>
+        Tue, 1 Sep 2020 05:45:14 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 41796638;
+        Tue,  1 Sep 2020 05:45:13 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 01 Sep 2020 05:45:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=4gcyFzed9X7eNC7JzpnKedk4o4e
+        NcTrAMfkvVcC89lk=; b=MJkvAFabzYnLIuY8R6cMW1TKfX3Z01jyYZqBVsx0iJj
+        kaVPG09Kvm5zLsQBGnseFzZ7CdjPPgek2sIOsHRjaAvsLqg4iERsSzzJ2HzMg56u
+        chvcdPJW914+nOBtkiiNQo17fgf92eLjdIk9f9Sxei8m1bn2bi8kIAeL84/XrD+d
+        MMTWaRvsG4QZnVp738UtbWsW8iE/o13rVP2gwBIZlO2dGyzMm60G23TeELgXiQ0V
+        CEgasM23QQ0xnvG0iR3+ZoJM1U8aq7+P50kU2PXJ3Jj+nfo2szEsPYWTuhrBztxG
+        uhIzPJipzF2fvlE5l5aETJcCfc5BY2nFT/mMA2rFvSA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=4gcyFz
+        ed9X7eNC7JzpnKedk4o4eNcTrAMfkvVcC89lk=; b=HBBaWnBsPg9041RHVLgrHY
+        iU6422JtfjgK93fFnZh6tOcjmm7qYs9RnbcSJl4WJwvDr4elf4CRlo3+vdEf58Lm
+        yMQq15DmAiQCPwYCMbiRhksdHdyiRQKufj3YdWbpfN7xVWKL0Y1JXiCGfWqnx3Fg
+        4JQROsFW2egQU28hv6aOsv/i7JmOI+XP+Bougqrkqr8sqGdWPdZ3OUK4FqVr05Xv
+        s2Aeb5Ng/zOKAM1+05jB63aVcffSuBdOc/kqRlsILcRyF9sBuXcUfUsu2zdhjP2N
+        BpuRjtTQBjv7n5DPkA5yKOX45YQ0r8Hjtxl6WoTeMuppW0WTT0yKldBlmlhSV5LQ
+        ==
+X-ME-Sender: <xms:JxhOX7YlJZzhbsmZXY9KU9wu_acJhSM_WO75amykEsTlKYLEHKnRZg>
+    <xme:JxhOX6aucLsV89BqrtQng2xIUEsv2lpEXv1kPSOkH2XpJ6gl6BEOCAPkK7cp6AGZP
+    0LyMVzOnpJUPnRSWSE>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefjedgvdduucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:JxhOX9_YS_ijvM0h8Qmjwums0DuFkL6xcKaJY3Am23bKEC9qq16ZSw>
+    <xmx:JxhOXxodm3EMTzXe5IwQucVyVZMRsx2XkgOy66XwLR5j2uFJnRewvw>
+    <xmx:JxhOX2qEbFfwPMhklXLUkPZs9ThbrhsPeU6m35r5DihuR2QUvkgXAg>
+    <xmx:KBhOXye3rr_neJTUrYOWteh1q0iCgCh0qoi-uE1oqqzGI-EKioia-lPaTTE>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 5B5F03280059;
+        Tue,  1 Sep 2020 05:45:11 -0400 (EDT)
+Date:   Tue, 1 Sep 2020 11:45:09 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Subject: Re: [PATCH v4 62/78] drm/vc4: hdmi: Adjust HSM clock rate depending
+ on pixel rate
+Message-ID: <20200901094509.spgxtkfybebo7mmb@gilmour.lan>
+References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <CGME20200708174513epcas1p2c059db88d8dad1d58aae3651b3c98c2b@epcas1p2.samsung.com>
+ <5919dccdd4a792936e6cb7eb55983c530c9a468d.1594230107.git-series.maxime@cerno.tech>
+ <95172a9a-e861-5e5d-bf51-2ec03c730237@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="l2cz7keizc6yoqv4"
 Content-Disposition: inline
-In-Reply-To: <00a87bad-f750-b08c-4ccb-545b90dd87fc@samsung.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <95172a9a-e861-5e5d-bf51-2ec03c730237@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01-09-20, 10:57, Marek Szyprowski wrote:
-> This patch landed in linux-next about a week ago. It introduces a 
-> following warning on Samsung Exnyos3250 SoC:
-> 
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 1000000000, volt: 1150000, enabled: 1. New: freq: 1000000000, volt: 
-> 1150000, enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 900000000, volt: 1112500, enabled: 1. New: freq: 900000000, volt: 
-> 1112500, enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 800000000, volt: 1075000, enabled: 1. New: freq: 800000000, volt: 
-> 1075000, enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 700000000, volt: 1037500, enabled: 1. New: freq: 700000000, volt: 
-> 1037500, enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 600000000, volt: 1000000, enabled: 1. New: freq: 600000000, volt: 
-> 1000000, enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 500000000, volt: 962500, enabled: 1. New: freq: 500000000, volt: 962500, 
-> enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 400000000, volt: 925000, enabled: 1. New: freq: 400000000, volt: 925000, 
-> enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 300000000, volt: 887500, enabled: 1. New: freq: 300000000, volt: 887500, 
-> enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 200000000, volt: 850000, enabled: 1. New: freq: 200000000, volt: 850000, 
-> enabled: 1
-> cpu cpu1: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 
-> 100000000, volt: 850000, enabled: 1. New: freq: 100000000, volt: 850000, 
-> enabled: 1
-> 
-> I've checked a bit and this is related to the fact that Exynos3250 SoC 
-> use OPP-v1 table. Is this intentional? It is not a problem to convert it 
-> to OPP-v2 and mark OPP table as shared, but this is a kind of a regression.
 
-It took me 20 minutes for me to see "where has my patch gone" :(
+--l2cz7keizc6yoqv4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I wrote a small patch for that to work without any issues, but not
-sure how I missed or abandoned it. Anyway, here is the diff again and
-I will send it out again once you confirm it fixes the issue. Can you
-please also test your driver as a module with multiple insertion/removals ?
+Hi Chanwoo,
 
-diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-index 5dac8bffd68c..e72753be7dc7 100644
---- a/drivers/opp/of.c
-+++ b/drivers/opp/of.c
-@@ -905,6 +905,16 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
-        const __be32 *val;
-        int nr, ret = 0;
- 
-+       mutex_lock(&opp_table->lock);
-+       if (opp_table->parsed_static_opps) {
-+               opp_table->parsed_static_opps++;
-+               mutex_unlock(&opp_table->lock);
-+               return 0;
-+       }
-+
-+       opp_table->parsed_static_opps = 1;
-+       mutex_unlock(&opp_table->lock);
-+
-        prop = of_find_property(dev->of_node, "operating-points", NULL);
-        if (!prop)
-                return -ENODEV;
-@@ -921,10 +931,6 @@ static int _of_add_opp_table_v1(struct device *dev, struct opp_table *opp_table)
-                return -EINVAL;
-        }
- 
--       mutex_lock(&opp_table->lock);
--       opp_table->parsed_static_opps = 1;
--       mutex_unlock(&opp_table->lock);
--
-        val = prop->value;
-        while (nr) {
-                unsigned long freq = be32_to_cpup(val++) * 1000;
+On Tue, Sep 01, 2020 at 01:36:17PM +0900, Chanwoo Choi wrote:
+> On 7/9/20 2:42 AM, Maxime Ripard wrote:
+> > The HSM clock needs to be setup at around 101% of the pixel rate. This
+> > was done previously by setting the clock rate to 163.7MHz at probe time=
+ and
+> > only check in mode_valid whether the mode pixel clock was under the pix=
+el
+> > clock +1% or not.
+> >=20
+> > However, with 4k we need to change that frequency to a higher frequency
+> > than 163.7MHz, and yet want to have the lowest clock as possible to hav=
+e a
+> > decent power saving.
+> >=20
+> > Let's change that logic a bit by setting the clock rate of the HSM clock
+> > to the pixel rate at encoder_enable time. This would work for the
+> > BCM2711 that support 4k resolutions and has a clock that can provide it,
+> > but we still have to take care of a 4k panel plugged on a BCM283x SoCs
+> > that wouldn't be able to use those modes, so let's define the limit in
+> > the variant.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+> > ---
+> >  drivers/gpu/drm/vc4/vc4_hdmi.c | 79 ++++++++++++++++-------------------
+> >  drivers/gpu/drm/vc4/vc4_hdmi.h |  3 +-
+> >  2 files changed, 41 insertions(+), 41 deletions(-)
+> >=20
+> > diff --git a/drivers/gpu/drm/vc4/vc4_hdmi.c b/drivers/gpu/drm/vc4/vc4_h=
+dmi.c
+> > index 17797b14cde4..9f30fab744f2 100644
+> > --- a/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > +++ b/drivers/gpu/drm/vc4/vc4_hdmi.c
+> > @@ -53,7 +53,6 @@
+> >  #include "vc4_hdmi_regs.h"
+> >  #include "vc4_regs.h"
+> > =20
+> > -#define HSM_CLOCK_FREQ 163682864
+> >  #define CEC_CLOCK_FREQ 40000
+> > =20
+> >  static int vc4_hdmi_debugfs_regs(struct seq_file *m, void *unused)
+> > @@ -326,6 +325,7 @@ static void vc4_hdmi_encoder_disable(struct drm_enc=
+oder *encoder)
+> >  	HDMI_WRITE(HDMI_VID_CTL,
+> >  		   HDMI_READ(HDMI_VID_CTL) & ~VC4_HD_VID_CTL_ENABLE);
+> > =20
+> > +	clk_disable_unprepare(vc4_hdmi->hsm_clock);
+> >  	clk_disable_unprepare(vc4_hdmi->pixel_clock);
+> > =20
+> >  	ret =3D pm_runtime_put(&vc4_hdmi->pdev->dev);
+> > @@ -423,6 +423,7 @@ static void vc4_hdmi_encoder_enable(struct drm_enco=
+der *encoder)
+> >  	struct vc4_hdmi *vc4_hdmi =3D encoder_to_vc4_hdmi(encoder);
+> >  	struct vc4_hdmi_encoder *vc4_encoder =3D to_vc4_hdmi_encoder(encoder);
+> >  	bool debug_dump_regs =3D false;
+> > +	unsigned long pixel_rate, hsm_rate;
+> >  	int ret;
+> > =20
+> >  	ret =3D pm_runtime_get_sync(&vc4_hdmi->pdev->dev);
+> > @@ -431,9 +432,8 @@ static void vc4_hdmi_encoder_enable(struct drm_enco=
+der *encoder)
+> >  		return;
+> >  	}
+> > =20
+> > -	ret =3D clk_set_rate(vc4_hdmi->pixel_clock,
+> > -			   mode->clock * 1000 *
+> > -			   ((mode->flags & DRM_MODE_FLAG_DBLCLK) ? 2 : 1));
+> > +	pixel_rate =3D mode->clock * 1000 * ((mode->flags & DRM_MODE_FLAG_DBL=
+CLK) ? 2 : 1);
+> > +	ret =3D clk_set_rate(vc4_hdmi->pixel_clock, pixel_rate);
+> >  	if (ret) {
+> >  		DRM_ERROR("Failed to set pixel clock rate: %d\n", ret);
+> >  		return;
+> > @@ -445,6 +445,36 @@ static void vc4_hdmi_encoder_enable(struct drm_enc=
+oder *encoder)
+> >  		return;
+> >  	}
+> > =20
+> > +	/*
+> > +	 * As stated in RPi's vc4 firmware "HDMI state machine (HSM) clock mu=
+st
+> > +	 * be faster than pixel clock, infinitesimally faster, tested in
+> > +	 * simulation. Otherwise, exact value is unimportant for HDMI
+> > +	 * operation." This conflicts with bcm2835's vc4 documentation, which
+> > +	 * states HSM's clock has to be at least 108% of the pixel clock.
+> > +	 *
+> > +	 * Real life tests reveal that vc4's firmware statement holds up, and
+> > +	 * users are able to use pixel clocks closer to HSM's, namely for
+> > +	 * 1920x1200@60Hz. So it was decided to have leave a 1% margin between
+> > +	 * both clocks. Which, for RPi0-3 implies a maximum pixel clock of
+> > +	 * 162MHz.
+> > +	 *
+> > +	 * Additionally, the AXI clock needs to be at least 25% of
+> > +	 * pixel clock, but HSM ends up being the limiting factor.
+> > +	 */
+> > +	hsm_rate =3D max_t(unsigned long, 120000000, (pixel_rate / 100) * 101=
+);
+> > +	ret =3D clk_set_rate(vc4_hdmi->hsm_clock, hsm_rate);
+> > +	if (ret) {
+> > +		DRM_ERROR("Failed to set HSM clock rate: %d\n", ret);
+> > +		return;
+> > +	}
+> > +
+> > +	ret =3D clk_prepare_enable(vc4_hdmi->hsm_clock);
+> > +	if (ret) {
+> > +		DRM_ERROR("Failed to turn on HSM clock: %d\n", ret);
+> > +		clk_disable_unprepare(vc4_hdmi->pixel_clock);
+> > +		return;
+> > +	}
+>=20
+> About vc4_hdmi->hsm_clock instance, usually, we need to enable the clock
+> with clk_prepare_enable() and then touch the clock like clk_set_rate().
+> I think that need to enable the clock before calling clk_set_rate().
+>=20
+> When I tested this patchset, it is well working because I think that
+> vc4_hdmi->hsm_clock was already enabled on other side.
 
--- 
-viresh
+There's no clear rule here on the ordering (at least enforced by the
+framework). There's clocks that need to be disabled to change their rate
+(CLK_SET_RATE_GATE) and some that need to be enabled to change their
+rate (CLK_SET_RATE_UNGATE).
+
+Generally speaking, it seems more logical to me to have first the rate
+changed and then the clock enabled since it won't create any "hiccup",
+but I could very well see the opposite to be preferred.
+
+Maxime
+
+--l2cz7keizc6yoqv4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX04YJQAKCRDj7w1vZxhR
+xW70AQD/ZlQ9or7xShXk/2/RckodgJ+4vJLaVsavf7Tsd0WhvAEAiTeK619R18o6
+OPxacjLjaE8/DQ+zuJRSY/O8LFoIdgU=
+=OBfP
+-----END PGP SIGNATURE-----
+
+--l2cz7keizc6yoqv4--
