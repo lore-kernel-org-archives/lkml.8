@@ -2,131 +2,107 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E4AC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF596C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E99B32098B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qqyvmuYi"
+	by mail.kernel.org (Postfix) with ESMTP id BF286206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:39:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgIAIj1 (ORCPT
+        id S1727993AbgIAIji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:39:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47070 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgIAIio (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:38:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7608EC061247
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 01:38:44 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id k15so513399wrn.10
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 01:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QyuNgv+RVd1VIyxBoD/N8sD0qrYIVJos+n990uvu1UA=;
-        b=qqyvmuYirbc/RZhn3fEijjtkQDEmGShM7dHDUfmvmTZhWLnfI/aos7mvjYr01g+8W3
-         /D4Pdcv7cbnAbSXxo8IVjE0oF/0/OHb5c0hYpyPWdL527RHg2URvS9wnye0hF+Wk/98Z
-         8itFBK2xdG3NM77B43KzOno7HrbnyaZVMdSb2VCxFFxMOLvnl7z2gBtic33oTQX8EvjO
-         lmmx4fOP1e0jXYPXYMstMnzfSjT9VBZPeFqIoJpLgq1NF/207YH+DMS/mBjRy0jPybBc
-         KK8E/p8yT46qTjywfaYbwrghO9Yt9nJMyqMM2NXQE+57Ah87ZLdRV74FCShq944OcD5B
-         IAXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=QyuNgv+RVd1VIyxBoD/N8sD0qrYIVJos+n990uvu1UA=;
-        b=FGHchgvSUZ87D4zfzkN/ee4jhXohwHoxFZRYR6XVkIzTezjqOyuhxMv7M4SK3BV8ft
-         xhBOE2RwuXwp/0OoMjD+g9XSWPqloT5JzlTfDwAeHIzVdrzebSlR2xkFSurnz8S31dgG
-         diXvnfGAp8LV6F+MgKTLM8bLsq0s1VhwF8G/nsFc5theTjxprCkHYNw0ihsr3wN+gMD5
-         V8qX+yQbTRBLhXTCFuoU4ZOrv7sFi5tKSuSlJv0zQ2nyQ0sHkTvZ/jgdkrucLQwxlySI
-         Na7tuPcc5i14+nRr+dszdot3i/70aJ5HhlNNaKEuExQNIOTC3AlQHW9OtnTRpivhkU41
-         a+VA==
-X-Gm-Message-State: AOAM5320MiVQwXJr2pv2rUVF8tCkfopOMyl03SNJko2tkI78IfjHEg+h
-        T8sNfwwEaa49NmsX6XTdzZdF0Q==
-X-Google-Smtp-Source: ABdhPJxxBUlZrsak+qKciu1DXtZVvDt56EFaJdDH/thRp4Hrst4L/QxprGLfpttTKFEv3KvJYpxHyQ==
-X-Received: by 2002:adf:b442:: with SMTP id v2mr688196wrd.213.1598949523124;
-        Tue, 01 Sep 2020 01:38:43 -0700 (PDT)
-Received: from hackbox2.linaro.org ([81.128.185.34])
-        by smtp.gmail.com with ESMTPSA id d190sm911260wmd.23.2020.09.01.01.38.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 01:38:42 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Ian Rogers <irogers@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        James Clark <james.clark@arm.com>,
-        Wei Li <liwei391@huawei.com>, Al Grant <Al.Grant@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2 09/14] perf arm-spe: Save memory addresses in packet
-Date:   Tue,  1 Sep 2020 09:38:10 +0100
-Message-Id: <20200901083815.13755-10-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901083815.13755-1-leo.yan@linaro.org>
-References: <20200901083815.13755-1-leo.yan@linaro.org>
+        Tue, 1 Sep 2020 04:39:38 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10749 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727929AbgIAIjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:39:22 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ECF1DEB90785927F2594;
+        Tue,  1 Sep 2020 16:39:19 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.177.253) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 1 Sep 2020 16:39:11 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v2 1/1] samples/seccomp: eliminate two compile warnings in user-trap.c
+Date:   Tue, 1 Sep 2020 16:39:03 +0800
+Message-ID: <20200901083903.2083-2-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <20200901083903.2083-1-thunder.leizhen@huawei.com>
+References: <20200901083903.2083-1-thunder.leizhen@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.177.253]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is to save virtual and physical memory addresses in packet,
-the address info can be used for generating memory samples.
+samples/seccomp/user-trap.c is compiled with $(userccflags), and the
+latter does not contain -fno-strict-aliasing, so the warnings reported as
+below. Due to add "userccflags += -fno-strict-aliasing" will impact other
+files, so use __attribute__((__may_alias__)) to suppress it exactly.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+My gcc version is 5.5.0 20171010.
+
+----------
+samples/seccomp/user-trap.c: In function ‘send_fd’:
+samples/seccomp/user-trap.c:50:2: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+  *((int *)CMSG_DATA(cmsg)) = fd;
+  ^
+samples/seccomp/user-trap.c: In function ‘recv_fd’:
+samples/seccomp/user-trap.c:83:2: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]
+  return *((int *)CMSG_DATA(cmsg));
+  ^
+
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.c | 4 ++++
- tools/perf/util/arm-spe-decoder/arm-spe-decoder.h | 2 ++
- 2 files changed, 6 insertions(+)
+ samples/seccomp/user-trap.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-index ae718e3419e3..1c430657939f 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.c
-@@ -160,6 +160,10 @@ static int arm_spe_read_record(struct arm_spe_decoder *decoder)
- 				decoder->record.from_ip = ip;
- 			else if (idx == SPE_ADDR_PKT_HDR_INDEX_BRANCH)
- 				decoder->record.to_ip = ip;
-+			else if (idx == SPE_ADDR_PKT_HDR_INDEX_DATA_VIRT)
-+				decoder->record.addr = ip;
-+			else if (idx == SPE_ADDR_PKT_HDR_INDEX_DATA_PHYS)
-+				decoder->record.phys_addr = ip;
- 			break;
- 		case ARM_SPE_COUNTER:
- 			break;
-diff --git a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-index 24727b8ca7ff..31d1776785de 100644
---- a/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-+++ b/tools/perf/util/arm-spe-decoder/arm-spe-decoder.h
-@@ -30,6 +30,8 @@ struct arm_spe_record {
- 	u64 from_ip;
- 	u64 to_ip;
- 	u64 timestamp;
-+	u64 addr;
-+	u64 phys_addr;
- };
+diff --git a/samples/seccomp/user-trap.c b/samples/seccomp/user-trap.c
+index 20291ec6489f31e..e36696b7f41517f 100644
+--- a/samples/seccomp/user-trap.c
++++ b/samples/seccomp/user-trap.c
+@@ -23,6 +23,8 @@
  
- struct arm_spe_insn;
+ #define ARRAY_SIZE(x) (sizeof(x) / sizeof(*(x)))
+ 
++typedef int __attribute__((__may_alias__)) __int_alias_t;
++
+ static int seccomp(unsigned int op, unsigned int flags, void *args)
+ {
+ 	errno = 0;
+@@ -47,7 +49,7 @@ static int send_fd(int sock, int fd)
+ 	cmsg->cmsg_level = SOL_SOCKET;
+ 	cmsg->cmsg_type = SCM_RIGHTS;
+ 	cmsg->cmsg_len = CMSG_LEN(sizeof(int));
+-	*((int *)CMSG_DATA(cmsg)) = fd;
++	*(__int_alias_t *)CMSG_DATA(cmsg) = fd;
+ 	msg.msg_controllen = cmsg->cmsg_len;
+ 
+ 	if (sendmsg(sock, &msg, 0) < 0) {
+@@ -80,7 +82,7 @@ static int recv_fd(int sock)
+ 
+ 	cmsg = CMSG_FIRSTHDR(&msg);
+ 
+-	return *((int *)CMSG_DATA(cmsg));
++	return *(__int_alias_t *)CMSG_DATA(cmsg);
+ }
+ 
+ static int user_trap_syscall(int nr, unsigned int flags)
 -- 
-2.20.1
+1.8.3
+
 
