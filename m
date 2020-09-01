@@ -2,165 +2,121 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,TVD_SUBJ_WIPE_DEBT,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD9FC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ECDC28E83
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 636E020767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FBA92087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598980439;
+	bh=LyCZN+BCUo30IxZJg+bDtUMGCtyQ45xLHCyexBR9wzQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kdIR4thb95uTAwI7zB9mTgUDMBNXxao6m5od8gVYejVYCztaPxF1l119uzk0PJzIo
+	 rpYarHXXul1JakGO4VxYfIfZBTZFCaEeEUZQ6HHg0fQWQhAWXdc1tCuZODrZYq+xjF
+	 xoCZeHQRQHGBNSto7weQfTyoG+kUdyXDIvo6yEvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732556AbgIARNp (ORCPT
+        id S1732155AbgIARNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:13:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:61806 "EHLO pegase1.c-s.fr"
+        Tue, 1 Sep 2020 13:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729443AbgIARN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:13:27 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 4Bgtv04xyTz9v1q9;
-        Tue,  1 Sep 2020 19:13:16 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id KHA6UIMLnSZl; Tue,  1 Sep 2020 19:13:16 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 4Bgtv01r8Xz9v1q8;
-        Tue,  1 Sep 2020 19:13:16 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id DF1578B7E7;
-        Tue,  1 Sep 2020 19:13:17 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id dXOiKVa1V5uo; Tue,  1 Sep 2020 19:13:17 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D6B3F8B7E6;
-        Tue,  1 Sep 2020 19:13:16 +0200 (CEST)
-Subject: Re: remove the last set_fs() in common code, and remove it for x86
- and powerpc v2
-To:     Christoph Hellwig <hch@lst.de>,
+        id S1728397AbgIAPPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:15:36 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 731DB20767;
+        Tue,  1 Sep 2020 15:15:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973331;
+        bh=LyCZN+BCUo30IxZJg+bDtUMGCtyQ45xLHCyexBR9wzQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KU6nWNsL2IXWeDr0Bjglg17sfY5/DuZckDqstxvT1JbLJZTcBNPT+iw7+MyMDbTi3
+         bfN2y728KMF3vy9E1ABMUcvOvVsW/CiqiwK4jYejm56xCstR/7/X042ZWIdwRl78aQ
+         aI1SfDWBux5Sr/twTf7z4hu96K9g1yyjO63hY4q4=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Marco Elver <elver@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org
-References: <20200827150030.282762-1-hch@lst.de>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <a8bb0319-0928-4687-9e9c-777c5860dbdd@csgroup.eu>
-Date:   Tue, 1 Sep 2020 19:13:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 37/78] efi: provide empty efi_enter_virtual_mode implementation
+Date:   Tue,  1 Sep 2020 17:10:13 +0200
+Message-Id: <20200901150926.592332088@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
+References: <20200901150924.680106554@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200827150030.282762-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+From: Andrey Konovalov <andreyknvl@google.com>
 
-Le 27/08/2020 à 17:00, Christoph Hellwig a écrit :
-> Hi all,
-> 
-> this series removes the last set_fs() used to force a kernel address
-> space for the uaccess code in the kernel read/write/splice code, and then
-> stops implementing the address space overrides entirely for x86 and
-> powerpc.
-> 
-> The file system part has been posted a few times, and the read/write side
-> has been pretty much unchanced.  For splice this series drops the
-> conversion of the seq_file and sysctl code to the iter ops, and thus loses
-> the splice support for them.  The reasons for that is that it caused a lot
-> of churn for not much use - splice for these small files really isn't much
-> of a win, even if existing userspace uses it.  All callers I found do the
-> proper fallback, but if this turns out to be an issue the conversion can
-> be resurrected.
-> 
-> Besides x86 and powerpc I plan to eventually convert all other
-> architectures, although this will be a slow process, starting with the
-> easier ones once the infrastructure is merged.  The process to convert
-> architectures is roughtly:
-> 
->   (1) ensure there is no set_fs(KERNEL_DS) left in arch specific code
->   (2) implement __get_kernel_nofault and __put_kernel_nofault
->   (3) remove the arch specific address limitation functionality
-> 
-> Changes since v1:
->   - drop the patch to remove the non-iter ops for /dev/zero and
->     /dev/null as they caused a performance regression
->   - don't enable user access in __get_kernel on powerpc
->   - xfail the set_fs() based lkdtm tests
-> 
-> Diffstat:
-> 
+[ Upstream commit 2c547f9da0539ad1f7ef7f08c8c82036d61b011a ]
 
+When CONFIG_EFI is not enabled, we might get an undefined reference to
+efi_enter_virtual_mode() error, if this efi_enabled() call isn't inlined
+into start_kernel().  This happens in particular, if start_kernel() is
+annodated with __no_sanitize_address.
 
-I'm still sceptic with the results I get.
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Elena Petrova <lenaptr@google.com>
+Cc: Marco Elver <elver@google.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Walter Wu <walter-zh.wu@mediatek.com>
+Link: http://lkml.kernel.org/r/6514652d3a32d3ed33d6eb5c91d0af63bf0d1a0c.1596544734.git.andreyknvl@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/efi.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-With 5.9-rc2:
-
-root@vgoippro:~# time dd if=/dev/zero of=/dev/null count=1M
-1048576+0 records in
-1048576+0 records out
-536870912 bytes (512.0MB) copied, 5.585880 seconds, 91.7MB/s
-real    0m 5.59s
-user    0m 1.40s
-sys     0m 4.19s
-
-
-With your series:
-
-root@vgoippro:/tmp# time dd if=/dev/zero of=/dev/null count=1M
-1048576+0 records in
-1048576+0 records out
-536870912 bytes (512.0MB) copied, 7.780540 seconds, 65.8MB/s
-real    0m 7.79s
-user    0m 2.12s
-sys     0m 5.66s
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 02c4f16685b69..69605956beb85 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -910,7 +910,11 @@ extern void *efi_get_pal_addr (void);
+ extern void efi_map_pal_code (void);
+ extern void efi_memmap_walk (efi_freemem_callback_t callback, void *arg);
+ extern void efi_gettimeofday (struct timespec64 *ts);
++#ifdef CONFIG_EFI
+ extern void efi_enter_virtual_mode (void);	/* switch EFI to virtual mode, if possible */
++#else
++static inline void efi_enter_virtual_mode (void) {}
++#endif
+ #ifdef CONFIG_X86
+ extern void efi_late_init(void);
+ extern void efi_free_boot_services(void);
+-- 
+2.25.1
 
 
 
-
-Top of perf report of a standard perf record:
-
-With 5.9-rc2:
-
-     20.31%  dd       [kernel.kallsyms]  [k] __arch_clear_user
-      8.37%  dd       [kernel.kallsyms]  [k] transfer_to_syscall
-      7.37%  dd       [kernel.kallsyms]  [k] __fsnotify_parent
-      6.95%  dd       [kernel.kallsyms]  [k] iov_iter_zero
-      5.72%  dd       [kernel.kallsyms]  [k] new_sync_read
-      4.87%  dd       [kernel.kallsyms]  [k] vfs_write
-      4.47%  dd       [kernel.kallsyms]  [k] vfs_read
-      3.07%  dd       [kernel.kallsyms]  [k] ksys_write
-      2.77%  dd       [kernel.kallsyms]  [k] ksys_read
-      2.65%  dd       [kernel.kallsyms]  [k] __fget_light
-      2.37%  dd       [kernel.kallsyms]  [k] __fdget_pos
-      2.35%  dd       [kernel.kallsyms]  [k] memset
-      1.53%  dd       [kernel.kallsyms]  [k] rw_verify_area
-      1.52%  dd       [kernel.kallsyms]  [k] read_iter_zero
-
-With your series:
-     19.60%  dd       [kernel.kallsyms]  [k] __arch_clear_user
-     10.92%  dd       [kernel.kallsyms]  [k] iov_iter_zero
-      9.50%  dd       [kernel.kallsyms]  [k] vfs_write
-      8.97%  dd       [kernel.kallsyms]  [k] __fsnotify_parent
-      5.46%  dd       [kernel.kallsyms]  [k] transfer_to_syscall
-      5.42%  dd       [kernel.kallsyms]  [k] vfs_read
-      3.58%  dd       [kernel.kallsyms]  [k] ksys_read
-      2.84%  dd       [kernel.kallsyms]  [k] read_iter_zero
-      2.24%  dd       [kernel.kallsyms]  [k] ksys_write
-      1.80%  dd       [kernel.kallsyms]  [k] __fget_light
-      1.34%  dd       [kernel.kallsyms]  [k] __fdget_pos
-      0.91%  dd       [kernel.kallsyms]  [k] memset
-      0.91%  dd       [kernel.kallsyms]  [k] rw_verify_area
-
-Christophe
