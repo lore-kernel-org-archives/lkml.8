@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2624C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F7FC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7CF621582
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4323B215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974639;
-	bh=Qj7JQS+ohLx5lQJpKyzZQKyNdacmCCnN1LoA2xLvZVU=;
+	s=default; t=1598974645;
+	bh=nen8rbwTQ4JvbkPLYxyfVe+jS2BIf74BjMDoianqLnA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iEhgw63IXU+H2FZ8+n7yu+LmkniZ+ECjQFzJnlX2fVExYi3DmAXgVgcp8qwoGUUeO
-	 jfZyxVdbBSI9fqzlHVViSNDdutdEjt7E/MHTQsUJwGytheHdFWVHSsVVtepEKf0IhR
-	 eoTcv56cSGpFDRXHpPsWnJeyJKoSvs16w4AbPF5A=
+	b=rcTbNqnBfFxI54kGfsBZYdVMl+jTK/asGoD5J6eEWUXp67Ka8hl8O8zlwY12ZuWpk
+	 gSitsTE+1X8VmtcubrtdrGKZttjG9nlmnjiLp8zbsuI7SQWZhfHljOP/HqK3VaS1ed
+	 KF6p/bQAspOoXLsQf5NMyu3S3ER9m4OEQ3Ts5wdY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgIAPhQ (ORCPT
+        id S1731135AbgIAPhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:37:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41966 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:37:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbgIAPfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:48 -0400
+        id S1729712AbgIAPfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:35:51 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61D4221534;
-        Tue,  1 Sep 2020 15:35:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19F0B2158C;
+        Tue,  1 Sep 2020 15:35:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974548;
-        bh=Qj7JQS+ohLx5lQJpKyzZQKyNdacmCCnN1LoA2xLvZVU=;
+        s=default; t=1598974550;
+        bh=nen8rbwTQ4JvbkPLYxyfVe+jS2BIf74BjMDoianqLnA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CuFZ77HL6gJVyYk0FTLEsWQB7N8jwC9+i0D7BoZ0y7UIVjxda5YkoyrRi3cVHvpyG
-         eIZ+DZAHQFS6FyXXLtPv+Ow0kKL0W1wU+HTZUJQdqy7pEpNEoWXrmZUC2SPP43+WGd
-         V59508Lv6oJlm0s5GELFGs8k7Fxzp+FS/xiJVxuw=
+        b=pgudOl1DW/RiGO5FYSahr0Y1ium08pXA+L64a6fo6O70icjGelnbwPQ/xdqEWAZ9M
+         G1WsCuQRmsUc6IVms5kcq9bwYf/BwuWtAy+imG81rtW9xEPZPU0MxOOZUuppRXoc5V
+         onAD27HpIb6rjR40Tg0Lc6NEEpUr4KIMvSgJkODA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Brooke Basile <brookebasile@gmail.com>,
-        stable <stable@kernel.org>
-Subject: [PATCH 5.4 197/214] USB: gadget: u_f: Unbreak offset calculation in VLAs
-Date:   Tue,  1 Sep 2020 17:11:17 +0200
-Message-Id: <20200901151002.381889040@linuxfoundation.org>
+        stable@vger.kernel.org, Tom Rix <trix@redhat.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: [PATCH 5.4 198/214] USB: cdc-acm: rework notification_buffer resizing
+Date:   Tue,  1 Sep 2020 17:11:18 +0200
+Message-Id: <20200901151002.432063894@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -62,51 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+From: Tom Rix <trix@redhat.com>
 
-commit bfd08d06d978d0304eb6f7855b548aa2cd1c5486 upstream.
+commit f4b9d8a582f738c24ebeabce5cc15f4b8159d74e upstream.
 
-Inadvertently the commit b1cd1b65afba ("USB: gadget: u_f: add overflow checks
-to VLA macros") makes VLA macros to always return 0 due to different scope of
-two variables of the same name. Obviously we need to have only one.
+Clang static analysis reports this error
 
-Fixes: b1cd1b65afba ("USB: gadget: u_f: add overflow checks to VLA macros")
-Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Brooke Basile <brookebasile@gmail.com>
-Cc: stable <stable@kernel.org>
-Link: https://lore.kernel.org/r/20200826192119.56450-1-andriy.shevchenko@linux.intel.com
+cdc-acm.c:409:3: warning: Use of memory after it is freed
+        acm_process_notification(acm, (unsigned char *)dr);
+
+There are three problems, the first one is that dr is not reset
+
+The variable dr is set with
+
+if (acm->nb_index)
+	dr = (struct usb_cdc_notification *)acm->notification_buffer;
+
+But if the notification_buffer is too small it is resized with
+
+		if (acm->nb_size) {
+			kfree(acm->notification_buffer);
+			acm->nb_size = 0;
+		}
+		alloc_size = roundup_pow_of_two(expected_size);
+		/*
+		 * kmalloc ensures a valid notification_buffer after a
+		 * use of kfree in case the previous allocation was too
+		 * small. Final freeing is done on disconnect.
+		 */
+		acm->notification_buffer =
+			kmalloc(alloc_size, GFP_ATOMIC);
+
+dr should point to the new acm->notification_buffer.
+
+The second problem is any data in the notification_buffer is lost
+when the pointer is freed.  In the normal case, the current data
+is accumulated in the notification_buffer here.
+
+	memcpy(&acm->notification_buffer[acm->nb_index],
+	       urb->transfer_buffer, copy_size);
+
+When a resize happens, anything before
+notification_buffer[acm->nb_index] is garbage.
+
+The third problem is the acm->nb_index is not reset on a
+resizing buffer error.
+
+So switch resizing to using krealloc and reassign dr and
+reset nb_index.
+
+Fixes: ea2583529cd1 ("cdc-acm: reassemble fragmented notifications")
+Signed-off-by: Tom Rix <trix@redhat.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20200801152154.20683-1-trix@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/u_f.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/usb/class/cdc-acm.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
---- a/drivers/usb/gadget/u_f.h
-+++ b/drivers/usb/gadget/u_f.h
-@@ -25,9 +25,9 @@
- 		size_t offset = 0;					       \
- 		if (groupname##__next != SIZE_MAX) {			       \
- 			size_t align_mask = __alignof__(type) - 1;	       \
--			size_t offset = (groupname##__next + align_mask)       \
--					 & ~align_mask;			       \
- 			size_t size = array_size(n, sizeof(type));	       \
-+			offset = (groupname##__next + align_mask) &	       \
-+				  ~align_mask;				       \
- 			if (check_add_overflow(offset, size,		       \
- 					       &groupname##__next)) {          \
- 				groupname##__next = SIZE_MAX;		       \
-@@ -43,8 +43,8 @@
- 		size_t offset = 0;						\
- 		if (groupname##__next != SIZE_MAX) {				\
- 			size_t align_mask = __alignof__(type) - 1;		\
--			size_t offset = (groupname##__next + align_mask)	\
--					 & ~align_mask;				\
-+			offset = (groupname##__next + align_mask) &		\
-+				  ~align_mask;					\
- 			if (check_add_overflow(offset, groupname##_##name##__sz,\
- 							&groupname##__next)) {	\
- 				groupname##__next = SIZE_MAX;			\
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -378,21 +378,19 @@ static void acm_ctrl_irq(struct urb *urb
+ 	if (current_size < expected_size) {
+ 		/* notification is transmitted fragmented, reassemble */
+ 		if (acm->nb_size < expected_size) {
+-			if (acm->nb_size) {
+-				kfree(acm->notification_buffer);
+-				acm->nb_size = 0;
+-			}
++			u8 *new_buffer;
+ 			alloc_size = roundup_pow_of_two(expected_size);
+-			/*
+-			 * kmalloc ensures a valid notification_buffer after a
+-			 * use of kfree in case the previous allocation was too
+-			 * small. Final freeing is done on disconnect.
+-			 */
+-			acm->notification_buffer =
+-				kmalloc(alloc_size, GFP_ATOMIC);
+-			if (!acm->notification_buffer)
++			/* Final freeing is done on disconnect. */
++			new_buffer = krealloc(acm->notification_buffer,
++					      alloc_size, GFP_ATOMIC);
++			if (!new_buffer) {
++				acm->nb_index = 0;
+ 				goto exit;
++			}
++
++			acm->notification_buffer = new_buffer;
+ 			acm->nb_size = alloc_size;
++			dr = (struct usb_cdc_notification *)acm->notification_buffer;
+ 		}
+ 
+ 		copy_size = min(current_size,
 
 
