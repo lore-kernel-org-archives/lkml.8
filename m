@@ -2,104 +2,105 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D33C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B98A9C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8CCF204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:13:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85F5C204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:13:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976812;
-	bh=KLufgV1+xdroKoH8u50RLlnUoukC9e4+lKUMs4RrTlw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oNruhVRDK6qzSFauKDy7lp4lcxbKy09HgbPGKKwIOqfY484aS5BPonILfI2pvUSb1
-	 QPucgUtwYFmAW9/wvcOr/tviaLbGmqKq32aXhtGfl/AD0KjjTR0bG9Iq21vYYQHlKp
-	 610G3EKoz2paBHfr/Q0a94ACtfeEK071Wq2ier1M=
+	s=default; t=1598976814;
+	bh=l1KxbslgXDTTFr//cJ3Gfyy1Gco4KliBv+y/wKQgfew=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TZHypSHeETmCyfzIhqSXOuag/8w7Xje3fRqAxvMObP0nff4FP1Ifmzm3mctHwYLSY
+	 AEYYqp9cZxgyn+QV1EHsntwZEq5fMT6TTNxJpdGR2LJ3jgk5QdvzkDgpDI/hYRseuv
+	 beN0MFJQfy6pBL+Z8A1wV9bbd5dCiH+NuHzpHOFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbgIAQNb (ORCPT
+        id S1731871AbgIAQNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:13:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42870 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:13:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42944 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728783AbgIAPgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:36:12 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        id S1728355AbgIAPgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:36:14 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C0E72168B;
-        Tue,  1 Sep 2020 15:36:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B18F214D8;
+        Tue,  1 Sep 2020 15:36:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974571;
-        bh=KLufgV1+xdroKoH8u50RLlnUoukC9e4+lKUMs4RrTlw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pd5wMoSfhjgv/zfHjIid+zoj9TV/pPjvNzHnB4nksXGVEMVrRE6n/f4xcSVyHxVQo
-         SaMMcJhZsOzJcWqHJQVltfEjqGh1CwsCqc1TLs1k8pxFMErWZ8y2irXj2vf9adrl7U
-         L9GzWMNZpyyaYeFv+qU1TglhaMqtox1RFbnj3xvg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 013/255] arm64: dts: qcom: msm8916: Pull down PDM GPIOs during sleep
-Date:   Tue,  1 Sep 2020 17:07:49 +0200
-Message-Id: <20200901151001.434662725@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
-References: <20200901151000.800754757@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1598974573;
+        bh=l1KxbslgXDTTFr//cJ3Gfyy1Gco4KliBv+y/wKQgfew=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jOqn0iuYFzorU/TALy7/NaFHLNxaHjeM66V447+gk7sU/ArUiRPcNR4hJncWIDc/m
+         quMoc8AKiGuz2a6YKeomOhQ16P2X2ysHvILxTv0wbp2GJ9R/plHqscBfD0YKrNk2pE
+         +QMg6JaAsC0W2bXhUgAWFcUA1Pc6uWfwvEuSB/CA=
+Date:   Tue, 1 Sep 2020 16:36:08 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     William Mcvicker <willmcvicker@google.com>, security@kernel.org,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/1] netfilter: nat: add a range check for l3/l4
+ protonum
+Message-ID: <20200901153607.GC4292@willie-the-truck>
+References: <20200727175720.4022402-1-willmcvicker@google.com>
+ <20200727175720.4022402-2-willmcvicker@google.com>
+ <20200729214607.GA30831@salvia>
+ <20200731002611.GA1035680@google.com>
+ <20200731175115.GA16982@salvia>
+ <20200731181633.GA1209076@google.com>
+ <20200803183156.GA3084830@google.com>
+ <20200804113711.GA20988@salvia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200804113711.GA20988@salvia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+Hi Will, Pablo,
 
-[ Upstream commit e2ee9edc282961783d519c760bbaa20fed4dec38 ]
+On Tue, Aug 04, 2020 at 01:37:11PM +0200, Pablo Neira Ayuso wrote:
+> This patch is much smaller and if you confirm this is address the
+> issue, then this is awesome.
 
-The original qcom kernel changed the PDM GPIOs to be pull-down
-during sleep at some point. Reportedly this was done because
-there was some "leakage at PDM outputs during sleep":
+Did that ever get confirmed? AFAICT, nothing ended up landing in the stable
+trees for this.
 
-  https://source.codeaurora.org/quic/la/kernel/msm-3.10/commit/?id=0f87e08c1cd3e6484a6f7fb3e74e37340bdcdee0
+Cheers,
 
-I cannot say how effective this is, but everything seems to work
-fine with this change so let's apply the same to mainline just
-to be sure.
-
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Link: https://lore.kernel.org/r/20200605185916.318494-3-stephan@gerhold.net
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm64/boot/dts/qcom/msm8916-pins.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-index 5785bf0a807ce..591f48a575353 100644
---- a/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916-pins.dtsi
-@@ -569,7 +569,7 @@
- 				pins = "gpio63", "gpio64", "gpio65", "gpio66",
- 				       "gpio67", "gpio68";
- 				drive-strength = <2>;
--				bias-disable;
-+				bias-pull-down;
- 			};
- 		};
- 	};
--- 
-2.25.1
+Will
 
 
-
+> On Mon, Aug 03, 2020 at 06:31:56PM +0000, William Mcvicker wrote:
+> [...]
+> > diff --git a/net/netfilter/nf_conntrack_netlink.c b/net/netfilter/nf_conntrack_netlink.c
+> > index 31fa94064a62..56d310f8b29a 100644
+> > --- a/net/netfilter/nf_conntrack_netlink.c
+> > +++ b/net/netfilter/nf_conntrack_netlink.c
+> > @@ -1129,6 +1129,8 @@ ctnetlink_parse_tuple(const struct nlattr * const cda[],
+> >  	if (!tb[CTA_TUPLE_IP])
+> >  		return -EINVAL;
+> >  
+> > +	if (l3num >= NFPROTO_NUMPROTO)
+> > +		return -EINVAL;
+> 
+> l3num can only be either NFPROTO_IPV4 or NFPROTO_IPV6.
+> 
+> Other than that, bail out with EOPNOTSUPP.
+> 
+> Thank you.
