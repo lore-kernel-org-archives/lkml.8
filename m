@@ -2,121 +2,100 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95ECDC28E83
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4564C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBA92087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:13:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980439;
-	bh=LyCZN+BCUo30IxZJg+bDtUMGCtyQ45xLHCyexBR9wzQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kdIR4thb95uTAwI7zB9mTgUDMBNXxao6m5od8gVYejVYCztaPxF1l119uzk0PJzIo
-	 rpYarHXXul1JakGO4VxYfIfZBTZFCaEeEUZQ6HHg0fQWQhAWXdc1tCuZODrZYq+xjF
-	 xoCZeHQRQHGBNSto7weQfTyoG+kUdyXDIvo6yEvw=
+	by mail.kernel.org (Postfix) with ESMTP id C6E3020767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732155AbgIARNO (ORCPT
+        id S1729495AbgIAROD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:13:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59866 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:14:03 -0400
+Received: from mga07.intel.com ([134.134.136.100]:2209 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728397AbgIAPPg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:15:36 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 731DB20767;
-        Tue,  1 Sep 2020 15:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973331;
-        bh=LyCZN+BCUo30IxZJg+bDtUMGCtyQ45xLHCyexBR9wzQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KU6nWNsL2IXWeDr0Bjglg17sfY5/DuZckDqstxvT1JbLJZTcBNPT+iw7+MyMDbTi3
-         bfN2y728KMF3vy9E1ABMUcvOvVsW/CiqiwK4jYejm56xCstR/7/X042ZWIdwRl78aQ
-         aI1SfDWBux5Sr/twTf7z4hu96K9g1yyjO63hY4q4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Elena Petrova <lenaptr@google.com>,
-        Marco Elver <elver@google.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Walter Wu <walter-zh.wu@mediatek.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        id S1729563AbgIARNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:13:04 -0400
+IronPort-SDR: 88nGYQL07Hd1sx4NtXJDw60T2FomUt8SFBAqQ5Outng1DYs6VDXJFSwYHJcD1DP8nmCYjvTJ4a
+ AMHjMEA4+/YA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="221439686"
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="221439686"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:13:02 -0700
+IronPort-SDR: IPJiBrBum7jSbBMjjnUnRTLc3uregRJqv4MEVLmYVVfOppTr0opOuRhR1Rggi52AQGhVbjTY48
+ m7ntPozknbkg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="477278477"
+Received: from djiang5-mobl1.amr.corp.intel.com (HELO [10.209.2.157]) ([10.209.2.157])
+  by orsmga005.jf.intel.com with ESMTP; 01 Sep 2020 10:13:01 -0700
+Subject: Re: [PATCH 5.8 070/255] dmaengine: idxd: fix PCI_MSI build errors
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        dmaengine@vger.kernel.org, Vinod Koul <vkoul@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 37/78] efi: provide empty efi_enter_virtual_mode implementation
-Date:   Tue,  1 Sep 2020 17:10:13 +0200
-Message-Id: <20200901150926.592332088@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
-References: <20200901150924.680106554@linuxfoundation.org>
-User-Agent: quilt/0.66
+References: <20200901151000.800754757@linuxfoundation.org>
+ <20200901151004.086401987@linuxfoundation.org>
+From:   Dave Jiang <dave.jiang@intel.com>
+Message-ID: <3ed5a847-981a-6520-add9-dc1e3792e703@intel.com>
+Date:   Tue, 1 Sep 2020 10:13:00 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200901151004.086401987@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrey Konovalov <andreyknvl@google.com>
-
-[ Upstream commit 2c547f9da0539ad1f7ef7f08c8c82036d61b011a ]
-
-When CONFIG_EFI is not enabled, we might get an undefined reference to
-efi_enter_virtual_mode() error, if this efi_enabled() call isn't inlined
-into start_kernel().  This happens in particular, if start_kernel() is
-annodated with __no_sanitize_address.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-Cc: Alexander Potapenko <glider@google.com>
-Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Dmitry Vyukov <dvyukov@google.com>
-Cc: Elena Petrova <lenaptr@google.com>
-Cc: Marco Elver <elver@google.com>
-Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Cc: Walter Wu <walter-zh.wu@mediatek.com>
-Link: http://lkml.kernel.org/r/6514652d3a32d3ed33d6eb5c91d0af63bf0d1a0c.1596544734.git.andreyknvl@google.com
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/efi.h | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index 02c4f16685b69..69605956beb85 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -910,7 +910,11 @@ extern void *efi_get_pal_addr (void);
- extern void efi_map_pal_code (void);
- extern void efi_memmap_walk (efi_freemem_callback_t callback, void *arg);
- extern void efi_gettimeofday (struct timespec64 *ts);
-+#ifdef CONFIG_EFI
- extern void efi_enter_virtual_mode (void);	/* switch EFI to virtual mode, if possible */
-+#else
-+static inline void efi_enter_virtual_mode (void) {}
-+#endif
- #ifdef CONFIG_X86
- extern void efi_late_init(void);
- extern void efi_free_boot_services(void);
--- 
-2.25.1
 
 
+On 9/1/2020 8:08 AM, Greg Kroah-Hartman wrote:
+> [ Upstream commit d6a7bb869dd8a516901591136a9a895fd829d6c6 ]
+> 
+> Fix build errors when CONFIG_PCI_MSI is not enabled by making the
+> driver depend on PCI_MSI:
+> 
+> ld: drivers/dma/idxd/device.o: in function `idxd_mask_msix_vector':
+> device.c:(.text+0x26f): undefined reference to `pci_msi_mask_irq'
+> ld: drivers/dma/idxd/device.o: in function `idxd_unmask_msix_vector':
+> device.c:(.text+0x2af): undefined reference to `pci_msi_unmask_irq'
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Dave Jiang <dave.jiang@intel.com>
+> Cc: dmaengine@vger.kernel.org
+> Cc: Vinod Koul <vkoul@kernel.org>
+> Link: https://lore.kernel.org/r/9dee3f46-70d9-ea75-10cb-5527ab297d1d@infradead.org
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
+Acked-by: Dave Jiang <dave.jiang@intel.com>
+
+> ---
+>   drivers/dma/Kconfig | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> index de41d7928bff2..984354ca877de 100644
+> --- a/drivers/dma/Kconfig
+> +++ b/drivers/dma/Kconfig
+> @@ -285,6 +285,7 @@ config INTEL_IDMA64
+>   config INTEL_IDXD
+>   	tristate "Intel Data Accelerators support"
+>   	depends on PCI && X86_64
+> +	depends on PCI_MSI
+>   	select DMA_ENGINE
+>   	select SBITMAP
+>   	help
+> 
