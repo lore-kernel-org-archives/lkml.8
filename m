@@ -2,258 +2,146 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFD9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E11C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6706F2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131B82067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 09:35:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dbKG0o+8"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="InbWVd9k";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="QztGerPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726586AbgIAJf1 (ORCPT
+        id S1726657AbgIAJfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 05:35:27 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:23392 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726078AbgIAJfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 05:35:25 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598952924; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=qNTZoSjMOlARZfdwaGR/PtLZDXAa33m0efXNFazpRmA=;
- b=dbKG0o+8rUGY49xIoySRQwht/XYJt5HjleJmrOm2D3MrhMianwBKV658h/ZfiEbmdROt0Bdh
- DQAcvh1ucq0curSYpGH9i0h89k8Tx2IBKM5b4Vyi+L7ZgyRJQSCrD2eDpTt/zUPJ3TcMqWuD
- v8vsNRb51aamwB+p9CqUrwLMMfc=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
- 5f4e15d9252c5224404585b5 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 09:35:21
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0FB3EC43391; Tue,  1 Sep 2020 09:35:21 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F131EC433CA;
-        Tue,  1 Sep 2020 09:35:17 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F131EC433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 1 Sep 2020 05:35:51 -0400
+Received: from wnew3-smtp.messagingengine.com ([64.147.123.17]:59981 "EHLO
+        wnew3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726116AbgIAJft (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 05:35:49 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 7045C7ED;
+        Tue,  1 Sep 2020 05:35:46 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 01 Sep 2020 05:35:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=ybNui0l/20dWyLlPF/bim7Hxg13
+        OT0asUU1YsmRFd3M=; b=InbWVd9kzW1+gJl9OPC3vc2zMnyiKfUyJ6KsorIcPZr
+        XQhZBVEpP+X96IylJS61QFcqRNaQtXohz4CKkXAMYOziN4IJo58u1P/sg43CRc3P
+        +ro10z7MnmPUzPnMzoyhnGgpFCwuTsrdGQLEvv9j9UKgUwAEo7egUHpvgq/x51Py
+        tnZom+fH0HUOb26OP+FlS4fFtQqpQNPMRdkivqc0uoPdfiRhHXl019eeS7Eqfbb0
+        rpRvJUvcS8kxqx80bKRcB4wwfttgp21xEkuITxvFrEOSsvrf/xMaSwuxVgjWTm8G
+        UI+KxDpDPfKJtYWqNr6/OVxgj0jPR+7UOr2K4J8ixPg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=ybNui0
+        l/20dWyLlPF/bim7Hxg13OT0asUU1YsmRFd3M=; b=QztGerPcWYjLyP8Q0Dmnjx
+        sZVtcAsE1lVN8/UlQalJQDSW8BMOL9FJws5mmf8h8rLfGXEqTV70pO2psPD3STo4
+        F03hIh6PRnwqEX+KRISPWbp3ANWU5AC0J+bAJKgB8/h21lj2ViYxqk+5OCqFaih5
+        RTVLjtM8oHQhGgdvZ9cUfL4P03SopEzV4PWxChG+MQDPqRmwPGph8idpDdk/szck
+        /2hSIsB6yriaGctX2rLNBlOcTMJA/jIJXqjtKZ2EcfhJELyxAwhJa4U7Y0tT9NIV
+        P4J4CST6LQyqVDrRnrey5s+pzTEbQibXQ6+SdtlX78jtl1ehMR4tO9KyuhCas+wg
+        ==
+X-ME-Sender: <xms:7hVOX4qWzIiGipLxj_QxYxJj6h3ChTrUgyLIR9VasGLbrp7SaZn8xA>
+    <xme:7hVOX-owiskxps2zscZIsu-_pPU0q8Pn7m33s5EsR2Vz7aFkOp12WIDzU4G-EbNYy
+    D-ojwfszA0Q_zbsDPo>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefjedgudelucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
+    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:7hVOX9Nn4fIoFZO5Cb2I4B3Iuv8g77ecZDCjSSn4rMA2vPsyv7CGGA>
+    <xmx:7hVOX_4yqOKb4S8pnNAbYgthEKlQqpkMpF_JckeMP3dAJl0CY9X8Hw>
+    <xmx:7hVOX36u2SHcawjAHAAY2jfHOOuNkM-0yUOV4zJJ0HtM_VzTi4xArA>
+    <xmx:8hVOXzMpaJiXXLn0b7AL-1t_9cYJARjGGNoP_Aq-hgEiG0zuNhhLqWtTF4Q>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 8C76F328005A;
+        Tue,  1 Sep 2020 05:35:42 -0400 (EDT)
+Date:   Tue, 1 Sep 2020 11:35:41 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Frank Lee <frank@allwinnertech.com>,
+        Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Frank Lee <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Ondrej Jirman <megous@megous.com>,
+        Corentin Labbe <clabbe@baylibre.com>, bage@linutronix.de,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux PM list <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v5 00/16] Allwinner A100 Initial support
+Message-ID: <20200901093541.d6swquja2zcyiqy7@gilmour.lan>
+References: <cover.1595572867.git.frank@allwinnertech.com>
+ <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: switch from 'pci_' to 'dma_' API
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20200820144604.144521-1-christophe.jaillet@wanadoo.fr>
-References: <20200820144604.144521-1-christophe.jaillet@wanadoo.fr>
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     pkshih@realtek.com, davem@davemloft.net, kuba@kernel.org,
-        Larry.Finger@lwfinger.net, straube.linux@gmail.com,
-        zhengbin13@huawei.com, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-User-Agent: pwcli/0.1.0-git (https://github.com/kvalo/pwcli/) Python/3.5.2
-Message-Id: <20200901093521.0FB3EC43391@smtp.codeaurora.org>
-Date:   Tue,  1 Sep 2020 09:35:21 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7g3sl2lx6xhwh5sz"
+Content-Disposition: inline
+In-Reply-To: <CACRpkdYOKOj4r-9U2iHCkdB74fWkm2J0xHqsnH_sE81SV5g1=w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-> The wrappers in include/linux/pci-dma-compat.h should go away.
-> 
-> The patch has been generated with the coccinelle script below and has been
-> hand modified to replace GFP_ with a correct flag.
-> It has been compile tested.
-> 
-> The only file where some GFP_ flags are updated is 'pci.c'.
-> 
-> When memory is allocated in '_rtl_pci_init_tx_ring()' and
-> '_rtl_pci_init_rx_ring()' GFP_KERNEL can be used because both functions are
-> called from a probe function and no spinlock is taken.
-> 
-> The call chain is:
->   rtl_pci_probe
->     --> rtl_pci_init
->       --> _rtl_pci_init_trx_ring
->         --> _rtl_pci_init_rx_ring
->         --> _rtl_pci_init_tx_ring
-> 
-> 
-> @@
-> @@
-> -    PCI_DMA_BIDIRECTIONAL
-> +    DMA_BIDIRECTIONAL
-> 
-> @@
-> @@
-> -    PCI_DMA_TODEVICE
-> +    DMA_TO_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_FROMDEVICE
-> +    DMA_FROM_DEVICE
-> 
-> @@
-> @@
-> -    PCI_DMA_NONE
-> +    DMA_NONE
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_alloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3;
-> @@
-> -    pci_zalloc_consistent(e1, e2, e3)
-> +    dma_alloc_coherent(&e1->dev, e2, e3, GFP_)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_free_consistent(e1, e2, e3, e4)
-> +    dma_free_coherent(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_single(e1, e2, e3, e4)
-> +    dma_map_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_single(e1, e2, e3, e4)
-> +    dma_unmap_single(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4, e5;
-> @@
-> -    pci_map_page(e1, e2, e3, e4, e5)
-> +    dma_map_page(&e1->dev, e2, e3, e4, e5)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_page(e1, e2, e3, e4)
-> +    dma_unmap_page(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_map_sg(e1, e2, e3, e4)
-> +    dma_map_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_unmap_sg(e1, e2, e3, e4)
-> +    dma_unmap_sg(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_single_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_single_for_device(e1, e2, e3, e4)
-> +    dma_sync_single_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_cpu(e1, e2, e3, e4)
-> +    dma_sync_sg_for_cpu(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2, e3, e4;
-> @@
-> -    pci_dma_sync_sg_for_device(e1, e2, e3, e4)
-> +    dma_sync_sg_for_device(&e1->dev, e2, e3, e4)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_dma_mapping_error(e1, e2)
-> +    dma_mapping_error(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_dma_mask(e1, e2)
-> +    dma_set_mask(&e1->dev, e2)
-> 
-> @@
-> expression e1, e2;
-> @@
-> -    pci_set_consistent_dma_mask(e1, e2)
-> +    dma_set_coherent_mask(&e1->dev, e2)
-> 
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Tested-by: Larry Finger <Larry.Finger@lwfinger.net> for rtl8821ae.
+--7g3sl2lx6xhwh5sz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Failed to apply, please rebase on top of wireless-drivers-next.
+Hi Linus
 
-Recorded preimage for 'drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c'
-Recorded preimage for 'drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c'
-Recorded preimage for 'drivers/net/wireless/realtek/rtlwifi/rtl8723be/trx.c'
-error: Failed to merge in the changes.
-Applying: rtlwifi: switch from 'pci_' to 'dma_' API
-Using index info to reconstruct a base tree...
-M	drivers/net/wireless/realtek/rtlwifi/pci.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8192ee/trx.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8723ae/trx.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8723be/hw.c
-M	drivers/net/wireless/realtek/rtlwifi/rtl8723be/trx.c
-Falling back to patching base and 3-way merge...
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8723be/trx.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/realtek/rtlwifi/rtl8723be/trx.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8723be/hw.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8723ae/trx.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/realtek/rtlwifi/rtl8723ae/trx.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/realtek/rtlwifi/rtl8192se/trx.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8192ee/trx.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/realtek/rtlwifi/rtl8192ee/trx.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/realtek/rtlwifi/rtl8192de/trx.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/realtek/rtlwifi/rtl8192ce/trx.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/realtek/rtlwifi/rtl8188ee/trx.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/rtl8188ee/hw.c
-Auto-merging drivers/net/wireless/realtek/rtlwifi/pci.c
-Patch failed at 0001 rtlwifi: switch from 'pci_' to 'dma_' API
-The copy of the patch that failed is found in: .git/rebase-apply/patch
+On Fri, Aug 28, 2020 at 12:02:29PM +0200, Linus Walleij wrote:
+> On Fri, Jul 24, 2020 at 8:53 AM Frank Lee <frank@allwinnertech.com> wrote:
+>=20
+> > This patch set adds initial support for allwinner a100 soc,
+> > which is a 64-bit tablet chip.
+>=20
+> Shall I commit the pinctrl patches (if Maxime ACKed) separately
+> or not? Once Maxime is happy, I am usually happy too.
 
-Patch set to Changes Requested.
+Yeah, you can apply it to your tree
 
--- 
-https://patchwork.kernel.org/patch/11726377/
+Thanks!
+Maxime
 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+--7g3sl2lx6xhwh5sz
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX04V7QAKCRDj7w1vZxhR
+xah4AQCxUZNxHo6NRo5x9Zj2xDrcVA422l6tyXJJ4rgQSHuZ9AD/co9QajnIDf1z
+KHXkMKfgF9/nNGoBzctcsBYfyMKrSAc=
+=FxAG
+-----END PGP SIGNATURE-----
+
+--7g3sl2lx6xhwh5sz--
