@@ -2,162 +2,172 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D624FC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169B2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:20:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93460207EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:19:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8FF206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 10:20:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="j3o+sUFn";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CN2MS3ME"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XFND8mCw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726400AbgIAKTa (ORCPT
+        id S1726479AbgIAKUS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 06:19:30 -0400
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:56323 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725848AbgIAKT1 (ORCPT
+        Tue, 1 Sep 2020 06:20:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34504 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbgIAKUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 06:19:27 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.west.internal (Postfix) with ESMTP id 1952CEB1;
-        Tue,  1 Sep 2020 06:19:26 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute4.internal (MEProxy); Tue, 01 Sep 2020 06:19:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=sUIriuDdEGEGb3qXjf0yLWBxBK6
-        VbKbmpwiiPPnocWI=; b=j3o+sUFnvkQTt37CkFXstCodCLKl0o84yDR4q71zpEk
-        GXvHq6HEjdGACV1BaMQmMLrub7y+cEsgbPxYooUeCDhIuU/pF5kefFvZ0Bi82W+9
-        NFQOYfWg0C47cDsSQ2FyEPI0M9dI8qPT08UBY2brHey9eRJc8wAN5KGQD1L0+r5G
-        3ZI7+LVYKUdOeeVADs+t0DNCgY76KF3Q14ASbOqIcVJECLHt3jJHWTOjBfctccjE
-        JWDAQcHIc5E/Wux+AXA9jgAzz0xRm5/645i1wCWTmLHc5rfHntHfbWGVS6BSns0O
-        6ToqZobbm5lDhn4bpLPZUN8I5YuNIiIyRi1Kd865B/Q==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=sUIriu
-        DdEGEGb3qXjf0yLWBxBK6VbKbmpwiiPPnocWI=; b=CN2MS3MEeKsFQO6hQP1aG+
-        kva8V4WhTtX3OEXc4vmGjDW+hZFMH38jVlksnyhhRztB4FTsYI5d9Ol4vzIWETNE
-        CEPcgBYtI0N9PMUYfkw8etJuaQdBFnQnFR5EZb1EaOpF53lDZS+VyBGylRYNh3gf
-        ieopMJUjb6RG+nLvoDxgGobtf8jtB5QrMHtgnqjP92abqFXTeBw20rkR0ZDq9e3+
-        82NZOw2XpdIGGUtPfFhHIhP0QPioUaCKuHCIIWI6GyepjSlgFlNR/HJNwkX68jSR
-        QlrCcp2Qg+DCAepmEu6MDUEKQdQZcSAA5E1gHJtlEmqu0sHMJmPSW86DIYeD42GQ
-        ==
-X-ME-Sender: <xms:LCBOX8up6Q4ZPYhwrZjpwG148Pj_GLIIb2t-E_T-lGKhFkgSaMbRhg>
-    <xme:LCBOX5fJIyEQfDCSp11uNtpHwflZjJeOt4kh0jmbOnol2Qd3DtJ5WFfa3kJg6LqvR
-    zGpKlZVevZ9cla0YMk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefjedgvdejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddvnecuhfhrohhmpeforgigihhm
-    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
-    htvghrnhepleekgeehhfdutdeljefgleejffehfffgieejhffgueefhfdtveetgeehieeh
-    gedunecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
-    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
-X-ME-Proxy: <xmx:LCBOX3zX7gMwlyKAMJYADGkzJ9XHpSt7jLH31jTTlkoMBYB3tHMVOQ>
-    <xmx:LCBOX_OTfrUOi8u2szg9lftfbTQ7j_H-fGrFRc1whT8gPwo-8cbdvg>
-    <xmx:LCBOX88UGVoEJ5DbcYA3SMts_BPqQeSBGBrB5gimA3KYo-dP4aG3HA>
-    <xmx:LSBOX5Pnfpw5CzRKG1MwpKYsNdO68IOK6eeZ1u16cZ_Ooxv4R1ns_A>
-Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        by mail.messagingengine.com (Postfix) with ESMTPA id AC989328005E;
-        Tue,  1 Sep 2020 06:19:24 -0400 (EDT)
-Date:   Tue, 1 Sep 2020 12:19:23 +0200
-From:   Maxime Ripard <maxime@cerno.tech>
-To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Subject: Re: [PATCH v4 77/78] drm/vc4: drv: Support BCM2711
-Message-ID: <20200901101923.7e744qwtuvmnbtmn@gilmour.lan>
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
- <90c53367b289e9c0f9eeb97794a8d3b08d813884.1594230107.git-series.maxime@cerno.tech>
- <CAPY8ntB3eeqqz0hPSfHiJpKs9sJpU5uN5GzLsqmhtxrD0i6TJg@mail.gmail.com>
+        Tue, 1 Sep 2020 06:20:12 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17BDEC061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 03:20:11 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id z9so614808wmk.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 03:20:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=date:from:to:cc:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=3GIpy2hsxgFsBlpT+dsHbTbTluNWsmd1rZYjI09Uxc8=;
+        b=XFND8mCwVNeeDtS+fg/HptRv9VEH756A1a+vj+5/P2wZZxyQEM2/bjCp/FcbmjsIPk
+         r64cPgQLvDI8oXcy561SiPfA8aV7kY+UBcCu0AQ8GiBSuWvXWuc3bEsCZpZl1y0NbLne
+         1C+QAYiqTPu98hOOlMgeWNFespOaXxl3tzfzg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to;
+        bh=3GIpy2hsxgFsBlpT+dsHbTbTluNWsmd1rZYjI09Uxc8=;
+        b=WupLHM6dFKc267kPKXViHuJKxXr1XYyhI7rMQ/rV6igK6BY6kMPG/zdzAv0VX2IFNP
+         xa3MRnaz53zpFsfDj2+WKSVl1p/GQBNK/bc6v8TWkM+q7gGqCWaIus32Y+G/955HGTgF
+         KP7lfbpWhKa73hRRH4q8QZxX/dm4/MG5/IaHmZTHzCuL949Y10oibu6kZQ8UrRJ3v+WI
+         idQHO7vGp1bAv7/tx/EbbibR9RTqUnVrZlJqpXDJ5S001ruZVtcB4ukNHpdr7/r7ESjj
+         ffp1pfUrcvVkx55EpFUiQ6PtTwguRz2UNpDZLaPUhIHVf6KRgTmeWMSGOhxg/o7wDAg0
+         aJ3g==
+X-Gm-Message-State: AOAM531cjMrWIsXeNX5ytDy3JPD4ku8coQuyp2yKZ0ZxCcvLzZBvaZDi
+        1yr0QKJhmKqg1vdtNaORcvmonA==
+X-Google-Smtp-Source: ABdhPJy0gJSV+RL3QsNU+fR8THpAo9rjW3MvBEvOVXFmBzuJReNfV54lLhSlHCW2A7mUll0ZBu5M0g==
+X-Received: by 2002:a1c:f207:: with SMTP id s7mr1096430wmc.22.1598955609706;
+        Tue, 01 Sep 2020 03:20:09 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
+        by smtp.gmail.com with ESMTPSA id m3sm800807wmb.26.2020.09.01.03.20.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 03:20:08 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 12:20:06 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        1882851@bugs.launchpad.net, David Airlie <airlied@linux.ie>,
+        Chia-I Wu <olvaffe@gmail.com>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2] drm/virtio: fix unblank
+Message-ID: <20200901102006.GZ2352366@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, 1882851@bugs.launchpad.net,
+        David Airlie <airlied@linux.ie>, Chia-I Wu <olvaffe@gmail.com>,
+        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20200818072511.6745-1-kraxel@redhat.com>
+ <20200818072511.6745-2-kraxel@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="dozkezvx4o5iboho"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPY8ntB3eeqqz0hPSfHiJpKs9sJpU5uN5GzLsqmhtxrD0i6TJg@mail.gmail.com>
+In-Reply-To: <20200818072511.6745-2-kraxel@redhat.com>
+X-Operating-System: Linux phenom 5.7.0-1-amd64 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Aug 18, 2020 at 09:25:10AM +0200, Gerd Hoffmann wrote:
+> When going through a disable/enable cycle without changing the
+> framebuffer the optimization added by commit 3954ff10e06e ("drm/virtio:
+> skip set_scanout if framebuffer didn't change") causes the screen stay
+> blank.  Add a bool to force an update to fix that.
+> 
+> v2: use drm_atomic_crtc_needs_modeset() (Daniel).
+> 
+> Cc: 1882851@bugs.launchpad.net
+> Fixes: 3954ff10e06e ("drm/virtio: skip set_scanout if framebuffer didn't change")
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.h     |  1 +
+>  drivers/gpu/drm/virtio/virtgpu_display.c | 11 +++++++++++
+>  drivers/gpu/drm/virtio/virtgpu_plane.c   |  4 +++-
+>  3 files changed, 15 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index 9ff9f4ac0522..4ab1b0ba2925 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -138,6 +138,7 @@ struct virtio_gpu_output {
+>  	int cur_x;
+>  	int cur_y;
+>  	bool enabled;
+> +	bool needs_modeset;
 
---dozkezvx4o5iboho
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Maybe for a follow-up in -next: The clean atomic way of doing this is to
+put this into a virtio_crtc_state, compute it in atomic_check, and then
+fish it out (through old_state->state lookup, somewhat contrived I know)
+in the commit side. Putting random atomic commit state tracking stuff into
+non-state structures without appropriate amounts of locks is kinda iffy
+and means more work for reviewers pondering whether it all works
+correctly.
 
-Hi Dave,
+Cheers, Daniel
 
-On Tue, Jul 28, 2020 at 04:30:16PM +0100, Dave Stevenson wrote:
-> > @@ -681,10 +684,14 @@ int vc4_kms_load(struct drm_device *dev)
-> >         struct vc4_load_tracker_state *load_state;
-> >         int ret;
-> >
-> > -       /* Start with the load tracker enabled. Can be disabled through=
- the
-> > -        * debugfs load_tracker file.
-> > -        */
-> > -       vc4->load_tracker_enabled =3D true;
-> > +       if (!of_device_is_compatible(dev->dev->of_node, "brcm,bcm2711-v=
-c5")) {
->=20
-> Is it better to look up the compatible string, or pass something via
-> the .data element of the of_device_id table? Probably down to personal
-> preference?
 
-It's pretty much equivalent, so I'm not sure one is arguably better than
-the other. However, checking for the compatible can be pretty cumbersome
-when you have to do it repeatedly (like we do in the HDMI controller),
-and when you don't it a lot, having a structure associated to the
-compatible is also fairly cumbersome.
+>  };
+>  #define drm_crtc_to_virtio_gpu_output(x) \
+>  	container_of(x, struct virtio_gpu_output, crtc)
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
+> index 2c2742b8d657..6c26b41f4e0d 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_display.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_display.c
+> @@ -123,6 +123,17 @@ static int virtio_gpu_crtc_atomic_check(struct drm_crtc *crtc,
+>  static void virtio_gpu_crtc_atomic_flush(struct drm_crtc *crtc,
+>  					 struct drm_crtc_state *old_state)
+>  {
+> +	struct virtio_gpu_output *output = drm_crtc_to_virtio_gpu_output(crtc);
+> +
+> +	/*
+> +	 * virtio-gpu can't do modeset and plane update operations
+> +	 * independant from each other.  So the actual modeset happens
+> +	 * in the plane update callback, and here we just check
+> +	 * whenever we must force the modeset.
+> +	 */
+> +	if (drm_atomic_crtc_needs_modeset(crtc->state)) {
+> +		output->needs_modeset = true;
+> +	}
+>  }
+>  
+>  static const struct drm_crtc_helper_funcs virtio_gpu_crtc_helper_funcs = {
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_plane.c b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> index 52d24179bcec..65757409d9ed 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_plane.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_plane.c
+> @@ -163,7 +163,9 @@ static void virtio_gpu_primary_plane_update(struct drm_plane *plane,
+>  	    plane->state->src_w != old_state->src_w ||
+>  	    plane->state->src_h != old_state->src_h ||
+>  	    plane->state->src_x != old_state->src_x ||
+> -	    plane->state->src_y != old_state->src_y) {
+> +	    plane->state->src_y != old_state->src_y ||
+> +	    output->needs_modeset) {
+> +		output->needs_modeset = false;
+>  		DRM_DEBUG("handle 0x%x, crtc %dx%d+%d+%d, src %dx%d+%d+%d\n",
+>  			  bo->hw_res_handle,
+>  			  plane->state->crtc_w, plane->state->crtc_h,
+> -- 
+> 2.18.4
+> 
 
-> > +               vc4->load_tracker_available =3D true;
-> > +
-> > +               /* Start with the load tracker enabled. Can be
-> > +                * disabled through the debugfs load_tracker file.
-> > +                */
-> > +               vc4->load_tracker_enabled =3D true;
-> > +       }
-> >
-> >         sema_init(&vc4->async_modeset, 1);
-> >
-> > @@ -698,8 +705,14 @@ int vc4_kms_load(struct drm_device *dev)
-> >                 return ret;
-> >         }
-> >
-> > -       dev->mode_config.max_width =3D 2048;
-> > -       dev->mode_config.max_height =3D 2048;
-> > +       if (of_device_is_compatible(dev->dev->of_node, "brcm,bcm2711-vc=
-5")) {
->=20
-> We're making the same of_device_is_compatible call twice within
-> vc4_kms_load. Set a flag based on it and check that instead?
-
-Good idea, thanks!
-Maxime
-
---dozkezvx4o5iboho
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX04gKwAKCRDj7w1vZxhR
-xdjRAP9NRCUkLEG71G/PlhSmiqu8PAfDEFoqOIOabvM3/kj1GAEAxUSCGhv9XmUs
-ZhR7LLKC9pnKW5c295ozmuSloS08AQg=
-=s4r0
------END PGP SIGNATURE-----
-
---dozkezvx4o5iboho--
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
