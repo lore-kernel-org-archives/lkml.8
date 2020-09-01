@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DADBC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B23FC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD303204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6F14204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976577;
-	bh=UIiXDKl+MTlpYV/Z9SFdwrRkfKFxU48g8t3ma74X9As=;
+	s=default; t=1598976580;
+	bh=I6GAMxGs19nNEZFk2dtb6Q6gWKmT1Q9GK98PIdZDL8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xikC5F4d4d3vDMWD0T2A/4rtlaMaDafD7uH3G5SNIzFWS0krNM7P97HDxt+PuUeF0
-	 MjRSuGY+7r2BVeH3RbF2Ci/7DKfFFKgY3+4FbQf2LGRneogKHlqIAcrU8kpJHHud7C
-	 /yaZRz+x0PcNBE1AwJTKFn0JxbtkiWbEi604NlkI=
+	b=tNdzJ31YWQnf6g4vveJkdSvmPW23V+IKfFSKOq2QZ/wEy4UnUV/ZGfesAt1yM8uJU
+	 TahrqHbFXVqk8P/uotRMWgopLsaWtpBuGP2iYQ2v9/L3D0rsYIvi3c7TfaMtPskCTJ
+	 GtTuPi22arZEUgrhby7Ma9nRo+RJ0WF9q8NS7tOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730114AbgIAQJg (ORCPT
+        id S1731411AbgIAPis (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:09:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48192 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:38:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44492 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbgIAPiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:38:51 -0400
+        id S1731122AbgIAPg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:36:57 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA44020E65;
-        Tue,  1 Sep 2020 15:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23AE021534;
+        Tue,  1 Sep 2020 15:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974731;
-        bh=UIiXDKl+MTlpYV/Z9SFdwrRkfKFxU48g8t3ma74X9As=;
+        s=default; t=1598974616;
+        bh=I6GAMxGs19nNEZFk2dtb6Q6gWKmT1Q9GK98PIdZDL8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kmxvMBgKBsJf0nVw5AGrXotz3l/GOe/dlNc3HLwLVW/x6xHCgmu24cq1aKgrvJygT
-         bsSb64CFMesHYuJ3SMnoAmGKBGbxozm/ibOG0zBkvy2au98YvvJYZ/r1f1gz9lfqPH
-         yrXjt/yySIXBVc1gXmjlNc+lCdz0M4goTTDziDQk=
+        b=zowdB2H2eB4whGqAIqgjq0kSUTCJ9ODZq5lxC8Ao8B8qjeKZVWDkwwwaq7/rQcJQB
+         kdpayqCjv7MQbLfW7EJ1y8zonS4T/Wm04qn3qG4g5OU/g/knILvV8GgXuegQlquFK4
+         K0iYPvWqj/HgjdXRkxHBhrgp6edxQPmOc+ZiAC+w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Narani <manish.narani@xilinx.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
+        stable@vger.kernel.org,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 072/255] mmc: sdhci-of-arasan: fix timings allocation code
-Date:   Tue,  1 Sep 2020 17:08:48 +0200
-Message-Id: <20200901151004.181713816@linuxfoundation.org>
+Subject: [PATCH 5.8 030/255] drm/amdkfd: fix ref count leak when pm_runtime_get_sync fails
+Date:   Tue,  1 Sep 2020 17:08:06 +0200
+Message-Id: <20200901151002.218616843@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,80 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Manish Narani <manish.narani@xilinx.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-[ Upstream commit 88e1d0b175ec0bfa775c8629eae2a728726e2c6a ]
+[ Upstream commit 1c1ada37af6ee6fb9cfc8da6a56cc83208cd8d6f ]
 
-The initial code that was adding delays was doing a cast over undefined
-memory. This meant that the delays would be all gibberish.
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-This change, allocates all delays on the stack, and assigns them from the
-ZynqMP & Versal macros/phase-list. And then finally copies them over the
-common iclk_phase & oclk_phase variables.
-
-Signed-off-by: Manish Narani <manish.narani@xilinx.com>
-Link: https://lore.kernel.org/r/1594753953-62980-1-git-send-email-manish.narani@xilinx.com
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Reviewed-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mmc/host/sdhci-of-arasan.c | 25 ++++++++++++++-----------
- 1 file changed, 14 insertions(+), 11 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/mmc/host/sdhci-of-arasan.c b/drivers/mmc/host/sdhci-of-arasan.c
-index fb26e743e1fd4..d0a80bfb953b0 100644
---- a/drivers/mmc/host/sdhci-of-arasan.c
-+++ b/drivers/mmc/host/sdhci-of-arasan.c
-@@ -1025,7 +1025,6 @@ static void arasan_dt_read_clk_phase(struct device *dev,
- static void arasan_dt_parse_clk_phases(struct device *dev,
- 				       struct sdhci_arasan_clk_data *clk_data)
- {
--	int *iclk_phase, *oclk_phase;
- 	u32 mio_bank = 0;
- 	int i;
- 
-@@ -1037,28 +1036,32 @@ static void arasan_dt_parse_clk_phases(struct device *dev,
- 	clk_data->set_clk_delays = sdhci_arasan_set_clk_delays;
- 
- 	if (of_device_is_compatible(dev->of_node, "xlnx,zynqmp-8.9a")) {
--		iclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) ZYNQMP_ICLK_PHASE;
--		oclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) ZYNQMP_OCLK_PHASE;
-+		u32 zynqmp_iclk_phase[MMC_TIMING_MMC_HS400 + 1] =
-+			ZYNQMP_ICLK_PHASE;
-+		u32 zynqmp_oclk_phase[MMC_TIMING_MMC_HS400 + 1] =
-+			ZYNQMP_OCLK_PHASE;
- 
- 		of_property_read_u32(dev->of_node, "xlnx,mio-bank", &mio_bank);
- 		if (mio_bank == 2) {
--			oclk_phase[MMC_TIMING_UHS_SDR104] = 90;
--			oclk_phase[MMC_TIMING_MMC_HS200] = 90;
-+			zynqmp_oclk_phase[MMC_TIMING_UHS_SDR104] = 90;
-+			zynqmp_oclk_phase[MMC_TIMING_MMC_HS200] = 90;
- 		}
- 
- 		for (i = 0; i <= MMC_TIMING_MMC_HS400; i++) {
--			clk_data->clk_phase_in[i] = iclk_phase[i];
--			clk_data->clk_phase_out[i] = oclk_phase[i];
-+			clk_data->clk_phase_in[i] = zynqmp_iclk_phase[i];
-+			clk_data->clk_phase_out[i] = zynqmp_oclk_phase[i];
- 		}
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+index 0e0c42e9f6a31..6520a920cad4a 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -1003,8 +1003,10 @@ struct kfd_process_device *kfd_bind_process_to_device(struct kfd_dev *dev,
+ 	 */
+ 	if (!pdd->runtime_inuse) {
+ 		err = pm_runtime_get_sync(dev->ddev->dev);
+-		if (err < 0)
++		if (err < 0) {
++			pm_runtime_put_autosuspend(dev->ddev->dev);
+ 			return ERR_PTR(err);
++		}
  	}
  
- 	if (of_device_is_compatible(dev->of_node, "xlnx,versal-8.9a")) {
--		iclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) VERSAL_ICLK_PHASE;
--		oclk_phase = (int [MMC_TIMING_MMC_HS400 + 1]) VERSAL_OCLK_PHASE;
-+		u32 versal_iclk_phase[MMC_TIMING_MMC_HS400 + 1] =
-+			VERSAL_ICLK_PHASE;
-+		u32 versal_oclk_phase[MMC_TIMING_MMC_HS400 + 1] =
-+			VERSAL_OCLK_PHASE;
- 
- 		for (i = 0; i <= MMC_TIMING_MMC_HS400; i++) {
--			clk_data->clk_phase_in[i] = iclk_phase[i];
--			clk_data->clk_phase_out[i] = oclk_phase[i];
-+			clk_data->clk_phase_in[i] = versal_iclk_phase[i];
-+			clk_data->clk_phase_out[i] = versal_oclk_phase[i];
- 		}
- 	}
- 
+ 	err = kfd_iommu_bind_process_to_device(pdd);
 -- 
 2.25.1
 
