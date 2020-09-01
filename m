@@ -2,115 +2,101 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85BCEC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 220EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 576C520767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB71320767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:39:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978349;
-	bh=NaQTcz4Nx7tejgYOZkje1gbrDOO+iWUUqbxrXjzVwak=;
+	s=default; t=1598978357;
+	bh=7Q6HM9Ptm0ehqNKFjOdCuDKFk4FU6X/LwGcfnqJLWIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zOCZxE+8mUtsAmezbXWek2nAn+qT+nCEP0MphVk7EFmB5ZpCFcvDOi2Qvb4pBTURa
-	 73H3XxiQ+JMcSojOgiS/lYVmEkUzBfdZDfSnPuDhqEHTGWfLveX6smAuPd5JtfICMD
-	 QG+GlZkKlvhcwvUjF1DVMNj9mvnwRBKAECbKo+vY=
+	b=1Ar3koMCkGAWNlkJcDd5FZdPsud0gs6MKW5Neyu4jVFeHVFu4DEfiCFwCPOLR6POH
+	 dcp1wefb93Gu2BirJaiH2L4oda4UkO8M0qC+zKKhaZLkelKD3yQCm3TakXz3cLuoMO
+	 1BtS7wOHeBq71Csp0QsOliWfbrwqw3dVUBhySxaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731119AbgIAQjI (ORCPT
+        id S1730864AbgIAQjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57214 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:39:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729702AbgIAP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729749AbgIAP2m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:28:42 -0400
-Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABB7D214D8;
-        Tue,  1 Sep 2020 15:28:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 537D9207D3;
+        Tue,  1 Sep 2020 15:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974117;
-        bh=NaQTcz4Nx7tejgYOZkje1gbrDOO+iWUUqbxrXjzVwak=;
+        s=default; t=1598974119;
+        bh=7Q6HM9Ptm0ehqNKFjOdCuDKFk4FU6X/LwGcfnqJLWIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ysl+WcfJY4JrmGMlfKduw86YoqyKEsHDVyFgGTtIScPzzBT8pfyFC3CEd0TkFQwCU
-         SLGsGIXMQSRI4a7MxNOyzQRog+SMTTGwNq3wLLPq18fHesHTWrj0k5lKNQ4reIlUCZ
-         cn1+8VuKHP+mw5xjf3WYuTg45e33rJenTaZhTKR8=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Mark Brown <broonie@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Masahisa Kojima <masahisa.kojima@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-tegra@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 10/11] spi: tegra114: Simplify with dev_err_probe()
-Date:   Tue,  1 Sep 2020 17:27:12 +0200
-Message-Id: <20200901152713.18629-10-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200901152713.18629-1-krzk@kernel.org>
-References: <20200901152713.18629-1-krzk@kernel.org>
+        b=hN1FySowmBTe9jU/MSRJLh+vHSAGNfet8DCVrO5eSCV6dVURVuDk4Kwv/8z4XS0tg
+         kltFyRUhdomQYpk6VhKmvJ0x1OoHtqKfmxT77kcrBrXvulbl905vVq3AGF+tk+9EPp
+         yMSgZFr5hZTQsmtxY9nS1N1YoFBdzajnN23CqgsU=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chris Wilson <chris@chris-wilson.co.uk>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 051/214] locking/lockdep: Fix overflow in presentation of average lock-time
+Date:   Tue,  1 Sep 2020 17:08:51 +0200
+Message-Id: <20200901150955.426047413@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
+References: <20200901150952.963606936@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Common pattern of handling deferred probe can be simplified with
-dev_err_probe().  Less code and the error value gets printed.
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[ Upstream commit a7ef9b28aa8d72a1656fa6f0a01bbd1493886317 ]
+
+Though the number of lock-acquisitions is tracked as unsigned long, this
+is passed as the divisor to div_s64() which interprets it as a s32,
+giving nonsense values with more than 2 billion acquisitons. E.g.
+
+  acquisitions   holdtime-min   holdtime-max holdtime-total   holdtime-avg
+  -------------------------------------------------------------------------
+    2350439395           0.07         353.38   649647067.36          0.-32
+
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: https://lore.kernel.org/r/20200725185110.11588-1-chris@chris-wilson.co.uk
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-tegra114.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ kernel/locking/lockdep_proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-index c2c58871a947..ca6886aaa519 100644
---- a/drivers/spi/spi-tegra114.c
-+++ b/drivers/spi/spi-tegra114.c
-@@ -664,16 +664,11 @@ static int tegra_spi_init_dma_param(struct tegra_spi_data *tspi,
- 	struct dma_chan *dma_chan;
- 	u32 *dma_buf;
- 	dma_addr_t dma_phys;
--	int ret;
+diff --git a/kernel/locking/lockdep_proc.c b/kernel/locking/lockdep_proc.c
+index 9bb6d2497b040..581f818181386 100644
+--- a/kernel/locking/lockdep_proc.c
++++ b/kernel/locking/lockdep_proc.c
+@@ -400,7 +400,7 @@ static void seq_lock_time(struct seq_file *m, struct lock_time *lt)
+ 	seq_time(m, lt->min);
+ 	seq_time(m, lt->max);
+ 	seq_time(m, lt->total);
+-	seq_time(m, lt->nr ? div_s64(lt->total, lt->nr) : 0);
++	seq_time(m, lt->nr ? div64_u64(lt->total, lt->nr) : 0);
+ }
  
- 	dma_chan = dma_request_chan(tspi->dev, dma_to_memory ? "rx" : "tx");
--	if (IS_ERR(dma_chan)) {
--		ret = PTR_ERR(dma_chan);
--		if (ret != -EPROBE_DEFER)
--			dev_err(tspi->dev,
--				"Dma channel is not available: %d\n", ret);
--		return ret;
--	}
-+	if (IS_ERR(dma_chan))
-+		return dev_err_probe(tspi->dev, PTR_ERR(dma_chan),
-+				     "Dma channel is not available\n");
- 
- 	dma_buf = dma_alloc_coherent(tspi->dev, tspi->dma_buf_size,
- 				&dma_phys, GFP_KERNEL);
+ static void seq_stats(struct seq_file *m, struct lock_stat_data *data)
 -- 
-2.17.1
+2.25.1
+
+
 
