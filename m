@@ -2,112 +2,144 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C9CC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4CDC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7122078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980988;
-	bh=tlTF8E8wCpC1Qkz2QnzGhofEoJGVooxBzEgBu1YNSlk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ckbm63gu5cu1DRjDC7zLoHurZeLTdM/tH/TXpmBECFVhVWdLWIj/GK97y/GhNPtO2
-	 J4oOboerRkJQ302XNpp/K9mEkOz5oH2jtPGGnut8cfGglhDVjxdl6p3dON3kdJi1xo
-	 Msp0U2lkXSA97bl4XNIkwW6UZC+TSVeIqnKUijtw=
+	by mail.kernel.org (Postfix) with ESMTP id 361162078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgIARXF (ORCPT
+        id S1732569AbgIARXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:23:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54090 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:23:39 -0400
+Received: from mga11.intel.com ([192.55.52.93]:59156 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgIAPMA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:00 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E162A206FA;
-        Tue,  1 Sep 2020 15:11:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973120;
-        bh=tlTF8E8wCpC1Qkz2QnzGhofEoJGVooxBzEgBu1YNSlk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FElUYZZr4GtO9ynAXFhD1F/TYwLjSohISpH9i/a/Ih5IxNFRtBgpWFbKJ39eHBv3k
-         Rian6jc2IgOh/z2AlIHaqU4+GhIZdTMtMdcRGGmmKx48eaEELc1kaBl+z/aiOhmWkY
-         5Lp9tWxXx9aGkvSJRR2U/cqdKXc8iJFNsqZnrDWg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 15/62] drm/amdgpu: fix ref count leak in amdgpu_display_crtc_set_config
-Date:   Tue,  1 Sep 2020 17:09:58 +0200
-Message-Id: <20200901150921.490303095@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
-References: <20200901150920.697676718@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729384AbgIARXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 13:23:15 -0400
+IronPort-SDR: 4B0tkcJC6JmsWNq3TyA+uqJaq/KHgRyf5UCkhB3Rk0oPDtDqP2jMsF8yLlDf3w96GsrMNe73XO
+ we4wYTnQ1VCg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="154729712"
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="154729712"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:23:14 -0700
+IronPort-SDR: wuavfJxSyAPpELTV8WPFMMAHFUIjYWk2p5fLGqafU8dChGcX+q9xPL+vQSSxs9yoHADPFY7gzF
+ UEmYO/DPRnJg==
+X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
+   d="scan'208";a="301519837"
+Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.241.30]) ([10.212.241.30])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:23:12 -0700
+Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
+ shadow stack
+To:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Weijiang Yang <weijiang.yang@intel.com>
+References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
+ <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
+ <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
+ <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
+ <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
+ <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
+ <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
+ <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
+ <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
+ <20200901102758.GY6642@arm.com>
+From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
+Message-ID: <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
+Date:   Tue, 1 Sep 2020 10:23:11 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.12.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200901102758.GY6642@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+On 9/1/2020 3:28 AM, Dave Martin wrote:
+> On Thu, Aug 27, 2020 at 06:26:11AM -0700, H.J. Lu wrote:
+>> On Wed, Aug 26, 2020 at 12:57 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>>>
+>>> On 8/26/20 11:49 AM, Yu, Yu-cheng wrote:
+>>>>> I would expect things like Go and various JITs to call it directly.
+>>>>>
+>>>>> If we wanted to be fancy and add a potentially more widely useful
+>>>>> syscall, how about:
+>>>>>
+>>>>> mmap_special(void *addr, size_t length, int prot, int flags, int type);
+>>>>>
+>>>>> Where type is something like MMAP_SPECIAL_X86_SHSTK.  Fundamentally,
+>>>>> this is really just mmap() except that we want to map something a bit
+>>>>> magical, and we don't want to require opening a device node to do it.
+>>>>
+>>>> One benefit of MMAP_SPECIAL_* is there are more free bits than MAP_*.
+>>>> Does ARM have similar needs for memory mapping, Dave?
+>>>
+>>> No idea.
+>>>
+>>> But, mmap_special() is *basically* mmap2() with extra-big flags space.
+>>> I suspect it will grow some more uses on top of shadow stacks.  It could
+>>> have, for instance, been used to allocate MPX bounds tables.
+>>
+>> There is no reason we can't use
+>>
+>> long arch_prctl (int, unsigned long, unsigned long, unsigned long, ..);
+>>
+>> for ARCH_X86_CET_MMAP_SHSTK.   We just need to use
+>>
+>> syscall (SYS_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, ...);
+> 
+> 
+> For arm64 (and sparc etc.) we continue to use the regular mmap/mprotect
+> family of calls.  One or two additional arch-specific mmap flags are
+> sufficient for now.
+> 
+> Is x86 definitely not going to fit within those calls?
 
-[ Upstream commit e008fa6fb41544b63973a529b704ef342f47cc65 ]
+That can work for x86.  Andy, what if we create PROT_SHSTK, which can 
+been seen only from the user.  Once in kernel, it is translated to 
+VM_SHSTK.  One question for mremap/mprotect is, do we allow a normal 
+data area to become shadow stack?
 
-in amdgpu_display_crtc_set_config, the call to pm_runtime_get_sync
-increments the counter even in case of failure, leading to incorrect
-ref count. In case of failure, decrement the ref count before returning.
+> 
+> For now, I can't see what arg[2] is used for (and hence the type
+> argument of mmap_special()), but I haven't dug through the whole series.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_display.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+If we use the approach above, then we don't need arch_prctl changes.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-index c555781685ea8..d3ee8f19f1ef9 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_display.c
-@@ -296,7 +296,7 @@ int amdgpu_crtc_set_config(struct drm_mode_set *set)
- 
- 	ret = pm_runtime_get_sync(dev->dev);
- 	if (ret < 0)
--		return ret;
-+		goto out;
- 
- 	ret = drm_crtc_helper_set_config(set);
- 
-@@ -311,7 +311,7 @@ int amdgpu_crtc_set_config(struct drm_mode_set *set)
- 	   take the current one */
- 	if (active && !adev->have_disp_power_ref) {
- 		adev->have_disp_power_ref = true;
--		return ret;
-+		goto out;
- 	}
- 	/* if we have no active crtcs, then drop the power ref
- 	   we got before */
-@@ -320,6 +320,7 @@ int amdgpu_crtc_set_config(struct drm_mode_set *set)
- 		adev->have_disp_power_ref = false;
- 	}
- 
-+out:
- 	/* drop the power reference we got coming in here */
- 	pm_runtime_put_autosuspend(dev->dev);
- 	return ret;
--- 
-2.25.1
-
-
-
+Thanks,
+Yu-cheng
