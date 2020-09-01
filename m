@@ -7,71 +7,71 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44197C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:54:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 920F0C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 215562087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB4221707
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 18:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598986498;
-	bh=tcWe8OKslQt3CgrL+pd7pksoqWMC8rYYLcw5KnH7Kyo=;
+	s=default; t=1598986505;
+	bh=eJDpSQ/jBhsVWnqtKwwYIXs3wEWe2CNGAqk4PFQf180=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NN+VZ1Y1IPT4BEOVlbd1k5Yt3QqOd9B73/NG/S3bWZD163/GKnYU8Nf0XgJlhqpw0
-	 pEtDzLE+tOdQUhwSuzAZ+mIPtBtReK7JB4fcHEPSpsON3/XK0zA9QjRchbM1GbUoeG
-	 BXBOHKFnFP3DUK338xU6eXfRDcmC85OQ6yJjv63g=
+	b=RiAYW4zceEcM7yoExIonbxdzhSQavnj6mOSaM/JYKX1QmE58YayupShiPwXLmDcqg
+	 EinaHL+7YlpuzVhwyCy6EyPLlH4IQTtfb6/6xqCal3sF5bROEsvLHgIysZS0iU5a1X
+	 +ExK/DfDMqiryFeQNzZJdPjVlY0A9JlChtpN6yQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731973AbgIASyg (ORCPT
+        id S1732116AbgIASzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 14:54:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57518 "EHLO
+        Tue, 1 Sep 2020 14:55:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731690AbgIASxr (ORCPT
+        with ESMTP id S1731783AbgIASyT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 14:53:47 -0400
-Received: from mail-qv1-xf43.google.com (mail-qv1-xf43.google.com [IPv6:2607:f8b0:4864:20::f43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9180EC061245;
-        Tue,  1 Sep 2020 11:53:47 -0700 (PDT)
-Received: by mail-qv1-xf43.google.com with SMTP id h1so1022030qvo.9;
-        Tue, 01 Sep 2020 11:53:47 -0700 (PDT)
+        Tue, 1 Sep 2020 14:54:19 -0400
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B19AC061244;
+        Tue,  1 Sep 2020 11:54:18 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id o5so1982059qke.12;
+        Tue, 01 Sep 2020 11:54:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NloDMWjJsS+bjuVz49pvrmKeqmF57hT1Nr3il/HqC2g=;
-        b=ebPycDI+XWZGaFDnilsFlFrO5OVRhPj02XE4tDGuTN9237wIwia46lmRS1W2nMJhik
-         zR1HAWIuad9uIjhNnsSePxMD5XGEI6Q8/NREEl5F4p4IBE5fM3oSnvPmcc6jUSJ8QExc
-         Mp3p1SEwURyxEYhH39CIMotzqp5qZLEMCzF25Q9bgPBYsBHrU7/0lWl/ve66RJalb6RT
-         JoQD3dtRJEXHsXjCCLEj8/QS6tx3hpzqNKCNhCjef606UXNGxuvqU4aACNEIP+97TFjm
-         redHzPSYcT+mPAn2MvffRlJPUXZjC91D3SAuZd95aPJ91PjM88PHsYERepmt8PFGTKwQ
-         vuEA==
+        bh=H5bqavxbqk85onXAByeypQmTg/sTVdfkgjS7XfGpNMQ=;
+        b=am9+85JN4GRBuF8BDWFu1kcmXapeiLESBbeO2JWuzObgkvndOBzUEW5c8Cs3bWO45B
+         soo1wZFJVSJgViU3TVF/amCK2K8rK+5eU0g3FyLarODlyKoB7aB5pObEvWDHSAVfjdKn
+         7A5fIa8Uep0kNYxTmTEiCxHdbm0pqDTvXTKl0rXbi/726sr87Kc19jUuKMRRz3mNmg6n
+         i94zbBVxEVyd6TSJKNe8l5quOIiACN3/rQ1lG19Pw+cKwOLvUqJe02RiOWfyVHNVJ4lp
+         O5fh3KrvfgaxTeRr0i2Q80Ymdy+n0Wd//ctPLB5EaYLvtUSInqMCAsJd979AnRbhMasQ
+         QWWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=NloDMWjJsS+bjuVz49pvrmKeqmF57hT1Nr3il/HqC2g=;
-        b=I9eRNmcSfOIK6EaFZTw8ifmPXtrI24NCm9wrpMnIv2vJHUvna5q9Foz/gqhIBEjmDA
-         1tOwuVOQyFUQYsM+0H0KEQLXtOATA2O/O4pKYbRu+K3l9xi12x5guoIIJDz+hTEZL5Ep
-         AuTPOJ3l1U/ayX6xdei3zyryKMZCHp1bFd5iRVDhza3/AGRiMGsSBRXQ5aHQKIHugyqT
-         zXHuOp2hXvn1bjCFNNq8ErQRngsH+nUNwCWgpM0IcvwpJ5uuMjRYhoiYedsf1MPltX9t
-         1PKB1K/xOyRpgihTKGJhtVihJklo5ZP3+zVGyLPnCIFZZSmdXBmiNp1kMrmcQV8YG1OQ
-         +xnQ==
-X-Gm-Message-State: AOAM531vgVnOz0Zv/saSy1g+3Bd4Fhui2SLciJ0K00ecUJel4wkIahNl
-        RwEJGF/wFshgj5nNqMgR5dZ9OFa8xrERVw==
-X-Google-Smtp-Source: ABdhPJz5vtIIkw4vrekQ9J4w7X5VWbykUaCY6gXRRGjSOMhB8/snecgoJs8lsxmvuPSBGEXc/ZFHUg==
-X-Received: by 2002:a0c:fece:: with SMTP id z14mr3450483qvs.66.1598986426674;
-        Tue, 01 Sep 2020 11:53:46 -0700 (PDT)
+        bh=H5bqavxbqk85onXAByeypQmTg/sTVdfkgjS7XfGpNMQ=;
+        b=hk6yzeKcLE57uR081Y5UulZcno+JLxC+GlGtWu7lGmEIb0DAo2lce5Ur73tv9+acok
+         q/njHVIAfFg801WFAjNVghib9iPB3m/JY7Xbas6jtMCI0Ox5jnc6qI6H+JEq0TIBwmn/
+         y5AKX2uKl8ydMjaVyBMlj34bTO8JhvCKhvPZy0kfoCHmbvmHMHUu3rxCGWt7v42cyw/3
+         w95m71kr3GfF394tqMo2HscvXdXAgzo1UcdJc/19Z7atVU0G1xGvrwIoyKhWO2BNRqUP
+         Imdyoa6axvaRN8OhNI993MWQ0N6BJhusxd8vt3KDSDMy0o31QRHnSgyOyuzTAS+lD3aH
+         i1IQ==
+X-Gm-Message-State: AOAM5322TdzUfKDtlLvgamPnLXFPcdkQOwHSZ902dvrQExGxAGWvh+Ax
+        jaP/mgZR2nkMJSKoV7+okIY=
+X-Google-Smtp-Source: ABdhPJyO0a9oHk4MM+e9MbfpbLTA2zRCF+wakZ3DyQrCz6X3Pxd9oPmG2DZI4hGsAR4BuvSSS8jjrw==
+X-Received: by 2002:a37:a281:: with SMTP id l123mr3271032qke.171.1598986457628;
+        Tue, 01 Sep 2020 11:54:17 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::1:a198])
-        by smtp.gmail.com with ESMTPSA id k185sm2544439qkd.94.2020.09.01.11.53.45
+        by smtp.gmail.com with ESMTPSA id r6sm2694793qkc.43.2020.09.01.11.54.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 11:53:46 -0700 (PDT)
+        Tue, 01 Sep 2020 11:54:17 -0700 (PDT)
 From:   Tejun Heo <tj@kernel.org>
 To:     axboe@kernel.dk
 Cc:     linux-block@vger.kernel.org, cgroups@vger.kernel.org,
         linux-kernel@vger.kernel.org, kernel-team@fb.com, newella@fb.com,
         Tejun Heo <tj@kernel.org>
-Subject: [PATCH 14/27] blk-iocost: calculate iocg->usages[] from iocg->local_stat.usage_us
-Date:   Tue,  1 Sep 2020 14:52:44 -0400
-Message-Id: <20200901185257.645114-15-tj@kernel.org>
+Subject: [PATCH 25/27] blk-iocost: restore inuse update tracepoints
+Date:   Tue,  1 Sep 2020 14:52:55 -0400
+Message-Id: <20200901185257.645114-26-tj@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200901185257.645114-1-tj@kernel.org>
 References: <20200901185257.645114-1-tj@kernel.org>
@@ -82,198 +82,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, iocg->usages[] which are used to guide inuse adjustments are
-calculated from vtime deltas. This, however, assumes that the hierarchical
-inuse weight at the time of calculation held for the entire period, which
-often isn't true and can lead to significant errors.
-
-Now that we have absolute usage information collected, we can derive
-iocg->usages[] from iocg->local_stat.usage_us so that inuse adjustment
-decisions are made based on actual absolute usage. The calculated usage is
-clamped between 1 and WEIGHT_ONE and WEIGHT_ONE is also used to signal
-saturation regardless of the current hierarchical inuse weight.
+Update and restore the inuse update tracepoints.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 ---
- block/blk-iocost.c            | 72 ++++++++++++++++++++++-------------
- include/trace/events/iocost.h |  7 +---
- 2 files changed, 47 insertions(+), 32 deletions(-)
+ block/blk-iocost.c            | 16 ++++++++++++++++
+ include/trace/events/iocost.h |  6 +++---
+ 2 files changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/block/blk-iocost.c b/block/blk-iocost.c
-index f30f9b37fcf0..2496674bbbf4 100644
+index 0270a504e6b5..9366527d8c12 100644
 --- a/block/blk-iocost.c
 +++ b/block/blk-iocost.c
-@@ -476,14 +476,10 @@ struct ioc_gq {
- 	 * `vtime_done` is the same but progressed on completion rather
- 	 * than issue.  The delta behind `vtime` represents the cost of
- 	 * currently in-flight IOs.
--	 *
--	 * `last_vtime` is used to remember `vtime` at the end of the last
--	 * period to calculate utilization.
- 	 */
- 	atomic64_t			vtime;
- 	atomic64_t			done_vtime;
- 	u64				abs_vdebt;
--	u64				last_vtime;
- 
- 	/*
- 	 * The period this iocg was last active in.  Used for deactivation
-@@ -506,6 +502,9 @@ struct ioc_gq {
- 	struct hrtimer			waitq_timer;
- 	struct hrtimer			delay_timer;
- 
-+	/* timestamp at the latest activation */
-+	u64				activated_at;
+@@ -1919,6 +1919,12 @@ static void transfer_surpluses(struct list_head *surpluses, struct ioc_now *now)
+ 		inuse = DIV64_U64_ROUND_UP(
+ 			parent->child_adjusted_sum * iocg->hweight_after_donation,
+ 			parent->hweight_inuse);
 +
- 	/* statistics */
- 	struct iocg_pcpu_stat __percpu	*pcpu_stat;
- 	struct iocg_stat		local_stat;
-@@ -514,6 +513,7 @@ struct ioc_gq {
- 	u64				last_stat_abs_vusage;
- 
- 	/* usage is recorded as fractions of WEIGHT_ONE */
-+	u32				usage_delta_us;
- 	int				usage_idx;
- 	u32				usages[NR_USAGE_SLOTS];
- 
-@@ -1159,7 +1159,7 @@ static bool iocg_activate(struct ioc_gq *iocg, struct ioc_now *now)
- 	TRACE_IOCG_PATH(iocg_activate, iocg, now,
- 			last_period, cur_period, vtime);
- 
--	iocg->last_vtime = vtime;
-+	iocg->activated_at = now->now;
- 
- 	if (ioc->running == IOC_IDLE) {
- 		ioc->running = IOC_RUNNING;
-@@ -1451,7 +1451,8 @@ static void iocg_flush_stat_one(struct ioc_gq *iocg, struct ioc_now *now)
- 	vusage_delta = abs_vusage - iocg->last_stat_abs_vusage;
- 	iocg->last_stat_abs_vusage = abs_vusage;
- 
--	iocg->local_stat.usage_us += div64_u64(vusage_delta, now->vrate);
-+	iocg->usage_delta_us = div64_u64(vusage_delta, now->vrate);
-+	iocg->local_stat.usage_us += iocg->usage_delta_us;
- 
- 	new_stat.usage_us =
- 		iocg->local_stat.usage_us + iocg->desc_stat.usage_us;
-@@ -1558,8 +1559,9 @@ static void ioc_timer_fn(struct timer_list *timer)
- 
- 	/* calc usages and see whether some weights need to be moved around */
- 	list_for_each_entry(iocg, &ioc->active_iocgs, active_list) {
--		u64 vdone, vtime, vusage, vmin;
-+		u64 vdone, vtime, usage_us, vmin;
- 		u32 hw_active, hw_inuse, usage;
-+		int uidx;
- 
- 		/*
- 		 * Collect unused and wind vtime closer to vnow to prevent
-@@ -1583,27 +1585,44 @@ static void ioc_timer_fn(struct timer_list *timer)
- 		    time_before64(vdone, now.vnow - period_vtime))
- 			nr_lagging++;
- 
--		if (waitqueue_active(&iocg->waitq))
--			vusage = now.vnow - iocg->last_vtime;
--		else if (time_before64(iocg->last_vtime, vtime))
--			vusage = vtime - iocg->last_vtime;
--		else
--			vusage = 0;
--
--		iocg->last_vtime += vusage;
- 		/*
--		 * Factor in in-flight vtime into vusage to avoid
--		 * high-latency completions appearing as idle.  This should
--		 * be done after the above ->last_time adjustment.
-+		 * Determine absolute usage factoring in pending and in-flight
-+		 * IOs to avoid stalls and high-latency completions appearing as
-+		 * idle.
- 		 */
--		vusage = max(vusage, vtime - vdone);
--
--		/* calculate hweight based usage ratio and record */
--		if (vusage) {
--			usage = DIV64_U64_ROUND_UP(vusage * hw_inuse,
--						   period_vtime);
--			iocg->usage_idx = (iocg->usage_idx + 1) % NR_USAGE_SLOTS;
--			iocg->usages[iocg->usage_idx] = usage;
-+		usage_us = iocg->usage_delta_us;
-+		if (waitqueue_active(&iocg->waitq) && time_before64(vtime, now.vnow))
-+			usage_us += DIV64_U64_ROUND_UP(
-+				cost_to_abs_cost(now.vnow - vtime, hw_inuse),
-+				now.vrate);
-+		if (vdone != vtime) {
-+			u64 inflight_us = DIV64_U64_ROUND_UP(
-+				cost_to_abs_cost(vtime - vdone, hw_inuse),
-+				now.vrate);
-+			usage_us = max(usage_us, inflight_us);
-+		}
++		TRACE_IOCG_PATH(inuse_transfer, iocg, now,
++				iocg->inuse, inuse,
++				iocg->hweight_inuse,
++				iocg->hweight_after_donation);
 +
-+		/* convert to hweight based usage ratio and record */
-+		uidx = (iocg->usage_idx + 1) % NR_USAGE_SLOTS;
+ 		__propagate_weights(iocg, iocg->active, inuse, true, now);
+ 	}
+ 
+@@ -2076,6 +2082,10 @@ static void ioc_timer_fn(struct timer_list *timer)
+ 				iocg->hweight_after_donation = new_hwi;
+ 				list_add(&iocg->surplus_list, &surpluses);
+ 			} else {
++				TRACE_IOCG_PATH(inuse_shortage, iocg, &now,
++						iocg->inuse, iocg->active,
++						iocg->hweight_inuse, new_hwi);
 +
-+		if (time_after64(vtime, now.vnow - ioc->margins.min)) {
-+			iocg->usage_idx = uidx;
-+			iocg->usages[uidx] = WEIGHT_ONE;
-+		} else if (usage_us) {
-+			u64 started_at, dur;
+ 				__propagate_weights(iocg, iocg->active,
+ 						    iocg->active, true, &now);
+ 				nr_shortages++;
+@@ -2248,11 +2258,13 @@ static u64 adjust_inuse_and_calc_cost(struct ioc_gq *iocg, u64 vtime,
+ 	struct ioc *ioc = iocg->ioc;
+ 	struct ioc_margins *margins = &ioc->margins;
+ 	u32 adj_step = DIV_ROUND_UP(iocg->active * INUSE_ADJ_STEP_PCT, 100);
++	u32 __maybe_unused old_inuse = iocg->inuse, __maybe_unused old_hwi;
+ 	u32 hwi;
+ 	s64 margin;
+ 	u64 cost, new_inuse;
+ 
+ 	current_hweight(iocg, NULL, &hwi);
++	old_hwi = hwi;
+ 	cost = abs_cost_to_cost(abs_cost, hwi);
+ 	margin = now->vnow - vtime - cost;
+ 
+@@ -2287,6 +2299,10 @@ static u64 adjust_inuse_and_calc_cost(struct ioc_gq *iocg, u64 vtime,
+ 		 iocg->inuse != iocg->active);
+ 
+ 	spin_unlock_irq(&ioc->lock);
 +
-+			if (time_after64(iocg->activated_at, ioc->period_at))
-+				started_at = iocg->activated_at;
-+			else
-+				started_at = ioc->period_at;
++	TRACE_IOCG_PATH(inuse_adjust, iocg, now,
++			old_inuse, iocg->inuse, old_hwi, hwi);
 +
-+			dur = max_t(u64, now.now - started_at, 1);
-+			usage = clamp_t(u32,
-+				DIV64_U64_ROUND_UP(usage_us * WEIGHT_ONE, dur),
-+				1, WEIGHT_ONE);
-+
-+			iocg->usage_idx = uidx;
-+			iocg->usages[uidx] = usage;
- 		} else {
- 			usage = 0;
- 		}
-@@ -1620,7 +1639,6 @@ static void ioc_timer_fn(struct timer_list *timer)
- 			/* throw away surplus vtime */
- 			atomic64_add(delta, &iocg->vtime);
- 			atomic64_add(delta, &iocg->done_vtime);
--			iocg->last_vtime += delta;
- 			/* if usage is sufficiently low, maybe it can donate */
- 			if (surplus_adjusted_hweight_inuse(usage, hw_inuse)) {
- 				iocg->has_surplus = true;
+ 	return cost;
+ }
+ 
 diff --git a/include/trace/events/iocost.h b/include/trace/events/iocost.h
-index c2f580fd371b..a905ecc0342f 100644
+index ee024fe8fef6..b350860d2e71 100644
 --- a/include/trace/events/iocost.h
 +++ b/include/trace/events/iocost.h
-@@ -26,7 +26,6 @@ TRACE_EVENT(iocost_iocg_activate,
- 		__field(u64, vrate)
- 		__field(u64, last_period)
- 		__field(u64, cur_period)
--		__field(u64, last_vtime)
- 		__field(u64, vtime)
- 		__field(u32, weight)
- 		__field(u32, inuse)
-@@ -42,7 +41,6 @@ TRACE_EVENT(iocost_iocg_activate,
- 		__entry->vrate = now->vrate;
- 		__entry->last_period = last_period;
- 		__entry->cur_period = cur_period;
--		__entry->last_vtime = iocg->last_vtime;
- 		__entry->vtime = vtime;
- 		__entry->weight = iocg->weight;
- 		__entry->inuse = iocg->inuse;
-@@ -51,13 +49,12 @@ TRACE_EVENT(iocost_iocg_activate,
- 	),
- 
- 	TP_printk("[%s:%s] now=%llu:%llu vrate=%llu "
--		  "period=%llu->%llu vtime=%llu->%llu "
-+		  "period=%llu->%llu vtime=%llu "
- 		  "weight=%u/%u hweight=%llu/%llu",
- 		__get_str(devname), __get_str(cgroup),
- 		__entry->now, __entry->vnow, __entry->vrate,
- 		__entry->last_period, __entry->cur_period,
--		__entry->last_vtime, __entry->vtime,
--		__entry->inuse, __entry->weight,
-+		__entry->vtime, __entry->inuse, __entry->weight,
- 		__entry->hweight_inuse, __entry->hweight_active
+@@ -95,7 +95,7 @@ DECLARE_EVENT_CLASS(iocg_inuse_update,
  	)
  );
+ 
+-DEFINE_EVENT(iocg_inuse_update, iocost_inuse_takeback,
++DEFINE_EVENT(iocg_inuse_update, iocost_inuse_shortage,
+ 
+ 	TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+ 		u32 old_inuse, u32 new_inuse,
+@@ -105,7 +105,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_takeback,
+ 		old_hw_inuse, new_hw_inuse)
+ );
+ 
+-DEFINE_EVENT(iocg_inuse_update, iocost_inuse_giveaway,
++DEFINE_EVENT(iocg_inuse_update, iocost_inuse_transfer,
+ 
+ 	TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+ 		u32 old_inuse, u32 new_inuse,
+@@ -115,7 +115,7 @@ DEFINE_EVENT(iocg_inuse_update, iocost_inuse_giveaway,
+ 		old_hw_inuse, new_hw_inuse)
+ );
+ 
+-DEFINE_EVENT(iocg_inuse_update, iocost_inuse_reset,
++DEFINE_EVENT(iocg_inuse_update, iocost_inuse_adjust,
+ 
+ 	TP_PROTO(struct ioc_gq *iocg, const char *path, struct ioc_now *now,
+ 		u32 old_inuse, u32 new_inuse,
 -- 
 2.26.2
 
