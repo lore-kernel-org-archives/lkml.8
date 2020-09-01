@@ -2,53 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C9CC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 863E4C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE73206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6222F2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975654;
-	bh=28qg86Fv2yHSlE6KxT+YVbBILfN1ppMYun3R6tD+i5Q=;
+	s=default; t=1598975665;
+	bh=WAnsymW3dLKgxGcbm6M9vOZzwrD1DT97PuziyPkFERc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHfFLIxDu0SbdWPd+9wzSLIT0E4xtUp4T2nGuVAJ0aqytNwS94kqH6FsuEDdL7Ob0
-	 06xcg4mrnIzNGnMOYptK0t/cTVijBd0Wlqwi/VXsqSsFISv3wTx0RjrNa+vENAZ0nq
-	 0LT0GA4KaSZ2Ss6xQ1+aP3y5aNsaK6BMSzWkPr0o=
+	b=QpCoX1p24+n9xPoop85+g4aazE+sQFoIsCqjsjZuN8fSaexOd5uFIDfgf1PZVbHY4
+	 YlzgXPWtEVXH8WiSLXYKC+zltvwGztLOkB3rpQUOOP8TAaYAFfL9vRTyXluqx1jfiy
+	 ry+dZqpVlAB4OwXMyx8TcPp2KClIJWOj635j/KjY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbgIAPyN (ORCPT
+        id S1732081AbgIAPyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:54:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36690 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:54:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731948AbgIAPqj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:46:39 -0400
+        id S1728393AbgIAPqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:46:37 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC8E206EF;
-        Tue,  1 Sep 2020 15:46:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BCB9206EB;
+        Tue,  1 Sep 2020 15:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975198;
-        bh=28qg86Fv2yHSlE6KxT+YVbBILfN1ppMYun3R6tD+i5Q=;
+        s=default; t=1598975196;
+        bh=WAnsymW3dLKgxGcbm6M9vOZzwrD1DT97PuziyPkFERc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LtmT8xLi+Rn4TxynZiBUIND7JTBL4XqQ7rGafWyBcPQEE5Zn2LG34GSsL9BRQivwu
-         bHsR8RyTEFkt5nGELCvmaweRf4eOXsIUrlo4zcZfVk0Y/rjrStLKco+HnxvlgdiTFq
-         10sczAEQbS2oQUoNCZdMgGXlyBAH+ysJr1x8NjQM=
+        b=bqZtnYVKGGVb91sNv3Nd4rA7y8ZCa3fMgD1AHnqECz1vCud8rY6zuK+ZWebNSSzZX
+         rq4egQ2GmLALrx9yN/cODRkcjJGKA4CBwggsaYpbcc22Zkk37FAAT575oe0hmlTuar
+         Rxdwuo+xvdJp5oEllF+BAKSlPZPqXHVoTna52vcM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Evan Quan <evan.quan@amd.com>
-Subject: [PATCH 5.8 217/255] drm/amd/powerplay: Fix hardmins not being sent to SMU for RV
-Date:   Tue,  1 Sep 2020 17:11:13 +0200
-Message-Id: <20200901151011.098452723@linuxfoundation.org>
+        stable@vger.kernel.org, Benedikt Ames <wisp3rwind@posteo.eu>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 245/255] io_uring: make offset == -1 consistent with preadv2/pwritev2
+Date:   Tue,  1 Sep 2020 17:11:41 +0200
+Message-Id: <20200901151012.493684257@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,64 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit e2bf3723db563457c0abe4eaeedac25bbbbd1d76 upstream.
+[ Upstream commit 0fef948363f62494d779cf9dc3c0a86ea1e5f7cd ]
 
-[Why]
-DC uses these to raise the voltage as needed for higher dispclk/dppclk
-and to ensure that we have enough bandwidth to drive the displays.
+The man page for io_uring generally claims were consistent with what
+preadv2 and pwritev2 accept, but turns out there's a slight discrepancy
+in how offset == -1 is handled for pipes/streams. preadv doesn't allow
+it, but preadv2 does. This currently causes io_uring to return -EINVAL
+if that is attempted, but we should allow that as documented.
 
-There's a bug preventing these from actuially sending messages since
-it's checking the actual clock (which is 0) instead of the incoming
-clock (which shouldn't be 0) when deciding to send the hardmin.
+This change makes us consistent with preadv2/pwritev2 for just passing
+in a NULL ppos for streams if the offset is -1.
 
-[How]
-Check the clocks != 0 instead of the actual clocks.
-
-Fixes: 9ed9203c3ee7 ("drm/amd/powerplay: rv dal-pplib interface refactor powerplay part")
-Signed-off-by: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Evan Quan <evan.quan@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org # v5.7+
+Reported-by: Benedikt Ames <wisp3rwind@posteo.eu>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ fs/io_uring.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/smu10_hwmgr.c
-@@ -204,8 +204,7 @@ static int smu10_set_min_deep_sleep_dcef
- {
- 	struct smu10_hwmgr *smu10_data = (struct smu10_hwmgr *)(hwmgr->backend);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 2b7018456091c..4115bfedf15dc 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2518,6 +2518,11 @@ static ssize_t io_import_iovec(int rw, struct io_kiocb *req,
+ 	return import_iovec(rw, buf, sqe_len, UIO_FASTIOV, iovec, iter);
+ }
  
--	if (smu10_data->need_min_deep_sleep_dcefclk &&
--		smu10_data->deep_sleep_dcefclk != clock) {
-+	if (clock && smu10_data->deep_sleep_dcefclk != clock) {
- 		smu10_data->deep_sleep_dcefclk = clock;
- 		smum_send_msg_to_smc_with_parameter(hwmgr,
- 					PPSMC_MSG_SetMinDeepSleepDcefclk,
-@@ -219,8 +218,7 @@ static int smu10_set_hard_min_dcefclk_by
- {
- 	struct smu10_hwmgr *smu10_data = (struct smu10_hwmgr *)(hwmgr->backend);
++static inline loff_t *io_kiocb_ppos(struct kiocb *kiocb)
++{
++	return kiocb->ki_filp->f_mode & FMODE_STREAM ? NULL : &kiocb->ki_pos;
++}
++
+ /*
+  * For files that don't have ->read_iter() and ->write_iter(), handle them
+  * by looping over ->read() or ->write() manually.
+@@ -2553,10 +2558,10 @@ static ssize_t loop_rw_iter(int rw, struct file *file, struct kiocb *kiocb,
  
--	if (smu10_data->dcf_actual_hard_min_freq &&
--		smu10_data->dcf_actual_hard_min_freq != clock) {
-+	if (clock && smu10_data->dcf_actual_hard_min_freq != clock) {
- 		smu10_data->dcf_actual_hard_min_freq = clock;
- 		smum_send_msg_to_smc_with_parameter(hwmgr,
- 					PPSMC_MSG_SetHardMinDcefclkByFreq,
-@@ -234,8 +232,7 @@ static int smu10_set_hard_min_fclk_by_fr
- {
- 	struct smu10_hwmgr *smu10_data = (struct smu10_hwmgr *)(hwmgr->backend);
+ 		if (rw == READ) {
+ 			nr = file->f_op->read(file, iovec.iov_base,
+-					      iovec.iov_len, &kiocb->ki_pos);
++					      iovec.iov_len, io_kiocb_ppos(kiocb));
+ 		} else {
+ 			nr = file->f_op->write(file, iovec.iov_base,
+-					       iovec.iov_len, &kiocb->ki_pos);
++					       iovec.iov_len, io_kiocb_ppos(kiocb));
+ 		}
  
--	if (smu10_data->f_actual_hard_min_freq &&
--		smu10_data->f_actual_hard_min_freq != clock) {
-+	if (clock && smu10_data->f_actual_hard_min_freq != clock) {
- 		smu10_data->f_actual_hard_min_freq = clock;
- 		smum_send_msg_to_smc_with_parameter(hwmgr,
- 					PPSMC_MSG_SetHardMinFclkByFreq,
+ 		if (iov_iter_is_bvec(iter))
+@@ -2681,7 +2686,7 @@ static int io_read(struct io_kiocb *req, bool force_nonblock)
+ 		goto copy_iov;
+ 
+ 	iov_count = iov_iter_count(&iter);
+-	ret = rw_verify_area(READ, req->file, &kiocb->ki_pos, iov_count);
++	ret = rw_verify_area(READ, req->file, io_kiocb_ppos(kiocb), iov_count);
+ 	if (!ret) {
+ 		ssize_t ret2;
+ 
+@@ -2780,7 +2785,7 @@ static int io_write(struct io_kiocb *req, bool force_nonblock)
+ 		goto copy_iov;
+ 
+ 	iov_count = iov_iter_count(&iter);
+-	ret = rw_verify_area(WRITE, req->file, &kiocb->ki_pos, iov_count);
++	ret = rw_verify_area(WRITE, req->file, io_kiocb_ppos(kiocb), iov_count);
+ 	if (!ret) {
+ 		ssize_t ret2;
+ 
+-- 
+2.25.1
+
 
 
