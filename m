@@ -2,120 +2,89 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E088C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE683C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E16206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB08D206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 12:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgIAMH2 (ORCPT
+        id S1727940AbgIAMHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 08:07:28 -0400
-Received: from wtarreau.pck.nerim.net ([62.212.114.60]:41211 "EHLO 1wt.eu"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgIAL6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:58:47 -0400
-Received: (from willy@localhost)
-        by pcw.home.local (8.15.2/8.15.2/Submit) id 081Bvts2001080;
-        Tue, 1 Sep 2020 13:57:55 +0200
-Date:   Tue, 1 Sep 2020 13:57:55 +0200
-From:   Willy Tarreau <w@1wt.eu>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        George Spelvin <lkml@sdf.org>,
-        Amit Klein <aksecurity@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>, tytso@mit.edu,
-        Florian Westphal <fw@strlen.de>,
-        Marc Plumb <lkml.mplumb@gmail.com>
-Subject: Re: [PATCH 2/2] random32: add noise from network and scheduling
- activity
-Message-ID: <20200901115755.GA1059@1wt.eu>
-References: <20200901064302.849-1-w@1wt.eu>
- <20200901064302.849-3-w@1wt.eu>
- <ed5d4d2a-0f8f-f202-8c4f-9fc3d4307e97@gmail.com>
+        Tue, 1 Sep 2020 08:07:52 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40160 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728043AbgIAL7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:59:22 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 48FDF56F8CD6021042EF;
+        Tue,  1 Sep 2020 19:59:21 +0800 (CST)
+Received: from huawei.com (10.175.104.175) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.487.0; Tue, 1 Sep 2020
+ 19:59:13 +0800
+From:   Miaohe Lin <linmiaohe@huawei.com>
+To:     <christian.brauner@ubuntu.com>, <oleg@redhat.com>,
+        <axboe@kernel.dk>, <ebiederm@xmission.com>,
+        <madhuparnabhowmik10@gmail.com>, <gustavoars@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>, <linmiaohe@huawei.com>
+Subject: [PATCH] signal: clean up codestyle
+Date:   Tue, 1 Sep 2020 07:58:00 -0400
+Message-ID: <20200901115800.7916-1-linmiaohe@huawei.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed5d4d2a-0f8f-f202-8c4f-9fc3d4307e97@gmail.com>
-User-Agent: Mutt/1.6.1 (2016-04-27)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.104.175]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+No functional change intended.
 
-On Tue, Sep 01, 2020 at 12:24:38PM +0200, Eric Dumazet wrote:
-> There is not much entropy here really :
-> 
-> 1) dev & txq are mostly constant on a typical host (at least the kind of hosts that is targeted by 
-> Amit Klein and others in their attacks.
-> 
-> 2) len is also known by the attacker, attacking an idle host.
-> 
-> 3) skb are also allocations from slab cache, which tend to recycle always the same pointers (on idle hosts)
-> 
-> 
-> 4) jiffies might be incremented every 4 ms (if HZ=250)
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+---
+ kernel/signal.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I know. The point is essentially that someone "remote" or with rare access
-to the host's memory (i.e. in a VM on the same CPU sharing L1 with some
-CPU vulnerabilities) cannot synchronize with the PRNG and easily stay
-synchronized forever. Otherwise I totally agree that these are pretty
-weak. But in my opinion they are sufficient to turn a 100% success into
-way less. I try not to forget that we're just trying to make a ~15-bit
-port require ~2^14 attempts on average. Oh and by the way the number of
-calls also counts here.
+diff --git a/kernel/signal.c b/kernel/signal.c
+index a38b3edc6851..10a31fafc35b 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -1115,8 +1115,8 @@ static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struc
+ 	q = __sigqueue_alloc(sig, t, GFP_ATOMIC, override_rlimit);
+ 	if (q) {
+ 		list_add_tail(&q->list, &pending->list);
+-		switch ((unsigned long) info) {
+-		case (unsigned long) SEND_SIG_NOINFO:
++		switch ((unsigned long)info) {
++		case (unsigned long)SEND_SIG_NOINFO:
+ 			clear_siginfo(&q->info);
+ 			q->info.si_signo = sig;
+ 			q->info.si_errno = 0;
+@@ -1129,7 +1129,7 @@ static int __send_signal(int sig, struct kernel_siginfo *info, struct task_struc
+ 						 current_uid());
+ 			rcu_read_unlock();
+ 			break;
+-		case (unsigned long) SEND_SIG_PRIV:
++		case (unsigned long)SEND_SIG_PRIV:
+ 			clear_siginfo(&q->info);
+ 			q->info.si_signo = sig;
+ 			q->info.si_errno = 0;
+@@ -1314,7 +1314,7 @@ force_sig_info_to_task(struct kernel_siginfo *info, struct task_struct *t)
+ 	int sig = info->si_signo;
+ 
+ 	spin_lock_irqsave(&t->sighand->siglock, flags);
+-	action = &t->sighand->action[sig-1];
++	action = &t->sighand->action[sig - 1];
+ 	ignored = action->sa.sa_handler == SIG_IGN;
+ 	blocked = sigismember(&t->blocked, sig);
+ 	if (blocked || ignored) {
+-- 
+2.19.1
 
-> Maybe we could feed percpu prandom noise with samples of ns resolution timestamps,
-> lazily cached from ktime_get() or similar functions.
->
-> This would use one instruction on x86 to update the cache, with maybe more generic noise.
-
-Sure! I think the principle here allows to easily extend it to various
-places, and the more the better. Maybe actually we'll figure that there
-are plenty of sources of randomness that were not considered secure enough
-to feed /dev/random while they're perfectly fine for such use cases.
-
-> diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
-> index 4c47f388a83f17860fdafa3229bba0cc605ec25a..a3e026cbbb6e8c5499ed780e57de5fa09bc010b6 100644
-> --- a/kernel/time/timekeeping.c
-> +++ b/kernel/time/timekeeping.c
-> @@ -751,7 +751,7 @@ ktime_t ktime_get(void)
->  {
->         struct timekeeper *tk = &tk_core.timekeeper;
->         unsigned int seq;
-> -       ktime_t base;
-> +       ktime_t res, base;
->         u64 nsecs;
->  
->         WARN_ON(timekeeping_suspended);
-> @@ -763,7 +763,9 @@ ktime_t ktime_get(void)
->  
->         } while (read_seqcount_retry(&tk_core.seq, seq));
->  
-> -       return ktime_add_ns(base, nsecs);
-> +       res = ktime_add_ns(base, nsecs);
-> +       __this_cpu_add(prandom_noise, (unsigned long)ktime_to_ns(res));
-> +       return res;
->  }
->  EXPORT_SYMBOL_GPL(ktime_get);
-
-Actually it could even be nice to combine it with __builtin_return_address(0)
-given the large number of callers this one has! But I generally agree with
-your proposal.
-
-Thanks,
-Willy
