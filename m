@@ -2,99 +2,218 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3941C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1E5C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCEC920767
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E638206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:53:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBqWWrSB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731548AbgIAPxN (ORCPT
+        id S1731853AbgIAPxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:53:13 -0400
-Received: from foss.arm.com ([217.140.110.172]:44482 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726283AbgIAPxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:53:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 760461045;
-        Tue,  1 Sep 2020 08:52:59 -0700 (PDT)
-Received: from [10.57.45.104] (unknown [10.57.45.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E26ED3F71F;
-        Tue,  1 Sep 2020 08:52:55 -0700 (PDT)
-Subject: Re: [PATCH RESEND v1 05/11] perf mem: Support AUX trace
-To:     Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Ian Rogers <irogers@google.com>,
-        Kemeng Shi <shikemeng@huawei.com>,
-        Wei Li <liwei391@huawei.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Al Grant <Al.Grant@arm.com>, linux-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Mike Leach <mike.leach@linaro.org>
-References: <20200806030727.30267-1-leo.yan@linaro.org>
- <20200806030727.30267-6-leo.yan@linaro.org>
-Cc:     nd <nd@arm.com>
-From:   James Clark <james.clark@arm.com>
-Message-ID: <7b0e61d3-3f28-0e98-9c82-b9a9573bf571@arm.com>
-Date:   Tue, 1 Sep 2020 16:52:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 1 Sep 2020 11:53:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728069AbgIAPxG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:53:06 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E135C061244;
+        Tue,  1 Sep 2020 08:53:05 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id m6so2129976wrn.0;
+        Tue, 01 Sep 2020 08:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BY4bXKc0xSgKW8hDeDD9u95KOuc3RBx/gc2Fu/W48eQ=;
+        b=TBqWWrSB1mvUqsytHINsQUCpaD6PqLh3UsHJMRUkGwH/66biENmlSfUhshtvyFx1Jl
+         Xm0W8v8iKkFOcdwlTL6nLnBqWo29CyX2TENRlw+7jc3NGK86XiruLidBhNmVttRUPs36
+         LfzPsLKO8sOVbxnG5K3VaHG3CgZEMEConRc7AIKSnvCz2lQI2jXmSmo47D3DH2EVKIe7
+         +716NNemet7lsA6Cel/JHnqqvzqRw7d6Q0bdmZn91FGsOYklnoY9Pd5xUlgENa1Qnr3l
+         Vr9BpGca6oaWmy2J9JHDdL7RKAd04P1S/x/kgTGyfh+1EOOPBVSqethI5oTYr8bLFwhE
+         x5mQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BY4bXKc0xSgKW8hDeDD9u95KOuc3RBx/gc2Fu/W48eQ=;
+        b=d3ULZkh+M833FFKHtexqLP2qO8fjVm0TM2DILjA7EGw4XLLl7TL+rTtgIwQ0fR6eqe
+         s3XP/4HhiO5SpB7KwoayWRPX6rX9RuND8FNHddCNG/U38+fkrnRVRhrIK7VZjISOuAbY
+         6RX8KJy1hfqypnwUQc85rQILwed7NLmHWe2RGZTXbXCDf14en50fh5gznf13t601mnsa
+         gVO37b0AnMTWJSGmFN20yPi9g+9GnH1OSsTlBAkmhwO97TlBPcS7Nh8nvLJkGfRMpTaO
+         4lxWWdJ/iK7J3vgNWUpGHdWgwAO+8XQCao/17JRqA1ph4qJQE4WuFLb7oJKpaLvf6agp
+         Be2A==
+X-Gm-Message-State: AOAM530qMYOzCJYnkZ4sQsMCf1/yo9buycPZU1LxsDzx9hADpgpQzM06
+        ncxq+B2a0yZU6ZgOilWFytqW/0lyeNTOBchgm3I=
+X-Google-Smtp-Source: ABdhPJzDoeC0Pb4kh7G7ViZBofzjFA7/roqtprdLHZ43CwlP1yJxepquJBwNWHIMnMPZtjY/Vti5ADETxrYodXZvEfo=
+X-Received: by 2002:adf:f382:: with SMTP id m2mr2458894wro.327.1598975584169;
+ Tue, 01 Sep 2020 08:53:04 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200806030727.30267-6-leo.yan@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200810222657.1841322-1-jcrouse@codeaurora.org>
+ <20200814024114.1177553-7-robdclark@gmail.com> <20200901043211.GN3715@yoga>
+In-Reply-To: <20200901043211.GN3715@yoga>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Tue, 1 Sep 2020 08:53:50 -0700
+Message-ID: <CAF6AEGthzRwUZby6XsToNpSbx0ad3hZWN2QM+qipR2zDDi-ySw@mail.gmail.com>
+Subject: Re: [PATCH 06/19] drm/msm/gpu: add dev_to_gpu() helper
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Will Deacon <will@kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Leo,
+On Mon, Aug 31, 2020 at 9:32 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> On Thu 13 Aug 21:41 CDT 2020, Rob Clark wrote:
+>
+> > From: Rob Clark <robdclark@chromium.org>
+> >
+> > In a later patch, the drvdata will not directly be 'struct msm_gpu *',
+> > so add a helper to reduce the churn.
+> >
+> > Signed-off-by: Rob Clark <robdclark@chromium.org>
+> > ---
+> >  drivers/gpu/drm/msm/adreno/adreno_device.c | 10 ++++------
+> >  drivers/gpu/drm/msm/msm_gpu.c              |  6 +++---
+> >  drivers/gpu/drm/msm/msm_gpu.h              |  5 +++++
+> >  3 files changed, 12 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_device.c b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> > index 9eeb46bf2a5d..26664e1b30c0 100644
+> > --- a/drivers/gpu/drm/msm/adreno/adreno_device.c
+> > +++ b/drivers/gpu/drm/msm/adreno/adreno_device.c
+> > @@ -282,7 +282,7 @@ struct msm_gpu *adreno_load_gpu(struct drm_device *dev)
+> >       int ret;
+> >
+> >       if (pdev)
+> > -             gpu = platform_get_drvdata(pdev);
+> > +             gpu = dev_to_gpu(&pdev->dev);
+> >
+> >       if (!gpu) {
+> >               dev_err_once(dev->dev, "no GPU device was found\n");
+> > @@ -425,7 +425,7 @@ static int adreno_bind(struct device *dev, struct device *master, void *data)
+> >  static void adreno_unbind(struct device *dev, struct device *master,
+> >               void *data)
+> >  {
+> > -     struct msm_gpu *gpu = dev_get_drvdata(dev);
+> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
+> >
+> >       pm_runtime_force_suspend(dev);
+> >       gpu->funcs->destroy(gpu);
+> > @@ -490,16 +490,14 @@ static const struct of_device_id dt_match[] = {
+> >  #ifdef CONFIG_PM
+> >  static int adreno_resume(struct device *dev)
+> >  {
+> > -     struct platform_device *pdev = to_platform_device(dev);
+> > -     struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
+> >
+> >       return gpu->funcs->pm_resume(gpu);
+> >  }
+> >
+> >  static int adreno_suspend(struct device *dev)
+> >  {
+> > -     struct platform_device *pdev = to_platform_device(dev);
+> > -     struct msm_gpu *gpu = platform_get_drvdata(pdev);
+> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
+> >
+> >       return gpu->funcs->pm_suspend(gpu);
+> >  }
+> > diff --git a/drivers/gpu/drm/msm/msm_gpu.c b/drivers/gpu/drm/msm/msm_gpu.c
+> > index d5645472b25d..6aa9e04e52e7 100644
+> > --- a/drivers/gpu/drm/msm/msm_gpu.c
+> > +++ b/drivers/gpu/drm/msm/msm_gpu.c
+> > @@ -24,7 +24,7 @@
+> >  static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+> >               u32 flags)
+> >  {
+> > -     struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
+> >       struct dev_pm_opp *opp;
+> >
+> >       opp = devfreq_recommended_opp(dev, freq, flags);
+> > @@ -45,7 +45,7 @@ static int msm_devfreq_target(struct device *dev, unsigned long *freq,
+> >  static int msm_devfreq_get_dev_status(struct device *dev,
+> >               struct devfreq_dev_status *status)
+> >  {
+> > -     struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
+> >       ktime_t time;
+> >
+> >       if (gpu->funcs->gpu_get_freq)
+> > @@ -64,7 +64,7 @@ static int msm_devfreq_get_dev_status(struct device *dev,
+> >
+> >  static int msm_devfreq_get_cur_freq(struct device *dev, unsigned long *freq)
+> >  {
+> > -     struct msm_gpu *gpu = platform_get_drvdata(to_platform_device(dev));
+> > +     struct msm_gpu *gpu = dev_to_gpu(dev);
+> >
+> >       if (gpu->funcs->gpu_get_freq)
+> >               *freq = gpu->funcs->gpu_get_freq(gpu);
+> > diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
+> > index 0db117a7339b..8bda7beaed4b 100644
+> > --- a/drivers/gpu/drm/msm/msm_gpu.h
+> > +++ b/drivers/gpu/drm/msm/msm_gpu.h
+> > @@ -141,6 +141,11 @@ struct msm_gpu {
+> >       struct msm_gpu_state *crashstate;
+> >  };
+> >
+> > +static inline struct msm_gpu *dev_to_gpu(struct device *dev)
+>
+> That's a fairly generic name for a driver-global helper :)
 
->  
-> +static int process_attr(struct perf_tool *tool __maybe_unused,
-> +			union perf_event *event,
-> +			struct evlist **pevlist)
-> +{
-> +	int err;
-> +
-> +	err = perf_event__process_attr(tool, event, pevlist);
-> +	if (err)
-> +		return err;
-> +
-> +	return 0;
-> +}
-> +
->  int cmd_mem(int argc, const char **argv)
->  {
->  	struct stat st;
-> @@ -405,8 +430,12 @@ int cmd_mem(int argc, const char **argv)
->  			.comm		= perf_event__process_comm,
->  			.lost		= perf_event__process_lost,
->  			.fork		= perf_event__process_fork,
-> +			.attr		= process_attr,
->  			.build_id	= perf_event__process_build_id,
+tbf, it is only global to the gpu part of the driver..
 
-I don't understand the __maybe_unused here. And also isn't this equivalent
-to this without the new function:
+thanks for the review
 
-  @@ -405,8 +430,12 @@ int cmd_mem(int argc, const char **argv)
-   			.comm		= perf_event__process_comm,
-   			.lost		= perf_event__process_lost,
-   			.fork		= perf_event__process_fork,
-  +			.attr		= perf_event__process_attr,
-   			.build_id	= perf_event__process_build_id,
+BR,
+-R
 
-
-James
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>
+> Regards,
+> Bjorn
+>
+> > +{
+> > +     return dev_get_drvdata(dev);
+> > +}
+> > +
+> >  /* It turns out that all targets use the same ringbuffer size */
+> >  #define MSM_GPU_RINGBUFFER_SZ SZ_32K
+> >  #define MSM_GPU_RINGBUFFER_BLKSIZE 32
+> > --
+> > 2.26.2
+> >
