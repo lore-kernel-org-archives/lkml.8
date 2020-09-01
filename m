@@ -2,274 +2,223 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90349C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D8D2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:47:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8682071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5DDA2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:47:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uNQ0tAP6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VgfAP3pD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728745AbgIAUhu (ORCPT
+        id S1727835AbgIAUrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:37:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbgIAUhs (ORCPT
+        Tue, 1 Sep 2020 16:47:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30505 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726091AbgIAUrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:37:48 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A91DFC061244;
-        Tue,  1 Sep 2020 13:37:47 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id y4so3179404ljk.8;
-        Tue, 01 Sep 2020 13:37:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vO5riVGJIq/jxWJeztPKNQ8H6lN7SjOM4tRFMoi/sX0=;
-        b=uNQ0tAP66OlqR1Ij2+/EidCAhIAvpJ7swbdTx5QaOQ+8eT0th69s6oHoZLtVrpVjxc
-         G5m4CeKKv35gSVjiHZGGuFWJS+/FDqd1XRQzEglajIhXxHUm0C9bY2sD/85y+bONhsbW
-         RGvyhnR47/xFQpbjW/NTOt1J40swIfB+igHf32cNdCD2oHjfKSS47nbaXByPrF4yIUQN
-         CAonnmfZTCePyoBJ+tKC1/Jms8qBzYr+SheYglWg6SRR8TP2YBU2XHmeIMQ184mBrldf
-         o8gRz2CzwBM4M/F1cqZFLcr5bd/GNE0QlScob7eai/5cUdykTHZ2bGgZKsgKkwXBfXeT
-         jXRw==
+        Tue, 1 Sep 2020 16:47:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1598993236;
+        h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gPCf4u3EyicebY387YkKs2a22jsTBC/ti3P+b5RanuE=;
+        b=VgfAP3pD8ejcYr5qwAoRNMw1AUI9f6/59y3t7rT1qLdyvY1zdzZZORsvhIlxN+OfDbX6dB
+        6+bgUe+H8UZ11cYbOKmIkUjmlmo1H68ycKdghSe9wnhPT/jeduf+2soUBzCathYwSa3Vuf
+        inX1R4jSHzsuMLL5QgsWvItEKcSmGo0=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-2-uSSx6X9TOK-nt5cTa82i-g-1; Tue, 01 Sep 2020 16:43:58 -0400
+X-MC-Unique: uSSx6X9TOK-nt5cTa82i-g-1
+Received: by mail-qv1-f69.google.com with SMTP id l18so1886493qvq.16
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 13:43:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:message-id:subject:from:reply-to:to:cc:date
+         :in-reply-to:references:organization:user-agent:mime-version
          :content-transfer-encoding;
-        bh=vO5riVGJIq/jxWJeztPKNQ8H6lN7SjOM4tRFMoi/sX0=;
-        b=SWEk97EQSvk4iyzeyE11KS/Zlp3vSaupW/nCYJCzBlGbg/EjmEtf8A/NLr8g/WV1J2
-         WvglQxA2aDYDZsz3vEU2jxv81LkutC5KsIrFqRRvbQ4vpgUvvKqFHh2dY+bxqCEFpDD1
-         xl+KgBPVKg2L0Ua/njUsjULfMc+93ZJlbwh8pyWrn9kivQwiEGrDZjdAy7BXeYCgucnl
-         voOpkrdQta/V4rRjPUkbbM+7TPn5O5bHkLSMXOvjXegBdY2IR8HFO7XG0Gvzeto4l/T/
-         i0UiKp1Wb18/AJYkraZj5027GBJ0ZzYMKI0WE+U2kZ5Vw+pwxEhWDNAJawkT2/vJpQoR
-         Egyw==
-X-Gm-Message-State: AOAM532VTm9ZzSxhQMQXOStUmO4iwyHOw/jq8EbWqoMXxXObbAg2ioS0
-        ZG4Op8n5gI3c4q9460tgZd0=
-X-Google-Smtp-Source: ABdhPJw2c3CxKYGo5eYERK/6aLmsizaDqVjFuUsaVzNVwLQF8SYg4XRTbJB4FUSfPEHROcnB+Yin1A==
-X-Received: by 2002:a2e:9bc2:: with SMTP id w2mr1379211ljj.236.1598992666106;
-        Tue, 01 Sep 2020 13:37:46 -0700 (PDT)
-Received: from localhost.localdomain (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.gmail.com with ESMTPSA id z7sm520164lfc.59.2020.09.01.13.37.45
+        bh=gPCf4u3EyicebY387YkKs2a22jsTBC/ti3P+b5RanuE=;
+        b=k/nrWQW8xit+XiNQ6jlXzDB7QOb3IJFOwde8utkGTdwcoEbSf8rolK54bDtHpt4V6J
+         hmJ11g+VdkodeHIQZ3l0kjrLDZX58FLc2jzlWABfDiS/rJDK5XvIS4yS4xSZEs4tVnSL
+         zaLrMHhoFw1cGNT96k3aOVCX+3xtHSacyQ47CMKRsQogefVrG93tYZ5CUoRYofXLfNAG
+         7Q+/NS1wdSgHJRPXIGvYR/u57Lo5eFvoPQXVnR/Jm9VE03Q3QhAbpoKyPwJuxI/BCZ4B
+         gGybs/lyzCVepTzu6N4ceLlyrGZ+BHlIH87wvZ2qI4eFXVBvXt1RIVIE58086dDywopH
+         aj0Q==
+X-Gm-Message-State: AOAM533uzuskGy/axA8LcEN3l5YnnLbR5S8vmQdYH87shDn3FYBJh4XY
+        sC2tzi1LknflKfCrzCSHEaWR1wdsVXeihHQoRR3QjNu4gV6W5BI9cBUGoOxQBWTBdsBJ7ttRwwO
+        oMMLt+sE2nfBDT+VygZGYJcq1
+X-Received: by 2002:a0c:b2d4:: with SMTP id d20mr3919067qvf.1.1598993038179;
+        Tue, 01 Sep 2020 13:43:58 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxMmHa3fHP8NY/dodaToFLVXTDFVn0f07O4xVQ5hfDgEZxkOry+RenIOt4w6jJJl7+Ml1CEdA==
+X-Received: by 2002:a0c:b2d4:: with SMTP id d20mr3919050qvf.1.1598993037914;
+        Tue, 01 Sep 2020 13:43:57 -0700 (PDT)
+Received: from Whitewolf.lyude.net (pool-108-49-102-102.bstnma.fios.verizon.net. [108.49.102.102])
+        by smtp.gmail.com with ESMTPSA id g37sm2892530qtk.76.2020.09.01.13.43.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Sep 2020 13:37:45 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Krishna Reddy <vdumpa@nvidia.com>
-Cc:     iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5] iommu/tegra-smmu: Add locking around mapping operations
-Date:   Tue,  1 Sep 2020 23:37:30 +0300
-Message-Id: <20200901203730.27865-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 01 Sep 2020 13:43:57 -0700 (PDT)
+Message-ID: <c099dc05ff80ea43033c72a52de51165d9b0f6ab.camel@redhat.com>
+Subject: Re: [Nouveau] [PATCH 1/2] drm/nouveau/kms/nv50-: Program notifier
+ offset before requesting disp caps
+From:   Lyude Paul <lyude@redhat.com>
+Reply-To: lyude@redhat.com
+To:     Ben Skeggs <skeggsb@gmail.com>
+Cc:     ML nouveau <nouveau@lists.freedesktop.org>,
+        Sasha Levin <sashal@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR NVIDIA GEFORCE/QUADRO GPUS" 
+        <dri-devel@lists.freedesktop.org>, Ben Skeggs <bskeggs@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>, stable@vger.kernel.org
+Date:   Tue, 01 Sep 2020 16:43:56 -0400
+In-Reply-To: <CACAvsv6GKeX=u4Jn0VVJk1qgnPcnPCW6exukqjvfrfmm2mwSUg@mail.gmail.com>
+References: <20200824183253.826343-1-lyude@redhat.com>
+         <20200824183253.826343-2-lyude@redhat.com>
+         <CACAvsv6hymdcGkEcigL3fWACZ_1POpB+aefq9d9ChnYv_dHnVg@mail.gmail.com>
+         <76392bff28359a88fbdf0857f011e0ed9f666dc4.camel@redhat.com>
+         <CACAvsv6GKeX=u4Jn0VVJk1qgnPcnPCW6exukqjvfrfmm2mwSUg@mail.gmail.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.5 (3.36.5-1.fc32) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mapping operations of the Tegra SMMU driver are subjected to a race
-condition issues because SMMU Address Space isn't allocated and freed
-atomically, while it should be. This patch makes the mapping operations
-atomic, it fixes an accidentally released Host1x Address Space problem
-which happens while running multiple graphics tests in parallel on
-Tegra30, i.e. by having multiple threads racing with each other in the
-Host1x's submission and completion code paths, performing IOVA mappings
-and unmappings in parallel.
+On Mon, 2020-08-31 at 14:26 +1000, Ben Skeggs wrote:
+> On Wed, 26 Aug 2020 at 02:52, Lyude Paul <lyude@redhat.com> wrote:
+> > On Tue, 2020-08-25 at 08:28 +1000, Ben Skeggs wrote:
+> > > On Tue, 25 Aug 2020 at 04:33, Lyude Paul <lyude@redhat.com> wrote:
+> > > > Not entirely sure why this never came up when I originally tested this
+> > > > (maybe some BIOSes already have this setup?) but the ->caps_init vfunc
+> > > > appears to cause the display engine to throw an exception on driver
+> > > > init, at least on my ThinkPad P72:
+> > > > 
+> > > > nouveau 0000:01:00.0: disp: chid 0 mthd 008c data 00000000 0000508c
+> > > > 0000102b
+> > > > 
+> > > > This is magic nvidia speak for "You need to have the DMA notifier offset
+> > > > programmed before you can call NV507D_GET_CAPABILITIES." So, let's fix
+> > > > this by doing that, and also perform an update afterwards to prevent
+> > > > racing with the GPU when reading capabilities.
+> > > > 
+> > > > Changes since v1:
+> > > > * Don't just program the DMA notifier offset, make sure to actually
+> > > >   perform an update
+> > > I'm not sure there's a need to send an Update() method here, I believe
+> > > GetCapabilities() is an action method on its own right?
+> > > 
+> > 
+> > I'm not entirely sure about this part tbh. I do know that we need to call
+> > GetCapabilities() _after_ the DMA notifier offset is programmed. But, my
+> > assumption was that if GetCapabilities() requires a DMA notifier offset to
+> > store
+> > its results in, we'd probably want to fire an update or something to make
+> > sure
+> > that we're not reading before it finishes writing capabilities?
+> We definitely want to *wait* on GetCapabilities() finishing, I believe
+> it should also update the notifier the same (or similar) way Update()
+> does.  But I don't think we want to send an Update() here, it'll
+> actually trigger a modeset (which, on earlier HW, will tear down the
+> boot mode.  Not sure about current HW, it might preserve state), and
+> we may not want that to happen there.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
+I'm not so sure about that, as it seems like the notifier times out without the
+update:
 
-Changelog:
+[    5.142033] nouveau 0000:1f:00.0: DRM: [DRM/00000000:kmsChanPush] 00000000: 00040088 mthd 0x0088 size 1 - core507d_init
+[    5.142037] nouveau 0000:1f:00.0: DRM: [DRM/00000000:kmsChanPush] 00000004: f0000000-> NV507D_SET_CONTEXT_DMA_NOTIFIER
+[    5.142041] nouveau 0000:1f:00.0: DRM: [DRM/00000000:kmsChanPush] 00000008: 00040084 mthd 0x0084 size 1 - core507d_caps_init
+[    5.142044] nouveau 0000:1f:00.0: DRM: [DRM/00000000:kmsChanPush] 0000000c: 80000000-> NV507D_SET_NOTIFIER_CONTROL
+[    5.142047] nouveau 0000:1f:00.0: DRM: [DRM/00000000:kmsChanPush] 00000010: 0004008c mthd 0x008c size 1 - core507d_caps_init
+[    5.142050] nouveau 0000:1f:00.0: DRM: [DRM/00000000:kmsChanPush] 00000014: 00000000-> NV507D_GET_CAPABILITIES
+[    7.142026] nouveau 0000:1f:00.0: DRM: core notifier timeout
+[    7.142700] nouveau 0000:1f:00.0: DRM: sor-0002-0fc1 caps: dp_interlace=0
+[    7.142708] nouveau 0000:1f:00.0: DRM: sor-0002-0fc4 caps: dp_interlace=0
+[    7.142715] nouveau 0000:1f:00.0: DRM: sor-0002-0f42 caps: dp_interlace=0
+[    7.142829] nouveau 0000:1f:00.0: DRM: sor-0006-0f82 caps: dp_interlace=0
+[    7.142842] nouveau 0000:1f:00.0: DRM: sor-0002-0f82 caps: dp_interlace=0
+[    7.142849] nouveau 0000:1f:00.0: DRM: failed to create encoder 1/8/0: -19
+[    7.142851] nouveau 0000:1f:00.0: DRM: Virtual-1 has no encoders, removing
 
-v5: - Replaced GFP_NOWAIT check with __GFP_ATOMIC to fix "sleep in
-      atomic context" warnings, NOWAIT != ATOMIC.
+Any other alternatives to UPDATE we might want to try?
 
-v4: - Returned to use spinlock, but now using a smarter allocation
-      logic that performs allocation in a sleeping context whenever
-      possible.
-
-    - Removed the stable tag because patch isn't portable as-is
-      since the arguments of map/unmap() callbacks changed recently.
-      Perhaps we could just ignore older kernels for now. It will be
-      possible to fix older kernels with a custom patch if will be needed.
-
-v3: - No changes. Resending for visibility.
-
- drivers/iommu/tegra-smmu.c | 95 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 84 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
-index 124c8848ab7e..4853a2f8dc7b 100644
---- a/drivers/iommu/tegra-smmu.c
-+++ b/drivers/iommu/tegra-smmu.c
-@@ -12,6 +12,7 @@
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
-+#include <linux/spinlock.h>
- #include <linux/dma-mapping.h>
- 
- #include <soc/tegra/ahb.h>
-@@ -49,6 +50,7 @@ struct tegra_smmu_as {
- 	struct iommu_domain domain;
- 	struct tegra_smmu *smmu;
- 	unsigned int use_count;
-+	spinlock_t lock;
- 	u32 *count;
- 	struct page **pts;
- 	struct page *pd;
-@@ -308,6 +310,8 @@ static struct iommu_domain *tegra_smmu_domain_alloc(unsigned type)
- 		return NULL;
- 	}
- 
-+	spin_lock_init(&as->lock);
-+
- 	/* setup aperture */
- 	as->domain.geometry.aperture_start = 0;
- 	as->domain.geometry.aperture_end = 0xffffffff;
-@@ -569,19 +573,14 @@ static u32 *tegra_smmu_pte_lookup(struct tegra_smmu_as *as, unsigned long iova,
- }
- 
- static u32 *as_get_pte(struct tegra_smmu_as *as, dma_addr_t iova,
--		       dma_addr_t *dmap)
-+		       dma_addr_t *dmap, struct page *page)
- {
- 	unsigned int pde = iova_pd_index(iova);
- 	struct tegra_smmu *smmu = as->smmu;
- 
- 	if (!as->pts[pde]) {
--		struct page *page;
- 		dma_addr_t dma;
- 
--		page = alloc_page(GFP_KERNEL | __GFP_DMA | __GFP_ZERO);
--		if (!page)
--			return NULL;
--
- 		dma = dma_map_page(smmu->dev, page, 0, SMMU_SIZE_PT,
- 				   DMA_TO_DEVICE);
- 		if (dma_mapping_error(smmu->dev, dma)) {
-@@ -655,15 +654,61 @@ static void tegra_smmu_set_pte(struct tegra_smmu_as *as, unsigned long iova,
- 	smmu_flush(smmu);
- }
- 
--static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
--			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
-+static struct page *as_get_pde_page(struct tegra_smmu_as *as,
-+				    unsigned long iova, gfp_t gfp,
-+				    unsigned long *flags)
-+{
-+	unsigned int pde = iova_pd_index(iova);
-+	struct page *page = as->pts[pde];
-+
-+	/* at first check whether allocation needs to be done at all */
-+	if (page)
-+		return page;
-+
-+	/*
-+	 * In order to prevent exhaustion of the atomic memory pool, we
-+	 * allocate page in a sleeping context if GFP flags permit. Hence
-+	 * spinlock needs to be unlocked and re-locked after allocation.
-+	 */
-+	if (!(gfp & __GFP_ATOMIC))
-+		spin_unlock_irqrestore(&as->lock, *flags);
-+
-+	page = alloc_page(gfp | __GFP_DMA | __GFP_ZERO);
-+
-+	if (!(gfp & __GFP_ATOMIC))
-+		spin_lock_irqsave(&as->lock, *flags);
-+
-+	/*
-+	 * In a case of blocking allocation, a concurrent mapping may win
-+	 * the PDE allocation. In this case the allocated page isn't needed
-+	 * if allocation succeeded and the allocation failure isn't fatal.
-+	 */
-+	if (as->pts[pde]) {
-+		if (page)
-+			__free_page(page);
-+
-+		page = as->pts[pde];
-+	}
-+
-+	return page;
-+}
-+
-+static int
-+__tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
-+		 phys_addr_t paddr, size_t size, int prot, gfp_t gfp,
-+		 unsigned long *flags)
- {
- 	struct tegra_smmu_as *as = to_smmu_as(domain);
- 	dma_addr_t pte_dma;
-+	struct page *page;
- 	u32 pte_attrs;
- 	u32 *pte;
- 
--	pte = as_get_pte(as, iova, &pte_dma);
-+	page = as_get_pde_page(as, iova, gfp, flags);
-+	if (!page)
-+		return -ENOMEM;
-+
-+	pte = as_get_pte(as, iova, &pte_dma, page);
- 	if (!pte)
- 		return -ENOMEM;
- 
-@@ -685,8 +730,9 @@ static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
- 	return 0;
- }
- 
--static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
--			       size_t size, struct iommu_iotlb_gather *gather)
-+static size_t
-+__tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-+		   size_t size, struct iommu_iotlb_gather *gather)
- {
- 	struct tegra_smmu_as *as = to_smmu_as(domain);
- 	dma_addr_t pte_dma;
-@@ -702,6 +748,33 @@ static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
- 	return size;
- }
- 
-+static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
-+			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
-+{
-+	struct tegra_smmu_as *as = to_smmu_as(domain);
-+	unsigned long flags;
-+	int ret;
-+
-+	spin_lock_irqsave(&as->lock, flags);
-+	ret = __tegra_smmu_map(domain, iova, paddr, size, prot, gfp, &flags);
-+	spin_unlock_irqrestore(&as->lock, flags);
-+
-+	return ret;
-+}
-+
-+static size_t tegra_smmu_unmap(struct iommu_domain *domain, unsigned long iova,
-+			       size_t size, struct iommu_iotlb_gather *gather)
-+{
-+	struct tegra_smmu_as *as = to_smmu_as(domain);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&as->lock, flags);
-+	size = __tegra_smmu_unmap(domain, iova, size, gather);
-+	spin_unlock_irqrestore(&as->lock, flags);
-+
-+	return size;
-+}
-+
- static phys_addr_t tegra_smmu_iova_to_phys(struct iommu_domain *domain,
- 					   dma_addr_t iova)
- {
+> 
+> Ben.
+> 
+> > > Ben.
+> > > 
+> > > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > > Fixes: 4a2cb4181b07 ("drm/nouveau/kms/nv50-: Probe SOR and PIOR caps for
+> > > > DP
+> > > > interlacing support")
+> > > > Cc: <stable@vger.kernel.org> # v5.8+
+> > > > ---
+> > > >  drivers/gpu/drm/nouveau/dispnv50/core507d.c | 25 ++++++++++++++++-----
+> > > >  1 file changed, 19 insertions(+), 6 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > > b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > > index e341f572c2696..5e86feec3b720 100644
+> > > > --- a/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > > +++ b/drivers/gpu/drm/nouveau/dispnv50/core507d.c
+> > > > @@ -65,13 +65,26 @@ core507d_ntfy_init(struct nouveau_bo *bo, u32
+> > > > offset)
+> > > >  int
+> > > >  core507d_caps_init(struct nouveau_drm *drm, struct nv50_disp *disp)
+> > > >  {
+> > > > -       u32 *push = evo_wait(&disp->core->chan, 2);
+> > > > +       struct nv50_core *core = disp->core;
+> > > > +       u32 interlock[NV50_DISP_INTERLOCK__SIZE] = {0};
+> > > > +       u32 *push;
+> > > > 
+> > > > -       if (push) {
+> > > > -               evo_mthd(push, 0x008c, 1);
+> > > > -               evo_data(push, 0x0);
+> > > > -               evo_kick(push, &disp->core->chan);
+> > > > -       }
+> > > > +       core->func->ntfy_init(disp->sync, NV50_DISP_CORE_NTFY);
+> > > > +
+> > > > +       push = evo_wait(&core->chan, 4);
+> > > > +       if (!push)
+> > > > +               return 0;
+> > > > +
+> > > > +       evo_mthd(push, 0x0084, 1);
+> > > > +       evo_data(push, 0x80000000 | NV50_DISP_CORE_NTFY);
+> > > > +       evo_mthd(push, 0x008c, 1);
+> > > > +       evo_data(push, 0x0);
+> > > > +       evo_kick(push, &core->chan);
+> > > > +
+> > > > +       core->func->update(core, interlock, false);
+> > > > +       if (core->func->ntfy_wait_done(disp->sync, NV50_DISP_CORE_NTFY,
+> > > > +                                      core->chan.base.device))
+> > > > +               NV_ERROR(drm, "core notifier timeout\n");
+> > > > 
+> > > >         return 0;
+> > > >  }
+> > > > --
+> > > > 2.26.2
+> > > > 
+> > > > _______________________________________________
+> > > > Nouveau mailing list
+> > > > Nouveau@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/nouveau
+> > --
+> > Sincerely,
+> >       Lyude Paul (she/her)
+> >       Software Engineer at Red Hat
+> > 
 -- 
-2.27.0
+Sincerely,
+      Lyude Paul (she/her)
+      Software Engineer at Red Hat
 
