@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF34DC43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4704AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B31C021548
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0770720866
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974306;
-	bh=Ztwn8cFBu9gxC3ghYV7VyOXlbElTI34F3EuT/pfVdB0=;
+	s=default; t=1598974359;
+	bh=XLPcl2FH3swdl5UwvcCQtT2pdcZTolwEr4lc6czp6xU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L+EQdzN6ns5evWSVikVGLxCABbRD3C3ga5ubVK6CFx24fACUBU46LHLF97B7Ew+Dt
-	 TZx+zV2+KPYVSooxwXP6zzgk51e7V/M+e8HwTlbZvqdXxTdOJ2KGnJz3waiBzzTUhb
-	 sfzTe6hOqslmr58hN9NoTpuDvFgX+DTGpP48VvlQ=
+	b=i+RpraH1PTJrVoHFPdeDxtcwalA93jSPv0grHxaS37vLNm7WZX3fK7iK2LtUcamul
+	 mtlcc0iAzymdMc5uU5xbAnkfqxY0nSFwiZAhfxPxtcYlk7TuLyEQw0S37aPlSwqnci
+	 DT4NlpVp89IVfWXMLC8nMhkBBIVgBCXS3TN5dcVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730736AbgIAPbo (ORCPT
+        id S1731107AbgIAPca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57108 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:32:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730391AbgIAP2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:28:41 -0400
+        id S1730728AbgIAPbm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:31:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED0D82078B;
-        Tue,  1 Sep 2020 15:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A632E21582;
+        Tue,  1 Sep 2020 15:31:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974114;
-        bh=Ztwn8cFBu9gxC3ghYV7VyOXlbElTI34F3EuT/pfVdB0=;
+        s=default; t=1598974302;
+        bh=XLPcl2FH3swdl5UwvcCQtT2pdcZTolwEr4lc6czp6xU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l2qNl2YJ9iKMLKggagRFQLnxx7gw1DqECTIijUwS/NTQrpWfynC5An5MyxEIkTgJL
-         JpcPJY/yti74oQxI7UOlV3Jyd4o1E4ZuM3DVXMo9CC7pQikv1gYNPuq8vRb+kje6oP
-         c4IUFc4yO32d6nBx06BHmg/TSOCGswdU+Bh5KU5E=
+        b=Yyyn9j8rA+kcU+rNFqULO0W+ijb8Nttf6E1jeRt4eBzPMgOYwwiq7AFrQajq/QkSl
+         1AvzuR5EZkwpcazfexnej5Q7yMlUuLarsGWR+JDRYhfdq4CiF3gv2gxxLBu2ktzN5F
+         ZChcLt6qKhPl+wBIXX61d3Ya6Vq94r8bgUkBgGCk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        stable@vger.kernel.org, Antonio Borneo <antonio.borneo@st.com>,
+        Alain Volmat <alain.volmat@st.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/214] drm/nouveau: fix reference count leak in nv50_disp_atomic_commit
-Date:   Tue,  1 Sep 2020 17:08:49 +0200
-Message-Id: <20200901150955.330463212@linuxfoundation.org>
+Subject: [PATCH 5.4 122/214] spi: stm32h7: fix race condition at end of transfer
+Date:   Tue,  1 Sep 2020 17:10:02 +0200
+Message-Id: <20200901150958.829122069@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,37 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Antonio Borneo <antonio.borneo@st.com>
 
-[ Upstream commit a2cdf39536b0d21fb06113f5e16692513d7bcb9c ]
+[ Upstream commit 135dd873d3c76d812ae64c668adef3f2c59ed27f ]
 
-nv50_disp_atomic_commit() calls calls pm_runtime_get_sync and in turn
-increments the reference count. In case of failure, decrement the
-ref count before returning the error.
+The caller of stm32_spi_transfer_one(), spi_transfer_one_message(),
+is waiting for us to call spi_finalize_current_transfer() and will
+eventually schedule a new transfer, if available.
+We should guarantee that the spi controller is really available
+before calling spi_finalize_current_transfer().
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Move the call to spi_finalize_current_transfer() _after_ the call
+to stm32_spi_disable().
+
+Signed-off-by: Antonio Borneo <antonio.borneo@st.com>
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+Link: https://lore.kernel.org/r/1597043558-29668-2-git-send-email-alain.volmat@st.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/nouveau/dispnv50/disp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/spi/spi-stm32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/nouveau/dispnv50/disp.c b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-index d735ea7e2d886..419a02260bfa7 100644
---- a/drivers/gpu/drm/nouveau/dispnv50/disp.c
-+++ b/drivers/gpu/drm/nouveau/dispnv50/disp.c
-@@ -2032,8 +2032,10 @@ nv50_disp_atomic_commit(struct drm_device *dev,
- 	int ret, i;
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index dc6334f67e6ae..25b1348aaa549 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -967,8 +967,8 @@ static irqreturn_t stm32h7_spi_irq_thread(int irq, void *dev_id)
+ 	spin_unlock_irqrestore(&spi->lock, flags);
  
- 	ret = pm_runtime_get_sync(dev->dev);
--	if (ret < 0 && ret != -EACCES)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_autosuspend(dev->dev);
- 		return ret;
-+	}
+ 	if (end) {
+-		spi_finalize_current_transfer(master);
+ 		stm32h7_spi_disable(spi);
++		spi_finalize_current_transfer(master);
+ 	}
  
- 	ret = drm_atomic_helper_setup_commit(state, nonblock);
- 	if (ret)
+ 	return IRQ_HANDLED;
 -- 
 2.25.1
 
