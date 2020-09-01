@@ -2,258 +2,135 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1F9C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7DEFC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B9F34206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:09:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="V1P48uZb"
+	by mail.kernel.org (Postfix) with ESMTP id AE4CD2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 23:17:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599002229;
+	bh=dEzwxEuUgfYnGt8tTDL/A1NPb+fEcrJH6io3xPpZIAI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hGvNhsIjqSbtQoye+1zDOeF8c55gyGnMRtPjt1rD0rC1CZxKYJWvdaWBnNWsdd/WZ
+	 +2zICOkqIAoBPmt06GInDAhaLSqtwP8Ch4IF5fP3g8bJBygLGSfCjlNx5ip9yjZGHX
+	 CrUcQT7rX5DPISpYdhVD8Rsg8WPbF1gW/9oEbLfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726283AbgIAXJG (ORCPT
+        id S1726269AbgIAXRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 19:09:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40430 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726050AbgIAXJE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 19:09:04 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD63DC061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 16:09:03 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id v196so1059669pfc.1
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 16:09:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kMq/w6vV7PeRoQdrs+kqGwGVs1CDfnxBCE3p1wYoNVg=;
-        b=V1P48uZbQzTqRK+mHkaAuIuMizn7pXgH0aQWOkjFPyGXl0FHHPPknxf1TJwjrl40An
-         6M1J/QfWnfAYZDZSnYxdAuR7FHldln2iW7qMv8ew5h0PQWnuVes4lPXXFIjmDCh2yxqR
-         lg46NjvHsr3taqyEb1tFA79mR+PRSFVXcN1L8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kMq/w6vV7PeRoQdrs+kqGwGVs1CDfnxBCE3p1wYoNVg=;
-        b=cTA1iMpBTWL/KlPYYkoPXtS7UPu/31j6Mw5KxDJpusBy4wZ5aA1DktQx0VJdYxazjT
-         HobXiFLytNwrLN8riLn1uIf+Rpu0E/aNnHYnWAMlXTwNJwsyrEXS1jx2KaSXXSZ7n0XT
-         pUsu3St7ZJYoC3nbQDUyrfGYj0u2goOmVB0sZWL1OEoqYvIl4JcWV5mp1nm/D19Y7YQ2
-         Uptdbwrb2r5uQdiSxeBS2NLS3zWFGSXNu6aioWdSclhAVWyxI/WL7DHB+7AKllrCPyoD
-         lEINjIJ9M8VvGwju+/GUz+DBqTNjJahAPBgReYLCjpW86RT5ceXEWzFHY7SBxE7IHi3m
-         cUHA==
-X-Gm-Message-State: AOAM532FE7BX2ByiljoOjxy5ZpirMCobTqVjOhFCbX/B5oMeQ4iwX7i2
-        vKaNgcRyRPd94sh5KVXs/DHWMA==
-X-Google-Smtp-Source: ABdhPJxt0quW2fzHjIRO/84M9Hx0XGzH12Ij1GyHAC/aJYB1PPLmoWH6KgRNc/T1/8VYTolip3gO7A==
-X-Received: by 2002:a62:1888:: with SMTP id 130mr469749pfy.220.1599001743063;
-        Tue, 01 Sep 2020 16:09:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id d5sm2506802pjw.18.2020.09.01.16.09.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 16:09:02 -0700 (PDT)
-Date:   Tue, 1 Sep 2020 16:09:01 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sc7180: Add 'sustainable_power' for
- CPU thermal zones
-Message-ID: <20200901230901.GC3419728@google.com>
-References: <20200813113030.1.I89c33c4119eaffb986b1e8c1bc6f0e30267089cd@changeid>
- <20200901170745.GA3419728@google.com>
- <CAD=FV=Xv0FLtWWcQcRy7p2LPNdDtSjdarsvNHRHaLkWwABnwJw@mail.gmail.com>
- <20200901213319.GB3419728@google.com>
- <CAD=FV=XDjsg314RGV1e5jRA+qa3s9LQWN8zk-ARZAQEjNeH8Kw@mail.gmail.com>
+        Tue, 1 Sep 2020 19:17:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38346 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbgIAXRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 19:17:08 -0400
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E92202071B
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 23:17:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599002227;
+        bh=dEzwxEuUgfYnGt8tTDL/A1NPb+fEcrJH6io3xPpZIAI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ZYj8rqV3HROpw6CDvgMVd5hZg5rBDjH4RSJIo5SPOM7Ja7YqDakNre623J7KNMdv9
+         zpEb0CzMeczKHCD4/DAAOODJN5n6te/K7xaUjswZj03FpVUJmbOxdsGfuH5owN08yV
+         Y8JxqXzezZAiQVMZxYJlE3EINQVxw7bVxJS2ykFo=
+Received: by mail-ej1-f50.google.com with SMTP id a15so1346138ejf.11
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 16:17:06 -0700 (PDT)
+X-Gm-Message-State: AOAM530Azf3SPnzgFoNk7oLNiIP1uabZU3cGLNrE+8+YaTN5ZYlGJI7/
+        CXVbwm3bKM1cpTq6Fx6z+1Lhn8KmD4qKXoiGYQ==
+X-Google-Smtp-Source: ABdhPJxjGeMplEAO/cPVthJXCGCEi6FG3fNO07cenYqDxG9mxyLxAmv8N/2WWybtiLb8XagSSQ/Sw0SUTCoZ0nSCAFg=
+X-Received: by 2002:a17:906:119b:: with SMTP id n27mr3661770eja.124.1599002225526;
+ Tue, 01 Sep 2020 16:17:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XDjsg314RGV1e5jRA+qa3s9LQWN8zk-ARZAQEjNeH8Kw@mail.gmail.com>
+References: <20200826063316.23486-1-m.szyprowski@samsung.com>
+ <CGME20200826063534eucas1p2647f5e9679f79f568e184b092f743f8b@eucas1p2.samsung.com>
+ <20200826063316.23486-12-m.szyprowski@samsung.com> <30f20ad6-783b-89c3-17b5-30c6a2587d23@arm.com>
+In-Reply-To: <30f20ad6-783b-89c3-17b5-30c6a2587d23@arm.com>
+From:   Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Date:   Wed, 2 Sep 2020 07:16:54 +0800
+X-Gmail-Original-Message-ID: <CAAOTY_9BaFZbiGFYjat4vJ-_kEONXxfgcTRPd6aKoeKJ7xxBww@mail.gmail.com>
+Message-ID: <CAAOTY_9BaFZbiGFYjat4vJ-_kEONXxfgcTRPd6aKoeKJ7xxBww@mail.gmail.com>
+Subject: Re: [PATCH v9 11/32] drm: mediatek: use common helper for extracting
+ pages array
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        iommu@lists.linux-foundation.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Chun-Kuang Hu <chunkuang.hu@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 03:45:52PM -0700, Doug Anderson wrote:
-> Hi,
-> 
-> On Tue, Sep 1, 2020 at 2:33 PM Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
-> > Hi Doug,
-> >
-> > On Tue, Sep 01, 2020 at 01:19:10PM -0700, Doug Anderson wrote:
-> > > Hi,
-> > >
-> > > On Tue, Sep 1, 2020 at 10:07 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> > > >
-> > > > On Thu, Aug 13, 2020 at 11:30:33AM -0700, Matthias Kaehlcke wrote:
-> > > > > The 'sustainable_power' attribute provides an estimate of the sustained
-> > > > > power that can be dissipated at the desired control temperature. One
-> > > > > could argue that this value is not necessarily the same for all devices
-> > > > > with the same SoC, which may have different form factors or thermal
-> > > > > designs. However there are reasons to specify a (default) value at SoC
-> > > > > level for SC7180: most importantly, if no value is specified at all the
-> > > > > power_allocator thermal governor (aka 'IPA') estimates a value, using the
-> > > > > minimum power of all cooling devices of the zone, which can result in
-> > > > > overly aggressive thermal throttling. For most devices an approximate
-> > > > > conservative value should be more useful than the minimum guesstimate
-> > > > > of power_allocator. Devices that need a different value can overwrite
-> > > > > it in their <device>.dts. Also the thermal zones for SC7180 have a high
-> > > > > level of granularity (essentially one for each function block), which
-> > > > > makes it more likely that the default value just works for many devices.
-> > > > >
-> > > > > The values correspond to 1901 MHz for the big cores, and 1804 MHz for
-> > > > > the small cores. The values were determined by limiting the CPU
-> > > > > frequencies to different max values and launching a bunch of processes
-> > > > > that cause high CPU load ('while true; do true; done &' is simple and
-> > > > > does a good job). A frequency is deemed sustainable if the CPU
-> > > > > temperatures don't rise (consistently) above the second trip point
-> > > > > ('control temperature', 95 degC in this case). Once the highest
-> > > > > sustainable frequency is found, the sustainable power can be calculated
-> > > > > by multiplying the energy consumption per core at this frequency (which
-> > > > > can be found in /sys/kernel/debug/energy_model/) with the number of
-> > > > > cores that are specified as cooling devices.
-> > > > >
-> > > > > The sustainable frequencies were determined at room temperature
-> > > > > on a device without heat sink or other passive cooling elements.
-> > >
-> > > I'm curious: was this a bare board, or a device in a case?  Hrm, I'm
-> > > not sure which one would be worse at heat dissipation, but I would
-> > > imagine that being inside a plastic case might be worse?
-> >
-> > This was with a device in a plastic case.
-> >
-> > > > > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > > ---
-> > > > > If maintainers think 'sustainable_power' should be specified at
-> > > > > device level (with which I conceptually agree) I'm fine with
-> > > > > doing that, just seemed it could be useful to have a reasonable
-> > > > > 'default' at SoC level in this case.
-> > > >
-> > > > Any comments on this?
-> > >
-> > > I'm not massively familiar with this area of the code, but I guess I
-> > > shouldn't let that stop me from having an opinion!  :-P
-> > >
-> > > * I would agree that it seems highly unlikely that someone would put
-> > > one of these chips in a device that could only dissipate the heat from
-> > > the lowest OPP, so having some higher estimate definitely makes sense.
-> > >
-> > > * In terms of the numbers here, I believe that you're claiming that we
-> > > can dissipate 768 mW * 6 + 1202 mW * 2 = ~7 Watts of power.
-> >
-> > No, I'm claiming it's 768 mW + 1202 mW = ~2 W.
-> >
-> > SC7180 has a 6 thermal zones for the 6 little cores and 4 zones for the
-> > 2 big cores. Each of these thermal zones uses either all little or all big
-> > cores as cooling devices, hence the power sustainable power of the
-> > individual zones doesn't add up. 768 mW corresponds to 6x 128 mW (aka all
-> > little cores at 1.8 GHz), and 1202 mW to 2x 601 mW (both big cores at 1.9 GHz).
-> 
-> Ah!  Thanks for explaining.
-> 
-> 
-> > > My memory
-> > > of how much power we could dissipate in previous laptops I worked on
-> > > is a little fuzzy, but that doesn't seem insane for a passively-cooled
-> > > laptop.  However, I think someone could conceivably put this chip in a
-> > > smaller form factor.  In such a case, it seems like we'd want these
-> > > things to sum up to ~2000 (if it would ever make sense for someone to
-> > > put this chip in a phone) or ~4000 (if it would ever make sense for
-> > > someone to put this chip in a small tablet).
-> >
-> > See above, the sustainable power with this patch only adds up to ~2000.
-> > It is possible though that it would be lower in a smaller form factor
-> > device.
-> >
-> > I'd be ok with posting something lower for SC7180 (it would be a guess
-> > though) and use the specific numbers in the device specific DT.
-> 
-> Given the advice in the bindings it seems like 2W should be fine.
-> 
-> 
-> > > It seems possible that,
-> > > to achieve this, we might have to tweak the
-> > > "dynamic-power-coefficient".  I don't know how much thought was put
-> > > into those numbers, but the fact that the little cores have a super
-> > > round 100 for their dynamic-power-coefficient makes me feel like they
-> > > might have been more schwags than anything.  Rajendra maybe knows?
-> >
-> > Yeah, it's possible that that was just an approximation
-> >
-> > > * I'm curious about the fact that there are two numbers here: one for
-> > > littles and one for bigs.  If I had to guess I'd say that since all
-> > > the cores are in one package so the contributions kinda need to be
-> > > thought of together, right?  If we're sitting there thermally
-> > > throttled then we'd want to pick the best perf-per-watt for the
-> > > overall package.  This is why your patch says we can sustain the
-> > > little cores at max and the big cores get whatever is left over,
-> > > right?
-> >
-> > It's derived from how Qualcomm specified the thermal zones and cooling
-> > devices. Any ("cpu") zone is either cooled by (all) big cores or by (all)
-> > little cores, but not a mix of them. In my tests I also saw that the big
-> > cores seemed to have little impact on the little ones. The little cores
-> > are at max because even running at max frequency the temperature in the
-> > 'little zones' wouldn't come close to the trip point.
-> 
-> OK, crazy.  I suppose that this makes sense,especially without a
-> heatsink and over a short burst of time.  I'd imagine that with a
-> heatsink things might look different, but trying to model everything
-> is impossible and seems like what't there works OK until someone can
-> say why it doesn't.  :-)
+Robin Murphy <robin.murphy@arm.com> =E6=96=BC 2020=E5=B9=B49=E6=9C=882=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=882:55=E5=AF=AB=E9=81=93=EF=BC=9A
+>
+> On 2020-08-26 07:32, Marek Szyprowski wrote:
+> > Use common helper for converting a sg_table object into struct
+> > page pointer array.
+>
+> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+>
+> Side note: is mtk_drm_gem_prime_vmap() missing a call to
+> sg_free_table(sgt) before its kfree(sgt)?
 
-Exactly, they will likely look different, but since we want conservative
-numbers for the generic case it's ok/good to use numbers from a
-configuration without heatsink.
+Yes, we need another patch to fix that bug, But for this patch,
 
-And 1.9 GHz doesn't even seem horribly slow for a device with a heatsink.
-When we have such a device we can evaluate whether there are significant
-gains from tweaking the values for the big cores in the device specific DT.
+Acked-by: Chun-Kuang Hu <chunkuang.hu@kernel.org>
 
-> > > * Should we be leaving some room in here for the GPU?  ...or I guess
-> > > once we list it as a cooling device we'll have to decrease the amount
-> > > the CPUs can use?
+>
+> > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > ---
+> >   drivers/gpu/drm/mediatek/mtk_drm_gem.c | 9 ++-------
+> >   1 file changed, 2 insertions(+), 7 deletions(-)
 > >
-> > I don't know for sure, but judging from the CPU zones I wouldn't be
-> > surprised if the GPU was managed exclusively in the dedicated GPU
-> > thermal zones (I guess that's what 'gpuss0-thermal' and 'gpuss1-thermal'
-> > are). If that's not the case the values in the CPU zones can be
-> > adjusted when specific data is available.
-> 
-> Sounds good.
-> 
-> 
-> > > So I guess the tl; dr is:
-> > >
-> > > a) We should check "dynamic-power-coefficient" and possibly adjust.
+> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_gem.c b/drivers/gpu/drm/m=
+ediatek/mtk_drm_gem.c
+> > index 3654ec732029..0583e557ad37 100644
+> > --- a/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_gem.c
+> > @@ -233,9 +233,7 @@ void *mtk_drm_gem_prime_vmap(struct drm_gem_object =
+*obj)
+> >   {
+> >       struct mtk_drm_gem_obj *mtk_gem =3D to_mtk_gem_obj(obj);
+> >       struct sg_table *sgt;
+> > -     struct sg_page_iter iter;
+> >       unsigned int npages;
+> > -     unsigned int i =3D 0;
 > >
-> > ok, lets see if Rajendra can check if there is room for tweaking.
+> >       if (mtk_gem->kvaddr)
+> >               return mtk_gem->kvaddr;
+> > @@ -249,11 +247,8 @@ void *mtk_drm_gem_prime_vmap(struct drm_gem_object=
+ *obj)
+> >       if (!mtk_gem->pages)
+> >               goto out;
 > >
-> > > b) I don't think the "conservative" by-default numbers should add up
-> > > to 7 Watts.  I could be convinced that this chip is not intended for
-> > > phones and thus we could have it add up to 4 Watts, but 7 Watts seems
-> > > too much.
+> > -     for_each_sg_page(sgt->sgl, &iter, sgt->orig_nents, 0) {
+> > -             mtk_gem->pages[i++] =3D sg_page_iter_page(&iter);
+> > -             if (i > npages)
+> > -                     break;
+> > -     }
+> > +     drm_prime_sg_to_page_addr_arrays(sgt, mtk_gem->pages, NULL, npage=
+s);
+> > +
+> >       mtk_gem->kvaddr =3D vmap(mtk_gem->pages, npages, VM_MAP,
+> >                              pgprot_writecombine(PAGE_KERNEL));
 > >
-> > I suppose this is mostly addressed by my explications above, unless we
-> > think that 2 Watts in CPU power might still be too aggressive as a
-> > default.
-> 
-> With all your explanations, I'm happy to add:
-> 
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-Thanks!
+> >
