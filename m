@@ -2,55 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875D1C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D04C9C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5804A2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC4172087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980949;
-	bh=pEBxRSw3TqO7gZcYEZTN6mdPju5fZa/dT5DRrcxV4UQ=;
+	s=default; t=1598980983;
+	bh=iwp4jh51/E3gWoJfH52vilAywRZ+X4+JsCcBlPWWAU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AvDtLIILTY+apwRSMKHBt4HPsPtKwfutA4GLnf1w4e8ZK4BN/chtunecDu472VsJs
-	 f693IIwVDyquiVl0v+7sEYyweYQymcj5c7zlT5tRY7ipSzL+DisbSj4FBJ5CFvOBbM
-	 s/zaY6RZmGhet9PgQ3dgvgsthNEL8pZos5l4U6hg=
+	b=Q1HzSWwUJR0pRBY+P7ZNLzYvWtYAwjxIIOIKoraC42U37k9nmRKruccuIQtvBC+2w
+	 V+YSJjyKEEym52eMJZUuVZG6OjkibuRKTmAy7WMMZVbhh5ymX/GqR1jtB5YgBdo/ng
+	 +3y59fr4FcL4wRm2PlgAOebEhN2EBEbFsPY/TOiQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732707AbgIARW1 (ORCPT
+        id S1728661AbgIARW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:22:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54428 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:22:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728548AbgIAPMN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:12:13 -0400
+        id S1727855AbgIAPMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:12:03 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 666D0206FA;
-        Tue,  1 Sep 2020 15:12:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BAEE206FA;
+        Tue,  1 Sep 2020 15:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973132;
-        bh=pEBxRSw3TqO7gZcYEZTN6mdPju5fZa/dT5DRrcxV4UQ=;
+        s=default; t=1598973122;
+        bh=iwp4jh51/E3gWoJfH52vilAywRZ+X4+JsCcBlPWWAU4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RCnaAqf9WSwJDAqAuBd6vfW9Wk2q2LeVC93x2icdj215INImQd5fJEo85WL3uM3SV
-         xSIdQqThG58gU6pf3PhCXh8CnoWaZx4AvbRRpvQsdReaAh4wnaP2eDjeGBD/57ypid
-         c9RHFMFnQNBJ6mODxlxHpuk4GEpEUJenzRYSafC0=
+        b=wMmc93EXvJ2ODXfR47vgtfpKKnvYPx46FMyIg8TLTd60hdNs82Y1HOQGiewuxiB9B
+         xhAWjLat0EOVWCH6yLwMeeE7Gx9rWjkCQxwiyrjyoLKSgwOTgz0o0DR4mpe7rB/bdQ
+         3fo5uJiuYaZ1tPzDxbpN1pCiSxJ3Cg1qtGEj+duI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jon Maloy <jmaloy@redhat.com>,
-        Ying Xue <ying.xue@windriver.com>,
-        Richard Alpe <richard.alpe@ericsson.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+0e7181deafa7e0b79923@syzkaller.appspotmail.com
-Subject: [PATCH 4.4 02/62] tipc: fix uninit skb->data in tipc_nl_compat_dumpit()
-Date:   Tue,  1 Sep 2020 17:09:45 +0200
-Message-Id: <20200901150920.835668850@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 16/62] drm/amdgpu/display: fix ref count leak when pm_runtime_get_sync fails
+Date:   Tue,  1 Sep 2020 17:09:59 +0200
+Message-Id: <20200901150921.540588505@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
 References: <20200901150920.697676718@linuxfoundation.org>
@@ -63,67 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 47733f9daf4fe4f7e0eb9e273f21ad3a19130487 ]
+[ Upstream commit f79f94765f8c39db0b7dec1d335ab046aac03f20 ]
 
-__tipc_nl_compat_dumpit() has two callers, and it expects them to
-pass a valid nlmsghdr via arg->data. This header is artificial and
-crafted just for __tipc_nl_compat_dumpit().
+The call to pm_runtime_get_sync increments the counter even in case of
+failure, leading to incorrect ref count.
+In case of failure, decrement the ref count before returning.
 
-tipc_nl_compat_publ_dump() does so by putting a genlmsghdr as well
-as some nested attribute, TIPC_NLA_SOCK. But the other caller
-tipc_nl_compat_dumpit() does not, this leaves arg->data uninitialized
-on this call path.
-
-Fix this by just adding a similar nlmsghdr without any payload in
-tipc_nl_compat_dumpit().
-
-This bug exists since day 1, but the recent commit 6ea67769ff33
-("net: tipc: prepare attrs in __tipc_nl_compat_dumpit()") makes it
-easier to appear.
-
-Reported-and-tested-by: syzbot+0e7181deafa7e0b79923@syzkaller.appspotmail.com
-Fixes: d0796d1ef63d ("tipc: convert legacy nl bearer dump to nl compat")
-Cc: Jon Maloy <jmaloy@redhat.com>
-Cc: Ying Xue <ying.xue@windriver.com>
-Cc: Richard Alpe <richard.alpe@ericsson.com>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Acked-by: Ying Xue <ying.xue@windriver.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/tipc/netlink_compat.c |   12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c | 16 ++++++++++++----
+ 1 file changed, 12 insertions(+), 4 deletions(-)
 
---- a/net/tipc/netlink_compat.c
-+++ b/net/tipc/netlink_compat.c
-@@ -250,8 +250,9 @@ err_out:
- static int tipc_nl_compat_dumpit(struct tipc_nl_compat_cmd_dump *cmd,
- 				 struct tipc_nl_compat_msg *msg)
- {
--	int err;
-+	struct nlmsghdr *nlh;
- 	struct sk_buff *arg;
-+	int err;
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+index 1f0e6ede120c4..1b3fda2331bee 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_connectors.c
+@@ -734,8 +734,10 @@ amdgpu_connector_lvds_detect(struct drm_connector *connector, bool force)
  
- 	if (msg->req_type && (!msg->req_size ||
- 			      !TLV_CHECK_TYPE(msg->req, msg->req_type)))
-@@ -280,6 +281,15 @@ static int tipc_nl_compat_dumpit(struct
- 		return -ENOMEM;
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
  	}
  
-+	nlh = nlmsg_put(arg, 0, 0, tipc_genl_family.id, 0, NLM_F_MULTI);
-+	if (!nlh) {
-+		kfree_skb(arg);
-+		kfree_skb(msg->rep);
-+		msg->rep = NULL;
-+		return -EMSGSIZE;
-+	}
-+	nlmsg_end(arg, nlh);
-+
- 	err = __tipc_nl_compat_dumpit(cmd, msg, arg);
- 	if (err) {
- 		kfree_skb(msg->rep);
+ 	if (encoder) {
+@@ -863,8 +865,10 @@ amdgpu_connector_vga_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	encoder = amdgpu_connector_best_single_encoder(connector);
+@@ -986,8 +990,10 @@ amdgpu_connector_dvi_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+@@ -1360,8 +1366,10 @@ amdgpu_connector_dp_detect(struct drm_connector *connector, bool force)
+ 
+ 	if (!drm_kms_helper_is_poll_worker()) {
+ 		r = pm_runtime_get_sync(connector->dev->dev);
+-		if (r < 0)
++		if (r < 0) {
++			pm_runtime_put_autosuspend(connector->dev->dev);
+ 			return connector_status_disconnected;
++		}
+ 	}
+ 
+ 	if (!force && amdgpu_connector_check_hpd_status_unchanged(connector)) {
+-- 
+2.25.1
+
 
 
