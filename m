@@ -2,123 +2,85 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C354CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915C2C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D84F206EF
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7048C206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:29:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977780;
-	bh=GkwWLyrg0SY/P4gHh/wH7AUIehCk6uU61q5j3nQlCRI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P0ak/ZW0eoO3uN+oLgSoMqywEPm7piytx6BUUGmRM2Ev6WxE+9zO/SQNulPTiuyPM
-	 DfR5olJX5K15yzbj9wbcolq1Z/MdwM3T0gue4p8dK+ObOyLgPMroT9nn49blAaQseV
-	 xvenM8aHWcKkTHUkUiHOhcoPXtcTlGS+wGS202zM=
+	s=default; t=1598977783;
+	bh=bXz4Z+ByU7oLOWvqxgR/MMJbU7okBrsVzpWrJCsFcyk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=wd6R4cqjzZ8pUyRVZbHOj3MMqjCGTbxt17k4/dom0CP/C/NFlKNE/btJw5LBncId8
+	 S+LlZIPH0LBfMRTYxCcB2DeiJxuG+QKYRdPCF2bb6tIip6Xo3ZZg+4Oj2X4Qwq8f2v
+	 yY1Uv6cuzeX3uEUHTBgZujdX8Vr0TJgLngsd7Reo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbgIAQ3j (ORCPT
+        id S1732063AbgIAQ3m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35368 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:29:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730824AbgIAPb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730819AbgIAPb6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 1 Sep 2020 11:31:58 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from kozik-lap.mshome.net (unknown [194.230.155.106])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47518205F4;
-        Tue,  1 Sep 2020 15:31:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F80A20E65;
+        Tue,  1 Sep 2020 15:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1598974317;
-        bh=GkwWLyrg0SY/P4gHh/wH7AUIehCk6uU61q5j3nQlCRI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mW4rQcCtqGco4ohTiYHyyvw0mWA2LaywmUkRZrp4Un1kwsqOmiNkyU6Xm3CP2v0+l
-         sLgX7Ieu5aLKPxLVIBZ3kiJDvc9DeYuOxXjdaj7xaIZxAus+ium6OQRLbJaukjoNLv
-         bWLyC2m3I61jd/YdWSkas8ohItJH4+5pX/UTkFBw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 099/214] block: respect queue limit of max discard segment
-Date:   Tue,  1 Sep 2020 17:09:39 +0200
-Message-Id: <20200901150957.738121289@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        bh=bXz4Z+ByU7oLOWvqxgR/MMJbU7okBrsVzpWrJCsFcyk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rKajFz0q4YCyOZCMCE7m2QIBuiozPTmdTA+2K5aHi+owEMvuqVBp0B5msIX5bc0oK
+         UbNS0RPWU6SHmmGVD4SwdJ65jalKFts9UsRsQEKawEeF1FC/zPL49ALinycOnl9049
+         UMF+1AHLFAGf3yA9IAZCf4/dtkv7gSqFc8I5iYT0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 1/3] watchdog: cadence: Simplify with dev_err_probe()
+Date:   Tue,  1 Sep 2020 17:31:39 +0200
+Message-Id: <20200901153141.18960-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ming Lei <ming.lei@redhat.com>
+Common pattern of handling deferred probe can be simplified with
+dev_err_probe().  Less code and the error value gets printed.
 
-[ Upstream commit 943b40c832beb71115e38a1c4d99b640b5342738 ]
-
-When queue_max_discard_segments(q) is 1, blk_discard_mergable() will
-return false for discard request, then normal request merge is applied.
-However, only queue_max_segments() is checked, so max discard segment
-limit isn't respected.
-
-Check max discard segment limit in the request merge code for fixing
-the issue.
-
-Discard request failure of virtio_blk is fixed.
-
-Fixes: 69840466086d ("block: fix the DISCARD request merge")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Stefano Garzarella <sgarzare@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- block/blk-merge.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ drivers/watchdog/cadence_wdt.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/block/blk-merge.c b/block/blk-merge.c
-index 93cff719b0661..c874931bae6b5 100644
---- a/block/blk-merge.c
-+++ b/block/blk-merge.c
-@@ -553,10 +553,17 @@ int blk_rq_map_sg(struct request_queue *q, struct request *rq,
- }
- EXPORT_SYMBOL(blk_rq_map_sg);
+diff --git a/drivers/watchdog/cadence_wdt.c b/drivers/watchdog/cadence_wdt.c
+index 672b184da875..bc99e9164930 100644
+--- a/drivers/watchdog/cadence_wdt.c
++++ b/drivers/watchdog/cadence_wdt.c
+@@ -334,12 +334,9 @@ static int cdns_wdt_probe(struct platform_device *pdev)
+ 	watchdog_set_drvdata(cdns_wdt_device, wdt);
  
-+static inline unsigned int blk_rq_get_max_segments(struct request *rq)
-+{
-+	if (req_op(rq) == REQ_OP_DISCARD)
-+		return queue_max_discard_segments(rq->q);
-+	return queue_max_segments(rq->q);
-+}
-+
- static inline int ll_new_hw_segment(struct request *req, struct bio *bio,
- 		unsigned int nr_phys_segs)
- {
--	if (req->nr_phys_segments + nr_phys_segs > queue_max_segments(req->q))
-+	if (req->nr_phys_segments + nr_phys_segs > blk_rq_get_max_segments(req))
- 		goto no_merge;
+ 	wdt->clk = devm_clk_get(dev, NULL);
+-	if (IS_ERR(wdt->clk)) {
+-		ret = PTR_ERR(wdt->clk);
+-		if (ret != -EPROBE_DEFER)
+-			dev_err(dev, "input clock not found\n");
+-		return ret;
+-	}
++	if (IS_ERR(wdt->clk))
++		return dev_err_probe(dev, PTR_ERR(wdt->clk),
++				     "input clock not found\n");
  
- 	if (blk_integrity_merge_bio(req->q, req, bio) == false)
-@@ -640,7 +647,7 @@ static int ll_merge_requests_fn(struct request_queue *q, struct request *req,
- 		return 0;
- 
- 	total_phys_segments = req->nr_phys_segments + next->nr_phys_segments;
--	if (total_phys_segments > queue_max_segments(q))
-+	if (total_phys_segments > blk_rq_get_max_segments(req))
- 		return 0;
- 
- 	if (blk_integrity_merge_rq(q, req, next) == false)
+ 	ret = clk_prepare_enable(wdt->clk);
+ 	if (ret) {
 -- 
-2.25.1
-
-
+2.17.1
 
