@@ -5,48 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35264C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7FAC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E8835216C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2591F2168B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974549;
-	bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
+	s=default; t=1598974555;
+	bh=lMCz7shUEGYmhFpPBbA9bvISxtpCW3iyb3Uv1DC/0k0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B8wqMyZ6m4xups/3RdIJjM/7ZyR+5xP9sRb/rj+K34FFLninpObVR/yUakvrCLGMe
-	 8Rg/q6q/YQVllaXwolF2GHmxlKGYaQX4LT4Wr9uQqfe24yYGo1bMURwuUefHFFIQ/B
-	 JJy6pM7N2hGRa9L4DSY+qNoqL8JNOc/meq67EJRQ=
+	b=oqZV33xeCqPNHLE7Tw2c0RK6TmW9O06UQpqNTbfJ3NlzAlNVoLjr1AyXfnUa6GeKG
+	 uH1ASG906VR+2qR9h80jsfP4ryi3A/5LJdDtFc2fdSRfXjK3r/Pz0fFpbGlTXvL3PF
+	 AeHle1wlM2FyUeV4BIpPqV7sM2HUN4s2RvQ+5PRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731229AbgIAPfq (ORCPT
+        id S1731177AbgIAPfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:35:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39886 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:35:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgIAPen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:43 -0400
+        id S1728058AbgIAPeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:34:46 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B42A20866;
-        Tue,  1 Sep 2020 15:34:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16B7D21548;
+        Tue,  1 Sep 2020 15:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974483;
-        bh=onWtOnOe38uujL9+85ri15ureODnZNtdVZRCOwH2QR4=;
+        s=default; t=1598974485;
+        bh=lMCz7shUEGYmhFpPBbA9bvISxtpCW3iyb3Uv1DC/0k0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vF23FAoSqvCZnBbDo+FZbMGnRXGFlziVXOioVKOqphkZMNWgzjm748mRAj8tLZjRx
-         TnYBUxuHpgvDM7ZdL5NBwUYBH8/nHj0/T1PH/K+P9czWiQWf6U3JL1QXnLsJohTdSU
-         GtQRdXnMI4WaWu+cRdMMwudmOXoGSljxBTHxcOfE=
+        b=Qr9bBI6hHe4rxk4wEpt0pWr+WRdzb+dIWlBBPlZyktbquO2Kytl9KlsqQHCjM16Lp
+         +lnMtC6YmaoTjMTfnCdadfcwk7XciaMBkCSGCSItWvlZe4g11iEnJ79US66chW+iTP
+         iBWH1E8aHj36IPdwFvTRGf8+j+bWGJi+pcwFBmCI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH 5.4 163/214] serial: pl011: Dont leak amba_ports entry on driver register error
-Date:   Tue,  1 Sep 2020 17:10:43 +0200
-Message-Id: <20200901151000.785511843@linuxfoundation.org>
+        stable@vger.kernel.org, Holger Assmann <h.assmann@pengutronix.de>
+Subject: [PATCH 5.4 164/214] serial: stm32: avoid kernel warning on absence of optional IRQ
+Date:   Tue,  1 Sep 2020 17:10:44 +0200
+Message-Id: <20200901151000.835096270@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -59,52 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Holger Assmann <h.assmann@pengutronix.de>
 
-commit 89efbe70b27dd325d8a8c177743a26b885f7faec upstream.
+commit fdf16d78941b4f380753053d229955baddd00712 upstream.
 
-pl011_probe() calls pl011_setup_port() to reserve an amba_ports[] entry,
-then calls pl011_register_port() to register the uart driver with the
-tty layer.
+stm32_init_port() of the stm32-usart may trigger a warning in
+platform_get_irq() when the device tree specifies no wakeup interrupt.
 
-If registration of the uart driver fails, the amba_ports[] entry is not
-released.  If this happens 14 times (value of UART_NR macro), then all
-amba_ports[] entries will have been leaked and driver probing is no
-longer possible.  (To be fair, that can only happen if the DeviceTree
-doesn't contain alias IDs since they cause the same entry to be used for
-a given port.)   Fix it.
+The wakeup interrupt is usually a board-specific GPIO and the driver
+functions correctly in its absence. The mainline stm32mp151.dtsi does
+not specify it, so all mainline device trees trigger an unnecessary
+kernel warning. Use of platform_get_irq_optional() avoids this.
 
-Fixes: ef2889f7ffee ("serial: pl011: Move uart_register_driver call to device")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v3.15+
-Cc: Tushar Behera <tushar.behera@linaro.org>
-Link: https://lore.kernel.org/r/138f8c15afb2f184d8102583f8301575566064a6.1597316167.git.lukas@wunner.de
+Fixes: 2c58e56096dd ("serial: stm32: fix the get_irq error case")
+Signed-off-by: Holger Assmann <h.assmann@pengutronix.de>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200813152757.32751-1-h.assmann@pengutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/amba-pl011.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/tty/serial/stm32-usart.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2593,7 +2593,7 @@ static int pl011_setup_port(struct devic
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -937,7 +937,7 @@ static int stm32_init_port(struct stm32_
+ 	stm32_init_rs485(port, pdev);
  
- static int pl011_register_port(struct uart_amba_port *uap)
- {
--	int ret;
-+	int ret, i;
- 
- 	/* Ensure interrupts from this UART are masked and cleared */
- 	pl011_write(0, uap, REG_IMSC);
-@@ -2604,6 +2604,9 @@ static int pl011_register_port(struct ua
- 		if (ret < 0) {
- 			dev_err(uap->port.dev,
- 				"Failed to register AMBA-PL011 driver\n");
-+			for (i = 0; i < ARRAY_SIZE(amba_ports); i++)
-+				if (amba_ports[i] == uap)
-+					amba_ports[i] = NULL;
- 			return ret;
- 		}
+ 	if (stm32port->info->cfg.has_wakeup) {
+-		stm32port->wakeirq = platform_get_irq(pdev, 1);
++		stm32port->wakeirq = platform_get_irq_optional(pdev, 1);
+ 		if (stm32port->wakeirq <= 0 && stm32port->wakeirq != -ENXIO)
+ 			return stm32port->wakeirq ? : -ENODEV;
  	}
 
 
