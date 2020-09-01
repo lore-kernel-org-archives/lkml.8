@@ -5,51 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA38C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0922C433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38865206A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 839AF206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:04:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976236;
-	bh=hEcf91JbzgPXRuztevJtJxtp78NU32tVPVA7ZRUoHnU=;
+	s=default; t=1598976243;
+	bh=DTab96VhILBeUDIxYQXE9i5WqS67E0oy0oIj9su4RMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=orq2tXLZ87aRKY9JOJem35EdLbcT8jYsd26Svyfei6EQkqlGDAfY7YQ6eO6mbO04g
-	 sjqr4RInlrs71iOwYj96vAS67RwKR7Lc2fzAkxtzSffURyYt0WyCvF7bS23x+vTz0Q
-	 l5mhsKqfYTQ9w25m09YtfRQSMu8DEn9lt2r0zdOc=
+	b=jGIQMsD/McU6sO2Y9i3yGGd/gmVEdXNwwf/lb7qHwjxe4SlroMHHbwaIcmXGtxNUL
+	 KTGvz/6Lys9Jm/FPTmXsaKU/gClNMENFlWDzgBAM8glTu3AvMV/eireAu4IcDXOd5L
+	 OH5ULQ2OQsfa/dWrTXrN5VKNh2OJNVTvU/wCKfsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729718AbgIAQDv (ORCPT
+        id S1728444AbgIAPmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:03:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55588 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:42:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731565AbgIAPmf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:42:35 -0400
+        id S1731482AbgIAPj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:39:58 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 055E92064B;
-        Tue,  1 Sep 2020 15:42:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61B2821534;
+        Tue,  1 Sep 2020 15:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974954;
-        bh=hEcf91JbzgPXRuztevJtJxtp78NU32tVPVA7ZRUoHnU=;
+        s=default; t=1598974798;
+        bh=DTab96VhILBeUDIxYQXE9i5WqS67E0oy0oIj9su4RMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=REPgVan5/Q6Rt1Oq2idcuIrKb4w5nba6deQdQXHzhMO+s6skHdRD47/9OZ176YHQc
-         pvhthVi37NyLxw7wWFPFvyxWS5Qhm0rDPT+3Puw3eUEbfml6ARtPk4EWfxpTNuTNGK
-         z98qu/dpcu2oWVNxUhWoDgbH5o/u2e6We7D+muPw=
+        b=rAg4hh0KUFV0GKqbwupVo3xwYnMIksa6Y2XLH0Pm5ZteDf0ECqCtxB5wirasTFfyN
+         Atxhx7/dIKv4UEP2nJrVf8Kos5omWpPNOA1WnPgAlJLd1ZUVpDdZT36Q4ehrdZbndN
+         Y4DDwevYy+aEMIX7a+kB6ZBoPqXGZNXqRqG/i/k4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anthony Koo <Anthony.Koo@amd.com>,
-        Aric Cyr <Aric.Cyr@amd.com>,
-        Qingqing Zhuo <qingqing.zhuo@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 124/255] drm/amd/display: Fix LFC multiplier changing erratically
-Date:   Tue,  1 Sep 2020 17:09:40 +0200
-Message-Id: <20200901151006.670575737@linuxfoundation.org>
+Subject: [PATCH 5.8 095/255] nvme-fc: Fix wrong return value in __nvme_fc_init_request()
+Date:   Tue,  1 Sep 2020 17:09:11 +0200
+Message-Id: <20200901151005.276890097@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -62,88 +63,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anthony Koo <Anthony.Koo@amd.com>
+From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
 
-[ Upstream commit e4ed4dbbc8383d42a197da8fe7ca6434b0f14def ]
+[ Upstream commit f34448cd0dc697723fb5f4118f8431d9233b370d ]
 
-[Why]
-1. There is a calculation that is using frame_time_in_us instead of
-last_render_time_in_us to calculate whether choosing an LFC multiplier
-would cause the inserted frame duration to be outside of range.
+On an error exit path, a negative error code should be returned
+instead of a positive return value.
 
-2. We do not handle unsigned integer subtraction correctly and it underflows
-to a really large value, which causes some logic errors.
-
-[How]
-1. Fix logic to calculate 'within range' using last_render_time_in_us
-2. Split out delta_from_mid_point_delta_in_us calculation to ensure
-we don't underflow and wrap around
-
-Signed-off-by: Anthony Koo <Anthony.Koo@amd.com>
-Reviewed-by: Aric Cyr <Aric.Cyr@amd.com>
-Acked-by: Qingqing Zhuo <qingqing.zhuo@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fixes: e399441de9115 ("nvme-fabrics: Add host support for FC transport")
+Cc: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../amd/display/modules/freesync/freesync.c   | 36 +++++++++++++++----
- 1 file changed, 29 insertions(+), 7 deletions(-)
+ drivers/nvme/host/fc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-index eb7421e83b865..23a7fa8447e24 100644
---- a/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-+++ b/drivers/gpu/drm/amd/display/modules/freesync/freesync.c
-@@ -324,22 +324,44 @@ static void apply_below_the_range(struct core_freesync *core_freesync,
+diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
+index 549f5b0fb0b4b..1a2b6910509ca 100644
+--- a/drivers/nvme/host/fc.c
++++ b/drivers/nvme/host/fc.c
+@@ -2076,7 +2076,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
+ 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.cmddma)) {
+ 		dev_err(ctrl->dev,
+ 			"FCP Op failed - cmdiu dma mapping failed.\n");
+-		ret = EFAULT;
++		ret = -EFAULT;
+ 		goto out_on_error;
+ 	}
  
- 		/* Choose number of frames to insert based on how close it
- 		 * can get to the mid point of the variable range.
-+		 *  - Delta for CEIL: delta_from_mid_point_in_us_1
-+		 *  - Delta for FLOOR: delta_from_mid_point_in_us_2
- 		 */
--		if ((frame_time_in_us / mid_point_frames_ceil) > in_out_vrr->min_duration_in_us &&
--				(delta_from_mid_point_in_us_1 < delta_from_mid_point_in_us_2 ||
--						mid_point_frames_floor < 2)) {
-+		if ((last_render_time_in_us / mid_point_frames_ceil) < in_out_vrr->min_duration_in_us) {
-+			/* Check for out of range.
-+			 * If using CEIL produces a value that is out of range,
-+			 * then we are forced to use FLOOR.
-+			 */
-+			frames_to_insert = mid_point_frames_floor;
-+		} else if (mid_point_frames_floor < 2) {
-+			/* Check if FLOOR would result in non-LFC. In this case
-+			 * choose to use CEIL
-+			 */
-+			frames_to_insert = mid_point_frames_ceil;
-+		} else if (delta_from_mid_point_in_us_1 < delta_from_mid_point_in_us_2) {
-+			/* If choosing CEIL results in a frame duration that is
-+			 * closer to the mid point of the range.
-+			 * Choose CEIL
-+			 */
- 			frames_to_insert = mid_point_frames_ceil;
--			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_2 -
--					delta_from_mid_point_in_us_1;
- 		} else {
-+			/* If choosing FLOOR results in a frame duration that is
-+			 * closer to the mid point of the range.
-+			 * Choose FLOOR
-+			 */
- 			frames_to_insert = mid_point_frames_floor;
--			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_1 -
--					delta_from_mid_point_in_us_2;
- 		}
+@@ -2086,7 +2086,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
+ 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.rspdma)) {
+ 		dev_err(ctrl->dev,
+ 			"FCP Op failed - rspiu dma mapping failed.\n");
+-		ret = EFAULT;
++		ret = -EFAULT;
+ 	}
  
- 		/* Prefer current frame multiplier when BTR is enabled unless it drifts
- 		 * too far from the midpoint
- 		 */
-+		if (delta_from_mid_point_in_us_1 < delta_from_mid_point_in_us_2) {
-+			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_2 -
-+					delta_from_mid_point_in_us_1;
-+		} else {
-+			delta_from_mid_point_delta_in_us = delta_from_mid_point_in_us_1 -
-+					delta_from_mid_point_in_us_2;
-+		}
- 		if (in_out_vrr->btr.frames_to_insert != 0 &&
- 				delta_from_mid_point_delta_in_us < BTR_DRIFT_MARGIN) {
- 			if (((last_render_time_in_us / in_out_vrr->btr.frames_to_insert) <
+ 	atomic_set(&op->state, FCPOP_STATE_IDLE);
 -- 
 2.25.1
 
