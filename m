@@ -2,104 +2,188 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA066C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:52:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46E9AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE022071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:52:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0741B2071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:52:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="QjoLyqfi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732761AbgIATwD (ORCPT
+        id S1732770AbgIATwg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:52:03 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:37225 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728711AbgIATwB (ORCPT
+        Tue, 1 Sep 2020 15:52:36 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:64352 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgIATwc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:52:01 -0400
-Received: (qmail 599608 invoked by uid 1000); 1 Sep 2020 15:51:59 -0400
-Date:   Tue, 1 Sep 2020 15:51:59 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Khalid Aziz <khalid.aziz@oracle.com>
-Cc:     gregkh@linuxfoundation.org, erkka.talvitie@vincit.fi,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC RESEND PATCH 0/1] USB EHCI: repeated resets on full and low
- speed devices
-Message-ID: <20200901195159.GA599114@rowland.harvard.edu>
-References: <cover.1598887346.git.khalid@gonehiking.org>
- <20200901023117.GD571008@rowland.harvard.edu>
- <608418fa-b0ce-c2a4-ad79-fe505c842587@oracle.com>
- <20200901163602.GG587030@rowland.harvard.edu>
- <4d1ab90a-ec55-85e8-d646-cfa58f08d449@oracle.com>
+        Tue, 1 Sep 2020 15:52:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1598989952; x=1630525952;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=fRZXTd6tTanOj6fuNvwe2B5pe+PpMShYr5x63b3HgOc=;
+  b=QjoLyqfigj9MgCFCO6pUsZrKkpDOddOYIavVBrh1w16MwlLHe/PeIWZP
+   2EZSxlwFuvXkZaw87uPaJw9aYMZVv7/uYPhMm1yLRYlwQO96KiMAJ3Tki
+   lgxCshHga0A9fHigpoH6DaeDVl0T2mhq4qZuyx4whTSCVfFGzYxuzHgxk
+   w=;
+X-IronPort-AV: E=Sophos;i="5.76,380,1592870400"; 
+   d="scan'208";a="64597815"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 01 Sep 2020 19:52:24 +0000
+Received: from EX13MTAUWC002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id AB9A0A1A05;
+        Tue,  1 Sep 2020 19:52:19 +0000 (UTC)
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13MTAUWC002.ant.amazon.com (10.43.162.240) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 1 Sep 2020 19:52:19 +0000
+Received: from freeip.amazon.com (10.43.161.34) by
+ EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 1 Sep 2020 19:52:15 +0000
+Subject: Re: [PATCH v4 2/3] KVM: x86: Introduce allow list for MSR emulation
+To:     Jim Mattson <jmattson@google.com>
+CC:     Paolo Bonzini <pbonzini@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        KarimAllah Raslan <karahmed@amazon.de>,
+        Aaron Lewis <aaronlewis@google.com>,
+        kvm list <kvm@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200803211423.29398-1-graf@amazon.com>
+ <20200803211423.29398-3-graf@amazon.com>
+ <CALMp9eS3Y845mPMD6H+5nmYDMvhPcDcFCWUXpLiscxo_9--EYQ@mail.gmail.com>
+From:   Alexander Graf <graf@amazon.com>
+Message-ID: <c69c5a53-04d4-a7f5-147f-209fe218eada@amazon.com>
+Date:   Tue, 1 Sep 2020 21:52:13 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.16; rv:78.0)
+ Gecko/20100101 Thunderbird/78.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d1ab90a-ec55-85e8-d646-cfa58f08d449@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CALMp9eS3Y845mPMD6H+5nmYDMvhPcDcFCWUXpLiscxo_9--EYQ@mail.gmail.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.161.34]
+X-ClientProxiedBy: EX13D07UWB004.ant.amazon.com (10.43.161.196) To
+ EX13D20UWC001.ant.amazon.com (10.43.162.244)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 11:00:16AM -0600, Khalid Aziz wrote:
-> On 9/1/20 10:36 AM, Alan Stern wrote:
-> > On Tue, Sep 01, 2020 at 09:15:46AM -0700, Khalid Aziz wrote:
-> >> On 8/31/20 8:31 PM, Alan Stern wrote:
-> >>> Can you collect a usbmon trace showing an example of this problem?
-> >>>
-> >>
-> >> I have attached usbmon traces for when USB hub with keyboards and mouse
-> >> is plugged into USB 2.0 port and when it is plugged into the NEC USB 3.0
-> >> port.
-> > 
-> > The usbmon traces show lots of errors, but no Clear-TT events.  The 
-> > large number of errors suggests that you've got a hardware problem; 
-> > either a bad hub or bad USB connections.
-> 
-> That is what I thought initially which is why I got additional hubs and
-> a USB 2.0 PCI card to test. I am seeing errors across 3 USB controllers,
-> 4 USB hubs and 4 slow/full speed devices. All of the hubs and slow/full
-> devices work with zero errors on my laptop. My keyboard/mouse devices
-> and 2 of my USB hubs predate motherboard update and they all worked
-> flawlessly before the motherboard upgrade. Some combinations of these
-> also works with no errors on my desktop with new motherboard that I had
-> listed in my original email:
+CgpPbiAyMC4wOC4yMCAwMDo0OSwgSmltIE1hdHRzb24gd3JvdGU6Cj4gCj4gT24gTW9uLCBBdWcg
+MywgMjAyMCBhdCAyOjE0IFBNIEFsZXhhbmRlciBHcmFmIDxncmFmQGFtYXpvbi5jb20+IHdyb3Rl
+Ogo+IAo+PiAtLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9rdm1faG9zdC5oCj4+ICsrKyBiL2Fy
+Y2gveDg2L2luY2x1ZGUvYXNtL2t2bV9ob3N0LmgKPj4gQEAgLTkwMSw2ICs5MDEsMTMgQEAgc3Ry
+dWN0IGt2bV9odiB7Cj4+ICAgICAgICAgIHN0cnVjdCBrdm1faHZfc3luZGJnIGh2X3N5bmRiZzsK
+Pj4gICB9Owo+Pgo+PiArc3RydWN0IG1zcl9iaXRtYXBfcmFuZ2Ugewo+PiArICAgICAgIHUzMiBm
+bGFnczsKPj4gKyAgICAgICB1MzIgbm1zcnM7Cj4+ICsgICAgICAgdTMyIGJhc2U7Cj4+ICsgICAg
+ICAgdW5zaWduZWQgbG9uZyAqYml0bWFwOwo+PiArfTsKPj4gKwo+PiAgIGVudW0ga3ZtX2lycWNo
+aXBfbW9kZSB7Cj4+ICAgICAgICAgIEtWTV9JUlFDSElQX05PTkUsCj4+ICAgICAgICAgIEtWTV9J
+UlFDSElQX0tFUk5FTCwgICAgICAgLyogY3JlYXRlZCB3aXRoIEtWTV9DUkVBVEVfSVJRQ0hJUCAq
+Lwo+PiBAQCAtMTAwNSw2ICsxMDEyLDkgQEAgc3RydWN0IGt2bV9hcmNoIHsKPj4gICAgICAgICAg
+LyogRGVmbGVjdCBSRE1TUiBhbmQgV1JNU1IgdG8gdXNlciBzcGFjZSB3aGVuIHRoZXkgdHJpZ2dl
+ciBhICNHUCAqLwo+PiAgICAgICAgICBib29sIHVzZXJfc3BhY2VfbXNyX2VuYWJsZWQ7Cj4+Cj4+
+ICsgICAgICAgc3RydWN0IG1zcl9iaXRtYXBfcmFuZ2UgbXNyX2FsbG93bGlzdF9yYW5nZXNbMTBd
+Owo+IAo+IFdoeSAxMD8gSSB0aGluayB0aGlzIGlzIHRoZSBvbmx5IHVzZSBvZiB0aGlzIGNvbnN0
+YW50LCBidXQgYSBtYWNybwo+IHdvdWxkIHN0aWxsIGJlIG5pY2UsIGVzcGVjaWFsbHkgc2luY2Ug
+dGhlIG51bWJlciBhcHBlYXJzIHRvIGJlCj4gYXJiaXRyYXJ5Lgo+IAo+PiBkaWZmIC0tZ2l0IGEv
+YXJjaC94ODYvaW5jbHVkZS91YXBpL2FzbS9rdm0uaCBiL2FyY2gveDg2L2luY2x1ZGUvdWFwaS9h
+c20va3ZtLmgKPj4gaW5kZXggMDc4MGY5N2MxODUwLi5jMzNmYjFkNzJkNTIgMTAwNjQ0Cj4+IC0t
+LSBhL2FyY2gveDg2L2luY2x1ZGUvdWFwaS9hc20va3ZtLmgKPj4gKysrIGIvYXJjaC94ODYvaW5j
+bHVkZS91YXBpL2FzbS9rdm0uaAo+PiBAQCAtMTkyLDYgKzE5MiwyMSBAQCBzdHJ1Y3Qga3ZtX21z
+cl9saXN0IHsKPj4gICAgICAgICAgX191MzIgaW5kaWNlc1swXTsKPj4gICB9Owo+Pgo+PiArI2Rl
+ZmluZSBLVk1fTVNSX0FMTE9XX1JFQUQgICgxIDw8IDApCj4+ICsjZGVmaW5lIEtWTV9NU1JfQUxM
+T1dfV1JJVEUgKDEgPDwgMSkKPj4gKwo+PiArLyogTWF4aW11bSBzaXplIG9mIHRoZSBvZiB0aGUg
+Yml0bWFwIGluIGJ5dGVzICovCj4+ICsjZGVmaW5lIEtWTV9NU1JfQUxMT1dMSVNUX01BWF9MRU4g
+MHg2MDAKPiAKPiBXb3VsZG4ndCAweDQwMCBiZSBhIG1vcmUgbmF0dXJhbCBzaXplLCBzaW5jZSBi
+b3RoIEludGVsIGFuZCBBTUQgTVNSCj4gcGVybWlzc2lvbiBiaXRtYXBzIGNvdmVyIHJhbmdlcyBv
+ZiA4MTkyIE1TUnM/CgpZb3UgY2FuIGFsd2F5cyBtYWtlIHlvdXIgYml0bWFwcyAweDQwMCA6KS4g
+SSBoYWQgdG8gY2hvb3NlIHNvbWV0aGluZyAKdGhhdCBsaW1pdHMgb3VyIG1lbW9yeSBmb290cHJp
+bnQsIHNvIHRoYXQgdXNlciBzcGFjZSBjYW4ndCBhbGxvY2F0ZSAKaW5maW5pdGUgYW1vdW50cyBv
+ZiBtZW1vcnkuCgo+IAo+PiBkaWZmIC0tZ2l0IGEvYXJjaC94ODYva3ZtL3g4Ni5jIGIvYXJjaC94
+ODYva3ZtL3g4Ni5jCj4+IGluZGV4IGUxMTM5MTI0MzUwZi4uMjVlNThjZWIxOWRlIDEwMDY0NAo+
+PiAtLS0gYS9hcmNoL3g4Ni9rdm0veDg2LmMKPj4gKysrIGIvYXJjaC94ODYva3ZtL3g4Ni5jCj4+
+IEBAIC0xNDcyLDYgKzE0NzIsMzggQEAgdm9pZCBrdm1fZW5hYmxlX2VmZXJfYml0cyh1NjQgbWFz
+aykKPj4gICB9Cj4+ICAgRVhQT1JUX1NZTUJPTF9HUEwoa3ZtX2VuYWJsZV9lZmVyX2JpdHMpOwo+
+Pgo+PiArc3RhdGljIGJvb2wga3ZtX21zcl9hbGxvd2VkKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwg
+dTMyIGluZGV4LCB1MzIgdHlwZSkKPiAKPiBJbiBhbm90aGVyIHRocmVhZCwgd2hlbiBJIHN1Z2dl
+c3RlZCB0aGF0IGEgZnVuY3Rpb24gc2hvdWxkIHJldHVybgo+IGJvb2wsIHlvdSBzYWlkLCAiJ0kn
+bSBub3QgYSBiaWcgZmFuIG9mIGJvb2wgcmV0dXJuaW5nIEFQSXMgdW5sZXNzIHRoZXkKPiBoYXZl
+IGFuICJpcyIgaW4gdGhlaXIgbmFtZS4nIFRoaXMgZnVuY3Rpb24gZG9lc24ndCBoYXZlICJpcyIg
+aW4gaXRzCj4gbmFtZS4gOi0pCgpJJ3ZlIGxlZnQgdGhpcyB1bmFuc3dlcmVkIGZvciB3YXkgdG9v
+IGxvbmcgOikuIElNSE8sIHBhc3NpdmUgaXMgZmluZSAKdG9vLCBhcyBpdCBpbXBsaWVzIGFuICJp
+cyIgaW4gbXkgYnJhaW4uIE9yIHRvIHB1dCBpdCBkaWZmZXJlbnRseToKCiAgIGJhZDogYm9vbCBr
+dm1fZ2V0X21zcigpCiAgIGJhZDogYm9vbCBrdm1fZ2V0X21zcl91c2VyX3NwYWNlKCkKICAgZ29v
+ZDogYm9vbCBrdm1fbXNyX2Jsb2NrZWQoKQogICBnb29kOiBib29sIGt2bV9tc3JfYWxsb3dlZCgp
+CiAgIGdvb2Q6IGJvb2wgaXNfa3ZtX21zcl9hbGxvd2VkKCkKCj4gCj4+ICt7Cj4+ICsgICAgICAg
+c3RydWN0IGt2bSAqa3ZtID0gdmNwdS0+a3ZtOwo+PiArICAgICAgIHN0cnVjdCBtc3JfYml0bWFw
+X3JhbmdlICpyYW5nZXMgPSBrdm0tPmFyY2gubXNyX2FsbG93bGlzdF9yYW5nZXM7Cj4+ICsgICAg
+ICAgdTMyIGNvdW50ID0ga3ZtLT5hcmNoLm1zcl9hbGxvd2xpc3RfcmFuZ2VzX2NvdW50Owo+IAo+
+IFNob3VsZG4ndCB0aGUgcmVhZCBvZiBrdm0tPmFyY2gubXNyX2FsbG93bGlzdF9yYW5nZXNfY291
+bnQgYmUgZ3VhcmRlZAo+IGJ5IHRoZSBtdXRleCwgYmVsb3c/Cj4gCj4+ICsgICAgICAgdTMyIGk7
+Cj4+ICsgICAgICAgYm9vbCByID0gZmFsc2U7Cj4+ICsKPj4gKyAgICAgICAvKiBNU1IgYWxsb3ds
+aXN0IG5vdCBzZXQgdXAsIGFsbG93IGV2ZXJ5dGhpbmcgKi8KPj4gKyAgICAgICBpZiAoIWNvdW50
+KQo+PiArICAgICAgICAgICAgICAgcmV0dXJuIHRydWU7Cj4+ICsKPj4gKyAgICAgICAvKiBQcmV2
+ZW50IGNvbGxpc2lvbiB3aXRoIGNsZWFyX21zcl9hbGxvd2xpc3QgKi8KPj4gKyAgICAgICBtdXRl
+eF9sb2NrKCZrdm0tPmxvY2spOwo+PiArCj4+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IGNvdW50
+OyBpKyspIHsKPj4gKyAgICAgICAgICAgICAgIHUzMiBzdGFydCA9IHJhbmdlc1tpXS5iYXNlOwo+
+PiArICAgICAgICAgICAgICAgdTMyIGVuZCA9IHN0YXJ0ICsgcmFuZ2VzW2ldLm5tc3JzOwo+PiAr
+ICAgICAgICAgICAgICAgdTMyIGZsYWdzID0gcmFuZ2VzW2ldLmZsYWdzOwo+PiArICAgICAgICAg
+ICAgICAgdW5zaWduZWQgbG9uZyAqYml0bWFwID0gcmFuZ2VzW2ldLmJpdG1hcDsKPj4gKwo+PiAr
+ICAgICAgICAgICAgICAgaWYgKChpbmRleCA+PSBzdGFydCkgJiYgKGluZGV4IDwgZW5kKSAmJiAo
+ZmxhZ3MgJiB0eXBlKSkgewo+PiArICAgICAgICAgICAgICAgICAgICAgICByID0gISF0ZXN0X2Jp
+dChpbmRleCAtIHN0YXJ0LCBiaXRtYXApOwo+IAo+IFRoZSAhISBzZWVtcyBncmF0dWl0b3VzLCBz
+aW5jZSByIGlzIG9mIHR5cGUgYm9vbC4KPiAKPj4gQEAgLTE0ODMsNiArMTUxNSw5IEBAIHN0YXRp
+YyBpbnQgX19rdm1fc2V0X21zcihzdHJ1Y3Qga3ZtX3ZjcHUgKnZjcHUsIHUzMiBpbmRleCwgdTY0
+IGRhdGEsCj4+ICAgewo+PiAgICAgICAgICBzdHJ1Y3QgbXNyX2RhdGEgbXNyOwo+Pgo+PiArICAg
+ICAgIGlmICghaG9zdF9pbml0aWF0ZWQgJiYgIWt2bV9tc3JfYWxsb3dlZCh2Y3B1LCBpbmRleCwg
+S1ZNX01TUl9BTExPV19XUklURSkpCj4+ICsgICAgICAgICAgICAgICByZXR1cm4gLUVOT0VOVDsK
+PiAKPiBQZXJoYXBzIC1FUEVSTSBpcyBtb3JlIGFwcHJvcHJpYXRlIGhlcmU/Cj4gCj4+ICAgICAg
+ICAgIHN3aXRjaCAoaW5kZXgpIHsKPj4gICAgICAgICAgY2FzZSBNU1JfRlNfQkFTRToKPj4gICAg
+ICAgICAgY2FzZSBNU1JfR1NfQkFTRToKPj4gQEAgLTE1MjgsNiArMTU2Myw5IEBAIGludCBfX2t2
+bV9nZXRfbXNyKHN0cnVjdCBrdm1fdmNwdSAqdmNwdSwgdTMyIGluZGV4LCB1NjQgKmRhdGEsCj4+
+ICAgICAgICAgIHN0cnVjdCBtc3JfZGF0YSBtc3I7Cj4+ICAgICAgICAgIGludCByZXQ7Cj4+Cj4+
+ICsgICAgICAgaWYgKCFob3N0X2luaXRpYXRlZCAmJiAha3ZtX21zcl9hbGxvd2VkKHZjcHUsIGlu
+ZGV4LCBLVk1fTVNSX0FMTE9XX1JFQUQpKQo+PiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9F
+TlQ7Cj4gCj4gLi4uYW5kIGhlcmU/Cj4gCj4+ICtzdGF0aWMgYm9vbCBtc3JfcmFuZ2Vfb3Zlcmxh
+cHMoc3RydWN0IGt2bSAqa3ZtLCBzdHJ1Y3QgbXNyX2JpdG1hcF9yYW5nZSAqcmFuZ2UpCj4gCj4g
+QW5vdGhlciBib29sIGZ1bmN0aW9uIHdpdGggbm8gImlzIj8gOi0pCj4gCj4+ICt7Cj4+ICsgICAg
+ICAgc3RydWN0IG1zcl9iaXRtYXBfcmFuZ2UgKnJhbmdlcyA9IGt2bS0+YXJjaC5tc3JfYWxsb3ds
+aXN0X3JhbmdlczsKPj4gKyAgICAgICB1MzIgaSwgY291bnQgPSBrdm0tPmFyY2gubXNyX2FsbG93
+bGlzdF9yYW5nZXNfY291bnQ7Cj4+ICsgICAgICAgYm9vbCByID0gZmFsc2U7Cj4+ICsKPj4gKyAg
+ICAgICBmb3IgKGkgPSAwOyBpIDwgY291bnQ7IGkrKykgewo+PiArICAgICAgICAgICAgICAgdTMy
+IHN0YXJ0ID0gbWF4KHJhbmdlLT5iYXNlLCByYW5nZXNbaV0uYmFzZSk7Cj4+ICsgICAgICAgICAg
+ICAgICB1MzIgZW5kID0gbWluKHJhbmdlLT5iYXNlICsgcmFuZ2UtPm5tc3JzLAo+PiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICByYW5nZXNbaV0uYmFzZSArIHJhbmdlc1tpXS5ubXNycyk7
+Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIGlmICgoc3RhcnQgPCBlbmQpICYmIChyYW5nZS0+Zmxh
+Z3MgJiByYW5nZXNbaV0uZmxhZ3MpKSB7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHIgPSB0
+cnVlOwo+PiArICAgICAgICAgICAgICAgICAgICAgICBicmVhazsKPj4gKyAgICAgICAgICAgICAg
+IH0KPj4gKyAgICAgICB9Cj4+ICsKPj4gKyAgICAgICByZXR1cm4gcjsKPj4gK30KPiAKPiBUaGlz
+IHNlZW1zIGxpa2UgYW4gYXdrd2FyZCBjb25zdHJhaW50LiBXb3VsZCBpdCBiZSBwb3NzaWJsZSB0
+byBhbGxvdwo+IG92ZXJsYXBwaW5nIHJhbmdlcyBhcyBsb25nIGFzIHRoZSBhY2Nlc3MgdHlwZXMg
+ZG9uJ3QgY2xhc2g/IFNvLCBmb3IKPiBleGFtcGxlLCBjb3VsZCBJIHNwZWNpZnkgYW4gYWxsb3cg
+bGlzdCBmb3IgUkVBRCBvZiBNU1JzIDAtMHgxZmZmZiBhbmQKPiBhbiBhbGxvdyBsaXN0IGZvciBX
+UklURSBvZiBNU1JzIDAtMHgxZmZmZj8gQWN0dWFsbHksIEkgZG9uJ3Qgc2VlIHdoeQo+IHlvdSBo
+YXZlIHRvIHByb2hpYml0IG92ZXJsYXBwaW5nIHJhbmdlcyBhdCBhbGwuCgpJIHRlbmQgdG8gYWdy
+ZWUuIE5vdyB0aGF0IHRoZSBvcmRlciBpcyBvYnZpb3VzIHRocm91Z2ggdGhlIG5ldyBBUEksIHdl
+IApubyBsb25nZXIgbmVlZCB0byBjaGVjayBmb3Igb3ZlcmxhcHMuCgo+IAo+IAo+PiArc3RhdGlj
+IGludCBrdm1fdm1faW9jdGxfY2xlYXJfbXNyX2FsbG93bGlzdChzdHJ1Y3Qga3ZtICprdm0pCj4+
+ICt7Cj4+ICsgICAgICAgaW50IGk7Cj4gCj4gTml0OiBJbiBlYXJsaWVyIGNvZGUsIHlvdSB1c2Ug
+dTMyIGZvciB0aGlzIGluZGV4LiAoSSdtIGFjdHVhbGx5IGEgZmFuCj4gb2YgaW50LCBteXNlbGYu
+KQoKSSB1c3VhbGx5IHVzZSBpbnQgYXMgd2VsbCBiZWNhdXNlIGl0J3MgZWFzaWVyIHRvIHR5cGUs
+IGJ1dCBkb2luZyBzaWduZWQgCmluZGV4ZXMgaXMganVzdCBzbyB3cm9uZyBvbiBzbyBtYW55IGxl
+dmVscyA6KS4gSSdsbCBmaXggdGhlbSB1cCB0b28gYmUgCmFsbCB1MzIuCgoKQWxleAoKCgpBbWF6
+b24gRGV2ZWxvcG1lbnQgQ2VudGVyIEdlcm1hbnkgR21iSApLcmF1c2Vuc3RyLiAzOAoxMDExNyBC
+ZXJsaW4KR2VzY2hhZWZ0c2Z1ZWhydW5nOiBDaHJpc3RpYW4gU2NobGFlZ2VyLCBKb25hdGhhbiBX
+ZWlzcwpFaW5nZXRyYWdlbiBhbSBBbXRzZ2VyaWNodCBDaGFybG90dGVuYnVyZyB1bnRlciBIUkIg
+MTQ5MTczIEIKU2l0ejogQmVybGluClVzdC1JRDogREUgMjg5IDIzNyA4NzkKCgo=
 
-It's a very puzzling situation.
-
-One thing which probably would work well, surprisingly, would be to buy 
-an old USB-1.1 hub and plug it into the PCI card.  That combination is 
-likely to be similar to what you see when plugging the devices directly 
-into the PCI card.  It might even work okay with the USB-3 controllers.
-
-> 2. USB 2.0 controller - WORKS
-> 5. USB 3.0/3.1 controller -> Bus powered USB 2.0 hub - WORKS
-> 
-> I am not seeing a common failure here that would point to any specific
-> hardware being bad. Besides, that one code change (which I still can't
-> say is the right code change) in ehci-q.c makes USB 2.0 controller work
-> reliably with all my devices.
-
-The USB and EHCI designs are flawed in that under the circumstances 
-you're seeing, they don't have any way to tell the difference between a 
-STALL and a host timing error.  The current code treats these situations 
-as timing/transmission errors (resulting in device resets); your change 
-causes them to be treated as STALLs.  However, there are known, common 
-situations in which those same symptoms really are caused by 
-transmission errors, so we don't want to start treating them as STALLs.
-
-Besides, I suspect that your code change does _not_ make the USB-2 
-controller work reliably with your devices.  You should collect a usbmon 
-trace under those conditions; I predict it will be full of STALLs.  And 
-furthermore, I believe these STALLs will not show up in a usbmon trace 
-made with the devices plugged directly into the PCI card.  If I'm right 
-about these things, the errors are still present even with your patch; 
-all it does is hide them.
-
-Short of a USB bus analyzer, however, there's no way to tell what's 
-really going on.
-
-Alan Stern
