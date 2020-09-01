@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF6FC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 294EAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C4F2206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4CB6206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598980283;
-	bh=W1ORujb5/xqtuO1rGmU0tZxlYYe49tnOPCCj3QgW8Uw=;
+	s=default; t=1598980303;
+	bh=muIJpAqjN9l4sXIKn38QABc9+61+aNu4DOnpPsWhrNk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YGYiCIRMopis1XWQ4zLMljcxAARZKjxQwU/Ow6xB8qaqToEW3NEKIB7bzCw3Se9z+
-	 VCpIoq3RDvFAFp+wkhDBVCEdKcU6KUwJGSk6zh2H5Qbi6i/cGEszECFBsdAwTo7V8K
-	 BKleuTZ6fxAVQplj9bpoDLwm6UEiSzMKf98wk/qg=
+	b=mirtQyBL97hG9EvQ5i2MVUdqBKXcohEAMaHMd7Yk2CJjJW8/eCLwIYXhwddolq7y6
+	 Bc1+fElIv+2UzhTLitQBndyZBXYbnTm0/jx4OLgpb50fWb+9jQNvLUp1ka22IqmG5N
+	 rOF6y6c/n0d/NjhRHLFbuE5eh8yIKOVQtLKvjcNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732422AbgIARLV (ORCPT
+        id S1729336AbgIARLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:11:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33082 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:11:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729311AbgIAPQZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:16:25 -0400
+        id S1729306AbgIAPQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:16:21 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C3B4206FA;
-        Tue,  1 Sep 2020 15:16:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99225206EB;
+        Tue,  1 Sep 2020 15:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973383;
-        bh=W1ORujb5/xqtuO1rGmU0tZxlYYe49tnOPCCj3QgW8Uw=;
+        s=default; t=1598973381;
+        bh=muIJpAqjN9l4sXIKn38QABc9+61+aNu4DOnpPsWhrNk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pW2c09wdbABSkbFugXA8KjVR/fPxFVoU3wqL+bjIPGQtOkT3Z0ssKnRQm11asfgez
-         81YWt+Oj7/sPUOfnheG74ehbjHgIA9mKtfu6c8e5jvLMc1avXKc5rFMb53JlPhdSEX
-         JbqeEWbsnlvS4KN0OEzq61g7WLR6rJQZhrtHMVgk=
+        b=aw5hQCuZsaC3ZbwYQLo33aZCiQ+XPArJEE2IJOPck3AS3qLRuFkp4ix64FfTAZCDG
+         HloTGB/CLx9IphpU20BaJBicyHkfyYi2QvwRzRNGbXh8GXgC8RdNk7QLEydvoitb7w
+         gwc02AGcisifM7FHCjTHCdtSY/6qm/j2fZ5B1CCM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lukas Wunner <lukas@wunner.de>,
-        Aleksey Makarov <amakarov@marvell.com>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Christopher Covington <cov@codeaurora.org>
-Subject: [PATCH 4.9 56/78] serial: pl011: Fix oops on -EPROBE_DEFER
-Date:   Tue,  1 Sep 2020 17:10:32 +0200
-Message-Id: <20200901150927.566535277@linuxfoundation.org>
+        stable@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Tamseel Shams <m.shams@samsung.com>
+Subject: [PATCH 4.9 55/78] serial: samsung: Removes the IRQ not found warning
+Date:   Tue,  1 Sep 2020 17:10:31 +0200
+Message-Id: <20200901150927.514317187@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
 References: <20200901150924.680106554@linuxfoundation.org>
@@ -62,93 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lukas Wunner <lukas@wunner.de>
+From: Tamseel Shams <m.shams@samsung.com>
 
-commit 27afac93e3bd7fa89749cf11da5d86ac9cde4dba upstream.
+commit 8c6c378b0cbe0c9f1390986b5f8ffb5f6ff7593b upstream.
 
-If probing of a pl011 gets deferred until after free_initmem(), an oops
-ensues because pl011_console_match() is called which has been freed.
+In few older Samsung SoCs like s3c2410, s3c2412
+and s3c2440, UART IP is having 2 interrupt lines.
+However, in other SoCs like s3c6400, s5pv210,
+exynos5433, and exynos4210 UART is having only 1
+interrupt line. Due to this, "platform_get_irq(platdev, 1)"
+call in the driver gives the following false-positive error:
+"IRQ index 1 not found" on newer SoC's.
 
-Fix by removing the __init attribute from the function and those it
-calls.
+This patch adds the condition to check for Tx interrupt
+only for the those SoC's which have 2 interrupt lines.
 
-Commit 10879ae5f12e ("serial: pl011: add console matching function")
-introduced pl011_console_match() not just for early consoles but
-regular preferred consoles, such as those added by acpi_parse_spcr().
-Regular consoles may be registered after free_initmem() for various
-reasons, one being deferred probing, another being dynamic enablement
-of serial ports using a DeviceTree overlay.
-
-Thus, pl011_console_match() must not be declared __init and the
-functions it calls mustn't either.
-
-Stack trace for posterity:
-
-Unable to handle kernel paging request at virtual address 80c38b58
-Internal error: Oops: 8000000d [#1] PREEMPT SMP ARM
-PC is at pl011_console_match+0x0/0xfc
-LR is at register_console+0x150/0x468
-[<80187004>] (register_console)
-[<805a8184>] (uart_add_one_port)
-[<805b2b68>] (pl011_register_port)
-[<805b3ce4>] (pl011_probe)
-[<80569214>] (amba_probe)
-[<805ca088>] (really_probe)
-[<805ca2ec>] (driver_probe_device)
-[<805ca5b0>] (__device_attach_driver)
-[<805c8060>] (bus_for_each_drv)
-[<805c9dfc>] (__device_attach)
-[<805ca630>] (device_initial_probe)
-[<805c90a8>] (bus_probe_device)
-[<805c95a8>] (deferred_probe_work_func)
-
-Fixes: 10879ae5f12e ("serial: pl011: add console matching function")
-Signed-off-by: Lukas Wunner <lukas@wunner.de>
-Cc: stable@vger.kernel.org # v4.10+
-Cc: Aleksey Makarov <amakarov@marvell.com>
-Cc: Peter Hurley <peter@hurleysoftware.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Christopher Covington <cov@codeaurora.org>
-Link: https://lore.kernel.org/r/f827ff09da55b8c57d316a1b008a137677b58921.1597315557.git.lukas@wunner.de
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Tamseel Shams <m.shams@samsung.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200810030021.45348-1-m.shams@samsung.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/serial/amba-pl011.c |   11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/tty/serial/samsung.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -2249,9 +2249,8 @@ pl011_console_write(struct console *co,
- 	clk_disable(uap->clk);
- }
- 
--static void __init
--pl011_console_get_options(struct uart_amba_port *uap, int *baud,
--			     int *parity, int *bits)
-+static void pl011_console_get_options(struct uart_amba_port *uap, int *baud,
-+				      int *parity, int *bits)
- {
- 	if (pl011_read(uap, REG_CR) & UART01x_CR_UARTEN) {
- 		unsigned int lcr_h, ibrd, fbrd;
-@@ -2284,7 +2283,7 @@ pl011_console_get_options(struct uart_am
+--- a/drivers/tty/serial/samsung.c
++++ b/drivers/tty/serial/samsung.c
+@@ -1725,9 +1725,11 @@ static int s3c24xx_serial_init_port(stru
+ 		ourport->tx_irq = ret + 1;
  	}
- }
  
--static int __init pl011_console_setup(struct console *co, char *options)
-+static int pl011_console_setup(struct console *co, char *options)
- {
- 	struct uart_amba_port *uap;
- 	int baud = 38400;
-@@ -2352,8 +2351,8 @@ static int __init pl011_console_setup(st
-  *
-  *	Returns 0 if console matches; otherwise non-zero to use default matching
-  */
--static int __init pl011_console_match(struct console *co, char *name, int idx,
--				      char *options)
-+static int pl011_console_match(struct console *co, char *name, int idx,
-+			       char *options)
- {
- 	unsigned char iotype;
- 	resource_size_t addr;
+-	ret = platform_get_irq(platdev, 1);
+-	if (ret > 0)
+-		ourport->tx_irq = ret;
++	if (!s3c24xx_serial_has_interrupt_mask(port)) {
++		ret = platform_get_irq(platdev, 1);
++		if (ret > 0)
++			ourport->tx_irq = ret;
++	}
+ 	/*
+ 	 * DMA is currently supported only on DT platforms, if DMA properties
+ 	 * are specified.
 
 
