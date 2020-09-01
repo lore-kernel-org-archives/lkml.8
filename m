@@ -2,134 +2,206 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DF19C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B897C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 387B6207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:39:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="2Hpp2pGP"
+	by mail.kernel.org (Postfix) with ESMTP id DEB72207EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 03:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbgIADjE (ORCPT
+        id S1726526AbgIADkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 31 Aug 2020 23:39:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57388 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgIADjD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 31 Aug 2020 23:39:03 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE21C061290
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:39:03 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id b124so1934pfg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 31 Aug 2020 20:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=CmWImjbfkai8w8IYrzWttSFE/ShThoXbvLekJzQkDNE=;
-        b=2Hpp2pGPGoM76EKftl74jbI1jE6i7BkynyJ4YEmKkncEDpi7syFP4I6+fZ40aXoMWP
-         4jHntOowSoOmVOmt3/HKPrWZeu0hPu4w4Xw5l/nPcBhXe8mpT+ekpd6/nvfhlPBvka35
-         bVdb4MsJL2T012kuCrdQLPBK9FQWt2jc38W+VKcfMdwe4fcc1ydnRfEXtPvTTdqB0uz1
-         Roak8DeVTXNH9SdCwuhtN4cW48ZXgHlA4qR1GtjrQO9Zv5qm1FSCvQvlqfL50Xsdkfpp
-         aL6oEfHl4LCfAP/k+ddBM2K88gUh0fwJoqJpZLv8o8PMGJlB2cvgsmslGDup+j6jdPxL
-         mlKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=CmWImjbfkai8w8IYrzWttSFE/ShThoXbvLekJzQkDNE=;
-        b=X3EucK/c0umqnKH0U8FBcPtpII9QqIi12E/Pt8bHX/5IsB8A7RvYmP5XjOInq8Rnf/
-         2YeblJ68Zm+NU1LTKZtw2X8quEDzq924zuSWT2XgxXQNBVs+H95zEW9kl5fUjqbt1bS0
-         MO/jKu4bVAlHqTxa7jz6XXoZGMmTaNelqUb0KIUf0jRM5lq5eYeSlYdnrNB4Gye57cr8
-         AzCKZ+1HZ9diNrFS2LFsIuIgq+MLj3foALVHnMFj/XdfQKVfeLvRXMP5yOL5fZ3VYckI
-         oYmhGoxYX9cvfMcvvfZxnRRotNBZtNijgxDVXlY02QkUWAyhD2ADLvS4gPMVafcOJA1N
-         t0mA==
-X-Gm-Message-State: AOAM530tS6r+YnDrc0NsGobiYdLbar9HmBmBaqE+TTiDpNr+fSCkxHKF
-        yeHapkVMVJ/HHxP8TYm3ToJrB0WCrnGv9CVd
-X-Google-Smtp-Source: ABdhPJxwc59YPWeeBw2UNybtTAbxjkWeEOLQHBC6jojvyuHuUAYP7kos/LMRkBGs5mEgIM5IdCOWkw==
-X-Received: by 2002:aa7:8657:: with SMTP id a23mr3953845pfo.169.1598931542218;
-        Mon, 31 Aug 2020 20:39:02 -0700 (PDT)
-Received: from [192.168.1.187] ([66.219.217.173])
-        by smtp.gmail.com with ESMTPSA id o192sm9966704pfg.81.2020.08.31.20.39.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 20:39:01 -0700 (PDT)
-Subject: Re: [PATCH] io_uring: Fix NULL pointer dereference in
- io_sq_wq_submit_work()
-To:     Xin Yin <yinxin_1989@aliyun.com>, viro@zeniv.linux.org.uk
-Cc:     linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200901015442.44831-1-yinxin_1989@aliyun.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ae9f3887-5205-8aa8-afa7-4e01d03921bc@kernel.dk>
-Date:   Mon, 31 Aug 2020 21:38:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200901015442.44831-1-yinxin_1989@aliyun.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 31 Aug 2020 23:40:10 -0400
+Received: from mga12.intel.com ([192.55.52.136]:62487 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725987AbgIADkK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 31 Aug 2020 23:40:10 -0400
+IronPort-SDR: GAFvU7O0EQRfcymRArsXWKjZP3g/ubMy11GaareUnUBGHphZ15cb+uVGOiEvxOues+4njavCjD
+ yqJtbF0abb5w==
+X-IronPort-AV: E=McAfee;i="6000,8403,9730"; a="136620916"
+X-IronPort-AV: E=Sophos;i="5.76,377,1592895600"; 
+   d="scan'208";a="136620916"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Aug 2020 20:40:09 -0700
+IronPort-SDR: xGboYKzvsJlkHn6PaFg2gJdD6Ho9X+J4xWldMcYK4l8ocnu41LSY2oGnWtKaxhn0DKvjOlZD+S
+ 0KuPivwRFKtQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.76,377,1592895600"; 
+   d="scan'208";a="325180845"
+Received: from allen-box.sh.intel.com ([10.239.159.139])
+  by fmsmga004.fm.intel.com with ESMTP; 31 Aug 2020 20:40:06 -0700
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+To:     Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Liu Yi L <yi.l.liu@intel.com>, Zeng Xin <xin.zeng@intel.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Lu Baolu <baolu.lu@linux.intel.com>
+Subject: [PATCH v4 0/5] iommu aux-domain APIs extensions
+Date:   Tue,  1 Sep 2020 11:34:17 +0800
+Message-Id: <20200901033422.22249-1-baolu.lu@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 8/31/20 7:54 PM, Xin Yin wrote:
-> the commit <1c4404efcf2c0> ("<io_uring: make sure async workqueue
-> is canceled on exit>") caused a crash in io_sq_wq_submit_work().
-> when io_ring-wq get a req form async_list, which may not have been
-> added to task_list. Then try to delete the req from task_list will caused
-> a "NULL pointer dereference".
+This series aims to extend the IOMMU aux-domain API set so that it
+could be more friendly to vfio/mdev usage. The interactions between
+vfio/mdev and iommu during mdev creation and passthr are:
 
-Hmm, do you have a reproducer for this?
+1. Create a group for mdev with iommu_group_alloc();
+2. Add the device to the group with
 
-> @@ -2356,9 +2358,11 @@ static void io_sq_wq_submit_work(struct work_struct *work)
->   * running. We currently only allow this if the new request is sequential
->   * to the previous one we punted.
->   */
-> -static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
-> +static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req,
-> +							struct io_ring_ctx *ctx)
->  {
->  	bool ret;
-> +	unsigned long flags;
->  
->  	if (!list)
->  		return false;
-> @@ -2378,6 +2382,13 @@ static bool io_add_to_prev_work(struct async_list *list, struct io_kiocb *req)
->  		list_del_init(&req->list);
->  		ret = false;
->  	}
-> +
-> +	if (ret) {
-> +		spin_lock_irqsave(&ctx->task_lock, flags);
-> +		list_add(&req->task_list, &ctx->task_list);
-> +		req->work_task = NULL;
-> +		spin_unlock_irqrestore(&ctx->task_lock, flags);
-> +	}
->  	spin_unlock(&list->lock);
->  	return ret;
->  }
-> @@ -2454,7 +2465,7 @@ static int __io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
->  			s->sqe = sqe_copy;
->  			memcpy(&req->submit, s, sizeof(*s));
->  			list = io_async_list_from_req(ctx, req);
-> -			if (!io_add_to_prev_work(list, req)) {
-> +			if (!io_add_to_prev_work(list, req, ctx)) {
->  				if (list)
->  					atomic_inc(&list->cnt);
->  				INIT_WORK(&req->work, io_sq_wq_submit_work);
-> 
+       group = iommu_group_alloc();
+       if (IS_ERR(group))
+               return PTR_ERR(group);
 
-ctx == req->ctx, so you should not need that change.
+       ret = iommu_group_add_device(group, &mdev->dev);
+       if (!ret)
+               dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+                        iommu_group_id(group));
+
+3. Allocate an aux-domain with iommu_domain_alloc();
+4. Attach the aux-domain to the iommu_group.
+
+       iommu_group_for_each_dev {
+               if (iommu_dev_feature_enabled(iommu_device, IOMMU_DEV_FEAT_AUX))
+                       return iommu_aux_attach_device(domain, iommu_device);
+               else
+                       return iommu_attach_device(domain, iommu_device);
+        }
+
+   where, iommu_device is the aux-domain-capable device. The mdev's in
+   the group are all derived from it.
+
+In the whole process, an iommu group was allocated for the mdev and an
+iommu domain was attached to the group, but the group->domain leaves
+NULL. As the result, iommu_get_domain_for_dev() (or other similar
+interfaces) doesn't work anymore.
+
+The iommu_get_domain_for_dev() is a necessary interface for device
+drivers that want to support vfio/mdev based aux-domain. For example,
+
+        unsigned long pasid;
+        struct iommu_domain *domain;
+        struct device *dev = mdev_dev(mdev);
+        struct device *iommu_device = vfio_mdev_get_iommu_device(dev);
+
+        domain = iommu_aux_get_domain_for_dev(dev);
+        if (!domain)
+                return -ENODEV;
+
+        pasid = iommu_aux_get_pasid(domain, iommu_device);
+        if (pasid <= 0)
+                return -EINVAL;
+
+         /* Program the device context */
+         ....
+
+We tried to address this by extending iommu_aux_at(de)tach_device() so that
+the users could pass in an optional device pointer (for example vfio/mdev).
+(v2 of this series)
+
+https://lore.kernel.org/linux-iommu/20200707013957.23672-1-baolu.lu@linux.intel.com/
+
+But that will cause a lock issue as group->mutex has been applied in
+iommu_group_for_each_dev(), but has to be reapplied again in the
+iommu_aux_attach_device().
+
+We also tried to implement an equivalent iommu_attch_group() for groups
+which includes subdevices derived from a single physical device. (v3 of
+this series)
+
+https://lore.kernel.org/linux-iommu/20200714055703.5510-1-baolu.lu@linux.intel.com/
+
+But that's too harsh (requires that all subdevices in an iommu_group
+must be derived from a same physical device) and breaks some generic
+concept of iommmu_group.
+
+This version continues to address this by introducing some new APIs into
+the aux-domain API set according to comments during v3 reviewing period.
+
+/**
+ * iommu_attach_subdev_group - attach domain to an iommu_group which
+ *                             contains subdevices.
+ *
+ * @domain: domain
+ * @group:  iommu_group which contains subdevices
+ * @fn:     callback for each subdevice in the @iommu_group to retrieve the
+ *          physical device where the subdevice was created from.
+ *
+ * Returns 0 on success, or an error value.
+ */
+int iommu_attach_subdev_group(struct iommu_domain *domain,
+                              struct iommu_group *group,
+                              iommu_device_lookup_t fn)
+
+/**
+ * iommu_detach_subdev_group - detach domain from an iommu_group which
+ *                             contains subdevices
+ *
+ * @domain: domain
+ * @group:  iommu_group which contains subdevices
+ * @fn:     callback for each subdevice in the @iommu_group to retrieve the
+ *          physical device where the subdevice was created from.
+ *
+ * The domain must have been attached to @group via iommu_attach_subdev_group().
+ */
+void iommu_detach_subdev_group(struct iommu_domain *domain,
+                               struct iommu_group *group,
+                               iommu_device_lookup_t fn)
+
+struct iommu_domain *iommu_aux_get_domain_for_dev(struct device *subdev)
+
+This version is evolved according to feedbacks from Robin, Alex and Kevin.
+I'm very appreciated to their contributions.
+
+Best regards,
+baolu
+
+---
+Change log:
+ - v1->v2:
+   - https://lore.kernel.org/linux-iommu/20200627031532.28046-1-baolu.lu@linux.intel.com/
+   - Suggested by Robin.
+
+ - v2->v3:
+   - https://lore.kernel.org/linux-iommu/20200707013957.23672-1-baolu.lu@linux.intel.com/
+   - Suggested by Alex, Kevin.
+
+ - v3->v4:
+   - https://lore.kernel.org/linux-iommu/20200714055703.5510-1-baolu.lu@linux.intel.com/
+   - Evolve the aux_attach_group APIs to take an iommu_device lookup
+     callback.
+   - Add interface to check whether a domain is aux-domain for a device.
+   - Return domain only if the domain is aux-domain in
+     iommu_aux_get_domain_for_dev().
+
+Lu Baolu (5):
+  iommu: Add optional subdev in aux_at(de)tach ops
+  iommu: Add iommu_at(de)tach_subdev_group()
+  iommu: Add iommu_aux_get_domain_for_dev()
+  vfio/type1: Use iommu_aux_at(de)tach_group() APIs
+  iommu/vt-d: Add is_aux_domain support
+
+ drivers/iommu/intel/iommu.c     | 135 +++++++++++++++++++--------
+ drivers/iommu/iommu.c           | 158 +++++++++++++++++++++++++++++++-
+ drivers/vfio/vfio_iommu_type1.c |  43 ++-------
+ include/linux/intel-iommu.h     |  17 ++--
+ include/linux/iommu.h           |  46 +++++++++-
+ 5 files changed, 315 insertions(+), 84 deletions(-)
 
 -- 
-Jens Axboe
+2.17.1
 
