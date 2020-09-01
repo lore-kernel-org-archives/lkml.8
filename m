@@ -2,156 +2,229 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B17C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6201CC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2162087D
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:49:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="YrKuyRgS"
+	by mail.kernel.org (Postfix) with ESMTP id 3896F2087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:49:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598942991;
+	bh=NvCekPHIZCmnbkeS6yKm6q1qga5DpGl3Zr7rAiRiOHo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pOnaJBp00Hg/YrFg1BXPhHND4v23cce9oEh6tSGBZJUElUzJw25DME+B5jeGzPlci
+	 BDw3NevSvaJXJxjLvhLWhDlZ9ll23CHarKiVaX+rdFP52OEUaYdLvkIeeogqlcALhi
+	 x2uWuRZsrO+ytu/eRTU2Fk56dymSDQvGHUsKNw4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgIAGtd (ORCPT
+        id S1727041AbgIAGtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:49:33 -0400
-Received: from mx.blih.net ([212.83.155.74]:46689 "EHLO mx.blih.net"
+        Tue, 1 Sep 2020 02:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726006AbgIAGtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:49:32 -0400
-X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Sep 2020 02:49:31 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bidouilliste.com;
-        s=mx; t=1598942569;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nZvkdgfEsx8IUABfhx71Dpoxee70fmEUTqE8AA7jJGE=;
-        b=YrKuyRgS7QNfdF7qc4hPTROgfFajA7Fk9Ph+iwvL4aPMHfAkWgKP6nOnmArJ1pn+u1TWq2
-        Cd91ByVr7E2rDIilyqYa/3Zyd/93ANKbFJxeHCP+m8YDm64qxE65dqaI+MukDy6JM7NyRu
-        rCmQsqbvJSUHjiMTKOj+S6geJCxe3A0=
-Received: from amy.home (lfbn-idf2-1-1138-237.w90-92.abo.wanadoo.fr [90.92.20.237])
-        by mx.blih.net (OpenSMTPD) with ESMTPSA id 8cb32919 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
-        Tue, 1 Sep 2020 06:42:49 +0000 (UTC)
-Date:   Tue, 1 Sep 2020 08:42:49 +0200
-From:   Emmanuel Vadot <manu@bidouilliste.com>
-To:     =?ISO-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Ray Jui <rjui@broadcom.com>, Chanho Min <chanho.min@lge.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Wei Xu <xuwei5@hisilicon.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 0/6] dt-bindings: Convert SP804 to Json-schema (and
- fix users)
-Message-Id: <20200901084249.b72bb69d617cc32733432da1@bidouilliste.com>
-In-Reply-To: <28acf821-fa6f-7259-ec1b-4810ca1ff48f@arm.com>
-References: <20200828142018.43298-1-andre.przywara@arm.com>
-        <CACRpkdZUrPeUbpNeCZcw8kq5k3egijAuh7R1_3TkbPz5wN+=Lw@mail.gmail.com>
-        <28acf821-fa6f-7259-ec1b-4810ca1ff48f@arm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+        id S1726085AbgIAGtt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:49:49 -0400
+Received: from kernel.org (unknown [87.70.91.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E479208DB;
+        Tue,  1 Sep 2020 06:49:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598942988;
+        bh=NvCekPHIZCmnbkeS6yKm6q1qga5DpGl3Zr7rAiRiOHo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JZ1I6hjvaQ67DJfPskMNXjYHEDuqWjex2aZC8Zfyxjmj/mq/nE8TOuA8Dhh+w3rxw
+         ogOuBGdv3DJ4rSGgL8qcm5KYEpf5hTQCgN9UqbE9icLxSbAs7a/lp74v/M1LnsdKwh
+         vtKGLgt0ovSk6VsSz2SfdluksPtSSjR0rBMspnUQ=
+Date:   Tue, 1 Sep 2020 09:49:42 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 01/23] asm-generic: add generic MMU versions of mmu
+ context functions
+Message-ID: <20200901064942.GD432455@kernel.org>
+References: <20200826145249.745432-1-npiggin@gmail.com>
+ <20200826145249.745432-2-npiggin@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200826145249.745432-2-npiggin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 28 Aug 2020 16:44:28 +0100
-Andr=E9 Przywara <andre.przywara@arm.com> wrote:
+On Thu, Aug 27, 2020 at 12:52:27AM +1000, Nicholas Piggin wrote:
+> Many of these are no-ops on many architectures, so extend mmu_context.h
+> to cover MMU and NOMMU, and split the NOMMU bits out to nommu_context.h
+> 
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-arch@vger.kernel.org
+> Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+> ---
+>  arch/microblaze/include/asm/mmu_context.h |  2 +-
+>  arch/sh/include/asm/mmu_context.h         |  2 +-
+>  include/asm-generic/mmu_context.h         | 57 +++++++++++++++++------
+>  include/asm-generic/nommu_context.h       | 19 ++++++++
+>  4 files changed, 64 insertions(+), 16 deletions(-)
+>  create mode 100644 include/asm-generic/nommu_context.h
+> 
+> diff --git a/arch/microblaze/include/asm/mmu_context.h b/arch/microblaze/include/asm/mmu_context.h
+> index f74f9da07fdc..34004efb3def 100644
+> --- a/arch/microblaze/include/asm/mmu_context.h
+> +++ b/arch/microblaze/include/asm/mmu_context.h
+> @@ -2,5 +2,5 @@
+>  #ifdef CONFIG_MMU
+>  # include <asm/mmu_context_mm.h>
+>  #else
+> -# include <asm-generic/mmu_context.h>
+> +# include <asm-generic/nommu_context.h>
+>  #endif
+> diff --git a/arch/sh/include/asm/mmu_context.h b/arch/sh/include/asm/mmu_context.h
+> index f664e51e8a15..461b1304580b 100644
+> --- a/arch/sh/include/asm/mmu_context.h
+> +++ b/arch/sh/include/asm/mmu_context.h
+> @@ -133,7 +133,7 @@ static inline void switch_mm(struct mm_struct *prev,
+>  #define set_TTB(pgd)			do { } while (0)
+>  #define get_TTB()			(0)
+>  
+> -#include <asm-generic/mmu_context.h>
+> +#include <asm-generic/nommu_context.h>
+>  
+>  #endif /* CONFIG_MMU */
+>  
+> diff --git a/include/asm-generic/mmu_context.h b/include/asm-generic/mmu_context.h
+> index 6be9106fb6fb..86cea80a50df 100644
+> --- a/include/asm-generic/mmu_context.h
+> +++ b/include/asm-generic/mmu_context.h
+> @@ -3,44 +3,73 @@
+>  #define __ASM_GENERIC_MMU_CONTEXT_H
+>  
+>  /*
+> - * Generic hooks for NOMMU architectures, which do not need to do
+> - * anything special here.
+> + * Generic hooks to implement no-op functionality.
+>   */
+>  
+> -#include <asm-generic/mm_hooks.h>
+> -
+>  struct task_struct;
+>  struct mm_struct;
+>  
+> +/*
+> + * enter_lazy_tlb - Called when "tsk" is about to enter lazy TLB mode.
+> + *
+> + * @mm:  the currently active mm context which is becoming lazy
+> + * @tsk: task which is entering lazy tlb
+> + *
+> + * tsk->mm will be NULL
+> + */
+> +#ifndef enter_lazy_tlb
+>  static inline void enter_lazy_tlb(struct mm_struct *mm,
+>  			struct task_struct *tsk)
+>  {
+>  }
+> +#endif
+>  
+> +/**
+> + * init_new_context - Initialize context of a new mm_struct.
+> + * @tsk: task struct for the mm
+> + * @mm:  the new mm struct
 
-> On 28/08/2020 15:54, Linus Walleij wrote:
->=20
-> Hi,
->=20
-> > On Fri, Aug 28, 2020 at 4:20 PM Andre Przywara <andre.przywara@arm.com>=
- wrote:
-> >=20
-> >> This is the second attempt at converting the SP804 timer binding to ya=
-ml.
-> >> Compared to v1, I forbid additional properties, and included the prime=
-cell
-> >> binding. Also the clock-names property is now listed, although without
-> >> further requirements on the names. Changelog below.
-> >=20
-> > The series:
-> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
-> >=20
-> >> I couldn't test any of those DT files on actual machines, but tried
-> >> to make the changes in a way that would be transparent to at least the
-> >> Linux driver. The only other SP804 DT user I could find is FreeBSD,
-> >> but they seem to use a different binding (no clocks, but a
-> >> clock-frequency property).
-> >=20
-> > That's annoying. I suppose FreeBSD just made that up and doesn't
-> > even have a binding document for it?
->=20
-> I couldn't find bindings at all in their git tree.
+'make *docs' will complain here about missing Return: description
 
- That's because I don't merge the bindings in the main branch.
+> + */
+> +#ifndef init_new_context
+>  static inline int init_new_context(struct task_struct *tsk,
+>  			struct mm_struct *mm)
+>  {
+>  	return 0;
+>  }
+> +#endif
 
-> I don't think they
-> treat this very formally, it seems to be more use-case driven.
-> Their SP804 driver does not know how to handle clock properties, so most
-> of the DTs (in sys/gnu/dts, so apparently copied from Linux) would not
-> work really well, because the driver assumes a hardcoded frequency of
-> 1MHz by default.
+Most architectures have non-trivial init_new_context, maybe this
+should go into nommu_context.h?
 
- In addition to sys/gnu/dts we also have sys/dts/ which are our own DTs
-before we used the Linux ones (a long time ago but some platform
-weren't converted, they will just die sometime in the futur if nobody
-takes care of them I guess).
+> +/**
+> + * destroy_context - Undo init_new_context when the mm is going away
+> + * @mm: old mm struct
+> + */
+> +#ifndef destroy_context
+>  static inline void destroy_context(struct mm_struct *mm)
+>  {
+>  }
+> +#endif
+>  
+> -static inline void deactivate_mm(struct task_struct *task,
+> -			struct mm_struct *mm)
+> -{
+> -}
+> -
+> -static inline void switch_mm(struct mm_struct *prev,
+> -			struct mm_struct *next,
+> -			struct task_struct *tsk)
+> +/**
+> + * activate_mm - called after exec switches the current task to a new mm, to switch to it
+> + * @prev_mm: previous mm of this task
+> + * @next_mm: new mm
+> + */
+> +#ifndef activate_mm
+> +static inline void activate_mm(struct mm_struct *prev_mm,
+> +			       struct mm_struct *next_mm)
+>  {
+> +	switch_mm(prev_mm, next_mm, current);
+>  }
+> +#endif
+>  
+> -static inline void activate_mm(struct mm_struct *prev_mm,
+> -			       struct mm_struct *next_mm)
+> +/**
+> + * dectivate_mm - called when an mm is released after exit or exec switches away from it
+> + * @tsk: the task
+> + * @mm:  the old mm
+> + */
+> +#ifndef deactivate_mm
+> +static inline void deactivate_mm(struct task_struct *tsk,
+> +			struct mm_struct *mm)
+>  {
+>  }
+> +#endif
+>  
+>  #endif /* __ASM_GENERIC_MMU_CONTEXT_H */
+> diff --git a/include/asm-generic/nommu_context.h b/include/asm-generic/nommu_context.h
+> new file mode 100644
+> index 000000000000..4f916f9e16cd
+> --- /dev/null
+> +++ b/include/asm-generic/nommu_context.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __ASM_GENERIC_NOMMU_H
+> +#define __ASM_GENERIC_NOMMU_H
+> +
+> +/*
+> + * Generic hooks for NOMMU architectures, which do not need to do
+> + * anything special here.
+> + */
+> +#include <asm-generic/mm_hooks.h>
+> +
+> +static inline void switch_mm(struct mm_struct *prev,
+> +			struct mm_struct *next,
+> +			struct task_struct *tsk)
+> +{
+> +}
+> +
+> +#include <asm-generic/mmu_context.h>
+> +
+> +#endif /* __ASM_GENERIC_NOMMU_H */
+> -- 
+> 2.23.0
+> 
+> 
 
-> There is only one DT (Annapurna Alpine with Cortex-A15) that provides
-> this clock-frequency property. The Linux DT does not mention the SP804
-> in there at all, interestingly.
-
- I'm not familiar with this platform at all, it was done under
-contract by Semihalf and I'm sure that if something fails and their
-client starts to complain they will fix it.
-
-> > In an ideal world I suppose we should go and fix FreeBSD but I have
-> > no idea how easy or hard that is.
->=20
-> It seems to be messy, at least in this case, and I guess unifying DTs
-> means some work on drivers as well.
-
- I wouldn't worry about us on this case, this binding requirements
-seems to have be done a long time ago before we had any clock framework
-and if our drivers needs to be updated we will do it when we imports
-DTS from whatever Linux version this will be merged in.
-
-> But AFAIK most of the more modern platforms copy the DTs (and thus
-> implicitly the bindings) from Linux, so there is probably much less
-> deviation for many more relevant boards.
-
- Yes, I (and others) insist on using the DTs from Linux and not doing
-any patches to it without sending them to the Linux ML.
-
-> Cheers,
-> Andre
-
- Cheers,
-
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
---=20
-Emmanuel Vadot <manu@bidouilliste.com>
+-- 
+Sincerely yours,
+Mike.
