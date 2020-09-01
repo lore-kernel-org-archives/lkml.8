@@ -5,50 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EBFC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED68C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 385862100A
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FA252078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598973859;
-	bh=tVS2ZQ+Ws0jCOq4RwVouKorzH4DD8uDRN4VgE2azIpw=;
+	s=default; t=1598973871;
+	bh=rOllQOSh1D1AvNLt3q/t02L4SAX9zGTkiumemWYhKTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wi3gg0QfZp8Dw6C2gupabHMRR+NyqcJb4X18Aqgbc4Sj2S2oSvkz0orabur81y6ei
-	 VbAKLRvglwbigJl7k/GOhVcvg4u1LkJ0xqHcNRDqmCYQAnuY2zw9TH7OljaIep1aHj
-	 x8iZvY6nWAr4ZrKEplfMmuYQOSQ/cifaPmKmxPVk=
+	b=BRf24GY85/+OlUqht33d2f+cpnaC7j+YOYBGl7yJ7MPF7Pym7lzF/l1LgyLWaDwmT
+	 BEevhQ1zJp99cENleLMyZ9cqcjinIaIPfIjOXr7RG+43JttFsFkHZOVTYeENyTJCdi
+	 TMiS20GSE8PPHp63+vwpT71jC6GURb5r2rlcccL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729938AbgIAPYR (ORCPT
+        id S1729511AbgIAPYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:24:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42962 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:24:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43032 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729154AbgIAPVx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:21:53 -0400
+        id S1729707AbgIAPV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:21:56 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F64D20BED;
-        Tue,  1 Sep 2020 15:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0C7520FC3;
+        Tue,  1 Sep 2020 15:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973712;
-        bh=tVS2ZQ+Ws0jCOq4RwVouKorzH4DD8uDRN4VgE2azIpw=;
+        s=default; t=1598973715;
+        bh=rOllQOSh1D1AvNLt3q/t02L4SAX9zGTkiumemWYhKTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gAzbxd/Ar9W1DejTQAF2YQE5zG7ExDbZRfAFAR+rmtJjWQTiuu7/MFJ8oltp50RKG
-         hjcBHJi379HWzMKy10b4UykI9AplbPJtCdVABvoKFpXMRL9gqW+hs6da4JF9rReEFH
-         QfISuZb4/UssaYhQ1/5bQM7p+iHRTjxClox56DgU=
+        b=n3wN0NqfuvHfY/sNdLECLTppjAAh9bmpSaCvK9eB3CZCB8soxgKdhONjqo1UqubIX
+         +I0rJ1RrUOsk8Y0JV2rmcTZkIUa1R58ed8doHBkH7ssO7jQigUO4JSYdePhS1DbqYu
+         Eyi8XEz44+5laBITuyyMk2Nk6jChgm3U5uNI9uc8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 017/125] blktrace: ensure our debugfs dir exists
-Date:   Tue,  1 Sep 2020 17:09:32 +0200
-Message-Id: <20200901150935.417995417@linuxfoundation.org>
+        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 018/125] scsi: target: tcmu: Fix crash on ARM during cmd completion
+Date:   Tue,  1 Sep 2020 17:09:33 +0200
+Message-Id: <20200901150935.466649535@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -61,64 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-[ Upstream commit b431ef837e3374da0db8ff6683170359aaa0859c ]
+[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
 
-We make an assumption that a debugfs directory exists, but since
-this can fail ensure it exists before allowing blktrace setup to
-complete. Otherwise we end up stuffing blktrace files on the debugfs
-root directory. In the worst case scenario this *in theory* can create
-an eventual panic *iff* in the future a similarly named file is created
-prior on the debugfs root directory. This theoretical crash can happen
-due to a recursive removal followed by a specific dentry removal.
+If tcmu_handle_completions() has to process a padding shorter than
+sizeof(struct tcmu_cmd_entry), the current call to
+tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
+param is wrong and causes crashes on e.g. ARM, because
+tcmu_flush_dcache_range() in this case calls
+flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
+address above the end of the vmalloc'ed area.
 
-This doesn't fix any known crash, however I have seen the files
-go into the main debugfs root directory in cases where the debugfs
-directory was not created due to other internal bugs with blktrace
-now fixed.
+The fix is to use the minimum of remaining ring space and sizeof(struct
+tcmu_cmd_entry) as the length param.
 
-blktrace is also completely useless without this directory, so
-this ensures to userspace we only setup blktrace if the kernel
-can stuff files where they are supposed to go into.
+The patch was tested on kernel 4.19.118.
 
-debugfs directory creations typically aren't checked for, and we have
-maintainers doing sweep removals of these checks, but since we need this
-check to ensure proper userspace blktrace functionality we make sure
-to annotate the justification for the check.
+See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/target/target_core_user.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 7a4ca2deb39bc..1442f6152abc2 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -529,6 +529,18 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	if (!dir)
- 		goto err;
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index 9c05e820857aa..91dbac7446a47 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1231,7 +1231,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
  
-+	/*
-+	 * As blktrace relies on debugfs for its interface the debugfs directory
-+	 * is required, contrary to the usual mantra of not checking for debugfs
-+	 * files or directories.
-+	 */
-+	if (IS_ERR_OR_NULL(dir)) {
-+		pr_warn("debugfs_dir not present for %s so skipping\n",
-+			buts->name);
-+		ret = -ENOENT;
-+		goto err;
-+	}
-+
- 	bt->dev = dev;
- 	atomic_set(&bt->dropped, 0);
- 	INIT_LIST_HEAD(&bt->running_list);
+ 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
+ 
+-		tcmu_flush_dcache_range(entry, sizeof(*entry));
++		/*
++		 * Flush max. up to end of cmd ring since current entry might
++		 * be a padding that is shorter than sizeof(*entry)
++		 */
++		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
++					       udev->cmdr_size);
++		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
++					ring_left : sizeof(*entry));
+ 
+ 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
+ 			UPDATE_HEAD(udev->cmdr_last_cleaned,
 -- 
 2.25.1
 
