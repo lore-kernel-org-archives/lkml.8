@@ -2,125 +2,130 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2300AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43278C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5F1D204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C+h+cgcv"
+	by mail.kernel.org (Postfix) with ESMTP id 0D82E2067C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:10:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976641;
+	bh=f8pxtx+OyrES5Ep2lPtPO/PT39Gfc/bkyv0MwzHa3LY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Gyasq7dMsexCitO+7TrqAefCA1TYtviBjtG2Vj/yiXDNbPSpFpeW7VvgCsGck1Ixv
+	 KE26x9h5fOFiwnM6RPVHcZoIb7GD/hWTE3adVmfWU7Jtr3U3s/NzWdgjZDTOlSRkRK
+	 rws2YP8GagDjqjEEXG5LHb12Imu1oghXHzqhSZ+8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbgIAQKe (ORCPT
+        id S1728047AbgIAQKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:10:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60406 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731340AbgIAQKQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:10:16 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 639DCC061244;
-        Tue,  1 Sep 2020 09:10:16 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id f18so1045444pfa.10;
-        Tue, 01 Sep 2020 09:10:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=NsQXaCw31y4r2uMbkl6htgoK/WBIwM078xbS0cXU+7w=;
-        b=C+h+cgcvCdrvsyM+XY6TVnknhOFCDL5CwskerXbP75VOQCWFbZN3VDOoKK3mYDE2Ho
-         8xjUAX4TZXOr5ocf08At2G3jXdQXJXMFupaCuTuTXAoiKMbK4Vi3Q78rpCYWKBgOwzej
-         lV3M/pKI9jlR+vlE1meAo8UfT7hEOtb97EepRRb0Vuk4nA5YMqzjfs6e/QSo8Yy+Mo3R
-         y3u1rufk8yt3lNvVzPqtvAsa1UXgPCKr80Q3iKwWX9MMxdWS+YISCPaOk3ghRT/XfZvj
-         z9nIlBWyKqiSbwDVHY7XB0jmbZ10rqZRfEL24/Xato3AxOJXYDsx+kYrEz/GtCtS23lW
-         I9+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=NsQXaCw31y4r2uMbkl6htgoK/WBIwM078xbS0cXU+7w=;
-        b=bvXtCDnYPQHGlob5b0sYj6Y83fROlJXOEQoTEbdBbBIUfGVhu9jDxiC9dBqpUzOhFA
-         9ovTwZNbZv7/ZqIaK7ZWOhvB5lWJcSjugrPKo6i6u5r+VRZZwwhcsXLX1kpP+d93i47H
-         CSA1YYjIoOG7Hx1aV6mIjb+b+xwijW2VRq/NpLWk7XIV6Hfeu37kXwUKKcg52ZbKURvT
-         hv0L5qBq9hIUkIYc+1kMhYugEGbUcgv/nZEvgarc01D8kGYhz5xxrgXXCer2r/OS+H6i
-         A8kgOJTm1JMyboATA2xQQ8Ka4HUsJ4gMGdmLpsfmwhcSog05BuSniSpyLXBqg3dWMUOt
-         2+zw==
-X-Gm-Message-State: AOAM5325tmgJgSd3gAl5yvtBeZfPeCNCnXLQ/qY/vpZ0n8yzvEskYgMC
-        iszmvK5EEClAWczO9pDNxIWENwlidzQ=
-X-Google-Smtp-Source: ABdhPJwKtA1KUbqtGdo3afUnY5etbEnRl0rJyDOflcBsCus3lfPEuSBXspRQU1fIzltpiNIbRaOsAQ==
-X-Received: by 2002:a63:4e5e:: with SMTP id o30mr2091042pgl.254.1598976615541;
-        Tue, 01 Sep 2020 09:10:15 -0700 (PDT)
-Received: from [192.168.1.3] (ip68-111-84-250.oc.oc.cox.net. [68.111.84.250])
-        by smtp.gmail.com with ESMTPSA id c3sm2506092pfo.120.2020.09.01.09.10.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 09:10:14 -0700 (PDT)
-Subject: Re: [PATCH 1/2] serial: 8250: Simplify with dev_err_probe()
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jirislaby@kernel.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Lukas Wunner <lukas@wunner.de>, linux-serial@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200901153100.18827-1-krzk@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <04f68fe6-2f92-031d-a96f-e93d7c741d88@gmail.com>
-Date:   Tue, 1 Sep 2020 09:10:12 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Firefox/78.0 Thunderbird/78.1.1
+        Tue, 1 Sep 2020 12:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729968AbgIAPia (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:38:30 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F4A421534;
+        Tue,  1 Sep 2020 15:38:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974710;
+        bh=f8pxtx+OyrES5Ep2lPtPO/PT39Gfc/bkyv0MwzHa3LY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QJ3A18BU7pSeHzcBgyjhurEQI3X4MxQ3qeUbKR8qXUMAk4belvyF1ommuj9+K/flW
+         +oovJnNgIsevl2ESdczRlyHgfFeh8QOB1qRHYD6y1vlTROp49CoErLN4Y/nInQ0pR6
+         FT6FemsrBswkXeMAxoqZi4V+BJHt0Es0DQgA8feg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Andrey Konovalov <andrey.konovalov@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 065/255] media: i2c: imx290: fix reset GPIO pin handling
+Date:   Tue,  1 Sep 2020 17:08:41 +0200
+Message-Id: <20200901151003.842944928@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200901153100.18827-1-krzk@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Andrey Konovalov <andrey.konovalov@linaro.org>
 
+[ Upstream commit 3909a92d7df622b41b9ceeeea694e641cad7667b ]
 
-On 9/1/2020 8:30 AM, Krzysztof Kozlowski wrote:
-> Common pattern of handling deferred probe can be simplified with
-> dev_err_probe().  Less code and the error value gets printed.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->   drivers/tty/serial/8250/8250_bcm2835aux.c | 12 +++---------
->   drivers/tty/serial/8250/8250_ingenic.c    | 20 ++++++--------------
->   2 files changed, 9 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/8250/8250_bcm2835aux.c b/drivers/tty/serial/8250/8250_bcm2835aux.c
-> index 12d03e678295..fd95860cd661 100644
-> --- a/drivers/tty/serial/8250/8250_bcm2835aux.c
-> +++ b/drivers/tty/serial/8250/8250_bcm2835aux.c
-> @@ -110,12 +110,8 @@ static int bcm2835aux_serial_probe(struct platform_device *pdev)
->   
->   	/* get the clock - this also enables the HW */
->   	data->clk = devm_clk_get(&pdev->dev, NULL);
-> -	ret = PTR_ERR_OR_ZERO(data->clk);
-> -	if (ret) {
-> -		if (ret != -EPROBE_DEFER)
-> -			dev_err(&pdev->dev, "could not get clk: %d\n", ret);
-> -		return ret;
-> -	}
-> +	if (IS_ERR(data->clk))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(data->clk), "could not get clk\n");
+According to https://www.kernel.org/doc/Documentation/gpio/consumer.txt,
 
-For 8250_bcm2835aux.c:
+- all of the gpiod_set_value_xxx() functions operate with the *logical*
+value. So in imx290_power_on() the reset signal should be cleared
+(de-asserted) with gpiod_set_value_cansleep(imx290->rst_gpio, 0), and in
+imx290_power_off() the value of 1 must be used to apply/assert the reset
+to the sensor. In the device tree the reset pin is described as
+GPIO_ACTIVE_LOW, and gpiod_set_value_xxx() functions take this into
+account,
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+- when devm_gpiod_get_optional() is called with GPIOD_ASIS, the GPIO is
+not initialized, and the direction must be set later; using a GPIO
+without setting its direction first is illegal and will result in undefined
+behavior. Fix this by using GPIOD_OUT_HIGH instead of GPIOD_ASIS (this
+asserts the reset signal to the sensor initially).
+
+Signed-off-by: Andrey Konovalov <andrey.konovalov@linaro.org>
+Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/media/i2c/imx290.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/i2c/imx290.c b/drivers/media/i2c/imx290.c
+index f7678e5a5d879..157a0ed0a8856 100644
+--- a/drivers/media/i2c/imx290.c
++++ b/drivers/media/i2c/imx290.c
+@@ -628,7 +628,7 @@ static int imx290_power_on(struct device *dev)
+ 	}
+ 
+ 	usleep_range(1, 2);
+-	gpiod_set_value_cansleep(imx290->rst_gpio, 1);
++	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
+ 	usleep_range(30000, 31000);
+ 
+ 	return 0;
+@@ -641,7 +641,7 @@ static int imx290_power_off(struct device *dev)
+ 	struct imx290 *imx290 = to_imx290(sd);
+ 
+ 	clk_disable_unprepare(imx290->xclk);
+-	gpiod_set_value_cansleep(imx290->rst_gpio, 0);
++	gpiod_set_value_cansleep(imx290->rst_gpio, 1);
+ 	regulator_bulk_disable(IMX290_NUM_SUPPLIES, imx290->supplies);
+ 
+ 	return 0;
+@@ -760,7 +760,8 @@ static int imx290_probe(struct i2c_client *client)
+ 		goto free_err;
+ 	}
+ 
+-	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_ASIS);
++	imx290->rst_gpio = devm_gpiod_get_optional(dev, "reset",
++						   GPIOD_OUT_HIGH);
+ 	if (IS_ERR(imx290->rst_gpio)) {
+ 		dev_err(dev, "Cannot get reset gpio\n");
+ 		ret = PTR_ERR(imx290->rst_gpio);
 -- 
-Florian
+2.25.1
+
+
+
