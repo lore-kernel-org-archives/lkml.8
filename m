@@ -2,90 +2,108 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B4DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:51:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C171C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2C8C205CB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:51:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE93205CB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FABgGNgV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbgIAIv2 (ORCPT
+        id S1728030AbgIAIvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:51:28 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:52507 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727989AbgIAIvR (ORCPT
+        Tue, 1 Sep 2020 04:51:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48990 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727915AbgIAIvI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:51:17 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-118-LZ28NOJPPTaVtO94LDjr0g-1; Tue, 01 Sep 2020 09:51:13 +0100
-X-MC-Unique: LZ28NOJPPTaVtO94LDjr0g-1
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Tue, 1 Sep 2020 09:51:12 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Tue, 1 Sep 2020 09:51:12 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Nick Desaulniers' <ndesaulniers@google.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-CC:     Masahiro Yamada <masahiroy@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        stable <stable@vger.kernel.org>, Andy Lavr <andy.lavr@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Sami Tolvanen" <samitolvanen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] lib/string.c: implement stpcpy
-Thread-Topic: [PATCH v3] lib/string.c: implement stpcpy
-Thread-Index: AQHWf+14nZWdJbVkRkiz0fwM7UWCxalTeddg
-Date:   Tue, 1 Sep 2020 08:51:12 +0000
-Message-ID: <5989b2666acb49ccb2d34a0b91f36923@AcuMS.aculab.com>
-References: <20200825135838.2938771-1-ndesaulniers@google.com>
- <CAK7LNAQXo5-5W6hvNMEVPBPf3tRWaf-pQdSR-0OHyi4RCGhjsQ@mail.gmail.com>
- <d56bf7b93f7a28c4a90e4e16fd412e6934704346.camel@perches.com>
- <CAKwvOd=YrVtPsB7HYPO0N=K7QJm9KstayqqeYQERSaGtGy2Bjg@mail.gmail.com>
- <CAK7LNAQKwOo=Oas+7Du9+neSm=Ev6pxdPV7ges7eEEpW+jh8Ug@mail.gmail.com>
- <202008261627.7B2B02A@keescook>
- <CAHp75VfniSw3AFTyyDk2OoAChGx7S6wF7sZKpJXNHmk97BoRXA@mail.gmail.com>
- <202008271126.2C397BF6D@keescook>
- <CAHp75VeA6asim81CwxPD7LKc--DEvOWH9fwgQ9Bbb1Xf55OYKw@mail.gmail.com>
- <202008271523.88796F201F@keescook>
- <CAHp75VcGOvYOXCaQeux5PQ+tHRYF3W=173s80U=mDE-0zzwTXg@mail.gmail.com>
- <CAKwvOdnV6GySbhKGVEUBV5GdanR9xRWAFE0JPcpORR=2dmRWPg@mail.gmail.com>
-In-Reply-To: <CAKwvOdnV6GySbhKGVEUBV5GdanR9xRWAFE0JPcpORR=2dmRWPg@mail.gmail.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Tue, 1 Sep 2020 04:51:08 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C259CC061244;
+        Tue,  1 Sep 2020 01:51:06 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id t11so209647plr.5;
+        Tue, 01 Sep 2020 01:51:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xD7AOhYrDQ8kkfdgEvt/y0u2Xdwvh6fCgyljU9EIUyY=;
+        b=FABgGNgVrC2WMjW6y8hwbXiuAPDyunDXT3GaLiIjvPsfYjB44e4eMEph/2pKD0Pe4e
+         1zRS2pRn35ajG+jI42hIvtEIluvLJiQMOHOWoiC7kujTDm2kf8YDCEWgTWt2Zrs8u/Th
+         U9PyZ7uvDi9Lxl5FaWgekWxmvgjMgizz65UUcQJKH3i0PLeAeFhwqtbVu8sf49nSoEsQ
+         t5bi3wmPefDBB2LVUII2CdAZ0BoV0Mnn/eNj1/9kMLdPduaK3KCUUCQrYsgU3TdtWRsk
+         2ceFG9pCOeScNIN3YOiD+eCb11t8KEBYvz5q1gpxvAXLGfvNxX6d3JQ71gMiSd2OQyzx
+         g5AA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xD7AOhYrDQ8kkfdgEvt/y0u2Xdwvh6fCgyljU9EIUyY=;
+        b=To0Sy0YPX5KYwi/KVrsjPWVB0BPBNGgjH2811aDw9N0TmoO1FK1vYzytTeHI1awF6y
+         zf9XElZX+/NbYa3ZUJ13mBTyv78auMK8iBVqMZpGJZzoWtNG72cB7KLl2GWgFL45HIfg
+         tSHR/LKHoeEKsETxMc9s+WlXaUAaDgMEr/Xv5/ZldI3wpMlaDNSrSkKWarFl2OGfVoJ6
+         dP+T3gySc5k8k4ZtcOsQCMoIvlOYyvWO/FyWU/RiABRIWgfVq5wUB268rLF/Y9+BP5s9
+         fUUYDWSGvs71TxBI9N7hoBlqwGELq8vMMSc3lN0N0On0TnZV/SI2YzwcFoOyg43HwqdR
+         vDig==
+X-Gm-Message-State: AOAM531QBsqZ20ZW4bIVPn2b6wEH3NUI7XbOqWOo8DRFd0wPPvQmdjWR
+        lmq16ucL8Xv83TC8eRs3Kd0ln241IMUtObjn1V8=
+X-Google-Smtp-Source: ABdhPJyksbW8OmcVYhvI14Fj54C4ihpatgb1J0h7uGF9RmYSFYWKfDks9WtvUKyN5qid4RP56VPjpQK04UwFSUAGBaM=
+X-Received: by 2002:a17:902:bc85:: with SMTP id bb5mr481240plb.303.1598950265536;
+ Tue, 01 Sep 2020 01:51:05 -0700 (PDT)
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
-X-Mimecast-Spam-Score: 0.002
-X-Mimecast-Originator: aculab.com
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
-Content-Language: en-US
+References: <20200901005713.27453-1-evan.nimmo@alliedtelesis.co.nz>
+ <20200901082046.GO1891694@smile.fi.intel.com> <20200901084619.GA897@ninjato>
+In-Reply-To: <20200901084619.GA897@ninjato>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 1 Sep 2020 11:50:48 +0300
+Message-ID: <CAHp75VdGkHqr_bJ5f2hf0yfk5rTAdpNkBUzcM=JGHKgnhyo-=Q@mail.gmail.com>
+Subject: Re: [PATCH] i2c: algo-pca: Reapply i2c bus settings after reset
+To:     Wolfram Sang <wsa@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Evan Nimmo <evan.nimmo@alliedtelesis.co.nz>,
+        Jean Delvare <jdelvare@suse.de>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPZiBjb3Vyc2UsIG5vICJUcnVlIFNjb3RzbWFuIiB3b3VsZCBhY2NpZGVudGFsbHkgbWlzdXNl
-IEMgc3RyaW5nLmggQVBJIQ0KPiBodHRwczovL3lvdXJsb2dpY2FsZmFsbGFjeWlzLmNvbS9uby10
-cnVlLXNjb3RzbWFuDQoNCkdvb2dsZSB3aWxsIGZpbmQgcGxlbnR5IG9mOg0KCXN0cltzdHJsZW4o
-c3RyKV0gPSAwOw0KDQogICBEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUs
-IEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJl
-Z2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Tue, Sep 1, 2020 at 11:48 AM Wolfram Sang <wsa@kernel.org> wrote:
+> > > +/**
+> > > + * struct i2c_bus_settings - The configured i2c bus settings
+> > > + * @mode: Configured i2c bus mode (PCA9665)
+> > > + * @tlow: Configured SCL LOW period (PCA9665)
+> > > + * @thi: Configured SCL HIGH period (PCA9665)
+> > > + * @clock_freq: The configured clock frequency (PCA9564)
+> > > + */
+> > > +struct i2c_bus_settings {
+> > > +   int mode;
+> > > +   int tlow;
+> > > +   int thi;
+> > > +   int clock_freq;
+> > > +};
+> >
+> > This is a good candidate to have it in generic header for sake of the
+> > unification. Possible users:
+> >
+> > struct tegra_i2c_hw_feature
+> > struct cci_data::struct hw_params
+>
+> Could be evaluated, but outside the scope of this patch, I think. This
+> is a bugfix, so a self-contained patch makes backporting a lot easier.
 
+True, my point here is to think if we were beneficial of this
+definition in the i2c.h.
+
+-- 
+With Best Regards,
+Andy Shevchenko
