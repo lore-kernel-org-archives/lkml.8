@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6EEC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D39EBC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4506C2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A342D206A5
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976200;
-	bh=2OnOolsDMu+0U4MnMCH9bUDxEatXuuId2hTaXWtFacM=;
+	s=default; t=1598976206;
+	bh=pcV0oajEnpm+aZV6RyAIZ2HIm69x7JgW03C8QV9BoQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KamxHGqTSpLdhnKcH/lx4K2z51T1xiqV7aUZTi5nOFxetXxirC6bHVLiFr9I+DdrP
-	 y8JDA2n12lRFJOxcObpkOgoE8+5xPcU3LKClcr0NVwr+ks/f/Wrh/xv+bXb5r5MAHO
-	 VysFZkAeSKVwJ0hsaUhrrZy4n1kBiTeR8zmHlK5o=
+	b=hSDqoSdQUp6tKQS4lCfqIe9WS6NbAVdoMT9TM8d9NV3BJci+as/yOPPh8bJIIYBmA
+	 mQTIPnazFzpdtHH8SwV+Wfzus8NGJUy1dtZUnhBM+iBOffhTYyMC5hQIJCWAvv2IOP
+	 Bt3jk7QDILaD8F+39g+kLJ6Cz/bqyv6ILfstfKog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgIAQDS (ORCPT
+        id S1731601AbgIAPmr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:03:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:42:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731624AbgIAPm6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:42:58 -0400
+        id S1729063AbgIAPk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:40:26 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4B22206EB;
-        Tue,  1 Sep 2020 15:42:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C674920866;
+        Tue,  1 Sep 2020 15:40:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974978;
-        bh=2OnOolsDMu+0U4MnMCH9bUDxEatXuuId2hTaXWtFacM=;
+        s=default; t=1598974826;
+        bh=pcV0oajEnpm+aZV6RyAIZ2HIm69x7JgW03C8QV9BoQY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z6DDidUVp5iZqdpSyTqiiLyyCAOiZV3SFN51oql/OJe3x+mHqTSLvDOUSmRm/d3uP
-         F5w3IWZDkUlNHjyDBKuO+Cv4iCrsqHj8U8XikRLscdrPCYivl0nsQ7YzkXjGODJquf
-         n9P9x8jeJsYQtJDyqfKPBH01Eslt+/mFxfbomRsw=
+        b=AR5j3FWhmkb/xGv9yYe7bNHf3LPKT++jAsPt7f01xRgRCT9OzZ98m6RgO8j81oOde
+         63ZUHdk/XgDn7dGHl9vbD1W3K6mJCICdIdEHYDJkNtPlIG7Km+rvpiUUyNTs0INE7R
+         6VRA86pL/1FscSKlqj3NQHvatFCtG6b+GwWlfWvg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 163/255] libbpf: Fix map index used in error message
-Date:   Tue,  1 Sep 2020 17:10:19 +0200
-Message-Id: <20200901151008.502236603@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 105/255] video: fbdev: controlfb: Fix build for COMPILE_TEST=y && PPC_PMAC=n
+Date:   Tue,  1 Sep 2020 17:09:21 +0200
+Message-Id: <20200901151005.744355680@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -61,34 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 1e891e513e16c145cc9b45b1fdb8bf4a4f2f9557 ]
+[ Upstream commit 4d618b9f3fcab84e9ec28c180de46fb2c929d096 ]
 
-The error message emitted by bpf_object__init_user_btf_maps() was using the
-wrong section ID.
+The build is currently broken, if COMPILE_TEST=y and PPC_PMAC=n:
 
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200819110534.9058-1-toke@redhat.com
+  linux/drivers/video/fbdev/controlfb.c: In function ‘control_set_hardware’:
+  linux/drivers/video/fbdev/controlfb.c:276:2: error: implicit declaration of function ‘btext_update_display’
+    276 |  btext_update_display(p->frame_buffer_phys + CTRLFB_OFF,
+        |  ^~~~~~~~~~~~~~~~~~~~
+
+Fix it by including btext.h whenever CONFIG_BOOTX_TEXT is enabled.
+
+Fixes: a07a63b0e24d ("video: fbdev: controlfb: add COMPILE_TEST support")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Acked-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Link: https://lore.kernel.org/r/20200821104910.3363818-1-mpe@ellerman.id.au
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/bpf/libbpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/video/fbdev/controlfb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index e0b88f0013b74..3ac0094706b81 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -2237,7 +2237,7 @@ static int bpf_object__init_user_btf_maps(struct bpf_object *obj, bool strict,
- 		data = elf_getdata(scn, NULL);
- 	if (!scn || !data) {
- 		pr_warn("failed to get Elf_Data from map section %d (%s)\n",
--			obj->efile.maps_shndx, MAPS_ELF_SEC);
-+			obj->efile.btf_maps_shndx, MAPS_ELF_SEC);
- 		return -EINVAL;
- 	}
+diff --git a/drivers/video/fbdev/controlfb.c b/drivers/video/fbdev/controlfb.c
+index 9c4f1be856eca..547abeb39f87a 100644
+--- a/drivers/video/fbdev/controlfb.c
++++ b/drivers/video/fbdev/controlfb.c
+@@ -49,6 +49,8 @@
+ #include <linux/cuda.h>
+ #ifdef CONFIG_PPC_PMAC
+ #include <asm/prom.h>
++#endif
++#ifdef CONFIG_BOOTX_TEXT
+ #include <asm/btext.h>
+ #endif
  
 -- 
 2.25.1
