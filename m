@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFCD8C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24227C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD4220684
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E460121534
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974192;
-	bh=jjDMnBfV2kf4oqJ8ZC0kEzNA16gpPYlYpFDeXHx93tc=;
+	s=default; t=1598974195;
+	bh=RJLp00XD7TP+whWdfvsvIJ+pYOGSXaR2waw3YKDqRMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QrcICfjg1JNs8GQ8Gysvd4TEh20pR5CBRggWABC3Da+cJVp7yDRO7I2Zjw02lGMeW
-	 cdYnZoOTntKKb7TERZC5upeOD360l0x/Xn9AIaHvQH3Ix4z4ShI+xaELmhUDLZ9uNW
-	 DA3dmSlB0yUg5Lq2ZDoKG6DvFVwF7YBDZDc4+kKU=
+	b=SMEfadXtisbiLUEXOXBopEKviToTcv69hIpqfJVt17t6RhPomrWLF7M9Gs71lB58W
+	 lxF5hzZDr7oT0gZGL4NR2/46FqcEAOh0f7ZyOVa+Tgroh1HrZ9zXXu1qzXK5ZX9m2w
+	 l1gvucjEcLi5br3EWEHO91gHaRjeOpTxD87Z5ShA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730560AbgIAP3u (ORCPT
+        id S1730570AbgIAP3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:29:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52534 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:29:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730131AbgIAP0j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:26:39 -0400
+        id S1730058AbgIAP0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:26:44 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADC5B206FA;
-        Tue,  1 Sep 2020 15:26:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9BDA206FA;
+        Tue,  1 Sep 2020 15:26:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973999;
-        bh=jjDMnBfV2kf4oqJ8ZC0kEzNA16gpPYlYpFDeXHx93tc=;
+        s=default; t=1598974004;
+        bh=RJLp00XD7TP+whWdfvsvIJ+pYOGSXaR2waw3YKDqRMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TK0tQUh1tsSVYRM0He7RZjnsFXOLVVoS+mECYVgaoV8D/259+kSKNPmw3Zr6nAzvM
-         U2kdQbFS1NHbieyoB28WWCJpc9BFkSL9hu9WeMsoChNn95zp/TOYx5LT5sU0LJG7Oo
-         eJJ5MBGnpWwa9hNZSJWhEJ1QUlXy5FX2a47gx0d8=
+        b=fwByCt/PkeC+BR8Blgv369pbTYFjzSRvBaXzvvPxY8zQpKIhgHHdrOMXk6tegDER7
+         0lfQ1UjA+eKNTWYc+1H3/8Q/osnA38BnA2rL8X0RlpVZ0jplBdBVedbexuLe+o0yVP
+         BbGZIdk/Fj0VWdqiNjJWNo4sIGx4GQlIm31VQ2Us=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Utkarsh H Patel <utkarsh.h.patel@intel.com>,
-        Pengfei Xu <pengfei.xu@intel.com>
-Subject: [PATCH 4.19 101/125] PM: sleep: core: Fix the handling of pending runtime resume requests
-Date:   Tue,  1 Sep 2020 17:10:56 +0200
-Message-Id: <20200901150939.557264880@linuxfoundation.org>
+        stable@vger.kernel.org, kernel test robot <rong.a.chen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.19 103/125] genirq/matrix: Deal with the sillyness of for_each_cpu() on UP
+Date:   Tue,  1 Sep 2020 17:10:58 +0200
+Message-Id: <20200901150939.655943648@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -62,82 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit e3eb6e8fba65094328b8dca635d00de74ba75b45 upstream.
+commit 784a0830377d0761834e385975bc46861fea9fa0 upstream.
 
-It has been reported that system-wide suspend may be aborted in the
-absence of any wakeup events due to unforseen interactions of it with
-the runtume PM framework.
+Most of the CPU mask operations behave the same way, but for_each_cpu() and
+it's variants ignore the cpumask argument and claim that CPU0 is always in
+the mask. This is historical, inconsistent and annoying behaviour.
 
-One failing scenario is when there are multiple devices sharing an
-ACPI power resource and runtime-resume needs to be carried out for
-one of them during system-wide suspend (for example, because it needs
-to be reconfigured before the whole system goes to sleep).  In that
-case, the runtime-resume of that device involves turning the ACPI
-power resource "on" which in turn causes runtime-resume requests
-to be queued up for all of the other devices sharing it.  Those
-requests go to the runtime PM workqueue which is frozen during
-system-wide suspend, so they are not actually taken care of until
-the resume of the whole system, but the pm_runtime_barrier()
-call in __device_suspend() sees them and triggers system wakeup
-events for them which then cause the system-wide suspend to be
-aborted if wakeup source objects are in active use.
+The matrix allocator uses for_each_cpu() and can be called on UP with an
+empty cpumask. The calling code does not expect that this succeeds but
+until commit e027fffff799 ("x86/irq: Unbreak interrupt affinity setting")
+this went unnoticed. That commit added a WARN_ON() to catch cases which
+move an interrupt from one vector to another on the same CPU. The warning
+triggers on UP.
 
-Of course, the logic that leads to triggering those wakeup events is
-questionable in the first place, because clearly there are cases in
-which a pending runtime resume request for a device is not connected
-to any real wakeup events in any way (like the one above).  Moreover,
-it is racy, because the device may be resuming already by the time
-the pm_runtime_barrier() runs and so if the driver doesn't take care
-of signaling the wakeup event as appropriate, it will be lost.
-However, if the driver does take care of that, the extra
-pm_wakeup_event() call in the core is redundant.
+Add a check for the cpumask being empty to prevent this.
 
-Accordingly, drop the conditional pm_wakeup_event() call fron
-__device_suspend() and make the latter call pm_runtime_barrier()
-alone.  Also modify the comment next to that call to reflect the new
-code and extend it to mention the need to avoid unwanted interactions
-between runtime PM and system-wide device suspend callbacks.
-
-Fixes: 1e2ef05bb8cf8 ("PM: Limit race conditions between runtime PM and system sleep (v2)")
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Tested-by: Utkarsh H Patel <utkarsh.h.patel@intel.com>
-Tested-by: Pengfei Xu <pengfei.xu@intel.com>
-Cc: All applicable <stable@vger.kernel.org>
+Fixes: 2f75d9e1c905 ("genirq: Implement bitmap matrix allocator")
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/main.c |   16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ kernel/irq/matrix.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1751,13 +1751,17 @@ static int __device_suspend(struct devic
- 	}
+--- a/kernel/irq/matrix.c
++++ b/kernel/irq/matrix.c
+@@ -380,6 +380,13 @@ int irq_matrix_alloc(struct irq_matrix *
+ 	unsigned int cpu, bit;
+ 	struct cpumap *cm;
  
- 	/*
--	 * If a device configured to wake up the system from sleep states
--	 * has been suspended at run time and there's a resume request pending
--	 * for it, this is equivalent to the device signaling wakeup, so the
--	 * system suspend operation should be aborted.
-+	 * Wait for possible runtime PM transitions of the device in progress
-+	 * to complete and if there's a runtime resume request pending for it,
-+	 * resume it before proceeding with invoking the system-wide suspend
-+	 * callbacks for it.
-+	 *
-+	 * If the system-wide suspend callbacks below change the configuration
-+	 * of the device, they must disable runtime PM for it or otherwise
-+	 * ensure that its runtime-resume callbacks will not be confused by that
-+	 * change in case they are invoked going forward.
- 	 */
--	if (pm_runtime_barrier(dev) && device_may_wakeup(dev))
--		pm_wakeup_event(dev, 0);
-+	pm_runtime_barrier(dev);
- 
- 	if (pm_wakeup_pending()) {
- 		dev->power.direct_complete = false;
++	/*
++	 * Not required in theory, but matrix_find_best_cpu() uses
++	 * for_each_cpu() which ignores the cpumask on UP .
++	 */
++	if (cpumask_empty(msk))
++		return -EINVAL;
++
+ 	cpu = matrix_find_best_cpu(m, msk);
+ 	if (cpu == UINT_MAX)
+ 		return -ENOSPC;
 
 
