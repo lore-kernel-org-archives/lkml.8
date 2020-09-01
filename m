@@ -2,266 +2,87 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FA2C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A588C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC101207EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:29:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="UbJk5lGb"
+	by mail.kernel.org (Postfix) with ESMTP id 48FF4207EA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 11:30:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598959848;
+	bh=Y3y5UkDAv4eqxhZr5c9rL5O7ZyCc/VXuq26MFzz9nq8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rPvuCv2Juf20wv8i0jtnJ89pgfJfArJ+ciEzDPeWKzDqcL8W2mNi5YoHcz/zFlfgP
+	 ZNMwdkWeCZOCVuhigN2V3RXBkl6a+nOX/49AyUPbcIOY+OKWCSh2qUPB2WjZohYP1m
+	 aDjaLtrK67hF/qcXFvbm6knIs7VXk/gIcvHNy+to=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbgIAL2q (ORCPT
+        id S1726528AbgIAL3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 07:28:46 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:20518 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgIALZy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 07:25:54 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200901110912epoutp01dadee983fe72e97a7fe6c8827bf859f8~wpFUMEfW62030420304epoutp01T
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 11:09:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200901110912epoutp01dadee983fe72e97a7fe6c8827bf859f8~wpFUMEfW62030420304epoutp01T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1598958552;
-        bh=ln393y8fuOqkR5rfKtX5PMD/RrB2vBw4AuzvUPUfPcw=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=UbJk5lGbgXnobVuEuqCVH1sP0xmvLdUjQlldEO2v7b1BvsTPLZTzF4r18EtVyJlhx
-         GfVo5NvTRGrPZ8fSgqXCvSwmtKPlUaAnZzHIv3MWb6E9tJ2q5ZS2WE5KeZqJsf1nGb
-         j9z05fwSr4pc85SC/Zg20sBWv8VBOn3hI11EQstU=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200901110912epcas1p2481b6b4988a9ced45b659c1c17f105ba~wpFT6Bp191035710357epcas1p2A;
-        Tue,  1 Sep 2020 11:09:12 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.153]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4Bgkps2C8pzMqYkj; Tue,  1 Sep
-        2020 11:09:09 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        80.52.19033.5DB2E4F5; Tue,  1 Sep 2020 20:09:09 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200901110908epcas1p1187737a9b58b1dd8b868c1a3f520bd0f~wpFQKiytE1134811348epcas1p1k;
-        Tue,  1 Sep 2020 11:09:08 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200901110908epsmtrp1fe02625d823aed052a4c5ddcc2f8c6db~wpFQJt9g82800628006epsmtrp1P;
-        Tue,  1 Sep 2020 11:09:08 +0000 (GMT)
-X-AuditID: b6c32a36-16fff70000004a59-35-5f4e2bd5e0f3
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        A2.A2.08382.4DB2E4F5; Tue,  1 Sep 2020 20:09:08 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200901110908epsmtip1b27fd75b2e63060dc5505a48f1cd9f57~wpFP8ZKCm0094600946epsmtip1M;
-        Tue,  1 Sep 2020 11:09:08 +0000 (GMT)
-Subject: Re: [PATCH v4 03/78] drm/vc4: hvs: Boost the core clock during
- modeset
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <a4f6ea62-441a-8e5b-5383-13d7f2b1a920@samsung.com>
-Date:   Tue, 1 Sep 2020 20:21:36 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Tue, 1 Sep 2020 07:29:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726928AbgIALZ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:25:27 -0400
+Received: from localhost (unknown [122.172.190.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB9A4207EA;
+        Tue,  1 Sep 2020 11:07:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598958469;
+        bh=Y3y5UkDAv4eqxhZr5c9rL5O7ZyCc/VXuq26MFzz9nq8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PR/oaQSSufNBm6+ewj1f1CKlOwqhr9DQhG0ymdEG1psbU4awNK4d8GmoFZGRz3//b
+         SJakzIt8uoE5C7CN+Tz0b1ckPnhMmej6SRyHSSpUPsC3j/kN2duHxDH5LLs81gsnn8
+         YtL3c8s2eqWk9dPgeiTyb1CxEl5Bt72kn/mKZcjI=
+Date:   Tue, 1 Sep 2020 16:37:45 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regmap: soundwire: remove unsed header mod_devicetable.h
+Message-ID: <20200901110745.GB2639@vkoul-mobl>
+References: <20200829103939.4007097-1-vkoul@kernel.org>
+ <d329c295-b2d1-68d9-79bf-278f7af4bb58@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <b04341887fb1acb9ed4adc28d109f9e21f146c7d.1594230107.git-series.maxime@cerno.tech>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrOJsWRmVeSWpSXmKPExsWy7bCmnu5Vbb94g3nL+SzW9h5lsXg7dzGL
-        xZWv79ksDjReZrTY9Pgaq8XlXXPYLCbe3sBuMePHP0aLbbOWs1msu/WazeLR1PuMDtweTe+P
-        sXnMun+WzePOufNsHve7jzN5bF5S79F69BeLx+bT1R6fN8kFcERl22SkJqakFimk5iXnp2Tm
-        pdsqeQfHO8ebmhkY6hpaWpgrKeQl5qbaKrn4BOi6ZeYA3amkUJaYUwoUCkgsLlbSt7Mpyi8t
-        SVXIyC8usVVKLUjJKbAs0CtOzC0uzUvXS87PtTI0MDAyBSpMyM5492gCY8E3hYodm26yNTDe
-        lexi5OSQEDCRaLn1nLGLkYtDSGAHo8S/04/ZIJxPjBJv1l5jgXC+MUqs+9jOCNNybtNzdhBb
-        SGAvo8T07fUQRe8ZJV6+PcbaxcjBISwQKDFhtxJIjYhAuUR7535mkBpmgR1MEh2nprOBJNgE
-        tCT2v7gBZvMLKEpc/fEYbAGvgJ3EgVUXWEFsFgEVibZnM5lAbFGBMImT21qgagQlTs58wgKy
-        i1MgXuLLDlOQMLOAuMStJ/OZIGx5ie1v54DtlRC4wCGx/zPILg4gx0ViZQ87xC/CEq+Ob4Gy
-        pSRe9rdB2dUSK08eYYPo7WCU2LIf4h4JAWOJ/UsnM4HMYRbQlFi/Sx8irCix8/dcRoi9fBLv
-        vvawQqzilehoE4IoUZa4/OAuE4QtKbG4vZNtAqPSLCTPzELywSwkH8xCWLaAkWUVo1hqQXFu
-        emqxYYERclxvYgSnYC2zHYyT3n7QO8TIxMF4iFGCg1lJhHfmDd94Id6UxMqq1KL8+KLSnNTi
-        Q4ymwOCdyCwlmpwPzAJ5JfGGpkbGxsYWJoZmpoaGSuK8D28pxAsJpCeWpGanphakFsH0MXFw
-        SjUwKa529f1t7HOK7+zuu7uMjoWKvLL5sEvZbdX125ovLaZET1rdXHz63L6LWQ8fBlzza1rf
-        mTztttVtr0lJfJ4i6Sf/rnZ6vKHPn/fPt2Wpa1w/fjKMSOXV+bxp1o2ae190Fn5N0e17YL+k
-        MS3JXDC0p/vjzaAsjc5epinNnOm7nUqjnvbYyutPq9T78e7JPJ5jEYH+e6X95B30O69tu8JY
-        GPmPwbmPZZOUlenlhDXGzKcC6q1WfRUXbFjR2hQ8u9xbv/Uwl6n1A5ZOyZAEAd/lcVEuNmL8
-        XhclJx/lfnJ2T2+ATJHxJhFfecFbmst4v5Yd2TX5ENdxV97Mej+eX+XOC6t2XnSPuuU5l/Pq
-        nWIlluKMREMt5qLiRABzPzYwSgQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsWy7bCSnO4Vbb94g9O/ZCzW9h5lsXg7dzGL
-        xZWv79ksDjReZrTY9Pgaq8XlXXPYLCbe3sBuMePHP0aLbbOWs1msu/WazeLR1PuMDtweTe+P
-        sXnMun+WzePOufNsHve7jzN5bF5S79F69BeLx+bT1R6fN8kFcERx2aSk5mSWpRbp2yVwZbx7
-        NIGx4JtCxY5NN9kaGO9KdjFyckgImEic2/ScvYuRi0NIYDejxJLW2cwQCUmJaRePAtkcQLaw
-        xOHDxRA1bxkljsw/BxYXFgiUmLBbCaRcRKBS4vOcXcwgNcwCO5gkuh6fZoFo6GWS2PNnOztI
-        FZuAlsT+FzfYQGx+AUWJqz8eM4LYvAJ2EgdWXWAFsVkEVCTans1kArFFBcIkdi55zARRIyhx
-        cuYTFpDFnALxEl92mIKEmQXUJf7Mu8QMYYtL3HoynwnClpfY/nYO8wRG4VlIumchaZmFpGUW
-        kpYFjCyrGCVTC4pz03OLDQsM81LL9YoTc4tL89L1kvNzNzGC41FLcwfj9lUf9A4xMnEwHmKU
-        4GBWEuGdecM3Xog3JbGyKrUoP76oNCe1+BCjNAeLkjjvjcKFcUIC6YklqdmpqQWpRTBZJg5O
-        qQam0Ne6Nx77Zj6N9rumcXjnkfl5zQ7y26yTQmq/F5kkzT7x1VIgaPu3XLa6Fuk57cKLGjtz
-        /1y0nWnh3b17nvaPV4wpgteSEqP5eauPL+K4t02kZRqLu1VhSYPDpM2qEn/U8ybevhB9qfD+
-        X075E5O/6bcx67Ff6N0z7/+ZSQnWMqIzuVWma++/+Lom+njakXzX600xKqELl70U4/tXMz1/
-        xpOfXxjStq274VqhdeVIymLdgMvFnjbOpyUf9PAu0XC7eLHhrrdEcLBsRtohVvNgu3cFCv/3
-        b/xwKbYkulZY9J7Iqt8dzUt8ZPxOpaWZy+Sn3qubphvmv1TqtrzVC9d9IrUzl0fOvWXDvtWw
-        eKkSS3FGoqEWc1FxIgDiyowgNgMAAA==
-X-CMS-MailID: 20200901110908epcas1p1187737a9b58b1dd8b868c1a3f520bd0f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200708174243epcas1p2b5646e3d45e412d1cd1286d90cb9cc37
-References: <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
-        <CGME20200708174243epcas1p2b5646e3d45e412d1cd1286d90cb9cc37@epcas1p2.samsung.com>
-        <b04341887fb1acb9ed4adc28d109f9e21f146c7d.1594230107.git-series.maxime@cerno.tech>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d329c295-b2d1-68d9-79bf-278f7af4bb58@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
+On 31-08-20, 09:12, Pierre-Louis Bossart wrote:
+> typo in commit message?
 
-On 7/9/20 2:41 AM, Maxime Ripard wrote:
-> In order to prevent timeouts and stalls in the pipeline, the core clock
-> needs to be maxed at 500MHz during a modeset on the BCM2711.
+Thanks for spotting, will send v2.
+
 > 
-> Reviewed-by: Eric Anholt <eric@anholt.net>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-> ---
->  drivers/gpu/drm/vc4/vc4_drv.h |  2 ++
->  drivers/gpu/drm/vc4/vc4_hvs.c |  9 +++++++++
->  drivers/gpu/drm/vc4/vc4_kms.c |  9 +++++++++
->  3 files changed, 20 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.h b/drivers/gpu/drm/vc4/vc4_drv.h
-> index e4cde1f9224b..6358f6ca8d56 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.h
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.h
-> @@ -320,6 +320,8 @@ struct vc4_hvs {
->  	void __iomem *regs;
->  	u32 __iomem *dlist;
->  
-> +	struct clk *core_clk;
-> +
->  	/* Memory manager for CRTCs to allocate space in the display
->  	 * list.  Units are dwords.
->  	 */
-> diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-> index 836d8799d79e..091fdf4908aa 100644
-> --- a/drivers/gpu/drm/vc4/vc4_hvs.c
-> +++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-> @@ -19,6 +19,7 @@
->   * each CRTC.
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/component.h>
->  #include <linux/platform_device.h>
->  
-> @@ -540,6 +541,14 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
->  	hvs->regset.regs = hvs_regs;
->  	hvs->regset.nregs = ARRAY_SIZE(hvs_regs);
->  
-> +	if (hvs->hvs5) {
-> +		hvs->core_clk = devm_clk_get(&pdev->dev, NULL);
-> +		if (IS_ERR(hvs->core_clk)) {
-> +			dev_err(&pdev->dev, "Couldn't get core clock\n");
-> +			return PTR_ERR(hvs->core_clk);
-> +		}
-> +	}
-> +
->  	if (!hvs->hvs5)
->  		hvs->dlist = hvs->regs + SCALER_DLIST_START;
->  	else
-> diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
-> index 08318e69061b..210cc2408087 100644
-> --- a/drivers/gpu/drm/vc4/vc4_kms.c
-> +++ b/drivers/gpu/drm/vc4/vc4_kms.c
-> @@ -11,6 +11,8 @@
->   * crtc, HDMI encoder).
->   */
->  
-> +#include <linux/clk.h>
-> +
->  #include <drm/drm_atomic.h>
->  #include <drm/drm_atomic_helper.h>
->  #include <drm/drm_crtc.h>
-> @@ -149,6 +151,7 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
->  {
->  	struct drm_device *dev = state->dev;
->  	struct vc4_dev *vc4 = to_vc4_dev(dev);
-> +	struct vc4_hvs *hvs = vc4->hvs;
->  	struct vc4_crtc *vc4_crtc;
->  	int i;
->  
-> @@ -160,6 +163,9 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
->  		vc4_hvs_mask_underrun(dev, vc4_crtc->channel);
->  	}
->  
-> +	if (vc4->hvs->hvs5)
-> +		clk_set_min_rate(hvs->core_clk, 500000000);
-> +
->  	drm_atomic_helper_wait_for_fences(dev, state, false);
->  
->  	drm_atomic_helper_wait_for_dependencies(state);
-> @@ -182,6 +188,9 @@ vc4_atomic_complete_commit(struct drm_atomic_state *state)
->  
->  	drm_atomic_helper_commit_cleanup_done(state);
->  
-> +	if (vc4->hvs->hvs5)
-> +		clk_set_min_rate(hvs->core_clk, 0);
-> +
->  	drm_atomic_state_put(state);
->  
->  	up(&vc4->async_modeset);
-> 
-
-This patch doesn't control the enable/disable of core_clk.
-So, I think that it need to handle the clock as following:
-
-diff --git a/drivers/gpu/drm/vc4/vc4_hvs.c b/drivers/gpu/drm/vc4/vc4_hvs.c
-index 4ef88c0b51ab..355d67fd8beb 100644
---- a/drivers/gpu/drm/vc4/vc4_hvs.c
-+++ b/drivers/gpu/drm/vc4/vc4_hvs.c
-@@ -588,6 +588,12 @@ static int vc4_hvs_bind(struct device *dev, struct device *master, void *data)
-                        dev_err(&pdev->dev, "Couldn't get core clock\n");
-                        return PTR_ERR(hvs->core_clk);
-                }
-+
-+               ret = clk_prepare_enable(hvs->core_clk);
-+               if (ret) {
-+                       dev_err(&pdev->dev, "Couldn't enable core clock\n");
-+                       return ret;
-+               }
-        }
- 
-        if (!hvs->hvs5)
-@@ -681,6 +687,8 @@ static void vc4_hvs_unbind(struct device *dev, struct device *master,
-        drm_mm_takedown(&vc4->hvs->dlist_mm);
-        drm_mm_takedown(&vc4->hvs->lbm_mm);
- 
-+       clk_prepare_enable(vc4->hvs->core_clk);
-+
-        vc4->hvs = NULL;
- }
-
-
+> On 8/29/20 5:39 AM, Vinod Koul wrote:
+> > mod_devicetable.h does not seem to be required for this file, so
+> > remove it.
+> > 
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >   drivers/base/regmap/regmap-sdw.c | 1 -
+> >   1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/drivers/base/regmap/regmap-sdw.c b/drivers/base/regmap/regmap-sdw.c
+> > index 50a66382d87d..c92d614b4943 100644
+> > --- a/drivers/base/regmap/regmap-sdw.c
+> > +++ b/drivers/base/regmap/regmap-sdw.c
+> > @@ -2,7 +2,6 @@
+> >   // Copyright(c) 2015-17 Intel Corporation.
+> >   #include <linux/device.h>
+> > -#include <linux/mod_devicetable.h>
+> >   #include <linux/module.h>
+> >   #include <linux/soundwire/sdw.h>
+> >   #include "internal.h"
+> > 
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+~Vinod
