@@ -2,106 +2,68 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8525AC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B04CC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4CB322068F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:44:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751052068F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 08:44:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ysoft.com header.i=@ysoft.com header.b="hgJzV6bb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbgIAIoP (ORCPT
+        id S1727786AbgIAIoj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 04:44:15 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:60134 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726078AbgIAIoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 04:44:14 -0400
-Received: from ambrosehua-HP-xw6600-Workstation (unknown [182.149.161.99])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxj93VCU5f290PAA--.640S2;
-        Tue, 01 Sep 2020 16:44:07 +0800 (CST)
-Date:   Tue, 1 Sep 2020 16:44:05 +0800
-From:   Huang Pei <huangpei@loongson.cn>
-To:     Huacai Chen <chenhc@lemote.com>
-Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        "open list:MIPS" <linux-mips@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-Subject: Re: [PATCH] MIPS: perf: Fix wrong check condition of Loongson event
- IDs
-Message-ID: <20200901084405.2lhsns5zxljbkhgy@ambrosehua-HP-xw6600-Workstation>
-References: <1598515388-3604-1-git-send-email-yangtiezhu@loongson.cn>
- <CAAhV-H4MA7L8uBG3y1R-VgkS74Awa5-Qsp-vQUsYM8jwgtekJg@mail.gmail.com>
+        Tue, 1 Sep 2020 04:44:39 -0400
+Received: from uho.ysoft.cz ([81.19.3.130]:38910 "EHLO uho.ysoft.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726102AbgIAIoh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 04:44:37 -0400
+Received: from [10.1.8.111] (unknown [10.1.8.111])
+        by uho.ysoft.cz (Postfix) with ESMTP id 8046CA00D7;
+        Tue,  1 Sep 2020 10:44:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ysoft.com;
+        s=20160406-ysoft-com; t=1598949875;
+        bh=mIdANwWwlPqHszzYGjhQKPmy/JsZ+HrTUgoApsidgoY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=hgJzV6bbgTlG6jqkhi4G/K86n/3yxvlWgkaIxznqz/g03TnZpxBUf5V6impw8wE+S
+         HCuYNUHOmAQxJ7F1ihLVdNHeK6I8xK/JG9LNmPtoK1rf5XJoTDPR1krxDh5i04phrI
+         YQHWNRRSjTghnlmtZvgDNYl8L3cUh3GLPirE+++o=
+Subject: Re: [PATCH v4] video: fbdev: ssd1307fb: Added support to Column
+ offset
+To:     b.zolnierkie@samsung.com
+Cc:     Rodrigo Alencar <455.rodrigo.alencar@gmail.com>,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+References: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
+From:   =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>
+Message-ID: <d15729dd-63d1-7a06-f957-22eab6d74c9f@ysoft.com>
+Date:   Tue, 1 Sep 2020 10:44:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAhV-H4MA7L8uBG3y1R-VgkS74Awa5-Qsp-vQUsYM8jwgtekJg@mail.gmail.com>
-User-Agent: NeoMutt/20171215
-X-CM-TRANSID: AQAAf9Dxj93VCU5f290PAA--.640S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7Cry7Cw45KFW3XF4Duw4DJwb_yoW8WF4Upr
-        4Uua1aywnrtr12ga98ZanrJr1DJrn8uwnrWayDKF13Awn8Z34DXFsrXFn8tr15Xwn0kayx
-        Xay2gr17Za4UZaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUyv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcVAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCF
-        x2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14
-        v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY
-        67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2
-        IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AK
-        xVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbXdbUUUUUU==
-X-CM-SenderInfo: xkxd0whshlqz5rrqw2lrqou0/
+In-Reply-To: <1595622138-3965-1-git-send-email-455.rodrigo.alencar@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Aug 28, 2020 at 04:49:37PM +0800, Huacai Chen wrote:
-> Hi, Pei,
+On 24. 07. 20 22:22, Rodrigo Alencar wrote:
+> This patch provides support for displays like VGM128064B0W10,
+> which requires a column offset of 2, i.e., its segments starts
+> in SEG2 and ends in SEG129.
 > 
-> On Thu, Aug 27, 2020 at 4:05 PM Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> > According to the user's manual chapter 8.2.1 of Loongson 3A2000 CPU [1]
-> > and 3A3000 CPU [2], we should take some event IDs such as 274, 358, 359
-> > and 360 as valid in the check condition, otherwise they are recognized
-> > as "not supported", fix it.
-> I think this patch needs you to confirm.
-> 
-> >
-> > [1] http://www.loongson.cn/uploadfile/cpu/3A2000/Loongson3A2000_user2.pdf
-> > [2] http://www.loongson.cn/uploadfile/cpu/3A3000/Loongson3A3000_3B3000user2.pdf
-> >
-> > Fixes: e9dfbaaeef1c ("MIPS: perf: Add hardware perf events support for new Loongson-3")
-> > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
-> > ---
-> >  arch/mips/kernel/perf_event_mipsxx.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/mips/kernel/perf_event_mipsxx.c b/arch/mips/kernel/perf_event_mipsxx.c
-> > index efce5de..011eb6bb 100644
-> > --- a/arch/mips/kernel/perf_event_mipsxx.c
-> > +++ b/arch/mips/kernel/perf_event_mipsxx.c
-> > @@ -1898,8 +1898,8 @@ static const struct mips_perf_event *mipsxx_pmu_map_raw_event(u64 config)
-> >                                 (base_id >= 64 && base_id < 90) ||
-> >                                 (base_id >= 128 && base_id < 164) ||
-> >                                 (base_id >= 192 && base_id < 200) ||
-> > -                               (base_id >= 256 && base_id < 274) ||
-> > -                               (base_id >= 320 && base_id < 358) ||
-> > +                               (base_id >= 256 && base_id < 275) ||
-> > +                               (base_id >= 320 && base_id < 361) ||
-> >                                 (base_id >= 384 && base_id < 574))
-> >                                 break;
-> >
-> > --
-> > 2.1.0
-> >
-Acked-by: Huang Pei <huangpei@loongson.cn>
+> Signed-off-by: Rodrigo Alencar <455.rodrigo.alencar@gmail.com>
 
+Hi Bartlomiej,
+what is the status of this patch? I would like to see this merged so I can send
+patches for our in-tree imx6dl-yapp4 device trees that need exactly this change.
+
+Thank you,
+Michal
