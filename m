@@ -2,135 +2,147 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5EC7C433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4247EC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABBA206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:34:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="IW4w5FQH"
+	by mail.kernel.org (Postfix) with ESMTP id 175BD206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:35:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727970AbgIAOeb (ORCPT
+        id S1728245AbgIAOe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:34:31 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:15397 "EHLO m43-7.mailgun.net"
+        Tue, 1 Sep 2020 10:34:58 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48842 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728296AbgIAOVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:21:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1598970082; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=RliZByYxzLz5y1Rz5nCF+AhM3YGfRNYBxdxpZBc+zj4=; b=IW4w5FQHwipQV+J+4GTaPm94r7iLiiytMA8vQgOOh6MJDaiIhy697+L2+9ojg/gpO/9/jYxy
- pxxlpyAmi805AAiifQBtxdix1LWf7pf6iuqnZWdWkVVhjKMzAtpvlVIFN/Qbb67fJk2kYRlK
- FU3P/9DVYKVxpvSqOS5ZZXHO+ls=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5f4e58c932925f96e1ccd720 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 01 Sep 2020 14:20:57
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 12708C43387; Tue,  1 Sep 2020 14:20:57 +0000 (UTC)
-Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96CEEC433C9;
-        Tue,  1 Sep 2020 14:20:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96CEEC433C9
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-To:     stanimir.varbanov@linaro.org, robh+dt@kernel.org,
-        agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v6 4/5] arm64: dts: sdm845: Add OPP tables and power-domains for venus
-Date:   Tue,  1 Sep 2020 19:50:25 +0530
-Message-Id: <1598970026-7199-5-git-send-email-rnayak@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1598970026-7199-1-git-send-email-rnayak@codeaurora.org>
-References: <1598970026-7199-1-git-send-email-rnayak@codeaurora.org>
+        id S1727996AbgIAOdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 10:33:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B7455B16B;
+        Tue,  1 Sep 2020 14:33:07 +0000 (UTC)
+Date:   Tue, 1 Sep 2020 16:33:06 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Paul McKenney <paulmck@kernel.org>, kexec@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH next v3 5/8] printk: ringbuffer: clear initial reserved
+ fields
+Message-ID: <20200901143306.GQ4928@alley>
+References: <20200831011058.6286-1-john.ogness@linutronix.de>
+ <20200831011058.6286-6-john.ogness@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200831011058.6286-6-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the OPP tables in order to be able to vote on the performance state of
-a power-domain.
+On Mon 2020-08-31 03:16:55, John Ogness wrote:
+> prb_reserve() will set some meta data values and leave others
+> uninitialized (or rather, containing the values of the previous
+> wrap). Simplify the API by always clearing out all the fields.
+> Only the sequence number is filled in. The caller is now
+> responsible for filling in the rest of the meta data fields.
+> In particular, for correctly filling in text and dict lengths.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+>
+> ---
+>  kernel/printk/printk.c            |  7 ++++++-
+>  kernel/printk/printk_ringbuffer.c | 29 +++++++++++++++++++----------
+>  2 files changed, 25 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index ad8d1dfe5fbe..7e7d596c8878 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -520,8 +520,11 @@ static int log_store(u32 caller_id, int facility, int level,
+>  	memcpy(&r.text_buf[0], text, text_len);
+>  	if (trunc_msg_len)
+>  		memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
+> -	if (r.dict_buf)
+> +	r.info->text_len = text_len + trunc_msg_len;
+> +	if (r.dict_buf) {
+>  		memcpy(&r.dict_buf[0], dict, dict_len);
+> +		r.info->dict_len = dict_len;
+> +	}
+>  	r.info->facility = facility;
+>  	r.info->level = level & 7;
+>  	r.info->flags = flags & 0x1f;
+> @@ -1078,9 +1081,11 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
+>  		return 0;
+>  
+>  	memcpy(&dest_r.text_buf[0], &r->text_buf[0], dest_r.text_buf_size);
+> +	dest_r.info->text_len = r->info->text_len;
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 40 ++++++++++++++++++++++++++++++++++--
- 1 file changed, 38 insertions(+), 2 deletions(-)
+It looks a bit non-consistent that memcpy() copies text_buf_size but valid data
+are defined by text_len.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 2884577..86457d9b 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -3639,8 +3639,10 @@
- 			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
- 			power-domains = <&videocc VENUS_GDSC>,
- 					<&videocc VCODEC0_GDSC>,
--					<&videocc VCODEC1_GDSC>;
--			power-domain-names = "venus", "vcodec0", "vcodec1";
-+					<&videocc VCODEC1_GDSC>,
-+					<&rpmhpd SDM845_CX>;
-+			power-domain-names = "venus", "vcodec0", "vcodec1", "cx";
-+			operating-points-v2 = <&venus_opp_table>;
- 			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
- 				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
- 				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>,
-@@ -3662,6 +3664,40 @@
- 			video-core1 {
- 				compatible = "venus-encoder";
- 			};
-+
-+			venus_opp_table: venus-opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-100000000 {
-+					opp-hz = /bits/ 64 <100000000>;
-+					required-opps = <&rpmhpd_opp_min_svs>;
-+				};
-+
-+				opp-200000000 {
-+					opp-hz = /bits/ 64 <200000000>;
-+					required-opps = <&rpmhpd_opp_low_svs>;
-+				};
-+
-+				opp-320000000 {
-+					opp-hz = /bits/ 64 <320000000>;
-+					required-opps = <&rpmhpd_opp_svs>;
-+				};
-+
-+				opp-380000000 {
-+					opp-hz = /bits/ 64 <380000000>;
-+					required-opps = <&rpmhpd_opp_svs_l1>;
-+				};
-+
-+				opp-444000000 {
-+					opp-hz = /bits/ 64 <444000000>;
-+					required-opps = <&rpmhpd_opp_nom>;
-+				};
-+
-+				opp-533000097 {
-+					opp-hz = /bits/ 64 <533000097>;
-+					required-opps = <&rpmhpd_opp_turbo>;
-+				};
-+			};
- 		};
- 
- 		videocc: clock-controller@ab00000 {
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I would prefer to be on the safe size and copy only text_len.
 
+I could imagine some later optimization that will make buf_size bigger
+by alignment or something like that. The reason might be preparation
+for continuous lines or so. Then the size of the original buffer and
+the destination one might differ.
+
+It is unrelated to this patch. I would solve it by a preparation
+or followup one.
+
+
+>  	if (dest_r.dict_buf) {
+
+>  		memcpy(&dest_r.dict_buf[0], &r->dict_buf[0],
+>  		       dest_r.dict_buf_size);
+> +		dest_r.info->dict_len = r->info->dict_len;
+
+Same here.
+
+>  	}
+>  	dest_r.info->facility = r->info->facility;
+>  	dest_r.info->level = r->info->level;
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> index d66718e74aae..da54d4fadf96 100644
+> --- a/kernel/printk/printk_ringbuffer.c
+> +++ b/kernel/printk/printk_ringbuffer.c
+> @@ -1159,6 +1162,18 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+>  
+>  	d = to_desc(desc_ring, id);
+>  
+> +	/*
+> +	 * Clear all @info fields except for @seq, which is used to determine
+> +	 * the new sequence number. The writer must fill in new values.
+> +	 */
+> +	d->info.ts_nsec = 0;
+> +	d->info.text_len = 0;
+> +	d->info.dict_len = 0;
+> +	d->info.facility = 0;
+> +	d->info.flags = 0;
+> +	d->info.level = 0;
+> +	d->info.caller_id = 0;
+
+This will be easy to miss when a new field is added in the future.
+
+I would prefer to store @seq into temporary variable and clear
+the entire structure by memset(). The new sequence number is
+calculated few lines below anyway.
+
+
+Otherwise, it looks good to me.
+
+Best Regards,
+Petr
