@@ -2,77 +2,136 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A2DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2759AC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6D112078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00C4E2078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:42:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598978570;
+	bh=t1LNtG/Jdd0VPLwGJg2Ezz0CbpvnD31LnWJbbEwRVp8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=s/CxmUGIoW9DV+6FtmfqlVgI95YgO0HZEQbie3JtP5OSZe0YOtgjPQKPv+k5S+fs3
+	 MHLhStdvMjSe3dUsxN4UwUVDnyjOovcinCtBIraeZ0P1azinLyZxwtGYtKITIiQTeH
+	 nJcmEiyTfdUMr6/58Qmyu4KE/dprSI+zblnh9SGA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbgIAQmp (ORCPT
+        id S1730311AbgIAP1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:42:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54665 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731048AbgIAQmj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:42:39 -0400
-Received: from ip5f5af70b.dynamic.kabel-deutschland.de ([95.90.247.11] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1kD9MS-00034e-78; Tue, 01 Sep 2020 16:42:20 +0000
-Date:   Tue, 1 Sep 2020 18:42:19 +0200
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Miaohe Lin <linmiaohe@huawei.com>, axboe@kernel.dk,
-        ebiederm@xmission.com, madhuparnabhowmik10@gmail.com,
-        gustavoars@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] signal: clean up codestyle
-Message-ID: <20200901164219.h7aqy6h7xjbj7mzc@wittgenstein>
-References: <20200901115800.7916-1-linmiaohe@huawei.com>
- <20200901122047.7hzztrssvr72wb2d@wittgenstein>
- <20200901163904.GC4386@redhat.com>
+        Tue, 1 Sep 2020 11:27:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48806 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729977AbgIAPYp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:45 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3E6420BED;
+        Tue,  1 Sep 2020 15:24:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973884;
+        bh=t1LNtG/Jdd0VPLwGJg2Ezz0CbpvnD31LnWJbbEwRVp8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RHemctS5EaXdPEhcmLN5DFvyTl2ZM+W4C7NtFi9k8WT9QyTQQxA7zUaMQyB/HXqHb
+         ZaRdRtxOhXVo2JbF7QNoKZxuhgWakRM02NCTp5YhDYZmRBv+w7Njxe4r4Jko209fKL
+         BzRC2x9rVhSnaRUhGpiIsJ5ULi43VlD6EXncboBQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, George Kennedy <george.kennedy@oracle.com>,
+        syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 085/125] fbcon: prevent user font height or width change from causing potential out-of-bounds access
+Date:   Tue,  1 Sep 2020 17:10:40 +0200
+Message-Id: <20200901150938.740748818@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200901163904.GC4386@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 06:39:05PM +0200, Oleg Nesterov wrote:
-> On 09/01, Christian Brauner wrote:
-> >
-> > On Tue, Sep 01, 2020 at 07:58:00AM -0400, Miaohe Lin wrote:
-> > > No functional change intended.
-> >
-> > Hey Miaohe,
-> >
-> > Thank you for the patch.
-> > I'm sure this is well-intended but afaict the whole file has more or
-> > less a consistent style already where e.g. sig-1 without spaces seems to
-> > be preferred. The same for the casts where most places use a single
-> > space.
-> >
-> > Now, I know CodingStyle.rst is on your side at least when it comes to
-> > the first point:
-> >
-> > Use one space around (on each side of) most binary and ternary operators,
-> > such as any of these::
-> >
-> > 	=  +  -  <  >  *  /  %  |  &  ^  <=  >=  ==  !=  ?  :
-> >
-> > but then you'd need to change each place in kernel/signal.c where that
-> > is currently not the case.
-> 
-> Or simply leave this code alone ;)
+From: George Kennedy <george.kennedy@oracle.com>
 
-I was trying to imply that by pointing out that this would be
-file-global change. I was likely too subtle. ;)
+commit 39b3cffb8cf3111738ea993e2757ab382253d86a upstream.
 
-Christian
+Add a check to fbcon_resize() to ensure that a possible change to user font
+height or user font width will not allow a font data out-of-bounds access.
+NOTE: must use original charcount in calculation as font charcount can
+change and cannot be used to determine the font data allocated size.
+
+Signed-off-by: George Kennedy <george.kennedy@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Reported-by: syzbot+38a3699c7eaf165b97a6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/1596213192-6635-1-git-send-email-george.kennedy@oracle.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ drivers/video/fbdev/core/fbcon.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
+
+--- a/drivers/video/fbdev/core/fbcon.c
++++ b/drivers/video/fbdev/core/fbcon.c
+@@ -2152,6 +2152,9 @@ static void updatescrollmode(struct disp
+ 	}
+ }
+ 
++#define PITCH(w) (((w) + 7) >> 3)
++#define CALC_FONTSZ(h, p, c) ((h) * (p) * (c)) /* size = height * pitch * charcount */
++
+ static int fbcon_resize(struct vc_data *vc, unsigned int width, 
+ 			unsigned int height, unsigned int user)
+ {
+@@ -2161,6 +2164,24 @@ static int fbcon_resize(struct vc_data *
+ 	struct fb_var_screeninfo var = info->var;
+ 	int x_diff, y_diff, virt_w, virt_h, virt_fw, virt_fh;
+ 
++	if (ops->p && ops->p->userfont && FNTSIZE(vc->vc_font.data)) {
++		int size;
++		int pitch = PITCH(vc->vc_font.width);
++
++		/*
++		 * If user font, ensure that a possible change to user font
++		 * height or width will not allow a font data out-of-bounds access.
++		 * NOTE: must use original charcount in calculation as font
++		 * charcount can change and cannot be used to determine the
++		 * font data allocated size.
++		 */
++		if (pitch <= 0)
++			return -EINVAL;
++		size = CALC_FONTSZ(vc->vc_font.height, pitch, FNTCHARCNT(vc->vc_font.data));
++		if (size > FNTSIZE(vc->vc_font.data))
++			return -EINVAL;
++	}
++
+ 	virt_w = FBCON_SWAP(ops->rotate, width, height);
+ 	virt_h = FBCON_SWAP(ops->rotate, height, width);
+ 	virt_fw = FBCON_SWAP(ops->rotate, vc->vc_font.width,
+@@ -2623,7 +2644,7 @@ static int fbcon_set_font(struct vc_data
+ 	int size;
+ 	int i, csum;
+ 	u8 *new_data, *data = font->data;
+-	int pitch = (font->width+7) >> 3;
++	int pitch = PITCH(font->width);
+ 
+ 	/* Is there a reason why fbconsole couldn't handle any charcount >256?
+ 	 * If not this check should be changed to charcount < 256 */
+@@ -2639,7 +2660,7 @@ static int fbcon_set_font(struct vc_data
+ 	if (fbcon_invalid_charcount(info, charcount))
+ 		return -EINVAL;
+ 
+-	size = h * pitch * charcount;
++	size = CALC_FONTSZ(h, pitch, charcount);
+ 
+ 	new_data = kmalloc(FONT_EXTRA_WORDS * sizeof(int) + size, GFP_USER);
+ 
+
+
