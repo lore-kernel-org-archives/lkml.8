@@ -2,263 +2,180 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-20.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37006C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D60C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F11A42071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:50:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DF662071B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 19:50:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HuBdJFCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732338AbgIATu0 (ORCPT
+        id S1732708AbgIATum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 15:50:26 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:42115 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726936AbgIATuY (ORCPT
+        Tue, 1 Sep 2020 15:50:42 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:47442 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731964AbgIATuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 15:50:24 -0400
-Received: by mail-il1-f197.google.com with SMTP id f67so1761117ilf.9
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 12:50:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=QCcUk6PDJ66T5rY64nvFgrqzOsiBnvjDHR8LfK6QB6w=;
-        b=dR2VumguXn0HEwuVrkQMNoat30ZMkSoud3HmdmPrcYK5FfgCuXzZlQA1JxJdbZrNaR
-         2J14io63VwATxNstbQ0P7k4sedktFjCoIISsuSXELYwQNXKtRXSzttkL1XBJIQOpq8iS
-         DRgbIHovY79CKwgIYwnKrFST+aDSPQecX1GUXyJ6J9VDXIT1s/xTHK3f79D8oSf3MYoh
-         PIVHQ3vUGZKEhTM+xxwpaj99/YIheb715CPxmYwHTkt4T7o9GxRkf2FKf1hnPcZ/SNdi
-         HbfwSUVumsvjtaSBON/9v00D9WrrmyByYqzedjLe8KhTMoGkX2PWiIVo+sNWzGU2YO/5
-         Utxw==
-X-Gm-Message-State: AOAM530Li3JALT1f9m422oCbYn7133HT4YrtkMyLW0LVffFAumnub/z1
-        lNgZ3v7MqlmYvXaxPvA0HQrbx8eO6Pj/F929N11yuwoe2J1q
-X-Google-Smtp-Source: ABdhPJxiYFujkpS7nBzuzp8GpXCF2cbV4LuRtjQLL2CXA/QBzPK3lBB9PlerEbjYZDQ9Sj8fB40lmIkZgytC4lHDz+r0+w2dkPEv
+        Tue, 1 Sep 2020 15:50:37 -0400
+Received: from localhost.localdomain (c-73-42-176-67.hsd1.wa.comcast.net [73.42.176.67])
+        by linux.microsoft.com (Postfix) with ESMTPSA id EAC6E205CFFB;
+        Tue,  1 Sep 2020 12:50:35 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EAC6E205CFFB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1598989836;
+        bh=woRVXYCthTA+4j2u5YTq7CagahV1PQQeqqiqJHb7g2Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HuBdJFCBGLILh3WV1UbZ87bA2d5hpYoz5mp0oeR+RBPo4pxXuPIgJmDOM/VFmh0u+
+         q7cBfiel1K9x629rPlhh91luVikItriGSg/TxlRs+OQMaA1XdO2FhY5l9UpMTdN9nT
+         5kYSSmniIA63YmV6dbjnJZUFyuDAoGMNqSbKhfHY=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, bauerman@linux.ibm.com, robh@kernel.org,
+        gregkh@linuxfoundation.org, james.morse@arm.com,
+        catalin.marinas@arm.com, sashal@kernel.org, will@kernel.org,
+        mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        robh+dt@kernel.org, frowand.list@gmail.com,
+        vincenzo.frascino@arm.com, mark.rutland@arm.com,
+        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        pasha.tatashin@soleen.com, allison@lohutok.net,
+        kstewart@linuxfoundation.org, takahiro.akashi@linaro.org,
+        tglx@linutronix.de, masahiroy@kernel.org, bhsharma@redhat.com,
+        mbrugger@suse.com, hsinyi@chromium.org, tao.li@vivo.com,
+        christophe.leroy@c-s.fr
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, prsriva@linux.microsoft.com,
+        balajib@linux.microsoft.com
+Subject: [PATCH v5 2/3] arm64: Store IMA log information in kimage used for kexec
+Date:   Tue,  1 Sep 2020 12:50:28 -0700
+Message-Id: <20200901195029.30039-3-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901195029.30039-1-nramas@linux.microsoft.com>
+References: <20200901195029.30039-1-nramas@linux.microsoft.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:820b:: with SMTP id o11mr2893214jag.136.1598989822335;
- Tue, 01 Sep 2020 12:50:22 -0700 (PDT)
-Date:   Tue, 01 Sep 2020 12:50:22 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005c1dc605ae45d401@google.com>
-Subject: INFO: task can't die in register_netdevice_notifier
-From:   syzbot <syzbot+df649192fec7dd1beaa7@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kuba@kernel.org, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mkl@pengutronix.de,
-        netdev@vger.kernel.org, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Address and size of the buffer containing the IMA measurement log need
+to be passed from the current kernel to the next kernel on kexec.
 
-syzbot found the following issue on:
+Add address and size fields to "struct kimage_arch" for ARM64 platform
+to hold the address and size of the IMA measurement log buffer.
+Define an architecture specific function for ARM64 namely
+arch_ima_add_kexec_buffer() that will set the address and size of
+the current kernel's IMA buffer to be passed to the next kernel on kexec.
 
-HEAD commit:    b36c9697 Add linux-next specific files for 20200828
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=16660271900000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5e3cf99580b5542c
-dashboard link: https://syzkaller.appspot.com/bug?extid=df649192fec7dd1beaa7
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+df649192fec7dd1beaa7@syzkaller.appspotmail.com
-
-INFO: task syz-executor.4:10877 can't die for more than 143 seconds.
-task:syz-executor.4  state:D stack:29424 pid:10877 ppid:  6874 flags:0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- rwsem_down_write_slowpath+0x603/0xc60 kernel/locking/rwsem.c:1235
- __down_write kernel/locking/rwsem.c:1389 [inline]
- down_write+0x137/0x150 kernel/locking/rwsem.c:1532
- register_netdevice_notifier+0x1e/0x260 net/core/dev.c:1814
- bcm_init+0x1a3/0x210 net/can/bcm.c:1451
- can_create+0x27c/0x4d0 net/can/af_can.c:168
- __sock_create+0x3ca/0x740 net/socket.c:1427
- sock_create net/socket.c:1478 [inline]
- __sys_socket+0xef/0x200 net/socket.c:1520
- __do_sys_socket net/socket.c:1529 [inline]
- __se_sys_socket net/socket.c:1527 [inline]
- __x64_sys_socket+0x6f/0xb0 net/socket.c:1527
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: Bad RIP value.
-RSP: 002b:00007f336efccc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000029
-RAX: ffffffffffffffda RBX: 0000000000032b40 RCX: 000000000045d5b9
-RDX: 0000000000000002 RSI: 0000000000000002 RDI: 000000000000001d
-RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007ffed071b14f R14: 00007f336efcd9c0 R15: 000000000118cf4c
-INFO: task syz-executor.4:10877 blocked for more than 143 seconds.
-      Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor.4  state:D stack:29424 pid:10877 ppid:  6874 flags:0x00004004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- rwsem_down_write_slowpath+0x603/0xc60 kernel/locking/rwsem.c:1235
- __down_write kernel/locking/rwsem.c:1389 [inline]
- down_write+0x137/0x150 kernel/locking/rwsem.c:1532
- register_netdevice_notifier+0x1e/0x260 net/core/dev.c:1814
- bcm_init+0x1a3/0x210 net/can/bcm.c:1451
- can_create+0x27c/0x4d0 net/can/af_can.c:168
- __sock_create+0x3ca/0x740 net/socket.c:1427
- sock_create net/socket.c:1478 [inline]
- __sys_socket+0xef/0x200 net/socket.c:1520
- __do_sys_socket net/socket.c:1529 [inline]
- __se_sys_socket net/socket.c:1527 [inline]
- __x64_sys_socket+0x6f/0xb0 net/socket.c:1527
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: Bad RIP value.
-RSP: 002b:00007f336efccc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000029
-RAX: ffffffffffffffda RBX: 0000000000032b40 RCX: 000000000045d5b9
-RDX: 0000000000000002 RSI: 0000000000000002 RDI: 000000000000001d
-RBP: 000000000118cf80 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118cf4c
-R13: 00007ffed071b14f R14: 00007f336efcd9c0 R15: 000000000118cf4c
-INFO: task syz-executor.4:10881 can't die for more than 144 seconds.
-task:syz-executor.4  state:D stack:29792 pid:10881 ppid:  6874 flags:0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- rwsem_down_write_slowpath+0x603/0xc60 kernel/locking/rwsem.c:1235
- __down_write kernel/locking/rwsem.c:1389 [inline]
- down_write+0x137/0x150 kernel/locking/rwsem.c:1532
- register_netdevice_notifier+0x1e/0x260 net/core/dev.c:1814
- bcm_init+0x1a3/0x210 net/can/bcm.c:1451
- can_create+0x27c/0x4d0 net/can/af_can.c:168
- __sock_create+0x3ca/0x740 net/socket.c:1427
- sock_create net/socket.c:1478 [inline]
- __sys_socket+0xef/0x200 net/socket.c:1520
- __do_sys_socket net/socket.c:1529 [inline]
- __se_sys_socket net/socket.c:1527 [inline]
- __x64_sys_socket+0x6f/0xb0 net/socket.c:1527
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: Bad RIP value.
-RSP: 002b:00007f336edccc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000029
-RAX: ffffffffffffffda RBX: 0000000000032b40 RCX: 000000000045d5b9
-RDX: 0000000000000002 RSI: 0000000000000002 RDI: 000000000000001d
-RBP: 000000000118d0c0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118d08c
-R13: 00007ffed071b14f R14: 00007f336edcd9c0 R15: 000000000118d08c
-INFO: task syz-executor.4:10881 blocked for more than 144 seconds.
-      Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-task:syz-executor.4  state:D stack:29792 pid:10881 ppid:  6874 flags:0x00000004
-Call Trace:
- context_switch kernel/sched/core.c:3778 [inline]
- __schedule+0x8e5/0x21e0 kernel/sched/core.c:4527
- schedule+0xd0/0x2a0 kernel/sched/core.c:4602
- rwsem_down_write_slowpath+0x603/0xc60 kernel/locking/rwsem.c:1235
- __down_write kernel/locking/rwsem.c:1389 [inline]
- down_write+0x137/0x150 kernel/locking/rwsem.c:1532
- register_netdevice_notifier+0x1e/0x260 net/core/dev.c:1814
- bcm_init+0x1a3/0x210 net/can/bcm.c:1451
- can_create+0x27c/0x4d0 net/can/af_can.c:168
- __sock_create+0x3ca/0x740 net/socket.c:1427
- sock_create net/socket.c:1478 [inline]
- __sys_socket+0xef/0x200 net/socket.c:1520
- __do_sys_socket net/socket.c:1529 [inline]
- __se_sys_socket net/socket.c:1527 [inline]
- __x64_sys_socket+0x6f/0xb0 net/socket.c:1527
- do_syscall_64+0x2d/0x70 arch/x86/entry/common.c:46
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45d5b9
-Code: Bad RIP value.
-RSP: 002b:00007f336edccc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000029
-RAX: ffffffffffffffda RBX: 0000000000032b40 RCX: 000000000045d5b9
-RDX: 0000000000000002 RSI: 0000000000000002 RDI: 000000000000001d
-RBP: 000000000118d0c0 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 000000000118d08c
-R13: 00007ffed071b14f R14: 00007f336edcd9c0 R15: 000000000118d08c
-
-Showing all locks held in the system:
-2 locks held by kworker/u4:2/80:
- #0: ffff8880ae635f98 (&rq->lock){-.-.}-{2:2}, at: rq_lock kernel/sched/sched.h:1292 [inline]
- #0: ffff8880ae635f98 (&rq->lock){-.-.}-{2:2}, at: __schedule+0x232/0x21e0 kernel/sched/core.c:4445
- #1: ffff8880ae620ec8 (&per_cpu_ptr(group->pcpu, cpu)->seq){-.-.}-{0:0}, at: psi_task_switch+0x2fb/0x400 kernel/sched/psi.c:833
-1 lock held by khungtaskd/1169:
- #0: ffffffff89c67640 (rcu_read_lock){....}-{1:2}, at: debug_show_all_locks+0x53/0x260 kernel/locking/lockdep.c:5825
-1 lock held by in:imklog/6548:
- #0: ffff888093dd26b0 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
-2 locks held by rs:main Q:Reg/6549:
- #0: ffff88809deee130 (&f->f_pos_lock){+.+.}-{3:3}, at: __fdget_pos+0xe9/0x100 fs/file.c:930
- #1: ffff888098aea460 (sb_writers#4){.+.+}-{0:0}, at: file_start_write include/linux/fs.h:2790 [inline]
- #1: ffff888098aea460 (sb_writers#4){.+.+}-{0:0}, at: vfs_write+0x54f/0x730 fs/read_write.c:574
-3 locks held by kworker/u4:8/8625:
-1 lock held by syz-executor.4/10877:
- #0: ffffffff8a879430 (pernet_ops_rwsem){++++}-{3:3}, at: register_netdevice_notifier+0x1e/0x260 net/core/dev.c:1814
-1 lock held by syz-executor.4/10881:
- #0: ffffffff8a879430 (pernet_ops_rwsem){++++}-{3:3}, at: register_netdevice_notifier+0x1e/0x260 net/core/dev.c:1814
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1169 Comm: khungtaskd Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x44/0xd7 lib/nmi_backtrace.c:105
- nmi_trigger_cpumask_backtrace+0x1b3/0x223 lib/nmi_backtrace.c:62
- trigger_all_cpu_backtrace include/linux/nmi.h:147 [inline]
- check_hung_uninterruptible_tasks kernel/hung_task.c:253 [inline]
- watchdog+0xd89/0xf30 kernel/hung_task.c:339
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 8625 Comm: kworker/u4:8 Not tainted 5.9.0-rc2-next-20200828-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-RIP: 0010:lock_acquire+0x1e/0xad0 kernel/locking/lockdep.c:4977
-Code: 66 90 66 2e 0f 1f 84 00 00 00 00 00 41 57 41 56 41 89 d6 41 55 49 89 fd 41 54 41 89 cc 48 b9 00 00 00 00 00 fc ff df 55 89 f5 <53> 44 89 c3 48 81 ec c0 00 00 00 48 8d 44 24 20 4c 89 0c 24 48 c7
-RSP: 0018:ffffc900065ffb40 EFLAGS: 00000246
-RAX: 0000000000000201 RBX: 0000000000010000 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff89a6be98
-RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
-R10: 000000000000160f R11: 0000000000000001 R12: 0000000000000000
-R13: ffffffff89a6be98 R14: 0000000000000000 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f8fc077f000 CR3: 000000009f467000 CR4: 00000000001506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2a/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:354 [inline]
- nf_conntrack_lock net/netfilter/nf_conntrack_core.c:91 [inline]
- get_next_corpse net/netfilter/nf_conntrack_core.c:2204 [inline]
- nf_ct_iterate_cleanup+0x102/0x330 net/netfilter/nf_conntrack_core.c:2249
- nf_conntrack_cleanup_net_list+0x81/0x250 net/netfilter/nf_conntrack_core.c:2436
- ops_exit_list+0x10d/0x160 net/core/net_namespace.c:189
- cleanup_net+0x4ea/0xb10 net/core/net_namespace.c:603
- process_one_work+0x94c/0x1670 kernel/workqueue.c:2269
- worker_thread+0x64c/0x1120 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:292
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:294
-
-
+Co-developed-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+Signed-off-by: Prakhar Srivastava <prsriva@linux.microsoft.com>
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Reported-by: kernel test robot <lkp@intel.com> warning: no previous prototype for 'arch_ima_add_kexec_buffer' [-Wmissing-prototypes]
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ arch/arm64/include/asm/ima.h   | 18 ++++++++++++++++++
+ arch/arm64/include/asm/kexec.h |  3 +++
+ arch/arm64/kernel/Makefile     |  1 +
+ arch/arm64/kernel/ima_kexec.c  | 34 ++++++++++++++++++++++++++++++++++
+ 4 files changed, 56 insertions(+)
+ create mode 100644 arch/arm64/include/asm/ima.h
+ create mode 100644 arch/arm64/kernel/ima_kexec.c
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/arm64/include/asm/ima.h b/arch/arm64/include/asm/ima.h
+new file mode 100644
+index 000000000000..507fc94ddaba
+--- /dev/null
++++ b/arch/arm64/include/asm/ima.h
+@@ -0,0 +1,18 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Copyright (C) 2019 Microsoft Corporation
++ *
++ * Author: Prakhar Srivastava <prsriva@linux.microsoft.com>
++ *
++ */
++#ifndef _ASM_ARCH_IMA_H
++#define _ASM_ARCH_IMA_H
++
++struct kimage;
++
++#ifdef CONFIG_IMA_KEXEC
++int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
++			      size_t size);
++#endif /* CONFIG_IMA_KEXEC */
++
++#endif /* _ASM_ARCH_IMA_H */
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index d24b527e8c00..7bd60c185ad3 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -100,6 +100,9 @@ struct kimage_arch {
+ 	void *elf_headers;
+ 	unsigned long elf_headers_mem;
+ 	unsigned long elf_headers_sz;
++
++	phys_addr_t ima_buffer_addr;
++	size_t ima_buffer_size;
+ };
+ 
+ extern const struct kexec_file_ops kexec_image_ops;
+diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
+index a561cbb91d4d..39c5d99b49fc 100644
+--- a/arch/arm64/kernel/Makefile
++++ b/arch/arm64/kernel/Makefile
+@@ -62,6 +62,7 @@ obj-$(CONFIG_ARM_SDE_INTERFACE)		+= sdei.o
+ obj-$(CONFIG_ARM64_SSBD)		+= ssbd.o
+ obj-$(CONFIG_ARM64_PTR_AUTH)		+= pointer_auth.o
+ obj-$(CONFIG_SHADOW_CALL_STACK)		+= scs.o
++obj-$(CONFIG_IMA_KEXEC)			+= ima_kexec.o
+ 
+ obj-y					+= vdso/ probes/
+ obj-$(CONFIG_COMPAT_VDSO)		+= vdso32/
+diff --git a/arch/arm64/kernel/ima_kexec.c b/arch/arm64/kernel/ima_kexec.c
+new file mode 100644
+index 000000000000..1847f1230710
+--- /dev/null
++++ b/arch/arm64/kernel/ima_kexec.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Copyright (C) 2019 Microsoft Corporation
++ *
++ * Author: Prakhar Srivastava <prsriva@linux.microsoft.com>
++ *
++ * File: ima_kexec.c
++ *       Defines IMA kexec functions.
++ */
++
++#include <linux/kernel.h>
++#include <linux/kexec.h>
++#include <linux/types.h>
++#include <asm/ima.h>
++
++/**
++ * arch_ima_add_kexec_buffer - do arch-specific steps to add the IMA buffer
++ *
++ * @image: kimage structure to set ima buffer information in for kexec
++ * @load_addr: Start address of the IMA buffer
++ * @size: size of the IMA buffer
++ *
++ * Architectures should use this function to pass on the IMA buffer
++ * information to the next kernel.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int arch_ima_add_kexec_buffer(struct kimage *image, unsigned long load_addr,
++			      size_t size)
++{
++	image->arch.ima_buffer_addr = load_addr;
++	image->arch.ima_buffer_size = size;
++	return 0;
++}
+-- 
+2.28.0
+
