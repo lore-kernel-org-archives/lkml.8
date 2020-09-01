@@ -2,139 +2,156 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A80C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B17C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45602208DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2162087D
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 06:49:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dQMYLRr+"
+	dkim=pass (1024-bit key) header.d=bidouilliste.com header.i=@bidouilliste.com header.b="YrKuyRgS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727035AbgIAGsR (ORCPT
+        id S1726942AbgIAGtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 02:48:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58272 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726006AbgIAGsR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 02:48:17 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84E6EC0612AC;
-        Mon, 31 Aug 2020 23:48:16 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id b79so23782wmb.4;
-        Mon, 31 Aug 2020 23:48:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=P0AD1Y/Lrkza56GStpxrrisnFk/Rh5ZF4KO+s+OS1N0=;
-        b=dQMYLRr+HeQrqvZ37hOut1a1wWXhuuNN4Ee2sj3VBzJtz6tiT5TVc0+RPU4ZPnuRBz
-         NzXPFyQZydzGs4vb8iHNqgZnK8ZlhVHCJpvgm3Dhp37Bs+w189HnBzkVv6YqZgaDHW8C
-         8PCUS8+UvaLbaWaYmg3cSOy6DTZPEeQL6n2Rz7csM62eAFiJLLyC344mqPzpobk9E0DL
-         M+GfZxFVbP1GqvT4IO4cylBzGLc4zVC81vU+VuMqDrDBcPOwPJ7km/2OHS+hLBy4mS9F
-         1id+OR8txcMmUnR4HrGS1UKPjguIi8rsHrYLDVCXRz0W4sPD7JbGq9L4054O0TnlAGMA
-         NFNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=P0AD1Y/Lrkza56GStpxrrisnFk/Rh5ZF4KO+s+OS1N0=;
-        b=R58OLQDTy5uQvqLUJDvvFOZ+btZTA2/X/zulyN4gubF7mXZXqtHyIkPhFR4niq9aNn
-         NnqCi5qbgKLBikzeQQcjgehoNWz/XauWCo4KqVHbAzKoIT4rUz1kyS/S7u1rNnzermO4
-         dqejrw4dBo1+t0NAUcRiucFZGdoBX1g/emXK8P3wINVNn8dfpIZWIiI0SK5b+4ks7vVA
-         zkmt6FdSWajXrgpo9VZWv0Fc6okg4xmTwji1SQJMzsFuDUQwOxn7NjbI2GaQzmSARO4n
-         Gb6ovQCcUJwy5p/CuYSyeict7ikEjW9sq53CjRx1+KA9E6KUk5NeUK/xZ56thjsBIekw
-         cDPA==
-X-Gm-Message-State: AOAM533m02fYYP/wD+s7kh43pnspcVzAT6TPuu/teHX728OGCgfr+R18
-        G20EQ1R/AsPDNuAnelfWcPI=
-X-Google-Smtp-Source: ABdhPJwozowH/FyzcH63GrxI3KvkT6Rv2AAo5rdl7GWlFRDB5Ggqe7IVvrtT/tBQAuJ2+0gB7cTQPg==
-X-Received: by 2002:a1c:234b:: with SMTP id j72mr248342wmj.153.1598942894686;
-        Mon, 31 Aug 2020 23:48:14 -0700 (PDT)
-Received: from [192.168.8.147] ([37.166.79.47])
-        by smtp.gmail.com with ESMTPSA id q12sm593092wrs.48.2020.08.31.23.48.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 31 Aug 2020 23:48:14 -0700 (PDT)
-Subject: Re: [PATCH net-next] net: sch_generic: aviod concurrent reset and
- enqueue op for lockless qdisc
-To:     Yunsheng Lin <linyunsheng@huawei.com>, jhs@mojatatu.com,
-        xiyou.wangcong@gmail.com, jiri@resnulli.us, davem@davemloft.net,
-        kuba@kernel.org
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxarm@huawei.com
-References: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <2d93706f-3ba6-128b-738a-b063216eba6d@gmail.com>
-Date:   Tue, 1 Sep 2020 08:48:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.11.0
-MIME-Version: 1.0
-In-Reply-To: <1598921718-79505-1-git-send-email-linyunsheng@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 1 Sep 2020 02:49:33 -0400
+Received: from mx.blih.net ([212.83.155.74]:46689 "EHLO mx.blih.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726006AbgIAGtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 02:49:32 -0400
+X-Greylist: delayed 399 seconds by postgrey-1.27 at vger.kernel.org; Tue, 01 Sep 2020 02:49:31 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bidouilliste.com;
+        s=mx; t=1598942569;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nZvkdgfEsx8IUABfhx71Dpoxee70fmEUTqE8AA7jJGE=;
+        b=YrKuyRgS7QNfdF7qc4hPTROgfFajA7Fk9Ph+iwvL4aPMHfAkWgKP6nOnmArJ1pn+u1TWq2
+        Cd91ByVr7E2rDIilyqYa/3Zyd/93ANKbFJxeHCP+m8YDm64qxE65dqaI+MukDy6JM7NyRu
+        rCmQsqbvJSUHjiMTKOj+S6geJCxe3A0=
+Received: from amy.home (lfbn-idf2-1-1138-237.w90-92.abo.wanadoo.fr [90.92.20.237])
+        by mx.blih.net (OpenSMTPD) with ESMTPSA id 8cb32919 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 1 Sep 2020 06:42:49 +0000 (UTC)
+Date:   Tue, 1 Sep 2020 08:42:49 +0200
+From:   Emmanuel Vadot <manu@bidouilliste.com>
+To:     =?ISO-8859-1?Q?Andr=E9?= Przywara <andre.przywara@arm.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Ray Jui <rjui@broadcom.com>, Chanho Min <chanho.min@lge.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Wei Xu <xuwei5@hisilicon.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v2 0/6] dt-bindings: Convert SP804 to Json-schema (and
+ fix users)
+Message-Id: <20200901084249.b72bb69d617cc32733432da1@bidouilliste.com>
+In-Reply-To: <28acf821-fa6f-7259-ec1b-4810ca1ff48f@arm.com>
+References: <20200828142018.43298-1-andre.przywara@arm.com>
+        <CACRpkdZUrPeUbpNeCZcw8kq5k3egijAuh7R1_3TkbPz5wN+=Lw@mail.gmail.com>
+        <28acf821-fa6f-7259-ec1b-4810ca1ff48f@arm.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; amd64-portbld-freebsd13.0)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 28 Aug 2020 16:44:28 +0100
+Andr=E9 Przywara <andre.przywara@arm.com> wrote:
+
+> On 28/08/2020 15:54, Linus Walleij wrote:
+>=20
+> Hi,
+>=20
+> > On Fri, Aug 28, 2020 at 4:20 PM Andre Przywara <andre.przywara@arm.com>=
+ wrote:
+> >=20
+> >> This is the second attempt at converting the SP804 timer binding to ya=
+ml.
+> >> Compared to v1, I forbid additional properties, and included the prime=
+cell
+> >> binding. Also the clock-names property is now listed, although without
+> >> further requirements on the names. Changelog below.
+> >=20
+> > The series:
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >=20
+> >> I couldn't test any of those DT files on actual machines, but tried
+> >> to make the changes in a way that would be transparent to at least the
+> >> Linux driver. The only other SP804 DT user I could find is FreeBSD,
+> >> but they seem to use a different binding (no clocks, but a
+> >> clock-frequency property).
+> >=20
+> > That's annoying. I suppose FreeBSD just made that up and doesn't
+> > even have a binding document for it?
+>=20
+> I couldn't find bindings at all in their git tree.
+
+ That's because I don't merge the bindings in the main branch.
+
+> I don't think they
+> treat this very formally, it seems to be more use-case driven.
+> Their SP804 driver does not know how to handle clock properties, so most
+> of the DTs (in sys/gnu/dts, so apparently copied from Linux) would not
+> work really well, because the driver assumes a hardcoded frequency of
+> 1MHz by default.
+
+ In addition to sys/gnu/dts we also have sys/dts/ which are our own DTs
+before we used the Linux ones (a long time ago but some platform
+weren't converted, they will just die sometime in the futur if nobody
+takes care of them I guess).
+
+> There is only one DT (Annapurna Alpine with Cortex-A15) that provides
+> this clock-frequency property. The Linux DT does not mention the SP804
+> in there at all, interestingly.
+
+ I'm not familiar with this platform at all, it was done under
+contract by Semihalf and I'm sure that if something fails and their
+client starts to complain they will fix it.
+
+> > In an ideal world I suppose we should go and fix FreeBSD but I have
+> > no idea how easy or hard that is.
+>=20
+> It seems to be messy, at least in this case, and I guess unifying DTs
+> means some work on drivers as well.
+
+ I wouldn't worry about us on this case, this binding requirements
+seems to have be done a long time ago before we had any clock framework
+and if our drivers needs to be updated we will do it when we imports
+DTS from whatever Linux version this will be merged in.
+
+> But AFAIK most of the more modern platforms copy the DTs (and thus
+> implicitly the bindings) from Linux, so there is probably much less
+> deviation for many more relevant boards.
+
+ Yes, I (and others) insist on using the DTs from Linux and not doing
+any patches to it without sending them to the Linux ML.
+
+> Cheers,
+> Andre
+
+ Cheers,
+
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 
-On 8/31/20 5:55 PM, Yunsheng Lin wrote:
-> Currently there is concurrent reset and enqueue operation for the
-> same lockless qdisc when there is no lock to synchronize the
-> q->enqueue() in __dev_xmit_skb() with the qdisc reset operation in
-> qdisc_deactivate() called by dev_deactivate_queue(), which may cause
-> out-of-bounds access for priv->ring[] in hns3 driver if user has
-> requested a smaller queue num when __dev_xmit_skb() still enqueue a
-> skb with a larger queue_mapping after the corresponding qdisc is
-> reset, and call hns3_nic_net_xmit() with that skb later.
-> 
-> Avoid the above concurrent op by calling synchronize_rcu_tasks()
-> after assigning new qdisc to dev_queue->qdisc and before calling
-> qdisc_deactivate() to make sure skb with larger queue_mapping
-> enqueued to old qdisc will always be reset when qdisc_deactivate()
-> is called.
-> 
-
-We request Fixes: tag for fixes in networking land.
-
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-> ---
->  net/sched/sch_generic.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-> index 265a61d..6e42237 100644
-> --- a/net/sched/sch_generic.c
-> +++ b/net/sched/sch_generic.c
-> @@ -1160,8 +1160,13 @@ static void dev_deactivate_queue(struct net_device *dev,
->  
->  	qdisc = rtnl_dereference(dev_queue->qdisc);
->  	if (qdisc) {
-> -		qdisc_deactivate(qdisc);
->  		rcu_assign_pointer(dev_queue->qdisc, qdisc_default);
-> +
-> +		/* Make sure lockless qdisc enqueuing is done with the
-> +		 * old qdisc in __dev_xmit_skb().
-> +		 */
-> +		synchronize_rcu_tasks();
-
-This seems quite wrong, there is not a single use of synchronize_rcu_tasks() in net/,
-we probably do not want this.
-
-I bet that synchronize_net() is appropriate, if not please explain/comment why we want this instead.
-
-Adding one synchronize_net() per TX queue is a killer for devices with 128 or 256 TX queues.
-
-I would rather find a way of not calling qdisc_reset() from qdisc_deactivate().
-
-This lockless pfifo_fast is a mess really.
-
-
+--=20
+Emmanuel Vadot <manu@bidouilliste.com>
