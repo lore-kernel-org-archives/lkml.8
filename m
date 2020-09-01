@@ -2,118 +2,93 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3325C43461
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FEC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FBDD207D3
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:01:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="afn94a0r"
+	by mail.kernel.org (Postfix) with ESMTP id 5E2AF206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:02:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598972549;
+	bh=iLYgeJMCiPuuCbdXC/mWJ55akOMipGrxGNLRGMp5bnI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tQhCZak6f/y+dwdeP6oMR9496NzTCXbtqplCSmntyzb/32EwfWPviNOZsuzgJuESX
+	 Lyzs9Bb0ehLhXToXNc42uEpQFm8Q8PL35TeCwsLmQh8d+doL4zUycGVI+J9WZv3hno
+	 TmRDSGSH2oAGmH4t2gZAKHtSDQgAwM93l7Y5kCPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728299AbgIAPBP (ORCPT
+        id S1727807AbgIAPC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:01:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbgIAPBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:01:10 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B360DC061244;
-        Tue,  1 Sep 2020 08:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=c4Ee9icQII2DGAoMrIbwKT8Ude3XzoISGtg+XB13lKQ=; b=afn94a0rd08dIeIK+nPtOLy9ZF
-        2kHzRnga5rpNnJdpfqAdEkDoDXnbQLFe53sru0CkEghz/uu1jDS/OLaSJ+nTqEjhT34UhvcmEEJIY
-        MqjQVEuWOQeiiEIl9BzC7QTXM3oeEPCjpJZW0uTROZyy/No0zCe/etHYanQR7sMptJckLhBj1ciT8
-        pB3s3YkIryDdSN+nEtCUxp7av0xGykhSncbcxwlkFtcNGZVMyZ4FT31TI2XkJIpM72reeWASyq8Lo
-        1Es0Ru63eoYj9KldC//FQZ4EIGB9kRInPDRT/Y1JbvmfYRhsX3+W+/83DND1k4IpIOTaeVkdknDH/
-        mlMV2o1Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1kD7mL-0004dC-KN; Tue, 01 Sep 2020 15:00:57 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 1 Sep 2020 11:02:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46188 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726406AbgIAPC1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:02:27 -0400
+Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 770E6300F7A;
-        Tue,  1 Sep 2020 17:00:55 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6633520BEB41B; Tue,  1 Sep 2020 17:00:55 +0200 (CEST)
-Date:   Tue, 1 Sep 2020 17:00:55 +0200
-From:   peterz@infradead.org
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>, paulmck@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Saravana Kannan <saravanak@google.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
- OF driver helper
-Message-ID: <20200901150055.GD2674@hirez.programming.kicks-ass.net>
-References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
- <20200831194402.GD2855@paulmck-ThinkPad-P72>
- <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
- <CAPDyKFrTERjpLrPOFtkqLyNsk2T_58Ye2FQ1mPf-0u78aWW=Xw@mail.gmail.com>
- <20200901104206.GU1362448@hirez.programming.kicks-ass.net>
- <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 027DA206CD;
+        Tue,  1 Sep 2020 15:02:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598972547;
+        bh=iLYgeJMCiPuuCbdXC/mWJ55akOMipGrxGNLRGMp5bnI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lwqK6om6s8kznzBFJ2v/mn33Pm22W4rRwN+31b100kldIemEmDSRtiW3HsHP2MZ8X
+         nVOgFpN8+Q21F83XwfPPDtjbuqm+0K38Rezs7VoqMxYjzAp0WVPHqpq8uJnaJwW1DC
+         u74/m6xxpwCg3yDmFSabeARka7dpHuevQgQd3Zp8=
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 1245140D3D; Tue,  1 Sep 2020 12:02:25 -0300 (-03)
+Date:   Tue, 1 Sep 2020 12:02:25 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Al Grant <al.grant@foss.arm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf: correct SNOOPX field offset
+Message-ID: <20200901150225.GA1424523@kernel.org>
+References: <9974f2d0-bf7f-518e-d9f7-4520e5ff1bb0@foss.arm.com>
+ <20200825174043.GQ1509399@tassilo.jf.intel.com>
+ <20200826142631.GA5351@redhat.com>
+ <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFo0VkW-cgRSkvPQ0whpuJCo4OKcL1nmH7nz1tDEChOtVg@mail.gmail.com>
+In-Reply-To: <d68e68f5-a7c3-c276-6134-a68f068a2b80@foss.arm.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Sep 01, 2020 at 02:35:52PM +0200, Ulf Hansson wrote:
-> On Tue, 1 Sep 2020 at 12:42, <peterz@infradead.org> wrote:
-
-> > That said; I pushed the rcu_idle_enter() about as deep as it goes into
-> > generic code in commit 1098582a0f6c ("sched,idle,rcu: Push rcu_idle
-> > deeper into the idle path")
+Em Wed, Aug 26, 2020 at 03:33:35PM +0100, Al Grant escreveu:
+> On 26/08/2020 15:26, Arnaldo Carvalho de Melo wrote:
+> > Em Tue, Aug 25, 2020 at 10:40:43AM -0700, Andi Kleen escreveu:
+> > > On Mon, Aug 24, 2020 at 10:28:34AM +0100, Al Grant wrote:
+> > > > perf_event.h has macros that define the field offsets in the
+> > > > data_src bitmask in perf records. The SNOOPX and REMOTE offsets
+> > > > were both 37. These are distinct fields, and the bitfield layout
+> > > > in perf_mem_data_src confirms that SNOOPX should be at offset 38.
+> > > 
+> > > Looks good.
+> > > 
+> > > Reviewed-by: Andi Kleen <ak@linux.intel.com>
+> > > 
+> > > Probably should have a Fixes: header
+> > 
+> > Please do so, find the patch that introduced the error, add the Fixes
+> > tag, will help me not having to do it myself :-)
 > 
-> Aha, that commit should fix this problem, I think. Looks like that
-> commit was sent as a fix and included in the recent v5.9-rc3.
+> Fixes: 52839e653b562 ("perf tools: Add support for printing new mem_info
+> encodings")
 
-AFAICT psci_enter_domain_idle_state() is still buggered. All that
-pm_runtime_*() stuff is using locks.
+Ok, I'll add that, thanks.
 
-Look at this:
+But you forgot to add your Signed-off-by:, can you please provide it?
 
-  psci_enter_domain_idle_state()
-    pm_runtime_put_sync_suspend()
-      __pm_runtime_suspend()
-        spin_lock_irqsave(&dev->power.lock, flags);
+There was also a minor problem in the patch, there was no separation of
+--- from the patch comment section to the patch itself, I'll fix that as
+well.
 
-That's a definite fail after we've done rcu_idle_enter().
-
-> > I suppose the next step is pushing it into individual driver when
-> > needed, something like the below perhaps. I realize the coupled idle
-> > state stuff is more complicated that most, but it's also not an area
-> > I've looked at in detail, so perhaps I've just made a bigger mess, but
-> > it ought to give you enough to get going I think.
-> 
-> These aren't coupled states. Instead, in cpuidle-psci, we are using PM
-> domains through genpd and runtime PM to manage "shared idle states"
-> between CPUs.
-
-Similar problem I'm thinking, 'complicated' stuff.
+- Arnaldo
