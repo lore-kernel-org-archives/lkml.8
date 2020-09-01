@@ -2,55 +2,55 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 688EFC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC735C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:12:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 30FD9204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 887D82078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:12:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976768;
-	bh=uZ2cKxuigQGTZJA16yFuIuvZhEK5XCUeHR7VZ6noavE=;
+	s=default; t=1598976775;
+	bh=G7Bxe3htfLyEMy8okKHuhNIpEbesWGNFyZOsNYvkWzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q9G68zu8KcAuvRoeyG4KAu9d6YPEcP2/l/rdd1xC/a24dOSXC4aq1BNBFrhTpo4bW
-	 zsDAhBnRO2XtIMzhjXXKOcGy2hzu3DbcqYRYILzMJX37iRNaHKmsGL32YCql5OilOm
-	 w6fiD5qEwHUFwgtNrW+kmRAIZijvczkUpr0iTDLs=
+	b=2tshIBzufqAZCMJceecdXabrem+n0DIt4wbxekwpKHUm/opfSjOWYohmfXG1Jp0AG
+	 VCRxXp9tqXgfD1DXmyfW/Zpm9REL3dbRhsA/sAJyerl57h6ZL6vlKfv9ABcHFkcCSn
+	 oRcSyH5Ea4irNTZmA8FqbUivwIes8xSbSATK4mFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731285AbgIAPgk (ORCPT
+        id S1731233AbgIAQMy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:36:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41206 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:12:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728209AbgIAPf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:35:27 -0400
+        id S1728586AbgIAPgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:36:38 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AFBF20866;
-        Tue,  1 Sep 2020 15:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7024321582;
+        Tue,  1 Sep 2020 15:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974526;
-        bh=uZ2cKxuigQGTZJA16yFuIuvZhEK5XCUeHR7VZ6noavE=;
+        s=default; t=1598974598;
+        bh=G7Bxe3htfLyEMy8okKHuhNIpEbesWGNFyZOsNYvkWzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oqT0GHyuG2zK4BS16fXJT1whY/vjUQEOpZjfrQCA/DybquuSyI9D5JiOqI7/UPujS
-         j6R4aobt9TzvQ+iFzQD1MGwPWNCbLnd1sN7w9UP2Ex5Kajun/BETCa7WZGErcu6zA8
-         1jktZyhJgn5CfQbDeFU0Vh3EUfe/ykqdxFz9IkUo=
+        b=Og/k1uQvuzkRMfyApZDoJnWHV01OAo9/iD9NlhkcpHk2r6a5Rq6vui+EsN9jp9T++
+         36saOWl1vhr9kSpC53EyGjPVV0IrHNVAK8u1ESg4doQjglDQ/TX8MgvAMdDTVi17iN
+         U09GLhSRJw2e/WQtaoWTDmD/dyRRC5L4PXt4X9dU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brice Goglin <brice.goglin@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Cyril Roelandt <tipecaml@gmail.com>
-Subject: [PATCH 5.4 193/214] USB: Ignore UAS for JMicron JMS567 ATA/ATAPI Bridge
-Date:   Tue,  1 Sep 2020 17:11:13 +0200
-Message-Id: <20200901151002.194608271@linuxfoundation.org>
+        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 009/255] ASoC: img: Fix a reference count leak in img_i2s_in_set_fmt
+Date:   Tue,  1 Sep 2020 17:07:45 +0200
+Message-Id: <20200901151001.258014167@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,37 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cyril Roelandt <tipecaml@gmail.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit 9aa37788e7ebb3f489fb4b71ce07adadd444264a upstream.
+[ Upstream commit c4c59b95b7f7d4cef5071b151be2dadb33f3287b ]
 
-This device does not support UAS properly and a similar entry already
-exists in drivers/usb/storage/unusual_uas.h. Without this patch,
-storage_probe() defers the handling of this device to UAS, which cannot
-handle it either.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+when it returns an error code, causing incorrect ref count if
+pm_runtime_put_noidle() is not called in error handling paths.
+Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
 
-Tested-by: Brice Goglin <brice.goglin@gmail.com>
-Fixes: bc3bdb12bbb3 ("usb-storage: Disable UAS on JMicron SATA enclosure")
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Signed-off-by: Cyril Roelandt <tipecaml@gmail.com>
-Link: https://lore.kernel.org/r/20200825212231.46309-1-tipecaml@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200614033749.2975-1-wu000273@umn.edu
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/unusual_devs.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/img/img-i2s-in.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/storage/unusual_devs.h
-+++ b/drivers/usb/storage/unusual_devs.h
-@@ -2328,7 +2328,7 @@ UNUSUAL_DEV(  0x357d, 0x7788, 0x0114, 0x
- 		"JMicron",
- 		"USB to ATA/ATAPI Bridge",
- 		USB_SC_DEVICE, USB_PR_DEVICE, NULL,
--		US_FL_BROKEN_FUA ),
-+		US_FL_BROKEN_FUA | US_FL_IGNORE_UAS ),
+diff --git a/sound/soc/img/img-i2s-in.c b/sound/soc/img/img-i2s-in.c
+index e30b66b94bf67..0843235d73c91 100644
+--- a/sound/soc/img/img-i2s-in.c
++++ b/sound/soc/img/img-i2s-in.c
+@@ -343,8 +343,10 @@ static int img_i2s_in_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+ 	chan_control_mask = IMG_I2S_IN_CH_CTL_CLK_TRANS_MASK;
  
- /* Reported by Andrey Rahmatullin <wrar@altlinux.org> */
- UNUSUAL_DEV(  0x4102, 0x1020, 0x0100,  0x0100,
+ 	ret = pm_runtime_get_sync(i2s->dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put_noidle(i2s->dev);
+ 		return ret;
++	}
+ 
+ 	for (i = 0; i < i2s->active_channels; i++)
+ 		img_i2s_in_ch_disable(i2s, i);
+-- 
+2.25.1
+
 
 
