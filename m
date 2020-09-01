@@ -5,48 +5,47 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28BEC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6E77C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9C212168B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86CFB2064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975344;
-	bh=8Fnj0CKNepqxCBOsPC5iV9WbwXpHlYzkqIZP2X/H1ZU=;
+	s=default; t=1598975353;
+	bh=4XZChSonufT3q06m5nVNuIAve7CPg3nWB8K8EqYwj6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pakNRwwxdONkN+6Zk+bvV69Db++W3iBb1E20ttjFCqeR7mZq5saNl+CI1hgf+VbBF
-	 heRjTrQNoJ56fZZZ05Alf+64MaRNRx2kx9PfNXicZR2ZuRJ/Y2VD3YhoNodbp8e8qa
-	 fefLp1dki9/IPALWUuxNkybum5yMNRdLaL58uAjM=
+	b=K1ISvns52AoA1icb1sxUT+5AfeSNkvogCeHpO6aecoRHHKyL/oiwf1+J6SG+C1Wyd
+	 Vkp9RolrwcmDZ9YiBtESeIVPDud7b7/NFIO+KEU3eXKlCXR/ZZvX2fJgha4Ft3UHGR
+	 vANLXiMhsgLRMw0LQoo2u/y0wHGGH7jlMq5wufuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732024AbgIAPtC (ORCPT
+        id S1732058AbgIAPtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33540 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34120 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731542AbgIAPpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:21 -0400
+        id S1726174AbgIAPpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:45:36 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCDBD208CA;
-        Tue,  1 Sep 2020 15:45:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE29520BED;
+        Tue,  1 Sep 2020 15:45:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975120;
-        bh=8Fnj0CKNepqxCBOsPC5iV9WbwXpHlYzkqIZP2X/H1ZU=;
+        s=default; t=1598975136;
+        bh=4XZChSonufT3q06m5nVNuIAve7CPg3nWB8K8EqYwj6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y2hlhJqP2Z3ON4VvAd7RVZP2UhQQw4GxQgNFZjTm9G2sl00Sk1Fs8Tviy68UUDMg6
-         0qkjnyGhUg9RF9RHrNj7Rff4ThsYAZC2E7jiRzhNysVaHXsztP8/yG1PkJ7WRVNJhR
-         CrkYAaZJqKB4MW31r8C52lDrc247Y4zuzHLRfqyY=
+        b=1s0Kc5cgz+8j+iVN1QBqu9hB4enR1fsoi7EIkDAAj1yO/bRWacSJ3lemjECs+YLHM
+         tEExnkkjdEKogv54LLWO8J/Bo+0wVwHo2OhX64PFj3bUmJeZwOAQzkd7XvdQouN7Pm
+         rEJTrKyqSv2UPok1Qs44WSENeHjsSPa0Y/7yiGik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martijn Coenen <maco@android.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.8 187/255] writeback: Protect inode->i_io_list with inode->i_lock
-Date:   Tue,  1 Sep 2020 17:10:43 +0200
-Message-Id: <20200901151009.648434509@linuxfoundation.org>
+        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 5.8 224/255] USB: quirks: Add no-lpm quirk for another Raydium touchscreen
+Date:   Tue,  1 Sep 2020 17:11:20 +0200
+Message-Id: <20200901151011.492683926@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,107 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit b35250c0816c7cf7d0a8de92f5fafb6a7508a708 upstream.
+commit 5967116e8358899ebaa22702d09b0af57fef23e1 upstream.
 
-Currently, operations on inode->i_io_list are protected by
-wb->list_lock. In the following patches we'll need to maintain
-consistency between inode->i_state and inode->i_io_list so change the
-code so that inode->i_lock protects also all inode's i_io_list handling.
+There's another Raydium touchscreen needs the no-lpm quirk:
+[    1.339149] usb 1-9: New USB device found, idVendor=2386, idProduct=350e, bcdDevice= 0.00
+[    1.339150] usb 1-9: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    1.339151] usb 1-9: Product: Raydium Touch System
+[    1.339152] usb 1-9: Manufacturer: Raydium Corporation
+...
+[    6.450497] usb 1-9: can't set config #1, error -110
 
-Reviewed-by: Martijn Coenen <maco@android.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-CC: stable@vger.kernel.org # Prerequisite for "writeback: Avoid skipping inode writeback"
-Signed-off-by: Jan Kara <jack@suse.cz>
+BugLink: https://bugs.launchpad.net/bugs/1889446
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200731051622.28643-1-kai.heng.feng@canonical.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fs-writeback.c |   22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/usb/core/quirks.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -144,6 +144,7 @@ static void inode_io_list_del_locked(str
- 				     struct bdi_writeback *wb)
- {
- 	assert_spin_locked(&wb->list_lock);
-+	assert_spin_locked(&inode->i_lock);
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -465,6 +465,8 @@ static const struct usb_device_id usb_qu
  
- 	list_del_init(&inode->i_io_list);
- 	wb_io_lists_depopulated(wb);
-@@ -1122,7 +1123,9 @@ void inode_io_list_del(struct inode *ino
- 	struct bdi_writeback *wb;
+ 	{ USB_DEVICE(0x2386, 0x3119), .driver_info = USB_QUIRK_NO_LPM },
  
- 	wb = inode_to_wb_and_lock_list(inode);
-+	spin_lock(&inode->i_lock);
- 	inode_io_list_del_locked(inode, wb);
-+	spin_unlock(&inode->i_lock);
- 	spin_unlock(&wb->list_lock);
- }
- EXPORT_SYMBOL(inode_io_list_del);
-@@ -1172,8 +1175,10 @@ void sb_clear_inode_writeback(struct ino
-  * the case then the inode must have been redirtied while it was being written
-  * out and we don't reset its dirtied_when.
-  */
--static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+static void redirty_tail_locked(struct inode *inode, struct bdi_writeback *wb)
- {
-+	assert_spin_locked(&inode->i_lock);
++	{ USB_DEVICE(0x2386, 0x350e), .driver_info = USB_QUIRK_NO_LPM },
 +
- 	if (!list_empty(&wb->b_dirty)) {
- 		struct inode *tail;
+ 	/* DJI CineSSD */
+ 	{ USB_DEVICE(0x2ca3, 0x0031), .driver_info = USB_QUIRK_NO_LPM },
  
-@@ -1184,6 +1189,13 @@ static void redirty_tail(struct inode *i
- 	inode_io_list_move_locked(inode, wb, &wb->b_dirty);
- }
- 
-+static void redirty_tail(struct inode *inode, struct bdi_writeback *wb)
-+{
-+	spin_lock(&inode->i_lock);
-+	redirty_tail_locked(inode, wb);
-+	spin_unlock(&inode->i_lock);
-+}
-+
- /*
-  * requeue inode for re-scanning after bdi->b_io list is exhausted.
-  */
-@@ -1394,7 +1406,7 @@ static void requeue_inode(struct inode *
- 		 * writeback is not making progress due to locked
- 		 * buffers. Skip this inode for now.
- 		 */
--		redirty_tail(inode, wb);
-+		redirty_tail_locked(inode, wb);
- 		return;
- 	}
- 
-@@ -1414,7 +1426,7 @@ static void requeue_inode(struct inode *
- 			 * retrying writeback of the dirty page/inode
- 			 * that cannot be performed immediately.
- 			 */
--			redirty_tail(inode, wb);
-+			redirty_tail_locked(inode, wb);
- 		}
- 	} else if (inode->i_state & I_DIRTY) {
- 		/*
-@@ -1422,7 +1434,7 @@ static void requeue_inode(struct inode *
- 		 * such as delayed allocation during submission or metadata
- 		 * updates after data IO completion.
- 		 */
--		redirty_tail(inode, wb);
-+		redirty_tail_locked(inode, wb);
- 	} else if (inode->i_state & I_DIRTY_TIME) {
- 		inode->dirtied_when = jiffies;
- 		inode_io_list_move_locked(inode, wb, &wb->b_dirty_time);
-@@ -1669,8 +1681,8 @@ static long writeback_sb_inodes(struct s
- 		 */
- 		spin_lock(&inode->i_lock);
- 		if (inode->i_state & (I_NEW | I_FREEING | I_WILL_FREE)) {
-+			redirty_tail_locked(inode, wb);
- 			spin_unlock(&inode->i_lock);
--			redirty_tail(inode, wb);
- 			continue;
- 		}
- 		if ((inode->i_state & I_SYNC) && wbc.sync_mode != WB_SYNC_ALL) {
 
 
