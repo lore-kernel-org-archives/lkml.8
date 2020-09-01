@@ -2,143 +2,176 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A19C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63142C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 86C9B2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977332;
-	bh=fSPWza8l+zESXd86vjXQT1c6kprk0xJPXAcbNaimApE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cqJh0upL0VFkP8zUKL3ifDK/oUJo/mP1EgXcd5tXF3MbdIL/6CmxD41vTTUURPTbZ
-	 ecKTMSbSn/pd1Vi5Ak6Jv4nJpi/FCiIRmK164zW90ZnymPt64IFEjK5y8ExvApt+Qr
-	 UJWtBRdjHCzcEmeTkdDsv9AdDFcBRNh/z/K1TUKw=
+	by mail.kernel.org (Postfix) with ESMTP id 3C9EC2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:22:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m4RbtglF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbgIAPcY (ORCPT
+        id S1728797AbgIAQWX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730672AbgIAPbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:31:11 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54AC72078B;
-        Tue,  1 Sep 2020 15:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974270;
-        bh=fSPWza8l+zESXd86vjXQT1c6kprk0xJPXAcbNaimApE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x+IYwjENkjwOT06XQGYS5QKCP9J3SzYawsoLfCADOduyPHRLq9iTVUERrKcmWSyS5
-         rOcbVsqn5gaNd3lGrGEj5pswYhwxRSanw96OV1gqwrXWesi7Zeo0VzTZU7hPjld90V
-         rIuQKbkPezF85WD69WPB7yB3OGTH5fLAM9m+kpIw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhishek Sahu <absahu@codeaurora.org>,
-        Ansuel Smith <ansuelsmth@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Rob Herring <robh@kernel.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 094/214] PCI: qcom: Change duplicate PCI reset to phy reset
-Date:   Tue,  1 Sep 2020 17:09:34 +0200
-Message-Id: <20200901150957.496498826@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 1 Sep 2020 12:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34012 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731442AbgIAQWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:22:09 -0400
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80F1BC061244;
+        Tue,  1 Sep 2020 09:22:09 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u128so1070023pfb.6;
+        Tue, 01 Sep 2020 09:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q6HC5jotdEa1iojupPydaZwGs0KBLlCSLSyqAXdojd8=;
+        b=m4RbtglF9uLIh7ocOiqxiP1hhbwkhURBNmBPRqarrbp9KyWcTlph+PR4P3YqcMEfO3
+         Lk/27pqo56IqcaGVByJ+jpxuswzeqO6eSEUMZR3f8LVq6nEKzV+7XNrfvE/kp3TVQfdA
+         HJqK3LgECrC/PSyV1Dmu7aX7pwqu5edk/gfned4Ql2kxFZ8vQU2DM8NbyhCh75GjRM5s
+         yYixT1Tm0k6A+OMcMIiCKc1dXt5qg9hCpktcWXverIrKWwO/20x/dRWfK26d4jiSgaZY
+         9JJJXi1sg+EfK4vfI+1awrIkltscpAtIOOIY1ZGbI6HzU7yRqQtVDTeB8oJoOOTwZg41
+         gB5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q6HC5jotdEa1iojupPydaZwGs0KBLlCSLSyqAXdojd8=;
+        b=Qdh++YGQz6HMRUlLAiWe06OqaAu97Cv/XnIfCzc3mYDPOyATai0aDjoWzn0lDoAS2T
+         bdVh+S2gPBWNGbTP8zInL8orW3UmSXyF5Mt9XImIw2TW/byCnVgE7hV0ZG5zQ+x7Gxbp
+         L5aeTEEj+UTPPLFCNsWSLGay4XKm0KUEdsJ6cZOFq6/tmVH1ma7f83Fitr21NZlkakF3
+         xqzHk8frlMQCgHRYh6XOsXlxmBkbZpMUFTTvlFSzQq1vS3dqQruZvHrcNHhcS2AVVVvr
+         J3mjhVzQi1jh/0t5rO10Rq9VrQLB7u+JgwHLRBOoCfQu/KGrIuvecscF/2J3Gf78nGjE
+         CAHg==
+X-Gm-Message-State: AOAM531oJkJNwdIVTK0j/Bq9Vgo9t97Hb72n7MPiCTcvs2q5LhTFpbRD
+        QeeQ/vbNuJfpRk1Z/IKaVTopEPbk6AaR3w==
+X-Google-Smtp-Source: ABdhPJxLZyZ6+2Gfa6deVwSK85gh+Yh6bXrcPZypidDu7HnfiOlTdfxQ5SKtqW4OsxYrx89hhcUdNA==
+X-Received: by 2002:a63:110c:: with SMTP id g12mr2052631pgl.91.1598977328199;
+        Tue, 01 Sep 2020 09:22:08 -0700 (PDT)
+Received: from sc2-haas01-esx0118.eng.vmware.com ([66.170.99.1])
+        by smtp.gmail.com with ESMTPSA id mw8sm1901888pjb.47.2020.09.01.09.22.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 09:22:06 -0700 (PDT)
+From:   Nadav Amit <nadav.amit@gmail.com>
+X-Google-Original-From: Nadav Amit
+To:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Nadav Amit <namit@vmware.com>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Kees Cook <keescook@chromium.org>, stable@vger.kernel.org
+Subject: [PATCH] x86/special_insn: reverse __force_order logic
+Date:   Tue,  1 Sep 2020 09:18:57 -0700
+Message-Id: <20200901161857.566142-1-namit@vmware.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
+From: Nadav Amit <namit@vmware.com>
 
-[ Upstream commit dd58318c019f10bc94db36df66af6c55d4c0cbba ]
+The __force_order logic seems to be inverted. __force_order is
+supposedly used to manipulate the compiler to use its memory
+dependencies analysis to enforce orders between CR writes and reads.
+Therefore, the memory should behave as a "CR": when the CR is read, the
+memory should be "read" by the inline assembly, and __force_order should
+be an output. When the CR is written, the memory should be "written".
 
-The deinit issues reset_control_assert for PCI twice and does not contain
-phy reset.
+This change should allow to remove the "volatile" qualifier from CR
+reads at a later patch.
 
-Link: https://lore.kernel.org/r/20200615210608.21469-4-ansuelsmth@gmail.com
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Stanimir Varbanov <svarbanov@mm-sol.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+While at it, remove the extra new-line from the inline assembly, as it
+only confuses GCC when it estimates the cost of the inline assembly.
+
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: x86@kernel.org
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Nadav Amit <namit@vmware.com>
+
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 18 ++++++++----------
- 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index 380a77a914fa0..9cf7599a198c4 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -287,14 +287,14 @@ static void qcom_pcie_deinit_2_1_0(struct qcom_pcie *pcie)
+Unless I misunderstand the logic, __force_order should also be used by
+rdpkru() and wrpkru() which do not have dependency on __force_order. I
+also did not understand why native_write_cr0() has R/W dependency on
+__force_order, and why native_write_cr4() no longer has any dependency
+on __force_order.
+---
+ arch/x86/include/asm/special_insns.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+index 5999b0b3dd4a..dff5e5b01a3c 100644
+--- a/arch/x86/include/asm/special_insns.h
++++ b/arch/x86/include/asm/special_insns.h
+@@ -24,32 +24,32 @@ void native_write_cr0(unsigned long val);
+ static inline unsigned long native_read_cr0(void)
  {
- 	struct qcom_pcie_resources_2_1_0 *res = &pcie->res.v2_1_0;
+ 	unsigned long val;
+-	asm volatile("mov %%cr0,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr0,%0" : "=r" (val) : "m" (__force_order));
+ 	return val;
+ }
  
-+	clk_disable_unprepare(res->phy_clk);
- 	reset_control_assert(res->pci_reset);
- 	reset_control_assert(res->axi_reset);
- 	reset_control_assert(res->ahb_reset);
- 	reset_control_assert(res->por_reset);
--	reset_control_assert(res->pci_reset);
-+	reset_control_assert(res->phy_reset);
- 	clk_disable_unprepare(res->iface_clk);
- 	clk_disable_unprepare(res->core_clk);
--	clk_disable_unprepare(res->phy_clk);
- 	clk_disable_unprepare(res->aux_clk);
- 	clk_disable_unprepare(res->ref_clk);
- 	regulator_bulk_disable(ARRAY_SIZE(res->supplies), res->supplies);
-@@ -333,12 +333,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		goto err_clk_core;
- 	}
+ static __always_inline unsigned long native_read_cr2(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr2,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr2,%0" : "=r" (val) : "m" (__force_order));
+ 	return val;
+ }
  
--	ret = clk_prepare_enable(res->phy_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable phy clock\n");
--		goto err_clk_phy;
--	}
--
- 	ret = clk_prepare_enable(res->aux_clk);
- 	if (ret) {
- 		dev_err(dev, "cannot prepare/enable aux clock\n");
-@@ -411,6 +405,12 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- 		return ret;
- 	}
+ static __always_inline void native_write_cr2(unsigned long val)
+ {
+-	asm volatile("mov %0,%%cr2": : "r" (val), "m" (__force_order));
++	asm volatile("mov %1,%%cr2" : "=m" (__force_order) : "r" (val));
+ }
  
-+	ret = clk_prepare_enable(res->phy_clk);
-+	if (ret) {
-+		dev_err(dev, "cannot prepare/enable phy clock\n");
-+		goto err_deassert_ahb;
-+	}
-+
- 	/* wait for clock acquisition */
- 	usleep_range(1000, 1500);
+ static inline unsigned long __native_read_cr3(void)
+ {
+ 	unsigned long val;
+-	asm volatile("mov %%cr3,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr3,%0" : "=r" (val) : "m" (__force_order));
+ 	return val;
+ }
  
-@@ -428,8 +428,6 @@ static int qcom_pcie_init_2_1_0(struct qcom_pcie *pcie)
- err_clk_ref:
- 	clk_disable_unprepare(res->aux_clk);
- err_clk_aux:
--	clk_disable_unprepare(res->phy_clk);
--err_clk_phy:
- 	clk_disable_unprepare(res->core_clk);
- err_clk_core:
- 	clk_disable_unprepare(res->iface_clk);
+ static inline void native_write_cr3(unsigned long val)
+ {
+-	asm volatile("mov %0,%%cr3": : "r" (val), "m" (__force_order));
++	asm volatile("mov %1,%%cr3" : "=m" (__force_order) : "r" (val));
+ }
+ 
+ static inline unsigned long native_read_cr4(void)
+@@ -64,10 +64,10 @@ static inline unsigned long native_read_cr4(void)
+ 	asm volatile("1: mov %%cr4, %0\n"
+ 		     "2:\n"
+ 		     _ASM_EXTABLE(1b, 2b)
+-		     : "=r" (val), "=m" (__force_order) : "0" (0));
++		     : "=r" (val) : "m" (__force_order), "0" (0));
+ #else
+ 	/* CR4 always exists on x86_64. */
+-	asm volatile("mov %%cr4,%0\n\t" : "=r" (val), "=m" (__force_order));
++	asm volatile("mov %%cr4,%0" : "=r" (val) : "m" (__force_order));
+ #endif
+ 	return val;
+ }
 -- 
 2.25.1
-
-
 
