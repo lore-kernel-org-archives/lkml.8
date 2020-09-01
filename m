@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4FEC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:05:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C2ECC433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7A6E2071B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:05:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3EF0206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979925;
-	bh=w0y1C0oyg+LShJP6HIIzLK62tT/UFB/tHWbU7VLh+7s=;
+	s=default; t=1598979929;
+	bh=vJr+chEqIzqZPZ+PRsXl/2RaVUEPlrN/pdSNATEKF0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2BzdAMIIuQzpSxUNNtsm/fKL2Kt3EsP0Q+eYrzXGQ7FnyTbcA1pyExIJMsrxAHm1q
-	 J8zI9SdESeJ8DaNemwhenbHvAasP1dddpTPRtKLhTTC6Agtv5lHkmjUNFgkFDrPxDi
-	 9EJiWR2VXHPDDOxGZ+eCakLQCts46bllSh4+SlFw=
+	b=cumuS6eXkoVcgU5aB2XoZeB99EKNP82LhKKF1Co10IZJAhi8hQBoxGWz09QpiX+nw
+	 Jzg3CDsTLFl/Kb5S2gxoW7xzqJexzmEiVAhiiVN8h+2G+CWOYl3GgZDTYUenL8DXFe
+	 VmAXAI1iECzV7E3X175z4u97aqZ3K01JYSdxpfEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728808AbgIARFX (ORCPT
+        id S1728514AbgIARFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 1 Sep 2020 13:05:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38860 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:38566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729304AbgIAPTj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:19:39 -0400
+        id S1729547AbgIAPTk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:19:40 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 332A821527;
-        Tue,  1 Sep 2020 15:19:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F07C1215A4;
+        Tue,  1 Sep 2020 15:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973569;
-        bh=w0y1C0oyg+LShJP6HIIzLK62tT/UFB/tHWbU7VLh+7s=;
+        s=default; t=1598973577;
+        bh=vJr+chEqIzqZPZ+PRsXl/2RaVUEPlrN/pdSNATEKF0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZqywLiwWfdXW/ujX3ZliqDsWZsunCWtTcVyVA8wrDzCkQuCy9vM4y6yzXxtsZC4TM
-         sRnO24FMeRtpGdsBg1WNFYHOy2hLSZ1wLMGRjPGIxSoLwGZr2CWsnWzizVMaQriJYb
-         zwgIpBdRWPu9S43O2zDL+zZaoi7TLWKEWf1PhQos=
+        b=m/pTrGsmqBzo13s6BZXJomVoYt57YZlo3uIpVocfWkdBiB8nN1ZzfnEZJG0IsGSUX
+         +uqKpYrUl+qhOjpaeTmZ3j5R6YHq/jpix9nFbZFFVJjYLn4SSpnKv9zb/3C09qrnFT
+         pXtNus0lI6iwaRdrdJfarca6MbLYbtds5eLkQxgE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Avri Altman <avri.altman@wdc.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 51/91] spi: stm32: fix stm32_spi_prepare_mbr in case of odd clk_rate
-Date:   Tue,  1 Sep 2020 17:10:25 +0200
-Message-Id: <20200901150930.666491741@linuxfoundation.org>
+Subject: [PATCH 4.14 54/91] scsi: ufs: Improve interrupt handling for shared interrupts
+Date:   Tue,  1 Sep 2020 17:10:28 +0200
+Message-Id: <20200901150930.800468667@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -61,36 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
 
-[ Upstream commit 9cc61973bf9385b19ff5dda4a2a7e265fcba85e4 ]
+[ Upstream commit 127d5f7c4b653b8be5eb3b2c7bbe13728f9003ff ]
 
-Fix spi->clk_rate when it is odd to the nearest lowest even value because
-minimum SPI divider is 2.
+For shared interrupts, the interrupt status might be zero, so check that
+first.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Link: https://lore.kernel.org/r/1597043558-29668-4-git-send-email-alain.volmat@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20200811133936.19171-2-adrian.hunter@intel.com
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-stm32.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index ba9743fa2326d..179749f354c33 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -254,7 +254,8 @@ static int stm32_spi_prepare_mbr(struct stm32_spi *spi, u32 speed_hz)
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 3b4214feae971..619fe46fcc5f0 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5373,7 +5373,7 @@ static void ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
+  */
+ static irqreturn_t ufshcd_intr(int irq, void *__hba)
  {
- 	u32 div, mbrdiv;
+-	u32 intr_status, enabled_intr_status;
++	u32 intr_status, enabled_intr_status = 0;
+ 	irqreturn_t retval = IRQ_NONE;
+ 	struct ufs_hba *hba = __hba;
+ 	int retries = hba->nutrs;
+@@ -5387,7 +5387,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 	 * read, make sure we handle them by checking the interrupt status
+ 	 * again in a loop until we process all of the reqs before returning.
+ 	 */
+-	do {
++	while (intr_status && retries--) {
+ 		enabled_intr_status =
+ 			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
+ 		if (intr_status)
+@@ -5398,7 +5398,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
+ 		}
  
--	div = DIV_ROUND_UP(spi->clk_rate, speed_hz);
-+	/* Ensure spi->clk_rate is even */
-+	div = DIV_ROUND_UP(spi->clk_rate & ~0x1, speed_hz);
+ 		intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	} while (intr_status && --retries);
++	}
  
- 	/*
- 	 * SPI framework set xfer->speed_hz to master->max_speed_hz if
+ 	spin_unlock(hba->host->host_lock);
+ 	return retval;
 -- 
 2.25.1
 
