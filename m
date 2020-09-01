@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F014C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE491C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59AB9206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A430206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977682;
-	bh=5XX2RQWMOIbfRSpMJZfRbIyQh6vvoUtfX87JlCCnWUM=;
+	s=default; t=1598977686;
+	bh=kPvXC1q2GmkliQciWKKb/LdEJYKqO3ID4Wsv5KP+0Z4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tEm7R+cjEBTrvEwkXZoav+JhXtavvcOh2Qpz3l+SC1toU/4UP5lqvwlB4xOSmcJSx
-	 ruTxWdqJ65n3uQX+PXWyR4p7RnAA09g4y7CZJ5i6zKeQ38VfvTTOzFY64gXzybu6wG
-	 Pye8eYrJqs54FZNnb11VFUGV2xKAqPmxC2ccspk8=
+	b=cBc8ujlf83syBxvOx3M+EBOKKNQE/PSKWph83HWiWhK1uJPPWJ5XdkJDzl/Hem5/2
+	 yOLYmadNSrSGjZQvy/3yrC3LUgxFVa/jPHPSKoOUL9BzIYB8Eq9uCjdtfYYQskHKbv
+	 gnUn0P+L4fmaMYsIIsxB5YMATXxzxJyRxHBLrRUc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730885AbgIAQ17 (ORCPT
+        id S1730851AbgIAPcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:27:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35504 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:32:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730854AbgIAPcD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:32:03 -0400
+        id S1730567AbgIAP35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:29:57 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6200520866;
-        Tue,  1 Sep 2020 15:32:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AB752078B;
+        Tue,  1 Sep 2020 15:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974322;
-        bh=5XX2RQWMOIbfRSpMJZfRbIyQh6vvoUtfX87JlCCnWUM=;
+        s=default; t=1598974197;
+        bh=kPvXC1q2GmkliQciWKKb/LdEJYKqO3ID4Wsv5KP+0Z4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0xnwLj6eu9utdbM30aBW3PaJqgR+lWq9mlkclwJYEmpu30TxXTDq7CGkPtrzdkWNZ
-         zfiRf4VAgvK0/98gad5NRfxvXAUWi0Z8cXIY+s5hDAf0kLunmisElbeoobixs8et3U
-         sFPtZw+oBA6IU56TCy7i/KlWAANuIjoV9oYxgrX4=
+        b=FJOAwYpX/aj79Ax9quO/wk+jbX60ITBMR5GJTGf8/Zmyebw7RfCeoSRvNcG/M156y
+         9wOvwZJ5X1OYssld/lPfJaEMTmuf+OwHaG+oger94G3jYgqCRqVdei4itoTOwkwXzs
+         FSUp5D67D6gk+bChaFB7sPA4/Z8sfcFKqar1qWZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rob Clark <robdclark@chromium.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>, Yue Hu <huyue2@yulong.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Ryohei Suzuki <ryh.szk.cmnty@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Doug Berger <opendmb@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 101/214] drm/msm/adreno: fix updating ring fence
-Date:   Tue,  1 Sep 2020 17:09:41 +0200
-Message-Id: <20200901150957.837252422@linuxfoundation.org>
+Subject: [PATCH 5.4 082/214] mm/cma.c: switch to bitmap_zalloc() for cma bitmap allocation
+Date:   Tue,  1 Sep 2020 17:09:22 +0200
+Message-Id: <20200901150956.926570179@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,40 +68,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rob Clark <robdclark@chromium.org>
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-[ Upstream commit f228af11dfa1d1616bc67f3a4119ab77c36181f1 ]
+[ Upstream commit 2184f9928ab52f26c2ae5e9ba37faf29c78f50b8 ]
 
-We need to set it to the most recent completed fence, not the most
-recent submitted.  Otherwise we have races where we think we can retire
-submits that the GPU is not finished with, if the GPU doesn't manage to
-overwrite the seqno before we look at it.
+kzalloc() is used for cma bitmap allocation in cma_activate_area(),
+switch to bitmap_zalloc() for clarity.
 
-This can show up with hang recovery if one of the submits after the
-crashing submit also hangs after it is replayed.
-
-Fixes: f97decac5f4c ("drm/msm: Support multiple ringbuffers")
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Link: http://lkml.kernel.org/r/895d4627-f115-c77a-d454-c0a196116426@huawei.com
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Yue Hu <huyue2@yulong.com>
+Cc: Peng Fan <peng.fan@nxp.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Ryohei Suzuki <ryh.szk.cmnty@gmail.com>
+Cc: Andrey Konovalov <andreyknvl@google.com>
+Cc: Doug Berger <opendmb@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/cma.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-index 048c8be426f32..053da39da1cc0 100644
---- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-+++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-@@ -350,7 +350,7 @@ int adreno_hw_init(struct msm_gpu *gpu)
- 		ring->next = ring->start;
+diff --git a/mm/cma.c b/mm/cma.c
+index 7fe0b8356775f..be55d1988c675 100644
+--- a/mm/cma.c
++++ b/mm/cma.c
+@@ -95,13 +95,11 @@ static void cma_clear_bitmap(struct cma *cma, unsigned long pfn,
  
- 		/* reset completed fence seqno: */
--		ring->memptrs->fence = ring->seqno;
-+		ring->memptrs->fence = ring->fctx->completed_fence;
- 		ring->memptrs->rptr = 0;
- 	}
+ static int __init cma_activate_area(struct cma *cma)
+ {
+-	int bitmap_size = BITS_TO_LONGS(cma_bitmap_maxno(cma)) * sizeof(long);
+ 	unsigned long base_pfn = cma->base_pfn, pfn = base_pfn;
+ 	unsigned i = cma->count >> pageblock_order;
+ 	struct zone *zone;
  
+-	cma->bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+-
++	cma->bitmap = bitmap_zalloc(cma_bitmap_maxno(cma), GFP_KERNEL);
+ 	if (!cma->bitmap) {
+ 		cma->count = 0;
+ 		return -ENOMEM;
+@@ -139,7 +137,7 @@ static int __init cma_activate_area(struct cma *cma)
+ 
+ not_in_zone:
+ 	pr_err("CMA area %s could not be activated\n", cma->name);
+-	kfree(cma->bitmap);
++	bitmap_free(cma->bitmap);
+ 	cma->count = 0;
+ 	return -EINVAL;
+ }
 -- 
 2.25.1
 
