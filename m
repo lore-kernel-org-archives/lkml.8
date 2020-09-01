@@ -5,49 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946A5C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1547DC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6380020BED
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3764206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:26:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974013;
-	bh=HJ/vuluO3Ej1jFBZvEEcc3VyOV2Ph3E3UJEfwVh6Z80=;
+	s=default; t=1598974017;
+	bh=+MfNxuHnBlkCBLQEFjFDclM8tJjbvYYuECeukj3Nrw8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pjW3D+BVSfeD0y0Ues+vArg07pHZ+QoZf8V52hn5Z0CvHPnbc8FWJ7ZhGZVroFsRT
-	 o6dRb8ncVnAbcJCglINzSoqdRbHdc/iuylwII6vuHBXfQ+O4CteEEuQABPUQZ2WwtL
-	 SxjMWZd2IMgGQ8tTr0F3J0izX9tRDlG21KxBkSRQ=
+	b=KCR6pSSNEmZzYvRovdiWM9O7brZ09fuYfHgoLcnk2bYuS97wtjaTumMhKuJYIPd2v
+	 14qtnmFGHiQV0UCJUrq6eWkC4g83Bk2rRVbnpMmhTEE1uVT6uriM7mn0D6VFp5DHR+
+	 nB8O+LKBXbNkBIQB3pqmGkyWkh74ZSlx7AiM20Sc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgIAP0w (ORCPT
+        id S1730158AbgIAP0z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:26:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46348 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:26:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbgIAPXW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:22 -0400
+        id S1729796AbgIAPXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:23:20 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79AE2206FA;
-        Tue,  1 Sep 2020 15:23:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA4C420BED;
+        Tue,  1 Sep 2020 15:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973802;
-        bh=HJ/vuluO3Ej1jFBZvEEcc3VyOV2Ph3E3UJEfwVh6Z80=;
+        s=default; t=1598973799;
+        bh=+MfNxuHnBlkCBLQEFjFDclM8tJjbvYYuECeukj3Nrw8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PqlebqpBXQ8InraHBBUImJMejs1phoHkzBgbeqXU8j6fQUP7mTFhAFDdDfgvLfEry
-         nuABjp18L5wCFdWmd0zCIUK9dEQibMVseo45xex0LQOa4ez3y/X9HppjKgvTKm4h3V
-         YrhLeWgbzlKmLzfSS9zAKauFurEx4D5F7Ojf0Bb0=
+        b=DeEfOx9er5MzegYDdFQY1BBcBymNyPyruOoacSBeuWNSAnE90EMGBV6j4iTCZeL99
+         nGL84tae1OSBTfea4WyT5GxMi0BSejPLkRNWAIrQz8RS1EZKB0hmmLW9nDZ1+VENtY
+         dBRJemlZBH3NhdweREd6RL6YxfEuY3cs28am8UX8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhi Chen <zhichen@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, kernel test robot <lkp@intel.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Elena Petrova <lenaptr@google.com>,
+        Marco Elver <elver@google.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Walter Wu <walter-zh.wu@mediatek.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 052/125] Revert "ath10k: fix DMA related firmware crashes on multiple devices"
-Date:   Tue,  1 Sep 2020 17:10:07 +0200
-Message-Id: <20200901150937.100789081@linuxfoundation.org>
+Subject: [PATCH 4.19 051/125] efi: provide empty efi_enter_virtual_mode implementation
+Date:   Tue,  1 Sep 2020 17:10:06 +0200
+Message-Id: <20200901150937.050660724@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -60,49 +71,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhi Chen <zhichen@codeaurora.org>
+From: Andrey Konovalov <andreyknvl@google.com>
 
-[ Upstream commit a1769bb68a850508a492e3674ab1e5e479b11254 ]
+[ Upstream commit 2c547f9da0539ad1f7ef7f08c8c82036d61b011a ]
 
-This reverts commit 76d164f582150fd0259ec0fcbc485470bcd8033e.
-PCIe hung issue was observed on multiple platforms. The issue was reproduced
-when DUT was configured as AP and associated with 50+ STAs.
+When CONFIG_EFI is not enabled, we might get an undefined reference to
+efi_enter_virtual_mode() error, if this efi_enabled() call isn't inlined
+into start_kernel().  This happens in particular, if start_kernel() is
+annodated with __no_sanitize_address.
 
-For QCA9984/QCA9888, the DMA_BURST_SIZE register controls the AXI burst size
-of the RD/WR access to the HOST MEM.
-0 - No split , RAW read/write transfer size from MAC is put out on bus
-    as burst length
-1 - Split at 256 byte boundary
-2,3 - Reserved
-
-With PCIe protocol analyzer, we can see DMA Read crossing 4KB boundary when
-issue happened. It broke PCIe spec and caused PCIe stuck. So revert
-the default value from 0 to 1.
-
-Tested:  IPQ8064 + QCA9984 with firmware 10.4-3.10-00047
-         QCS404 + QCA9984 with firmware 10.4-3.9.0.2--00044
-         Synaptics AS370 + QCA9888  with firmware 10.4-3.9.0.2--00040
-
-Signed-off-by: Zhi Chen <zhichen@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Cc: Alexander Potapenko <glider@google.com>
+Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dmitry Vyukov <dvyukov@google.com>
+Cc: Elena Petrova <lenaptr@google.com>
+Cc: Marco Elver <elver@google.com>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: Walter Wu <walter-zh.wu@mediatek.com>
+Link: http://lkml.kernel.org/r/6514652d3a32d3ed33d6eb5c91d0af63bf0d1a0c.1596544734.git.andreyknvl@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/ath10k/hw.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/efi.h | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/wireless/ath/ath10k/hw.h b/drivers/net/wireless/ath/ath10k/hw.h
-index fac58c3c576a2..3ff65a0a834a2 100644
---- a/drivers/net/wireless/ath/ath10k/hw.h
-+++ b/drivers/net/wireless/ath/ath10k/hw.h
-@@ -753,7 +753,7 @@ ath10k_rx_desc_get_l3_pad_bytes(struct ath10k_hw_params *hw,
- 
- #define TARGET_10_4_TX_DBG_LOG_SIZE		1024
- #define TARGET_10_4_NUM_WDS_ENTRIES		32
--#define TARGET_10_4_DMA_BURST_SIZE		0
-+#define TARGET_10_4_DMA_BURST_SIZE		1
- #define TARGET_10_4_MAC_AGGR_DELIM		0
- #define TARGET_10_4_RX_SKIP_DEFRAG_TIMEOUT_DUP_DETECTION_CHECK 1
- #define TARGET_10_4_VOW_CONFIG			0
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 6797811bf1e6c..9a5d4b4992716 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -996,7 +996,11 @@ extern void *efi_get_pal_addr (void);
+ extern void efi_map_pal_code (void);
+ extern void efi_memmap_walk (efi_freemem_callback_t callback, void *arg);
+ extern void efi_gettimeofday (struct timespec64 *ts);
++#ifdef CONFIG_EFI
+ extern void efi_enter_virtual_mode (void);	/* switch EFI to virtual mode, if possible */
++#else
++static inline void efi_enter_virtual_mode (void) {}
++#endif
+ #ifdef CONFIG_X86
+ extern void efi_free_boot_services(void);
+ extern efi_status_t efi_query_variable_store(u32 attributes,
 -- 
 2.25.1
 
