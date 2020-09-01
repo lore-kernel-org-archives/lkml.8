@@ -2,154 +2,107 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD1EC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 450C3C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 989EC207EA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BEFC20767
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 20:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HEYouRK6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732648AbgIAUBJ (ORCPT
+        id S1732762AbgIAUBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 16:01:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:49270 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgIAUBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 16:01:03 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C75DA1FB;
-        Tue,  1 Sep 2020 13:01:02 -0700 (PDT)
-Received: from [10.57.40.122] (unknown [10.57.40.122])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8CE313F66F;
-        Tue,  1 Sep 2020 13:01:00 -0700 (PDT)
-Subject: Re: [PATCH v9 17/32] drm: rockchip: fix common struct sg_table
- related issues
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sandy Huang <hjc@rock-chips.com>,
-        =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-References: <20200826063316.23486-1-m.szyprowski@samsung.com>
- <CGME20200826063537eucas1p2d9a362f619920ad84c46f36cd13ec362@eucas1p2.samsung.com>
- <20200826063316.23486-18-m.szyprowski@samsung.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <d69bd263-c628-170d-3992-d717423196a2@arm.com>
-Date:   Tue, 1 Sep 2020 21:00:59 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        Tue, 1 Sep 2020 16:01:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39746 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732069AbgIAUB2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 16:01:28 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50CE8C061244
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 13:01:28 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id a8so1092557plm.2
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 13:01:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=UjrXFlrwlFcaBJes26UhoSpBJyw05OEZbNN97Pv9QCA=;
+        b=HEYouRK6zRQC2b74dfauX3z0nMq6GedE0xNxNRJd9FdWfO2xKQm71Lr7yzoxFH25+H
+         cSQPa89f7aPEGUPeZR8QKP08J1SD0XT7Wm3kH4AUckMR2V2EWqnG03pzn7c6l3AH2c7m
+         A75UNyOguy9wwLbw4piT3uMGHfIkEdFaJQqSk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UjrXFlrwlFcaBJes26UhoSpBJyw05OEZbNN97Pv9QCA=;
+        b=tEAJC2Imu4h19VgDbKLyprcmO9jfX4uRWu9fXPHu1Omq4kalICjElC+7w8nRxaEYTV
+         XaQJdCaJIlYrmtVqod5l9E4xH7r4HRZf3uWF0QEcr7+04aBqfg0ahudvAScIr9K05GvD
+         MgIifcR5JzBNCgbGGM1+V2mSELQZFFYBXzsvtFierRfunAEVZTF5E87VLAxkXqxlszzw
+         bhE4mPGuc0AsZ9ZQUYvR1DkYahKgtCbopZvYJhBcGywjIfX+hStH6c5faWOsHX/SZ4i9
+         nExcWuiK/E1ja0S7E2+tbYwPmqTpLMVCZD1EuHzMC/vLp92sn3SroDeFpPXKeGN7SmJ9
+         pBog==
+X-Gm-Message-State: AOAM533aiZvBhMPXsbyKDpmJuVmCm+Z+B4/SSI6+IVWTEyoWVvFn2SW7
+        Tr4HCTYBtr17SYVwfa0CaHRrwA==
+X-Google-Smtp-Source: ABdhPJxQA6wgzqXd9IgaRux7H5G7DlMcStnSUdfcK/yepsungBU/BlogKjVZvzxw5ShAkAPllbZkuw==
+X-Received: by 2002:a17:902:d345:: with SMTP id l5mr2720112plk.265.1598990487868;
+        Tue, 01 Sep 2020 13:01:27 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id t11sm2829990pfe.165.2020.09.01.13.01.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 13:01:26 -0700 (PDT)
+Date:   Tue, 1 Sep 2020 13:01:25 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Marco Elver <elver@google.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        clang-built-linux@googlegroups.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 0/7] set clang minimum version to 10.0.1
+Message-ID: <202009011255.5BBF4F31F1@keescook>
+References: <20200901002326.1137289-1-ndesaulniers@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200826063316.23486-18-m.szyprowski@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901002326.1137289-1-ndesaulniers@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-08-26 07:33, Marek Szyprowski wrote:
-> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg() function
-> returns the number of the created entries in the DMA address space.
-> However the subsequent calls to the dma_sync_sg_for_{device,cpu}() and
-> dma_unmap_sg must be called with the original number of the entries
-> passed to the dma_map_sg().
+On Mon, Aug 31, 2020 at 05:23:19PM -0700, Nick Desaulniers wrote:
+> Adds a compile time #error to compiler-clang.h setting the effective
+> minimum supported version to clang 10.0.1. A separate patch has already
+> been picked up into the Documentation/ tree also confirming the version.
 > 
-> struct sg_table is a common structure used for describing a non-contiguous
-> memory buffer, used commonly in the DRM and graphics subsystems. It
-> consists of a scatterlist with memory pages and DMA addresses (sgl entry),
-> as well as the number of scatterlist entries: CPU pages (orig_nents entry)
-> and DMA mapped pages (nents entry).
+> Next are a series of reverts. One for 32b arm is a partial revert.
 > 
-> It turned out that it was a common mistake to misuse nents and orig_nents
-> entries, calling DMA-mapping functions with a wrong number of entries or
-> ignoring the number of mapped entries returned by the dma_map_sg()
-> function.
+> Then Marco suggested fixes to KASAN docs.
 > 
-> To avoid such issues, lets use a common dma-mapping wrappers operating
-> directly on the struct sg_table objects and use scatterlist page
-> iterators where possible. This, almost always, hides references to the
-> nents and orig_nents entries, making the code robust, easier to follow
-> and copy/paste safe.
+> Finally, improve the warning for GCC too as per Kees.
+> [...]
+>  8 files changed, 16 insertions(+), 27 deletions(-)
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+A nice simplification!
 
-(Until now I hadn't noticed the crimes against the API that 
-rockchip_gem_get_pages() is committing, but it's not this patch's 
-fault... I'll have to take a closer look at that)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> ---
->   drivers/gpu/drm/rockchip/rockchip_drm_gem.c | 23 +++++++++------------
->   1 file changed, 10 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> index 2970e534e2bb..cb50f2ba2e46 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_gem.c
-> @@ -36,8 +36,8 @@ static int rockchip_gem_iommu_map(struct rockchip_gem_object *rk_obj)
->   
->   	rk_obj->dma_addr = rk_obj->mm.start;
->   
-> -	ret = iommu_map_sg(private->domain, rk_obj->dma_addr, rk_obj->sgt->sgl,
-> -			   rk_obj->sgt->nents, prot);
-> +	ret = iommu_map_sgtable(private->domain, rk_obj->dma_addr, rk_obj->sgt,
-> +				prot);
->   	if (ret < rk_obj->base.size) {
->   		DRM_ERROR("failed to map buffer: size=%zd request_size=%zd\n",
->   			  ret, rk_obj->base.size);
-> @@ -98,11 +98,10 @@ static int rockchip_gem_get_pages(struct rockchip_gem_object *rk_obj)
->   	 * TODO: Replace this by drm_clflush_sg() once it can be implemented
->   	 * without relying on symbols that are not exported.
->   	 */
-> -	for_each_sg(rk_obj->sgt->sgl, s, rk_obj->sgt->nents, i)
-> +	for_each_sgtable_sg(rk_obj->sgt, s, i)
->   		sg_dma_address(s) = sg_phys(s);
->   
-> -	dma_sync_sg_for_device(drm->dev, rk_obj->sgt->sgl, rk_obj->sgt->nents,
-> -			       DMA_TO_DEVICE);
-> +	dma_sync_sgtable_for_device(drm->dev, rk_obj->sgt, DMA_TO_DEVICE);
->   
->   	return 0;
->   
-> @@ -350,8 +349,8 @@ void rockchip_gem_free_object(struct drm_gem_object *obj)
->   		if (private->domain) {
->   			rockchip_gem_iommu_unmap(rk_obj);
->   		} else {
-> -			dma_unmap_sg(drm->dev, rk_obj->sgt->sgl,
-> -				     rk_obj->sgt->nents, DMA_BIDIRECTIONAL);
-> +			dma_unmap_sgtable(drm->dev, rk_obj->sgt,
-> +					  DMA_BIDIRECTIONAL, 0);
->   		}
->   		drm_prime_gem_destroy(obj, rk_obj->sgt);
->   	} else {
-> @@ -476,15 +475,13 @@ rockchip_gem_dma_map_sg(struct drm_device *drm,
->   			struct sg_table *sg,
->   			struct rockchip_gem_object *rk_obj)
->   {
-> -	int count = dma_map_sg(drm->dev, sg->sgl, sg->nents,
-> -			       DMA_BIDIRECTIONAL);
-> -	if (!count)
-> -		return -EINVAL;
-> +	int err = dma_map_sgtable(drm->dev, sg, DMA_BIDIRECTIONAL, 0);
-> +	if (err)
-> +		return err;
->   
->   	if (drm_prime_get_contiguous_size(sg) < attach->dmabuf->size) {
->   		DRM_ERROR("failed to map sg_table to contiguous linear address.\n");
-> -		dma_unmap_sg(drm->dev, sg->sgl, sg->nents,
-> -			     DMA_BIDIRECTIONAL);
-> +		dma_unmap_sgtable(drm->dev, sg, DMA_BIDIRECTIONAL, 0);
->   		return -EINVAL;
->   	}
->   
-> 
+(I do note that for Ubuntu 20.04, they're going to need to do an LLVM
+10.0.0 -> 10.0.1 bump to do kernel builds for their latest LTS...)
+
+-- 
+Kees Cook
