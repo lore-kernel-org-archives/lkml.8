@@ -2,197 +2,177 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-20.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52775C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C2AC433E7
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:42:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEC6206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:42:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599000128;
-	bh=bkqTCuyjMWUzLsM51EdKuZc5BoXY0AQFfsu8gSayk0w=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=u67r4KQDQoe7VQZhOSox5D+aPiZmsvSredV5NljtQrYn2x3dTIo8DPB0VzORPEmwA
-	 FD2mVgnEyW+WLSdEmmgKduLZyHUN+wvOvRvIXYDVU5JGi19LX20OxdarqeaRAkEXhZ
-	 bcFmjx/JElN5SoqgrTYbiigQTFWqKOVwmZVmkyQI=
+	by mail.kernel.org (Postfix) with ESMTP id CFCE6206EF
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 22:42:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="GvXW+ltr";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="hhqCSvtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbgIAWmH (ORCPT
+        id S1726984AbgIAWmc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 18:42:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45518 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726112AbgIAWmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 18:42:04 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681FB206EF;
-        Tue,  1 Sep 2020 22:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599000123;
-        bh=bkqTCuyjMWUzLsM51EdKuZc5BoXY0AQFfsu8gSayk0w=;
-        h=From:To:Cc:Subject:Date:From;
-        b=zA1pC81fboxqgGk5fAc5E877Y0sVcjKXdT4y4X3Jg7/UgTDuT6GvJ+jEZlJy7FDkH
-         BOlz3AvHkKSzlLX6VQF9nF+9L7JaNzzwiTXvM070vxKa/clf3Ot+nBN9+EzjzoY5ku
-         UF4+bdvOJGBkWlgL3vZgnt9rA5DpihaDw++3eDrA=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Al Grant <al.grant@arm.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        David Ahern <dsahern@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Like Xu <like.xu@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Sumanth Korikkar <sumanthk@linux.ibm.com>,
-        Thomas Richter <tmricht@linux.ibm.com>,
-        Tiezhu Yang <yangtiezhu@loongson.cn>,
-        Wei Li <liwei391@huawei.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [GIT PULL] perf tools fixes for v5.9
-Date:   Tue,  1 Sep 2020 19:41:54 -0300
-Message-Id: <20200901224154.3436175-1-acme@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 1 Sep 2020 18:42:32 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:34202 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726112AbgIAWma (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 18:42:30 -0400
+Received: from pps.filterd (m0001303.ppops.net [127.0.0.1])
+        by m0001303.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 081MgJQX031353;
+        Tue, 1 Sep 2020 15:42:23 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=C4uHPjxdR+bjb0CEGriCwqfnQXJOSsZ/OvIwbsuPu3k=;
+ b=GvXW+ltrKf/5HzDfauSdXU7rnd8fvV9ToFwypZHeJG5W50ZIA9ecv7BbTkPkRQGn8H75
+ AyayXbXACaUG12Pye88DUhJugL8ly6OZpw7epsGGBEBxiwE16RWv7elj8z5eKWxJlUrA
+ iWE2z7VKM3185yxjlQyY2QVLfodCMDP/Otc= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by m0001303.ppops.net with ESMTP id 337jpngvd6-9
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 01 Sep 2020 15:42:23 -0700
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.175) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 1 Sep 2020 15:42:09 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=AtLXtuOAsXlOOTwdrif1uPSmBK5F08hmwn7sEa/fhTGWwTaiTOe2jKVL4DhAf9rSu1BbbR6kdyHNQWUbWBb/w1kjGnu5M1QJW8XDDKVBSy5QD69Lxa6J4lYGb5B/XFxeJpQJ1u/A+5/vPSrxrRnxqB5tzrBnoh7PrFUQJRRJUWh9qC6T0/sJXjEhi2WmWuJwhkxibu9FaxFUKPE5oKSqAwtNxG878dso2wq+1j5r9Z+sFwWu2roKwVB3A4nmvIsmjX0nMUf5zDcMenb1ZsF7KoJIXDxv0gZkbSUZISvMIXvRPWFNCEXLvG/UUr1xY4Rj6GzISLqIChDOscP4MZOd+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C4uHPjxdR+bjb0CEGriCwqfnQXJOSsZ/OvIwbsuPu3k=;
+ b=OzR8whSy1tnvLnFzjfZZC1CYEXd7nY4q/PvRvJPZqX9I7rFE9HN+lOiKFj4YH38Tvgbk24baySD3ZlUJG06/6MEnTs9of0u7yW1RjEhp7pyYuTzw982aAxvBSkjD4+seKihK+JLFuGfJsIfo0zucKzXZ/ed9HSVN5AfMlBSnthUMMHa4f3goiguhk/5nm8/7LaBywnM3rb2TNIwY0j4Zd15ZkJ6xE7MZeaTxTieVXKnOcmls4g+FicZWG7V3l6ndzHxn8upkUsqsN4r2s5EpBAxit3cScLK6CGKnxVMg6YyRIzpEOb9pk2oGrTxdG5p1JqQvA4Ae/2XH8ZpLi4i5pg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=C4uHPjxdR+bjb0CEGriCwqfnQXJOSsZ/OvIwbsuPu3k=;
+ b=hhqCSvtAdqzYe6cWUe4QfanLDw1DtrkfgqGP6YIcUR5tonum0Ip9K/j1jQabRxHiKLDPbwwyZL3XNjgHt20fbX/F43Chs2ZACx9ZZGzyfKasA+D6WkN0Z7rQQJXng5zdqaGmsKu2U4EXEn5pvP+/DxJMH12CtPg26g0LLbE/iJk=
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com (2603:10b6:a03:1f9::18)
+ by BYAPR15MB2950.namprd15.prod.outlook.com (2603:10b6:a03:f6::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.21; Tue, 1 Sep
+ 2020 22:42:08 +0000
+Received: from BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea]) by BY5PR15MB3667.namprd15.prod.outlook.com
+ ([fe80::f4b9:8011:9aaa:e4ea%3]) with mapi id 15.20.3326.025; Tue, 1 Sep 2020
+ 22:42:08 +0000
+From:   Nick Terrell <terrelln@fb.com>
+To:     Paul Cercueil <paul@crapouillou.net>
+CC:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        "od@zcrc.me" <od@zcrc.me>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 1/2] lib: decompress_unzstd: Limit output size
+Thread-Topic: [PATCH v3 1/2] lib: decompress_unzstd: Limit output size
+Thread-Index: AQHWgGwCgxByMrx6Qka7tKhSQVK176lUYWWA
+Date:   Tue, 1 Sep 2020 22:42:08 +0000
+Message-ID: <747B4847-08E5-40C9-927B-E1BAC057CF46@fb.com>
+References: <20200901142651.1165237-1-paul@crapouillou.net>
+ <20200901142651.1165237-2-paul@crapouillou.net>
+In-Reply-To: <20200901142651.1165237-2-paul@crapouillou.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: crapouillou.net; dkim=none (message not signed)
+ header.d=none;crapouillou.net; dmarc=none action=none header.from=fb.com;
+x-originating-ip: [2620:10d:c090:400::5:5c3c]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a9349a92-7507-4ad5-4665-08d84ec84270
+x-ms-traffictypediagnostic: BYAPR15MB2950:
+x-microsoft-antispam-prvs: <BYAPR15MB2950E2708C9714763025D486AB2E0@BYAPR15MB2950.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: C/ILFhrGf+W9k9yYoFep3NYw2kMCxOh5HTrcGynjB86AuLgpn3aTMQVF7SROdR8sFUP9IcG4saIJKL36Dv6VE7Tqv0fX8dFcLwTYwTMBcx8zy588Ju/DGFh3H4by7yz/cUDMRif/A4VoxoUmIrpSt7ftq8YcZoFPMoCmkXIdQj5u+saX9nn+Z+Dd8NYI+BKQgJMwEdcQqQCAKH5UOUSOeD3Fb8z+sW3f7XmQFje35FnE3CmGTwtG4E1HNBG4XIflLe4EyaC/+TOgQoDYAeDVWT1+XA1arPkaLmPHJjKh317FCjjXLVy1xWovfDVu55/H
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR15MB3667.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(366004)(39860400002)(136003)(396003)(376002)(346002)(83380400001)(2906002)(4326008)(66446008)(54906003)(53546011)(66556008)(64756008)(6916009)(186003)(6506007)(6486002)(36756003)(478600001)(71200400001)(8676002)(66946007)(5660300002)(2616005)(6512007)(8936002)(33656002)(86362001)(66476007)(316002)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: lm11pw/lbEvytKCqq+NoGDmL7KZLdRUKyf89Y62CA5ZW3TQ6HXqTxhCOJM7/0JNy/tiq2hn2+xfoE5PJPvG1AWqm+Ak8AJVPpeTFF+idzPZUaO+gn4t5SzJAd4pATSFnVnk7fHyaa6EvpSO9zf2pXC2XQZ37bD56wNR6H2fm8whFrYqlgeGfQ/H/yUOWUgPasFyi6U10pbW73uvrWrvNN+DYfNzLUOA8d4PZ+u/KwpXxNOc3k011RQdPidvNtE5PSlel8qbn/eoxzFyoJPvq+S24bMJbovTHY0JilNMCXlPnz42nnWyWaNnvS7cKm7WL6Om/YANoW0/vxbyjaZo2iT2LF14FKImH+L/dpR4BjijGbpLj8QyCogeu8pjRMpu2jxiQ97Bl2G4ieSn/wuml0WyNjoM0ZUvoePOHsjUhhbamjLtA5uvLKTDE1/hzUgl0PXtOe5w4aFW6TL8RNCtc2dkMBRnZ2DgthH1PXpI0cXMpRkI84RPNBxgkWzG5tWNj/akAue5et/8Q4ncbOeAW/r4li8VFULxfOvBcjPs4YAlVkiDU9TfgpB+pwzN7yWGvMMbSJxnAIL1hO1r7HYHqthrhu7ThzCqhR5o57mO2VAi8zp0jxYOpL7rerDeoYi+QejcHyULG0/iknUmhWAHFNs9qx/vzqyLQSfCyRKGV6meQiTLQUPriYW1PTFClEw1L
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <89AA661875F82C44BD6E153981C3C528@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR15MB3667.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9349a92-7507-4ad5-4665-08d84ec84270
+X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Sep 2020 22:42:08.5506
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Drt6I0u+LlGpKmyc1QigMeyV9j0pOnbR/H6IlSi7hj+yPMjKJsUb2CXFuG/PH6T8
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2950
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-01_10:2020-09-01,2020-09-01 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 adultscore=0
+ mlxlogscore=999 impostorscore=0 spamscore=0 phishscore=0 suspectscore=0
+ mlxscore=0 malwarescore=0 lowpriorityscore=0 clxscore=1015
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2006250000 definitions=main-2009010190
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
 
-	Please consider pulling,
+> On Sep 1, 2020, at 7:26 AM, Paul Cercueil <paul@crapouillou.net> wrote:
+>=20
+> The zstd decompression code, as it is right now, will most likely fail
+> on 32-bit systems, as the default output buffer size causes the buffer's
+> end address to overflow.
+>=20
+> Address this issue by setting a sane default to the default output size,
+> with a value that won't overflow the buffer's end address.
+>=20
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>=20
+> Notes:
+>    v2: Change limit to 1 GiB
+>=20
+>    v3: Compute size limit instead of using hardcoded value
+>=20
+> lib/decompress_unzstd.c | 7 ++++++-
+> 1 file changed, 6 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/lib/decompress_unzstd.c b/lib/decompress_unzstd.c
+> index 0ad2c15479ed..790abc472f5b 100644
+> --- a/lib/decompress_unzstd.c
+> +++ b/lib/decompress_unzstd.c
+> @@ -178,8 +178,13 @@ static int INIT __unzstd(unsigned char *in_buf, long=
+ in_len,
+> 	int err;
+> 	size_t ret;
+>=20
+> +	/*
+> +	 * ZSTD decompression code won't be happy if the buffer size is so big
+> +	 * that its end address overflows. When the size is not provided, make
+> +	 * it as big as possible without having the end address overflow.
+> +	 */
+> 	if (out_len =3D=3D 0)
+> -		out_len =3D LONG_MAX; /* no limit */
+> +		out_len =3D UINTPTR_MAX - (uintptr_t)out_buf;
 
-Best regards,
+Great, that works for me. Thanks for fixing this!
 
-- Arnaldo
+Reviewed-by: Nick Terrell <terrelln@fb.com>
 
-The following changes since commit da2968ff879b9e74688cdc658f646971991d2c56:
-
-  Merge tag 'pci-v5.9-fixes-1' of git://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci (2020-08-20 14:17:03 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.9-2020-09-01
-
-for you to fetch changes up to 977f739b7126bf98b5202e243f60cbc0a1ec2c3b:
-
-  perf report: Disable ordered_events for raw dump (2020-09-01 12:20:25 -0300)
-
-----------------------------------------------------------------
-perf tools fixes for v5.9:
-
-- Fix infinite loop in the TUI for grouped events in 'perf top/record', for
-  instance when using "perf top -e '{cycles,instructions,cache-misses}'.
-
-- Fix segfault by skipping side-band event setup if HAVE_LIBBPF_SUPPORT is not set.
-
-- Fix synthesized branch stacks generated from CoreSight ETM trace and Intel PT
-  hardware traces.
-
-- Fix error when synthesizing events from ARM SPE hardware trace.
-
-- The SNOOPX and REMOTE offsets in the data_src bitmask in perf records were
-  were both 37, SNOOPX is 38, fix it.
-
-- Fix use of CPU list with summary option in 'perf sched timehist'.
-
-- Avoid an uninitialized read when using fake PMUs.
-
-- Set perf_event_attr.exclude_guest=1 for user-space counting.
-
-- Don't order events when doing a 'perf report -D' raw dump of perf.data records.
-
-- Set NULL sentinel in pmu_events table in "Parse and process metrics" 'perf test'
-
-- Fix basic bpf filtering 'perf test' on s390x.
-
-- Fix out of bounds array access in the 'perf stat' print_counters() evlist method.
-
-- Add mwait_idle_with_hints.constprop.0 to the list of idle symbols.
-
-- Use %zd for size_t printf formats on 32-bit.
-
-- Correct the help info of "perf record --no-bpf-event" option.
-
-- Add entries for CoreSight and Arm SPE tooling to MAINTAINERS.
-
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-Al Grant (3):
-  perf cs-etm: Fix corrupt data after perf inject from
-  perf intel-pt: Fix corrupt data after perf inject from
-  perf tools: Correct SNOOPX field offset
-
-Arnaldo Carvalho de Melo (2):
-  perf symbols: Add mwait_idle_with_hints.constprop.0 to the list of idle symbols
-  perf top/report: Fix infinite loop in the TUI for grouped events
-
-Chris Wilson (1):
-  perf tools: Use %zd for size_t printf formats on 32-bit
-
-David Ahern (1):
-  perf sched timehist: Fix use of CPU list with summary option
-
-Ian Rogers (1):
-  perf parse-events: Avoid an uninitialized read when using fake PMUs
-
-Jin Yao (1):
-  perf parse-events: Set exclude_guest=1 for user-space counting
-
-Jiri Olsa (1):
-  perf report: Disable ordered_events for raw dump
-
-Mathieu Poirier (1):
-  MAINTAINERS: Add entries for CoreSight and Arm SPE tooling
-
-Sumanth Korikkar (1):
-  perf test: Fix basic bpf filtering test
-
-Thomas Richter (2):
-  perf test: Set NULL sentinel in pmu_events table in "Parse and process metrics" test
-  perf stat: Fix out of bounds array access in the print_counters() evlist method
-
-Tiezhu Yang (1):
-  perf top: Skip side-band event setup if HAVE_LIBBPF_SUPPORT is not set
-
-Wei Li (2):
-  perf: arm-spe: Fix check error when synthesizing events
-  perf record: Correct the help info of option "--no-bpf-event"
-
- MAINTAINERS                                   |  8 ++++-
- tools/include/uapi/linux/perf_event.h         |  2 +-
- tools/perf/builtin-record.c                   |  2 +-
- tools/perf/builtin-report.c                   |  3 ++
- tools/perf/builtin-sched.c                    |  6 +++-
- tools/perf/builtin-top.c                      |  2 ++
- tools/perf/tests/bpf.c                        |  2 +-
- tools/perf/tests/parse-events.c               |  4 +--
- tools/perf/tests/parse-metric.c               |  3 ++
- tools/perf/ui/browsers/hists.c                |  3 +-
- .../util/arm-spe-decoder/arm-spe-decoder.c    |  6 ++--
- tools/perf/util/cs-etm.c                      |  9 +++++-
- tools/perf/util/intel-pt.c                    |  9 +++++-
- tools/perf/util/parse-events.c                | 31 ++++++++++++-------
- tools/perf/util/session.c                     |  2 +-
- tools/perf/util/stat-display.c                |  2 +-
- tools/perf/util/symbol.c                      |  1 +
- tools/perf/util/zstd.c                        |  2 +-
- 18 files changed, 69 insertions(+), 28 deletions(-)
-
--- 
-2.26.2
+> 	if (fill =3D=3D NULL && flush =3D=3D NULL)
+> 		/*
+> --=20
+> 2.28.0
+>=20
 
