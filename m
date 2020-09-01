@@ -2,52 +2,51 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4BCC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2F7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF554205F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAE1B2158C
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974263;
-	bh=wfyP6ErZoZxY7ltPAxt9V2YaYyKjCJkU6bza5vC6jfQ=;
+	s=default; t=1598974268;
+	bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ESmiQPeqbjLMx7Oc2Fe1wRxNwWPVUj60DhlUuqU4/Bh4g6Q9ivMp/VkLvk8zC1sHE
-	 1gc0acfj24La7DOSv/YAKSfYdwkgilwqTmrxX656kgnWbC/j3kFtSxAIX5Rzi/+6Va
-	 0gLFL/pgfHO/v92hBU5EP/99bGHTxOtDE2PgFQlE=
+	b=sp6WXvzTXmKv9bXyFrLrfW5OSS4fV26dfl5Yc7qAifDXYP9VpvwKHBWpZ2K3RK0oU
+	 oycsRWiNK/n+CFCLHLuIFHQDPJvVNGS28Yh36LmMcd+wEkpHKvh1LlrzVFAvr5lJuk
+	 CBOmCBO6RAaiP+f5gwx4fdtPKSNNTJ2Gd20VR+YE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730660AbgIAPbC (ORCPT
+        id S1730668AbgIAPbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:31:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53856 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:31:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730183AbgIAP1N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:27:13 -0400
+        id S1730188AbgIAP1S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:27:18 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2795206FA;
-        Tue,  1 Sep 2020 15:27:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0F52207D3;
+        Tue,  1 Sep 2020 15:27:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974032;
-        bh=wfyP6ErZoZxY7ltPAxt9V2YaYyKjCJkU6bza5vC6jfQ=;
+        s=default; t=1598974037;
+        bh=MqAyc3vVX6Sn4o+E+TZtYRzJyGODsIk2bdb5U1rmkkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x6dAE+RKDnkaOF2JKqOj4UmVscY4ftDN+DrNBrHpIqGs6LmjledWo7L4ngyphO6DV
-         Qcwp4aYnNcl1XpVhcLvNMWOxsCrGo7R0XuSBLKqSz8mBKirbzLCS2hfxmOc+nF7heR
-         qXFUyH5s5czYtIoeIEcBoXZG1gaC5BCgwh/nkezE=
+        b=0eG3BRWnuB7PiB3IQ2SCQEiDOCmjO2IwQD8uSIpsHKw7T4WLEYU6MRm0996P8gkw9
+         pYJPXHG3t/qinz4qtkSB50ET/DbZFDb7oJOa/Sv6Vbkvlf5fbSDdvo3IX02m9DSCZd
+         e6zcmEBnyF4b/+DHnk1K9J5AMSI1ZzETCUrp/uQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qiushi Wu <wu000273@umn.edu>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 018/214] ASoC: img-parallel-out: Fix a reference count leak
-Date:   Tue,  1 Sep 2020 17:08:18 +0200
-Message-Id: <20200901150953.840058605@linuxfoundation.org>
+        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>
+Subject: [PATCH 5.4 002/214] binfmt_flat: revert "binfmt_flat: dont offset the data start"
+Date:   Tue,  1 Sep 2020 17:08:02 +0200
+Message-Id: <20200901150953.075216023@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -60,41 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Max Filippov <jcmvbkbc@gmail.com>
 
-[ Upstream commit 6b9fbb073636906eee9fe4d4c05a4f445b9e2a23 ]
+commit 2217b982624680d19a80ebb4600d05c8586c4f96 upstream.
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-when it returns an error code, causing incorrect ref count if
-pm_runtime_put_noidle() is not called in error handling paths.
-Thus call pm_runtime_put_noidle() if pm_runtime_get_sync() fails.
+binfmt_flat loader uses the gap between text and data to store data
+segment pointers for the libraries. Even in the absence of shared
+libraries it stores at least one pointer to the executable's own data
+segment. Text and data can go back to back in the flat binary image and
+without offsetting data segment last few instructions in the text
+segment may get corrupted by the data segment pointer.
 
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200614033344.1814-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix it by reverting commit a2357223c50a ("binfmt_flat: don't offset the
+data start").
+
+Cc: stable@vger.kernel.org
+Fixes: a2357223c50a ("binfmt_flat: don't offset the data start")
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Signed-off-by: Greg Ungerer <gerg@linux-m68k.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/soc/img/img-parallel-out.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/binfmt_flat.c |   20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/sound/soc/img/img-parallel-out.c b/sound/soc/img/img-parallel-out.c
-index 5ddbe3a31c2e9..4da49a42e8547 100644
---- a/sound/soc/img/img-parallel-out.c
-+++ b/sound/soc/img/img-parallel-out.c
-@@ -163,8 +163,10 @@ static int img_prl_out_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+--- a/fs/binfmt_flat.c
++++ b/fs/binfmt_flat.c
+@@ -571,7 +571,7 @@ static int load_flat_file(struct linux_b
+ 			goto err;
+ 		}
+ 
+-		len = data_len + extra;
++		len = data_len + extra + MAX_SHARED_LIBS * sizeof(unsigned long);
+ 		len = PAGE_ALIGN(len);
+ 		realdatastart = vm_mmap(NULL, 0, len,
+ 			PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE, 0);
+@@ -585,7 +585,9 @@ static int load_flat_file(struct linux_b
+ 			vm_munmap(textpos, text_len);
+ 			goto err;
+ 		}
+-		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
++		datapos = ALIGN(realdatastart +
++				MAX_SHARED_LIBS * sizeof(unsigned long),
++				FLAT_DATA_ALIGN);
+ 
+ 		pr_debug("Allocated data+bss+stack (%u bytes): %lx\n",
+ 			 data_len + bss_len + stack_len, datapos);
+@@ -615,7 +617,7 @@ static int load_flat_file(struct linux_b
+ 		memp_size = len;
+ 	} else {
+ 
+-		len = text_len + data_len + extra;
++		len = text_len + data_len + extra + MAX_SHARED_LIBS * sizeof(u32);
+ 		len = PAGE_ALIGN(len);
+ 		textpos = vm_mmap(NULL, 0, len,
+ 			PROT_READ | PROT_EXEC | PROT_WRITE, MAP_PRIVATE, 0);
+@@ -630,7 +632,9 @@ static int load_flat_file(struct linux_b
+ 		}
+ 
+ 		realdatastart = textpos + ntohl(hdr->data_start);
+-		datapos = ALIGN(realdatastart, FLAT_DATA_ALIGN);
++		datapos = ALIGN(realdatastart +
++				MAX_SHARED_LIBS * sizeof(u32),
++				FLAT_DATA_ALIGN);
+ 
+ 		reloc = (__be32 __user *)
+ 			(datapos + (ntohl(hdr->reloc_start) - text_len));
+@@ -647,9 +651,8 @@ static int load_flat_file(struct linux_b
+ 					 (text_len + full_data
+ 						  - sizeof(struct flat_hdr)),
+ 					 0);
+-			if (datapos != realdatastart)
+-				memmove((void *)datapos, (void *)realdatastart,
+-						full_data);
++			memmove((void *) datapos, (void *) realdatastart,
++					full_data);
+ #else
+ 			/*
+ 			 * This is used on MMU systems mainly for testing.
+@@ -705,7 +708,8 @@ static int load_flat_file(struct linux_b
+ 		if (IS_ERR_VALUE(result)) {
+ 			ret = result;
+ 			pr_err("Unable to read code+data+bss, errno %d\n", ret);
+-			vm_munmap(textpos, text_len + data_len + extra);
++			vm_munmap(textpos, text_len + data_len + extra +
++				MAX_SHARED_LIBS * sizeof(u32));
+ 			goto err;
+ 		}
  	}
- 
- 	ret = pm_runtime_get_sync(prl->dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put_noidle(prl->dev);
- 		return ret;
-+	}
- 
- 	reg = img_prl_out_readl(prl, IMG_PRL_OUT_CTL);
- 	reg = (reg & ~IMG_PRL_OUT_CTL_EDGE_MASK) | control_set;
--- 
-2.25.1
-
 
 
