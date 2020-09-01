@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D000C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A7FFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D867E2065F
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:33:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B0DC2065F
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:33:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598978018;
-	bh=ySBnpwnF0CNXjCXAEVMorz59mCAeieq6TpQ0Z/HUrxE=;
+	s=default; t=1598978038;
+	bh=pDSFRSTQwnciu5Fe9o6G+gZ7lzOqtlB0ZrjDnXzhTZM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kc9hLyRYF1BRVDiOcv0ri1G41i+TVMkQHK6g6KH2DdaUH6cD6Xz6VLlJJriH/+Aom
-	 O7a1dZsZzVoI3lgCNquUp1I2byURXlgV7Jlqnx+OLY20HcclOt2WLGLkxFy/BC/KkD
-	 710R9iTO9O5TjAB2mU9J1O/nIebR2wLwu1rmRP/U=
+	b=MY3QtJjNyyn7+mS3KXTcVeYbzv5e0cH/0EP3+OCQ1d7rBlA2ocAFY8mRV8r20V3y+
+	 +GkIY5y1+sgKnfQGebR1TKKnrELkUM0tDy5OlaI3GuuxhVSDe2HD7NRg53NUWVlC+Y
+	 F4qXKPOWbKs9YLnZXfFKBKy7Mo+o7n1tqJOoz8sk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbgIAQdg (ORCPT
+        id S1730796AbgIAQdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:33:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35078 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:33:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730738AbgIAPbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:31:45 -0400
+        id S1730707AbgIAPbd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:31:33 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4742E205F4;
-        Tue,  1 Sep 2020 15:31:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E22B421548;
+        Tue,  1 Sep 2020 15:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974304;
-        bh=ySBnpwnF0CNXjCXAEVMorz59mCAeieq6TpQ0Z/HUrxE=;
+        s=default; t=1598974291;
+        bh=pDSFRSTQwnciu5Fe9o6G+gZ7lzOqtlB0ZrjDnXzhTZM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HmFWNKwUIhSlr+HMX4yYCtyB8A+mELT+IY2Z6gCN7HHfRXkHpJeG2ieHJX+mynq2w
-         WelXk9E+pd8dOUdxeeeFYX+hEOQKCwBSTFLzF6X5ElR2bog7HO6MXvnlakuKsDjro1
-         BK5PcHUjVwzYoRA3FXkrSp1w0+KqqT97zsVDTCZs=
+        b=QkJgr8sGNJ0zwcByXvWMe8j0b9ID9V+1DAPT7/EvqKxiQc1ycIZn21a4Mv4ikXga9
+         YfEPNFB8lhlkzfZu9m5+NHPrbXpSNNLs/O5Hb7U3JraHX0LdIYnvT2TyjY1FLtvHnT
+         +B99hOgJAYGjoKPXE3ZCDZ5JIXzsAkoWK7l3+z4Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>,
-        Alain Volmat <alain.volmat@st.com>,
-        Mark Brown <broonie@kernel.org>,
+        stable@vger.kernel.org, Lukas Czerner <lczerner@redhat.com>,
+        Jan Kara <jack@suse.cz>, Theodore Tso <tytso@mit.edu>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 123/214] spi: stm32: fix fifo threshold level in case of short transfer
-Date:   Tue,  1 Sep 2020 17:10:03 +0200
-Message-Id: <20200901150958.878202484@linuxfoundation.org>
+Subject: [PATCH 5.4 119/214] ext4: handle error of ext4_setup_system_zone() on remount
+Date:   Tue,  1 Sep 2020 17:09:59 +0200
+Message-Id: <20200901150958.689993418@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
 References: <20200901150952.963606936@linuxfoundation.org>
@@ -61,97 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amelie Delaunay <amelie.delaunay@st.com>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit 3373e9004acc0603242622b4378c64bc01d21b5f ]
+[ Upstream commit d176b1f62f242ab259ff665a26fbac69db1aecba ]
 
-When transfer is shorter than half of the fifo, set the data packet size
-up to transfer size instead of up to half of the fifo.
-Check also that threshold is set at least to 1 data frame.
+ext4_setup_system_zone() can fail. Handle the failure in ext4_remount().
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Alain Volmat <alain.volmat@st.com>
-Link: https://lore.kernel.org/r/1597043558-29668-3-git-send-email-alain.volmat@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Reviewed-by: Lukas Czerner <lczerner@redhat.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20200728130437.7804-2-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/spi/spi-stm32.c | 26 ++++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
+ fs/ext4/super.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 25b1348aaa549..f092bc8e00819 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -469,20 +469,27 @@ static int stm32_spi_prepare_mbr(struct stm32_spi *spi, u32 speed_hz,
- /**
-  * stm32h7_spi_prepare_fthlv - Determine FIFO threshold level
-  * @spi: pointer to the spi controller data structure
-+ * @xfer_len: length of the message to be transferred
-  */
--static u32 stm32h7_spi_prepare_fthlv(struct stm32_spi *spi)
-+static u32 stm32h7_spi_prepare_fthlv(struct stm32_spi *spi, u32 xfer_len)
- {
--	u32 fthlv, half_fifo;
-+	u32 fthlv, half_fifo, packet;
- 
- 	/* data packet should not exceed 1/2 of fifo space */
- 	half_fifo = (spi->fifo_size / 2);
- 
-+	/* data_packet should not exceed transfer length */
-+	if (half_fifo > xfer_len)
-+		packet = xfer_len;
-+	else
-+		packet = half_fifo;
-+
- 	if (spi->cur_bpw <= 8)
--		fthlv = half_fifo;
-+		fthlv = packet;
- 	else if (spi->cur_bpw <= 16)
--		fthlv = half_fifo / 2;
-+		fthlv = packet / 2;
- 	else
--		fthlv = half_fifo / 4;
-+		fthlv = packet / 4;
- 
- 	/* align packet size with data registers access */
- 	if (spi->cur_bpw > 8)
-@@ -490,6 +497,9 @@ static u32 stm32h7_spi_prepare_fthlv(struct stm32_spi *spi)
- 	else
- 		fthlv -= (fthlv % 4); /* multiple of 4 */
- 
-+	if (!fthlv)
-+		fthlv = 1;
-+
- 	return fthlv;
- }
- 
-@@ -1396,7 +1406,7 @@ static void stm32h7_spi_set_bpw(struct stm32_spi *spi)
- 	cfg1_setb |= (bpw << STM32H7_SPI_CFG1_DSIZE_SHIFT) &
- 		     STM32H7_SPI_CFG1_DSIZE;
- 
--	spi->cur_fthlv = stm32h7_spi_prepare_fthlv(spi);
-+	spi->cur_fthlv = stm32h7_spi_prepare_fthlv(spi, spi->cur_xferlen);
- 	fthlv = spi->cur_fthlv - 1;
- 
- 	cfg1_clrb |= STM32H7_SPI_CFG1_FTHLV;
-@@ -1582,6 +1592,8 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 
- 	spin_lock_irqsave(&spi->lock, flags);
- 
-+	spi->cur_xferlen = transfer->len;
-+
- 	if (spi->cur_bpw != transfer->bits_per_word) {
- 		spi->cur_bpw = transfer->bits_per_word;
- 		spi->cfg->set_bpw(spi);
-@@ -1629,8 +1641,6 @@ static int stm32_spi_transfer_one_setup(struct stm32_spi *spi,
- 			goto out;
+diff --git a/fs/ext4/super.c b/fs/ext4/super.c
+index 92a6741c4bdd9..e8923013accc0 100644
+--- a/fs/ext4/super.c
++++ b/fs/ext4/super.c
+@@ -5563,7 +5563,10 @@ static int ext4_remount(struct super_block *sb, int *flags, char *data)
+ 		ext4_register_li_request(sb, first_not_zeroed);
  	}
  
--	spi->cur_xferlen = transfer->len;
--
- 	dev_dbg(spi->dev, "transfer communication mode set to %d\n",
- 		spi->cur_comm);
- 	dev_dbg(spi->dev,
+-	ext4_setup_system_zone(sb);
++	err = ext4_setup_system_zone(sb);
++	if (err)
++		goto restore_opts;
++
+ 	if (sbi->s_journal == NULL && !(old_sb_flags & SB_RDONLY)) {
+ 		err = ext4_commit_super(sb, 1);
+ 		if (err)
 -- 
 2.25.1
 
