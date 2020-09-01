@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8779EC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECEAC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 655FA206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C127207D3
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:54:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979249;
-	bh=CvSkdwDg6PRknrGxMyqrHFPTdy7TeeZG/HZYNd6mZRQ=;
+	s=default; t=1598979257;
+	bh=6K4rNcG4L2WAZUDR1nnhoCoAQdWt0wxjfaOUf2NyQQQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OBbEo1vMt6fuRl2RZQQparNXT2QovsOIFYoa6y5RbIp3L4eiHkVeR8ghhEk/AMO7X
-	 syoYsi9xB6bmbmoQjlNN/Ux1RUDKplyTjb55RVCLL5CPLTeGE6blGYokjJ3OeBKg8E
-	 1fiwXSHhfZ1gAHOjJqyUamzA6amZsb8CJh95M4bc=
+	b=zJYq/yixQxlBmjPfsZicUSNJ8Jgj/mIg8CPCr6a9so5aDP5vdqxVSnfbhMg60j0ha
+	 ONttYr57KR7uSwTjoDYLI/6gaSBq+bzmc40uBUaHMAt7qWEudoUczHBE4qViq2NKu/
+	 +SgklXNRDAAcLPg3llgYwHvSnW2XDs3u4m0rNtAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbgIAQyH (ORCPT
+        id S1732449AbgIAQyP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:54:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48872 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:54:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729070AbgIAPYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:24:51 -0400
+        id S1729976AbgIAPYm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:24:42 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C35C920FC3;
-        Tue,  1 Sep 2020 15:24:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84A622078B;
+        Tue,  1 Sep 2020 15:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973889;
-        bh=CvSkdwDg6PRknrGxMyqrHFPTdy7TeeZG/HZYNd6mZRQ=;
+        s=default; t=1598973882;
+        bh=6K4rNcG4L2WAZUDR1nnhoCoAQdWt0wxjfaOUf2NyQQQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tKoukL++EDMwYQ1LDNIZX8HfKH3hrY9qTu4nRpIcTb9SD53rG5ZTfLLlBPDvm55m/
-         1Y/EMFpzlMfnAgbEnFf/vbQUAO83YWyp8/BV4bLOyMq2R/VRtzH+UfOXasEpvFbRs/
-         Ia+/8nJF+eGnizRbZCPXrRV6Oc6Twd8vCzV9B8Zg=
+        b=jiYuzm16E1Ak850bjpg28C4TrYLX6MBMXgTRHnIzsBPAHz0l1tJoJKC8OeSXTO7ze
+         BCowVfuUCHqmi+9CBj1ZJuBn8VxBDxtc6O7ZCG1XjP0ndrNPdUujQFf4EByL7oCl11
+         jKJLdcGUVKfnrWye5Odgt5vUuYhIh9fqzG0AYqrc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Subject: [PATCH 4.19 087/125] vt: defer kfree() of vc_screenbuf in vc_do_resize()
-Date:   Tue,  1 Sep 2020 17:10:42 +0200
-Message-Id: <20200901150938.837990318@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 084/125] btrfs: fix space cache memory leak after transaction abort
+Date:   Tue,  1 Sep 2020 17:10:39 +0200
+Message-Id: <20200901150938.689852779@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
 References: <20200901150934.576210879@linuxfoundation.org>
@@ -60,57 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit f8d1653daec02315e06d30246cff4af72e76e54e upstream.
+commit bbc37d6e475eee8ffa2156ec813efc6bbb43c06d upstream.
 
-syzbot is reporting UAF bug in set_origin() from vc_do_resize() [1], for
-vc_do_resize() calls kfree(vc->vc_screenbuf) before calling set_origin().
+If a transaction aborts it can cause a memory leak of the pages array of
+a block group's io_ctl structure. The following steps explain how that can
+happen:
 
-Unfortunately, in set_origin(), vc->vc_sw->con_set_origin() might access
-vc->vc_pos when scroll is involved in order to manipulate cursor, but
-vc->vc_pos refers already released vc->vc_screenbuf until vc->vc_pos gets
-updated based on the result of vc->vc_sw->con_set_origin().
+1) Transaction N is committing, currently in state TRANS_STATE_UNBLOCKED
+   and it's about to start writing out dirty extent buffers;
 
-Preserving old buffer and tolerating outdated vc members until set_origin()
-completes would be easier than preventing vc->vc_sw->con_set_origin() from
-accessing outdated vc members.
+2) Transaction N + 1 already started and another task, task A, just called
+   btrfs_commit_transaction() on it;
 
-[1] https://syzkaller.appspot.com/bug?id=6649da2081e2ebdc65c0642c214b27fe91099db3
+3) Block group B was dirtied (extents allocated from it) by transaction
+   N + 1, so when task A calls btrfs_start_dirty_block_groups(), at the
+   very beginning of the transaction commit, it starts writeback for the
+   block group's space cache by calling btrfs_write_out_cache(), which
+   allocates the pages array for the block group's io_ctl with a call to
+   io_ctl_init(). Block group A is added to the io_list of transaction
+   N + 1 by btrfs_start_dirty_block_groups();
 
-Reported-by: syzbot <syzbot+9116ecc1978ca3a12f43@syzkaller.appspotmail.com>
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1596034621-4714-1-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp
+4) While transaction N's commit is writing out the extent buffers, it gets
+   an IO error and aborts transaction N, also setting the file system to
+   RO mode;
+
+5) Task A has already returned from btrfs_start_dirty_block_groups(), is at
+   btrfs_commit_transaction() and has set transaction N + 1 state to
+   TRANS_STATE_COMMIT_START. Immediately after that it checks that the
+   filesystem was turned to RO mode, due to transaction N's abort, and
+   jumps to the "cleanup_transaction" label. After that we end up at
+   btrfs_cleanup_one_transaction() which calls btrfs_cleanup_dirty_bgs().
+   That helper finds block group B in the transaction's io_list but it
+   never releases the pages array of the block group's io_ctl, resulting in
+   a memory leak.
+
+In fact at the point when we are at btrfs_cleanup_dirty_bgs(), the pages
+array points to pages that were already released by us at
+__btrfs_write_out_cache() through the call to io_ctl_drop_pages(). We end
+up freeing the pages array only after waiting for the ordered extent to
+complete through btrfs_wait_cache_io(), which calls io_ctl_free() to do
+that. But in the transaction abort case we don't wait for the space cache's
+ordered extent to complete through a call to btrfs_wait_cache_io(), so
+that's why we end up with a memory leak - we wait for the ordered extent
+to complete indirectly by shutting down the work queues and waiting for
+any jobs in them to complete before returning from close_ctree().
+
+We can solve the leak simply by freeing the pages array right after
+releasing the pages (with the call to io_ctl_drop_pages()) at
+__btrfs_write_out_cache(), since we will never use it anymore after that
+and the pages array points to already released pages at that point, which
+is currently not a problem since no one will use it after that, but not a
+good practice anyway since it can easily lead to use-after-free issues.
+
+So fix this by freeing the pages array right after releasing the pages at
+__btrfs_write_out_cache().
+
+This issue can often be reproduced with test case generic/475 from fstests
+and kmemleak can detect it and reports it with the following trace:
+
+unreferenced object 0xffff9bbf009fa600 (size 512):
+  comm "fsstress", pid 38807, jiffies 4298504428 (age 22.028s)
+  hex dump (first 32 bytes):
+    00 a0 7c 4d 3d ed ff ff 40 a0 7c 4d 3d ed ff ff  ..|M=...@.|M=...
+    80 a0 7c 4d 3d ed ff ff c0 a0 7c 4d 3d ed ff ff  ..|M=.....|M=...
+  backtrace:
+    [<00000000f4b5cfe2>] __kmalloc+0x1a8/0x3e0
+    [<0000000028665e7f>] io_ctl_init+0xa7/0x120 [btrfs]
+    [<00000000a1f95b2d>] __btrfs_write_out_cache+0x86/0x4a0 [btrfs]
+    [<00000000207ea1b0>] btrfs_write_out_cache+0x7f/0xf0 [btrfs]
+    [<00000000af21f534>] btrfs_start_dirty_block_groups+0x27b/0x580 [btrfs]
+    [<00000000c3c23d44>] btrfs_commit_transaction+0xa6f/0xe70 [btrfs]
+    [<000000009588930c>] create_subvol+0x581/0x9a0 [btrfs]
+    [<000000009ef2fd7f>] btrfs_mksubvol+0x3fb/0x4a0 [btrfs]
+    [<00000000474e5187>] __btrfs_ioctl_snap_create+0x119/0x1a0 [btrfs]
+    [<00000000708ee349>] btrfs_ioctl_snap_create_v2+0xb0/0xf0 [btrfs]
+    [<00000000ea60106f>] btrfs_ioctl+0x12c/0x3130 [btrfs]
+    [<000000005c923d6d>] __x64_sys_ioctl+0x83/0xb0
+    [<0000000043ace2c9>] do_syscall_64+0x33/0x80
+    [<00000000904efbce>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/vt/vt.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ fs/btrfs/disk-io.c          |    1 +
+ fs/btrfs/free-space-cache.c |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -1199,7 +1199,7 @@ static int vc_do_resize(struct tty_struc
- 	unsigned int old_rows, old_row_size, first_copied_row;
- 	unsigned int new_cols, new_rows, new_row_size, new_screen_size;
- 	unsigned int user;
--	unsigned short *newscreen;
-+	unsigned short *oldscreen, *newscreen;
- 	struct uni_screen *new_uniscr = NULL;
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -4444,6 +4444,7 @@ static void btrfs_cleanup_bg_io(struct b
+ 		cache->io_ctl.inode = NULL;
+ 		iput(inode);
+ 	}
++	ASSERT(cache->io_ctl.pages == NULL);
+ 	btrfs_put_block_group(cache);
+ }
  
- 	WARN_CONSOLE_UNLOCKED();
-@@ -1297,10 +1297,11 @@ static int vc_do_resize(struct tty_struc
- 	if (new_scr_end > new_origin)
- 		scr_memsetw((void *)new_origin, vc->vc_video_erase_char,
- 			    new_scr_end - new_origin);
--	kfree(vc->vc_screenbuf);
-+	oldscreen = vc->vc_screenbuf;
- 	vc->vc_screenbuf = newscreen;
- 	vc->vc_screenbuf_size = new_screen_size;
- 	set_origin(vc);
-+	kfree(oldscreen);
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -1167,7 +1167,6 @@ static int __btrfs_wait_cache_io(struct
+ 	ret = update_cache_item(trans, root, inode, path, offset,
+ 				io_ctl->entries, io_ctl->bitmaps);
+ out:
+-	io_ctl_free(io_ctl);
+ 	if (ret) {
+ 		invalidate_inode_pages2(inode->i_mapping);
+ 		BTRFS_I(inode)->generation = 0;
+@@ -1332,6 +1331,7 @@ static int __btrfs_write_out_cache(struc
+ 	 * them out later
+ 	 */
+ 	io_ctl_drop_pages(io_ctl);
++	io_ctl_free(io_ctl);
  
- 	/* do part of a reset_terminal() */
- 	vc->vc_top = 0;
+ 	unlock_extent_cached(&BTRFS_I(inode)->io_tree, 0,
+ 			     i_size_read(inode) - 1, &cached_state);
 
 
