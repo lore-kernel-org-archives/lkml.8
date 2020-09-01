@@ -2,124 +2,104 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83CA8C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74698C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 529C3206FA
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lJHiAw/i"
+	by mail.kernel.org (Postfix) with ESMTP id 4205F206C0
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:58:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598979516;
+	bh=Rt0xE89x9whGsdU3+Kog2t5CBCq2HWb2QWVTPNjdFGU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RlfqmB4yLQZOa3bC9i4S0kDxrIGGdq8pChQaCmksS8GKxdguTF55GNsUe0pvqHE4B
+	 FlzNo8ZDu8a+A1cEgmyUaaeHFCl3COq4G6Gpa0A2fycgBrUdCNA6EyrnSxlR4vnBqt
+	 DCeKIZ6GH45OzAUfsDFSgQB1eYypZJUI3j/7qHI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732454AbgIAQ6a (ORCPT
+        id S1732462AbgIAQ6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:58:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39590 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729681AbgIAQ54 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 12:57:56 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12A3DC061244;
-        Tue,  1 Sep 2020 09:57:55 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id r13so2425655ljm.0;
-        Tue, 01 Sep 2020 09:57:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fLX5J20+fA4410d7uA+LwglBCTxFJG7EYBTgn15oCgQ=;
-        b=lJHiAw/ipnb9qghfOnZr7yNwUUoq5LxZ9Kbk8xp5SQ7UyP2mBuTCNUaDjcpV0cX3jc
-         hDDcYQpqUtb6H+p7z93EWF9by0zOFnAT99VMnubt6SixxOLDzjKizqBlmeXEi16XO6wt
-         FlnmJ3gdOuGNI4l+QWmPTQgzhWR43Rm8jghVHciIOB6E4VXDvqTYhRNyVEfNff+gf34m
-         9TQIvbLO5XkuDFwAjjwCpGxH3GYJxGoLR7gjDVXZpr28f8tnkVF8txcdrHMgmDfOPnPt
-         X7xrjc92zbKpLtv8802fOv6XUnBwAZ4X6zxwyks4ERzjLsD1TnbttHua0NQBB2IP9u1F
-         Tv4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fLX5J20+fA4410d7uA+LwglBCTxFJG7EYBTgn15oCgQ=;
-        b=RqrG8yBCvsLyZYgwUj0dfLXwgYeqy1Yg6OxQguxtW1lT90i9RBrslFis9wgFU9bAox
-         wiza/GLPDP0XpFVgVQZgzp/+tGsMcEFf9dh9f/Oaj/0tfAEu3rNblpkO7QQXfgBE6tPx
-         6akUdVybXYrQDKXFzF4HCrF+ydbd+cLvK49v+brups1pahom98vbnq8UoJgVvAa3QjZh
-         J863y6EG3C442VJTDTj2RNagrooUJ8Z79nj//V9+jt7QKWHSRT8c4+WeQjgWSrpjf4Gi
-         deXM6QUaHY2PfOam7pG1af/fAcDGqHv5eGRPpt6RShojIIlzzgaeigRrHH1JmltVUH5E
-         Fo1g==
-X-Gm-Message-State: AOAM532W7vaqggTk480Ji2uJF3K0VoCNQOWH+puaxwqZy/9um1EHEcoA
-        vnE80zguZhPc+XVm/iJHPKk=
-X-Google-Smtp-Source: ABdhPJxZJE2aBF4ceMoFtqVOqM6n27rzp7Z3S4vNx4JoTv4gqCZKDM7k4RmbSy+BkC9WeotC0mHyUg==
-X-Received: by 2002:a2e:9e43:: with SMTP id g3mr1046893ljk.122.1598979474275;
-        Tue, 01 Sep 2020 09:57:54 -0700 (PDT)
-Received: from [192.168.2.145] (109-252-170-211.dynamic.spd-mgts.ru. [109.252.170.211])
-        by smtp.googlemail.com with ESMTPSA id t5sm378771ljg.111.2020.09.01.09.57.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 01 Sep 2020 09:57:53 -0700 (PDT)
-Subject: Re: [PATCH] memory: tegra: Remove GPU from DRM IOMMU group
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Matias Zuniga <matias.nicolas.zc@gmail.com>
-References: <20200901153248.1831263-1-thierry.reding@gmail.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <09d7d396-fcb6-634c-f9d4-9c8ac34c7e71@gmail.com>
-Date:   Tue, 1 Sep 2020 19:57:52 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
+        Tue, 1 Sep 2020 12:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729566AbgIAPWd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:22:33 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF248206FA;
+        Tue,  1 Sep 2020 15:22:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973753;
+        bh=Rt0xE89x9whGsdU3+Kog2t5CBCq2HWb2QWVTPNjdFGU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fl6HcZGR+5KeGZIJG8PC+NLCOSfoNs9m2XOVNEn87uL2Kxg8Wowojogl8k5uArf3R
+         KeGxobiWm9uz9VwJCHDjcmRqGIy2Z05A7CN2Z8XA6kN0NpW6EaelP4vplY1gb91pji
+         g3J4jVALbiN2/8fUEnS7tno8PThXMVZob9JcrXkM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Shay Agroskin <shayagr@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 007/125] net: ena: Make missed_tx stat incremental
+Date:   Tue,  1 Sep 2020 17:09:22 +0200
+Message-Id: <20200901150934.954808692@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200901153248.1831263-1-thierry.reding@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-01.09.2020 18:32, Thierry Reding пишет:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> Commit 63a613fdb16c ("memory: tegra: Add gr2d and gr3d to DRM IOMMU
-> group") added the GPU to the DRM IOMMU group, which doesn't make any
-> sense. This causes problems when Nouveau tries to attach to the SMMU
-> and causes it to fall back to using the DMA API.
-> 
-> Remove the GPU from the DRM groups to restore the old behaviour. The
-> GPU should always have its own IOMMU domain to make sure it can map
-> buffers into contiguous chunks (for big page support) without getting
-> in the way of mappings from the DRM group.
-> 
-> Fixes: 63a613fdb16c ("memory: tegra: Add gr2d and gr3d to DRM IOMMU group")
-> Reported-by: Matias Zuniga <matias.nicolas.zc@gmail.com>
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->  drivers/memory/tegra/tegra124.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/memory/tegra/tegra124.c b/drivers/memory/tegra/tegra124.c
-> index 493b5dc3a4b3..0cede24479bf 100644
-> --- a/drivers/memory/tegra/tegra124.c
-> +++ b/drivers/memory/tegra/tegra124.c
-> @@ -957,7 +957,6 @@ static const struct tegra_smmu_swgroup tegra124_swgroups[] = {
->  static const unsigned int tegra124_group_drm[] = {
->  	TEGRA_SWGROUP_DC,
->  	TEGRA_SWGROUP_DCB,
-> -	TEGRA_SWGROUP_GPU,
->  	TEGRA_SWGROUP_VIC,
->  };
->  
-> 
+From: Shay Agroskin <shayagr@amazon.com>
 
-Technically a stable tag is needed for this patch, but I guess the bot
-will recognize that this patch is useful for older kernels.
+[ Upstream commit ccd143e5150f24b9ba15145c7221b61dd9e41021 ]
 
-Otherwise looks good!
+Most statistics in ena driver are incremented, meaning that a stat's
+value is a sum of all increases done to it since driver/queue
+initialization.
 
-Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+This patch makes all statistics this way, effectively making missed_tx
+statistic incremental.
+Also added a comment regarding rx_drops and tx_drops to make it
+clearer how these counters are calculated.
+
+Fixes: 11095fdb712b ("net: ena: add statistics for missed tx packets")
+Signed-off-by: Shay Agroskin <shayagr@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/amazon/ena/ena_netdev.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/amazon/ena/ena_netdev.c
++++ b/drivers/net/ethernet/amazon/ena/ena_netdev.c
+@@ -2736,7 +2736,7 @@ static int check_missing_comp_in_tx_queu
+ 	}
+ 
+ 	u64_stats_update_begin(&tx_ring->syncp);
+-	tx_ring->tx_stats.missed_tx = missed_tx;
++	tx_ring->tx_stats.missed_tx += missed_tx;
+ 	u64_stats_update_end(&tx_ring->syncp);
+ 
+ 	return rc;
+@@ -3544,6 +3544,9 @@ static void ena_keep_alive_wd(void *adap
+ 	rx_drops = ((u64)desc->rx_drops_high << 32) | desc->rx_drops_low;
+ 
+ 	u64_stats_update_begin(&adapter->syncp);
++	/* These stats are accumulated by the device, so the counters indicate
++	 * all drops since last reset.
++	 */
+ 	adapter->dev_stats.rx_drops = rx_drops;
+ 	u64_stats_update_end(&adapter->syncp);
+ }
+
+
