@@ -2,131 +2,103 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FFBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C093AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC3B2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:53:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598972025;
-	bh=HpWZik1j9+sfkS0/wxDG2E/McFvOr29VTlfELilXyDk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u5nnMndLT1bbnW1oLT2fL1+D6w8/71ELOpnRhLjDn4OOQlbjVYywJfPn2GHXq2bKn
-	 3o4tv598ccGul+x6AQztXy3CUwTVfLc29Gql3PeBWGB/SWLcfTqvf2PRIrh8ftEk0M
-	 POmRlT8eMntbv9HtkM+nVlQUNBiEhFc0LmMyn0nE=
+	by mail.kernel.org (Postfix) with ESMTP id 92A05206EB
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 14:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sWmq658B";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="17pyMS9U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728865AbgIAOxn (ORCPT
+        id S1728126AbgIAOyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 10:53:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40204 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728386AbgIAOxf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 10:53:35 -0400
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF05B206FA;
-        Tue,  1 Sep 2020 14:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598972014;
-        bh=HpWZik1j9+sfkS0/wxDG2E/McFvOr29VTlfELilXyDk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s2M6tw5X2FLoO+ZaIl4ZPFNPkHUGNWOZL/zyWY1eneiNGh28OmxjMRbVMiAcof+Vu
-         soAAVcPhNf9jBLHjBnIkLm7/FpfSyEQbLb5MSfeXD1GZDCA9LOU6C50kbyo4bVmRds
-         gUQavtUt0yb/rahYnLHiF2bYNhddSHACmA+oW5A4=
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4446840D3D; Tue,  1 Sep 2020 11:53:31 -0300 (-03)
-Date:   Tue, 1 Sep 2020 11:53:31 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        AAl Grant <al.grant@arm.com>
-Subject: Re: [PATCH 2/2] perf intel-pt: Fix corrupt data after perf inject
- from
-Message-ID: <20200901145331.GA1422817@kernel.org>
-References: <20200819084751.17686-1-leo.yan@linaro.org>
- <20200819084751.17686-2-leo.yan@linaro.org>
- <20200831203832.GA120995@xps15>
+        Tue, 1 Sep 2020 10:54:13 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:39396 "EHLO
+        galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbgIALs1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 07:48:27 -0400
+Date:   Tue, 01 Sep 2020 11:47:52 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1598960873;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d9wop9RHUjCjERWVdTd3kUo7Nmuag7HCI+WHPRHgIjw=;
+        b=sWmq658BSYQnvnm+nboWl8P7Rw+a9hTv/JuJKDeQCMBtsmvvYv+Rba/fU12viV/wDiXRG+
+        asVexdTsPfL8GWGfov+qVqmsWpSdZRkn5T/rbYZFQywkjsIcJOM6zXYC/xtzhhJFCY620f
+        JR3mXriqi0gnBjlajubmKSaFDwCvMcpA4Ck5jiKtTqIIucC5UCkY+i3w5V3h8ngtFs+1GL
+        hGOLV733e6bFUwEafKqChO2wsWSM4UIjYKRoQG23GgucGSA1AC1VbgUdedP3HkVXwVJOjj
+        kVWGJqLhSBQ4RvATcsWjViAaiOsiEaYOsQlBt91w2k6gLCmolO5Rn4XME09B+A==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1598960873;
+        h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=d9wop9RHUjCjERWVdTd3kUo7Nmuag7HCI+WHPRHgIjw=;
+        b=17pyMS9UQOjQt2s75pU94NbSeKzxNyrPOsMmJMnumkXHlb5/aQwldjde/ztNZBBIdSzXyn
+        5UFtXy/40qBzU3Ag==
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: core/build] x86/boot/compressed: Add missing debugging sections
+ to output
+Cc:     Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200821194310.3089815-29-keescook@chromium.org>
+References: <20200821194310.3089815-29-keescook@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200831203832.GA120995@xps15>
-X-Url:  http://acmel.wordpress.com
+Message-ID: <159896087226.20229.1708368825874555559.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Aug 31, 2020 at 02:38:32PM -0600, Mathieu Poirier escreveu:
-> On Wed, Aug 19, 2020 at 04:47:51PM +0800, Leo Yan wrote:
-> > From: Al Grant <al.grant@arm.com>
-> > 
-> > Commit 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
-> > changed the format of branch stacks in perf samples. When samples use
-> > this new format, a flag must be set in the corresponding event.
-> > Synthesized branch stacks generated from Intel PT were using the new
-> > format, but not setting the event attribute, leading to consumers
-> > seeing corrupt data. This patch fixes the issue by setting the event
-> > attribute to indicate use of the new format.
-> > 
-> > Fixes: 42bbabed09ce ("perf tools: Add hw_idx in struct branch_stack")
-> > Signed-off-by: Al Grant <al.grant@arm.com>
-> > Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> 
-> Arnaldo, please consider.
-> 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+The following commit has been merged into the core/build branch of tip:
 
-Thanks, applied, and 1/2 too.
+Commit-ID:     414d2ff5e5f21049b6b242271a6a8579f9dffc1b
+Gitweb:        https://git.kernel.org/tip/414d2ff5e5f21049b6b242271a6a8579f9dffc1b
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Fri, 21 Aug 2020 12:43:09 -07:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 01 Sep 2020 10:03:18 +02:00
 
-- Arnaldo
+x86/boot/compressed: Add missing debugging sections to output
+
+Include the missing DWARF and STABS sections in the compressed image,
+when they are present.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20200821194310.3089815-29-keescook@chromium.org
+---
+ arch/x86/boot/compressed/vmlinux.lds.S | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index 02f6feb..112b237 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -69,6 +69,8 @@ SECTIONS
+ 	. = ALIGN(PAGE_SIZE);	/* keep ZO size page aligned */
+ 	_end = .;
  
-> > ---
-> >  tools/perf/util/intel-pt.c | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-> > index 2a8d245351e7..0af4e81c46e2 100644
-> > --- a/tools/perf/util/intel-pt.c
-> > +++ b/tools/perf/util/intel-pt.c
-> > @@ -3017,8 +3017,15 @@ static int intel_pt_synth_events(struct intel_pt *pt,
-> >  
-> >  	if (pt->synth_opts.callchain)
-> >  		attr.sample_type |= PERF_SAMPLE_CALLCHAIN;
-> > -	if (pt->synth_opts.last_branch)
-> > +	if (pt->synth_opts.last_branch) {
-> >  		attr.sample_type |= PERF_SAMPLE_BRANCH_STACK;
-> > +		/*
-> > +		 * We don't use the hardware index, but the sample generation
-> > +		 * code uses the new format branch_stack with this field,
-> > +		 * so the event attributes must indicate that it's present.
-> > +		 */
-> > +		attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
-> > +	}
-> >  
-> >  	if (pt->synth_opts.instructions) {
-> >  		attr.config = PERF_COUNT_HW_INSTRUCTIONS;
-> > -- 
-> > 2.17.1
-> > 
-
--- 
-
-- Arnaldo
++	STABS_DEBUG
++	DWARF_DEBUG
+ 	ELF_DETAILS
+ 
+ 	DISCARDS
