@@ -2,123 +2,106 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C7BC433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14CBFC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77E882078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598977515;
-	bh=ycmxk5i8ePmn3f3t0OuO4dy8MaL56n5jOKzwYUsc690=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2n44MI3LuXK7J+wjrPMliZf76OatYQitNUysXCPpzblhKyoK2ggA4UmxLmAB49e00
-	 fyGv47v1BsxW6MqpLDD6uA0Q18wqGCtSwIFaUIgaaZ7Aj+HDMLqEhxgnV30FNN/O+p
-	 0HMoZCVAdVsTzpLemVtTS91qZXLxFs5FAAPpoZpQ=
+	by mail.kernel.org (Postfix) with ESMTP id DF8C62078B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:25:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730893AbgIAPcG (ORCPT
+        id S1731036AbgIAQZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60316 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 12:25:19 -0400
+Received: from gofer.mess.org ([88.97.38.141]:36619 "EHLO gofer.mess.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730589AbgIAPaO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:30:14 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D9EA214D8;
-        Tue,  1 Sep 2020 15:30:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974212;
-        bh=ycmxk5i8ePmn3f3t0OuO4dy8MaL56n5jOKzwYUsc690=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRjAm45hdirNS5OK3eYnhG8AMN4kq0LMMbYiGrvnNO5fXWWW8Eytu55h/OVR3VR3H
-         pkzrTAjCRa0aNbhZqUOHHFvPdh21qwQB6lbjw56t35t2Jx7yLzOVQCf/Cv7ZSn5aZh
-         afQvy0FhKlH+ZioAjJ+bFs13fo2VezyhMAkk/f04=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stylon Wang <stylon.wang@amd.com>,
-        Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>,
-        Eryk Brol <eryk.brol@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        id S1730027AbgIAQZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:25:14 -0400
+Received: by gofer.mess.org (Postfix, from userid 1000)
+        id 7D41DC63F2; Tue,  1 Sep 2020 17:25:12 +0100 (BST)
+Date:   Tue, 1 Sep 2020 17:25:12 +0100
+From:   Sean Young <sean@mess.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jia-Ju Bai <baijiaju@tsinghua.edu.cn>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 088/214] drm/amd/display: Fix dmesg warning from setting abm level
-Date:   Tue,  1 Sep 2020 17:09:28 +0200
-Message-Id: <20200901150957.215018098@linuxfoundation.org>
-X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
+Subject: Re: [PATCH 4.19 016/125] media: pci: ttpci: av7110: fix possible
+ buffer overflow caused by bad DMA value in debiirq()
+Message-ID: <20200901162512.GA30837@gofer.mess.org>
+References: <20200901150934.576210879@linuxfoundation.org>
+ <20200901150935.368387062@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901150935.368387062@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stylon Wang <stylon.wang@amd.com>
+Greg,
 
-[ Upstream commit c5892a10218214d729699ab61bad6fc109baf0ce ]
+On Tue, Sep 01, 2020 at 05:09:31PM +0200, Greg Kroah-Hartman wrote:
+> From: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+> 
+> [ Upstream commit 6499a0db9b0f1e903d52f8244eacc1d4be00eea2 ]
+> 
+> The value av7110->debi_virt is stored in DMA memory, and it is assigned
+> to data, and thus data[0] can be modified at any time by malicious
+> hardware. In this case, "if (data[0] < 2)" can be passed, but then
+> data[0] can be changed into a large number, which may cause buffer
+> overflow when the code "av7110->ci_slot[data[0]]" is used.
+> 
+> To fix this possible bug, data[0] is assigned to a local variable, which
+> replaces the use of data[0].
 
-[Why]
-Setting abm level does not correctly update CRTC state. As a result
-no surface update is added to dc stream state and triggers warning.
+See the discussion here:
 
-[How]
-Correctly update CRTC state when setting abm level property.
+https://lkml.org/lkml/2020/8/31/479
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Stylon Wang <stylon.wang@amd.com>
-Reviewed-by: Nicholas Kazlauskas <Nicholas.Kazlauskas@amd.com>
-Acked-by: Eryk Brol <eryk.brol@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- .../gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c | 23 +++++++++++++++++++
- 1 file changed, 23 insertions(+)
+It does not seem worthwhile merging to the stable trees.
 
-diff --git a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-index 3eb77f343bbfa..247f53d41993d 100644
---- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-+++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
-@@ -7306,6 +7306,29 @@ static int amdgpu_dm_atomic_check(struct drm_device *dev,
- 	if (ret)
- 		goto fail;
- 
-+	/* Check connector changes */
-+	for_each_oldnew_connector_in_state(state, connector, old_con_state, new_con_state, i) {
-+		struct dm_connector_state *dm_old_con_state = to_dm_connector_state(old_con_state);
-+		struct dm_connector_state *dm_new_con_state = to_dm_connector_state(new_con_state);
-+
-+		/* Skip connectors that are disabled or part of modeset already. */
-+		if (!old_con_state->crtc && !new_con_state->crtc)
-+			continue;
-+
-+		if (!new_con_state->crtc)
-+			continue;
-+
-+		new_crtc_state = drm_atomic_get_crtc_state(state, new_con_state->crtc);
-+		if (IS_ERR(new_crtc_state)) {
-+			ret = PTR_ERR(new_crtc_state);
-+			goto fail;
-+		}
-+
-+		if (dm_old_con_state->abm_level !=
-+		    dm_new_con_state->abm_level)
-+			new_crtc_state->connectors_changed = true;
-+	}
-+
- #if defined(CONFIG_DRM_AMD_DC_DCN)
- 	if (adev->asic_type >= CHIP_NAVI10) {
- 		for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state, new_crtc_state, i) {
--- 
-2.25.1
+Thanks
 
+Sean
 
-
+> 
+> Signed-off-by: Jia-Ju Bai <baijiaju@tsinghua.edu.cn>
+> Signed-off-by: Sean Young <sean@mess.org>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  drivers/media/pci/ttpci/av7110.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/pci/ttpci/av7110.c b/drivers/media/pci/ttpci/av7110.c
+> index d6816effb8786..d02b5fd940c12 100644
+> --- a/drivers/media/pci/ttpci/av7110.c
+> +++ b/drivers/media/pci/ttpci/av7110.c
+> @@ -424,14 +424,15 @@ static void debiirq(unsigned long cookie)
+>  	case DATA_CI_GET:
+>  	{
+>  		u8 *data = av7110->debi_virt;
+> +		u8 data_0 = data[0];
+>  
+> -		if ((data[0] < 2) && data[2] == 0xff) {
+> +		if (data_0 < 2 && data[2] == 0xff) {
+>  			int flags = 0;
+>  			if (data[5] > 0)
+>  				flags |= CA_CI_MODULE_PRESENT;
+>  			if (data[5] > 5)
+>  				flags |= CA_CI_MODULE_READY;
+> -			av7110->ci_slot[data[0]].flags = flags;
+> +			av7110->ci_slot[data_0].flags = flags;
+>  		} else
+>  			ci_get_data(&av7110->ci_rbuffer,
+>  				    av7110->debi_virt,
+> -- 
+> 2.25.1
+> 
+> 
