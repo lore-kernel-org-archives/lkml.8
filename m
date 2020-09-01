@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA17CC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99E15C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A0E582064B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 675842064B
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598975375;
-	bh=YMnVnsmdYN2uNSDiEdHcqXjBuVe+97a/Z3fspDQx3U0=;
+	s=default; t=1598975380;
+	bh=a5zetCsPr03/v7ZDAl30v4VSrPGe+nBSLBcgpDozsvA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yra7/Um8teHJ6zqCBLm1lINuPch28H2WXSUm24caeat89qN37ILDwIqqugZ4beaEz
-	 jUiVXU+PC6crEBuqXPD4VzemXDhT1z7llZJb9fpnT9V61tpH0VYNiAzJuYSfICw82O
-	 XX7/FgVx92grPwwzNnk9CE6DGDoyLdsbcRRj6D0o=
+	b=HcwR7q7Doii+HAP6gtsvSJTV1peAdjnQ/vY9jvaG/Yzqm7C6S3jouKIBKIXHGZOpt
+	 c4vxwmBhgp57a0pZvKlL+1tPKjxOESglRC5+tyBvUjT2LQm+qbvYCrEmELOblMaQ2E
+	 95Lh6LZSquYPUmW/NSYFQa9pQTGFcMhPz8jBezuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbgIAPtc (ORCPT
+        id S1732117AbgIAPti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:49:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:49:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731674AbgIAPpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:45:55 -0400
+        id S1731916AbgIAPqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:46:00 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2191D208CA;
-        Tue,  1 Sep 2020 15:45:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2405E2064B;
+        Tue,  1 Sep 2020 15:45:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598975154;
-        bh=YMnVnsmdYN2uNSDiEdHcqXjBuVe+97a/Z3fspDQx3U0=;
+        s=default; t=1598975159;
+        bh=a5zetCsPr03/v7ZDAl30v4VSrPGe+nBSLBcgpDozsvA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IemJ38IRMFhxEAfmN0/pOUQFhPWRampJvxD4k13Teyp+e2hQdMEgvm6sHz/dAr1ZO
-         13e6so55LKbj2PDHNhNJlSUlaIpHXJNBeYYlFiirqdvktwAvfzxIxn8Cxd7UU290pc
-         n8fUqIb1kEdDRrDnx6JOjOHhMWPBOJyghaMe/f+0=
+        b=gf1jd2xRu5zaw8DY/qc/ucrcMaYRT8aRU1l6C4hvMNd89ssZeLFj01eRfb7VrdItg
+         gOMaqvU559T5a7Z6eI8tyB67gcfOphHeGapwdMOrqKWDLRz33yDhuhPDT/Br6j42Lb
+         bvHsyXSDXpOwn2303+5u5EXhhDzLGrdbevP9bP04=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.8 231/255] usb: dwc3: gadget: Dont setup more than requested
-Date:   Tue,  1 Sep 2020 17:11:27 +0200
-Message-Id: <20200901151011.818306454@linuxfoundation.org>
+        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>,
+        Alexander Monakov <amonakov@ispras.ru>
+Subject: [PATCH 5.8 215/255] drm/amd/display: use correct scale for actual_brightness
+Date:   Tue,  1 Sep 2020 17:11:11 +0200
+Message-Id: <20200901151011.006767904@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -59,171 +60,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Alexander Monakov <amonakov@ispras.ru>
 
-commit 5d187c0454ef4c5e046a81af36882d4d515922ec upstream.
+commit 69d9f4278d0f9d24607645f10e5ac5c59c77a4ac upstream.
 
-The SG list may be set up with entry size more than the requested
-length. Check the usb_request->length and make sure that we don't setup
-the TRBs to send/receive more than requested. This case may occur when
-the SG entry is allocated up to a certain minimum size, but the request
-length is less than that. It can also occur when the request is reused
-for a different request length.
+Documentation for sysfs backlight level interface requires that
+values in both 'brightness' and 'actual_brightness' files are
+interpreted to be in range from 0 to the value given in the
+'max_brightness' file.
 
-Cc: <stable@vger.kernel.org> # v4.18+
-Fixes: a31e63b608ff ("usb: dwc3: gadget: Correct handling of scattergather lists")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+With amdgpu, max_brightness gives 255, and values written by the user
+into 'brightness' are internally rescaled to a wider range. However,
+reading from 'actual_brightness' gives the raw register value without
+inverse rescaling. This causes issues for various userspace tools such
+as PowerTop and systemd that expect the value to be in the correct
+range.
+
+Introduce a helper to retrieve internal backlight range. Use it to
+reimplement 'convert_brightness' as 'convert_brightness_from_user' and
+introduce 'convert_brightness_to_user'.
+
+Bug: https://bugzilla.kernel.org/show_bug.cgi?id=203905
+Bug: https://gitlab.freedesktop.org/drm/amd/-/issues/1242
+Cc: Alex Deucher <alexander.deucher@amd.com>
+Cc: Nicholas Kazlauskas <nicholas.kazlauskas@amd.com>
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Alexander Monakov <amonakov@ispras.ru>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc3/gadget.c |   51 +++++++++++++++++++++++++++++++---------------
- 1 file changed, 35 insertions(+), 16 deletions(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c |   81 ++++++++++------------
+ 1 file changed, 40 insertions(+), 41 deletions(-)
 
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1054,27 +1054,25 @@ static void __dwc3_prepare_one_trb(struc
-  * dwc3_prepare_one_trb - setup one TRB from one request
-  * @dep: endpoint for which this request is prepared
-  * @req: dwc3_request pointer
-+ * @trb_length: buffer size of the TRB
-  * @chain: should this TRB be chained to the next?
-  * @node: only for isochronous endpoints. First TRB needs different type.
-  */
- static void dwc3_prepare_one_trb(struct dwc3_ep *dep,
--		struct dwc3_request *req, unsigned chain, unsigned node)
-+		struct dwc3_request *req, unsigned int trb_length,
-+		unsigned chain, unsigned node)
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm.c
+@@ -2882,51 +2882,50 @@ static int set_backlight_via_aux(struct
+ 	return rc ? 0 : 1;
+ }
+ 
+-static u32 convert_brightness(const struct amdgpu_dm_backlight_caps *caps,
+-			      const uint32_t user_brightness)
++static int get_brightness_range(const struct amdgpu_dm_backlight_caps *caps,
++				unsigned *min, unsigned *max)
  {
- 	struct dwc3_trb		*trb;
--	unsigned int		length;
- 	dma_addr_t		dma;
- 	unsigned		stream_id = req->request.stream_id;
- 	unsigned		short_not_ok = req->request.short_not_ok;
- 	unsigned		no_interrupt = req->request.no_interrupt;
- 	unsigned		is_last = req->request.is_last;
- 
--	if (req->request.num_sgs > 0) {
--		length = sg_dma_len(req->start_sg);
-+	if (req->request.num_sgs > 0)
- 		dma = sg_dma_address(req->start_sg);
--	} else {
--		length = req->request.length;
-+	else
- 		dma = req->request.dma;
--	}
- 
- 	trb = &dep->trb_pool[dep->trb_enqueue];
- 
-@@ -1086,7 +1084,7 @@ static void dwc3_prepare_one_trb(struct
- 
- 	req->num_trbs++;
- 
--	__dwc3_prepare_one_trb(dep, trb, dma, length, chain, node,
-+	__dwc3_prepare_one_trb(dep, trb, dma, trb_length, chain, node,
- 			stream_id, short_not_ok, no_interrupt, is_last);
- }
- 
-@@ -1096,16 +1094,27 @@ static void dwc3_prepare_one_trb_sg(stru
- 	struct scatterlist *sg = req->start_sg;
- 	struct scatterlist *s;
- 	int		i;
+-	u32 min, max, conversion_pace;
+-	u32 brightness = user_brightness;
 -
-+	unsigned int length = req->request.length;
- 	unsigned int remaining = req->request.num_mapped_sgs
- 		- req->num_queued_sgs;
+ 	if (!caps)
+-		goto out;
++		return 0;
  
-+	/*
-+	 * If we resume preparing the request, then get the remaining length of
-+	 * the request and resume where we left off.
-+	 */
-+	for_each_sg(req->request.sg, s, req->num_queued_sgs, i)
-+		length -= sg_dma_len(s);
-+
- 	for_each_sg(sg, s, remaining, i) {
--		unsigned int length = req->request.length;
- 		unsigned int maxp = usb_endpoint_maxp(dep->endpoint.desc);
- 		unsigned int rem = length % maxp;
-+		unsigned int trb_length;
- 		unsigned chain = true;
- 
-+		trb_length = min_t(unsigned int, length, sg_dma_len(s));
-+
-+		length -= trb_length;
-+
- 		/*
- 		 * IOMMU driver is coalescing the list of sgs which shares a
- 		 * page boundary into one and giving it to USB driver. With
-@@ -1113,7 +1122,7 @@ static void dwc3_prepare_one_trb_sg(stru
- 		 * sgs passed. So mark the chain bit to false if it isthe last
- 		 * mapped sg.
- 		 */
--		if (i == remaining - 1)
-+		if ((i == remaining - 1) || !length)
- 			chain = false;
- 
- 		if (rem && usb_endpoint_dir_out(dep->endpoint.desc) && !chain) {
-@@ -1123,7 +1132,7 @@ static void dwc3_prepare_one_trb_sg(stru
- 			req->needs_extra_trb = true;
- 
- 			/* prepare normal TRB */
--			dwc3_prepare_one_trb(dep, req, true, i);
-+			dwc3_prepare_one_trb(dep, req, trb_length, true, i);
- 
- 			/* Now prepare one extra TRB to align transfer size */
- 			trb = &dep->trb_pool[dep->trb_enqueue];
-@@ -1135,7 +1144,7 @@ static void dwc3_prepare_one_trb_sg(stru
- 					req->request.no_interrupt,
- 					req->request.is_last);
- 		} else {
--			dwc3_prepare_one_trb(dep, req, chain, i);
-+			dwc3_prepare_one_trb(dep, req, trb_length, chain, i);
- 		}
- 
- 		/*
-@@ -1150,6 +1159,16 @@ static void dwc3_prepare_one_trb_sg(stru
- 
- 		req->num_queued_sgs++;
- 
-+		/*
-+		 * The number of pending SG entries may not correspond to the
-+		 * number of mapped SG entries. If all the data are queued, then
-+		 * don't include unused SG entries.
-+		 */
-+		if (length == 0) {
-+			req->num_pending_sgs -= req->request.num_mapped_sgs - req->num_queued_sgs;
-+			break;
-+		}
-+
- 		if (!dwc3_calc_trbs_left(dep))
- 			break;
- 	}
-@@ -1169,7 +1188,7 @@ static void dwc3_prepare_one_trb_linear(
- 		req->needs_extra_trb = true;
- 
- 		/* prepare normal TRB */
--		dwc3_prepare_one_trb(dep, req, true, 0);
-+		dwc3_prepare_one_trb(dep, req, length, true, 0);
- 
- 		/* Now prepare one extra TRB to align transfer size */
- 		trb = &dep->trb_pool[dep->trb_enqueue];
-@@ -1187,7 +1206,7 @@ static void dwc3_prepare_one_trb_linear(
- 		req->needs_extra_trb = true;
- 
- 		/* prepare normal TRB */
--		dwc3_prepare_one_trb(dep, req, true, 0);
-+		dwc3_prepare_one_trb(dep, req, length, true, 0);
- 
- 		/* Now prepare one extra TRB to handle ZLP */
- 		trb = &dep->trb_pool[dep->trb_enqueue];
-@@ -1198,7 +1217,7 @@ static void dwc3_prepare_one_trb_linear(
- 				req->request.no_interrupt,
- 				req->request.is_last);
+-	if (!caps->aux_support) {
+-		max = caps->max_input_signal;
+-		min = caps->min_input_signal;
+-		/*
+-		 * The brightness input is in the range 0-255
+-		 * It needs to be rescaled to be between the
+-		 * requested min and max input signal
+-		 * It also needs to be scaled up by 0x101 to
+-		 * match the DC interface which has a range of
+-		 * 0 to 0xffff
+-		 */
+-		conversion_pace = 0x101;
+-		brightness =
+-			user_brightness
+-			* conversion_pace
+-			* (max - min)
+-			/ AMDGPU_MAX_BL_LEVEL
+-			+ min * conversion_pace;
++	if (caps->aux_support) {
++		// Firmware limits are in nits, DC API wants millinits.
++		*max = 1000 * caps->aux_max_input_signal;
++		*min = 1000 * caps->aux_min_input_signal;
  	} else {
--		dwc3_prepare_one_trb(dep, req, false, 0);
-+		dwc3_prepare_one_trb(dep, req, length, false, 0);
+-		/* TODO
+-		 * We are doing a linear interpolation here, which is OK but
+-		 * does not provide the optimal result. We probably want
+-		 * something close to the Perceptual Quantizer (PQ) curve.
+-		 */
+-		max = caps->aux_max_input_signal;
+-		min = caps->aux_min_input_signal;
+-
+-		brightness = (AMDGPU_MAX_BL_LEVEL - user_brightness) * min
+-			       + user_brightness * max;
+-		// Multiple the value by 1000 since we use millinits
+-		brightness *= 1000;
+-		brightness = DIV_ROUND_CLOSEST(brightness, AMDGPU_MAX_BL_LEVEL);
++		// Firmware limits are 8-bit, PWM control is 16-bit.
++		*max = 0x101 * caps->max_input_signal;
++		*min = 0x101 * caps->min_input_signal;
  	}
++	return 1;
++}
++
++static u32 convert_brightness_from_user(const struct amdgpu_dm_backlight_caps *caps,
++					uint32_t brightness)
++{
++	unsigned min, max;
++
++	if (!get_brightness_range(caps, &min, &max))
++		return brightness;
++
++	// Rescale 0..255 to min..max
++	return min + DIV_ROUND_CLOSEST((max - min) * brightness,
++				       AMDGPU_MAX_BL_LEVEL);
++}
++
++static u32 convert_brightness_to_user(const struct amdgpu_dm_backlight_caps *caps,
++				      uint32_t brightness)
++{
++	unsigned min, max;
++
++	if (!get_brightness_range(caps, &min, &max))
++		return brightness;
+ 
+-out:
+-	return brightness;
++	if (brightness < min)
++		return 0;
++	// Rescale min..max to 0..255
++	return DIV_ROUND_CLOSEST(AMDGPU_MAX_BL_LEVEL * (brightness - min),
++				 max - min);
  }
  
+ static int amdgpu_dm_backlight_update_status(struct backlight_device *bd)
+@@ -2942,7 +2941,7 @@ static int amdgpu_dm_backlight_update_st
+ 
+ 	link = (struct dc_link *)dm->backlight_link;
+ 
+-	brightness = convert_brightness(&caps, bd->props.brightness);
++	brightness = convert_brightness_from_user(&caps, bd->props.brightness);
+ 	// Change brightness based on AUX property
+ 	if (caps.aux_support)
+ 		return set_backlight_via_aux(link, brightness);
+@@ -2959,7 +2958,7 @@ static int amdgpu_dm_backlight_get_brigh
+ 
+ 	if (ret == DC_ERROR_UNEXPECTED)
+ 		return bd->props.brightness;
+-	return ret;
++	return convert_brightness_to_user(&dm->backlight_caps, ret);
+ }
+ 
+ static const struct backlight_ops amdgpu_dm_backlight_ops = {
 
 
