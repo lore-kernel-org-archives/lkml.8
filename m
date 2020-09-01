@@ -2,58 +2,53 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16351C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4B0C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E76DB206C0
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC6D214F1
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979444;
-	bh=YgC0YRxiUO8aFLyonSNozBZtblQ0WwwViSlbYTEgmFc=;
+	s=default; t=1598979449;
+	bh=1m5+nAWtOJJpl7AXJJibXT6CnuIrbMsK1htwmRQv/qo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sEBT52KdzBMxJVK8lXlUNahCdSuTXxbiVCEnuCmo9Q+UIwtm9WPyIU9I0RjI7L3PT
-	 NDLaJV31u2OwAkpvE4lIzaDNoGgiow60uXHMI+BKuA6LX9C154+VTbDr5TeZxqbJvj
-	 7UklFXkE77rlZs9CftnIZiILdTGBpAGAjIe4jMAM=
+	b=dkyN9LLn3mVY2IokUfRQmIVkJ7qSwMCKI+HvrQW7MNqF1j1LGpeA4ktkfr095impL
+	 9kwecYmR6RbPUuM6CRRsHJB8TkyOEmJ8OzLti/Rk1pP0x9xdfYxwW03apbs5rVhUaB
+	 IcJSTAOLpjMFuuDFezxvFsdbNEzWAqFp9oXjscd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729906AbgIAQ5W (ORCPT
+        id S1729199AbgIAPXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:57:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46584 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729272AbgIAPXa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:23:30 -0400
+        id S1728973AbgIAPUh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:37 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09799206FA;
-        Tue,  1 Sep 2020 15:23:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51A0820767;
+        Tue,  1 Sep 2020 15:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973809;
-        bh=YgC0YRxiUO8aFLyonSNozBZtblQ0WwwViSlbYTEgmFc=;
+        s=default; t=1598973636;
+        bh=1m5+nAWtOJJpl7AXJJibXT6CnuIrbMsK1htwmRQv/qo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o7JDLNRNUoPZ107GH3O8VZ8xNRMQdS/17AOTQ4spmZgaFPcL41qpLqzMX2UgRf3no
-         iP4x0WZ0QrhbnqG8tHPbO1bxGRgf5kpULYBIR1lH7/g0ruhCIKueENnPFBwqzNlOMf
-         Jlyj41fNfMLDmhEDddtlFReBCIOdXQlmvZqxdxSo=
+        b=1lJnfhoMo9nSBe5iNWM5n+Vm91QmhxmqeC0NtCI3aKhif3SF1k5YGm8teSh0021Hw
+         DmTLsirpPrgo2VbTE0fp47F0OiOQXRts+OVLP4geUHJPo74/C3LGSjT+CxtZIHRmg+
+         swiEQUfkLesDuXbRpqKKxrOFB9XVV/ybtRkhZ1fs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Smart <jsmart2021@gmail.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/125] nvme-fc: Fix wrong return value in __nvme_fc_init_request()
-Date:   Tue,  1 Sep 2020 17:10:10 +0200
-Message-Id: <20200901150937.251719140@linuxfoundation.org>
+        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 4.14 79/91] USB: quirks: Add no-lpm quirk for another Raydium touchscreen
+Date:   Tue,  1 Sep 2020 17:10:53 +0200
+Message-Id: <20200901150932.106796842@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150934.576210879@linuxfoundation.org>
-References: <20200901150934.576210879@linuxfoundation.org>
+In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
+References: <20200901150928.096174795@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,49 +58,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit f34448cd0dc697723fb5f4118f8431d9233b370d ]
+commit 5967116e8358899ebaa22702d09b0af57fef23e1 upstream.
 
-On an error exit path, a negative error code should be returned
-instead of a positive return value.
+There's another Raydium touchscreen needs the no-lpm quirk:
+[    1.339149] usb 1-9: New USB device found, idVendor=2386, idProduct=350e, bcdDevice= 0.00
+[    1.339150] usb 1-9: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    1.339151] usb 1-9: Product: Raydium Touch System
+[    1.339152] usb 1-9: Manufacturer: Raydium Corporation
+...
+[    6.450497] usb 1-9: can't set config #1, error -110
 
-Fixes: e399441de9115 ("nvme-fabrics: Add host support for FC transport")
-Cc: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BugLink: https://bugs.launchpad.net/bugs/1889446
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200731051622.28643-1-kai.heng.feng@canonical.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/nvme/host/fc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/core/quirks.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/nvme/host/fc.c b/drivers/nvme/host/fc.c
-index ed43b06353a39..bb3b447c56468 100644
---- a/drivers/nvme/host/fc.c
-+++ b/drivers/nvme/host/fc.c
-@@ -1716,7 +1716,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
- 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.cmddma)) {
- 		dev_err(ctrl->dev,
- 			"FCP Op failed - cmdiu dma mapping failed.\n");
--		ret = EFAULT;
-+		ret = -EFAULT;
- 		goto out_on_error;
- 	}
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -299,6 +299,8 @@ static const struct usb_device_id usb_qu
  
-@@ -1726,7 +1726,7 @@ __nvme_fc_init_request(struct nvme_fc_ctrl *ctrl,
- 	if (fc_dma_mapping_error(ctrl->lport->dev, op->fcp_req.rspdma)) {
- 		dev_err(ctrl->dev,
- 			"FCP Op failed - rspiu dma mapping failed.\n");
--		ret = EFAULT;
-+		ret = -EFAULT;
- 	}
+ 	{ USB_DEVICE(0x2386, 0x3119), .driver_info = USB_QUIRK_NO_LPM },
  
- 	atomic_set(&op->state, FCPOP_STATE_IDLE);
--- 
-2.25.1
-
++	{ USB_DEVICE(0x2386, 0x350e), .driver_info = USB_QUIRK_NO_LPM },
++
+ 	/* DJI CineSSD */
+ 	{ USB_DEVICE(0x2ca3, 0x0031), .driver_info = USB_QUIRK_NO_LPM },
+ 
 
 
