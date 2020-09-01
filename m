@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9C0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D875C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64DD92158C
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 236E521534
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 15:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598974753;
-	bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
+	s=default; t=1598974762;
+	bh=FS9LV1mgzKB2FrwnM+i3H+Tuad1djbcvC2VsGtvdOyI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OrHVa0goj4D6Cmnyu/n0muJDuWRwAHRagBEAojpM5s233isx4DrLLDQ9XiF4q3xRV
-	 fZRGLqFx6YXdWJuO7mDfwS+8WxghF2v7BS2Bu0jyxl6eFwKdS9ZiF3uzd9TUq5KxE8
-	 1502P673TpnT/oFIrSs7oSRk9xT4a9KR/eLkCPAE=
+	b=ZqkP+wk2v0dUgNb1d3e1jxEtWSfehxRyGDnlvxm8TTO67rLWCk8crJRGri5lmiMRd
+	 m3ntcXMvi1WQoXh91JUUJPBtltUwtAsH2cZn2nYOI8q1vL2WH6QcPsTYQgkNcF+WSR
+	 5roOOBCHvoORBwsfA/IMQLpAC0Dsp/1NQ1ZYYY5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731449AbgIAPjM (ORCPT
+        id S1728238AbgIAPjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 11:39:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45662 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 11:39:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731341AbgIAPhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:37:31 -0400
+        id S1726654AbgIAPhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:37:36 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F9EE20866;
-        Tue,  1 Sep 2020 15:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97CA920866;
+        Tue,  1 Sep 2020 15:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974650;
-        bh=ZS5koshl9P5XnEP6E1J+YO76VIZh7Oth6V8mWrNQ9Ps=;
+        s=default; t=1598974656;
+        bh=FS9LV1mgzKB2FrwnM+i3H+Tuad1djbcvC2VsGtvdOyI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QSQgUU8CXHbSMRo4gtzoa6QwXh248fyQ8fbuTBeSs3Nc45PJwkuUrV+yzB1ZA93hs
-         enqJ9mNibKh1uuREWBlE4tE8b+W+SIjx6thsrgbRruDXe6gVfDMeg89m4NXFhsiaYx
-         ZagPtqv4FZRLlFWa0Ebqm9k5azQYfkWC53znIiAw=
+        b=JCB6ks1kH+LJc17VhICAROPBG26RNbbKUFDA4nYpfVBz7Bia2hp6H/7EmMtsvhH5L
+         x7UZz0U+nEdTaHGsbZbrFawn5Ih8upztySXmNIGKe0vjriDA9sb8CYy7Bh8x1L23Um
+         kAhQuJ4Eqpa+DbBU/D75YXnka7AQI4yPqbjjml5E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Reto Schneider <code@reto-schneider.ch>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.8 042/255] rtlwifi: rtl8192cu: Prevent leaking urb
-Date:   Tue,  1 Sep 2020 17:08:18 +0200
-Message-Id: <20200901151002.766076852@linuxfoundation.org>
+        stable@vger.kernel.org, Kaige Li <likaige@loongson.cn>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 044/255] ALSA: hda: Add support for Loongson 7A1000 controller
+Date:   Tue,  1 Sep 2020 17:08:20 +0200
+Message-Id: <20200901151002.863331843@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
 References: <20200901151000.800754757@linuxfoundation.org>
@@ -60,38 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reto Schneider <code@reto-schneider.ch>
+From: Kaige Li <likaige@loongson.cn>
 
-[ Upstream commit 03128643eb5453a798db5770952c73dc64fcaf00 ]
+[ Upstream commit 61eee4a7fc406f94e441778c3cecbbed30373c89 ]
 
-If usb_submit_urb fails the allocated urb should be unanchored and
-released.
+Add the new PCI ID 0x0014 0x7a07 to support Loongson 7A1000 controller.
 
-Signed-off-by: Reto Schneider <code@reto-schneider.ch>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-Link: https://lore.kernel.org/r/20200622132113.14508-3-code@reto-schneider.ch
+Signed-off-by: Kaige Li <likaige@loongson.cn>
+Link: https://lore.kernel.org/r/1594954292-1703-2-git-send-email-likaige@loongson.cn
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/realtek/rtlwifi/usb.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ sound/pci/hda/hda_intel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/wireless/realtek/rtlwifi/usb.c b/drivers/net/wireless/realtek/rtlwifi/usb.c
-index c66c6dc003783..bad06939a247c 100644
---- a/drivers/net/wireless/realtek/rtlwifi/usb.c
-+++ b/drivers/net/wireless/realtek/rtlwifi/usb.c
-@@ -718,8 +718,11 @@ static int _rtl_usb_receive(struct ieee80211_hw *hw)
- 
- 		usb_anchor_urb(urb, &rtlusb->rx_submitted);
- 		err = usb_submit_urb(urb, GFP_KERNEL);
--		if (err)
-+		if (err) {
-+			usb_unanchor_urb(urb);
-+			usb_free_urb(urb);
- 			goto err_out;
-+		}
- 		usb_free_urb(urb);
- 	}
- 	return 0;
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 4c23b169ac67e..1a26940a3fd7c 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2747,6 +2747,8 @@ static const struct pci_device_id azx_ids[] = {
+ 	  .driver_data = AZX_DRIVER_GENERIC | AZX_DCAPS_PRESET_ATI_HDMI },
+ 	/* Zhaoxin */
+ 	{ PCI_DEVICE(0x1d17, 0x3288), .driver_data = AZX_DRIVER_ZHAOXIN },
++	/* Loongson */
++	{ PCI_DEVICE(0x0014, 0x7a07), .driver_data = AZX_DRIVER_GENERIC },
+ 	{ 0, }
+ };
+ MODULE_DEVICE_TABLE(pci, azx_ids);
 -- 
 2.25.1
 
