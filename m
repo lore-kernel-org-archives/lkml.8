@@ -2,130 +2,97 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8125C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A031C43461
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C21082166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/8U9ZP+"
+	by mail.kernel.org (Postfix) with ESMTP id 244D6204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:08:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598976516;
+	bh=TFcesgzQ7Oq2G8volWlqg/GYHHqF06Bz+VQQ33eO6+k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1WZQcubNV6v8ft1rUv/M/Vfb9vBgnKQRu9fQJFf34o4vK6bvXNxilUZ1Qp+nku5nB
+	 KDhN7DS7A71D/tozZUDcD1GAN7YfWBUgLLnm8HJUapBKDalZEBGGFOdzJxe25fqeXq
+	 lamcos7gndTQCGRTt0/T8Iz+zGnqxrQSbWpw1UIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731797AbgIAQIb (ORCPT
+        id S1731755AbgIAQIZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:08:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55556 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731455AbgIAPjP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:39:15 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34409C061244
-        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 08:39:14 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id i26so2274664ejb.12
-        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 08:39:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6PG5SiNwVZVH2pkgJv+IFK7tt0WCjvP76ZbFGjJc07s=;
-        b=i/8U9ZP+xxv0b1D3KLACprbO6f9XSdui6Bpc8qWHCAGjJKdf6SV/BwLJGyCkNI3w8z
-         utwAKrw3BY6mIzso/yYfFuWfGTECQ7+S2GJJglSWnuRG1i7Bp7IEakBk2lI8ydIqqedT
-         v9oYslNVOGXacY4YbhO1cqsCwlEYrOZUV0biEgmGK1TKRp95SDA12NtKfAwlcUMe93ud
-         dHZS9fZM0xCRZnZQ5JOyObYV58dweBq4qelLd7pQ0t8xe9+RE9neWOy4ZWoYf9TCf50V
-         L8Wrp+SBtYeR3Pq0uEVbTaRF4pyNXDottPB0Ao1kbMW2rgURZ9yPc+nvFWeuJ8jxGVRD
-         S2zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6PG5SiNwVZVH2pkgJv+IFK7tt0WCjvP76ZbFGjJc07s=;
-        b=L3xEM7UVTl3ywXWdfMWQXmZerWoVFfy5pJl25Q7r1lv9Agzoh3GuA/iLeuHZHL0b+p
-         Yuk8tnWTEI9TfTd+PWemnU5WYTiqw4ZgP1fmL/1gp1rcGnELIjpBPv7b3c75FQc1sgpq
-         mc0dQqO3+q2buCJRQBfnjTpscXdry0Ebb/7fVIB1tYo743hoVZBwZIw/Iqo1eJCrxMPa
-         cqVE4YDA15MDZ7hCImE8qFDFOS7J1Zz2fOzZnsKWFqb8W4izB0XwGzuKOZ7MBy2HOZ0h
-         ZObKjhYZMig58khOBOXgm4ATiIjCiUpMWUf+x96T6Eqi7JzbyJwJBoJTI6H0fmTucczB
-         fKAQ==
-X-Gm-Message-State: AOAM532IaKLCVUCE3thEZIxpZJ2o2jIFA5FVNlrfmh04anegjEvw1e18
-        TZhm4AT8tqdVCV4hG0np6tarsnaqHyykEDkwq37EzcdG6bs=
-X-Google-Smtp-Source: ABdhPJy3CwrJ6zEga+umlT+PQ35ecu20mv5XP4qIonGiniaxceoYl6LbA+wYSR0qjjmWEQ8IBfCfFcdjm5xcXMm/KK8=
-X-Received: by 2002:a17:907:2173:: with SMTP id rl19mr1935562ejb.514.1598974752908;
- Tue, 01 Sep 2020 08:39:12 -0700 (PDT)
+        Tue, 1 Sep 2020 12:08:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48976 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731304AbgIAPjR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:39:17 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2DC21534;
+        Tue,  1 Sep 2020 15:39:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598974756;
+        bh=TFcesgzQ7Oq2G8volWlqg/GYHHqF06Bz+VQQ33eO6+k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=h1YtK4J0zI2YcIVLs4hclT8ujkFdRXaudGZqy9+xxDxw8/8U2Nvstcfxbzt24q29H
+         bMMIp5xchXuD2Qh9vn5+J8gK9DJlASzdHJn9VFNm1Fy1L0P8S22mNgc/pQMk4NUJUL
+         Bm8bvddlLxoTdkyF/F7ytAPQDYJgyYzDn2faBTCY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Aditya Pakki <pakki001@umn.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.8 052/255] drm/nouveau: Fix reference count leak in nouveau_connector_detect
+Date:   Tue,  1 Sep 2020 17:08:28 +0200
+Message-Id: <20200901151003.218880410@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901151000.800754757@linuxfoundation.org>
+References: <20200901151000.800754757@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <alpine.LSU.2.11.2008301401390.5954@eggly.anvils>
-In-Reply-To: <alpine.LSU.2.11.2008301401390.5954@eggly.anvils>
-From:   Yang Shi <shy828301@gmail.com>
-Date:   Tue, 1 Sep 2020 08:39:00 -0700
-Message-ID: <CAHbLzko5xAyzJ7s31B55uXJPXT+2dzun+XcGPJngTwJ6mE=ETg@mail.gmail.com>
-Subject: Re: [PATCH 3/5] shmem: shmem_writepage() split unlikely i915 THP
-To:     Hugh Dickins <hughd@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Matthew Wilcox <willy@infradead.org>, Qian Cai <cai@lca.pw>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Kuo-Hsin Yang <vovoy@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Aug 30, 2020 at 2:04 PM Hugh Dickins <hughd@google.com> wrote:
->
-> drivers/gpu/drm/i915/gem/i915_gem_shmem.c contains a shmem_writeback()
-> which calls shmem_writepage() from a shrinker: that usually works well
-> enough; but if /sys/kernel/mm/transparent_hugepage/shmem_enabled has
-> been set to "force" (documented as "Force the huge option on for all -
-> very useful for testing"), shmem_writepage() is surprised to be called
-> with a huge page, and crashes on the VM_BUG_ON_PAGE(PageCompound) (I
-> did not find out where the crash happens when CONFIG_DEBUG_VM is off).
->
-> LRU page reclaim always splits the shmem huge page first: I'd prefer not
-> to demand that of i915, so check and split compound in shmem_writepage().
->
-> Fixes: 2d6692e642e7 ("drm/i915: Start writeback from the shrinker")
-> Signed-off-by: Hugh Dickins <hughd@google.com>
-> Cc: stable@vger.kernel.org # v5.3+
-> ---
-> I've marked this for stable just for the info, but the number of users
-> affected is very probably 1, so please feel free to delete that marking.
->
->  mm/shmem.c |    9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> --- 5.9-rc2/mm/shmem.c  2020-08-16 17:32:50.693507198 -0700
-> +++ linux/mm/shmem.c    2020-08-28 17:35:08.326024349 -0700
-> @@ -1362,7 +1362,15 @@ static int shmem_writepage(struct page *
->         swp_entry_t swap;
->         pgoff_t index;
->
-> -       VM_BUG_ON_PAGE(PageCompound(page), page);
-> +       /*
-> +        * If /sys/kernel/mm/transparent_hugepage/shmem_enabled is "force",
-> +        * then drivers/gpu/drm/i915/gem/i915_gem_shmem.c gets huge pages,
-> +        * and its shmem_writeback() needs them to be split when swapping.
-> +        */
-> +       if (PageTransCompound(page))
-> +               if (split_huge_page(page) < 0)
-> +                       goto redirty;
+From: Aditya Pakki <pakki001@umn.edu>
 
-The change looks good to me. Acked-by: Yang Shi <shy828301@gmail.com>
+[ Upstream commit 990a1162986e8eff7ca18cc5a0e03b4304392ae2 ]
 
-Just a nit: it may be better to move the spilte after the !PageLocked
-assertion? Split needs page locked too.
+nouveau_connector_detect() calls pm_runtime_get_sync and in turn
+increments the reference count. In case of failure, decrement the
+ref count before returning the error.
 
-> +
->         BUG_ON(!PageLocked(page));
->         mapping = page->mapping;
->         index = page->index;
->
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: Ben Skeggs <bskeggs@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/nouveau/nouveau_connector.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/nouveau/nouveau_connector.c b/drivers/gpu/drm/nouveau/nouveau_connector.c
+index 1b383ae0248f3..ef8ddbe445812 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_connector.c
++++ b/drivers/gpu/drm/nouveau/nouveau_connector.c
+@@ -572,8 +572,10 @@ nouveau_connector_detect(struct drm_connector *connector, bool force)
+ 		pm_runtime_get_noresume(dev->dev);
+ 	} else {
+ 		ret = pm_runtime_get_sync(dev->dev);
+-		if (ret < 0 && ret != -EACCES)
++		if (ret < 0 && ret != -EACCES) {
++			pm_runtime_put_autosuspend(dev->dev);
+ 			return conn_status;
++		}
+ 	}
+ 
+ 	nv_encoder = nouveau_connector_ddc_detect(connector);
+-- 
+2.25.1
+
+
+
