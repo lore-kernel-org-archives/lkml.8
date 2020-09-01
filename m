@@ -2,144 +2,117 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4CDC433E7
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B420C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 361162078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D06208CA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1598981063;
+	bh=HqtT5doAifp9T3ikPbQo5IxVfM1uWmbFHqq6m6yONIU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UUsNlfM92gsf74f7ZRP20xFs3CS9ynunGSL1bleUxgYKi+EIySXukeeJq/pqgLCUt
+	 VYxLekfdDS9YIpRZmNs8umWTiFivcszlYJtv/6g609yqZzJWfi8/8xvtsU7dfhcDj2
+	 T7sc2mU/SPBOkvERPA4yusjGaMofC1tO+66oWimM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732569AbgIARXj (ORCPT
+        id S1729033AbgIARYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:23:39 -0400
-Received: from mga11.intel.com ([192.55.52.93]:59156 "EHLO mga11.intel.com"
+        Tue, 1 Sep 2020 13:24:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729384AbgIARXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 13:23:15 -0400
-IronPort-SDR: 4B0tkcJC6JmsWNq3TyA+uqJaq/KHgRyf5UCkhB3Rk0oPDtDqP2jMsF8yLlDf3w96GsrMNe73XO
- we4wYTnQ1VCg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9731"; a="154729712"
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="154729712"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:23:14 -0700
-IronPort-SDR: wuavfJxSyAPpELTV8WPFMMAHFUIjYWk2p5fLGqafU8dChGcX+q9xPL+vQSSxs9yoHADPFY7gzF
- UEmYO/DPRnJg==
-X-IronPort-AV: E=Sophos;i="5.76,379,1592895600"; 
-   d="scan'208";a="301519837"
-Received: from yyu32-mobl1.amr.corp.intel.com (HELO [10.212.241.30]) ([10.212.241.30])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Sep 2020 10:23:12 -0700
-Subject: Re: [PATCH v11 25/25] x86/cet/shstk: Add arch_prctl functions for
- shadow stack
-To:     Dave Martin <Dave.Martin@arm.com>, "H.J. Lu" <hjl.tools@gmail.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Florian Weimer <fweimer@redhat.com>, X86 ML <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Weijiang Yang <weijiang.yang@intel.com>
-References: <086c73d8-9b06-f074-e315-9964eb666db9@intel.com>
- <73c2211f-8811-2d9f-1930-1c5035e6129c@intel.com>
- <af258a0e-56e9-3747-f765-dfe45ce76bba@intel.com>
- <ef7f9e24-f952-d78c-373e-85435f742688@intel.com>
- <20200826164604.GW6642@arm.com> <87ft892vvf.fsf@oldenburg2.str.redhat.com>
- <CALCETrVeNA0Kt2rW0CRCVo1JE0CKaBxu9KrJiyqUA8LPraY=7g@mail.gmail.com>
- <0e9996bc-4c1b-cc99-9616-c721b546f857@intel.com>
- <4f2dfefc-b55e-bf73-f254-7d95f9c67e5c@intel.com>
- <CAMe9rOqt9kbqERC8U1+K-LiDyNYuuuz3TX++DChrRJwr5ajt6Q@mail.gmail.com>
- <20200901102758.GY6642@arm.com>
-From:   "Yu, Yu-cheng" <yu-cheng.yu@intel.com>
-Message-ID: <c91bbad8-9e45-724b-4526-fe3674310c57@intel.com>
-Date:   Tue, 1 Sep 2020 10:23:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
+        id S1726406AbgIAPLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:11:48 -0400
+Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 37C77206FA;
+        Tue,  1 Sep 2020 15:11:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1598973107;
+        bh=HqtT5doAifp9T3ikPbQo5IxVfM1uWmbFHqq6m6yONIU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UHd71wPRZl95KhmjrEppsWxYR03W9JG9lwq+arP+/jHvMkeciAMdmOEqzSgHMC0oX
+         cW8a0NgBU7h+9MRcqajeDIjT9DMpoPLC2lXCoPfLvk7q0TQrhsp8M7n1criWjnXI0i
+         ZsIxKc7oWOdBYhzMe0gpCd1wOy+Da2Jk+b9S8mZQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, JiangYu <lnsyyj@hotmail.com>,
+        Mike Christie <michael.christie@oracle.com>,
+        Bodo Stroesser <bstroesser@ts.fujitsu.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 10/62] scsi: target: tcmu: Fix crash on ARM during cmd completion
+Date:   Tue,  1 Sep 2020 17:09:53 +0200
+Message-Id: <20200901150921.229809296@linuxfoundation.org>
+X-Mailer: git-send-email 2.28.0
+In-Reply-To: <20200901150920.697676718@linuxfoundation.org>
+References: <20200901150920.697676718@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200901102758.GY6642@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/1/2020 3:28 AM, Dave Martin wrote:
-> On Thu, Aug 27, 2020 at 06:26:11AM -0700, H.J. Lu wrote:
->> On Wed, Aug 26, 2020 at 12:57 PM Dave Hansen <dave.hansen@intel.com> wrote:
->>>
->>> On 8/26/20 11:49 AM, Yu, Yu-cheng wrote:
->>>>> I would expect things like Go and various JITs to call it directly.
->>>>>
->>>>> If we wanted to be fancy and add a potentially more widely useful
->>>>> syscall, how about:
->>>>>
->>>>> mmap_special(void *addr, size_t length, int prot, int flags, int type);
->>>>>
->>>>> Where type is something like MMAP_SPECIAL_X86_SHSTK.  Fundamentally,
->>>>> this is really just mmap() except that we want to map something a bit
->>>>> magical, and we don't want to require opening a device node to do it.
->>>>
->>>> One benefit of MMAP_SPECIAL_* is there are more free bits than MAP_*.
->>>> Does ARM have similar needs for memory mapping, Dave?
->>>
->>> No idea.
->>>
->>> But, mmap_special() is *basically* mmap2() with extra-big flags space.
->>> I suspect it will grow some more uses on top of shadow stacks.  It could
->>> have, for instance, been used to allocate MPX bounds tables.
->>
->> There is no reason we can't use
->>
->> long arch_prctl (int, unsigned long, unsigned long, unsigned long, ..);
->>
->> for ARCH_X86_CET_MMAP_SHSTK.   We just need to use
->>
->> syscall (SYS_arch_prctl, ARCH_X86_CET_MMAP_SHSTK, ...);
-> 
-> 
-> For arm64 (and sparc etc.) we continue to use the regular mmap/mprotect
-> family of calls.  One or two additional arch-specific mmap flags are
-> sufficient for now.
-> 
-> Is x86 definitely not going to fit within those calls?
+From: Bodo Stroesser <bstroesser@ts.fujitsu.com>
 
-That can work for x86.  Andy, what if we create PROT_SHSTK, which can 
-been seen only from the user.  Once in kernel, it is translated to 
-VM_SHSTK.  One question for mremap/mprotect is, do we allow a normal 
-data area to become shadow stack?
+[ Upstream commit 5a0c256d96f020e4771f6fd5524b80f89a2d3132 ]
 
-> 
-> For now, I can't see what arg[2] is used for (and hence the type
-> argument of mmap_special()), but I haven't dug through the whole series.
+If tcmu_handle_completions() has to process a padding shorter than
+sizeof(struct tcmu_cmd_entry), the current call to
+tcmu_flush_dcache_range() with sizeof(struct tcmu_cmd_entry) as length
+param is wrong and causes crashes on e.g. ARM, because
+tcmu_flush_dcache_range() in this case calls
+flush_dcache_page(vmalloc_to_page(start)); with start being an invalid
+address above the end of the vmalloc'ed area.
 
-If we use the approach above, then we don't need arch_prctl changes.
+The fix is to use the minimum of remaining ring space and sizeof(struct
+tcmu_cmd_entry) as the length param.
 
-Thanks,
-Yu-cheng
+The patch was tested on kernel 4.19.118.
+
+See https://bugzilla.kernel.org/show_bug.cgi?id=208045#c10
+
+Link: https://lore.kernel.org/r/20200629093756.8947-1-bstroesser@ts.fujitsu.com
+Tested-by: JiangYu <lnsyyj@hotmail.com>
+Acked-by: Mike Christie <michael.christie@oracle.com>
+Signed-off-by: Bodo Stroesser <bstroesser@ts.fujitsu.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/target/target_core_user.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index c43c942e1f876..bccde58bc5e30 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -590,7 +590,14 @@ static unsigned int tcmu_handle_completions(struct tcmu_dev *udev)
+ 		struct tcmu_cmd_entry *entry = (void *) mb + CMDR_OFF + udev->cmdr_last_cleaned;
+ 		struct tcmu_cmd *cmd;
+ 
+-		tcmu_flush_dcache_range(entry, sizeof(*entry));
++		/*
++		 * Flush max. up to end of cmd ring since current entry might
++		 * be a padding that is shorter than sizeof(*entry)
++		 */
++		size_t ring_left = head_to_end(udev->cmdr_last_cleaned,
++					       udev->cmdr_size);
++		tcmu_flush_dcache_range(entry, ring_left < sizeof(*entry) ?
++					ring_left : sizeof(*entry));
+ 
+ 		if (tcmu_hdr_get_op(entry->hdr.len_op) == TCMU_OP_PAD) {
+ 			UPDATE_HEAD(udev->cmdr_last_cleaned,
+-- 
+2.25.1
+
+
+
