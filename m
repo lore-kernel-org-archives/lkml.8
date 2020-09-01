@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45990C433E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2265AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1342F2078B
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE32C206FA
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 17:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598979763;
-	bh=UVqY3YhZ306TOgWdkmq+kptt9ngZIg/RI2IakMfpQdU=;
+	s=default; t=1598979766;
+	bh=t1iltjttesnODkweQy4rYpmj8dRrV11y+px+IK3HtrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sRovIZPI+DU+tvOwJh6WHmVaJOrBhOWrXhkGOQJ+O/DjNOaVpygwe2I7u1z5jsAbX
-	 quZ0IFJXWtNRz2dKytbLL7VaDlQ0MQddPeA2TCfkUFs4x0s+xR/xu0n4MuPLOm2kus
-	 mTC38wlLwgC4iG+NXtOWo0/dGsTCsC1OHphW/T8I=
+	b=RWwYvqXx0YJaHGWMhcFm5yajC0Eh/Ko+vlNV/VjH3byzqlmbZU8f3MUZu5kY+j8O1
+	 s7ynC2C5Ka3ynwbRgjRwlA0RxfPi4ol/C1VvtjkxT8xNRLMmt3CFYLdffGERGeT18J
+	 0OIpeNNHzIyoMIWY+tkVLxpjVYM/Qud9v0VamDLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732410AbgIARCm (ORCPT
+        id S1732479AbgIARCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 13:02:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 13:02:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgIAPUc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:20:32 -0400
+        id S1729616AbgIAPU3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 11:20:29 -0400
 Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B4B32078B;
-        Tue,  1 Sep 2020 15:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E94FD20767;
+        Tue,  1 Sep 2020 15:20:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598973632;
-        bh=UVqY3YhZ306TOgWdkmq+kptt9ngZIg/RI2IakMfpQdU=;
+        s=default; t=1598973629;
+        bh=t1iltjttesnODkweQy4rYpmj8dRrV11y+px+IK3HtrU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=laoV0BHHFHW05ScX/4iO49yyFCghSSCkZtJeiyuyoA7mPTjeAIrChcWU3HqQWFoj2
-         2XnYH4/WNdt6LXsgmmHIpbz8SLd3SYtK+bXkkOi+TfpCdiFTZPz+QvcLSadxqRXP1h
-         NNFPVuEyhcsQ6k6EzUicMI+i0OvV/vIZZ65+jXlY=
+        b=jDCTDfrZN5svxh5A3bV+y9gMUj4CUMQptKydxzYBTxLBRAiMmBiPnDs4jrqHlRFGD
+         kobnNDRDXadcDFANj8dgIcBeZJ3O1I/LJ7tUISYHTLc3nyjM9CQcrnh2+sDeFmASBB
+         Ah6PoSy7tswPbISARiOgbvP72rjRztoG/TTT3l+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 77/91] USB: yurex: Fix bad gfp argument
-Date:   Tue,  1 Sep 2020 17:10:51 +0200
-Message-Id: <20200901150932.012107820@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.14 76/91] drm/amdgpu: Fix buffer overflow in INFO ioctl
+Date:   Tue,  1 Sep 2020 17:10:50 +0200
+Message-Id: <20200901150931.969701698@linuxfoundation.org>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200901150928.096174795@linuxfoundation.org>
 References: <20200901150928.096174795@linuxfoundation.org>
@@ -59,72 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit f176ede3a3bde5b398a6777a7f9ff091baa2d3ff upstream.
+commit b5b97cab55eb71daba3283c8b1d2cce456d511a1 upstream.
 
-The syzbot fuzzer identified a bug in the yurex driver: It passes
-GFP_KERNEL as a memory-allocation flag to usb_submit_urb() at a time
-when its state is TASK_INTERRUPTIBLE, not TASK_RUNNING:
+The values for "se_num" and "sh_num" come from the user in the ioctl.
+They can be in the 0-255 range but if they're more than
+AMDGPU_GFX_MAX_SE (4) or AMDGPU_GFX_MAX_SH_PER_SE (2) then it results in
+an out of bounds read.
 
-do not call blocking ops when !TASK_RUNNING; state=1 set at [<00000000370c7c68>] prepare_to_wait+0xb1/0x2a0 kernel/sched/wait.c:247
-WARNING: CPU: 1 PID: 340 at kernel/sched/core.c:7253 __might_sleep+0x135/0x190
-kernel/sched/core.c:7253
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 340 Comm: syz-executor677 Not tainted 5.8.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google
-01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xf6/0x16e lib/dump_stack.c:118
- panic+0x2aa/0x6e1 kernel/panic.c:231
- __warn.cold+0x20/0x50 kernel/panic.c:600
- report_bug+0x1bd/0x210 lib/bug.c:198
- handle_bug+0x41/0x80 arch/x86/kernel/traps.c:234
- exc_invalid_op+0x14/0x40 arch/x86/kernel/traps.c:254
- asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:536
-RIP: 0010:__might_sleep+0x135/0x190 kernel/sched/core.c:7253
-Code: 65 48 8b 1c 25 40 ef 01 00 48 8d 7b 10 48 89 fe 48 c1 ee 03 80 3c 06 00 75
-2b 48 8b 73 10 48 c7 c7 e0 9e 06 86 e8 ed 12 f6 ff <0f> 0b e9 46 ff ff ff e8 1f
-b2 4b 00 e9 29 ff ff ff e8 15 b2 4b 00
-RSP: 0018:ffff8881cdb77a28 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: ffff8881c6458000 RCX: 0000000000000000
-RDX: ffff8881c6458000 RSI: ffffffff8129ec93 RDI: ffffed1039b6ef37
-RBP: ffffffff86fdade2 R08: 0000000000000001 R09: ffff8881db32f54f
-R10: 0000000000000000 R11: 0000000030343354 R12: 00000000000001f2
-R13: 0000000000000000 R14: 0000000000000068 R15: ffffffff83c1b1aa
- slab_pre_alloc_hook.constprop.0+0xea/0x200 mm/slab.h:498
- slab_alloc_node mm/slub.c:2816 [inline]
- slab_alloc mm/slub.c:2900 [inline]
- kmem_cache_alloc_trace+0x46/0x220 mm/slub.c:2917
- kmalloc include/linux/slab.h:554 [inline]
- dummy_urb_enqueue+0x7a/0x880 drivers/usb/gadget/udc/dummy_hcd.c:1251
- usb_hcd_submit_urb+0x2b2/0x22d0 drivers/usb/core/hcd.c:1547
- usb_submit_urb+0xb4e/0x13e0 drivers/usb/core/urb.c:570
- yurex_write+0x3ea/0x820 drivers/usb/misc/yurex.c:495
-
-This patch changes the call to use GFP_ATOMIC instead of GFP_KERNEL.
-
-Reported-and-tested-by: syzbot+c2c3302f9c601a4b1be2@syzkaller.appspotmail.com
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200810182954.GB307778@rowland.harvard.edu
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/yurex.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/misc/yurex.c
-+++ b/drivers/usb/misc/yurex.c
-@@ -496,7 +496,7 @@ static ssize_t yurex_write(struct file *
- 	prepare_to_wait(&dev->waitq, &wait, TASK_INTERRUPTIBLE);
- 	dev_dbg(&dev->interface->dev, "%s - submit %c\n", __func__,
- 		dev->cntl_buffer[0]);
--	retval = usb_submit_urb(dev->cntl_urb, GFP_KERNEL);
-+	retval = usb_submit_urb(dev->cntl_urb, GFP_ATOMIC);
- 	if (retval >= 0)
- 		timeout = schedule_timeout(YUREX_WRITE_TIMEOUT);
- 	finish_wait(&dev->waitq, &wait);
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_kms.c
+@@ -502,8 +502,12 @@ static int amdgpu_info_ioctl(struct drm_
+ 		 * in the bitfields */
+ 		if (se_num == AMDGPU_INFO_MMR_SE_INDEX_MASK)
+ 			se_num = 0xffffffff;
++		else if (se_num >= AMDGPU_GFX_MAX_SE)
++			return -EINVAL;
+ 		if (sh_num == AMDGPU_INFO_MMR_SH_INDEX_MASK)
+ 			sh_num = 0xffffffff;
++		else if (sh_num >= AMDGPU_GFX_MAX_SH_PER_SE)
++			return -EINVAL;
+ 
+ 		if (info->read_mmr_reg.count > 128)
+ 			return -EINVAL;
 
 
