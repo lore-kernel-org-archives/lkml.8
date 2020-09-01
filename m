@@ -2,91 +2,149 @@ Return-Path: <SRS0=b2Mh=CK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A223DC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6180C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76F93204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1598976919;
-	bh=/6sOBbcwvDM9RTeLa3xY3Md8dh6xf16alzMSmHCraCg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oK/oHPt8gp49iLRlscpuwzhoRSBWF3yvT/x7+i/g/oIN4ys+7aZCdrFiRpZclFpeE
-	 bxbTHf1e0ZeglH3R5+KAR1vU+RiMfGMTW9umR6yojqDtto3UG3S3dlLvxRna/Jg2ID
-	 guPlPgLwtO5cDkGoe36ZM9Orhqvg3vxfG87pFpU0=
+	by mail.kernel.org (Postfix) with ESMTP id BEC34204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  1 Sep 2020 16:15:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qa2EBwHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731615AbgIAQPN (ORCPT
+        id S1731933AbgIAQPX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 12:15:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40252 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728531AbgIAPe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 11:34:56 -0400
-Received: from localhost (83-86-74-64.cable.dynamic.v4.ziggo.nl [83.86.74.64])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DA21205F4;
-        Tue,  1 Sep 2020 15:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1598974495;
-        bh=/6sOBbcwvDM9RTeLa3xY3Md8dh6xf16alzMSmHCraCg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xomj/vXdifhMKmUNJS59iQX2/gMXka7PEdxNDPg6scJAsoDJPjoiiI+rMieOsOc8u
-         +viGgpx0v/Dmzvy2Vy7ohZzkvquAs9xZxYkHpq14jU6m05nisqIJEXuWb/Y/BqOLOl
-         CfxI5solZQkK/HQxJt43yPE2Q6dYUPziDpvBO9uU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evgeny Novikov <novikov@ispras.ru>
-Subject: [PATCH 5.4 158/214] USB: lvtest: return proper error code in probe
-Date:   Tue,  1 Sep 2020 17:10:38 +0200
-Message-Id: <20200901151000.542520839@linuxfoundation.org>
+        Tue, 1 Sep 2020 12:15:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32938 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729482AbgIAQPQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 12:15:16 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70A32C061245
+        for <linux-kernel@vger.kernel.org>; Tue,  1 Sep 2020 09:15:15 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q1so845479pjd.1
+        for <linux-kernel@vger.kernel.org>; Tue, 01 Sep 2020 09:15:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jzUV1ToBnPSzuyXeMWjIThN/0jU4c6GM1tdII/RDC3M=;
+        b=Qa2EBwHkepYbnrf459ys3AYVZFFdsy1Y3PcpfKOk3PfdKt+pLJB8U9oVzNpEzsyn73
+         YFhI7tgxaZlR+EQY6LKBh0OcrLFzNkJmd3raQkpfsBIYdVMtEyMYZZx0GswKGIltGToS
+         G+uVYCKvKUVjKNH1ohJVwguCQ0DX0f8P/hji9zzx4ngf5JHGzDo75ejUk+h6ev8VX1qL
+         PH6vImgO4a4OjgHWREmh7SaejKv/eLj2HSzfVN/peM0nFBBvbaKTj2IJws9f51ZPKe8i
+         gP1yhhiCkfgGvlsiBbCElMYUZ0bmiI+R+nL6zhf4Xp9kn0huqiAqvzocpUd5egE7ijhv
+         nybQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jzUV1ToBnPSzuyXeMWjIThN/0jU4c6GM1tdII/RDC3M=;
+        b=QLpZFr/rTDOuhycjlhH3ogh/Yw4DDAUwR4BN6Z8SN898v/+IZgb/IYyIteWGQ1buV4
+         ok13dzOt6HPLNXpErnGhh5kr3xfOekYDxe+p554xkxOwilFV7tIZwp594DgwwUtCAGY3
+         AESfQ4jcVpe519+r7MB6IqDFyJw1XmsSe+agUWr1jzXaj192nN4gJ/GKpaeaBa5AJ8vC
+         xcmLcAIhYbFAuK/yU+6OUxq6O+tNLYhzxB1LUnxdE6wytPh65Ua0WoGp2jO3g+EGV0eI
+         oL1kBLOOT0MMlSkB6ZR6SfoGydYdY+aZ/7Bu1wxVWHjKqB8ylbXEqzRN57uwCNC7BcJQ
+         ZqNw==
+X-Gm-Message-State: AOAM5308BOtp5B2iChdo9dDIAHDghKFrJQ+ILHVcz/Ehq3PEuRnvdzUn
+        B9extPi4ajQv2zmeOo8H/gaE5g==
+X-Google-Smtp-Source: ABdhPJz+CXSBMLxjORPZ02TS54ZJrZBVY0+DTj3EswB4Eolon8bJ/NdGrtm/qHdYBJE0ZZeswpFkyA==
+X-Received: by 2002:a17:902:b683:: with SMTP id c3mr2069892pls.248.1598976914697;
+        Tue, 01 Sep 2020 09:15:14 -0700 (PDT)
+Received: from nagraj.lan ([175.100.146.50])
+        by smtp.gmail.com with ESMTPSA id d77sm2553169pfd.121.2020.09.01.09.15.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 09:15:13 -0700 (PDT)
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Colin Cross <ccross@google.com>,
+        Alexey Gladkov <gladkov.alexey@gmail.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michel Lespinasse <walken@google.com>,
+        =?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
+        Song Liu <songliubraving@fb.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        chenqiwu <chenqiwu@xiaomi.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Adrian Reber <areber@redhat.com>,
+        Nicolas Viennot <Nicolas.Viennot@twosigma.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org,
+        John Stultz <john.stultz@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>
+Subject: [PATCH v7 0/3] Anonymous VMA naming patches
+Date:   Tue,  1 Sep 2020 21:44:56 +0530
+Message-Id: <20200901161459.11772-1-sumit.semwal@linaro.org>
 X-Mailer: git-send-email 2.28.0
-In-Reply-To: <20200901150952.963606936@linuxfoundation.org>
-References: <20200901150952.963606936@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evgeny Novikov <novikov@ispras.ru>
+Version v4 of these patches was sent by Colin Cross a long time ago [1]
+and [2]. At the time, these patches were not merged, and it looks like they
+just fell off the radar since.
 
-commit 531412492ce93ea29b9ca3b4eb5e3ed771f851dd upstream.
+In our efforts to run Android on mainline kernels, we realised that since past
+some time, this patchset is needed for Android to boot, hence I am re-posting
+it to try and get these discussed and hopefully merged.
 
-lvs_rh_probe() can return some nonnegative value from usb_control_msg()
-when it is less than "USB_DT_HUB_NONVAR_SIZE + 2" that is considered as
-a failure. Make lvs_rh_probe() return -EINVAL in this case.
-
-Found by Linux Driver Verification project (linuxtesting.org).
-
-Signed-off-by: Evgeny Novikov <novikov@ispras.ru>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200805090643.3432-1-novikov@ispras.ru
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+I have rebased these for v5.9-rc3 and fixed minor updates as required.
 
 ---
- drivers/usb/misc/lvstest.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v6: Rebased to v5.9-rc3 and addressed review comments:
+    - added missing callers in fs/userfaultd.c
+    - simplified the union
+    - use the new access_remote_vm_locked() in show_map_vma() since that
+       already holds mmap_lock
+v7: fixed randconfig build failure when CONFIG_ADVISE_SYSCALLS isn't defined
 
---- a/drivers/usb/misc/lvstest.c
-+++ b/drivers/usb/misc/lvstest.c
-@@ -426,7 +426,7 @@ static int lvs_rh_probe(struct usb_inter
- 			USB_DT_SS_HUB_SIZE, USB_CTRL_GET_TIMEOUT);
- 	if (ret < (USB_DT_HUB_NONVAR_SIZE + 2)) {
- 		dev_err(&hdev->dev, "wrong root hub descriptor read %d\n", ret);
--		return ret;
-+		return ret < 0 ? ret : -EINVAL;
- 	}
- 
- 	/* submit urb to poll interrupt endpoint */
+Colin Cross (2):
+  mm: rearrange madvise code to allow for reuse
+  mm: add a field to store names for private anonymous memory
 
+Sumit Semwal (1):
+  mm: memory: Add access_remote_vm_locked variant
+
+ Documentation/filesystems/proc.rst |   2 +
+ fs/proc/task_mmu.c                 |  24 +-
+ fs/userfaultfd.c                   |   7 +-
+ include/linux/mm.h                 |  14 +-
+ include/linux/mm_types.h           |  25 +-
+ include/uapi/linux/prctl.h         |   3 +
+ kernel/sys.c                       |  32 +++
+ mm/interval_tree.c                 |   2 +-
+ mm/madvise.c                       | 356 +++++++++++++++++------------
+ mm/memory.c                        |  49 +++-
+ mm/mempolicy.c                     |   3 +-
+ mm/mlock.c                         |   2 +-
+ mm/mmap.c                          |  38 +--
+ mm/mprotect.c                      |   2 +-
+ 14 files changed, 381 insertions(+), 178 deletions(-)
+
+-- 
+2.28.0
 
