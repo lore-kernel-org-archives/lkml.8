@@ -6,60 +6,78 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CB3C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42222C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFF6D207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12BDC20707
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 02:45:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599014719;
-	bh=WG/yXwjv4L2MXI8+Zs5SazBK9AySgQfmEdwFwAdAHJY=;
+	s=default; t=1599014726;
+	bh=5SaoNQyBaWmhwg893HCYqQAM/mdr9/N/GIIv6v/gqaY=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=T+YqOqpd6wBiXyhnj2myU8ltJqGyDVjlDeRuDP5dK77VXGpWXie4rSgm10jqR71Jg
-	 BIZJCrvj9NExEA1PJPieV+0cj0ptYFCFXvL84+xyKP6/S5LdZHvS3f5Sgp+TTgo7AS
-	 RzxkVeNJtE7DSOFANlVj9xUdg1fwSVhwstYbfm9A=
+	b=nAo6q88EYn3NaLXp9SADyXxQ3eoeL29XRpwhYPtt/no5MBSCJi12tYNWO/GYHokQj
+	 ZlANqswCQ1H7v7h06/Ok8hBilaWnHRxdb7yCL4vk6SN9JLs2V1zdIczDeDxO1k3JN8
+	 bXw0CMzhngWwXmVoaWxksQXNxW5prSr2H0A+C14o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbgIBCpR (ORCPT
+        id S1726521AbgIBCpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 22:45:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37398 "EHLO mail.kernel.org"
+        Tue, 1 Sep 2020 22:45:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726122AbgIBCpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 22:45:15 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.9-rc4
+        id S1726122AbgIBCpV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 22:45:21 -0400
+Subject: Re: [GIT PULL] perf tools fixes for v5.9
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599014715;
-        bh=WG/yXwjv4L2MXI8+Zs5SazBK9AySgQfmEdwFwAdAHJY=;
+        s=default; t=1599014721;
+        bh=5SaoNQyBaWmhwg893HCYqQAM/mdr9/N/GIIv6v/gqaY=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=JPXLowZJsCpJasjRWGKPcKLxTCC+P45mXS0hw3lf8UYFyMbudO7bJUFW3cT7tbNOe
-         csXjik3yhgLInBFLowdE9IKtaczaC6wIAshWEs7Y/Or7okYInUC4aiTb4Tg+gDrome
-         uWKh5MUzTxM9oBxuWXN7PllkOop8JNR7cyIBiWjM=
+        b=ZO0GMjwmNshbsY57t/PtucesBxtSpbpu01rsqRglxZA611GW402xSKvEwETtEvXeX
+         vafNuyuZ1hvB/2WQe7+HF5kbUXl3liqyY1EX5NJDtROJ/Zhi5Gw3S4ddbx+6s6HGp2
+         p+ILYmjoV1rMq3WJIXgxneUwGLBnWQ3Et3W+IV5Y=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1598905089.git.dsterba@suse.com>
-References: <cover.1598905089.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-btrfs.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1598905089.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.9-rc3-tag
-X-PR-Tracked-Commit-Id: f96d6960abbc52e26ad124e69e6815283d3e1674
+In-Reply-To: <20200901224154.3436175-1-acme@kernel.org>
+References: <20200901224154.3436175-1-acme@kernel.org>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20200901224154.3436175-1-acme@kernel.org>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.9-2020-09-01
+X-PR-Tracked-Commit-Id: 977f739b7126bf98b5202e243f60cbc0a1ec2c3b
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: dcdfd9cc28ddd356d24d5461119e4c1d19284ff5
-Message-Id: <159901471527.4624.11112977292229789155.pr-tracker-bot@kernel.org>
-Date:   Wed, 02 Sep 2020 02:45:15 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+X-PR-Merge-Commit-Id: 9c7d619be5a002ea29c172df5e3c1227c22cbb41
+Message-Id: <159901472136.4624.16783161865001951925.pr-tracker-bot@kernel.org>
+Date:   Wed, 02 Sep 2020 02:45:21 +0000
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Al Grant <al.grant@arm.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        David Ahern <dsahern@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Like Xu <like.xu@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Sumanth Korikkar <sumanthk@linux.ibm.com>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Wei Li <liwei391@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue,  1 Sep 2020 01:20:49 +0200:
+The pull request you sent on Tue,  1 Sep 2020 19:41:54 -0300:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.9-rc3-tag
+> git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-tools-fixes-for-v5.9-2020-09-01
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/dcdfd9cc28ddd356d24d5461119e4c1d19284ff5
+https://git.kernel.org/torvalds/c/9c7d619be5a002ea29c172df5e3c1227c22cbb41
 
 Thank you!
 
