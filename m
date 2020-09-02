@@ -2,226 +2,189 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB46C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97ADC433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99B222072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599031120;
-	bh=nwODmtmyQ5qjmsI/zaMI6iWqpTJVXrQ+VoK/Khp15fU=;
-	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l9PrVy2p31Hhw54OCGLJlPCMB8gn0LzhsTL625gysOMVzVPI3T1nPHflV0mshMBYt
-	 yPLhxu43Zx9ZCxiCNz0nu7HfNyvQVjr9zihCrlh0jqkkp5Q82MIAh3RjNS6v8nQTqS
-	 7rAssNvIB/w0j3Wd/GrkQ4xVkBdRs06eZynXvQdo=
+	by mail.kernel.org (Postfix) with ESMTP id B3C2D2072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 07:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ataGrn/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbgIBHSj (ORCPT
+        id S1726323AbgIBHVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 03:18:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55430 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgIBHSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 03:18:34 -0400
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C74B2207EA;
-        Wed,  2 Sep 2020 07:18:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599031114;
-        bh=nwODmtmyQ5qjmsI/zaMI6iWqpTJVXrQ+VoK/Khp15fU=;
-        h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=0XkfNFQY8uTTVOpm5viRsln7HLPv52Plz+eMkzuvwls5Z0ofRxA9H7OPWitEmYIl7
-         zbR/+1vDaVE7oH26z9/EsNpBdWukZGWGzlku0zFCeI98My3CSfhtHlsSeeH58gLVP5
-         sZ6ohP5hiTw92fyr1RyUocwSvSaqL5yrG7SvVGrw=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 3/3] media: imx258: Get clock from device properties and enable it via runtime PM
-Date:   Wed,  2 Sep 2020 09:18:10 +0200
-Message-Id: <1599031090-21608-3-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1599031090-21608-1-git-send-email-krzk@kernel.org>
-References: <1599031090-21608-1-git-send-email-krzk@kernel.org>
+        Wed, 2 Sep 2020 03:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59644 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726144AbgIBHVi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 03:21:38 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5B2BC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 00:21:37 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id h23so988707vkn.4
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 00:21:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=C/xlusgyynj50LphPE7yRWxaC4UNPqGRAKI/CRVezGo=;
+        b=ataGrn/bavsY1PRvhpV+cu88HQPOAAhirgJONpozGGMDtHBc+kh+kySUsmPZXd3X2L
+         ka8TjO0gZaXexKQILzFQfNFFiia7TJAp2KCiKLVa1BnOhrhLtk6LLWci/jN1rDonHWxD
+         d9etY3oEAiqrKP5wbGUNHrIRnxm4+nWPVwMKQzWYL2hDO86VMRJPMhIkMuVRB7SUmZI5
+         sZy9A4WYoy9Ldwp1UKAygreXWXI7ZJjjrEkNeBd4DZSSnD7fM1fn6HAZQq4/7lEBf3Ba
+         YLXUqdKG3KKB2+508vaVpsZX4CQZXsgN9WNQE3AE1C8F+/sNzuFophv2vFwKMGaMiLfy
+         T5QA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=C/xlusgyynj50LphPE7yRWxaC4UNPqGRAKI/CRVezGo=;
+        b=RJxCaaC26qkE2biwYAy1fULkEiCeS4B69lrIZSbiaN0cM3/cZ3t3Nw4JfVQUvXKsem
+         WYnkxKw5eGGXJn99cItYGSWv9O3KYFQ+/FxVR7E4WO3Ri2A2w1WInyVbsernbehvHCMk
+         +jSWL9gCJe+BUPfA2s9VmeboIplW1JK30/zJxPOYkwcXT9I927wkfI9lDl+PgwXcp8PA
+         OvJHuI87BatLf8BlHysQ4VjOLt+2OOrSZIRnYOphPdNwOqAY094URjg/FaaSIsti+nZz
+         Ptxips70Jus7TSasDpMJP76+L6cG/QgCZWW24razC0uMqyHp11/D751trl79cUOjwMS6
+         8DXg==
+X-Gm-Message-State: AOAM530ZUjEh82hzIELihPM2ZoR5BWUXGj3dGLvyvZxeIetOBWQrNUH2
+        DTR+8batADOv5c8lvds3zNF5LcIiw/v+obsd9qNjOg==
+X-Google-Smtp-Source: ABdhPJwacFo6Gk9MVMl4j50TKlHV7IPvBrGweCgCAi90kEX4/2dzyup49X43PX+GIuNEe4taDCbntBpaU1PJI9ZYu24=
+X-Received: by 2002:a1f:4357:: with SMTP id q84mr4600241vka.4.1599031296792;
+ Wed, 02 Sep 2020 00:21:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200901150924.680106554@linuxfoundation.org>
+In-Reply-To: <20200901150924.680106554@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 2 Sep 2020 12:51:25 +0530
+Message-ID: <CA+G9fYuZvp9LbLfqNd=wHMRuyAHbuffB+Hh0c-7y7vBPBoeVRg@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/78] 4.9.235-rc1 review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The IMX258 sensor driver checked in device properties for a
-clock-frequency property which actually does not mean that the clock is
-really running such frequency or is it even enabled.
+On Tue, 1 Sep 2020 at 20:46, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.235 release.
+> There are 78 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 03 Sep 2020 15:09:01 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.235-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Get the provided clock and check it frequency.  If none is provided,
-fall back to old property.
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-Enable the clock when accessing the IMX258 registers and when streaming
-starts with runtime PM.
+Summary
+------------------------------------------------------------------------
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+kernel: 4.9.235-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: defc50a6f06ca62b5e1fa42add038887484154e4
+git describe: v4.9.234-79-gdefc50a6f06c
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.234-79-gdefc50a6f06c
 
----
+No regressions (compared to build v4.9.234)
 
-Changes since v1:
-1. Use runtime PM for clock toggling
----
- drivers/media/i2c/imx258.c | 68 ++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 59 insertions(+), 9 deletions(-)
+No fixes (compared to build v4.9.234)
 
-diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-index c20bac9b00ec..ee38dafb8450 100644
---- a/drivers/media/i2c/imx258.c
-+++ b/drivers/media/i2c/imx258.c
-@@ -2,6 +2,7 @@
- // Copyright (C) 2018 Intel Corporation
- 
- #include <linux/acpi.h>
-+#include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/i2c.h>
- #include <linux/module.h>
-@@ -68,6 +69,9 @@
- #define REG_CONFIG_MIRROR_FLIP		0x03
- #define REG_CONFIG_FLIP_TEST_PATTERN	0x02
- 
-+/* Input clock frequency in Hz */
-+#define IMX258_INPUT_CLOCK_FREQ		19200000
-+
- struct imx258_reg {
- 	u16 address;
- 	u8 val;
-@@ -610,6 +614,8 @@ struct imx258 {
- 
- 	/* Streaming on/off */
- 	bool streaming;
-+
-+	struct clk *clk;
- };
- 
- static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
-@@ -972,6 +978,27 @@ static int imx258_stop_streaming(struct imx258 *imx258)
- 	return 0;
- }
- 
-+static int imx258_power_on(struct device *dev)
-+{
-+	struct imx258 *imx258 = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(imx258->clk);
-+	if (ret)
-+		dev_err(dev, "failed to enable clock\n");
-+
-+	return ret;
-+}
-+
-+static int imx258_power_off(struct device *dev)
-+{
-+	struct imx258 *imx258 = dev_get_drvdata(dev);
-+
-+	clk_disable_unprepare(imx258->clk);
-+
-+	return 0;
-+}
-+
- static int imx258_set_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct imx258 *imx258 = to_imx258(sd);
-@@ -1201,9 +1228,27 @@ static int imx258_probe(struct i2c_client *client)
- 	int ret;
- 	u32 val = 0;
- 
--	device_property_read_u32(&client->dev, "clock-frequency", &val);
--	if (val != 19200000)
--		return -EINVAL;
-+	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
-+	if (!imx258)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(&client->dev, imx258);
-+
-+	imx258->clk = devm_clk_get_optional(&client->dev, NULL);
-+	if (!imx258->clk) {
-+		dev_info(&client->dev, "no clock provided, using clock-frequency property\n");
-+
-+		device_property_read_u32(&client->dev, "clock-frequency", &val);
-+		if (val != IMX258_INPUT_CLOCK_FREQ)
-+			return -EINVAL;
-+	} else if (IS_ERR(imx258->clk)) {
-+		return dev_err_probe(&client->dev, PTR_ERR(imx258->clk), "error getting clock\n");
-+	} else {
-+		if (clk_get_rate(imx258->clk) != IMX258_INPUT_CLOCK_FREQ) {
-+			dev_err(&client->dev, "input clock frequency not supported\n");
-+			return -EINVAL;
-+		}
-+	}
- 
- 	/*
- 	 * Check that the device is mounted upside down. The driver only
-@@ -1213,24 +1258,25 @@ static int imx258_probe(struct i2c_client *client)
- 	if (ret || val != 180)
- 		return -EINVAL;
- 
--	imx258 = devm_kzalloc(&client->dev, sizeof(*imx258), GFP_KERNEL);
--	if (!imx258)
--		return -ENOMEM;
--
- 	/* Initialize subdev */
- 	v4l2_i2c_subdev_init(&imx258->sd, client, &imx258_subdev_ops);
- 
-+	/* Will be powered off via pm_runtime_idle */
-+	ret = imx258_power_on(&client->dev);
-+	if (ret)
-+		return ret;
-+
- 	/* Check module identity */
- 	ret = imx258_identify_module(imx258);
- 	if (ret)
--		return ret;
-+		goto error_identify;
- 
- 	/* Set default mode to max resolution */
- 	imx258->cur_mode = &supported_modes[0];
- 
- 	ret = imx258_init_controls(imx258);
- 	if (ret)
--		return ret;
-+		goto error_identify;
- 
- 	/* Initialize subdev */
- 	imx258->sd.internal_ops = &imx258_internal_ops;
-@@ -1260,6 +1306,9 @@ static int imx258_probe(struct i2c_client *client)
- error_handler_free:
- 	imx258_free_controls(imx258);
- 
-+error_identify:
-+	imx258_power_off(&client->dev);
-+
- 	return ret;
- }
- 
-@@ -1280,6 +1329,7 @@ static int imx258_remove(struct i2c_client *client)
- 
- static const struct dev_pm_ops imx258_pm_ops = {
- 	SET_SYSTEM_SLEEP_PM_OPS(imx258_suspend, imx258_resume)
-+	SET_RUNTIME_PM_OPS(imx258_power_off, imx258_power_on, NULL)
- };
- 
- #ifdef CONFIG_ACPI
--- 
-2.7.4
+Ran 24841 total tests in the following environments and test suites.
 
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* igt-gpu-tools
+* install-android-platform-tools-r2600
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* perf
+* v4l2-compliance
+* ltp-syscalls-tests
+* ltp-tracing-tests
+* network-basic-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
