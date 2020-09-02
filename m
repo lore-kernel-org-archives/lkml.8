@@ -2,169 +2,109 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BA2C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:48:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A59A4C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:52:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CAE9220758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:48:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599076114;
-	bh=OgzbxnKzljOfmxtIw6lHS6/Ks7BP9r+XE+ldLoye0S8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=xg5EFNfVgMLJksEN/uEeWDqOlj8TQbmAyCnq36QJr6crVJa65pS13KSwNQumIlH6d
-	 UUkHqSz5S/BNWbrUF5dAlV9sqGtatQ6LAEuQs7X50i6D5Z85igwceUOQEJoKFYM87T
-	 UuBfHXu23ExFbApBya2mnd73fQ1MZxqKDX4X/DKE=
+	by mail.kernel.org (Postfix) with ESMTP id 7BB3F20767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 19:52:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=pascalroeleven.nl header.i=@pascalroeleven.nl header.b="hdXDtFwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727019AbgIBTsd (ORCPT
+        id S1726523AbgIBTwP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 15:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBTsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 15:48:31 -0400
-Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 248F12137B
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 19:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599076110;
-        bh=OgzbxnKzljOfmxtIw6lHS6/Ks7BP9r+XE+ldLoye0S8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=wc9/EXwJXadx1uom4vWBN+DhcVK0L21EW4UBR4F7VC9UROrvtFXm0jeAO2A/VWUQT
-         m/4HklpWsDMS8vOJlwNnV7fQYu1A6GvdY7wPT1qYT/3/vxmEiRyVbIG8bB7vklj8Hx
-         ccqv0CAQ+eM+/I2LdzlblQgzJnoqAisjJHwjiOEg=
-Received: by mail-oi1-f170.google.com with SMTP id 2so515991ois.8
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 12:48:30 -0700 (PDT)
-X-Gm-Message-State: AOAM533TCo352eKmNwd+hHTXrtDRLH9iCpmfD3oUaKtEDuQC+1X5ckEE
-        Fle3JQqPzgUXRoYOfOCcljpKGCXThC1jJKrdaw==
-X-Google-Smtp-Source: ABdhPJwMYBuyVJXnWDArWAOHngKUgcVT57YVsk57VQvLP5QeaDmaoqfZYf7wAesEdzPQ1pEU2JPhWekekt3Wtqx7AWc=
-X-Received: by 2002:a54:4197:: with SMTP id 23mr3066920oiy.106.1599076109367;
- Wed, 02 Sep 2020 12:48:29 -0700 (PDT)
+        Wed, 2 Sep 2020 15:52:15 -0400
+Received: from pmg01-out1.zxcs.nl ([185.104.30.240]:42747 "EHLO
+        pmg01-out1.zxcs.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726226AbgIBTwO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 15:52:14 -0400
+X-Greylist: delayed 563 seconds by postgrey-1.27 at vger.kernel.org; Wed, 02 Sep 2020 15:52:14 EDT
+Received: from pmg01.zxcs.nl (localhost.localdomain [127.0.0.1])
+        by pmg01.zxcs.nl (ZXCS) with ESMTP id E9240103D74;
+        Wed,  2 Sep 2020 21:42:49 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=pascalroeleven.nl; s=x; h=Content-Transfer-Encoding:Content-Type:Message-ID
+        :References:In-Reply-To:Subject:Cc:To:From:Date:MIME-Version:Sender:Reply-To:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=KNenMuIKDW/cG/OCNrUxLUJ9j1/2p1rYL+aDVLwuqv4=; b=hdXDtFwYQb1ag7/bFm3Zz3rLW7
+        1qF0TdHjx1k4Ord2Ywa+wPX7L+PSAxxUoxQL+7chtN5gqrIbIgfHxIjcaltzzS1/1j9FbGnIwpJ70
+        8pm/DOcJvEIk/cAwXgIVsPH3/uSpbw/2fYteubtA3mH2fWsx13CaMF42E4U6/dHRFg9Om4DlNZ/t+
+        ZalA0iOA/yAIGX63hb/Rjc/jmwa9swMYwGKRM321jwUQA0KnJUVaP5JnkOUrex1txUV4ZdP0mGe7g
+        1GbI6h3lTq+/kvPA83ovp/d3GsoiN9cksY7bEOH/vtmDmCQzotBFnm8U3Tr0IllzamX/18GQMn5XO
+        6crHMZqg==;
 MIME-Version: 1.0
-References: <20200828205614.3391252-1-robh@kernel.org> <20200828205614.3391252-6-robh@kernel.org>
- <CAP-5=fXTEd14wCZJgPyk1wUsSDAWP1zW+=e7sUx66L_1+YOO7A@mail.gmail.com>
-In-Reply-To: <CAP-5=fXTEd14wCZJgPyk1wUsSDAWP1zW+=e7sUx66L_1+YOO7A@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 2 Sep 2020 13:48:18 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLUZ+iejO0WyqivPfkZ+Wk_VC-fw260ScqGk1r=PnUZbA@mail.gmail.com>
-Message-ID: <CAL_JsqLUZ+iejO0WyqivPfkZ+Wk_VC-fw260ScqGk1r=PnUZbA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/9] libperf: Add support for user space counter access
-To:     Ian Rogers <irogers@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Raphael Gault <raphael.gault@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Honnappa Nagarahalli <honnappa.nagarahalli@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 02 Sep 2020 21:42:49 +0200
+From:   Pascal Roeleven <dev@pascalroeleven.nl>
+To:     Andrey Lebedev <andrey@lebedev.lt>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+        Lee Jones <lee.jones@linaro.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+        "moderated list:ARM/Allwinner sunXi SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Emil Lenngren <emil.lenngren@gmail.com>
+Subject: Re: pwm-sun4i: PWM backlight is not turned off on shutdown
+In-Reply-To: <913a5324-a7d2-f1d5-701e-1c28359286f2@lebedev.lt>
+References: <ae58976c-a8d7-0d00-fe72-d21579b37240@lebedev.lt>
+ <20200902095402.pombrirqqjdew34b@holly.lan>
+ <913a5324-a7d2-f1d5-701e-1c28359286f2@lebedev.lt>
+User-Agent: Roundcube Webmail/1.4.8
+Message-ID: <5302741318a28e39239db08a1f05ecb7@pascalroeleven.nl>
+X-Sender: dev@pascalroeleven.nl
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+X-AuthUser: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 2, 2020 at 12:07 PM Ian Rogers <irogers@google.com> wrote:
->
-> On Fri, Aug 28, 2020 at 1:56 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > x86 and arm64 can both support direct access of event counters in
-> > userspace. The access sequence is less than trivial and currently exists
-> > in perf test code (tools/perf/arch/x86/tests/rdpmc.c) with copies in
-> > projects such as PAPI and libpfm4.
-> >
-> > In order to support usersapce access, an event must be mmapped. While
-> > there's already mmap support for evlist, the usecase is a bit different
-> > than the self monitoring with userspace access. So let's add a new
-> > perf_evsel__mmap() function to mmap an evsel. This allows implementing
-> > userspace access as a fastpath for perf_evsel__read().
-> >
-> > The mmapped address is returned by perf_evsel__mmap() primarily for
-> > users/tests to check if userspace access is enabled.
-> >
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
+Thank you for adding me. Emil (also added now) and I spent a while on 
+trying to figure out how to solve this. The Allwinner PWM controller has 
+some quirks.
 
-> > +int perf_mmap__read_self(struct perf_mmap *map, struct perf_counts_values *count)
-> > +{
-> > +       struct perf_event_mmap_page *pc = map->base;
-> > +       u32 seq, idx, time_mult = 0, time_shift = 0;
-> > +       u64 cnt, cyc = 0, time_offset = 0, time_cycles = 0, time_mask = ~0ULL;
-> > +
-> > +       BUG_ON(!pc);
-> > +
-> > +       if (!pc->cap_user_rdpmc)
-> > +               return -1;
-> > +
-> > +       do {
-> > +               seq = READ_ONCE(pc->lock);
-> > +               barrier();
-> > +
-> > +               count->ena = READ_ONCE(pc->time_enabled);
-> > +               count->run = READ_ONCE(pc->time_running);
-> > +
-> > +               if (pc->cap_user_time && count->ena != count->run) {
-> > +                       cyc = read_timestamp();
-> > +                       time_mult = READ_ONCE(pc->time_mult);
-> > +                       time_shift = READ_ONCE(pc->time_shift);
-> > +                       time_offset = READ_ONCE(pc->time_offset);
-> > +
-> > +                       if (pc->cap_user_time_short) {
-> > +                               time_cycles = READ_ONCE(pc->time_cycles);
-> > +                               time_mask = READ_ONCE(pc->time_mask);
-> > +                       }
-> > +               }
-> > +
-> > +               idx = READ_ONCE(pc->index);
-> > +               cnt = READ_ONCE(pc->offset);
-> > +               if (pc->cap_user_rdpmc && idx) {
-> > +                       u64 evcnt = read_perf_counter(idx - 1);
-> > +                       u16 width = READ_ONCE(pc->pmc_width);
-> > +
-> > +                       evcnt <<= 64 - width;
-> > +                       evcnt >>= 64 - width;
-> > +                       cnt += evcnt;
-> > +               } else
-> > +                       return -1;
-> > +
-> > +               barrier();
-> > +       } while (READ_ONCE(pc->lock) != seq);
-> > +
-> > +       if (count->ena != count->run) {
->
-> There's an existing bug here that I tried to resolve in this patch:
-> https://lore.kernel.org/lkml/CAP-5=fVRdqvswtyQMg5cB+ntTGda+SAYskjTQednEH-AeZo13g@mail.gmail.com/
-> Due to multiplexing, enabled may be > 0 but run == 0 and the divide
-> below can end up with divide by zero.
+Unfortunately I never got around to perform some more tests and fix it 
+indefinitely. It's still on my todo list..
 
-Yeah, I saw that, but didn't try to also fix that issue here.
+> On 9/2/20 12:54 PM, Daniel Thompson wrote:
+>> There's some rather odd logic in sun4i_pwm_apply() that results in the
+>> PWM being disabled twice... once when it applies the initial config
+>> and again after waiting for a duty_cycle.
 
-> I like the idea of this code being in a library, there's an intent
-> that the perf_event.h and test code be copy-paste-able, but there is
-> some pre-existing divergence. It would be nice if this code could be
-> closer to the sample code in both the test and perf_event.h.
+That's true. To properly turn off the controller you have to turn the 
+controller off first and keep the gate on for at least two full clock 
+cycles. Then the gate must be turned off. Otherwise it might get stuck. 
+That's probably what is trying to be done here.
 
-The only way we get and keep all the versions of the code aligned is
-removing the other copies. We should just remove the code comment from
-perf_event.h IMO. If rdpmc.c is going to stick around given some
-resistance to removing it, then perhaps it should be converted to use
-libperf. At that point it could also be arch independent. Though I
-don't like the idea of having the same test twice.
+On 2020-09-02 21:05, Andrey Lebedev wrote:
+> Indeed, this fixes the issue for me. The display goes dark reliably on
+> writing 4 to "/sys/.../bl_power" as well as when system is halted. I 
+> did
+> not notice any negative side effects so far.
 
-> As per the change above, I think running and enabled times need to be
-> out arguments.
+Problems start to arise when combining bl_power and brightness setting 
+in a particular order or at the same time (with for example a backlight 
+driver which sets both bl_power and brightness). I can't recall exactly 
+what caused problems and when, but one thing I was sure of is that 
+timing was of the essence. Once I added some delays here and there it 
+started to work.
 
-They are now in this version.
+If this patch works for you then that's great, but unfortunately it 
+isn't a complete solution.
 
-Rob
+Regards,
+Pascal
+
