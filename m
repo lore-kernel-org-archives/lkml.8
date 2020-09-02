@@ -2,110 +2,143 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.7 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4052EC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A434C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD6920758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBAC720758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 03:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yTpM3i7K"
+	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="lHxY3tDq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726536AbgIBDgn (ORCPT
+        id S1726355AbgIBDob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 1 Sep 2020 23:36:43 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:33522 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726244AbgIBDgm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 1 Sep 2020 23:36:42 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0823abVE022335;
-        Tue, 1 Sep 2020 22:36:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1599017797;
-        bh=TyFs6MA6geWsu2B6sGQmrQ3S8a8sRQLeWTZwTsdi9v8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yTpM3i7KJXJ7kZRbKKaffFDuM7DizvUEp00MzQj4EYtL2VjfAOdSPODudDTTaYyJg
-         8W72S7iepYYFjrWCvphE4j6lZeJB4uxf72Q2wds3Wl3MGCsiBpYtIEqadIS0qKXV1+
-         8BxCQoXHwFU0opjkrMuoVrLm9Tx1GEmSueZ2dIIg=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0823abnH120427
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 1 Sep 2020 22:36:37 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 1 Sep
- 2020 22:36:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 1 Sep 2020 22:36:37 -0500
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0823aXao031827;
-        Tue, 1 Sep 2020 22:36:33 -0500
-Subject: Re: [PATCH 0/7] arm64: dts: ti: k3-*: Squash up
- node_name_chars_strict warnings
-To:     Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Tero Kristo <t-kristo@ti.com>
-CC:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, Suman Anna <s-anna@ti.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <grygorii.strashko@ti.com>, <nsekhar@ti.com>
-References: <20200901223059.14801-1-nm@ti.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <e284241e-7db8-c9ba-5512-8551abce6566@ti.com>
-Date:   Wed, 2 Sep 2020 09:06:32 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 1 Sep 2020 23:44:31 -0400
+Received: from mail.cock.li ([37.120.193.124]:38248 "EHLO mail.cock.li"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726193AbgIBDoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 1 Sep 2020 23:44:30 -0400
 MIME-Version: 1.0
-In-Reply-To: <20200901223059.14801-1-nm@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
+        t=1599018267; bh=vflWA/LonQhWee+V4EJyhQMkrQw4PVDpac4i9fXO+OI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lHxY3tDqeYS4PAIBYWgjKxME7+onRFK9wD0QAEox2vITEPZnaDJZM0knmEPpi/DbL
+         h1rabh+E5bxuycIE46Dx/pe6qbBI5ZgaBaYPM8+9MHwHGD0p1zcqiK3qZsMRLj0Yks
+         rH7RHClwVgtL57gOjzip0cT0ByWVOBE/tcnX9hXWCHM2I6dbMyPRUeGSREfZUpLMgF
+         F+kKMzYY8wtEjFCfY9EF8QqIw1H7m2CueyqtGu0kPGNb7rGXjp8MPM0Rqn41mLfKa/
+         B/bRdhQ/dDwkejjA43szV54gpfZOWdlafaRprUaDqrZMgZZUC0pxU/SYuguTTIsFph
+         2uNxo9IaYg0Ag==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Date:   Wed, 02 Sep 2020 03:44:27 +0000
+From:   formermusictribemember@firemail.cc
+To:     linux-kernel@vger.kernel.org
+Cc:     torvalds@osdl.org, pkunert@theregister.com
+Subject: Uli Behringer is a racist and a sexist. Worked at Music Tribe for 30
+ years (it's name has changed repeatedly).
+Message-ID: <e2a596450a97fcad15dee981f8ac10fa@firemail.cc>
+X-Sender: formermusictribemember@firemail.cc
+User-Agent: Roundcube Webmail/1.3.10
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Uli Behringer is a racist and a sexist. Worked at Music Tribe for 30 
+years (it's name has changed repeatedly)
 
 
-On 02/09/20 4:00 am, Nishanth Menon wrote:
-> Hi,
-> 
-> This is one part of cleanups meant for make W=2 dtbs for 5.10 on TI
-> dtbs. Hopefully we dont see node_name_chars_strict warnings anymore.
-> 
-> As part of this cleanup, I ran a cross check of nodes that are
-> part of K3 as of right now, Vs what is "generic" definition as per 0.3
-> dt specification:
-> https://pastebin.ubuntu.com/p/kp3g4ktBYp/
-> 
-> I dont think the remaining have a good reference, at least in my
-> subjective view.
-> 
-> In possibly some cases, bootloaders may need to sync before doing DT
-> fixup etc.
-> 
-> Nishanth Menon (7):
->   arm64: dts: ti: k3-am65*: Use generic gpio for node names
->   arm64: dts: ti: k3-am65*: Use generic clock for serdes clock name
->   arm64: dts: ti: k3-*: Use generic pinctrl for node names
->   arm64: dts: ti: k3-am65-base-board Use generic camera for node name
->     instead of ov5640
->   arm64: dts: ti: k3-am65-wakeup: Use generic temperature-sensor for
->     node name
->   arm64: dts: ti: k3-*: Use generic adc for node names
->   arm64: dts: ti: k3-*: Fix up node_name_chars_strict errors
+Cons of working at Music Tribe:
+Uli Behringer, the CEO, is a racist and a sexist. You can tell by the 
+way he presents himself: plastic surgery to uphold his boyish youthful 
+looks; originally natural blonde hair (now dyed since he's 60 and going 
+grey); resplendent blue eyes (these have always been natural). The 
+spitting image of past euro-centric times. He refuses to dye his hair a 
+more world-representative black or dark brown, and refuses to wear black 
+or brown contact lenses. He seems proud of his visage: that of a 
+proto-typical (Swiss)-German. He is also proud of his German surname and 
+emblazons it on everything: as if it was a coat-of-arms of a great 
+House.
 
-Series looks good to me,
+When I worked for Music Tribe / Music Group / Behringer (the name keeps 
+changing), Uli mostly wanted us to hire Engineers and Programmers. He 
+was happy with the over-representation of white and european males in 
+his companies. He ONLY talked to those (mostly white and european) male 
+programmers and engineers. He ROUTINELY fired WHOLE OFFICES of 
+non-white-non-engineer-non-programmers-non-males like the marketing 
+departments. He always drove the factory workers hard, but was kinder 
+(though demanding) of the white males: he had a sort of 
+engineer-to-engineer camaraderie with them..
 
-Reviewed-by: Lokesh Vutla <lokeshvutla@ti.com>
+In a time when Responsible Global Companies are choosing to hire more 
+representative candidates and women over white males: Uli Behringer 
+continues to employ white-males in his companies. Additionally Uli 
+Behringer loaths to cover advanced anti-viral treatments that are 
+required by American workers: he believed that simply living a "normal" 
+lifestyle would not-necessitate such treatments. This is why he closed 
+the office in Seattle: he didn't want to pay for "LGBT related 
+treatments that were a waste of money and their own fault anyway". He 
+has a similar view of American women's "ways".
 
-Thanks and regards,
-Lokesh
+The CEO: Uli Behringer rejects the modern world; this is in-part why he 
+is recreating the synths of his youth (youth which he tries to keep a 
+grasp of through vainglorious plastic surgery and constant physical 
+workouts). This is also why he has hidden himself away in Asia for the 
+past 30 years, and sheds light on the way his company (and it is HIS 
+company: he runs everything: even though he has the money to hire 
+managers to parcel out tasks). In his early youth America had not yet 
+fully taken control over all of Europe, in terms of enforced morals. 
+Once they did Uli fled to Asia where older male-centric morals abound 
+(simply: Asia allows wealthy business men girls; while America imprisons 
+any male that breaks said American rules protecting women.)
+
+Uli Behringer does NOT donate ANY money to Girls Not Brides campaign, 
+nor to LGBT groups, nor to women-empowerment groups. He believes that by 
+NOT donating he keeps prices low for his "real" customers.
+
+The fact of the matter is that these "real" customers: the bedroom 
+musicians and synth freaks are mostly, demographically, white males. Uli 
+Behringer prides himself in "not screwing them over". But by doing this, 
+underprivledged groups and causes are not served. What is right and just 
+in this world is for the white males of the opressive group to have to 
+pay recompense to those who were and are opressed. In other companies 
+these donation drives are built into the cost to the consumer. In Uli 
+Behringer's company they are not: since he does not donate millions of 
+dollars to said causes.
+
+By not donating to Girls Not Brides, Uli Behringer shows that he does 
+not mind girls getting married young. By not donating to LGBT charities 
+Uli Behringer shows that he does not particularly care about the plight 
+of the actual good people of this world.
+
+In summary: If you support Racism, Sexism, race-to-the-bottom, 
+consumer-price-point driven development, and incel-white-males who buy 
+synthesizers. Then this is the company for you. If not: if you are an 
+actually good person who rejects the sexist religions of old and 
+embraces the new world where good people can prosper: avoid this company 
+and campaign against it: your life may be on the line: if Uli undercuts 
+your company you will be laid off and lose your health insurance and 
+your anti-virals needed to live. It's THAT serious.
+
+
+Pros of working at Music Tribe:
+It's a good place if you are a programmer or an engineer, I guess. I 
+eventually got old, had enough money, and wanted to do nothing so I 
+resigned after 3 decades of a tireless race to the bottom. The name of 
+the game it to screw over the other companies, more than make as much 
+money as possible. Very different from other companies. It's good if you 
+like that sort of thing. There are celebrations when other companies 
+have to lay off their workers due to Uli undercutting them. He has a wry 
+smile when he knows what's about to occur before we do.
+
+
+
+Suggestions to Management:
+Convince Uli Behringer to do an IPO: that way he will lose control of 
+his company and can be removed by the Board once he floats another 
+"CorkSniffer" anti-Semitic / racist prank (his fans actually want him to 
+produce that device still).
