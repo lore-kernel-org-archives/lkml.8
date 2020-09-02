@@ -2,107 +2,169 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEBFC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42699C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA0A420829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 185F72078E
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:12:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qBFNyh5F"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WtuBLD4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727797AbgIBOLv (ORCPT
+        id S1727824AbgIBOM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:11:51 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:38718 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbgIBN6u (ORCPT
+        Wed, 2 Sep 2020 10:12:28 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51498 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgIBN6Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:58:50 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 082DtFBq098614;
-        Wed, 2 Sep 2020 13:58:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=sISFKp6fY3CZNRYrsljYaLRFlBpsjvuEEeZbVQnf6C8=;
- b=qBFNyh5FamTaAKmaLTj1t/9vNrjXSicagwiameh1CvuZNb61kgn0OxoLoUBEun7kAWbL
- bGILnf+Le3fR6TlAH15WsTi1DAUd0s61NZZ2idY/BWnlGBcmBiDyjKSshvCKpLzJKZU5
- 7iqhmRbZV4QjxGZwGHBwde8NhFMBIqIgEC2G2OJBKI6hf6PmxczCia+MgjtSUcCxJa5I
- +wQQBJZVug/J2HQX0DRr/nYnOrbwlomBSxk6m3X9xo4RodwWjjbhra0hzJLFc3dSejKZ
- MKLLeJga/IFqfjME3aC7z6FUkihb2SPUCHIOzW7YSbJonaHt35B11lOiWiGukpatSO90 Kg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 337eer2qxv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 02 Sep 2020 13:58:40 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 082Dt4ft154100;
-        Wed, 2 Sep 2020 13:58:39 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 3380su04k1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 02 Sep 2020 13:58:39 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 082DwcpO011001;
-        Wed, 2 Sep 2020 13:58:38 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 02 Sep 2020 06:58:38 -0700
-Date:   Wed, 2 Sep 2020 16:58:32 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Antoni Przybylik <antoni.przybylik@wp.pl>
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: gdm724x: gdm_tty: replaced macro with a
- function v2
-Message-ID: <20200902135832.GZ8299@kadam>
-References: <20200902132559.61310-1-antoni.przybylik@wp.pl>
+        Wed, 2 Sep 2020 09:58:24 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 082DZt8g126157;
+        Wed, 2 Sep 2020 08:35:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1599053755;
+        bh=3APtkbHYrt+xP2S/hKgF189ShFm5BX6uKlppIWy5V58=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=WtuBLD4fKjgY2P82xYenl2yEBVg4t2Sv4+r1Jv5l0NqHri9sTB+AnyEVM++TWsvKb
+         37UjX7pi/YCqY1IOGnjYeZm8G+xJGamLK9pRX4M2OsEnatHgFs2fiVSdaDgMf50a6u
+         eMLAXdwmKVt2lnWJ8iACDAxbVdKwGPmLPCSAhTOI=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 082DZtbg043439
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 2 Sep 2020 08:35:55 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Wed, 2 Sep
+ 2020 08:35:54 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Wed, 2 Sep 2020 08:35:54 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 082DZiGC065816;
+        Wed, 2 Sep 2020 08:35:52 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <balbi@kernel.org>
+CC:     <pawell@cadence.com>, <kurahul@cadence.com>, <nsekhar@ti.com>,
+        <vigneshr@ti.com>, <robh+dt@kernel.org>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 3/3] usb: cdns3: Enable workaround for USB2.0 PHY Rx compliance test PHY lockup
+Date:   Wed, 2 Sep 2020 16:35:43 +0300
+Message-ID: <20200902133543.17222-4-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902133543.17222-1-rogerq@ti.com>
+References: <20200902133543.17222-1-rogerq@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902132559.61310-1-antoni.przybylik@wp.pl>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
- phishscore=0 malwarescore=0 mlxscore=0 spamscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020133
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9731 signatures=668679
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 clxscore=1015 priorityscore=1501
- lowpriorityscore=0 malwarescore=0 adultscore=0 spamscore=0 mlxscore=0
- phishscore=0 impostorscore=0 mlxlogscore=999 bulkscore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
- definitions=main-2009020132
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 03:25:59PM +0200, Antoni Przybylik wrote:
-> This approach is more elegant and prevents some problems related to
-> macros such as operator precedence in expanded expression.
-> -------------------------------------------------------------------
-> Changed return type to bool and removed inline sepcifier.
-> 
-> Signed-off-by: Antoni Przybylik <antoni.przybylik@wp.pl>
-> ---
-  ^^^
-See this line.
+From: Pawel Laszczak <pawell@cadence.com>
 
-No that doesn't work at all.  Try applying your patch and reviewing the
-git log.  Look the the email archive to see how to send a v2 patch.
+USB2.0 PHY hangs in Rx Compliance test when the incoming packet
+amplitude is varied below and above the Squelch Level of
+Receiver during the active packet multiple times.
 
-1) subject says [PATCH v2]
-2) comments under the --- line
+Version 1 of the controller allows PHY to be reset when RX fail condition
+is detected to work around the above issue. This feature is
+disabled by default and needs to be enabled using a bit from
+the newly added PHYRST_CFG register. This patch enables the workaround.
 
->  drivers/staging/gdm724x/gdm_tty.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
+There is no way to know controller version before device controller
+is started and the workaround needs to be applied for both host and
+device modes, so we rely on a DT property do decide when to
+apply the workaround.
 
-regards,
-dan carpenter
+Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ drivers/usb/cdns3/core.c |  2 ++
+ drivers/usb/cdns3/core.h |  1 +
+ drivers/usb/cdns3/drd.c  | 12 ++++++++++++
+ drivers/usb/cdns3/drd.h  |  5 ++++-
+ 4 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/usb/cdns3/core.c b/drivers/usb/cdns3/core.c
+index 5c1586ec7824..34b36487682b 100644
+--- a/drivers/usb/cdns3/core.c
++++ b/drivers/usb/cdns3/core.c
+@@ -443,6 +443,8 @@ static int cdns3_probe(struct platform_device *pdev)
+ 		return -ENXIO;
+ 	}
+ 
++	cdns->phyrst_a_enable = device_property_read_bool(dev, "cdns,phyrst-a-enable");
++
+ 	cdns->otg_res = *res;
+ 
+ 	mutex_init(&cdns->mutex);
+diff --git a/drivers/usb/cdns3/core.h b/drivers/usb/cdns3/core.h
+index 1ad1f1fe61e9..24cf0f1b5726 100644
+--- a/drivers/usb/cdns3/core.h
++++ b/drivers/usb/cdns3/core.h
+@@ -76,6 +76,7 @@ struct cdns3 {
+ #define CDNS3_CONTROLLER_V0	0
+ #define CDNS3_CONTROLLER_V1	1
+ 	u32				version;
++	bool				phyrst_a_enable;
+ 
+ 	int				otg_irq;
+ 	int				dev_irq;
+diff --git a/drivers/usb/cdns3/drd.c b/drivers/usb/cdns3/drd.c
+index 6234bcd6158a..b74803e9703d 100644
+--- a/drivers/usb/cdns3/drd.c
++++ b/drivers/usb/cdns3/drd.c
+@@ -42,6 +42,18 @@ int cdns3_set_mode(struct cdns3 *cdns, enum usb_dr_mode mode)
+ 			reg = readl(&cdns->otg_v1_regs->override);
+ 			reg |= OVERRIDE_IDPULLUP;
+ 			writel(reg, &cdns->otg_v1_regs->override);
++
++			/*
++			 * Enable work around feature built into the
++			 * controller to address issue with RX Sensitivity
++			 * est (EL_17) for USB2 PHY. The issue only occures
++			 * for 0x0002450D controller version.
++			 */
++			if (cdns->phyrst_a_enable) {
++				reg = readl(&cdns->otg_v1_regs->phyrst_cfg);
++				reg |= PHYRST_CFG_PHYRST_A_ENABLE;
++				writel(reg, &cdns->otg_v1_regs->phyrst_cfg);
++			}
+ 		} else {
+ 			reg = readl(&cdns->otg_v0_regs->ctrl1);
+ 			reg |= OVERRIDE_IDPULLUP_V0;
+diff --git a/drivers/usb/cdns3/drd.h b/drivers/usb/cdns3/drd.h
+index 7e7cf7fa2dd3..f1ccae285a16 100644
+--- a/drivers/usb/cdns3/drd.h
++++ b/drivers/usb/cdns3/drd.h
+@@ -31,7 +31,7 @@ struct cdns3_otg_regs {
+ 	__le32 simulate;
+ 	__le32 override;
+ 	__le32 susp_ctrl;
+-	__le32 reserved4;
++	__le32 phyrst_cfg;
+ 	__le32 anasts;
+ 	__le32 adp_ramp_time;
+ 	__le32 ctrl1;
+@@ -153,6 +153,9 @@ struct cdns3_otg_common_regs {
+ /* Only for CDNS3_CONTROLLER_V0 version */
+ #define OVERRIDE_IDPULLUP_V0		BIT(24)
+ 
++/* PHYRST_CFG - bitmasks */
++#define PHYRST_CFG_PHYRST_A_ENABLE     BIT(0)
++
+ #define CDNS3_ID_PERIPHERAL		1
+ #define CDNS3_ID_HOST			0
+ 
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
