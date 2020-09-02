@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2985DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A93C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01D3E2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 541EA20773
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:11:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063084;
-	bh=0QtwpM2+k4SGeByY3Ftq2AvC2KycTDYtoRM0Sll0Zyo=;
+	s=default; t=1599063094;
+	bh=jLwPewIQn+pgFUopzBjLSNLeLllS2zvZWT+HqHEkCss=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=BWhAQyk9Y7E3Q5FqQkWzv+0dF5JxDXH9ngwHVQhVkiHjQFGJzBQ1+C9rzSFwFe7O0
-	 fmjGR4wQtpf/WbBUR+g6Ek9hZWOJi/fMsptwmCUYRoNeI3Vi64WPiwIVb6nP2m0Nwg
-	 n0oAMkEmB94GdQF7pQKjsQ/F04+OEl14JeKUccpc=
+	b=hJYUNaO3R2p8bkiPNBOkUt0Xj+g7YW4PoxH6cvMVYwplRoME0CAf7FPnS5ZqKF0hs
+	 fz48ZWb1PMnoRMSsEltWsFpNRVK3D/7pW8g7/gCTab+DoDU4v9cVknDRdlEq+0Eo+C
+	 i2/AYyQIY45bMieHKjN06OaiEFVfqsMMrDwvCy1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgIBQLV (ORCPT
+        id S1728428AbgIBQL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:11:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:11:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728264AbgIBQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728261AbgIBQKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 2 Sep 2020 12:10:52 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6EAA21534;
+        by mail.kernel.org (Postfix) with ESMTPSA id E524B21532;
         Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=0QtwpM2+k4SGeByY3Ftq2AvC2KycTDYtoRM0Sll0Zyo=;
+        bh=jLwPewIQn+pgFUopzBjLSNLeLllS2zvZWT+HqHEkCss=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O1UuCkxMnSHGR3+e2CxTm1Bscn95rjUO2I/9ujqY8rlD4cy8QWC73JtWyRo8b+V38
-         3vzz9lSPfHDk17cPuPCv7lHJPqy3kFlXOmXNfeFSp0xYEYrV4OxYzPy6N5tpTgGM7a
-         xidpW4EfMziDy0I08qcUd2U6eYtBX/wz/2Pku9p0=
+        b=mfGsMbIFHQAtssLyUM73TwAZkAt+2AAhZnlAsVA0zni6U3JNgnIdJRkMEb6bziIrR
+         oF6+7psEzCsO8jJDQG4mZM5t8RKmSqk380rORMbIeuv+TkiN0XD6Ew56MyX5C/EjSI
+         aLle/FcBysGu2c9nmQCpppgffNzQqbkndQ+F0lDc=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLP-000tAB-V6; Wed, 02 Sep 2020 18:10:43 +0200
+        id 1kDVLQ-000tAW-57; Wed, 02 Sep 2020 18:10:44 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 12/38] media: vivid: place dt timings init code on a separate function
-Date:   Wed,  2 Sep 2020 18:10:15 +0200
-Message-Id: <b41823d40e3b862714ee4c4591649b5a89a5649a.1599062230.git.mchehab+huawei@kernel.org>
+        Takashi Iwai <tiwai@suse.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 19/38] media: cx88-alsa: number of pages should be unsigned long
+Date:   Wed,  2 Sep 2020 18:10:22 +0200
+Message-Id: <0f391afa1692b65fa61f795e192fcef43e1779ba.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
 References: <cover.1599062230.git.mchehab+huawei@kernel.org>
@@ -60,109 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move those out of the big vivid_create_instance() function.
+As reported by smatch:
+
+	drivers/media/pci/cx88/cx88-alsa.c:286 cx88_alsa_dma_init() warn: should 'nr_pages << 12' be a 64 bit type?
+
+the number of patches should be unsigned long.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- drivers/media/test-drivers/vivid/vivid-core.c | 76 +++++++++++--------
- 1 file changed, 44 insertions(+), 32 deletions(-)
+ drivers/media/pci/cx88/cx88-alsa.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/media/test-drivers/vivid/vivid-core.c b/drivers/media/test-drivers/vivid/vivid-core.c
-index e3ffc2566623..3340b61e68c0 100644
---- a/drivers/media/test-drivers/vivid/vivid-core.c
-+++ b/drivers/media/test-drivers/vivid/vivid-core.c
-@@ -1177,6 +1177,48 @@ static void vivid_disable_unused_ioctls(struct vivid_dev *dev,
- 	v4l2_disable_ioctl(&dev->touch_cap_dev, VIDIOC_ENUM_FRAMEINTERVALS);
+diff --git a/drivers/media/pci/cx88/cx88-alsa.c b/drivers/media/pci/cx88/cx88-alsa.c
+index 7d7aceecc985..aec60ebb010f 100644
+--- a/drivers/media/pci/cx88/cx88-alsa.c
++++ b/drivers/media/pci/cx88/cx88-alsa.c
+@@ -42,12 +42,12 @@
+  */
+ 
+ struct cx88_audio_buffer {
+-	unsigned int               bpl;
+-	struct cx88_riscmem        risc;
++	unsigned int		bpl;
++	struct cx88_riscmem	risc;
+ 	void			*vaddr;
+ 	struct scatterlist	*sglist;
+ 	int                     sglen;
+-	int                     nr_pages;
++	unsigned long		nr_pages;
+ };
+ 
+ struct cx88_audio_dev {
+@@ -271,7 +271,8 @@ static irqreturn_t cx8801_irq(int irq, void *dev_id)
+ 	return IRQ_RETVAL(handled);
  }
  
-+static int vivid_init_dv_timings(struct vivid_dev *dev)
-+{
-+	int i;
-+
-+	while (v4l2_dv_timings_presets[dev->query_dv_timings_size].bt.width)
-+		dev->query_dv_timings_size++;
-+
-+	/*
-+	 * Create a char pointer array that points to the names of all the
-+	 * preset timings
-+	 */
-+	dev->query_dv_timings_qmenu = kmalloc_array(dev->query_dv_timings_size,
-+						    sizeof(char *), GFP_KERNEL);
-+	/*
-+	 * Create a string array containing the names of all the preset
-+	 * timings. Each name is max 31 chars long (+ terminating 0).
-+	 */
-+	dev->query_dv_timings_qmenu_strings =
-+		kmalloc_array(dev->query_dv_timings_size, 32, GFP_KERNEL);
-+
-+	if (!dev->query_dv_timings_qmenu ||
-+	    !dev->query_dv_timings_qmenu_strings)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < dev->query_dv_timings_size; i++) {
-+		const struct v4l2_bt_timings *bt = &v4l2_dv_timings_presets[i].bt;
-+		char *p = dev->query_dv_timings_qmenu_strings + i * 32;
-+		u32 htot, vtot;
-+
-+		dev->query_dv_timings_qmenu[i] = p;
-+
-+		htot = V4L2_DV_BT_FRAME_WIDTH(bt);
-+		vtot = V4L2_DV_BT_FRAME_HEIGHT(bt);
-+		snprintf(p, 32, "%ux%u%s%u",
-+			bt->width, bt->height, bt->interlaced ? "i" : "p",
-+			(u32)bt->pixelclock / (htot * vtot));
-+	}
-+
-+	return 0;
-+}
-+
-+
- static int vivid_create_instance(struct platform_device *pdev, int inst)
+-static int cx88_alsa_dma_init(struct cx88_audio_dev *chip, int nr_pages)
++static int cx88_alsa_dma_init(struct cx88_audio_dev *chip,
++			      unsigned long nr_pages)
  {
- 	static const struct v4l2_dv_timings def_dv_timings =
-@@ -1254,40 +1296,10 @@ static int vivid_create_instance(struct platform_device *pdev, int inst)
- 	if (!dev->edid)
- 		goto free_dev;
+ 	struct cx88_audio_buffer *buf = chip->buf;
+ 	struct page *pg;
+@@ -279,11 +280,11 @@ static int cx88_alsa_dma_init(struct cx88_audio_dev *chip, int nr_pages)
  
--	while (v4l2_dv_timings_presets[dev->query_dv_timings_size].bt.width)
--		dev->query_dv_timings_size++;
--
--	/*
--	 * Create a char pointer array that points to the names of all the
--	 * preset timings
--	 */
--	dev->query_dv_timings_qmenu = kmalloc_array(dev->query_dv_timings_size,
--						    sizeof(char *), GFP_KERNEL);
--	/*
--	 * Create a string array containing the names of all the preset
--	 * timings. Each name is max 31 chars long (+ terminating 0).
--	 */
--	dev->query_dv_timings_qmenu_strings =
--		kmalloc_array(dev->query_dv_timings_size, 32, GFP_KERNEL);
--
--	if (!dev->query_dv_timings_qmenu ||
--	    !dev->query_dv_timings_qmenu_strings)
-+	ret = vivid_init_dv_timings(dev);
-+	if (ret < 0)
- 		goto free_dev;
+ 	buf->vaddr = vmalloc_32(nr_pages << PAGE_SHIFT);
+ 	if (!buf->vaddr) {
+-		dprintk(1, "vmalloc_32(%d pages) failed\n", nr_pages);
++		dprintk(1, "vmalloc_32(%lu pages) failed\n", nr_pages);
+ 		return -ENOMEM;
+ 	}
  
--	for (i = 0; i < dev->query_dv_timings_size; i++) {
--		const struct v4l2_bt_timings *bt = &v4l2_dv_timings_presets[i].bt;
--		char *p = dev->query_dv_timings_qmenu_strings + i * 32;
--		u32 htot, vtot;
--
--		dev->query_dv_timings_qmenu[i] = p;
--
--		htot = V4L2_DV_BT_FRAME_WIDTH(bt);
--		vtot = V4L2_DV_BT_FRAME_HEIGHT(bt);
--		snprintf(p, 32, "%ux%u%s%u",
--			bt->width, bt->height, bt->interlaced ? "i" : "p",
--			(u32)bt->pixelclock / (htot * vtot));
--	}
--
- 	vivid_disable_unused_ioctls(dev, has_tuner, has_modulator,
- 				    in_type_counter, out_type_counter);
+-	dprintk(1, "vmalloc is at addr %p, size=%d\n",
++	dprintk(1, "vmalloc is at addr %p, size=%lu\n",
+ 		buf->vaddr, nr_pages << PAGE_SHIFT);
  
+ 	memset(buf->vaddr, 0, nr_pages << PAGE_SHIFT);
 -- 
 2.26.2
 
