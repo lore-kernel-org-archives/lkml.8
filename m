@@ -2,98 +2,85 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6DAC43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:59:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AF63C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 222672078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:59:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="k1y0rDoD"
+	by mail.kernel.org (Postfix) with ESMTP id 44B3720767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 23:59:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1599091190;
+	bh=XzkbUniJSxkCIQdUyyrVHwyUPTM03iMXc14/JCTEQCU=;
+	h=Date:From:To:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+	 List-ID:From;
+	b=GG+/ucI8NIX9TSXX8L40XTek6WhqDSeH/O0bcC1ZC2C87NnvbuH5k9N8f0R1KeMm+
+	 yKjUEcOZrgPk8fYmiIzxYyPLLUAyQpXAvdldGIKBnaSav+AZveFBv8klCrmk1szZsz
+	 vmnigdMDxCrRuK79MqGImui79EXcMK3WCXC83KFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726942AbgIBX7O (ORCPT
+        id S1727035AbgIBX7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 19:59:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43766 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726586AbgIBX7M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 19:59:12 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55855C061246
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 16:59:12 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id n18so655371qtw.0
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 16:59:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=k+XXCDXSF8k3/5oiJ0DY2qz0pJ0OQTKQmzd5Mr1hMp0=;
-        b=k1y0rDoDsr248x1CrTdDnmq7vHyf3zqzV66lGF84OfqFM/30fnlspewvTtRvX7gidt
-         gKLDfuKNurlYK+R6LwvZ+qHdC4de+pqaJZSVppacYj9aI9LUH0L5tc0Uoh+Z/aj8M9ZJ
-         R6FWg8miU37wLvY2KcR7jd2EIPJ1daC+4PIKYb7D8dOi77gNhJnXrhYPMOqh32KuvPP8
-         XejcAUn4CvHG80LA/gFKzjQRuuelnO2jhZWs/wY/tECnRxVgNr/JnyNRnkRY/TttdGB/
-         gU7CLgfyrHQVWJMKNbMqWZLm+o2LV+mlHDUmQZV7kjB8cqzryAmBAJ5nZ9CcRCfBnsZS
-         7rVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=k+XXCDXSF8k3/5oiJ0DY2qz0pJ0OQTKQmzd5Mr1hMp0=;
-        b=GdJbdaRKNSYclqBzK7qDX6hicmxl/X0xekH8K42Hi8psK2FJkM1pAW46pjyTQeA9ds
-         MnDXHsMIOO3gRpTWV7/TFgK5S+YUwphQ2KjbDMs0aepN3JVfGHuNd+0cbORsZ7eVFg7W
-         xwQMPwUUEhRosliiPBdT8HTpnEo5zGXkYZITnImbEoohfzdPvuh3kJ6YYbqILzQF66WU
-         Vz2s7vrgrW09Tb0wpXE8EK5aUUlnep2fJr75qqPm5XLNxmwlTCWJM/BSgtRgDDr61b4A
-         2VASXJJ5csKHPqZW2SSLsqEiBkztvHrkkU6yuMaf5VCEuLTTr94hxQo+1tiGigvoEo3x
-         HhkQ==
-X-Gm-Message-State: AOAM530wjwJXRpvIsgqtVtszrOcX9+9xsax17ktJhuh+bevR3e/MYCyw
-        byU6dsES656AXQaqGXx8pRoAYg==
-X-Google-Smtp-Source: ABdhPJxPEvQzdmtHRU/dLJO3dr0rZQWH3nG+MoxQFCjUTeleYWtCUHQZIyapPQIwS1V6Ay7IjUZ3Og==
-X-Received: by 2002:ac8:60d9:: with SMTP id i25mr716212qtm.209.1599091151435;
-        Wed, 02 Sep 2020 16:59:11 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-48-30.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.48.30])
-        by smtp.gmail.com with ESMTPSA id b43sm762647qtk.84.2020.09.02.16.59.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 16:59:10 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.94)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1kDcek-006Cfl-01; Wed, 02 Sep 2020 20:59:10 -0300
-Date:   Wed, 2 Sep 2020 20:59:09 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] RDMA/ucma: fix memory leak of mc on an xa_alloc
- failure
-Message-ID: <20200902235909.GK24045@ziepe.ca>
-References: <20200902162805.200436-1-colin.king@canonical.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200902162805.200436-1-colin.king@canonical.com>
+        Wed, 2 Sep 2020 19:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726586AbgIBX7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 19:59:48 -0400
+Received: from localhost (unknown [70.37.104.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F76A206F8;
+        Wed,  2 Sep 2020 23:59:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1599091188;
+        bh=XzkbUniJSxkCIQdUyyrVHwyUPTM03iMXc14/JCTEQCU=;
+        h=Date:From:To:To:To:To:Cc:Cc:Cc:Subject:In-Reply-To:References:
+         From;
+        b=Kg0JctmZd/poMrNdrOeV+szP56X9rL1g8im8CLcEBmqaYhlBPoVtowR3A10HGahcn
+         a5GxO5AdKcGoZduUIQ3rZl8G9xwASWrQPihAd7mSdi74aPWLloRYdBWAz0BbPberXS
+         ODx8f4JLizsTleUewVN9uisn7865BCeaAZM4krxA=
+Date:   Wed, 02 Sep 2020 23:59:47 +0000
+From:   Sasha Levin <sashal@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+To:     x86@kernel.org
+Cc:     linux-kernel@vger.kernel.org, Kyle Huey <me@kylehuey.com>
+Cc:     stable@vger.kernel.org
+Cc:     stable@vger.kernel.org
+Subject: Re: [PATCH 02/13] x86/debug: Allow a single level of #DB recursion
+In-Reply-To: <20200902133200.726584153@infradead.org>
+References: <20200902133200.726584153@infradead.org>
+Message-Id: <20200902235948.2F76A206F8@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 05:28:05PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently when an xa_alloc failure occurs the error exit path leaks
-> the allocated object mc.  Fix this by adding an error return path
-> that frees mc and rename error exit paths err3 to err4 and err2 to err3.
-> 
-> Fixes: 95fe51096b7a ("RDMA/ucma: Remove mc_list and rely on xarray")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/infiniband/core/ucma.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
+Hi
 
-Alex beat you too it, so I will use his patch, thanks
+[This is an automated email]
 
-Jason
+This commit has been processed because it contains a "Fixes:" tag
+fixing commit: 9f58fdde95c9 ("x86/db: Split out dr6/7 handling").
+
+The bot has tested the following trees: v5.8.5.
+
+v5.8.5: Failed to apply! Possible dependencies:
+    0b085e68f407 ("x86/entry: Consolidate 32/64 bit syscall entry")
+    27d6b4d14f5c ("x86/entry: Use generic syscall entry function")
+    517e499227be ("x86/entry: Cleanup idtentry_entry/exit_user")
+    8d5ea35c5e91 ("x86/entry: Consolidate check_user_regs()")
+    a377ac1cd9d7 ("x86/entry: Move user return notifier out of loop")
+    b037b09b9058 ("x86/entry: Rename idtentry_enter/exit_cond_rcu() to idtentry_enter/exit()")
+    ba1f2b2eaa2a ("x86/entry: Fix NMI vs IRQ state tracking")
+
+
+NOTE: The patch will not be queued to stable trees until it is upstream.
+
+How should we proceed with this patch?
+
+-- 
+Thanks
+Sasha
