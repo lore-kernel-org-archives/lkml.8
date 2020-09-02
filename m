@@ -2,142 +2,508 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-18.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB69C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7C48C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:52:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B55B920767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 970262080C
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:52:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nyxMsTzM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lO2GKhMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbgIBWs4 (ORCPT
+        id S1726654AbgIBWw5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:48:56 -0400
-Received: from mail-eopbgr50080.outbound.protection.outlook.com ([40.107.5.80]:29666
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726828AbgIBWsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:48:53 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RkYmVDJ9QMXtyvhx5IQ+2reWitzsA2hELGiV1jOzppuX0PfAPBbOaIXM7M7b9sfRGdRUSj1mRiofHxydTTFfGVOVAPKoJCa4XIkNBbYt8v2+oBfckvbpDgLvUS32k7lUoQRWqfR6ZHK+oMdLs+/YuuyCOGWtKjBlSq5ifyzdSrZ/TRrdC+RjVh6rZJXaVqHZVb6ERqhKWoqE8ue7l8dpc+tRrPNI/eWYcxRSsNK8lDh8Sf7Z9kiKhyAR6Wtf84kPS/jq28GOjIA/m+Rh3fkEu5HVu84lyZvlT9kf6PJn94fUgsAb0E2M80G1MrGAopZo9c16CTvsgZARtngOenp54w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=djP9nZSO0mPS+u1xb0QVGMh7kJhv+owi8Wkg5ZKlWrs=;
- b=lss2GfTQKrz7N4oxiDaCFQ095z7pq3xhFmLGAEPGRv2mvS5CAHKdzTg6uJebrJOcEO//r9cMdb3AJnb6+BKN5HFeB5BCuB9YUM4Ql6LUhbPrB+KYAEZK3wkJFlxhHvEwt5nDSlCrRgzo7SK9bzRzDmqpWwIgk3l7jkp9NGNWmMGoJKjgQtspzW0ucIbF5CnEKlu1V211OS/Rlu2XRTE4anV7JiZ0EUvX0dN16JTg4t8HtFMXWDI3nMr7zup80CX/1zvyyIHHxMEoRCw1yAy2yYpdtuch0Aj3I2ZICLWE8DKzi1bWkE8OWvJCRF2QuwsZRNP9W1Bd0mPMDTmN+Cplag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=djP9nZSO0mPS+u1xb0QVGMh7kJhv+owi8Wkg5ZKlWrs=;
- b=nyxMsTzMwCi5ExeV0HEzy5nVCKfv/DchoIAA0x36FFEL6OIZTPiV6fzPdTewRoUfLOakCR5vJvlqN6JlcEUja3owZ1qtmGJqWz7qe0PF424ZLtkVLF/vGbwDuyMCT8pD/TezlW0LnVBl1EdpX1xr6yQsgK8wiEV1BGvuo8/2EgQ=
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
- by AM6PR04MB6278.eurprd04.prod.outlook.com (2603:10a6:20b:be::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Wed, 2 Sep
- 2020 22:48:49 +0000
-Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1023:be8d:40c:efe1]) by AM7PR04MB7157.eurprd04.prod.outlook.com
- ([fe80::1023:be8d:40c:efe1%3]) with mapi id 15.20.3348.015; Wed, 2 Sep 2020
- 22:48:49 +0000
-From:   Peter Chen <peter.chen@nxp.com>
-To:     Roger Quadros <rogerq@ti.com>
-CC:     "balbi@kernel.org" <balbi@kernel.org>,
-        "pawell@cadence.com" <pawell@cadence.com>,
-        "kurahul@cadence.com" <kurahul@cadence.com>,
-        "nsekhar@ti.com" <nsekhar@ti.com>,
-        "vigneshr@ti.com" <vigneshr@ti.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: usb: cdns,usb3: Add cdns,phyrst-a-enable
- property
-Thread-Topic: [PATCH 2/3] dt-bindings: usb: cdns,usb3: Add
- cdns,phyrst-a-enable property
-Thread-Index: AQHWetjF2mYsQKwgvU+3PPFGyTZfuKlL0I2AgAmTp4CAAJx0gA==
-Date:   Wed, 2 Sep 2020 22:48:49 +0000
-Message-ID: <20200902224829.GA11250@b29397-desktop>
-References: <20200825120059.12436-1-rogerq@ti.com>
- <20200825120059.12436-3-rogerq@ti.com> <20200827111343.GB5983@b29397-desktop>
- <08a7533f-b09e-f044-64e5-d709ae220599@ti.com>
-In-Reply-To: <08a7533f-b09e-f044-64e5-d709ae220599@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: ti.com; dkim=none (message not signed)
- header.d=none;ti.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7decf3bd-7cba-4ce5-8bb0-08d84f925b88
-x-ms-traffictypediagnostic: AM6PR04MB6278:
-x-microsoft-antispam-prvs: <AM6PR04MB6278904E2860F70064FDCACB8B2F0@AM6PR04MB6278.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OVgzuSplbL9c3O+AXRzRDO0vqU9kWx9cp4VWzDpSidlTeyTkg+C+bKsYZ2Aa9cEvHNCZFJDZ2Gkntv1+QYmQ+z4+grTVa8rQgv0TmzeLJjnsHupsmSXuKn5hJNLHsduFJpW0quTJpIJS7otEcouuUCdN8zYIENVcU4EohAQEgNRtlVyuDYOTD13/z7cqlKExXe+ZLpSj5y/nm4xTs2tEeBsbEPCD1O0Ta6Txaw6xV+ce4CLJN4t77N1pUieFnEmbBQ8+9OBW3LDkAd5c2fO+1KQrE3zAnkwLPKfIoy/e30Fsdmx1N11c1iWX8Q7RzBGOwNd+vWhz3G6o+gn11PaFJT/lrPNxLlPPEIZUm+lGAzS/B8EgCs90jn7ZqqG3NyTm
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(7916004)(39860400002)(396003)(376002)(346002)(136003)(366004)(33656002)(316002)(44832011)(71200400001)(7416002)(8936002)(54906003)(5660300002)(8676002)(66446008)(66946007)(2906002)(9686003)(6512007)(91956017)(86362001)(186003)(6486002)(66476007)(6916009)(66556008)(53546011)(4326008)(478600001)(33716001)(1076003)(26005)(6506007)(64756008)(76116006)(142933001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: Ul5kDXXv2ZuuKF3anQf2mdiuS/jypO2aBtUE2FgRADFc4HssZ0+ocV1Px2imfGATFCtZ2bsc/W1Wou7sA0HB4RyGCkZBztQPguV8CffIzGi1BU9mPcgoGf8k5vgVQf2quir245E/AdX5colQhdC8TRkHAyhgF3d2xUL7HDNupg97glT6ycc97ntx5BfZ+eLR9CNE/A92Yem1jb/ystDDeJg2OffjdnirkfDCo/rX5F0JbjhAE90gt1lvSgl4s10HLVxT/YvGZOI3dLi3Ci7uCSNg160PhuCYCfKDYK8qhaGQSIiv0921J0CQLMYzmbywyZytdy4qvgWuMoeRnzTEqewgVmBboK9LZ4Jd8rkLkG7yWkaLYijm1+vwlFYjb+q02XIsp/4KjV1LE8dEYbWxb0cHKPZ9aT4Jkx+A7F0rph1MnStKLhq8VP93cV54AL6xOPMsqDumKZEzjOR5t1eHqXdDHGwQmanNyO3erKq6oomXqijQEWucKmKQES73Glqx2TnPi2g0144NAqMYXGFLxo/RlcMvMeFtMbtxlm/XfAfBJOHT3QXARCqbdRzyYp0ttQf064cUxf73UDJqNN1WBFnNCRmv3ljIKpg/xIlxej1ibie3dl/1dfLR/VNIUGShOx7UQcdzBy4WzCNlslZOEg==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <8B379C6FED2430458D6C5B48169BE3BF@eurprd04.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Wed, 2 Sep 2020 18:52:57 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11535 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726310AbgIBWwz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 18:52:55 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5f5021c60001>; Wed, 02 Sep 2020 15:50:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 02 Sep 2020 15:52:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 02 Sep 2020 15:52:54 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
+ 2020 22:52:52 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 2 Sep 2020 22:52:52 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5f5022440001>; Wed, 02 Sep 2020 15:52:52 -0700
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <linux-doc@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>
+Subject: [PATCH v2] mm/doc: editorial pass on page migration
+Date:   Wed, 2 Sep 2020 15:52:47 -0700
+Message-ID: <20200902225247.15213-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7decf3bd-7cba-4ce5-8bb0-08d84f925b88
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 22:48:49.1573
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: RQlc2tD8jSUoN4UEZS87vWdhc/RIGx5f5gZZ9WDHbX8YS5ju7vk0uHggamSlOiANWjonNbWNw6Q9Jp3TXBY93w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB6278
+X-NVConfidentiality: public
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1599087046; bh=7L7c+njVQm3TmiG+KufbWSq+w1CJz5Job6ouif+fLgk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Transfer-Encoding:
+         Content-Type;
+        b=lO2GKhMvCAIgKFXPUCRlrNzgz3Flmh1GTFE6AqVfgbo0fQqTNm08IIrhXCTkXSSxe
+         Upd6eOrmqskyLBjhbkcrocjnQ+g3OeN4/sD/RDyvfOBFCqlMmorOzB5mJlsEHrKBtk
+         5UTS0dpHf0fnE6lxa7xXAVg1xML8zx8I5eb1OcKbqPdrBwNEXYbTcXuoLw0KwmM2kR
+         Yq+3L5vS1tR51gVSAoqQ3dTgV0JIzqO07hRqbOdLf6F+PDNBSrDExrl6mB+x+607yv
+         F6SJrzmgC/MRet8deDjjStlr43Ybrhfs1sOAgEoleppR+eKBaq2h9J8kzcjP7pgR0U
+         g7CKFe5YQX+lg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-09-02 16:28:31, Roger Quadros wrote:
-> Peter,
->=20
-> On 27/08/2020 14:14, Peter Chen wrote:
-> > On 20-08-25 15:00:58, Roger Quadros wrote:
-> > > Controller version 0x0002450D has USB2 PHY RX sensitivity issues
-> > > that needs to be worked around by enabling phyrst-a-enable bit
-> > > in PHYRST_CFG register.
-> > >=20
-> > > There is no way to distinguish between the controller version
-> > > before the device controller is started so we need to add this
-> > > DT property.
-> >=20
-> > Maybe you should say "There is no way to know controller version
-> > at host mode, but this workaround needs for both host and device
-> > mode, so we have to add this DT property", the same for the comments
-> > of your driver code patch.
->=20
-> I will reword it to
->=20
-> "There is no way to know controller version before device controller
-> is started and the workaround needs to be applied for both host and
-> device modes, so we add this DT property"
->=20
+Add Sphinx reference links to HMM and CPUSETS, and numerous small
+editorial changes to make the page_migration.rst document more readable.
 
-After apply it, feel free add:
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+---
 
-Reviewed-by: Peter Chen <peter.chen@nxp.com>
+The patch applies cleanly to the latest linux or linux-mm tree.
+Since this is MM relatated, perhaps Andrew Morton would like to
+take this into the linux-mm tree.
 
-Please apply above for device party commit log as well.
+Changes in v2:
+Applied suggestions from Randy Dunlap:
+Replace outdated ftp:// link to https://github
+Changed "off node" to "off-node" and "non-lru" to "non-LRU"
 
+ .../admin-guide/cgroup-v1/cpusets.rst         |   2 +
+ Documentation/vm/hmm.rst                      |   2 +-
+ Documentation/vm/page_migration.rst           | 164 +++++++++---------
+ 3 files changed, 87 insertions(+), 81 deletions(-)
+
+diff --git a/Documentation/admin-guide/cgroup-v1/cpusets.rst b/Documentatio=
+n/admin-guide/cgroup-v1/cpusets.rst
+index 7ade3abd342a..5d844ed4df69 100644
+--- a/Documentation/admin-guide/cgroup-v1/cpusets.rst
++++ b/Documentation/admin-guide/cgroup-v1/cpusets.rst
+@@ -1,3 +1,5 @@
++.. _cpusets:
++
+ =3D=3D=3D=3D=3D=3D=3D
+ CPUSETS
+ =3D=3D=3D=3D=3D=3D=3D
+diff --git a/Documentation/vm/hmm.rst b/Documentation/vm/hmm.rst
+index 6f9e000757fa..7453acc1ea4f 100644
+--- a/Documentation/vm/hmm.rst
++++ b/Documentation/vm/hmm.rst
+@@ -1,4 +1,4 @@
+-.. hmm:
++.. _hmm:
+=20
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+ Heterogeneous Memory Management (HMM)
+diff --git a/Documentation/vm/page_migration.rst b/Documentation/vm/page_mi=
+gration.rst
+index 68883ac485fa..91a98a6b43bb 100644
+--- a/Documentation/vm/page_migration.rst
++++ b/Documentation/vm/page_migration.rst
+@@ -4,25 +4,28 @@
+ Page migration
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+-Page migration allows the moving of the physical location of pages between
+-nodes in a numa system while the process is running. This means that the
++Page migration allows moving the physical location of pages between
++nodes in a NUMA system while the process is running. This means that the
+ virtual addresses that the process sees do not change. However, the
+ system rearranges the physical location of those pages.
+=20
+-The main intend of page migration is to reduce the latency of memory acces=
+s
++Also see :ref:`Heterogeneous Memory Management (HMM) <hmm>`
++for migrating pages to or from device private memory.
++
++The main intent of page migration is to reduce the latency of memory acces=
+ses
+ by moving pages near to the processor where the process accessing that mem=
+ory
+ is running.
+=20
+ Page migration allows a process to manually relocate the node on which its
+ pages are located through the MF_MOVE and MF_MOVE_ALL options while settin=
+g
+-a new memory policy via mbind(). The pages of process can also be relocate=
+d
++a new memory policy via mbind(). The pages of a process can also be reloca=
+ted
+ from another process using the sys_migrate_pages() function call. The
+-migrate_pages function call takes two sets of nodes and moves pages of a
++migrate_pages() function call takes two sets of nodes and moves pages of a
+ process that are located on the from nodes to the destination nodes.
+ Page migration functions are provided by the numactl package by Andi Kleen
+ (a version later than 0.9.3 is required. Get it from
+-ftp://oss.sgi.com/www/projects/libnuma/download/). numactl provides libnum=
+a
+-which provides an interface similar to other numa functionality for page
++https://github.com/numactl/numactl.git). numactl provides libnuma
++which provides an interface similar to other NUMA functionality for page
+ migration.  cat ``/proc/<pid>/numa_maps`` allows an easy review of where t=
+he
+ pages of a process are located. See also the numa_maps documentation in th=
+e
+ proc(5) man page.
+@@ -30,19 +33,19 @@ proc(5) man page.
+ Manual migration is useful if for example the scheduler has relocated
+ a process to a processor on a distant node. A batch scheduler or an
+ administrator may detect the situation and move the pages of the process
+-nearer to the new processor. The kernel itself does only provide
++nearer to the new processor. The kernel itself only provides
+ manual page migration support. Automatic page migration may be implemented
+ through user space processes that move pages. A special function call
+ "move_pages" allows the moving of individual pages within a process.
+-A NUMA profiler may f.e. obtain a log showing frequent off node
++For example, A NUMA profiler may obtain a log showing frequent off-node
+ accesses and may use the result to move pages to more advantageous
+ locations.
+=20
+ Larger installations usually partition the system using cpusets into
+ sections of nodes. Paul Jackson has equipped cpusets with the ability to
+ move pages when a task is moved to another cpuset (See
+-Documentation/admin-guide/cgroup-v1/cpusets.rst).
+-Cpusets allows the automation of process locality. If a task is moved to
++:ref:`CPUSETS <cpusets>`).
++Cpusets allow the automation of process locality. If a task is moved to
+ a new cpuset then also all its pages are moved with it so that the
+ performance of the process does not sink dramatically. Also the pages
+ of processes in a cpuset are moved if the allowed memory nodes of a
+@@ -67,9 +70,9 @@ In kernel use of migrate_pages()
+    Lists of pages to be migrated are generated by scanning over
+    pages and moving them into lists. This is done by
+    calling isolate_lru_page().
+-   Calling isolate_lru_page increases the references to the page
++   Calling isolate_lru_page() increases the references to the page
+    so that it cannot vanish while the page migration occurs.
+-   It also prevents the swapper or other scans to encounter
++   It also prevents the swapper or other scans from encountering
+    the page.
+=20
+ 2. We need to have a function of type new_page_t that can be
+@@ -91,23 +94,24 @@ is increased so that the page cannot be freed while pag=
+e migration occurs.
+=20
+ Steps:
+=20
+-1. Lock the page to be migrated
++1. Lock the page to be migrated.
+=20
+ 2. Ensure that writeback is complete.
+=20
+ 3. Lock the new page that we want to move to. It is locked so that accesse=
+s to
+-   this (not yet uptodate) page immediately lock while the move is in prog=
+ress.
++   this (not yet uptodate) page immediately block while the move is in pro=
+gress.
+=20
+ 4. All the page table references to the page are converted to migration
+    entries. This decreases the mapcount of a page. If the resulting
+    mapcount is not zero then we do not migrate the page. All user space
+-   processes that attempt to access the page will now wait on the page loc=
+k.
++   processes that attempt to access the page will now wait on the page loc=
+k
++   or wait for the migration page table entry to be removed.
+=20
+ 5. The i_pages lock is taken. This will cause all processes trying
+    to access the page via the mapping to block on the spinlock.
+=20
+-6. The refcount of the page is examined and we back out if references rema=
+in
+-   otherwise we know that we are the only one referencing this page.
++6. The refcount of the page is examined and we back out if references rema=
+in.
++   Otherwise, we know that we are the only one referencing this page.
+=20
+ 7. The radix tree is checked and if it does not contain the pointer to thi=
+s
+    page then we back out because someone else modified the radix tree.
+@@ -134,124 +138,124 @@ Steps:
+=20
+ 15. Queued up writeback on the new page is triggered.
+=20
+-16. If migration entries were page then replace them with real ptes. Doing
+-    so will enable access for user space processes not already waiting for
+-    the page lock.
++16. If migration entries were inserted into the page table, then replace t=
+hem
++    with real ptes. Doing so will enable access for user space processes n=
+ot
++    already waiting for the page lock.
+=20
+-19. The page locks are dropped from the old and new page.
++17. The page locks are dropped from the old and new page.
+     Processes waiting on the page lock will redo their page faults
+     and will reach the new page.
+=20
+-20. The new page is moved to the LRU and can be scanned by the swapper
+-    etc again.
++18. The new page is moved to the LRU and can be scanned by the swapper,
++    etc. again.
+=20
+ Non-LRU page migration
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+-Although original migration aimed for reducing the latency of memory acces=
+s
+-for NUMA, compaction who want to create high-order page is also main custo=
+mer.
++Although migration originally aimed for reducing the latency of memory acc=
+esses
++for NUMA, compaction also uses migration to create high-order pages.
+=20
+ Current problem of the implementation is that it is designed to migrate on=
+ly
+-*LRU* pages. However, there are potential non-lru pages which can be migra=
+ted
++*LRU* pages. However, there are potential non-LRU pages which can be migra=
+ted
+ in drivers, for example, zsmalloc, virtio-balloon pages.
+=20
+ For virtio-balloon pages, some parts of migration code path have been hook=
+ed
+ up and added virtio-balloon specific functions to intercept migration logi=
+cs.
+ It's too specific to a driver so other drivers who want to make their page=
+s
+-movable would have to add own specific hooks in migration path.
++movable would have to add their own specific hooks in the migration path.
+=20
+-To overclome the problem, VM supports non-LRU page migration which provide=
+s
++To overcome the problem, VM supports non-LRU page migration which provides
+ generic functions for non-LRU movable pages without driver specific hooks
+-migration path.
++in the migration path.
+=20
+-If a driver want to make own pages movable, it should define three functio=
+ns
++If a driver wants to make its pages movable, it should define three functi=
+ons
+ which are function pointers of struct address_space_operations.
+=20
+ 1. ``bool (*isolate_page) (struct page *page, isolate_mode_t mode);``
+=20
+-   What VM expects on isolate_page function of driver is to return *true*
+-   if driver isolates page successfully. On returing true, VM marks the pa=
+ge
++   What VM expects from isolate_page() function of driver is to return *tr=
+ue*
++   if driver isolates the page successfully. On returning true, VM marks t=
+he page
+    as PG_isolated so concurrent isolation in several CPUs skip the page
+    for isolation. If a driver cannot isolate the page, it should return *f=
+alse*.
+=20
+    Once page is successfully isolated, VM uses page.lru fields so driver
+-   shouldn't expect to preserve values in that fields.
++   shouldn't expect to preserve values in those fields.
+=20
+ 2. ``int (*migratepage) (struct address_space *mapping,``
+ |	``struct page *newpage, struct page *oldpage, enum migrate_mode);``
+=20
+-   After isolation, VM calls migratepage of driver with isolated page.
+-   The function of migratepage is to move content of the old page to new p=
+age
++   After isolation, VM calls migratepage() of driver with the isolated pag=
+e.
++   The function of migratepage() is to move the contents of the old page t=
+o the
++   new page
+    and set up fields of struct page newpage. Keep in mind that you should
+    indicate to the VM the oldpage is no longer movable via __ClearPageMova=
+ble()
+-   under page_lock if you migrated the oldpage successfully and returns
++   under page_lock if you migrated the oldpage successfully and returned
+    MIGRATEPAGE_SUCCESS. If driver cannot migrate the page at the moment, d=
+river
+    can return -EAGAIN. On -EAGAIN, VM will retry page migration in a short=
+ time
+-   because VM interprets -EAGAIN as "temporal migration failure". On retur=
+ning
+-   any error except -EAGAIN, VM will give up the page migration without re=
+trying
+-   in this time.
++   because VM interprets -EAGAIN as "temporary migration failure". On retu=
+rning
++   any error except -EAGAIN, VM will give up the page migration without
++   retrying.
+=20
+-   Driver shouldn't touch page.lru field VM using in the functions.
++   Driver shouldn't touch the page.lru field while in the migratepage() fu=
+nction.
+=20
+ 3. ``void (*putback_page)(struct page *);``
+=20
+-   If migration fails on isolated page, VM should return the isolated page
+-   to the driver so VM calls driver's putback_page with migration failed p=
+age.
+-   In this function, driver should put the isolated page back to the own d=
+ata
++   If migration fails on the isolated page, VM should return the isolated =
+page
++   to the driver so VM calls the driver's putback_page() with the isolated=
+ page.
++   In this function, the driver should put the isolated page back into its=
+ own data
+    structure.
+=20
+-4. non-lru movable page flags
++4. non-LRU movable page flags
+=20
+-   There are two page flags for supporting non-lru movable page.
++   There are two page flags for supporting non-LRU movable page.
+=20
+    * PG_movable
+=20
+-     Driver should use the below function to make page movable under page_=
+lock::
++     Driver should use the function below to make page movable under page_=
+lock::
+=20
+ 	void __SetPageMovable(struct page *page, struct address_space *mapping)
+=20
+      It needs argument of address_space for registering migration
+      family functions which will be called by VM. Exactly speaking,
+-     PG_movable is not a real flag of struct page. Rather than, VM
+-     reuses page->mapping's lower bits to represent it.
++     PG_movable is not a real flag of struct page. Rather, VM
++     reuses the page->mapping's lower bits to represent it::
+=20
+-::
+ 	#define PAGE_MAPPING_MOVABLE 0x2
+ 	page->mapping =3D page->mapping | PAGE_MAPPING_MOVABLE;
+=20
+      so driver shouldn't access page->mapping directly. Instead, driver sh=
+ould
+-     use page_mapping which mask off the low two bits of page->mapping und=
+er
+-     page lock so it can get right struct address_space.
+-
+-     For testing of non-lru movable page, VM supports __PageMovable functi=
+on.
+-     However, it doesn't guarantee to identify non-lru movable page becaus=
+e
+-     page->mapping field is unified with other variables in struct page.
+-     As well, if driver releases the page after isolation by VM, page->map=
+ping
+-     doesn't have stable value although it has PAGE_MAPPING_MOVABLE
+-     (Look at __ClearPageMovable). But __PageMovable is cheap to catch whe=
+ther
+-     page is LRU or non-lru movable once the page has been isolated. Becau=
+se
+-     LRU pages never can have PAGE_MAPPING_MOVABLE in page->mapping. It is=
+ also
+-     good for just peeking to test non-lru movable pages before more expen=
+sive
+-     checking with lock_page in pfn scanning to select victim.
+-
+-     For guaranteeing non-lru movable page, VM provides PageMovable functi=
+on.
+-     Unlike __PageMovable, PageMovable functions validates page->mapping a=
+nd
+-     mapping->a_ops->isolate_page under lock_page. The lock_page prevents =
+sudden
+-     destroying of page->mapping.
+-
+-     Driver using __SetPageMovable should clear the flag via __ClearMovabl=
+ePage
+-     under page_lock before the releasing the page.
++     use page_mapping() which masks off the low two bits of page->mapping =
+under
++     page lock so it can get the right struct address_space.
++
++     For testing of non-LRU movable pages, VM supports __PageMovable() fun=
+ction.
++     However, it doesn't guarantee to identify non-LRU movable pages becau=
+se
++     the page->mapping field is unified with other variables in struct pag=
+e.
++     If the driver releases the page after isolation by VM, page->mapping
++     doesn't have a stable value although it has PAGE_MAPPING_MOVABLE set
++     (look at __ClearPageMovable). But __PageMovable() is cheap to call wh=
+ether
++     page is LRU or non-LRU movable once the page has been isolated becaus=
+e LRU
++     pages can never have PAGE_MAPPING_MOVABLE set in page->mapping. It is=
+ also
++     good for just peeking to test non-LRU movable pages before more expen=
+sive
++     checking with lock_page() in pfn scanning to select a victim.
++
++     For guaranteeing non-LRU movable page, VM provides PageMovable() func=
+tion.
++     Unlike __PageMovable(), PageMovable() validates page->mapping and
++     mapping->a_ops->isolate_page under lock_page(). The lock_page() preve=
+nts
++     sudden destroying of page->mapping.
++
++     Drivers using __SetPageMovable() should clear the flag via
++     __ClearMovablePage() under page_lock() before the releasing the page.
+=20
+    * PG_isolated
+=20
+      To prevent concurrent isolation among several CPUs, VM marks isolated=
+ page
+-     as PG_isolated under lock_page. So if a CPU encounters PG_isolated no=
+n-lru
+-     movable page, it can skip it. Driver doesn't need to manipulate the f=
+lag
+-     because VM will set/clear it automatically. Keep in mind that if driv=
+er
+-     sees PG_isolated page, it means the page have been isolated by VM so =
+it
+-     shouldn't touch page.lru field.
+-     PG_isolated is alias with PG_reclaim flag so driver shouldn't use the=
+ flag
+-     for own purpose.
++     as PG_isolated under lock_page(). So if a CPU encounters PG_isolated
++     non-LRU movable page, it can skip it. Driver doesn't need to manipula=
+te the
++     flag because VM will set/clear it automatically. Keep in mind that if=
+ the
++     driver sees a PG_isolated page, it means the page has been isolated b=
+y the
++     VM so it shouldn't touch the page.lru field.
++     The PG_isolated flag is aliased with the PG_reclaim flag so drivers
++     shouldn't use PG_isolated for its own purposes.
+=20
+ Monitoring Migration
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+@@ -266,8 +270,8 @@ The following events (counters) can be used to monitor =
+page migration.
+    512.
+=20
+ 2. PGMIGRATE_FAIL: Normal page migration failure. Same counting rules as f=
+or
+-   _SUCCESS, above: this will be increased by the number of subpages, if i=
+t was
+-   a THP.
++   PGMIGRATE_SUCCESS, above: this will be increased by the number of subpa=
+ges,
++   if it was a THP.
+=20
+ 3. THP_MIGRATION_SUCCESS: A THP was migrated without being split.
+=20
 --=20
+2.20.1
 
-Thanks,
-Peter Chen=
