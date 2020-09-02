@@ -2,55 +2,77 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B81C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1552C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D10320829
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90696207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599063262;
-	bh=MAam3szAvyQjlLkEQdoK5/MrRc6oip9fFC54zFOdGNA=;
-	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=gB+pY2cGlC4WqR8GwSN+a7O2qxWtxAiQwLkjI9x8q1MrM2C/uHVf5RNBmksqVj7k4
-	 QNM53LoBkyu5JtMPoHGnZFa8vFY3vQ9Nli14S7tkBETiXyVKZG751IPS6fjSz+UftL
-	 ySVw6ToKPGaS8KyVYa0qZ3KjFvtHYmxBR4/V6i54=
+	s=default; t=1599063267;
+	bh=r+4c7QB4p852T49gME2IZW5IZmsU3UjeY+WL8JYG9rM=;
+	h=From:Cc:Subject:Date:To:List-ID:From;
+	b=tjh//wg+A/PXrKMeUw3L6+G8/T/+G9OhfpUqa3Hq2gEl61RfA3jBOoj/rbr2dpFfJ
+	 o5ESOtOiuE5v/qKxjT5gcR7In5m8ykVcFGanA7leFaSPPA3PhmmpAClym7z72OKbQG
+	 Zt1a4TlzRERmSjxvlfgLzHZC4w3Gm7xv24x2gcDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728785AbgIBQOO (ORCPT
+        id S1728101AbgIBQON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:14:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
+        Wed, 2 Sep 2020 12:14:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbgIBQK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:10:56 -0400
+        id S1728302AbgIBQK5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:10:57 -0400
 Received: from mail.kernel.org (ip5f5ad5c3.dynamic.kabel-deutschland.de [95.90.213.195])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0E5A21582;
+        by mail.kernel.org (Postfix) with ESMTPSA id 003EC215A4;
         Wed,  2 Sep 2020 16:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1599063046;
-        bh=MAam3szAvyQjlLkEQdoK5/MrRc6oip9fFC54zFOdGNA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHvO+/fkSkVARvG1XOXU+M3HD+f0y6SgRHkfLSx8v73wfnmnM4zeK5oZt+2IM2zp0
-         pb/6gW5TtMHWB8xCLAXiU2lAHd1mgM7QgEXpgQbRCs0bIkkFNZjPjFtNGe1IjUffwl
-         Hdol4IbSkXK99JphCsUwq29eW1SpWRYtlfVnYabQ=
+        bh=r+4c7QB4p852T49gME2IZW5IZmsU3UjeY+WL8JYG9rM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oF+zgOpExWFjUPBjQpLHZmYeyUxq0A2NGClPsw04AmB6f2T3o7JdNDh+2W0cor0jZ
+         zILiWkwoNqmYPbjpi+ZExncPr4ZzmA0VvNk6ZJwJZTbfqIAH3LxgcuU1xQN9ER21/I
+         pl0IQy/E6U+hnNVRWbLDRDVlR5xg8wshEElF+dWE=
 Received: from mchehab by mail.kernel.org with local (Exim 4.94)
         (envelope-from <mchehab@kernel.org>)
-        id 1kDVLQ-000tAd-6l; Wed, 02 Sep 2020 18:10:44 +0200
+        id 1kDVLP-000t9h-K8; Wed, 02 Sep 2020 18:10:43 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 21/38] media: dvb-ttusb-budget: don't use stack for USB transfers
-Date:   Wed,  2 Sep 2020 18:10:24 +0200
-Message-Id: <214db6f0cc80506ac2ade13475e1f359ae1ff7b4.1599062230.git.mchehab+huawei@kernel.org>
+        Sean Young <sean@mess.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        =?UTF-8?q?Niklas=20S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mike Rapoport <rppt@kernel.org>,
+        Michel Lespinasse <walken@google.com>,
+        linux-media@vger.kernel.org, Allen Pais <allen.lkml@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Forest Crossman <cyrozap@gmail.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Colin Ian King <colin.king@canonical.com>,
+        Antti Palosaari <crope@iki.fi>,
+        Romain Perier <romain.perier@gmail.com>,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Vandana BN <bnvandana@gmail.com>, devel@driverdev.osuosl.org,
+        Takashi Iwai <tiwai@suse.de>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 00/38] media sparse/smatch warn fixes
+Date:   Wed,  2 Sep 2020 18:10:03 +0200
+Message-Id: <cover.1599062230.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
-In-Reply-To: <cover.1599062230.git.mchehab+huawei@kernel.org>
-References: <cover.1599062230.git.mchehab+huawei@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -59,221 +81,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As reported by smatch:
+While I was lately relying on Jenkins to report smatch/sparse issues,
+I discovered this week that the reports were missing such warnings
 
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:311 ttusb_boot_dsp() error: doing dma on the stack (b)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:321 ttusb_boot_dsp() error: doing dma on the stack (b)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:330 ttusb_boot_dsp() error: doing dma on the stack (b)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:351 ttusb_set_channel() error: doing dma on the stack (b)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:361 ttusb_del_channel() error: doing dma on the stack (b)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:412 ttusb_init_controller() error: doing dma on the stack (b0)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:416 ttusb_init_controller() error: doing dma on the stack (b1)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:422 ttusb_init_controller() error: doing dma on the stack (b2)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:425 ttusb_init_controller() error: doing dma on the stack (b3)
-    drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c:430 ttusb_init_controller() error: doing dma on the stack (get_version)
+I got it fixed already at builder.linuxtv.org, but there are several new
+warnings that got added over time.
 
-This driver still uses the USB stack for DMA transfers,
-which is broken for a long time. I almost dropped this driver,
-as there's a high chance that nobody is using it with upstream
-Kernels, as we didn't receive any bug reports.
+This series is meant to solve the ones that are reported on x86_64
+without pre-building the smatch database.
 
-As fixing this won't be hard, I ended opting to fix.
+It should allow receiving cleaner error reports.
 
-While here, I dropped an ugly hack that implemented read via
-a separate function that was just doing a memcpy().
+While most of the patches are meant to shut up the static analizers,
+some contain real bug fixes.
 
-It should be noticed that, during the init phase, there's
-a "b4" register that were never initialized, as its buffer
-were used just to store the results of "b3" initialization.
+Mauro Carvalho Chehab (38):
+  media: tda10086: cleanup symbol_rate setting logic
+  media: v4l2-ioctl: avoid memory leaks on some time32 compat functions
+  media: qt1010: fix usage of unititialized value
+  media: av7110_v4l: avoid a typecast
+  media: wl128x: get rid of a potential spectre issue
+  media: venus: place extern venus_fw_debug on a header file
+  media: tda10021: avoid casts when using symbol_rate
+  media: serial_ir: use the right type for a dma address
+  media: vivid: move the detection part out of vivid_create_instance
+  media: vivid: place the logic which disables ioctl on a separate
+    function
+  media: vivid: move set_capabilities logic to a separate function
+  media: vivid: place dt timings init code on a separate function
+  media: vivid: move the create queues to a separate function
+  media: vivid: move the devnode creation logic to a separate function
+  media: vivid: fix error path
+  media: videobuf-dma-sg: number of pages should be unsigned long
+  media: cx25821-alsa: number of pages should be unsigned long
+  media: cx23885-alsa: number of pages should be unsigned long
+  media: cx88-alsa: number of pages should be unsigned long
+  media: saa7134-alsa.c: number of pages should be unsigned long
+  media: dvb-ttusb-budget: don't use stack for USB transfers
+  media: dvb-ttusb-budget: cleanup printk logic
+  media: saa7134: avoid a shift overflow
+  media: atomisp: fix casts at atomisp_compat_ioctl32.c
+  media: atomisp: get rid of some unused code
+  media: atomisp: cleanup ifdefs from ia_css_debug.c
+  media: atomisp: get rid of version-dependent globals
+  media: atomisp: get rid of isys_dma.h and isys_dma_local.h
+  media: atomisp: get rid of ibuf_ctrl abstraction
+  media: atomisp: don't check for ISP version for includes
+  media: atomisp: unify INPUT error return type
+  media: atomisp: de-duplicate names at *_input_system_global.h
+  media: atomisp: reorder functions at pixelgen_private.h
+  media: atomisp: remove compile-time tests from input_system_global.h
+  media: atomisp: fix some bad indents
+  media: atomisp: csi_rx.c: add a missing includes
+  media: atomisp: atomisp_gmin_platform: check before use
+  media: atomisp: cleanup isys_irq headers
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
----
- .../media/usb/ttusb-budget/dvb-ttusb-budget.c | 83 +++++++------------
- 1 file changed, 30 insertions(+), 53 deletions(-)
+ drivers/media/dvb-frontends/tda10021.c        |  38 +-
+ drivers/media/dvb-frontends/tda10086.c        |  22 +-
+ drivers/media/pci/cx23885/cx23885-alsa.c      |   7 +-
+ drivers/media/pci/cx23885/cx23885.h           |   4 +-
+ drivers/media/pci/cx25821/cx25821-alsa.c      |  11 +-
+ drivers/media/pci/cx88/cx88-alsa.c            |  13 +-
+ drivers/media/pci/saa7134/saa7134-alsa.c      |   7 +-
+ drivers/media/pci/saa7134/saa7134-tvaudio.c   |   3 +-
+ drivers/media/pci/saa7134/saa7134.h           |   2 +-
+ drivers/media/pci/ttpci/av7110_v4l.c          |   4 +-
+ drivers/media/platform/qcom/venus/core.h      |   2 +
+ drivers/media/platform/qcom/venus/dbgfs.c     |   2 -
+ drivers/media/radio/wl128x/fmdrv_common.c     |  16 +-
+ drivers/media/rc/serial_ir.c                  |   2 +-
+ drivers/media/test-drivers/vivid/vivid-core.c | 645 ++++++------
+ drivers/media/tuners/qt1010.c                 |  25 +-
+ .../media/usb/ttusb-budget/dvb-ttusb-budget.c | 197 ++--
+ drivers/media/v4l2-core/v4l2-ioctl.c          |  48 +-
+ drivers/media/v4l2-core/videobuf-dma-sg.c     |  22 +-
+ drivers/staging/media/atomisp/Makefile        |  12 +-
+ .../atomisp/pci/atomisp_compat_ioctl32.c      |  84 +-
+ .../media/atomisp/pci/atomisp_gmin_platform.c |   5 +-
+ .../atomisp/pci/css_2401_system/host/csi_rx.c |   1 +
+ .../pci/css_2401_system/host/ibuf_ctrl.c      |   1 +
+ .../css_2401_system/host/ibuf_ctrl_local.h    |   1 +
+ .../css_2401_system/host/ibuf_ctrl_private.h  | 268 -----
+ .../pci/css_2401_system/host/isys_dma.c       |  10 +-
+ .../pci/css_2401_system/host/isys_dma_local.h |  21 -
+ .../css_2401_system/host/isys_dma_private.h   |  12 +-
+ .../pci/css_2401_system/host/isys_irq.c       |   3 +-
+ .../pci/css_2401_system/host/isys_irq_local.h |   4 +-
+ .../css_2401_system/host/isys_irq_private.h   |  12 +-
+ .../css_2401_system/host/pixelgen_private.h   |  73 +-
+ .../pci/css_2401_system/ibuf_ctrl_global.h    |   6 +-
+ .../pci/css_2401_system/isys_irq_global.h     |   4 +-
+ .../pci/css_2401_system/pixelgen_global.h     |   8 +-
+ .../host/input_formatter.c                    |   2 +-
+ .../hive_isp_css_common/host/input_system.c   |  70 +-
+ .../hive_isp_css_include/host/csi_rx_public.h |   4 +-
+ .../host/ibuf_ctrl_public.h                   |  94 --
+ .../host/isys_dma_public.h                    |   8 +-
+ .../host/isys_irq_public.h                    |  29 +-
+ .../hive_isp_css_include/host/isys_public.h   |   4 +-
+ .../host/pixelgen_public.h                    |   4 +-
+ .../pci/hive_isp_css_include/ibuf_ctrl.h      |  47 -
+ .../pci/hive_isp_css_include/isys_dma.h       |  47 -
+ .../pci/hive_isp_css_include/isys_irq.h       |  16 +-
+ drivers/staging/media/atomisp/pci/hmm/hmm.c   |   6 +-
+ .../staging/media/atomisp/pci/ia_css_mipi.h   |   2 -
+ .../staging/media/atomisp/pci/ia_css_stream.h |   4 +-
+ .../media/atomisp/pci/input_system_global.h   |  29 +-
+ .../kernels/ctc/ctc_1.0/ia_css_ctc_param.h    |   7 -
+ .../ctc/ctc_1.0/ia_css_ctc_table.host.c       | 145 ---
+ .../kernels/gc/gc_1.0/ia_css_gc_table.host.c  | 144 ---
+ .../kernels/gc/gc_2/ia_css_gc2_table.host.c   |  53 -
+ .../isp/kernels/raw/raw_1.0/ia_css_raw.host.c |   4 +-
+ .../kernels/xnr/xnr_1.0/ia_css_xnr_param.h    |   7 -
+ .../xnr/xnr_1.0/ia_css_xnr_table.host.c       |  31 -
+ .../atomisp/pci/isp2400_input_system_global.h |  21 +-
+ .../atomisp/pci/isp2400_input_system_local.h  |  17 +-
+ .../atomisp/pci/isp2400_input_system_public.h |  26 +-
+ .../media/atomisp/pci/isp2400_system_global.h |  16 -
+ .../atomisp/pci/isp2401_input_system_global.h |  30 +-
+ .../atomisp/pci/isp2401_input_system_local.h  |   3 -
+ .../pci/isp2401_input_system_private.h        | 224 ++++-
+ .../media/atomisp/pci/isp2401_system_global.h |  19 -
+ .../atomisp/pci/runtime/binary/src/binary.c   | 919 +++++++++---------
+ .../runtime/bufq/interface/ia_css_bufq_comm.h |  10 -
+ .../media/atomisp/pci/runtime/bufq/src/bufq.c |  26 +-
+ .../runtime/debug/interface/ia_css_debug.h    |   6 -
+ .../pci/runtime/debug/src/ia_css_debug.c      | 193 +---
+ .../atomisp/pci/runtime/ifmtr/src/ifmtr.c     |   2 +-
+ .../pci/runtime/inputfifo/src/inputfifo.c     |  10 -
+ .../pci/runtime/isys/interface/ia_css_isys.h  |  18 +-
+ .../runtime/isys/interface/ia_css_isys_comm.h |   4 +-
+ .../pci/runtime/isys/src/csi_rx_rmgr.c        |   2 +-
+ .../pci/runtime/isys/src/isys_dma_rmgr.c      |   2 +-
+ .../atomisp/pci/runtime/isys/src/isys_init.c  |  20 +-
+ .../runtime/isys/src/isys_stream2mmio_rmgr.c  |   2 +-
+ .../media/atomisp/pci/runtime/isys/src/rx.c   |  24 +-
+ .../pci/runtime/isys/src/virtual_isys.c       |  58 +-
+ .../pipeline/interface/ia_css_pipeline.h      |   2 +-
+ .../pci/runtime/pipeline/src/pipeline.c       |   4 +-
+ drivers/staging/media/atomisp/pci/sh_css.c    | 296 ++----
+ .../staging/media/atomisp/pci/sh_css_defs.h   |   4 -
+ .../staging/media/atomisp/pci/sh_css_hrt.c    |   4 -
+ .../media/atomisp/pci/sh_css_internal.h       |  36 +-
+ .../staging/media/atomisp/pci/sh_css_mipi.c   |  34 +-
+ .../media/atomisp/pci/sh_css_param_shading.c  |   2 +-
+ .../staging/media/atomisp/pci/sh_css_params.c | 538 ----------
+ .../media/atomisp/pci/sh_css_properties.c     |  10 -
+ drivers/staging/media/atomisp/pci/sh_css_sp.c |  39 +-
+ drivers/staging/media/atomisp/pci/sh_css_sp.h |   8 +-
+ .../staging/media/atomisp/pci/sh_css_struct.h |   2 -
+ .../staging/media/atomisp/pci/system_global.h |  23 -
+ include/media/videobuf-dma-sg.h               |   2 +-
+ 96 files changed, 1708 insertions(+), 3300 deletions(-)
+ delete mode 100644 drivers/staging/media/atomisp/pci/css_2401_system/host/ibuf_ctrl_private.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/css_2401_system/host/isys_dma_local.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_include/host/ibuf_ctrl_public.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_include/ibuf_ctrl.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/hive_isp_css_include/isys_dma.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/isp2400_system_global.h
+ delete mode 100644 drivers/staging/media/atomisp/pci/isp2401_system_global.h
 
-diff --git a/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c b/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
-index 4e56ff83566b..2582a62184fd 100644
---- a/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
-+++ b/drivers/media/usb/ttusb-budget/dvb-ttusb-budget.c
-@@ -72,6 +72,9 @@ DVB_DEFINE_MOD_OPT_ADAPTER_NR(adapter_nr);
- #define TTUSB_REV_2_2	0x22
- #define TTUSB_BUDGET_NAME "ttusb_stc_fw"
- 
-+#define MAX_SEND	0x28
-+#define MAX_RCV		0x20
-+
- /*
-  *  since we're casting (struct ttusb*) <-> (struct dvb_demux*) around
-  *  the dvb_demux field must be the first in struct!!
-@@ -119,87 +122,72 @@ struct ttusb {
- 	int cc;			/* MuxCounter - will increment on EVERY MUX PACKET */
- 	/* (including stuffing. yes. really.) */
- 
--	u8 last_result[32];
-+	u8 send_buf[MAX_SEND];
-+	u8 last_result[MAX_RCV];
- 
- 	int revision;
- 
- 	struct dvb_frontend* fe;
- };
- 
--/* ugly workaround ... don't know why it's necessary to read */
--/* all result codes. */
--
--static int ttusb_cmd(struct ttusb *ttusb,
--	      const u8 * data, int len, int needresult)
-+static int ttusb_cmd(struct ttusb *ttusb, u8 *data, int len, int len_result)
- {
- 	int actual_len;
- 	int err;
--	int i;
--
--	if (debug >= 3) {
--		printk(KERN_DEBUG ">");
--		for (i = 0; i < len; ++i)
--			printk(KERN_CONT " %02x", data[i]);
--		printk(KERN_CONT "\n");
--	}
- 
- 	if (mutex_lock_interruptible(&ttusb->semusb) < 0)
- 		return -EAGAIN;
- 
-+	if (debug >= 3)
-+		printk(KERN_DEBUG "> %*ph\n", len, data);
-+
-+	memcpy(data, ttusb->send_buf, len);
-+
- 	err = usb_bulk_msg(ttusb->dev, ttusb->bulk_out_pipe,
--			   (u8 *) data, len, &actual_len, 1000);
-+			   ttusb->send_buf, len, &actual_len, 1000);
- 	if (err != 0) {
- 		dprintk("%s: usb_bulk_msg(send) failed, err == %i!\n",
- 			__func__, err);
--		mutex_unlock(&ttusb->semusb);
--		return err;
-+		goto err;
- 	}
- 	if (actual_len != len) {
-+		err = -EIO;
- 		dprintk("%s: only wrote %d of %d bytes\n", __func__,
- 			actual_len, len);
--		mutex_unlock(&ttusb->semusb);
--		return -1;
-+		goto err;
- 	}
- 
- 	err = usb_bulk_msg(ttusb->dev, ttusb->bulk_in_pipe,
--			   ttusb->last_result, 32, &actual_len, 1000);
-+			   ttusb->last_result, MAX_RCV, &actual_len, 1000);
- 
- 	if (err != 0) {
- 		printk("%s: failed, receive error %d\n", __func__,
- 		       err);
--		mutex_unlock(&ttusb->semusb);
--		return err;
-+		goto err;
- 	}
- 
- 	if (debug >= 3) {
- 		actual_len = ttusb->last_result[3] + 4;
--		printk(KERN_DEBUG "<");
--		for (i = 0; i < actual_len; ++i)
--			printk(KERN_CONT " %02x", ttusb->last_result[i]);
--		printk(KERN_CONT "\n");
-+		printk(KERN_DEBUG "< %*ph\n", actual_len, ttusb->last_result);
- 	}
- 
--	if (!needresult)
--		mutex_unlock(&ttusb->semusb);
--	return 0;
--}
-+	if (len_result)
-+		memcpy(ttusb->send_buf, ttusb->last_result, len_result);
- 
--static int ttusb_result(struct ttusb *ttusb, u8 * data, int len)
--{
--	memcpy(data, ttusb->last_result, len);
-+err:
- 	mutex_unlock(&ttusb->semusb);
--	return 0;
-+	return err;
- }
- 
- static int ttusb_i2c_msg(struct ttusb *ttusb,
- 		  u8 addr, u8 * snd_buf, u8 snd_len, u8 * rcv_buf,
- 		  u8 rcv_len)
- {
--	u8 b[0x28];
-+	u8 b[MAX_SEND];
- 	u8 id = ++ttusb->c;
- 	int i, err;
- 
--	if (snd_len > 0x28 - 7 || rcv_len > 0x20 - 7)
-+	if (snd_len > MAX_SEND - 7 || rcv_len > MAX_RCV - 7)
- 		return -EINVAL;
- 
- 	b[0] = 0xaa;
-@@ -213,13 +201,11 @@ static int ttusb_i2c_msg(struct ttusb *ttusb,
- 	for (i = 0; i < snd_len; i++)
- 		b[7 + i] = snd_buf[i];
- 
--	err = ttusb_cmd(ttusb, b, snd_len + 7, 1);
-+	err = ttusb_cmd(ttusb, b, snd_len + 7, MAX_RCV);
- 
- 	if (err)
- 		return -EREMOTEIO;
- 
--	err = ttusb_result(ttusb, b, 0x20);
--
- 	/* check if the i2c transaction was successful */
- 	if ((snd_len != b[5]) || (rcv_len != b[6])) return -EREMOTEIO;
- 
-@@ -400,8 +386,6 @@ static int ttusb_init_controller(struct ttusb *ttusb)
- 	/* i2c write read: 5 bytes, addr 0x10, 0x02 bytes write, 1 bytes read. */
- 	u8 b3[] =
- 	    { 0xaa, ++ttusb->c, 0x31, 5, 0x10, 0x02, 0x01, 0x00, 0x1e };
--	u8 b4[] =
--	    { 0x55, ttusb->c, 0x31, 4, 0x10, 0x02, 0x01, 0x00, 0x1e };
- 
- 	u8 get_version[] = { 0xaa, ++ttusb->c, 0x17, 5, 0, 0, 0, 0, 0 };
- 	u8 get_dsp_version[0x20] =
-@@ -422,15 +406,11 @@ static int ttusb_init_controller(struct ttusb *ttusb)
- 	if ((err = ttusb_cmd(ttusb, b2, sizeof(b2), 0)))
- 		return err;
- 
--	if ((err = ttusb_cmd(ttusb, b3, sizeof(b3), 1)))
-+	if ((err = ttusb_cmd(ttusb, b3, sizeof(b3), 0)))
- 		return err;
- 
--	err = ttusb_result(ttusb, b4, sizeof(b4));
--
--	if ((err = ttusb_cmd(ttusb, get_version, sizeof(get_version), 1)))
--		return err;
--
--	if ((err = ttusb_result(ttusb, get_version, sizeof(get_version))))
-+	if ((err = ttusb_cmd(ttusb, get_version,
-+			     sizeof(get_version), sizeof(get_version))))
- 		return err;
- 
- 	dprintk("%s: stc-version: %c%c%c%c%c\n", __func__,
-@@ -451,14 +431,11 @@ static int ttusb_init_controller(struct ttusb *ttusb)
- 			   (get_version[8] - '0');
- 
- 	err =
--	    ttusb_cmd(ttusb, get_dsp_version, sizeof(get_dsp_version), 1);
-+	    ttusb_cmd(ttusb, get_dsp_version,
-+		      sizeof(get_dsp_version), sizeof(get_dsp_version));
- 	if (err)
- 		return err;
- 
--	err =
--	    ttusb_result(ttusb, get_dsp_version, sizeof(get_dsp_version));
--	if (err)
--		return err;
- 	printk("%s: dsp-version: %c%c%c\n", __func__,
- 	       get_dsp_version[4], get_dsp_version[5], get_dsp_version[6]);
- 	return 0;
 -- 
 2.26.2
+
 
