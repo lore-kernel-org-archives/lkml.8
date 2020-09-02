@@ -2,118 +2,154 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4709C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8EB8C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F23F20709
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 980C120709
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 05:10:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="H3V9cbGz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="b3MC0sS0";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="T3MF2QhM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbgIBFKE (ORCPT
+        id S1726623AbgIBFKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 01:10:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22238 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726193AbgIBFKC (ORCPT
+        Wed, 2 Sep 2020 01:10:33 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:6012 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgIBFKa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 01:10:02 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 08251Z5s156666;
-        Wed, 2 Sep 2020 01:09:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : subject : to : cc
- : references : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=va4X/XnVOGn7MM6uvsEvIRgl5Wa0iCBRzbiQS5tv7ZM=;
- b=H3V9cbGz7dyNrXXTdHRRMlkcH7x9WlsId7IMCHCdHEbCDxDL6EYTtkqPpHEpm86jW1we
- j0vE8ficPd1OlQItK1kPbTtV9hLOk162xVBPJvNNkUtfRscrQ/34g+AnAIDKw9B1zdfp
- VIMKOpPVYeGE2Gyp8TVPhWAqPNa8KP4unZBGQHJOywg0leDPUrKZPLLs3hN513PgPV3C
- t9f2CFd5tF/Z3AaqosKD5/JFUCe84x2Tb+SkosMKM2EgrTn5U+qjc83sIqnnqhp722rp
- iluRm4T7+4BOKwLsR+UQNCWZzhv2CopRGrQpO5LBnbkSECmNBuedYjR+PdtOTgvuzhhV dQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33a4c48un1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 01:09:53 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 08254vH9166033;
-        Wed, 2 Sep 2020 01:09:53 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 33a4c48um9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 01:09:53 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08251opN022321;
-        Wed, 2 Sep 2020 05:09:50 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 337en849ff-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 02 Sep 2020 05:09:50 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 08259lPr62325026
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 2 Sep 2020 05:09:47 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EFF86A405F;
-        Wed,  2 Sep 2020 05:09:46 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 91C7AA4054;
-        Wed,  2 Sep 2020 05:09:43 +0000 (GMT)
-Received: from [9.199.37.120] (unknown [9.199.37.120])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  2 Sep 2020 05:09:43 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH 1/7] powerpc/watchpoint/kvm: Rename current DAWR macros
- and variables
-To:     Paul Mackerras <paulus@ozlabs.org>
-Cc:     mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
-        pbonzini@redhat.com, christophe.leroy@c-s.fr, jniethe5@gmail.com,
-        pedromfc@br.ibm.com, rogealve@br.ibm.com, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20200723102058.312282-1-ravi.bangoria@linux.ibm.com>
- <20200723102058.312282-2-ravi.bangoria@linux.ibm.com>
- <20200902014908.GA272502@thinks.paulus.ozlabs.org>
-Message-ID: <174036fb-1ee9-0e33-64a0-b021f53ac301@linux.ibm.com>
-Date:   Wed, 2 Sep 2020 10:39:42 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20200902014908.GA272502@thinks.paulus.ozlabs.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 2 Sep 2020 01:10:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1599023428; x=1630559428;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=Mck26RQzN5xmNC5QAv5OOxbey49vtuBE6wweHry4UzA=;
+  b=b3MC0sS0KHIBuY2YX/GCXQ3qXMDQ8W7F0uTTSYz4hv/D3dSlW6c7RsRZ
+   +eaipqnLcxSvmbtVIP0pbBPdq8edS+g6sZ0beZma3TkcTsZGHzk59vn/F
+   5Gyv/PKPKJL+DItwAWVpAAtTTHKCCGLCuaGTCoX4FTSEIKHHWW4464HXI
+   CNYiLdbdwSgbvHJJTtW9Q5kHjhVe7XhEb/VbU94FQXMB6Qq9sRO/5FL/M
+   wQ4xyg+v1FSvCoI/BK9l3C2uoI10EUFA6vev6ieKcyl2KZI+MpBH1zBbh
+   9W8m8ZfHKEiVSgrrjc8JSTH+zApltiHkp3/vhmVd++tH6DubOfqgkga2p
+   Q==;
+IronPort-SDR: iAnFgyusQRUalp/mCk1baiv068tzzPuFo95n0g3b7PCpx724hNwmN6hgIbHxlMOaPTK2sIxhGt
+ NdHQt4d3AV7djfPynJ2zTgeqeJz/A7sAtYSz2FB8x00Og15N1KVHOLcnj74mm74NnHwyjPwVDa
+ LKYTaQQ+NghIpZ8V8bTIM36mFpnEDjeQoLzt7sgiVf3tfjboKRk/z2M9rq/qmkAhgNhtJkqT1F
+ JZamA/XNoY/5ssLOoBWRc1WoTx5gQcA5AUDsD4axHVEUE1LTP9sGy5VwPAhqO3LZTWMozbRPF7
+ yzM=
+X-IronPort-AV: E=Sophos;i="5.76,381,1592841600"; 
+   d="scan'208";a="147603230"
+Received: from mail-bn7nam10lp2101.outbound.protection.outlook.com (HELO NAM10-BN7-obe.outbound.protection.outlook.com) ([104.47.70.101])
+  by ob1.hgst.iphmx.com with ESMTP; 02 Sep 2020 13:10:25 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eyxxyfGhZ1JZHUS/gTd596zGL2M5GT19sSUBEqR3zfQOCnMtId7tnr46TvUjCgbJtGrDXqt7zBo55gi8N6tvRrlJMAx6AZh/qmcLDmkcjpNi/gqhYDbHfPg3Tyjsr960sLtvRY1higEKjQwtYI8ouIVGf+Cgy3tFMtoKQL3xr13khlwnI/oPvchWdghvrLm+z0Jv6WXNg59szsC6jZyRSLwbbSqTn9hIL7Jve5GVt2HFPeAYDcwQPmz9rKmKfpO4RxY/sik+IscLt27MUvNrWQCZq9AtHPAJ6w88lMPzEKEo2VmxKBrhUWFoB8qyGqb9ObcFpRk0ANKWEyFW80mVyw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mck26RQzN5xmNC5QAv5OOxbey49vtuBE6wweHry4UzA=;
+ b=RvSKBHI5CNZUZflixHF7b8txsCQxfqWMjKV2pg+5VGnSCj0xDHNw8pYeTFHnZ0uCQwO6QYp0xlpipy4zorSeJAOO6jNAYxxNjV7O+IXXQ+W0PAmDNKOamZc4MvDKRJKIAgMuHm+sxGv0r1ibgue5oe17tcitm/n+Zqm/tdcDOLYP8JVnC59aJi76pgsKLPM32GiZer1hssmBnWvkT4I3zvWV5e0130Aus2/wmiuVQb39wN7bPYVkEzojP0v2HYEuz+h0k1hj+o2Wwzed/ETad6YfVTtx/y4pdysnZqa0Qna0x8j3aBdNDEQWDkp0D2DoWBIydX0pGV9b70viXKBzhQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Mck26RQzN5xmNC5QAv5OOxbey49vtuBE6wweHry4UzA=;
+ b=T3MF2QhMQPnOAb1XezFZjJNZXM2v7fsGIpT4aTZkk4LS0gXPGakiq54d31k0Sgkgt00hDP5h7Z0NErY/IzHwKa/PB85FEIP8G5uSisB59Zckqe88A9LvHdv/oVIU9ZREzg9chmcrWskdOfy7s9UP4e73EexhNuOFvaVOb4DLM7w=
+Received: from BY5PR04MB6705.namprd04.prod.outlook.com (2603:10b6:a03:220::8)
+ by BYAPR04MB5767.namprd04.prod.outlook.com (2603:10b6:a03:10e::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Wed, 2 Sep
+ 2020 05:10:23 +0000
+Received: from BY5PR04MB6705.namprd04.prod.outlook.com
+ ([fe80::1083:4093:49fa:a3fd]) by BY5PR04MB6705.namprd04.prod.outlook.com
+ ([fe80::1083:4093:49fa:a3fd%2]) with mapi id 15.20.3326.025; Wed, 2 Sep 2020
+ 05:10:23 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>
+CC:     "cang@codeaurora.org" <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Nitin Rawat <nitirawa@codeaurora.org>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
+ Auto-Hibernate Timer
+Thread-Topic: [PATCH v1 1/1] scsi: ufshcd: Allow zero value setting to
+ Auto-Hibernate Timer
+Thread-Index: AQHWfaC3kd0c1Nm+d0KoEDt9jyytd6lOsAkwgAPXxwCAAkrNAA==
+Date:   Wed, 2 Sep 2020 05:10:23 +0000
+Message-ID: <BY5PR04MB67058266FB01737736CFC978FC2F0@BY5PR04MB6705.namprd04.prod.outlook.com>
+References: <b141cfcd7998b8933635828b56fbb64f8ad4d175.1598661071.git.nguyenb@codeaurora.org>
+ <BY5PR04MB6705177184FC1A0E5F7710FDFC530@BY5PR04MB6705.namprd04.prod.outlook.com>
+ <96e34a8d7d52dfbc47738f04d2a127c2@codeaurora.org>
+In-Reply-To: <96e34a8d7d52dfbc47738f04d2a127c2@codeaurora.org>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-09-02_02:2020-09-01,2020-09-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- lowpriorityscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
- suspectscore=0 mlxscore=0 bulkscore=0 clxscore=1015 mlxlogscore=942
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2006250000 definitions=main-2009020042
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: codeaurora.org; dkim=none (message not signed)
+ header.d=none;codeaurora.org; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f6914c38-d949-40c0-ea37-08d84efe7f62
+x-ms-traffictypediagnostic: BYAPR04MB5767:
+x-microsoft-antispam-prvs: <BYAPR04MB576755241CA685B9A2FCC905FC2F0@BYAPR04MB5767.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: qiOeiQWildYDvFdYx8C1y7tmDkFV4ningbkIWlfOyJXrJ9Vx0oNE5qT/xLKIbMzCebM9rpMCckKC9wayj6BwtByYQqENULbH1ZK2+JTmmySk9R7ugzy4ITDQ0LYRrGCeVm98mZURNKYa/elojJ4+FbRnQvr+b2+HN5Q5tcbhy4sAqXM14dfZBIjjsLpawTLW0Kh2ACv1O3qiueQVA7JvTfUPSOo1Sjp1vUdEs7d22JDgMzeKiSRO+EMwozfF88qOVBD/ngZn02irxMNnWD2dJxD9z/IyYagibhKJLL8fhlGUTZID/RwEKMEG3ws3sWsK
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR04MB6705.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(76116006)(83380400001)(86362001)(4326008)(316002)(2906002)(54906003)(26005)(52536014)(9686003)(186003)(478600001)(53546011)(66946007)(64756008)(55016002)(66476007)(71200400001)(6916009)(66556008)(66446008)(8676002)(5660300002)(7416002)(8936002)(6506007)(33656002)(7696005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 1Q7ybvo8JSqdArxVPjyB1fXKh2s/fijEUwO5JMFoi4nUX7d9yY6cPn6OFyvzKuYQiUNDAEgNref9YpS0mLMq87lwF2hS+vQiGQU1mprQz5c23QDU8wqRA4dpVpNV5TygqwNS0/jOw7Pc6O9qVlkl1xOARWx1VChkf1UoSqdS5LtC6gfd0BiQ63gd53YbKRqa0cvO9nUgL/fJScV1Yz1qgMh8P7vThkXfbegmTDaxjblopacjdtOMtwXY/gPig1eZhL3luNEbbfO3zrytMG7mbm+I8Jwjpou1qPU2eFi+y//oxQWaX8DDDXo5QWoZCVDXYGDeeg4F4r0qPBVDOhUWbbJF3p9AsTTS5aRE7HL2Dv748DpePa9PhGXRcPVcFvo2FCean4LtLTV7nLGlt5zriLPh5ml0JyLh981u8thqarc9TpG4SlrXuITnkOdwTxAK6lZF+HXDkB8CcSYqpPIz+C9X0jTGlYC2jXqyqw9EZv0B8F1YFdYcRwPCm720bDAgkbjQuIVNaTqf2J7D4uIzFdUf6/l8MvsxqluNYfh3BV9BM1XVAmAQRzMb9BlWoMw6UwJardIUYTweOcoPenAG2Wf13Heo+Sv2vR8MCsS0SjAYcZOQeIFYYUv5/hKx+RrQ+NDVIXnOpC+4OLBav3AnGA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR04MB6705.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f6914c38-d949-40c0-ea37-08d84efe7f62
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Sep 2020 05:10:23.7847
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kZfUngvAt0g1xZlMpMLt8aZWEqFYpRSf7d+miJeGix7Ju9cByBZqO+epG/R/dDNKiaYiwLMLlTyGZhud9yFs0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5767
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
-
-On 9/2/20 7:19 AM, Paul Mackerras wrote:
-> On Thu, Jul 23, 2020 at 03:50:52PM +0530, Ravi Bangoria wrote:
->> Power10 is introducing second DAWR. Use real register names (with
->> suffix 0) from ISA for current macros and variables used by kvm.
-> 
-> Most of this looks fine, but I think we should not change the existing
-> names in arch/powerpc/include/uapi/asm/kvm.h (and therefore also
-> Documentation/virt/kvm/api.rst).
-
-Missed that I'm changing uapi. I'll rename only those macros/variables
-which are not uapi.
-
-Thanks,
-Ravi
+IA0KPiANCj4gT24gMjAyMC0wOC0yOSAwMDozMiwgQXZyaSBBbHRtYW4gd3JvdGU6DQo+ID4+DQo+
+ID4+IFRoZSB6ZXJvIHZhbHVlIEF1dG8tSGliZXJuYXRlIFRpbWVyIGlzIGEgdmFsaWQgc2V0dGlu
+ZywgYW5kIGl0DQo+ID4+IGluZGljYXRlcyB0aGUgQXV0by1IaWJlcm5hdGUgZmVhdHVyZSBiZWlu
+ZyBkaXNhYmxlZC4gQ29ycmVjdGx5DQo+ID4gUmlnaHQuIFNvICIgdWZzaGNkX2F1dG9faGliZXJu
+OF9lbmFibGUiIGlzIG5vIGxvbmdlciBhbiBhcHByb3ByaWF0ZQ0KPiA+IG5hbWUuDQo+ID4gTWF5
+YmUgdWZzaGNkX2F1dG9faGliZXJuOF9zZXQgaW5zdGVhZD8NCj4gVGhhbmtzIGZvciB5b3VyIGNv
+bW1lbnQuIEkgYW0gb2sgd2l0aCB0aGUgbmFtZSBjaGFuZ2Ugc3VnZ2VzdGlvbi4NCj4gPg0KPiA+
+IEFsc28sIGRpZCB5b3UgdmVyaWZpZWQgdGhhdCBubyBvdGhlciBwbGF0Zm9ybSByZWxpZXMgb24g
+aXRzIG5vbi16ZXJvDQo+ID4gdmFsdWU/DQo+IEkgb25seSB0ZXN0ZWQgdGhlIGNoYW5nZSBvbiBR
+dWFsY29tbSdzIHBsYXRmb3JtLiBJIGRvIG5vdCBoYXZlIG90aGVyDQo+IHBsYXRmb3JtcyB0byBk
+byB0aGUgdGVzdC4NCj4gVGhlIFVGUyBob3N0IGNvbnRyb2xsZXIgc3BlYyBKRVNEMjIwRSwgU2Vj
+dGlvbiA1LjIuNSBzYXlzDQo+ICJTb2Z0d2FyZSB3cml0ZXMg4oCcMOKAnSB0byBkaXNhYmxlIEF1
+dG8tSGliZXJuYXRlIElkbGUgVGltZXIiLiBTbyB0aGUgc3BlYw0KPiBzdXBwb3J0cyB0aGlzIHpl
+cm8gdmFsdWUuDQo+IFNvbWUgb3B0aW9uczoNCj4gLSBXZSBjb3VsZCBhZGQgYSBoYmEtPmNhcHMg
+c28gdGhhdCB3ZSBvbmx5IGFwcGx5IHRoZSBjaGFuZ2UgZm9yDQo+IFF1YWxjb21tJ3MgcGxhdGZv
+cm1zLg0KPiBUaGlzIGlzIG5vdCBwcmVmZXJyZWQgYmVjYXVzZSBpdCBpcyBmb2xsb3dpbmcgdGhl
+IHNwZWMgaW1wbGVtZW50YXRpb25zLg0KPiAtIE9yIG90aGVyIHBsYXRmb3JtcyB0aGF0IGRvIG5v
+dCBzdXBwb3J0IHRoZSB6ZXJvIHZhbHVlIG5lZWRzIGEgY2Fwcy4NClllYWgsIEkgZG9uJ3QgdGhp
+bmsgYW5vdGhlciBjYXBzIGlzIHJlcXVpcmVkLA0KTWF5YmUganVzdCBhbiBhY2sgZnJvbSBTdGFu
+bGV5Lg0KDQpUaGFua3MsDQpBdnJpDQo=
