@@ -2,87 +2,95 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E727C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E063C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59BCF2071B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:48:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599040102;
-	bh=Fvp6GtErygK3d+qTR+zVYuca+8Xt8w10C5RDoh0HRUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=l52hdhn1L4WrPK4d7+8qY71aEVyfpfHsDIZE1+RGXVZS6hHpVgGHRhfVubDSD2epL
-	 L6c+CF+EvocBqkXiJO0POL2zZcy4sR9GOgV7Qr1anttx2Uwl8Q3NcYKkhJkso3pt37
-	 IonndTzDFNdccWCxdui/HohzZ3TtXXYil2nZqLTU=
+	by mail.kernel.org (Postfix) with ESMTP id 0CC90204FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:48:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="o2vZo1Af"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgIBJsV (ORCPT
+        id S1726946AbgIBJsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:48:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbgIBJsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:48:11 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        Wed, 2 Sep 2020 05:48:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbgIBJsh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:48:37 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6898FC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 02:48:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=mdyL13Uvjv1pNVjDzDIXoAmUHsG+84egfwplSg5ntaw=; b=o2vZo1AfY48tpgHHFsroW+RLQh
+        ExcPZ60NefC3QI5EeH72sz0ZrETHcn3vv5nfbwR7X0LNTpza99hUfxzENoF/f876x0aWMplE0rxmx
+        1LxSlShA+O0G26QIWv07Po1Z0iIeD/+Mv6x33pCNxJMdR8+znBiC8Dsx7BHWe5wgr9i2W4ukyg/2W
+        UxphiKAPp07eF1VrFdDnc6JnJB75h/u4dN9LXpji3W69vvm24uvEtijBW10FW+5t8046RCFSwgFib
+        +u4XWl2Au3Yui9HQQv0O16kRkAhnOSQbwAgJeIb4AFqbGlSXYy3ZBt5ch5HHPU+Qdnie8aqcl3RtK
+        1MtzhkCQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1kDPNP-0002Zo-4z; Wed, 02 Sep 2020 09:48:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2E49204FD;
-        Wed,  2 Sep 2020 09:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599040091;
-        bh=Fvp6GtErygK3d+qTR+zVYuca+8Xt8w10C5RDoh0HRUQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=maGZNk/FRrK/iNABWG4A6gb9SkEbUHXF3FFmsaaYPFpxJABAmKx0bRSsL9LeVS2iI
-         s03ND2pH+cVTVgW9sYzzsjV70C9JRUIJ13tOBIRIprXZMTfGd/dlhtP4Dw+PpKkH7V
-         bU7C5LoRHv/+gqvWVj6vSY5xb4fpDLTwN4oe3ayU=
-Date:   Wed, 2 Sep 2020 10:48:06 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Hanjun Guo <guohanjun@huawei.com>
-Cc:     Zenghui Yu <yuzenghui@huawei.com>, lorenzo.pieralisi@arm.com,
-        sudeep.holla@arm.com, linux-acpi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        wanghaibin.wang@huawei.com
-Subject: Re: [PATCH v2 0/2] ACPI/IORT: Code cleanups
-Message-ID: <20200902094806.GA5567@willie-the-truck>
-References: <3142b38e-fef0-a7cf-319e-96c5da04967c@huawei.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1F46C304B92;
+        Wed,  2 Sep 2020 11:48:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 01BC123D3D72C; Wed,  2 Sep 2020 11:48:20 +0200 (CEST)
+Date:   Wed, 2 Sep 2020 11:48:20 +0200
+From:   peterz@infradead.org
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        bristot@redhat.com, jbaron@akamai.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        mingo@kernel.org, namit@vmware.com, hpa@zytor.com, luto@kernel.org,
+        ard.biesheuvel@linaro.org, jpoimboe@redhat.com,
+        pbonzini@redhat.com, mathieu.desnoyers@efficios.com,
+        linux@rasmusvillemoes.dk
+Subject: Re: [PATCH v7 08/18] static_call: Avoid kprobes on inline
+ static_call()s
+Message-ID: <20200902094820.GA1362448@hirez.programming.kicks-ass.net>
+References: <20200818135735.948368560@infradead.org>
+ <20200818135804.744920586@infradead.org>
+ <20200902103508.2872d92709fc8de7c6bffe08@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <3142b38e-fef0-a7cf-319e-96c5da04967c@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200902103508.2872d92709fc8de7c6bffe08@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 05:17:43PM +0800, Hanjun Guo wrote:
-> +Cc Will
+On Wed, Sep 02, 2020 at 10:35:08AM +0900, Masami Hiramatsu wrote:
+> On Tue, 18 Aug 2020 15:57:43 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> On 2020/8/18 17:16, Hanjun Guo wrote:
-> > On 2020/8/18 14:36, Zenghui Yu wrote:
-> > > * From v1 [1]:
-> > >    - As pointed out by Hanjun, remove two now unused inline functions.
-> > >      Compile tested with CONFIG_IOMMU_API is not selected.
-> > > 
-> > > [1] https://lore.kernel.org/r/20200817105946.1511-1-yuzenghui@huawei.com
-> > > 
-> > > Zenghui Yu (2):
-> > >    ACPI/IORT: Drop the unused @ops of iort_add_device_replay()
-> > >    ACPI/IORT: Remove the unused inline functions
-> > > 
-> > >   drivers/acpi/arm64/iort.c | 10 ++--------
-> > >   1 file changed, 2 insertions(+), 8 deletions(-)
-> > 
-> > Nice cleanup.
-> > 
-> > Acked-by: Hanjun Guo <guohanjun@huawei.com>
+> > Similar to how we disallow kprobes on any other dynamic text
+> > (ftrace/jump_label) also disallow kprobes on inline static_call()s.
 > 
-> Will, would you mind taking this patch set via ARM64 tree?
+> Looks good to me. 
+> 
+> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> 
+> BTW, here we already have 5 subsystems which reserves texts
+> (ftrace, alternatives, jump_label, static_call and kprobes.)
+> 
+> Except for the kprobes and ftrace, we can generalize the reserved-text
+> code because those are section-based static address-areas (or lists).
 
-Sure, no problem. I'll queue this for 5.10 later this week.
+Doesn't ftrace also have a section where it lists all the mcount
+locations?
 
-Will
+On top of that ftrace probably registers its trampolines.
+
+Do we support adding kprobes to BPF-JIT'ed code or should we blacklist
+them too?
