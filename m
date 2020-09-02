@@ -2,125 +2,152 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE21C433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87F1C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 62D522078E
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599058767;
-	bh=s6nqfBIuq3dFoDRkLqgA8cQMjG1yVZ4UtRlISUFc8VE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=hsS6sPOgznB5wthMXGtm8lhOqIczgBWE/C1C23I+obPEErAkeWIUpXutvafez+AGB
-	 yXcoTMDqjjrKBE+3h4roiSPbNOSnMOaUoSjn+ZPbXUg+PFTgg0ISFOiQr2rEbmlWIK
-	 q0w/FVU+zkY0WM0IuoLEPtmexXNTKFhFN9OGspRY=
+	by mail.kernel.org (Postfix) with ESMTP id A004520829
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 14:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="XXkBZ0AU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tWoJdacz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbgIBO7Z (ORCPT
+        id S1728016AbgIBO7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 10:59:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbgIBNwD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 09:52:03 -0400
-Received: from paulmck-ThinkPad-P72.home (unknown [50.45.173.55])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D3F020767;
-        Wed,  2 Sep 2020 13:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599054722;
-        bh=s6nqfBIuq3dFoDRkLqgA8cQMjG1yVZ4UtRlISUFc8VE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=IbeQzyFkL0L1Xx0MynJJM3KNt2ZzKm747XMqTTSZrHK5HGG1gK3K6+OcBg5Zpw390
-         8UBtwQJ/QuRKdnq6FdcKrsbpA98aFmiAnH7wlT2JxLVtma/p5+Ma9v005KFEEZT76T
-         Q6zZtSxr2fDTjJhybaShUyWoecF+njvfmRhpJL3M=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 0D17F3520DED; Wed,  2 Sep 2020 06:52:02 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 06:52:02 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-mmc <linux-mmc@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, rcu@vger.kernel.org,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        John Stultz <john.stultz@linaro.org>,
+        Wed, 2 Sep 2020 10:59:21 -0400
+Received: from wnew1-smtp.messagingengine.com ([64.147.123.26]:59977 "EHLO
+        wnew1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726528AbgIBNwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 09:52:35 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.west.internal (Postfix) with ESMTP id 679675DD;
+        Wed,  2 Sep 2020 09:52:33 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Wed, 02 Sep 2020 09:52:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=uYl4BPHJHJwCu+IH/QSOVmLDopG
+        QR9pU8iqrt6n2QJ0=; b=XXkBZ0AU1gPtIpCT7UwgtStXIxC4oVjC5FcJH6iX5uu
+        wU8wjbZRK+1vICtZ/tqPMGhwhPvsfFVbDVuin0kFLguFYqVV50GOYS1zHOhHen3i
+        KeeHo1QhqbPDsysn7wll3hIotJ3Cd69FKxgIqtbZiAv8H7Jo/lo/wDHUs51Fhjl9
+        Fxy9ABtJ1odVwjWjiKsdTFMRZSER7IySA/+KejSIreeCxel/DIYZJrl5wO1a1XjI
+        wTEZSN5YjXCj98GWwBOo4QxYVOoU4rTGY5oHFSPX87u2PX5ER6llcTj63hVJ94Be
+        79kH65Z/JoTSk1DYXlsSCpgWMBQVshsyTTo1SRScd2w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=uYl4BP
+        HJHJwCu+IH/QSOVmLDopGQR9pU8iqrt6n2QJ0=; b=tWoJdaczodYmxy9J3bFBoX
+        buLaM3YefbPsTm0YESK7pU2fH2O4d9bhnx1mMLYb1e1MGPjUJw7DmKqkOSn3vAaH
+        cii0IYzDwoc2KYriGH/w0x0dFr+WoE6aqxDPL2QYIvF7Q/WVfWXoLhLsrrrsWxLn
+        lr2YERIwgcuvlIt832jKJXsjfJx7w0lDm5b+6+nCr5UJNKSznDikAtCKmUL479i/
+        fjkPOhVgHUdNr15aa//iCKtzrtFsRV7TfH4ysy0syrENwm/Y674NDOiM2pt2KOpX
+        Avh4zd2A2sjHztEX+71YVf57YMP608BpfL4z0JIavPbzsDUbBut785e9GvY7HTYQ
+        ==
+X-ME-Sender: <xms:n6NPX_qTozjzfe7fC4apLu9gBl2-reHQmCuC-doz2DB5lGMOkSgSGw>
+    <xme:n6NPX5q5BpOf_e2Ys3Ec66brJ63DJNPwSSkiJuqz4WccZWPmi824aRCXvQJL7t0rq
+    LjXYDTPN53sumIMlp0>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrudefledgjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehgtderredttddunecuhfhrohhmpeforgigihhm
+    vgcutfhiphgrrhguuceomhgrgihimhgvsegtvghrnhhordhtvggthheqnecuggftrfgrth
+    htvghrnhepuddvudfhkeekhefgffetffelgffftdehffduffegveetffehueeivddvjedv
+    gfevnecukfhppeeltddrkeelrdeikedrjeeinecuvehluhhsthgvrhfuihiivgeptdenuc
+    frrghrrghmpehmrghilhhfrhhomhepmhgrgihimhgvsegtvghrnhhordhtvggthh
+X-ME-Proxy: <xmx:n6NPX8O69UHTuexuOmoIizn2havGvGAJxVqtDwjneINQxnWDPV_KXg>
+    <xmx:n6NPXy4jE2Y_PBTupPEGBJBijeDTFyEWOj9ThEqavfUXNml4oOyjcQ>
+    <xmx:n6NPX-4SbTbPsnGqG7FfpQFxNJ0FpD68ZtoqHuh7YL63anamrGAenw>
+    <xmx:oaNPX9RvhgC5IuuXK-6wp4pu4tPY8NNdvcBQt_Nnj2BubG8zLBazXVNhzPg>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B013D328005E;
+        Wed,  2 Sep 2020 09:52:31 -0400 (EDT)
+Date:   Wed, 2 Sep 2020 15:52:30 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
         Stephen Boyd <sboyd@kernel.org>,
-        Lars Povlsen <lars.povlsen@microchip.com>,
-        madhuparnabhowmik10@gmail.com,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        peterz@infrdead.org, Lina Iyer <ilina@codeaurora.org>
-Subject: Re: WARNING: suspicious RCU usage - sdhci-pltfm: SDHCI platform and
- OF driver helper
-Message-ID: <20200902135202.GG29330@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <CA+G9fYuiJwN1ad955Xw4ShamX2=373r+56KsbpeverEs+i_NAg@mail.gmail.com>
- <20200831194402.GD2855@paulmck-ThinkPad-P72>
- <CAPDyKFq7KWo=4VmPhgrt7vEEQ_P6NdVgQp+MO_1cg1dtoVR_Fw@mail.gmail.com>
- <20200901150047.GB29330@paulmck-ThinkPad-P72>
- <CAPDyKFptZK-OqnAuJYGnpfPbZ1qw-iSd4t5SuE7SmWic=ms48Q@mail.gmail.com>
+        Michael Turquette <mturquette@baylibre.com>,
+        Kamal Dasu <kdasu.kdev@gmail.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-clk@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        Phil Elwell <phil@raspberrypi.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 00/78] drm/vc4: Support BCM2711 Display Pipeline
+Message-ID: <20200902135230.5hpvfjqsamot5zg6@gilmour.lan>
+References: <CGME20200709070649epcas1p13664bacc66a0f73443bf4d3e8940f933@epcas1p1.samsung.com>
+ <cover.7a1aa1784976093af26cb31fd283cf5b3ed568bb.1594230107.git-series.maxime@cerno.tech>
+ <1a39aedf-b708-e490-6acb-9a07e1b73300@samsung.com>
+ <20200902133220.avp6dhfv2fhpiyf3@gilmour.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="hfgqy6buhvjnpemx"
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFptZK-OqnAuJYGnpfPbZ1qw-iSd4t5SuE7SmWic=ms48Q@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200902133220.avp6dhfv2fhpiyf3@gilmour.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Sep 02, 2020 at 08:49:11AM +0200, Ulf Hansson wrote:
-> On Tue, 1 Sep 2020 at 17:00, Paul E. McKenney <paulmck@kernel.org> wrote:
 
-[ . . . ]
+--hfgqy6buhvjnpemx
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > Here is the list, though it is early in the morning here:
-> >
-> > 1.      RCU_NONIDLE().
-> >
-> > 2.      Peter's patch, if it turns out to hoist your code out of what
-> >         RCU considers to be the idle loop.
-> >
-> > 3.      If the problem is trace events, use the _rcuidle() variant of the
-> >         trace event.  Instead of trace_blah(), use trace_blah_rcuidle().
-> >
-> > 4.      Switch from RCU (as in rcu_read_lock()) to SRCU (as in
-> >         srcu_read_lock()).
-> >
-> > 5.      Take Peter's patch a step further, moving the rcu_idle_enter()
-> >         and rcu_idle_exit() calls as needed.  But please keep in mind
-> >         that these two functions require that irqs be disabled by their
-> >         callers.
-> >
-> > 6.      If RCU_NONIDLE() in inconvenient due to early exits and such,
-> >         you could use the rcu_irq_enter_irqson() and rcu_irq_exit_irqson()
-> >         functions that it calls.
-> >
-> > Do any of those help?
-> 
-> Yes, they will, in one way or the other. Thanks for providing me with
-> all the available options.
-> 
-> BTW, I still don't get what good rcu_idle_enter|exit() does, but I am
-> assuming those need to be called at some point before the CPU goes to
-> sleep.
+On Wed, Sep 02, 2020 at 03:32:20PM +0200, Maxime Ripard wrote:
+> Hi Hoegeun
+>=20
+> On Fri, Aug 21, 2020 at 04:18:34PM +0900, Hoegeun Kwon wrote:
+> > Hi Maxime,
+> >=20
+> > Thank you for your version 4 patch.
+> > I tested all 78 patches based on the next-20200708.
+> >=20
+> >=20
+> > Dual HDMI opearation does not work normally.
+> > flip_done timed out occurs and doesn't work.
+> > Could you check please it.
+> >=20
+> > [=A0 105.694541] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=
+=20
+> > [CRTC:64:crtc-3] flip_done timed out
+> > [=A0 115.934994] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=
+=20
+> > [CONNECTOR:32:HDMI-A-1] flip_done timed out
+> > [=A0 126.174545] [drm:drm_atomic_helper_wait_for_dependencies] *ERROR*=
+=20
+> > [PLANE:60:plane-3] flip_done timed out
+>=20
+> Thanks for testing and reporting this. I've been looking into it, and it
+> seems that it's not just the dual output that's broken, but HDMI1
+> entirely (so even a single display connected to HDMI1 doesn't work).
+>=20
+> Is it happening for you as well?
 
-These functions allow RCU to leave idle CPUs undisturbed.  If they
-were not invoked, RCU would periodically IPI idle CPUs to verify that
-there were no RCU readers running on them.  This would be quite bad for
-battery lifetime, among other things.  So the call to rcu_idle_enter()
-tells RCU that it may safely completely ignore this CPU until its next
-call to rcu_idle_exit().
+Nevermind, I had the DSI panel connected and it was interfering
 
-							Thanx, Paul
+Maxime
+
+
+--hfgqy6buhvjnpemx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCX0+jngAKCRDj7w1vZxhR
+xVSHAQCnCDlA/SJLCP5PetU7Iyf4P2mZvBCHHAz/RyMCctXhaAEA+AQnVnAQhqZZ
+mmLYhcaotKt4KrJuuhWp61WNWd0RMwQ=
+=1Ln2
+-----END PGP SIGNATURE-----
+
+--hfgqy6buhvjnpemx--
