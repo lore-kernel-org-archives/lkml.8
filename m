@@ -2,217 +2,210 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA992C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:06:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF273C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B296F207EA
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:06:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97FF5207EA
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hviSWVzB"
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hxyULGA8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgIBQGY (ORCPT
+        id S1728277AbgIBQG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:06:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55618 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726490AbgIBQGL (ORCPT
+        Wed, 2 Sep 2020 12:06:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60966 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728035AbgIBQGO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:06:11 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8161C061244;
-        Wed,  2 Sep 2020 09:06:10 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id z9so5118409wmk.1;
-        Wed, 02 Sep 2020 09:06:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0O4dQf9ijqc3DJHTRqGfgFX/txsOCHtKdPYLLD83pqA=;
-        b=hviSWVzBIYj8FNGXfXWECTBNPGc00bdNjjr2aNz5Ks38vUJmN1Xf2Ktai2CSbcmP2S
-         VvVfkEJVTeeT8V5676PV1cEYtiupuQd2cmCPoDWsb8O45qWpgYCDj5hmBmTUf+yaYQj2
-         ho0JukZbw5l6AthWRtrRgKEaUdei8Yvv8JGta1uPTbu0y4mNdP58YOjK0zHReNBkYfUw
-         cyHjeulLy9QARdE0qADfPB4+xI7aklJAj5ZTPNJWR9gvncijU+56BV9RF7pOkf4q1h+x
-         N9xBb3+Y5ci4a1WR9dBxtbUOf37eGOdWZXhCXrFZjHssMLzFh6A1MoB+6BxbazbPY/bB
-         CjGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0O4dQf9ijqc3DJHTRqGfgFX/txsOCHtKdPYLLD83pqA=;
-        b=O0uVaBHiNzTi1y0+w/GxKZvLY5RbBWGG6MxloAis5Nty0NPSKdvoCT1B+MXCReBj+9
-         ncmNeICb4rgqEHkhjoKPUmXZhw+E6aNNY9jfWJyXEFtl9/ApUCKEEhyDNjILgKh3q3/0
-         ZAw+L6G4sm4ee5aYr/+WflFa+K9PFq8h6uEI0dxePwHqVFaCbe6w+Q0H4QCPuTVmbSC/
-         APuutOUZmi4ItZlPKi9vUeTit8XHZFyGBup1Fb28LYRxvTq9oQLObmGJaQVK/PtW6Flj
-         JF9J2Od5Vd9N14jEFTt9lkZkPCMmub7+/mHcLMCCN0CeqDSUHZhhQByF9ixYrPkCX/7e
-         Rsgg==
-X-Gm-Message-State: AOAM53171q7ZybyUnqTg7XG7Zg6/qzXmYFF4ORsdukJ7ztydx8ghUmWI
-        kFOKkwATvQuDGGRIj+QLZ2h8c/3yaijD3GG6KIY=
-X-Google-Smtp-Source: ABdhPJxdfC3mgIvbt6wua8mzM+KmTyM8048m+AYjGnIYLBeF9SqkT0az/f0O5TPKGpss8BXufe9V77wBncKPW7hIYZ4=
-X-Received: by 2002:a1c:f605:: with SMTP id w5mr1358007wmc.26.1599062769544;
- Wed, 02 Sep 2020 09:06:09 -0700 (PDT)
+        Wed, 2 Sep 2020 12:06:14 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 082G22JQ005694;
+        Wed, 2 Sep 2020 12:05:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=mCBD115kons15XNbWGYTN9L1TEnzLhbN4TRP6WpLQZM=;
+ b=hxyULGA8KndPV3IA4cnfHgwCGtG+qCBU8tXkRNwcUCP5NQqr6kNJx/uz3u/qpXekftTH
+ GOtdlF5lg9pokUCFainPpcDfkg6feVPwiWMiBaeZdq8hIXzK6Qd6Lqzvr7qYKEqXBbNB
+ a6ndZSVRh/9KqRxGdNSI03L/Q/5kHf0/jcIGRFj/cj4uyxzSnR1ZfAnUKb3e+9ksPFuv
+ Pe0x5nkbm3RQtQ+0C7w81xS+mrJqpN2H8k/AXxSl36QSNrqrVCC7LTuDCvogIloMB5eb
+ cgRgzGjbsBIL5CQBjr1+FnMdLXYe7jLVH4Co4Lk5Fh5eF1e8wOs1fGfFREmtVqHznV4c SQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ad4fkbjm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 12:05:46 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 082G2Pex008058;
+        Wed, 2 Sep 2020 12:05:45 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 33ad4fkbh4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 12:05:45 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 082G3NGp013563;
+        Wed, 2 Sep 2020 16:05:42 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma03ams.nl.ibm.com with ESMTP id 337en8cw2b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 02 Sep 2020 16:05:42 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 082G5dNT10879354
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 2 Sep 2020 16:05:39 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF6DBA4051;
+        Wed,  2 Sep 2020 16:05:39 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BDD32A4040;
+        Wed,  2 Sep 2020 16:05:34 +0000 (GMT)
+Received: from localhost.localdomain.com (unknown [9.85.83.99])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  2 Sep 2020 16:05:34 +0000 (GMT)
+From:   Kajol Jain <kjain@linux.ibm.com>
+To:     acme@kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, pc@us.ibm.com,
+        jolsa@redhat.com, namhyung@kernel.org, ak@linux.intel.com,
+        yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, irogers@google.com,
+        maddy@linux.ibm.com, ravi.bangoria@linux.ibm.com,
+        john.garry@huawei.com, kjain@linux.ibm.com
+Subject: [PATCH v7 3/5] perf jevents: Add support for parsing perchip/percore events
+Date:   Wed,  2 Sep 2020 21:34:37 +0530
+Message-Id: <20200902160439.335232-4-kjain@linux.ibm.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200902160439.335232-1-kjain@linux.ibm.com>
+References: <20200902160439.335232-1-kjain@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200707171515.110818-1-izabela.bakollari@gmail.com>
- <20200804160908.46193-1-izabela.bakollari@gmail.com> <e971a990-4c92-9d64-8bc6-61516d874370@redhat.com>
-In-Reply-To: <e971a990-4c92-9d64-8bc6-61516d874370@redhat.com>
-From:   Izabela Bakollari <izabela.bakollari@gmail.com>
-Date:   Wed, 2 Sep 2020 18:05:58 +0200
-Message-ID: <CAC8tkWD03qhxqB2G06f4e_-xiuXBYc4GsrKftx30MnUuFtNnJg@mail.gmail.com>
-Subject: Re: [PATCHv2 net-next] dropwatch: Support monitoring of dropped frames
-To:     Michal Schmidt <mschmidt@redhat.com>
-Cc:     nhorman@tuxdriver.com, davem@davemloft.net, kuba@kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-09-02_09:2020-09-02,2020-09-02 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 clxscore=1015
+ priorityscore=1501 spamscore=0 phishscore=0 mlxscore=0 mlxlogscore=999
+ malwarescore=0 adultscore=0 lowpriorityscore=0 impostorscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2006250000
+ definitions=main-2009020148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thank you for your review. I am working on a patch v3 and will apply
-your suggestions where possible.
+Initially, every time we want to add new terms like chip, core thread etc,
+we need to create corrsponding fields in pmu_events and event struct.
+This patch adds an enum called 'aggr_mode_class' which store all these
+aggregation like perchip/percore. It also adds new field 'aggr_mode'
+to capture these terms.
+Now, if user wants to add any new term, they just need to add it in
+the enum defined.
 
-Best,
-Izabela
+Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
+---
+ tools/perf/pmu-events/jevents.c    | 19 +++++++++++++++++++
+ tools/perf/pmu-events/pmu-events.h |  6 ++++++
+ 2 files changed, 25 insertions(+)
 
-On Mon, Aug 31, 2020 at 3:18 PM Michal Schmidt <mschmidt@redhat.com> wrote:
->
-> Dne 04. 08. 20 v 18:09 izabela.bakollari@gmail.com napsala:
-> > From: Izabela Bakollari <izabela.bakollari@gmail.com>
-> >
-> > Dropwatch is a utility that monitors dropped frames by having userspace
-> > record them over the dropwatch protocol over a file. This augument
-> > allows live monitoring of dropped frames using tools like tcpdump.
-> >
-> > With this feature, dropwatch allows two additional commands (start and
-> > stop interface) which allows the assignment of a net_device to the
-> > dropwatch protocol. When assinged, dropwatch will clone dropped frames,
-> > and receive them on the assigned interface, allowing tools like tcpdump
-> > to monitor for them.
-> >
-> > With this feature, create a dummy ethernet interface (ip link add dev
-> > dummy0 type dummy), assign it to the dropwatch kernel subsystem, by using
-> > these new commands, and then monitor dropped frames in real time by
-> > running tcpdump -i dummy0.
-> >
-> > Signed-off-by: Izabela Bakollari <izabela.bakollari@gmail.com>
-> > ---
-> > Changes in v2:
-> > - protect the dummy ethernet interface from being changed by another
-> > thread/cpu
-> > ---
-> >   include/uapi/linux/net_dropmon.h |  3 ++
-> >   net/core/drop_monitor.c          | 84 ++++++++++++++++++++++++++++++++
-> >   2 files changed, 87 insertions(+)
-> [...]
-> > @@ -255,6 +259,21 @@ static void trace_drop_common(struct sk_buff *skb, void *location)
-> >
-> >   out:
-> >       spin_unlock_irqrestore(&data->lock, flags);
-> > +     spin_lock_irqsave(&interface_lock, flags);
-> > +     if (interface && interface != skb->dev) {
-> > +             skb = skb_clone(skb, GFP_ATOMIC);
->
-> I suggest naming the cloned skb "nskb". Less potential for confusion
-> that way.
->
-> > +             if (skb) {
-> > +                     skb->dev = interface;
-> > +                     spin_unlock_irqrestore(&interface_lock, flags);
-> > +                     netif_receive_skb(skb);
-> > +             } else {
-> > +                     spin_unlock_irqrestore(&interface_lock, flags);
-> > +                     pr_err("dropwatch: Not enough memory to clone dropped skb\n");
->
-> Maybe avoid logging the error here. In NET_DM_ALERT_MODE_PACKET mode,
-> drop monitor does not log about the skb_clone() failure either.
-> We don't want to open the possibility to flood the logs in case this
-> somehow gets triggered by every packet.
->
-> A coding style suggestion - can you rearrange it so that the error path
-> code is spelled out first? Then the regular path does not have to be
-> indented further:
->
->        nskb = skb_clone(skb, GFP_ATOMIC);
->        if (!nskb) {
->                spin_unlock_irqrestore(&interface_lock, flags);
->                return;
->        }
->
->        /* ... implicit else ... Proceed normally ... */
->
-> > +                     return;
-> > +             }
-> > +     } else {
-> > +             spin_unlock_irqrestore(&interface_lock, flags);
-> > +     }
-> >   }
-> >
-> >   static void trace_kfree_skb_hit(void *ignore, struct sk_buff *skb, void *location)
-> > @@ -1315,6 +1334,53 @@ static int net_dm_cmd_trace(struct sk_buff *skb,
-> >       return -EOPNOTSUPP;
-> >   }
-> >
-> > +static int net_dm_interface_start(struct net *net, const char *ifname)
-> > +{
-> > +     struct net_device *nd = dev_get_by_name(net, ifname);
-> > +
-> > +     if (nd)
-> > +             interface = nd;
-> > +     else
-> > +             return -ENODEV;
-> > +
-> > +     return 0;
->
-> Similarly here, consider:
->
->    if (!nd)
->            return -ENODEV;
->
->    interface = nd;
->    return 0;
->
-> But maybe I'm nitpicking ...
->
-> > +}
-> > +
-> > +static int net_dm_interface_stop(struct net *net, const char *ifname)
-> > +{
-> > +     dev_put(interface);
-> > +     interface = NULL;
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int net_dm_cmd_ifc_trace(struct sk_buff *skb, struct genl_info *info)
-> > +{
-> > +     struct net *net = sock_net(skb->sk);
-> > +     char ifname[IFNAMSIZ];
-> > +
-> > +     if (net_dm_is_monitoring())
-> > +             return -EBUSY;
-> > +
-> > +     memset(ifname, 0, IFNAMSIZ);
-> > +     nla_strlcpy(ifname, info->attrs[NET_DM_ATTR_IFNAME], IFNAMSIZ - 1);
-> > +
-> > +     switch (info->genlhdr->cmd) {
-> > +     case NET_DM_CMD_START_IFC:
-> > +             if (!interface)
-> > +                     return net_dm_interface_start(net, ifname);
-> > +             else
-> > +                     return -EBUSY;
-> > +     case NET_DM_CMD_STOP_IFC:
-> > +             if (interface)
-> > +                     return net_dm_interface_stop(net, interface->name);
-> > +             else
-> > +                     return -ENODEV;
->
-> ... and here too.
->
-> Best regards,
-> Michal
->
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index 388dd287d736..767a6d59b07a 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -48,6 +48,7 @@
+ #include <linux/list.h>
+ #include "jsmn.h"
+ #include "json.h"
++#include "pmu-events.h"
+ 
+ int verbose;
+ char *prog;
+@@ -60,6 +61,7 @@ struct json_event {
+ 	char *pmu;
+ 	char *unit;
+ 	char *perpkg;
++	char *aggr_mode;
+ 	char *metric_expr;
+ 	char *metric_name;
+ 	char *metric_group;
+@@ -67,6 +69,17 @@ struct json_event {
+ 	char *metric_constraint;
+ };
+ 
++enum aggr_mode_class convert(const char *aggr_mode)
++{
++	if (!strcmp(aggr_mode, "PerCore"))
++		return PerCore;
++	else if (!strcmp(aggr_mode, "PerChip"))
++		return PerChip;
++
++	pr_err("%s: Wrong AggregationMode value '%s'\n", prog, aggr_mode);
++	return -1;
++}
++
+ typedef int (*func)(void *data, struct json_event *je);
+ 
+ int eprintf(int level, int var, const char *fmt, ...)
+@@ -355,6 +368,8 @@ static int print_events_table_entry(void *data, struct json_event *je)
+ 		fprintf(outfp, "\t.unit = \"%s\",\n", je->unit);
+ 	if (je->perpkg)
+ 		fprintf(outfp, "\t.perpkg = \"%s\",\n", je->perpkg);
++	if (je->aggr_mode)
++		fprintf(outfp, "\t.aggr_mode = \"%d\",\n", convert(je->aggr_mode));
+ 	if (je->metric_expr)
+ 		fprintf(outfp, "\t.metric_expr = \"%s\",\n", je->metric_expr);
+ 	if (je->metric_name)
+@@ -379,6 +394,7 @@ struct event_struct {
+ 	char *pmu;
+ 	char *unit;
+ 	char *perpkg;
++	char *aggr_mode;
+ 	char *metric_expr;
+ 	char *metric_name;
+ 	char *metric_group;
+@@ -408,6 +424,7 @@ struct event_struct {
+ 	op(pmu);						\
+ 	op(unit);						\
+ 	op(perpkg);						\
++	op(aggr_mode);						\
+ 	op(metric_expr);					\
+ 	op(metric_name);					\
+ 	op(metric_group);					\
+@@ -613,6 +630,8 @@ static int json_events(const char *fn,
+ 				addfield(map, &je.unit, "", "", val);
+ 			} else if (json_streq(map, field, "PerPkg")) {
+ 				addfield(map, &je.perpkg, "", "", val);
++			} else if (json_streq(map, field, "AggregationMode")) {
++				addfield(map, &je.aggr_mode, "", "", val);
+ 			} else if (json_streq(map, field, "Deprecated")) {
+ 				addfield(map, &je.deprecated, "", "", val);
+ 			} else if (json_streq(map, field, "MetricName")) {
+diff --git a/tools/perf/pmu-events/pmu-events.h b/tools/perf/pmu-events/pmu-events.h
+index c8f306b572f4..7da1a3743b77 100644
+--- a/tools/perf/pmu-events/pmu-events.h
++++ b/tools/perf/pmu-events/pmu-events.h
+@@ -2,6 +2,11 @@
+ #ifndef PMU_EVENTS_H
+ #define PMU_EVENTS_H
+ 
++enum aggr_mode_class {
++	PerChip = 1,
++	PerCore
++};
++
+ /*
+  * Describe each PMU event. Each CPU has a table of PMU events.
+  */
+@@ -14,6 +19,7 @@ struct pmu_event {
+ 	const char *pmu;
+ 	const char *unit;
+ 	const char *perpkg;
++	const char *aggr_mode;
+ 	const char *metric_expr;
+ 	const char *metric_name;
+ 	const char *metric_group;
+-- 
+2.26.2
+
