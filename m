@@ -2,251 +2,158 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=BAYES_00,DATE_IN_PAST_03_06,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB90DC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 827A2C43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76A60204FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4933E2071B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 09:48:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="s+tFWIJV"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="J1mIpoT4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbgIBJqg (ORCPT
+        id S1726858AbgIBJsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 05:46:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53594 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726654AbgIBJqb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 05:46:31 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C508DC061245
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 02:46:30 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l9so3827216wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 02:46:30 -0700 (PDT)
+        Wed, 2 Sep 2020 05:48:10 -0400
+Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:39918
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726268AbgIBJsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 05:48:06 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RmGhU2AgXexYHDj0K+x/3z/u+YXVDl4lHmFobOsKwN2mmp4H5If3bgfLeQL+L0UwBN0eci0JbZ38y5ediin88PBum6mA7R1Nm+PoMDwbpMMdxfGSz19JTGIVXjQWGk06JdmnHNcDtuTiBM3pI0Npkf9Pq+XZ2DKoo5Nriafcj8QxqUukMbAcIsOMwugbWIzN73DwB8ckSAeLYoOq+l6qyQiG9SR7WjFONZLTtn5qUGGnqB1YwTaP5+7Q1HnCcH4dZhC7FI5octrSQ1jE6vpXs8wsYOrTy8U/DvQqnJO6aiLrk/qoUJ2r3RdUiLPDoNj6jm1RAwMBC1wjAPqXUYyP4w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RPrTYZVH1G+G/OS/3YmI5YCL8W9JtFq7DF94lCvM4Go=;
+ b=Zy6nTxUMeO/a5W7Y6vxs5F7LSSqDXj/QRKKD3UTAM46lXmZsttPW/Q2jV8bRW8XK6IOBAzqjpZcqhxLT5Q5Fu67to/B66xDyyUiF5twKdr6pG3a9WQtn8Vf+0euZMjW8vugQtRI7HCgAyQkq6TJiX1up0yHRKIzmo8sxVS+fLIuPRezOgrGFF3Xsy3aek4U516cIiXQku8oX515IKqqE5AALeXs4FCOI0FXWXNJasTNK7lE2Pww1bRzO7SmgLq/f6F7NWbN6PXrmIPpLFFp7Z504fmdBBRMojaDWdYp+t61C8gUSEFjsc0FinqMZ4X7xX2MOefJWbE1wl46i3ElqoQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 193.240.239.45) smtp.rcpttodomain=kernel.org smtp.mailfrom=diasemi.com;
+ dmarc=fail (p=none sp=none pct=100) action=none header.from=diasemi.com;
+ dkim=none (message not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jX2ecA2PJy/6cJDE/ynYXDewujYCxQrA9LGe6p7fwa0=;
-        b=s+tFWIJVIBL61p7DDHaqPAy9Y1On3xF+O5zL/CRvF1TShz2kOVXGa0BfN+4C08nZLe
-         FSleXSBrFmWZSt8tJw3nm3UPjrvaW2QGxylwvCLqLRc6q01cfw9J/FXwy/gpahD+1Nu/
-         eW1lgtOJD37BSpZxfm/TiaddOWbPmD95FHak3Xdf8EI2RLQPdCSa5EVbubyubg/xilUJ
-         reN4hcojOON3o+u4tA3r1+6iv3b2Z4WszZr/oZd0iN6FiQWSa1bSgSLEVLVkvOsHoU3M
-         Jx9lkoZv7VH4Tsxj3yJpbsPwI8TbO61B12Ar7mrvrZTbc03O5My6ek8ALq4moGm5Yvll
-         tJEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jX2ecA2PJy/6cJDE/ynYXDewujYCxQrA9LGe6p7fwa0=;
-        b=aanwv6ivgiPMAmRBd4fmrrGXG5ps75OCJstIyaXNhcD+QNTQ0tlPz+Jb9IdYd48utW
-         n6tbFqi+1qr0CcR3PTPLzbNUZZ8x/aO5wr8p2TmWy/3eVMCriRgwYTBBe1ZVS4Whi0HO
-         PcxBKZa6FXD1bBiTudfVMVreJ6ees43Xq44irq0E7uuDZ/oQ9hb+gn4tivAOvoVPVhCG
-         R0FAn3n+SDqJ7/xMkqArQbywAkw1/ZHy+wAmxRCwmdW24nKexmfA9rmJlyM27BDel5h+
-         KzQ6GxVAV60k0efWrr758mpLMJNCnDZ2cNnLefMAkbsbm00lmjYwR1iSR0txxVSnhy7t
-         HKlA==
-X-Gm-Message-State: AOAM533xsCzkZKkGVnMl3MgTXMTBhGOivPKh3eGGwPZulLV4F4B/Xd+2
-        igHZiApXyLLv0dOGlwf4K4egGw==
-X-Google-Smtp-Source: ABdhPJyRzryUcwqo75TyJ2PL+JQ/4k6riaj+13wMpTRayJKeAUcGGy58JS/hO44sgWLczW38eGZI7w==
-X-Received: by 2002:a1c:c906:: with SMTP id f6mr6291735wmb.5.1599039989403;
-        Wed, 02 Sep 2020 02:46:29 -0700 (PDT)
-Received: from localhost ([85.163.43.78])
-        by smtp.gmail.com with ESMTPSA id t203sm5786576wmg.43.2020.09.02.02.46.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 02:46:28 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 11:46:27 +0200
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     Moshe Shemesh <moshe@nvidia.com>
-Cc:     Moshe Shemesh <moshe@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next RFC v3 01/14] devlink: Add reload action option
- to devlink reload command 
-Message-ID: <20200902094627.GB2568@nanopsycho>
-References: <1598801254-27764-1-git-send-email-moshe@mellanox.com>
- <1598801254-27764-2-git-send-email-moshe@mellanox.com>
- <20200831121501.GD3794@nanopsycho.orion>
- <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
+ d=dialogsemiconductor.onmicrosoft.com;
+ s=selector1-dialogsemiconductor-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RPrTYZVH1G+G/OS/3YmI5YCL8W9JtFq7DF94lCvM4Go=;
+ b=J1mIpoT4CMAMUdC/A975HosLk3qMZANm75yI6JrUEnGqadK2VJ4IBVyCAPR9/w6SQ0+9mDKj/dduvyfKS6/aHdvsv3ZV93WGeJLVjnKg33XuLTEcp8L9dKDcvm1xeO0AEUzfilNtfpHgYjBDCOg3C+SOQ3PCMT+A1cYrPTS1FLs=
+Received: from AM5PR0701CA0016.eurprd07.prod.outlook.com
+ (2603:10a6:203:51::26) by AM4PR1001MB1266.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:200:95::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15; Wed, 2 Sep
+ 2020 09:48:02 +0000
+Received: from HE1EUR02FT004.eop-EUR02.prod.protection.outlook.com
+ (2603:10a6:203:51:cafe::2f) by AM5PR0701CA0016.outlook.office365.com
+ (2603:10a6:203:51::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.5 via Frontend
+ Transport; Wed, 2 Sep 2020 09:48:02 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is
+ 193.240.239.45) smtp.mailfrom=diasemi.com; kernel.org; dkim=none (message not
+ signed) header.d=none;kernel.org; dmarc=fail action=none
+ header.from=diasemi.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ diasemi.com discourages use of 193.240.239.45 as permitted sender)
+Received: from mailrelay1.diasemi.com (193.240.239.45) by
+ HE1EUR02FT004.mail.protection.outlook.com (10.152.10.83) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 09:48:01 +0000
+Received: from krsrvapps-03.diasemi.com (10.93.17.2) by
+ NB-EX-CASHUB01.diasemi.com (10.1.16.140) with Microsoft SMTP Server id
+ 14.3.468.0; Wed, 2 Sep 2020 11:47:58 +0200
+Received: by krsrvapps-03.diasemi.com (Postfix, from userid 22266)      id
+ 444ED13F670; Wed,  2 Sep 2020 18:47:56 +0900 (KST)
+Message-ID: <b825660680906abb0053cbe43c6bbe899bfe0c32.1599022115.git.Roy.Im@diasemi.com>
+In-Reply-To: <cover.1599022115.git.Roy.Im@diasemi.com>
+References: <cover.1599022115.git.Roy.Im@diasemi.com>
+From:   Roy Im <roy.im.opensource@diasemi.com>
+Date:   Wed, 2 Sep 2020 13:48:35 +0900
+Subject: [RESEND PATCH v19 1/3] MAINTAINERS: da7280 updates to the Dialog
+ Semiconductor search terms
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh@kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Greg KH <gregkh@linuxfoundation.org>,
+        Support Opensource <support.opensource@diasemi.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9fffbe80-9a2a-33de-2e11-24be34648686@nvidia.com>
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: a0671d12-b688-4778-0ba5-08d84f254889
+X-MS-TrafficTypeDiagnostic: AM4PR1001MB1266:
+X-Microsoft-Antispam-PRVS: <AM4PR1001MB12665EFAA1754BE979CE2000A22F0@AM4PR1001MB1266.EURPRD10.PROD.OUTLOOK.COM>
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: ilkx8Ut405//jKEXeDFK6DpSQNztbekvSw442kFpVZGcOygxSPrtc7pfg0zsmB5SoMV84MK9sflfbCvuQqJZdaAJpkBnvnz82S4z1OcYfAhOLVDduDnMtltyTU8dq1we0/exDQWMuVusSQv7HqsqKSb1QM4swsUKepm36FSHE5eaGjuSpl9G1sMRluPZZS3M5IxztG634UcrWJuPQvl9bRLA16R+3dgVYIfnURtYgw5sT+RevdRlm2F2bRu8THO3aXA7AkwkQBsmt3mpybEoTEtBkjF/l9Hz/SmlNKtH0MqWoJkW9ouF3AgivHqP6WHeUNEXMDN6/plHOGNWguDTA5AOpA+MiKlV3ORjzWIeGdzQJY1HsdIT4jeyFM7aVj1rySwq8F89C+YvFC/mqUbZqWntx5Tk9PKnKW9fC7gR6fiS/x1oPMCqTwpVvw8dPEqiB/+3k2nJML1nIF/doIH50k2epfuVglCYQUbDibJITM/2LHf0DjXFqb1XY8q4j+v2
+X-Forefront-Antispam-Report: CIP:193.240.239.45;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mailrelay1.diasemi.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(4636009)(46966005)(36906005)(54906003)(186003)(42186006)(26005)(426003)(336012)(82310400003)(6266002)(4326008)(966005)(33310700002)(70586007)(83080400001)(81166007)(356005)(70206006)(47076004)(83380400001)(498600001)(107886003)(5660300002)(110136005)(2616005)(2906002)(6666004)(36756003)(8676002)(8936002)(86362001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 09:48:01.9341
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0671d12-b688-4778-0ba5-08d84f254889
+X-MS-Exchange-CrossTenant-Id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=511e3c0e-ee96-486e-a2ec-e272ffa37b7c;Ip=[193.240.239.45];Helo=[mailrelay1.diasemi.com]
+X-MS-Exchange-CrossTenant-AuthSource: HE1EUR02FT004.eop-EUR02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR1001MB1266
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tue, Sep 01, 2020 at 09:43:00PM CEST, moshe@nvidia.com wrote:
->
->On 8/31/2020 3:15 PM, Jiri Pirko wrote:
->> Sun, Aug 30, 2020 at 05:27:21PM CEST, moshe@mellanox.com wrote:
->> > Add devlink reload action to allow the user to request a specific reload
->> > action. The action parameter is optional, if not specified then devlink
->> > driver re-init action is used (backward compatible).
->> > Note that when required to do firmware activation some drivers may need
->> > to reload the driver. On the other hand some drivers may need to reset
->> > the firmware to reinitialize the driver entities. Therefore, the devlink
->> > reload command returns the actions which were actually done.
->> > However, in case fw_activate_no_reset action is selected, then no other
->> > reload action is allowed.
->> > Reload actions supported are:
->> > driver_reinit: driver entities re-initialization, applying devlink-param
->> >                and devlink-resource values.
->> > fw_activate: firmware activate.
->> > fw_activate_no_reset: Activate new firmware image without any reset.
->> >                       (also known as: firmware live patching).
->> > 
->> > command examples:
->> > $devlink dev reload pci/0000:82:00.0 action driver_reinit
->> > reload_actions_done:
->> >   driver_reinit
->> > 
->> > $devlink dev reload pci/0000:82:00.0 action fw_activate
->> > reload_actions_done:
->> >   driver_reinit fw_activate
->> > 
->> > Signed-off-by: Moshe Shemesh <moshe@mellanox.com>
->> > ---
->> > v2 -> v3:
->> > - Replace fw_live_patch action by fw_activate_no_reset
->> > - Devlink reload returns the actions done over netlink reply
->> > v1 -> v2:
->> > - Instead of reload levels driver,fw_reset,fw_live_patch have reload
->> >   actions driver_reinit,fw_activate,fw_live_patch
->> > - Remove driver default level, the action driver_reinit is the default
->> >   action for all drivers
->> > ---
->> [...]
->> 
->> 
->> > diff --git a/drivers/net/ethernet/mellanox/mlxsw/core.c b/drivers/net/ethernet/mellanox/mlxsw/core.c
->> > index 08d101138fbe..c42b66d88884 100644
->> > --- a/drivers/net/ethernet/mellanox/mlxsw/core.c
->> > +++ b/drivers/net/ethernet/mellanox/mlxsw/core.c
->> > @@ -1113,7 +1113,7 @@ mlxsw_devlink_info_get(struct devlink *devlink, struct devlink_info_req *req,
->> > 
->> > static int
->> > mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
->> > -					  bool netns_change,
->> > +					  bool netns_change, enum devlink_reload_action action,
->> > 					  struct netlink_ext_ack *extack)
->> > {
->> > 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
->> > @@ -1126,15 +1126,23 @@ mlxsw_devlink_core_bus_device_reload_down(struct devlink *devlink,
->> > }
->> > 
->> > static int
->> > -mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink,
->> > -					struct netlink_ext_ack *extack)
->> > +mlxsw_devlink_core_bus_device_reload_up(struct devlink *devlink, enum devlink_reload_action action,
->> > +					struct netlink_ext_ack *extack, unsigned long *actions_done)
->> > {
->> > 	struct mlxsw_core *mlxsw_core = devlink_priv(devlink);
->> > +	int err;
->> > 
->> > -	return mlxsw_core_bus_device_register(mlxsw_core->bus_info,
->> > -					      mlxsw_core->bus,
->> > -					      mlxsw_core->bus_priv, true,
->> > -					      devlink, extack);
->> > +	err = mlxsw_core_bus_device_register(mlxsw_core->bus_info,
->> > +					     mlxsw_core->bus,
->> > +					     mlxsw_core->bus_priv, true,
->> > +					     devlink, extack);
->> > +	if (err)
->> > +		return err;
->> > +	if (actions_done)
->> > +		*actions_done = BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
->> > +				BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE);
->> > +
->> > +	return 0;
->> > }
->> > 
->> > static int mlxsw_devlink_flash_update(struct devlink *devlink,
->> > @@ -1268,6 +1276,8 @@ mlxsw_devlink_trap_policer_counter_get(struct devlink *devlink,
->> > }
->> > 
->> > static const struct devlink_ops mlxsw_devlink_ops = {
->> > +	.supported_reload_actions	= BIT(DEVLINK_RELOAD_ACTION_DRIVER_REINIT) |
->> > +					  BIT(DEVLINK_RELOAD_ACTION_FW_ACTIVATE),
->> This is confusing and open to interpretation. Does this mean that the
->> driver supports:
->> 1) REINIT && FW_ACTIVATE
->> 2) REINIT || FW_ACTIVATE
->> ?
->> 
->> Because mlxsw supports only 1. I guess that mlx5 supports both. This
->> needs to be distinguished.
->
->Mlxsw supports 1, so it supports fw_activation and performs also reinit and
->vice versa.
+This patch adds the da7280 bindings doc and driver to the Dialog
+Semiconductor support list.
 
-My point is, your bitfield does not exactly tell what the driver
-supports or not.
+Signed-off-by: Roy Im <roy.im.opensource@diasemi.com>
+
+---
+v19: No changes.
+v18: No changes.
+v17: No changes.
+v16: No changes.
+v15: No changes.
+v14: No changes.
+v13: No changes.
+v12: Corrected file list order.
+v11: No changes.
+v10: No changes.
+v9: No changes.
+v8: No changes.
+v7: No changes.
+v6: No changes.
+v5: No changes.
+v4: No changes.
+v3: No changes.
+v2: No changes.
 
 
->
->Mlx5 supports fw_activate and performs also reinit. However, it supports
->reinit without performing fw_activate.
->
->> I think you need an array of combinations. Or perhaps rather to extend
->> the enum with combinations. You kind of have it already with
->> DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET
->> 
->> Maybe we can have something like:
->> DEVLINK_RELOAD_ACTION_DRIVER_REINIT
->> DEVLINK_RELOAD_ACTION_DRIVER_REINIT_FW_ACTIVATE_RESET
->> DEVLINK_RELOAD_ACTION_FW_ACTIVATE_RESET
->> DEVLINK_RELOAD_ACTION_FW_ACTIVATE (this is the original FW_ACTIVATE_NO_RESET)
->
->The FW_ACTIVATE_NO_RESET meant also to emphasize that driver implementation
->for this one should not do any reset.
->
->So maybe we can have
->
->DEVLINK_RELOAD_ACTION_FW_ACTIVATE_RESET
->DEVLINK_RELOAD_ACTION_FW_ACTIVATE_NO_RESET
+ MAINTAINERS | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Okay.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4e2698c..81a9416 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5003,6 +5003,7 @@ M:	Support Opensource <support.opensource@diasemi.com>
+ S:	Supported
+ W:	http://www.dialog-semiconductor.com/products
+ F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
++F:	Documentation/devicetree/bindings/input/dlg,da72??.txt
+ F:	Documentation/devicetree/bindings/mfd/da90*.txt
+ F:	Documentation/devicetree/bindings/regulator/da92*.txt
+ F:	Documentation/devicetree/bindings/regulator/slg51000.txt
+@@ -5013,6 +5014,7 @@ F:	Documentation/hwmon/da90??.rst
+ F:	drivers/gpio/gpio-da90??.c
+ F:	drivers/hwmon/da90??-hwmon.c
+ F:	drivers/iio/adc/da91??-*.c
++F:	drivers/input/misc/da72??.[ch]
+ F:	drivers/input/misc/da90??_onkey.c
+ F:	drivers/input/touchscreen/da9052_tsi.c
+ F:	drivers/leds/leds-da90??.c
+-- 
+end-of-patch for RESEND PATCH v19
 
-
->
->> Each has very clear meaning.
->
->
->Yes, it the driver support here is more clear.
->
->> Also, then the "actions_done" would be a simple enum, directly returned
->> to the user. No bitfield needed.
->
->
->I agree it is more clear on the driver support side, but what about the uAPI
-
-As I said, there would be one enum value returned to the user. Clear and
-simple.
-
-
->? Do we need such change there too or keep it as is, each action by itself
->and return what was performed ?
-
-Well, I don't know. User asks for X, X should be performed, not Y or Z.
-So perhaps the return value is not needed.
-Just driver advertizes it supports X, Y, Z and the users says:
-1) do X, driver does X
-2) do Y, driver does Y
-3) do Z, driver does Z
-[
-I think this kindof circles back to the original proposal...
-
->
->> 
->> > 	.reload_down		= mlxsw_devlink_core_bus_device_reload_down,
->> > 	.reload_up		= mlxsw_devlink_core_bus_device_reload_up,
->> > 	.port_type_set			= mlxsw_devlink_port_type_set,
->> [...]
