@@ -2,171 +2,189 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=BAYES_00,
-	CHARSET_FARAWAY_HEADER,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=BAYES_00,DKIMWL_WL_MED,
+	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC80C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDC7C433E7
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63BF420758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4B220758
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:40:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rXWlyxq+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726523AbgIBWfj (ORCPT
+        id S1726594AbgIBWkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:35:39 -0400
-Received: from szxga03-in.huawei.com ([45.249.212.189]:3498 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726247AbgIBWfi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:35:38 -0400
-Received: from dggeme708-chm.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 7941A6129E1DC693D606;
-        Thu,  3 Sep 2020 06:35:35 +0800 (CST)
-Received: from dggeme755-chm.china.huawei.com (10.3.19.101) by
- dggeme708-chm.china.huawei.com (10.1.199.104) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1913.5; Thu, 3 Sep 2020 06:35:35 +0800
-Received: from dggeme755-chm.china.huawei.com ([10.7.64.71]) by
- dggeme755-chm.china.huawei.com ([10.7.64.71]) with mapi id 15.01.1913.007;
- Thu, 3 Sep 2020 06:35:34 +0800
-From:   gengdongjiu <gengdongjiu@huawei.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     "mingo@redhat.com" <mingo@redhat.com>,
-        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "bsegall@google.com" <bsegall@google.com>,
-        "mgorman@suse.de" <mgorman@suse.de>,
-        "thara.gopinath@linaro.org" <thara.gopinath@linaro.org>,
-        "pauld@redhat.com" <pauld@redhat.com>,
-        "vincent.donnefort@arm.com" <vincent.donnefort@arm.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: =?gb2312?B?UkWjultQQVRDSF0gc2NoZWQ6IEFkZCB0cmFjZSBmb3IgdGFzayB3YWtlIHVw?=
- =?gb2312?Q?_latency_and_leave_running_time?=
-Thread-Topic: =?gb2312?B?UkWjultQQVRDSF0gc2NoZWQ6IEFkZCB0cmFjZSBmb3IgdGFzayB3YWtlIHVw?=
- =?gb2312?Q?_latency_and_leave_running_time?=
-Thread-Index: AdaBcBYASIvfNFONQ1KjaPlQxEC0PQ==
-Date:   Wed, 2 Sep 2020 22:35:34 +0000
-Message-ID: <6995260be2ca4fd18bc773fe9f50f420@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.45.217.238]
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Wed, 2 Sep 2020 18:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59838 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726247AbgIBWkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 18:40:17 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B266AC061244
+        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 15:40:17 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id q1so488728pjd.1
+        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 15:40:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Et/xc2YROl4qNYcn8Qs+aCkZEYKnAaIEsZ0/FKsLWP4=;
+        b=rXWlyxq+7xy8HCIGDawd2y3Q9cNhx3h14WdEfZpVCnXHn/W7dIw0hrnqlfwn7/bxBc
+         cX0HRuUSLpuKmOqUkj6PU74xgDN+yWwhqBtk4/xoZBLQ8kzJ8RHU0V6iVlTNzswd5BQ6
+         MBBxZDsW7WasDh52zjB1XiYWf3KOM6m/Oq9dQ71MY8NM/UC8dGl7JyioqZQUhC5EB4bQ
+         rBWuZbUeeYuVgTbc79XUAvzqwQcek7la+DjQwh1fiDuWW8Zg8nTFAKrcL/M8hcwCBCoL
+         UN0d0QGbs2TXeYQ+PanIQTJ/SGk+IVboTQzAbP3iKk624k6HIzXLPUcktL55yHC28vGB
+         /L1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Et/xc2YROl4qNYcn8Qs+aCkZEYKnAaIEsZ0/FKsLWP4=;
+        b=FDTo5j57dwjWdIPxNMsw4JncJKi9fmrGDTmmHYKqOyOnQCj+fUr5PwcRqNTJ+vF1Vf
+         P+JhhE0mayXW/mDqmfuLq8nnEWBDYh02HrSgLM468KN1E1olRhdNBB8yds+JubZXVEHi
+         kftgpy8SnSU9ww7tJZlOYrXG6j5PLROdSfi6bkhNFlrR98FvTsXKZMfzUd4xR1oxnSL3
+         fYniguBnocpH6+ONLt4N7N69ksbL4ORo0dX9eWOJA6PizGS9/1vfzAYNtqxQL/o1p0gL
+         j78fsRKqM9e5D8zQnnVN+AWg6LU3PXeNmxW6i/5Czs5oUniFp9yYDmcnS3KUSgY9PVGq
+         JJFA==
+X-Gm-Message-State: AOAM530CO0bPdkjFjtlX+R050c9MYWzivAeniFyq0SyDC66lkpj6jdXZ
+        SDu/whQk3LPcFWtCgW/psKVY4K42djWPYwwqsOT+9Q==
+X-Google-Smtp-Source: ABdhPJxcdId1jw1ooHY4s038mjOk1feFDY5gNw9gtUjdobC0Ug+3mX37JstD4Yuuwen7SNvDFv06RaZUgSy6viXWt6A=
+X-Received: by 2002:a17:90a:e517:: with SMTP id t23mr3922497pjy.25.1599086414557;
+ Wed, 02 Sep 2020 15:40:14 -0700 (PDT)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200820220955.3325555-1-ndesaulniers@google.com> <CAK7LNAQO9sKw=7RLPSnsChddrwNCc_si-XgSDQcGHTSxeq4_Pg@mail.gmail.com>
+In-Reply-To: <CAK7LNAQO9sKw=7RLPSnsChddrwNCc_si-XgSDQcGHTSxeq4_Pg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 2 Sep 2020 15:40:03 -0700
+Message-ID: <CAKwvOdnbdhkB=OG0Gec5jt5H4b4jRGPvKfgJ-JbZY+gym-u3_g@mail.gmail.com>
+Subject: Re: [PATCH] Makefile: add -fuse-ld=lld to KBUILD_HOSTLDFLAGS when LLVM=1
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     stable <stable@vger.kernel.org>,
+        Matthias Maennich <maennich@google.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Stephen Hines <srhines@google.com>,
+        Dan Albert <danalbert@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Elliott Hughes <enh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgUGV0ZXKjrA0KICAgIFNvcnJ5IGZvciB0aGUgbGF0ZSByZXNwb25zZS4NCg0KPiANCj4gPiBk
-aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9zY2hlZC5oIGIvaW5jbHVkZS9saW51eC9zY2hlZC5o
-IGluZGV4DQo+ID4gOTNlY2Q5MzBlZmQzLi5lZGI2MjJjNDBhOTAgMTAwNjQ0DQo+ID4gLS0tIGEv
-aW5jbHVkZS9saW51eC9zY2hlZC5oDQo+ID4gKysrIGIvaW5jbHVkZS9saW51eC9zY2hlZC5oDQo+
-ID4gQEAgLTEzMjQsNiArMTMyNCwxMyBAQCBzdHJ1Y3QgdGFza19zdHJ1Y3Qgew0KPiA+ICAJLyog
-Q1BVLXNwZWNpZmljIHN0YXRlIG9mIHRoaXMgdGFzazogKi8NCj4gPiAgCXN0cnVjdCB0aHJlYWRf
-c3RydWN0CQl0aHJlYWQ7DQo+ID4NCj4gPiArCS8qIFRhc2sgd2FrZSB1cCB0aW1lIHN0YW1wICov
-DQo+ID4gKwl1NjQJCQkJdHNfd2FrZXVwOw0KPiA+ICsJLyogUHJldmlvdXMgdGFzayBzd2l0Y2gg
-b3V0IHRpbWUgc3RhbXAgKi8NCj4gPiArCXU2NAkJCQlwcmVfdHNfZW5kOw0KPiA+ICsJLyogTmV4
-dCB0YXNrIHN3aXRjaCBpbiB0aW1lIHN0YW1wICovDQo+ID4gKwl1NjQJCQkJbmV4dF90c19zdGFy
-dDsNCj4gPiArCWJvb2wJCQkJd2FrZXVwX3N0YXRlOw0KPiA+ICAJLyoNCj4gPiAgCSAqIFdBUk5J
-Tkc6IG9uIHg4NiwgJ3RocmVhZF9zdHJ1Y3QnIGNvbnRhaW5zIGEgdmFyaWFibGUtc2l6ZWQNCj4g
-PiAgCSAqIHN0cnVjdHVyZS4gIEl0ICpNVVNUKiBiZSBhdCB0aGUgZW5kIG9mICd0YXNrX3N0cnVj
-dCcuDQo+IA0KPiBeXl4gZGlkIHlvdSByZWFkIHRoYXQgY29tbWVudD8NCiAgIFNvcnJ5IGZvciBt
-eSBjYXJlbGVzc25lc3MuDQoNCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvdHJhY2UvZXZl
-bnRzL3NjaGVkLmgNCj4gPiBiL2luY2x1ZGUvdHJhY2UvZXZlbnRzL3NjaGVkLmggaW5kZXggZmVj
-MjViOWNmYmFmLi5lOTljNmQ1NzNhNDIgMTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS90cmFjZS9l
-dmVudHMvc2NoZWQuaA0KPiA+ICsrKyBiL2luY2x1ZGUvdHJhY2UvZXZlbnRzL3NjaGVkLmgNCj4g
-PiBAQCAtMTgzLDYgKzE4Myw3MiBAQCBUUkFDRV9FVkVOVChzY2hlZF9zd2l0Y2gsDQo+ID4gIAkJ
-X19lbnRyeS0+bmV4dF9jb21tLCBfX2VudHJ5LT5uZXh0X3BpZCwgX19lbnRyeS0+bmV4dF9wcmlv
-KSAgKTsNCj4gPg0KPiA+ICtERUNMQVJFX0VWRU5UX0NMQVNTKHNjaGVkX2xhdGVuY3lfdGVtcGxh
-dGUsDQo+ID4gKw0KPiA+ICsJVFBfUFJPVE8oYm9vbCBwcmVlbXB0LA0KPiA+ICsJCSBzdHJ1Y3Qg
-dGFza19zdHJ1Y3QgKnByZXYsDQo+ID4gKwkJIHN0cnVjdCB0YXNrX3N0cnVjdCAqbmV4dCwNCj4g
-PiArCQkgdTY0IHRpbWUpLA0KPiA+ICsNCj4gPiArCVRQX0FSR1MocHJlZW1wdCwgcHJldiwgbmV4
-dCwgdGltZSksDQo+ID4gKw0KPiA+ICsJVFBfU1RSVUNUX19lbnRyeSgNCj4gPiArCQlfX2FycmF5
-KAljaGFyLAlwcmV2X2NvbW0sCVRBU0tfQ09NTV9MRU4JKQ0KPiA+ICsJCV9fZmllbGQoCXBpZF90
-LAlwcmV2X3BpZAkJCSkNCj4gPiArCQlfX2ZpZWxkKAlpbnQsCXByZXZfcHJpbwkJCSkNCj4gPiAr
-CQlfX2ZpZWxkKAlsb25nLAlwcmV2X3N0YXRlCQkJKQ0KPiA+ICsJCV9fYXJyYXkoCWNoYXIsCW5l
-eHRfY29tbSwJVEFTS19DT01NX0xFTgkpDQo+ID4gKwkJX19maWVsZCgJcGlkX3QsCW5leHRfcGlk
-CQkJKQ0KPiA+ICsJCV9fZmllbGQoCWludCwJbmV4dF9wcmlvCQkJKQ0KPiA+ICsJCV9fZmllbGQo
-CXU2NCwJdGltZQkJCQkpDQo+ID4gKwkpLA0KPiA+ICsNCj4gPiArCVRQX2Zhc3RfYXNzaWduKA0K
-PiA+ICsJCW1lbWNweShfX2VudHJ5LT5uZXh0X2NvbW0sIG5leHQtPmNvbW0sIFRBU0tfQ09NTV9M
-RU4pOw0KPiA+ICsJCV9fZW50cnktPnByZXZfcGlkCT0gcHJldi0+cGlkOw0KPiA+ICsJCV9fZW50
-cnktPnByZXZfcHJpbwk9IHByZXYtPnByaW87DQo+ID4gKwkJX19lbnRyeS0+cHJldl9zdGF0ZQk9
-IF9fdHJhY2Vfc2NoZWRfc3dpdGNoX3N0YXRlKHByZWVtcHQsIHByZXYpOw0KPiA+ICsJCW1lbWNw
-eShfX2VudHJ5LT5wcmV2X2NvbW0sIHByZXYtPmNvbW0sIFRBU0tfQ09NTV9MRU4pOw0KPiA+ICsJ
-CV9fZW50cnktPm5leHRfcGlkCT0gbmV4dC0+cGlkOw0KPiA+ICsJCV9fZW50cnktPm5leHRfcHJp
-bwk9IG5leHQtPnByaW87DQo+ID4gKwkJX19lbnRyeS0+dGltZQkJPSB0aW1lOw0KPiA+ICsJCS8q
-IFhYWCBTQ0hFRF9ERUFETElORSAqLw0KPiA+ICsJKSwNCj4gPiArDQo+ID4gKwlUUF9wcmludGso
-InByZXZfY29tbT0lcyBwcmV2X3BpZD0lZCBwcmV2X3ByaW89JWQgcHJldl9zdGF0ZT0lcyVzID09
-PiBuZXh0X2NvbW09JXMgbmV4dF9waWQ9JWQgbmV4dF9wcmlvPSVkIHBhc3NlZA0KPiB0aW1lPSVs
-bHUgKG5zKSIsDQo+ID4gKwkJX19lbnRyeS0+cHJldl9jb21tLCBfX2VudHJ5LT5wcmV2X3BpZCwg
-X19lbnRyeS0+cHJldl9wcmlvLA0KPiA+ICsNCj4gPiArCQkoX19lbnRyeS0+cHJldl9zdGF0ZSAm
-IChUQVNLX1JFUE9SVF9NQVggLSAxKSkgPw0KPiA+ICsJCSAgX19wcmludF9mbGFncyhfX2VudHJ5
-LT5wcmV2X3N0YXRlICYgKFRBU0tfUkVQT1JUX01BWCAtIDEpLCAifCIsDQo+ID4gKwkJCQl7IFRB
-U0tfSU5URVJSVVBUSUJMRSwgIlMiIH0sDQo+ID4gKwkJCQl7IFRBU0tfVU5JTlRFUlJVUFRJQkxF
-LCAiRCIgfSwNCj4gPiArCQkJCXsgX19UQVNLX1NUT1BQRUQsICJUIiB9LA0KPiA+ICsJCQkJeyBf
-X1RBU0tfVFJBQ0VELCAidCIgfSwNCj4gPiArCQkJCXsgRVhJVF9ERUFELCAiWCIgfSwNCj4gPiAr
-CQkJCXsgRVhJVF9aT01CSUUsICJaIiB9LA0KPiA+ICsJCQkJeyBUQVNLX1BBUktFRCwgIlAiIH0s
-DQo+ID4gKwkJCQl7IFRBU0tfREVBRCwgIkkiIH0pIDoNCj4gPiArCQkgICJSIiwNCj4gPiArDQo+
-ID4gKwkJX19lbnRyeS0+cHJldl9zdGF0ZSAmIFRBU0tfUkVQT1JUX01BWCA/ICIrIiA6ICIiLA0K
-PiA+ICsJCV9fZW50cnktPm5leHRfY29tbSwgX19lbnRyeS0+bmV4dF9waWQsIF9fZW50cnktPm5l
-eHRfcHJpbywNCj4gPiArCQlfX2VudHJ5LT50aW1lKQ0KPiA+ICspOw0KPiANCj4gTkFLLCB0aGF0
-IHRyYWNlcG9pbnQgaXMgYWxyZWFkeSBicm9rZW4sIHdlIGRvbid0IHdhbnQgdG8gcHJvbGlmZXJh
-dGUgdGhlIGJyb2tlbi4NCiAgDQpTb3JyeSwgV2hhdCB0aGUgbWVhbmluZyB0aGF0IHRyYWNlcG9p
-bnQgaXMgYWxyZWFkeSBicm9rZW4/IA0KTWF5YmUgSSBuZWVkIHRvIGV4cGxhaW4gdGhlIHJlYXNv
-biB0aGF0IHdoeSBJIGFkZCB0d28gdHJhY2UgcG9pbnQuIA0Kd2hlbiB1c2luZyBwZXJmIHRvb2wg
-b3IgRnRyYWNlIHN5c2ZzIHRvIGNhcHR1cmUgdGhlIHRhc2sgd2FrZS11cCBsYXRlbmN5IGFuZCB0
-aGUgdGFzayBsZWF2aW5nIHJ1bm5pbmcgcXVldWUgdGltZSwgdXN1YWxseSB0aGUgdHJhY2UgZGF0
-YSBpcyB0b28gbGFyZ2UgYW5kIHRoZSBDUFUgdXRpbGl6YXRpb24gcmF0ZSBpcyB0b28gaGlnaCBp
-biB0aGUgcHJvY2VzcyBkdWUgdG8gYSBsb3Qgb2YgZGlzayB3cml0ZS4gU29tZXRpbWVzIGV2ZW4g
-dGhlIGRpc2sgaXMgZnVsbCwgdGhlIGlzc3VlIHN0aWxsIGRvZXMgbm90IHJlcHJvZHVjZWQgdGhh
-dCBhYm92ZSB0d28gdGltZSBleGNlZWQgYSBjZXJ0YWluIHRocmVzaG9sZC4gIFNvIEkgYWRkZWQg
-dHdvIHRyYWNlIHBvaW50cywgdXNpbmcgZmlsdGVyIHdlIGNhbiBvbmx5IHJlY29yZCB0aGUgYWJu
-b3JtYWwgdHJhY2UgdGhhdCBpbmNsdWRlcyB3YWtldXAgbGF0ZW5jeSBhbmQgbGVhdmluZyBydW5u
-aW5nIHRpbWUgbGFyZ2VyIHRoYW4gYW4gdGhyZXNob2xkLiANCk9yIGRvIHlvdSBoYXZlIGJldHRl
-ciBzb2x1dGlvbj8NCg0KPiANCj4gPiBkaWZmIC0tZ2l0IGEva2VybmVsL3NjaGVkL2NvcmUuYyBi
-L2tlcm5lbC9zY2hlZC9jb3JlLmMgaW5kZXgNCj4gPiA4NDcxYTBmN2ViMzIuLmI1YTE5MjhkYzk0
-OCAxMDA2NDQNCj4gPiAtLS0gYS9rZXJuZWwvc2NoZWQvY29yZS5jDQo+ID4gKysrIGIva2VybmVs
-L3NjaGVkL2NvcmUuYw0KPiA+IEBAIC0yNDY0LDYgKzI0NjQsOCBAQCBzdGF0aWMgdm9pZCB0dHd1
-X2RvX3dha2V1cChzdHJ1Y3QgcnEgKnJxLCBzdHJ1Y3QNCj4gPiB0YXNrX3N0cnVjdCAqcCwgaW50
-IHdha2VfZmxhZ3MsICB7DQo+ID4gIAljaGVja19wcmVlbXB0X2N1cnIocnEsIHAsIHdha2VfZmxh
-Z3MpOw0KPiA+ICAJcC0+c3RhdGUgPSBUQVNLX1JVTk5JTkc7DQo+ID4gKwlwLT50c193YWtldXAg
-PSBsb2NhbF9jbG9jaygpOw0KPiA+ICsJcC0+d2FrZXVwX3N0YXRlID0gdHJ1ZTsNCj4gPiAgCXRy
-YWNlX3NjaGVkX3dha2V1cChwKTsNCj4gPg0KPiA+ICAjaWZkZWYgQ09ORklHX1NNUA0KPiANCj4g
-TkFLLCB1c2VybGVzcyBvdmVyaGVhZC4NCg0KIFdoZW4gc2NoZWQgc3dpdGNoLCB3ZSBkbyBub3Qg
-a25vdyB0aGUgbmV4dCB0YXNrIHByZXZpb3VzIHN0YXRlIGFuZCB3YWtldXAgdGltZXN0YW1wLCBz
-byBJIHJlY29yZCB0aGUgdGFzayBwcmV2aW91cyBzdGF0ZSBpZiBpdCBpcyB3YWtlbiBmcm9tIHNs
-ZWVwLg0KIEFuZCB0aGVuIGl0IGNhbiBjYWxjdWxhdGUgdGhlIHdha2V1cCBsYXRlbmN5IHdoZW4g
-dGFzayBzd2l0Y2guDQoNCg0KPiANCj4gPiBAQCAtMjg0Niw2ICsyODQ4LDggQEAgdHJ5X3RvX3dh
-a2VfdXAoc3RydWN0IHRhc2tfc3RydWN0ICpwLCB1bnNpZ25lZCBpbnQgc3RhdGUsIGludCB3YWtl
-X2ZsYWdzKQ0KPiA+ICAJCXN1Y2Nlc3MgPSAxOw0KPiA+ICAJCXRyYWNlX3NjaGVkX3dha2luZyhw
-KTsNCj4gPiAgCQlwLT5zdGF0ZSA9IFRBU0tfUlVOTklORzsNCj4gPiArCQlwLT50c193YWtldXAg
-PSBsb2NhbF9jbG9jaygpOw0KPiA+ICsJCXAtPndha2V1cF9zdGF0ZSA9IHRydWU7DQo+ID4gIAkJ
-dHJhY2Vfc2NoZWRfd2FrZXVwKHApOw0KPiA+ICAJCWdvdG8gb3V0Ow0KPiA+ICAJfQ0KPiANCj4g
-aWRlbQ0KPiANCj4gDQo+ID4gQEAgLTMzNTUsNiArMzM2Miw4IEBAIHZvaWQgd2FrZV91cF9uZXdf
-dGFzayhzdHJ1Y3QgdGFza19zdHJ1Y3QgKnApDQo+ID4gIAlwb3N0X2luaXRfZW50aXR5X3V0aWxf
-YXZnKHApOw0KPiA+DQo+ID4gIAlhY3RpdmF0ZV90YXNrKHJxLCBwLCBFTlFVRVVFX05PQ0xPQ0sp
-Ow0KPiA+ICsJcC0+dHNfd2FrZXVwID0gbG9jYWxfY2xvY2soKTsNCj4gPiArCXAtPndha2V1cF9z
-dGF0ZSA9IHRydWU7DQo+ID4gIAl0cmFjZV9zY2hlZF93YWtldXBfbmV3KHApOw0KPiA+ICAJY2hl
-Y2tfcHJlZW1wdF9jdXJyKHJxLCBwLCBXRl9GT1JLKTsNCj4gPiAgI2lmZGVmIENPTkZJR19TTVAN
-Cj4gDQo+IGlkZW0NCj4gDQo+ID4gQEAgLTQ1MjEsOCArNDUzMCwxOSBAQCBzdGF0aWMgdm9pZCBf
-X3NjaGVkIG5vdHJhY2UgX19zY2hlZHVsZShib29sDQo+ID4gcHJlZW1wdCkNCj4gPg0KPiA+ICAJ
-CXBzaV9zY2hlZF9zd2l0Y2gocHJldiwgbmV4dCwgIXRhc2tfb25fcnFfcXVldWVkKHByZXYpKTsN
-Cj4gPg0KPiA+ICsJCW5leHQtPm5leHRfdHNfc3RhcnQgPSBwcmV2LT5wcmVfdHNfZW5kID0gbG9j
-YWxfY2xvY2soKTsNCj4gPiArDQo+ID4gIAkJdHJhY2Vfc2NoZWRfc3dpdGNoKHByZWVtcHQsIHBy
-ZXYsIG5leHQpOw0KPiA+DQo+ID4gKwkJaWYgKG5leHQtPnRzX3dha2V1cCAmJiBuZXh0LT53YWtl
-dXBfc3RhdGUpIHsNCj4gPiArCQkJdHJhY2Vfc2NoZWRfd2FrZXVwX2xhdGVuY3kocHJlZW1wdCwg
-cHJldiwgbmV4dCwNCj4gPiArCQkJCW5leHQtPm5leHRfdHNfc3RhcnQgLSBuZXh0LT50c193YWtl
-dXApOw0KPiA+ICsJCQluZXh0LT53YWtldXBfc3RhdGUgPSBmYWxzZTsNCj4gPiArCQl9DQo+ID4g
-Kw0KPiA+ICsJCXRyYWNlX3NjaGVkX2xlYXZlX3J1bm5pbmdfdGltZShwcmVlbXB0LCBwcmV2LA0K
-PiA+ICsJCQluZXh0LCBuZXh0LT5uZXh0X3RzX3N0YXJ0IC0gbmV4dC0+cHJlX3RzX2VuZCk7DQo+
-ID4gKw0KPiA+ICAJCS8qIEFsc28gdW5sb2NrcyB0aGUgcnE6ICovDQo+ID4gIAkJcnEgPSBjb250
-ZXh0X3N3aXRjaChycSwgcHJldiwgbmV4dCwgJnJmKTsNCj4gPiAgCX0gZWxzZSB7DQo+IA0KPiBU
-aGlzIHJlYWxseSBpc24ndCBldmVyIGdvaW5nIHRvIGhhcHBlbi4NCg==
+On Fri, Aug 21, 2020 at 10:14 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> On Fri, Aug 21, 2020 at 7:10 AM 'Nick Desaulniers' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+> >
+> > While moving Android kernels over to use LLVM=1, we observe the failure
+> > when building in a hermetic docker image:
+> >   HOSTCC  scripts/basic/fixdep
+> > clang: error: unable to execute command: Executable "ld" doesn't exist!
+> >
+> > The is because the build of the host utility fixdep builds the fixdep
+> > executable in one step by invoking the compiler as the driver, rather
+> > than individual compile then link steps.
+> >
+> > Clang when configured from source defaults to use the system's linker,
+> > and not LLVM's own LLD, unless the CMake config
+> > -DCLANG_DEFAULT_LINKER='lld' is set when configuring a build of clang
+> > itself.
+> >
+> > Don't rely on the compiler's implicit default linker; be explicit.
+>
+>
+> I do not understand this patch.
+>
+> The host compiler should be able to link executables
+> without any additional settings.
+
+Correct; there is no issue linking working executables. The issue is
+which linker is used by default or implied when -fuse-ld=* is not
+explicitly set.
+
+>
+> So, can you link a hello world program
+> in your docker?
+>
+> masahiro@zoe:~$ cat test.c
+> #include <stdio.h>
+> int main(void)
+> {
+>         printf("helloworld\n");
+>         return 0;
+> }
+> masahiro@zoe:~$ clang test.c
+
+It will fail, because:
+1. clang will implicitly default to ld.bfd on linux hosts and ld on
+OSX hosts (idk about windows).
+2. ld.bfd is not installed, and we *dont'* want to install it.
+Instead, we *want* to use ld.lld in a hermetic environment.
+
+> If this fails, your environment is broken.
+
+Disagree.  The environment has unique constraints (cross compiling for
+Android from OSX host, caring about builds being hermetic, etc.).
+
+> Just do  -DCLANG_DEFAULT_LINKER='lld'
+> if you know GNU ld is missing in your docker environment.
+
+I understand your point. However, I have two reasons I still think
+this patch should be upstream rather than downstream:
+
+1. The build of clang that is distributed with Android, "AOSP LLVM"
+[0], does not and cannot yet set `-DCLANG_DEFAULT_LINKER='lld'`.  See
+the discussion in the comments of [1] where I'm trying to do that.
+The reason is that AOSP LLVM is used to build Android userspace,
+kernel, and is part of the NDK for developers to target Android from
+Windows, OSX, and Linux.  If AOSP is used to build a "host binary" on
+OSX, LLD will not work there for that quite yet.  OSX has its own
+linker that is not LLD, and LLD support for mach-o binaries is a work
+in progress.  NDK has their own timeline that's blocking that change.
+
+You might think "that's Android problem" and that we should just carry
+the patch downstream/out of tree since it is somewhat self-inflicted
+but a very important second point why I think this should be upstream:
+
+2. clang itself (upstream of AOSP LLVM) doesn't yet default to
+-fuse-ld=lld (likely for similar reasons related to OSX).  That means
+distributions of clang-10 from your distro package manager such as
+Debian's apt won't be hermetic.  That means if you build clang from
+source, and don't configure it with -DCLANG_DEFAULT_LINKER='lld', then
+your kernel builds with LLVM=1 will not be hermetic.  That means we
+have to document this somewhere for other people to know or find this.
+That means I have to run around and tell all of the different Kernel
+CI folks about this compiler configuration in order to test
+hermetically.
+
+...
+
+Or, encouraged by the zen of Python, we can just be explicit about
+what linker we want when using LLVM=1, which already signals that that
+is what we want to do.
+
+I think there are similar issues with other distros changing default
+flags of GCC (like -fstack-protector) [2].  The kernel is already
+explicit, so that differences in distro's changes to compiler defaults
+don't matter for kernel builds (except where people accidentally wipe
+out KBUILD_CFLAGS).  I'd argue my change is in the same bucket.
+Please reconsider this patch.
+
+(I should also probably add something like this for `make LD=ld.lld`
+and `make LD=ld.bfd`, regardless of compiler, since everyone supports
+`-fuse-ld=`)
+
+[0] https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/
+[1] https://android-review.googlesource.com/c/toolchain/llvm_android/+/1007826
+[2] https://fedoraproject.org/wiki/Changes/HardenedCompiler#Detailed_Description
+-- 
+Thanks,
+~Nick Desaulniers
