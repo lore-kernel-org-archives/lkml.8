@@ -2,173 +2,140 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 585B7C433E6
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A312C433E6
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1792078B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:25:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1599027925;
-	bh=OJSpVQ5c8EF99vvALEkF5NCOboYU11I4INM1qljBWAk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IzrOuSGTNuq3prlp0wc8eG+XTS0GJRZE+TAyhAXrzPBaWqpMsPOLjGNlAplCNGWal
-	 VFGfGk9g9lusgPQbM0rIedHwPWb4NajePYSHcV+RvEnkN35Wfm6eQr7mK83SssD2TE
-	 UHeGNk80Y+tGjR0aFbR7gY/dApIrsM9vNvaeMt0E=
+	by mail.kernel.org (Postfix) with ESMTP id 756CD2078B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 06:28:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z5JnQjcX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726669AbgIBGZX (ORCPT
+        id S1726384AbgIBG2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 02:25:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44066 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726140AbgIBGZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 02:25:23 -0400
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4384207EA;
-        Wed,  2 Sep 2020 06:25:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1599027922;
-        bh=OJSpVQ5c8EF99vvALEkF5NCOboYU11I4INM1qljBWAk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cx7V3lN0x/HJn8KyFIInMt5KfkyaJCTldKREtwcqUlfsZvC6DVn1jss0trGfjrR4L
-         v35JrKSKPDZ5kRg51D2bplQkOUUEu50JpIzclruONxWogIYddV+3uNatU9Xky1Kvf0
-         nwPVPCx3YD7AnovHok7owct+V5+ZBhc33Ez3GXzo=
-Received: by mail-ej1-f45.google.com with SMTP id nw23so5001068ejb.4;
-        Tue, 01 Sep 2020 23:25:21 -0700 (PDT)
-X-Gm-Message-State: AOAM533bPaodKwUxVfRXkymCeJ1ZzI4U4ulEN7tCtoGPL7IV+F5/hkqy
-        FkbU/6qons1MbzK/NFxA4WzsPFtbUCvvHFoFC98=
-X-Google-Smtp-Source: ABdhPJyiySgzLF6YcdaOO3ZsW9BLeguC234fHAFv7x9K7DmVJH5VctW7LNW5MlD4LKdDfgXG0WPH27dKjVqXE8SyjSo=
-X-Received: by 2002:a17:906:9356:: with SMTP id p22mr4697123ejw.119.1599027920394;
- Tue, 01 Sep 2020 23:25:20 -0700 (PDT)
+        Wed, 2 Sep 2020 02:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51456 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726140AbgIBG22 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 02:28:28 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D5F7C061244;
+        Tue,  1 Sep 2020 23:28:28 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id a65so3212860wme.5;
+        Tue, 01 Sep 2020 23:28:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=SBzOvJB/yYCoEo/r9GhASG+JavodAZ6L/gZnLI3x0KI=;
+        b=Z5JnQjcXzHs+Z00jerccBtpE0ThplOgsdiZ1LvBuzfP/Ufhc8Xcv4L8PP6cc/ottSh
+         5wzkKyLoOIuytmMGjyfaVTAsxuVdUfSXLrc/Z9UDAsPA2bIvoHYDyg3+E9X/nTaGkx5p
+         GA4kxFbavEBTBF2Gp/0UxMA1ljbmmqN/TBOcaby6UY0hp+bFolQcqstSayAAv48A//6A
+         neN4d2xhdOK8w3Otl/n9HGDA4Ajc6DOi9q1yeZ8sFrSmKC7Uy6e/aiMMEu8cc1w31zxa
+         CKhT2eqW7qCtr168/V9trSYXPY42Mr5i99JNH0q5UgtR1PWwA9U51BRKB4iHr1lnrlnh
+         O5aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=SBzOvJB/yYCoEo/r9GhASG+JavodAZ6L/gZnLI3x0KI=;
+        b=LoLyzAbskY7h9O/GlCCil0kVWO1ca+JFqrfkD4H4VZOAFrTf2/f0Cxd0wpc0h3+dnj
+         9MJP8Gl4uynbBRjSfbWSPgPhdmuO0vSWGSlG+IljPlwA361kwxuRgDaDY22DrYRH98lv
+         Osd9HN7b06IEpTCplM+RDGeU5hECajioD/+ezrp/55LdJxDLgxl8QwbdaYUp0nIOanRr
+         LasEbsFufhkVQN/neTNq1E2F7cK3DAPwcez01VtRvJDYAGFxyD1pQ/ErYkr6h+aiFZR8
+         ZUJ0htjJKPSaOjB+dOnrmKTN98egqTLOuJQzjKnv3EMnhmbUuQ+cXgZeoPV62MJlfZVY
+         9AZQ==
+X-Gm-Message-State: AOAM532zSUIPuKQf0UovYY3OPmAEjyLybRboMkObfkgtisHRnAt9XoF3
+        IxckFXwy7HPDP0SWd2W5XXnBmVtZBQg=
+X-Google-Smtp-Source: ABdhPJzhjKiHrhhALnmXS3UwJ8+rCfsYcWKwhMzV1GH28wyAmXLezB6r1R54QDs8fL/pOG0qRuam0A==
+X-Received: by 2002:a05:600c:2cc1:: with SMTP id l1mr5029705wmc.78.1599028107192;
+        Tue, 01 Sep 2020 23:28:27 -0700 (PDT)
+Received: from Red ([2a01:cb1d:3d5:a100:264b:feff:fe03:2806])
+        by smtp.googlemail.com with ESMTPSA id v3sm4789527wmh.6.2020.09.01.23.28.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Sep 2020 23:28:26 -0700 (PDT)
+Date:   Wed, 2 Sep 2020 08:28:24 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Maxime Ripard <maxime@cerno.tech>
+Cc:     Martin Cerveny <m.cerveny@computer.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: crypto: add new compatible for V3s
+Message-ID: <20200902062824.GA17544@Red>
+References: <20200831073101.3608-1-m.cerveny@computer.org>
+ <20200831073101.3608-2-m.cerveny@computer.org>
+ <20200901093249.orwyc5sr3z2y43fz@gilmour.lan>
+ <20200901105719.GA2639@Red>
+ <20200901114015.qivovvjqvmhkicdl@gilmour.lan>
 MIME-Version: 1.0
-References: <20200828160053.6064-1-krzk@kernel.org> <20200828160053.6064-3-krzk@kernel.org>
- <20200831090859.GF31019@paasikivi.fi.intel.com>
-In-Reply-To: <20200831090859.GF31019@paasikivi.fi.intel.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Wed, 2 Sep 2020 08:25:09 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPe6+vBfnTUXq4DdSmk3e-xaaCEZabD3u=LOaKH773Kc1w@mail.gmail.com>
-Message-ID: <CAJKOXPe6+vBfnTUXq4DdSmk3e-xaaCEZabD3u=LOaKH773Kc1w@mail.gmail.com>
-Subject: Re: [PATCH 3/3] media: imx258: Get clock from device properties and
- enable it
-To:     Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Yeh, Andy" <andy.yeh@intel.com>,
-        "Chiang, Alan" <alanx.chiang@intel.com>,
-        "Chen, Jason" <jasonx.z.chen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200901114015.qivovvjqvmhkicdl@gilmour.lan>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 31 Aug 2020 at 11:09, Sakari Ailus <sakari.ailus@linux.intel.com> wrote:
->
-> Hi Krzysztof,
->
-> Thanks for the patchset.
->
-> On Fri, Aug 28, 2020 at 06:00:53PM +0200, Krzysztof Kozlowski wrote:
-> > The IMX258 sensor driver checked in device properties for a
-> > clock-frequency property which actually does not mean that the clock is
-> > really running such frequency or is it even enabled.
-> >
-> > Get the provided clock and check it frequency.  If none is provided,
-> > fall back to old property.
-> >
-> > Enable the clock when accessing the IMX258 registers and when streaming
-> > starts.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  drivers/media/i2c/imx258.c | 107 ++++++++++++++++++++++++++++++-------
-> >  1 file changed, 87 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/media/i2c/imx258.c b/drivers/media/i2c/imx258.c
-> > index c20bac9b00ec..4d763dcabb1d 100644
-> > --- a/drivers/media/i2c/imx258.c
-> > +++ b/drivers/media/i2c/imx258.c
-> > @@ -2,6 +2,7 @@
-> >  // Copyright (C) 2018 Intel Corporation
-> >
-> >  #include <linux/acpi.h>
-> > +#include <linux/clk.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/i2c.h>
-> >  #include <linux/module.h>
-> > @@ -68,6 +69,9 @@
-> >  #define REG_CONFIG_MIRROR_FLIP               0x03
-> >  #define REG_CONFIG_FLIP_TEST_PATTERN 0x02
-> >
-> > +/* Input clock frequency in Hz */
-> > +#define IMX258_INPUT_CLOCK_FREQ              19200000
-> > +
-> >  struct imx258_reg {
-> >       u16 address;
-> >       u8 val;
-> > @@ -610,6 +614,8 @@ struct imx258 {
-> >
-> >       /* Streaming on/off */
-> >       bool streaming;
-> > +
-> > +     struct clk *clk;
-> >  };
-> >
-> >  static inline struct imx258 *to_imx258(struct v4l2_subdev *_sd)
-> > @@ -747,6 +753,12 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
-> >       if (pm_runtime_get_if_in_use(&client->dev) == 0)
-> >               return 0;
-> >
-> > +     ret = clk_prepare_enable(imx258->clk);
-> > +     if (ret) {
-> > +             dev_err(&client->dev, "failed to enable clock\n");
-> > +             goto out;
-> > +     }
-> > +
-> >       switch (ctrl->id) {
-> >       case V4L2_CID_ANALOGUE_GAIN:
-> >               ret = imx258_write_reg(imx258, IMX258_REG_ANALOG_GAIN,
-> > @@ -779,6 +791,8 @@ static int imx258_set_ctrl(struct v4l2_ctrl *ctrl)
-> >               break;
-> >       }
-> >
-> > +out:
-> > +     clk_disable_unprepare(imx258->clk);
-> >       pm_runtime_put(&client->dev);
-> >
-> >       return ret;
-> > @@ -972,10 +986,40 @@ static int imx258_stop_streaming(struct imx258 *imx258)
-> >       return 0;
-> >  }
-> >
-> > +static int imx258_power_on(struct imx258 *imx258)
-> > +{
-> > +     struct i2c_client *client = v4l2_get_subdevdata(&imx258->sd);
-> > +     int ret;
-> > +
-> > +     ret = pm_runtime_get_sync(&client->dev);
-> > +     if (ret < 0)
-> > +             goto err;
->
-> Please continue to use runtime PM directly, and move the clock control to
-> runtime PM callbacks (apart from probe and remove).
+On Tue, Sep 01, 2020 at 01:40:15PM +0200, Maxime Ripard wrote:
+> On Tue, Sep 01, 2020 at 12:57:19PM +0200, Corentin Labbe wrote:
+> > On Tue, Sep 01, 2020 at 11:32:49AM +0200, Maxime Ripard wrote:
+> > > On Mon, Aug 31, 2020 at 09:30:59AM +0200, Martin Cerveny wrote:
+> > > > Like A33 "sun4i-ss" has a difference, it give SHA1 digest
+> > > > directly in BE. So add new compatible.
+> > > > 
+> > > > Tested-by: Martin Cerveny <m.cerveny@computer.org>
+> > > 
+> > > The Tested-by tag is for the other developpers. You're very much
+> > > expected to have tested your patch before contributing it.
+> > > 
+> > > > Signed-off-by: Martin Cerveny <m.cerveny@computer.org>
+> > > > ---
+> > > >  .../bindings/crypto/allwinner,sun4i-a10-crypto.yaml          | 5 ++++-
+> > > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+> > > > index fc823572b..180efd13a 100644
+> > > > --- a/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+> > > > +++ b/Documentation/devicetree/bindings/crypto/allwinner,sun4i-a10-crypto.yaml
+> > > > @@ -25,6 +25,7 @@ properties:
+> > > >            - const: allwinner,sun4i-a10-crypto
+> > > >        - items:
+> > > >            - const: allwinner,sun8i-a33-crypto
+> > > > +      - const: allwinner,sun8i-v3s-crypto
+> > > 
+> > > If it's compatible with the A33, why do we need to introduce a new compatible?
+> > > 
+> > > >  
+> > > >    reg:
+> > > >      maxItems: 1
+> > > > @@ -59,7 +60,9 @@ if:
+> > > >    properties:
+> > > >      compatible:
+> > > >        contains:
+> > > > -        const: allwinner,sun6i-a31-crypto
+> > > > +        oneOf:
+> > > > +          - const: allwinner,sun6i-a31-crypto
+> > > > +          - const: allwinner,sun8i-v3s-crypto
+> > > 
+> > > I guess the A33 compatible should be on that list as well?
+> > 
+> > This is the list of "need reset".
+> > So we cannot use allwinner,sun8i-a33-crypto
+> > Probably this explanation should be in the commit message.
+> 
+> But the A33 has a reset in the DTSI
+> 
 
-Runtime PM comes with its own overhead and using it for just toggling
-clock is slightly waste of cycle but if this is preferred I can do it.
 
-Best regards,
-Krzysztof
+Oh right so I need to send a fix for that and Martin Cerveny could simply use the "allwinner,sun8i-a33-crypto" (and so keep only patch #1(DTS))
+
+Regards
