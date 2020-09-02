@@ -2,63 +2,129 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=BAYES_00,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68917C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8CBC433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4047520758
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DE8C214F1
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 22:44:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726900AbgIBWnq (ORCPT
+        id S1726941AbgIBWoJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 18:43:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60368 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBWnp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 18:43:45 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 232A8C061244;
-        Wed,  2 Sep 2020 15:43:45 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1F3E8157347A1;
-        Wed,  2 Sep 2020 15:26:58 -0700 (PDT)
-Date:   Wed, 02 Sep 2020 15:43:44 -0700 (PDT)
-Message-Id: <20200902.154344.13498608344678705.davem@davemloft.net>
-To:     tanhuazhong@huawei.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        salil.mehta@huawei.com, yisen.zhuang@huawei.com,
-        linuxarm@huawei.com, kuba@kernel.org
-Subject: Re: [RFC net-next] udp: add a GSO type for UDPv6
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1599048911-7923-1-git-send-email-tanhuazhong@huawei.com>
-References: <1599048911-7923-1-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [2620:137:e000::1:9]); Wed, 02 Sep 2020 15:26:58 -0700 (PDT)
+        Wed, 2 Sep 2020 18:44:09 -0400
+Received: from mga11.intel.com ([192.55.52.93]:7459 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgIBWoJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 18:44:09 -0400
+IronPort-SDR: yYb2LRWEnovmxVusYZpk8nzGt8ICDB1QzQKWRISkyEsiZlmS3Fr338XqqtlPez6EXRFpuFlgYs
+ w4hDCa/YCbHw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9732"; a="154996681"
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="154996681"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 15:44:07 -0700
+IronPort-SDR: SgPuBa8KagMKUW23uXxcS5sth5yAXQj3CkBd39UgRDyePqw5JZKnGx4ZU3LbvuLYL1lgKr9a8x
+ S1wtQdQosjJg==
+X-IronPort-AV: E=Sophos;i="5.76,384,1592895600"; 
+   d="scan'208";a="502837008"
+Received: from sjchrist-ice.jf.intel.com (HELO sjchrist-ice) ([10.54.31.34])
+  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Sep 2020 15:44:07 -0700
+Date:   Wed, 2 Sep 2020 15:44:06 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Chenyi Qiang <chenyi.qiang@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [RFC v2 2/2] KVM: VMX: Enable bus lock VM exit
+Message-ID: <20200902224405.GK11695@sjchrist-ice>
+References: <20200817014459.28782-1-chenyi.qiang@intel.com>
+ <20200817014459.28782-3-chenyi.qiang@intel.com>
+ <87sgc1x4yn.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87sgc1x4yn.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huazhong Tan <tanhuazhong@huawei.com>
-Date: Wed, 2 Sep 2020 20:15:11 +0800
+On Tue, Sep 01, 2020 at 10:43:12AM +0200, Vitaly Kuznetsov wrote:
+> > @@ -6809,6 +6824,19 @@ static fastpath_t vmx_vcpu_run(struct kvm_vcpu *vcpu)
+> >  	if (unlikely(vmx->exit_reason.failed_vmentry))
+> >  		return EXIT_FASTPATH_NONE;
+> >  
+> > +	/*
+> > +	 * check the exit_reason to see if there is a bus lock
+> > +	 * happened in guest.
+> > +	 */
+> > +	if (kvm_bus_lock_exit_enabled(vmx->vcpu.kvm)) {
+> > +		if (vmx->exit_reason.bus_lock_detected) {
+> > +			vcpu->stat.bus_locks++;
 
-> In some cases, for UDP GSO, UDPv4 and UDPv6 need to be handled
-> separately, for example, checksum offload, so add new GSO type
-> SKB_GSO_UDPV6_L4 for UDPv6, and the old SKB_GSO_UDP_L4 stands
-> for UDPv4.
+Why bother with stats?  Every bus lock exits to userspace, having quick
+stats doesn't seem all that interesting.
+
+> > +			vcpu->arch.bus_lock_detected = true;
+> > +		} else {
+> > +			vcpu->arch.bus_lock_detected = false;
 > 
-> Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+> This is a fast path so I'm wondering if we can move bus_lock_detected
+> clearing somewhere else.
 
-Please submit this alongside something that needs to use it.
+Why even snapshot vmx->exit_reason.bus_lock_detected?  I don't see any
+reason why vcpu_enter_guest() needs to handle the exit to userspace, e.g.
+it's just as easily handled in VMX code.
 
-Thank you.
+> 
+> > +		}
+> > +	}
+> > +
+> >  	vmx->loaded_vmcs->launched = 1;
+> >  	vmx->idt_vectoring_info = vmcs_read32(IDT_VECTORING_INFO_FIELD);
+> >  
+> > @@ -8060,6 +8088,9 @@ static __init int hardware_setup(void)
+> >  		kvm_tsc_scaling_ratio_frac_bits = 48;
+> >  	}
+> >  
+> > +	if (cpu_has_vmx_bus_lock_detection())
+> > +		kvm_has_bus_lock_exit = true;
+> > +
+> >  	set_bit(0, vmx_vpid_bitmap); /* 0 is reserved for host */
+> >  
+> >  	if (enable_ept)
+
+...
+
+> > @@ -4990,6 +4996,12 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
+> >  		kvm->arch.exception_payload_enabled = cap->args[0];
+> >  		r = 0;
+> >  		break;
+> > +	case KVM_CAP_X86_BUS_LOCK_EXIT:
+> > +		if (!kvm_has_bus_lock_exit)
+> > +			return -EINVAL;
+> 
+> ... because userspace can check for -EINVAL when enabling the cap. Or we
+> can return e.g. -EOPNOTSUPP here. I don't have a strong opinion on the matter..
+> 
+> > +		kvm->arch.bus_lock_exit = cap->args[0];
+
+Assuming we even want to make this per-VM, I think it'd make sense to make
+args[0] a bit mask, e.g. to provide "off" and "exit" (this behavior) while
+allowing for future modes, e.g. log-only.
+
+> > +		r = 0;
+> > +		break;
+> >  	default:
+> >  		r = -EINVAL;
+> >  		break;
+> > @@ -7732,12 +7744,23 @@ static void post_kvm_run_save(struct kvm_vcpu *vcpu)
