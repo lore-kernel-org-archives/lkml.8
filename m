@@ -2,130 +2,128 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,RCVD_ILLEGAL_IP,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A25F7C433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 820C2C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B1992075D
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:49:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C77C2075D
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 04:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="kUCUYJlM"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="JTpZYrbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726312AbgIBEt4 (ORCPT
+        id S1726503AbgIBEuD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 00:49:56 -0400
+        Wed, 2 Sep 2020 00:50:03 -0400
 Received: from mail-dm6nam10on2061.outbound.protection.outlook.com ([40.107.93.61]:3904
         "EHLO NAM10-DM6-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726021AbgIBEty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 00:49:54 -0400
+        id S1726144AbgIBEt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 00:49:57 -0400
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VR2z7xRQBoG2YBsAZW7QN0OhmxL8Sz4K67PA38AkiJiPN7Evkb48fFGfdjQvzdtNEA2ww5XTJNQHzE4utfc96foj7600ybjBgvnC6jdfvE/woQzrR10MAZ+VAIOwBKULCZGfKLW50dHYaKRe4wqnM0Wr1ApYLS3wiMrckGKnaUI4c2z3wNKs1qfKId5JaZyQxwc4YEGyh+TD5K9pJ05IWMJPcfkprZBtyTyLfTMsDHS6EOOaqw6XfliinHC8200MkYeBNWtN3NY0STcRrsXwHqG18gqL1irx7CkE1gvKzuFeIBOa0Ct/bmNHDAMsQlzpM7+JtvfKNhqvkPYjW+FWFw==
+ b=kMPv11IlkoQvfXZ82Z/GkiMh2khqKSOtXi7GVA9y6VzOSGBBENdAjMNIKhnB5tkCW925Rl21FQBW+hBbzgf01S/8Vz1i0c4sFavddP9fc2Iai0iE+zz63UwcwZffcx7wsSrRI24CbxrPV/kwrtK8bCQqujtP+Dbc+1vdThsuCSXl+ZxNPjMtBNQzo1Raafy58GBJAsQv52Hc/38MdHsWmzp3tVcPfZH+2/LbF7xL6vvF13TyhiMytPBDpx985vrMSndfnm6a8a2CWpnsByhhS9cCj6UNkGUPKdhjp6wguJNrpDW/v+znCdTU+ItY0tb5UiofpZfNaLaklvlhhwYmTg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1yAKRequ8oNmVcfARXpYHwl6V88V45F98DxZXk/4ui8=;
- b=Cj3vG1FwteqHM1DTHCigjBlNBw+kMKDQGDtmZnZoCpUZK7TvMNEGi5410+hiC91Aw8h/6AYZZ8ve/vHmccgSSp7K2VoeYBGTd/8aeGVXxk9zSdsQgsZCMC2aLl6FW1ZNHDns2+D0yzVOuk5NmcyebuW5zd46Fx+KJl9N01cag8ugOawHcLHeweKfnKl+NrzOwRfX5bIdqsSOExaFCceuD3UUcJIKNLM2UXFOR1S5dst+ufwgbHdYB7CAfS3DXfzH0YX3pZZawfoLmrUCEY41YicirTqmqmGj3JI1u3y0EiB4kc1kBiiZVobjfh3NVQe2K3HzN95clQ6H/h5XFpXSew==
+ bh=VaGkcZzHqPvl2U+JcPXmfVtH2Cww0YaKnBZ7Z2/wDg0=;
+ b=ZMwSynQFUtIYJRuH9UVsmmXrmtqDwMiw5UGoJK6K0Kn8xsxRE6iHULR2dTpLpDyvujF+X008XTnGgXDpg/cRdKc6rQk5gcnsFPe/A0t1EEVHbyh9sT+hzfQp+TKGRoecQuqDHMTVTyiKmxzM/T29d0oJ5R4RY04pUtBiCu0XR5ob+ereNiQGbqI8qFJPHbHbBwlpTUb8CdyrmG2w/x+LF+QCgjXVQZ1bUx37Y8LomSFPfWRp52vQi0f9fv0lyUhNX62OaIhToxMSSbpDHgv3ebdxCHdMTKW0VaHSOhnsfCDsm+XbDT3mheC52P0Q2fm8vfK7xfUAqw6dya64UuguWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
  header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1yAKRequ8oNmVcfARXpYHwl6V88V45F98DxZXk/4ui8=;
- b=kUCUYJlM+R/wsD8MmQt/A6mpOnmaFo0lNrWuT9BOWbQcEkJgeF/2nlOl4pLg7PKwOemhCU9exa8hz1eI75P50EXGzZ9KEFT8PK7Su1ENsUjg62uMfLqr5aM0KidkGeH8ixkf442cjZLOWA0ndqOzMKL6g4G/7Dh5mkVTEDBueY8=
+ bh=VaGkcZzHqPvl2U+JcPXmfVtH2Cww0YaKnBZ7Z2/wDg0=;
+ b=JTpZYrbl8dJ1mFxsANEhYhsiJY+UJOsE5I/HJTFv04By04pDczbhRC5UZM7J1rkt7jUobhvFOUKgJMRyQrN/eGelIcEe8BUE5BdCFoXNq95af25WsWoof6H/XUA+LOe25LjxEBERGSgrb87YHk5wpntftI7TAicpO/SQs4YgrCY=
 Authentication-Results: vger.kernel.org; dkim=none (message not signed)
  header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
 Received: from DM5PR12MB1163.namprd12.prod.outlook.com (2603:10b6:3:7a::18) by
  DM6PR12MB2795.namprd12.prod.outlook.com (2603:10b6:5:41::32) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.15; Wed, 2 Sep 2020 04:49:49 +0000
+ 15.20.3348.15; Wed, 2 Sep 2020 04:49:47 +0000
 Received: from DM5PR12MB1163.namprd12.prod.outlook.com
  ([fe80::cc8d:7537:ec56:108e]) by DM5PR12MB1163.namprd12.prod.outlook.com
  ([fe80::cc8d:7537:ec56:108e%11]) with mapi id 15.20.3326.025; Wed, 2 Sep 2020
- 04:49:48 +0000
+ 04:49:47 +0000
 From:   Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
 To:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 Cc:     joro@8bytes.org, sean.m.osborne@oracle.com,
         james.puthukattukaran@oracle.com, joao.m.martins@oracle.com,
         boris.ostrovsky@oracle.com, jon.grimm@amd.com,
         Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-Subject: [PATCH 1/2] iommu: amd: Restore IRTE.RemapEn bit after programming IRTE
-Date:   Wed,  2 Sep 2020 04:51:09 +0000
-Message-Id: <20200902045110.4679-2-suravee.suthikulpanit@amd.com>
+Subject: [PATCH 0/2] iommu: amd: Fix intremap IO_PAGE_FAULT for VMs
+Date:   Wed,  2 Sep 2020 04:51:08 +0000
+Message-Id: <20200902045110.4679-1-suravee.suthikulpanit@amd.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200902045110.4679-1-suravee.suthikulpanit@amd.com>
-References: <20200902045110.4679-1-suravee.suthikulpanit@amd.com>
 Content-Type: text/plain
 X-ClientProxiedBy: SN1PR12CA0093.namprd12.prod.outlook.com
  (2603:10b6:802:21::28) To DM5PR12MB1163.namprd12.prod.outlook.com
  (2603:10b6:3:7a::18)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from 255.255.255.255 (255.255.255.255) by SN1PR12CA0093.namprd12.prod.outlook.com (2603:10b6:802:21::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 04:49:47 +0000
+Received: from 255.255.255.255 (255.255.255.255) by SN1PR12CA0093.namprd12.prod.outlook.com (2603:10b6:802:21::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 04:49:46 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [165.204.78.2]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 5e48a417-59ce-402d-310f-08d84efb9ef3
+X-MS-Office365-Filtering-Correlation-Id: 018f5fb0-f49f-4ed2-bdcf-08d84efb9e40
 X-MS-TrafficTypeDiagnostic: DM6PR12MB2795:
 X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <DM6PR12MB2795CA64CF345DAA182FD1B1F32F0@DM6PR12MB2795.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1923;
+X-Microsoft-Antispam-PRVS: <DM6PR12MB279527E667B4F7AB490BB744F32F0@DM6PR12MB2795.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: f8WqwxGnkGPUxRNbo7vlR2K0f84d+1I7HZ5Sq/0r7Wdlbcz8o5bXomIJBnH8kFZHX8AbrAdVQT2jG/IDqRzbr75rSY4D9eNjUcSjBYcAyNw6ljdAtwlKprkEAE+UjwjnLacO8s04ppHCx7sONuoPI6tbsgZoAlp8UyQpqWg+WV+Q1R84tWwG/sOc/NVYgnoLFgu5CrIJFsgRvhnA+xbkiwf4NHs9IBUSGdDHEDeNxojJOiv1kOaSlGONLuFx6SEiKsT3j1OKq3E7p4RmCAeBVruN5/46P5JmDx3mlhR0r2F8c12UnnJHtiYytZJXnApz5Y9GpWRsLu45JDFOnJsLbQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(83380400001)(4326008)(8936002)(2616005)(956004)(86362001)(498600001)(26005)(16576012)(44832011)(8676002)(2906002)(5660300002)(36756003)(66556008)(66476007)(66946007)(186003)(6666004)(1076003)(6486002)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: NFRFEbBZDmdt+rnNrQIScOEyEmc2bxYSWovjRKVB5t/bVQDoHcNL2N0/lcHmDDGz6yHXtIFQE/YLEI7ZUyJ+HWjV3i29AXJor7ToaGzVv0rQDFEIdjAYnsF6ERtDtSu2ZyB386OU3XtlcgpaFzV4dcTsw8ZHlD1mXtekr64VwDRBBqp6ru4209/1Z40mc3s0947v/5kzMk1aEE7yzpAnaVgGw79HEJXHqs2TsM5We+aemEmcIGhgjixgVivsI2KQPA+06dBijnecqWQ5s7/FWonQ1etX1kzx0m3sDewlrM5Cba8fIbx4q/wSK+D9PXUQlTmXD9Ezqmxw+jYG5hMSuze2ECs4aB9pQ5D+dqnIIJqoX8KKMYMiQf+UrZIeeItgx6rlz2xBK85cqZxeI//pEhCxzLnoBT6jJ0hc+GZCYBIFrzr+b5AmQAc/rnzjL599pngcfmKUta0XNt8PWYQskPtU2Nb4xzDkN7EHdBNFDUsN9dsfeLFf7YQrWxrbCArGjOoU4Fl6mJVV/DnaksDCeOxSORqw/6X1o+N8d976fLEpNZO/nsqpDqGz7m6uvMUKRNeofy88FfgO3wPQ3E2uIgCcFEw52IEj+Qvvx/LAhxCp7JEmIaiZPZx3cHwDt9eDnq3EVPMbDffxReywkw86Tw==
+X-Microsoft-Antispam-Message-Info: U3w1vuW3zY9ecjCYwdDrXyyk8xCJa3fGM8HWvFKd79+9J06fpbCr57lllDJGqVQb6pvxUneRZfR0ntxZNZZ4JGM3OThwr72IjO/r8eg/jpsCRFAqfAsSOLxbHjiXZVZo1Rv0AiYUJN7lTzBvlXFew6V17WcvJyFdRGmrmbjRCzcv355lOh2lxHHAxq5whsyIigCzc/RZazivkiQVg3e8o5LiUgdOFc0rbT2Ae/irTfT19ttif0HvB5HMjcG0vcBzDHrDt+PPRGtQGigay6eUdOc4JhYSk6b0JEBtM0x73cJ/iQ/D6eZsKT8bxLXadb9i
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1163.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(366004)(39860400002)(376002)(136003)(346002)(83380400001)(4326008)(8936002)(2616005)(956004)(86362001)(478600001)(26005)(16576012)(44832011)(8676002)(2906002)(5660300002)(36756003)(66556008)(316002)(66476007)(66946007)(186003)(6666004)(1076003)(6486002)(52116002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: /6zPGhZAlGhrZxT2NcTBK2a2xwuNof/H7+0nxDSUpL4uL+ho5Sp4hwbW/AhO7IsBAs0IXVbiGvQLQPtB7cL3FoB4MT9firAIWHw1USeNNRhZDAXBGJXpk80jIjiGmP8uK1P4x4nooEehZeaU94VJHmLkdVmheWM19OZGxG1Vh3cDRq8Kn0GLnLSgatxR/nXaX5mhsLdEMzj5rELCdFQW6r0zIC2xGNHW5bOAJfG+GfkSSg0S4IZNiKDJ5d4QmJLezYJzimTofvjmmffj/Blx3mcWZYGhWEp0SJSdIedGgzhtVg61B+JqujY6LDU7H9zJYpvbMe3E1e9JKQ7f8Z5ECBod2xnVqXH2/WwU3lqCFEzRkoViEOrky6dcuChtlI6HPdVcSlz/hKOa7sdpZbUcX7h5T1WuRSj3rWJqRCMQ6w5Q/i167uBGX2Xn4ABvkVhzYyBSAB2sdnYpmbOZKeuvDfaiocK0l3shh7PCAeUhk9PXjguugfI6tQ5aocqtWhXRfyvwqDZz3k3JkYGtg1EnH3GE1D/1XwBZjcS0SB4aCOg+EbZrqu+zG0RSiNFk7oR3QSTGGTr6vd5ALHKrmjk7UPgPnECY+pSOap0RguBqW/VraY5Bor7PipnU/Hgq37f6Ca556sswEfZqmK9ED6K2aA==
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5e48a417-59ce-402d-310f-08d84efb9ef3
+X-MS-Exchange-CrossTenant-Network-Message-Id: 018f5fb0-f49f-4ed2-bdcf-08d84efb9e40
 X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1163.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 04:49:48.8988
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 04:49:47.4374
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: xdJB8cvs9CC5vl/C1/SsPIgGmjjuubkOo+xrfcmDnG1qCJ9pN1rCe5a7qe6lZKWLFIbu2DFHUIvRi3L9XVpaJg==
+X-MS-Exchange-CrossTenant-UserPrincipalName: bMazvi3mGjGxuvcwp52ACBEyFyNo268banjAHAIlzbPDhXei+VZVTlsn/3fQLrWUSw7paaLA1SGHf3ZTIERNnA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB2795
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the RemapEn (valid) bit is accidentally cleared when
-programming IRTE w/ guestMode=0. It should be restored to
-the prior state.
+Interrupt remapping IO_PAGE_FAULT has been observed under system w/
+large number of VMs w/ pass-through devices. This can be reproduced with
+64 VMs + 64 pass-through VFs of Mellanox MT28800 Family [ConnectX-5 Ex],
+where each VM runs small-packet netperf test via the pass-through device
+to the netserver running on the host. All VMs are running in reboot loop,
+to trigger IRTE updates.
 
-Signed-off-by: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
----
- drivers/iommu/amd/iommu.c | 2 ++
- 1 file changed, 2 insertions(+)
+In addition, to accelerate the failure, irqbalance is triggered periodically
+(e.g. 1-5 sec), which should generate large amount of updates to IRTE.
+This setup generally triggers IO_PAGE_FAULT within 3-4 hours.
 
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index ba9f3dbc5b94..967f4e96d1eb 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -3850,6 +3850,7 @@ int amd_iommu_deactivate_guest_mode(void *data)
- 	struct amd_ir_data *ir_data = (struct amd_ir_data *)data;
- 	struct irte_ga *entry = (struct irte_ga *) ir_data->entry;
- 	struct irq_cfg *cfg = ir_data->cfg;
-+	u64 valid = entry->lo.fields_remap.valid;
- 
- 	if (!AMD_IOMMU_GUEST_IR_VAPIC(amd_iommu_guest_ir) ||
- 	    !entry || !entry->lo.fields_vapic.guest_mode)
-@@ -3858,6 +3859,7 @@ int amd_iommu_deactivate_guest_mode(void *data)
- 	entry->lo.val = 0;
- 	entry->hi.val = 0;
- 
-+	entry->lo.fields_remap.valid       = valid;
- 	entry->lo.fields_remap.dm          = apic->irq_dest_mode;
- 	entry->lo.fields_remap.int_type    = apic->irq_delivery_mode;
- 	entry->hi.fields.vector            = cfg->vector;
+Investigation has shown that the issue is in the code to update IRTE
+while remapping is enabled. Please see patch 2/2 for detail discussion.
+
+This serires has been tested running in the setup mentioned above
+upto 96 hours w/o seeing issues.
+
+Thanks,
+Suravee
+
+Suravee Suthikulpanit (2):
+  iommu: amd: Restore IRTE.RemapEn bit after programming IRTE
+  iommu: amd: Use cmpxchg_double() when updating 128-bit IRTE
+
+ drivers/iommu/amd/Kconfig |  2 +-
+ drivers/iommu/amd/init.c  | 21 +++++++++++++++++++--
+ drivers/iommu/amd/iommu.c | 19 +++++++++++++++----
+ 3 files changed, 35 insertions(+), 7 deletions(-)
+
 -- 
 2.17.1
 
