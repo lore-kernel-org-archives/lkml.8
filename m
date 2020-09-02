@@ -2,94 +2,83 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C306BC433E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:49:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E19C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8F10D206F0
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:49:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="PNx9FMjY"
+	by mail.kernel.org (Postfix) with ESMTP id DD5FD214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 10:49:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbgIBKtJ (ORCPT
+        id S1726791AbgIBKtu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 06:49:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34880 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726124AbgIBKtD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 06:49:03 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA427C061244
-        for <linux-kernel@vger.kernel.org>; Wed,  2 Sep 2020 03:49:02 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id b79so4006976wmb.4
-        for <linux-kernel@vger.kernel.org>; Wed, 02 Sep 2020 03:49:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wKy0FvZis71+4qxVI83Fx/5Pqd+StZsc7RYb47DfcTo=;
-        b=PNx9FMjYsdVOB/sxz0G794p4p4EA7KzmA0oiWvfG1w/fSMqOhV2y6pE59cAztBoMrU
-         KT3KvIDP3s9Lrt7v0zTvO+T3rpb024sNuX2L+gauq55I5ZKdPV/Q2JF0Ou1qw48ghnpC
-         3guRKF1jNp7S/+wgHiYo+ggs98oIB/ShlniMw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wKy0FvZis71+4qxVI83Fx/5Pqd+StZsc7RYb47DfcTo=;
-        b=lNkfx0BOhawIBm4QRcBNyKj5JMcmZeSbsC9Mh/wFkfm0S+BAeNk+r+dkkXFNkWC1DW
-         lMsd3bGVs1cYOR2in7vJHlKCZ12TAW3veO8g7fGugwRUGSngvItpj3kBQA5JvIuh5LM4
-         V3xETrO7sq2Rz87pkSaBCYCA0fn8WCVG+QjU4Gu/eOWMA8B+7sdXV9FprWYmTpK/oYTa
-         XPDzLedZkkAqTKlw8vfxBp/+p5hcdzaC2fBfv9ybg07LigGmtSHXKn+paz4YIRm81yXG
-         zAjI5A2TAxu2a8uTekdR9jtgprPscq01P7ErjYXR+zWFZzrMwurmIxGNucBgxtHQb2oX
-         X8yQ==
-X-Gm-Message-State: AOAM530Ye1yKW5a2XEaJqK96H8OceMDbxZU5aMJVF8f0vq6WXU3+MBC6
-        x5I9aRUguXLKN5JVIkQ94vOqgA==
-X-Google-Smtp-Source: ABdhPJxkezEQ5EimdP4Yp+JtPtW0eRcJQ2iEIy0KpFqSwNAMzw6MmpDD6SCT6xU8qMChbK1udpZBEQ==
-X-Received: by 2002:a7b:ce96:: with SMTP id q22mr50318wmj.132.1599043741171;
-        Wed, 02 Sep 2020 03:49:01 -0700 (PDT)
-Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
-        by smtp.gmail.com with ESMTPSA id v12sm6680567wri.47.2020.09.02.03.48.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Sep 2020 03:48:59 -0700 (PDT)
-Date:   Wed, 2 Sep 2020 11:48:59 +0100
-From:   Chris Down <chris@chrisdown.name>
-To:     Byron Stanoszek <gandalf@winds.org>
-Cc:     Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] tmpfs: Restore functionality of nr_inodes=0
-Message-ID: <20200902104859.GA79629@chrisdown.name>
-References: <20200902035715.16414-1-gandalf@winds.org>
+        Wed, 2 Sep 2020 06:49:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49724 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbgIBKts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 06:49:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 00205AD7B;
+        Wed,  2 Sep 2020 10:49:47 +0000 (UTC)
+Subject: Re: [Patch v4 5/7] mm/hugetlb: a page from buddy is not on any list
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        mike.kravetz@oracle.com, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org, bhe@redhat.com
+References: <20200901014636.29737-1-richard.weiyang@linux.alibaba.com>
+ <20200901014636.29737-6-richard.weiyang@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <fd89ad4a-ef8d-e54e-8769-d6b15c40cc43@suse.cz>
+Date:   Wed, 2 Sep 2020 12:49:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.11.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200902035715.16414-1-gandalf@winds.org>
-User-Agent: Mutt/1.14.6 (2020-07-11)
+In-Reply-To: <20200901014636.29737-6-richard.weiyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Byron Stanoszek writes:
->Commit e809d5f0b5c9 ("tmpfs: per-superblock i_ino support") made changes to
->shmem_reserve_inode() in mm/shmem.c, however the original test for
->(sbinfo->max_inodes) got dropped. This causes mounting tmpfs with option
->nr_inodes=0 to fail:
->
->  # mount -ttmpfs -onr_inodes=0 none /ext0
->  mount: /ext0: mount(2) system call failed: Cannot allocate memory.
->
->This patch restores the nr_inodes=0 functionality.
->
->Fixes: e809d5f0b5c9 ("tmpfs: per-superblock i_ino support")
->Cc: Chris Down <chris@chrisdown.name>
->Signed-off-by: Byron Stanoszek <gandalf@winds.org>
+On 9/1/20 3:46 AM, Wei Yang wrote:
+> The page allocated from buddy is not on any list, so just use list_add()
+> is enough.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> Reviewed-by: Baoquan He <bhe@redhat.com>
+> Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  mm/hugetlb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index 441b7f7c623e..c9b292e664c4 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -2405,7 +2405,7 @@ struct page *alloc_huge_page(struct vm_area_struct *vma,
+>  			h->resv_huge_pages--;
+>  		}
+>  		spin_lock(&hugetlb_lock);
+> -		list_move(&page->lru, &h->hugepage_activelist);
+> +		list_add(&page->lru, &h->hugepage_activelist);
 
-Acked-by: Chris Down <chris@chrisdown.name>
+Hmm, how does that list_move() actually not crash today?
+Page has been taken from free lists, thus there was list_del() and page->lru
+should be poisoned.
+list_move() does __list_del_entry() which will either detect the poison with
+CONFIG_DEBUG_LIST, or crash accessing the poison, no?
+Am I missing something or does it mean this code is actually never executed in wild?
 
-Thanks, good catch.
+>  		/* Fall through */
+
+Maybe delete this comment? This is not a switch statement.
+
+>  	}
+>  	hugetlb_cgroup_commit_charge(idx, pages_per_huge_page(h), h_cg, page);
+> 
+
