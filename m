@@ -2,80 +2,46 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=BAYES_00,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,NICE_REPLY_A,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=BAYES_00,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,NICE_REPLY_A,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 429D4C43461
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4CDC43461
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6452083B
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:50:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nwd1UqVM"
+	by mail.kernel.org (Postfix) with ESMTP id 60C382083B
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 17:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727804AbgIBRuq (ORCPT
+        id S1727850AbgIBRvt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 13:50:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43524 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726247AbgIBRup (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 13:50:45 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5655C061244;
-        Wed,  2 Sep 2020 10:50:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id s2so155691pjr.4;
-        Wed, 02 Sep 2020 10:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gldkp7PW4j0DFMsRsIZxRE3Gipj4nAiWdiTeBWgOz50=;
-        b=Nwd1UqVMyXf3mjIymnk+vD+DPirEUCHett1jNK87DprBGgW+CTZZpMM7pwqUG+5+eb
-         ws8wMD7FIxnp55sJYoS8gYv7W+sGwQeOIPL9gr+WOCtSLv+r11aKmH2P5wixwMN7FWez
-         DBuYjtncHi/O5Ds0hrNbJlq6sPJ/jOr7Pv/kXdWYI9+FEui3g+jihG6CaE1x+9M4KYlb
-         Tw0HHU2nlWqVQfkF2Ka7C0P6ItecbxJnjB7Od4k4JkOLiB8HKdJUa8eoIQa82Sttb8xs
-         SuD88I3aa8IInaBr4N9RWyvvKv/JN5JavJB2K0SUEG07WSzVVTvKlUKK47Ic8bJQMDeJ
-         6D9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gldkp7PW4j0DFMsRsIZxRE3Gipj4nAiWdiTeBWgOz50=;
-        b=Zct+ESSzVbdwl76rAOPQ3xSnWSZCsZOdI2zlLLFJC3TcmA1JsNZbe+xanqJY6FOYk6
-         i8i/8sSfRPAA5Q82bDGxC9wSSZmqfHi6aeqRRP/hw7DhkSnbyyCLPms35gDdHxyOuX3T
-         P0dJM/3ZW/f1D+brWtLhbgOTsGo0R5KHkp3wjbHwNfylEegOiwyvTr2Mlf7lWz0Qa89e
-         iFe1zxwLVgNHetxh+wyZlGwv/+XkHtOeQmFwzqEOBq5YhlpjEGSGP6eNkOabtczRt3G3
-         DWVGFZc+0WvzSoAfTm0QN6Uoxx2b5wiB6U28FvuZBBTvpe+pAjFfoMKbDilQrrMh97Z+
-         ZEow==
-X-Gm-Message-State: AOAM531QT5Pi047L7gdd8+Rn8zcd5lS7vuk2wOlHycftcwFCsvHJcYG0
-        MXyn1HCU9qGHBbxyX31QUBdrGVvxCk8=
-X-Google-Smtp-Source: ABdhPJyM6VawxkZVo+/zeLvKajvna+zRWmEiEWBof7ij8IV6Rs/NJnX43gYynQXgp6nZeG4j+70QUA==
-X-Received: by 2002:a17:902:9a02:: with SMTP id v2mr3012615plp.151.1599069043990;
-        Wed, 02 Sep 2020 10:50:43 -0700 (PDT)
-Received: from [10.230.191.242] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id p11sm6764408pgh.80.2020.09.02.10.50.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 02 Sep 2020 10:50:43 -0700 (PDT)
-Subject: Re: [PATCH] net: bcmgenet: fix mask check in bcmgenet_validate_flow()
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20200902111845.9915-1-efremov@linux.com>
-From:   Doug Berger <opendmb@gmail.com>
-Message-ID: <74100a9f-5215-ed55-7077-a180a85f775a@gmail.com>
-Date:   Wed, 2 Sep 2020 10:53:51 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Wed, 2 Sep 2020 13:51:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46328 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726247AbgIBRvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 13:51:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DD109AD5C;
+        Wed,  2 Sep 2020 17:51:46 +0000 (UTC)
+Subject: Re: [PATCH] mm/memory_hotplug: drain per-cpu pages again during
+ memory offline
+To:     Michal Hocko <mhocko@suse.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>
+References: <20200901124615.137200-1-pasha.tatashin@soleen.com>
+ <20200902140851.GJ4617@dhcp22.suse.cz>
+ <CA+CK2bBZdN56fmsC2jyY_ju8rQfG2-9hForf1CEdcUVL1+wrrA@mail.gmail.com>
+ <74f2341a-7834-3e37-0346-7fbc48d74df3@suse.cz>
+ <20200902151306.GL4617@dhcp22.suse.cz>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <e6bf05cb-044c-47a9-3c65-e41b1e42b702@suse.cz>
+Date:   Wed, 2 Sep 2020 19:51:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.11.0
 MIME-Version: 1.0
-In-Reply-To: <20200902111845.9915-1-efremov@linux.com>
+In-Reply-To: <20200902151306.GL4617@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -84,35 +50,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/2/2020 4:18 AM, Denis Efremov wrote:
-> VALIDATE_MASK(eth_mask->h_source) is checked twice in a row in
-> bcmgenet_validate_flow(). Add VALIDATE_MASK(eth_mask->h_dest)
-> instead.
+On 9/2/20 5:13 PM, Michal Hocko wrote:
+> On Wed 02-09-20 16:55:05, Vlastimil Babka wrote:
+>> On 9/2/20 4:26 PM, Pavel Tatashin wrote:
+>> > On Wed, Sep 2, 2020 at 10:08 AM Michal Hocko <mhocko@suse.com> wrote:
+>> >>
+>> >> >
+>> >> > Thread#1 - continue
+>> >> >          free_unref_page_commit
+>> >> >            migratetype = get_pcppage_migratetype(page);
+>> >> >               // get old migration type
+>> >> >            list_add(&page->lru, &pcp->lists[migratetype]);
+>> >> >               // add new page to already drained pcp list
+>> >> >
+>> >> > Thread#2
+>> >> > Never drains pcp again, and therefore gets stuck in the loop.
+>> >> >
+>> >> > The fix is to try to drain per-cpu lists again after
+>> >> > check_pages_isolated_cb() fails.
+>> >>
+>> >> But this means that the page is not isolated and so it could be reused
+>> >> for something else. No?
+>> > 
+>> > The page is in a movable zone, has zero references, and the section is
+>> > isolated (i.e. set_pageblock_migratetype(page, MIGRATE_ISOLATE);) is
+>> > set. The page should be offlinable, but it is lost in a pcp list as
+>> > that list is never drained again after the first failure to migrate
+>> > all pages in the range.
+>> 
+>> Yeah. To answer Michal's "it could be reused for something else" - yes, somebody
+>> could allocate it from the pcplist before we do the extra drain. But then it
+>> becomes "visible again" and the loop in __offline_pages() should catch it by
+>> scan_movable_pages() - do_migrate_range(). And this time the pageblock is
+>> already marked as isolated, so the page (freed by migration) won't end up on the
+>> pcplist again.
 > 
-> Fixes: 3e370952287c ("net: bcmgenet: add support for ethtool rxnfc flows")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
-> I'm not sure that h_dest check is required here, it's only my guess.
-> Compile tested only.
-> 
->  drivers/net/ethernet/broadcom/genet/bcmgenet.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> index 0ca8436d2e9d..be85dad2e3bc 100644
-> --- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> +++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-> @@ -1364,7 +1364,7 @@ static int bcmgenet_validate_flow(struct net_device *dev,
->  	case ETHER_FLOW:
->  		eth_mask = &cmd->fs.m_u.ether_spec;
->  		/* don't allow mask which isn't valid */
-> -		if (VALIDATE_MASK(eth_mask->h_source) ||
-> +		if (VALIDATE_MASK(eth_mask->h_dest) ||
->  		    VALIDATE_MASK(eth_mask->h_source) ||
->  		    VALIDATE_MASK(eth_mask->h_proto)) {
->  			netdev_err(dev, "rxnfc: Unsupported mask\n");
-> 
-Well spotted. Thanks!
+> So the page block is marked MIGRATE_ISOLATE but the allocation itself
+> could be used for non migrateable objects. Or does anything prevent that
+> from happening?
 
-Acked-by: Doug Berger <opendmb@gmail.com>
+In a movable zone, the allocation should not be used for non migrateable
+objects. E.g. if the zone was not ZONE_MOVABLE, the offlining could fail
+regardless of this race (analogically for migrating away from CMA pageblocks).
+
+> We really do depend on isolation to not allow reuse when offlining.
+
+This is not really different than if the page on pcplist was allocated just a
+moment before the offlining, thus isolation started. We ultimately rely on being
+able to migrate any allocated pages away during the isolation. This "freeing to
+pcplists" race doesn't fundamentally change anything in this regard. We just
+have to guarantee that pages on pcplists will be eventually flushed, to make
+forward progress, and there was a bug in this aspect.
