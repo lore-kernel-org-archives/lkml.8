@@ -2,628 +2,173 @@ Return-Path: <SRS0=728o=CL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=BAYES_00,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.0 required=3.0 tests=BAYES_00,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1EEBC433E7
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 312D7C433E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8233120767
-	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBD8220767
+	for <linux-kernel@archiver.kernel.org>; Wed,  2 Sep 2020 16:59:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="V4qQ5W7Y"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="nlfjaQLC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728355AbgIBQ7U (ORCPT
+        id S1728604AbgIBQ7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 2 Sep 2020 12:59:20 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10788 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728434AbgIBQ6j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 2 Sep 2020 12:58:39 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5f4fcebc0004>; Wed, 02 Sep 2020 09:56:28 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 02 Sep 2020 09:58:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 02 Sep 2020 09:58:36 -0700
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 2 Sep
- 2020 16:58:36 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Wed, 2 Sep 2020 16:58:36 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5f4fcf3c0002>; Wed, 02 Sep 2020 09:58:36 -0700
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Bharata B Rao <bharata@linux.ibm.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v2 7/7] nouveau: support THP migration to private memory
-Date:   Wed, 2 Sep 2020 09:58:30 -0700
-Message-ID: <20200902165830.5367-8-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200902165830.5367-1-rcampbell@nvidia.com>
-References: <20200902165830.5367-1-rcampbell@nvidia.com>
+        Wed, 2 Sep 2020 12:59:21 -0400
+Received: from mail-bn8nam11on2070.outbound.protection.outlook.com ([40.107.236.70]:15232
+        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728495AbgIBQ6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 2 Sep 2020 12:58:54 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=VT5ayBwVaG/BLCrVVAwS9tc/3CbpAmi/pPIN+zb7x/jJBlwqlsscjjYbrehRpi2K5YUfVNOKrVYtGiUO9DkGGicXgSscBGfFU4XzDBYRinvc031+/6ir1L/Iy0k+J12z295EQzaRqiEPI+tMUJRY0gcg6LdNkNR6eh5mvBqmFIbeDD5n3JRx2UmZF38+rQtNRyfs9AZ68W7wn4mmZAvpFZIfSwmJbFY1kO0uJ8SoS0eb+uVNAAJBzD0Q3jUbKw0SmyAuBgMX2lhl5DMW90RMe8pDoVEJWes5Vy6Opx/gjJXqexx6fOWaDQEsDp9f2cWHpzOY4qQoKmmj+lltvYp3sQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p5xh2iMbOUuYykH3VtoEpRrVeANMsj9APMUlrpsyzW0=;
+ b=YXPnDywNM3RaUT9eoESQHXNffNdrPQpygLAVcf+3NMl7R7QASlJfR0WAkmjNy0lmt6dZUEmRF29+oVOTTuEdl4jcwvLINYSNEHh+Ay+TixiIVznxDwib1cGUySKv9Rz9DjTVUqS2H/G9h0X2X3LdYg1yaSwtOHvjaEhv1sA27Cs+sBNKNduFDJy23YSQh7plsJZW7u91OGDtFsGkhTCC3lT2FnFsUr9H+ENQMIXpLz0qYQtikS9fS/vq/SciXrAOaFX7x+pPHTJm2/l8i7XgjMHQztkxvzP7HQRtdZvmvPKF21dyCBsh+WntGcX/r7tPMUkPJ6d2E7W9mR/tRXbMJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=lists.infradead.org
+ smtp.mailfrom=xilinx.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p5xh2iMbOUuYykH3VtoEpRrVeANMsj9APMUlrpsyzW0=;
+ b=nlfjaQLCu2H2uiP1bgv4J1YI9S9bpR3oDqJ9PDA4wyzVaN/WoNJfQ30MHHi0IKjbyzphmxJbn0k5+P1Hoi9QKXc7SLzPSuxgInvXCTwvNWvpTuCv5+BMfDstca9muFxkhPEdwYrMjsXiM/FPBwnQ061sBO2xO0iS6N9984FKEIM=
+Received: from CY4PR19CA0037.namprd19.prod.outlook.com (2603:10b6:903:103::23)
+ by SN1PR02MB3678.namprd02.prod.outlook.com (2603:10b6:802:24::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19; Wed, 2 Sep
+ 2020 16:58:51 +0000
+Received: from CY1NAM02FT053.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:903:103:cafe::b1) by CY4PR19CA0037.outlook.office365.com
+ (2603:10b6:903:103::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
+ Transport; Wed, 2 Sep 2020 16:58:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; lists.infradead.org; dkim=none (message not signed)
+ header.d=none;lists.infradead.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ CY1NAM02FT053.mail.protection.outlook.com (10.152.74.165) with Microsoft SMTP
+ Server id 15.20.3326.19 via Frontend Transport; Wed, 2 Sep 2020 16:58:50
+ +0000
+Received: from [149.199.38.66] (port=52905 helo=smtp.xilinx.com)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.90)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1kDW5t-0004kZ-U6; Wed, 02 Sep 2020 09:58:45 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by smtp.xilinx.com with smtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1kDW5y-0004Hg-Gr; Wed, 02 Sep 2020 09:58:50 -0700
+Received: from xsj-pvapsmtp01 (smtp-fallback.xilinx.com [149.199.38.66] (may be forged))
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 082Gwkwt003909;
+        Wed, 2 Sep 2020 09:58:46 -0700
+Received: from [172.19.2.206] (helo=xsjblevinsk50.xilinx.com)
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <ben.levinsky@xilinx.com>)
+        id 1kDW5u-0004H9-A5; Wed, 02 Sep 2020 09:58:46 -0700
+From:   Ben Levinsky <ben.levinsky@xilinx.com>
+To:     stefanos@xilinx.com, michals@xilinx.com, michael.auchter@ni.com
+Cc:     devicetree@vger.kernel.org, mathieu.poirier@linaro.org,
+        emooring@xilinx.com, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jliang@xilinx.com,
+        robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v11 1/5] firmware: xilinx: Add ZynqMP firmware ioctl enums for RPU configuration.
+Date:   Wed,  2 Sep 2020 09:58:42 -0700
+Message-Id: <20200902165846.3366-2-ben.levinsky@xilinx.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200902165846.3366-1-ben.levinsky@xilinx.com>
+References: <20200902165846.3366-1-ben.levinsky@xilinx.com>
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-PublicTrafficType: Email
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1599065789; bh=AJUp5oJSVkG5/knqs/F6FOPXqf6dVM42k+QNkVPqYoQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=V4qQ5W7Yfy+dJJx8g9499OfOPQFPJYgd1WoacoZfSNhRqH7SEMUo3h3prF92m6+Yr
-         TtbHPryo7ZXfDN2XagrcMqxpl0AHW8ewAPmGBLVZAbrfQx9ycJxuTx3QCmn/TAYOPB
-         4/UbYpM6zSkwx57XSCPOdvrCwFkPiAjnAkB2eSN8ZhxPPJ+O66/Nir+3/KRJlOEgZw
-         WpeIJoPXHsXB6GbdhNORfgFmxkBDjlu7gd6+zkecgxLA5zIGhyaGK5AGqgu0w0meUT
-         5PwAXOT9V0skRJHUVdF2f2rnhtgggz1q9s+YYISMgUOb44tpRLZRvYY7qmqKBTEELA
-         rF4pZOwvr9D8w==
+X-MS-Office365-Filtering-Correlation-Id: 52364fa0-0e6a-485c-9964-08d84f617779
+X-MS-TrafficTypeDiagnostic: SN1PR02MB3678:
+X-Microsoft-Antispam-PRVS: <SN1PR02MB3678338A580B2E7FEFCA9196B52F0@SN1PR02MB3678.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:565;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4j4py1jNUrDgJHMlKiH9s84ZLVMCPbuSdSqdMjr+zVgHd3XKi+HA8eFLFgMzOejb+T/PYDzYhhX6jdKttNPaxlUsdqOwnCWSR8vphWg4/ZQdwWxtv9PVl5xl+oXAJ5mXt1IMAydctb6tgeAe+K2ABVmmINLDaL8oWmAoou8BX45PL9dr6Qfu92+iW3yptXETrpox1d3B31PCC9c8fc8+bDc9dJbCrJhNMzqmnMN7GLH0jFDFBUYQDW8FHX/Ebf8ez4Q/GO3rh9uBlH/U7FbkXb2v3HMOk84whwsGkf25vkStcUpVPEn4SGMkhbmsPeUakm0bqr/fc8+FQB/b+SHmPuzAzN+em8wYJEwLFtliXFvYPSl9jh3PkiIrNlNBHbLfCQACrBT7caT8PSF+h4J0OdpmSrZacy1x3Ljxp1cQ9fQ=
+X-Forefront-Antispam-Report: CIP:149.199.60.83;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:xsj-pvapsmtpgw01;PTR:unknown-60-83.xilinx.com;CAT:NONE;SFS:(39860400002)(396003)(136003)(346002)(376002)(46966005)(1076003)(426003)(82740400003)(8936002)(47076004)(2616005)(9786002)(2906002)(5660300002)(44832011)(356005)(7696005)(26005)(186003)(36756003)(316002)(83380400001)(70206006)(6666004)(336012)(82310400003)(81166007)(4326008)(8676002)(478600001)(70586007)(42866002);DIR:OUT;SFP:1101;
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Sep 2020 16:58:50.7685
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52364fa0-0e6a-485c-9964-08d84f617779
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-AuthSource: CY1NAM02FT053.eop-nam02.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR02MB3678
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for migrating transparent huge pages to and from device
-private memory.
+Add ZynqMP firmware ioctl enums for RPU configuration.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Signed-off-by: Ben Levinsky <ben.levinsky@xilinx.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 289 ++++++++++++++++++-------
- drivers/gpu/drm/nouveau/nouveau_svm.c  |  11 +-
- drivers/gpu/drm/nouveau/nouveau_svm.h  |   3 +-
- 3 files changed, 215 insertions(+), 88 deletions(-)
+v3:
+- add xilinx-related platform mgmt fn's instead of wrapping around
+  function pointer in xilinx eemi ops struct
+v4:
+- add default values for enums
+---
+ include/linux/firmware/xlnx-zynqmp.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouve=
-au/nouveau_dmem.c
-index a13c6215bba8..78ad0ee77b3d 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -82,6 +82,7 @@ struct nouveau_dmem {
- 	struct list_head chunks;
- 	struct mutex mutex;
- 	struct page *free_pages;
-+	struct page *free_huge_pages;
- 	spinlock_t lock;
+diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
+index 5968df82b991..bb347dfe4ba4 100644
+--- a/include/linux/firmware/xlnx-zynqmp.h
++++ b/include/linux/firmware/xlnx-zynqmp.h
+@@ -104,6 +104,10 @@ enum pm_ret_status {
  };
-=20
-@@ -112,8 +113,13 @@ static void nouveau_dmem_page_free(struct page *page)
- 	struct nouveau_dmem *dmem =3D chunk->drm->dmem;
-=20
- 	spin_lock(&dmem->lock);
--	page->zone_device_data =3D dmem->free_pages;
--	dmem->free_pages =3D page;
-+	if (PageHead(page)) {
-+		page->zone_device_data =3D dmem->free_huge_pages;
-+		dmem->free_huge_pages =3D page;
-+	} else {
-+		page->zone_device_data =3D dmem->free_pages;
-+		dmem->free_pages =3D page;
-+	}
-=20
- 	WARN_ON(!chunk->callocated);
- 	chunk->callocated--;
-@@ -139,51 +145,100 @@ static void nouveau_dmem_fence_done(struct nouveau_f=
-ence **fence)
-=20
- static vm_fault_t nouveau_dmem_fault_copy_one(struct nouveau_drm *drm,
- 		struct vm_fault *vmf, struct migrate_vma *args,
--		dma_addr_t *dma_addr)
-+		struct page *spage, bool is_huge, dma_addr_t *dma_addr)
- {
-+	struct nouveau_svmm *svmm =3D spage->zone_device_data;
- 	struct device *dev =3D drm->dev->dev;
--	struct page *dpage, *spage;
--	struct nouveau_svmm *svmm;
--
--	spage =3D migrate_pfn_to_page(args->src[0]);
--	if (!spage || !(args->src[0] & MIGRATE_PFN_MIGRATE))
--		return 0;
-+	struct page *dpage;
-+	unsigned int i;
-=20
--	dpage =3D alloc_page_vma(GFP_HIGHUSER, vmf->vma, vmf->address);
-+	if (is_huge)
-+		dpage =3D alloc_transhugepage(vmf->vma, args->start);
-+	else
-+		dpage =3D alloc_page_vma(GFP_HIGHUSER, vmf->vma, vmf->address);
- 	if (!dpage)
--		return VM_FAULT_SIGBUS;
--	lock_page(dpage);
-+		return VM_FAULT_OOM;
-+	WARN_ON_ONCE(compound_order(spage) !=3D compound_order(dpage));
-=20
--	*dma_addr =3D dma_map_page(dev, dpage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
-+	*dma_addr =3D dma_map_page(dev, dpage, 0, page_size(dpage),
-+				 DMA_BIDIRECTIONAL);
- 	if (dma_mapping_error(dev, *dma_addr))
- 		goto error_free_page;
-=20
--	svmm =3D spage->zone_device_data;
-+	lock_page(dpage);
-+	i =3D (vmf->address - args->start) >> PAGE_SHIFT;
-+	spage +=3D i;
- 	mutex_lock(&svmm->mutex);
- 	nouveau_svmm_invalidate(svmm, args->start, args->end);
--	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_HOST, *dma_addr,
--			NOUVEAU_APER_VRAM, nouveau_dmem_page_addr(spage)))
-+	if (drm->dmem->migrate.copy_func(drm, compound_nr(dpage),
-+			NOUVEAU_APER_HOST, *dma_addr, NOUVEAU_APER_VRAM,
-+			nouveau_dmem_page_addr(spage)))
- 		goto error_dma_unmap;
- 	mutex_unlock(&svmm->mutex);
-=20
--	args->dst[0] =3D migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
-+	args->dst[i] =3D migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
-+	if (is_huge)
-+		args->dst[i] |=3D MIGRATE_PFN_COMPOUND;
- 	return 0;
-=20
- error_dma_unmap:
- 	mutex_unlock(&svmm->mutex);
--	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
-+	unlock_page(dpage);
-+	dma_unmap_page(dev, *dma_addr, page_size(dpage), DMA_BIDIRECTIONAL);
- error_free_page:
- 	__free_page(dpage);
- 	return VM_FAULT_SIGBUS;
- }
-=20
-+static vm_fault_t nouveau_dmem_fault_chunk(struct nouveau_drm *drm,
-+		struct vm_fault *vmf, struct migrate_vma *args)
-+{
-+	struct device *dev =3D drm->dev->dev;
-+	struct nouveau_fence *fence;
-+	struct page *spage;
-+	unsigned long src =3D args->src[0];
-+	bool is_huge =3D (src & (MIGRATE_PFN_MIGRATE | MIGRATE_PFN_COMPOUND)) =3D=
-=3D
-+		(MIGRATE_PFN_MIGRATE | MIGRATE_PFN_COMPOUND);
-+	unsigned long dma_page_size;
-+	dma_addr_t dma_addr;
-+	vm_fault_t ret =3D 0;
-+
-+	spage =3D migrate_pfn_to_page(src);
-+	if (!spage) {
-+		ret =3D VM_FAULT_SIGBUS;
-+		goto out;
-+	}
-+	if (is_huge) {
-+		dma_page_size =3D PMD_SIZE;
-+		ret =3D nouveau_dmem_fault_copy_one(drm, vmf, args, spage, true,
-+						  &dma_addr);
-+		if (!ret)
-+			goto fence;
-+		/*
-+		 * If we couldn't allocate a huge page, fallback to migrating
-+		 * a single page.
-+		 */
-+	}
-+	dma_page_size =3D PAGE_SIZE;
-+	ret =3D nouveau_dmem_fault_copy_one(drm, vmf, args, spage, false,
-+					  &dma_addr);
-+	if (ret)
-+		goto out;
-+fence:
-+	nouveau_fence_new(drm->dmem->migrate.chan, false, &fence);
-+	migrate_vma_pages(args);
-+	nouveau_dmem_fence_done(&fence);
-+	dma_unmap_page(dev, dma_addr, dma_page_size, DMA_BIDIRECTIONAL);
-+out:
-+	migrate_vma_finalize(args);
-+	return ret;
-+}
-+
- static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
- {
- 	struct nouveau_drm *drm =3D page_to_drm(vmf->page);
--	struct nouveau_dmem *dmem =3D drm->dmem;
--	struct nouveau_fence *fence;
- 	unsigned long src =3D 0, dst =3D 0;
--	dma_addr_t dma_addr =3D 0;
-+	struct page *page;
- 	vm_fault_t ret;
- 	struct migrate_vma args =3D {
- 		.vma		=3D vmf->vma,
-@@ -192,39 +247,64 @@ static vm_fault_t nouveau_dmem_migrate_to_ram(struct =
-vm_fault *vmf)
- 		.src		=3D &src,
- 		.dst		=3D &dst,
- 		.pgmap_owner	=3D drm->dev,
--		.flags		=3D MIGRATE_VMA_SELECT_DEVICE_PRIVATE,
-+		.flags		=3D MIGRATE_VMA_SELECT_DEVICE_PRIVATE |
-+				  MIGRATE_VMA_SELECT_COMPOUND,
- 	};
-=20
-+	/*
-+	 * If the page was migrated to the GPU as a huge page, try to
-+	 * migrate it back the same way.
-+	 */
-+	page =3D compound_head(vmf->page);
-+	if (PageHead(page)) {
-+		unsigned int order =3D compound_order(page);
-+		unsigned int nr_pages =3D 1U << order;
-+
-+		args.start &=3D PAGE_MASK << order;
-+		args.end =3D args.start + (PAGE_SIZE << order);
-+		args.src =3D kmalloc_array(nr_pages, sizeof(*args.src),
-+					 GFP_KERNEL);
-+		if (!args.src)
-+			return VM_FAULT_OOM;
-+		args.dst =3D kmalloc_array(nr_pages, sizeof(*args.dst),
-+					 GFP_KERNEL);
-+		if (!args.dst) {
-+			ret =3D VM_FAULT_OOM;
-+			goto error_src;
-+		}
-+	}
-+
- 	/*
- 	 * FIXME what we really want is to find some heuristic to migrate more
- 	 * than just one page on CPU fault. When such fault happens it is very
- 	 * likely that more surrounding page will CPU fault too.
- 	 */
--	if (migrate_vma_setup(&args) < 0)
--		return VM_FAULT_SIGBUS;
--	if (!args.cpages)
--		return 0;
--
--	ret =3D nouveau_dmem_fault_copy_one(drm, vmf, &args, &dma_addr);
--	if (ret || dst =3D=3D 0)
--		goto done;
--
--	nouveau_fence_new(dmem->migrate.chan, false, &fence);
--	migrate_vma_pages(&args);
--	nouveau_dmem_fence_done(&fence);
--	dma_unmap_page(drm->dev->dev, dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
--done:
--	migrate_vma_finalize(&args);
-+	if (migrate_vma_setup(&args))
-+		ret =3D VM_FAULT_SIGBUS;
-+	else
-+		ret =3D nouveau_dmem_fault_chunk(drm, vmf, &args);
-+	if (args.dst !=3D &dst)
-+		kfree(args.dst);
-+error_src:
-+	if (args.src !=3D &src)
-+		kfree(args.src);
- 	return ret;
- }
-=20
-+static void nouveau_page_split(struct page *head, struct page *page)
-+{
-+	page->pgmap =3D head->pgmap;
-+	page->zone_device_data =3D head->zone_device_data;
-+}
-+
- static const struct dev_pagemap_ops nouveau_dmem_pagemap_ops =3D {
- 	.page_free		=3D nouveau_dmem_page_free,
- 	.migrate_to_ram		=3D nouveau_dmem_migrate_to_ram,
-+	.page_split		=3D nouveau_page_split,
+ 
+ enum pm_ioctl_id {
++	IOCTL_GET_RPU_OPER_MODE = 0,
++	IOCTL_SET_RPU_OPER_MODE = 1,
++	IOCTL_RPU_BOOT_ADDR_CONFIG = 2,
++	IOCTL_TCM_COMB_CONFIG = 3,
+ 	IOCTL_SD_DLL_RESET = 6,
+ 	IOCTL_SET_SD_TAPDELAY,
+ 	IOCTL_SET_PLL_FRAC_MODE,
+@@ -129,6 +133,21 @@ enum pm_query_id {
+ 	PM_QID_CLOCK_GET_MAX_DIVISOR,
  };
-=20
--static int
--nouveau_dmem_chunk_alloc(struct nouveau_drm *drm, struct page **ppage)
-+static int nouveau_dmem_chunk_alloc(struct nouveau_drm *drm, bool is_huge,
-+				    struct page **ppage)
- {
- 	struct nouveau_dmem_chunk *chunk;
- 	struct resource *res;
-@@ -278,16 +358,20 @@ nouveau_dmem_chunk_alloc(struct nouveau_drm *drm, str=
-uct page **ppage)
- 	pfn_first =3D chunk->pagemap.range.start >> PAGE_SHIFT;
- 	page =3D pfn_to_page(pfn_first);
- 	spin_lock(&drm->dmem->lock);
--	for (i =3D 0; i < DMEM_CHUNK_NPAGES - 1; ++i, ++page) {
--		page->zone_device_data =3D drm->dmem->free_pages;
--		drm->dmem->free_pages =3D page;
--	}
-+	if (IS_ENABLED(CONFIG_TRANSPARENT_HUGEPAGE) && is_huge)
-+		prep_transhuge_device_private_page(page);
-+	else
-+		for (i =3D 0; i < DMEM_CHUNK_NPAGES - 1; ++i, ++page) {
-+			page->zone_device_data =3D drm->dmem->free_pages;
-+			drm->dmem->free_pages =3D page;
-+		}
- 	*ppage =3D page;
- 	chunk->callocated++;
- 	spin_unlock(&drm->dmem->lock);
-=20
--	NV_INFO(drm, "DMEM: registered %ldMB of device memory\n",
--		DMEM_CHUNK_SIZE >> 20);
-+	NV_INFO(drm, "DMEM: registered %ldMB of %sdevice memory %lx %lx\n",
-+		DMEM_CHUNK_SIZE >> 20, is_huge ? "huge " : "", pfn_first,
-+		nouveau_dmem_page_addr(page));
-=20
- 	return 0;
-=20
-@@ -304,14 +388,20 @@ nouveau_dmem_chunk_alloc(struct nouveau_drm *drm, str=
-uct page **ppage)
- }
-=20
- static struct page *
--nouveau_dmem_page_alloc_locked(struct nouveau_drm *drm)
-+nouveau_dmem_page_alloc_locked(struct nouveau_drm *drm, bool is_huge)
- {
- 	struct nouveau_dmem_chunk *chunk;
- 	struct page *page =3D NULL;
- 	int ret;
-=20
- 	spin_lock(&drm->dmem->lock);
--	if (drm->dmem->free_pages) {
-+	if (is_huge && drm->dmem->free_huge_pages) {
-+		page =3D drm->dmem->free_huge_pages;
-+		drm->dmem->free_huge_pages =3D page->zone_device_data;
-+		chunk =3D nouveau_page_to_chunk(page);
-+		chunk->callocated++;
-+		spin_unlock(&drm->dmem->lock);
-+	} else if (!is_huge && drm->dmem->free_pages) {
- 		page =3D drm->dmem->free_pages;
- 		drm->dmem->free_pages =3D page->zone_device_data;
- 		chunk =3D nouveau_page_to_chunk(page);
-@@ -319,7 +409,7 @@ nouveau_dmem_page_alloc_locked(struct nouveau_drm *drm)
- 		spin_unlock(&drm->dmem->lock);
- 	} else {
- 		spin_unlock(&drm->dmem->lock);
--		ret =3D nouveau_dmem_chunk_alloc(drm, &page);
-+		ret =3D nouveau_dmem_chunk_alloc(drm, is_huge, &page);
- 		if (ret)
- 			return NULL;
- 	}
-@@ -567,31 +657,22 @@ nouveau_dmem_init(struct nouveau_drm *drm)
-=20
- static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm=
-,
- 		struct nouveau_svmm *svmm, unsigned long src,
--		dma_addr_t *dma_addr, u64 *pfn)
-+		struct page *spage, bool is_huge, dma_addr_t dma_addr, u64 *pfn)
- {
--	struct device *dev =3D drm->dev->dev;
--	struct page *dpage, *spage;
-+	struct page *dpage;
- 	unsigned long paddr;
-+	unsigned long dst;
-=20
--	spage =3D migrate_pfn_to_page(src);
--	if (!(src & MIGRATE_PFN_MIGRATE))
--		goto out;
--
--	dpage =3D nouveau_dmem_page_alloc_locked(drm);
-+	dpage =3D nouveau_dmem_page_alloc_locked(drm, is_huge);
- 	if (!dpage)
- 		goto out;
-=20
- 	paddr =3D nouveau_dmem_page_addr(dpage);
- 	if (spage) {
--		*dma_addr =3D dma_map_page(dev, spage, 0, page_size(spage),
--					 DMA_BIDIRECTIONAL);
--		if (dma_mapping_error(dev, *dma_addr))
-+		if (drm->dmem->migrate.copy_func(drm, compound_nr(dpage),
-+			NOUVEAU_APER_VRAM, paddr, NOUVEAU_APER_HOST, dma_addr))
- 			goto out_free_page;
--		if (drm->dmem->migrate.copy_func(drm, 1,
--			NOUVEAU_APER_VRAM, paddr, NOUVEAU_APER_HOST, *dma_addr))
--			goto out_dma_unmap;
- 	} else {
--		*dma_addr =3D DMA_MAPPING_ERROR;
- 		if (drm->dmem->migrate.clear_func(drm, page_size(dpage),
- 			NOUVEAU_APER_VRAM, paddr))
- 			goto out_free_page;
-@@ -602,10 +683,11 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
-ruct nouveau_drm *drm,
- 		((paddr >> PAGE_SHIFT) << NVIF_VMM_PFNMAP_V0_ADDR_SHIFT);
- 	if (src & MIGRATE_PFN_WRITE)
- 		*pfn |=3D NVIF_VMM_PFNMAP_V0_W;
--	return migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
-+	dst =3D migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
-+	if (PageHead(dpage))
-+		dst |=3D MIGRATE_PFN_COMPOUND;
-+	return dst;
-=20
--out_dma_unmap:
--	dma_unmap_page(dev, *dma_addr, PAGE_SIZE, DMA_BIDIRECTIONAL);
- out_free_page:
- 	nouveau_dmem_page_free_locked(drm, dpage);
- out:
-@@ -617,26 +699,64 @@ static void nouveau_dmem_migrate_chunk(struct nouveau=
-_drm *drm,
- 		struct nouveau_svmm *svmm, struct migrate_vma *args,
- 		dma_addr_t *dma_addrs, u64 *pfns)
- {
-+	struct device *dev =3D drm->dev->dev;
- 	struct nouveau_fence *fence;
- 	unsigned long addr =3D args->start, nr_dma =3D 0, i;
-+	unsigned int page_shift =3D PAGE_SHIFT;
-+	struct page *spage;
-+	unsigned long src =3D args->src[0];
-+	bool is_huge =3D (src & (MIGRATE_PFN_MIGRATE | MIGRATE_PFN_COMPOUND)) =3D=
-=3D
-+		(MIGRATE_PFN_MIGRATE | MIGRATE_PFN_COMPOUND);
-+	unsigned long dma_page_size =3D is_huge ? PMD_SIZE : PAGE_SIZE;
+ 
++enum rpu_oper_mode {
++	PM_RPU_MODE_LOCKSTEP = 0,
++	PM_RPU_MODE_SPLIT = 1,
++};
 +
-+	if (is_huge) {
-+		spage =3D migrate_pfn_to_page(src);
-+		if (spage) {
-+			dma_addrs[nr_dma] =3D dma_map_page(dev, spage, 0,
-+							 page_size(spage),
-+							 DMA_BIDIRECTIONAL);
-+			if (dma_mapping_error(dev, dma_addrs[nr_dma]))
-+				goto out;
-+			nr_dma++;
-+		}
-+		args->dst[0] =3D nouveau_dmem_migrate_copy_one(drm, svmm, src,
-+				spage, true, *dma_addrs, pfns);
-+		if (args->dst[0] & MIGRATE_PFN_COMPOUND) {
-+			page_shift =3D PMD_SHIFT;
-+			i =3D 1;
-+			goto fence;
-+		}
-+	}
-=20
--	for (i =3D 0; addr < args->end; i++) {
--		args->dst[i] =3D nouveau_dmem_migrate_copy_one(drm, svmm,
--				args->src[i], dma_addrs + nr_dma, pfns + i);
--		if (!dma_mapping_error(drm->dev->dev, dma_addrs[nr_dma]))
-+	for (i =3D 0; addr < args->end; i++, addr +=3D PAGE_SIZE) {
-+		src =3D args->src[i];
-+		if (!(src & MIGRATE_PFN_MIGRATE))
-+			continue;
-+		spage =3D migrate_pfn_to_page(src);
-+		if (spage && !is_huge) {
-+			dma_addrs[i] =3D dma_map_page(dev, spage, 0,
-+						    page_size(spage),
-+						    DMA_BIDIRECTIONAL);
-+			if (dma_mapping_error(dev, dma_addrs[i]))
-+				break;
- 			nr_dma++;
--		addr +=3D PAGE_SIZE;
-+		} else if (spage && is_huge && i !=3D 0)
-+			dma_addrs[i] =3D dma_addrs[i - 1] + PAGE_SIZE;
-+		args->dst[i] =3D nouveau_dmem_migrate_copy_one(drm, svmm, src,
-+				spage, false, dma_addrs[i], pfns + i);
- 	}
-=20
-+fence:
- 	nouveau_fence_new(drm->dmem->migrate.chan, false, &fence);
- 	migrate_vma_pages(args);
- 	nouveau_dmem_fence_done(&fence);
--	nouveau_pfns_map(svmm, args->vma->vm_mm, args->start, pfns, i);
-+	nouveau_pfns_map(svmm, args->vma->vm_mm, args->start, pfns, i,
-+			 page_shift);
-=20
--	while (nr_dma--) {
--		dma_unmap_page(drm->dev->dev, dma_addrs[nr_dma], PAGE_SIZE,
--				DMA_BIDIRECTIONAL);
--	}
-+	while (nr_dma)
-+		dma_unmap_page(drm->dev->dev, dma_addrs[--nr_dma],
-+				dma_page_size, DMA_BIDIRECTIONAL);
-+out:
- 	migrate_vma_finalize(args);
- }
-=20
-@@ -648,25 +768,25 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 			 unsigned long end)
- {
- 	unsigned long npages =3D (end - start) >> PAGE_SHIFT;
--	unsigned long max =3D min(SG_MAX_SINGLE_ALLOC, npages);
-+	unsigned long max =3D min(1UL << (PMD_SHIFT - PAGE_SHIFT), npages);
- 	dma_addr_t *dma_addrs;
- 	struct migrate_vma args =3D {
- 		.vma		=3D vma,
- 		.start		=3D start,
- 		.pgmap_owner	=3D drm->dev,
--		.flags		=3D MIGRATE_VMA_SELECT_SYSTEM,
-+		.flags		=3D MIGRATE_VMA_SELECT_SYSTEM |
-+				  MIGRATE_VMA_SELECT_COMPOUND,
- 	};
--	unsigned long i;
- 	u64 *pfns;
- 	int ret =3D -ENOMEM;
-=20
- 	if (drm->dmem =3D=3D NULL)
- 		return -ENODEV;
-=20
--	args.src =3D kcalloc(max, sizeof(*args.src), GFP_KERNEL);
-+	args.src =3D kmalloc_array(max, sizeof(*args.src), GFP_KERNEL);
- 	if (!args.src)
- 		goto out;
--	args.dst =3D kcalloc(max, sizeof(*args.dst), GFP_KERNEL);
-+	args.dst =3D kmalloc_array(max, sizeof(*args.dst), GFP_KERNEL);
- 	if (!args.dst)
- 		goto out_free_src;
-=20
-@@ -678,8 +798,10 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 	if (!pfns)
- 		goto out_free_dma;
-=20
--	for (i =3D 0; i < npages; i +=3D max) {
--		args.end =3D start + (max << PAGE_SHIFT);
-+	for (; args.start < end; args.start =3D args.end) {
-+		args.end =3D min(end, ALIGN(args.start, PMD_SIZE));
-+		if (args.start =3D=3D args.end)
-+			args.end =3D min(end, args.start + PMD_SIZE);
- 		ret =3D migrate_vma_setup(&args);
- 		if (ret)
- 			goto out_free_pfns;
-@@ -687,7 +809,6 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 		if (args.cpages)
- 			nouveau_dmem_migrate_chunk(drm, svmm, &args, dma_addrs,
- 						   pfns);
--		args.start =3D args.end;
- 	}
-=20
- 	ret =3D 0;
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index 4f69e4c3dafd..3db0997f21b5 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -681,7 +681,6 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
- 			continue;
- 		}
--		SVMM_DBG(svmm, "addr %016llx", buffer->fault[fi]->addr);
-=20
- 		/* We try and group handling of faults within a small
- 		 * window into a single update.
-@@ -733,6 +732,10 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 		}
- 		mmput(mm);
-=20
-+		SVMM_DBG(svmm, "addr %llx %s %c", buffer->fault[fi]->addr,
-+			args.phys[0] & NVIF_VMM_PFNMAP_V0_VRAM ?
-+			"vram" : "sysmem",
-+			args.i.p.size > PAGE_SIZE ? 'H' : 'N');
- 		limit =3D args.i.p.addr + args.i.p.size;
- 		for (fn =3D fi; ++fn < buffer->fault_nr; ) {
- 			/* It's okay to skip over duplicate addresses from the
-@@ -804,13 +807,15 @@ nouveau_pfns_free(u64 *pfns)
-=20
- void
- nouveau_pfns_map(struct nouveau_svmm *svmm, struct mm_struct *mm,
--		 unsigned long addr, u64 *pfns, unsigned long npages)
-+		 unsigned long addr, u64 *pfns, unsigned long npages,
-+		 unsigned int page_shift)
- {
- 	struct nouveau_pfnmap_args *args =3D nouveau_pfns_to_args(pfns);
- 	int ret;
-=20
- 	args->p.addr =3D addr;
--	args->p.size =3D npages << PAGE_SHIFT;
-+	args->p.page =3D page_shift;
-+	args->p.size =3D npages << args->p.page;
-=20
- 	mutex_lock(&svmm->mutex);
-=20
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.h b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.h
-index e7d63d7f0c2d..3fd78662f17e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.h
-@@ -33,7 +33,8 @@ void nouveau_svmm_invalidate(struct nouveau_svmm *svmm, u=
-64 start, u64 limit);
- u64 *nouveau_pfns_alloc(unsigned long npages);
- void nouveau_pfns_free(u64 *pfns);
- void nouveau_pfns_map(struct nouveau_svmm *svmm, struct mm_struct *mm,
--		      unsigned long addr, u64 *pfns, unsigned long npages);
-+		      unsigned long addr, u64 *pfns, unsigned long npages,
-+		      unsigned int page_shift);
- #else /* IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM) */
- static inline void nouveau_svm_init(struct nouveau_drm *drm) {}
- static inline void nouveau_svm_fini(struct nouveau_drm *drm) {}
---=20
-2.20.1
++enum rpu_boot_mem {
++	PM_RPU_BOOTMEM_LOVEC = 0,
++	PM_RPU_BOOTMEM_HIVEC = 1,
++};
++
++enum rpu_tcm_comb {
++	PM_RPU_TCM_SPLIT = 0,
++	PM_RPU_TCM_COMB = 1,
++};
++
+ enum zynqmp_pm_reset_action {
+ 	PM_RESET_ACTION_RELEASE,
+ 	PM_RESET_ACTION_ASSERT,
+-- 
+2.17.1
 
